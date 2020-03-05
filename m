@@ -2,190 +2,124 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E22C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1B0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D8720866
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4DC120866
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:23:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="vRmlQPhc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZYUFsof2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgCEBWB (ORCPT
+        id S1725844AbgCEBXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 20:22:01 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33611 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgCEBWA (ORCPT
+        Wed, 4 Mar 2020 20:23:49 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:40554 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgCEBXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 20:22:00 -0500
-Received: by mail-pg1-f194.google.com with SMTP id m5so1912451pgg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 17:21:59 -0800 (PST)
+        Wed, 4 Mar 2020 20:23:49 -0500
+Received: by mail-pg1-f201.google.com with SMTP id n16so2277771pgl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 17:23:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JtVY2TbnZYg34ePRXi3izpntJbzbeF3tPdRAvzboEq4=;
-        b=vRmlQPhcvEZSPwvwVSbDFH2/f2X9nWaWR7WirMd/AxqNvih88hS3tAuPclvlOztfOd
-         NYAANy/g3VOcEsrh6+j4V82J982wL/WYXidaKBfEtcYSuTgXfq8/wl7Y8qakl6zmrREa
-         Gb9JEogTJ01Y2gxKBQPhwvWT17JDW1Gjg+GiSqg2WHBdoy37IbDxzs2zNy5JJdA1atA+
-         b3lr/JRh3DZO4U/hcAWh0Xn64I2GLzoZcjAlbLgVaj1Ig7eUnId6i2j5QGpz0TQARcpt
-         VrLFIVGMEkGyKVcTBuQv/sYNvjF972O74pMspAUZyO5ajds2iONAj6KA70OlKVDsyfhp
-         NFyw==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=C9EkwJ1gUg61QN8k194CxCHcCIG0/y+uw6Hl1AyDtGU=;
+        b=ZYUFsof2AdnN/vxqOFzeKiPT7SkzpB/41s6WTfPp++cAv0qbgdDjJ6g5Rga20zTPBf
+         gVsTD4MeMUoXCcB+Yigcrgnk5XZFiAVW/wNHUFEQSxUBuWOc4VMLHC9HhaNdfPSo4ZPe
+         4Kc4pufQiFjyEB3orS6YAYWNQpQ/Dop2rQPcJtiRb11ektKq1x/7kQKp8Y8GjqGzwOgC
+         EqqXorAOfzF4xN26+FaMtotHiNvsBJ/EmkGcx1l0Iq/CSDkgdarDn6oWTsh6VXUn38Dq
+         l0C46YIBY9maN/qy1VA09qYcXLwOQPUjkIqftU3r+2Wa2+AZQrPHmTpatnf476pjTwrI
+         CSXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=JtVY2TbnZYg34ePRXi3izpntJbzbeF3tPdRAvzboEq4=;
-        b=L7gi91OUiBCtBay2uaNv5s/gav8CYwYh8CK5uIpkfbhgzJgMwIN2/KIWa0qAYxKf+v
-         Axi7BAYxJK4Hk7Hw11ODwKHFle/MyjsO7sUHtfJI6lKpGgl+V9JFB3BhToI69+qo2qUv
-         U+WUVGL9s+7aXXsJ9WgkdpAUXI8lS9x8vHDy8Lg+JMTX07wcGnf3aMel1C2jQx1dI2W5
-         JCoyyACnEcL5gm9cxma7qlMpF7x2GAS5WeDD/f70P/ieKkUI6zs+fB4w0k19IBpbCnhU
-         TvstZZOCdl53QSC6pEsjq/SkrEK3fIKvARRNLeLlEvH8nbXQv29F3UT6P4k44O+9YB22
-         CbWg==
-X-Gm-Message-State: ANhLgQ31HUWoJGhNA27VNfxBIk89S1cG9Zka1RK9Gr3U1GUhMFLCqFYG
-        DoAyE2uZ78MDlTenSM42jGTuuA==
-X-Google-Smtp-Source: ADFU+vu139oi/AXnRI9S2g5bYyVFgxEXHq5dJXwkf/gEh7zlAomdz0ShxEZvQDizftt1c19aePWiKQ==
-X-Received: by 2002:a65:5c46:: with SMTP id v6mr5297930pgr.333.1583371318976;
-        Wed, 04 Mar 2020 17:21:58 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
-        by smtp.gmail.com with ESMTPSA id 129sm4362349pfw.84.2020.03.04.17.21.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 17:21:57 -0800 (PST)
-Date:   Wed, 04 Mar 2020 17:21:57 -0800 (PST)
-X-Google-Original-Date: Wed, 04 Mar 2020 17:21:43 PST (-0800)
-Subject:     Re: [PATCH 6/8] riscv: add STRICT_KERNEL_RWX support
-In-Reply-To: <20200217083223.2011-7-zong.li@sifive.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        zong.li@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     zong.li@sifive.com
-Message-ID: <mhng-5d8ed200-0200-4198-946f-ae41ba71cc06@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=C9EkwJ1gUg61QN8k194CxCHcCIG0/y+uw6Hl1AyDtGU=;
+        b=JHzxjAHGaAl/iT2LUf9Uu5CRwbLHdBAU00W7B9BobnMqrh7jBK8lq5JLX0gXwIvns2
+         WNeUe84BUulUjPJ6n0BVYNcpHKl/PcM8t1tl5TI7WAibjavaCvodGqp37eW49TFgnNKs
+         lH8bkPMWPDKQ62BGCJx384HcDkAM1n1Z9FHVhY5Ys24d2urIqKLeoYIOsdo5Q7MHVsEn
+         S+nz1d7DvIxfYuYWnKUQkRZ7Nw1b8O6VzgWdHhSo785+DG/jEnCHEuIsGurYSauGMtcl
+         iP0Sm3BBtTXfHMwUtUi3YF5myazI39XlfFYQlfvWia8QvU6rJxEB4Wli9Eky/EwvvmxG
+         5C1w==
+X-Gm-Message-State: ANhLgQ0x95nuyBJesvbU4/bC/3rjC6HZnjKCo5A0G9cPJEuOhSaJPLub
+        Bk02wcriyOolHzwYq2cTD1upQ1syklij
+X-Google-Smtp-Source: ADFU+vt22Y/ktG0yM2E5RHf9kr3+rTtxgnQJRQ51fjn3zDr8ksVD4tQhfSFd9ZOr4BIHrnKtguZNIHHL5bU7
+X-Received: by 2002:a63:2166:: with SMTP id s38mr4787838pgm.83.1583371426342;
+ Wed, 04 Mar 2020 17:23:46 -0800 (PST)
+Date:   Wed,  4 Mar 2020 17:23:36 -0800
+In-Reply-To: <20200305012338.219746-1-rajatja@google.com>
+Message-Id: <20200305012338.219746-2-rajatja@google.com>
+Mime-Version: 1.0
+References: <20200305012338.219746-1-rajatja@google.com>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v6 1/3] intel_acpi: Rename drm_dev local variable to dev
+From:   Rajat Jain <rajatja@google.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        "=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?=" 
+        <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        "=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?=" <jose.souza@intel.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, gregkh@linuxfoundation.org,
+        mathewk@google.com, Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
+        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
+        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>,
+        mpearson@lenovo.com, Nitin Joshi1 <njoshi1@lenovo.com>,
+        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
+        Tomoki Maruichi <maruichit@lenovo.com>
+Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 00:32:21 PST (-0800), zong.li@sifive.com wrote:
-> The commit contains that make text section as non-writable, rodata
-> section as read-only, and data section as non-executable.
->
-> The init section should be changed to non-executable.
->
-> Signed-off-by: Zong Li <zong.li@sifive.com>
-> ---
->  arch/riscv/Kconfig                  |  1 +
->  arch/riscv/include/asm/set_memory.h |  8 +++++
->  arch/riscv/mm/init.c                | 45 +++++++++++++++++++++++++++++
->  3 files changed, 54 insertions(+)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index f524d7e60648..308a4dbc0b39 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -62,6 +62,7 @@ config RISCV
->  	select ARCH_HAS_GIGANTIC_PAGE
->  	select ARCH_HAS_SET_DIRECT_MAP
->  	select ARCH_HAS_SET_MEMORY
-> +	select ARCH_HAS_STRICT_KERNEL_RWX
->  	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
->  	select SPARSEMEM_STATIC if 32BIT
->  	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
-> diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
-> index a91f192063c2..d3076087cb34 100644
-> --- a/arch/riscv/include/asm/set_memory.h
-> +++ b/arch/riscv/include/asm/set_memory.h
-> @@ -15,6 +15,14 @@ int set_memory_rw(unsigned long addr, int numpages);
->  int set_memory_x(unsigned long addr, int numpages);
->  int set_memory_nx(unsigned long addr, int numpages);
->
-> +#ifdef CONFIG_STRICT_KERNEL_RWX
-> +void set_kernel_text_ro(void);
-> +void set_kernel_text_rw(void);
-> +#else
-> +static inline void set_kernel_text_ro(void) { }
-> +static inline void set_kernel_text_rw(void) { }
-> +#endif
-> +
->  int set_direct_map_invalid_noflush(struct page *page);
->  int set_direct_map_default_noflush(struct page *page);
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 965a8cf4829c..09fa643e079c 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -12,11 +12,13 @@
->  #include <linux/sizes.h>
->  #include <linux/of_fdt.h>
->  #include <linux/libfdt.h>
-> +#include <linux/set_memory.h>
->
->  #include <asm/fixmap.h>
->  #include <asm/tlbflush.h>
->  #include <asm/sections.h>
->  #include <asm/pgtable.h>
-> +#include <asm/ptdump.h>
->  #include <asm/io.h>
->
->  #include "../kernel/head.h"
-> @@ -477,6 +479,49 @@ static void __init setup_vm_final(void)
->  	csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
->  	local_flush_tlb_all();
->  }
-> +
-> +#ifdef CONFIG_STRICT_KERNEL_RWX
-> +void set_kernel_text_rw(void)
-> +{
-> +	unsigned long text_start = (unsigned long)_text;
-> +	unsigned long text_end = (unsigned long)_etext;
-> +
-> +	set_memory_rw(text_start, (text_end - text_start) >> PAGE_SHIFT);
-> +}
-> +
-> +void set_kernel_text_ro(void)
-> +{
-> +	unsigned long text_start = (unsigned long)_text;
-> +	unsigned long text_end = (unsigned long)_etext;
-> +
-> +	set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
-> +}
-> +
-> +void mark_rodata_ro(void)
-> +{
-> +	unsigned long text_start = (unsigned long)_text;
-> +	unsigned long text_end = (unsigned long)_etext;
-> +	unsigned long rodata_start = (unsigned long)__start_rodata;
-> +	unsigned long data_start = (unsigned long)_sdata;
-> +	unsigned long max_low = (unsigned long)(__va(PFN_PHYS(max_low_pfn)));
-> +
-> +	set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
-> +	set_memory_ro(rodata_start, (data_start - rodata_start) >> PAGE_SHIFT);
-> +	set_memory_nx(rodata_start, (data_start - rodata_start) >> PAGE_SHIFT);
+Change the struct drm_device * local variable from drm_dev to dev
+per the feedback received here:
+https://lkml.org/lkml/2020/1/24/1143
 
-Ya, this'll risk barfing because of srodata.
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+v6: Initial patch (v6 to match other patches in the set) 
 
-> +	set_memory_nx(data_start, (max_low - data_start) >> PAGE_SHIFT);
-> +}
-> +#endif
-> +
-> +void free_initmem(void)
-> +{
-> +	unsigned long init_begin = (unsigned long)__init_begin;
-> +	unsigned long init_end = (unsigned long)__init_end;
-> +
-> +	/* Make the region as non-execuatble. */
-> +	set_memory_nx(init_begin, (init_end - init_begin) >> PAGE_SHIFT);
-> +	free_initmem_default(POISON_FREE_INITMEM);
-> +}
-> +
->  #else
->  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->  {
+ drivers/gpu/drm/i915/display/intel_acpi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_acpi.c b/drivers/gpu/drm/i915/display/intel_acpi.c
+index e21fb14d5e07b..3e6831cca4ac1 100644
+--- a/drivers/gpu/drm/i915/display/intel_acpi.c
++++ b/drivers/gpu/drm/i915/display/intel_acpi.c
+@@ -224,13 +224,13 @@ static u32 acpi_display_type(struct intel_connector *connector)
+ 
+ void intel_acpi_device_id_update(struct drm_i915_private *dev_priv)
+ {
+-	struct drm_device *drm_dev = &dev_priv->drm;
++	struct drm_device *dev = &dev_priv->drm;
+ 	struct intel_connector *connector;
+ 	struct drm_connector_list_iter conn_iter;
+ 	u8 display_index[16] = {};
+ 
+ 	/* Populate the ACPI IDs for all connectors for a given drm_device */
+-	drm_connector_list_iter_begin(drm_dev, &conn_iter);
++	drm_connector_list_iter_begin(dev, &conn_iter);
+ 	for_each_intel_connector_iter(connector, &conn_iter) {
+ 		u32 device_id, type;
+ 
+-- 
+2.25.0.265.gbab2e86ba0-goog
+
