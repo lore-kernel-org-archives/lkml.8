@@ -2,245 +2,117 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ACCC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607A2C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4AE2146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8C5208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NrFhDK9B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SDgD4Mjf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbgCEFO2 (ORCPT
+        id S1725912AbgCEFTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 00:14:28 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38586 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgCEFO2 (ORCPT
+        Thu, 5 Mar 2020 00:19:32 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44532 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725208AbgCEFTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 00:14:28 -0500
-Received: by mail-qk1-f195.google.com with SMTP id j7so3876162qkd.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 21:14:27 -0800 (PST)
+        Thu, 5 Mar 2020 00:19:31 -0500
+Received: by mail-pg1-f193.google.com with SMTP id n24so1152562pgk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 21:19:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rTn3aZiOBdvpLaF9in60GflGuo7nuzt/CIGjImwtiUM=;
-        b=NrFhDK9B12p+3RdamIUYum/ORdm0XLJgoFeESAo99664Tf9pb1E6TcqGodgrLcM5BU
-         6YUyipKpSxuCMqCS5XxgM87hpGBtG6kcUPm3Zq2El6LJ+BtsgCxRXTFOKSp/G+nfZOOI
-         T1OpoH0qKLaMjQXRWCU3Yc3tRnguEKVaKs5oI=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xz0vKiIHUnBC6KaRjuHnnW/6amnzPB0TTTrzomiuqwo=;
+        b=SDgD4Mjfq/Dgym5JoDng77rvx/8OVbSyd6rxOr/CI82fCJOpITTLS1w0A+Vw3Yk8hM
+         TPaOcm+zqlADV2F9QCgy6Sp+y32QikANzXSHv2WoARs2kIqeKWotF61Wb1MFvqKK+Dkm
+         8FoZ2rD5hgD2moitfA/3U8D+wsIpebCkJ5PTzRe7seTTUdVPdU7B5ZYgZevQm5oO1JwB
+         nh66oHOrYa07uf2dA7xjCa7BudLjGep3a2aJmM2vU6V7swTP9xZRDqfyADox8fByw5oW
+         qgDJFaDJ0jOAozhMknHsfFlMRAs0qHHaKpyM+7JKMYT4SortoD754O8SKHenZ6+WfzHE
+         3mjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rTn3aZiOBdvpLaF9in60GflGuo7nuzt/CIGjImwtiUM=;
-        b=DSg8gHPIxad8Ao+eVfJM18HII72sZzsgZ+JxYLfqdGc0OENE8WE8ECT3YYY1v2/f36
-         dQP0nmoYA/XFQvZhK2348mc/4tWntdRPkdRL3HV8xuAdn+QAsplCDMJAUZlz+VoKxP7P
-         7HcwxQ266XR3Du92Fy4NQfJoMbpBI0rVk99N4ahgMnJEp47jEkZeB7C1miTCnuiNrw4U
-         vLLA7o0JiUFRPNzF2cFpxFXkw0v2OEqN5Qe1jFpbpXY/iszrPxmsqgEI2oZnMX/2glTk
-         W9mY3l9QFKra8wH7tAGyTKE+iYNY7+b2SZc0Bsc9EdrTyPmBEyRrTKt/TM2Kbgzqu0UM
-         HOpw==
-X-Gm-Message-State: ANhLgQ25TdNzrew8ALBKW9Ku3fUx8SnX1b2rckMABiNm2dzoamW5MhB/
-        wh/jwBYs7ZNL9NWLA+aLwtGGbFfouL0QNNYgX2MCIQ==
-X-Google-Smtp-Source: ADFU+vsjlqRt25RAnjpqBwwBqr94htBKQelMZzFwJ5kzWW9Pubmn0eresOonSxZoZDexvuo0WFSMiY0iBLfQk0M8fiw=
-X-Received: by 2002:a37:c47:: with SMTP id 68mr996909qkm.144.1583385266606;
- Wed, 04 Mar 2020 21:14:26 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xz0vKiIHUnBC6KaRjuHnnW/6amnzPB0TTTrzomiuqwo=;
+        b=ptBozK0BJRTiwDVdw56xc+QAfVV/W0yw4X4o01nebWxndPqQMxDsZPdPhEdKmMp0tZ
+         kpMS6wlUUDkqgiGbES4kGuO4UxxlNg/03wkSRQfM5ji7eymJhVDsSeiOqRHzK45BZuZN
+         yxP0ke02FBbPTfXsfJigOfImbfQII1mzTlaPbu50dbzVnnTEFWAcUkKVPORqfdA6JIfc
+         gsKdpW+UVIBQ6lIezH2HJXq3MRm3w2kkICkL09PpclSdt/lz/cKJoSXhy5HhBDQIcFDW
+         /4DNnazlrFr7GGwWOqyPvHbaEoQvPNeMpgnfdb5Oi7ZIgULH+lEfqA9jomHF9Bw93bqm
+         U7Fw==
+X-Gm-Message-State: ANhLgQ3MOCZFuQR8DxwnkP5bqHNtvzIWRSwvKf1bNT74gcXPDU5SanAx
+        gYZI2TUxK/Sqvi8ebZxnBkhkyw==
+X-Google-Smtp-Source: ADFU+vua2MMsBnzheRLXdTg7xrcI8uSK6QVnZ1MrY5/ScWJb2rqjOWfQoOFxS3iaAeNCQhG1TCwhMg==
+X-Received: by 2002:a63:f744:: with SMTP id f4mr6023135pgk.345.1583385570426;
+        Wed, 04 Mar 2020 21:19:30 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id w19sm22592050pgm.27.2020.03.04.21.19.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 21:19:29 -0800 (PST)
+Date:   Wed, 4 Mar 2020 21:19:27 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rajeshwari <rkambl@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sanm@codeaurora.org,
+        sivaa@codeaurora.org
+Subject: Re: [PATCH 1/1] arm64: dts: qcom: sc7180: Added critical trip point
+ Thermal-zones node
+Message-ID: <20200305051927.GE857139@builder>
+References: <1583324635-8271-1-git-send-email-rkambl@codeaurora.org>
+ <1583324635-8271-2-git-send-email-rkambl@codeaurora.org>
 MIME-Version: 1.0
-References: <1567503456-24725-1-git-send-email-yong.wu@mediatek.com> <1567503456-24725-4-git-send-email-yong.wu@mediatek.com>
-In-Reply-To: <1567503456-24725-4-git-send-email-yong.wu@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 5 Mar 2020 13:14:14 +0800
-Message-ID: <CANMq1KAOHFF43708ktvhEU6EYZv_s7Wp+kUwFD7h0bwVrQpyqw@mail.gmail.com>
-Subject: Re: [PATCH v3 03/14] iommu/mediatek: Add device_link between the
- consumer and the larb devices
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
-        Matthias Kaehlcke <mka@chromium.org>, anan.sun@mediatek.com,
-        cui.zhang@mediatek.com, chao.hao@mediatek.com,
-        ming-fan.chen@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583324635-8271-2-git-send-email-rkambl@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 5:38 PM Yong Wu <yong.wu@mediatek.com> wrote:
->
-> MediaTek IOMMU don't have its power-domain. all the consumer connect
-> with smi-larb, then connect with smi-common.
->
->         M4U
->          |
->     smi-common
->          |
->   -------------
->   |         |    ...
->   |         |
-> larb1     larb2
->   |         |
-> vdec       venc
->
-> When the consumer works, it should enable the smi-larb's power which
-> also need enable the smi-common's power firstly.
->
-> Thus, First of all, use the device link connect the consumer and the
-> smi-larbs. then add device link between the smi-larb and smi-common.
->
-> This patch adds device_link between the consumer and the larbs.
->
-> When device_link_add, I add the flag DL_FLAG_STATELESS to avoid calling
-> pm_runtime_xx to keep the original status of clocks. It can avoid two
-> issues:
-> 1) Display HW show fastlogo abnormally reported in [1]. At the beggining,
-> all the clocks are enabled before entering kernel, but the clocks for
-> display HW(always in larb0) will be gated after clk_enable and clk_disable
-> called from device_link_add(->pm_runtime_resume) and rpm_idle. The clock
-> operation happened before display driver probe. At that time, the display
-> HW will be abnormal.
->
-> 2) A deadlock issue reported in [2]. Use DL_FLAG_STATELESS to skip
-> pm_runtime_xx to avoid the deadlock.
->
-> Corresponding, DL_FLAG_AUTOREMOVE_CONSUMER can't be added, then
-> device_link_removed should be added explicitly.
->
-> [1] http://lists.infradead.org/pipermail/linux-mediatek/2019-July/
-> 021500.html
-> [2] https://lore.kernel.org/patchwork/patch/1086569/
->
-> Suggested-by: Tomasz Figa <tfiga@chromium.org>
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+On Wed 04 Mar 04:23 PST 2020, Rajeshwari wrote:
+
+> To enable kernel critical shutdown feature added critical trip point to
+
+s/added/add/
+s/point/points/
+
+> all non CPU sensors to perform shutdown in orderly manner.
+> 
+> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
 > ---
->  drivers/iommu/mtk_iommu.c    | 17 +++++++++++++++++
->  drivers/iommu/mtk_iommu_v1.c | 18 +++++++++++++++++-
->  2 files changed, 34 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index b138b94..2511b3c 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -450,6 +450,9 @@ static int mtk_iommu_add_device(struct device *dev)
->         struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
->         struct mtk_iommu_data *data;
->         struct iommu_group *group;
-> +       struct device_link *link;
-> +       struct device *larbdev;
-> +       unsigned int larbid;
->
->         if (!fwspec || fwspec->ops != &mtk_iommu_ops)
->                 return -ENODEV; /* Not a iommu client device */
-> @@ -461,6 +464,14 @@ static int mtk_iommu_add_device(struct device *dev)
->         if (IS_ERR(group))
->                 return PTR_ERR(group);
->
-> +       /* Link the consumer device with the smi-larb device(supplier) */
-> +       larbid = MTK_M4U_TO_LARB(fwspec->ids[0]);
 
-I'll mirror the comment I made on gerrit
-(https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1361013):
-Maybe I'm missing something here, but for example, on MT8173,
-vcodec_enc: vcodec@18002000 needs to use both larb3 and larb5, isn't
-the code below just adding a link for larb3?
+No need to provide a cover-letter for a single patch.
 
-Do we need to iterate over all fwspecs->ids to figure out which larbs
-we need to add links to each of them?
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index b8a72cf..7e5f14f 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1956,6 +1956,12 @@
+>  					hysteresis = <2000>;
+>  					type = "hot";
+>  				};
+> +
+> +				aoss0_crit: aoss0_crit {
+> +                                        temperature = <110000>;
+> +                                        hysteresis = <2000>;
+> +                                        type = "critical";
+> +                                };
 
-> +       larbdev = data->larb_imu[larbid].dev;
-> +       link = device_link_add(dev, larbdev,
-> +                              DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS);
-> +       if (!link)
-> +               dev_err(dev, "Unable to link %s\n", dev_name(larbdev));
-> +
->         iommu_group_put(group);
->         return 0;
->  }
-> @@ -469,6 +480,8 @@ static void mtk_iommu_remove_device(struct device *dev)
->  {
->         struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
->         struct mtk_iommu_data *data;
-> +       struct device *larbdev;
-> +       unsigned int larbid;
->
->         if (!fwspec || fwspec->ops != &mtk_iommu_ops)
->                 return;
-> @@ -476,6 +489,10 @@ static void mtk_iommu_remove_device(struct device *dev)
->         data = fwspec->iommu_priv;
->         iommu_device_unlink(&data->iommu, dev);
->
-> +       larbid = MTK_M4U_TO_LARB(fwspec->ids[0]);
-> +       larbdev = data->larb_imu[larbid].dev;
-> +       device_link_remove(dev, larbdev);
-> +
->         iommu_group_remove_device(dev);
->         iommu_fwspec_free(dev);
->  }
-> diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-> index 2034d72..a7f22a2 100644
-> --- a/drivers/iommu/mtk_iommu_v1.c
-> +++ b/drivers/iommu/mtk_iommu_v1.c
-> @@ -423,7 +423,9 @@ static int mtk_iommu_add_device(struct device *dev)
->         struct of_phandle_iterator it;
->         struct mtk_iommu_data *data;
->         struct iommu_group *group;
-> -       int err;
-> +       struct device_link *link;
-> +       struct device *larbdev;
-> +       int err, larbid;
->
->         of_for_each_phandle(&it, err, dev->of_node, "iommus",
->                         "#iommu-cells", 0) {
-> @@ -466,6 +468,14 @@ static int mtk_iommu_add_device(struct device *dev)
->                 return err;
->         }
->
-> +       /* Link the consumer device with the smi-larb device(supplier) */
-> +       larbid = mt2701_m4u_to_larb(fwspec->ids[0]);
-> +       larbdev = data->larb_imu[larbid].dev;
-> +       link = device_link_add(dev, larbdev,
-> +                              DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS);
-> +       if (!link)
-> +               dev_err(dev, "Unable to link %s\n", dev_name(larbdev));
-> +
->         return iommu_device_link(&data->iommu, dev);
->  }
->
-> @@ -473,6 +483,8 @@ static void mtk_iommu_remove_device(struct device *dev)
->  {
->         struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
->         struct mtk_iommu_data *data;
-> +       struct device *larbdev;
-> +       unsigned int larbid;
->
->         if (!fwspec || fwspec->ops != &mtk_iommu_ops)
->                 return;
-> @@ -480,6 +492,10 @@ static void mtk_iommu_remove_device(struct device *dev)
->         data = fwspec->iommu_priv;
->         iommu_device_unlink(&data->iommu, dev);
->
-> +       larbid = mt2701_m4u_to_larb(fwspec->ids[0]);
-> +       larbdev = data->larb_imu[larbid].dev;
-> +       device_link_remove(dev, larbdev);
-> +
->         iommu_group_remove_device(dev);
->         iommu_fwspec_free(dev);
->  }
-> --
-> 1.9.1
->
+The indentation of all but the initial line is off. Same with below
+hunks as well. Please correct this.
+
+Regards,
+Bjorn
