@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2757C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E18AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D1321556
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB786208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583419072;
-	bh=Ka8ej95r71yxWRW+wqTQwfcdc5yMq89kG68aWilit2Y=;
+	s=default; t=1583419077;
+	bh=fA2ir/zc22UpWMn+nUdKmdqC68iInvYUCbxuFpfZ00s=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=M/BV9rNI0ddA7U5T3BUKyH/1u+6E1TySFaZdV+iqKBJ4dPUPBBb/TZeU/NqUrF9h8
-	 fwOatw4DtK7nbyEh9wz2HGj3YR3im1evMGN0FAxwVZzjC0KMEo28BSpvVAJppsP1RJ
-	 nu127u0k6mPtN1wYA95cejf8N+zDmFSHKgPEpDcM=
+	b=llDiriGlim/1A9ny4FDURCCnTPKh6l7X/eqCkUCX9gdNOk9YMHwItSyq+rw2sYwwl
+	 gLcnfIyiQU1LM/5bwXN22oKAuYVR7VvS2vkaIoBqM7nj0i3z8ztuvrJTKaNSOGvchP
+	 wQ4ul+xqsprY+oYYZhP8VLsiZmpcG46TX/Jn89DY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgCEOhw (ORCPT
+        id S1727385AbgCEOh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:37:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:49468 "EHLO foss.arm.com"
+        Thu, 5 Mar 2020 09:37:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:49486 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgCEOhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:37:51 -0500
+        id S1726676AbgCEOhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 09:37:55 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83DBE4B2;
-        Thu,  5 Mar 2020 06:37:50 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB9401045;
+        Thu,  5 Mar 2020 06:37:54 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 080CD3F908;
-        Thu,  5 Mar 2020 06:37:49 -0800 (PST)
-Date:   Thu, 05 Mar 2020 14:37:48 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FA103F534;
+        Thu,  5 Mar 2020 06:37:54 -0800 (PST)
+Date:   Thu, 05 Mar 2020 14:37:52 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc:     andrew.smirnov@gmail.com, angelo@sysam.it, broonie@kernel.org,
         eha@deif.com, gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         mhosny@nvidia.com, weic@nvidia.com
-Subject: Applied "spi: spi-fsl-dspi: Add comments around dspi_pop_tx and dspi_push_rx functions" to the spi tree
-In-Reply-To:  <20200304220044.11193-5-olteanv@gmail.com>
-Message-Id:  <applied-20200304220044.11193-5-olteanv@gmail.com>
+Subject: Applied "spi: spi-fsl-dspi: Don't mask off undefined bits" to the spi tree
+In-Reply-To:  <20200304220044.11193-4-olteanv@gmail.com>
+Message-Id:  <applied-20200304220044.11193-4-olteanv@gmail.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,7 +51,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-fsl-dspi: Add comments around dspi_pop_tx and dspi_push_rx functions
+   spi: spi-fsl-dspi: Don't mask off undefined bits
 
 has been applied to the spi tree at
 
@@ -76,54 +76,35 @@ to this mail.
 Thanks,
 Mark
 
-From 8f8303ee05857e1b3084c467dde8bb31c58464bd Mon Sep 17 00:00:00 2001
+From 5542bd797190d5d77f1ad3a6df9628f26d117b31 Mon Sep 17 00:00:00 2001
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
-Date: Thu, 5 Mar 2020 00:00:36 +0200
-Subject: [PATCH] spi: spi-fsl-dspi: Add comments around dspi_pop_tx and
- dspi_push_rx functions
+Date: Thu, 5 Mar 2020 00:00:35 +0200
+Subject: [PATCH] spi: spi-fsl-dspi: Don't mask off undefined bits
 
-Their names are confusing, since dspi_pop_tx prepares a word to be
-written to the PUSHR register, and dspi_push_rx gets a word from the
-POPR register.
+This is a useless operation, and if the driver needs to do that, there's
+something deeply wrong going on.
 
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Link: https://lore.kernel.org/r/20200304220044.11193-5-olteanv@gmail.com
+Link: https://lore.kernel.org/r/20200304220044.11193-4-olteanv@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/spi/spi-fsl-dspi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index b92c2b84a94b..a8077d4903c7 100644
+index 63ec1d634d08..b92c2b84a94b 100644
 --- a/drivers/spi/spi-fsl-dspi.c
 +++ b/drivers/spi/spi-fsl-dspi.c
-@@ -245,6 +245,10 @@ struct fsl_dspi {
- 	struct fsl_dspi_dma			*dma;
- };
- 
-+/*
-+ * Pop one word from the TX buffer for pushing into the
-+ * PUSHR register (TX FIFO)
-+ */
- static u32 dspi_pop_tx(struct fsl_dspi *dspi)
- {
- 	u32 txdata = 0;
-@@ -257,6 +261,7 @@ static u32 dspi_pop_tx(struct fsl_dspi *dspi)
- 	return txdata;
- }
- 
-+/* Prepare one TX FIFO entry (txdata plus cmd) */
- static u32 dspi_pop_tx_pushr(struct fsl_dspi *dspi)
- {
- 	u16 cmd = dspi->tx_cmd, data = dspi_pop_tx(dspi);
-@@ -269,6 +274,7 @@ static u32 dspi_pop_tx_pushr(struct fsl_dspi *dspi)
- 	return cmd << 16 | data;
- }
- 
-+/* Push one word to the RX buffer from the POPR register (RX FIFO) */
- static void dspi_push_rx(struct fsl_dspi *dspi, u32 rxdata)
- {
+@@ -274,9 +274,6 @@ static void dspi_push_rx(struct fsl_dspi *dspi, u32 rxdata)
  	if (!dspi->rx)
+ 		return;
+ 
+-	/* Mask off undefined bits */
+-	rxdata &= (1 << dspi->bits_per_word) - 1;
+-
+ 	memcpy(dspi->rx, &rxdata, dspi->bytes_per_word);
+ 	dspi->rx += dspi->bytes_per_word;
+ }
 -- 
 2.20.1
 
