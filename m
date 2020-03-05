@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC45C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E0FC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462F32146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 166D2207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428789;
-	bh=wgmoLWEcseM6n7d6+U/LOI7cmzjZ0l1QeI4r/EulqzA=;
+	s=default; t=1583428803;
+	bh=fIW9RpwBzvjkRLCfM9sJ2cMeptlTr1Gs34EZQL58bpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzRdBBkNlSQyr+OvHXinA1sTCg8rb+Iyv+4oh2hBWR+un9Pf8x4PoQLT0HP7JSHBs
-	 6Yg/bmd8cDkrla1eIw6NW5/0WTtT6qFWKXQvfYM9khqIKwBT46/RAssigBCfyPlHfl
-	 R9BWsDNbUl8mppsccjyAq/C6alhFo/S9K1mtFgXM=
+	b=S+G48dp/HKFgkGITAQnnhVBa3OAbm4owHp6xJB61Ou5f+nmxcJcpWQOKsbk1YivAD
+	 P1cmMWjarJXPW+GmBFJs2CQm/gxd7V9LtSTkNp/C28NVNtw1wK+H6aE3hHPTCZv9yv
+	 SvWMYdLzpc/wRSqy7QVltGdxcV7+4aV/PopDQML8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgCERTs (ORCPT
+        id S1727735AbgCERUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:19:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41534 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:20:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727908AbgCERPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:02 -0500
+        id S1726979AbgCERO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69A86207FD;
-        Thu,  5 Mar 2020 17:15:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7CEB20848;
+        Thu,  5 Mar 2020 17:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428501;
-        bh=wgmoLWEcseM6n7d6+U/LOI7cmzjZ0l1QeI4r/EulqzA=;
+        s=default; t=1583428497;
+        bh=fIW9RpwBzvjkRLCfM9sJ2cMeptlTr1Gs34EZQL58bpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F/314om9EOMGQANqy2cFv9fKWwTphjrgXABub0jjb4eZnxkrtmrGcVuLDDmd5LhbV
-         qqfJ3+xVS6Cx6zuKnxpojEBeolxsqFkxqAqa8tklrH/DOKLfY//10YNK2koNceWIR8
-         p0tb0HjW1obmDyxIXKIGzwoU/R1YVwDuQ+PnWUPE=
+        b=gU9Q4KQ19riq+8/oAw28AKaL6qam/IfMCMJeyw4xtG2FsOlOgAQIDCT0JJkdtuRYJ
+         yFwJc45mDdTXaYjy1Ec8cDudnhbjuISuS+J4nYmJEn7Vvp1UWGQEpQJpxAKL1y2a/o
+         ON1HZ5w+nmhHMljmgIrRt4CgXtegk/bgnQNeuwPM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Esben Haabendal <esben@geanix.com>,
+Cc:     Marek Vasut <marex@denx.de>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 32/58] net: ll_temac: Add more error handling of dma_map_single() calls
-Date:   Thu,  5 Mar 2020 12:13:53 -0500
-Message-Id: <20200305171420.29595-32-sashal@kernel.org>
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 29/58] net: ks8851-ml: Fix IRQ handling and locking
+Date:   Thu,  5 Mar 2020 12:13:50 -0500
+Message-Id: <20200305171420.29595-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
 References: <20200305171420.29595-1-sashal@kernel.org>
@@ -60,76 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Esben Haabendal <esben@geanix.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit d07c849cd2b97d6809430dfb7e738ad31088037a ]
+[ Upstream commit 44343418d0f2f623cb9da6f5000df793131cbe3b ]
 
-This adds error handling to the remaining dma_map_single() calls, so that
-behavior is well defined if/when we run out of DMA memory.
+The KS8851 requires that packet RX and TX are mutually exclusive.
+Currently, the driver hopes to achieve this by disabling interrupt
+from the card by writing the card registers and by disabling the
+interrupt on the interrupt controller. This however is racy on SMP.
 
-Fixes: 92744989533c ("net: add Xilinx ll_temac device driver")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
+Replace this approach by expanding the spinlock used around the
+ks_start_xmit() TX path to ks_irq() RX path to assure true mutual
+exclusion and remove the interrupt enabling/disabling, which is
+now not needed anymore. Furthermore, disable interrupts also in
+ks_net_stop(), which was missing before.
+
+Note that a massive improvement here would be to re-use the KS8851
+driver approach, which is to move the TX path into a worker thread,
+interrupt handling to threaded interrupt, and synchronize everything
+with mutexes, but that would be a much bigger rework, for a separate
+patch.
+
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/xilinx/ll_temac_main.c | 26 +++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index fd578568b3bff..fd4231493449b 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -367,6 +367,8 @@ static int temac_dma_bd_init(struct net_device *ndev)
- 		skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
- 					      XTE_MAX_JUMBO_FRAME_SIZE,
- 					      DMA_FROM_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr))
-+			goto out;
- 		lp->rx_bd_v[i].phys = cpu_to_be32(skb_dma_addr);
- 		lp->rx_bd_v[i].len = cpu_to_be32(XTE_MAX_JUMBO_FRAME_SIZE);
- 		lp->rx_bd_v[i].app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
-@@ -863,12 +865,13 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
- 				      skb_headlen(skb), DMA_TO_DEVICE);
- 	cur_p->len = cpu_to_be32(skb_headlen(skb));
-+	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
-+		return NETDEV_TX_BUSY;
- 	cur_p->phys = cpu_to_be32(skb_dma_addr);
- 	ptr_to_txbd((void *)skb, cur_p);
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index a41a90c589db2..20cb5b500661a 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -548,14 +548,17 @@ static irqreturn_t ks_irq(int irq, void *pw)
+ {
+ 	struct net_device *netdev = pw;
+ 	struct ks_net *ks = netdev_priv(netdev);
++	unsigned long flags;
+ 	u16 status;
  
- 	for (ii = 0; ii < num_frag; ii++) {
--		lp->tx_bd_tail++;
--		if (lp->tx_bd_tail >= TX_BD_NUM)
-+		if (++lp->tx_bd_tail >= TX_BD_NUM)
- 			lp->tx_bd_tail = 0;
++	spin_lock_irqsave(&ks->statelock, flags);
+ 	/*this should be the first in IRQ handler */
+ 	ks_save_cmd_reg(ks);
  
- 		cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-@@ -876,6 +879,25 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 					      skb_frag_address(frag),
- 					      skb_frag_size(frag),
- 					      DMA_TO_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr)) {
-+			if (--lp->tx_bd_tail < 0)
-+				lp->tx_bd_tail = TX_BD_NUM - 1;
-+			cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-+			while (--ii >= 0) {
-+				--frag;
-+				dma_unmap_single(ndev->dev.parent,
-+						 be32_to_cpu(cur_p->phys),
-+						 skb_frag_size(frag),
-+						 DMA_TO_DEVICE);
-+				if (--lp->tx_bd_tail < 0)
-+					lp->tx_bd_tail = TX_BD_NUM - 1;
-+				cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-+			}
-+			dma_unmap_single(ndev->dev.parent,
-+					 be32_to_cpu(cur_p->phys),
-+					 skb_headlen(skb), DMA_TO_DEVICE);
-+			return NETDEV_TX_BUSY;
-+		}
- 		cur_p->phys = cpu_to_be32(skb_dma_addr);
- 		cur_p->len = cpu_to_be32(skb_frag_size(frag));
- 		cur_p->app0 = 0;
+ 	status = ks_rdreg16(ks, KS_ISR);
+ 	if (unlikely(!status)) {
+ 		ks_restore_cmd_reg(ks);
++		spin_unlock_irqrestore(&ks->statelock, flags);
+ 		return IRQ_NONE;
+ 	}
+ 
+@@ -581,6 +584,7 @@ static irqreturn_t ks_irq(int irq, void *pw)
+ 		ks->netdev->stats.rx_over_errors++;
+ 	/* this should be the last in IRQ handler*/
+ 	ks_restore_cmd_reg(ks);
++	spin_unlock_irqrestore(&ks->statelock, flags);
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -650,6 +654,7 @@ static int ks_net_stop(struct net_device *netdev)
+ 
+ 	/* shutdown RX/TX QMU */
+ 	ks_disable_qmu(ks);
++	ks_disable_int(ks);
+ 
+ 	/* set powermode to soft power down to save power */
+ 	ks_set_powermode(ks, PMECR_PM_SOFTDOWN);
+@@ -706,10 +711,9 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	netdev_tx_t retv = NETDEV_TX_OK;
+ 	struct ks_net *ks = netdev_priv(netdev);
++	unsigned long flags;
+ 
+-	disable_irq(netdev->irq);
+-	ks_disable_int(ks);
+-	spin_lock(&ks->statelock);
++	spin_lock_irqsave(&ks->statelock, flags);
+ 
+ 	/* Extra space are required:
+ 	*  4 byte for alignment, 4 for status/length, 4 for CRC
+@@ -723,9 +727,7 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 		dev_kfree_skb(skb);
+ 	} else
+ 		retv = NETDEV_TX_BUSY;
+-	spin_unlock(&ks->statelock);
+-	ks_enable_int(ks);
+-	enable_irq(netdev->irq);
++	spin_unlock_irqrestore(&ks->statelock, flags);
+ 	return retv;
+ }
+ 
 -- 
 2.20.1
 
