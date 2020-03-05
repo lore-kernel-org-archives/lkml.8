@@ -2,95 +2,113 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2DEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864B7C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF71208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4072073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ha/iISKt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CRKLx0er"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgCEPsc (ORCPT
+        id S1726956AbgCEPtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:48:32 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45872 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgCEPsc (ORCPT
+        Thu, 5 Mar 2020 10:49:21 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33583 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726092AbgCEPtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:48:32 -0500
-Received: by mail-wr1-f65.google.com with SMTP id v2so7598293wrp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:48:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=6vKPBMFAdnWYkETwAnE+NZr/Oa9B4AUuvrv5+JlUIUk=;
-        b=ha/iISKtT2+pJaZKrcGZZxC8b1yqDyVkddwdovsXqroFDgNG72EvdwnjQ8q+AuEfyP
-         L2Ro3c8X6ZCY6Q/IZWmBpD3df/47EMYujeereZZqX2hTSFealvoR/0Z3tj9AcyT4YhTe
-         2jS7G4FspyKARvVgbl7WTdypb7H65+Ej1yhBkRnDMYujtkCWbF38hvBvz0aN3RJ60geF
-         fFFLd8A5CIi3/SZ5yCJ3lUw2E810UFfw1JAgXatN9aKGhTVR+VBri4NACExWeBXUnTwX
-         BJ8BaEsA/wS4Deoj02ML66A6LLuHUp6TerVrAvkUf51rWg56/hNPMG/YVdLefufbIYfz
-         9sjw==
+        Thu, 5 Mar 2020 10:49:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583423359;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cXuIpqJI7rTjh/BFJajlRtBWEXkuawKoUjndvA3VFKA=;
+        b=CRKLx0erMM3FIe8+jeAFxh1Ca14RtpnfFIJCdbwQ4KzLItypjM8Fglj/Gz6hUcncoMcwM7
+        FnxXVMEbVyWKfjrAGKF1JyVO0jtIFOrantLdllzWxsX9A9JiF4erYQ0ZcfIqx/fNsq1zNX
+        jGkZY8UxjXwd4ix9jVeIx1BN7bWH6Sw=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-cSsda5AcNpSzmN_5R-8-Nw-1; Thu, 05 Mar 2020 10:49:17 -0500
+X-MC-Unique: cSsda5AcNpSzmN_5R-8-Nw-1
+Received: by mail-qv1-f71.google.com with SMTP id z39so3272918qve.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:49:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6vKPBMFAdnWYkETwAnE+NZr/Oa9B4AUuvrv5+JlUIUk=;
-        b=f4xL0M9/OGBfdtwYAmCUpbIxoQte5aVMzNVYjDL6d7WnHmT8W3NZDxwLmQyjfhdg22
-         cVdfWChKqbfwOwALFjhMziut2UbHrMzlRS7/rMxuJZuwNqDvM1wtpinvMEuX09dBZnWg
-         Dx7DmQGRnC5+ijRkOtN6yu/5HcnOU5sS5ABIhVun9onuDedhxGieOs8nSnfzXPoqQuvq
-         sPVmbMzvV+jId27nJi5IKsVNUlYjfI3QxTB+kn8t2MInx/xdHmE0OkzQdCu/BdHK+MCN
-         WNMnNpsprcNWGJ1X6LsRlqmv9BATAWS7sj293p150iYPhm+8FbeEswbaXkTjMzi8vh82
-         HJgA==
-X-Gm-Message-State: ANhLgQ2BuyGw7IimxG6tOU2+1mx/0hRcDD5tuclHVbEhSTasPKoqHXIw
-        T3tCsCZSwrs3A0jXMPtnqj08e7kg5YA=
-X-Google-Smtp-Source: ADFU+vsvtG4BngtdZbRkezZWGdyNU2MQK7sMwHpKfqFfhZqwBj0F8TEfH2yT+3tKSqzsrXBCcl8rEQ==
-X-Received: by 2002:adf:a419:: with SMTP id d25mr11479372wra.210.1583423310070;
-        Thu, 05 Mar 2020 07:48:30 -0800 (PST)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id t187sm10175897wmt.25.2020.03.05.07.48.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 05 Mar 2020 07:48:29 -0800 (PST)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     linux@armlinux.org.uk
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH] ARM: defconfig: enable storage for qemu
-Date:   Thu,  5 Mar 2020 15:48:23 +0000
-Message-Id: <1583423303-25405-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cXuIpqJI7rTjh/BFJajlRtBWEXkuawKoUjndvA3VFKA=;
+        b=gzaH1Bf4Mje9eo7G5lwcubUACDVdlkbbA09NVvnrapEuECWIs/byEo1jHS/RYiCDbD
+         1YvNd5CPnGgK+D81gjTAjfB+WslONBGUZnGk3yzzfjf4JdjWoAwOipYvNHWMM8vTw7bn
+         uXlH9+rJ1I7BqEjFoKGjRFzcJb1swF5jqWN5JZk6EW/QZtD5a/MeyabFrZ5HgH0x1h70
+         9rVGz14wZVSy5IXLsZ295xncTshL91b8zcwPgt1WogkDKgR+cph8idK0F/TTJUcKHnlL
+         wrO72U6kQlhIQDZLPVmOz99ikOeRYRM7u4v216jkcDS4XYZ58JYIEeVmxe7vzxaNzbqS
+         6R3g==
+X-Gm-Message-State: ANhLgQ2J+grBLlU9/im6Nzy4Qk2QjScAVXoD0L/8je+PDIdorLbI9LGv
+        rjM/5K4ynDbXz2SkAtDAcoZXsmdeXphk0BzPEMYfTMnN41SvMKoO8pB1SmoHRNa8uGc3f27W5wc
+        j+YYnfYZUlqWgVH00CjLckYDm
+X-Received: by 2002:ad4:480f:: with SMTP id g15mr6888250qvy.247.1583423357345;
+        Thu, 05 Mar 2020 07:49:17 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vughxL1Zr78oB78siwCRXuDqPRslu3YgV7DyjXfzDStD9FiLos09QdINXSzciM7YTSBPMwNVA==
+X-Received: by 2002:ad4:480f:: with SMTP id g15mr6888224qvy.247.1583423356972;
+        Thu, 05 Mar 2020 07:49:16 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id s56sm310900qtk.9.2020.03.05.07.49.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 07:49:16 -0800 (PST)
+Date:   Thu, 5 Mar 2020 10:49:14 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] KVM: Drop gfn_to_pfn_atomic()
+Message-ID: <20200305154914.GE7146@xz-x1>
+References: <2256821e496c45f5baf97f3f8f884d59@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2256821e496c45f5baf97f3f8f884d59@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The qemu versatilepb machine has some SCSI storage which cannot be used
-with this defconfig.
-The SCSI rely on PCI which is not enabled.
-So let's enable both PCI and SCSI.
+On Thu, Mar 05, 2020 at 01:52:24AM +0000, linmiaohe wrote:
+> Peter Xu <peterx@redhat.com> writes:
+> >It's never used anywhere now.
+> >
+> >Signed-off-by: Peter Xu <peterx@redhat.com>
+> >---
+> > include/linux/kvm_host.h | 1 -
+> > virt/kvm/kvm_main.c      | 6 ------
+> > 2 files changed, 7 deletions(-)
+> 
+> It seems we prefer to use kvm_vcpu_gfn_to_pfn_atomic instead now. :)
+> Patch looks good, but maybe we should update Documentation/virt/kvm/locking.rst too:
+> In locking.rst:
+> 	For direct sp, we can easily avoid it since the spte of direct sp is fixed
+> 	to gfn. For indirect sp, before we do cmpxchg, we call gfn_to_pfn_atomic()
+> 	to pin gfn to pfn, because after gfn_to_pfn_atomic()
+> 
+> Thanks.
+> Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
 
-This will permit to use LAVA tests for versatilepb in kernelCI.
+Yes we should update the document, however instead of replacing with
+the vcpu helper, I'd rather reorganize the locking doc for a bit more
+because the fast page fault is not enabled for indirect sp at all,
+afaict...
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- arch/arm/configs/versatile_defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+I'll add a pre-requisite patch to refine the document, and keep your
+r-b for this patch.
 
-diff --git a/arch/arm/configs/versatile_defconfig b/arch/arm/configs/versatile_defconfig
-index 767935337413..6171b96cf9b8 100644
---- a/arch/arm/configs/versatile_defconfig
-+++ b/arch/arm/configs/versatile_defconfig
-@@ -96,3 +96,7 @@ CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_KERNEL=y
- CONFIG_DEBUG_USER=y
- CONFIG_DEBUG_LL=y
-+CONFIG_PCI=y
-+CONFIG_PCI_VERSATILE=y
-+CONFIG_SCSI=y
-+CONFIG_SCSI_SYM53C8XX_2=y
+Thanks,
+
 -- 
-2.24.1
+Peter Xu
 
