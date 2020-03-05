@@ -7,235 +7,110 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA34CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2784EC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8859E20801
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FD82072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fQNMhlr5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LWAX/mnH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgCEReP (ORCPT
+        id S1726485AbgCEReu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:34:15 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47153 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725938AbgCEReO (ORCPT
+        Thu, 5 Mar 2020 12:34:50 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37024 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgCEReu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:34:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583429652;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q5Ztb+ebP7ko84zmTyGjqclC5MVj66P6wDuPjxw8z+k=;
-        b=fQNMhlr5xwpclvJaSJzVsH+F5G9o3Sb0m5aZJzABaW4p4SJaSwtbkbN8mdVejjFo/ohmRh
-        SOqH3gNTyTQZ5igKQzgn9hvHdpTYZ4iacvBaUyarEBDKKrW9tRMTzSaZKPN4dETYWFvFBf
-        /YhMKs92zg2iVjCrlLZFifBL4BZiJW0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-9vNhKWGMNJKBwHM2O6mVpQ-1; Thu, 05 Mar 2020 12:34:04 -0500
-X-MC-Unique: 9vNhKWGMNJKBwHM2O6mVpQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7884D107ACCA;
-        Thu,  5 Mar 2020 17:34:02 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 773DA272D3;
-        Thu,  5 Mar 2020 17:34:00 +0000 (UTC)
-Date:   Thu, 5 Mar 2020 10:33:59 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: [PATCH v2 0/7] vfio/pci: SR-IOV support
-Message-ID: <20200305103359.4467f97f@w520.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
+        Thu, 5 Mar 2020 12:34:50 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p14so3093479pfn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:34:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xEAJ1NUXPHu81BkE5lRF70aT//8/AuwgSjMAA/AA9VY=;
+        b=LWAX/mnHWCEyMQS79Ze1HibVuhsx2iRhWybu/OIfRIhEMmxafA+jO26+0CcM8GqZKp
+         bj465loQBo/50XZIGBZ/ylnMWfJX66dz1JBN7/OtzDfydSHSgNy9SDYwXcCo8Xg96Vmr
+         Yt9ah3j9GlG/34Y7n1Z4iDB3Jgr4sgDvvLFHM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xEAJ1NUXPHu81BkE5lRF70aT//8/AuwgSjMAA/AA9VY=;
+        b=S/AK6btbvs6aYZtb/Bt0zM23AL2UTMFMa7/ZWL20VdEBIDiTChydpLS1b4YaSMegDR
+         bHQiOO+WyY+pp5CwDVp67b5CCw99eSPnOyyKWqkrAPyOxAoflcUCAa0rNyGCiXnMb5By
+         oi8K/DlRzfvmSNdOXnBNSoqC1Aj8/Bd11XO5zK9dOcOaKGnQeoFrB4iFaUw4Cg9i8Wl0
+         kb06XMRkqyNMu8rKKh+7gHse4hPUMt0WuqEhAbpDMoCgZXtIL7fPtOdpRC2wE0BE5pPY
+         zGS53zNnD4ltAdydWqcUXTcJj6zPeW7UNIWE27ooB5SVbv8N5x8L1RXLxgkW6+b8lCeu
+         h0Mw==
+X-Gm-Message-State: ANhLgQ3NMHhyJHaeM15Kly+mPgigt8vzBd/mxGVuxtyMgD7377/t+hGn
+        CcPmNEd05mvXMqC9BDSL26UzJg==
+X-Google-Smtp-Source: ADFU+vuqTfC7B4BJz1/7pVQ/CWvKBqNiVRzuaTrFyEVgzlwk4wZWRxHJIk8rQLzAzPTg3iuU6kJDPA==
+X-Received: by 2002:a63:7f14:: with SMTP id a20mr3441343pgd.428.1583429689456;
+        Thu, 05 Mar 2020 09:34:49 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h29sm29954099pfk.57.2020.03.05.09.34.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 09:34:48 -0800 (PST)
+Date:   Thu, 5 Mar 2020 09:34:47 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Joe Perches <joe@perches.com>,
+        "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>,
+        kernel-hardening@lists.openwall.com,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sh: Stop printing the virtual memory layout
+Message-ID: <202003050933.14BDEDBF1@keescook>
+References: <202003021038.8F0369D907@keescook>
+ <20200305151010.835954-1-nivedita@alum.mit.edu>
+ <f672417e-1323-4ef2-58a1-1158c482d569@physik.fu-berlin.de>
+ <31d1567c4c195f3bc5c6b610386cf0f559f9094f.camel@perches.com>
+ <3c628a5a-35c7-3d92-b94b-23704500f7c4@physik.fu-berlin.de>
+ <20200305154657.GA848330@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305154657.GA848330@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+On Thu, Mar 05, 2020 at 10:46:58AM -0500, Arvind Sankar wrote:
+> On Thu, Mar 05, 2020 at 04:41:05PM +0100, John Paul Adrian Glaubitz wrote:
+> > On 3/5/20 4:38 PM, Joe Perches wrote:
+> > >> Aww, why wasn't this made configurable? I found these memory map printouts
+> > >> very useful for development.
+> > > 
+> > > It could be changed from pr_info to pr_devel.
+> > > 
+> > > A #define DEBUG would have to be added to emit it.
+> > 
+> > Well, from the discussion it seems the decision to cut it out has already been
+> > made, so I guess it's too late :(.
+> > 
+> > Adrian
+> > 
+> > -- 
+> >  .''`.  John Paul Adrian Glaubitz
+> > : :' :  Debian Developer - glaubitz@debian.org
+> > `. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+> >   `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+> 
+> Not really too late. I can do s/pr_info/pr_devel and resubmit.
+> 
+> parisc for eg actually hides this in #if 0 rather than deleting the
+> code.
+> 
+> Kees, you fine with that?
 
-Sorry for the delay, I've been out on PTO...
+I don't mind pr_devel(). ("#if 0" tends to lead to code-rot since it's
+not subjected to syntax checking in case the names of things change.)
+That said, it's really up to the arch maintainers.
 
-On Tue, 25 Feb 2020 02:33:27 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
-
-> > From: Alex Williamson
-> > Sent: Thursday, February 20, 2020 2:54 AM
-> >=20
-> > Changes since v1 are primarily to patch 3/7 where the commit log is
-> > rewritten, along with option parsing and failure logging based on
-> > upstream discussions.  The primary user visible difference is that
-> > option parsing is now much more strict.  If a vf_token option is
-> > provided that cannot be used, we generate an error.  As a result of
-> > this, opening a PF with a vf_token option will serve as a mechanism of
-> > setting the vf_token.  This seems like a more user friendly API than
-> > the alternative of sometimes requiring the option (VFs in use) and
-> > sometimes rejecting it, and upholds our desire that the option is
-> > always either used or rejected.
-> >=20
-> > This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
-> > means of setting the VF token, which might call into question whether
-> > we absolutely need this new ioctl.  Currently I'm keeping it because I
-> > can imagine use cases, for example if a hypervisor were to support
-> > SR-IOV, the PF device might be opened without consideration for a VF
-> > token and we'd require the hypservisor to close and re-open the PF in
-> > order to set a known VF token, which is impractical.
-> >=20
-> > Series overview (same as provided with v1): =20
->=20
-> Thanks for doing this!=20
->=20
-> >=20
-> > The synopsis of this series is that we have an ongoing desire to drive
-> > PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
-> > for this with DPDK drivers and potentially interesting future use =20
->=20
-> Can you provide a link to the DPDK discussion?
-
-There's a thread here which proposed an out-of-tree driver that enables
-a parallel sr-iov enabling interface for a vfio-pci own device.
-Clearly I felt strongly about it ;)
-
-https://patches.dpdk.org/patch/58810/
-
-Also, documentation for making use of an Intel FPGA device with DPDK
-requires the PF bound to igb_uio to support enabling SR-IOV:
-
-https://doc.dpdk.org/guides/bbdevs/fpga_lte_fec.html
-
-> > cases in virtualization.  We've been reluctant to add this support
-> > previously due to the dependency and trust relationship between the
-> > VF device and PF driver.  Minimally the PF driver can induce a denial
-> > of service to the VF, but depending on the specific implementation,
-> > the PF driver might also be responsible for moving data between VFs
-> > or have direct access to the state of the VF, including data or state
-> > otherwise private to the VF or VF driver. =20
->=20
-> Just a loud thinking. While the motivation of VF token sounds reasonable
-> to me, I'm curious why the same concern is not raised in other usages.
-> For example, there is no such design in virtio framework, where the
-> virtio device could also be restarted, putting in separate process (vhost=
--user),
-> and even in separate VM (virtio-vhost-user), etc. Of course the para-
-> virtualized attribute of virtio implies some degree of trust, but as you
-> mentioned many SR-IOV implementations support VF->PF communication
-> which also implies some level of trust. It's perfectly fine if VFIO just =
-tries
-> to do better than other sub-systems, but knowing how other people
-> tackle the similar problem may make the whole picture clearer. =F0=9F=98=
-=8A
->=20
-> +Jason.
-
-We can follow the thread with Jason, but I can't really speak to
-whether virtio needs something similar or doesn't provide enough PF
-access to be concerned.  If they need a similar solution, we can
-collaborate, but the extension we're defining here is specifically part
-of the vfio-pci ABI, so it might not be easily portable to virtio.
-
-> > To help resolve these concerns, we introduce a VF token into the VFIO
-> > PCI ABI, which acts as a shared secret key between drivers.  The
-> > userspace PF driver is required to set the VF token to a known value
-> > and userspace VF drivers are required to provide the token to access
-> > the VF device.  If a PF driver is restarted with VF drivers in use, it
-> > must also provide the current token in order to prevent a rogue
-> > untrusted PF driver from replacing a known driver.  The degree to
-> > which this new token is considered secret is left to the userspace
-> > drivers, the kernel intentionally provides no means to retrieve the
-> > current token. =20
->=20
-> I'm wondering whether the token idea can be used beyond SR-IOV, e.g.
-> (1) we may allow vfio user space to manage Scalable IOV in the future,
-> which faces the similar challenge between the PF and mdev; (2) the
-> token might be used as a canonical way to replace off-tree acs-override
-> workaround, say, allowing the admin to assign devices within the=20
-> same iommu group to different VMs which trust each other. I'm not
-> sure how much complexity will be further introduced, but it's greatly
-> appreciated if you can help think a bit and if feasible abstract some=20
-> logic in vfio core layer for such potential usages...
-
-I don't see how this can be used for ACS override.  Lacking ACS, we
-must assume lack of DMA isolation, which results in our IOMMU grouping.
-If we split IOMMU groups, that implies something that doesn't exist.  A
-user can already create a process that can own the vfio group and pass
-vfio devices to other tasks, with the restriction of having a single
-DMA address space.  If there is DMA isolation, then an mdev solution
-might be better, but given the IOMMU integration of SIOV, I'm not sure
-why the devices wouldn't simply be placed in separate groups by the
-IOMMU driver.  Thanks,
-
-Alex
-=20
-> > Note that the above token is only required for this new model where
-> > both the PF and VF devices are usable through vfio-pci.  Existing
-> > models of VFIO drivers where the PF is used without SR-IOV enabled
-> > or the VF is bound to a userspace driver with an in-kernel, host PF
-> > driver are unaffected.
-> >=20
-> > The latter configuration above also highlights a new inverted scenario
-> > that is now possible, a userspace PF driver with in-kernel VF drivers.
-> > I believe this is a scenario that should be allowed, but should not be
-> > enabled by default.  This series includes code to set a default
-> > driver_override for VFs sourced from a vfio-pci user owned PF, such
-> > that the VFs are also bound to vfio-pci.  This model is compatible
-> > with tools like driverctl and allows the system administrator to
-> > decide if other bindings should be enabled.  The VF token interface
-> > above exists only between vfio-pci PF and VF drivers, once a VF is
-> > bound to another driver, the administrator has effectively pronounced
-> > the device as trusted.  The vfio-pci driver will note alternate
-> > binding in dmesg for logging and debugging purposes.
-> >=20
-> > Please review, comment, and test.  The example QEMU implementation
-> > provided with the RFC is still current for this version.  Thanks,
-> >=20
-> > Alex
-> >=20
-> > RFC:
-> > https://lore.kernel.org/lkml/158085337582.9445.17682266437583505502.stg
-> > it@gimli.home/
-> > v1:
-> > https://lore.kernel.org/lkml/158145472604.16827.15751375540102298130.st
-> > git@gimli.home/
-> >=20
-> > ---
-> >=20
-> > Alex Williamson (7):
-> >       vfio: Include optional device match in vfio_device_ops callbacks
-> >       vfio/pci: Implement match ops
-> >       vfio/pci: Introduce VF token
-> >       vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
-> >       vfio/pci: Add sriov_configure support
-> >       vfio/pci: Remove dev_fmt definition
-> >       vfio/pci: Cleanup .probe() exit paths
-> >=20
-> >=20
-> >  drivers/vfio/pci/vfio_pci.c         |  383
-> > +++++++++++++++++++++++++++++++++--
-> >  drivers/vfio/pci/vfio_pci_private.h |   10 +
-> >  drivers/vfio/vfio.c                 |   20 +-
-> >  include/linux/vfio.h                |    4
-> >  include/uapi/linux/vfio.h           |   37 +++
-> >  5 files changed, 426 insertions(+), 28 deletions(-) =20
->=20
-
+-- 
+Kees Cook
