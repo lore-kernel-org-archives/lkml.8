@@ -2,92 +2,109 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E11C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD16C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEEA206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D36B206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbgCEWrV (ORCPT
+        id S1726271AbgCEWpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 17:47:21 -0500
-Received: from www62.your-server.de ([213.133.104.62]:51744 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgCEWrO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 17:47:14 -0500
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j9zGd-0007qj-P2; Thu, 05 Mar 2020 23:46:59 +0100
-Received: from [85.7.42.192] (helo=pc-9.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j9zGd-000UwR-1P; Thu, 05 Mar 2020 23:46:59 +0100
-Subject: Re: [PATCH bpf-next v5 0/4] eBPF JIT for RV32G
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Cc:     Luke Nelson <lukenels@cs.washington.edu>,
-        bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
-References: <20200305050207.4159-1-luke.r.nels@gmail.com>
- <CAJ+HfNjrUxVqpBgC-WLHbZX7_7Gd-Lk7ghrmASTmaNySuXVUfg@mail.gmail.com>
- <4633123d-dc61-ab79-d2ee-e0cef66e4cea@iogearbox.net>
- <CAJ+HfNg_cP8DC+C0UGHnumde6+YhqBoTB909A9XwFMPv82tqWw@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <d95a83aa-d91c-6e5f-b9ec-0de0af23770a@iogearbox.net>
-Date:   Thu, 5 Mar 2020 23:46:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 5 Mar 2020 17:45:46 -0500
+Received: from mga18.intel.com ([134.134.136.126]:5017 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbgCEWpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 17:45:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 14:45:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,519,1574150400"; 
+   d="scan'208";a="234674594"
+Received: from minkleyx-mobl1.amr.corp.intel.com (HELO spandruv-mobl.amr.corp.intel.com) ([10.252.207.66])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Mar 2020 14:45:44 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     andriy.shevchenko@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, prarit@redhat.com,
+        linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 00/27] tools/power/x86/intel-speed-select: Enhancements
+Date:   Thu,  5 Mar 2020 14:45:11 -0800
+Message-Id: <20200305224538.490864-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <CAJ+HfNg_cP8DC+C0UGHnumde6+YhqBoTB909A9XwFMPv82tqWw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25742/Thu Mar  5 15:10:18 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 5:53 PM, Björn Töpel wrote:
-> On Thu, 5 Mar 2020 at 16:19, Daniel Borkmann <daniel@iogearbox.net> wrote:
->>
-> [...]
->> Applied, thanks everyone!
->>
->> P.s.: I fixed the MAINTAINERS entry in the last one to have both netdev and bpf
->> to be consistent with all the other JIT entries there.
-> 
-> Ah, I asked specifically Xi and Luke to *remove* the netdev entry, due
-> to the bpf_devel_QA.rst change. :-)
+These are not urgent fixes, but improves usability based on user
+feedback. This series addresses:
+- Check validaity of user options for a command
+- Print helpful errors
+- Improves help
+- Enhance existing options like --info
+- Fixes issues with json keys
+- Take care of handling offline CPUs
 
-Ah right, although all the BPF entries in MAINTAINERS file have both lists
-mentioned today. I think it doesn't hurt to have potentially more eyes for
-reviews.
 
-Thanks,
-Daniel
+Srinivas Pandruvada (27):
+  tools/power/x86/intel-speed-select: Warn for invalid package id
+  tools/power/x86/intel-speed-select: Make target CPU optional for
+    core-power info
+  tools/power/x86/intel-speed-select: Enhance core-power info command
+  tools/power/x86/intel-speed-select: Use more verbiage for clos
+    information
+  tools/power/x86/intel-speed-select: Special handling for CPU 0
+    online/offline
+  tools/power/x86/intel-speed-select: Max CPU count calculation when
+    CPU0 is offline
+  tools/power/x86/intel-speed-select: Store topology information
+  tools/power/x86/intel-speed-select: Helpful warning for missing kernel
+    interface
+  tools/power/x86/intel-speed-select: Enhance help
+  tools/power/x86/intel-speed-select: Enhance --info option
+  tools/power/x86/intel-speed-select: Add an API for error/information
+    print
+  tools/power/x86/intel-speed-select: Improve error display for
+    perf-profile feature
+  tools/power/x86/intel-speed-select: Check feature status first
+  tools/power/x86/intel-speed-select: Display error for invalid priority
+    type
+  tools/power/x86/intel-speed-select: Enhance help for core-power assoc
+  tools/power/x86/intel-speed-select: Improve output of perf-profile
+    commands
+  tools/power/x86/intel-speed-select: Improve error display for
+    base-freq feature
+  tools/power/x86/intel-speed-select: Improve error display for
+    turbo-freq feature
+  tools/power/x86/intel-speed-select: Kernel interface error handling
+  tools/power/x86/intel-speed-select: Improve core-power result and
+    error display
+  tools/power/x86/intel-speed-select: Show error for invalid CPUs in the
+    options
+  tools/power/x86/intel-speed-select: Improve CLX commands
+  tools/power/x86/intel-speed-select: Fix avx options for turbo-freq
+    feature
+  tools/power/x86/intel-speed-select: Print friendly warning for bad
+    command line
+  tools/power/x86/intel-speed-select: Add display for enabled cpus count
+  tools/power/x86/intel-speed-select: Avoid duplicate Package strings
+    for json
+  tools/power/x86/intel-speed-select: Update version
+
+ .../x86/intel-speed-select/isst-config.c      | 574 ++++++++++++++----
+ .../power/x86/intel-speed-select/isst-core.c  | 117 +++-
+ .../x86/intel-speed-select/isst-display.c     | 274 ++++++---
+ tools/power/x86/intel-speed-select/isst.h     |  12 +-
+ 4 files changed, 752 insertions(+), 225 deletions(-)
+
+-- 
+2.24.1
+
