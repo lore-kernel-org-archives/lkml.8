@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E047C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB85C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED9B020870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258F72146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428436;
-	bh=3IeweYz10iLPB5x/FxuKK3ushj7/AQrBPdxWYnpyJ3c=;
+	s=default; t=1583428440;
+	bh=LijBeT8ghRz4OhfDqJrmVw3kAoNl4ItiK+qJNyWxjHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RilIyA8zB5GDP2BJ72JvGM2uhCz0nwlyDJ4IeK27eRgAgxdamRvpByE+TKdEM+LOr
-	 RCN/jNTw5rn4wdGBdY6j1Md3d97RuA8S/76k2hprInXSJFK6enCdrQG3JGQ6ax+G5n
-	 4DXb2eFdkRxe82ofxuLqTYWhuZCtrINfOA4jVvyw=
+	b=qTYljjrYJMR7mM/A7z/WwQFUKuuYKI/FwI3Gabcc+bi8nE9igzRiEmJt6oDrX79S0
+	 jt4GHudxvS/ZZztlMMeQPaKV9DW8QilsdCyta2AnOhAlxrlTFTb2PXlQbJUpQjIS6v
+	 cM91Bd9E+/YiG3Q8szxeFXN49wXG7g2nrsFC6rpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgCERNz (ORCPT
+        id S1727499AbgCERN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:13:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39578 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:13:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727408AbgCERNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:50 -0500
+        id S1727469AbgCERN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE7EF21556;
-        Thu,  5 Mar 2020 17:13:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFBB82146E;
+        Thu,  5 Mar 2020 17:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428429;
-        bh=3IeweYz10iLPB5x/FxuKK3ushj7/AQrBPdxWYnpyJ3c=;
+        s=default; t=1583428436;
+        bh=LijBeT8ghRz4OhfDqJrmVw3kAoNl4ItiK+qJNyWxjHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uZHtR0y4QBYCgCjdEy0G20yZqNbDOJvDxypflvWF/BItqtv/FRBFT21wyh9qLcfNH
-         rK3dxe+Re5sHhjpf2gXiPa8+MjHBQF/O5eUSx1xBvdG8YUZ/4mLFAICSG98MQyHLAj
-         hHoGjfKBlRualXBd1K1I4FXL5+0XAykKo3MyNgEA=
+        b=TdtqDKmpcRRn4mTEW90ycwvfDToG+qnvGtin21H7VLsL9h1zGa8JuNx79x6RaYC/L
+         lG5Ypu3fiN0Jkbo7+q8j4UdQ7KsgHIsZMbnDP+0ypZjyzMZIQa1jqnN0wDjS4TgBpX
+         /q+4JsPgu/2crDOclVvDO7GeH/poNBaFiYDSIFOs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        syzbot+6a86565c74ebe30aea18@syzkaller.appspotmail.com,
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 29/67] netfilter: ipset: Fix forceadd evaluation path
-Date:   Thu,  5 Mar 2020 12:12:30 -0500
-Message-Id: <20200305171309.29118-29-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 34/67] mac80211: rx: avoid RCU list traversal under mutex
+Date:   Thu,  5 Mar 2020 12:12:35 -0500
+Message-Id: <20200305171309.29118-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -61,36 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jozsef Kadlecsik <kadlec@netfilter.org>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 8af1c6fbd9239877998c7f5a591cb2c88d41fb66 ]
+[ Upstream commit 253216ffb2a002a682c6f68bd3adff5b98b71de8 ]
 
-When the forceadd option is enabled, the hash:* types should find and replace
-the first entry in the bucket with the new one if there are no reuseable
-(deleted or timed out) entries. However, the position index was just not set
-to zero and remained the invalid -1 if there were no reuseable entries.
+local->sta_mtx is held in __ieee80211_check_fast_rx_iface().
+No need to use list_for_each_entry_rcu() as it also requires
+a cond argument to avoid false lockdep warnings when not used in
+RCU read-side section (with CONFIG_PROVE_RCU_LIST).
+Therefore use list_for_each_entry();
 
-Reported-by: syzbot+6a86565c74ebe30aea18@syzkaller.appspotmail.com
-Fixes: 23c42a403a9c ("netfilter: ipset: Introduction of new commands and protocol version 7")
-Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Link: https://lore.kernel.org/r/20200223143302.15390-1-madhuparnabhowmik10@gmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_hash_gen.h | 2 ++
- 1 file changed, 2 insertions(+)
+ net/mac80211/rx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipset/ip_set_hash_gen.h
-index 71e93eac08319..e52d7b7597a0d 100644
---- a/net/netfilter/ipset/ip_set_hash_gen.h
-+++ b/net/netfilter/ipset/ip_set_hash_gen.h
-@@ -931,6 +931,8 @@ mtype_add(struct ip_set *set, void *value, const struct ip_set_ext *ext,
- 		}
- 	}
- 	if (reuse || forceadd) {
-+		if (j == -1)
-+			j = 0;
- 		data = ahash_data(n, j, set->dsize);
- 		if (!deleted) {
- #ifdef IP_SET_HASH_WITH_NETS
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 0e05ff0376726..0ba98ad9bc854 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -4114,7 +4114,7 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
+ 
+ 	lockdep_assert_held(&local->sta_mtx);
+ 
+-	list_for_each_entry_rcu(sta, &local->sta_list, list) {
++	list_for_each_entry(sta, &local->sta_list, list) {
+ 		if (sdata != sta->sdata &&
+ 		    (!sta->sdata->bss || sta->sdata->bss != sdata->bss))
+ 			continue;
 -- 
 2.20.1
 
