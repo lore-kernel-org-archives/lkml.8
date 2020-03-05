@@ -2,499 +2,195 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A3CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D26C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5D5208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D38208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XhsJgLw3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PMJEmZnU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgCESRo (ORCPT
+        id S1726094AbgCESUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:17:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21985 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726087AbgCESRo (ORCPT
+        Thu, 5 Mar 2020 13:20:10 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43557 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgCESUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:17:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583432261;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q9SLBPXCJeBgr0pne8tNvEaCgsnOPwV8LcCfg4kKNRk=;
-        b=XhsJgLw3slNLemnDSAFDMF6dMbqUVWEZG/tJxVj8EFUpBPrXvy81AtRiECcPw7sZkDTSGZ
-        KlfsAu+E6AceETYelwRxmAmszYusqYpFKIhQDSKd/7hSlTLADJ8lToIZniFJPNI4kQkbFS
-        ZMrXcM6LrnyR9yZIeImOGoMK2+UJKMg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-442-nYiHzoUqNgSx6SlnabmoVw-1; Thu, 05 Mar 2020 13:17:37 -0500
-X-MC-Unique: nYiHzoUqNgSx6SlnabmoVw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFEF0800D5B;
-        Thu,  5 Mar 2020 18:17:35 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B07228D56C;
-        Thu,  5 Mar 2020 18:17:34 +0000 (UTC)
-Date:   Thu, 5 Mar 2020 11:17:34 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: Re: [PATCH v2 3/7] vfio/pci: Introduce VF token
-Message-ID: <20200305111734.4025ce2f@w520.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D79A904@SHSMSX104.ccr.corp.intel.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
-        <158213845243.17090.15563257812711358228.stgit@gimli.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D79A904@SHSMSX104.ccr.corp.intel.com>
+        Thu, 5 Mar 2020 13:20:09 -0500
+Received: by mail-oi1-f194.google.com with SMTP id p125so6927932oif.10;
+        Thu, 05 Mar 2020 10:20:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2sYXJQO6Yq9otqWKHOhi+UR9qlXpPMPoT6Si1fUA0Sk=;
+        b=PMJEmZnUwXE3NOgvQUgOt2bjP55cluHYSc8rSdjGCzCbt1j3zTCwedZkvini9gvf8F
+         tx9Jxt/qPLBQesudk+IiHEN8iIymNiycFyiV/oUmgYqqYhFSinRMpO6U5LZ0VIGZEm0W
+         ZvqJ+QJp+P2tMObn+9ZY7CLkXMioDwTXkzxPQk3ZX6n/zNlt/klfO6bf7heSSSx4qA7w
+         nyv3hyFOMo5Wv8KQdPaoEP2R3sMk+NCxVFgdWsNAffuH0P1qTzicxN0ROZKwiNeg3c+W
+         N2KDH1cFJ6TqJzkWoAiBt0ppB5H0p79DUje7WDTyMzIz25GM1CSB/3pLhutXvNpvUCUr
+         nwrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2sYXJQO6Yq9otqWKHOhi+UR9qlXpPMPoT6Si1fUA0Sk=;
+        b=MszNaJbMjXHOOO2kq4nhGczPCnerooi3K6sCZVa4BeIgeurO8Va5vqVLapzmR+WplK
+         4FUba42EPLzzmzGNGMty0sdsiMhlgaKv1D3nJdNIM6SkhBpsuI8X19/oS/eh/IsXjYLf
+         HwzkYHQedtG+TBj6ITEpT9qqjXYBc4H/oGz6/4GhFhrw0QjAUP6+wJVwwQWLjof13Ij4
+         OZUcMxhs7UsIB6BPVP/kZAxawrGM19X/vyN1vb3+8M5VVc6OkeRiSr6WuzAGzcBj9ocC
+         Z+3QgNpk/SvxwgodkrfVncl/Ayoej8XPcxvSO9fjdvoMtaWDDfymtKD/OotAwlJWZ19/
+         Nz4w==
+X-Gm-Message-State: ANhLgQ3nQQ5OsG1h2/dzbrcNY2KOKATP7RY5KX9s4X7UX6vWGV/iyWoR
+        roMRfX5onmKWwju6VtyBQgJw4PY01SOL58Bk/MQ=
+X-Google-Smtp-Source: ADFU+vtribu1lE9gfwLSME7/yQEkndnVmVMFtDPMbjJTGDEAm13SV25Kute1R6cgk/Mf3g2E7xNxRXPhfT1drE0KbXk=
+X-Received: by 2002:aca:170c:: with SMTP id j12mr271017oii.50.1583432408698;
+ Thu, 05 Mar 2020 10:20:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200214154854.6746-1-sashal@kernel.org> <20200214154854.6746-542-sashal@kernel.org>
+ <CANaxB-zjYecWpjMoX6dXY3B5HtVu8+G9npRnaX2FnTvp9XucTw@mail.gmail.com>
+ <CAHk-=wjd6BKXEpU0MfEaHuOEK-StRToEcYuu6NpVfR0tR5d6xw@mail.gmail.com>
+ <CAHk-=wgs8E4JYVJHaRV2hMn3dxUnM8i0Kn2mA1SjzJdsbB9tXw@mail.gmail.com>
+ <CAHk-=wiaDvYHBt8oyZGOp2XwJW4wNXVAchqTFuVBvASTFx_KfA@mail.gmail.com>
+ <20200218182041.GB24185@bombadil.infradead.org> <CAHk-=wi8Q8xtZt1iKcqSaV1demDnyixXT+GyDZi-Lk61K3+9rw@mail.gmail.com>
+ <20200218223325.GA143300@gmail.com> <CAHk-=wgKHFB9-XggwOmBCJde3V35Mw9g+vGnt0JGjfGbSgtWhQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wgKHFB9-XggwOmBCJde3V35Mw9g+vGnt0JGjfGbSgtWhQ@mail.gmail.com>
+From:   Andrei Vagin <avagin@gmail.com>
+Date:   Thu, 5 Mar 2020 10:19:56 -0800
+Message-ID: <CANaxB-xTTDcshttGnVMgDLm96CC8FYsQT4LpobvCWSQym2=8qA@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.5 542/542] pipe: use exclusive waits when
+ reading or writing
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 02:59:37 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+Hello Linus,
 
-> > From: Alex Williamson
-> > Sent: Thursday, February 20, 2020 2:54 AM
-> >=20
-> > If we enable SR-IOV on a vfio-pci owned PF, the resulting VFs are not
-> > fully isolated from the PF.  The PF can always cause a denial of service
-> > to the VF, even if by simply resetting itself.  The degree to which a PF
-> > can access the data passed through a VF or interfere with its operation
-> > is dependent on a given SR-IOV implementation.  Therefore we want to
-> > avoid a scenario where an existing vfio-pci based userspace driver might
-> > assume the PF driver is trusted, for example assigning a PF to one VM
-> > and VF to another with some expectation of isolation.  IOMMU grouping
-> > could be a solution to this, but imposes an unnecessarily strong
-> > relationship between PF and VF drivers if they need to operate with the
-> > same IOMMU context.  Instead we introduce a "VF token", which is
-> > essentially just a shared secret between PF and VF drivers, implemented
-> > as a UUID.
-> >=20
-> > The VF token can be set by a vfio-pci based PF driver and must be known
-> > by the vfio-pci based VF driver in order to gain access to the device.
-> > This allows the degree to which this VF token is considered secret to be
-> > determined by the applications and environment.  For example a VM might
-> > generate a random UUID known only internally to the hypervisor while a
-> > userspace networking appliance might use a shared, or even well know,
-> > UUID among the application drivers.
-> >=20
-> > To incorporate this VF token, the VFIO_GROUP_GET_DEVICE_FD interface is
-> > extended to accept key=3Dvalue pairs in addition to the device name.  T=
-his
-> > allows us to most easily deny user access to the device without risk
-> > that existing userspace drivers assume region offsets, IRQs, and other
-> > device features, leading to more elaborate error paths.  The format of
-> > these options are expected to take the form:
-> >=20
-> > "$DEVICE_NAME $OPTION1=3D$VALUE1 $OPTION2=3D$VALUE2"
-> >=20
-> > Where the device name is always provided first for compatibility and
-> > additional options are specified in a space separated list.  The
-> > relation between and requirements for the additional options will be
-> > vfio bus driver dependent, however unknown or unused option within this
-> > schema should return error.  This allow for future use of unknown
-> > options as well as a positive indication to the user that an option is
-> > used.
-> >=20
-> > An example VF token option would take this form:
-> >=20
-> > "0000:03:00.0 vf_token=3D2ab74924-c335-45f4-9b16-8569e5b08258"
-> >=20
-> > When accessing a VF where the PF is making use of vfio-pci, the user
-> > MUST provide the current vf_token.  When accessing a PF, the user MUST
-> > provide the current vf_token IF there are active VF users or MAY provide
-> > a vf_token in order to set the current VF token when no VF users are
-> > active.  The former requirement assures VF users that an unassociated
-> > driver cannot usurp the PF device.  These semantics also imply that a
-> > VF token MUST be set by a PF driver before VF drivers can access their
-> > device, the default token is random and mechanisms to read the token are
-> > not provided in order to protect the VF token of previous users.  Use of
-> > the vf_token option outside of these cases will return an error, as
-> > discussed above.
-> >=20
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci.c         |  198
-> > +++++++++++++++++++++++++++++++++++
-> >  drivers/vfio/pci/vfio_pci_private.h |    8 +
-> >  2 files changed, 205 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> > index 2ec6c31d0ab0..8dd6ef9543ca 100644
-> > --- a/drivers/vfio/pci/vfio_pci.c
-> > +++ b/drivers/vfio/pci/vfio_pci.c
-> > @@ -466,6 +466,44 @@ static void vfio_pci_disable(struct vfio_pci_device
-> > *vdev)
-> >  		vfio_pci_set_power_state(vdev, PCI_D3hot);
-> >  }
-> >=20
-> > +static struct pci_driver vfio_pci_driver;
-> > +
-> > +static struct vfio_pci_device *get_pf_vdev(struct vfio_pci_device *vde=
-v,
-> > +					   struct vfio_device **pf_dev)
-> > +{
-> > +	struct pci_dev *physfn =3D pci_physfn(vdev->pdev);
-> > +
-> > +	if (!vdev->pdev->is_virtfn)
-> > +		return NULL;
-> > +
-> > +	*pf_dev =3D vfio_device_get_from_dev(&physfn->dev);
-> > +	if (!*pf_dev)
-> > +		return NULL;
-> > +
-> > +	if (pci_dev_driver(physfn) !=3D &vfio_pci_driver) {
-> > +		vfio_device_put(*pf_dev);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	return vfio_device_data(*pf_dev);
-> > +}
-> > +
-> > +static void vfio_pci_vf_token_user_add(struct vfio_pci_device *vdev, i=
-nt val)
-> > +{
-> > +	struct vfio_device *pf_dev;
-> > +	struct vfio_pci_device *pf_vdev =3D get_pf_vdev(vdev, &pf_dev);
-> > +
-> > +	if (!pf_vdev)
-> > +		return;
-> > +
-> > +	mutex_lock(&pf_vdev->vf_token->lock);
-> > +	pf_vdev->vf_token->users +=3D val;
-> > +	WARN_ON(pf_vdev->vf_token->users < 0);
-> > +	mutex_unlock(&pf_vdev->vf_token->lock);
-> > +
-> > +	vfio_device_put(pf_dev);
-> > +}
-> > +
-> >  static void vfio_pci_release(void *device_data)
-> >  {
-> >  	struct vfio_pci_device *vdev =3D device_data;
-> > @@ -473,6 +511,7 @@ static void vfio_pci_release(void *device_data)
-> >  	mutex_lock(&vdev->reflck->lock);
-> >=20
-> >  	if (!(--vdev->refcnt)) {
-> > +		vfio_pci_vf_token_user_add(vdev, -1);
-> >  		vfio_spapr_pci_eeh_release(vdev->pdev);
-> >  		vfio_pci_disable(vdev);
-> >  	}
-> > @@ -498,6 +537,7 @@ static int vfio_pci_open(void *device_data)
-> >  			goto error;
-> >=20
-> >  		vfio_spapr_pci_eeh_open(vdev->pdev);
-> > +		vfio_pci_vf_token_user_add(vdev, 1);
-> >  	}
-> >  	vdev->refcnt++;
-> >  error:
-> > @@ -1278,11 +1318,148 @@ static void vfio_pci_request(void *device_data,
-> > unsigned int count)
-> >  	mutex_unlock(&vdev->igate);
-> >  }
-> >=20
-> > +static int vfio_pci_validate_vf_token(struct vfio_pci_device *vdev,
-> > +				      bool vf_token, uuid_t *uuid)
-> > +{
-> > +	/*
-> > +	 * There's always some degree of trust or collaboration between SR-
-> > IOV
-> > +	 * PF and VFs, even if just that the PF hosts the SR-IOV capability a=
-nd
-> > +	 * can disrupt VFs with a reset, but often the PF has more explicit
-> > +	 * access to deny service to the VF or access data passed through the
-> > +	 * VF.  We therefore require an opt-in via a shared VF token (UUID)
-> > to
-> > +	 * represent this trust.  This both prevents that a VF driver might
-> > +	 * assume the PF driver is a trusted, in-kernel driver, and also that
-> > +	 * a PF driver might be replaced with a rogue driver, unknown to in-
-> > use
-> > +	 * VF drivers.
-> > +	 *
-> > +	 * Therefore when presented with a VF, if the PF is a vfio device and
-> > +	 * it is bound to the vfio-pci driver, the user needs to provide a VF
-> > +	 * token to access the device, in the form of appending a vf_token to
-> > +	 * the device name, for example:
-> > +	 *
-> > +	 * "0000:04:10.0 vf_token=3Dbd8d9d2b-5a5f-4f5a-a211-f591514ba1f3"
-> > +	 *
-> > +	 * When presented with a PF which has VFs in use, the user must also
-> > +	 * provide the current VF token to prove collaboration with existing
-> > +	 * VF users.  If VFs are not in use, the VF token provided for the PF
-> > +	 * device will act to set the VF token.
-> > +	 *
-> > +	 * If the VF token is provided but unused, a fault is generated. =20
->=20
-> fault->error, otherwise it is easy to consider a CPU fault. =F0=9F=98=8A
+After this change, one more criu test became flaky. This is due to one
+of corner cases, so I am not sure that we need to fix something in the
+kernel. I have fixed this issue in the test. I am not sure that this
+will affect any real applications.
 
-Ok, I can make that change, but I think you might have a unique
-background to make a leap that a userspace ioctl can trigger a CPU
-fault ;)
-=20
-> > +	 */
-> > +	if (!vdev->pdev->is_virtfn && !vdev->vf_token && !vf_token)
-> > +		return 0; /* No VF token provided or required */
-> > +
-> > +	if (vdev->pdev->is_virtfn) {
-> > +		struct vfio_device *pf_dev;
-> > +		struct vfio_pci_device *pf_vdev =3D get_pf_vdev(vdev,
-> > &pf_dev);
-> > +		bool match;
-> > +
-> > +		if (!pf_vdev) {
-> > +			if (!vf_token)
-> > +				return 0; /* PF is not vfio-pci, no VF token */
-> > +
-> > +			pci_info_ratelimited(vdev->pdev,
-> > +				"VF token incorrectly provided, PF not bound
-> > to vfio-pci\n");
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		if (!vf_token) {
-> > +			vfio_device_put(pf_dev);
-> > +			pci_info_ratelimited(vdev->pdev,
-> > +				"VF token required to access device\n");
-> > +			return -EACCES;
-> > +		}
-> > +
-> > +		mutex_lock(&pf_vdev->vf_token->lock);
-> > +		match =3D uuid_equal(uuid, &pf_vdev->vf_token->uuid);
-> > +		mutex_unlock(&pf_vdev->vf_token->lock);
-> > +
-> > +		vfio_device_put(pf_dev);
-> > +
-> > +		if (!match) {
-> > +			pci_info_ratelimited(vdev->pdev,
-> > +				"Incorrect VF token provided for device\n");
-> > +			return -EACCES;
-> > +		}
-> > +	} else if (vdev->vf_token) {
-> > +		mutex_lock(&vdev->vf_token->lock);
-> > +		if (vdev->vf_token->users) {
-> > +			if (!vf_token) {
-> > +				mutex_unlock(&vdev->vf_token->lock);
-> > +				pci_info_ratelimited(vdev->pdev,
-> > +					"VF token required to access
-> > device\n");
-> > +				return -EACCES;
-> > +			}
-> > +
-> > +			if (!uuid_equal(uuid, &vdev->vf_token->uuid)) {
-> > +				mutex_unlock(&vdev->vf_token->lock);
-> > +				pci_info_ratelimited(vdev->pdev,
-> > +					"Incorrect VF token provided for
-> > device\n");
-> > +				return -EACCES;
-> > +			}
-> > +		} else if (vf_token) {
-> > +			uuid_copy(&vdev->vf_token->uuid, uuid);
-> > +		} =20
->=20
-> It implies that we allow PF to be accessed w/o providing a VF token,
-> as long as no VF is currently in-use, which further means no VF can
-> be further assigned since no one knows the random uuid allocated
-> by vfio. Just want to confirm whether it is the desired flavor. If an
-> user really wants to use PF-only, possibly he should disable SR-IOV
-> instead...
+Here is the reproducer:
 
-Yes, this is the behavior I'm intending.  Are you suggesting that we
-should require a VF token in order to access a PF that has SR-IOV
-already enabled?  This introduces an inconsistency that SR-IOV can be
-enabled via sysfs asynchronous to the GET_DEVICE_FD ioctl, so we'd need
-to secure the sysfs interface to only allow enabling SR-IOV when the PF
-is already opened to cases where the VF token is already set?  Thus
-SR-IOV could be pre-enabled, but the user must provide a vf_token
-option on GET_DEVICE_FD, otherwise SR-IOV could only be enabled after
-the user sets a VF token.  But then do we need to invalidate the token
-at some point, or else it seems like we have the same scenario when the
-next user comes along.  We believe there are PFs that require no
-special VF support other than sriov_configure, so those driver could
-theoretically close the PF after setting a VF token.  That makes it
-difficult to determine the lifetime of a VF token and leads to the
-interface proposed here of an initial random token, then the user set
-token persisting indefinitely.
+#include <unistd.h>
+#include <stdio.h>
 
-I've tended consider all of these to be mechanisms that a user can
-shoot themselves in the foot.  Yes, the user and admin can do things
-that will fail to work with this interface, for example my testing
-involves QEMU, where we don't expose SR-IOV to the guest yet and the
-igb driver for the PF will encounter problems running a device with
-SR-IOV enabled that it doesn't know about.  Do we want to try to play
-nanny and require specific semantics?  I've opt'd for the more simple
-code here.
+int main()
+{
+    char buf[1<<20];
+    int pid, p[2], ret;
 
-> > +
-> > +		mutex_unlock(&vdev->vf_token->lock);
-> > +	} else if (vf_token) {
-> > +		pci_info_ratelimited(vdev->pdev,
-> > +			"VF token incorrectly provided, not a PF or VF\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +#define VF_TOKEN_ARG "vf_token=3D"
-> > +
-> >  static int vfio_pci_match(void *device_data, char *buf)
-> >  {
-> >  	struct vfio_pci_device *vdev =3D device_data;
-> > +	bool vf_token =3D false;
-> > +	uuid_t uuid;
-> > +	int ret;
-> > +
-> > +	if (strncmp(pci_name(vdev->pdev), buf, strlen(pci_name(vdev- =20
-> > >pdev)))) =20
-> > +		return 0; /* No match */
-> > +
-> > +	if (strlen(buf) > strlen(pci_name(vdev->pdev))) {
-> > +		buf +=3D strlen(pci_name(vdev->pdev));
-> > +
-> > +		if (*buf !=3D ' ')
-> > +			return 0; /* No match: non-whitespace after name */
-> > +
-> > +		while (*buf) {
-> > +			if (*buf =3D=3D ' ') {
-> > +				buf++;
-> > +				continue;
-> > +			}
-> > +
-> > +			if (!vf_token && !strncmp(buf, VF_TOKEN_ARG,
-> > +						  strlen(VF_TOKEN_ARG))) {
-> > +				buf +=3D strlen(VF_TOKEN_ARG);
-> > +
-> > +				if (strlen(buf) < UUID_STRING_LEN)
-> > +					return -EINVAL;
-> > +
-> > +				ret =3D uuid_parse(buf, &uuid);
-> > +				if (ret)
-> > +					return ret;
-> >=20
-> > -	return !strcmp(pci_name(vdev->pdev), buf);
-> > +				vf_token =3D true;
-> > +				buf +=3D UUID_STRING_LEN;
-> > +			} else {
-> > +				/* Unknown/duplicate option */
-> > +				return -EINVAL;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	ret =3D vfio_pci_validate_vf_token(vdev, vf_token, &uuid);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return 1; /* Match */
-> >  }
-> >=20
-> >  static const struct vfio_device_ops vfio_pci_ops =3D {
-> > @@ -1354,6 +1531,19 @@ static int vfio_pci_probe(struct pci_dev *pdev,
-> > const struct pci_device_id *id)
-> >  		return ret;
-> >  	}
-> >=20
-> > +	if (pdev->is_physfn) {
-> > +		vdev->vf_token =3D kzalloc(sizeof(*vdev->vf_token),
-> > GFP_KERNEL);
-> > +		if (!vdev->vf_token) {
-> > +			vfio_pci_reflck_put(vdev->reflck);
-> > +			vfio_del_group_dev(&pdev->dev);
-> > +			vfio_iommu_group_put(group, &pdev->dev);
-> > +			kfree(vdev);
-> > +			return -ENOMEM;
-> > +		}
-> > +		mutex_init(&vdev->vf_token->lock);
-> > +		uuid_gen(&vdev->vf_token->uuid); =20
->=20
-> should we also regenerate a random uuid somewhere when SR-IOV is
-> disabled and then re-enabled on a PF? Although vfio disallows userspace
-> to read uuid, it is always safer to avoid caching a secret from previous
-> user.
+    if (pipe(p) < 0)
+        return 1;
+    pid = fork();
+    if (pid == 0) {
+        close(p[1]);
 
-What if our user is QEMU emulating SR-IOV to the guest.  Do we want to
-force a new VF token is set every time we bounce the VFs?  Why?  As
-above, the session lifetime of the VF token might be difficult to
-determine and I'm not sure paranoia is a sufficient reason to try to
-create boundaries for it.  Thanks,
+        ret = read(p[0], buf, sizeof(buf));
+        if (ret < 0)
+            return 1;
+        printf("read -> %d\n", ret);
+        return 0;
+    }
+    close(p[0]);
+    ret = write(p[1], buf, sizeof(buf));
+    if (ret < 0)
+        return 1;
+    printf("write -> %d\n", ret);
+    return 0;
+}
 
-Alex
+Before this change:
+[avagin@laptop fifo]$ uname -a
+Linux laptop 5.3.7-200.fc30.x86_64 #1 SMP Fri Oct 18 20:13:59 UTC 2019
+x86_64 x86_64 x86_64 GNU/Linux
+[avagin@laptop fifo]$ strace -e read,write,pipe -f ./pipe_bigbuf
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\260r\2\0\0\0\0\0"...,
+832) = 832
+read(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"...,
+784) = 784
+read(3, "\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0",
+32) = 32
+read(3, "\4\0\0\0\24\0\0\0\3\0\0\0GNU\0gZ\316<\240z\v\206=\360\37F\32{\t\204"...,
+68) = 68
+read(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"...,
+784) = 784
+read(3, "\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0",
+32) = 32
+read(3, "\4\0\0\0\24\0\0\0\3\0\0\0GNU\0gZ\316<\240z\v\206=\360\37F\32{\t\204"...,
+68) = 68
+pipe([3, 4])                            = 0
+strace: Process 622350 attached
+[pid 622349] write(4,
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"...,
+1048576 <unfinished ...>
+[pid 622350] read(3,  <unfinished ...>
+[pid 622349] <... write resumed> )      = 1048576
+[pid 622350] <... read resumed>
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"...,
+1048576) = 1048576
+[pid 622349] write(1, "write -> 1048576\n", 17write -> 1048576
+) = 17
+[pid 622350] write(1, "read -> 1048576\n", 16read -> 1048576
+) = 16
+[pid 622349] +++ exited with 0 +++
++++ exited with 0 +++
 
-> > +	}
-> > +
-> >  	if (vfio_pci_is_vga(pdev)) {
-> >  		vga_client_register(pdev, vdev, NULL,
-> > vfio_pci_set_vga_decode);
-> >  		vga_set_legacy_decoding(pdev,
-> > @@ -1387,6 +1577,12 @@ static void vfio_pci_remove(struct pci_dev *pdev)
-> >  	if (!vdev)
-> >  		return;
-> >=20
-> > +	if (vdev->vf_token) {
-> > +		WARN_ON(vdev->vf_token->users);
-> > +		mutex_destroy(&vdev->vf_token->lock);
-> > +		kfree(vdev->vf_token);
-> > +	}
-> > +
-> >  	vfio_pci_reflck_put(vdev->reflck);
-> >=20
-> >  	vfio_iommu_group_put(pdev->dev.iommu_group, &pdev->dev);
-> > diff --git a/drivers/vfio/pci/vfio_pci_private.h
-> > b/drivers/vfio/pci/vfio_pci_private.h
-> > index 8a2c7607d513..76c11c915949 100644
-> > --- a/drivers/vfio/pci/vfio_pci_private.h
-> > +++ b/drivers/vfio/pci/vfio_pci_private.h
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/pci.h>
-> >  #include <linux/irqbypass.h>
-> >  #include <linux/types.h>
-> > +#include <linux/uuid.h>
-> >=20
-> >  #ifndef VFIO_PCI_PRIVATE_H
-> >  #define VFIO_PCI_PRIVATE_H
-> > @@ -84,6 +85,12 @@ struct vfio_pci_reflck {
-> >  	struct mutex		lock;
-> >  };
-> >=20
-> > +struct vfio_pci_vf_token {
-> > +	struct mutex		lock;
-> > +	uuid_t			uuid;
-> > +	int			users;
-> > +};
-> > +
-> >  struct vfio_pci_device {
-> >  	struct pci_dev		*pdev;
-> >  	void __iomem		*barmap[PCI_STD_NUM_BARS];
-> > @@ -122,6 +129,7 @@ struct vfio_pci_device {
-> >  	struct list_head	dummy_resources_list;
-> >  	struct mutex		ioeventfds_lock;
-> >  	struct list_head	ioeventfds_list;
-> > +	struct vfio_pci_vf_token	*vf_token;
-> >  };
-> >=20
-> >  #define is_intx(vdev) (vdev->irq_type =3D=3D VFIO_PCI_INTX_IRQ_INDEX) =
-=20
->=20
+After this change:
+[root@fc24 ~]# strace -e read,write,pipe -f ./pipe_bigbuf
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\260r\2\0\0\0\0\0"...,
+832) = 832
+read(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"...,
+784) = 784
+read(3, "\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0",
+32) = 32
+read(3, "\4\0\0\0\24\0\0\0\3\0\0\0GNU\0L\355\265_\4c\17r@ix\305q\26W\242"...,
+68) = 68
+read(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"...,
+784) = 784
+read(3, "\4\0\0\0\20\0\0\0\5\0\0\0GNU\0\2\0\0\300\4\0\0\0\3\0\0\0\0\0\0\0",
+32) = 32
+read(3, "\4\0\0\0\24\0\0\0\3\0\0\0GNU\0L\355\265_\4c\17r@ix\305q\26W\242"...,
+68) = 68
+pipe([3, 4])                            = 0
+strace: Process 4946 attached
+[pid  4945] write(4,
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"...,
+1048576 <unfinished ...>
+[pid  4946] read(3,
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"...,
+1048576) = 65536
+[pid  4946] write(1, "read -> 65536\n", 14read -> 65536
+) = 14
+[pid  4945] <... write resumed>)        = 131072
+[pid  4946] +++ exited with 0 +++
+--- SIGPIPE {si_signo=SIGPIPE, si_code=SI_USER, si_pid=4945, si_uid=0} ---
++++ killed by SIGPIPE +++
 
+On Tue, Feb 18, 2020 at 3:03 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, Feb 18, 2020 at 2:33 PM Andrei Vagin <avagin@gmail.com> wrote:
+> >
+> > I run CRIU tests on the kernel with both these patches. Everything work
+> > as expected.
+>
+> Thanks. I've added your tested-by and pushed out the fix.
+>
+>            Linus
