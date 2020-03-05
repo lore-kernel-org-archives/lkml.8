@@ -2,94 +2,135 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392C0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B73C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4C92073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5EF208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bNdSrPUd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jRnFL4wQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgCEKrl (ORCPT
+        id S1727226AbgCEKsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:47:41 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32009 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725912AbgCEKrk (ORCPT
+        Thu, 5 Mar 2020 05:48:35 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.61]:19499 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbgCEKse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:47:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583405260;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FFHDTdsHNQ+WpC3J48LkcUo13CW/xHV+YRnYq60G8e8=;
-        b=bNdSrPUdbVucwqy09Kn7tUvb8HM7UuCO9VkQtP17NRsnUbfcZ1gEtCy8sz1+z2IsjrUTlz
-        akWQOfFh+ozS1c67RZpRPqg3VPDpHYEiXVHaNyKPOY0NPDjC1tXKm1KrvhiuGey79iJZMf
-        63FuZYxKDZ/+EEhyAZTnCPA//Nwxgq0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-113-HuL3wU8oMkWBRhRkMioOIg-1; Thu, 05 Mar 2020 05:47:36 -0500
-X-MC-Unique: HuL3wU8oMkWBRhRkMioOIg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E687D107ACC7;
-        Thu,  5 Mar 2020 10:47:34 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C937E91D79;
-        Thu,  5 Mar 2020 10:47:34 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7BD4538A1;
-        Thu,  5 Mar 2020 10:47:34 +0000 (UTC)
-Date:   Thu, 5 Mar 2020 05:47:34 -0500 (EST)
-From:   Vladis Dronov <vdronov@redhat.com>
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <1136615517.13281010.1583405254370.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20200305073653.GC267906@xps-13>
-References: <20200304175350.GB267906@xps-13> <1830360600.13123996.1583352704368.JavaMail.zimbra@redhat.com> <20200305073653.GC267906@xps-13>
-Subject: Re: [PATCH] ptp: free ptp clock properly
+        Thu, 5 Mar 2020 05:48:34 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id BE431A8FEF
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Mar 2020 04:48:33 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 9o3Njtpo2AGTX9o3Nj1iXA; Thu, 05 Mar 2020 04:48:33 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=N+cQ6695/UaT15cBW0dOVs0XFP/fIU8FdrNDquttipY=; b=jRnFL4wQjKz1AfDheOOAqnMyi5
+        erogLWYYg0i5Ton9B+L1Occ8/tO7OBtB8P7NXs9jDMDb1sI5ZMgzgQUvJfpvNV537UW0AFTZqXbje
+        Wu2UvVtueVgUcqT0tohInOtDGg66GaturmFGxZb7/rqe8CTdGxPjB2wR7R0WwbRbmg6P6yTeB1jkE
+        cBYIVnbtG5udEWlTfD1WOlkyFwgjdM6xOrZOYklk4oN0RN3b0A3QA+8t3oKlybYuXwIcEA68eEfKJ
+        3SrQjr5xzWEHYXiQmDl+5If0ZS/v21s3G9GaD0ZEZlVINosd2QM6nngBlFJi3n3QoiGo/gg+A1/kU
+        8qUCmSWg==;
+Received: from [201.166.169.220] (port=13470 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j9o3L-003dNJ-JM; Thu, 05 Mar 2020 04:48:32 -0600
+Date:   Thu, 5 Mar 2020 04:51:37 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] drm: etnaviv_gem.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200305105137.GA18628@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.204.231, 10.4.195.18]
-Thread-Topic: free ptp clock properly
-Thread-Index: QwGKf1Q/LQ0b+CJqbVMkJPSAlrl8TQ==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.169.220
+X-Source-L: No
+X-Exim-ID: 1j9o3L-003dNJ-JM
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.169.220]:13470
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Andrea, all,
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-> > I would guess that a kernel in question (5.3.0-40-generic) has the commit
-> > a33121e5487b but does not have the commit 75718584cb3c, which should be
-> > exactly fixing a docking station disconnect crash. Could you please,
-> > check this?
-> 
-> Unfortunately the kernel in question already has 75718584cb3c:
-> https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/bionic/commit/?h=hwe&id=c71b774732f997ef38ed7bd62e73891a01f2bbfe
-> 
-> It looks like there's something else that can free up too early the
-> resources required by posix_clock_unregister() to destroy the related
-> sysfs files.
-> 
-> Maybe what we really need to call from ptp_clock_release() is
-> pps_unregister_source()? Something like this:
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Err... I believe, "Maybe" is not a good enough reason to accept a kernel patch.
-Probably, there should be something supporting this statement.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Best regards,
-Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/gpu/drm/etnaviv/etnaviv_gem.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.h b/drivers/gpu/drm/etnaviv/etnaviv_gem.h
+index 6b68fe16041b..98e60df882b6 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gem.h
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.h
+@@ -105,7 +105,7 @@ struct etnaviv_gem_submit {
+ 	unsigned int nr_pmrs;
+ 	struct etnaviv_perfmon_request *pmrs;
+ 	unsigned int nr_bos;
+-	struct etnaviv_gem_submit_bo bos[0];
++	struct etnaviv_gem_submit_bo bos[];
+ 	/* No new members here, the previous one is variable-length! */
+ };
+ 
+-- 
+2.25.0
 
