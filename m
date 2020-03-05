@@ -2,181 +2,109 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA97C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 573AAC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD362072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E742072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:02:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lew8K2KR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBjwhXXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCER7e (ORCPT
+        id S1726181AbgCESCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:59:34 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35086 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgCER7d (ORCPT
+        Thu, 5 Mar 2020 13:02:21 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35724 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgCESCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:59:33 -0500
-Received: by mail-qk1-f194.google.com with SMTP id 145so6191341qkl.2;
-        Thu, 05 Mar 2020 09:59:32 -0800 (PST)
+        Thu, 5 Mar 2020 13:02:21 -0500
+Received: by mail-ot1-f68.google.com with SMTP id v10so6631460otp.2;
+        Thu, 05 Mar 2020 10:02:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yHsry5N2dnMyiEZPE+CiD2B+1Y5pPONnPCFPtUcNWlY=;
-        b=Lew8K2KRbDphQ3wYDH9AW27FrjcSeB879CvkpxHXH3obFqaT6d6ss66x0vDHumQCj7
-         4UxV+LDbbOj2Spnr+Dzf78z2qLTED9xbkYzv9weBiGIvytMBW5jEusf2/J33kYO1wka9
-         003kfksLdZMhpS9sbzLbD15bCgwT6YQIuVuAosDM+ynj0Xyu7oBXm/h0j6fjDHGr0so3
-         q68WT12p1rNiGY73W4Fcc2HxDu2vKgy7op8cMX8Yg4Dzh2Z8oZdLA+e7Nn+yAco9Ms8e
-         8rtkbH0D2eP4tQtK+u6vfoDn2/ERuaOvro6YnlPG8NLZCVxUhEWKE+wdofoQNIfPEojU
-         rvUg==
+        bh=bImCa8e75imP5OBiFn4OIcu9vGwfjFkhcN3Jk6EQf9c=;
+        b=UBjwhXXB7Z3eO7J/9T0RT1RI8fpcwomIFdsfs667Q3w3V4MrEqj1JxGClS1nCzLXtu
+         OB4WkpY+EooNfPTvjY0qr7DuPSuAt7D3SqzFKq/ellIgtaM3DY5QKKfXbjyCEvvEnz4t
+         hQgjGwsVgvNtcF/t15XaM8sJ0DczcuyEFDLQngNw/LaGa25bryQxdbXRJXbFyqwVr35S
+         4mc7xyA/NQFFk/74kv7IXPPe0E+jcGUm/mVR+WQR/dRZWyEB6xBf164GWiu62359avCj
+         pNLVz2qmkVV68i19jQxzYExh6ecLV9Wd0N80e0/2f1v7GC1yxe8B96jBPoj4u9BcY+5t
+         eiqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yHsry5N2dnMyiEZPE+CiD2B+1Y5pPONnPCFPtUcNWlY=;
-        b=ctdVpxZfOzgL+pH4PLalZrVbM8lMwbHxhgbvo+e6Gxe9FP5Rg7zD6KqEjKhzc29kdq
-         VAC94y58bN12mozIBIQ1tzESR/JUCBUZ2XdZwx5vC4PK/UcBHvtK5xXqFCflE5RsOCXs
-         x/i5Vxbxviorwzk72A9M58HIKSGvCwnwfnqiiai+5XQvlQotkIuMCCh/Z/Pl0JxVMRuW
-         VpyoPu30rnQYkyBfcsfS80W3/k7hGfadpiy0+phokn1lSzp6FYAHYeVd+6SmuIcXj9Eq
-         FC0zwMz/Xr+ZjzZlmXMBIF59lZp8xemyeHkLtYnTCaziFI7dghlJOxxOsdgpFmgYxw0V
-         AViQ==
-X-Gm-Message-State: ANhLgQ1Dd4WID6Jn9waUth7Iw4RZ+PEc1XvDtrTAj3fOPediYWBJT03e
-        SvGmTl8FScG9iD2vqeL/LG5//tFAXdxFZSE17go=
-X-Google-Smtp-Source: ADFU+vv+eEySiamfk3LVjyZxj7hT+/d7ennxxwp+eIJTjnqDQa4vtNof2oxNClUi1Ax+lT6SrUmdaF+qZPsP1Ufa46M=
-X-Received: by 2002:a05:620a:1345:: with SMTP id c5mr9166574qkl.182.1583431172026;
- Thu, 05 Mar 2020 09:59:32 -0800 (PST)
+        bh=bImCa8e75imP5OBiFn4OIcu9vGwfjFkhcN3Jk6EQf9c=;
+        b=nq0pSMsCcs7ZolZI5OpvXhCVJW6FXOtzhdFe6GrDCYNaCRPQGXgER8mmS1TbzKvpaS
+         ycUV0tQWSsNS8cYIo7B2IFDoe2iCoMhRvGobiYE3xHxHAdulWCVCOFDwmCTpfI3AIB1e
+         rHIWl9v8zjpIZGcvusBqR6l5XyHDmpm5qWvo6pyKs5ZEjRYtJK3iSslBldsZjdjrkmkr
+         rx/PliuQ7U13hW0uRuIVEczDUYYN7w4J2SflhmUqNWWLF0OtO+nouM7PkiJPUIqlUDFM
+         jFVZ0CwL04xqb85hB7R3V+rgoayogYqg5J7a+pGUGfNznBia/Ieh6vjwUqP0Q4WA31vN
+         dpQQ==
+X-Gm-Message-State: ANhLgQ2P87WWWV8yZfXHMFQxw4OqxHF+VWFGmozxS9TP1IRHIT66U7nq
+        QBFGEqI3lWIfvfomGVQXOIuxTm8SAbNoe+nXjJs=
+X-Google-Smtp-Source: ADFU+vsvbQuqzn8gGOtAxjPNVm9WpKEFdkyFDU2gticZVw82S72hfRFT62HlHzFLjnhAG5wKOwfQ5MHvENi4XGLAZXw=
+X-Received: by 2002:a05:6830:22f2:: with SMTP id t18mr7959676otc.165.1583431340611;
+ Thu, 05 Mar 2020 10:02:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20200305220108.18780-1-mayflowerera@gmail.com>
- <20200305220108.18780-2-mayflowerera@gmail.com> <20200305140241.GA28693@unicorn.suse.cz>
- <CAMdQvKv9tSoSBfyOyhtctQ9D7aU2WUmuMUsoLn_WZ8whD=3AzA@mail.gmail.com>
- <CAMdQvKuzaBuKGj1-HR6+r=FY4X9GhZPvEHwRt3BjErFiu1+bgw@mail.gmail.com> <20200305172453.GB28693@unicorn.suse.cz>
-In-Reply-To: <20200305172453.GB28693@unicorn.suse.cz>
-From:   Era Mayflower <mayflowerera@gmail.com>
-Date:   Fri, 6 Mar 2020 02:59:14 +0000
-Message-ID: <CAMdQvKsAdFW_u0LQ8q4zy4mz9a7x0FESAeyvKRQWbcA7jDdjtw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] macsec: Netlink support of XPN cipher suites (IEEE 802.1AEbw)
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
+References: <20200304191853.1529-1-kpsingh@chromium.org> <20200304191853.1529-4-kpsingh@chromium.org>
+ <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com>
+ <20200305155421.GA209155@google.com> <d7615424-48cb-1131-3c5d-f2a0b4adfaf7@schaufler-ca.com>
+In-Reply-To: <d7615424-48cb-1131-3c5d-f2a0b4adfaf7@schaufler-ca.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 5 Mar 2020 13:03:26 -0500
+Message-ID: <CAEjxPJ7EQjq2J8AGn+b90=yMG9H5CaNErk1PqtTz8T3CwdAvJw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 3/7] bpf: Introduce BPF_MODIFY_RETURN
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>, jmorris@namei.org,
+        Paul Moore <paul@paul-moore.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 5:24 PM Michal Kubecek <mkubecek@suse.cz> wrote:
-> Yes, new attribute identifiers should always be added as last so that
-> you don't change existing values.
+On Thu, Mar 5, 2020 at 12:35 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> I believe that I have stated that order isn't my issue.
+> Go first, last or as specified in the lsm list, I really
+> don't care. We'll talk about what does matter in the KRSI
+> thread.
 
-Created a new patch: macsec: Backward compatibility bugfix of consts values
+Order matters when the security module logic (in this case, the BPF
+program) is loaded from userspace and
+the userspace process isn't already required to be fully privileged
+with respect to the in-kernel security modules.
+CAP_MAC_ADMIN was their (not unreasonable) attempt to check that
+requirement; it just doesn't happen to convey
+the same meaning for SELinux since SELinux predates the introduction
+of CAP_MAC_ADMIN (in Linux at least) and
+since SELinux was designed to confine even processes with capabilities.
 
-On Thu, Mar 5, 2020 at 5:24 PM Michal Kubecek <mkubecek@suse.cz> wrote:
->
-> On Thu, Mar 05, 2020 at 11:53:29PM +0000, Era Mayflower wrote:
-> > Do you think that inserting those new enum values after *_PAD would be
-> > a good solution?
->
-> Yes, new attribute identifiers should always be added as last so that
-> you don't change existing values.
->
-> Michal
->
-> > On Thu, Mar 5, 2020 at 11:51 PM Era Mayflower <mayflowerera@gmail.com> wrote:
-> > >
-> > > Do you think that inserting those new enum values after *_PAD would be a good solution?
-> > >
-> > > On Thu, Mar 5, 2020 at 2:02 PM Michal Kubecek <mkubecek@suse.cz> wrote:
-> > >>
-> > >> On Thu, Mar 05, 2020 at 10:01:08PM +0000, Era Mayflower wrote:
-> > >> > Netlink support of extended packet number cipher suites,
-> > >> > allows adding and updating XPN macsec interfaces.
-> > >> >
-> > >> > Added support in:
-> > >> >     * Creating interfaces with GCM-AES-XPN-128 and GCM-AES-XPN-256.
-> > >> >     * Setting and getting packet numbers with 64bit of SAs.
-> > >> >     * Settings and getting ssci of SCs.
-> > >> >     * Settings and getting salt of SecYs.
-> > >> >
-> > >> > Depends on: macsec: Support XPN frame handling - IEEE 802.1AEbw.
-> > >> >
-> > >> > Signed-off-by: Era Mayflower <mayflowerera@gmail.com>
-> > >> > ---
-> > >> [...]
-> > >> > diff --git a/include/net/macsec.h b/include/net/macsec.h
-> > >> > index a0b1d0b5c..3c7914ff1 100644
-> > >> > --- a/include/net/macsec.h
-> > >> > +++ b/include/net/macsec.h
-> > >> > @@ -11,6 +11,9 @@
-> > >> >  #include <uapi/linux/if_link.h>
-> > >> >  #include <uapi/linux/if_macsec.h>
-> > >> >
-> > >> > +#define MACSEC_DEFAULT_PN_LEN 4
-> > >> > +#define MACSEC_XPN_PN_LEN 8
-> > >> > +
-> > >> >  #define MACSEC_SALT_LEN 12
-> > >> >
-> > >> >  typedef u64 __bitwise sci_t;
-> > >> > diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-> > >> > index 024af2d1d..ee424d915 100644
-> > >> > --- a/include/uapi/linux/if_link.h
-> > >> > +++ b/include/uapi/linux/if_link.h
-> > >> > @@ -462,6 +462,8 @@ enum {
-> > >> >       IFLA_MACSEC_SCB,
-> > >> >       IFLA_MACSEC_REPLAY_PROTECT,
-> > >> >       IFLA_MACSEC_VALIDATION,
-> > >> > +     IFLA_MACSEC_SSCI,
-> > >> > +     IFLA_MACSEC_SALT,
-> > >> >       IFLA_MACSEC_PAD,
-> > >> >       __IFLA_MACSEC_MAX,
-> > >> >  };
-> > >>
-> > >> Doesn't this break backword compatibility? You change the value of
-> > >> IFLA_MACSEC_PAD; even if it's only used as padding, if an old client
-> > >> uses it, new kernel will interpret it as IFLA_MACSEC_SSCI (an the same
-> > >> holds for new client with old kernel).
-> > >>
-> > >> > diff --git a/include/uapi/linux/if_macsec.h b/include/uapi/linux/if_macsec.h
-> > >> > index 1d63c43c3..c8fab9673 100644
-> > >> > --- a/include/uapi/linux/if_macsec.h
-> > >> > +++ b/include/uapi/linux/if_macsec.h
-> > >> > @@ -25,6 +25,8 @@
-> > >> >  /* cipher IDs as per IEEE802.1AEbn-2011 */
-> > >> >  #define MACSEC_CIPHER_ID_GCM_AES_128 0x0080C20001000001ULL
-> > >> >  #define MACSEC_CIPHER_ID_GCM_AES_256 0x0080C20001000002ULL
-> > >> > +#define MACSEC_CIPHER_ID_GCM_AES_XPN_128 0x0080C20001000003ULL
-> > >> > +#define MACSEC_CIPHER_ID_GCM_AES_XPN_256 0x0080C20001000004ULL
-> > >> >
-> > >> >  /* deprecated cipher ID for GCM-AES-128 */
-> > >> >  #define MACSEC_DEFAULT_CIPHER_ID     0x0080020001000001ULL
-> > >> > @@ -66,6 +68,8 @@ enum macsec_secy_attrs {
-> > >> >       MACSEC_SECY_ATTR_INC_SCI,
-> > >> >       MACSEC_SECY_ATTR_ES,
-> > >> >       MACSEC_SECY_ATTR_SCB,
-> > >> > +     MACSEC_SECY_ATTR_SSCI,
-> > >> > +     MACSEC_SECY_ATTR_SALT,
-> > >> >       MACSEC_SECY_ATTR_PAD,
-> > >> >       __MACSEC_SECY_ATTR_END,
-> > >> >       NUM_MACSEC_SECY_ATTR = __MACSEC_SECY_ATTR_END,
-> > >> > @@ -78,6 +82,7 @@ enum macsec_rxsc_attrs {
-> > >> >       MACSEC_RXSC_ATTR_ACTIVE,  /* config/dump, u8 0..1 */
-> > >> >       MACSEC_RXSC_ATTR_SA_LIST, /* dump, nested */
-> > >> >       MACSEC_RXSC_ATTR_STATS,   /* dump, nested, macsec_rxsc_stats_attr */
-> > >> > +     MACSEC_RXSC_ATTR_SSCI,    /* config/dump, u32 */
-> > >> >       MACSEC_RXSC_ATTR_PAD,
-> > >> >       __MACSEC_RXSC_ATTR_END,
-> > >> >       NUM_MACSEC_RXSC_ATTR = __MACSEC_RXSC_ATTR_END,
-> > >>
-> > >> The same problem with these two.
-> > >>
-> > >> I'm also a bit unsure about the change of type and length of
-> > >> MACSEC_SA_ATTR_PN but I would have to get more familiar with the code to
-> > >> see if it is really a problem.
-> > >>
-> > >> Michal
+> Then I'm fine with using the LSM ordering mechanisms that Kees
+> thought through to run the BPF last. Although I think it's somewhat
+> concerning that SELinux cares what other security models might be
+> in place. If BPF programs can violate SELinux (or traditional DAC)
+> policies there are bigger issues than ordering.
+
+It is only safe for Smack because CAP_MAC_ADMIN already conveys all
+privileges with respect to Smack.
+Otherwise, the BPF program can access information about the object
+attributes, e.g. inode attributes,
+and leak that information to userspace even if SELinux would have
+denied the process that loaded the BPF
+program permissions to directly obtain that information.  This is also
+why Landlock has to be last in the LSM list.
