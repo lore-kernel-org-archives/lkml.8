@@ -2,108 +2,225 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93641C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9FAC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7192146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klpt5eD0"
+	by mail.kernel.org (Postfix) with ESMTP id 526552146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgCEJHH (ORCPT
+        id S1727059AbgCEJHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:07:07 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54210 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbgCEJHG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:07:06 -0500
-Received: by mail-pj1-f66.google.com with SMTP id cx7so2217825pjb.3;
-        Thu, 05 Mar 2020 01:07:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CwWk3rymKlBi7YMKzGNb1n6EmY/0fOhsKyM88/tetFg=;
-        b=klpt5eD0lOtMOlCD5w9upzN5MpEqELB1VFCJEfVhkmU5Zh/Z5kIcGB7jZfHR+c/LaH
-         2kbROwAXGEZ//027FUQT6zMBJ6GPWY5L5Ur9TWzhA8NqJ7ht6cAI1ecJx0meCQ89YnnE
-         GEAKxEwX29TwLSK7YklkkL49IlUuVx9FseHC/XmkfBjvfRQfl76UvxWb6NS7S8f1NWrz
-         VF37gLXVlQrlvF74m+789A/fhF/f4HTvK+WIdYq9d2QcuD6AUm0rLvW6t3qH/oWpMVo6
-         Erubp45bmBx1/yw43tBtBM47YbmTEIVEUT0faLSCHSqOMKXuI8DErOZlRkaHyPxOrtmc
-         E9eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CwWk3rymKlBi7YMKzGNb1n6EmY/0fOhsKyM88/tetFg=;
-        b=kS951B6rNfUESNgq1bH4FA2bHhuhrPjsNK4EEDI6SLnacWBD4Hzyew/k6wsMmP7/d+
-         /+ndgMEDJVFDJSM6Ce8FMzxgFG9ZG9+lLzuHxYdNsCe9IfZ8P5CZo1o+HzFmImqRY8tg
-         o7m7r81BAV5I4kSW6PDE8xNKKfj8JZYZwWGacWIk8eE8qG3Oh2qqh8LyC4qXHQUI4/pE
-         z9IyDz9fIUZj7jJPscpgdrFvZ/MOUMaUnYbJNDCVrjcbqPbuYtEO/IHI8RTFGLjIf2IE
-         iwTaGHpBmb+P3p6pjgDNDuKSOLkorFLvQBjIiNb6hfPizfXkMBSlHaSEdcgutbGEP0dM
-         hPxQ==
-X-Gm-Message-State: ANhLgQ0m2tzZe0YyE0vJC/Me1FwURfQvot9jvn8kNyVREP7zuY4Dj6YY
-        kE17TN+ZIxWSs+eFUa0sZkZAmCWw
-X-Google-Smtp-Source: ADFU+vvbk9XiN+e5NS1NkizYhrxuArSYCMucjcPDA/Qy+EnS7Ar6iKHF9uTwRCjX+df5AMO+yMHWlg==
-X-Received: by 2002:a17:902:bd95:: with SMTP id q21mr7267961pls.148.1583399223859;
-        Thu, 05 Mar 2020 01:07:03 -0800 (PST)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id r14sm10626822pfh.119.2020.03.05.01.07.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 01:07:03 -0800 (PST)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH] arm64: dts: specify console via command line
-Date:   Thu,  5 Mar 2020 17:06:35 +0800
-Message-Id: <20200305090635.30569-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 5 Mar 2020 04:07:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:45182 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725880AbgCEJHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 04:07:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49D231045;
+        Thu,  5 Mar 2020 01:07:08 -0800 (PST)
+Received: from e108754-lin.cambridge.arm.com (e108754-lin.cambridge.arm.com [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B3DED3F534;
+        Thu,  5 Mar 2020 01:07:05 -0800 (PST)
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        lukasz.luba@arm.com, valentin.schneider@arm.com,
+        dietmar.eggemann@arm.com, rjw@rjwysocki.net,
+        pkondeti@codeaurora.org, ionela.voinescu@arm.com
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v6 4/7] Documentation: arm64: document support for the AMU extension
+Date:   Thu,  5 Mar 2020 09:06:24 +0000
+Message-Id: <20200305090627.31908-5-ionela.voinescu@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200305090627.31908-1-ionela.voinescu@arm.com>
+References: <20200305090627.31908-1-ionela.voinescu@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+The activity monitors extension is an optional extension introduced
+by the ARMv8.4 CPU architecture.
 
-The SPRD serial driver need to know which port would be used as console
-in an early period during initialization, otherwise console init would
-fail since we added this feature[1].
+Add initial documentation for the AMUv1 extension:
+ - arm64/amu.txt: AMUv1 documentation
+ - arm64/booting.txt: system registers initialisation
 
-So this patch add console to command line via devicetree.
-
-[1] https://lore.kernel.org/lkml/20190826072929.7696-4-zhang.lyra@gmail.com/
-
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
 ---
- arch/arm64/boot/dts/sprd/sp9863a-1h10.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/arm64/amu.rst     | 112 ++++++++++++++++++++++++++++++++
+ Documentation/arm64/booting.rst |  14 ++++
+ Documentation/arm64/index.rst   |   1 +
+ 3 files changed, 127 insertions(+)
+ create mode 100644 Documentation/arm64/amu.rst
 
-diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-index 2047f7a74265..510f65f4d8b8 100644
---- a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-+++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-@@ -28,7 +28,7 @@
+diff --git a/Documentation/arm64/amu.rst b/Documentation/arm64/amu.rst
+new file mode 100644
+index 000000000000..5057b11100ed
+--- /dev/null
++++ b/Documentation/arm64/amu.rst
+@@ -0,0 +1,112 @@
++=======================================================
++Activity Monitors Unit (AMU) extension in AArch64 Linux
++=======================================================
++
++Author: Ionela Voinescu <ionela.voinescu@arm.com>
++
++Date: 2019-09-10
++
++This document briefly describes the provision of Activity Monitors Unit
++support in AArch64 Linux.
++
++
++Architecture overview
++---------------------
++
++The activity monitors extension is an optional extension introduced by the
++ARMv8.4 CPU architecture.
++
++The activity monitors unit, implemented in each CPU, provides performance
++counters intended for system management use. The AMU extension provides a
++system register interface to the counter registers and also supports an
++optional external memory-mapped interface.
++
++Version 1 of the Activity Monitors architecture implements a counter group
++of four fixed and architecturally defined 64-bit event counters.
++  - CPU cycle counter: increments at the frequency of the CPU.
++  - Constant counter: increments at the fixed frequency of the system
++    clock.
++  - Instructions retired: increments with every architecturally executed
++    instruction.
++  - Memory stall cycles: counts instruction dispatch stall cycles caused by
++    misses in the last level cache within the clock domain.
++
++When in WFI or WFE these counters do not increment.
++
++The Activity Monitors architecture provides space for up to 16 architected
++event counters. Future versions of the architecture may use this space to
++implement additional architected event counters.
++
++Additionally, version 1 implements a counter group of up to 16 auxiliary
++64-bit event counters.
++
++On cold reset all counters reset to 0.
++
++
++Basic support
++-------------
++
++The kernel can safely run a mix of CPUs with and without support for the
++activity monitors extension. Therefore, when CONFIG_ARM64_AMU_EXTN is
++selected we unconditionally enable the capability to allow any late CPU
++(secondary or hotplugged) to detect and use the feature.
++
++When the feature is detected on a CPU, we flag the availability of the
++feature but this does not guarantee the correct functionality of the
++counters, only the presence of the extension.
++
++Firmware (code running at higher exception levels, e.g. arm-tf) support is
++needed to:
++ - Enable access for lower exception levels (EL2 and EL1) to the AMU
++   registers.
++ - Enable the counters. If not enabled these will read as 0.
++ - Save/restore the counters before/after the CPU is being put/brought up
++   from the 'off' power state.
++
++When using kernels that have this feature enabled but boot with broken
++firmware the user may experience panics or lockups when accessing the
++counter registers. Even if these symptoms are not observed, the values
++returned by the register reads might not correctly reflect reality. Most
++commonly, the counters will read as 0, indicating that they are not
++enabled.
++
++If proper support is not provided in firmware it's best to disable
++CONFIG_ARM64_AMU_EXTN. To be noted that for security reasons, this does not
++bypass the setting of AMUSERENR_EL0 to trap accesses from EL0 (userspace) to
++EL1 (kernel). Therefore, firmware should still ensure accesses to AMU registers
++are not trapped in EL2/EL3.
++
++The fixed counters of AMUv1 are accessible though the following system
++register definitions:
++ - SYS_AMEVCNTR0_CORE_EL0
++ - SYS_AMEVCNTR0_CONST_EL0
++ - SYS_AMEVCNTR0_INST_RET_EL0
++ - SYS_AMEVCNTR0_MEM_STALL_EL0
++
++Auxiliary platform specific counters can be accessed using
++SYS_AMEVCNTR1_EL0(n), where n is a value between 0 and 15.
++
++Details can be found in: arch/arm64/include/asm/sysreg.h.
++
++
++Userspace access
++----------------
++
++Currently, access from userspace to the AMU registers is disabled due to:
++ - Security reasons: they might expose information about code executed in
++   secure mode.
++ - Purpose: AMU counters are intended for system management use.
++
++Also, the presence of the feature is not visible to userspace.
++
++
++Virtualization
++--------------
++
++Currently, access from userspace (EL0) and kernelspace (EL1) on the KVM
++guest side is disabled due to:
++ - Security reasons: they might expose information about code executed
++   by other guests or the host.
++
++Any attempt to access the AMU registers will result in an UNDEFINED
++exception being injected into the guest.
+diff --git a/Documentation/arm64/booting.rst b/Documentation/arm64/booting.rst
+index 5d78a6f5b0ae..a3f1a47b6f1c 100644
+--- a/Documentation/arm64/booting.rst
++++ b/Documentation/arm64/booting.rst
+@@ -248,6 +248,20 @@ Before jumping into the kernel, the following conditions must be met:
+     - HCR_EL2.APK (bit 40) must be initialised to 0b1
+     - HCR_EL2.API (bit 41) must be initialised to 0b1
  
- 	chosen {
- 		stdout-path = "serial1:115200n8";
--		bootargs = "earlycon";
-+		bootargs = "earlycon console=ttyS1";
- 	};
- };
++  For CPUs with Activity Monitors Unit v1 (AMUv1) extension present:
++  - If EL3 is present:
++    CPTR_EL3.TAM (bit 30) must be initialised to 0b0
++    CPTR_EL2.TAM (bit 30) must be initialised to 0b0
++    AMCNTENSET0_EL0 must be initialised to 0b1111
++    AMCNTENSET1_EL0 must be initialised to a platform specific value
++    having 0b1 set for the corresponding bit for each of the auxiliary
++    counters present.
++  - If the kernel is entered at EL1:
++    AMCNTENSET0_EL0 must be initialised to 0b1111
++    AMCNTENSET1_EL0 must be initialised to a platform specific value
++    having 0b1 set for the corresponding bit for each of the auxiliary
++    counters present.
++
+ The requirements described above for CPU mode, caches, MMUs, architected
+ timers, coherency and system registers apply to all CPUs.  All CPUs must
+ enter the kernel in the same exception level.
+diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
+index 5c0c69dc58aa..09cbb4ed2237 100644
+--- a/Documentation/arm64/index.rst
++++ b/Documentation/arm64/index.rst
+@@ -6,6 +6,7 @@ ARM64 Architecture
+     :maxdepth: 1
  
+     acpi_object_usage
++    amu
+     arm-acpi
+     booting
+     cpu-feature-registers
 -- 
-2.20.1
+2.17.1
 
