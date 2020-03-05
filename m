@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B75C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0404C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC53F21739
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F7121556
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428489;
-	bh=3FrZdYvpqhFybQqlRH77rhrJ/OHxk2sMndBLGH2KYyY=;
+	s=default; t=1583428493;
+	bh=q1ZJfqZkpoH40GqRMjB4mYTdZMps4c9CnvYPqZJ7INI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J8e+FtA+nhbBWyuXU1tnsMu3ey6qI/ghKdIvtlXMk0ObwMJGkQYs7eUZ/p8z0K8kN
-	 mibv7kbWSuBaXe3jyxHrWbr003rh8GjpwTeirk0Y7uDM/gOJ5xwkcmvxzxcncodSTO
-	 FZkD7Za1o0cNiLCY/Cy+zPkBaONjlg1BDDVfyKts=
+	b=MCfcdTAEWKgMH4JeWRDm0OK0UZhKkY80R9gikp/g+l3QAf1w5wJxWP3ds4/CbEub3
+	 2vVHWeXsoTr73MzsiE+tTNVR0dDFE+8UHBXOCvuQvL8bC+bbnwqYse1G6GwbVars2W
+	 7RrzhLNsmn69WQVh+IdeBanujHnGrr17iEdTZy6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgCEROt (ORCPT
+        id S1727830AbgCEROv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:14:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40734 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:14:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726273AbgCEROc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:32 -0500
+        id S1727662AbgCEROg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A6BC21744;
-        Thu,  5 Mar 2020 17:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A61A024655;
+        Thu,  5 Mar 2020 17:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428471;
-        bh=3FrZdYvpqhFybQqlRH77rhrJ/OHxk2sMndBLGH2KYyY=;
+        s=default; t=1583428475;
+        bh=q1ZJfqZkpoH40GqRMjB4mYTdZMps4c9CnvYPqZJ7INI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TjtMonUBqkUQuEQjeZ0z4pazc6on071fXRqYpG+N6UBi1Zm0CzLDneHs+Nc+vGvFj
-         tPbp0P0joz/jvDhYRKhW+Ze+qD/yJCFUZAw2FGERP7MJCSEgJnSAeYtrZPxhuKoXSn
-         eVpsyrrVWiEFjk8zp5bXQwsm0HpmIv+ah8oqvy3o=
+        b=TVnRuwvR1Vxxwi/sWnCaApzmlaWt2rJoJ7T41Kbwd0f/gDbUBYnf+dS67VQyMy7LV
+         lG++qds8jJvFADg5fzkA8Cu4sAr5TUe89/SSutiOipOnYZFK+Iaz9pS553NngOthsW
+         hTfO3JK+agPXgJCOBGTpMvDRhf3w7othN6Iv3dug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/58] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
-Date:   Thu,  5 Mar 2020 12:13:30 -0500
-Message-Id: <20200305171420.29595-9-sashal@kernel.org>
+Cc:     Victor Kamensky <kamensky@cisco.com>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        bruce.ashfield@gmail.com, richard.purdie@linuxfoundation.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 12/58] mips: vdso: add build time check that no 'jalr t9' calls left
+Date:   Thu,  5 Mar 2020 12:13:33 -0500
+Message-Id: <20200305171420.29595-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
 References: <20200305171420.29595-1-sashal@kernel.org>
@@ -60,41 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Victor Kamensky <kamensky@cisco.com>
 
-[ Upstream commit be0aba826c4a6ba5929def1962a90d6127871969 ]
+[ Upstream commit 976c23af3ee5bd3447a7bfb6c356ceb4acf264a6 ]
 
-The Surfbook E11B uses the SIPODEV SP1064 touchpad, which does not supply
-descriptors, so it has to be added to the override list.
+vdso shared object cannot have GOT based PIC 'jalr t9' calls
+because nobody set GOT table in vdso. Contributing into vdso
+.o files are compiled in PIC mode and as result for internal
+static functions calls compiler will generate 'jalr t9'
+instructions. Those are supposed to be converted into PC
+relative 'bal' calls by linker when relocation are processed.
 
-BugLink: https://bugs.launchpad.net/bugs/1858299
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Mips global GOT entries do have dynamic relocations and they
+will be caught by cmd_vdso_check Makefile rule. Static PIC
+calls go through mips local GOT entries that do not have
+dynamic relocations. For those 'jalr t9' calls could be present
+but without dynamic relocations and they need to be converted
+to 'bal' calls by linker.
+
+Add additional build time check to make sure that no 'jalr t9'
+slip through because of some toolchain misconfiguration that
+prevents 'jalr t9' to 'bal' conversion.
+
+Signed-off-by: Victor Kamensky <kamensky@cisco.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: bruce.ashfield@gmail.com
+Cc: richard.purdie@linuxfoundation.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/mips/vdso/Makefile | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-index d31ea82b84c17..a66f08041a1aa 100644
---- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -341,6 +341,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
- 		},
- 		.driver_data = (void *)&sipodev_desc
- 	},
-+	{
-+		.ident = "Trekstor SURFBOOK E11B",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SURFBOOK E11B"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
- 	{
- 		.ident = "Direkt-Tek DTLAPY116-2",
- 		.matches = {
+diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+index b6b1eb638fb14..08c835d48520b 100644
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -92,12 +92,18 @@ CFLAGS_REMOVE_vdso.o = -pg
+ GCOV_PROFILE := n
+ UBSAN_SANITIZE := n
+ 
++# Check that we don't have PIC 'jalr t9' calls left
++quiet_cmd_vdso_mips_check = VDSOCHK $@
++      cmd_vdso_mips_check = if $(OBJDUMP) --disassemble $@ | egrep -h "jalr.*t9" > /dev/null; \
++		       then (echo >&2 "$@: PIC 'jalr t9' calls are not supported"; \
++			     rm -f $@; /bin/false); fi
++
+ #
+ # Shared build commands.
+ #
+ 
+ quiet_cmd_vdsold_and_vdso_check = LD      $@
+-      cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check)
++      cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check); $(cmd_vdso_mips_check)
+ 
+ quiet_cmd_vdsold = VDSO    $@
+       cmd_vdsold = $(CC) $(c_flags) $(VDSO_LDFLAGS) \
 -- 
 2.20.1
 
