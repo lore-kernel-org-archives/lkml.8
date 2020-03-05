@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCE2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E31A7C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C92B20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F4720848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428770;
-	bh=QTPrZ8L1wMcEl85u1Lgl6O7EWS4Lod16z+aVQ0DhUrw=;
+	s=default; t=1583428772;
+	bh=IUgSQBIgrx3acAIdWwuai6U1vJC+ObOnP/PsZf5UV9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TKsIlxxRFNgEg/eqtF8XalkYxCNeAbe7bzMEOFHI8dZKmxzxEfyA2ikL1sMhSLb3T
-	 T08HYo3JZoo2+u2HS5jyJaC9TNdxHFo2/Lri50V4Q+n8NaBCCgzos3/lAx3/W6tbZs
-	 06AuNoXB1cw4+1GOaHRcMqfO+vsjWTNker4IArDI=
+	b=IbGT/KplUN5u//6i2Lsaaxw/v0FjWYRO1rCpBe/gCD8ZWvhtJAk/+5D5TZeZw+gMm
+	 sdSAHv7m02IO/dwe3uJRfGL5pbnaEUmRUHHwAj0mrqdUjPvz73EzTNYIwWxpovPw/Z
+	 AxZ09l1i6oGqvkPjGTeb7BCYOtsAcR0Vug1mCHeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgCERTY (ORCPT
+        id S1727945AbgCERPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:19:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41708 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:15:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbgCERPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:07 -0500
+        id S1727768AbgCEROn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B71BE2146E;
-        Thu,  5 Mar 2020 17:15:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 518D6208CD;
+        Thu,  5 Mar 2020 17:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428507;
-        bh=QTPrZ8L1wMcEl85u1Lgl6O7EWS4Lod16z+aVQ0DhUrw=;
+        s=default; t=1583428483;
+        bh=IUgSQBIgrx3acAIdWwuai6U1vJC+ObOnP/PsZf5UV9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=voxxUxfkEAyDeRi6TmOA7XWHuCBCf3LAErPk1X9lv6OYHYNcdu1l1Vmu4Zr2epWRr
-         QVTHwvEM7Nm/PcV6TJYq5CHGSy+QWX3ye5+My6N42XVNhT3itWHwWEe9+JvLLprs3e
-         uEcETw3sbRvBKP+wFZzcZ4CaiF3jgKf6wFRxJ6Kk=
+        b=ak/98HxOy7igGca74hn23cNtbLghWQBvZGYpUxjfXWhuGT1uvzVEozDHDYxjvwP9X
+         rzJU1nuc1oBNFt4AoBBoe29AEinwB1hL+cvYvYu61stD4DgBW3giutA99WuTwFy/XW
+         7B0JrYQU1KY9P9BqqHMBblDMYpwHN5LDm9NhO+yM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 37/58] kbuild: fix DT binding schema rule to detect command line changes
-Date:   Thu,  5 Mar 2020 12:13:58 -0500
-Message-Id: <20200305171420.29595-37-sashal@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 18/58] selftests/rseq: Fix out-of-tree compilation
+Date:   Thu,  5 Mar 2020 12:13:39 -0500
+Message-Id: <20200305171420.29595-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
 References: <20200305171420.29595-1-sashal@kernel.org>
@@ -59,47 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 7a04960560640ac5b0b89461f7757322b57d0c7a ]
+[ Upstream commit ef89d0545132d685f73da6f58b7e7fe002536f91 ]
 
-This if_change_rule is not working properly; it cannot detect any
-command line change.
+Currently if you build with O=... the rseq tests don't build:
 
-The reason is because cmd-check in scripts/Kbuild.include compares
-$(cmd_$@) and $(cmd_$1), but cmd_dtc_dt_yaml does not exist here.
+  $ make O=$PWD/output -C tools/testing/selftests/ TARGETS=rseq
+  make: Entering directory '/linux/tools/testing/selftests'
+  ...
+  make[1]: Entering directory '/linux/tools/testing/selftests/rseq'
+  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./  -shared -fPIC rseq.c -lpthread -o /linux/output/rseq/librseq.so
+  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./  basic_test.c -lpthread -lrseq -o /linux/output/rseq/basic_test
+  /usr/bin/ld: cannot find -lrseq
+  collect2: error: ld returned 1 exit status
 
-For if_change_rule to work properly, the stem part of cmd_* and rule_*
-must match. Because this cmd_and_fixdep invokes cmd_dtc, this rule must
-be named rule_dtc.
+This is because the library search path points to the source
+directory, not the output.
 
-Fixes: 4f0e3a57d6eb ("kbuild: Add support for DT binding schema checks")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+We can fix it by changing the library search path to $(OUTPUT).
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Makefile.lib | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/rseq/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 179d55af58529..8a6663580b8e1 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -305,13 +305,13 @@ DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
- quiet_cmd_dtb_check =	CHECK   $@
-       cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@ ;
+diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
+index d6469535630af..708c1b3452454 100644
+--- a/tools/testing/selftests/rseq/Makefile
++++ b/tools/testing/selftests/rseq/Makefile
+@@ -4,7 +4,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+ CLANG_FLAGS += -no-integrated-as
+ endif
  
--define rule_dtc_dt_yaml
-+define rule_dtc
- 	$(call cmd_and_fixdep,dtc,yaml)
- 	$(call cmd,dtb_check)
- endef
- 
- $(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
--	$(call if_changed_rule,dtc_dt_yaml)
-+	$(call if_changed_rule,dtc)
- 
- dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
+-CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ \
++CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L$(OUTPUT) -Wl,-rpath=./ \
+ 	  $(CLANG_FLAGS)
+ LDLIBS += -lpthread
  
 -- 
 2.20.1
