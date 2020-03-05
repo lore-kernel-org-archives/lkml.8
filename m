@@ -2,40 +2,83 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B56EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE23EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C48520848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9658E20732
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:51:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eYR9WFqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgCEOur (ORCPT
+        id S1726436AbgCEOvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:50:47 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55388 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbgCEOuq (ORCPT
+        Thu, 5 Mar 2020 09:51:32 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32598 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725963AbgCEOvb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:50:46 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 41E97295EE7
-Subject: Re: [PATCH v3 0/4] Implement FUTEX_WAIT_MULTIPLE operation
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "kernel@collabora.com" <kernel@collabora.com>
-References: <20200229105130.15436-1-hdanton@sina.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <fdcd5f32-803f-7665-22a2-d674840a3e54@collabora.com>
-Date:   Thu, 5 Mar 2020 11:48:07 -0300
+        Thu, 5 Mar 2020 09:51:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583419890;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q2h6nPEsw2WQpXjdndQPq3IqLV2vLVlw94U+XC3vi3k=;
+        b=eYR9WFqjHc2tluXiDlAyhnk2Hdri1jZblg02na6nkysoAFSysjuLLr3sZr5+QJXZc4eC8+
+        RuCG8iFd2ROJNeEqxV3kt2pD6JNvXefPDsMzETe9veSIqzJ/rRkB4FLcsHix0HfhUYLTSM
+        N03LEQa5f79YzbtIm3Kn+Kw+fddxotw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-jJzC4JpDNW-yrc6nSNDSUg-1; Thu, 05 Mar 2020 09:51:26 -0500
+X-MC-Unique: jJzC4JpDNW-yrc6nSNDSUg-1
+Received: by mail-wm1-f72.google.com with SMTP id e26so664120wmk.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:51:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q2h6nPEsw2WQpXjdndQPq3IqLV2vLVlw94U+XC3vi3k=;
+        b=kC2Ac0U/zno0byWxGOXfsa7wOVbrUL37EHP9liwJUiXvnfirAbAc5APfzOBVWwcjRP
+         qbSkbDwcpewwKtCvYpoVtowN+R7X4dsgjLCIUcUSNdjitNYC0xbFdQ6gFV4pBLWhtd+D
+         1VScJpUAv8GN6nzc5a2jia1VFR7ce/i4xo1yp+cnyPavw/7LIW24zqp6SY1JuoTI9AcQ
+         GpG3+kJS8Uc3XJQAAiYci27eWpJmVIfN3XJkHfFurOpOp5qtLlx6JRADXDRvmwWgIAeu
+         PsiJgspT9uIr6nMiJ1H0+Yyj0VIGhe/RN5qK3Xrm3+pC+oQvwFevAT6tqDzIBleh6OyN
+         IH0Q==
+X-Gm-Message-State: ANhLgQ0mm5E4mRxz84W4UJ/mHJ4evN/ic80unxoceizTvezJ6N67qqpu
+        Lx2RBAYAqOlsJtuKb0Qp1Id3cTk8Q+j8Zhnxa0I3tRgkQVce2iobzr+hVmD5IeJ34FBGGXj5iIZ
+        hIIKLbEl3rDfaZY9onVjnRcGZ
+X-Received: by 2002:adf:db84:: with SMTP id u4mr10772012wri.317.1583419884800;
+        Thu, 05 Mar 2020 06:51:24 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vtTRxo3t5rJ55MDnIHanJNHGJWt5oHjPPR6NBeyxl0zG2Vh2C3V07dfWyE02Tr41RF7mTuCEA==
+X-Received: by 2002:adf:db84:: with SMTP id u4mr10771941wri.317.1583419883699;
+        Thu, 05 Mar 2020 06:51:23 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
+        by smtp.gmail.com with ESMTPSA id 12sm9559704wmo.30.2020.03.05.06.51.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 06:51:23 -0800 (PST)
+Subject: Re: [PATCH v9 1/7] KVM: CPUID: Fix IA32_XSS support in CPUID(0xd,i)
+ enumeration
+To:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jmattson@google.com,
+        sean.j.christopherson@intel.com
+Cc:     yu.c.zhang@linux.intel.com
+References: <20191227021133.11993-1-weijiang.yang@intel.com>
+ <20191227021133.11993-2-weijiang.yang@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <bd75450f-a929-f60b-e973-205e4f5a9743@redhat.com>
+Date:   Thu, 5 Mar 2020 15:51:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200229105130.15436-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191227021133.11993-2-weijiang.yang@intel.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,103 +86,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/29/20 7:51 AM, Hillf Danton wrote:
-> 
-> On Thu, 13 Feb 2020 18:45:21 -0300 Andre Almeida wrote:
->>
->> When a write or a read operation in an eventfd file succeeds, it will try
->> to wake up all threads that are waiting to perform some operation to
->> the file. The lock (ctx->wqh.lock) that hold the access to the file value
->> (ctx->count) is the same lock used to control access the waitqueue. When
->> all those those thread woke, they will compete to get this lock. Along
->> with that, the poll() also manipulates the waitqueue and need to hold
->> this same lock. This lock is specially hard to acquire when poll() calls
->> poll_freewait(), where it tries to free all waitqueues associated with
->> this poll. While doing that, it will compete with a lot of read and
->> write operations that have been waken.
-> 
-> Want to know if a rwsem is likely to help mitigate the tension between the
-> readers and writers in your workloads.
-> 
+On 27/12/19 03:11, Yang Weijiang wrote:
+> +	u64 (*supported_xss)(void);
 
-Thanks for the suggestion Hillf. However, keep in mind that the lock
-that is causing the tension (ctx->wqh.lock) is shared between eventfd()
-and poll() syscall, so a solution to help mitigate the tension would
-need to be shared between both codes. And since wqh.lock isn't a
-read/write lock, even if a lot of readers manage to get this lock in
-parallel, they will compete wqh.lock
+I don't think the new callback is needed.  Anyway I'm rewriting this
+patch on top of the new CPUID feature and will post it shortly.
 
-> --- a/fs/eventfd.c
-> +++ b/fs/eventfd.c
-> @@ -40,6 +40,7 @@ struct eventfd_ctx {
->  	__u64 count;
->  	unsigned int flags;
->  	int id;
-> +	struct rw_semaphore rwsem;
->  };
->  
->  /**
-> @@ -212,6 +213,8 @@ static ssize_t eventfd_read(struct file
->  	if (count < sizeof(ucnt))
->  		return -EINVAL;
->  
-> +	/* take sem in write mode for event read */
-> +	down_write(&ctx->rwsem);
->  	spin_lock_irq(&ctx->wqh.lock);
->  	res = -EAGAIN;
->  	if (ctx->count > 0)
-> @@ -229,7 +232,9 @@ static ssize_t eventfd_read(struct file
->  				break;
->  			}
->  			spin_unlock_irq(&ctx->wqh.lock);
-> +			up_write(&ctx->rwsem);
->  			schedule();
-> +			down_write(&ctx->rwsem);
->  			spin_lock_irq(&ctx->wqh.lock);
->  		}
->  		__remove_wait_queue(&ctx->wqh, &wait);
-> @@ -241,6 +246,7 @@ static ssize_t eventfd_read(struct file
->  			wake_up_locked_poll(&ctx->wqh, EPOLLOUT);
->  	}
->  	spin_unlock_irq(&ctx->wqh.lock);
-> +	up_write(&ctx->rwsem);
->  
->  	if (res > 0 && put_user(ucnt, (__u64 __user *)buf))
->  		return -EFAULT;
-> @@ -262,6 +268,8 @@ static ssize_t eventfd_write(struct file
->  		return -EFAULT;
->  	if (ucnt == ULLONG_MAX)
->  		return -EINVAL;
-> +	/* take sem in read mode for event write */
-> +	down_read(&ctx->rwsem);
->  	spin_lock_irq(&ctx->wqh.lock);
->  	res = -EAGAIN;
->  	if (ULLONG_MAX - ctx->count > ucnt)
-> @@ -279,7 +287,9 @@ static ssize_t eventfd_write(struct file
->  				break;
->  			}
->  			spin_unlock_irq(&ctx->wqh.lock);
-> +			up_read(&ctx->rwsem);
->  			schedule();
-> +			down_read(&ctx->rwsem);
->  			spin_lock_irq(&ctx->wqh.lock);
->  		}
->  		__remove_wait_queue(&ctx->wqh, &wait);
-> @@ -291,6 +301,7 @@ static ssize_t eventfd_write(struct file
->  			wake_up_locked_poll(&ctx->wqh, EPOLLIN);
->  	}
->  	spin_unlock_irq(&ctx->wqh.lock);
-> +	up_read(&ctx->rwsem);
->  
->  	return res;
->  }
-> @@ -408,6 +419,7 @@ static int do_eventfd(unsigned int count
->  	init_waitqueue_head(&ctx->wqh);
->  	ctx->count = count;
->  	ctx->flags = flags;
-> +	init_rwsem(&ctx->rwsem);
->  	ctx->id = ida_simple_get(&eventfd_ida, 0, 0, GFP_KERNEL);
->  
->  	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
-> 
+Paolo
 
