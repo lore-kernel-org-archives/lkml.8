@@ -2,154 +2,121 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42680C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06871C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1C82072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19F62072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:48:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="YJgXceow"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="B+rC3aCe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbgCEErd (ORCPT
+        id S1726049AbgCEEsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 23:47:33 -0500
-Received: from mail-dm6nam12on2049.outbound.protection.outlook.com ([40.107.243.49]:6036
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725852AbgCEErc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 23:47:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GgrP+posPI+OpI6YxoQlj7RDWdVPbbSaJyNVbkKfs3RFp6jXNrEUoTwDJS6IqHcbAaTgEYo5ekdvVXEMN4Okxz48thFiHUhgfAW/PnBztiyaeWKFw5scnsRPolZxcN201eu8vZgBs/XkB9cHqx8rQwOtntOLHbIenwBF0HUzJWm+EtkZW9Ygaz0fOcorj5K9jJCqPyh6+9UkWLvoPngmzZ0GmrVlmbzYdnSzCPh9hzVE0OTWeUGUNoT2NywihEFilkR/0kqucKqb4MoXzJds5S1nnSyD0qjTZsbDaQiBni/JfgRwiQG/regRnjzR6PfGOI7Yr0cKhd/ZKmDPXBBkjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p2zTdGeolJ8wlOEGU31tl39xvfHxGJ3pxbvQaBeOmo0=;
- b=QkdHFbxfKDO0IFwXlW7jWYWbAy6eT4AL6mF1nVehAJ2Ix1ooWdM5SIbjGsGPVhVakRfqrx8SSU1quLao734tOOunVS6GIySjanNQV/PP0giZD6i8+rSn0/Q/zer58VreGm4uWLhYoCKtRNKtFMtOGxWwCLNHZR2zfIFXEAe+hUVGrUV5kBFTqOxXqyvb7RH3y3kL68xDkhbMPWDDtliSAT45FX1RqmpAUuJBLgbpfoRBrlL5fLf7CF6W8Ov5lfkYuR+vnFLEpv6TTPZ9EAHbpKexknfxJ5lndNN0bG/6ibyXipPWT7YaEcPz0iuj9ovHTPajyLljON9Dt7oWeDzhZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p2zTdGeolJ8wlOEGU31tl39xvfHxGJ3pxbvQaBeOmo0=;
- b=YJgXceowAyhxGGF+HSuaxr0vZiHrniloWBA9NxTVnzfVNMvh3c8sIPaRHsmedgvb1LZZAUXXOLcGHGHKQ3dM/yrDICOVGH8kzqLH3ZGM0FngimOsQmz624Nn/UC5K/W+9Mpy2nkpkn8WnQta8blK2iR57ZzWe9kRl1FW46CJBwg=
-Received: from SN6PR05MB5326.namprd05.prod.outlook.com (2603:10b6:805:b9::27)
- by SN6PR05MB4992.namprd05.prod.outlook.com (2603:10b6:805:df::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.9; Thu, 5 Mar
- 2020 04:47:29 +0000
-Received: from SN6PR05MB5326.namprd05.prod.outlook.com
- ([fe80::8482:b122:870c:eec6]) by SN6PR05MB5326.namprd05.prod.outlook.com
- ([fe80::8482:b122:870c:eec6%5]) with mapi id 15.20.2793.011; Thu, 5 Mar 2020
- 04:47:29 +0000
-Received: from sc2-cpbu2-b0737.eng.vmware.com (66.170.99.1) by DB6PR1001CA0022.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:b7::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.16 via Frontend Transport; Thu, 5 Mar 2020 04:47:25 +0000
-From:   Vivek Thampi <vithampi@vmware.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Pv-drivers <Pv-drivers@vmware.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "jgross@suse.com" <jgross@suse.com>
-Subject: Re: [PATCH RESEND] ptp: add VMware virtual PTP clock driver
-Thread-Topic: [PATCH RESEND] ptp: add VMware virtual PTP clock driver
-Thread-Index: AQHV7fh9sGmTv3Q/nkCcjzOFcD8fwKg5BbgAgABwnYA=
-Date:   Thu, 5 Mar 2020 04:47:28 +0000
-Message-ID: <20200305044713.GA173879@sc2-cpbu2-b0737.eng.vmware.com>
-References: <20200228053230.GA457139@sc2-cpbu2-b0737.eng.vmware.com>
- <20200304.140410.731261448085906331.davem@davemloft.net>
-In-Reply-To: <20200304.140410.731261448085906331.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [66.170.99.1]
-x-clientproxiedby: DB6PR1001CA0022.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:4:b7::32) To SN6PR05MB5326.namprd05.prod.outlook.com
- (2603:10b6:805:b9::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vithampi@vmware.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 968b98a2-6bdf-478a-758e-08d7c0c04eb6
-x-ms-traffictypediagnostic: SN6PR05MB4992:|SN6PR05MB4992:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR05MB4992271151650FE414581012B9E20@SN6PR05MB4992.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 03333C607F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(39860400002)(346002)(376002)(199004)(189003)(7696005)(55016002)(66476007)(1076003)(66446008)(64756008)(52116002)(8676002)(66946007)(66556008)(5660300002)(26005)(316002)(478600001)(16526019)(54906003)(33656002)(71200400001)(186003)(956004)(6916009)(2906002)(86362001)(4326008)(81166006)(81156014)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR05MB4992;H:SN6PR05MB5326.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: y06snQYR8TAAYGVjlaxyxi8N0S3mrJm66x93S8kqbGP1Sr9QFr6+Gw3irazbV2emA1ZfYgTDAmEwCM6RB67jR4Ts7xeNl9+CnayzdbRSrCrIsOvz6VjUN8wCmqv6THf7FGHHUWmcIuA5KE9NG9vLGTADRcYVUrVoPlSH20ecvaTb71CwaYc3QmrPx7pHodhTqR99/X91u/W3GvJnnTkb5kO3TKont1RvF+v5o9PcoO8e8wIgKrURNQ6yhwqSAAIbMz8g6FfkvKqyV+iZ4rbw6ymvXatf4YUQ3JUTafVMwPV8kwJWxGZuHetrMDdJO3OX6EI4ClL2gFyod8aWr/HzqL44X2KA/aalIozRXL6YNr99j9hcRMZ4lWGUAiBkBZffsx/JsznKAIItO5kAhfgOO5KiU+ck9Mig3BJmx+HfYkL1WHqLIVwDM6z8VrGP2jwo
-x-ms-exchange-antispam-messagedata: 6bJxoQttOsJGHSAHMcz37ZcEaBgwNLS53BxM/tBD1Js25QopnvtiYaQkqIJpmo+UWn5UaKqIYtPpWXcEYjOnKcEfG3eakd/9Q2nU7nfAq6W5b+TKZrFApbluQCdDdjjDLOy0zyb6+ilaIoJxjBTn0w==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C0CC8BFB48469A448048072E8EA83764@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 4 Mar 2020 23:48:14 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:39242 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgCEEsO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 23:48:14 -0500
+Received: by mail-qv1-f68.google.com with SMTP id fc12so1884445qvb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 20:48:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bR0yHX0jt6RtU935MOjekAD7bW6X/oaFERrZJKbX81c=;
+        b=B+rC3aCeemmKXHBSwju8vpHFCDXJcRs2zcFIZabqMKtnfwyC5IFe4UBlPY5IdtlbNT
+         1TyZfkxYuwzKwN0UMI8cCtJb36E2zFRjAVnc0eTu/XkdwYPFezn/waq+VXkI+VqRmYnU
+         n5Um4fRTCPyM9+n/57/Kx2tFyn3M9rwprh2/LZ9DPO1FiqsAsrfikh2KWR9wnIKxWeKi
+         wQuv8uUejauid1qLg6ALj5Gl8V2WZ9t8GxEn4fMgbfQ68WJ41HfHuFXnXVo8/TisXRLL
+         WU552JRA4VWKoyjVV+yCz4b1HxFOcjwfXTk29A3DP/yP+yFI6w8eE1hHRmZI3KKRG/Kg
+         1B9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bR0yHX0jt6RtU935MOjekAD7bW6X/oaFERrZJKbX81c=;
+        b=movLjRJ49lUUla61r3d+Hi6EFo6SNExSlyz/XrMRiXjkkrHtmKxNizm8czv+LD0IF9
+         YVhvno4QRkCe3PUpjonHfEOeIa1tj2/HptTlefzSWgwMXgtP5tZojW0ABvnV0T/r7+oF
+         3B0fDCB/b7PcDWDIVS8vo+LpjjCRSZzNOA9kjsRgCJeWAXXxl7mjrYG71U2Pj8CVEwAt
+         s5FKM8DsyEDQICJ/KdxPOxlyjSoR+x+L77AwO/OCW81RYNQEFfjEc9togC45Y68iL9lZ
+         tTpyUhznISe+tTy81Fb7S1HDMoiHJs+/6Yw2FK/gPleE08Im2JkMt7OT5WtjucALb9N1
+         hufg==
+X-Gm-Message-State: ANhLgQ1RHh2dOAUgxFKQ0t5NufC5NnBmtFtxxEIrn4q05zFwSqFkLfeL
+        Qk3VQx2DyP6RoaN+cu5aKAcquw==
+X-Google-Smtp-Source: ADFU+vv4UwakNttileojs5+Urm6yioCkCkSY1Y4lDvERapnfL62VOgXHTglEEbpPG2qMx2Kb88J8Iw==
+X-Received: by 2002:a0c:b669:: with SMTP id q41mr673037qvf.20.1583383693207;
+        Wed, 04 Mar 2020 20:48:13 -0800 (PST)
+Received: from localhost.localdomain (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id f13sm10558859qkm.42.2020.03.04.20.48.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Mar 2020 20:48:12 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     mpe@ellerman.id.au, akpm@linux-foundation.org
+Cc:     rashmicy@gmail.com, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] powerpc/mm/ptdump: fix an undefined behaviour
+Date:   Wed,  4 Mar 2020 23:47:59 -0500
+Message-Id: <20200305044759.1279-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 968b98a2-6bdf-478a-758e-08d7c0c04eb6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2020 04:47:28.7876
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xhm8nGB6qxeCvwwg8TB8v5CWVT6nWfn/KtYZoRCAETpUXttDHZqTZ8SEfC9zAANDN9Iz22czZVgfXGmAcZX07A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR05MB4992
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for taking a look, David.
+Booting a power9 server with hash MMU could trigger an undefined
+behaviour because pud_offset(p4d, 0) will do,
 
-On Wed, Mar 04, 2020 at 02:04:10PM -0800, David Miller wrote:
-> From: Vivek Thampi <vithampi@vmware.com>
-> Date: Fri, 28 Feb 2020 05:32:46 +0000
->=20
-> > Add a PTP clock driver called ptp_vmw, for guests running on VMware ESX=
-i
-> > hypervisor. The driver attaches to a VMware virtual device called
-> > "precision clock" that provides a mechanism for querying host system ti=
-me.
-> > Similar to existing virtual PTP clock drivers (e.g. ptp_kvm), ptp_vmw
-> > utilizes the kernel's PTP hardware clock API to implement a clock devic=
-e
-> > that can be used as a reference in Chrony for synchronizing guest time =
-with
-> > host.
-> >=20
-> > The driver is only applicable to x86 guests running in VMware virtual
-> > machines with precision clock virtual device present. It uses a VMware
-> > specific hypercall mechanism to read time from the device.
-> >=20
-> > Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
-> > Signed-off-by: Vivek Thampi <vithampi@vmware.com>
-> > ---
-> >  Based on feedback, resending patch to include a broader audience.
->=20
-> If it's just providing a read of an accurate timesource, I think it's kin=
-da
-> pointless to provide a full PTP driver for it.
+0 >> (PAGE_SHIFT:16 + PTE_INDEX_SIZE:8 + H_PMD_INDEX_SIZE:10)
 
-The point of a PTP driver for this timesource is to provide an interface
-that can be consumed by Chrony (and possibly other applications) as a
-reference clock for time sync. This is admittedly a very basic first
-step providing just PTP_SYS_OFFSET functionality (which gets us to <1us
-VM-host time sync). Down the line, I also intend to introduce
-cross-timestamping for more precise offsets.
+ UBSAN: shift-out-of-bounds in arch/powerpc/mm/ptdump/ptdump.c:282:15
+ shift exponent 34 is too large for 32-bit type 'int'
+ CPU: 6 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200303+ #13
+ Call Trace:
+ dump_stack+0xf4/0x164 (unreliable)
+ ubsan_epilogue+0x18/0x78
+ __ubsan_handle_shift_out_of_bounds+0x160/0x21c
+ walk_pagetables+0x2cc/0x700
+ walk_pud at arch/powerpc/mm/ptdump/ptdump.c:282
+ (inlined by) walk_pagetables at arch/powerpc/mm/ptdump/ptdump.c:311
+ ptdump_check_wx+0x8c/0xf0
+ mark_rodata_ro+0x48/0x80
+ kernel_init+0x74/0x194
+ ret_from_kernel_thread+0x5c/0x74
 
-Using the PHC infrastructure seems like a good fit for this, but please
-let me know if I'm missing something or misinterpreting your comment.
+Fixes: 8eb07b187000 ("powerpc/mm: Dump linux pagetables")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
-Thanks.
+Notes for maintainers:
+
+This is on the top of the linux-next commit "powerpc: add support for
+folded p4d page tables" which is in the Andrew's tree.
+
+ arch/powerpc/mm/ptdump/ptdump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
+index 9d6256b61df3..b530f81398a7 100644
+--- a/arch/powerpc/mm/ptdump/ptdump.c
++++ b/arch/powerpc/mm/ptdump/ptdump.c
+@@ -279,7 +279,7 @@ static void walk_pmd(struct pg_state *st, pud_t *pud, unsigned long start)
+ 
+ static void walk_pud(struct pg_state *st, p4d_t *p4d, unsigned long start)
+ {
+-	pud_t *pud = pud_offset(p4d, 0);
++	pud_t *pud = pud_offset(p4d, 0UL);
+ 	unsigned long addr;
+ 	unsigned int i;
+ 
+-- 
+2.21.0 (Apple Git-122.2)
+
