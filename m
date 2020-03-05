@@ -2,96 +2,202 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6326C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AC3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F23620848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A1F20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:28:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Edejk94U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sgKQNZHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgCEN0E (ORCPT
+        id S1726184AbgCEN2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:26:04 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:1743 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725912AbgCEN0E (ORCPT
+        Thu, 5 Mar 2020 08:28:24 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44921 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgCEN2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:26:04 -0500
-X-UUID: ec4f85029a5f4ad3876fa5dbcd392890-20200305
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vJUGDoFzTQdjcbPEZc20+na+H1fziGynCmehL0Gfwnk=;
-        b=Edejk94UMt9bpOodRgLuaVcBa4S2X0Q+G3Pm6zylOtGdk37Kf36DvIY/Dz1aMXPkoGmDjCGn2RpKEGnN9btiYv9lu3P2J2e0jZoidPcutZT575g3CMQdFoYW4SW4IivKijgNmCcSqXyNhGSRrlDsRB4r5TiRu+vM9zdkf0yRY30=;
-X-UUID: ec4f85029a5f4ad3876fa5dbcd392890-20200305
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 736192571; Thu, 05 Mar 2020 21:25:58 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 5 Mar 2020 21:23:54 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Mar 2020 21:25:10 +0800
-Message-ID: <1583414757.14250.7.camel@mtksdccf07>
-Subject: RE: [PATCH v1 4/4] scsi: ufs-mediatek: remove delay for host
- enabling
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Avri Altman <Avri.Altman@wdc.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Date:   Thu, 5 Mar 2020 21:25:57 +0800
-In-Reply-To: <MN2PR04MB6991FAE18CCA3DACF2306E08FCE20@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <20200305040704.10645-1-stanley.chu@mediatek.com>
-         <20200305040704.10645-5-stanley.chu@mediatek.com>
-         <MN2PR04MB6991FAE18CCA3DACF2306E08FCE20@MN2PR04MB6991.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 5 Mar 2020 08:28:24 -0500
+Received: by mail-pl1-f195.google.com with SMTP id d9so2638010plo.11;
+        Thu, 05 Mar 2020 05:28:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=bhx+NBdKqY66XB2XWeinrI4DDBX+xbxLxkCNi2ZSM60=;
+        b=sgKQNZHQ1JV9YlLIBaur6OHIznYyeVhIl9wcnbLhCbPWqkgsRQFXa28uDXbQGfVOkW
+         vUqTINwdRMU+LuFu7U03b++x4DxtY58gjMl+2Jg5aXx/hlFSBDWvVCZWLmCX9IM/6gsP
+         NFk/qJa+I/S31cs1qf1R1+EwwxobxdP+WmNx9H76or9vLkRIdv28s32bzHB9H4l4A67h
+         PbrXquzbjrkjqF1gvZIYp/T2vAz9nWTWiREFy1BDpKUJacclV7Qt3dzEhQZy6UMeAbxr
+         OQ/ln4qwVPAF9Bu3YeYq5wwD8urCmdr5tL//iG//8SvI6JM3QP34Qaj+K0KBCtxQ1hbH
+         9u3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=bhx+NBdKqY66XB2XWeinrI4DDBX+xbxLxkCNi2ZSM60=;
+        b=Txg5T/IRb9vaqQ98vwtOlhycYDTwh01IuUo/USJavXMIxh1rx3T9khYO0f3Wh/bnfN
+         ORFx7aMfgPBAaDmUDbOD/cJPMlswoAy4KIiXJD1FCPUR9jigOgIjnBwEpvWn5qtWX0P1
+         eD1K9SUlF2WiGsihF6FV/qQUuaWhP1Uv5elzVDSUtRBZhkvjLD4xIvM40Z8r/12xuGtK
+         vy6sNTLgvu+YSFUqz/kMgxfDx7OLXcEfa1JmmPL3ilZgVRv2RmZ8uiYo/qytR4jkqoRS
+         DxMmNKiwaxymCD5MpFQA2DUhoGjIfK39VIa7Z5JJNFRj/ZtQpATB2xlniGCoGUTxUZJ1
+         Kqng==
+X-Gm-Message-State: ANhLgQ0Ahu35KJKiF7QzCi7O28Tdf4ftwyVHIkMswpjld89lIGNQ+vvh
+        8Zylk+qfTr7/o1mefixZ9UUbd/P1
+X-Google-Smtp-Source: ADFU+vvF1wTj9Tk1NLRkUINz3py3w9Oy5Pixy5Y2Hm0XtsNFSE8Qr0gmY7l4M3gr1aTX4w2a/JR2FQ==
+X-Received: by 2002:a17:90a:1912:: with SMTP id 18mr7935609pjg.124.1583414902895;
+        Thu, 05 Mar 2020 05:28:22 -0800 (PST)
+Received: from [127.0.0.1] ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id mn19sm6447589pjb.39.2020.03.05.05.28.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 05:28:22 -0800 (PST)
+Subject: Re: [PATCH] memcg: fix NULL pointer dereference in
+ __mem_cgroup_usage_unregister_event
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <5ee35fe7-2a90-ae71-9100-3f2833cbf252@gmail.com>
+ <20200305092447.GQ16139@dhcp22.suse.cz>
+From:   brookxu <brookxu.cn@gmail.com>
+Message-ID: <1391a759-845e-11d4-09f4-9bd6e498db4f@gmail.com>
+Date:   Thu, 5 Mar 2020 21:28:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200305092447.GQ16139@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXZyaSwNCg0KT24gVGh1LCAyMDIwLTAzLTA1IGF0IDEzOjE0ICswMDAwLCBBdnJpIEFsdG1h
-biB3cm90ZToNCj4gSGkgU3RhbmxleSwNCj4gDQo+ID4gDQo+ID4gDQo+ID4gTWVkaWFUZWsgcGxh
-dGZvcm0gYW5kIFVGUyBjb250cm9sbGVyIGRvIG5vdCByZXF1aXJlIHRoZSBkZWxheQ0KPiA+IGZv
-ciBob3N0IGVuYWJsaW5nLCB0aHVzIHJlbW92ZSBpdC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBk
-cml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jIHwgMiArKw0KPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgMiBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91
-ZnMvdWZzLW1lZGlhdGVrLmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jDQo+ID4g
-aW5kZXggM2IwZTU3NWQ3NDYwLi5lYTNiNWZkNjI0OTIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVy
-cy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0KPiA+ICsrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZz
-LW1lZGlhdGVrLmMNCj4gPiBAQCAtMjU4LDYgKzI1OCw4IEBAIHN0YXRpYyBpbnQgdWZzX210a19p
-bml0KHN0cnVjdCB1ZnNfaGJhICpoYmEpDQo+IEkgd291bGQgZXhwZWN0IHRvIHNldCB3aGF0ZXZl
-ciBpcyBuZWVkZWQgZm9yIHlvdXIgaG9zdCBjb250cm9sbGVyDQo+IEluIHVmc2hjZF92b3BzX2hj
-ZV9lbmFibGVfbm90aWZ5KGhiYSwgUFJFX0NIQU5HRSksIGFuZCBub3QgaGVyZS4NCj4gDQoNCkkg
-dGhpbmsgdGhpcyBpcyBhIGdvb2Qgc3VnZ2VzdGlvbiEgQW5kIHRodXMgd2UgY291bGQgaGF2ZSBt
-b3JlDQpmbGV4aWJpbGl0eSB0byBjdXN0b21pemUgdGhlIHZhbHVlIGFjY29yZGluZyB0byBkaWZm
-ZXJlbnQgc2NlbmFyaW9zLg0KDQpJIHdpbGwgY29uc2lkZXIgdGhpcyBhcHByb2FjaCBpbiBuZXh0
-IHZlcnNpb24uDQoNClRoYW5rcyENClN0YW5sZXkgQ2h1DQoNCg==
+Sorry, the calltrace in the email is from the old system, i will fix it l=
+ater. this problem also exists in the latest master branch. The
+following is the calltrace corresponding to the latest kernel:
+
+[=C2=A0 135.675108] BUG: kernel NULL pointer dereference, address: 000000=
+0000000004
+[=C2=A0 135.675350] #PF: supervisor write access in kernel mode
+[=C2=A0 135.675579] #PF: error_code(0x0002) - not-present page
+[=C2=A0 135.675816] PGD 800000033058e067 P4D 800000033058e067 PUD 3355ce0=
+67 PMD 0
+[=C2=A0 135.676080] Oops: 0002 [#1] SMP PTI
+[=C2=A0 135.676332] CPU: 2 PID: 14012 Comm: kworker/2:6 Kdump: loaded Not=
+ tainted 5.6.0-rc4 #3
+[=C2=A0 135.676610] Hardware name: LENOVO 20AWS01K00/20AWS01K00, BIOS GLE=
+T70WW (2.24 ) 05/21/2014
+[=C2=A0 135.676909] Workqueue: events memcg_event_remove
+[=C2=A0 135.677192] RIP: 0010:__mem_cgroup_usage_unregister_event+0xb3/0x=
+190
+[=C2=A0 135.677473] Code: c0 31 d2 48 63 ca 48 c1 e1 04 4c 39 64 0e 08 0f=
+ 95 c1 83 c2 01 0f b6 c9 01 c8 39 fa 75 e5 85 c0 4d 8b 7d 08 0f 84 ad 00 =
+00 00 <41> 89 47 04 41 c7 07 ff ff ff ff 31 c0 49 8b 4d 00 31 d2 8b 71 04=
+
+[=C2=A0 135.677825] RSP: 0018:ffffb47e01c4fe18 EFLAGS: 00010202
+[=C2=A0 135.678186] RAX: 0000000000000001 RBX: ffff8bb223a8a000 RCX: 0000=
+000000000001
+[=C2=A0 135.678548] RDX: 0000000000000001 RSI: ffff8bb22fb83540 RDI: 0000=
+000000000001
+[=C2=A0 135.678912] RBP: ffffb47e01c4fe48 R08: 0000000000000000 R09: 0000=
+000000000010
+[=C2=A0 135.679287] R10: 000000000000000c R11: 071c71c71c71c71c R12: ffff=
+8bb226aba880
+[=C2=A0 135.679670] R13: ffff8bb223a8a480 R14: 0000000000000000 R15: 0000=
+000000000000
+[=C2=A0 135.680066] FS:=C2=A0 0000000000000000(0000) GS:ffff8bb242680000(=
+0000) knlGS:0000000000000000
+[=C2=A0 135.680475] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 000000008005003=
+3
+[=C2=A0 135.680894] CR2: 0000000000000004 CR3: 000000032c29c003 CR4: 0000=
+0000001606e0
+[=C2=A0 135.681325] Call Trace:
+[=C2=A0 135.681763]=C2=A0 memcg_event_remove+0x32/0x90
+[=C2=A0 135.682209]=C2=A0 process_one_work+0x172/0x380
+[=C2=A0 135.682657]=C2=A0 worker_thread+0x49/0x3f0
+[=C2=A0 135.683111]=C2=A0 kthread+0xf8/0x130
+[=C2=A0 135.683570]=C2=A0 ? max_active_store+0x80/0x80
+[=C2=A0 135.684034]=C2=A0 ? kthread_bind+0x10/0x10
+[=C2=A0 135.684506]=C2=A0 ret_from_fork+0x35/0x40
+[=C2=A0 135.684981] Modules linked in: netconsole cmac xt_CHECKSUM xt_MAS=
+QUERADE tun bridge stp llc ccm ip6t_rpfilter ipt_REJECT nf_reject_ipv4 ip=
+6t_REJECT nf_reject_ipv6 xt_conntrack ip_set nfnetlink ebtable_nat ebtabl=
+e_broute ip6table_nat ip6table_mangle ip6table_security ip6table_raw ipta=
+ble_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_mangle =
+iptable_security iptable_raw ebtable_filter ebtables ip6table_filter ip6_=
+tables iptable_filter bnep sunrpc intel_rapl_msr intel_rapl_common x86_pk=
+g_temp_thermal intel_powerclamp coretemp kvm_intel kvm rtl8192cu rtl_usb =
+rtl8192c_common irqbypass rtlwifi mac80211 uvcvideo snd_hda_codec_realtek=
+ crct10dif_pclmul snd_hda_codec_hdmi snd_hda_codec_generic iTCO_wdt crc32=
+_pclmul wmi_bmof mei_wdt iTCO_vendor_support snd_hda_intel btusb videobuf=
+2_vmalloc ghash_clmulni_intel snd_intel_dspcfg btrtl videobuf2_memops snd=
+_hda_codec btbcm videobuf2_v4l2 btintel snd_hda_core videobuf2_common blu=
+etooth aesni_intel crypto_simd cryptd cfg80211
+videodev
+[=C2=A0 135.685003]=C2=A0 snd_hwdep glue_helper snd_seq mc ecdh_generic l=
+ibarc4 snd_seq_device ecc pcspkr joydev snd_pcm thinkpad_acpi snd_timer l=
+edtrig_audio sg i2c_i801 lpc_ich wmi snd rfkill mei_me soundcore mei ie31=
+200_edac sch_fq_codel ip_tables xfs libcrc32c sr_mod sd_mod cdrom t10_pi =
+i915 i2c_algo_bit drm_kms_helper crc32c_intel syscopyarea sysfillrect sys=
+imgblt serio_raw fb_sys_fops drm e1000e ahci libahci video libata ptp pps=
+_core dm_mirror dm_region_hash dm_log dm_mod
+[=C2=A0 135.689733] CR2: 0000000000000004
+
+We can reproduce this problem in the following ways=EF=BC=9A
+
+1. We create a new cgroup subdirectory and a new eventfd, and then we mon=
+itor multiple memory thresholds of the cgroup through this eventfd
+2. closing this eventfd, the system will call __mem_cgroup_usage_unregist=
+er_event () multiple times to delete all events related to this eventfd.
+
+The first time __mem_cgroup_usage_unregister_event () is called, the syst=
+em will clear all items related to this eventfd in thresholds-> primary.
+Since there is currently only one eventfd, thresholds-> primary becomes e=
+mpty, so the system will set thresholds-> primary and hresholds-> spare
+to NULL. If at this time, the user creates a new eventfd and monitor the =
+memory threshold of this cgroup, then the system will re-initialize
+thresholds-> primary. Then when the system call __mem_cgroup_usage_unregi=
+ster_event () is called for the second time, because thresholds-> primary=
+
+is not empty, the system will access thresholds-> spare, but thresholds->=
+ spare is NULL, which will trigger a crash.
+
+In general, the longer it takes to delete all events related to this even=
+tfd, the easier it is to trigger this problem.
+
+thanks
+
+Michal Hocko wrote on 2020/3/5 17:24:
+> Thank you for the report!
+>
+> On Thu 05-03-20 13:52:03, brookxu wrote:
+>> One eventfd monitors multiple memory thresholds of cgroup, closing it,=
+ the
+>> system will delete related events. Before all events are deleted, anot=
+her
+>> eventfd monitors the cgroup's memory threshold.
+> Could you describe the race scenario please? Ideally=20
+>> As a result, thresholds->primary[] is not empty, but thresholds->spars=
+e[]
+>> is NULL, __mem_cgroup_usage_unregister_event() leading to a crash:
+>>
+>> [=C2=A0 138.925809] BUG: unable to handle kernel NULL pointer derefere=
+nce at 0000000000000004
+>> [=C2=A0 138.926817] IP: [<ffffffff8116c9b7>] mem_cgroup_usage_unregist=
+er_event+0xd7/0x1f0
+>> [=C2=A0 138.927701] PGD 73bce067 PUD 76ff3067 PMD 0
+>> [=C2=A0 138.928384] Oops: 0002 [#1] SMP
+>> [=C2=A0 138.935218] CPU: 1 PID: 14 Comm: kworker/1:0 Not tainted 3.10.=
+107-1-tlinux2-0047 #1
+> Also you seem to be running a very old kernel. Does the problem exist i=
+n
+> the current Vanilla kernel?
 
