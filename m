@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09320C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A3DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8F42073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D672073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgCEPGl (ORCPT
+        id S1726591AbgCEPIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:06:41 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:33673 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgCEPGl (ORCPT
+        Thu, 5 Mar 2020 10:08:39 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41493 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgCEPIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:06:41 -0500
-Received: by mail-qv1-f66.google.com with SMTP id p3so2559091qvq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:06:41 -0800 (PST)
+        Thu, 5 Mar 2020 10:08:39 -0500
+Received: by mail-qt1-f194.google.com with SMTP id l21so4340377qtr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:08:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4YtauhyBuYarI81yGagt2ohXVIXr6pZDvPOFIfRFrBo=;
-        b=foMdXzl1SEGhbyyZPeZ5sxE6sstFWIlKM6xzP/zZxiGmCvLLIEx7NtAp9vZ50H1idl
-         lBImuThmPj4Pe6IhPQPexjsJIP/3zZWWdeCzpqT/6NER5TwI515RcZCRKdHJklVOvQMv
-         t+Qp3DEoic7YsuwRf8QjyM7ON6K11Hl6GX9wV91NwNcAXnB+7+x2Ro9ClNbEnhuLi7Xa
-         2ALt0icjFhvOD1Zg70qnnKdyqMSDLk3OuQzUGsm/8+BJNN01n8Oi7xomO3BgNt2vMnLE
-         pbfb4o8lcXph2DHkePwVvdVtjrYDRRLguih+8u0JU0C5r09oTd4+KVWVe4JX4cgEuSUl
-         SFAw==
-X-Gm-Message-State: ANhLgQ3QBMEogkkdr+KjZ0MPjWHqw3pnvCkb7+P3phPJAgJksVICICVj
-        GEbUrNmNiGpDgFDA8rF5pLo=
-X-Google-Smtp-Source: ADFU+vt4PIOV75cKuujfyu22jJMx8631ltXW5tt1iRMuoUZFlcy2KbEnmXQTIcni8S134YaBPpbl7w==
-X-Received: by 2002:a0c:9081:: with SMTP id p1mr4587490qvp.38.1583420800482;
-        Thu, 05 Mar 2020 07:06:40 -0800 (PST)
+        bh=m1v7KEH8H8EEgDnDnnlGNlXFsnNQAqOhZZNudokQ2Po=;
+        b=mfoETpWWds7ePSzqjESKiAvEl/+kjaCgdug7r1ir9LYBmm1A3RcL+t6lcdy3ZqHjcD
+         lUxSdXwilih+5r1vUT1NKGO668Agn/GONl0MSUir1ZlvtMRBebDY3yNk+joSkc4fkmpD
+         sIYS8EZUon/+ahjpaNx70vmJbnc5QQi1L8WCsNhr5rOuY0/a3iUeMaBLcvjHyEXfCghx
+         dl1Akt9P4KsPYXBIjtOL/o6Xb+D8xocPW8FQ+9mPYC9Zhp6rfjru75URPxNX9LxiVeWC
+         vRmOzuCoMIlJfu7wjBlvOEOpQeXsNA+UJVJUjdZjgVhSQEZm4mC7GLZfoWkG+HliLaH9
+         AJfA==
+X-Gm-Message-State: ANhLgQ2mEJOziBNYkNpfSIsWCD3HqUqsDGWDjgmXXW9wiSOJzTDfNuoG
+        A1gbKwheMP5j+EPig5nIyfA=
+X-Google-Smtp-Source: ADFU+vuOS2xZwbWZs6qEQtovSh6AUFl9WlSPml+IgYmIWtqCd0kt/sKG334d9lzu+FpmW4dkIw7TEw==
+X-Received: by 2002:ac8:4408:: with SMTP id j8mr7637069qtn.3.1583420918447;
+        Thu, 05 Mar 2020 07:08:38 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id b2sm15471417qkj.9.2020.03.05.07.06.39
+        by smtp.gmail.com with ESMTPSA id n46sm266850qtb.48.2020.03.05.07.08.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 07:06:39 -0800 (PST)
+        Thu, 05 Mar 2020 07:08:37 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>,
         kernel-hardening@lists.openwall.com,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] nds32/mm: Stop printing the virtual memory layout
-Date:   Thu,  5 Mar 2020 10:06:39 -0500
-Message-Id: <20200305150639.834129-1-nivedita@alum.mit.edu>
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc/32: Stop printing the virtual memory layout
+Date:   Thu,  5 Mar 2020 10:08:37 -0500
+Message-Id: <20200305150837.835083-1-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <202003021038.8F0369D907@keescook>
 References: <202003021038.8F0369D907@keescook>
@@ -77,50 +77,37 @@ adb1fe9ae2ee ("mm/page_alloc: Remove kernel address exposure in free_reserved_ar
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/nds32/mm/init.c | 30 ------------------------------
- 1 file changed, 30 deletions(-)
+ arch/powerpc/mm/mem.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-diff --git a/arch/nds32/mm/init.c b/arch/nds32/mm/init.c
-index 0be3833f6814..1c1e79b4407c 100644
---- a/arch/nds32/mm/init.c
-+++ b/arch/nds32/mm/init.c
-@@ -205,36 +205,6 @@ void __init mem_init(void)
- 	memblock_free_all();
- 	mem_init_print_info(NULL);
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index ef7b1119b2e2..df2c143b6bf7 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -331,23 +331,6 @@ void __init mem_init(void)
+ #endif
  
--	pr_info("virtual kernel memory layout:\n"
--		"    fixmap  : 0x%08lx - 0x%08lx   (%4ld kB)\n"
--#ifdef CONFIG_HIGHMEM
--		"    pkmap   : 0x%08lx - 0x%08lx   (%4ld kB)\n"
+ 	mem_init_print_info(NULL);
+-#ifdef CONFIG_PPC32
+-	pr_info("Kernel virtual memory layout:\n");
+-#ifdef CONFIG_KASAN
+-	pr_info("  * 0x%08lx..0x%08lx  : kasan shadow mem\n",
+-		KASAN_SHADOW_START, KASAN_SHADOW_END);
 -#endif
--		"    consist : 0x%08lx - 0x%08lx   (%4ld MB)\n"
--		"    vmalloc : 0x%08lx - 0x%08lx   (%4ld MB)\n"
--		"    lowmem  : 0x%08lx - 0x%08lx   (%4ld MB)\n"
--		"      .init : 0x%08lx - 0x%08lx   (%4ld kB)\n"
--		"      .data : 0x%08lx - 0x%08lx   (%4ld kB)\n"
--		"      .text : 0x%08lx - 0x%08lx   (%4ld kB)\n",
--		FIXADDR_START, FIXADDR_TOP, (FIXADDR_TOP - FIXADDR_START) >> 10,
+-	pr_info("  * 0x%08lx..0x%08lx  : fixmap\n", FIXADDR_START, FIXADDR_TOP);
 -#ifdef CONFIG_HIGHMEM
--		PKMAP_BASE, PKMAP_BASE + LAST_PKMAP * PAGE_SIZE,
--		(LAST_PKMAP * PAGE_SIZE) >> 10,
--#endif
--		CONSISTENT_BASE, CONSISTENT_END,
--		((CONSISTENT_END) - (CONSISTENT_BASE)) >> 20, VMALLOC_START,
--		(unsigned long)VMALLOC_END, (VMALLOC_END - VMALLOC_START) >> 20,
--		(unsigned long)__va(memory_start), (unsigned long)high_memory,
--		((unsigned long)high_memory -
--		 (unsigned long)__va(memory_start)) >> 20,
--		(unsigned long)&__init_begin, (unsigned long)&__init_end,
--		((unsigned long)&__init_end -
--		 (unsigned long)&__init_begin) >> 10, (unsigned long)&_etext,
--		(unsigned long)&_edata,
--		((unsigned long)&_edata - (unsigned long)&_etext) >> 10,
--		(unsigned long)&_text, (unsigned long)&_etext,
--		((unsigned long)&_etext - (unsigned long)&_text) >> 10);
--
- 	/*
- 	 * Check boundaries twice: Some fundamental inconsistencies can
- 	 * be detected at build time already.
+-	pr_info("  * 0x%08lx..0x%08lx  : highmem PTEs\n",
+-		PKMAP_BASE, PKMAP_ADDR(LAST_PKMAP));
+-#endif /* CONFIG_HIGHMEM */
+-	if (ioremap_bot != IOREMAP_TOP)
+-		pr_info("  * 0x%08lx..0x%08lx  : early ioremap\n",
+-			ioremap_bot, IOREMAP_TOP);
+-	pr_info("  * 0x%08lx..0x%08lx  : vmalloc & ioremap\n",
+-		VMALLOC_START, VMALLOC_END);
+-#endif /* CONFIG_PPC32 */
+ }
+ 
+ void free_initmem(void)
 -- 
 2.24.1
 
