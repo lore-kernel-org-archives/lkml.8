@@ -2,123 +2,174 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF97C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A671C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59578205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8982073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgCEPlJ (ORCPT
+        id S1726982AbgCEPlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:41:09 -0500
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:34759 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726048AbgCEPlI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:41:08 -0500
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1j9scU-000hq4-Gl; Thu, 05 Mar 2020 16:41:06 +0100
-Received: from suse-laptop.physik.fu-berlin.de ([160.45.32.140])
-          by inpost2.zedat.fu-berlin.de (Exim 4.85)
-          with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id <1j9scU-003Qw8-B4>; Thu, 05 Mar 2020 16:41:06 +0100
-Subject: Re: [PATCH] sh: Stop printing the virtual memory layout
-To:     Joe Perches <joe@perches.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>,
-        kernel-hardening@lists.openwall.com,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        Thu, 5 Mar 2020 10:41:31 -0500
+Received: from mga06.intel.com ([134.134.136.31]:41163 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgCEPlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 10:41:31 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 07:41:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="413555891"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 05 Mar 2020 07:41:30 -0800
+Date:   Thu, 5 Mar 2020 07:41:30 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <202003021038.8F0369D907@keescook>
- <20200305151010.835954-1-nivedita@alum.mit.edu>
- <f672417e-1323-4ef2-58a1-1158c482d569@physik.fu-berlin.de>
- <31d1567c4c195f3bc5c6b610386cf0f559f9094f.camel@perches.com>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <3c628a5a-35c7-3d92-b94b-23704500f7c4@physik.fu-berlin.de>
-Date:   Thu, 5 Mar 2020 16:41:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Subject: Re: [PATCH 2/2] KVM: x86: VMX: untangle VMXON revision_id setting
+ when using eVMCS
+Message-ID: <20200305154130.GB11500@linux.intel.com>
+References: <20200305100123.1013667-1-vkuznets@redhat.com>
+ <20200305100123.1013667-3-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <31d1567c4c195f3bc5c6b610386cf0f559f9094f.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: 160.45.32.140
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305100123.1013667-3-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 4:38 PM, Joe Perches wrote:
->> Aww, why wasn't this made configurable? I found these memory map printouts
->> very useful for development.
+On Thu, Mar 05, 2020 at 11:01:23AM +0100, Vitaly Kuznetsov wrote:
+> As stated in alloc_vmxon_regions(), VMXON region needs to be tagged with
+> revision id from MSR_IA32_VMX_BASIC even in case of eVMCS. The logic to
+> do so is not very straightforward: first, we set
+> hdr.revision_id = KVM_EVMCS_VERSION in alloc_vmcs_cpu() just to reset it
+> back to vmcs_config.revision_id in alloc_vmxon_regions(). Simplify this by
+> introducing 'enum vmx_area_type' parameter to what is now known as
+> alloc_vmx_area_cpu().
+
+I'd strongly prefer to keep the alloc_vmcs_cpu() name and call the new enum
+"vmcs_type".  The discrepancy could be resolved by a comment above the
+VMXON_REGION usage, e.g.
+
+		/* The VMXON region is really just a special type of VMCS. */
+		vmcs = alloc_vmcs_cpu(VMXON_REGION, cpu, GFP_KERNEL);
+
+> No functional change intended.
 > 
-> It could be changed from pr_info to pr_devel.
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 31 +++++++++++++------------------
+>  arch/x86/kvm/vmx/vmx.h | 12 +++++++++---
+>  2 files changed, 22 insertions(+), 21 deletions(-)
 > 
-> A #define DEBUG would have to be added to emit it.
-
-Well, from the discussion it seems the decision to cut it out has already been
-made, so I guess it's too late :(.
-
-Adrian
-
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index dab19e4e5f2b..4ee19fb35cde 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2554,7 +2554,7 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>  	return 0;
+>  }
+>  
+> -struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags)
+> +struct vmcs *alloc_vmx_area_cpu(enum vmx_area_type type, int cpu, gfp_t flags)
+>  {
+>  	int node = cpu_to_node(cpu);
+>  	struct page *pages;
+> @@ -2566,13 +2566,21 @@ struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags)
+>  	vmcs = page_address(pages);
+>  	memset(vmcs, 0, vmcs_config.size);
+>  
+> -	/* KVM supports Enlightened VMCS v1 only */
+> -	if (static_branch_unlikely(&enable_evmcs))
+> +	/*
+> +	 * When eVMCS is enabled, vmcs->revision_id needs to be set to the
+> +	 * supported eVMCS version (KVM_EVMCS_VERSION) instead of revision_id
+> +	 * reported by MSR_IA32_VMX_BASIC.
+> +	 *
+> +	 * However, even though not explicitly documented by TLFS, VMXArea
+> +	 * passed as VMXON argument should still be marked with revision_id
+> +	 * reported by physical CPU.
+> +	 */
+> +	if (type != VMXON_REGION && static_branch_unlikely(&enable_evmcs))
+>  		vmcs->hdr.revision_id = KVM_EVMCS_VERSION;
+>  	else
+>  		vmcs->hdr.revision_id = vmcs_config.revision_id;
+>  
+> -	if (shadow)
+> +	if (type == SHADOW_VMCS_REGION)
+>  		vmcs->hdr.shadow_vmcs = 1;
+>  	return vmcs;
+>  }
+> @@ -2652,25 +2660,12 @@ static __init int alloc_vmxon_regions(void)
+>  	for_each_possible_cpu(cpu) {
+>  		struct vmcs *vmcs;
+>  
+> -		vmcs = alloc_vmcs_cpu(false, cpu, GFP_KERNEL);
+> +		vmcs = alloc_vmx_area_cpu(VMXON_REGION, cpu, GFP_KERNEL);
+>  		if (!vmcs) {
+>  			free_vmxon_regions();
+>  			return -ENOMEM;
+>  		}
+>  
+> -		/*
+> -		 * When eVMCS is enabled, alloc_vmcs_cpu() sets
+> -		 * vmcs->revision_id to KVM_EVMCS_VERSION instead of
+> -		 * revision_id reported by MSR_IA32_VMX_BASIC.
+> -		 *
+> -		 * However, even though not explicitly documented by
+> -		 * TLFS, VMXArea passed as VMXON argument should
+> -		 * still be marked with revision_id reported by
+> -		 * physical CPU.
+> -		 */
+> -		if (static_branch_unlikely(&enable_evmcs))
+> -			vmcs->hdr.revision_id = vmcs_config.revision_id;
+> -
+>  		per_cpu(vmxarea, cpu) = vmcs;
+>  	}
+>  	return 0;
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index e64da06c7009..7bdac5a50432 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -489,7 +489,13 @@ static inline struct pi_desc *vcpu_to_pi_desc(struct kvm_vcpu *vcpu)
+>  	return &(to_vmx(vcpu)->pi_desc);
+>  }
+>  
+> -struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags);
+> +enum vmx_area_type {
+> +	VMXON_REGION,
+> +	VMCS_REGION,
+> +	SHADOW_VMCS_REGION,
+> +};
+> +
+> +struct vmcs *alloc_vmx_area_cpu(enum vmx_area_type type, int cpu, gfp_t flags);
+>  void free_vmcs(struct vmcs *vmcs);
+>  int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+>  void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+> @@ -498,8 +504,8 @@ void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs);
+>  
+>  static inline struct vmcs *alloc_vmcs(bool shadow)
+>  {
+> -	return alloc_vmcs_cpu(shadow, raw_smp_processor_id(),
+> -			      GFP_KERNEL_ACCOUNT);
+> +	return alloc_vmx_area_cpu(shadow ? SHADOW_VMCS_REGION : VMCS_REGION,
+> +				  raw_smp_processor_id(), GFP_KERNEL_ACCOUNT);
+>  }
+>  
+>  u64 construct_eptp(struct kvm_vcpu *vcpu, unsigned long root_hpa);
+> -- 
+> 2.24.1
+> 
