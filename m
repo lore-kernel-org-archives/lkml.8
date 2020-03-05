@@ -2,96 +2,159 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CF6C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4283DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8565520848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:05:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r1lyRzmj"
+	by mail.kernel.org (Postfix) with ESMTP id 29B8C2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgCETF4 (ORCPT
+        id S1726128AbgCETHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 14:05:56 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:32204 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726009AbgCETFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 14:05:54 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583435154; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=YH+QWh0B2Sy6GXDxwNE87QSZhteGeflftaYJuX5RZ/w=; b=r1lyRzmje8Ks9/NXflsxzU9RCvJKo1W4gNY2pJ22pJi6QuVZfAgJe++py2NcE0+1yHTfpAX9
- OhV3+Ost+W4kQ1FwFx5R1l6H6LwpOqgRV8Y2GmLxknSDnkFbUf00T4ZL7DRnjelChs9j+fSc
- qSXX1t2+ShEV1rePg2MOt8x9eVw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e614d89.7fa75291bce0-smtp-out-n02;
- Thu, 05 Mar 2020 19:05:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D91F7C447A5; Thu,  5 Mar 2020 19:05:45 +0000 (UTC)
-Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: eberman)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D3E60C447A0;
-        Thu,  5 Mar 2020 19:05:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D3E60C447A0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
-From:   Elliot Berman <eberman@codeaurora.org>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Elliot Berman <eberman@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Trilok Soni <tsoni@codeaurora.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] arm64: dts: qcom: sm8250: Add vendor-specific PSCI system reset2 type
-Date:   Thu,  5 Mar 2020 11:05:29 -0800
-Message-Id: <1583435129-31356-4-git-send-email-eberman@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583435129-31356-1-git-send-email-eberman@codeaurora.org>
-References: <1583435129-31356-1-git-send-email-eberman@codeaurora.org>
+        Thu, 5 Mar 2020 14:07:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:52704 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbgCETHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 14:07:13 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AF7030E;
+        Thu,  5 Mar 2020 11:07:13 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E3B13F6CF;
+        Thu,  5 Mar 2020 11:07:11 -0800 (PST)
+Subject: Re: [PATCH] sched/fair: fix enqueue_task_fair warning
+To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
+        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com
+Cc:     stable@vger.kernel.org
+References: <20200305172921.22743-1-vincent.guittot@linaro.org>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <e31aa232-bc7e-a7b9-5b6a-a1131ac88164@arm.com>
+Date:   Thu, 5 Mar 2020 20:07:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200305172921.22743-1-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qualcomm Technologies, Inc. SoCs do not guarantee that an architectural
-warm reset boots back into Linux kernel. For instance, if download mode
-or reboot reason cookies are set, the SoC would do a warm reset into an
-alternate exception level (e.g. a mode to collect RAM dumps) or an alternate
-EL1 application (e.g. fastboot mode). Thus, Qualcomm Technologies,
-Inc. SoCs support a vendor-specific warm reset type that can be used in
-all instances of warm/soft reboots.
+On 05/03/2020 18:29, Vincent Guittot wrote:
+> When a cfs rq is throttled, the latter and its child are removed from the
+> leaf list but their nr_running is not changed which includes staying higher
+> than 1. When a task is enqueued in this throttled branch, the cfs rqs must
+> be added back in order to ensure correct ordering in the list but this can
+> only happens if nr_running == 1.
+> When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
+> when enqueuing an entity to make sure that the complete branch will be
+> added.
+> 
+> Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: stable@vger.kernel.org #v5.1+
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  kernel/sched/fair.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index fcc968669aea..bdc5bb72ab31 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4117,6 +4117,7 @@ static inline void check_schedstat_required(void)
+>  #endif
+>  }
+>  
+> +static inline bool cfs_bandwidth_used(void);
+>  
+>  /*
+>   * MIGRATION
+> @@ -4195,10 +4196,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>  		__enqueue_entity(cfs_rq, se);
+>  	se->on_rq = 1;
+>  
+> -	if (cfs_rq->nr_running == 1) {
+> +	/*
+> +	 * When bandwidth control is enabled, cfs might have been removed because of
+> +	 * a parent been throttled but cfs->nr_running > 1. Try to add it
+> +	 * unconditionnally.
+> +	 */
+> +	if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
+>  		list_add_leaf_cfs_rq(cfs_rq);
+> +
+> +	if (cfs_rq->nr_running == 1)
+>  		check_enqueue_throttle(cfs_rq);
+> -	}
+>  }
+>  
+>  static void __clear_buddies_last(struct sched_entity *se)
 
-Signed-off-by: Elliot Berman <eberman@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+I experimented with an rt-app based setup on Arm64 Juno (6 CPUs):
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index f63df12..11cede1 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -162,6 +162,7 @@
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
-+		arm,psci-sys-reset2-vendor-param = <0>;
- 	};
- 
- 	reserved_memory: reserved-memory {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+cgroupv1 hierarchy A/B/C, all CFS bw controlled (30,000/100,000)
+
+I create A/B/C outside rt-app so I can have rt-app runs with an already
+existing taskgroup hierarchy. There is a 4 secs gap between consecutive
+rt-app runs.
+
+The rt-app files contains 6 periodic CFS tasks (25,000/100,000) running
+in /A/B/C, /A/B, /A (3 rt-app task phases).
+
+I get w/ the patch (and the debug patch applied to unthrottle_cfs_rq()):
+
+root@juno:~#
+[  409.236925] CPU1 path=/A/B on_list=1 nr_running=1 throttled=1
+[  409.242682] CPU1 path=/A on_list=0 nr_running=0 throttled=1
+[  409.248260] CPU1 path=/ on_list=1 nr_running=0 throttled=0
+[  409.253748] ------------[ cut here ]------------
+[  409.258365] rq->tmp_alone_branch != &rq->leaf_cfs_rq_list
+[  409.258382] WARNING: CPU: 1 PID: 0 at kernel/sched/fair.c:380
+unthrottle_cfs_rq+0x21c/0x2a8
+...
+[  409.275196] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc3-dirty #62
+[  409.281990] Hardware name: ARM Juno development board (r0) (DT)
+...
+[  409.384644] Call trace:
+[  409.387089]  unthrottle_cfs_rq+0x21c/0x2a8
+[  409.391188]  distribute_cfs_runtime+0xf4/0x198
+[  409.395634]  sched_cfs_period_timer+0x134/0x240
+[  409.400168]  __hrtimer_run_queues+0x10c/0x3c0
+[  409.404527]  hrtimer_interrupt+0xd4/0x250
+[  409.408539]  tick_handle_oneshot_broadcast+0x17c/0x208
+[  409.413683]  sp804_timer_interrupt+0x30/0x40
+
+If I add the following snippet the issue goes away:
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index e9fd5379bb7e..5e03be046aba 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4627,11 +4627,17 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+ 			break;
+ 	}
+
+-	assert_list_leaf_cfs_rq(rq);
+-
+ 	if (!se)
+ 		add_nr_running(rq, task_delta);
+
++	for_each_sched_entity(se) {
++		cfs_rq = cfs_rq_of(se);
++
++		list_add_leaf_cfs_rq(cfs_rq);
++	}
++
++	assert_list_leaf_cfs_rq(rq);
++
+ 	/* Determine whether we need to wake up potentially idle CPU: */
+ 	if (rq->curr == rq->idle && rq->cfs.nr_running)
+ 		resched_curr(rq);
