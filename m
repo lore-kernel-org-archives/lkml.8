@@ -2,156 +2,123 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F038C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E3BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F962166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4433220848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b0VYjSjS"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="C89R36ZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgCEKIs (ORCPT
+        id S1726915AbgCEKN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:08:48 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31287 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726048AbgCEKIr (ORCPT
+        Thu, 5 Mar 2020 05:13:26 -0500
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:55871 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725816AbgCEKN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:08:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583402926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=a++OnOLHx7X8yF6qTfZsk/CBiAFakXwwpWB/hlFxqQk=;
-        b=b0VYjSjS8cYmXf37DQDgYEnEctWn1+KamHSN5i4zPaYzLMWfk04ubqegbh8AKo/bBxzWWr
-        AhlqZio4+9CnNCDB+sDtApjjaO2hvweK8UqVJzeEMrinQBRH+AvnLtN8BSODXokRKnfRr9
-        jxTnnEVS+myOwxKB0Jmy8GFJPuxHSmE=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-91-J_PgCmR1P86beQUa6xyehA-1; Thu, 05 Mar 2020 05:08:43 -0500
-X-MC-Unique: J_PgCmR1P86beQUa6xyehA-1
-Received: by mail-wr1-f69.google.com with SMTP id m18so2070591wro.22
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 02:08:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=a++OnOLHx7X8yF6qTfZsk/CBiAFakXwwpWB/hlFxqQk=;
-        b=osK3H/uamH6e6YVF4djZSnx2AfKTl8fbud3rbCjxLnHMIVCDfHHAo6HhjOMxF37eD7
-         xry4Q1V4iS6SCjXIirSA5BUJZfH2XGppP5Y4iaHlwZlAvn6o+wTUfjRncooY3UlH4EPy
-         f5BNvF6ukA3GP6IxuZM0/1q0fD8OGb7zdusbhITJ4YfvUp1q5Pyuk5NpaXgItEF42z1R
-         mn5aWhyL8F3ZcPPpNRk5abcRnTcyxgSvVlqahJSFo+WbM764K45Dbbr0lvYL4ddzhLf+
-         HIJ4M1HgF+mSE7vYHnylkJRTNj9wFzStJr8WXyGpSwIOb/Nj7RECIag0Lcxg8+ORu8za
-         rWYw==
-X-Gm-Message-State: ANhLgQ1oc+0xgLv1Krm7vHbh1MMmD1Cgkv10jQ3opkgMAThGp4C6FKoS
-        AdssmL+SPltxuvEa1DzlDa0vee0oiMyWi0sLq4cNzKFp30ha04NbkSUIurdQV+Xn+5cUf6a4w20
-        xUeZEUFdaxWnJDofXw3ZcSvOM
-X-Received: by 2002:a1c:f008:: with SMTP id a8mr8497021wmb.81.1583402921632;
-        Thu, 05 Mar 2020 02:08:41 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsbhjFKaAeSfPW48bnxoeEB0ks/A9uEmzLV2bTa/Ugj9be5kTg7qhyLsAMwgyzYk+RO9VUxug==
-X-Received: by 2002:a1c:f008:: with SMTP id a8mr8497006wmb.81.1583402921444;
-        Thu, 05 Mar 2020 02:08:41 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id i6sm10535928wra.42.2020.03.05.02.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 02:08:40 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com
-Subject: Re: [PATCH] KVM: VMX: Use wrapper macro ~RMODE_GUEST_OWNED_EFLAGS_BITS directly
-In-Reply-To: <1583375731-18219-1-git-send-email-linmiaohe@huawei.com>
-References: <1583375731-18219-1-git-send-email-linmiaohe@huawei.com>
-Date:   Thu, 05 Mar 2020 11:08:39 +0100
-Message-ID: <87tv33cdw8.fsf@vitty.brq.redhat.com>
+        Thu, 5 Mar 2020 05:13:26 -0500
+Received: from [IPv6:2001:983:e9a7:1:7c2d:3b2e:4be4:20a2]
+ ([IPv6:2001:983:e9a7:1:7c2d:3b2e:4be4:20a2])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 9nVKjhfeq9Im29nVLj7p3K; Thu, 05 Mar 2020 11:13:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1583403203; bh=Kgnd3zToKuRBUxYCpM+7FQ2spzn0XiARVXXCsNiNcw0=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=C89R36ZOdYOrsnfSksnjWTDu12oq6e1S4Z2cYzqEjLrZRu4AAKI+eClThy4RS7jOI
+         CLk3DsvFnfGb2wtoGDmVwLPyEHOcIcAJK56LS3aHhdTQuWY4uxjwRQ+3NA06VL7Y0C
+         kYrhD5dH7riepKJwdQLilDkC4ODcrHP8rblHr8AsQpmC+PEKoesiZMF4rKpqOagFdb
+         WYi6GiDznvQU7ZebKg35fpMmGRCtbnyfCA9y6x0epsIOvZyFfWwl7UrC9iIoDl1VB3
+         FyJ0kiiCkMGNCdpz+Q6YQyOmmLI56db68dYH++ivVm9FumQbHNNHzZDgQQj0eYXCD0
+         YsZ1VzVFrEcng==
+Subject: Re: [PATCH] media: adv7604: Add new predefined video timings for
+ adv76xx
+To:     Beniamin Bia <beniamin.bia@analog.com>, linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, linux-kernel@vger.kernel.org,
+        dragos.bogdan@analog.com, biabeniamin@outlook.com,
+        alexandru.ardelean@analog.com
+References: <20200305085908.26267-1-beniamin.bia@analog.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <edc7dadf-b05a-df8e-82a9-87c4ade3f412@xs4all.nl>
+Date:   Thu, 5 Mar 2020 11:13:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200305085908.26267-1-beniamin.bia@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCPpn8IpkKWh05S5KK73CAnv0075A29Y0fVXYg/zkT1rjsH+nBTrwM+1UfrdZ048LvK85HGUUaqIUtguC2ZeiPwc54RF1TQm8GtrJthMJQ3o21ZlW6E4
+ AtIf/+fkkGlZwvC1zeDsZBiBCnU4ITv3LL5a1zueGqv8danYnBrz3FBHL3a/U8D7SZRBzsKstdWPE5Y8FaBOkdfYGC0uh7IZDYDhb/uvnZGJQYOMoTRVyY1V
+ VjYj87uXZX/XfoZquSu8AhVIlEO+yWrF5sDvKIM+fhN8OnGw4R+jUiwdC8iwOdjrgG0dv29S499MImu1E4peiK5MBJgbZVcGr+dufdI3nNRGuzK1FNu/ErLV
+ Vy9XKkRomUotfREVuOT0l70TOz2/PCoZCs/IBOTRDqylvpLQNrSGB0nepAGQjMptDO2ATFzPTT2lE8GL2ujhgNdBWRTntLZY493jLCVJK4McQqbybH9KG+5n
+ 1h4swGxtro3NTXa7DUECl3VDumKr47di4t5CHg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-linmiaohe <linmiaohe@huawei.com> writes:
-
-> From: Miaohe Lin <linmiaohe@huawei.com>
->
-> (X86_EFLAGS_IOPL | X86_EFLAGS_VM) indicates the eflag bits that can not be
-> owned by realmode guest, i.e. ~RMODE_GUEST_OWNED_EFLAGS_BITS. Use wrapper
-> macro directly to make it clear and also improve readability.
->
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+On 05/03/2020 09:59, Beniamin Bia wrote:
+> This patch adds more predefined video timings for adv76xx family.
+> 
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
 > ---
->  arch/x86/kvm/vmx/vmx.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 743b81642ce2..9571f8dea016 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1466,7 +1466,7 @@ void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
->  	vmx->rflags = rflags;
->  	if (vmx->rmode.vm86_active) {
->  		vmx->rmode.save_rflags = rflags;
-> -		rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
-> +		rflags |= ~RMODE_GUEST_OWNED_EFLAGS_BITS;
->  	}
->  	vmcs_writel(GUEST_RFLAGS, rflags);
->  
-> @@ -2797,7 +2797,7 @@ static void enter_rmode(struct kvm_vcpu *vcpu)
->  	flags = vmcs_readl(GUEST_RFLAGS);
->  	vmx->rmode.save_rflags = flags;
->  
-> -	flags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
-> +	flags |= ~RMODE_GUEST_OWNED_EFLAGS_BITS;
->  
->  	vmcs_writel(GUEST_RFLAGS, flags);
->  	vmcs_writel(GUEST_CR4, vmcs_readl(GUEST_CR4) | X86_CR4_VME);
+>  drivers/media/i2c/adv7604.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+> index 2dedd6ebb236..bf16c7a626a9 100644
+> --- a/drivers/media/i2c/adv7604.c
+> +++ b/drivers/media/i2c/adv7604.c
+> @@ -280,6 +280,8 @@ static const struct adv76xx_video_standards adv7604_prim_mode_gr[] = {
+>  static const struct adv76xx_video_standards adv76xx_prim_mode_hdmi_comp[] = {
+>  	{ V4L2_DV_BT_CEA_720X480P59_94, 0x0a, 0x00 },
+>  	{ V4L2_DV_BT_CEA_720X576P50, 0x0b, 0x00 },
+> +	{ V4L2_DV_BT_CEA_1280X720P25, 0x13, 0x03 },
+> +	{ V4L2_DV_BT_CEA_1280X720P24, 0x13, 0x04 },
 
-Double negations are evil, let's define a macro for 'X86_EFLAGS_IOPL |
-X86_EFLAGS_VM' instead (completely untested):
+Are these two tested? V4L2_DV_BT_CEA_1280X720P25 in particular has an
+extremely high horizontal frontporch (2420) that not all receivers can
+handle.
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 4ee19fb35cde..d838f93bd6d2 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -139,7 +139,8 @@ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
- #define KVM_PMODE_VM_CR4_ALWAYS_ON (X86_CR4_PAE | X86_CR4_VMXE)
- #define KVM_RMODE_VM_CR4_ALWAYS_ON (X86_CR4_VME | X86_CR4_PAE | X86_CR4_VMXE)
- 
--#define RMODE_GUEST_OWNED_EFLAGS_BITS (~(X86_EFLAGS_IOPL | X86_EFLAGS_VM))
-+#define RMODE_HOST_OWNED_EFLAGS_BITS (X86_EFLAGS_IOPL | X86_EFLAGS_VM)
-+#define RMODE_GUEST_OWNED_EFLAGS_BITS (~RMODE_HOST_OWNED_EFLAGS_BITS)
- 
- #define MSR_IA32_RTIT_STATUS_MASK (~(RTIT_STATUS_FILTEREN | \
-        RTIT_STATUS_CONTEXTEN | RTIT_STATUS_TRIGGEREN | \
-@@ -1468,7 +1469,7 @@ void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
-        vmx->rflags = rflags;
-        if (vmx->rmode.vm86_active) {
-                vmx->rmode.save_rflags = rflags;
--               rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
-+               rflags |= RMODE_HOST_OWNED_EFLAGS_BITS;
-        }
-        vmcs_writel(GUEST_RFLAGS, rflags);
- 
-@@ -2794,7 +2795,7 @@ static void enter_rmode(struct kvm_vcpu *vcpu)
-        flags = vmcs_readl(GUEST_RFLAGS);
-        vmx->rmode.save_rflags = flags;
- 
--       flags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
-+       flags |= RMODE_HOST_OWNED_EFLAGS_BITS;
- 
-        vmcs_writel(GUEST_RFLAGS, flags);
-        vmcs_writel(GUEST_CR4, vmcs_readl(GUEST_CR4) | X86_CR4_VME);
+Looking at this line:
 
--- 
-Vitaly
+             bt->hfrontporch = (hdmi_read(sd, 0x20) & 0x03) * 256 +
+                        hdmi_read(sd, 0x21);
+
+I'd say that the adv7604 can't handle any timings with a hfrontporch > 1023.
+
+Regards,
+
+	Hans
+
+>  	{ V4L2_DV_BT_CEA_1280X720P50, 0x13, 0x01 },
+>  	{ V4L2_DV_BT_CEA_1280X720P60, 0x13, 0x00 },
+>  	{ V4L2_DV_BT_CEA_1920X1080P24, 0x1e, 0x04 },
+> @@ -305,8 +307,17 @@ static const struct adv76xx_video_standards adv76xx_prim_mode_hdmi_gr[] = {
+>  	{ V4L2_DV_BT_DMT_1024X768P70, 0x0d, 0x00 },
+>  	{ V4L2_DV_BT_DMT_1024X768P75, 0x0e, 0x00 },
+>  	{ V4L2_DV_BT_DMT_1024X768P85, 0x0f, 0x00 },
+> +	{ V4L2_DV_BT_DMT_1280X768P60, 0x10, 0x00 },
+> +	{ V4L2_DV_BT_DMT_1280X768P60_RB, 0x11, 0x00 },
+>  	{ V4L2_DV_BT_DMT_1280X1024P60, 0x05, 0x00 },
+>  	{ V4L2_DV_BT_DMT_1280X1024P75, 0x06, 0x00 },
+> +	{ V4L2_DV_BT_DMT_1360X768P60, 0x12, 0x00 },
+> +	{ V4L2_DV_BT_DMT_1366X768P60, 0x13, 0x00 },
+> +	{ V4L2_DV_BT_DMT_1400X1050P60, 0x14, 0x00 },
+> +	{ V4L2_DV_BT_DMT_1400X1050P75, 0x15, 0x00 },
+> +	{ V4L2_DV_BT_DMT_1600X1200P60, 0x16, 0x00 },
+> +	{ V4L2_DV_BT_DMT_1680X1050P60, 0x18, 0x00 },
+> +	{ V4L2_DV_BT_DMT_1920X1200P60_RB, 0x19, 0x00 },
+>  	{ },
+>  };
+>  
+> 
 
