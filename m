@@ -2,131 +2,142 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F18C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8509FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18622207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583433923;
-	bh=psjSyz6vdZGPl/xqFFUayAS2GQX1IEdZO+cta5jUIwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z9KuOHZIBTjFfKR7fMwb8Dfz6GVHUrGb/QkPPWcXNoqJdfIWFNh/cf+ss+NX1EaQb
-	 jK/H0tbZ3frn34iQeM198NVU6fNjMB8XaeoL12A0wHiIhsJudwjgviuyIACsSzyEOS
-	 3Y/leMOiszrTIapz2+lxwWUCIf4pQduhOkR3q2q4=
+	by mail.kernel.org (Postfix) with ESMTP id 5E523207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:46:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="ipHhDMSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgCESpW (ORCPT
+        id S1726177AbgCESqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:45:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgCESpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:45:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8692C2072D;
-        Thu,  5 Mar 2020 18:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583433920;
-        bh=psjSyz6vdZGPl/xqFFUayAS2GQX1IEdZO+cta5jUIwc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xq/t4n1rMZB+lbOw37tYhQzBztl2fGM/23HLuK70yNAC3quB28r8n/MjElg0f9vVt
-         lo8WWomFsAEbA225T9MNvASYCjaSHxYaVkJA/mWYUfGlC4PueoNzepaS0s7CYlXNWW
-         fI230MSCnOkOdPxsqyklMKSYmG9M71BHtju/IeCI=
-Date:   Thu, 5 Mar 2020 19:45:17 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Angelo Dureghello <angelo.dureghello@timesys.com>
-Cc:     linux-kernel@vger.kernel.org, zbr@ioremap.net
-Subject: Re: [PATCH] w1: ds2430: non functional fixes
-Message-ID: <20200305184517.GA2141048@kroah.com>
-References: <20200305183951.2647785-1-angelo.dureghello@timesys.com>
+        Thu, 5 Mar 2020 13:46:35 -0500
+Received: from forward501p.mail.yandex.net ([77.88.28.111]:45698 "EHLO
+        forward501p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725991AbgCESqe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 13:46:34 -0500
+Received: from mxback30g.mail.yandex.net (mxback30g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:330])
+        by forward501p.mail.yandex.net (Yandex) with ESMTP id E27733500531;
+        Thu,  5 Mar 2020 21:46:27 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback30g.mail.yandex.net (mxback/Yandex) with ESMTP id iGuMvhqZaa-kQYi1aoQ;
+        Thu, 05 Mar 2020 21:46:27 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1583433987;
+        bh=WbDDv6qYTqWmJsP3qfohS0aAr3PAr4lOdDNrBRZ/zy8=;
+        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
+        b=ipHhDMSs/4/WhzPQcS4NsH6Fqom/ChEWJK8QdMv5iXS+oV6rBy30120HjwOyBNt5t
+         mUAmwqLxUU5qvsdfQ4GCFVpREBaLoKGLT1NvHO99TNyNdhFzax2k4JT+gbUd9e21cK
+         Mn581akDZSmN+GZfCnzfca8SnNumZTpfYVGVEi14=
+Authentication-Results: mxback30g.mail.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by myt3-605d5ea4bc20.qloud-c.yandex.net with HTTP;
+        Thu, 05 Mar 2020 21:46:26 +0300
+From:   nikita.shubin@maquefel.me
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Nikita Shubin <nshubin@topcon.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <CANLsYkyHaZFrCYFxWZVGqy=QwU86i2E2o9ENZ7k2mv70jU9pqg@mail.gmail.com>
+References: <20200304142628.8471-1-NShubin@topcon.com> <CANLsYkzPROdphvmtpZ6YiajZ2dYLrojC-rGYkq4jK2yzTnAJ5A@mail.gmail.com>
+         <264561583429111@sas1-438a02fc058e.qloud-c.yandex.net> <CANLsYkxj=1o8Y0V0WedbVirj9seZSArWeCvQvwk+N7wZa2_hPQ@mail.gmail.com>
+         <266371583430956@iva3-67f911cb3a01.qloud-c.yandex.net> <CANLsYkyHaZFrCYFxWZVGqy=QwU86i2E2o9ENZ7k2mv70jU9pqg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] remoteproc: imx_rproc: dummy kick method
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305183951.2647785-1-angelo.dureghello@timesys.com>
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Thu, 05 Mar 2020 21:46:26 +0300
+Message-Id: <272401583433950@myt4-c14277df27e9.qloud-c.yandex.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 07:39:51PM +0100, Angelo Dureghello wrote:
-> Mainly discovered a typo in the eeprom size that may lead to
-> misunderstandings.
-> 
-> Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
-> ---
->  drivers/w1/slaves/w1_ds2430.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/w1/slaves/w1_ds2430.c b/drivers/w1/slaves/w1_ds2430.c
-> index 6fb0563fb2ae..67d168ddfb60 100644
-> --- a/drivers/w1/slaves/w1_ds2430.c
-> +++ b/drivers/w1/slaves/w1_ds2430.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /*
->   * w1_ds2430.c - w1 family 14 (DS2430) driver
-> - **
-> + *
->   * Copyright (c) 2019 Angelo Dureghello <angelo.dureghello@timesys.com>
->   *
->   * Cloned and modified from ds2431
-> @@ -290,6 +290,6 @@ static struct w1_family w1_family_14 = {
->  module_w1_family(w1_family_14);
->  
->  MODULE_AUTHOR("Angelo Dureghello <angelo.dureghello@timesys.com>");
-> -MODULE_DESCRIPTION("w1 family 14 driver for DS2430, 256kb EEPROM");
-> +MODULE_DESCRIPTION("w1 family 14 driver for DS2430, 256b EEPROM");
->  MODULE_LICENSE("GPL");
->  MODULE_ALIAS("w1-family-" __stringify(W1_EEPROM_DS2430));
-> -- 
-> 2.25.0
-> 
+That's totally okay - thank you for review.
 
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch did many different things all at once, making it difficult
-  to review.  All Linux kernel patches need to only do one thing at a
-  time.  If you need to do multiple things (such as clean up all coding
-  style issues in a file/driver), do it in a sequence of patches, each
-  one doing only one thing.  This will make it easier to review the
-  patches to ensure that they are correct, and to help alleviate any
-  merge issues that larger patches can cause.
-
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what is needed in order to
-  properly describe the change.
-
-- You did not write a descriptive Subject: for the patch, allowing Greg,
-  and everyone else, to know what this patch is all about.  Please read
-  the section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what a proper Subject: line should
-  look like.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+05.03.2020, 21:36, "Mathieu Poirier" <mathieu.poirier@linaro.org>:
+> On Thu, 5 Mar 2020 at 11:07, <nikita.shubin@maquefel.me> wrote:
+>>  05.03.2020, 20:54, "Mathieu Poirier" <mathieu.poirier@linaro.org>:
+>>  > On Thu, 5 Mar 2020 at 10:29, <nikita.shubin@maquefel.me> wrote:
+>>  >> 05.03.2020, 19:17, "Mathieu Poirier" <mathieu.poirier@linaro.org>:
+>>  >> > On Wed, 4 Mar 2020 at 07:25, Nikita Shubin <NShubin@topcon.com> wrote:
+>>  >> >> add kick method that does nothing, to avoid errors in rproc_virtio_notify.
+>>  >> >>
+>>  >> >> Signed-off-by: Nikita Shubin <NShubin@topcon.com>
+>>  >> >> ---
+>>  >> >> drivers/remoteproc/imx_rproc.c | 6 ++++++
+>>  >> >> 1 file changed, 6 insertions(+)
+>>  >> >>
+>>  >> >> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+>>  >> >> index 3e72b6f38d4b..796b6b86550a 100644
+>>  >> >> --- a/drivers/remoteproc/imx_rproc.c
+>>  >> >> +++ b/drivers/remoteproc/imx_rproc.c
+>>  >> >> @@ -240,9 +240,15 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+>>  >> >> return va;
+>>  >> >> }
+>>  >> >>
+>>  >> >> +static void imx_rproc_kick(struct rproc *rproc, int vqid)
+>>  >> >> +{
+>>  >> >> +
+>>  >> >> +}
+>>  >> >> +
+>>  >> >
+>>  >> > If rproc::kick() is empty, how does the MCU know there is packets to
+>>  >> > fetch in the virtio queues?
+>>  >>
+>>  >> Well, of course it doesn't i understand this perfectly - just following documentation citing:
+>>  >>
+>>  >> | Every remoteproc implementation should at least provide the ->start and ->stop
+>>  >> | handlers. If rpmsg/virtio functionality is also desired, then the ->kick handler
+>>  >> | should be provided as well.
+>>  >>
+>>  >> But i as i mentioned in "remoteproc: Fix NULL pointer dereference in rproc_virtio_notify" kick method will be called if
+>>  >> "resource_table exists in firmware and has "Virtio device entry" defined" anyway, the imx_rproc is not in control of what
+>>  >> exactly it is booting, so such situation can occur.
+>>  >
+>>  > If I understand correctly, the MCU can boot images that have a virtio
+>>  > device in its resource table and still do useful work even if the
+>>  > virtio device/rpmsg bus can't be setup - is this correct?
+>>
+>>  Yes, this assumption is correct.
+>>
+>>  Despite this situation is not i desire at all - such thing can happen.
+>>  I am currently using co-proc as a realtime part of UGV control,
+>>  so it must immediately stop the engines, if not provided with navigational information.
+>>
+>>  The imx7d MCU have access to the most periphery that have the main processor.
+>>
+>>  Of course the kick method should do real work, but i decided to submit step by step if i am allowed to do so.
+>
+> Ok, the situation is clearer now and I have put your patches back in
+> my queue. I am seriously back-logged at this time so it will take a
+> little while before I get to them.
+>
+>>  >
+>>  > Thanks,
+>>  > Mathieu
+>>  >
+>>  >> >
+>>  >> >> static const struct rproc_ops imx_rproc_ops = {
+>>  >> >> .start = imx_rproc_start,
+>>  >> >> .stop = imx_rproc_stop,
+>>  >> >> + .kick = imx_rproc_kick,
+>>  >> >> .da_to_va = imx_rproc_da_to_va,
+>>  >> >> };
+>>  >> >>
+>>  >> >> --
+>>  >> >> 2.24.1
