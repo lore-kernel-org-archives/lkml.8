@@ -2,169 +2,87 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE42C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B097BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891BC2073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:43:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lKqr2+6Y"
+	by mail.kernel.org (Postfix) with ESMTP id 6DD072073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgCEPn3 (ORCPT
+        id S1726822AbgCEPpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:43:29 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:43694 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgCEPn2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:43:28 -0500
-Received: by mail-ua1-f68.google.com with SMTP id o42so2214030uad.10
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:43:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BtkP4rjLPJJ3tMCB0I86aLFGaPPlP5RT1g3Fl+k0ezY=;
-        b=lKqr2+6Y70nMAQIyJl5JRc7tIiLa+hzIz7tEvf/tovFCfmf+e7RuHwdMVi4tryYNTD
-         +pymGTN4XbCQi1CQ2PWP9jPf1sDURpvJEBqC59VhPJF1ZTtb8ifBnbcHDu7/o3b8UX+/
-         BupJMhndJtlKuYaGJ/ZOifRB1mOciw3bd+8KEN2jkk5w0PbDET9x7GDPdVZcHA4HMCSU
-         DIrYETeAQerh3c1CrVA3ipFhiuj7XLqCfmLKdZLc/gC2IxdYCTgy6CmtM3Qa7kLf6ltZ
-         yiKe1i/cC5h5GYiBTHxi3IJSLiLC9sGHsOuncMXK3UHEnqsauLAX3vSUQXR1vMznxLBR
-         Q4YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BtkP4rjLPJJ3tMCB0I86aLFGaPPlP5RT1g3Fl+k0ezY=;
-        b=gRMldRXAOUQLMe36oBWlGU6L6G6ZSWeR2n587wSbGL7j8+LmVOgCxaqGpz8A1m91cE
-         5JSTX3fxLRSJYBNefOfqnt2bUIPMJG9iZenGXFphhrtf5KMaH+lBYzyct6jicCDAEuc9
-         HeDBMq1mH3MzSx0HpKQqNpSpwfUNCVMoJXkufsFke0f+dAC7wXmpaFL5odsgGlnmGOvl
-         BIUVUTizRTFIuFVcUoc1C9oUScflwhecR6W2GxGjrkDcJuiebuCi6gn56FsDRB940bID
-         5dL3FyLV8N0OLJlkkCC3AhQxjZjEYKvW43WdxeT2PFgKGL4f0G8Mbv/006a1nO92odfR
-         2dMA==
-X-Gm-Message-State: ANhLgQ2zvEYgsMc7M8kL0g+iMGUkpBNjzlVgm/Imt8uWs/TXuVpY27F5
-        PAv+y+oq7hifVvFH837RQeYsQllrz4UDOlj1jQI7nA==
-X-Google-Smtp-Source: ADFU+vtnAS2M6fsz0X4CPT/qujFk6wJUPdYM8Pmr5JuuT0heSqdLkpUK6njwODFUJ11mFbZK5GofJhtZiCjNvuUC940=
-X-Received: by 2002:ab0:7518:: with SMTP id m24mr4824318uap.60.1583423006775;
- Thu, 05 Mar 2020 07:43:26 -0800 (PST)
+        Thu, 5 Mar 2020 10:45:00 -0500
+Received: from verein.lst.de ([213.95.11.211]:60028 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgCEPo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 10:44:59 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C4FC168B05; Thu,  5 Mar 2020 16:44:56 +0100 (CET)
+Date:   Thu, 5 Mar 2020 16:44:56 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "Grimm, Jon" <jon.grimm@amd.com>, Joerg Roedel <joro@8bytes.org>,
+        baekhw@google.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: Re: [rfc 5/6] dma-direct: atomic allocations must come from
+ unencrypted pools
+Message-ID: <20200305154456.GC5332@lst.de>
+References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com> <alpine.DEB.2.21.2002280118461.165532@chino.kir.corp.google.com> <alpine.DEB.2.21.2003011535510.213582@chino.kir.corp.google.com> <alpine.DEB.2.21.2003011538040.213582@chino.kir.corp.google.com>
 MIME-Version: 1.0
-References: <cover.1582528977.git.amit.kucheria@linaro.org>
- <59d24f8ec98e29d119c5cbdb2abe6d4644cc51cf.1582528977.git.amit.kucheria@linaro.org>
- <20200224184003.GA3607@bogus> <CAHLCerP1_xESMbLuSBsVz1XkrA0j_okbX+SxbefVSo4ttvX_fg@mail.gmail.com>
- <CAL_JsqK_8MbxwKb9D4U0Cfv1m61zHWku4hJwiLaeOO6wkS8WCQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqK_8MbxwKb9D4U0Cfv1m61zHWku4hJwiLaeOO6wkS8WCQ@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 5 Mar 2020 21:13:15 +0530
-Message-ID: <CAHLCerOeSx2hkB5QUhj_iK1sU=X9EWFLVgof2XsLhhy3CmbpNg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 3/3] dt-bindings: thermal: Add yaml bindings for
- thermal zones
-To:     Rob Herring <robh@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2003011538040.213582@chino.kir.corp.google.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 9:08 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Mar 5, 2020 at 6:50 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> >
-> > On Tue, Feb 25, 2020 at 12:10 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Mon, 24 Feb 2020 12:55:37 +0530, Amit Kucheria wrote:
-> > > > As part of moving the thermal bindings to YAML, split it up into 3
-> > > > bindings: thermal sensors, cooling devices and thermal zones.
-> > > >
-> > > > The thermal-zone binding is a software abstraction to capture the
-> > > > properties of each zone - how often they should be checked, the
-> > > > temperature thresholds (trips) at which mitigation actions need to be
-> > > > taken and the level of mitigation needed at those thresholds.
-> > > >
-> > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > > ---
-> > > >  .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
-> > > >  1 file changed, 302 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
-> > > >
-> > >
-> > > My bot found errors running 'make dt_binding_check' on your patch:
-> > >
-> > > Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> >
-> > This one isn't due to my patch, I believe.
->
-> Right, that's the one known warning...
->
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupt-names: ['uplow'] is too short
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupts: [[0, 506, 4]] is too short
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupt-names: ['uplow'] is too short
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupts: [[0, 507, 4]] is too short
-> >
-> > Fixed. Just for my information, did the check somehow figure out that
-> > this (incomplete) example needed the qcom-tsens.yaml binding (based on
-> > compatible string?) and then apply those rules to throw this error?
->
-> Yes. And setting DT_SCHEMA_FILES did change that to only check with
-> the specified schema file. However, that's now changed in linux-next
-> such that examples are always checked by all schemas and
-> DT_SCHEMA_FILES just limits which bindings to build and check.
+On Sun, Mar 01, 2020 at 04:05:23PM -0800, David Rientjes wrote:
+> When AMD memory encryption is enabled, all non-blocking DMA allocations
+> must originate from the atomic pools depending on the device and the gfp
+> mask of the allocation.
+> 
+> Keep all memory in these pools unencrypted.
+> 
+> Signed-off-by: David Rientjes <rientjes@google.com>
+> ---
+>  arch/x86/Kconfig    | 1 +
+>  kernel/dma/direct.c | 9 ++++-----
+>  kernel/dma/remap.c  | 2 ++
+>  3 files changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1523,6 +1523,7 @@ config X86_CPA_STATISTICS
+>  config AMD_MEM_ENCRYPT
+>  	bool "AMD Secure Memory Encryption (SME) support"
+>  	depends on X86_64 && CPU_SUP_AMD
+> +	select DMA_DIRECT_REMAP
 
-DT_SCHEMA_FILES doesn't seem to take wildcards. Individual yaml files
-worked fine.
+I think we need to split the pool from remapping so that we don't drag
+in the remap code for x86.
 
-$ make -k -j`nproc` ARCH=arm64 CROSS_COMPILE="ccache
-aarch64-linux-gnu-" O=~/work/builds/build-aarch64/ dt_binding_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/thermal/thermal*.yaml
-make[1]: Entering directory '/home/amit/work/builds/build-aarch64'
-make[2]: Circular
-Documentation/devicetree/bindings/processed-schema.yaml <-
-Documentation/devicetree/bindings/thermal/thermal-sensor.example.dt.yaml
-dependency dropped.
-make[2]: Circular
-Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml
-<- Documentation/devicetree/bindings/processed-schema.yaml dependency
-dropped.
-make[2]: Circular
-Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml
-<- Documentation/devicetree/bindings/processed-schema.yaml dependency
-dropped.
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-Traceback (most recent call last):
-  File "/home/amit/.local/bin/dt-mk-schema", line 7, in <module>
-    exec(compile(f.read(), __file__, 'exec'))
-  File "/home/amit/work/sources/tools-dt-schema.git/tools/dt-mk-schema",
-line 32, in <module>
-    schemas = dtschema.process_schemas(args.schemas, core_schema=(not
-args.useronly))
-  File "/home/amit/work/sources/tools-dt-schema.git/dtschema/lib.py",
-line 475, in process_schemas
-    sch = process_schema(os.path.abspath(filename))
-  File "/home/amit/work/sources/tools-dt-schema.git/dtschema/lib.py",
-line 435, in process_schema
-    DTValidator.check_schema(schema)
-  File "/home/amit/work/sources/tools-dt-schema.git/dtschema/lib.py",
-line 582, in check_schema
-    meta_schema = cls.resolver.resolve_from_url(schema['$schema'])
-TypeError: list indices must be integers or slices, not str
-make[2]: *** [/home/amit/work/sources/linux-amit.git/Documentation/devicetree/bindings/Makefile:34:
-Documentation/devicetree/bindings/processed-schema.yaml] Error 1
-make[2]: Target '__build' not remade because of errors.
-make[1]: *** [/home/amit/work/sources/linux-amit.git/Makefile:1262:
-dt_binding_check] Error 2
-make[1]: Leaving directory '/home/amit/work/builds/build-aarch64'
-make: *** [Makefile:179: sub-make] Error 2
-make: Target 'dt_binding_check' not remade because of errors.
+>  	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
+> -	    dma_alloc_need_uncached(dev, attrs) &&
+
+We still need a check here for either uncached or memory encryption.
+
+> @@ -141,6 +142,7 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+>  	if (!addr)
+>  		goto free_page;
+>  
+> +	set_memory_decrypted((unsigned long)page_to_virt(page), nr_pages);
+
+This probably warrants a comment.
+
+Also I think the infrastructure changes should be split from the x86
+wire up.
