@@ -2,111 +2,92 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE8DC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED35C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D93F20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBC9207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YyEqUw71"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GcAAzWY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCEQVk (ORCPT
+        id S1726358AbgCEQWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:21:40 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42644 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgCEQVk (ORCPT
+        Thu, 5 Mar 2020 11:22:47 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34988 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgCEQWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:21:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=L2uspJRoRT7neik2N4DuFrl2a9BrSt+K4IAqB69JQoQ=; b=YyEqUw71nfTPEi/pxrkuKiaAMn
-        HCj9nByw3Wl4yBSwdL2Z4N+wGVcYed4qI4k+xImn/3Ry2m7oUmCUJKY9WqeJHL3Y9E08v4jPJwEms
-        YuVNy1kkZlUlufPDkn5aLL+W9Nyt4O236p/vZWfYSJ5WVioxVPNsFR44c9Uik5stQld0sgnKevaYh
-        qbv+przaabbXasIGFlPyLPiL3wrTUdbxMPwHJDAmssLyyhQbylS7wXwU4ncfIa4i8cFsn1qobf6sM
-        e3XtHn6KJ4tln2qX6IVU1yHZr9gWTn5S3ZfOFYXFwfvrZeQvfVEIeFpUBqCrvsrkrej6ukuXDBexX
-        Lom2Q1fg==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9tFj-0008OD-EO; Thu, 05 Mar 2020 16:21:39 +0000
-Subject: Re: [PATCH] spi: Remove CONFIG_ prefix from Kconfig select
-To:     John Garry <john.garry@huawei.com>, Joe Perches <joe@perches.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>
-References: <f8ac6b32a29b9a05b58a7e58ffe8b780642abbf1.camel@perches.com>
- <e265e7df-fd8c-691f-389a-c0e0e377ed9e@huawei.com>
- <84f8504924380fc6380216d03d28a2285e3d106e.camel@perches.com>
- <55edba5c-78d6-12e2-eff6-f16c204badee@huawei.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <15ad3c68-4e67-0c92-a0e1-c62861673561@infradead.org>
-Date:   Thu, 5 Mar 2020 08:21:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 11:22:46 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m3so6411707wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:22:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cEvgQVZavtTsnR3H4wayPtk/nZQ+Zm47QLXTHSzN7fo=;
+        b=GcAAzWY1RcrrmwdnC52Rlub3aR8//mgYvQ9FmOS++fuNEZoR8Rlkaj/Z1BRuuybFA0
+         uMHBNEOfUefPRil4g2NixlSsSkl8in3cEnm9Mc1ocdM/8SFn2GNnB/QfmtaelLsczEt0
+         XY/4MAu0ZTNZZCjzbYc0+4sWwqTPwaWT2A2xE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cEvgQVZavtTsnR3H4wayPtk/nZQ+Zm47QLXTHSzN7fo=;
+        b=QDN4arZWx2ODRwjxq9bluZAaidSZTNODHa79H98akOUQBJZtwnoShUqIJLn9uP58uu
+         9/tYTPCeFknBJvAPNxStIw7UsjdRW1LBlkckA/5mTenBatckEEqhZzP5lYLjq+m2cqcR
+         HrEJg1Ev7E9pERwRR+Sv8C1k8MED3oVqCPguP971/4MyW5LM9tBCJLxBSJKG5oIMqhop
+         HLGkIGZ/g6CgGVrIIHndN6bDUoyfvOsREoFKTjUC3hXGRpcduErIc1pn8a/Uc9xPDXMJ
+         WP1G3ckvTjshzxgiiZPESIx7Hjhzr5O7dmOGUj0EXADUGw8RiF+SGBZJgydpt89hFkgP
+         F3lw==
+X-Gm-Message-State: ANhLgQ0sZedUwpoZFmebUvKEa9VL5A1RNBIGA726t2PzWQxEeoOaBa0L
+        ZEcyCzigEYM7VYZv4jV53XwMZ90N7NtRiQL6yGRP5Q==
+X-Google-Smtp-Source: ADFU+vvBj+1xJThqxd5rF87Tunq26QxaCiqKxwYjHudkZ0a9XD8NqOyNXEkTlJ26vyLocVjmpuu2PlqvdYuTfnFNgbU=
+X-Received: by 2002:a1c:2504:: with SMTP id l4mr10601800wml.72.1583425364775;
+ Thu, 05 Mar 2020 08:22:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <55edba5c-78d6-12e2-eff6-f16c204badee@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200305175528.5b3ccc09@canb.auug.org.au> <715919f5-e256-fbd1-44ff-8934bda78a71@infradead.org>
+ <CAADnVQ+TYiVu+Ksstj4LmYa=+UPwbv-dv-tscRaKn_0FcpstBg@mail.gmail.com>
+In-Reply-To: <CAADnVQ+TYiVu+Ksstj4LmYa=+UPwbv-dv-tscRaKn_0FcpstBg@mail.gmail.com>
+From:   KP Singh <kpsingh@chromium.org>
+Date:   Thu, 5 Mar 2020 17:22:34 +0100
+Message-ID: <CACYkzJ4ks6VgxeGpJApvqJdx6Q-8PZwk-r=q4ySWsDBDy1jp+g@mail.gmail.com>
+Subject: Re: linux-next: Tree for Mar 5 (bpf_trace)
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 8:20 AM, John Garry wrote:
-> On 05/03/2020 16:01, Joe Perches wrote:
->> On Thu, 2020-03-05 at 15:53 +0000, John Garry wrote:
->>> On 05/03/2020 15:15, Joe Perches wrote:
->>>> commit a2ca53b52e00 ("spi: Add HiSilicon v3xx SPI NOR flash
->>>> controller driver") likely inadvertently used a select statement
->>>> with a CONFIG_ prefix, remove the prefix.
->>>>
->>>> Signed-off-by: Joe Perches <joe@perches.com>
->>>
->>> It's a pity checkpatch can't pick this stuff up...
->>
->> You are free to write a rule and submit a patch.
->>
-> 
-> I'm not opposed to the idea...
-> 
->> The grammar is pretty hard to verify from a patch
->> fragment though.
->>
->> There are 2 existing nominal false positives.
->>
->> $ git grep 'select\b.*\bCONFIG_' -- '*/Kconfig*'
->> drivers/edac/Kconfig:     select CONFIG_ACPI_NFIT.
->> drivers/edac/Kconfig:     select CONFIG_ACPI_NFIT.
-> 
-> Ah, that's in the help text. I guess that those can be ignored simply based on the indentation.
-> 
-> I also see these:
-> 
-> drivers/i2c/busses/Kconfig:       to also select CONFIG_TYPEC_FUSB302=m.
-> drivers/platform/chrome/Kconfig:        select CONFIG_MFD_CROS_EC_DEV
-> 
-> The 2nd looks like it's incorrect.
+On Thu, Mar 5, 2020 at 5:18 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Thu, Mar 5, 2020 at 8:13 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> >
+> > On 3/4/20 10:55 PM, Stephen Rothwell wrote:
+> > > Hi all,
+> > >
+> > > Changes since 20200304:
+> > >
+> >
+> > on i386:
+> >
+> > ld: kernel/trace/bpf_trace.o:(.rodata+0x38): undefined reference to `bpf_prog_test_run_tracing'
+>
+> KP,
+> Please take a look.
 
-Yes, we just got a patch for that one today.
+Sure. Taking a look.
 
-> 
-> And then also:
-> $ git grep 'depends on\b.*\bCONFIG_' -- '*/Kconfig*'
-> samples/Kconfig:        depends on CONFIG_ANDROID_BINDERFS
-> 
-> Thanks,
-> John
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+- KP
