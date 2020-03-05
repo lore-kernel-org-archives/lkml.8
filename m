@@ -2,134 +2,92 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9682C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0003C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB6D2073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:42:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FmtSTEvH"
+	by mail.kernel.org (Postfix) with ESMTP id A57F72073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbgCENl7 (ORCPT
+        id S1726087AbgCENn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:41:59 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36062 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgCENl7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:41:59 -0500
-Received: by mail-oi1-f194.google.com with SMTP id t24so5993062oij.3;
-        Thu, 05 Mar 2020 05:41:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Eg8qOXXxTZFH+avf9eVy3dxxHHbyWn0g+mO5XgLQ+LM=;
-        b=FmtSTEvH4JMkzvU0rV87l8dSnNd84J4k4OZljnkIKeA+JdbhSP2k3UYVQHAj/RdzZo
-         3X0XIgdmwfssLPelrx2aDyIQUJYesIXKOkcKZNCtmXlc89vmsPXqkm+yQXN3ygynVjbx
-         kA/QSQ/XlzuAL3x3oTPFD5Kkb7hT2/DZcQumspk3pMO31H0x5RSlrPF2krNULhOMuRRs
-         7gHmKFAPVWUPnfWSCSlJLvyV4AYkbm+vUQVwHSMiCzuwiIG2lHJFWjrz/R6fMGO+g2PT
-         JIXFfICm6nMqSzkHWrXGgBrbUtNWAFrx7Ld2iLBooTpGfVfsdKb0XRNnsuhaqmnGm5Wr
-         r19w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Eg8qOXXxTZFH+avf9eVy3dxxHHbyWn0g+mO5XgLQ+LM=;
-        b=C91yfvNHiKvlUR5jUaZAWKFMaW/lhjwACwHYsQwIhpTgpa8BRH3fD3pPRZD4Ph6Cg5
-         2Ri+7b+2dal7Vm6CD/h2Z51HdfPnVgDfAn80eELCu14/ErlK9GtiUObqYFP4ojagSax2
-         /4BV8sEVV+vpCYpB8giSYQ3BDJ0oUuwBjoGnXel3uKi/p20o0UsjB6emfnyN7Sn9ZFVU
-         mgenznFSeoyHv7zG184cQ8rNbLN0RgAGFh30nxzPVeLd4+zEdgNHk7cpzMWxgZK+mShy
-         w/UshD8Fy9ebxxSrKG+UNNLOUaOqac+ymGlqm4xFcee6v/Khe58JDexTNwiFoYsWur0u
-         auaw==
-X-Gm-Message-State: ANhLgQ3p3X7aZDuDXP7Hns2onQMMAOkuxvi/KmehvXO+C49nSsjykGaj
-        Q3eCh4NoIo7aIufiNudLCSyN9INXDJPkiJFpBYI=
-X-Google-Smtp-Source: ADFU+vvtxT5hJ8HqcW7oErtibqc8cObhOkR6SqqTz7pQJCUcRgKfjJTnBK7VFvyHTTwWd+9UuWVXYTEiLpwYZAjhOD4=
-X-Received: by 2002:aca:3544:: with SMTP id c65mr5466604oia.160.1583415718336;
- Thu, 05 Mar 2020 05:41:58 -0800 (PST)
+        Thu, 5 Mar 2020 08:43:26 -0500
+Received: from mga18.intel.com ([134.134.136.126]:27196 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgCENn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 08:43:26 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 05:43:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="234457765"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Mar 2020 05:43:23 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1j9qmb-0076gO-T3; Thu, 05 Mar 2020 15:43:25 +0200
+Date:   Thu, 5 Mar 2020 15:43:25 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH v1] mfd: intel-lpss: Add Intel Comet Lake PCH-V PCI IDs
+Message-ID: <20200305134325.GL1224808@smile.fi.intel.com>
+References: <20200113125729.8576-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20200304191853.1529-1-kpsingh@chromium.org> <20200304191853.1529-5-kpsingh@chromium.org>
-In-Reply-To: <20200304191853.1529-5-kpsingh@chromium.org>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 5 Mar 2020 08:43:11 -0500
-Message-ID: <CAEjxPJ4G4sp5_zHXxhe+crafNGV-oZZZ2YYbbMb61BZx0F_ujw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 4/7] bpf: Attachment verification for BPF_MODIFY_RETURN
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Paul Moore <paul@paul-moore.com>, jmorris@namei.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113125729.8576-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 2:20 PM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> - Allow BPF_MODIFY_RETURN attachment only to functions that are:
->
->     * Whitelisted for error injection by checking
->       within_error_injection_list. Similar discussions happened for the
->       bpf_override_return helper.
->
->     * security hooks, this is expected to be cleaned up with the LSM
->       changes after the KRSI patches introduce the LSM_HOOK macro:
->
->         https://lore.kernel.org/bpf/20200220175250.10795-1-kpsingh@chromium.org/
->
-> - The attachment is currently limited to functions that return an int.
->   This can be extended later other types (e.g. PTR).
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> ---
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index 2460c8e6b5be..ae32517d4ccd 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -9800,6 +9801,33 @@ static int check_struct_ops_btf_id(struct bpf_verifier_env *env)
->
->         return 0;
->  }
-> +#define SECURITY_PREFIX "security_"
-> +
-> +static int check_attach_modify_return(struct bpf_verifier_env *env)
-> +{
-> +       struct bpf_prog *prog = env->prog;
-> +       unsigned long addr = (unsigned long) prog->aux->trampoline->func.addr;
-> +
-> +       if (within_error_injection_list(addr))
-> +               return 0;
-> +
-> +       /* This is expected to be cleaned up in the future with the KRSI effort
-> +        * introducing the LSM_HOOK macro for cleaning up lsm_hooks.h.
-> +        */
-> +       if (!strncmp(SECURITY_PREFIX, prog->aux->attach_func_name,
-> +                    sizeof(SECURITY_PREFIX) - 1)) {
-> +
-> +               if (!capable(CAP_MAC_ADMIN))
-> +                       return -EPERM;
+On Mon, Jan 13, 2020 at 02:57:29PM +0200, Andy Shevchenko wrote:
+> Intel Comet Lake PCH-V has the same LPSS than Intel Kaby Lake.
+> Add the new IDs to the list of supported devices.
+> 
 
-CAP_MAC_ADMIN was originally introduced for Smack and is not
-all-powerful wrt SELinux, so this is not a sufficient check for
-SELinux.
-We would want an actual security hook called here so we can implement
-a specific check over userspace
-being able to attach BPF progs to LSM hooks.  CAP_MAC_ADMIN has other
-connotations to SELinux (presently the
-ability to set/get file security labels that are not known to the
-currently loaded policy).
+Lee, anything I need to do with this?
+
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/mfd/intel-lpss-pci.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+> index c40a6c7d0cf8..378024a3ba28 100644
+> --- a/drivers/mfd/intel-lpss-pci.c
+> +++ b/drivers/mfd/intel-lpss-pci.c
+> @@ -347,6 +347,16 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+>  	{ PCI_VDEVICE(INTEL, 0xa36a), (kernel_ulong_t)&cnl_i2c_info },
+>  	{ PCI_VDEVICE(INTEL, 0xa36b), (kernel_ulong_t)&cnl_i2c_info },
+>  	{ PCI_VDEVICE(INTEL, 0xa37b), (kernel_ulong_t)&spt_info },
+> +	/* CML-V */
+> +	{ PCI_VDEVICE(INTEL, 0xa3a7), (kernel_ulong_t)&spt_uart_info },
+> +	{ PCI_VDEVICE(INTEL, 0xa3a8), (kernel_ulong_t)&spt_uart_info },
+> +	{ PCI_VDEVICE(INTEL, 0xa3a9), (kernel_ulong_t)&spt_info },
+> +	{ PCI_VDEVICE(INTEL, 0xa3aa), (kernel_ulong_t)&spt_info },
+> +	{ PCI_VDEVICE(INTEL, 0xa3e0), (kernel_ulong_t)&spt_i2c_info },
+> +	{ PCI_VDEVICE(INTEL, 0xa3e1), (kernel_ulong_t)&spt_i2c_info },
+> +	{ PCI_VDEVICE(INTEL, 0xa3e2), (kernel_ulong_t)&spt_i2c_info },
+> +	{ PCI_VDEVICE(INTEL, 0xa3e3), (kernel_ulong_t)&spt_i2c_info },
+> +	{ PCI_VDEVICE(INTEL, 0xa3e6), (kernel_ulong_t)&spt_uart_info },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(pci, intel_lpss_pci_ids);
+> -- 
+> 2.24.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
