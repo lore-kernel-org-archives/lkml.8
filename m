@@ -2,124 +2,110 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEB5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F015C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A1B20728
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0789C20728
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:15:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xo9Ym8or"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="ULgqtRG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgCEVLJ (ORCPT
+        id S1726173AbgCEVPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:11:09 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38818 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgCEVLJ (ORCPT
+        Thu, 5 Mar 2020 16:15:43 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39407 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbgCEVPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:11:09 -0500
-Received: by mail-io1-f65.google.com with SMTP id s24so8049252iog.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 13:11:09 -0800 (PST)
+        Thu, 5 Mar 2020 16:15:42 -0500
+Received: by mail-pf1-f195.google.com with SMTP id l7so3368689pff.6
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 13:15:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KgCiuleqCzLTSUjw22UCoY8ZDkk7GEszoFBVAof0Qx8=;
-        b=Xo9Ym8orTM9HyxCSsaVHy9BymP4VD2UA8iON1jyOyciEx7yuFQ2g6QIf+oCNtf3VKB
-         L/dwI6a2LpncfRwMifkF/UcA8o+ZXg2lCnfetTi8RqtExWq6NT0pp+2s5lAlI/Ej3nSb
-         ccGVm74s6E1eaTDrvIiWu+2HxhA33gA48NvkSqC6zF5Ae6/mJw9iQHKLYZqw63z6edrd
-         cziYbZqVklcKZ6z/wmuqPO/FTFVC6UaIpNJITYpFTRb7TEKJOQqc5hnSoEdeSWg5fwCg
-         tHRmvbiyNZt7al5MhrpYknx7AuhpQOiBzg59pdlxXJ+i6IH24NDX4+2b5peE26utXGBv
-         oEoA==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9+1EhWPpss4QhNZrOlX7kurqpoCphQTt/H2TjuPYl1Q=;
+        b=ULgqtRG/k56Nm9/C+oQS1iM+7iougmuOf6uGVDm8ZKNfCMzHQlgvfah02EoKzwxfZx
+         RqnZqhrww3Wb90uOhyw3TlUOgkDEFh51Qrqn1Zf0bobDidGXMWwvmjiWeC+njkQJOf7N
+         w3wcqQ6mFFpQo0ZGB+6TVzKIzUoE9EbdWNAhoby1aFj/wCLyYxl/Gzbp9+W6bZdMJGJX
+         mUGz1RqHvD+4eKfCAeGLCWM4iSa1A+xHawoR1E6heG0FipTKWerUfeTCQmLIYQ4xMDtZ
+         HYne9SBwz7D+ZXLeWk8VPb5XjTq5t+J0zFza7lvEvBno5kLtj8PwYVrkyXukD3Puj5Aq
+         MeJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KgCiuleqCzLTSUjw22UCoY8ZDkk7GEszoFBVAof0Qx8=;
-        b=n4pAFzYkpFrT0ktsKIlwPeZqJ3PGRpdTlUnwt7UY+rO3aRK49XN25/rnfNxL6T7Sf/
-         MhkL8a9/A3JQcgvqvBncMowwVvL+JYArywZQ9D3SpYwFJxBBc3vuZbYjRzRf/jhGqpkq
-         sHvFx+eoiDsqVqsWOrGOrT+mHgFavGcsEsjNo5e3OHkuF0YW3nDgE3Ai/HaxzIQl9/4R
-         2Okr8pYdEgXskfUclWDC2+Qbc2Eq912YzaOodMnnCZzvLsJqNtcgBehNsBuFm2jUAsGw
-         ieyqPj9yEMJ9KfBR+uLRaoIPiIfOJ4J/aupcbrgjLBg7P4NArXze6y2H/Vyh/LDj1LF0
-         gt/A==
-X-Gm-Message-State: ANhLgQ2mScvciwfxTviSF6D6na5Z+1mwFUDyXohCO5B9r0X7vTAqdg3n
-        Hl3+6323WnnSXS14mzOzXoz49dLbF+BpzLHHHdVA6w==
-X-Google-Smtp-Source: ADFU+vsFyC5bNS5mHTNH/+8qxZn2g9Lgm1XqoRI5hT88liOMctbkO5KYjmjv4UGZslJc50zLrCUKM9MeYbSdoFd5m1k=
-X-Received: by 2002:a05:6602:27cf:: with SMTP id l15mr313933ios.70.1583442668601;
- Thu, 05 Mar 2020 13:11:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20200305013437.8578-1-sean.j.christopherson@intel.com>
- <20200305013437.8578-5-sean.j.christopherson@intel.com> <CALMp9eRRWZ54kzMXdTqRCy2KmaUAq+HVVVzbxJNVdgktg65XCA@mail.gmail.com>
- <20200305192532.GN11500@linux.intel.com>
-In-Reply-To: <20200305192532.GN11500@linux.intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 5 Mar 2020 13:10:57 -0800
-Message-ID: <CALMp9eRxdGj0DL0_g-an0YC+gTMcWcSk7=md=k4-8S0Zcankbg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] KVM: x86: Fix CPUID range checks for Hypervisor
- and Centaur classes
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Pu Wen <puwen@hygon.cn>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=9+1EhWPpss4QhNZrOlX7kurqpoCphQTt/H2TjuPYl1Q=;
+        b=uYDiQjtRqAXJ4Qky9w49lm+ilmVlSSK2XNgs6la3P53WcPVKqOZxjJgMht1OrzMrMq
+         fEh6sMNYx2ZB33vyoZ7fzyA+/fK3DnKPasd3TbJZ2tXxegDRyTUOKHpf47wtXa7UdYNe
+         Vm7S9L1wv7FyH1uYMqhoprWRPuNfGnqANn8LjZ6iVY31OSbL2KS0T4ggeyxPeg0HOa02
+         RbF2ECZYGWHdARZRAHmYLtbVCYkCeudSSxw04GGQ7IVyqU2Pk8IZ0O3ujMnVNIU7BHG4
+         gN8m6BPI84BTbZV9+MTTKtdidf8D9eY30DowtJ4EpmMMt/vO56ZdaPu+TD6uN+XDbfhB
+         x9Fw==
+X-Gm-Message-State: ANhLgQ0K7QMF+vQHtqDWVZmseKZjWhbAfAEsZxKoI35pU+B2vrexWGfJ
+        ekEeLYwgviWTO+cNH9IxxYJoXQ==
+X-Google-Smtp-Source: ADFU+vsbZynI+R8e3jLSyig5XUAieRLdXVzdDbgFtNnMb7/UmNXkF1SMhG1Unke/mdJNVMUjK9dDpw==
+X-Received: by 2002:a62:7784:: with SMTP id s126mr298249pfc.23.1583442939943;
+        Thu, 05 Mar 2020 13:15:39 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
+        by smtp.gmail.com with ESMTPSA id 188sm29333161pfa.62.2020.03.05.13.15.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 13:15:39 -0800 (PST)
+Date:   Thu, 05 Mar 2020 13:15:39 -0800 (PST)
+X-Google-Original-Date: Thu, 05 Mar 2020 13:10:06 PST (-0800)
+Subject:     Re: [PATCH] riscv: Use p*d_leaf macros to define p*d_huge
+In-Reply-To: <20200220061023.958-1-alex@ghiti.fr>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        alex@ghiti.fr
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     alex@ghiti.fr
+Message-ID: <mhng-e9025d02-f23d-486a-bbbf-083fe0932619@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 11:25 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Wed, 19 Feb 2020 22:10:23 PST (-0800), alex@ghiti.fr wrote:
+> The newly introduced p*d_leaf macros allow to check if an entry of the
+> page table map to a physical page instead of the next level. To avoid
+> duplication of code, use those macros to determine if a page table entry
+> points to a hugepage.
 >
-> On Thu, Mar 05, 2020 at 10:43:51AM -0800, Jim Mattson wrote:
-> > On Wed, Mar 4, 2020 at 5:34 PM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
-> > >
-> > > Rework the masking in the out-of-range CPUID logic to handle the
-> > > Hypervisor sub-classes, as well as the Centaur class if the guest
-> > > virtual CPU vendor is Centaur.
-> > >
-> > > Masking against 0x80000000 only handles basic and extended leafs, which
-> > > results in Hypervisor range checks being performed against the basic
-> > > CPUID class, and Centuar range checks being performed against the
-> > > Extended class.  E.g. if CPUID.0x40000000.EAX returns 0x4000000A and
-> > > there is no entry for CPUID.0x40000006, then function 0x40000006 would
-> > > be incorrectly reported as out of bounds.
-> > >
-> > > While there is no official definition of what constitutes a class, the
-> > > convention established for Hypervisor classes effectively uses bits 31:8
-> > > as the mask by virtue of checking for different bases in increments of
-> > > 0x100, e.g. KVM advertises its CPUID functions starting at 0x40000100
-> > > when HyperV features are advertised at the default base of 0x40000000.
-> > >
-> > > The bad range check doesn't cause functional problems for any known VMM
-> > > because out-of-range semantics only come into play if the exact entry
-> > > isn't found, and VMMs either support a very limited Hypervisor range,
-> > > e.g. the official KVM range is 0x40000000-0x40000001 (effectively no
-> > > room for undefined leafs) or explicitly defines gaps to be zero, e.g.
-> > > Qemu explicitly creates zeroed entries up to the Cenatur and Hypervisor
-> > > limits (the latter comes into play when providing HyperV features).
-> > >
-> > > The bad behavior can be visually confirmed by dumping CPUID output in
-> > > the guest when running Qemu with a stable TSC, as Qemu extends the limit
-> > > of range 0x40000000 to 0x40000010 to advertise VMware's cpuid_freq,
-> > > without defining zeroed entries for 0x40000002 - 0x4000000f.
-> > >
-> > > Note, documentation of Centaur/VIA CPUs is hard to come by.  Designating
-> > > 0xc0000000 - 0xcfffffff as the Centaur class is a best guess as to the
-> > > behavior of a real Centaur/VIA CPU.
-> >
-> > Don't forget Transmeta's CPUID range at 0x80860000 through 0x8086FFFF!
+> Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> ---
+>  arch/riscv/mm/hugetlbpage.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 >
-> Hmm, is it actually needed here?  KVM doesn't advertise support for that
-> range in KVM_GET_SUPPORTED_CPUID.  That's also why I limited the Centaur
-> range to vendor==CENTAUR, as KVM_GET_SUPPORTED_CPUID enumerates the
-> Centaur range if and only if the host CPU is Centaur.
+> diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+> index 0d4747e9d5b5..a6189ed36c5f 100644
+> --- a/arch/riscv/mm/hugetlbpage.c
+> +++ b/arch/riscv/mm/hugetlbpage.c
+> @@ -4,14 +4,12 @@
+>
+>  int pud_huge(pud_t pud)
+>  {
+> -	return pud_present(pud) &&
+> -		(pud_val(pud) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
+> +	return pud_leaf(pud);
+>  }
+>
+>  int pmd_huge(pmd_t pmd)
+>  {
+> -	return pmd_present(pmd) &&
+> -		(pmd_val(pmd) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
+> +	return pmd_leaf(pmd);
+>  }
+>
+>  static __init int setup_hugepagesz(char *opt)
 
-Ah. So cross-vendor CPUID specifications are not supported?
+Thanks, this is on for-next.
