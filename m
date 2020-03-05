@@ -2,139 +2,124 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED74C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEB5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA8E207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A1B20728
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:11:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSdCOvQz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xo9Ym8or"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCEVKP (ORCPT
+        id S1726400AbgCEVLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:10:15 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42329 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgCEVKP (ORCPT
+        Thu, 5 Mar 2020 16:11:09 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38818 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbgCEVLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:10:15 -0500
-Received: by mail-wr1-f67.google.com with SMTP id v11so6803732wrm.9;
-        Thu, 05 Mar 2020 13:10:12 -0800 (PST)
+        Thu, 5 Mar 2020 16:11:09 -0500
+Received: by mail-io1-f65.google.com with SMTP id s24so8049252iog.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 13:11:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=R+PGzB7QBkmxLrqxE3+DOkXyeGf/OpoVTm06v9y8aos=;
-        b=nSdCOvQzF3QX1J14e07drWR926Ix5pJUxt4CB5rRDVJQw97A6ZpJIHnlzNKMZxmGrZ
-         /cBSlaGBs8J5Ov1YoUxy7GdNGpLeiS7XCumZqJUWNknjgX9yP8ZA3X9LvZreNrvKPZke
-         rAmXr6N/cNITiP84Dc0QMS83lTsANVhXKxn+KkY1CDwVDSEz7V3lmhlUCDX0C8NuNN4z
-         GJt9wWtEHi4ns034Pba6dkSkDbnOFf3jUNyMxjvo7olP4yppRkVVVLkYWqSQxh4X4Gsv
-         iRXN8ll6jRmCpTlxQZmufbc5XizHwejbbxKRunjHhYkPiwN94511qCLdJikJrPyHKluo
-         dUnQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KgCiuleqCzLTSUjw22UCoY8ZDkk7GEszoFBVAof0Qx8=;
+        b=Xo9Ym8orTM9HyxCSsaVHy9BymP4VD2UA8iON1jyOyciEx7yuFQ2g6QIf+oCNtf3VKB
+         L/dwI6a2LpncfRwMifkF/UcA8o+ZXg2lCnfetTi8RqtExWq6NT0pp+2s5lAlI/Ej3nSb
+         ccGVm74s6E1eaTDrvIiWu+2HxhA33gA48NvkSqC6zF5Ae6/mJw9iQHKLYZqw63z6edrd
+         cziYbZqVklcKZ6z/wmuqPO/FTFVC6UaIpNJITYpFTRb7TEKJOQqc5hnSoEdeSWg5fwCg
+         tHRmvbiyNZt7al5MhrpYknx7AuhpQOiBzg59pdlxXJ+i6IH24NDX4+2b5peE26utXGBv
+         oEoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=R+PGzB7QBkmxLrqxE3+DOkXyeGf/OpoVTm06v9y8aos=;
-        b=ji7os7fgH8M0wRXJJopUXwFLJRuZL29Vu3aqwEBNGFaK1YJESKCUxFLXgDGXYDqItH
-         FJIIAHFtuPX+gQJ8x5KQtxY3HJJmYdPk/SR2EqNOke2G9DSSGDgX1xhtEwJqQ9msAHRP
-         b3BqOOPupKTSEYdUC6IRF/5/ITBoJ+UFJSH0oJ2+RVi/g028F+Zv3tnKe4sy4n/wIekJ
-         KYY33peXhAla/g8QbLJm4KNx0Sw116MIlRD4A4fzP6eSC+o9oMGculskm+i5dBmgjI2h
-         lvEAllJNKsyqVlTmvew0p0KKjR2QGlCA3TCylcV6Noot8JSXqh9CCQ33j7j2KFIFxWZY
-         twQQ==
-X-Gm-Message-State: ANhLgQ1EoMjGRZr36uD7zUVt9QiIOOEuvklgc07RG9K8AN5s6wnIvozL
-        gsy3CzppmV3dnMswoYGQf5A=
-X-Google-Smtp-Source: ADFU+vsIWp72Qy//Y7eyylr7b2Bf1ieFhvhxXqkbeDhEz3Rt/Koe7g+MDjvNCPYcsAhXFULtgBAdTg==
-X-Received: by 2002:adf:a19c:: with SMTP id u28mr754837wru.221.1583442611069;
-        Thu, 05 Mar 2020 13:10:11 -0800 (PST)
-Received: from felia ([2001:16b8:2d7c:7000:ec58:d834:7ed:456a])
-        by smtp.gmail.com with ESMTPSA id g14sm46885651wrv.58.2020.03.05.13.10.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 13:10:10 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Thu, 5 Mar 2020 22:10:00 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     James Bottomley <jejb@linux.ibm.com>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: adjust to trusted keys subsystem creation
-In-Reply-To: <1583441170.3927.37.camel@linux.ibm.com>
-Message-ID: <alpine.DEB.2.21.2003052204060.7885@felia>
-References: <20200304160359.16809-1-lukas.bulwahn@gmail.com> <9127f0318e8507ca0b4e146d9b99d9ecb27f7f28.camel@linux.intel.com> <alpine.DEB.2.21.2003052132540.5431@felia> <1583441170.3927.37.camel@linux.ibm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KgCiuleqCzLTSUjw22UCoY8ZDkk7GEszoFBVAof0Qx8=;
+        b=n4pAFzYkpFrT0ktsKIlwPeZqJ3PGRpdTlUnwt7UY+rO3aRK49XN25/rnfNxL6T7Sf/
+         MhkL8a9/A3JQcgvqvBncMowwVvL+JYArywZQ9D3SpYwFJxBBc3vuZbYjRzRf/jhGqpkq
+         sHvFx+eoiDsqVqsWOrGOrT+mHgFavGcsEsjNo5e3OHkuF0YW3nDgE3Ai/HaxzIQl9/4R
+         2Okr8pYdEgXskfUclWDC2+Qbc2Eq912YzaOodMnnCZzvLsJqNtcgBehNsBuFm2jUAsGw
+         ieyqPj9yEMJ9KfBR+uLRaoIPiIfOJ4J/aupcbrgjLBg7P4NArXze6y2H/Vyh/LDj1LF0
+         gt/A==
+X-Gm-Message-State: ANhLgQ2mScvciwfxTviSF6D6na5Z+1mwFUDyXohCO5B9r0X7vTAqdg3n
+        Hl3+6323WnnSXS14mzOzXoz49dLbF+BpzLHHHdVA6w==
+X-Google-Smtp-Source: ADFU+vsFyC5bNS5mHTNH/+8qxZn2g9Lgm1XqoRI5hT88liOMctbkO5KYjmjv4UGZslJc50zLrCUKM9MeYbSdoFd5m1k=
+X-Received: by 2002:a05:6602:27cf:: with SMTP id l15mr313933ios.70.1583442668601;
+ Thu, 05 Mar 2020 13:11:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200305013437.8578-1-sean.j.christopherson@intel.com>
+ <20200305013437.8578-5-sean.j.christopherson@intel.com> <CALMp9eRRWZ54kzMXdTqRCy2KmaUAq+HVVVzbxJNVdgktg65XCA@mail.gmail.com>
+ <20200305192532.GN11500@linux.intel.com>
+In-Reply-To: <20200305192532.GN11500@linux.intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 5 Mar 2020 13:10:57 -0800
+Message-ID: <CALMp9eRxdGj0DL0_g-an0YC+gTMcWcSk7=md=k4-8S0Zcankbg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] KVM: x86: Fix CPUID range checks for Hypervisor
+ and Centaur classes
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Pu Wen <puwen@hygon.cn>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Thu, 5 Mar 2020, James Bottomley wrote:
-
-> On Thu, 2020-03-05 at 21:34 +0100, Lukas Bulwahn wrote:
-> > 
-> > On Thu, 5 Mar 2020, Jarkko Sakkinen wrote:
-> > 
-> > > On Wed, 2020-03-04 at 17:03 +0100, Lukas Bulwahn wrote:
-> > > > Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys
-> > > > subsystem")
-> > > > renamed trusted.h to trusted_tpm.h in include/keys/, and moved
-> > > > trusted.c
-> > > > to trusted-keys/trusted_tpm1.c in security/keys/.
-> > > > 
-> > > > Since then, ./scripts/get_maintainer.pl --self-test complains:
-> > > > 
-> > > >   warning: no file matches F: security/keys/trusted.c
-> > > >   warning: no file matches F: include/keys/trusted.h
-> > > > 
-> > > > Rectify the KEYS-TRUSTED entry in MAINTAINERS now.
-> > > > 
-> > > > Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-> > > > Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-> > > > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > > > ---
-> > > > Sumit, please ack.
-> > > > Jarkko, please pick this patch.
-> > > 
-> > > I'll pick it when it is done. I acknowledge the regression but I
-> > > see no reason for rushing as this does not break any systems in
-> > > the wild.
-> > > 
-> > 
-> > Agree. No need to rush this. I sent out a v3, and I hope to get
-> > Sumit's ACK and then you can pick it for the next merge window.
-> 
-> From a process point of view, I don't quite understand this.  You're
-> altering an entry in the MAINTAINERS file which belongs to the three
-> maintainers of trusted keys, you only need our ack to do that, which
-> picking up via the trusted key tree will substitute for.  It would be
-> useful to have Sumit review this because he moved the files and there
-> may be something we missed, but a reviewed-by: is a nice to have and
-> not a block on the process.
+On Thu, Mar 5, 2020 at 11:25 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
+> On Thu, Mar 05, 2020 at 10:43:51AM -0800, Jim Mattson wrote:
+> > On Wed, Mar 4, 2020 at 5:34 PM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> > >
+> > > Rework the masking in the out-of-range CPUID logic to handle the
+> > > Hypervisor sub-classes, as well as the Centaur class if the guest
+> > > virtual CPU vendor is Centaur.
+> > >
+> > > Masking against 0x80000000 only handles basic and extended leafs, which
+> > > results in Hypervisor range checks being performed against the basic
+> > > CPUID class, and Centuar range checks being performed against the
+> > > Extended class.  E.g. if CPUID.0x40000000.EAX returns 0x4000000A and
+> > > there is no entry for CPUID.0x40000006, then function 0x40000006 would
+> > > be incorrectly reported as out of bounds.
+> > >
+> > > While there is no official definition of what constitutes a class, the
+> > > convention established for Hypervisor classes effectively uses bits 31:8
+> > > as the mask by virtue of checking for different bases in increments of
+> > > 0x100, e.g. KVM advertises its CPUID functions starting at 0x40000100
+> > > when HyperV features are advertised at the default base of 0x40000000.
+> > >
+> > > The bad range check doesn't cause functional problems for any known VMM
+> > > because out-of-range semantics only come into play if the exact entry
+> > > isn't found, and VMMs either support a very limited Hypervisor range,
+> > > e.g. the official KVM range is 0x40000000-0x40000001 (effectively no
+> > > room for undefined leafs) or explicitly defines gaps to be zero, e.g.
+> > > Qemu explicitly creates zeroed entries up to the Cenatur and Hypervisor
+> > > limits (the latter comes into play when providing HyperV features).
+> > >
+> > > The bad behavior can be visually confirmed by dumping CPUID output in
+> > > the guest when running Qemu with a stable TSC, as Qemu extends the limit
+> > > of range 0x40000000 to 0x40000010 to advertise VMware's cpuid_freq,
+> > > without defining zeroed entries for 0x40000002 - 0x4000000f.
+> > >
+> > > Note, documentation of Centaur/VIA CPUs is hard to come by.  Designating
+> > > 0xc0000000 - 0xcfffffff as the Centaur class is a best guess as to the
+> > > behavior of a real Centaur/VIA CPU.
+> >
+> > Don't forget Transmeta's CPUID range at 0x80860000 through 0x8086FFFF!
+>
+> Hmm, is it actually needed here?  KVM doesn't advertise support for that
+> range in KVM_GET_SUPPORTED_CPUID.  That's also why I limited the Centaur
+> range to vendor==CENTAUR, as KVM_GET_SUPPORTED_CPUID enumerates the
+> Centaur range if and only if the host CPU is Centaur.
 
-Agree. I expect Sumit to acknowledge that the PATCH v3 "fixes" what he 
-missed in his commit from his point of view. I do not use the Fixes: tag, 
-because it just some basic administrative clean-up, but not any 
-functional change; commits with Fixes: tags are quickly picked up for 
-stable, but this patch should not be picked up, because changes to 
-MAINTAINERS do not need to be reflected in stable branches.
-
-There is no rush and no blocker here.
-
-Lukas
+Ah. So cross-vendor CPUID specifications are not supported?
