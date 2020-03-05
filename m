@@ -2,230 +2,235 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAC4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F13C3F2D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBDA2072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B270720716
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:35:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="oXe4cF7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgCERfM (ORCPT
+        id S1726947AbgCERfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:35:12 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:49630 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgCERfL (ORCPT
+        Thu, 5 Mar 2020 12:35:55 -0500
+Received: from sonic305-27.consmr.mail.ne1.yahoo.com ([66.163.185.153]:40174
+        "EHLO sonic305-27.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725990AbgCERfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:35:11 -0500
-Received: by mail-io1-f71.google.com with SMTP id v2so4463128ioq.16
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:35:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=J22kxp4BNuwMstNi9lcwjW2uSd1Dg5Ss2XhXJn3O4S4=;
-        b=i+bhmIlE5dlNV4DQQvhMFwjSeG1PkK75X3Ou1HGt4iM3yQX1iVQKR17QKfQ4N6qGyt
-         znGplYc1CshQSGnOlmTZCNpeSklNzHDWDu0K5bRiEKoKT16tHYDrZIkOPp5YcRTuSN57
-         x+X9nHZ+GcpmOzSk2oRjbvjxJVIPoDToyZyJD3ODFjEj7QrSzXe6Lcg85dYY6XXU1Xv2
-         U2PpwSloKOnr0pKS6kqtdEV8I6lLMRMIN75Jq8gQdHajDfBI1XLvmnYfsoiBAeQF92Kk
-         z6IdxBEyXua85J143trlMT298NvlCAfuQiYlc7Lrv9RUSElDdqQTK1EpqzNnwh1OQbrn
-         AYGw==
-X-Gm-Message-State: ANhLgQ3P8wQZI7tNGPB0s7ZjFDPMesAGPFZXJLmGdyZJ79lz0aw4BI/f
-        a7QWKsbddgqg2B9eB7kBSKT2tVCKOoaWSFK+Ure1MMB1sB9O
-X-Google-Smtp-Source: ADFU+vteBSOQ0/QG+CsPVBCQTt9GV3zfOTGle6Md0xngnSpRu0XtNHkIcy5OwuwGAnCBWXt+D1hW+mzlPxSKAo8RB1bsFe7n0T9J
+        Thu, 5 Mar 2020 12:35:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1583429752; bh=k2xHTNONz5sMhvyO5N8Im0O7CjtgXx2Pz7D1hNnS8nk=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=oXe4cF7bDLveS/gG5YCN30IDwhDIldvK9+sF32Oew78jqh/ipNAt/kRy4mVU8wLijO8FWsz+tPPLbF3UV8L1O8LKRkyOFeMPujy4ZBrPsx0cxWJ2rWQwyQmQzr9RRxgY9ujUFhQEBnNbuP8CdOk4rJ5ZqrvUH4joOR6XLLotRxMRbmIPgD2Syktdvun0bVkf3EX3Jq8Re39vEfhATQ7wyS8r4L1y40QRTbmctPKByuTOMop/em3Joh0+nqHJkPiSh3Zh9mih+BxtqSVmQoO8ZpSYXURHXHmqXFjChHVextG3ciceziL7RqTLFSG8nq32/e2sPs7L3mCPjESgfCK+VA==
+X-YMail-OSG: KzMLmncVM1l4LgZ_sS1bIlKREMtvCZ2IBZA5CG2ZrLCQ9ttB3GJdZTq6tYEJnUd
+ sHof_5IdMQ4CPX95GzkS3vG4olGEYDVhB4e3a98E4U4o.FLXHmj081W7vOax3KMIw7AWbT.7EcHm
+ DD6Hsn7ByOlzqnPUi94b.rJr20FnfXo5MeOXaw.GGz6fF2aWqvcFfY4aKCiHo3et3HHGsIhFNeoW
+ TwDuOrHNAOKl3hu38V98KPKVX2dLJGn1M5k0iMBLeXJS4v39gl3_JjjTnIixKumFG._H1GyAEKb3
+ ysZG_wzRogMVFnwAsc.Pka8Qg._XvFQ3v54E04f_Wn.MS3ddHqbOwBGuzN.KIDR_213445W_JPwO
+ BS9JObIm4jqPPPl0hP2kbC357HvuYMbbDHbiv.MSuw6CUTzblKaXuHFtyJznzPjbnEaglJTVHEb0
+ lmEqcR_V6SVo6L2m352eLXtp132KihQpCqWA9DITYC7B.0QJSM9npoA5acVSVSI3wVRFoooqAAlI
+ BOmT2MxatdpY6_cPWXUkyofuCDVKJntk7dq4kT4CqhtznV8wfGHOl2Lr5jKTamiu5vIink.UwnD3
+ QzsVCHHmVBg5asUCz8r9wSWOYj2rHLY7ASNXSUnEvQrA7lElZRRf6utDGFlRG8zO.TkmgTqhngxL
+ ueAo1aBAGiMBKayml3tS2XkmH3P.aWjJ8fZg9DrCh2D0CXU3SVbq7ApVsKVrEojEV5hrlYreYQbJ
+ gKeblR17Rp2ANEfLwxm2KM6lR_Ft_sN_HMwmw1aELL6Vqe_ZlXxPbB0U3RZELcMK4gkSaYnWhZnv
+ coAvHZ9IiJJwbfmIGS9DAUd2i8XV1G6vZ9x47O2ecBRV5vPmFJEK2w8VKFS8qovh7QPgx8Ct2bva
+ Q.8hV9esDXSma91.muKiEupvn2butjss3ge4NP6eefxg5of74FoQqjBJBvDrzajpNhsPt7cRrDhP
+ 8V3cB.zIUiNxtkgXNSJ24YH3xjG1N2dJTjoox2oxjkeIUwZLoTSf6Pv8.AGs9KQ1_lz.AADVzC78
+ SHLMiFwjd5xX9eMb5I2Us2ZnDxWt4E1Wu8NYqtpau0QlMEFZ3ftoBKMZbxsg0QGTiQC7wALm9p39
+ GXm.pP9cS40qXYMn8ZrQ8.A3mtJ7QzAU75EtgCXEQXzAA1dvQqlQZ9pGhhqoLkhQj2ZQSJX25G5v
+ ouqgpqlnlGyeuC3MI9ZI1pFtIR0zkRN4PHn4hTrj1Ad58Xk4y0q4iQxW9aFPNIhgLArUADN3mdtD
+ j.NfWuPTNJBqUHN_07kV5U2dqqskMP94XzXCxS7d5.1lI5sPlCMgvKxwvEebbAkPwMTOUoDq0ojf
+ TEB_.B5mznKGK0KSZUOHdPkrgQaX8LbwF52ky0gahN9a5fdmsY_70Fd5LduZXSkDEqWIQhJRsaxm
+ 8h5Ta6ySv6TpoUxdunKX5xdOPIlC9PW1qikCU.MI2s1CF6A--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.ne1.yahoo.com with HTTP; Thu, 5 Mar 2020 17:35:52 +0000
+Received: by smtp414.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 44f0bf907ef9420dd1891bfaea2db984;
+          Thu, 05 Mar 2020 17:35:49 +0000 (UTC)
+Subject: Re: [PATCH bpf-next v4 3/7] bpf: Introduce BPF_MODIFY_RETURN
+To:     KP Singh <kpsingh@chromium.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>, jmorris@namei.org,
+        Paul Moore <paul@paul-moore.com>
+References: <20200304191853.1529-1-kpsingh@chromium.org>
+ <20200304191853.1529-4-kpsingh@chromium.org>
+ <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com>
+ <20200305155421.GA209155@google.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <d7615424-48cb-1131-3c5d-f2a0b4adfaf7@schaufler-ca.com>
+Date:   Thu, 5 Mar 2020 09:35:47 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8956:: with SMTP id b22mr103393iot.263.1583429710715;
- Thu, 05 Mar 2020 09:35:10 -0800 (PST)
-Date:   Thu, 05 Mar 2020 09:35:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006f20e205a01ef5e1@google.com>
-Subject: possible deadlock in __static_key_slow_dec
-From:   syzbot <syzbot+61ffbb75d30176841f76@syzkaller.appspotmail.com>
-To:     bristot@redhat.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, peterz@infradead.org, simon.horman@netronome.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200305155421.GA209155@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Mailer: WebService/1.1.15302 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_241)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 3/5/2020 7:54 AM, KP Singh wrote:
+> On 05-Mar 08:51, Stephen Smalley wrote:
+>> On Wed, Mar 4, 2020 at 2:20 PM KP Singh <kpsingh@chromium.org> wrote:
+>>> From: KP Singh <kpsingh@google.com>
+>>>
+>>> When multiple programs are attached, each program receives the return=
 
-syzbot found the following crash on:
+>>> value from the previous program on the stack and the last program
+>>> provides the return value to the attached function.
+>>>
+>>> The fmod_ret bpf programs are run after the fentry programs and befor=
+e
+>>> the fexit programs. The original function is only called if all the
+>>> fmod_ret programs return 0 to avoid any unintended side-effects. The
+>>> success value, i.e. 0 is not currently configurable but can be made s=
+o
+>>> where user-space can specify it at load time.
+>>>
+>>> For example:
+>>>
+>>> int func_to_be_attached(int a, int b)
+>>> {  <--- do_fentry
+>>>
+>>> do_fmod_ret:
+>>>    <update ret by calling fmod_ret>
+>>>    if (ret !=3D 0)
+>>>         goto do_fexit;
+>>>
+>>> original_function:
+>>>
+>>>     <side_effects_happen_here>
+>>>
+>>> }  <--- do_fexit
+>>>
+>>> The fmod_ret program attached to this function can be defined as:
+>>>
+>>> SEC("fmod_ret/func_to_be_attached")
+>>> int BPF_PROG(func_name, int a, int b, int ret)
+>>> {
+>>>         // This will skip the original function logic.
+>>>         return 1;
+>>> }
+>>>
+>>> The first fmod_ret program is passed 0 in its return argument.
+>>>
+>>> Signed-off-by: KP Singh <kpsingh@google.com>
+>>> Acked-by: Andrii Nakryiko <andriin@fb.com>
+>> IIUC you've switched from a model where the BPF program would be
+>> invoked after the original function logic
+>> and the BPF program is skipped if the original function logic returns
+>> non-zero to a model where the BPF program is invoked first and
+>> the original function logic is skipped if the BPF program returns
+>> non-zero.  I'm not keen on that for userspace-loaded code attached
+> We do want to continue the KRSI series and the effort to implement a
+> proper BPF LSM. In the meantime, the tracing + error injection
+> solution helps us to:
+>
+>   * Provide better debug capabilities.
+>   * And parallelize the effort to come up with the right helpers
+>     for our LSM work and work on sleepable BPF which is also essential
+>     for some of the helpers.
+>
+> As you noted, in the KRSI v4 series, we mentioned that we would like
+> to have the user-space loaded BPF programs be unable to override the
+> decision made by the in-kernel logic/LSMs, but this got shot down:
+>
+>    https://lore.kernel.org/bpf/00c216e1-bcfd-b7b1-5444-2a2dfa69190b@sch=
+aufler-ca.com
+>
+> I would like to continue this discussion when we post the v5 series
+> for KRSI as to what the correct precedence order should be for the
+> BPF_PROG_TYPE_LSM and would appreciate if you also bring it up there.
 
-HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=154474f9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-dashboard link: https://syzkaller.appspot.com/bug?extid=61ffbb75d30176841f76
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f0efa1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119cf3b5e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+61ffbb75d30176841f76@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-5.6.0-rc3-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor374/8758 is trying to acquire lock:
-ffffffff892c9f18 (cpu_hotplug_lock.rw_sem){++++}, at: __static_key_slow_dec+0x14/0x90 kernel/jump_label.c:254
-
-but task is already holding lock:
-ffff88808438c7d8 (&mm->mmap_sem#2){++++}, at: vm_mmap_pgoff+0xf6/0x1d0 mm/util.c:504
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&mm->mmap_sem#2){++++}:
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       down_write+0x57/0x140 kernel/locking/rwsem.c:1534
-       mpol_rebind_mm+0x37/0x210 mm/mempolicy.c:382
-       cpuset_attach+0x35f/0x4c0 kernel/cgroup/cpuset.c:2203
-       cgroup_migrate_execute+0x7ac/0xff0 kernel/cgroup/cgroup.c:2445
-       cgroup_migrate+0x181/0x190 kernel/cgroup/cgroup.c:2701
-       cgroup_attach_task+0x786/0xa10 kernel/cgroup/cgroup.c:2738
-       __cgroup1_procs_write+0x257/0x390 kernel/cgroup/cgroup-v1.c:521
-       cgroup1_procs_write+0x2a/0x40 kernel/cgroup/cgroup-v1.c:534
-       cgroup_file_write+0x223/0x5f0 kernel/cgroup/cgroup.c:3695
-       kernfs_fop_write+0x3f0/0x4f0 fs/kernfs/file.c:315
-       __vfs_write+0xb8/0x740 fs/read_write.c:494
-       vfs_write+0x270/0x580 fs/read_write.c:558
-       ksys_write+0x117/0x220 fs/read_write.c:611
-       __do_sys_write fs/read_write.c:623 [inline]
-       __se_sys_write fs/read_write.c:620 [inline]
-       __x64_sys_write+0x7b/0x90 fs/read_write.c:620
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #1 (&cpuset_rwsem){++++}:
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-       cpuset_read_lock+0x3e/0x130 kernel/cgroup/cpuset.c:340
-       __sched_setscheduler+0x624/0x1b00 kernel/sched/core.c:4869
-       _sched_setscheduler kernel/sched/core.c:5041 [inline]
-       sched_setscheduler_nocheck+0x125/0x240 kernel/sched/core.c:5087
-       __kthread_create_on_node+0x2eb/0x3b0 kernel/kthread.c:349
-       kthread_create_on_node+0x72/0xa0 kernel/kthread.c:388
-       create_worker+0x396/0x890 kernel/workqueue.c:1924
-       workqueue_prepare_cpu+0x98/0x110 kernel/workqueue.c:5024
-       cpuhp_invoke_callback+0x4c9/0x8b0 kernel/cpu.c:172
-       cpuhp_up_callbacks kernel/cpu.c:599 [inline]
-       _cpu_up+0x307/0x550 kernel/cpu.c:1165
-       do_cpu_up+0x159/0x1a0 kernel/cpu.c:1200
-       cpu_up+0x18/0x20 kernel/cpu.c:1208
-       smp_init+0x107/0x29a kernel/smp.c:604
-       kernel_init_freeable+0x2f2/0x429 init/main.c:1432
-       kernel_init+0x11/0x290 init/main.c:1346
-       ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
--> #0 (cpu_hotplug_lock.rw_sem){++++}:
-       check_prev_add kernel/locking/lockdep.c:2475 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
-       validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2970
-       __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
-       lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
-       percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-       cpus_read_lock+0x3e/0x130 kernel/cpu.c:292
-       __static_key_slow_dec+0x14/0x90 kernel/jump_label.c:254
-       static_key_slow_dec+0x50/0xa0 kernel/jump_label.c:270
-       sw_perf_event_destroy+0x78/0x170 kernel/events/core.c:8840
-       _free_event+0x825/0xdc0 kernel/events/core.c:4616
-       put_event kernel/events/core.c:4710 [inline]
-       perf_mmap_close+0xc04/0xea0 kernel/events/core.c:5754
-       remove_vma mm/mmap.c:177 [inline]
-       remove_vma_list mm/mmap.c:2568 [inline]
-       __do_munmap+0x1006/0x14b0 mm/mmap.c:2812
-       do_munmap mm/mmap.c:2820 [inline]
-       mmap_region+0x8c8/0x1c40 mm/mmap.c:1713
-       do_mmap+0xa8f/0x1100 mm/mmap.c:1543
-       do_mmap_pgoff include/linux/mm.h:2334 [inline]
-       vm_mmap_pgoff+0x13d/0x1d0 mm/util.c:506
-       ksys_mmap_pgoff+0x45b/0x540 mm/mmap.c:1593
-       __do_sys_mmap arch/x86/kernel/sys_x86_64.c:99 [inline]
-       __se_sys_mmap arch/x86/kernel/sys_x86_64.c:90 [inline]
-       __x64_sys_mmap+0x103/0x120 arch/x86/kernel/sys_x86_64.c:90
-       do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-  cpu_hotplug_lock.rw_sem --> &cpuset_rwsem --> &mm->mmap_sem#2
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&mm->mmap_sem#2);
-                               lock(&cpuset_rwsem);
-                               lock(&mm->mmap_sem#2);
-  lock(cpu_hotplug_lock.rw_sem);
-
- *** DEADLOCK ***
-
-1 lock held by syz-executor374/8758:
- #0: ffff88808438c7d8 (&mm->mmap_sem#2){++++}, at: vm_mmap_pgoff+0xf6/0x1d0 mm/util.c:504
-
-stack backtrace:
-CPU: 1 PID: 8758 Comm: syz-executor374 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- print_circular_bug+0xc3f/0xe70 kernel/locking/lockdep.c:1684
- check_noncircular+0x206/0x3a0 kernel/locking/lockdep.c:1808
- check_prev_add kernel/locking/lockdep.c:2475 [inline]
- check_prevs_add kernel/locking/lockdep.c:2580 [inline]
- validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2970
- __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3954
- lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
- percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
- cpus_read_lock+0x3e/0x130 kernel/cpu.c:292
- __static_key_slow_dec+0x14/0x90 kernel/jump_label.c:254
- static_key_slow_dec+0x50/0xa0 kernel/jump_label.c:270
- sw_perf_event_destroy+0x78/0x170 kernel/events/core.c:8840
- _free_event+0x825/0xdc0 kernel/events/core.c:4616
- put_event kernel/events/core.c:4710 [inline]
- perf_mmap_close+0xc04/0xea0 kernel/events/core.c:5754
- remove_vma mm/mmap.c:177 [inline]
- remove_vma_list mm/mmap.c:2568 [inline]
- __do_munmap+0x1006/0x14b0 mm/mmap.c:2812
- do_munmap mm/mmap.c:2820 [inline]
- mmap_region+0x8c8/0x1c40 mm/mmap.c:1713
- do_mmap+0xa8f/0x1100 mm/mmap.c:1543
- do_mmap_pgoff include/linux/mm.h:2334 [inline]
- vm_mmap_pgoff+0x13d/0x1d0 mm/util.c:506
- ksys_mmap_pgoff+0x45b/0x540 mm/mmap.c:1593
- __do_sys_mmap arch/x86/kernel/sys_x86_64.c:99 [inline]
- __se_sys_mmap arch/x86/kernel/sys_x86_64.c:90 [inline]
- __x64_sys_mmap+0x103/0x120 arch/x86/kernel/sys_x86_64.c:90
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4473b9
-Code: e8 4c bb 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f0272a71da8 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
-RAX: ffffffffffffffda RBX: 00000000006dcc38 RCX: 00000000004473b9
-RDX: 0000000000000000 RSI: 0000000000003000 RDI: 0000000020ffd000
-RBP: 00000000006dcc30 R08: 0000000000000004 R09: 0000000000000000
-R10: 0000000000000011 R11: 0000000000000246 R12: 00000000006dcc3c
-R13: 00007ffcae9c6f0f R14: 00007f0272a729c0 R15: 0000000000000000
+I believe that I have stated that order isn't my issue.
+Go first, last or as specified in the lsm list, I really
+don't care. We'll talk about what does matter in the KRSI
+thread.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+>> to LSM hooks; it means that userspace BPF programs can run even if
+>> SELinux would have denied access and SELinux hooks get
+>> skipped entirely if the BPF program returns an error.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Then I'm fine with using the LSM ordering mechanisms that Kees
+thought through to run the BPF last. Although I think it's somewhat
+concerning that SELinux cares what other security models might be
+in place. If BPF programs can violate SELinux (or traditional DAC)
+policies there are bigger issues than ordering.
+
+>>   I think Casey
+>> may have wrongly pointed you in this direction on the grounds
+>> it can already happen with the base DAC checking logic.  But that's
+> What we can do for this tracing/modify_ret series, is to remove
+> the special casing for "security_" functions in the BPF code and add
+> ALLOW_ERROR_INJECTION calls to the security hooks. This way, if
+> someone needs to disable the BPF programs being able to modify
+> security hooks, they can disable error injection. If that's okay, we
+> can send a patch.
+>
+> - KP
+>
+>> kernel DAC checking logic, not userspace-loaded code.
+>> And the existing checking on attachment is not sufficient for SELinux
+>> since CAP_MAC_ADMIN is not all powerful to SELinux.
+>> Be careful about designing your mechanisms around Smack because Smack
+>> is not the only LSM.
+
+:)
+=C2=A0
+
+
