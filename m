@@ -2,86 +2,83 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDF3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19188C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD90020870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E007120870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FYcQwAuX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NylefYR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgCERst (ORCPT
+        id S1726143AbgCERuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:48:49 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59762 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgCERst (ORCPT
+        Thu, 5 Mar 2020 12:50:12 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35524 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgCERuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:48:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Df+Ig0PmkHN63sTvEob8OOMDLzhpt9pB/wVBSuAD08A=; b=FYcQwAuXpfAk4AjiPu8FznYBor
-        IxyzqmH5D44FR8ZLhaDF/85SOnKAqv1Hh5leH1eFRZ276OIFQtX3upoMz/ISSD9x2I1TJqbYsslkI
-        8l+h/HHV88hpFJBhVBT+8iXqNQUzYDATQR+N0zIUhO4SLyWGmhFRysiS/qgjVvYOnKzd8sNALWFEb
-        TVkRzAMWjfGnx7YURGJewlS5V+v53yZolCpOqPMnuuHKh6300JyrcQqmC0IzTbOVWiwlFY4x7nwSi
-        N2q8WoxbB2fKWT1ATAw+oAU6mkXbkkbWxKbqUhKw352ENOE4MX5CloLrVxq6VM8+pMypHmvoIze4h
-        Cp+TRhJQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9uc4-0000dn-4v; Thu, 05 Mar 2020 17:48:48 +0000
-Subject: Re: [v5] Documentation: bootconfig: Update boot configuration
- documentation
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-doc@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-References: <158339065180.26602.26457588086834858.stgit@devnote2>
- <158339066140.26602.7533299987467005089.stgit@devnote2>
- <ef820445-25c5-a312-57d4-25ff3b4d08cf@infradead.org>
- <3fb124a6-07d2-7a40-8981-07561aeb3c1e@web.de>
- <f823204d-dcd1-2159-a525-02f15562e1af@infradead.org>
- <29c599ef-991d-a253-9f27-5999fb55b228@web.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <997f73af-dc6c-bc8b-12ba-69270ee4b95d@infradead.org>
-Date:   Thu, 5 Mar 2020 09:48:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 12:50:12 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so2950712plt.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:50:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=rC5OtK13XnzKjVKRv/ahMfo1lY7wZkZ7yJrsj3kp0MA=;
+        b=NylefYR1wLE1MebQawnzVM1OzyZKJff36rYhBnH7mzz9fCJ7h6T1d3sDEceneTttms
+         Pzx0tWoiknsjxQlYdzKMQmqsS5C7jlBaBCOOP9JXJKR4yYmCgQAprYQy7XL4Llcv8xbw
+         5qD42gQpxnJ6Y01n/OWA0TIzMzWQpd93JOp88=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=rC5OtK13XnzKjVKRv/ahMfo1lY7wZkZ7yJrsj3kp0MA=;
+        b=plg7kXnspD4POnqHE0tvlxGcZbkc5Jf+Mgb68skTxzwfK4o6Sb0GoT02KXXViSkqtu
+         n4z9YMPKq4FgFEhIuTlZxlD6wdV3WlU8VGiLxkeShUCCjj92sHzEmJ/c6JjvI5fSVGy1
+         xjtcMPvka9MIq7ghUfcg+k3LDyaaz3rsHcILGrIw4oAMZQkbrViBqYWXcLUq/dEspZUd
+         SHogudekBBQfoYkH+VHBcoUjUd35Xiw8QnESMrJc00QlW3Te1+3Es4IGia5Hl89rPSa6
+         BmD817GXlNsmW/YxVryNlIAveaIQMXMhrx9ykUadIP6U/vpFLpGXkqPVri6mGAC7vLy5
+         sKTA==
+X-Gm-Message-State: ANhLgQ0COOLFOjr+9k65pXpBXmvOWkt+qK7/XziVC1VLQR9cbH+FVCXG
+        v+Gh0grtVUMntzfo44RTIkC/PnCamuI=
+X-Google-Smtp-Source: ADFU+vsmPBLgRU3w1Cl9Hu6agTsF4GwojuoHnJV+0HRo3jlsnoLAxcCl3AKFvsgw+z3bh5Am6N3g+w==
+X-Received: by 2002:a17:90a:9409:: with SMTP id r9mr9847148pjo.39.1583430610997;
+        Thu, 05 Mar 2020 09:50:10 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id w76sm15012773pfc.154.2020.03.05.09.50.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 09:50:10 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <29c599ef-991d-a253-9f27-5999fb55b228@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1583428023-19559-1-git-send-email-mkshah@codeaurora.org>
+References: <1583428023-19559-1-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v12 0/4] Invoke rpmh_flush for non OSI targets
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, mka@chromium.org
+Date:   Thu, 05 Mar 2020 09:50:09 -0800
+Message-ID: <158343060946.7173.9822192224809476773@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 9:30 AM, Markus Elfring wrote:
->>> How does this feedback fit to known concerns around the discussed wordings?
->>
->> As far as I am concerned, it means that the documentation is
->> sufficiently good enough to be useful and not difficult to read.
-> 
-> Would you like to add anything to my previous review comments
-> (besides simple typo adjustments)?
+Quoting Maulik Shah (2020-03-05 09:06:59)
+> Changes in v12:
+> - Kconfig change to remove COMPILE_TEST was dropped in v11, reinclude it.
 
-If you would (could) be more concrete (or discrete) in your suggestions,
-I would be glad to comment on them.
-
-> 
-> 
->> It does not mean that it's perfect. Patches can still be made to it.
-> 
-> I hope that corresponding agreements will be achieved for
-> further improvements.
-
-
--- 
-~Randy
-
+What is the difficulty in maintaining COMPILE_TEST support? If it's
+purely making a stub function for OSI support then I'm lost why we can't
+have another patch at the start of the series that makes the function
+return false when PSCI is disabled.
