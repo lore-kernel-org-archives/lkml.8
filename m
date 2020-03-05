@@ -2,94 +2,97 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC76C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A90C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6206820637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3B8208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NKgKXtBf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P86071V0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgCEQv7 (ORCPT
+        id S1726269AbgCEQwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:51:59 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:47802 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgCEQv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:51:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=zeR+H7dn9cUFtnRC0x5I2lV7x72XaKNcFrXhJbZx+zE=; b=NKgKXtBftkTbcpjFm+o7nq6lzK
-        +okGpzirVXjC1s0/urazl6+TZ6IW7vmFVZDvOhbZ7KQf1F1mh33r4dmd8ud4TF4YgAu5MxuKhyD7P
-        WCI8vBd7TKsJTceWVDQUK15C/PiWDXfJRYsPewdXKWNR+8pKwKtEzMRtCQN1unxh2urI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j9tir-0006jV-1a; Thu, 05 Mar 2020 17:51:45 +0100
-Date:   Thu, 5 Mar 2020 17:51:45 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: mach-imx6q: add ksz9131rn_phy_fixup
-Message-ID: <20200305165145.GA25183@lunn.ch>
-References: <20200305134928.19775-1-philippe.schenker@toradex.com>
- <20200305143805.dk7fndblnqjnwxu6@pengutronix.de>
+        Thu, 5 Mar 2020 11:52:22 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44634 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCEQwW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 11:52:22 -0500
+Received: by mail-wr1-f67.google.com with SMTP id n7so7852216wrt.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:52:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=okCxADSi/XY9CnlYiTmN0nDKDcnaKRsPlFnUGxBGBDw=;
+        b=P86071V0lLLIljNo2bRtNtc+CevjRLr9BZPf9ogbVLMbsgiY2pzed/yMW71FucMhYQ
+         gPlqsEw5om+Bn+B0KISIxzHV/NcJZZq8dbyB1+u8hGpEcaH+fgXSoRBHgvXHkFMo2p2t
+         6MWsg5/Qh2qabxtx9vauxbteOXR+gTqAiHgFztJW0pcQCEatBI5p10dfWEHCquBJaaSX
+         VqlsBkxBmwerKDZVkjceiDp8xC3yXMNnoxMbSt1V4SOtrvW65khoopyfLubxLj7G0N1Y
+         SrHlP2WPVe/iGZ2996L4vSfWubsVvN24Ahl2zhovkkPcD10DH82xjtq9FGkfmtwqp+Rd
+         tynw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=okCxADSi/XY9CnlYiTmN0nDKDcnaKRsPlFnUGxBGBDw=;
+        b=IymyM9aTqFrecgKCQjb8HgsowUVxB0Oaw3APm9vOUsASuc32hftqfDzDw8vch+TmNR
+         4njPOH5p16ykCvk4qSqw35j3ivvc7htryNMmFymW4Ui7yDL01+NulxJFOcvV6o45xgir
+         pyOzOZ1ahpW76geNnupkM2+X4SvKPKwc/bBBGHbGyzWvRQk3wge7/2LKNDs5pyqy/w1a
+         QmMj1CJE1Xo1gZBcWc3yrv6PldU3ruOIQZALopYJEK6FPqARmwjCxsZ+jXwwQtwL3WQ5
+         vxE3kaqm4/7FhooyvZlOpq/HY4p+UXe5Tr4Y2pQidfUUYCsBZJwoKc4wX/GcMKo66FNd
+         BAAA==
+X-Gm-Message-State: ANhLgQ0UZP7x6H4139n4kooUMgA0bRmwW/iLHdZRv1cYWhR8RPphTtgp
+        MHYFHFQ1Xp+FpkdT38XvYr1pIw==
+X-Google-Smtp-Source: ADFU+vsXV4mCLrfRyf2z3uo3kGyUR05feC6JrvWPvGqxsCAU5I8Y73jIv4EYZQE2CykTtulgynK2yA==
+X-Received: by 2002:adf:914e:: with SMTP id j72mr11213015wrj.109.1583427140244;
+        Thu, 05 Mar 2020 08:52:20 -0800 (PST)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id x8sm34019834wro.55.2020.03.05.08.52.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 08:52:19 -0800 (PST)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     srini@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] nvmem: core: validate nvmem config before parsing
+Date:   Thu,  5 Mar 2020 16:52:12 +0000
+Message-Id: <20200305165212.26525-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305143805.dk7fndblnqjnwxu6@pengutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 03:38:05PM +0100, Oleksij Rempel wrote:
-> Hi Philippe,
-> 
-> On Thu, Mar 05, 2020 at 02:49:28PM +0100, Philippe Schenker wrote:
-> > The MAC of the i.MX6 SoC is compliant with RGMII v1.3. The KSZ9131 PHY
-> > is like KSZ9031 adhering to RGMII v2.0 specification. This means the
-> > MAC should provide a delay to the TXC line. Because the i.MX6 MAC does
-> > not provide this delay this has to be done in the PHY.
-> > 
-> > This patch adds by default ~1.6ns delay to the TXC line. This should
-> > be good for all boards that have the RGMII signals routed with the
-> > same length.
-> > 
-> > The KSZ9131 has relatively high tolerances on skew registers from
-> > MMD 2.4 to MMD 2.8. Therefore the new DLL-based delay of 2ns is used
-> > and then as little as possibly subtracted from that so we get more
-> > accurate delay. This is actually needed because the i.MX6 SoC has
-> > an asynchron skew on TXC from -100ps to 900ps, to get all RGMII
-> > values within spec.
-> 
-> This configuration has nothing to do in mach-imx/* It belongs to the
-> board devicetree. Please see DT binding documentation for needed
-> properties:
-> Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+nvmem provider has to provide either reg_read/write, add a check
+to enforce this.
 
-It probably does not even need that. Just
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/nvmem/core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-phy-mode = <rgmii-txid>
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index c05c4f4a7b9e..77d890d3623d 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -339,6 +339,9 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+ 	if (!config->dev)
+ 		return ERR_PTR(-EINVAL);
+ 
++	if (!config->reg_read && !config->reg_write)
++		return ERR_PTR(-EINVAL);
++
+ 	nvmem = kzalloc(sizeof(*nvmem), GFP_KERNEL);
+ 	if (!nvmem)
+ 		return ERR_PTR(-ENOMEM);
+-- 
+2.21.0
 
-Also, please Cc: netdev for network code.
-
-      Andrew
