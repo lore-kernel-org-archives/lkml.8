@@ -2,168 +2,90 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF566C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84662C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F1720732
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB9C207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:53:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0xOKWX8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yewZkC5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgCEOxt (ORCPT
+        id S1726974AbgCEOxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:53:49 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:41336 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgCEOxt (ORCPT
+        Thu, 5 Mar 2020 09:53:54 -0500
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:41802 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbgCEOxx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:53:49 -0500
-Received: by mail-qv1-f67.google.com with SMTP id s15so2521138qvn.8;
-        Thu, 05 Mar 2020 06:53:48 -0800 (PST)
+        Thu, 5 Mar 2020 09:53:53 -0500
+Received: by mail-wr1-f47.google.com with SMTP id v4so7382506wrs.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:53:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VxuhUCC4n+HG3AgUkytKe/eT7ToYukorM5sgQRyWjQU=;
-        b=f0xOKWX8qNAzNupu5nlpzWfh81iFksOdx2LiItmWH5+9asvPAsRWUFTunBaxxaYBTv
-         qv3JbBlUuYlH9NTFcOlP8Gq+eDGP1J0tTf5u9mbjg7ZRQQR1g7P0r4Yk7+foaNXicH2D
-         Pf0O6ubtAp1nHxOyClotBqMdZP2pYr9FVTOwouVc+W+zqOI1VoW7/Ulz0yoBCEAt4pST
-         mv7BiCoF1bRK6bYDrjTJPo5mB+h2xbdddrof61DuUFnxIFgLIelBYEc0CcflY6fp0JYn
-         giTNKjpMcJaUiHZ4Rpdqb/rx/s+9oFWs9rMmCEMQGHsZ9f81NnSLn20fA2OI1VNfIvSk
-         FbEw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lCZ4HBLcDjnL0GdiZ5dsCCZ5Ed4ecHOyKpkVxr2Wiks=;
+        b=yewZkC5Pn9QnislGnz/uZFfnAAGZWyd7Ao8vvhbNkIKtHlSvMCkKMmeqn2RnBR749E
+         Q/Tsersijkoxdqb56hKlHqu8Y6xz0TKDRw78BcLFLdeRtsS8LqnQmKOdMmFpGJSVy5I6
+         xMC6STJnPA+hgvvcxotH0AS1oagHWOHjuNiwoGEtOOLYYysTPnaLwD78XH9mnWKH15JM
+         Z4cHOLiZpLFdN2nqzAtofFYq8Kf8nXLPAFEnKEnQG/Vlc2Vu08qESciVnElHIZrKnU06
+         tUPrTHwcbX/ifBZ8bQj9KwplZ4xVmzhjYFRz8+Mrg5ACXuHP4Qs7T6qCiSKoH0Pihbgx
+         M83w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VxuhUCC4n+HG3AgUkytKe/eT7ToYukorM5sgQRyWjQU=;
-        b=oPCqzesbp6D7+zhK+MbTrtwFhoN31p9+MqkL9obL085UpyW16p/Rk2+hxoKpEJLzF0
-         4BTl9paIBQ9ixOrPJ0lC2TYYKPeM9HpIUhoDGQPdHP9iU9h7Di6xRdguDnb0IY/oweFi
-         VJX7Fq4Iq1iUlIQM4vYhFoVFbxaXIEiFJklHQliYpaS3m/2kKBpCLJHTv8DGOqEQfSfG
-         OS6R/zeYnDmWBrQNcY2fmoCIUTbOCesnKKPloVeQ8j1B566eKXlOggXx8O/dfklV9h8v
-         t2tal6YQ7lOlY1eNAl17Me1+9epDyU2RvTo+khPEs2K1ikra4667pJlSpplUASjgQTm5
-         s0/g==
-X-Gm-Message-State: ANhLgQ1AdefHa8ObTk4eM0e4+58sjwXxzXXCSIXAh2hDrLZ69ly8FPlv
-        JDZ3m6TdAb+07P7vWHvZgMd8UQeRA5aPHbYywYE=
-X-Google-Smtp-Source: ADFU+vvEbdeciibEt6Hrq92wQ3v5gNAzAqdWRfPoKAj87boYm/+Z7me5O2hb9UostwnS1QPcgbJLwx/2ELu6kWicWjM=
-X-Received: by 2002:a05:6214:1552:: with SMTP id t18mr6513046qvw.113.1583420027929;
- Thu, 05 Mar 2020 06:53:47 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lCZ4HBLcDjnL0GdiZ5dsCCZ5Ed4ecHOyKpkVxr2Wiks=;
+        b=HTmhCC6lh+n4gWB1YDVCexguM26F/zQqA3c/HCumuPbvAuRUv7mEqOFYDpcrjqtxBr
+         5oVnhnSolNPyyVXQfw6edg+kW9ItF1dY+D2w3cGT4mdyafYLjYvJzqt6/o7VqCl7Z1FF
+         xqfvafQ5s1lsqr15hEfm4dg816jQaZUzAN2qg07ogHN7szJup/UyV/3T1804cTKkIup+
+         WbQy+273g0zWYmCkdt73MUVgHgmqMxmWXODoGzi/SOmTUAUdJhXHBVJRYyBF5tG/MV/3
+         Td8xyqip/+0chDF6WGhq8jaSyt+vKkOFcaHwtKlGRkjVb/jM1oUl72Nxz7J3SFhsWJu0
+         /BKQ==
+X-Gm-Message-State: ANhLgQ2W0mudTqHjZnYO8sbyo/SQ4l8e5lUE+LXtntRxMYJnCjd48+jJ
+        Mubgc90cdGrEO6iU8doPDOFlWQ==
+X-Google-Smtp-Source: ADFU+vsfm72FlPKo2DedsUpzOgx9vtyfPB8peWEuftgmEYyDsNFyRjk9QP5ylKJRXp0nOMtr/hbdHw==
+X-Received: by 2002:adf:e3d0:: with SMTP id k16mr10701691wrm.260.1583420030754;
+        Thu, 05 Mar 2020 06:53:50 -0800 (PST)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id f16sm35785985wrx.25.2020.03.05.06.53.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 06:53:50 -0800 (PST)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 0/4] arm64: dts: qcom: sdm845: add audio support
+Date:   Thu,  5 Mar 2020 14:53:40 +0000
+Message-Id: <20200305145344.14670-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20200305220108.18780-1-mayflowerera@gmail.com>
- <20200305220108.18780-2-mayflowerera@gmail.com> <20200305140241.GA28693@unicorn.suse.cz>
- <CAMdQvKv9tSoSBfyOyhtctQ9D7aU2WUmuMUsoLn_WZ8whD=3AzA@mail.gmail.com>
-In-Reply-To: <CAMdQvKv9tSoSBfyOyhtctQ9D7aU2WUmuMUsoLn_WZ8whD=3AzA@mail.gmail.com>
-From:   Era Mayflower <mayflowerera@gmail.com>
-Date:   Thu, 5 Mar 2020 23:53:29 +0000
-Message-ID: <CAMdQvKuzaBuKGj1-HR6+r=FY4X9GhZPvEHwRt3BjErFiu1+bgw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] macsec: Netlink support of XPN cipher suites (IEEE 802.1AEbw)
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do you think that inserting those new enum values after *_PAD would be
-a good solution?
+First 3 patches in this patchset adds support to audio via wcd934x codec.
+Last patch adds support to i2c/spi buses on Low speed expansion.
 
 
-On Thu, Mar 5, 2020 at 11:51 PM Era Mayflower <mayflowerera@gmail.com> wrote:
->
-> Do you think that inserting those new enum values after *_PAD would be a good solution?
->
-> On Thu, Mar 5, 2020 at 2:02 PM Michal Kubecek <mkubecek@suse.cz> wrote:
->>
->> On Thu, Mar 05, 2020 at 10:01:08PM +0000, Era Mayflower wrote:
->> > Netlink support of extended packet number cipher suites,
->> > allows adding and updating XPN macsec interfaces.
->> >
->> > Added support in:
->> >     * Creating interfaces with GCM-AES-XPN-128 and GCM-AES-XPN-256.
->> >     * Setting and getting packet numbers with 64bit of SAs.
->> >     * Settings and getting ssci of SCs.
->> >     * Settings and getting salt of SecYs.
->> >
->> > Depends on: macsec: Support XPN frame handling - IEEE 802.1AEbw.
->> >
->> > Signed-off-by: Era Mayflower <mayflowerera@gmail.com>
->> > ---
->> [...]
->> > diff --git a/include/net/macsec.h b/include/net/macsec.h
->> > index a0b1d0b5c..3c7914ff1 100644
->> > --- a/include/net/macsec.h
->> > +++ b/include/net/macsec.h
->> > @@ -11,6 +11,9 @@
->> >  #include <uapi/linux/if_link.h>
->> >  #include <uapi/linux/if_macsec.h>
->> >
->> > +#define MACSEC_DEFAULT_PN_LEN 4
->> > +#define MACSEC_XPN_PN_LEN 8
->> > +
->> >  #define MACSEC_SALT_LEN 12
->> >
->> >  typedef u64 __bitwise sci_t;
->> > diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
->> > index 024af2d1d..ee424d915 100644
->> > --- a/include/uapi/linux/if_link.h
->> > +++ b/include/uapi/linux/if_link.h
->> > @@ -462,6 +462,8 @@ enum {
->> >       IFLA_MACSEC_SCB,
->> >       IFLA_MACSEC_REPLAY_PROTECT,
->> >       IFLA_MACSEC_VALIDATION,
->> > +     IFLA_MACSEC_SSCI,
->> > +     IFLA_MACSEC_SALT,
->> >       IFLA_MACSEC_PAD,
->> >       __IFLA_MACSEC_MAX,
->> >  };
->>
->> Doesn't this break backword compatibility? You change the value of
->> IFLA_MACSEC_PAD; even if it's only used as padding, if an old client
->> uses it, new kernel will interpret it as IFLA_MACSEC_SSCI (an the same
->> holds for new client with old kernel).
->>
->> > diff --git a/include/uapi/linux/if_macsec.h b/include/uapi/linux/if_macsec.h
->> > index 1d63c43c3..c8fab9673 100644
->> > --- a/include/uapi/linux/if_macsec.h
->> > +++ b/include/uapi/linux/if_macsec.h
->> > @@ -25,6 +25,8 @@
->> >  /* cipher IDs as per IEEE802.1AEbn-2011 */
->> >  #define MACSEC_CIPHER_ID_GCM_AES_128 0x0080C20001000001ULL
->> >  #define MACSEC_CIPHER_ID_GCM_AES_256 0x0080C20001000002ULL
->> > +#define MACSEC_CIPHER_ID_GCM_AES_XPN_128 0x0080C20001000003ULL
->> > +#define MACSEC_CIPHER_ID_GCM_AES_XPN_256 0x0080C20001000004ULL
->> >
->> >  /* deprecated cipher ID for GCM-AES-128 */
->> >  #define MACSEC_DEFAULT_CIPHER_ID     0x0080020001000001ULL
->> > @@ -66,6 +68,8 @@ enum macsec_secy_attrs {
->> >       MACSEC_SECY_ATTR_INC_SCI,
->> >       MACSEC_SECY_ATTR_ES,
->> >       MACSEC_SECY_ATTR_SCB,
->> > +     MACSEC_SECY_ATTR_SSCI,
->> > +     MACSEC_SECY_ATTR_SALT,
->> >       MACSEC_SECY_ATTR_PAD,
->> >       __MACSEC_SECY_ATTR_END,
->> >       NUM_MACSEC_SECY_ATTR = __MACSEC_SECY_ATTR_END,
->> > @@ -78,6 +82,7 @@ enum macsec_rxsc_attrs {
->> >       MACSEC_RXSC_ATTR_ACTIVE,  /* config/dump, u8 0..1 */
->> >       MACSEC_RXSC_ATTR_SA_LIST, /* dump, nested */
->> >       MACSEC_RXSC_ATTR_STATS,   /* dump, nested, macsec_rxsc_stats_attr */
->> > +     MACSEC_RXSC_ATTR_SSCI,    /* config/dump, u32 */
->> >       MACSEC_RXSC_ATTR_PAD,
->> >       __MACSEC_RXSC_ATTR_END,
->> >       NUM_MACSEC_RXSC_ATTR = __MACSEC_RXSC_ATTR_END,
->>
->> The same problem with these two.
->>
->> I'm also a bit unsure about the change of type and length of
->> MACSEC_SA_ATTR_PN but I would have to get more familiar with the code to
->> see if it is really a problem.
->>
->> Michal
+Srinivas Kandagatla (4):
+  arm64: dts: qcom: sdm845: Add ADSP audio support
+  arm64: dts: qcom: c630: Enable audio support
+  arm64: dts: qcom: db845c: add analog audio support
+  arm64: dts: qcom: db845c: add Low speed expansion i2c and spi nodes
+
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts    | 147 ++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 338 ++++++++++++++++++
+ .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts |  91 +++++
+ 3 files changed, 576 insertions(+)
+
+-- 
+2.21.0
+
