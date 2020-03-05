@@ -2,74 +2,120 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5854C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 03:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECF9C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 03:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92AD0208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 03:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCFF208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 03:53:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F1j0nU9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725965AbgCEDw3 (ORCPT
+        id S1726007AbgCEDxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 22:52:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725880AbgCEDw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 22:52:29 -0500
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 4 Mar 2020 22:53:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47671 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725839AbgCEDxm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 22:53:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583380421;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7dRwSfMa7qKrmqL7MdtHbIwI2LezXgxKe/a4kDF36F0=;
+        b=F1j0nU9VP/drViKCL2u9R9fnfReF6iknYncAHGha7nxmvqUxMz0rONxtnvk/CoiQsxDyWZ
+        K/zkeQVclu5KDR8GujCrd9U1TsT0Qegan0S5ReKX7nRb7Xx4gu6IUjfabtZ/ZhQrwz0GLa
+        jpAruDCzrnQc1HL6a8FllXomqY1GAAU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-xvX7mDflP-2_S1QXHKaujw-1; Wed, 04 Mar 2020 22:53:39 -0500
+X-MC-Unique: xvX7mDflP-2_S1QXHKaujw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8E172051A;
-        Thu,  5 Mar 2020 03:52:27 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 22:52:26 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
-Subject: Re: Pinning down a blocked task to extract diagnostics
-Message-ID: <20200304225226.6d631baa@oasis.local.home>
-In-Reply-To: <20200305005049.GA21120@paulmck-ThinkPad-P72>
-References: <20200305005049.GA21120@paulmck-ThinkPad-P72>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4AC018A5505;
+        Thu,  5 Mar 2020 03:53:37 +0000 (UTC)
+Received: from localhost (ovpn-12-116.pek2.redhat.com [10.72.12.116])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F54E5C219;
+        Thu,  5 Mar 2020 03:53:31 +0000 (UTC)
+Date:   Thu, 5 Mar 2020 11:53:29 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Kairui Song <kasong@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Khalid Aziz <khalid@gonehiking.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Randy Wright <rwright@hpe.com>, Dave Young <dyoung@redhat.com>,
+        Myron Stowe <myron.stowe@redhat.com>, jroedel@suse.de
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+Message-ID: <20200305035329.GD4433@MiWiFi-R3L-srv>
+References: <20191225192118.283637-1-kasong@redhat.com>
+ <20200222165631.GA213225@google.com>
+ <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com>
+ <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
+ <CABeXuvonZpwWfcUef4PeihTJkgH2ZC_RCKuLR3rH3Re4hx36Aw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABeXuvonZpwWfcUef4PeihTJkgH2ZC_RCKuLR3rH3Re4hx36Aw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 16:50:49 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
++Joerg to CC.
 
-> Hello!
-> 
-> Suppose that I need to extract diagnostics information from a blocked
-> task, but that I absolutely cannot tolerate this task awakening in the
-> midst of this extraction process.  Is the following code the right way
-> to make this work given a task "t"?
-> 
-> 	raw_spin_lock_irq(&t->pi_lock);
-> 	if (t->on_rq) {
-> 		/* Task no longer blocked, so ignore it. */
-> 	} else {
-> 		/* Extract consistent diagnostic information. */
-> 	}
-> 	raw_spin_unlock_irq(&t->pi_lock);
-> 
-> It looks like all the wakeup paths acquire ->pi_lock, but I figured I
-> should actually ask...
+On 03/03/20 at 01:01pm, Deepa Dinamani wrote:
+> I looked at this some more. Looks like we do not clear irqs when we do
+> a kexec reboot. And, the bootup code maintains the same table for the
+> kexec-ed kernel. I'm looking at the following code in
 
-IIUC, the rtmutex code uses pi_lock to tinker with the task while it is
-blocked (not woken). But the on_rq test may not be correct. It appears
-that can change without holding the task's pi_lock. I'm looking at the
-ttwu_do_activate() code which modifies the t->on_rq without holding the
-pi_lock. Seems you may need to check the p->state as well. See the
-comment in try_to_wake_up() about testing on_rq vs the state.
+I guess you are talking about kdump reboot here, right? Kexec and kdump
+boot take the similar mechanism, but differ a little.
 
--- Steve
+> intel_irq_remapping.c:
+> 
+>         if (ir_pre_enabled(iommu)) {
+>                 if (!is_kdump_kernel()) {
+>                         pr_warn("IRQ remapping was enabled on %s but
+> we are not in kdump mode\n",
+>                                 iommu->name);
+>                         clear_ir_pre_enabled(iommu);
+>                         iommu_disable_irq_remapping(iommu);
+>                 } else if (iommu_load_old_irte(iommu))
+
+Here, it's for kdump kernel to copy old ir table from 1st kernel.
+
+>                         pr_err("Failed to copy IR table for %s from
+> previous kernel\n",
+>                                iommu->name);
+>                 else
+>                         pr_info("Copied IR table for %s from previous kernel\n",
+>                                 iommu->name);
+>         }
+> 
+> Would cleaning the interrupts(like in the non kdump path above) just
+> before shutdown help here? This should clear the interrupts enabled
+> for all the devices in the current kernel. So when kdump kernel
+> starts, it starts clean. This should probably help block out the
+> interrupts from a device that does not have a driver.
+
+I think stopping those devices out of control from continue sending
+interrupts is a good idea. While not sure if only clearing the interrupt 
+will be enough. Those devices which will be initialized by their driver
+will brake, but devices which drivers are not loaded into kdump kernel
+may continue acting. Even though interrupts are cleaning at this time,
+the on-flight DMA could continue triggerring interrupt since the ir
+table and iopage table are rebuilt.
 
