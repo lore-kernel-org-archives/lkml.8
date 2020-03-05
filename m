@@ -2,88 +2,116 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8961C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31273C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E9B2072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583385707;
-	bh=2lUN7ILWaspQY0MJv1l9aakTEzclFQ4lRj4makZ7tLI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0wuysFBRmTjXjiUC2e2hcGgcryl3Y0nzmc/7s5hkoamhyTnA80hwjdnGwt2/mYOeQ
-	 EP32Bwou0i9RYlpZRqZ9L7po5iAavF7XzLzG0TJ5aEpJYuVFKzH05/I58gOeR9jqrW
-	 7mVVsqKxVomII/SZ6eLUpJ48R9lwSZ3N+ruvWLOM=
+	by mail.kernel.org (Postfix) with ESMTP id F3F6C208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eT8UZZeO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725924AbgCEFVq (ORCPT
+        id S1725893AbgCEFhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 00:21:46 -0500
-Received: from conuserg-09.nifty.com ([210.131.2.76]:43948 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgCEFVq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 00:21:46 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 0255Kw6j009985;
-        Thu, 5 Mar 2020 14:20:58 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 0255Kw6j009985
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583385659;
-        bh=ZAwmm19S9mp5zDydwDwXfFI6adzi2LMYicgGIC+mmNg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SEjTa3Q7PJ9eXfMJ6N/c2+bn6ar/e+qtVUy/ALJyJmVeFIJaEnVRHHTjhH3106hWS
-         6NdtdXVXUAM8KT/OcEwOfz/22PR+8f/QukN/FFLGLollrb1nS21rBBNTB5/KDD+Ghf
-         VB4sDT7LmawKK7Ux5rAqWOTRZvLC4gS+zvqBuJ+IS8t926PfZ7ti0D4HpED8BxCisv
-         WnT8V30HGgyfOfzJx62cuQc/Nagy1Tl6TyeL+MPste2HZY6NtT7lllSgT5/A1x66og
-         sN6Dy6PTq1MbSFScDNOIiyKElkHLE+qtXlAD+K53q2gczeqzNSp1BqXkwQUjxuSJhd
-         1jmX/3RkvjAQQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Torsten Duwe <duwe@lst.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: [PATCH] arm64: efi: add efi-entry.o to targets instead of extra-$(CONFIG_EFI)
-Date:   Thu,  5 Mar 2020 14:20:52 +0900
-Message-Id: <20200305052052.30757-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 5 Mar 2020 00:37:54 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37913 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbgCEFhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 00:37:53 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Xzzf3bpFz9sPg;
+        Thu,  5 Mar 2020 16:37:50 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583386671;
+        bh=uwsly7r56LR1gOgzYn8JlKEjCgBFw6Bgr3L0ffm2qGA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eT8UZZeOXhiytl80Ij4zcOXho21Uo/c2x5KatJ6sHGRwXQOq52Ful1deU/NwcTgZp
+         RMDKTV/ev6eQJZcr5bwtMql9wBhXRTPNNB4/7zu6NjTfmAfFuQowEGjoXHPowucrwX
+         R2/xOj+fTk3yWIR0TZYxkOJ5JjO67XGfEF1T3/R5tljltsQJ0ZCQds7sHIQ+vdQ2uC
+         WREf/4W+a9HX35mqsZlyJ9ehAGOuEzK+u9L1Pi8Qx5C1r/dXuLvb9vYzQuJhIiv+54
+         V2AR/H/niiD6mbagRRWRLEYY5N3GIng3oSzSlnoKQsGcl5IsQobl/eLMd9FP8ju/Xe
+         ojLY3Usxr/Vjw==
+Date:   Thu, 5 Mar 2020 16:37:43 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20200305163743.7128c251@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/qCODnZABl+nVPlHcR_c1_U=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-efi-entry.o is built on demand for efi-entry.stub.o, so you do not have
-to repeat $(CONFIG_EFI) here. Adding it to 'targets' is enough.
+--Sig_/qCODnZABl+nVPlHcR_c1_U=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Hi all,
 
- arch/arm64/kernel/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+After merging the akpm-current tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index fc6488660f64..4e5b8ee31442 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -21,7 +21,7 @@ obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
- 			   smp.o smp_spin_table.o topology.o smccc-call.o	\
- 			   syscall.o
- 
--extra-$(CONFIG_EFI)			:= efi-entry.o
-+targets			+= efi-entry.o
- 
- OBJCOPYFLAGS := --prefix-symbols=__efistub_
- $(obj)/%.stub.o: $(obj)/%.o FORCE
--- 
-2.17.1
+mm/kasan/common.o: warning: objtool: kasan_report()+0x17: call to report_en=
+abled() with UACCESS enabled
+In file included from include/linux/bitmap.h:9,
+                 from include/linux/cpumask.h:12,
+                 from arch/x86/include/asm/paravirt.h:17,
+                 from arch/x86/include/asm/irqflags.h:72,
+                 from include/linux/irqflags.h:16,
+                 from include/linux/rcupdate.h:26,
+                 from include/linux/rculist.h:11,
+                 from include/linux/pid.h:5,
+                 from include/linux/sched.h:14,
+                 from include/linux/uaccess.h:6,
+                 from arch/x86/include/asm/fpu/xstate.h:5,
+                 from arch/x86/include/asm/pgtable.h:26,
+                 from include/linux/kasan.h:15,
+                 from lib/test_kasan.c:12:
+In function 'memmove',
+    inlined from 'kmalloc_memmove_invalid_size' at lib/test_kasan.c:301:2:
+include/linux/string.h:441:9: warning: '__builtin_memmove' specified bound =
+18446744073709551614 exceeds maximum object size 9223372036854775807 [-Wstr=
+ingop-overflow=3D]
+  441 |  return __builtin_memmove(p, q, size);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Introduced by commit
+
+  519e500fac64 ("kasan: add test for invalid size in memmove")
+
+That's a bit annoying during a normal x86_64 allmodconfig build ...
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qCODnZABl+nVPlHcR_c1_U=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5gkCcACgkQAVBC80lX
+0GxG5Qf/eCX+x5T2DJ2WL5i9H06GtsJzZX4xIvikvbcofdRdeMCP7mtZG2kEQhz/
+6WXEZ57/XNa7HCSLctFkGV1BSp8HeB2sESTOG7Augg392rUa8uej5zCzJC8wskkY
+vt0TfTjBEDeTHmUwLyYBheXAKcSWNiby8YIN9eIyu63UCZz/5Vvuf+LcJz4t7Vab
+elWzl4uEvqsKlVwkIkZJpn0vUJkHGdTatiGteu8m1OLdgKb1HBOXh+R003fhzrog
+cUftGsyZ69XVs8vf2fglw9D3BMkj5ywi88OoZvr+VFoWVNYPPdKziH9LASQwGkCa
+LA+EWqJ2NDhGmqBHNUY2D/mnq4tktg==
+=ugqg
+-----END PGP SIGNATURE-----
+
+--Sig_/qCODnZABl+nVPlHcR_c1_U=--
