@@ -2,114 +2,87 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FE6C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260FDC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41EC420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13F420870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nAHJxLWF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbgCEHl4 (ORCPT
+        id S1725975AbgCEHoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 02:41:56 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34528 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgCEHl4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 02:41:56 -0500
-Received: by mail-ot1-f67.google.com with SMTP id j16so4789682otl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 23:41:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UaKgasWVcBQ93an+Agrstk0BzArq02vl1AdAYFSL1zo=;
-        b=o2wWe5YczTVHN9RM8WC5+UVvKfO/jd8xsikWF0iM9fXbP60tydn43iw8Os3cVAtjoX
-         9V3wLCym4C2b4XEAzwx/SogmZLaRslnjs+O/0MZZGpSHJ8nGtbJYZB3mRlyRgGTv7n8A
-         MjVsQy6y2N/ayWuWCbkR9qVi6//6PBps66bK0JuWUNnpvCVIdM+zlhe4roQibXeW44VB
-         gk4qqwukps+ZBlbZxoOzBOPfadIKvvPuWyQh9lBV1SsOm7LxnXwh2utpHlInAvb6ZdWM
-         k9klXNC+LGtNJ9UpJTFuPmoWSosUgfIGlEJ7qKv7kEZkCPdwpixWa8goOkbPmvYehYHn
-         cGEg==
-X-Gm-Message-State: ANhLgQ0aB5vebYDdbScNiLrpjTVmLn7X/5GPceVVjMMJdKw3OiqjVOIz
-        RTSUyvp/wpvOhGy05fuNLT8VfHM2ig0bzB9x4zWMMywM
-X-Google-Smtp-Source: ADFU+vs+r9dNshBcrKTTJ5BMCYvbI4wwrkG5wXWO03B0ztUBo++7VIkrY6dqa2ExFrA+3MjOkd21B0npHboEFnweuak=
-X-Received: by 2002:a9d:dc1:: with SMTP id 59mr5620664ots.250.1583394115721;
- Wed, 04 Mar 2020 23:41:55 -0800 (PST)
+        Thu, 5 Mar 2020 02:44:39 -0500
+Received: from ozlabs.org ([203.11.71.1]:48623 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725880AbgCEHoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 02:44:38 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Y2nw0f0vz9sPg;
+        Thu,  5 Mar 2020 18:44:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583394276;
+        bh=HQOjKU2saBqKtdOf9baWYIhRvPXjw1G4W3YpNZ8OZqk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nAHJxLWFDPtlnBYT4HmR54r43miirPhFSU/Qr2A2f1h32UHtq1FY6YnEyYGVLwUI6
+         5TXLflfEe5juA6Q7vQTRfjK1GQ4RaPByDkvBGSk9Z2e6BJ5STHJ3kN1qGlTKNpYZxq
+         mM7G+Rv7OxXKd80+YzCbOuiOtOKqrGxGnPaVY7mTNHpTc1qT/CtMYi1vaG5M64Z0MF
+         QrJ6rNFfRcnmkY4IbCs+orcqYlJJlIYkWffT4WGUAE/CYIq5uDZuxxU9miVV1tqaM/
+         qmbZbpDr0/rUuU2aoPBJ/K1TEeA8+WzzqgQsjnbyEKeDxXXBB/NNFik4JiSs+Y+UgH
+         TRals66nXrUww==
+Date:   Thu, 5 Mar 2020 18:44:29 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rob Herring <robherring2@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the
+ devicetree-fixes tree
+Message-ID: <20200305184429.0b6a38c3@canb.auug.org.au>
 MIME-Version: 1.0
-References: <158323467008.10560.4307464503748340855.stgit@devnote2>
- <158323468033.10560.14661631369326294355.stgit@devnote2> <27ae25f5-29c6-62f3-5531-78fcc28b7d3c@infradead.org>
- <20200304221716.007587c7@oasis.local.home> <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org>
-In-Reply-To: <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 5 Mar 2020 08:41:44 +0100
-Message-ID: <CAMuHMdVSSGbHBOvFbYaPuRH59Nmh_AaqJFfu-csJnZHOtd7mGQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] bootconfig: Support O=<builddir> option
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/.Y2z2ubC4qh_XDeXpSz8noP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+--Sig_/.Y2z2ubC4qh_XDeXpSz8noP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 5, 2020 at 5:53 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 3/4/20 7:17 PM, Steven Rostedt wrote:
-> > On Wed, 4 Mar 2020 15:04:43 -0800
-> > Randy Dunlap <rdunlap@infradead.org> wrote:
-> >
-> >> On 3/3/20 3:24 AM, Masami Hiramatsu wrote:
-> >>> Support O=<builddir> option to build bootconfig tool in
-> >>> the other directory. As same as other tools, if you specify
-> >>> O=<builddir>, bootconfig command is build under <builddir>.
-> >>
-> >> Hm.  If I use
-> >> $ make O=~/tmp -C tools/bootconfig
-> >>
-> >> that works: it builds bootconfig in ~/tmp.
-> >>
-> >> OTOH, if I sit at the top of the kernel source tree
-> >> and I enter
-> >> $ mkdir builddir
-> >> $ make O=builddir -C tools/bootconfig
-> >>
-> >> I get this:
-> >> make: Entering directory '/home/rdunlap/lnx/next/linux-next-20200304/tools/bootconfig'
-> >> ../scripts/Makefile.include:4: *** O=builddir does not exist.  Stop.
-> >> make: Leaving directory '/home/rdunlap/lnx/next/linux-next-20200304/tools/bootconfig'
-> >>
-> >> so it looks like tools/scripts/Makefile.include doesn't handle this case correctly
-> >> (which is how I do all of my builds).
-> >>
-> >
-> > Do you build perf that way?
->
-> No.  It should also be fixed.
+Hi all,
 
-There are lots of issues when (cross)building the tools and selftest with O=.
-I tried to fix some of them a while ago, but I lost interest.
-https://lore.kernel.org/lkml/20190114135144.26096-1-geert+renesas@glider.be/
+Commit
 
-The only thing you can rely on when (cross)building with O=, is the kernel
-itself ;-)
+  9dbf66696d29 ("MAINTAINERS: update ALLWINNER CPUFREQ DRIVER entry")
 
-Gr{oetje,eeting}s,
+is missing a Signed-off-by from its committer.
 
-                        Geert
+--=20
+Cheers,
+Stephen Rothwell
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--Sig_/.Y2z2ubC4qh_XDeXpSz8noP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5grd0ACgkQAVBC80lX
+0GyflQf+KKUSw3VAQJn2uTDDbU6AXcwKeFuEwLlHZYdgh0I3RYe4HVZLvMixXFGR
+9MmlYUR2bQDDv4EoDwQzhi1sP5akFujAQ5Nb96CuCGIGHZfXuJy2stY1m1gbOCzt
+GF/Sovdx6eHpETUJ+Ky/Lz11mBwyoPPG6DhQAHQsViWc3xqNc5XX14iNAmD43tFK
+3hA4J+N1ZjxqFm1LWGd3diJ+CrIodW6Latxzsc/kh1UtF3VC8CiNQWa3rXSDuCgq
+06UZjQMq9LelRUAgRKr8/HvthLxTVtVjTfGpmAi6ZB7mTfb3nQr0iK+iFyZxJl5q
+SZMLJt0XT+6VFQr7EvLr5jZ9kDKCjQ==
+=Tyd7
+-----END PGP SIGNATURE-----
+
+--Sig_/.Y2z2ubC4qh_XDeXpSz8noP--
