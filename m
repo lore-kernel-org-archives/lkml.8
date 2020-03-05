@@ -2,150 +2,92 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADC7C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A052C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA352166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1146420728
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583443044;
+	bh=TwO5bwawSGBd1hvXvSkBLj+ILLCCIBlCvGCMPQ8I2c4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A5X980VU1dZv3Dq6upQeczX/1X2idJLj9358eIS+iqKb8u+wqw3TENG9wI0yZ9BcM
+	 n9ONPXECdf7hV7aSes1zKa4BWf2dAWi+E+IEh1yK9dQfE1rY1DSOYOSrl8Kiq5hsL+
+	 +KAAvjGXqs7zlq7Ju1Y+b1wPCCCs7m31RnC0n2+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgCEVRT (ORCPT
+        id S1726162AbgCEVRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:17:19 -0500
-Received: from out02.mta.xmission.com ([166.70.13.232]:35394 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgCEVRS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:17:18 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j9xrb-0000jm-0q; Thu, 05 Mar 2020 14:17:03 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j9xrZ-0006Hu-U8; Thu, 05 Mar 2020 14:17:02 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87k142lpfz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <875zfmloir.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nmjulm.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <202003021531.C77EF10@keescook>
-        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
-        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Thu, 05 Mar 2020 15:14:48 -0600
-In-Reply-To: <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        (Bernd Edlinger's message of "Thu, 5 Mar 2020 18:36:53 +0000")
-Message-ID: <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 5 Mar 2020 16:17:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbgCEVQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 16:16:53 -0500
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B21F820728;
+        Thu,  5 Mar 2020 21:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583443013;
+        bh=TwO5bwawSGBd1hvXvSkBLj+ILLCCIBlCvGCMPQ8I2c4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fdWl/xjGhfe8AKx4gpf1+pTdzly+8Vw6cUxr4Dy4g6e/giV8iCGLZTBYALqfTRnW7
+         Wq3TB/+Ek0YX+fvgK7QRy+qGFMS7sTmnHAakfRHiyKa6JB1O9V/GpM+BdgTzoGmYe2
+         nenXuvZHS0ixwjtE/x0jRLbXfYNFYqfxat8gl61M=
+Date:   Thu, 5 Mar 2020 13:16:51 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH] KEYS: Don't write out to userspace while holding key
+ semaphore
+Message-ID: <20200305211651.GA225345@gmail.com>
+References: <20200305210640.15315-1-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j9xrZ-0006Hu-U8;;;mid=<87tv32cxmf.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19PkZFb5/n1hZBXmR96TXlIgx1ImOcYE8M=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 0/2] Infrastructure to allow fixing exec deadlocks
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305210640.15315-1-longman@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 05, 2020 at 04:06:40PM -0500, Waiman Long wrote:
+> diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+> index 9b898c969558..564a4d187329 100644
+> --- a/security/keys/keyctl.c
+> +++ b/security/keys/keyctl.c
+> @@ -846,14 +846,36 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+>  can_read_key:
+>  	ret = -EOPNOTSUPP;
+>  	if (key->type->read) {
+> -		/* Read the data with the semaphore held (since we might sleep)
+> +		/*
+> +		 * Read the data with the semaphore held (since we might sleep)
+>  		 * to protect against the key being updated or revoked.
+> +		 *
+> +		 * Allocating a temporary buffer to hold the keys before
+> +		 * transferring them to user buffer to avoid potential
+> +		 * deadlock involving page fault and mmap_sem.
+>  		 */
+> +		char *tmpbuf = kmalloc(buflen, GFP_KERNEL);
 
-Bernd, everyone
+This is passing an arbitrarily large size from userspace into kmalloc().
 
-This is how I think the infrastructure change should look that makes way
-for fixing this issue.
-
-- Correct the point of no return.
-- Add a new mutex to replace cred_guard_mutex
-
-Then I think it is just going through the existing
-users of cred_guard_mutex and fixing them to use the new one.
-
-There really aren't that many users of cred_guard_mutex so we should be
-able to get through the easy ones fairly quickly.  And anything that
-isn't easy we can wait until we have a good fix.
-
-The users of cred_guard_mutex that I saw were:
-    fs/proc/base.c:
-       proc_pid_attr_write
-       do_io_accounting
-       proc_pid_stack
-       proc_pid_syscall
-       proc_pid_personality
-    
-    perf_event_open
-    mm_access
-    kcmp
-    pidfd_fget
-    seccomp_set_mode_filter
-
-Bernd does this make sense to you?  
-
-I think we can fix the seccomp/no_new_privs issue with some careful
-refactoring.  We can probably do the same for ptrace but that appears
-to need a little lsm bug fixing.
-
-My goal here is to allow us to fix the uncontroversial easy bits.  While
-still allowing the difficult tricky bits to be fixed.
-
-Eric W. Biederman (2):
-      exec: Properly mark the point of no return
-      exec: Add a exec_update_mutex to replace cred_guard_mutex
-
- fs/exec.c                    | 11 ++++++++---
- include/linux/binfmts.h      |  7 ++++++-
- include/linux/sched/signal.h |  9 ++++++++-
- kernel/fork.c                |  1 +
- 4 files changed, 23 insertions(+), 5 deletions(-)
-
-Eric
+- Eric
