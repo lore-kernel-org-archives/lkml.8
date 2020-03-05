@@ -2,68 +2,92 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DD0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C82DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0B320637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70B6207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583428909;
+	bh=YAFvu5ij+AyAowyPL31UII9ZhMcFpurD7oRq4jnXm+Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tG09TCs3ylThHQNNxUZy7LAg5v5Gxt44+z+467V0cJskeHlgnpNll6/nglVN6CpxN
+	 J7512kkVTlv95Ck66nT1uNLNd6w+duSRRHAx8Exd/JDtnhS9V6RH/FXHgpUGfgKq/U
+	 Wlcg4QnBId+GDZIIrfdi9HzJFjN5a0Ev6/FUT+nA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgCERVh convert rfc822-to-8bit (ORCPT
+        id S1727818AbgCERVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:21:37 -0500
-Received: from mailoutvs55.siol.net ([185.57.226.246]:56836 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727604AbgCEROc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:32 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 87E02521A71;
-        Thu,  5 Mar 2020 18:14:29 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Uu7iizrBYcEZ; Thu,  5 Mar 2020 18:14:29 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 482BE5232A3;
-        Thu,  5 Mar 2020 18:14:29 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Zimbra) with ESMTPA id 7D13B521A71;
-        Thu,  5 Mar 2020 18:14:28 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     a.hajda@samsung.com, narmstrong@baylibre.com
-Cc:     Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/4] drm/bridge: dw-hdmi: fix AVI frame colorimetry
-Date:   Thu, 05 Mar 2020 18:14:27 +0100
-Message-ID: <5332114.DvuYhMxLoT@jernej-laptop>
-In-Reply-To: <20200304232512.51616-2-jernej.skrabec@siol.net>
-References: <20200304232512.51616-1-jernej.skrabec@siol.net> <20200304232512.51616-2-jernej.skrabec@siol.net>
+        Thu, 5 Mar 2020 12:21:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727659AbgCEROX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:23 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 572D321556;
+        Thu,  5 Mar 2020 17:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583428463;
+        bh=YAFvu5ij+AyAowyPL31UII9ZhMcFpurD7oRq4jnXm+Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ll8Qr1BNTqphKTjwZQSRjnbDtqdWVSGGUoCP529MupUk2uzd2qDCuvJ6voMDnFduL
+         Rm0q+kaNV1GbRwhH2UD5MoVLqTOGHbE+77QsIf8U+dp/hBVmPP3Fmv8PACTo6134Vj
+         1hx0DCNugw8kuUhEvB01hPsN+Lef4AaeVoO1VbyQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mansour Behabadi <mansour@oxplot.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 02/58] HID: apple: Add support for recent firmware on Magic Keyboards
+Date:   Thu,  5 Mar 2020 12:13:23 -0500
+Message-Id: <20200305171420.29595-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
+References: <20200305171420.29595-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 05. marec 2020 ob 00:25:09 CET je Jernej Skrabec napisal(a):
-> CTA-861-F explicitly states that for RGB colorspace colorimetry should
-> be set to "none". Fix that.
-> 
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Fixes: def23aa7e982 ("drm: bridge: dw-hdmi: Switch to V4L bus format and
-> encodings") Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Mansour Behabadi <mansour@oxplot.com>
 
-Applied to drm-next-fixes.
+[ Upstream commit e433be929e63265b7412478eb7ff271467aee2d7 ]
 
-Best regards,
-Jernej
+Magic Keyboards with more recent firmware (0x0100) report Fn key differently.
+Without this patch, Fn key may not behave as expected and may not be
+configurable via hid_apple fnmode module parameter.
 
+Signed-off-by: Mansour Behabadi <mansour@oxplot.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/hid-apple.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 6ac8becc2372e..d732d1d10cafb 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -340,7 +340,8 @@ static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+ 		unsigned long **bit, int *max)
+ {
+ 	if (usage->hid == (HID_UP_CUSTOM | 0x0003) ||
+-			usage->hid == (HID_UP_MSVENDOR | 0x0003)) {
++			usage->hid == (HID_UP_MSVENDOR | 0x0003) ||
++			usage->hid == (HID_UP_HPVENDOR2 | 0x0003)) {
+ 		/* The fn key on Apple USB keyboards */
+ 		set_bit(EV_REP, hi->input->evbit);
+ 		hid_map_usage_clear(hi, usage, bit, max, EV_KEY, KEY_FN);
+-- 
+2.20.1
 
