@@ -2,237 +2,124 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1291CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9989DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B968A2072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595232146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:43:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jlh/X/YE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgCEElc (ORCPT
+        id S1725946AbgCEEna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 23:41:32 -0500
-Received: from mga17.intel.com ([192.55.52.151]:21012 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgCEElc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 23:41:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 20:41:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,516,1574150400"; 
-   d="scan'208";a="240684644"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga003.jf.intel.com with ESMTP; 04 Mar 2020 20:41:27 -0800
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH -V2] mm: Add PageLayzyFree() helper functions for MADV_FREE
-References: <20200304081732.563536-1-ying.huang@intel.com>
-        <d7dcb472-76fa-9d8b-513a-793a7ab8580d@redhat.com>
-Date:   Thu, 05 Mar 2020 12:41:26 +0800
-In-Reply-To: <d7dcb472-76fa-9d8b-513a-793a7ab8580d@redhat.com> (David
-        Hildenbrand's message of "Wed, 4 Mar 2020 09:28:37 +0100")
-Message-ID: <87y2sf1ki1.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 4 Mar 2020 23:43:30 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40047 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgCEEn3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 23:43:29 -0500
+Received: by mail-lj1-f195.google.com with SMTP id 143so4516316ljj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 20:43:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0ig10XyduVsZjw4w3HMmJwxDdosoLr+guVyiHfv8gK0=;
+        b=Jlh/X/YEDONR3IOXn6nxoGLEnIeUJ3iyKiyAQ8f2QzEuxov1wR2zT1eYqvUS/AYq5F
+         9xHKaOXV0yEACS/FXpwgnh2EKdpPwjrEPNNO38PqKTEuWZ+CgHMEwxD+HkI/LrROg0hB
+         YR3i/KCqEdPBTwRaDSSs6L8tGCWX06xKdweZavMUm33yUpnoFnrH4RYiYlcaChAFOVvZ
+         KMPno2mNmtNw9VAltjQmUnFMUWGuvmu27lO9GnhA3PQ9MW/a3wqk5feEPtyUZOVBJWrn
+         cSfYJGa9xuYJA+pyDxU4wQ67Y1qe43jCIoAmUSBHTThkEO5AzWYbhrpNVcYGxEe+uP/M
+         Dk9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0ig10XyduVsZjw4w3HMmJwxDdosoLr+guVyiHfv8gK0=;
+        b=eGF5pGkhqhTWNhlNK187HMT2eQ6Y7epW+9JDsq2r73lhK3ehArqYum5kfiJQQcSJm5
+         lcnQO1YvkZivDDFNqyDyLruJn4WL3jTL4b83QMQ00+1N8dJVidcJD1FZMkIvxKxTxOK7
+         xulXcq/86JlvrSb3BB4fHnBgQcqb4c+i++hdnlwkjBzT3R1GKCuP53gk0TbgxB8TZidB
+         xk/e4XohjPSt/NlzAxL/KQHBg5BdbMhxadA5wSDb+4DKAv6rauT/LHmBP7ykdxCO8gDe
+         xVUjVN3wiXp8eVehHyNgKnjsTU5PTtew0qKRT3l4Pq9U1rZfoAV1Lb4enKWQXvSbeA0v
+         DnFg==
+X-Gm-Message-State: ANhLgQ3E9zyjm3GQt3SJvixW8+0prxw9cGihVybWeO4ChMpVaeMrZIsO
+        remt3VjteZKkXh4RJvezH/FzhWkj3waSS6x/UoRg5Ai1gFA=
+X-Google-Smtp-Source: ADFU+vsdtsIPN/hjdmMTRmXabwL436fmEFM1KY5oGBIXd3XKcqkjLBih3S1oNvDRDLlp88m5djXZztpTsxX2PHnpxUg=
+X-Received: by 2002:a05:651c:147:: with SMTP id c7mr3817550ljd.206.1583383407161;
+ Wed, 04 Mar 2020 20:43:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <20200304211254.5127-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20200304211254.5127-1-lukas.bulwahn@gmail.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 5 Mar 2020 10:13:15 +0530
+Message-ID: <CAFA6WYOfLONAM8qAhpiikrGkmDkLq0qcw_eGUTzG1AdgP0TB+w@mail.gmail.com>
+Subject: Re: [PATCH v2] MAINTAINERS: adjust to trusted keys subsystem creation
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Hildenbrand <david@redhat.com> writes:
+On Thu, 5 Mar 2020 at 02:43, Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+>
+> Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys subsystem")
+> renamed trusted.h to trusted_tpm.h in include/keys/, and moved trusted.c
+> to trusted-keys/trusted_tpm1.c in security/keys/.
+>
+> Since then, ./scripts/get_maintainer.pl --self-test complains:
+>
+>   warning: no file matches F: security/keys/trusted.c
+>   warning: no file matches F: include/keys/trusted.h
+>
+> Rectify the KEYS-TRUSTED entry in MAINTAINERS now and ensure that all
+> files in security/keys/ are identified as part of KEYS-TRUSTED.
+>
 
-> On 04.03.20 09:17, Huang, Ying wrote:
->> From: Huang Ying <ying.huang@intel.com>
->> 
->> Now PageSwapBacked() is used as the helper function to check whether
->> pages have been freed lazily via MADV_FREE.  This isn't very obvious.
->> So Dave suggested to add PageLazyFree() family helper functions to
->> improve the code readability.
->> 
->> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Mel Gorman <mgorman@suse.de>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: Zi Yan <ziy@nvidia.com>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Minchan Kim <minchan@kernel.org>
->> Cc: Johannes Weiner <hannes@cmpxchg.org>
->> Cc: Hugh Dickins <hughd@google.com>
->> ---
->> 
->> Changelog:
->> 
->> v2:
->> 
->> - Avoid code bloat via removing VM_BUG_ON_PAGE(), which doesn't exist
->>   in the original code.  Now there is no any text/data/bss size
->>   change.
->> 
->> - Fix one wrong replacement in try_to_unmap_one().
->> ---
->>  include/linux/page-flags.h | 25 +++++++++++++++++++++++++
->>  mm/rmap.c                  |  4 ++--
->>  mm/swap.c                  | 11 +++--------
->>  mm/vmscan.c                |  7 +++----
->>  4 files changed, 33 insertions(+), 14 deletions(-)
->> 
->> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
->> index 49c2697046b9..192b593750d3 100644
->> --- a/include/linux/page-flags.h
->> +++ b/include/linux/page-flags.h
->> @@ -498,6 +498,31 @@ static __always_inline int PageKsm(struct page *page)
->>  TESTPAGEFLAG_FALSE(Ksm)
->>  #endif
->>  
->> +/*
->> + * For pages freed lazily via MADV_FREE.  lazyfree pages are clean
->> + * anonymous pages.  They have SwapBacked flag cleared to distinguish
->> + * with normal anonymous pages
->
-> "They don't have PG_swapbacked set, to distinguish them from normal
-> anonymous pages." ?
+I guess you meant here security/keys/trusted-keys/ instead of security/keys/.
 
-Thanks!
+-Sumit
 
->> + */
->> +static __always_inline int __PageLazyFree(struct page *page)
->> +{
->> +	return !PageSwapBacked(page);
->> +}
->> +
->> +static __always_inline int PageLazyFree(struct page *page)
->> +{
->> +	return PageAnon(page) && __PageLazyFree(page);
->> +}
->> +
->> +static __always_inline void SetPageLazyFree(struct page *page)
->> +{
->> +	ClearPageSwapBacked(page);
->> +}
->> +
->> +static __always_inline void ClearPageLazyFree(struct page *page)
->> +{
->> +	SetPageSwapBacked(page);
->> +}
->> +
->>  u64 stable_page_flags(struct page *page);
->>  
->>  static inline int PageUptodate(struct page *page)
->> diff --git a/mm/rmap.c b/mm/rmap.c
->> index 1c02adaa233e..6ec96c8e7826 100644
->> --- a/mm/rmap.c
->> +++ b/mm/rmap.c
->> @@ -1609,7 +1609,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
->>  			}
->>  
->>  			/* MADV_FREE page check */
->> -			if (!PageSwapBacked(page)) {
->> +			if (__PageLazyFree(page)) {
->>  				if (!PageDirty(page)) {
->>  					/* Invalidate as we cleared the pte */
->>  					mmu_notifier_invalidate_range(mm,
->> @@ -1623,7 +1623,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
->>  				 * discarded. Remap the page to page table.
->>  				 */
->>  				set_pte_at(mm, address, pvmw.pte, pteval);
->> -				SetPageSwapBacked(page);
->> +				ClearPageLazyFree(page);
->>  				ret = false;
->>  				page_vma_mapped_walk_done(&pvmw);
->>  				break;
->> diff --git a/mm/swap.c b/mm/swap.c
->> index c1d3ca80ea10..d83f2cd4cdb8 100644
->> --- a/mm/swap.c
->> +++ b/mm/swap.c
->> @@ -563,7 +563,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
->>  static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
->>  			    void *arg)
->>  {
->> -	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
->> +	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
+> Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
+> Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> Changes to v1:
+> - use a global pattern for matching the whole security/keys/ directory.
+> Sumit, please ack.
+> James or Jarkko, please pick this patch v2.
 >
-> See my comment below
+>  MAINTAINERS | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
->>  	    !PageSwapCache(page) && !PageUnevictable(page)) {
->>  		bool active = PageActive(page);
->>  
->> @@ -571,12 +571,7 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
->>  				       LRU_INACTIVE_ANON + active);
->>  		ClearPageActive(page);
->>  		ClearPageReferenced(page);
->> -		/*
->> -		 * lazyfree pages are clean anonymous pages. They have
->> -		 * SwapBacked flag cleared to distinguish normal anonymous
->> -		 * pages
->> -		 */
->> -		ClearPageSwapBacked(page);
->> +		SetPageLazyFree(page);
->>  		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
->>  
->>  		__count_vm_events(PGLAZYFREE, hpage_nr_pages(page));
->> @@ -678,7 +673,7 @@ void deactivate_page(struct page *page)
->>   */
->>  void mark_page_lazyfree(struct page *page)
->>  {
->> -	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
->> +	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5c755e03ddee..7f11ac752b91 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9276,8 +9276,8 @@ L:        keyrings@vger.kernel.org
+>  S:     Supported
+>  F:     Documentation/security/keys/trusted-encrypted.rst
+>  F:     include/keys/trusted-type.h
+> -F:     security/keys/trusted.c
+> -F:     include/keys/trusted.h
+> +F:     include/keys/trusted_tpm.h
+> +F:     security/keys/trusted-keys/
 >
-> See my comment below.
+>  KEYS/KEYRINGS
+>  M:     David Howells <dhowells@redhat.com>
+> --
+> 2.17.1
 >
->>  	    !PageSwapCache(page) && !PageUnevictable(page)) {
->>  		struct pagevec *pvec = &get_cpu_var(lru_lazyfree_pvecs);
->>  
->> diff --git a/mm/vmscan.c b/mm/vmscan.c
->> index eca49a1c2f68..40bb41ada2d2 100644
->> --- a/mm/vmscan.c
->> +++ b/mm/vmscan.c
->> @@ -1043,8 +1043,7 @@ static void page_check_dirty_writeback(struct page *page,
->>  	 * Anonymous pages are not handled by flushers and must be written
->>  	 * from reclaim context. Do not stall reclaim based on them
->>  	 */
->> -	if (!page_is_file_cache(page) ||
->> -	    (PageAnon(page) && !PageSwapBacked(page))) {
->> +	if (!page_is_file_cache(page) || PageLazyFree(page)) {
->>  		*dirty = false;
->>  		*writeback = false;
->>  		return;
->> @@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>  		 * Try to allocate it some swap space here.
->>  		 * Lazyfree page could be freed directly
->>  		 */
->> -		if (PageAnon(page) && PageSwapBacked(page)) {
->> +		if (PageAnon(page) && !__PageLazyFree(page)) {
->
-> I don't think this chunk makes this code easier to understand. I'd just
-> keep this as is. IOW, I prefer PageSwapBacked() over !__PageLazyFree().
->
->
-> In general, I don't think this patch really improves the situation ...
-> it's only a handful of places where this change slightly makes the code
-> easier to understand. And there, only slightly ... I'd prefer better
-> comments instead (e.g., in PageAnon()), documenting what it means for a
-> anon page to either have PageSwapBacked() set or not.
-
-Personally, I still prefer the better named functions than the comments
-here and there.  But I can understand that people may have different
-flavor.
-
-Best Regards,
-Huang, Ying
