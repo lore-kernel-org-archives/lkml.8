@@ -2,221 +2,114 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1D1C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EA4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092602146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="C6AcNVIg"
+	by mail.kernel.org (Postfix) with ESMTP id B1288207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583428504;
+	bh=9g2gIbbLljcopMLsa1wpkRfrnY5cLA9djOVfX6VbqYg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EN046KTtamxlRyjh5YTfcEgYTr8MdPRp9KtJZziAjv+drmNzNO3/9iby1zIM0dEBn
+	 MRi/kwNFPWeUz20YfNQGmNlHF3sHcAqcDSTtej4ve2SW99Z9pVN+1IWOxb/Q2g4mql
+	 qEytz1b2Y3kk7Y3hBcacfvUwwjhp5qLIaczLd+Xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgCERPA (ORCPT
+        id S1727923AbgCERPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:15:00 -0500
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:15276 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727678AbgCEROl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1583428481; x=1614964481;
-  h=from:subject:to:cc:references:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=5fApbeaqTcP0p/hHQ0KDa3FOcjpecfzaTtmdMnU8Cg4=;
-  b=C6AcNVIgYxXMhAd+acEWJ/3LrP08LYHfFpmpLtLpyZ+6R2NXa9ihLt4J
-   S41VCgOjMj7quo69lFNe2N+b4kP+q2tDI0ynQG2GPW1aneafJF9r3wkde
-   ecDgTq6QiN8QoailrtC47Xo5UDEQombHTuFVnXLsuRyIb0/CBybhhHq7h
-   U=;
-IronPort-SDR: EtTtVXXh4nhSPq0l+1rlC6IjpDmotIhfWTqDYxh6jbBOZoG+jtgmHMuPXMXz4dXEWL2ImWfocY
- 4HYs/ioX7lAg==
-X-IronPort-AV: E=Sophos;i="5.70,518,1574121600"; 
-   d="scan'208";a="19767269"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 Mar 2020 17:14:18 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id A5A5CA2090;
-        Thu,  5 Mar 2020 17:14:14 +0000 (UTC)
-Received: from EX13D13UWB001.ant.amazon.com (10.43.161.156) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Mar 2020 17:14:13 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D13UWB001.ant.amazon.com (10.43.161.156) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 5 Mar 2020 17:14:13 +0000
-Received: from [10.107.3.22] (10.107.3.22) by mail-relay.amazon.com
- (10.43.161.249) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Thu, 5 Mar 2020 17:14:08 +0000
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Subject: Re: [EXTERNAL][PATCH v4 6/6] arm64: dts: amazon: add Amazon's
- Annapurna Labs Alpine v3 support
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <tsahee@annapurnalabs.com>, <mchehab+samsung@kernel.org>,
-        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
-        <Jonathan.Cameron@huawei.com>, <tglx@linutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
-        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
-        <jonnyc@amazon.com>, <hanochu@amazon.com>, <eitan@amazon.com>
-References: <20200225112926.16518-1-hhhawa@amazon.com>
- <20200225112926.16518-7-hhhawa@amazon.com> <20200304212737.GN3179@kwain>
-Message-ID: <7a1c1b59-f12d-5839-beea-6af5e7998640@amazon.com>
-Date:   Thu, 5 Mar 2020 19:14:06 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 12:15:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727764AbgCEROm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:42 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC84C24654;
+        Thu,  5 Mar 2020 17:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583428481;
+        bh=9g2gIbbLljcopMLsa1wpkRfrnY5cLA9djOVfX6VbqYg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lXi2eyLm8+51IMgjiFx9RjLWEwcP3KlcOJkkVTzsSLnACEh2rxQjsZ/p4Bj2NLy5g
+         l7UxP+LYSQOjQkU+sJp24H1hU7ObcN3+ajn/J0IaMgZor7sEzwBrOdkiYottghIJkc
+         nmsg2XM0kTgAMueqs+aWUaSkJUT5Ct5683Uy9tMQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 17/58] MIPS: vdso: Wrap -mexplicit-relocs in cc-option
+Date:   Thu,  5 Mar 2020 12:13:38 -0500
+Message-Id: <20200305171420.29595-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
+References: <20200305171420.29595-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200304212737.GN3179@kwain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Antonie,
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-Thanks for reviewing,
+[ Upstream commit 72cf3b3df423c1bbd8fa1056fed009d3a260f8a9 ]
 
-On 3/4/2020 11:27 PM, Antoine Tenart wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> 
-> 
-> 
-> Hello,
-> 
-> Sorry, I'm a bit late to the party...
-> 
-> On Tue, Feb 25, 2020 at 01:29:26PM +0200, Hanna Hawa wrote:
->> diff --git a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
->> +     arch-timer {
-> 
-> Please use 'timer' instead.
+Clang does not support this option and errors out:
 
-Will be fixed
+clang-11: error: unknown argument: '-mexplicit-relocs'
 
-> 
->> +             compatible = "arm,armv8-timer";
->> +             interrupts = <GIC_PPI 0xd IRQ_TYPE_LEVEL_LOW>,
->> +                          <GIC_PPI 0xe IRQ_TYPE_LEVEL_LOW>,
->> +                          <GIC_PPI 0xb IRQ_TYPE_LEVEL_LOW>,
->> +                          <GIC_PPI 0xa IRQ_TYPE_LEVEL_LOW>;
->> +     };
-> 
->> +             gic: interrupt-controller@f0000000 {
->> +                     compatible = "arm,gic-v3";
->> +                     #interrupt-cells = <3>;
->> +                     #address-cells = <0>;
-> 
-> No need for this.
+Clang does not appear to need this flag like GCC does because the jalr
+check that was added in commit 976c23af3ee5 ("mips: vdso: add build
+time check that no 'jalr t9' calls left") passes just fine with
 
-Will be removed
+$ make ARCH=mips CC=clang CROSS_COMPILE=mipsel-linux-gnu- malta_defconfig arch/mips/vdso/
 
-> 
->> +                     interrupt-controller;
->> +                     reg = <0x0 0xf0800000 0 0x10000>,
->> +                           <0x0 0xf0a00000 0 0x200000>,
->> +                           <0x0 0xf0000000 0 0x2000>,
->> +                           <0x0 0xf0010000 0 0x1000>,
->> +                           <0x0 0xf0020000 0 0x2000>;
-> 
-> Please add comments here, see alpine-v2.dtsi (or other dtsi in
-> arch/arm64).
+even before commit d3f703c4359f ("mips: vdso: fix 'jalr t9' crash in
+vdso code").
 
-Will be added.
+-mrelax-pic-calls has been supported since clang 9, which is the
+earliest version that could build a working MIPS kernel, and it is the
+default for clang so just leave it be.
 
-> 
->> +                     interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->> +             };
->> +
->> +             msix: msix@fbe00000 {
->> +                     compatible = "al,alpine-msix";
->> +                     reg = <0x0 0xfbe00000 0x0 0x100000>;
->> +                     interrupt-controller;
->> +                     msi-controller;
->> +                     al,msi-base-spi = <160>;
->> +                     al,msi-num-spis = <800>;
->> +                     interrupt-parent = <&gic>;
->> +             };
->> +
->> +             uart0: serial@fd883000 {
-> 
-> Looking at the Alpine v2 dtsi, this node was put in an io-fabric bus. It
-> seems to me the Alpine v3 dtsi is very similar. Would it apply as well?
+Fixes: d3f703c4359f ("mips: vdso: fix 'jalr t9' crash in vdso code")
+Link: https://github.com/ClangBuiltLinux/linux/issues/890
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-V3 very similar to V2, will add to io-fabric bus and will add missing 
-uart devices.
+diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+index 08c835d48520b..3dcfdee678fb9 100644
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -29,7 +29,7 @@ endif
+ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+ 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
+-	-mrelax-pic-calls -mexplicit-relocs \
++	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
+ 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+ 	$(call cc-option, -fno-asynchronous-unwind-tables) \
+ 	$(call cc-option, -fno-stack-protector)
+-- 
+2.20.1
 
-> 
->> +                     compatible = "ns16550a";
->> +                     reg = <0x0 0xfd883000 0x0 0x1000>;
->> +                     clock-frequency = <0>;
-> 
-> Is the frequency set to 0 on purpose? Or is it set by a firmware at boot
-> time (if so please add a comment)?
-
-It's updated by firmware, will add a comment.
-
-> 
->> +                     interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
->> +                     reg-shift = <2>;
->> +                     reg-io-width = <4>;
-> 
-> Since you're enabling this node explicitly in the dts, you can set it to
-> disabled by default.
-
-Ack
-
-> 
->> +             };
->> +
->> +             pcie@fbd00000 {
-> 
-> Please order the nodes in increasing order.
-
-Ack
-
-> 
->> +                     compatible = "pci-host-ecam-generic";
->> +                     device_type = "pci";
->> +                     #size-cells = <2>;
->> +                     #address-cells = <3>;
->> +                     #interrupt-cells = <1>;
->> +                     reg = <0x0 0xfbd00000 0x0 0x100000>;
->> +                     interrupt-map-mask = <0xf800 0 0 7>;
->> +                     /* 8 x legacy interrupts for SATA only */
->> +                     interrupt-map = <0x4000 0 0 1 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
->> +                                     <0x4800 0 0 1 &gic 0 58 IRQ_TYPE_LEVEL_HIGH>,
->> +                                     <0x5000 0 0 1 &gic 0 59 IRQ_TYPE_LEVEL_HIGH>,
->> +                                     <0x5800 0 0 1 &gic 0 60 IRQ_TYPE_LEVEL_HIGH>,
->> +                                     <0x6000 0 0 1 &gic 0 61 IRQ_TYPE_LEVEL_HIGH>,
->> +                                     <0x6800 0 0 1 &gic 0 62 IRQ_TYPE_LEVEL_HIGH>,
->> +                                     <0x7000 0 0 1 &gic 0 63 IRQ_TYPE_LEVEL_HIGH>,
->> +                                     <0x7800 0 0 1 &gic 0 64 IRQ_TYPE_LEVEL_HIGH>;
->> +                     ranges = <0x02000000 0x0 0xfe000000 0x0 0xfe000000 0x0 0x1000000>;
->> +                     bus-range = <0x00 0x00>;
->> +                     msi-parent = <&msix>;
->> +             };
->> +     };
->> +};
-> 
-> The rest of the series looks good.
-Thanks
-
-Regards,
-Hanna
-
-> 
-> Thanks!
-> Antoine
-> 
-> --
-> Antoine Ténart, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
