@@ -2,155 +2,115 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D14CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6A0C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4152146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D2A21556
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ctYxfjLo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8Z7wwYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgCEGoW (ORCPT
+        id S1726504AbgCEGo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 01:44:22 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:40664 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgCEGoV (ORCPT
+        Thu, 5 Mar 2020 01:44:28 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43343 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbgCEGo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 01:44:21 -0500
-Received: by mail-qv1-f68.google.com with SMTP id u17so648166qvv.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 22:44:19 -0800 (PST)
+        Thu, 5 Mar 2020 01:44:27 -0500
+Received: by mail-pf1-f193.google.com with SMTP id c144so2275444pfb.10;
+        Wed, 04 Mar 2020 22:44:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jUsXfxq47fTB69Eo8JioRupR5VCGfY6ptuLWDAnbRk8=;
-        b=ctYxfjLo/A+r4dZRBuJIu/kSqGQpprntxrJvCk9FV5NaH6locQvrgp+PKWXl1i8Udq
-         KmxJqN/EXANRIs2kJvuZEzZVNqQMPmKQbyFQkg1hq03TVX4lFtQKEO/b2/Yj0CFym9qJ
-         L5Lm6cMjTjhw6WM5FApyl47nqWXM5YDHBAqTualP/UqNNqLkj8gWZ8yPK7lTxAGEBa3w
-         jt2Lc1h6BRAXO40Pp08QJYAL0gwuPxWxfZo6ILnwgsNayZwgrVbf1kXpj4zYmzMVNpwS
-         vYhD17FZQEo5XONsGf190dy0fpLVlhwsZ9CoZq/tbUvtGzUGQx/vhL3+5kRr7u29kED4
-         nsWQ==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=iHCLUX4LlZEuEw2wjTqn+Kf9HUrwO3gyzSzh9eS6vB8=;
+        b=i8Z7wwYJp4A559I+KmDI1uIIDf4ALcKodvGO5dAfEp8Pbp7WGuoD2aDGeQYZXcGTnh
+         DxJMSLMKx6+dWWK0vx+xrr6VWqM2SeCHrDslGkN1w7SIhXeb+OW9jKBpwu/4wuR4R0fo
+         qcKtYtsGBAV3ozx6TlKvkzo+j6Sqxv7hyngUOOP94we/DANDqxX2X3jjRzZiecp6fw3N
+         +wA/UWriRtmXxNZ7WyLcxnRR7/eM2Au+eB1wJgOrrQ0DPsNFvwBxyiBZvwU8HgVwP93e
+         QfEk7+AAWRL01NFi7tMxF2SuelaHgdOZU/DZUGqXRYbkwx41U5TQJUWYI2nm1zf7O6eB
+         /75w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jUsXfxq47fTB69Eo8JioRupR5VCGfY6ptuLWDAnbRk8=;
-        b=Y3jwSVbkHFDeDx6Sq5k1NizE3hBypl7glkQNUjqmITc+2Iw5DWgSWF8wRmSMKLnJAc
-         UAjzx6iyuwY9mJw1dAhqb7pTToRaPxjwh8rWYvaugMEMOe1sFzUCrSl/P27yj35EXxXQ
-         RFBvamwmUZIH/bNR+dC/dydGIcptXPRtVpWroWvNu+nc/uF/MnZX5SeWnAOuzT9rS0BZ
-         DarapPbCfLQLqANQrE2ZlCAlSvM7wpdZMOo+R4K7i2yKkSVJu7yWgYmoAB1tdvRYW0N/
-         pqcLsxsKLQ3y8PjbZYx1e0D14pGjCrhBsF1ULS6fHQWWbLIn7RvY4arUraPj1m9mYZcI
-         /i2Q==
-X-Gm-Message-State: ANhLgQ1KZG4P68ig2Hy8E/0Euxbpptzb3sSQfPpSdJ2qaAXZi3yvf6pM
-        ytVBwWu2d1eLgusnijf0wRU3Kpv0hixVBJduBYNM7w==
-X-Google-Smtp-Source: ADFU+vsVJtTi0c4Al9cn4rzjpTYArv7CtyzDoGym5TNUnHVkiEkLAtqeW9IPhoAFm902Z5T54qN6KCjJ49fwIIG2ngg=
-X-Received: by 2002:ad4:4bc6:: with SMTP id l6mr5269372qvw.34.1583390658639;
- Wed, 04 Mar 2020 22:44:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20200227024301.217042-1-trishalfonso@google.com>
- <20200227024301.217042-2-trishalfonso@google.com> <CACT4Y+YFewcbRnY62wLHueVNwyXCSZwO8K7SUR2cg=pxZv8uZA@mail.gmail.com>
- <CAKFsvUJFovti=enpOefqMbtQpeorihQhugH3-1nv0BBwevCwQg@mail.gmail.com>
- <CACT4Y+Y-zoiRfDWw6KJr1BJO_=yTpFsVaHMng5iaRn9HeJMNaw@mail.gmail.com>
- <CAKFsvU+ruKWt-BdVz+OX-T9wNEBetqVFACsG1B9ucMS4zHrMBQ@mail.gmail.com>
- <CACT4Y+b5WaH8OkAJCDeAJcYQ1cbnbqgiF=tTb7CCmtY4UXHc0A@mail.gmail.com> <CAKFsvUK84pD+K5rTbvKXB0MyW9XCknpSfMAO28iQ4S1=WBQK6Q@mail.gmail.com>
-In-Reply-To: <CAKFsvUK84pD+K5rTbvKXB0MyW9XCknpSfMAO28iQ4S1=WBQK6Q@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 5 Mar 2020 07:44:07 +0100
-Message-ID: <CACT4Y+a+SLAetVsquiitua9v0pnhQD-C5AWFekvZ8h-m0y1xuQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=iHCLUX4LlZEuEw2wjTqn+Kf9HUrwO3gyzSzh9eS6vB8=;
+        b=e5FXFKZY8Sbma/zOqeUN/8zUzDytnqJmkfqTvJm2XOY9rBjZZIGKyMfuz0ouAoaEjT
+         vgf9lD1YpgSFE+Thtu3s4bmy4dLEw1WmP2be/5tgZIVXMWtD2JxlMM5NQBtRzGLE+1jX
+         eL+IrY5F8q186NiW4+M8oxG1eFLW3oHap5bmXLc4i29AvV3pQ7pfNtvQI98Jm/p0bWJh
+         eVCrfe86hGryOj1mk+cj+9d5LSY0POIGjPOLcdBk8LgAnX+KmR5J1yVE7lbBKmV4d/03
+         +Y1zdlNbp9Wqh17hKaWr2mq8UIzsODr69TEAiD6Fbv+n8jUjntIACT1BCyfiSAdiEjbq
+         nYqQ==
+X-Gm-Message-State: ANhLgQ2pYlz71ljUhTiMqnG7uWSIOEA6pX1WnBKmeyZeVTAmH3Mbl5nh
+        Zil0woQjwKdNbXbKW5Yt6uI=
+X-Google-Smtp-Source: ADFU+vsZdz4mOQHRYedWXA90jUzMBhPRBEjV3ILIMadz2Ii8pDZqacczIffSpWyMTQqroUq7ZZ/lcQ==
+X-Received: by 2002:a62:d10b:: with SMTP id z11mr7164103pfg.38.1583390665965;
+        Wed, 04 Mar 2020 22:44:25 -0800 (PST)
+Received: from localhost (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id e1sm30964891pff.188.2020.03.04.22.44.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Mar 2020 22:44:25 -0800 (PST)
+From:   AceLan Kao <acelan.kao@canonical.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: i8042 - Fix the selftest retry logic
+Date:   Thu,  5 Mar 2020 14:44:23 +0800
+Message-Id: <20200305064423.16196-1-acelan.kao@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 1:08 AM Patricia Alfonso <trishalfonso@google.com> wrote:
-> > > On Sat, Feb 29, 2020 at 10:29 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > > >
-> > > > On Sat, Feb 29, 2020 at 2:23 AM Patricia Alfonso
-> > > > <trishalfonso@google.com> wrote:
-> > > > > >
-> > > > > > On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
-> > > > > > <kasan-dev@googlegroups.com> wrote:
-> > > > > > >
-> > > > > > > --- a/tools/testing/kunit/kunit_kernel.py
-> > > > > > > +++ b/tools/testing/kunit/kunit_kernel.py
-> > > > > > > @@ -141,7 +141,7 @@ class LinuxSourceTree(object):
-> > > > > > >                 return True
-> > > > > > >
-> > > > > > >         def run_kernel(self, args=[], timeout=None, build_dir=''):
-> > > > > > > -               args.extend(['mem=256M'])
-> > > > > > > +               args.extend(['mem=256M', 'kasan_multi_shot'])
-> > > > > >
-> > > > > > This is better done somewhere else (different default value if
-> > > > > > KASAN_TEST is enabled or something). Or overridden in the KASAN tests.
-> > > > > > Not everybody uses tools/testing/kunit/kunit_kernel.py and this seems
-> > > > > > to be a mandatory part now. This means people will always hit this, be
-> > > > > > confused, figure out they need to flip the value, and only then be
-> > > > > > able to run kunit+kasan.
-> > > > > >
-> > > > > I agree. Is the best way to do this with "bool multishot =
-> > > > > kasan_save_enable_multi_shot();"  and
-> > > > > "kasan_restore_multi_shot(multishot);" inside test_kasan.c like what
-> > > > > was done in the tests before?
-> > > >
-> > > > This will fix KASAN tests, but not non-KASAN tests running under KUNIT
-> > > > and triggering KASAN reports.
-> > > > You set kasan_multi_shot for all KUNIT tests. I am reading this as
-> > > > that we don't want to abort on the first test that triggered a KASAN
-> > > > report. Or not?
-> > >
-> > > I don't think I understand the question, but let me try to explain my
-> > > thinking and see if that resonates with you. We know that the KASAN
-> > > tests will require more than one report, and we want that. For most
-> > > users, since a KASAN error can cause unexpected kernel behavior for
-> > > anything after a KASAN error, it is best for just one unexpected KASAN
-> > > error to be the only error printed to the user, unless they specify
-> > > kasan-multi-shot. The way I understand it, the way to implement this
-> > > is to use  "bool multishot = kasan_save_enable_multi_shot();"  and
-> > > "kasan_restore_multi_shot(multishot);" around the KASAN tests so that
-> > > kasan-multi-shot is temporarily enabled for the tests we expect
-> > > multiple reports. I assume "kasan_restore_multi_shot(multishot);"
-> > > restores the value to what the user input was so after the KASAN tests
-> > > are finished, if the user did not specify kasan-multi-shot and an
-> > > unexpected kasan error is reported, it will print the full report and
-> > > only that first one. Is this understanding correct? If you have a
-> > > better way of implementing this or a better expected behavior, I
-> > > appreciate your thoughts.
-> >
-> > Everything you say is correct.
-> > What I tried to point at is that this new behavior is different from
-> > the original behavior of your change. Initially you added
-> > kasan_multi_shot to command line for _all_ kunit tests (not just
-> > KASAN). The question is: do we want kasan_multi_shot for non-KASAN
-> > tests or not?
->
-> Ah, yes. I thought your first comment was suggesting I change it from
-> printing all KASAN tests by default because the intended behavior of
-> KASAN is to only print the first report. I think I'll pose the
-> question back to you. Do we want kasan_multi_shot for non-KASAN tests?
-> For functionality sake, it is only required for the KASAN tests so
-> this is more of a judgement call for the user experience.
+It returns -NODEV at the first selftest timeout, so the retry logic
+doesn't work. Move the return outside of the while loop to make it real
+retry 5 times before returns -ENODEV.
 
-Good question. I don't see strong arguments either way. So I guess we
-can leave the current version (only for kasan tests) and wait when/if
-somebody has real arguments. I wanted to point to change in behavior
-and understand if it's intentional/accidental.
+BTW, the origin loop will retry 6 times, also fix this.
+
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/input/serio/i8042.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
+index 20ff2bed3917..3f6433a5c8e6 100644
+--- a/drivers/input/serio/i8042.c
++++ b/drivers/input/serio/i8042.c
+@@ -944,10 +944,9 @@ static int i8042_controller_selftest(void)
+ 	 */
+ 	do {
+ 
+-		if (i8042_command(&param, I8042_CMD_CTL_TEST)) {
+-			pr_err("i8042 controller selftest timeout\n");
+-			return -ENODEV;
+-		}
++		if (i8042_command(&param, I8042_CMD_CTL_TEST))
++			pr_err("i8042 controller selftest timeout (%d/5)\n",
++			       i+1);
+ 
+ 		if (param == I8042_RET_CTL_TEST)
+ 			return 0;
+@@ -955,7 +954,9 @@ static int i8042_controller_selftest(void)
+ 		dbg("i8042 controller selftest: %#x != %#x\n",
+ 		    param, I8042_RET_CTL_TEST);
+ 		msleep(50);
+-	} while (i++ < 5);
++	} while (++i < 5);
++	if (i == 5)
++		return -ENODEV;
+ 
+ #ifdef CONFIG_X86
+ 	/*
+-- 
+2.17.1
+
