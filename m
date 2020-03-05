@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6160C3F2DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7984C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B222146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E692146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428456;
-	bh=Fd5mXYSIkdYOZviVLVfQIG/AbZvQecDxCTGdLIxVWH4=;
+	s=default; t=1583428463;
+	bh=YIF9xn17dm9T04tLd25uhOOCgMPiyMHx+KPiYfEmEy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQNhsytj/Jmsv0iNZE5ZGczq1LzfTztCJEiohUxLRIJHPppxvSyjo6NqYiNrUyQfD
-	 pF2Ce/uEO2RnGH9tYBunCIblRUjGTlkcLhir2jFWnTRcygoLdOl6L2KMpetSAt7H2/
-	 a74qsS32r7VsmvbcjY4FSEXunGizarb8997EJCu0=
+	b=MWz2HMSq3nlJQmGp/Sx1cKl7bZMJ1Ceasvo5Ka8zZGDA24EhNuDDAhQzExItKSMTE
+	 HoOaKo3o8Ol7yonFMtw+gRSuFc/85Thhwp+ZzMrXHNPKb05lz+8htbAQTHcqjv8ZRg
+	 093XBmTMFqD7bBbDnAdvu1mmgGhpSnhMyJxNaFH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbgCEROP (ORCPT
+        id S1727653AbgCEROW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:14:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40002 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:14:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727557AbgCEROH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:07 -0500
+        id S1726563AbgCEROK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A6F32146E;
-        Thu,  5 Mar 2020 17:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77B452146E;
+        Thu,  5 Mar 2020 17:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428446;
-        bh=Fd5mXYSIkdYOZviVLVfQIG/AbZvQecDxCTGdLIxVWH4=;
+        s=default; t=1583428450;
+        bh=YIF9xn17dm9T04tLd25uhOOCgMPiyMHx+KPiYfEmEy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DJSup7gQwVkhjRiSWeH1J9Z1W7EpfjdmlddKsQFaev1Bfj7LauEFJ3bH1tERiQoK6
-         KCuAiWvPfyU/LzH6IdAIfpKggGNfJdhJPvxNGsyxHx+T5+pNE0jICHyxqYDgXqpDBV
-         YjKjaUpjDixEkuWdBApTkJy4/tfokBHERbE6UWmQ=
+        b=h7J3LwyPI4Cr1Lhbv+z+xGrv0Mq/uTDDGvOQ4myRtXOOb4GmMMdj2U86GLs7Ltp+M
+         xSSf9QGqKMso0Uk0q6SaMOR7ncCGOBDxz0qETFs03IEwuoLx6WFFCohQlMlkPQpotC
+         +fJeS+VOmRCLB0o6CX6yG7TclkWSjlRi+6xhha3c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org,
-        io-uring@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 42/67] io_uring: pick up link work on submit reference drop
-Date:   Thu,  5 Mar 2020 12:12:43 -0500
-Message-Id: <20200305171309.29118-42-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 45/67] kbuild: add dt_binding_check to PHONY in a correct place
+Date:   Thu,  5 Mar 2020 12:12:46 -0500
+Message-Id: <20200305171309.29118-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -60,56 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 2a44f46781617c5040372b59da33553a02b1f46d ]
+[ Upstream commit c473a8d03ea8e03ca9d649b0b6d72fbcf6212c05 ]
 
-If work completes inline, then we should pick up a dependent link item
-in __io_queue_sqe() as well. If we don't do so, we're forced to go async
-with that item, which is suboptimal.
+The dt_binding_check is added to PHONY, but it is invisible when
+$(dtstree) is empty. So, it is not specified as phony for
+ARCH=x86 etc.
 
-This also fixes an issue with io_put_req_find_next(), which always looks
-up the next work item. That should only be done if we're dropping the
-last reference to the request, to prevent multiple lookups of the same
-work item.
+Add it to PHONY outside the ifneq ... endif block.
 
-Outside of being a fix, this also enables a good cleanup series for 5.7,
-where we never have to pass 'nxt' around or into the work handlers.
-
-Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 95df7026ac5aa..39b18ab928210 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1099,10 +1099,10 @@ static void io_free_req(struct io_kiocb *req)
- __attribute__((nonnull))
- static void io_put_req_find_next(struct io_kiocb *req, struct io_kiocb **nxtptr)
- {
--	io_req_find_next(req, nxtptr);
--
--	if (refcount_dec_and_test(&req->refs))
-+	if (refcount_dec_and_test(&req->refs)) {
-+		io_req_find_next(req, nxtptr);
- 		__io_free_req(req);
-+	}
- }
+diff --git a/Makefile b/Makefile
+index f86ebe1dd2bd0..4dc2dd35e9e3e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1239,7 +1239,7 @@ ifneq ($(dtstree),)
+ %.dtb: include/config/kernel.release scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
  
- static void io_put_req(struct io_kiocb *req)
-@@ -3559,7 +3559,7 @@ static void __io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+-PHONY += dtbs dtbs_install dtbs_check dt_binding_check
++PHONY += dtbs dtbs_install dtbs_check
+ dtbs dtbs_check: include/config/kernel.release scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree)
  
- err:
- 	/* drop submission reference */
--	io_put_req(req);
-+	io_put_req_find_next(req, &nxt);
+@@ -1259,6 +1259,7 @@ PHONY += scripts_dtc
+ scripts_dtc: scripts_basic
+ 	$(Q)$(MAKE) $(build)=scripts/dtc
  
- 	if (linked_timeout) {
- 		if (!ret)
++PHONY += dt_binding_check
+ dt_binding_check: scripts_dtc
+ 	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
+ 
 -- 
 2.20.1
 
