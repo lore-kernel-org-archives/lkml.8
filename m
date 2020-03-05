@@ -2,114 +2,232 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36597C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812EDC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12CF72073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F742206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="psMUlKTk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCEXR6 (ORCPT
+        id S1726271AbgCEXWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 18:17:58 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63419 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgCEXR5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 18:17:57 -0500
-Received: from 79.184.237.41.ipv4.supernova.orange.pl (79.184.237.41) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 4a20b7f991c383a4; Fri, 6 Mar 2020 00:17:55 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH] ACPI: EC: Eliminate EC_FLAGS_QUERY_HANDSHAKE
-Date:   Fri, 06 Mar 2020 00:17:55 +0100
-Message-ID: <4132402.vtZ0fvcVVT@kreacher>
+        Thu, 5 Mar 2020 18:22:09 -0500
+Received: from ozlabs.org ([203.11.71.1]:43211 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbgCEXWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 18:22:09 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48YRbd5SFrz9sNg;
+        Fri,  6 Mar 2020 10:22:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583450526;
+        bh=PvR3xvSSafUOmuGnnxb06iTcgtURZdFSYRFughwx4Jc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=psMUlKTkLtxWgoN1IA50NGPWdGS3hB3HdMRoe5FDUpSOS1fIY6HWjZYAyHKKzxF3D
+         9NRhvJfHINFTJlf/SEKKty3sKJso2RH/4AMJez+pTVPVImvYfGyhM5YSyz8famnEvr
+         obKpExYXgAU0g+ek1XBiV2G8bTZ2+BgByr/cqdOD9Qy03CYWfR2c9/9m40GVsUpy+4
+         G4DuKxrduayZUIizWVcBReAfCIj4MaMf+v0ehJqTivyZRB3FXxbDAVqDQqXh7kOdtD
+         CSd8iwgoQ159AM0f1MOW29lgknQmmrVG4ayd2iMxg+hAo1r5LtulZwr0GCbpc4BGqW
+         xh62PJw55My3Q==
+Date:   Fri, 6 Mar 2020 10:21:58 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: linux-next: manual merge of the net-next tree with the powerpc tree
+Message-ID: <20200306102158.0b88e0a0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; boundary="Sig_/MiD=6dX41diOlbdUFdeLJ7D";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+--Sig_/MiD=6dX41diOlbdUFdeLJ7D
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The EC_FLAGS_QUERY_HANDSHAKE switch is never set in the current
-code (the only function setting it is defined under #if 0) and
-has no effect whatever, so eliminate it and drop the code
-depending on it.
+Hi all,
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/ec.c |   35 +++--------------------------------
- 1 file changed, 3 insertions(+), 32 deletions(-)
+Today's linux-next merge of the net-next tree got a conflict in:
 
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -182,7 +182,6 @@ static bool boot_ec_is_ecdt = false;
- static struct workqueue_struct *ec_wq;
- static struct workqueue_struct *ec_query_wq;
- 
--static int EC_FLAGS_QUERY_HANDSHAKE; /* Needs QR_EC issued when SCI_EVT set */
- static int EC_FLAGS_CORRECT_ECDT; /* Needs ECDT port address correction */
- static int EC_FLAGS_IGNORE_DSDT_GPE; /* Needs ECDT GPE as correction setting */
- static int EC_FLAGS_CLEAR_ON_RESUME; /* Needs acpi_ec_clear() on boot/resume */
-@@ -690,21 +689,9 @@ static void advance_transaction(struct a
- 			wakeup = true;
- 		}
- 		goto out;
--	} else {
--		if (EC_FLAGS_QUERY_HANDSHAKE &&
--		    !(status & ACPI_EC_FLAG_SCI) &&
--		    (t->command == ACPI_EC_COMMAND_QUERY)) {
--			ec_transaction_transition(ec, ACPI_EC_COMMAND_POLL);
--			t->rdata[t->ri++] = 0x00;
--			ec_transaction_transition(ec, ACPI_EC_COMMAND_COMPLETE);
--			ec_dbg_evt("Command(%s) completed by software",
--				   acpi_ec_cmd_string(ACPI_EC_COMMAND_QUERY));
--			wakeup = true;
--		} else if ((status & ACPI_EC_FLAG_IBF) == 0) {
--			acpi_ec_write_cmd(ec, t->command);
--			ec_transaction_transition(ec, ACPI_EC_COMMAND_POLL);
--		} else
--			goto err;
-+	} else if (!(status & ACPI_EC_FLAG_IBF)) {
-+		acpi_ec_write_cmd(ec, t->command);
-+		ec_transaction_transition(ec, ACPI_EC_COMMAND_POLL);
- 		goto out;
- 	}
- err:
-@@ -1805,22 +1792,6 @@ static void __init acpi_ec_ecdt_start(vo
- 	acpi_bus_register_early_device(ACPI_BUS_TYPE_ECDT_EC);
- }
- 
--#if 0
--/*
-- * Some EC firmware variations refuses to respond QR_EC when SCI_EVT is not
-- * set, for which case, we complete the QR_EC without issuing it to the
-- * firmware.
-- * https://bugzilla.kernel.org/show_bug.cgi?id=82611
-- * https://bugzilla.kernel.org/show_bug.cgi?id=97381
-- */
--static int ec_flag_query_handshake(const struct dmi_system_id *id)
--{
--	pr_debug("Detected the EC firmware requiring QR_EC issued when SCI_EVT set\n");
--	EC_FLAGS_QUERY_HANDSHAKE = 1;
--	return 0;
--}
--#endif
--
- /*
-  * On some hardware it is necessary to clear events accumulated by the EC during
-  * sleep. These ECs stop reporting GPEs until they are manually polled, if too
+  fs/sysfs/group.c
 
+between commit:
 
+  9255782f7061 ("sysfs: Wrap __compat_only_sysfs_link_entry_to_kobj functio=
+n to change the symlink name")
 
+from the powerpc tree and commit:
+
+  303a42769c4c ("sysfs: add sysfs_group{s}_change_owner()")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/sysfs/group.c
+index 1e2a096057bc,5afe0e7ff7cd..000000000000
+--- a/fs/sysfs/group.c
++++ b/fs/sysfs/group.c
+@@@ -478,4 -457,118 +479,118 @@@ int compat_only_sysfs_link_entry_to_kob
+  	kernfs_put(target);
+  	return PTR_ERR_OR_ZERO(link);
+  }
+ -EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
+ +EXPORT_SYMBOL_GPL(compat_only_sysfs_link_entry_to_kobj);
++=20
++ static int sysfs_group_attrs_change_owner(struct kernfs_node *grp_kn,
++ 					  const struct attribute_group *grp,
++ 					  struct iattr *newattrs)
++ {
++ 	struct kernfs_node *kn;
++ 	int error;
++=20
++ 	if (grp->attrs) {
++ 		struct attribute *const *attr;
++=20
++ 		for (attr =3D grp->attrs; *attr; attr++) {
++ 			kn =3D kernfs_find_and_get(grp_kn, (*attr)->name);
++ 			if (!kn)
++ 				return -ENOENT;
++=20
++ 			error =3D kernfs_setattr(kn, newattrs);
++ 			kernfs_put(kn);
++ 			if (error)
++ 				return error;
++ 		}
++ 	}
++=20
++ 	if (grp->bin_attrs) {
++ 		struct bin_attribute *const *bin_attr;
++=20
++ 		for (bin_attr =3D grp->bin_attrs; *bin_attr; bin_attr++) {
++ 			kn =3D kernfs_find_and_get(grp_kn, (*bin_attr)->attr.name);
++ 			if (!kn)
++ 				return -ENOENT;
++=20
++ 			error =3D kernfs_setattr(kn, newattrs);
++ 			kernfs_put(kn);
++ 			if (error)
++ 				return error;
++ 		}
++ 	}
++=20
++ 	return 0;
++ }
++=20
++ /**
++  * sysfs_group_change_owner - change owner of an attribute group.
++  * @kobj:	The kobject containing the group.
++  * @grp:	The attribute group.
++  * @kuid:	new owner's kuid
++  * @kgid:	new owner's kgid
++  *
++  * Returns 0 on success or error code on failure.
++  */
++ int sysfs_group_change_owner(struct kobject *kobj,
++ 			     const struct attribute_group *grp, kuid_t kuid,
++ 			     kgid_t kgid)
++ {
++ 	struct kernfs_node *grp_kn;
++ 	int error;
++ 	struct iattr newattrs =3D {
++ 		.ia_valid =3D ATTR_UID | ATTR_GID,
++ 		.ia_uid =3D kuid,
++ 		.ia_gid =3D kgid,
++ 	};
++=20
++ 	if (!kobj->state_in_sysfs)
++ 		return -EINVAL;
++=20
++ 	if (grp->name) {
++ 		grp_kn =3D kernfs_find_and_get(kobj->sd, grp->name);
++ 	} else {
++ 		kernfs_get(kobj->sd);
++ 		grp_kn =3D kobj->sd;
++ 	}
++ 	if (!grp_kn)
++ 		return -ENOENT;
++=20
++ 	error =3D kernfs_setattr(grp_kn, &newattrs);
++ 	if (!error)
++ 		error =3D sysfs_group_attrs_change_owner(grp_kn, grp, &newattrs);
++=20
++ 	kernfs_put(grp_kn);
++=20
++ 	return error;
++ }
++ EXPORT_SYMBOL_GPL(sysfs_group_change_owner);
++=20
++ /**
++  * sysfs_groups_change_owner - change owner of a set of attribute groups.
++  * @kobj:	The kobject containing the groups.
++  * @groups:	The attribute groups.
++  * @kuid:	new owner's kuid
++  * @kgid:	new owner's kgid
++  *
++  * Returns 0 on success or error code on failure.
++  */
++ int sysfs_groups_change_owner(struct kobject *kobj,
++ 			      const struct attribute_group **groups,
++ 			      kuid_t kuid, kgid_t kgid)
++ {
++ 	int error =3D 0, i;
++=20
++ 	if (!kobj->state_in_sysfs)
++ 		return -EINVAL;
++=20
++ 	if (!groups)
++ 		return 0;
++=20
++ 	for (i =3D 0; groups[i]; i++) {
++ 		error =3D sysfs_group_change_owner(kobj, groups[i], kuid, kgid);
++ 		if (error)
++ 			break;
++ 	}
++=20
++ 	return error;
++ }
++ EXPORT_SYMBOL_GPL(sysfs_groups_change_owner);
+
+--Sig_/MiD=6dX41diOlbdUFdeLJ7D
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5hiZYACgkQAVBC80lX
+0GwNjgf+NR8vXKVJAOj4wfPbS7Z86o+CKOI/QhegsGe9hQhSVkfAPt2iQ44y3B4c
+8zSfBQW5uYRwXALv7eiFKnIBw1rFg66smu7svvbEIFE/siwIMqGZJW0gOpVwIAF7
+qgO7qyQJlRa7G3+vZsA8VDA/1ti+juHCJHikLmzHRZOB6hF2QQTGLodXuD0ReJHQ
+D0seqE0uNkN5DO/5KifBic8SHGRMAv0P28MC2SH8Si/YmF4CwN4E9gp9fKsQ4vo5
+dBpZvDO345/zQO7p31mIV/exmvQZ68ttELulIYglGLY2d3c245eBf432lqT9EIIk
+SlGc8Nxd/I8v17zpel/hCzWN1KrnxQ==
+=ApLk
+-----END PGP SIGNATURE-----
+
+--Sig_/MiD=6dX41diOlbdUFdeLJ7D--
