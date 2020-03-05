@@ -2,96 +2,81 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FCBC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661B8C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4BC2073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:55:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kdy1Oy0u"
+	by mail.kernel.org (Postfix) with ESMTP id 47F8C206D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgCEWza (ORCPT
+        id S1726579AbgCEW4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 17:55:30 -0500
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:45473 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbgCEWza (ORCPT
+        Thu, 5 Mar 2020 17:56:07 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:57410 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgCEW4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 17:55:30 -0500
-Received: by mail-yw1-f73.google.com with SMTP id q187so640815ywg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 14:55:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=jeiv1jAncPDzHne66XaZP4GiBWG3GQA5weKZvN0zA0o=;
-        b=kdy1Oy0uXJCE1+kO+LPetei9qACt9fs8O8C1RBjAJdyUQJPprRNSx53fHdHIQZ105Y
-         BqCF5Ivg0kH2LJK1+zaBBzM8qhBQNWa0fesL0vjjN7wf32shwLVaW/d5kcFYoYhRDgp3
-         Pdhgl2yKEiEkDP7stUh50ZkYS4LZC2AnHe+yof/+OMsK8mL3E3CyISsD7DnqMsONAujm
-         y1zwq0fpSxjAa7RaB1h8Sn7WUsqJPQdKB5YLFmgvm8VyQV06rA2mLDZm1KPsU68QxGYd
-         g5ji7YntvkqphMkC6Qa5LqTh634OZ9WEjv4uJAiFTMtK2smmZNUz82QUkEktdWS2lhKH
-         yilQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=jeiv1jAncPDzHne66XaZP4GiBWG3GQA5weKZvN0zA0o=;
-        b=dJv3CtZWxKd4HXcpfUusDW+UZz6LOEm5f1BgpPRtB8PVDGJp+WqY/C8rdQNBVqLwaL
-         fV+4A82VCnz6f7o6u18vxy+t1nkgL4FbJ6OluDECTQWfzgHY5tFeImIY6f798Q7/8yrt
-         /RpndcskhwWGiWlo/GQZzczXFWaNgS4zk1skve5g9FuSS0IIL9D0cpZZnv4mIFQ+h5VC
-         KSU26MscOwoWPm185o0wvkuulmmHHcC1EpK4PqZoXSR2uDACR9E2LxFEXGcGsKPnZB76
-         NsPMrCHMU7ayBgD6NKih1QsR8tAV3ydjRIUGsKOfGy9hpWP2Nquq5D7qEyCe5/mfevuX
-         53nA==
-X-Gm-Message-State: ANhLgQ0Tsne/mQwDCyyztGoBmWmsVg8uLwTY+RhJILeYOPDDtbfDMIsx
-        +f488HddUeK1pVWl5cczIL3Pr4uS4g==
-X-Google-Smtp-Source: ADFU+vu60Lus6uSHEBfNkUZ3xXtpeBay92XILAjLAfjHZcYKS3QoOxm4vMm0F5mcnLfkx2moENdu8HsuUg==
-X-Received: by 2002:a81:47c3:: with SMTP id u186mr915204ywa.40.1583448929500;
- Thu, 05 Mar 2020 14:55:29 -0800 (PST)
-Date:   Thu,  5 Mar 2020 23:54:43 +0100
-Message-Id: <20200305225443.64426-1-jannh@google.com>
+        Thu, 5 Mar 2020 17:56:06 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3C53915BF42E8;
+        Thu,  5 Mar 2020 14:56:06 -0800 (PST)
+Date:   Thu, 05 Mar 2020 14:56:03 -0800 (PST)
+Message-Id: <20200305.145603.847745750597025052.davem@davemloft.net>
+To:     gustavo@embeddedor.com
+Cc:     netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] net: tulip: Replace zero-length array with
+ flexible-array member
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200305110644.GA8604@embeddedor>
+References: <20200305110644.GA8604@embeddedor>
+X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] x86/entry/64: Fix unwind hint for rewind_stack_do_exit
-From:   Jann Horn <jannh@google.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 05 Mar 2020 14:56:06 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The leaq instruction in rewind_stack_do_exit moves the stack pointer
-directly below the pt_regs at the top of the task stack before calling
-do_exit(). Tell the unwinder to expect pt_regs.
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date: Thu, 5 Mar 2020 05:06:44 -0600
 
-Signed-off-by: Jann Horn <jannh@google.com>
----
- arch/x86/entry/entry_64.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index f2bb91e87877..2393c803fd8c 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1739,7 +1739,7 @@ SYM_CODE_START(rewind_stack_do_exit)
- 
- 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rax
- 	leaq	-PTREGS_SIZE(%rax), %rsp
--	UNWIND_HINT_FUNC sp_offset=PTREGS_SIZE
-+	UNWIND_HINT_REGS
- 
- 	call	do_exit
- SYM_CODE_END(rewind_stack_do_exit)
-
-base-commit: 9f65ed5fe41ce08ed1cb1f6a950f9ec694c142ad
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+Applied.
