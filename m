@@ -2,142 +2,273 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEA2C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0C5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4205E207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1506C207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:07:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hOJsO3Ce"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dp4IaxDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCEHHE (ORCPT
+        id S1726436AbgCEHHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 02:07:04 -0500
-Received: from mail-bn8nam12on2065.outbound.protection.outlook.com ([40.107.237.65]:6059
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725877AbgCEHHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 02:07:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OvEEeguQK8Z+8VUGdT769sGnr1+Ba6/If1alXPGvgTjkcAxZNkNwrV//AJGiuENc2rHJigdEijQbvo8pdCokxmMKwEzTRqPCigvrPsikXhAvQmMF4QYPe2g1mGBqmmcT6BpNBV+qtTv814d4viRgkGhe6TMLoHJqTy5EPnJNJHGMDKixRfMqalqnIDCqH0LYkUxucZ/G4mZ+mUP+TXUjB/XQLnS9s0TJTC467BQR8WTr5UfJvPh2e6BMOJXTN1ymttyKHZwvbBMYlgltO0YVMLTuNGF6duwB7fnwRwzqD8Vdc+HjgZyC7cPfVSOL+RezY2DkISbc3cf9IvowZnxl5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p91bTofGqjLPFIff0yanPg5p7fSvw+Ak+aofAZHpFoM=;
- b=DVuZl8tvcd7NHLCfHPbVscia56/D+ZCZiW5+f82epqVPfXtYlKYnbAeMt48FS/bGtx7ClscCC7YEfCK9HbLocrYanB+Cg1JJXYJjOxV2gSMJQcwBv5GXplHsIjU5yy+8DMYkFxHMAIvkDtyK+UbPd7WGDFfNqWcCrVZeAoih6U1uqSQxV0WRUWV8nGdKlxn3ek4ds+iBt0NJeVYeJfW+OUOFKVWsOxSl+Cy67sN/BuCZv32Ru7hA1YpgfKR0nerhcMxBUl4laOJ60BqbDyHyS53knZ9HIuPT0qd9xblxB6L3d2k5SGRCdjNLMGrz00au8WKsUJev8zlen+wYxxqKyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p91bTofGqjLPFIff0yanPg5p7fSvw+Ak+aofAZHpFoM=;
- b=hOJsO3Ce3rmg0W6KpAqX+0Pegg8Ww+0jpinc0N1c8y1lwTTPmQjFcANbMoTvULRh+8gGeyPUZSMJQQvzUBAdhessOgw+xXee0hhgP/rWTCXSBqPT89kNvWmdgBAqSBFn0JWCAT8uWAwIX7ujEVdwOMHAaKyWY+//DQxmiWHbB10=
-Received: from DM3PR12CA0131.namprd12.prod.outlook.com (2603:10b6:0:51::27) by
- MN2PR12MB4335.namprd12.prod.outlook.com (2603:10b6:208:1d4::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Thu, 5 Mar
- 2020 07:07:01 +0000
-Received: from DM6NAM11FT062.eop-nam11.prod.protection.outlook.com
- (2603:10b6:0:51:cafe::35) by DM3PR12CA0131.outlook.office365.com
- (2603:10b6:0:51::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11 via Frontend
- Transport; Thu, 5 Mar 2020 07:07:01 +0000
-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=permerror action=none
- header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB01.amd.com (165.204.84.17) by
- DM6NAM11FT062.mail.protection.outlook.com (10.13.173.40) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.2793.11 via Frontend Transport; Thu, 5 Mar 2020 07:07:00 +0000
-Received: from [10.217.80.179] (10.180.168.240) by SATLEXMB01.amd.com
- (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 5 Mar 2020
- 01:06:59 -0600
-Subject: Re: v5.5-rc1 and beyond insta-kills some Comcast wifi routers
-To:     Tony Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-References: <DM6PR12MB4331FD3C4EF86E6AF2B3EBC7E5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
- <4e2a1fc1-4c14-733d-74e2-750ef1f81bf6@infradead.org>
- <87h7z4r9p5.fsf@kamboji.qca.qualcomm.com>
- <4bd036de86c94545af3e5d92f0920ac2@realtek.com>
- <DM6PR12MB433132A38F2AA6A5946B75CBE5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
- <c185b1f27e4a4b66941b50697dba006c@realtek.com>
-From:   Jason Mancini <Jason.Mancini@amd.com>
-Message-ID: <ed6e071d-00c0-fb4d-4bbe-1f3668a0c140@amd.com>
-Date:   Wed, 4 Mar 2020 23:06:58 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Thu, 5 Mar 2020 02:07:20 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:43223 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgCEHHU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 02:07:20 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200305070717euoutp02eab2cc23007324d00e417ebcfba2e3a2~5VqtQYVEw0933909339euoutp02K
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Mar 2020 07:07:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200305070717euoutp02eab2cc23007324d00e417ebcfba2e3a2~5VqtQYVEw0933909339euoutp02K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1583392037;
+        bh=BNesTyLQvVBEB+/M7jHYKs4b78sYTv7b/PnyNmhYe54=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=dp4IaxDUjU/Hv0RJdFKkukivtJrHrvfsw6pd/H/stCNOQo123utUHFFM2j0kyW7Fq
+         S8mO4rcjENV8IyfRY/Gqo2MI1WDdmvCyMI8TUgWML/BKW6padCOzmG61DvixqQi4+D
+         ywyIvkG10rUGX48Hc+vrhMk6EOSV/Ksc1mLd6OSk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200305070717eucas1p1094961cc8a05d10cc6a95c97b395715b~5Vqs5Pji71003210032eucas1p1V;
+        Thu,  5 Mar 2020 07:07:17 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 70.C2.60698.525A06E5; Thu,  5
+        Mar 2020 07:07:17 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200305070716eucas1p261a245d2a992c247df216999b63067f7~5VqsdKy2E0339303393eucas1p2B;
+        Thu,  5 Mar 2020 07:07:16 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200305070716eusmtrp2ab2471cdc84627ede9bab86b4756f3f6~5VqscaevE2209422094eusmtrp2T;
+        Thu,  5 Mar 2020 07:07:16 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-98-5e60a525ed06
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id EA.18.08375.425A06E5; Thu,  5
+        Mar 2020 07:07:16 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200305070716eusmtip26f183909871836c7e203319d6fc9b9f7~5VqropC982907029070eusmtip2d;
+        Thu,  5 Mar 2020 07:07:16 +0000 (GMT)
+Subject: Re: [PATCH] drm/exynos: Fix memory leak and release IOMMU mapping
+ structures
+To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     inki.dae@samsung.com, jy0922.shim@samsung.com,
+        sw0312.kim@samsung.com, kyungmin.park@samsung.com,
+        airlied@linux.ie, daniel@ffwll.ch, kgene@kernel.org,
+        krzk@kernel.org, b.zolnierkie@samsung.com, a.hajda@samsung.com,
+        Dietmar.Eggemann@arm.com
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <684ef9fb-eafb-22d3-40c1-50f596211d85@samsung.com>
+Date:   Thu, 5 Mar 2020 08:07:13 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <c185b1f27e4a4b66941b50697dba006c@realtek.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200304220022.8003-1-lukasz.luba@arm.com>
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB01.amd.com (10.181.40.142) To SATLEXMB01.amd.com
- (10.181.40.142)
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(136003)(376002)(428003)(199004)(189003)(70206006)(478600001)(2906002)(426003)(70586007)(8676002)(31686004)(81166006)(31696002)(2616005)(53546011)(110136005)(54906003)(336012)(316002)(81156014)(4326008)(16576012)(5660300002)(26005)(16526019)(66574012)(36756003)(8936002)(356004)(186003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4335;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1e8b58b4-9fee-4f90-b252-08d7c0d3cd34
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4335:
-X-Microsoft-Antispam-PRVS: <MN2PR12MB4335C2185558DB38CF1B8F21E5E20@MN2PR12MB4335.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-Forefront-PRVS: 03333C607F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: biigbgUVKPaf67Vp5smU0u+9hn1yWkhDiUL27uko2WCr7o6eNsc62Z7QW/cKFHQ35mJeyOYH3vrhpcHSIcm3VgX5YEkB1Sbu35veF3MRK+i8MsRgNZVWvRf42BlBHdNuq2JhgqiTKdkjCLyLL89FBMv6ngnKigZtPsfHM9lGATCLbK+knz1U8SMi4BwGWijO2VBGSXceVs39xwLPkvQBgZrW7i3zpVfEeXhqN1S7yxF74+s1/sEjn+j1G9/3MnVY5kNbi4JqyLc8MOuSC8m58Yd5ATbM3U954hF80Ee6Q+TByV8F5OeFaVJI+ofIMUNnK+CsmaaYv89pGdXwaQ839ShRun5/Ek+GvG/Rdze3btnOF7HfIaUHn0bFFrkfeF4gyhWI5mFX6kE4+cZgW59OyNACztNCO/eL0m9jrIk7mU4aDqzg20bKDaKRlYLk+I03
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2020 07:07:00.8790
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e8b58b4-9fee-4f90-b252-08d7c0d3cd34
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4335
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURT1dabToVryKJDeoIHYiCIKiEvyEg1Bo6QfxvhjNBCoVUY0UCCd
+        guKHICJqRQXcSiXiviCCIrLFtagVCGUzSoCACIhVERMsiBqRYUT5O+fcc3POfXkspRyQerG7
+        4o2cIV4Xp2bkdPmLMXuA79WtUUvK+jFpL7ZLyTF7rYTcNZdIyXh5DkX6s+9T5JVziCG53dk0
+        +dDVTJMTvZ8o0th4R0Ya0j/LSGnvaylprc5niLnxkYRcTM+QEfNJBxOKNUXni5Dm4cgFWlNa
+        eITRVIy8lWq6j9okmntXUjXHywqRZrjUeyMbLl8VzcXtSuYMQSFb5TurO09KEkuW7qkdHaLT
+        0EE/E2JZwMuhxhxjQnJWiW8gsDjO0CL5hsD5cooMI8goOy01IZfJjbq2PkYcXEdQkLn/LxlE
+        8O5xp0xwuePN8KRrdHLgge8iaCuqQgKh8BiCW93DEsHF4GAwDZoYAStwCDgup01m0Hge5I31
+        IAF74kg4d7OGFj1uUJvXRwvNXTCBay3BgkxhH6gYzKdErIL2vgKJkAX4CAsPO5sosfda+F6f
+        Q4vYHT7aymQingPjVVMLBxD02G/LRJKFoDXdjETXSui0/2CEZAovhJLqIFFeDfuteVLxKV2h
+        bdBNLOEKueVnKVFWwOFMpeieDxZb8b/Yp00tVDZSW6ZdZpl2jmXaOZb/uRcQXYhUXBKvj+H4
+        ZfHc7kBep+eT4mMCtyfoS9HE96v/bXNWoke/tlkRZpF6luLDaW2UUqpL5lP0VgQspfZQuK+Y
+        kBTRupS9nCFBa0iK43grms3SapVi2SVHpBLH6IxcLMclcoapqYR18UpDz59t+Nq7ckPspv6a
+        DuPAurBtbxr0Sc2ph5oD1m+5HeE94BG92ZtP8+frbHdCf6ncHkeFNDT4z9zxXvsl0/maX5zv
+        8Gr65OYbNkOyINp4dM1Y/tucrIUVTEfYiYjaoJ8+WWq/8MXrI4tTcozhT7RBpwb2hRVnjz94
+        5en0m9tWuYhd5Kqm+Z26YH/KwOv+AKuUX2B6AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJIsWRmVeSWpSXmKPExsVy+t/xe7oqSxPiDBbMMbK4te4cq0XvuZNM
+        FhtnrGe1+L9tIrPF0wlbmS2ufH3PZjHp/gQWixf3LrJY9D9+zWxx/vwGdouzTW/YLTY9vsZq
+        cXnXHDaLGef3MVksbGpht5gx+SWbg4DHmnlrGD32flvA4rFpVSebx/ZvD1g97ncfZ/LYvKTe
+        o2/LKkaPz5vkAjii9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMy
+        y1KL9O0S9DJ23ZnMVLDeqOLk9/csDYytGl2MnBwSAiYSp248Yeti5OIQEljKKNG+8A4jREJG
+        4uS0BlYIW1jiz7UuqKLXjBJth1+zgySEBcIlDtz7DpYQEdjIKDH//AoWEIdZ4CejxKzvL8BG
+        CQl0M0pMn+MNYrMJGEp0vQUZxcnBK2An8XIxxAoWARWJmT8fgtWLCsRK3JjZwQRRIyhxcuYT
+        oKEcHJwCFhLLLhmChJkFzCTmbX7IDGHLS2x/OwfKFpe49WQ+0wRGoVlIumchaZmFpGUWkpYF
+        jCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAqN927Gfm3cwXtoYfIhRgINRiYf3xdT4OCHW
+        xLLiytxDjBIczEoivMKmQCHelMTKqtSi/Pii0pzU4kOMpkC/TWSWEk3OByaivJJ4Q1NDcwtL
+        Q3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjMJibSYsmw7lreYqFdWbrsWgwOql
+        n/Dk5ep3ybZimnd2lNxatkctOEhOYtPNLbP0L6QYRIQ+mnhnv33/rBuF7gX7Mo7tkLS5yvvV
+        fPm93yX+uXJHq1ztOrZ9C/k871vthv4W0bDr1/YZuqwI/lHi6RzU3cnls3GGZtH5Ft0KgfJI
+        DcmbcaUTlFiKMxINtZiLihMBWe8DUQwDAAA=
+X-CMS-MailID: 20200305070716eucas1p261a245d2a992c247df216999b63067f7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200304220106eucas1p232aae5af79945664c4586930a9412eda
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200304220106eucas1p232aae5af79945664c4586930a9412eda
+References: <CGME20200304220106eucas1p232aae5af79945664c4586930a9412eda@eucas1p2.samsung.com>
+        <20200304220022.8003-1-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 2:41 AM, Tony Chuang wrote:
-> Unfortunately, no, there's no flag to turn off this.
-> But, from your experiments, if you applied that patch,
-> ("rtw88: disable TX-AMSDU on 2.4G band") connect to AP on 2.4G, and still crash
-> the Comcast AP, then it looks like it's not TX-AMSDU to be blamed.
+Hi Lukasz,
+
+On 04.03.2020 23:00, Lukasz Luba wrote:
+> There is a memory leak which left some objects not freed. The reference
+> counter of mapping: 'mapping->kref' was 2 when calling
+> arm_iommu_detach_device(), so the release_iommu_mapping() won't be called.
+> Since the old mapping structure is not going to be used any more (because
+> it is detached and new one attached), call arm_iommu_release_mapping()
+> to trigger cleanup.
+
+This will break IOMMU support in Exynos DRM if deferred probe happens. 
+Here is a proper fix:
+
+https://patchwork.kernel.org/patch/11415715/
+
+The mapping initially created by DMA-mapping framework should be 
+attached back when Exynos DRM releases the subdev device.
+
+> Found using kmemleak detector, the output:
 >
-> Assume the return value you mentioned is max_rc_amsdu_len, if you always
-> return 1, it will just disable all of the AMSDU process.
-> You can try it, and to see if sending AMSDU will crash the router or not.
+> unreferenced object 0xc2137640 (size 64):
+>    comm "swapper/0", pid 1, jiffies 4294937900 (age 3127.400s)
+>    hex dump (first 32 bytes):
+>      50 a3 14 c2 80 a2 14 c2 01 00 00 00 20 00 00 00  P........... ...
+>      00 10 00 00 00 80 00 00 00 00 00 00 00 00 00 00  ................
+>    backtrace:
+>      [<3acd268d>] arch_setup_dma_ops+0x4c/0x104
+>      [<9f7d2cce>] of_dma_configure+0x19c/0x3a4
+>      [<ba07704b>] really_probe+0xb0/0x47c
+>      [<4f510e4f>] driver_probe_device+0x78/0x1c4
+>      [<7481a0cf>] device_driver_attach+0x58/0x60
+>      [<0ff8f5c1>] __driver_attach+0xb8/0x158
+>      [<86006144>] bus_for_each_dev+0x74/0xb4
+>      [<10159dca>] bus_add_driver+0x1c0/0x200
+>      [<8a265265>] driver_register+0x74/0x108
+>      [<e0f3451a>] exynos_drm_init+0xb0/0x134
+>      [<db3fc7ba>] do_one_initcall+0x90/0x458
+>      [<6da35917>] kernel_init_freeable+0x188/0x200
+>      [<db3f74d4>] kernel_init+0x8/0x110
+>      [<1f3cddf9>] ret_from_fork+0x14/0x20
+>      [<8cd12507>] 0x0
+> unreferenced object 0xc214a280 (size 128):
+>    comm "swapper/0", pid 1, jiffies 4294937900 (age 3127.400s)
+>    hex dump (first 32 bytes):
+>      00 a0 ec ed 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>    backtrace:
+>      [<3acd268d>] arch_setup_dma_ops+0x4c/0x104
+>      [<9f7d2cce>] of_dma_configure+0x19c/0x3a4
+>      [<ba07704b>] really_probe+0xb0/0x47c
+>      [<4f510e4f>] driver_probe_device+0x78/0x1c4
+>      [<7481a0cf>] device_driver_attach+0x58/0x60
+>      [<0ff8f5c1>] __driver_attach+0xb8/0x158
+>      [<86006144>] bus_for_each_dev+0x74/0xb4
+>      [<10159dca>] bus_add_driver+0x1c0/0x200
+>      [<8a265265>] driver_register+0x74/0x108
+>      [<e0f3451a>] exynos_drm_init+0xb0/0x134
+>      [<db3fc7ba>] do_one_initcall+0x90/0x458
+>      [<6da35917>] kernel_init_freeable+0x188/0x200
+>      [<db3f74d4>] kernel_init+0x8/0x110
+>      [<1f3cddf9>] ret_from_fork+0x14/0x20
+>      [<8cd12507>] 0x0
+> unreferenced object 0xedeca000 (size 4096):
+>    comm "swapper/0", pid 1, jiffies 4294937900 (age 3127.400s)
+>    hex dump (first 32 bytes):
+>      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>    backtrace:
+>      [<3acd268d>] arch_setup_dma_ops+0x4c/0x104
+>      [<9f7d2cce>] of_dma_configure+0x19c/0x3a4
+>      [<ba07704b>] really_probe+0xb0/0x47c
+>      [<4f510e4f>] driver_probe_device+0x78/0x1c4
+>      [<7481a0cf>] device_driver_attach+0x58/0x60
+>      [<0ff8f5c1>] __driver_attach+0xb8/0x158
+>      [<86006144>] bus_for_each_dev+0x74/0xb4
+>      [<10159dca>] bus_add_driver+0x1c0/0x200
+>      [<8a265265>] driver_register+0x74/0x108
+>      [<e0f3451a>] exynos_drm_init+0xb0/0x134
+>      [<db3fc7ba>] do_one_initcall+0x90/0x458
+>      [<6da35917>] kernel_init_freeable+0x188/0x200
+>      [<db3f74d4>] kernel_init+0x8/0x110
+>      [<1f3cddf9>] ret_from_fork+0x14/0x20
+>      [<8cd12507>] 0x0
+> unreferenced object 0xc214a300 (size 128):
+>    comm "swapper/0", pid 1, jiffies 4294937900 (age 3127.400s)
+>    hex dump (first 32 bytes):
+>      00 a3 14 c2 00 a3 14 c2 00 40 18 c2 00 80 18 c2  .........@......
+>      02 00 02 00 ad 4e ad de ff ff ff ff ff ff ff ff  .....N..........
+>    backtrace:
+>      [<08cbd8bc>] iommu_domain_alloc+0x24/0x50
+>      [<b835abee>] arm_iommu_create_mapping+0xe4/0x134
+>      [<3acd268d>] arch_setup_dma_ops+0x4c/0x104
+>      [<9f7d2cce>] of_dma_configure+0x19c/0x3a4
+>      [<ba07704b>] really_probe+0xb0/0x47c
+>      [<4f510e4f>] driver_probe_device+0x78/0x1c4
+>      [<7481a0cf>] device_driver_attach+0x58/0x60
+>      [<0ff8f5c1>] __driver_attach+0xb8/0x158
+>      [<86006144>] bus_for_each_dev+0x74/0xb4
+>      [<10159dca>] bus_add_driver+0x1c0/0x200
+>      [<8a265265>] driver_register+0x74/0x108
+>      [<e0f3451a>] exynos_drm_init+0xb0/0x134
+>      [<db3fc7ba>] do_one_initcall+0x90/0x458
+>      [<6da35917>] kernel_init_freeable+0x188/0x200
+>      [<db3f74d4>] kernel_init+0x8/0x110
+>      [<1f3cddf9>] ret_from_fork+0x14/0x20
 >
-> Yen-Hsuan
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+>
+> Hi all,
+>
+> I have discovered this issue on OdroidXU4 while running some stress tests
+> for upcoming Energy Model. To reproduce it, kernel must be compiled with
+> DEBUG_KMEMLEAK. When the boot has finished, type:
+> # echo scan > /sys/kernel/debug/kmemleak
+> # cat /sys/kernel/debug/kmemleak
+> You should expect similar output to the one from the commit message.
+>
+> I don't know if it should go via stable tree as well. I can resend with CC
+> stable, if there is a need.
+>
+> Regards,
+> Lukasz Luba
+>
+>   drivers/gpu/drm/exynos/exynos_drm_dma.c | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dma.c b/drivers/gpu/drm/exynos/exynos_drm_dma.c
+> index 9ebc02768847..45f209ec107f 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dma.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dma.c
+> @@ -74,8 +74,13 @@ static int drm_iommu_attach_device(struct drm_device *drm_dev,
+>   		return ret;
+>   
+>   	if (IS_ENABLED(CONFIG_ARM_DMA_USE_IOMMU)) {
+> -		if (to_dma_iommu_mapping(subdrv_dev))
+> +		struct dma_iommu_mapping *mapping =
+> +					to_dma_iommu_mapping(subdrv_dev);
+> +
+> +		if (mapping) {
+>   			arm_iommu_detach_device(subdrv_dev);
+> +			arm_iommu_release_mapping(mapping);
+> +		}
+>   
+>   		ret = arm_iommu_attach_device(subdrv_dev, priv->mapping);
+>   	} else if (IS_ENABLED(CONFIG_IOMMU_DMA)) {
 
-(Specifically, this Comcast router is "Arris TG1682G" firmware 10.1.27B.SIP.PC20.CT hardware version 9.0)
-
-I re-tested tonight, here are the results, from *unpatched* kernels:
-
-(1) 2.4G only w/5G disabled via router control panel: kernel 5.5/5.6 seemingly doesn't upset router.
-(2) 5G only w/2.4G disabled via router control panel: kernel 5.5/5.6 definitely kill router wifi.
-(3) 5G only w/2.4G disabled via router control panel: plus get_max_amsdu_len forced to return 1: kernel 5.6-rc4 seemingly doesn't upset router.
-
-As you can see, the suggested patch isn't going to help result (2), and apparently isn't needed for (1).  And this router's 5G seems
-allergic to amsdu per (3), so somehow amsdu is involved it seems.
-
-Well, I'll just work around it with (3) custom kernels, or (1) leave the router in 2.4G mode.  But be aware that apparently there's at least
-one common buggy wifi router that's going to puke on 5G + amsdu.
-
-Jason
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
