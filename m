@@ -2,70 +2,71 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBC2C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B74C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA48208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BE62072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:03:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8f1Lpzo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqjN7sn1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgCEEBT (ORCPT
+        id S1726007AbgCEEDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 23:01:19 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40440 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgCEEBT (ORCPT
+        Wed, 4 Mar 2020 23:03:40 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35194 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgCEEDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 23:01:19 -0500
-Received: by mail-lj1-f193.google.com with SMTP id 143so4445011ljj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 20:01:16 -0800 (PST)
+        Wed, 4 Mar 2020 23:03:40 -0500
+Received: by mail-lf1-f68.google.com with SMTP id z9so3400896lfa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 20:03:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=9VU+lVbHX0qAw8bXtTYx7XdwXh/+wKdP6K88dg5a7UM=;
-        b=m8f1LpzoYDlsqPhFGG0BvlCvNoSoVC6VdZ+wMBtBZ7sIxYiA3QyplOfaFWVZVdoTEi
-         iS+0bM+SdOGRNLGNrc+89EpUjiv+4YEv7Ht47ocfGFo9s3WSwwWJ/n9OKEZb1TlYzKek
-         ZQJxY4D8/lOfjukIL4HuQZTE1Kv+OQZr0tCcAU8ladJb2WVB0UbMCrruHms/41KyyQiR
-         T6PZXM01KDvH9tLYxktX/Pi98Ajf8VKpAhqA6ucQ6ufxa9Y8svUOXon8/reAGeqxKsKl
-         uH7LkhJ5KWmwxj02gYMqgweVS/f8j/IcgHs4lFAo6VA8PzsIr6AJ5CDe1ipv7ll2YzDB
-         Otkw==
+        bh=VklxRdhjEuCIVv9HPoUaXq6mGuwwwTdi/ln0LYnVDsY=;
+        b=iqjN7sn1fgP8MPUCuQpmzoScaDl1FaFzxx3l1cao6LafOPa8aFbH28X7nrCPhLRAbR
+         qtXG+jrOx+0IPwQTh8T0OpSSV6eVDvOi2nVHr+AMlvWLKSoWxo9JoXpKQMXHEZjbZdIP
+         Eg0P7foQARhwfsw4LDg3rxTBm0PfMExB/HPfcvvQU6OCxEiMKA+A7donE9uK7TQxxHGd
+         Tlb/uDyhYeWMxsBDSAv3jUoA+bsPBAJ+mBd165pbvxkgbsChGGXYU/liBCc22CPvI+Bi
+         u5S/sz/Q0IsWdmEYawIM+0cbJg3IigCvSnjnEwRb3eJSdmZoLWTq9uMqepeF8ts+1lF1
+         PH+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9VU+lVbHX0qAw8bXtTYx7XdwXh/+wKdP6K88dg5a7UM=;
-        b=eG2vQsgte2R4/nL4InZ9wF7qHToOavaCYogVVdquj87Zi5KvXBln5KqHyjyQDVfbTb
-         dnhaUtJfoN6I5l8D4r6IB4o6HRgqKboQU6m8BzuLDzgfex80BdsPgz7DiBnRVtHzk+8y
-         RLLL5z1zHDtmZhGHQQsyGzMOVIqmfeX6RMRVpYgTV1kCnXLZieRO6lr7e6K4ZM4v29nc
-         9FH0Zw0gpVJASKuEI7zE66ocvXbU4pujgPVszbUEIXuS08FDM7l9dUwlP0VJdp97t0Xv
-         +l6cFr+h7CYshGhX3PRLok9c5raCc3mQ/9t02XELEXJcy8xwnp832eUWS6Y5YoYoXkPk
-         Y8BQ==
-X-Gm-Message-State: ANhLgQ3wD4WuctnOiSTg9/ntUnILReHLeoOIX/bjxkp90QhwgEgT0Dto
-        Auj0oGv3DdwmqniADrUJ1YsdQbsJFKKRrof01dw=
-X-Google-Smtp-Source: ADFU+vtfwukAWL2WWaPv7EjY+eaP00v7NFT4qzt/7yJWqeGIKgBCWO1yg82W0W0UQAr2SSakpTQnbbixPieeNawRqVM=
-X-Received: by 2002:a2e:b0c4:: with SMTP id g4mr3907216ljl.83.1583380875979;
- Wed, 04 Mar 2020 20:01:15 -0800 (PST)
+        bh=VklxRdhjEuCIVv9HPoUaXq6mGuwwwTdi/ln0LYnVDsY=;
+        b=g0pu3AQSStkWWwdVIMp0fxu/H9QhXV3r6F3C5ldt9+ZrTqiV+/jqCy5UT5Rb3ZkAd4
+         wLt+bMM85zrHikN2BgsYmXM7tvBqGUCZ0XRnWpyYCyae4TrPOnKiTXbHJVIrobGvNo1h
+         EY8IH/C5xnIBULvReJoFRsHUw3O3B7Cu6QfiTzI2ztT0SEjiK9hj9zmyNkQIeGIm6lXc
+         usOqxpfdabYPPjzFUuplUpCM7bnU6y/Rbr158U+uBQPr/QzJW0h+iVNI8Gp+moqsJiUM
+         51Afog2PjyDqV1ouooYBEZ/8XASYFJlZ/efkALLrdeqikSUxvnTm36Arsl6fZHFAPBvK
+         LhPw==
+X-Gm-Message-State: ANhLgQ0XUHV3R/8B0eiTaftT15RasfTnG5zPBkoukAOC1fBvs5dBwT75
+        ncmlGEO9FQf2GlHCn9T7nVO3numGB5Dv5DuYaHc=
+X-Google-Smtp-Source: ADFU+vuQdhdkwqvCT4rZebQz2XQDE0WI+aS9PhR/Z3fu1h9LmSnA/wASEBpkts2Cc3AneUr71GfjwjxOKvU2A0KiPf4=
+X-Received: by 2002:ac2:5f62:: with SMTP id c2mr4094191lfc.207.1583381017663;
+ Wed, 04 Mar 2020 20:03:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20200217083223.2011-5-zong.li@sifive.com> <mhng-6a94c49b-419b-4b5a-a11d-dda1fb0aa896@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-6a94c49b-419b-4b5a-a11d-dda1fb0aa896@palmerdabbelt-glaptop1>
-From:   Zong Li <zongbox@gmail.com>
-Date:   Thu, 5 Mar 2020 12:01:04 +0800
-Message-ID: <CA+ZOyai1rUVttopEOGMjug8fM6YkV3c+WTstxD6YojdwMCmHzw@mail.gmail.com>
-Subject: Re: [PATCH 4/8] riscv: move exception table immediately after RO_DATA
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Zong Li <zong.li@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>
+References: <20200303065210.1279-1-zhenzhong.duan@gmail.com>
+ <20200303065210.1279-3-zhenzhong.duan@gmail.com> <ba5067ad-4fba-52c9-6872-c18bfeb947db@intel.com>
+In-Reply-To: <ba5067ad-4fba-52c9-6872-c18bfeb947db@intel.com>
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Date:   Thu, 5 Mar 2020 12:03:26 +0800
+Message-ID: <CAFH1YnN01PtCBm_92m3CPRhsiS2Bzis8q-vOJ5q+_LUq8ZoZqg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/boot/KASLR: Fix unused variable warning
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,77 +74,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Palmer Dabbelt <palmer@dabbelt.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=885=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=888:58=E5=AF=AB=E9=81=93=EF=BC=9A
+On Wed, Mar 4, 2020 at 6:56 AM Dave Hansen <dave.hansen@intel.com> wrote:
 >
-> On Mon, 17 Feb 2020 00:32:19 PST (-0800), zong.li@sifive.com wrote:
-> > Move EXCEPTION_TABLE immediately after RO_DATA. Make it easy to set the
-> > attribution of the sections which should be read-only at a time.
-> > Move .sdata to indicate the start of data section with write permission=
+> On 3/2/20 10:52 PM, Zhenzhong Duan wrote:
+> > Local variable 'i' is referenced only when CONFIG_MEMORY_HOTREMOVE and
+> > CONFIG_ACPI are defined, but definition of variable 'i' is out of guard=
 .
-> > This patch is prepared for STRICT_KERNEL_RWX support.
+> > If any of the two macros is undefined, below warning triggers during
+> > build, fix it by moving 'i' in the guard.
 > >
-> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > ---
-> >  arch/riscv/kernel/vmlinux.lds.S | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinu=
-x.lds.S
-> > index 1e0193ded420..4ba8a5397e8b 100644
-> > --- a/arch/riscv/kernel/vmlinux.lds.S
-> > +++ b/arch/riscv/kernel/vmlinux.lds.S
-> > @@ -9,6 +9,7 @@
-> >  #include <asm/page.h>
-> >  #include <asm/cache.h>
-> >  #include <asm/thread_info.h>
-> > +#include <asm/set_memory.h>
-> >
-> >  OUTPUT_ARCH(riscv)
-> >  ENTRY(_start)
-> > @@ -52,12 +53,15 @@ SECTIONS
+> > arch/x86/boot/compressed/kaslr.c:698:6: warning: unused variable =E2=80=
+=98i=E2=80=99 [-Wunused-variable]
+> ...
+> > diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compresse=
+d/kaslr.c
+> > index d7408af55738..62bc46684581 100644
+> > --- a/arch/x86/boot/compressed/kaslr.c
+> > +++ b/arch/x86/boot/compressed/kaslr.c
+> > @@ -695,7 +695,6 @@ static bool process_mem_region(struct mem_vector *r=
+egion,
+> >                              unsigned long long minimum,
+> >                              unsigned long long image_size)
+> >  {
+> > -     int i;
+> >       /*
+> >        * If no immovable memory found, or MEMORY_HOTREMOVE disabled,
+> >        * use @region directly.
+> > @@ -711,6 +710,7 @@ static bool process_mem_region(struct mem_vector *r=
+egion,
 > >       }
 > >
-> >       /* Start of data section */
-> > -     _sdata =3D .;
-> >       RO_DATA(L1_CACHE_BYTES)
-> >       .srodata : {
-> >               *(.srodata*)
-> >       }
-> >
-> > +     EXCEPTION_TABLE(0x10)
-> > +
-> > +     _sdata =3D .;
-> > +
-> >       RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
-> >       .sdata : {
-> >               __global_pointer$ =3D . + 0x800;
-> > @@ -69,8 +73,6 @@ SECTIONS
-> >
-> >       BSS_SECTION(PAGE_SIZE, PAGE_SIZE, 0)
-> >
-> > -     EXCEPTION_TABLE(0x10)
-> > -
-> >       .rel.dyn : {
-> >               *(.rel.dyn*)
-> >       }
+> >  #if defined(CONFIG_MEMORY_HOTREMOVE) && defined(CONFIG_ACPI)
+> > +     int i;
 >
-> As far as I can tell this is OK: core_kernel_data() explicitly says that =
-RODATA
-> may or may not be between _sdata and _edata.  That said, I think we shoul=
-d add
-> __start_rodata and __end_rodata atomicly with this change (around RO_DATA=
- and
-> .srodata).
->
+> Won't this just result in a different warning since it now it will
+> declare 'i' in the middle of the function once CONFIG_MEMORY_HOTREMOVE
+> and ACPI are enabled?
 
-OK, I'll move _sdata back. Actually, here I need a symbol to specify
-the start address at writable data (RW_DATA), thus, I could remove the
-executable permission of .data section (from this symbol), and make
-.rodata, .srodata and __ex_table read-only at a time (from
-__start_rodata to this symbol). So even if we use __end_rodata to wrap
-.srodata together with .rodata, exception table still be excluded, and
-we have no idea where is the .data section start address. Do you think
-it would be OK if we use _data to specify the start address at
-writable data? If it's OK, whether we still need to add __end_rodata
-after .srodata?
+I didn't see a different warning with both configs enabled, because
+-std=3Dgnu89 isn't
+enforced in arch/x86/boot/compressed but it does in other part of kernel.
+C99 and above allows declaration in middule of the function.
+
+Zhenzhong
