@@ -2,230 +2,79 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C01C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1508C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C215620870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FE2208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgCEHtd (ORCPT
+        id S1726142AbgCEHuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 02:49:33 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:11206 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725900AbgCEHtd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 02:49:33 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 05 Mar 2020 13:19:30 +0530
-Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 05 Mar 2020 13:19:14 +0530
-Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
-        id 620F639C1; Thu,  5 Mar 2020 13:19:13 +0530 (IST)
-From:   Rajeshwari <rkambl@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sanm@codeaurora.org,
-        sivaa@codeaurora.org, Rajeshwari <rkambl@codeaurora.org>
-Subject: [PATCH 1/1] arm64: dts: qcom: sc7180: Added critical trip point Thermal-zones node
-Date:   Thu,  5 Mar 2020 13:19:07 +0530
-Message-Id: <1583394547-12779-2-git-send-email-rkambl@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583394547-12779-1-git-send-email-rkambl@codeaurora.org>
-References: <1583394547-12779-1-git-send-email-rkambl@codeaurora.org>
+        Thu, 5 Mar 2020 02:50:04 -0500
+Received: from mga11.intel.com ([192.55.52.93]:62923 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbgCEHuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 02:50:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 23:50:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
+   d="scan'208";a="234335912"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.138.71]) ([10.249.138.71])
+  by orsmga008.jf.intel.com with ESMTP; 04 Mar 2020 23:50:01 -0800
+Subject: Re: [cpufreq] 909c0e9cc1: fwq.fwq.med 210.0% improvement
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org, linux-pm@vger.kernel.org, lkp@lists.01.org,
+        Rafael Wysocki <rafael@kernel.org>
+References: <20200305013509.GF5972@shao2-debian>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <951b0986-bb35-d9a5-1639-0a8cdb3dcd04@intel.com>
+Date:   Thu, 5 Mar 2020 08:50:00 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200305013509.GF5972@shao2-debian>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To enable kernel critical shutdown feature added critical trip point to
-all non CPU sensors to perform shutdown in orderly manner.
+On 3/5/2020 2:35 AM, kernel test robot wrote:
+> Greeting,
+>
+> FYI, we noticed a 210.0% improvement of fwq.fwq.med due to commit:
 
-Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+Well, that sounds impressive. :-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 253274d..ca876ed 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2366,6 +2366,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				aoss0_crit: aoss0_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2421,6 +2427,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				gpuss0_crit: gpuss0_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2436,6 +2448,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				gpuss1_crit: gpuss1_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2451,6 +2469,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				aoss1_crit: aoss1_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2466,6 +2490,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				cwlan_crit: cwlan_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2481,6 +2511,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				audio_crit: audio_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2496,6 +2532,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				ddr_crit: ddr_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2511,6 +2553,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				q6_hvx_crit: q6_hvx_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2526,6 +2574,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				camera_crit: camera_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2541,6 +2595,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				mdm_crit: mdm_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2556,6 +2616,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				mdm_dsp_crit: mdm_dsp_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2571,6 +2637,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				npu_crit: npu_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 
-@@ -2586,6 +2658,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				video_crit: video_crit {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
- 			};
- 		};
- 	};
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+
+>
+> commit: 909c0e9cc11ba39fa5a660583b25c2431cf54deb ("cpufreq: intel_pstate: Use passive mode by default without HWP")
+> https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git intel_pstate-passive
+>
+> in testcase: fwq
+> on test machine: 16 threads Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz with 48G memory
+> with following parameters:
+>
+> 	nr_task: 100%
+> 	samples: 100000ss
+> 	iterations: 18x
+> 	cpufreq_governor: powersave
+
+The governor should be schedutil, though, unless it is explicitly set to 
+powersave in the test environment.
+
+Is that the case?
+
 
