@@ -2,129 +2,136 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268BBC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA162C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F118B208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 873F72073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:50:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bob5i7Hx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgCENuA (ORCPT
+        id S1726220AbgCENup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:50:00 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:49398 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgCENt7 (ORCPT
+        Thu, 5 Mar 2020 08:50:45 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38338 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbgCENup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:49:59 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id D09F01C032D; Thu,  5 Mar 2020 14:49:57 +0100 (CET)
-Date:   Thu, 5 Mar 2020 14:49:57 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dmitry Osipenko <digetx@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 12/87] arm/ftrace: Fix BE text poking
-Message-ID: <20200305134956.GD2367@duo.ucw.cz>
-References: <20200303174349.075101355@linuxfoundation.org>
- <20200303174350.172336594@linuxfoundation.org>
+        Thu, 5 Mar 2020 08:50:45 -0500
+Received: by mail-oi1-f196.google.com with SMTP id x75so5990445oix.5;
+        Thu, 05 Mar 2020 05:50:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fcCTfa/+b2H8bD6/l2jkw8E4TRC6mBDpyhRVH0rkeuw=;
+        b=bob5i7Hx/1c84xrjeDHggoA7v1P27/LaFo+Tv1+2TxOFFyU6cuvCSz7SHlOOspW8Fs
+         AgDpkhqBum4Tb5nRKQP5LEZNWteQW+XO5aV2rLWhs7C3kVnZWlXBBFpTW815/ib5loHl
+         Lte9VAzb954Y+9kOYs3Zoj3CIawohp39tvMtbhkPH073pg8hSpC5HeRbJ9gsHlQIM2mA
+         MMzNaJVtN1XHin5uT4UKfWT7HOlnGQCsSptHEWHriu7ByFd8D4K/wv66VvC+76qbNJGW
+         i1XWeWsA6B67rMal1OugqQJWDfFLuDAGtWFC6tOloj7dkiBD7nAjtqjXz1c6lGuGJJZR
+         ouFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fcCTfa/+b2H8bD6/l2jkw8E4TRC6mBDpyhRVH0rkeuw=;
+        b=jHULGypSb6U4xMr3J0gXv7rjwXJVycoP79vibY8OzyWbSgr5v00N71xnBppfQqytcE
+         cM+fWNlZGXEPPBdYkHl+U8nEN92Od9Ms5BrwlDnr1J1pSNTDr00W4u7znIOq3VewQ+mc
+         Shb4WoDkQIkal9YQnm3LnRPNobbFFS7s9fi2wTKA5fSV49xZ8GdWarTZBwYal2qdkpGS
+         huF3I90mY5+AV/MtVXioxY+kdC82mRnRr624VM3vZTHJZz2Bh7430DYAIIfb7kPFdZKJ
+         XiFJGvnWw4z7SORdHGRNC6lftc0wydX2USFHYWMDmo051H01MskkTpW5JHuhP1sS0NPa
+         m+7w==
+X-Gm-Message-State: ANhLgQ3ZaozaziZsff7vSgM1CUHcuCKyCqn0tRB97wEBAbjH6zq3mzSy
+        hyE2cR+uF3O2dSAb/tVgtbcuTvfWGMVReTiRqGE=
+X-Google-Smtp-Source: ADFU+vtIByz2R0kLCeIr1TlairntfhCiMv9MbVfDdAkVKlBSQ+hpH0fDPPDbLe5Vog30q1evW1THoDq5tC/2YlQmzv4=
+X-Received: by 2002:aca:3544:: with SMTP id c65mr5488952oia.160.1583416244454;
+ Thu, 05 Mar 2020 05:50:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2Z2K0IlrPCVsbNpk"
-Content-Disposition: inline
-In-Reply-To: <20200303174350.172336594@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200304191853.1529-1-kpsingh@chromium.org> <20200304191853.1529-4-kpsingh@chromium.org>
+In-Reply-To: <20200304191853.1529-4-kpsingh@chromium.org>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 5 Mar 2020 08:51:58 -0500
+Message-ID: <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 3/7] bpf: Introduce BPF_MODIFY_RETURN
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>, jmorris@namei.org,
+        Paul Moore <paul@paul-moore.com>, casey@schaufler-ca.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 4, 2020 at 2:20 PM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> When multiple programs are attached, each program receives the return
+> value from the previous program on the stack and the last program
+> provides the return value to the attached function.
+>
+> The fmod_ret bpf programs are run after the fentry programs and before
+> the fexit programs. The original function is only called if all the
+> fmod_ret programs return 0 to avoid any unintended side-effects. The
+> success value, i.e. 0 is not currently configurable but can be made so
+> where user-space can specify it at load time.
+>
+> For example:
+>
+> int func_to_be_attached(int a, int b)
+> {  <--- do_fentry
+>
+> do_fmod_ret:
+>    <update ret by calling fmod_ret>
+>    if (ret != 0)
+>         goto do_fexit;
+>
+> original_function:
+>
+>     <side_effects_happen_here>
+>
+> }  <--- do_fexit
+>
+> The fmod_ret program attached to this function can be defined as:
+>
+> SEC("fmod_ret/func_to_be_attached")
+> int BPF_PROG(func_name, int a, int b, int ret)
+> {
+>         // This will skip the original function logic.
+>         return 1;
+> }
+>
+> The first fmod_ret program is passed 0 in its return argument.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
 
---2Z2K0IlrPCVsbNpk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> From: Peter Zijlstra <peterz@infradead.org>
->=20
-> [ Upstream commit be993e44badc448add6a18d6f12b20615692c4c3 ]
->=20
-> The __patch_text() function already applies __opcode_to_mem_*(), so
-> when __opcode_to_mem_*() is not the identity (BE*), it is applied
-> twice, wrecking the instruction.
->=20
-> Fixes: 42e51f187f86 ("arm/ftrace: Use __patch_text()")
-
-I don't see 42e51f187f86 anywhere. Mainline contains
-
-commit 5a735583b764750726621b0396d03e4782911b77
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Tue Oct 15 21:07:35 2019 +0200
-
-    arm/ftrace: Use __patch_text()
-
-But that one is not present in 4.19, so perhaps we should not need
-this?
-
-Best regards,
-								Pavel
-
-> Reported-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Tested-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  arch/arm/kernel/ftrace.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->=20
-> diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
-> index ee673c09aa6c0..dd0215fb6fe23 100644
-> --- a/arch/arm/kernel/ftrace.c
-> +++ b/arch/arm/kernel/ftrace.c
-> @@ -106,13 +106,10 @@ static int ftrace_modify_code(unsigned long pc, uns=
-igned long old,
->  {
->  	unsigned long replaced;
-> =20
-> -	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
-> +	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
->  		old =3D __opcode_to_mem_thumb32(old);
-> -		new =3D __opcode_to_mem_thumb32(new);
-> -	} else {
-> +	else
->  		old =3D __opcode_to_mem_arm(old);
-> -		new =3D __opcode_to_mem_arm(new);
-> -	}
-> =20
->  	if (validate) {
->  		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
-> --=20
-> 2.20.1
->=20
->=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2Z2K0IlrPCVsbNpk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXmEDgwAKCRAw5/Bqldv6
-8nSOAKCSRVNfm8M9KqXZY/UIoN+oE8kDagCbBOglnH+Ev4iU4/iQOq7jO+O3TOQ=
-=QGDc
------END PGP SIGNATURE-----
-
---2Z2K0IlrPCVsbNpk--
+IIUC you've switched from a model where the BPF program would be
+invoked after the original function logic
+and the BPF program is skipped if the original function logic returns
+non-zero to a model where the BPF program is invoked first and
+the original function logic is skipped if the BPF program returns
+non-zero.  I'm not keen on that for userspace-loaded code attached
+to LSM hooks; it means that userspace BPF programs can run even if
+SELinux would have denied access and SELinux hooks get
+skipped entirely if the BPF program returns an error.  I think Casey
+may have wrongly pointed you in this direction on the grounds
+it can already happen with the base DAC checking logic.  But that's
+kernel DAC checking logic, not userspace-loaded code.
+And the existing checking on attachment is not sufficient for SELinux
+since CAP_MAC_ADMIN is not all powerful to SELinux.
+Be careful about designing your mechanisms around Smack because Smack
+is not the only LSM.
