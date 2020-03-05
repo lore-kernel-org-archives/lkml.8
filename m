@@ -2,95 +2,143 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498C5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4813C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A7E208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583382429;
-	bh=WZjQCTkf8uRUWaIOBbpLwjySe/6G1sEj2Z+vxOKRr9A=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=uMXzauP8Cehk5X9aSG5jqqBkxBEbdNwEhsvuANYw9PfanMFxtwiEBQn5wBtZo00aV
-	 eSh9buYasmIygJjbTWv2ji2B2aH25gSvuzTHvxepM7l36ow6peClF8xgpZ7/19mfcK
-	 Q4HXJwbmKqW1I5R05zrv4ePKWsi83k8bKyCmPaOc=
+	by mail.kernel.org (Postfix) with ESMTP id 7185E2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:27:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9snj2lv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbgCEEZl (ORCPT
+        id S1725944AbgCEE1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 23:25:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgCEEZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 23:25:41 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBF702073B;
-        Thu,  5 Mar 2020 04:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583382340;
-        bh=WZjQCTkf8uRUWaIOBbpLwjySe/6G1sEj2Z+vxOKRr9A=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=tW3MUexwEc0MlHeHCOIaECvT8QRiUww+6GXde+GuzAtu0PuJm4awXkFvUog+4IOl+
-         slVeG/r4uhIs6UHPL8B8eByG56KVfMITBGmaP9fO7kesTFM4PpSiyypU6plYUYo5Yj
-         9kR4o8qaFACqkYjf02LWhP9h/Aoe2YK3QLnrvAAY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 92E8735227C6; Wed,  4 Mar 2020 20:25:40 -0800 (PST)
-Date:   Wed, 4 Mar 2020 20:25:40 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
-Subject: Re: Pinning down a blocked task to extract diagnostics
-Message-ID: <20200305042540.GZ2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200305005049.GA21120@paulmck-ThinkPad-P72>
- <20200304225226.6d631baa@oasis.local.home>
+        Wed, 4 Mar 2020 23:27:17 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34621 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgCEE1Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 23:27:16 -0500
+Received: by mail-lf1-f68.google.com with SMTP id w27so3429785lfc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 20:27:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sS9dvBtV87gMWUGiIiRGt8RJH5mq+llNqMeBOdVmClE=;
+        b=Z9snj2lvrSLPdsNRBeZOWFaNcyEqk6Dwqvz7hhIVeSaaaJCnXCFQaGOKcUx7z48tXu
+         SXmKi+SvTc23cCXr4QQtXz1pXBjtoWoTqLJYNZq8zvUDJ9XjbSq8/TVJDQ1QzOUbD9CY
+         oFqY4TO8J3rw5ylDKUW8yOktXBimepvIs3uLSniPjraAFxfp9JZZTL68kFSdrbxODRJa
+         o9MSbvOXYwncfHefEmYQyrqOD4HlKx2+IgTEnnkV8+8etB4xEzdQYC2z4EMTcki9aQdA
+         wv1WpvFnYwlULtXQkq+LSv1i1Hn+LOtYJw2mOlfnJC1UWJoFvVrbf7b5irUxIopu5M92
+         iC4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sS9dvBtV87gMWUGiIiRGt8RJH5mq+llNqMeBOdVmClE=;
+        b=o/J3iAFQKlaPlj/jmIKhErLRseU0zhmTA9nShOPD4uhKVBmAfMUrNZxD3TrHPjNr7f
+         9rqyTIVV/7YyMgN9ndDAfK5fzxlJK9fZA6E/pP6G2i76ZKEULyP1tf31i3JDJh8kzjkw
+         BGilpXcjxQPLJNgHKYh/QUczJ3Y4y2n2qcr2SVB/Wi0dPPjXmQkIYTuAZ6NkGHRTgbcU
+         DrCLio4yvjS4Bx1t58y51tW7hcJaHHaSANXkDgOkcEhHFVfpMaf8sBVFdkHXuIyubjnE
+         10EN2D+poxhMBr9djB63hFumCv0oYDJeRmsRuxDM1mjrCCr9+oquh2DstJVLvfipSDlI
+         Y3dg==
+X-Gm-Message-State: ANhLgQ2myRaWpXmxTvNzW9+8YdUnkjU93W1xooQhbZZYwMUsjQRtwMNg
+        /dcJmGOLC1sEqQXjNzSFJJXE7wqJD8tEmOEjFy0=
+X-Google-Smtp-Source: ADFU+vvj68an1VQy2p4AvnAIwRe0iWTeTc/g/rEg7MViupDuWdJ35eXqac0LFWQ9snFVtaSEIz+2tlonbwlmYG8vTf0=
+X-Received: by 2002:a05:6512:3188:: with SMTP id i8mr4256307lfe.26.1583382435049;
+ Wed, 04 Mar 2020 20:27:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304225226.6d631baa@oasis.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200217083223.2011-9-zong.li@sifive.com> <mhng-da89b7a8-70ef-4ac2-9d56-a4ddab325e9c@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-da89b7a8-70ef-4ac2-9d56-a4ddab325e9c@palmerdabbelt-glaptop1>
+From:   Zong Li <zongbox@gmail.com>
+Date:   Thu, 5 Mar 2020 12:27:03 +0800
+Message-ID: <CA+ZOyairbeQaaJw6VcKWvJzPKkE4-g=p3U45s8gZSrBG=K+jGw@mail.gmail.com>
+Subject: Re: [PATCH 8/8] riscv: add two hook functions of ftrace
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Zong Li <zong.li@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 10:52:26PM -0500, Steven Rostedt wrote:
-> On Wed, 4 Mar 2020 16:50:49 -0800
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > Hello!
-> > 
-> > Suppose that I need to extract diagnostics information from a blocked
-> > task, but that I absolutely cannot tolerate this task awakening in the
-> > midst of this extraction process.  Is the following code the right way
-> > to make this work given a task "t"?
-> > 
-> > 	raw_spin_lock_irq(&t->pi_lock);
-> > 	if (t->on_rq) {
-> > 		/* Task no longer blocked, so ignore it. */
-> > 	} else {
-> > 		/* Extract consistent diagnostic information. */
-> > 	}
-> > 	raw_spin_unlock_irq(&t->pi_lock);
-> > 
-> > It looks like all the wakeup paths acquire ->pi_lock, but I figured I
-> > should actually ask...
-> 
-> IIUC, the rtmutex code uses pi_lock to tinker with the task while it is
-> blocked (not woken). But the on_rq test may not be correct. It appears
-> that can change without holding the task's pi_lock. I'm looking at the
-> ttwu_do_activate() code which modifies the t->on_rq without holding the
-> pi_lock. Seems you may need to check the p->state as well. See the
-> comment in try_to_wake_up() about testing on_rq vs the state.
+Palmer Dabbelt <palmer@dabbelt.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=885=E6=
+=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=889:44=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Mon, 17 Feb 2020 00:32:23 PST (-0800), zong.li@sifive.com wrote:
+> > After the text section be mask as non-writable, the ftrace have to
+> > change the permission of text for dynamic patching the intructions.
+> > Add ftrace_arch_code_modify_prepare and
+> > ftrace_arch_code_modify_post_process to change permission.
+> >
+> > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > ---
+> >  arch/riscv/kernel/ftrace.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> >
+> > diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> > index c40fdcdeb950..576df0807200 100644
+> > --- a/arch/riscv/kernel/ftrace.c
+> > +++ b/arch/riscv/kernel/ftrace.c
+> > @@ -7,9 +7,27 @@
+> >
+> >  #include <linux/ftrace.h>
+> >  #include <linux/uaccess.h>
+> > +#include <linux/memory.h>
+> > +#include <asm/set_memory.h>
+> >  #include <asm/cacheflush.h>
+> >
+> >  #ifdef CONFIG_DYNAMIC_FTRACE
+> > +int ftrace_arch_code_modify_prepare(void) __acquires(&text_mutex)
+> > +{
+> > +     mutex_lock(&text_mutex);
+> > +     set_kernel_text_rw();
+> > +     set_all_modules_text_rw();
+> > +     return 0;
+> > +}
+>
+> None of the other architectures are doing anything remotely like this in =
+these
+> functions, despite many supporting STRICT_KERNEL_RWX.  Having a function =
+that
+> maps all text as RW seems super dangerous, as one stack attack means NX i=
+s
+> gone.
+>
+> Looks like FIX_TEXT_POKE0 is the magic that makes the other ports work.
+>
 
-Thank you, Steve!
+Your concern is right. Let me change the way.
 
-							Thanx, Paul
+> > +
+> > +int ftrace_arch_code_modify_post_process(void) __releases(&text_mutex)
+> > +{
+> > +     set_all_modules_text_ro();
+> > +     set_kernel_text_ro();
+> > +     mutex_unlock(&text_mutex);
+> > +     return 0;
+> > +}
+>
+> Presumably this needs a icache flush as well?  Probably better to do so w=
+hen
+> installing the instructions, though.
+>
+
+Yes, I think I lost it. Thanks.
+
+> > +
+> >  static int ftrace_check_current_call(unsigned long hook_pos,
+> >                                    unsigned int *expected)
+> >  {
+>
