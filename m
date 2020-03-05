@@ -2,57 +2,59 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AA7C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9579EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6962146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7AC2146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YrReZc+I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SIlHJNUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbgCEIlo (ORCPT
+        id S1726382AbgCEIly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:41:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33513 "EHLO
+        Thu, 5 Mar 2020 03:41:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49716 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725880AbgCEIlo (ORCPT
+        with ESMTP id S1726049AbgCEIlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:41:44 -0500
+        Thu, 5 Mar 2020 03:41:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583397702;
+        s=mimecast20190719; t=1583397712;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TuWQ+iLEiNR6MjU69NtgSJHIMX21Xib1ZaETC6m+QbM=;
-        b=YrReZc+IYKYnkZKLS82phSkF7nLRb95Fo1K0RY0vEr/atmjVmlnJNN7SXT9qCKbI/6Fo68
-        CgpnH2eDwNyo0MRr7nE0q+QFFMNWVzfWJpwnRHzWTXTFh+rls3rprNXIduGIVo+BZTcaM7
-        74XsTMxIicTRdSNWRx6E470WELULSdY=
+        bh=qTt+sb/R1m5KV+j3++5Y1R9izPSSnxWSHBF4kFcR3H8=;
+        b=SIlHJNURveT3pK583w1FhJjwGE+x98cGd+rtQ6SanRKcW5OWD0BaJMUDs6YVjx4B5URR5P
+        8zfLvfB+7Qq5z98C2IKiQlRU7zEov3tjwqIwgmTm0MxqrPd4Lym0BDUng5ktrxoEy96ZDr
+        CSuB3E+Iv6dLPzDeItTdsfNXg+IqGz8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-270-FyDKhKtVOMup3-dZA3TmHA-1; Thu, 05 Mar 2020 03:41:40 -0500
-X-MC-Unique: FyDKhKtVOMup3-dZA3TmHA-1
+ us-mta-199-GCKAEdzONp2JBsA7OFk58w-1; Thu, 05 Mar 2020 03:41:49 -0500
+X-MC-Unique: GCKAEdzONp2JBsA7OFk58w-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD1EB100550E;
-        Thu,  5 Mar 2020 08:41:39 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0DD0100550E;
+        Thu,  5 Mar 2020 08:41:48 +0000 (UTC)
 Received: from rules.brq.redhat.com (ovpn-204-231.brq.redhat.com [10.40.204.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BE8819C6A;
-        Thu,  5 Mar 2020 08:41:35 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5278B46;
+        Thu,  5 Mar 2020 08:41:44 +0000 (UTC)
 From:   Vladis Dronov <vdronov@redhat.com>
 To:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
         joeyli <jlee@suse.com>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/3] efi: fix a race and add a sanity check
-Date:   Thu,  5 Mar 2020 09:40:38 +0100
-Message-Id: <20200305084041.24053-1-vdronov@redhat.com>
-In-Reply-To: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
+Subject: [PATCH v3 2/3] efi: add a sanity check to efivar_store_raw()
+Date:   Thu,  5 Mar 2020 09:40:40 +0100
+Message-Id: <20200305084041.24053-3-vdronov@redhat.com>
+In-Reply-To: <20200305084041.24053-1-vdronov@redhat.com>
 References: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
+ <20200305084041.24053-1-vdronov@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Content-Transfer-Encoding: quoted-printable
@@ -61,18 +63,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race and a buffer overflow while reading an efi variable
-and the first patch fixes it. The second patch adds a sanity check
-to efivar_store_raw(). And the third one just fixes mistypes in
-comments.
+Add a sanity check to efivar_store_raw() the same way
+efivar_{attr,size,data}_read() and efivar_show_raw() have it.
 
-Vladis Dronov (3):
-  efi: fix a race and a buffer overflow while reading efivars via sysfs
-  efi: add a sanity check to efivar_store_raw()
-  efi: fix a mistype in comments mentioning efivar_entry_iter_begin()
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+---
+ drivers/firmware/efi/efivars.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- drivers/firmware/efi/efi-pstore.c |  2 +-
- drivers/firmware/efi/efivars.c    | 32 +++++++++++++++++++++++---------
- drivers/firmware/efi/vars.c       |  2 +-
- 3 files changed, 25 insertions(+), 11 deletions(-)
+diff --git a/drivers/firmware/efi/efivars.c b/drivers/firmware/efi/efivar=
+s.c
+index 69f13bc4b931..aff3dfb4d7ba 100644
+--- a/drivers/firmware/efi/efivars.c
++++ b/drivers/firmware/efi/efivars.c
+@@ -208,6 +208,9 @@ efivar_store_raw(struct efivar_entry *entry, const ch=
+ar *buf, size_t count)
+ 	u8 *data;
+ 	int err;
+=20
++	if (!entry || !buf)
++		return -EINVAL;
++
+ 	if (in_compat_syscall()) {
+ 		struct compat_efi_variable *compat;
+=20
+--=20
+2.20.1
 
