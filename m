@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DB3C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A12C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63DC20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8980620870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428526;
-	bh=Iry3y92U2E1yvLLBpQF94F9MQ3RtUtsLdwKvD3gdcJQ=;
+	s=default; t=1583428544;
+	bh=+IjVORKh/seQrNgXksEThu2KTYNq7FzrhANnMv4hTSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lcixRLdJE5CfR0rQeB2bzL5hs0Tih04fxvrRmivW7oHtQCqO2JYQ2h1FwsvlRLnzU
-	 mF2Wlfw5JeCMrzXUELDStNZ2EqksZudUKBk858ooCJZur/9nXWLx/BjmNPDi7eoaDT
-	 VjCDqpYx9uoxKtm3zLYqrnuso9dycDp0yLsB32Qo=
+	b=vABtdJeluCRiUQfZjfB9UjYolZU+VW+MfaQhutJgzoER5APpnjJB+7DS8jvz9s6pB
+	 1zwdA5rmgaAyCVtV5Q71nP4WO+1DsBeweEJVQE2x6nroQPjE7w4GgZ1k8QEZ/l7yz7
+	 O3ucWHmvjKROJ+JKZwikNQzgjQLMXf+KuKMEWpSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgCERPZ (ORCPT
+        id S1728199AbgCERPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:15:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41772 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:15:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727973AbgCERPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:10 -0500
+        id S1728069AbgCERP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4DAB2146E;
-        Thu,  5 Mar 2020 17:15:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F3862146E;
+        Thu,  5 Mar 2020 17:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428509;
-        bh=Iry3y92U2E1yvLLBpQF94F9MQ3RtUtsLdwKvD3gdcJQ=;
+        s=default; t=1583428526;
+        bh=+IjVORKh/seQrNgXksEThu2KTYNq7FzrhANnMv4hTSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oelVnF3UPq+afz/ma40hWFwukGPKhGLGY+yp7cXzNN+Nv2u2UjzDtRpH7eR3S+WGI
-         YtVr/G8E0/YhPBe58+J1oHtUj3L2BFrZqQMsrFaYawQoy5d1BpJl3Kp6SZs/azVbKm
-         VFvLYpOTtmg4xL17FwYbeRdDRz1nfxhSQ5W+DNGM=
+        b=iCX8cIjyFKjAJufkczJxTWgtfr2LD1eQUu1G682DekQb+ZxaPIVRFiHlEew4WF2y1
+         gMe1kF7rs3ZZ0FQmL1DoBJcvjeJINjzqbf4IWaJBXH5Z96VANoHa4N4ajKP9L9DQI5
+         kp7dTkUrFqviX2JZigsiix4ldY8Lc0M37b88SrME=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 39/58] kbuild: add dt_binding_check to PHONY in a correct place
-Date:   Thu,  5 Mar 2020 12:14:00 -0500
-Message-Id: <20200305171420.29595-39-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/31] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
+Date:   Thu,  5 Mar 2020 12:14:52 -0500
+Message-Id: <20200305171516.30028-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
-References: <20200305171420.29595-1-sashal@kernel.org>
+In-Reply-To: <20200305171516.30028-1-sashal@kernel.org>
+References: <20200305171516.30028-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,44 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit c473a8d03ea8e03ca9d649b0b6d72fbcf6212c05 ]
+[ Upstream commit be0aba826c4a6ba5929def1962a90d6127871969 ]
 
-The dt_binding_check is added to PHONY, but it is invisible when
-$(dtstree) is empty. So, it is not specified as phony for
-ARCH=x86 etc.
+The Surfbook E11B uses the SIPODEV SP1064 touchpad, which does not supply
+descriptors, so it has to be added to the override list.
 
-Add it to PHONY outside the ifneq ... endif block.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+BugLink: https://bugs.launchpad.net/bugs/1858299
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Makefile b/Makefile
-index 63094ce5e5744..993f87d5a0ba5 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1242,7 +1242,7 @@ ifneq ($(dtstree),)
- %.dtb: include/config/kernel.release scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
- 
--PHONY += dtbs dtbs_install dtbs_check dt_binding_check
-+PHONY += dtbs dtbs_install dtbs_check
- dtbs dtbs_check: include/config/kernel.release scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree)
- 
-@@ -1262,6 +1262,7 @@ PHONY += scripts_dtc
- scripts_dtc: scripts_basic
- 	$(Q)$(MAKE) $(build)=scripts/dtc
- 
-+PHONY += dt_binding_check
- dt_binding_check: scripts_dtc
- 	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
- 
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index 10af8585c820d..95052373a8282 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -341,6 +341,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Trekstor SURFBOOK E11B",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SURFBOOK E11B"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{
+ 		.ident = "Direkt-Tek DTLAPY116-2",
+ 		.matches = {
 -- 
 2.20.1
 
