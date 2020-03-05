@@ -2,97 +2,110 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B44C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85C3C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27AD420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9258621775
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583399161;
+	bh=2uYDBF1IAay/Qv+U/5AVUMUXPlcyvxUV498YeMp98t0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qqmpPdzwhPIublQL5P/ws5o94clCHgoM1fTslG8WOD5195e1D68EhtM1lrsgA4S46
+	 I5iMvH4R/fEkUa6tf45/66KSmHOYjs6OsTFzPnlY5uHT9UdQdYRflQS7yONYKpxLtO
+	 N7lk+Nkh6fcbF3rDJeSZLVu7oO72KOlYvU1bkFdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCEJEU (ORCPT
+        id S1726209AbgCEJGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:04:20 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28336 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725866AbgCEJET (ORCPT
+        Thu, 5 Mar 2020 04:06:00 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37544 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgCEJGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:04:19 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0258wvVR001633
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Mar 2020 04:04:18 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhr4k0ag7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 04:04:16 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <mimu@linux.ibm.com>;
-        Thu, 5 Mar 2020 09:04:06 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Mar 2020 09:04:04 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 025942UE61603854
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Mar 2020 09:04:03 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 292684C046;
-        Thu,  5 Mar 2020 09:04:02 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DB85B4C040;
-        Thu,  5 Mar 2020 09:04:01 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Mar 2020 09:04:01 +0000 (GMT)
-From:   Michael Mueller <mimu@linux.ibm.com>
-To:     linux-s390@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: [PATCH] s390/diag: fix display of diagnose call statistics
-Date:   Thu,  5 Mar 2020 10:03:55 +0100
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 20030509-0028-0000-0000-000003E11438
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030509-0029-0000-0000-000024A64869
-Message-Id: <20200305090355.88036-1-mimu@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-05_02:2020-03-04,2020-03-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- mlxscore=0 phishscore=0 mlxlogscore=876 suspectscore=1 lowpriorityscore=0
- impostorscore=0 bulkscore=0 spamscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003050057
+        Thu, 5 Mar 2020 04:06:00 -0500
+Received: by mail-oi1-f195.google.com with SMTP id q65so5224697oif.4;
+        Thu, 05 Mar 2020 01:06:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TFaIpxONCt+sIKKd0QPqj0IgGgaDTj/hC/vgrFizdCQ=;
+        b=GuzS8nT3AauttJ6WfU/a6zTaQ464al1hHmereqWJb/Ssz+PgO89ZNSWLT+2xGhbIAb
+         k9erFuzRmTtgQv5VAtIXO2M48mIXQTze4OmmMGMkyHfBYvVnfvvpgphvSP7urJVN1uoT
+         /hievaawLxaBuoYt6FFYCNHeMc6Tdx83HiNwDG3Di+L2TAP4dH1SjL3HelJ4Dq1OXm/6
+         KN18lIlFBwzefLKQEUc0+4XbKPUztBe/OnkkwLdjaf9TbVf4wNLvBDv87SwCxw81eBvl
+         jfy2O+jxRxuQsFahzVIwLFcI9fsEmN8fuusIlYPo0xo8ANcO89wlEEA74bxZ6UulYTki
+         xPDw==
+X-Gm-Message-State: ANhLgQ3c8xrF+uhqJ94aaBppbfyaejCbRxlkwV9HifavVxJzTm0aiYCV
+        zPqBSuiafriJr3uXxEwSeQWDHCsiYkavvdE27pE=
+X-Google-Smtp-Source: ADFU+vsVto72cKF3MbnXe+qIld4wE26jLbmiKoIvdaN3p8hl2BHPVRl6eXOwNLvQlumM0l5svFNoiVz3tZWVRYd3M0s=
+X-Received: by 2002:aca:bfc2:: with SMTP id p185mr5074380oif.57.1583399159819;
+ Thu, 05 Mar 2020 01:05:59 -0800 (PST)
+MIME-Version: 1.0
+References: <20200305013509.GF5972@shao2-debian> <951b0986-bb35-d9a5-1639-0a8cdb3dcd04@intel.com>
+ <cbe4887c-d54a-c4aa-e4bf-981b5fcc291d@intel.com>
+In-Reply-To: <cbe4887c-d54a-c4aa-e4bf-981b5fcc291d@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 5 Mar 2020 10:05:48 +0100
+Message-ID: <CAJZ5v0g2vzYQ04GyrpubLx2+B0O4SDbqoTDCvhnSyaj1j1xswA@mail.gmail.com>
+Subject: Re: [cpufreq] 909c0e9cc1: fwq.fwq.med 210.0% improvement
+To:     Rong Chen <rong.a.chen@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        Linux PM <linux-pm@vger.kernel.org>, lkp@lists.01.org,
+        Rafael Wysocki <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Show the full diag statistic table and not just parts of it.
+On Thu, Mar 5, 2020 at 9:18 AM Rong Chen <rong.a.chen@intel.com> wrote:
+>
+>
+>
+> On 3/5/20 3:50 PM, Rafael J. Wysocki wrote:
+> > On 3/5/2020 2:35 AM, kernel test robot wrote:
+> >> Greeting,
+> >>
+> >> FYI, we noticed a 210.0% improvement of fwq.fwq.med due to commit:
+> >
+> > Well, that sounds impressive. :-)
+> >
+> >
+> >>
+> >> commit: 909c0e9cc11ba39fa5a660583b25c2431cf54deb ("cpufreq:
+> >> intel_pstate: Use passive mode by default without HWP")
+> >> https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git
+> >> intel_pstate-passive
+> >>
+> >> in testcase: fwq
+> >> on test machine: 16 threads Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz
+> >> with 48G memory
+> >> with following parameters:
+> >>
+> >>     nr_task: 100%
+> >>     samples: 100000ss
+> >>     iterations: 18x
+> >>     cpufreq_governor: powersave
+> >
+> > The governor should be schedutil, though, unless it is explicitly set
+> > to powersave in the test environment.
+> >
+> > Is that the case?
+> >
+> >
+>
+> Hi Rafael,
+>
+> Yes, we set to powersave for this test.
 
-Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
----
- arch/s390/kernel/diag.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
-index e9dac9a24d3f..61f2b0412345 100644
---- a/arch/s390/kernel/diag.c
-+++ b/arch/s390/kernel/diag.c
-@@ -84,7 +84,7 @@ static int show_diag_stat(struct seq_file *m, void *v)
- 
- static void *show_diag_stat_start(struct seq_file *m, loff_t *pos)
- {
--	return *pos <= nr_cpu_ids ? (void *)((unsigned long) *pos + 1) : NULL;
-+	return *pos <= NR_DIAG_STAT ? (void *)((unsigned long) *pos + 1) : NULL;
- }
- 
- static void *show_diag_stat_next(struct seq_file *m, void *v, loff_t *pos)
--- 
-2.17.1
-
+I wonder why this is done?  Is there any particular technical reason
+for doing that?
