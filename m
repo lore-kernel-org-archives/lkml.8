@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBA6C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C85C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFB7207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B786207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428692;
-	bh=7SaziNVYYG4I60nOloOeJp1riuc/CPAPo3yiqECQ7jY=;
+	s=default; t=1583428696;
+	bh=7EZFA0yEFYm/NUSzTiHK2MXkr9twqygEe+mMb0V/yWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uHOMoZAwYJYjtcqgI4sed4hNOKEwoTYW4LLyfFNsSXb8kFaygdg6RfEB642V2sv7M
-	 Je7WoBWR/xy3PKshzwXza6NfJYkmdgJBnXwNJ0WJqRjzkrpWZZbxdTv82WwYoojvoD
-	 DhPXlzmxAD8UT1sO/xgv7SpSz7ZUBiqL0C05+zbs=
+	b=1NWNkK4Lfx8jXfdte17ZbZ8uUy5cKa7wbQaRHNPDT4xdoA9dn5X0iVGk91NBDbZTD
+	 cnM23UcA5nR0K1au8Bo2ZJuUI8CzPf3POh7//gnpKgpeUwomaDJhMtcXFMJ9vf7kfg
+	 6CWXsDh1JSVqlawThgb9zBgrzA57t2oaQtjFA0q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgCERPg (ORCPT
+        id S1728135AbgCERSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:15:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42138 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:18:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728043AbgCERPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:24 -0500
+        id S1728117AbgCERPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EB5C2166E;
-        Thu,  5 Mar 2020 17:15:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3015421739;
+        Thu,  5 Mar 2020 17:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428523;
-        bh=7SaziNVYYG4I60nOloOeJp1riuc/CPAPo3yiqECQ7jY=;
+        s=default; t=1583428534;
+        bh=7EZFA0yEFYm/NUSzTiHK2MXkr9twqygEe+mMb0V/yWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hx2oPhwDdqlAtUdcic1F53D/myENJkYXU9yCp5klTIlbeQsPPZz0aX96qmkLY7aDg
-         a+waCSMs9MFNjLVG3RUrBgEVZISp5G6Q3qlN5v/jHpDGYw9PCpwwkwrq5Bkoa4lR8j
-         wv5tGU/ClfOJ1yb4+3L+sYMSqBt1bc8WZT/Vr4og=
+        b=mvLsdfTm1WOt1yORKmrZEVT0Syp/rWy2nXoBAxYvfxliDFnk3G64LROa0yD8MmjOV
+         TAQMgrMoebLtUAsjxnsVqcgAR7KFe4nG6UhzRNwt+4AK0WE1j0aQn1N21OIE2WJS4e
+         0FrRM2lGXMl6f1WEwwjSH4Q6pXs92XeBqj8VJY1g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/31] HID: hiddev: Fix race in in hiddev_disconnect()
-Date:   Thu,  5 Mar 2020 12:14:49 -0500
-Message-Id: <20200305171516.30028-5-sashal@kernel.org>
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/31] hv_netvsc: Fix unwanted wakeup in netvsc_attach()
+Date:   Thu,  5 Mar 2020 12:14:58 -0500
+Message-Id: <20200305171516.30028-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171516.30028-1-sashal@kernel.org>
 References: <20200305171516.30028-1-sashal@kernel.org>
@@ -61,41 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-[ Upstream commit 5c02c447eaeda29d3da121a2e17b97ccaf579b51 ]
+[ Upstream commit f6f13c125e05603f68f5bf31f045b95e6d493598 ]
 
-Syzbot reports that "hiddev" is used after it's free in hiddev_disconnect().
-The hiddev_disconnect() function sets "hiddev->exist = 0;" so
-hiddev_release() can free it as soon as we drop the "existancelock"
-lock.  This patch moves the mutex_unlock(&hiddev->existancelock) until
-after we have finished using it.
+When netvsc_attach() is called by operations like changing MTU, etc.,
+an extra wakeup may happen while netvsc_attach() calling
+rndis_filter_device_add() which sends rndis messages when queue is
+stopped in netvsc_detach(). The completion message will wake up queue 0.
 
-Reported-by: syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com
-Fixes: 7f77897ef2b6 ("HID: hiddev: fix potential use-after-free")
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+We can reproduce the issue by changing MTU etc., then the wake_queue
+counter from "ethtool -S" will increase beyond stop_queue counter:
+     stop_queue: 0
+     wake_queue: 1
+The issue causes queue wake up, and counter increment, no other ill
+effects in current code. So we didn't see any network problem for now.
+
+To fix this, initialize tx_disable to true, and set it to false when
+the NIC is ready to be attached or registered.
+
+Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/hiddev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/hyperv/netvsc.c     | 2 +-
+ drivers/net/hyperv/netvsc_drv.c | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
-index da000195b79af..c34ef95d7cef3 100644
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -954,9 +954,9 @@ void hiddev_disconnect(struct hid_device *hid)
- 	hiddev->exist = 0;
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index dbfd3a0c97d3b..77a9a753d9794 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -110,7 +110,7 @@ static struct netvsc_device *alloc_net_device(void)
  
- 	if (hiddev->open) {
--		mutex_unlock(&hiddev->existancelock);
- 		hid_hw_close(hiddev->hid);
- 		wake_up_interruptible(&hiddev->wait);
-+		mutex_unlock(&hiddev->existancelock);
- 	} else {
- 		mutex_unlock(&hiddev->existancelock);
- 		kfree(hiddev);
+ 	init_waitqueue_head(&net_device->wait_drain);
+ 	net_device->destroy = false;
+-	net_device->tx_disable = false;
++	net_device->tx_disable = true;
+ 
+ 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
+ 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 7ab576d8b6227..bdb55db4523b1 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -984,6 +984,7 @@ static int netvsc_attach(struct net_device *ndev,
+ 	}
+ 
+ 	/* In any case device is now ready */
++	nvdev->tx_disable = false;
+ 	netif_device_attach(ndev);
+ 
+ 	/* Note: enable and attach happen when sub-channels setup */
+@@ -2336,6 +2337,8 @@ static int netvsc_probe(struct hv_device *dev,
+ 	else
+ 		net->max_mtu = ETH_DATA_LEN;
+ 
++	nvdev->tx_disable = false;
++
+ 	ret = register_netdevice(net);
+ 	if (ret != 0) {
+ 		pr_err("Unable to register netdev.\n");
 -- 
 2.20.1
 
