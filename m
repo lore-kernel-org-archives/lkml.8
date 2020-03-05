@@ -2,174 +2,195 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3330DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4EBC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33362072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A0A2072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:54:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DEApbHTn"
+	dkim=pass (2048-bit key) header.d=jlekstrand-net.20150623.gappssmtp.com header.i=@jlekstrand-net.20150623.gappssmtp.com header.b="DiAuYIkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgCEPyZ (ORCPT
+        id S1727185AbgCEPyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:54:25 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44380 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbgCEPyZ (ORCPT
+        Thu, 5 Mar 2020 10:54:32 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38874 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbgCEPyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:54:25 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n7so7609978wrt.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:54:23 -0800 (PST)
+        Thu, 5 Mar 2020 10:54:31 -0500
+Received: by mail-ed1-f68.google.com with SMTP id e25so7376323edq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:54:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8r3r3JLBCoT+7BHX6G7TDShJ5a1/tz8dj9KPds9gTCo=;
-        b=DEApbHTnS0agxpfhPaqw8/MbeQWWgxQiV8dMim1J2/cDkAgUz+6XYcVbU7CosnhTLk
-         jBo/lHQ9zWrKOYL2BbSrzLmvYHQG1LRK6ppljf+IIBlhV7O4HdXRDC/SWiQ/SAPwDHfr
-         /YNmZkOjupuCcvGVS5w+KPzUaHKJtNrvCe1PU=
+        d=jlekstrand-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jpgwSkp7XcrOD1X4HMaPrupSeCafE36RfxzoW5P2WRA=;
+        b=DiAuYIkHTZXOVb9HWj0I5RfNbwb2gRoDsioZ3DGYGgGwpuHWBI6imJQcLeV/8vMoqx
+         vLpKZYWVuc/WzCc5hrpyImzqk89IyeFPjEb+xaiDUdzUc3L+4vP0GxfMfWHAa5225inH
+         bhqKp8vTYWxjL8QTRbdt0RawrERVG6l9iq4VKC12IMs05TN+MQMi7cEdi0ZODqu3zAmn
+         l87bl6TItmmR7WIHUwFPQog5XZ0yhYkDSymk8Nmfar54q6ikBv7NtkZMuLgKjzmfUNuR
+         ciEIB+WF2eGUFEjO13Md4l7m4l+Ku0SUEk5+AiVw2jj5FK33lWzc593ZRpUii2yNSxRP
+         8p1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8r3r3JLBCoT+7BHX6G7TDShJ5a1/tz8dj9KPds9gTCo=;
-        b=LoJ6UdqPb/nx9dQvAREYVIb3xQfzJ+06GVLaGZumGQE1k1ggF0MTYd3xYxciw+IxFX
-         H1Z4jnn7QGkzlaFqXBfUOeYzAl1KOH7Rum6se+Drx248L1JlfSAPw1OL9WbslVBv6PRO
-         rqORTw03TWYRforQFEmvyZ/kfErCr/ajThS/3pZW5UXS4HNdWSybcrdQicpXlupJO2MR
-         YOQrUgxzZV6L1obxL8zraJR3S1nzl2n+w10ltTqDvnExKx3IM3QDuT8/sv8ODRXXMIFA
-         8ARGQCJMaF1ObzFefpExGLGdAUwrZpEoWUh6FuvpgB74W56TbC5KVWLe2eIAYZn1WGsu
-         A6iA==
-X-Gm-Message-State: ANhLgQ0TpjTZF9pjdDFB615Bu6OlyID3GzrbKdlKE0nA/fZcfiVPPA2H
-        D2mEXJHIzfkAkObgAXZvGTJJLw==
-X-Google-Smtp-Source: ADFU+vuZnHlrjwtYGp90nAVDU7FR3teK5G/y9pKUhZxtjW/2S5agwnFL89xTRzG1s0R8AIPZj3It3A==
-X-Received: by 2002:adf:d4ca:: with SMTP id w10mr10686408wrk.407.1583423663087;
-        Thu, 05 Mar 2020 07:54:23 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id y8sm9685425wmj.22.2020.03.05.07.54.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 07:54:22 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Thu, 5 Mar 2020 16:54:21 +0100
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>, jmorris@namei.org,
-        Paul Moore <paul@paul-moore.com>, casey@schaufler-ca.com
-Subject: Re: [PATCH bpf-next v4 3/7] bpf: Introduce BPF_MODIFY_RETURN
-Message-ID: <20200305155421.GA209155@google.com>
-References: <20200304191853.1529-1-kpsingh@chromium.org>
- <20200304191853.1529-4-kpsingh@chromium.org>
- <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jpgwSkp7XcrOD1X4HMaPrupSeCafE36RfxzoW5P2WRA=;
+        b=EYAcgyxEYwZsRGZUAkjnIUXQlsx1uxD16SrrrkDrBHHgjwZ/GkviAi5VaqIKLATKsT
+         k3rKfQM1+ztBdPVxtaV+MCn4dXz/ak3B4o5WzXnzg9GvU02xuiGCzcVOl/r0DwqOjED1
+         kLAyJZmm2WkO59brVG6DHQallk8qdMeMBawbkLfEWiARJkBWegNrie3hNzqqSYEQIVFT
+         dshaZkPKPCpZtamZUP8SCV/osARQsz+wT6LKTdKHLnLGqG3dbYmI9dYyR3/7twq2Xlpr
+         HfjBQA4heh8MQY/k21jw2928MAEQ51JWR/G5tRSxmJKhj1oUt75ZkNibOoA9tcAr8uLT
+         ruGQ==
+X-Gm-Message-State: ANhLgQ2MrZumCwL1FlFq2zcb7cVdJGRNZL1hsliE1laqoNU16H/+h1KY
+        jBqsKLfTPhYHkHb0YgpMwbajCUM330+RLlw0oIloZg==
+X-Google-Smtp-Source: ADFU+vtfOlYmMkcz0GZIDO1iKHc1JvcTJQpELewViffLb0TBaaBXcV3kuWUnf2AGZLPIyKSJzHoRuU3LVrFVwcti4F0=
+X-Received: by 2002:a05:6402:1655:: with SMTP id s21mr9282877edx.324.1583423668000;
+ Thu, 05 Mar 2020 07:54:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200225235856.975366-1-jason@jlekstrand.net> <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
+ <20200226100523.GQ2363188@phenom.ffwll.local> <CAOFGe94O66HL212aXqhi9tdYqw---Xm-fwNSV4pxHyPmpSGpbg@mail.gmail.com>
+ <CAP+8YyEUz29fXDW5kO_0ZG6c849=TuFWCK8ynT3LuM+Tn+rMzw@mail.gmail.com>
+ <810a26e7-4294-a615-b7ee-18148ac70641@amd.com> <CAOFGe96namyeQXTvdrduM+=wkJuoWWx34CxcsJHS3fcCaKDadw@mail.gmail.com>
+ <21aeacc0-f3ae-c5dd-66df-4d2f3d73f73e@amd.com> <CAOFGe95Gx=kX=sxwhx1FYmXQuPtGAKwt2V5YodQBwJXujE3WwA@mail.gmail.com>
+ <CAOFGe97XSxgzCViOH=2+B2_d5P3vGifKmvAw-JrzRQbbRMRbcg@mail.gmail.com> <6fb8becf-9e6b-f59e-9c22-2b20069241a7@amd.com>
+In-Reply-To: <6fb8becf-9e6b-f59e-9c22-2b20069241a7@amd.com>
+From:   Jason Ekstrand <jason@jlekstrand.net>
+Date:   Thu, 5 Mar 2020 09:54:16 -0600
+Message-ID: <CAOFGe94gv9N+6n6oEC2aRtsmy7kBfx1D_R6WLQSGq7-8yUM_OQ@mail.gmail.com>
+Subject: Re: [PATCH] RFC: dma-buf: Add an API for importing and exporting sync files
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
+        Dave Airlie <airlied@redhat.com>,
+        Jesse Hall <jessehall@google.com>,
+        James Jones <jajones@nvidia.com>,
+        Daniel Stone <daniels@collabora.com>,
+        =?UTF-8?Q?Kristian_H=C3=B8gsberg?= <hoegsberg@google.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Chenbo Feng <fengc@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        linux-media@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-Mar 08:51, Stephen Smalley wrote:
-> On Wed, Mar 4, 2020 at 2:20 PM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > When multiple programs are attached, each program receives the return
-> > value from the previous program on the stack and the last program
-> > provides the return value to the attached function.
-> >
-> > The fmod_ret bpf programs are run after the fentry programs and before
-> > the fexit programs. The original function is only called if all the
-> > fmod_ret programs return 0 to avoid any unintended side-effects. The
-> > success value, i.e. 0 is not currently configurable but can be made so
-> > where user-space can specify it at load time.
-> >
-> > For example:
-> >
-> > int func_to_be_attached(int a, int b)
-> > {  <--- do_fentry
-> >
-> > do_fmod_ret:
-> >    <update ret by calling fmod_ret>
-> >    if (ret != 0)
-> >         goto do_fexit;
-> >
-> > original_function:
-> >
-> >     <side_effects_happen_here>
-> >
-> > }  <--- do_fexit
-> >
-> > The fmod_ret program attached to this function can be defined as:
-> >
-> > SEC("fmod_ret/func_to_be_attached")
-> > int BPF_PROG(func_name, int a, int b, int ret)
-> > {
-> >         // This will skip the original function logic.
-> >         return 1;
-> > }
-> >
-> > The first fmod_ret program is passed 0 in its return argument.
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > Acked-by: Andrii Nakryiko <andriin@fb.com>
-> 
-> IIUC you've switched from a model where the BPF program would be
-> invoked after the original function logic
-> and the BPF program is skipped if the original function logic returns
-> non-zero to a model where the BPF program is invoked first and
-> the original function logic is skipped if the BPF program returns
-> non-zero.  I'm not keen on that for userspace-loaded code attached
+On Thu, Mar 5, 2020 at 7:06 AM Christian K=C3=B6nig <christian.koenig@amd.c=
+om> wrote:
+>
+> Am 04.03.20 um 17:41 schrieb Jason Ekstrand:
+> > On Wed, Mar 4, 2020 at 10:27 AM Jason Ekstrand <jason@jlekstrand.net> w=
+rote:
+> >> On Wed, Mar 4, 2020 at 2:34 AM Christian K=C3=B6nig <christian.koenig@=
+amd.com> wrote:
+> >>> Am 03.03.20 um 20:10 schrieb Jason Ekstrand:
+> >>>> On Thu, Feb 27, 2020 at 2:28 AM Christian K=C3=B6nig
+> >>>> <christian.koenig@amd.com> wrote:
+> >>>> [SNIP]
+> >>> For reference see what dance is necessary in the dma_fence_chain_rele=
+ase
+> >>> function to avoid that:
+> >>>>          /* Manually unlink the chain as much as possible to avoid
+> >>>> recursion
+> >>>>           * and potential stack overflow.
+> >>>>           */
+> >>>>          while ((prev =3D rcu_dereference_protected(chain->prev, tru=
+e))) {
+> >>> ....
+> >>>
+> >>> It took me quite a while to figure out how to do this without causing
+> >>> issues. But I don't see how this would be possible for dma_fence_arra=
+y.
+> >> Ah, I see the issue now!  It hadn't even occurred to me that userspace
+> >> could use this to build up an infinite recursion chain.  That's nasty!
+>
+> Yeah, when I first stumbled over it it was like why the heck is my code
+> crashing in an interrupt handler?
+>
+> Realizing that this is stack corruption because of the long chain we
+> constructed was quite an enlightenment.
+>
+> And then it took me even longer to fix it :)
 
-We do want to continue the KRSI series and the effort to implement a
-proper BPF LSM. In the meantime, the tracing + error injection
-solution helps us to:
+Fun....
 
-  * Provide better debug capabilities.
-  * And parallelize the effort to come up with the right helpers
-    for our LSM work and work on sleepable BPF which is also essential
-    for some of the helpers.
+> >>   I'll give this some more thought and see if can come up with
+> >> something clever.
+> >>
+> >> Here's one thought:  We could make dma_fence_array automatically
+> >> collapse any arrays it references and instead directly reference their
+> >> fences.  This way, no matter how much the client chains things, they
+> >> will never get more than one dma_fence_array.  Of course, the
+> >> difficulty here (answering my own question) comes if they ping-pong
+> >> back-and-forth between something which constructs a dma_fence_array
+> >> and something which constructs a dma_fence_chain to get
+> >> array-of-chain-of-array-of-chain-of-...  More thought needed.
+>
+> Condensing the fences into a larger array can certainly work, yes.
+>
+> > Answering my own questions again...  I think the
+> > array-of-chain-of-array case is also solvable.
+> >
+> > For array-of-chain, we can simply add all unsignaled dma_fences in the
+> > chain to the array.  The array won't signal until all of them have
+> > which is exactly the same behavior as if we'd added the chain itself.
+>
+> Yeah, that should work. Probably best to implement something like a
+> cursor to walk all fences in the data structure.
+>
+> > For chain-of-array, we can add all unsignaled dma_fences in the array
+> > to the same point in the chain.  There may be some fiddling with the
+> > chain numbering required here but I think we can get it so the chain
+> > won't signal until everything in the array has signaled and we get the
+> > same behavior as if we'd added the dma_fence_array to the chain.
+>
+> Well as far as I can see this won't work because it would break the
+> semantics of the timeline sync.
 
-As you noted, in the KRSI v4 series, we mentioned that we would like
-to have the user-space loaded BPF programs be unable to override the
-decision made by the in-kernel logic/LSMs, but this got shot down:
+I'm not 100% convinced it has to.  We already have support for the
+seqno regressing and we ensure that we still wait for all the fences.
+I thought maybe we could use that but I haven't spent enough time
+looking at the details to be sure.  I may be missing something.
 
-   https://lore.kernel.org/bpf/00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com
+> But I think I know a different way which should work: A dma_fence_chain
+> can still contain a dma_fence_array, only the other way around is
+> forbidden. Then we create the cursor functionality in such a way that it
+> allows us to deep dive into the data structure and return all containing
+> fences one by one.
 
-I would like to continue this discussion when we post the v5 series
-for KRSI as to what the correct precedence order should be for the
-BPF_PROG_TYPE_LSM and would appreciate if you also bring it up there.
+Agreed.  As long as one container is able to consume the other, it's fine.
 
-> to LSM hooks; it means that userspace BPF programs can run even if
-> SELinux would have denied access and SELinux hooks get
-> skipped entirely if the BPF program returns an error.  I think Casey
-> may have wrongly pointed you in this direction on the grounds
-> it can already happen with the base DAC checking logic.  But that's
+> I can prototype that if you want, shouldn't be more than a few hours of
+> hacking anyway.
 
-What we can do for this tracing/modify_ret series, is to remove
-the special casing for "security_" functions in the BPF code and add
-ALLOW_ERROR_INJECTION calls to the security hooks. This way, if
-someone needs to disable the BPF programs being able to modify
-security hooks, they can disable error injection. If that's okay, we
-can send a patch.
+If you'd like to, go for it.  I'd be happy to give it a go as well but
+if you already know what you want, it may be easier for you to just
+write the patch for the cursor.
 
-- KP
+Two more questions:
 
-> kernel DAC checking logic, not userspace-loaded code.
-> And the existing checking on attachment is not sufficient for SELinux
-> since CAP_MAC_ADMIN is not all powerful to SELinux.
-> Be careful about designing your mechanisms around Smack because Smack
-> is not the only LSM.
+ 1. Do you want this collapsing to happen every time we create a
+dma_fence_array or should it be a special entrypoint?  Collapsing all
+the time likely means doing extra array calculations instead of the
+dma_fence_array taking ownership of the array that's passed in.  My
+gut says that cost is ok; but my gut doesn't spend much time in kernel
+space.
+
+ 2. When we do the collapsing, should we call dma_fence_is_signaled()
+to avoid adding signaled fences to the array?  It seems like avoiding
+adding references to fences that are already signaled would let the
+kernel clean them up faster and reduce the likelihood that a fence
+will hang around forever because it keeps getting added to arrays with
+other unsignaled fences.
+
+--Jason
