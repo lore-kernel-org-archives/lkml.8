@@ -2,96 +2,167 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426B2C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323A9C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06AEE21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428466;
-	bh=4r5GnKFk9mhwmxZD5O0PJi9pOIVSBxE1g0rmmigPvdg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BxmEuGZRlme+xfxZF47US3Tkf6scFDsViotVUm7iGyzEjqClSHkxv6AVhUZjdp+qT
-	 jN3Bpnvjwk0jtcqUVKNIa0DNQltF/Bev3UgzR1hzZNWZkVkjby9Kyk91Oa5p85Kxvo
-	 ATurQsus2KudfXi7Xo9Jo9fLDscdQt66VRTBoMfM=
+	by mail.kernel.org (Postfix) with ESMTP id 08026208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="So08X36r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbgCEROZ (ORCPT
+        id S1727686AbgCERO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:14:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbgCEROJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:09 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 5 Mar 2020 12:14:29 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40076 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727604AbgCERON (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583428451;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pNFG4r2jcMd7zD6p/OeosGiXr6KudiQkY+8b32nG8s0=;
+        b=So08X36rcQqb62Vv7AbUV5GRknjANnm7HyoNEZUQFJnTaGC88PgeG5KX8iHiJp2wqPo0V9
+        ibFjk7jA5lmMVRVyPkpNxdxcwNK4ya602kKjK4slyWCnp/77o8HiSSqXxnAzbXPPNiihjv
+        ovyzWdif5h5GEvgAuwSplgsK6MLgGA0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-332-YIy-mLF0Mm6hHmV2DR43KQ-1; Thu, 05 Mar 2020 12:14:09 -0500
+X-MC-Unique: YIy-mLF0Mm6hHmV2DR43KQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A8002166E;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50791800D6C;
         Thu,  5 Mar 2020 17:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428449;
-        bh=4r5GnKFk9mhwmxZD5O0PJi9pOIVSBxE1g0rmmigPvdg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oLJqGTfnkxKS3uT6CJBWJhqhB2wI4nSTkJXgdi/C7HA5rU7Ti6PukDJPljbQi+Ixr
-         QRDf+tp50XqJHYSQGMM62dc47ZCqVMoYzZsHZdahicR5W5wvQrOBsw2PdSW3hDlSIP
-         hYx4qtOR5UUsj4zANAlxx5j+71CSsWe9CuLXR81Q=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 44/67] kbuild: add dtbs_check to PHONY
-Date:   Thu,  5 Mar 2020 12:12:45 -0500
-Message-Id: <20200305171309.29118-44-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
-References: <20200305171309.29118-1-sashal@kernel.org>
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2F3ED90796;
+        Thu,  5 Mar 2020 17:14:07 +0000 (UTC)
+Date:   Thu, 5 Mar 2020 10:14:06 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dev@dpdk.org" <dev@dpdk.org>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        "thomas@monjalon.net" <thomas@monjalon.net>,
+        "bluca@debian.org" <bluca@debian.org>,
+        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
+        "Richardson, Bruce" <bruce.richardson@intel.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>
+Subject: Re: [PATCH v2 0/7] vfio/pci: SR-IOV support
+Message-ID: <20200305101406.02703e2a@w520.home>
+In-Reply-To: <a6c04bac-0a37-f4c0-876e-e5cf2a8a6c3f@redhat.com>
+References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
+        <a6c04bac-0a37-f4c0-876e-e5cf2a8a6c3f@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+On Tue, 25 Feb 2020 14:09:07 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-[ Upstream commit 964a596db8db8c77c9903dd05655696696e6b3ad ]
+> On 2020/2/25 =E4=B8=8A=E5=8D=8810:33, Tian, Kevin wrote:
+> >> From: Alex Williamson
+> >> Sent: Thursday, February 20, 2020 2:54 AM
+> >>
+> >> Changes since v1 are primarily to patch 3/7 where the commit log is
+> >> rewritten, along with option parsing and failure logging based on
+> >> upstream discussions.  The primary user visible difference is that
+> >> option parsing is now much more strict.  If a vf_token option is
+> >> provided that cannot be used, we generate an error.  As a result of
+> >> this, opening a PF with a vf_token option will serve as a mechanism of
+> >> setting the vf_token.  This seems like a more user friendly API than
+> >> the alternative of sometimes requiring the option (VFs in use) and
+> >> sometimes rejecting it, and upholds our desire that the option is
+> >> always either used or rejected.
+> >>
+> >> This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
+> >> means of setting the VF token, which might call into question whether
+> >> we absolutely need this new ioctl.  Currently I'm keeping it because I
+> >> can imagine use cases, for example if a hypervisor were to support
+> >> SR-IOV, the PF device might be opened without consideration for a VF
+> >> token and we'd require the hypservisor to close and re-open the PF in
+> >> order to set a known VF token, which is impractical.
+> >>
+> >> Series overview (same as provided with v1): =20
+> > Thanks for doing this!
+> > =20
+> >> The synopsis of this series is that we have an ongoing desire to drive
+> >> PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
+> >> for this with DPDK drivers and potentially interesting future use =20
+> > Can you provide a link to the DPDK discussion?
+> > =20
+> >> cases in virtualization.  We've been reluctant to add this support
+> >> previously due to the dependency and trust relationship between the
+> >> VF device and PF driver.  Minimally the PF driver can induce a denial
+> >> of service to the VF, but depending on the specific implementation,
+> >> the PF driver might also be responsible for moving data between VFs
+> >> or have direct access to the state of the VF, including data or state
+> >> otherwise private to the VF or VF driver. =20
+> > Just a loud thinking. While the motivation of VF token sounds reasonable
+> > to me, I'm curious why the same concern is not raised in other usages.
+> > For example, there is no such design in virtio framework, where the
+> > virtio device could also be restarted, putting in separate process (vho=
+st-user),
+> > and even in separate VM (virtio-vhost-user), etc. =20
+>=20
+>=20
+> AFAIK, the restart could only be triggered by either VM or qemu. But=20
+> yes, the datapath could be offloaded.
+>=20
+> But I'm not sure introducing another dedicated mechanism is better than=20
+> using the exist generic POSIX mechanism to make sure the connection=20
+> (AF_UINX) is secure.
+>=20
+>=20
+> >   Of course the para-
+> > virtualized attribute of virtio implies some degree of trust, but as you
+> > mentioned many SR-IOV implementations support VF->PF communication
+> > which also implies some level of trust. It's perfectly fine if VFIO jus=
+t tries
+> > to do better than other sub-systems, but knowing how other people
+> > tackle the similar problem may make the whole picture clearer. =F0=9F=
+=98=8A
+> >
+> > +Jason. =20
+>=20
+>=20
+> I'm not quite sure e.g allowing userspace PF driver with kernel VF=20
+> driver would not break the assumption of kernel security model. At least=
+=20
+> we should forbid a unprivileged PF driver running in userspace.
 
-The dtbs_check should be a phony target, but currently it is not
-specified so.
+It might be useful to have your opinion on this series, because that's
+exactly what we're trying to do here.  Various environments, DPDK
+specifically, want a userspace PF driver.  This series takes steps to
+mitigate the risk of having such a driver, such as requiring this VF
+token interface to extend the VFIO interface and validate participation
+around a PF that is not considered trusted by the kernel.  We also set
+a driver_override to try to make sure no host kernel driver can
+automatically bind to a VF of a user owned PF, only vfio-pci, but we
+don't prevent the admin from creating configurations where the VFs are
+used by other host kernel drivers.
 
-'make dtbs_check' works even if a file named 'dtbs_check' exists
-because it depends on another phony target, scripts_dtc, but we
-should not rely on it.
+I think the question Kevin is inquiring about is whether virtio devices
+are susceptible to the type of collaborative, shared key environment
+we're creating here.  For example, can a VM or qemu have access to
+reset a virtio device in a way that could affect other devices, ex. FLR
+on a PF that could interfere with VF operation.  Thanks,
 
-Add dtbs_check to PHONY.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Makefile b/Makefile
-index 0f64b92fa39a6..f86ebe1dd2bd0 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1239,7 +1239,7 @@ ifneq ($(dtstree),)
- %.dtb: include/config/kernel.release scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
- 
--PHONY += dtbs dtbs_install dt_binding_check
-+PHONY += dtbs dtbs_install dtbs_check dt_binding_check
- dtbs dtbs_check: include/config/kernel.release scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree)
- 
--- 
-2.20.1
+Alex
 
