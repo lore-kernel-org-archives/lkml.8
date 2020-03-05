@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBBFC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C12DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F324B20637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EBD20637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583429029;
-	bh=BhyIfmtJjmMPuNVk8eJ8v3alPCrVguYeSygPeKGfx1Q=;
+	s=default; t=1583429036;
+	bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LZnx8UoU3YeVQ+J7tnpy4lsTmC8c2WvT1sMPrKtxlrd3t5up1hW971w/a8fwn7YH7
-	 iybr9XvjSoX1vBB/H7AEq9GJqZzrmCFZvV1b1q8Av/95N6WLJCE7wAwEQk/LWgYote
-	 gBv1AqJlT0q8q8C1ESsLrUzIyTrq6YyXo2zlmF5Q=
+	b=rY+bcwtd/d5j8HRYjHcSAPgq1QQhSmIHKEWc7E9cM+RxVzIQDhIx7z9mHH0/KdRYC
+	 hdxoknyTypLEXxX+s5wxY0GHCASQDpIj9deGaIuyEvX2g+h+oxw6t7/qInpu/pNVFv
+	 Z+PvT9reUmC5kFKJNDoXo3tbL2xHUCt8LE12Ccv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCERXr (ORCPT
+        id S1727065AbgCERXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:23:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39112 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:23:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbgCERNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:36 -0500
+        id S1727050AbgCERNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6DF21556;
-        Thu,  5 Mar 2020 17:13:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C08DB20848;
+        Thu,  5 Mar 2020 17:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428416;
-        bh=BhyIfmtJjmMPuNVk8eJ8v3alPCrVguYeSygPeKGfx1Q=;
+        s=default; t=1583428412;
+        bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uT5Tryw1uX7mfyLsNfwExEo+YmWtvlKwjjMzOlIt1ZKliN6mYss8r/NOTjkHY6Wqw
-         NzyXJI9c9LU+/upBOxlj7CqIyDyNPTi6oThwDFOjbQ5f34jD+U6UDSSumfOgB1vdL0
-         Or0SNZIlBxB+bWXevU9PYhR0dO72ByXJMxU0A4TI=
+        b=CLCRcV7UF3qZcgu9neI0a1daA40jYC7xGqS4niEvfD3tIopOwVlslyASBknezGIy4
+         jN1stX8rpp2uVcZR95ovyaXJ4nSF0EizWJbBDHgGPAo8hILcqfc+2YOnmFw0rRlcli
+         M7OA3lzLKbJDYqsDPcV9dODB7tXwS4KaWidkImHw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 19/67] RISC-V: Don't enable all interrupts in trap_init()
-Date:   Thu,  5 Mar 2020 12:12:20 -0500
-Message-Id: <20200305171309.29118-19-sashal@kernel.org>
+Cc:     Hanno Zulla <kontakt@hanno.de>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 16/67] HID: hid-bigbenff: call hid_hw_stop() in case of error
+Date:   Thu,  5 Mar 2020 12:12:17 -0500
+Message-Id: <20200305171309.29118-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -60,47 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anup Patel <anup.patel@wdc.com>
+From: Hanno Zulla <kontakt@hanno.de>
 
-[ Upstream commit 6a1ce99dc4bde564e4a072936f9d41f4a439140e ]
+[ Upstream commit 976a54d0f4202cb412a3b1fc7f117e1d97db35f3 ]
 
-Historically, we have been enabling all interrupts for each
-HART in trap_init(). Ideally, we should only enable M-mode
-interrupts for M-mode kernel and S-mode interrupts for S-mode
-kernel in trap_init().
+It's required to call hid_hw_stop() once hid_hw_start() was called
+previously, so error cases need to handle this. Also, hid_hw_close() is
+not necessary during removal.
 
-Currently, we get suprious S-mode interrupts on Kendryte K210
-board running M-mode NO-MMU kernel because we are enabling all
-interrupts in trap_init(). To fix this, we only enable software
-and external interrupt in trap_init(). In future, trap_init()
-will only enable software interrupt and PLIC driver will enable
-external interrupt using CPU notifiers.
-
-Fixes: a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs machine mode")
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
-Tested-by: Palmer Dabbelt <palmerdabbelt@google.com> [QMEU virt machine with SMP]
-[Palmer: Move the Fixes up to a newer commit]
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Hanno Zulla <kontakt@hanno.de>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/traps.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/hid-bigbenff.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index f4cad5163bf2c..ffb3d94bf0cc2 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -156,6 +156,6 @@ void __init trap_init(void)
- 	csr_write(CSR_SCRATCH, 0);
- 	/* Set the exception vector address */
- 	csr_write(CSR_TVEC, &handle_exception);
--	/* Enable all interrupts */
--	csr_write(CSR_IE, -1);
-+	/* Enable interrupts */
-+	csr_write(CSR_IE, IE_SIE | IE_EIE);
+diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
+index f7e85bacb6889..f8c552b64a899 100644
+--- a/drivers/hid/hid-bigbenff.c
++++ b/drivers/hid/hid-bigbenff.c
+@@ -305,7 +305,6 @@ static void bigben_remove(struct hid_device *hid)
+ 	struct bigben_device *bigben = hid_get_drvdata(hid);
+ 
+ 	cancel_work_sync(&bigben->worker);
+-	hid_hw_close(hid);
+ 	hid_hw_stop(hid);
  }
+ 
+@@ -350,7 +349,7 @@ static int bigben_probe(struct hid_device *hid,
+ 	error = input_ff_create_memless(hidinput->input, NULL,
+ 		hid_bigben_play_effect);
+ 	if (error)
+-		return error;
++		goto error_hw_stop;
+ 
+ 	name_sz = strlen(dev_name(&hid->dev)) + strlen(":red:bigben#") + 1;
+ 
+@@ -360,8 +359,10 @@ static int bigben_probe(struct hid_device *hid,
+ 			sizeof(struct led_classdev) + name_sz,
+ 			GFP_KERNEL
+ 		);
+-		if (!led)
+-			return -ENOMEM;
++		if (!led) {
++			error = -ENOMEM;
++			goto error_hw_stop;
++		}
+ 		name = (void *)(&led[1]);
+ 		snprintf(name, name_sz,
+ 			"%s:red:bigben%d",
+@@ -375,7 +376,7 @@ static int bigben_probe(struct hid_device *hid,
+ 		bigben->leds[n] = led;
+ 		error = devm_led_classdev_register(&hid->dev, led);
+ 		if (error)
+-			return error;
++			goto error_hw_stop;
+ 	}
+ 
+ 	/* initial state: LED1 is on, no rumble effect */
+@@ -389,6 +390,10 @@ static int bigben_probe(struct hid_device *hid,
+ 	hid_info(hid, "LED and force feedback support for BigBen gamepad\n");
+ 
+ 	return 0;
++
++error_hw_stop:
++	hid_hw_stop(hid);
++	return error;
+ }
+ 
+ static __u8 *bigben_report_fixup(struct hid_device *hid, __u8 *rdesc,
 -- 
 2.20.1
 
