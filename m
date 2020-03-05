@@ -2,111 +2,82 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A421C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C54C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2334C2072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583423947;
-	bh=OLPBLmwItKvaH4nVrV6rzwzGbuXn1dcCfQrCGq9tg5g=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=AA/aHaeyDKxOjf74enC+G8BlDmi4/ipaRo6YeHKP1H+XLAHRK7LUdmXPkL1OyCYD4
-	 1F24l0zXeEMZyBTs8fcUJoKehOvVbx8uhXcUK1idABZabJwI9GXQaL776DIRyQO213
-	 Q/0AVaj88OQ25C/dVzaW7kdq0SGQgThRouYMrV8o=
+	by mail.kernel.org (Postfix) with ESMTP id 70FBF20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgCEP7G (ORCPT
+        id S1727173AbgCEP7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:59:06 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35307 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbgCEP7F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:59:05 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r7so7685737wro.2;
-        Thu, 05 Mar 2020 07:59:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=aCB9L1TCzoGV2wPRhB/5CLpoAqtfcOA7EFraTWxgd74=;
-        b=cqGlS1xk7wG0NnLLcjcuNia/wPD/dnf24mXs/sLI6jPUC9sTUEK4xUiJrtdGm1k53s
-         BrI43owyJlBG4F0A9J/7YKfRMBqT7atv6xN6RkA1QUU4MdfCvGg8G2+1NYCB9paT2AtS
-         srO6t25Ffjt8N3N0wyZd7/l20k+j2vdJ6jOYHpA1UZXKjxR0+ucRwhqgWSsSZm3ZWpKh
-         ZN9ShH0gabqZaVCZuqZFxrqcF7DYPCAqfez+Ij8Ghyr6femvl/Xvrv24/ZCQYGivhP76
-         B2aRW91+zQeyNysegH6VCL+P9vFA/k5aBB6f00iK+Tus9p+m8k881o+ExJQvvKXwJW42
-         UshQ==
-X-Gm-Message-State: ANhLgQ1x3HPWuoXlJ9e8VSeFrkJnUa2GYrJGq1eJ3hE2J4t1sVXOo3Bn
-        ESn9A2DrnBEpluTq4uDY0yQ=
-X-Google-Smtp-Source: ADFU+vvMwTPvKadCAFBemUxuFtpBthjV2ZtzZjzNC6JbbgqinjgxbqNSGThIPS/v5DHroI6F6JDlCg==
-X-Received: by 2002:a5d:5290:: with SMTP id c16mr2345631wrv.235.1583423944306;
-        Thu, 05 Mar 2020 07:59:04 -0800 (PST)
-Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
-        by smtp.gmail.com with ESMTPSA id p15sm9453994wma.40.2020.03.05.07.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 07:59:03 -0800 (PST)
-Date:   Thu, 5 Mar 2020 15:59:02 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        sashal@kernel.org, haiyangz@microsoft.com
-Subject: [GIT PULL] Hyper-V commits for 5.6-rc
-Message-ID: <20200305155901.xmstcqwutrb6s7pi@debian>
+        Thu, 5 Mar 2020 10:59:12 -0500
+Received: from mga02.intel.com ([134.134.136.20]:42219 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbgCEP7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 10:59:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 07:59:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="352382578"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2020 07:59:10 -0800
+Date:   Thu, 5 Mar 2020 07:59:09 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        DavidWang@zhaoxin.com, CooperYan@zhaoxin.com,
+        QiyuanWang@zhaoxin.com, HerryYang@zhaoxin.com
+Subject: Re: [PATCH] x86/Kconfig: Make X86_UMIP to cover Zhaoxin CPUs too
+Message-ID: <20200305155909.GD11500@linux.intel.com>
+References: <1583288285-2804-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+ <20200304171336.GD21662@linux.intel.com>
+ <c3d9ad69-4a49-19de-1680-84f7d5afeb81@zhaoxin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <c3d9ad69-4a49-19de-1680-84f7d5afeb81@zhaoxin.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Mar 05, 2020 at 11:40:02AM +0800, Tony W Wang-oc wrote:
+> 
+> On 05/03/2020 01:13, Sean Christopherson wrote:
+> > On Wed, Mar 04, 2020 at 10:18:05AM +0800, Tony W Wang-oc wrote:
+> >> New Zhaoxin family 7 CPUs support the UMIP (User-Mode Instruction
+> >> Prevention) feature. So, modify X86_UMIP depends on Zhaoxin CPUs too.
+> >>
+> >> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+> >> ---
+> >>  arch/x86/Kconfig | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> >> index 16a4b39..ca4beb8 100644
+> >> --- a/arch/x86/Kconfig
+> >> +++ b/arch/x86/Kconfig
+> >> @@ -1877,7 +1877,7 @@ config X86_SMAP
+> >>  
+> >>  config X86_UMIP
+> >>  	def_bool y
+> >> -	depends on CPU_SUP_INTEL || CPU_SUP_AMD
+> >> +	depends on CPU_SUP_INTEL || CPU_SUP_AMD || CPU_SUP_CENTAUR || CPU_SUP_ZHAOXIN
+> > 
+> > The changelog only mentions Zhaoxin, but this also adds Centaur...
+> 
+> Sorry for this. Some Centaur family 7 CPUs also support the UMIP
+> feature, so will resend this patch as a patch series.
 
-Sasha Levin recently stepped down as the Hyper-V tree maintainer and I
-(along with Haiyang Zhang) will be responsible for sending Hyper-V
-patches to you.
-
-This is mostly a "dry-run" attempt to sort out any wrinkles on my end.
-If I have done something stupid, let me know.
-
-Please pull from the signed tag below.
-
-The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
-
-  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
-tags/hyperv-fixes-signed
-
-for you to fetch changes up to 5313b2a58ef02e2b077d7ae8088043609e3155b0:
-
-  HID: hyperv: NULL check before some freeing functions is not needed.
-(2020-03-05 14:17:11 +0000)
-
-----------------------------------------------------------------
-- Update MAINTAINERS file for Hyper-V.
-- One cleanup patch for Hyper-V HID driver.
-
-----------------------------------------------------------------
-Lucas Tanure (1):
-      HID: hyperv: NULL check before some freeing functions is not needed.
-
-Sasha Levin (1):
-      Hyper-V: Drop Sasha Levin from the Hyper-V maintainers
-
-Wei Liu (1):
-      Hyper-V: add myself as a maintainer
-
- MAINTAINERS              | 2 +-
- drivers/hid/hid-hyperv.c | 6 ++----
- 2 files changed, 3 insertions(+), 5 deletions(-)
+Oooh, can you point me at architectural documentation for Centaur family 7?
+I've been trying to track down Centaur documentation for CPUID behavior.
