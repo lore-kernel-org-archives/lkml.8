@@ -2,105 +2,161 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F77C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15D8C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6F2208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:29:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvOU9y2j"
+	by mail.kernel.org (Postfix) with ESMTP id 8A1D5208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:29:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgCES3f (ORCPT
+        id S1726143AbgCES3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:29:35 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44418 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgCES3e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:29:34 -0500
-Received: by mail-qk1-f193.google.com with SMTP id f198so6270308qke.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:29:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aO2Nq+upn1lfouLFIykWQjQaxMLKoHNR//pZLEIFyDY=;
-        b=jvOU9y2jIyuus28lCdGSa29MRkBfX+AYfa5dfh0jIofGHb60Kox/pvSem+UEw4v45i
-         bEK4m8apx06qK2bXZLYnmrQLG7H6sS962p/so7lwIXzHijeZ1GCFtKfq2u8atHdw211U
-         q4YjG1gpJhref3SVpbLge9rRpDiEn5bk3H2y1jWijafqK1aPMHAgHsEtrB4wS7aVJH7V
-         ITm4r4BXl4VO+6XWjwbvp5PE1U9Gbj4i9JFQsnAzHDzRSrVk0qWn4wgc709ZaaVdqKOQ
-         bLddG18m4X9KkYtRuvEbYEhr5Y9Weui9eLIZrWbF2OEkP/iuXz3h5dx6S56m3q0IXKLa
-         IA4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aO2Nq+upn1lfouLFIykWQjQaxMLKoHNR//pZLEIFyDY=;
-        b=VRfoJEPuTQQeDORy6bTC6A7sg1LIHwyH1RU+7hA2utI0Hxsu8oIPrhHvOkteZPN/OM
-         n+8RSdHJlzlxhGoURcgPYyVwWZC8+5x+8kgJu3KGiZ2LjjlDjf8eT+jJU8Ooozn2qyBO
-         SD6h3J7rZHJ2xlzYiPOqIH5Jf7fq79q+IGuNfr7g0bkGTLb37Fieoz5AP5gaTjMGG+Q/
-         FI3tTYG6mWueSGLSItyAtu0XMp+tBxBphK8JtmaMnYl61dr5CCYJRPAH081ZuyfDwkfw
-         F/z9uiDBvk6525RsQvQubz/j7PiWRq+7lIdj1d2+oba1T71yZiE5sZ7LmbqfpYkp2URp
-         Qhvw==
-X-Gm-Message-State: ANhLgQ2b7Rv86gaJy8rjV6vvlvY3rTbCXpBBGqMpE6GkqbRL5mvaym5d
-        pqS/v7KE9yRMWzwU9P0xspP2x/UkJO3LCVs5bT0=
-X-Google-Smtp-Source: ADFU+vsq2/P0E2CDnX7KV7FdX1+WD1Ea4vTrjXDFHtSlnmi/MkBaggpukFlmsbWyGUmeM7eR/CtWPLqYjK5bAud44Y4=
-X-Received: by 2002:a05:620a:12a2:: with SMTP id x2mr9530926qki.276.1583432974202;
- Thu, 05 Mar 2020 10:29:34 -0800 (PST)
+        Thu, 5 Mar 2020 13:29:52 -0500
+Received: from mga06.intel.com ([134.134.136.31]:54510 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbgCES3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 13:29:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 10:29:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="244358107"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga006.jf.intel.com with SMTP; 05 Mar 2020 10:29:43 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 05 Mar 2020 20:29:42 +0200
+Date:   Thu, 5 Mar 2020 20:29:42 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, Sean Paul <seanpaul@google.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>
+Subject: Re: [PATCH 2/3] drm/dp_mst: Don't show connectors as connected
+ before probing available PBN
+Message-ID: <20200305182942.GP13686@intel.com>
+References: <20200304223614.312023-1-lyude@redhat.com>
+ <20200304223614.312023-3-lyude@redhat.com>
+ <20200305131119.GJ13686@intel.com>
+ <73f52c392431cd21a80a118dd2fd1986e2c535df.camel@redhat.com>
 MIME-Version: 1.0
-References: <20200213145416.890080-1-enric.balletbo@collabora.com>
- <20200213145416.890080-2-enric.balletbo@collabora.com> <CA+E=qVffVzZwRTk9K7=xhWn-AOKExkew0aPcyL_W1nokx-mDdg@mail.gmail.com>
- <CAFqH_53crnC6hLExNgQRjMgtO+TLJjT6uzA4g8WXvy7NkwHcJg@mail.gmail.com>
- <CA+E=qVfGiQseZZVBvmmK6u2Mu=-91ViwLuhNegu96KRZNAHr_w@mail.gmail.com>
- <CAFqH_505eWt9UU7Wj6tCQpQCMZFMfy9e1ETSkiqi7i5Zx6KULQ@mail.gmail.com>
- <CA+E=qVff5_hdPFdaG4Lrg7Uzorea=JbEdPoy+sQd7rUGNTTZ5g@mail.gmail.com> <5245a8e4-2320-46bd-04fd-f86ce6b17ce7@collabora.com>
-In-Reply-To: <5245a8e4-2320-46bd-04fd-f86ce6b17ce7@collabora.com>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Thu, 5 Mar 2020 10:29:33 -0800
-Message-ID: <CA+E=qVcyRW4LNC5db27d-8x-T_Nk9QAhkBPwu5rwthTc6ewbYA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] drm/bridge: anx7688: Add anx7688 bridge driver support
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
-Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>, Torsten Duwe <duwe@suse.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Collabora Kernel ML <kernel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <73f52c392431cd21a80a118dd2fd1986e2c535df.camel@redhat.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 7:28 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Vasily,
+On Thu, Mar 05, 2020 at 01:13:36PM -0500, Lyude Paul wrote:
+> On Thu, 2020-03-05 at 15:11 +0200, Ville Syrjälä wrote:
+> > On Wed, Mar 04, 2020 at 05:36:12PM -0500, Lyude Paul wrote:
+> > > It's next to impossible for us to do connector probing on topologies
+> > > without occasionally racing with userspace, since creating a connector
+> > > itself causes a hotplug event which we have to send before probing the
+> > > available PBN of a connector. Even if we didn't have this hotplug event
+> > > sent, there's still always a chance that userspace started probing
+> > > connectors before we finished probing the topology.
+> > > 
+> > > This can be a problem when validating a new MST state since the
+> > > connector will be shown as connected briefly, but without any available
+> > > PBN - causing any atomic state which would enable said connector to fail
+> > > with -ENOSPC. So, let's simply workaround this by telling userspace new
+> > > MST connectors are disconnected until we've finished probing their PBN.
+> > > Since we always send a hotplug event at the end of the link address
+> > > probing process, userspace will still know to reprobe the connector when
+> > > we're ready.
+> > > 
+> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to MST
+> > > atomic check")
+> > > Cc: Mikita Lipski <mikita.lipski@amd.com>
+> > > Cc: Alex Deucher <alexander.deucher@amd.com>
+> > > Cc: Sean Paul <seanpaul@google.com>
+> > > Cc: Hans de Goede <hdegoede@redhat.com>
+> > > ---
+> > >  drivers/gpu/drm/drm_dp_mst_topology.c | 13 +++++++++++++
+> > >  1 file changed, 13 insertions(+)
+> > > 
+> > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > index 207eef08d12c..7b0ff0cff954 100644
+> > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > @@ -4033,6 +4033,19 @@ drm_dp_mst_detect_port(struct drm_connector
+> > > *connector,
+> > >  			ret = connector_status_connected;
+> > >  		break;
+> > >  	}
+> > > +
+> > > +	/* We don't want to tell userspace the port is actually plugged into
+> > > +	 * anything until we've finished probing it's available_pbn, otherwise
+> > 
+> > "its"
+> > 
+> > Why is the connector even registered before we've finished the probe?
+> > 
+> Oops, I'm not sure how I did this by accident but the explanation I gave in
+> the commit message was uh, completely wrong. I must have forgotten that I made
+> sure we didn't expose connectors before probing their PBN back when I started
+> my MST cleanup....
+> 
+> So: despite what I said before it's not actually when new connectors are
+> created, it's when downstream hotplugs happen which means that the conenctor's
+> always going to be there before we probe the available_pbn.
 
-CC: Icenowy and Ondrej
->
-> Would you mind to check which firmware version is running the anx7688 in
-> PinePhone, I think should be easy to check with i2c-tools.
+Not sure I understand. You're saying this is going to change for already
+existing connectors when something else gets plugged in, and either we
+zero it out during the probe or it always was zero to begin with for
+whatever reason?
 
-Icenowy, Ondrej, can you guys please check anx7688 firmware version?
+> I did just notice
+> though that we send a hotplug on connection status notifications even before
+> we've finished the PBN probe, so I might be able to improve on that as well.
+> We still definitely want to report the connector as disconnected before we
+> have the available PBN though, in case another probe was already going before
+> we got the connection status notification.
+> 
+> I'll make sure to fixup the explanation in the commit message on the next
+> respin
+> 
+> > > +	 * userspace will see racy atomic check failures
+> > > +	 *
+> > > +	 * Since we always send a hotplug at the end of probing topology
+> > > +	 * state, we can just let userspace reprobe this connector later.
+> > > +	 */
+> > > +	if (ret == connector_status_connected && !port->available_pbn) {
+> > > +		DRM_DEBUG_KMS("[CONNECTOR:%d:%s] not ready yet (PBN not
+> > > probed)\n",
+> > > +			      connector->base.id, connector->name);
+> > > +		ret = connector_status_disconnected;
+> > > +	}
+> > >  out:
+> > >  	drm_dp_mst_topology_put_port(port);
+> > >  	return ret;
+> > > -- 
+> > > 2.24.1
+> > > 
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> -- 
+> Cheers,
+> 	Lyude Paul (she/her)
+> 	Associate Software Engineer at Red Hat
 
-> Thanks in advance,
->  Enric
->
-> [snip]
+-- 
+Ville Syrjälä
+Intel
