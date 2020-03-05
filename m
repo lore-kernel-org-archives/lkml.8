@@ -2,111 +2,122 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6483CC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69B2C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F032207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B5F20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="WnwAb5d1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JggJGJZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgCEU25 (ORCPT
+        id S1726211AbgCEUa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 15:28:57 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36087 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbgCEU24 (ORCPT
+        Thu, 5 Mar 2020 15:30:26 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43541 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgCEUa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 15:28:56 -0500
-Received: by mail-pg1-f193.google.com with SMTP id d9so3296231pgu.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 12:28:56 -0800 (PST)
+        Thu, 5 Mar 2020 15:30:26 -0500
+Received: by mail-wr1-f65.google.com with SMTP id v9so2030269wrf.10;
+        Thu, 05 Mar 2020 12:30:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HmV0FbbTWHLNbEk18HRKmUQTmdvAb4GvXJNWIO8inpU=;
-        b=WnwAb5d1RStcMvL3G6qv4iE1QY1aQtZjztVhcUwHLiYbgE5zZ0JXszDfD3lwrVqyEu
-         Kdm5SRwXEzXdgyWsmnnf2qpUZv8e9Pp3337mPcRc+FO/qa61nUpE5JNAeC3uIl6Sk7aZ
-         zEScB88mw8C1wc8IlERsLazES/1iiv6dwlrGBRDCwRAihk9DCNz/UKEVMAc/KIeo8bCg
-         X5vvpK01hbb4iaXxC+iHsO9iPBxBtQwUjk/WduX/3jJiXiIYFEiS7Ymakdm2kpN+svRh
-         NPnjd+56lWMHdDiscVAMwx4SjrFfc6nX8RgUgJyoNS0YwDdRICHgGGuRnUlaq9IHgGUE
-         sPMA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=juYwq62t6R4eHfh+DtghPbycszS3hALzIrDdl9KbM1c=;
+        b=JggJGJZ74CId5O5W+ekRHBGRii5hGwwlVujhFs+0LWqATqCFf49ZWMlfjE7Fey199u
+         gbHwtr1I22EQ6hiNPyW5wjGztf6TdkwL1eSWjYbf6VfdYFFUU4wtaGKp/mX4X0hSuW/z
+         uH6UEnVsYpAtMZDoHL2NJVypq3/KYW2OlTifk5/woCgCWvo41+V6qeC6VV8RcsiXRaGm
+         EL4H9y5t2NRseP/T/dFdb3U+bQuD13EQtYu8G+an8LOvWem1Pwtx/3ms0q86TaSQ8w/n
+         QVdkdabYX71ROFgWS9afD4L4UxIFQlCbjmM8+FrA1XvVkO81g3AvkMeKC5jah7Ja/e1k
+         ogIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=HmV0FbbTWHLNbEk18HRKmUQTmdvAb4GvXJNWIO8inpU=;
-        b=PgqgBuz8HMLV/aO8Qz0gx/W59S/HoZsYOtQ0UAEYZxGw76wEYmjQLVtL+7d6lb6sS3
-         A96Sr2iRsJb/IVT/o+WJn6f50gFl/bBv4naZxmjYbanOWzbkUtkHv0iR4T2/CQaKlxCI
-         c3znVJwb74ifVt1xDUHPFAB2cQ/CFaIfSs/Yhi1JkWg8o4SgADKMiVBtBGzME5Xbn+XY
-         5RF5WQmHb6SJEW4uTIgNQIslngiDbjmAVEh8BCC8owyv3eTabFJfM5t0z2bym2knJVPG
-         gpC9Iz7j0sEQnLaM6781rvYKb7qF9s46emvlrJJ06w1Lxd6dHaK6W8o/5cWb1NYK/BDF
-         gHBQ==
-X-Gm-Message-State: ANhLgQ18bklR8YKxsMlaJ3reLEzHUTkoLvzPK3KBnYMMdVKFq3TPedJ/
-        nK6UW5sgO76MdsLWcC9km1U5BQ==
-X-Google-Smtp-Source: ADFU+vuDn2wW8R29ceg7yGU4g1TMD8aF53aa5zyxzy79BYqzrEg5t0wg3/ksTytImORhH9AfXvij9w==
-X-Received: by 2002:a62:25c3:: with SMTP id l186mr151830pfl.52.1583440135288;
-        Thu, 05 Mar 2020 12:28:55 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
-        by smtp.gmail.com with ESMTPSA id y5sm33080681pfr.169.2020.03.05.12.28.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=juYwq62t6R4eHfh+DtghPbycszS3hALzIrDdl9KbM1c=;
+        b=h5Yay2XQ5bflVGjiqkIBbPbSmefIz/32hUUPnCd3LDD/0BpZzEmKW8bHnAyN051J9E
+         fVtnRzTcLv1U0vd1Zz2zlyFR9l2k9u3HWgwWM5FCeRa3c+UMSjvN6Pk4D81EAkNsvJOw
+         MsiUqcTut9N9usRbDb1sJCBkOBngjt1gfCsiQb9VrOfmXBWH/60ed7UlQML3Ym7c4xYy
+         Pnhh+G0Ojn/49CLPAqoObxpySQY8ykpyu/hbb5smo3RSCHm7yKFR1DMCnYHA42dXNzdm
+         7xGiENOxe6I7dtBeqqDJltsYql+RIeXxO2ECNXcAcwmRRis2LI2OlVMdFZJybpjZh+SS
+         SbRg==
+X-Gm-Message-State: ANhLgQ00mkAiSC1dmJvnr7DnrDWhaTWymvyALF3N1bqYF0VLhzq6ZoJc
+        FoO7/VfQhm/CFxZ0BtcwG6c=
+X-Google-Smtp-Source: ADFU+vuPdn1HOnk75j4r99XPjPJh1599lKBBZ32CYxv+g/Sq9+FHWjKwmdgjb/JXnVfAnHyEpemCVg==
+X-Received: by 2002:adf:fdc3:: with SMTP id i3mr707308wrs.142.1583440224101;
+        Thu, 05 Mar 2020 12:30:24 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d7c:7000:ec58:d834:7ed:456a])
+        by smtp.gmail.com with ESMTPSA id k66sm8000310wmf.0.2020.03.05.12.30.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 12:28:54 -0800 (PST)
-Date:   Thu, 05 Mar 2020 12:28:54 -0800 (PST)
-X-Google-Original-Date: Thu, 05 Mar 2020 12:28:24 PST (-0800)
-Subject:     Re: [PATCH] riscv: dts: Add GPIO reboot method to HiFive Unleashed DTS file
-In-Reply-To: <1582084147-24516-1-git-send-email-yash.shah@sifive.com>
-CC:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, Atish Patra <Atish.Patra@wdc.com>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, yash.shah@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     yash.shah@sifive.com
-Message-ID: <mhng-96dfac99-10d0-466f-8119-fbca6a67fa22@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 05 Mar 2020 12:30:23 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Sumit Garg <sumit.garg@linaro.org>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH v3] MAINTAINERS: adjust to trusted keys subsystem creation
+Date:   Thu,  5 Mar 2020 21:30:13 +0100
+Message-Id: <20200305203013.6189-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 19:49:07 PST (-0800), yash.shah@sifive.com wrote:
-> Add the ability to reboot the HiFive Unleashed board via GPIO.
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> index 609198c..4a2729f 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> @@ -2,6 +2,7 @@
->  /* Copyright (c) 2018-2019 SiFive, Inc */
->
->  #include "fu540-c000.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
->
->  /* Clock frequency (in Hz) of the PCB crystal for rtcclk */
->  #define RTCCLK_FREQ		1000000
-> @@ -41,6 +42,10 @@
->  		clock-frequency = <RTCCLK_FREQ>;
->  		clock-output-names = "rtcclk";
->  	};
-> +	gpio-restart {
-> +		compatible = "gpio-restart";
-> +		gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
-> +	};
->  };
->
->  &uart0 {
+Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys subsystem")
+renamed trusted.h to trusted_tpm.h in include/keys/, and moved trusted.c
+to trusted-keys/trusted_tpm1.c in security/keys/.
 
-Thanks, this is on fixes -- I figure that given it's just a DT change there's
-no reason to delay it.
+Since then, ./scripts/get_maintainer.pl --self-test complains:
+
+  warning: no file matches F: security/keys/trusted.c
+  warning: no file matches F: include/keys/trusted.h
+
+Rectify the KEYS-TRUSTED entry in MAINTAINERS now and ensure that all
+files in security/keys/trusted-keys/ are identified as part of
+KEYS-TRUSTED.
+
+Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
+Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Changes to v1:
+  - use a global pattern for matching the whole security/keys/trusted-keys/
+    directory.
+Changes to v2:
+  - name the correct directory in the commit message
+
+Sumit, please ack.
+Jarkko, please pick this patch v3.
+
+ MAINTAINERS | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5c755e03ddee..7f11ac752b91 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9276,8 +9276,8 @@ L:	keyrings@vger.kernel.org
+ S:	Supported
+ F:	Documentation/security/keys/trusted-encrypted.rst
+ F:	include/keys/trusted-type.h
+-F:	security/keys/trusted.c
+-F:	include/keys/trusted.h
++F:	include/keys/trusted_tpm.h
++F:	security/keys/trusted-keys/
+ 
+ KEYS/KEYRINGS
+ M:	David Howells <dhowells@redhat.com>
+-- 
+2.17.1
+
