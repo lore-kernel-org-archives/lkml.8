@@ -2,69 +2,125 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EECC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5283C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152322072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937302072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgCEQEE (ORCPT
+        id S1726591AbgCEQEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:04:04 -0500
-Received: from mga06.intel.com ([134.134.136.31]:42946 "EHLO mga06.intel.com"
+        Thu, 5 Mar 2020 11:04:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:50626 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbgCEQED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:04:03 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 08:04:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="439544115"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Mar 2020 08:04:01 -0800
-Date:   Thu, 5 Mar 2020 08:04:01 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: Fix warning due to implicit truncation on
- 32-bit KVM
-Message-ID: <20200305160401.GF11500@linux.intel.com>
-References: <20200305002422.20968-1-sean.j.christopherson@intel.com>
- <87wo7zcea3.fsf@vitty.brq.redhat.com>
+        id S1725946AbgCEQEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 11:04:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06B9330E;
+        Thu,  5 Mar 2020 08:04:10 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C202F3F534;
+        Thu,  5 Mar 2020 08:04:08 -0800 (PST)
+Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
+To:     Roger Quadros <rogerq@ti.com>, tony@atomide.com
+Cc:     yan-liu@ti.com, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200304090031.30360-1-rogerq@ti.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
+Date:   Thu, 5 Mar 2020 16:04:06 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wo7zcea3.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200304090031.30360-1-rogerq@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 11:00:20AM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> > Explicitly cast the integer literal to an unsigned long when stuffing a
-> > non-canonical value into the host virtual address during private memslot
-> > deletion.  The explicit cast fixes a warning that gets promoted to an
-> > error when running with KVM's newfangled -Werror setting.
-> >
-> >   arch/x86/kvm/x86.c:9739:9: error: large integer implicitly truncated
-> >   to unsigned type [-Werror=overflow]
-> >
-> > Fixes: a3e967c0b87d3 ("KVM: Terminate memslot walks via used_slots"
-> 
-> Missing ')'
+On 04/03/2020 9:00 am, Roger Quadros wrote:
+> Even though the TRM says that SATA IP has 36 address bits
+> wired in the SoC, we see bus errors whenever any address
+> greater than 32-bit is given to the controller.
 
-Hrm, surprised checkpatch didn't catch that.
+Actually, is it really just SATA? I pulled up a couple of DRA7xx TRMs 
+out of curiosity - thanks for having such easy-to-access documentation 
+by the way :) - and they both give me a clear impression that the entire 
+L3_MAIN interconnect is limited to 32-bit addresses and thus pretty much 
+all the DMA masters should only be able to touch the lower 2GB of DRAM. 
+Especially the bit that explicitly says "This is a high address range 
+(Q8 – Q15) that requires an address greater than 32 bits. This space is 
+visible only for the MPU Subsystem."
+
+Is it in fact the case that the SATA driver happens to be the only one 
+to set a >32-bit DMA mask on your system?
+
+Robin.
+
+> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
+> 
+> As a workaround we limit the DMA address range to 32-bits
+> for SATA.
+> 
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Reported-by: Yan Liu <yan-liu@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+> 
+> NOTE: Currently ARM dma-mapping code doesn't account for devices
+> bus_dma_limit. This is fixed in [1].
+> 
+> [1] https://lkml.org/lkml/2020/2/18/712
+> 
+>   arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
+>   1 file changed, 16 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index d78b684e7fca..895462c22d1c 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -642,15 +642,22 @@
+>   		};
+>   
+>   		/* OCP2SCP3 */
+> -		sata: sata@4a141100 {
+> -			compatible = "snps,dwc-ahci";
+> -			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+> -			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> -			phys = <&sata_phy>;
+> -			phy-names = "sata-phy";
+> -			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+> -			ti,hwmods = "sata";
+> -			ports-implemented = <0x1>;
+> +		sata_aux_bus {
+> +			#address-cells = <1>;
+> +			#size-cells = <2>;
+> +			compatible = "simple-bus";
+> +			ranges = <0x0 0x4a140000 0x0 0x1200>;
+> +			dma-ranges = <0x0 0x0 0x1 0x00000000>;
+> +			sata: sata@4a141100 {
+> +				compatible = "snps,dwc-ahci";
+> +				reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
+> +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +				phys = <&sata_phy>;
+> +				phy-names = "sata-phy";
+> +				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+> +				ti,hwmods = "sata";
+> +				ports-implemented = <0x1>;
+> +			};
+>   		};
+>   
+>   		/* OCP2SCP1 */
+> 
