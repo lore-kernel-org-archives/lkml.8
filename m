@@ -2,242 +2,108 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43693C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93641C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7332146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7192146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klpt5eD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCEJHF (ORCPT
+        id S1727000AbgCEJHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:07:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:45158 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725880AbgCEJHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:07:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E31C24B2;
-        Thu,  5 Mar 2020 01:07:03 -0800 (PST)
-Received: from e108754-lin.cambridge.arm.com (e108754-lin.cambridge.arm.com [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 484AE3F8A4;
-        Thu,  5 Mar 2020 01:07:01 -0800 (PST)
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        lukasz.luba@arm.com, valentin.schneider@arm.com,
-        dietmar.eggemann@arm.com, rjw@rjwysocki.net,
-        pkondeti@codeaurora.org, ionela.voinescu@arm.com
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-Subject: [PATCH v6 3/7] arm64/kvm: disable access to AMU registers from kvm guests
-Date:   Thu,  5 Mar 2020 09:06:23 +0000
-Message-Id: <20200305090627.31908-4-ionela.voinescu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200305090627.31908-1-ionela.voinescu@arm.com>
-References: <20200305090627.31908-1-ionela.voinescu@arm.com>
+        Thu, 5 Mar 2020 04:07:07 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54210 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgCEJHG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 04:07:06 -0500
+Received: by mail-pj1-f66.google.com with SMTP id cx7so2217825pjb.3;
+        Thu, 05 Mar 2020 01:07:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CwWk3rymKlBi7YMKzGNb1n6EmY/0fOhsKyM88/tetFg=;
+        b=klpt5eD0lOtMOlCD5w9upzN5MpEqELB1VFCJEfVhkmU5Zh/Z5kIcGB7jZfHR+c/LaH
+         2kbROwAXGEZ//027FUQT6zMBJ6GPWY5L5Ur9TWzhA8NqJ7ht6cAI1ecJx0meCQ89YnnE
+         GEAKxEwX29TwLSK7YklkkL49IlUuVx9FseHC/XmkfBjvfRQfl76UvxWb6NS7S8f1NWrz
+         VF37gLXVlQrlvF74m+789A/fhF/f4HTvK+WIdYq9d2QcuD6AUm0rLvW6t3qH/oWpMVo6
+         Erubp45bmBx1/yw43tBtBM47YbmTEIVEUT0faLSCHSqOMKXuI8DErOZlRkaHyPxOrtmc
+         E9eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CwWk3rymKlBi7YMKzGNb1n6EmY/0fOhsKyM88/tetFg=;
+        b=kS951B6rNfUESNgq1bH4FA2bHhuhrPjsNK4EEDI6SLnacWBD4Hzyew/k6wsMmP7/d+
+         /+ndgMEDJVFDJSM6Ce8FMzxgFG9ZG9+lLzuHxYdNsCe9IfZ8P5CZo1o+HzFmImqRY8tg
+         o7m7r81BAV5I4kSW6PDE8xNKKfj8JZYZwWGacWIk8eE8qG3Oh2qqh8LyC4qXHQUI4/pE
+         z9IyDz9fIUZj7jJPscpgdrFvZ/MOUMaUnYbJNDCVrjcbqPbuYtEO/IHI8RTFGLjIf2IE
+         iwTaGHpBmb+P3p6pjgDNDuKSOLkorFLvQBjIiNb6hfPizfXkMBSlHaSEdcgutbGEP0dM
+         hPxQ==
+X-Gm-Message-State: ANhLgQ0m2tzZe0YyE0vJC/Me1FwURfQvot9jvn8kNyVREP7zuY4Dj6YY
+        kE17TN+ZIxWSs+eFUa0sZkZAmCWw
+X-Google-Smtp-Source: ADFU+vvbk9XiN+e5NS1NkizYhrxuArSYCMucjcPDA/Qy+EnS7Ar6iKHF9uTwRCjX+df5AMO+yMHWlg==
+X-Received: by 2002:a17:902:bd95:: with SMTP id q21mr7267961pls.148.1583399223859;
+        Thu, 05 Mar 2020 01:07:03 -0800 (PST)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id r14sm10626822pfh.119.2020.03.05.01.07.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 01:07:03 -0800 (PST)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH] arm64: dts: specify console via command line
+Date:   Thu,  5 Mar 2020 17:06:35 +0800
+Message-Id: <20200305090635.30569-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Access to the AMU counters should be disabled by default in kvm guests,
-as information from the counters might reveal activity in other guests
-or activity on the host.
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Therefore, disable access to AMU registers from EL0 and EL1 in kvm
-guests by:
- - Hiding the presence of the extension in the feature register
-   (SYS_ID_AA64PFR0_EL1) on the VCPU.
- - Disabling access to the AMU registers before switching to the guest.
- - Trapping accesses and injecting an undefined instruction into the
-   guest.
+The SPRD serial driver need to know which port would be used as console
+in an early period during initialization, otherwise console init would
+fail since we added this feature[1].
 
-Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
+So this patch add console to command line via devicetree.
+
+[1] https://lore.kernel.org/lkml/20190826072929.7696-4-zhang.lyra@gmail.com/
+
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 ---
- arch/arm64/include/asm/kvm_arm.h |  1 +
- arch/arm64/kvm/hyp/switch.c      | 14 ++++-
- arch/arm64/kvm/sys_regs.c        | 93 +++++++++++++++++++++++++++++++-
- 3 files changed, 105 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/sprd/sp9863a-1h10.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-index 6e5d839f42b5..51c1d9918999 100644
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -267,6 +267,7 @@
+diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+index 2047f7a74265..510f65f4d8b8 100644
+--- a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
++++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+@@ -28,7 +28,7 @@
  
- /* Hyp Coprocessor Trap Register */
- #define CPTR_EL2_TCPAC	(1 << 31)
-+#define CPTR_EL2_TAM	(1 << 30)
- #define CPTR_EL2_TTA	(1 << 20)
- #define CPTR_EL2_TFP	(1 << CPTR_EL2_TFP_SHIFT)
- #define CPTR_EL2_TZ	(1 << 8)
-diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index dfe8dd172512..46292a370781 100644
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -98,6 +98,18 @@ static void activate_traps_vhe(struct kvm_vcpu *vcpu)
- 	val = read_sysreg(cpacr_el1);
- 	val |= CPACR_EL1_TTA;
- 	val &= ~CPACR_EL1_ZEN;
-+
-+	/*
-+	 * With VHE (HCR.E2H == 1), accesses to CPACR_EL1 are routed to
-+	 * CPTR_EL2. In general, CPACR_EL1 has the same layout as CPTR_EL2,
-+	 * except for some missing controls, such as TAM.
-+	 * In this case, CPTR_EL2.TAM has the same position with or without
-+	 * VHE (HCR.E2H == 1) which allows us to use here the CPTR_EL2.TAM
-+	 * shift value for trapping the AMU accesses.
-+	 */
-+
-+	val |= CPTR_EL2_TAM;
-+
- 	if (update_fp_enabled(vcpu)) {
- 		if (vcpu_has_sve(vcpu))
- 			val |= CPACR_EL1_ZEN;
-@@ -119,7 +131,7 @@ static void __hyp_text __activate_traps_nvhe(struct kvm_vcpu *vcpu)
- 	__activate_traps_common(vcpu);
+ 	chosen {
+ 		stdout-path = "serial1:115200n8";
+-		bootargs = "earlycon";
++		bootargs = "earlycon console=ttyS1";
+ 	};
+ };
  
- 	val = CPTR_EL2_DEFAULT;
--	val |= CPTR_EL2_TTA | CPTR_EL2_TZ;
-+	val |= CPTR_EL2_TTA | CPTR_EL2_TZ | CPTR_EL2_TAM;
- 	if (!update_fp_enabled(vcpu)) {
- 		val |= CPTR_EL2_TFP;
- 		__activate_traps_fpsimd32(vcpu);
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 3e909b117f0c..44354c812783 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1003,6 +1003,20 @@ static bool access_pmuserenr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
- 	{ SYS_DESC(SYS_PMEVTYPERn_EL0(n)),					\
- 	  access_pmu_evtyper, reset_unknown, (PMEVTYPER0_EL0 + n), }
- 
-+static bool access_amu(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
-+			     const struct sys_reg_desc *r)
-+{
-+	kvm_inject_undefined(vcpu);
-+
-+	return false;
-+}
-+
-+/* Macro to expand the AMU counter and type registers*/
-+#define AMU_AMEVCNTR0_EL0(n) { SYS_DESC(SYS_AMEVCNTR0_EL0(n)), access_amu }
-+#define AMU_AMEVTYPE0_EL0(n) { SYS_DESC(SYS_AMEVTYPE0_EL0(n)), access_amu }
-+#define AMU_AMEVCNTR1_EL0(n) { SYS_DESC(SYS_AMEVCNTR1_EL0(n)), access_amu }
-+#define AMU_AMEVTYPE1_EL0(n) { SYS_DESC(SYS_AMEVTYPE1_EL0(n)), access_amu }
-+
- static bool trap_ptrauth(struct kvm_vcpu *vcpu,
- 			 struct sys_reg_params *p,
- 			 const struct sys_reg_desc *rd)
-@@ -1078,8 +1092,10 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
- 			 (u32)r->CRn, (u32)r->CRm, (u32)r->Op2);
- 	u64 val = raz ? 0 : read_sanitised_ftr_reg(id);
- 
--	if (id == SYS_ID_AA64PFR0_EL1 && !vcpu_has_sve(vcpu)) {
--		val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-+	if (id == SYS_ID_AA64PFR0_EL1) {
-+		if (!vcpu_has_sve(vcpu))
-+			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-+		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
- 	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
- 		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
- 			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
-@@ -1565,6 +1581,79 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 	{ SYS_DESC(SYS_TPIDR_EL0), NULL, reset_unknown, TPIDR_EL0 },
- 	{ SYS_DESC(SYS_TPIDRRO_EL0), NULL, reset_unknown, TPIDRRO_EL0 },
- 
-+	{ SYS_DESC(SYS_AMCR_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCFGR_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCGCR_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMUSERENR_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCNTENCLR0_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCNTENSET0_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCNTENCLR1_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCNTENSET1_EL0), access_amu },
-+	AMU_AMEVCNTR0_EL0(0),
-+	AMU_AMEVCNTR0_EL0(1),
-+	AMU_AMEVCNTR0_EL0(2),
-+	AMU_AMEVCNTR0_EL0(3),
-+	AMU_AMEVCNTR0_EL0(4),
-+	AMU_AMEVCNTR0_EL0(5),
-+	AMU_AMEVCNTR0_EL0(6),
-+	AMU_AMEVCNTR0_EL0(7),
-+	AMU_AMEVCNTR0_EL0(8),
-+	AMU_AMEVCNTR0_EL0(9),
-+	AMU_AMEVCNTR0_EL0(10),
-+	AMU_AMEVCNTR0_EL0(11),
-+	AMU_AMEVCNTR0_EL0(12),
-+	AMU_AMEVCNTR0_EL0(13),
-+	AMU_AMEVCNTR0_EL0(14),
-+	AMU_AMEVCNTR0_EL0(15),
-+	AMU_AMEVTYPE0_EL0(0),
-+	AMU_AMEVTYPE0_EL0(1),
-+	AMU_AMEVTYPE0_EL0(2),
-+	AMU_AMEVTYPE0_EL0(3),
-+	AMU_AMEVTYPE0_EL0(4),
-+	AMU_AMEVTYPE0_EL0(5),
-+	AMU_AMEVTYPE0_EL0(6),
-+	AMU_AMEVTYPE0_EL0(7),
-+	AMU_AMEVTYPE0_EL0(8),
-+	AMU_AMEVTYPE0_EL0(9),
-+	AMU_AMEVTYPE0_EL0(10),
-+	AMU_AMEVTYPE0_EL0(11),
-+	AMU_AMEVTYPE0_EL0(12),
-+	AMU_AMEVTYPE0_EL0(13),
-+	AMU_AMEVTYPE0_EL0(14),
-+	AMU_AMEVTYPE0_EL0(15),
-+	AMU_AMEVCNTR1_EL0(0),
-+	AMU_AMEVCNTR1_EL0(1),
-+	AMU_AMEVCNTR1_EL0(2),
-+	AMU_AMEVCNTR1_EL0(3),
-+	AMU_AMEVCNTR1_EL0(4),
-+	AMU_AMEVCNTR1_EL0(5),
-+	AMU_AMEVCNTR1_EL0(6),
-+	AMU_AMEVCNTR1_EL0(7),
-+	AMU_AMEVCNTR1_EL0(8),
-+	AMU_AMEVCNTR1_EL0(9),
-+	AMU_AMEVCNTR1_EL0(10),
-+	AMU_AMEVCNTR1_EL0(11),
-+	AMU_AMEVCNTR1_EL0(12),
-+	AMU_AMEVCNTR1_EL0(13),
-+	AMU_AMEVCNTR1_EL0(14),
-+	AMU_AMEVCNTR1_EL0(15),
-+	AMU_AMEVTYPE1_EL0(0),
-+	AMU_AMEVTYPE1_EL0(1),
-+	AMU_AMEVTYPE1_EL0(2),
-+	AMU_AMEVTYPE1_EL0(3),
-+	AMU_AMEVTYPE1_EL0(4),
-+	AMU_AMEVTYPE1_EL0(5),
-+	AMU_AMEVTYPE1_EL0(6),
-+	AMU_AMEVTYPE1_EL0(7),
-+	AMU_AMEVTYPE1_EL0(8),
-+	AMU_AMEVTYPE1_EL0(9),
-+	AMU_AMEVTYPE1_EL0(10),
-+	AMU_AMEVTYPE1_EL0(11),
-+	AMU_AMEVTYPE1_EL0(12),
-+	AMU_AMEVTYPE1_EL0(13),
-+	AMU_AMEVTYPE1_EL0(14),
-+	AMU_AMEVTYPE1_EL0(15),
-+
- 	{ SYS_DESC(SYS_CNTP_TVAL_EL0), access_arch_timer },
- 	{ SYS_DESC(SYS_CNTP_CTL_EL0), access_arch_timer },
- 	{ SYS_DESC(SYS_CNTP_CVAL_EL0), access_arch_timer },
 -- 
-2.17.1
+2.20.1
 
