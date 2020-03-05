@@ -2,178 +2,128 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68021C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3252FC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3944B2073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:32:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Dgl84ulZ"
+	by mail.kernel.org (Postfix) with ESMTP id 153A5208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725926AbgCEHcG (ORCPT
+        id S1725965AbgCEHeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 02:32:06 -0500
-Received: from ozlabs.org ([203.11.71.1]:55377 "EHLO ozlabs.org"
+        Thu, 5 Mar 2020 02:34:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:44192 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgCEHcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 02:32:05 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Y2WQ2xs3z9sPK;
-        Thu,  5 Mar 2020 18:32:02 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1583393522;
-        bh=AqqD/7BsFEb+Qk3QF29MUqu1eSjy6ruJUlUW2LliTO0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Dgl84ulZ2LAPoIca7ZyBw2dkmL+xADxZa+I8AfmyYqC1E0xR55k/k9rtG4XzEm26Q
-         YWYKS3Mobc+u0snLdNHK+LBL2WlisAtIEUkrZPGX05e+iyyiJ7YzQxjND2ENPiHuvq
-         CS/tK+lrFtv6aGmMLp/2UipjzBjCYSjhd9yVbTARL0F8a0eGtASYNDeyfLVhNkMEJ9
-         GKVIOrsJwiGAoj1MkK3b9neMISiJc3EcNgFjXznF+F1guSesp9gowucE1VLlRRuHu0
-         gkR2MBmYkjVcbc5hFbGCJEnF63iNMHwum8TBdrnJtijG+ivFMeIN+u6l5wE+6EhuHA
-         0SCPlU3ykZbdA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Po-Hsu Lin <po-hsu.lin@canonical.com>,
-        linux-kselftest@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        benh@kernel.crashing.org, paulus@samba.org, shuah@kernel.org
-Subject: Re: [PATCH] selftests/powerpc: Turn off timeout setting for benchmarks, dscr, signal, tm
-In-Reply-To: <20200304131553.27582-1-po-hsu.lin@canonical.com>
-References: <20200304131553.27582-1-po-hsu.lin@canonical.com>
-Date:   Thu, 05 Mar 2020 18:31:57 +1100
-Message-ID: <87zhcvp89e.fsf@mpe.ellerman.id.au>
+        id S1725866AbgCEHef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 02:34:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7F0E1FB;
+        Wed,  4 Mar 2020 23:34:33 -0800 (PST)
+Received: from [10.163.1.88] (unknown [10.163.1.88])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B93CE3F534;
+        Wed,  4 Mar 2020 23:38:16 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH] mm/special: Create generic fallbacks for pte_special()
+ and pte_mkspecial()
+To:     linux-mm@kvack.org, Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>
+Cc:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Guo Ren <guoren@kernel.org>, Brian Cain <bcain@codeaurora.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sam Creasey <sammy@sammy.net>, Michal Simek <monstr@monstr.eu>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1583114190-7678-1-git-send-email-anshuman.khandual@arm.com>
+Message-ID: <58aecdcf-ea16-c958-0deb-97541792e081@arm.com>
+Date:   Thu, 5 Mar 2020 13:04:19 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1583114190-7678-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Po-Hsu Lin <po-hsu.lin@canonical.com> writes:
-> Some specific tests in powerpc can take longer than the default 45
-> seconds that added in commit 852c8cbf (selftests/kselftest/runner.sh:
-> Add 45 second timeout per test) to run, the following test result was
-> collected across 2 Power8 nodes and 1 Power9 node in our pool:
->   powerpc/benchmarks/futex_bench - 52s
->   powerpc/dscr/dscr_sysfs_test - 116s
->   powerpc/signal/signal_fuzzer - 88s
->   powerpc/tm/tm_unavailable_test - 168s
->   powerpc/tm/tm-poison - 240s
->
-> Thus they will fail with TIMEOUT error. Disable the timeout setting
-> for these sub-tests to allow them finish properly.
 
-I run the powerpc tests with run-parts, rather than the kselftest
-script, we already have our own test runner with a 120s timeout.
-
-I didn't think the kselftests runner actually worked with the powerpc
-tests? Because we override RUN_TESTS.
-
-cheers
-
-
-> https://bugs.launchpad.net/bugs/1864642
-> Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
-> ---
->  tools/testing/selftests/powerpc/benchmarks/Makefile | 2 ++
->  tools/testing/selftests/powerpc/benchmarks/settings | 1 +
->  tools/testing/selftests/powerpc/dscr/Makefile       | 2 ++
->  tools/testing/selftests/powerpc/dscr/settings       | 1 +
->  tools/testing/selftests/powerpc/signal/Makefile     | 2 ++
->  tools/testing/selftests/powerpc/signal/settings     | 1 +
->  tools/testing/selftests/powerpc/tm/Makefile         | 2 ++
->  tools/testing/selftests/powerpc/tm/settings         | 1 +
->  8 files changed, 12 insertions(+)
->  create mode 100644 tools/testing/selftests/powerpc/benchmarks/settings
->  create mode 100644 tools/testing/selftests/powerpc/dscr/settings
->  create mode 100644 tools/testing/selftests/powerpc/signal/settings
->  create mode 100644 tools/testing/selftests/powerpc/tm/settings
->
-> diff --git a/tools/testing/selftests/powerpc/benchmarks/Makefile b/tools/testing/selftests/powerpc/benchmarks/Makefile
-> index d40300a..a32a6ab 100644
-> --- a/tools/testing/selftests/powerpc/benchmarks/Makefile
-> +++ b/tools/testing/selftests/powerpc/benchmarks/Makefile
-> @@ -2,6 +2,8 @@
->  TEST_GEN_PROGS := gettimeofday context_switch fork mmap_bench futex_bench null_syscall
->  TEST_GEN_FILES := exec_target
+On 03/02/2020 07:26 AM, Anshuman Khandual wrote:
+> diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
+> index aef5378f909c..8e4e4be1ca00 100644
+> --- a/arch/mips/include/asm/pgtable.h
+> +++ b/arch/mips/include/asm/pgtable.h
+> @@ -269,6 +269,36 @@ static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+>   */
+>  extern pgd_t swapper_pg_dir[];
 >  
-> +TEST_FILES := settings
+> +/*
+> + * Platform specific pte_special() and pte_mkspecial() definitions
+> + * are required only when ARCH_HAS_PTE_SPECIAL is enabled.
+> + */
+> +#if !defined(CONFIG_32BIT) && !defined(CONFIG_CPU_HAS_RIXI)
+> +#if defined(CONFIG_PHYS_ADDR_T_64BIT) && defined(CONFIG_CPU_MIPS32)
+> +static inline int pte_special(pte_t pte)
+> +{
+> +	return pte.pte_low & _PAGE_SPECIAL;
+> +}
 > +
->  CFLAGS += -O2
->  
->  top_srcdir = ../../../../..
-> diff --git a/tools/testing/selftests/powerpc/benchmarks/settings b/tools/testing/selftests/powerpc/benchmarks/settings
-> new file mode 100644
-> index 0000000..e7b9417
-> --- /dev/null
-> +++ b/tools/testing/selftests/powerpc/benchmarks/settings
-> @@ -0,0 +1 @@
-> +timeout=0
-> diff --git a/tools/testing/selftests/powerpc/dscr/Makefile b/tools/testing/selftests/powerpc/dscr/Makefile
-> index 5df4763..cfa6eed 100644
-> --- a/tools/testing/selftests/powerpc/dscr/Makefile
-> +++ b/tools/testing/selftests/powerpc/dscr/Makefile
-> @@ -3,6 +3,8 @@ TEST_GEN_PROGS := dscr_default_test dscr_explicit_test dscr_user_test	\
->  	      dscr_inherit_test dscr_inherit_exec_test dscr_sysfs_test	\
->  	      dscr_sysfs_thread_test
->  
-> +TEST_FILES := settings
+> +static inline pte_t pte_mkspecial(pte_t pte)
+> +{
+> +	pte.pte_low |= _PAGE_SPECIAL;
+> +	return pte;
+> +}
+> +#else
+> +static inline int pte_special(pte_t pte)
+> +{
+> +	return pte_val(pte) & _PAGE_SPECIAL;
+> +}
 > +
->  top_srcdir = ../../../../..
->  include ../../lib.mk
->  
-> diff --git a/tools/testing/selftests/powerpc/dscr/settings b/tools/testing/selftests/powerpc/dscr/settings
-> new file mode 100644
-> index 0000000..e7b9417
-> --- /dev/null
-> +++ b/tools/testing/selftests/powerpc/dscr/settings
-> @@ -0,0 +1 @@
-> +timeout=0
-> diff --git a/tools/testing/selftests/powerpc/signal/Makefile b/tools/testing/selftests/powerpc/signal/Makefile
-> index 113838f..153fafc 100644
-> --- a/tools/testing/selftests/powerpc/signal/Makefile
-> +++ b/tools/testing/selftests/powerpc/signal/Makefile
-> @@ -5,6 +5,8 @@ CFLAGS += -maltivec
->  $(OUTPUT)/signal_tm: CFLAGS += -mhtm
->  $(OUTPUT)/sigfuz: CFLAGS += -pthread -m64
->  
-> +TEST_FILES := settings
+> +static inline pte_t pte_mkspecial(pte_t pte)
+> +{
+> +	pte_val(pte) |= _PAGE_SPECIAL;
+> +	return pte;
+> +}
+> +#endif
+> +#endif
 > +
->  top_srcdir = ../../../../..
->  include ../../lib.mk
->  
-> diff --git a/tools/testing/selftests/powerpc/signal/settings b/tools/testing/selftests/powerpc/signal/settings
-> new file mode 100644
-> index 0000000..e7b9417
-> --- /dev/null
-> +++ b/tools/testing/selftests/powerpc/signal/settings
-> @@ -0,0 +1 @@
-> +timeout=0
-> diff --git a/tools/testing/selftests/powerpc/tm/Makefile b/tools/testing/selftests/powerpc/tm/Makefile
-> index b15a1a3..7b99d09 100644
-> --- a/tools/testing/selftests/powerpc/tm/Makefile
-> +++ b/tools/testing/selftests/powerpc/tm/Makefile
-> @@ -7,6 +7,8 @@ TEST_GEN_PROGS := tm-resched-dscr tm-syscall tm-signal-msr-resv tm-signal-stack
->  	$(SIGNAL_CONTEXT_CHK_TESTS) tm-sigreturn tm-signal-sigreturn-nt \
->  	tm-signal-context-force-tm tm-poison
->  
-> +TEST_FILES := settings
-> +
->  top_srcdir = ../../../../..
->  include ../../lib.mk
->  
-> diff --git a/tools/testing/selftests/powerpc/tm/settings b/tools/testing/selftests/powerpc/tm/settings
-> new file mode 100644
-> index 0000000..e7b9417
-> --- /dev/null
-> +++ b/tools/testing/selftests/powerpc/tm/settings
-> @@ -0,0 +1 @@
-> +timeout=0
-> -- 
-> 2.7.4
+
+Hello Ralf/Paul,
+
+This change now restricts mips definitions for pte_special() and pte_mkspecial()
+and makes them visible only for configs where ARCH_HAS_PTE_SPECIAL is enabled.
+Does this look okay ? In almost all other platforms we drop the stub definitions
+for pte_special() and pte_mkspecial().
+
+- Anshuman
