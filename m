@@ -2,449 +2,145 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5FAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC1AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DF020870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GM2z4ud+"
+	by mail.kernel.org (Postfix) with ESMTP id 8EACA20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbgCEBX4 (ORCPT
+        id S1726049AbgCEBX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 20:23:56 -0500
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:57289 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgCEBXy (ORCPT
+        Wed, 4 Mar 2020 20:23:59 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:49534 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725308AbgCEBX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 20:23:54 -0500
-Received: by mail-pg1-f202.google.com with SMTP id k67so2263571pga.23
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 17:23:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=xVbKhPYa03B/7Fj2wzK9whmItxLhEu9PIS8rQfMj+SU=;
-        b=GM2z4ud+9K0JKzbxsFheloVDdBaQxSOGR7UIizgqv6Fz3VfjncftQN2pKYvj/ugTrJ
-         mMLygJcH56f9wyVkGssID3FkFnLLrIPZAIW6W4LRnh+L2ihE5QKtAmn2oqIIpUFk1apN
-         8d38W5ToUj9qvA1qIicW38AR0EroTnBYVFjbJ33csWp+zI4q8tuJFR/VkHAf6bTlZRIe
-         IPeY1Jx9dlQ5AiAz0ocL2KKG8XzORqbjzlMCzPHjKEP3Kupx/yzVN/JcRTfgh5nE8trH
-         P6YObwrzcc3Uha/ST7nirtLf3DxrE4c0hojx9bg92k3iePINHFff5+OoApSeTOvBobrT
-         ml+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=xVbKhPYa03B/7Fj2wzK9whmItxLhEu9PIS8rQfMj+SU=;
-        b=NtoCCmXvFez0ziYuctJ7W+ulJKdUXFM0MS/XLXct17uOQ46AzASA+gK/g3dMaaXApV
-         dH3KtuPT+DlqbvJVZeVnQBSnyjnQ7ItpUX4u9HT/7Y7cKM6RuWd9yXYb1L/ntru6aXgh
-         en5PhoJcGW7wNUrH7BxsYpKpmDln5+OeEJz04ob0ShDLQeQZfV3+VmV8wKFR/HZWppGI
-         bIwkGjFzyVVsA7xCzsicOXWLIJp2pOWuBhdu7+OdeT8JgCtDx8aBiRYRBJmgpY4CpCZ7
-         PgjyoCZV4trbotz768hab2NSCR8rOCMQw5OUDUtSg+Pf8e+yfladO5XVx+hgFS8T7KqN
-         78DQ==
-X-Gm-Message-State: ANhLgQ2oAFBFiJ/lmEQcjc/qtkxobeWDJIycISfskPUXvXZppiPOVmgh
-        KKp7D+u4mBRzlFw4V5D+MXULt+myTXDI
-X-Google-Smtp-Source: ADFU+vu9pNnubG4QZFewleUzGXkCy2THuipbLYTYtQx0hzQy+4owF20BomGvEjVc33UZsofb5kI0PQhzFQ/O
-X-Received: by 2002:a65:488d:: with SMTP id n13mr5008755pgs.91.1583371431651;
- Wed, 04 Mar 2020 17:23:51 -0800 (PST)
-Date:   Wed,  4 Mar 2020 17:23:38 -0800
-In-Reply-To: <20200305012338.219746-1-rajatja@google.com>
-Message-Id: <20200305012338.219746-4-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200305012338.219746-1-rajatja@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v6 3/3] drm/i915: Add support for integrated privacy screens
-From:   Rajat Jain <rajatja@google.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        "=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?=" 
-        <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        "=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?=" <jose.souza@intel.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, gregkh@linuxfoundation.org,
-        mathewk@google.com, Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
-        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>,
-        mpearson@lenovo.com, Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
-        Tomoki Maruichi <maruichit@lenovo.com>, groeck@google.com
-Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 4 Mar 2020 20:23:58 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Trh0niI_1583371435;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Trh0niI_1583371435)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 05 Mar 2020 09:23:55 +0800
+Subject: Re: [RFC PATCH] sched: fix the nonsense shares when load of cfs_rq is
+ too, small
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+References: <44fa1cee-08db-e4ab-e5ab-08d6fbd421d7@linux.alibaba.com>
+ <20200303195245.GF2596@hirez.programming.kicks-ass.net>
+ <241603dd-1149-58aa-85cf-43f3da2de43f@linux.alibaba.com>
+ <CAKfTPtB=+sMXYXEeb2WppUracxLNXQPJj0H7d-MqEmgrB3gTDw@mail.gmail.com>
+ <CAKfTPtCnwUKCNbmGR-oErNrF+H+D0FPZPVS=d4m3mvr8Hc7ivQ@mail.gmail.com>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <a22aa816-df93-3bf2-20be-c3eaae17628c@linux.alibaba.com>
+Date:   Thu, 5 Mar 2020 09:23:55 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <CAKfTPtCnwUKCNbmGR-oErNrF+H+D0FPZPVS=d4m3mvr8Hc7ivQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain laptops now come with panels that have integrated privacy
-screens on them. This patch adds support for such panels by adding
-a privacy-screen property to the intel_connector for the panel, that
-the userspace can then use to control and check the status.
 
-Identifying the presence of privacy screen, and controlling it, is done
-via ACPI _DSM methods.
 
-Currently, this is done only for the Intel display ports. But in future,
-this can be done for any other ports if the hardware becomes available
-(e.g. external monitors supporting integrated privacy screens?).
+On 2020/3/4 下午5:43, Vincent Guittot wrote:
+> On Wed, 4 Mar 2020 at 09:47, Vincent Guittot <vincent.guittot@linaro.org> wrote:
+>>
+>> On Wed, 4 Mar 2020 at 02:19, 王贇 <yun.wang@linux.alibaba.com> wrote:
+>>>
+>>>
+>>>
+>>> On 2020/3/4 上午3:52, Peter Zijlstra wrote:
+>>> [snip]
+>>>>> The reason is because we have group B with shares as 2, which make
+>>>>> the group A 'cfs_rq->load.weight' very small.
+>>>>>
+>>>>> And in calc_group_shares() we calculate shares as:
+>>>>>
+>>>>>   load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+>>>>>   shares = (tg_shares * load) / tg_weight;
+>>>>>
+>>>>> Since the 'cfs_rq->load.weight' is too small, the load become 0
+>>>>> in here, although 'tg_shares' is 102400, shares of the se which
+>>>>> stand for group A on root cfs_rq become 2.
+>>>>
+>>>> Argh, because A->cfs_rq.load.weight is B->se.load.weight which is
+>>>> B->shares/nr_cpus.
+>>>
+>>> Yeah, that's exactly why it happens, even the share 2 scale up to 2048,
+>>> on 96 CPUs platform, each CPU get only 21 in equal case.
+>>>
+>>>>
+>>>>> While the se of D on root cfs_rq is far more bigger than 2, so it
+>>>>> wins the battle.
+>>>>>
+>>>>> This patch add a check on the zero load and make it as MIN_SHARES
+>>>>> to fix the nonsense shares, after applied the group C wins as
+>>>>> expected.
+>>>>>
+>>>>> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+>>>>> ---
+>>>>>  kernel/sched/fair.c | 2 ++
+>>>>>  1 file changed, 2 insertions(+)
+>>>>>
+>>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>>>>> index 84594f8aeaf8..53d705f75fa4 100644
+>>>>> --- a/kernel/sched/fair.c
+>>>>> +++ b/kernel/sched/fair.c
+>>>>> @@ -3182,6 +3182,8 @@ static long calc_group_shares(struct cfs_rq *cfs_rq)
+>>>>>      tg_shares = READ_ONCE(tg->shares);
+>>>>>
+>>>>>      load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+>>>>> +    if (!load && cfs_rq->load.weight)
+>>>>> +            load = MIN_SHARES;
+>>>>>
+>>>>>      tg_weight = atomic_long_read(&tg->load_avg);
+>>>>
+>>>> Yeah, I suppose that'll do. Hurmph, wants a comment though.
+>>>>
+>>>> But that has me looking at other users of scale_load_down(), and doesn't
+>>>> at least update_tg_cfs_load() suffer the same problem?
+>>>
+>>> Good point :-) I'm not sure but is scale_load_down() supposed to scale small
+>>> value into 0? If not, maybe we should fix the helper to make sure it at
+>>> least return some real load? like:
+>>>
+>>> # define scale_load_down(w) ((w + (1 << SCHED_FIXEDPOINT_SHIFT)) >> SCHED_FIXEDPOINT_SHIFT)
+>>
+>> you will add +1 of nice prio for each device
+> 
+> Of course, it's not prio but only weight which is different
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v6: Always initialize prop in intel_attach_privacy_screen_property()
-v5: fix a cosmetic checkpatch warning
-v4: Fix a typo in intel_privacy_screen.h
-v3: * Change license to GPL-2.0 OR MIT
-    * Move privacy screen enum from UAPI to intel_display_types.h
-    * Rename parameter name and some other minor changes.
-v2: Formed by splitting the original patch into multiple patches.
-    - All code has been moved into i915 now.
-    - Privacy screen is a i915 property
-    - Have a local state variable to store the prvacy screen. Don't read
-      it from hardware.
+That's right, should only handle the issue cases.
 
- drivers/gpu/drm/i915/Makefile                 |  3 +-
- drivers/gpu/drm/i915/display/intel_atomic.c   | 13 +++-
- .../gpu/drm/i915/display/intel_connector.c    | 35 +++++++++
- .../gpu/drm/i915/display/intel_connector.h    |  1 +
- .../drm/i915/display/intel_display_types.h    | 18 +++++
- drivers/gpu/drm/i915/display/intel_dp.c       |  6 ++
- .../drm/i915/display/intel_privacy_screen.c   | 72 +++++++++++++++++++
- .../drm/i915/display/intel_privacy_screen.h   | 27 +++++++
- 8 files changed, 171 insertions(+), 4 deletions(-)
- create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.c
- create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.h
+Regards,
+Michael Wang
 
-diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
-index 991a8c537d123..825951b4cd006 100644
---- a/drivers/gpu/drm/i915/Makefile
-+++ b/drivers/gpu/drm/i915/Makefile
-@@ -208,7 +208,8 @@ i915-y +=3D \
- 	display/intel_vga.o
- i915-$(CONFIG_ACPI) +=3D \
- 	display/intel_acpi.o \
--	display/intel_opregion.o
-+	display/intel_opregion.o \
-+	display/intel_privacy_screen.o
- i915-$(CONFIG_DRM_FBDEV_EMULATION) +=3D \
- 	display/intel_fbdev.o
-=20
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/=
-i915/display/intel_atomic.c
-index d043057d2fa03..4ed537c877777 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-@@ -40,6 +40,7 @@
- #include "intel_global_state.h"
- #include "intel_hdcp.h"
- #include "intel_psr.h"
-+#include "intel_privacy_screen.h"
- #include "intel_sprite.h"
-=20
- /**
-@@ -60,11 +61,14 @@ int intel_digital_connector_atomic_get_property(struct =
-drm_connector *connector,
- 	struct drm_i915_private *dev_priv =3D to_i915(dev);
- 	struct intel_digital_connector_state *intel_conn_state =3D
- 		to_intel_digital_connector_state(state);
-+	struct intel_connector *intel_connector =3D to_intel_connector(connector)=
-;
-=20
- 	if (property =3D=3D dev_priv->force_audio_property)
- 		*val =3D intel_conn_state->force_audio;
- 	else if (property =3D=3D dev_priv->broadcast_rgb_property)
- 		*val =3D intel_conn_state->broadcast_rgb;
-+	else if (property =3D=3D intel_connector->privacy_screen_property)
-+		*val =3D intel_conn_state->privacy_screen_status;
- 	else {
- 		drm_dbg_atomic(&dev_priv->drm,
- 			       "Unknown property [PROP:%d:%s]\n",
-@@ -93,15 +97,18 @@ int intel_digital_connector_atomic_set_property(struct =
-drm_connector *connector,
- 	struct drm_i915_private *dev_priv =3D to_i915(dev);
- 	struct intel_digital_connector_state *intel_conn_state =3D
- 		to_intel_digital_connector_state(state);
-+	struct intel_connector *intel_connector =3D to_intel_connector(connector)=
-;
-=20
- 	if (property =3D=3D dev_priv->force_audio_property) {
- 		intel_conn_state->force_audio =3D val;
- 		return 0;
--	}
--
--	if (property =3D=3D dev_priv->broadcast_rgb_property) {
-+	} else if (property =3D=3D dev_priv->broadcast_rgb_property) {
- 		intel_conn_state->broadcast_rgb =3D val;
- 		return 0;
-+	} else if (property =3D=3D intel_connector->privacy_screen_property) {
-+		intel_privacy_screen_set_val(intel_connector, val);
-+		intel_conn_state->privacy_screen_status =3D val;
-+		return 0;
- 	}
-=20
- 	drm_dbg_atomic(&dev_priv->drm, "Unknown property [PROP:%d:%s]\n",
-diff --git a/drivers/gpu/drm/i915/display/intel_connector.c b/drivers/gpu/d=
-rm/i915/display/intel_connector.c
-index 903e49659f561..55f80219cb269 100644
---- a/drivers/gpu/drm/i915/display/intel_connector.c
-+++ b/drivers/gpu/drm/i915/display/intel_connector.c
-@@ -297,3 +297,38 @@ intel_attach_colorspace_property(struct drm_connector =
-*connector)
- 	drm_object_attach_property(&connector->base,
- 				   connector->colorspace_property, 0);
- }
-+
-+static const struct drm_prop_enum_list privacy_screen_enum[] =3D {
-+	{ PRIVACY_SCREEN_DISABLED, "Disabled" },
-+	{ PRIVACY_SCREEN_ENABLED, "Enabled" },
-+};
-+
-+/**
-+ * intel_attach_privacy_screen_property -
-+ *     create and attach the connecter's privacy-screen property. *
-+ * @connector: connector for which to init the privacy-screen property
-+ *
-+ * This function creates and attaches the "privacy-screen" property to the
-+ * connector. Initial state of privacy-screen is set to disabled.
-+ */
-+void
-+intel_attach_privacy_screen_property(struct drm_connector *connector)
-+{
-+	struct intel_connector *intel_connector =3D to_intel_connector(connector)=
-;
-+	struct drm_property *prop =3D intel_connector->privacy_screen_property;
-+
-+	if (!prop) {
-+		prop =3D drm_property_create_enum(connector->dev,
-+						DRM_MODE_PROP_ENUM,
-+						"privacy-screen",
-+						privacy_screen_enum,
-+					    ARRAY_SIZE(privacy_screen_enum));
-+		if (!prop)
-+			return;
-+
-+		intel_connector->privacy_screen_property =3D prop;
-+	}
-+
-+	drm_object_attach_property(&connector->base, prop,
-+				   PRIVACY_SCREEN_DISABLED);
-+}
-diff --git a/drivers/gpu/drm/i915/display/intel_connector.h b/drivers/gpu/d=
-rm/i915/display/intel_connector.h
-index 93a7375c8196d..61005f37a3385 100644
---- a/drivers/gpu/drm/i915/display/intel_connector.h
-+++ b/drivers/gpu/drm/i915/display/intel_connector.h
-@@ -31,5 +31,6 @@ void intel_attach_force_audio_property(struct drm_connect=
-or *connector);
- void intel_attach_broadcast_rgb_property(struct drm_connector *connector);
- void intel_attach_aspect_ratio_property(struct drm_connector *connector);
- void intel_attach_colorspace_property(struct drm_connector *connector);
-+void intel_attach_privacy_screen_property(struct drm_connector *connector)=
-;
-=20
- #endif /* __INTEL_CONNECTOR_H__ */
-diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/g=
-pu/drm/i915/display/intel_display_types.h
-index d70612cc1ba2a..de20effb3e073 100644
---- a/drivers/gpu/drm/i915/display/intel_display_types.h
-+++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-@@ -442,6 +442,23 @@ struct intel_connector {
- 	struct work_struct modeset_retry_work;
-=20
- 	struct intel_hdcp hdcp;
-+
-+	/* Optional "privacy-screen" property for the connector panel */
-+	struct drm_property *privacy_screen_property;
-+};
-+
-+/**
-+ * enum intel_privacy_screen_status - privacy_screen status
-+ *
-+ * This enum is used to track and control the state of the integrated priv=
-acy
-+ * screen present on some display panels, via the "privacy-screen" propert=
-y.
-+ *
-+ * @PRIVACY_SCREEN_DISABLED: The privacy-screen on the panel is disabled
-+ * @PRIVACY_SCREEN_ENABLED:  The privacy-screen on the panel is enabled
-+ **/
-+enum intel_privacy_screen_status {
-+	PRIVACY_SCREEN_DISABLED =3D 0,
-+	PRIVACY_SCREEN_ENABLED =3D 1,
- };
-=20
- struct intel_digital_connector_state {
-@@ -449,6 +466,7 @@ struct intel_digital_connector_state {
-=20
- 	enum hdmi_force_audio force_audio;
- 	int broadcast_rgb;
-+	enum intel_privacy_screen_status privacy_screen_status;
- };
-=20
- #define to_intel_digital_connector_state(x) container_of(x, struct intel_d=
-igital_connector_state, base)
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915=
-/display/intel_dp.c
-index 171821113d362..ff76c799364d0 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -62,6 +62,7 @@
- #include "intel_lspcon.h"
- #include "intel_lvds.h"
- #include "intel_panel.h"
-+#include "intel_privacy_screen.h"
- #include "intel_psr.h"
- #include "intel_sideband.h"
- #include "intel_tc.h"
-@@ -6841,6 +6842,7 @@ intel_dp_add_properties(struct intel_dp *intel_dp, st=
-ruct drm_connector *connect
- {
- 	struct drm_i915_private *dev_priv =3D to_i915(connector->dev);
- 	enum port port =3D dp_to_dig_port(intel_dp)->base.port;
-+	struct intel_connector *intel_connector =3D to_intel_connector(connector)=
-;
-=20
- 	if (!IS_G4X(dev_priv) && port !=3D PORT_A)
- 		intel_attach_force_audio_property(connector);
-@@ -6871,6 +6873,10 @@ intel_dp_add_properties(struct intel_dp *intel_dp, s=
-truct drm_connector *connect
-=20
- 		/* Lookup the ACPI node corresponding to the connector */
- 		intel_acpi_device_id_update(dev_priv);
-+
-+		/* Check for integrated Privacy screen support */
-+		if (intel_privacy_screen_present(intel_connector))
-+			intel_attach_privacy_screen_property(connector);
- 	}
- }
-=20
-diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.c b/drivers/=
-gpu/drm/i915/display/intel_privacy_screen.c
-new file mode 100644
-index 0000000000000..c8a5b64f94fb7
---- /dev/null
-+++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.c
-@@ -0,0 +1,72 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Intel ACPI privacy screen code
-+ *
-+ * Copyright =C2=A9 2019 Google Inc.
-+ */
-+
-+#include <linux/acpi.h>
-+
-+#include "intel_privacy_screen.h"
-+
-+#define CONNECTOR_DSM_REVID 1
-+
-+#define CONNECTOR_DSM_FN_PRIVACY_ENABLE		2
-+#define CONNECTOR_DSM_FN_PRIVACY_DISABLE		3
-+
-+static const guid_t drm_conn_dsm_guid =3D
-+	GUID_INIT(0xC7033113, 0x8720, 0x4CEB,
-+		  0x90, 0x90, 0x9D, 0x52, 0xB3, 0xE5, 0x2D, 0x73);
-+
-+/* Makes _DSM call to set privacy screen status */
-+static void acpi_privacy_screen_call_dsm(acpi_handle conn_handle, u64 func=
-)
-+{
-+	union acpi_object *obj;
-+
-+	obj =3D acpi_evaluate_dsm(conn_handle, &drm_conn_dsm_guid,
-+				CONNECTOR_DSM_REVID, func, NULL);
-+	if (!obj) {
-+		DRM_DEBUG_DRIVER("failed to evaluate _DSM for fn %llx\n", func);
-+		return;
-+	}
-+
-+	ACPI_FREE(obj);
-+}
-+
-+void intel_privacy_screen_set_val(struct intel_connector *connector,
-+				  enum intel_privacy_screen_status val)
-+{
-+	acpi_handle acpi_handle =3D connector->acpi_handle;
-+
-+	if (!acpi_handle)
-+		return;
-+
-+	if (val =3D=3D PRIVACY_SCREEN_DISABLED)
-+		acpi_privacy_screen_call_dsm(acpi_handle,
-+					     CONNECTOR_DSM_FN_PRIVACY_DISABLE);
-+	else if (val =3D=3D PRIVACY_SCREEN_ENABLED)
-+		acpi_privacy_screen_call_dsm(acpi_handle,
-+					     CONNECTOR_DSM_FN_PRIVACY_ENABLE);
-+	else
-+		DRM_WARN("%s: Cannot set privacy screen to invalid val %u\n",
-+			 dev_name(connector->base.dev->dev), val);
-+}
-+
-+bool intel_privacy_screen_present(struct intel_connector *connector)
-+{
-+	acpi_handle handle =3D connector->acpi_handle;
-+
-+	if (!handle)
-+		return false;
-+
-+	if (!acpi_check_dsm(handle, &drm_conn_dsm_guid,
-+			    CONNECTOR_DSM_REVID,
-+			    1 << CONNECTOR_DSM_FN_PRIVACY_ENABLE |
-+			    1 << CONNECTOR_DSM_FN_PRIVACY_DISABLE)) {
-+		DRM_WARN("%s: Odd, connector ACPI node but no privacy scrn?\n",
-+			 dev_name(connector->base.dev->dev));
-+		return false;
-+	}
-+	DRM_DEV_INFO(connector->base.dev->dev, "supports privacy screen\n");
-+	return true;
-+}
-diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.h b/drivers/=
-gpu/drm/i915/display/intel_privacy_screen.h
-new file mode 100644
-index 0000000000000..74013a7885c70
---- /dev/null
-+++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR MIT */
-+/*
-+ * Copyright =C2=A9 2019 Google Inc.
-+ */
-+
-+#ifndef __DRM_PRIVACY_SCREEN_H__
-+#define __DRM_PRIVACY_SCREEN_H__
-+
-+#include "intel_display_types.h"
-+
-+#ifdef CONFIG_ACPI
-+bool intel_privacy_screen_present(struct intel_connector *connector);
-+void intel_privacy_screen_set_val(struct intel_connector *connector,
-+				  enum intel_privacy_screen_status val);
-+#else
-+static bool intel_privacy_screen_present(struct intel_connector *connector=
-)
-+{
-+	return false;
-+}
-+
-+static void
-+intel_privacy_screen_set_val(struct intel_connector *connector,
-+			     enum intel_privacy_screen_status val)
-+{ }
-+#endif /* CONFIG_ACPI */
-+
-+#endif /* __DRM_PRIVACY_SCREEN_H__ */
---=20
-2.25.0.265.gbab2e86ba0-goog
-
+> 
+>>
+>> should we use instead
+>> # define scale_load_down(w) ((w >> SCHED_FIXEDPOINT_SHIFT) ? (w >>
+>> SCHED_FIXEDPOINT_SHIFT) : MIN_SHARES)
+>>
+>> Regards,
+>> Vincent
+>>
+>>>
+>>> Regards,
+>>> Michael Wang
+>>>
+>>>>
