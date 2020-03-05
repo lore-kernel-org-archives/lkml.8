@@ -2,101 +2,135 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F18C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB47C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C272073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B100A21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgCELdd (ORCPT
+        id S1727291AbgCELje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:33:33 -0500
-Received: from mga02.intel.com ([134.134.136.20]:23507 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgCELdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:33:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 03:33:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
-   d="scan'208";a="234387456"
-Received: from unknown (HELO jsakkine-mobl1) ([10.237.50.161])
-  by orsmga008.jf.intel.com with ESMTP; 05 Mar 2020 03:33:27 -0800
-Message-ID: <04362c0cf66bf66e8f7c25a531830b9f294d2d09.camel@linux.intel.com>
-Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        linux-kselftest@vger.kernel.org
-Date:   Thu, 05 Mar 2020 13:33:28 +0200
-In-Reply-To: <CAOASepN1JrD6OEzZycbqOr6_ZVACK=EctEOoQ8oSAEeigMr1Eg@mail.gmail.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
-         <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
-         <CAOASepN1JrD6OEzZycbqOr6_ZVACK=EctEOoQ8oSAEeigMr1Eg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.35.92-1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Mar 2020 06:39:34 -0500
+Received: from lucky1.263xmail.com ([211.157.147.132]:34418 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgCELje (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 06:39:34 -0500
+Received: from localhost (unknown [192.168.167.32])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 679DBA97C0;
+        Thu,  5 Mar 2020 19:39:26 +0800 (CST)
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P32419T139954420168448S1583408354858766_;
+        Thu, 05 Mar 2020 19:39:26 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <cdef503d441f81601a125fddf1498248>
+X-RL-SENDER: andy.yan@rock-chips.com
+X-SENDER: yxj@rock-chips.com
+X-LOGIN-NAME: andy.yan@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Andy Yan <andy.yan@rock-chips.com>
+To:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH 4/4] arm64: dts: rockchip: Enable eDP display on rk3399 evb
+Date:   Thu,  5 Mar 2020 19:39:12 +0800
+Message-Id: <20200305113912.32226-5-andy.yan@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200305113912.32226-1-andy.yan@rock-chips.com>
+References: <20200305113912.32226-1-andy.yan@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-04 at 14:27 -0500, Nathaniel McCallum wrote:
-> > > +xsave_area:
-> > +       .fill   1, 4, 0x037F            # FCW
-> > +       .fill   5, 4, 0
-> > +       .fill   1, 4, 0x1F80            # MXCSR
-> > +       .fill   1, 4, 0xFFFF            # MXCSR_MASK
-> > +       .fill   123, 4, 0
-> > +       .fill   1, 4, 0x80000000        # XCOMP_BV[63] = 1, compaction mode
-> > +       .fill   12, 4, 0
-> 
-> I find this much more readable:
+Add eDP panle and enable relative dt node like vop/iommu
+to enable eDP display on rk3399 evb.
 
-And I always aim to get things more readable. Thank you.
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+---
 
-> xsave_area:
->         # Legacy
->         .fill   1, 4, 0x037F            # FCW
->         .fill   5, 4, 0
->         .fill   1, 4, 0x1F80            # MXCSR
->         .fill   1, 4, 0xFFFF            # MXCSR_MASK
->         .fill   60, 8, 0
-> 
->         # Header
->         .fill   1, 8, 0                 # XSTATE_BV
->         .fill   1, 8, 1 << 63           # XCOMP_BV (compaction mode)
->         .fill   6, 8, 0
-> 
-> Also, since people are likely to copy this code for their own
-> enclaves, it would be helpful to document which flags are set in FCW
-> and MXCSR.
+ arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 40 +++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-It was meant as a test program but I'd guess what you say is true
-because it also might be the only alternative user space to Intel's
-:-) And a great starting point if you want to do things from scratch.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+index d4e402b40d08..23e213c421d0 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+@@ -51,6 +51,19 @@
+ 		pwms = <&pwm0 0 25000 0>;
+ 	};
+ 
++	edp_panel: edp-panel {
++		compatible ="lg,lp079qx1-sp0v";
++		backlight = <&backlight>;
++		power-supply = <&vcc3v3_s0>;
++		enable-gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
++
++		port {
++			panel_in_edp: endpoint {
++				remote-endpoint = <&edp_out_panel>;
++			};
++		};
++	};
++
+ 	clkin_gmac: external-gmac-clock {
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <125000000>;
+@@ -113,6 +126,24 @@
+ 
+ };
+ 
++&edp {
++	status = "okay";
++	force-hpd;
++
++	ports {
++		edp_out: port@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			edp_out_panel: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&panel_in_edp>;
++			};
++		};
++	};
++};
++
+ &emmc_phy {
+ 	status = "okay";
+ };
+@@ -439,3 +470,12 @@
+ 		};
+ 	};
+ };
++
++&vopb {
++	status = "okay";
++};
++
++&vopb_mmu {
++	status = "okay";
++};
++
+-- 
+2.17.1
 
-Because I meant it as a smoke test program for SGX, not everything is
-too well documented but given the multipurpose use for that code I'll
-make the improvements that you are suggesting.
 
-/Jarkko
 
