@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8034CC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A050C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 544DE2072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52D02072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HX5orCBV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="No1VK0Js"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgCEP5S (ORCPT
+        id S1727167AbgCEP5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:57:18 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48380 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726184AbgCEP5R (ORCPT
+        Thu, 5 Mar 2020 10:57:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47751 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726184AbgCEP5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:57:17 -0500
+        Thu, 5 Mar 2020 10:57:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583423836;
+        s=mimecast20190719; t=1583423839;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=giheljeQP6Uu0Yz/rFBlh12QkzN9q9BUOHVrPPrqkx8=;
-        b=HX5orCBVqSUEiQcESWb3nSt7EB5GfI+WGL3dewtZSp/970ljwfL6tN/OwezSZmee9gBb2F
-        r+3cpk75oYmd6Jb2CdmFeuzPt05tUlkN4mjXyC8vx75jqYsOO6M5V5okJg4vFWl7H1C/R/
-        F5czHRhS6v6xsjOBND3BC6xbQKKDZkY=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-213-m5GlZDgsPcuW4ZE_ZeTNVw-1; Thu, 05 Mar 2020 10:57:15 -0500
-X-MC-Unique: m5GlZDgsPcuW4ZE_ZeTNVw-1
-Received: by mail-qv1-f69.google.com with SMTP id w13so3276604qvk.8
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:57:15 -0800 (PST)
+        bh=BKhoQxKzVdv0hd1Nmd+yV7hKjeG+Y4sbHF1K+C0InG0=;
+        b=No1VK0Jsb+nIocMcR2Idv9eWZ+dU69bLU0tsrH1ZgdSqSc1Z3oFam29usjXcExoaWRL9j+
+        CJkD4YADUjwGsRUhTeSAuwrkQSTxPG10Kh+I0Ry3oU7vvZvcyqsvMzzKwnHbOPfWwPeFiK
+        Z1jhe6D/5sdgd733y8AuHxEY+McZsnQ=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-25-plA_70yAM6Oa0ROicP3veg-1; Thu, 05 Mar 2020 10:57:18 -0500
+X-MC-Unique: plA_70yAM6Oa0ROicP3veg-1
+Received: by mail-qt1-f197.google.com with SMTP id o9so4107671qtt.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:57:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=giheljeQP6Uu0Yz/rFBlh12QkzN9q9BUOHVrPPrqkx8=;
-        b=Pggn+mcOYd7EzovvU49ryZgwBeDrz00gXPbvEqEqsg+Mvh+cx+uwaWsGzjOLfAzInk
-         +KX9TPCPdE9dPCNKk0JemyArAiI2ZzUja/tX5d6EWqwN2B+tED4YyVwPTaR0j+pxl4Ef
-         7R8cJybupXE963N7eQjnvp/n0zOSKjLQCVoFPKj2SZ0TJ3SeDh6uOnGdCE5vM7ObJid4
-         T9ogxSMCzwJax66infnMXsp0L1sExgNW4bY3YKif06i4LUcV0Pp2Jd/VhZYDufEoo36t
-         VOJSW983ZzsNNEL1BW781dHK+0An7jjusqtBCw1PcTLrtoGTFbpj6EtKk9LBXpOjPsad
-         tBuQ==
-X-Gm-Message-State: ANhLgQ2cKkEY0xY+NktgkLv9aBnz2SHowPbIUSOlYDKffgMQCWWmvYsn
-        /bMJe+KEiBFWhGbQLRhsQ6Jflv0p21uYJNiSY97+whRcFT4KR/Uv9ObXjjiASCAD5MfApBeU5Ey
-        BHNS0X3yQXseWWRpqv4WQA9v8
-X-Received: by 2002:a05:620a:1278:: with SMTP id b24mr8060000qkl.387.1583423834575;
-        Thu, 05 Mar 2020 07:57:14 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vuS9VXeOpu9/W83Z1y6Y24APvGXa7o2yN6VxlQqagLVu9bnEMeqGkR1oGxJCIotDVDEQlOaQA==
-X-Received: by 2002:a05:620a:1278:: with SMTP id b24mr8059984qkl.387.1583423834350;
-        Thu, 05 Mar 2020 07:57:14 -0800 (PST)
+        bh=BKhoQxKzVdv0hd1Nmd+yV7hKjeG+Y4sbHF1K+C0InG0=;
+        b=KD/swwufV1p+8LNjbPdQdXBHJXJNgUfJVn8CbGDtz12Y3qecZHOkLaUyPOBZBx80Iq
+         eikPKCr6sWP5y8pVuNLHLsTVbi5uLPcnz62ECCrnLW8/EXgN/hv+9st5AB+9YEhWCXd4
+         pj1z10Kk6eATBbBRA4pWRGTqa+CRavgabzG6Fc74BDok4/07fQ1zsgR3e+602syq9gaj
+         hQyFkCFwC1jb5tJosktw5fBJYGxicDTx5PNY42Bgahc7naIS32RPKorol+HzzJvE9snu
+         yn2wgykXOwGZM7fufq7DhaZJGL6AGkpC8y9OJATPhek7DWdLvZW6J9cy0Nxr5eaob7Lc
+         qx2w==
+X-Gm-Message-State: ANhLgQ1Cr4x79T7fiOfCHLMAX48udRkvPBSj76KSocT8/zPJ1e2eQnxd
+        Wt+S1Hz/FCLqE7f/HsIsVg00s8jrUylvLyoJIJW9STA6+plM8bL9imFtult1lKojGViuCHeIY8I
+        E7HYRFJs2L15k+qesFmqkDOc9
+X-Received: by 2002:a0c:f64e:: with SMTP id s14mr6990172qvm.129.1583423837882;
+        Thu, 05 Mar 2020 07:57:17 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vtbWhnXso6DibXEzx0MPB5VJm2bB4SiaCiuUwt486jy6wWRPqTydJKvfB1ptF3rG84ssICm/Q==
+X-Received: by 2002:a0c:f64e:: with SMTP id s14mr6990149qvm.129.1583423837566;
+        Thu, 05 Mar 2020 07:57:17 -0800 (PST)
 Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id c13sm10172236qtv.37.2020.03.05.07.57.13
+        by smtp.gmail.com with ESMTPSA id x93sm8030727qte.60.2020.03.05.07.57.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 07:57:13 -0800 (PST)
+        Thu, 05 Mar 2020 07:57:16 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     linmiaohe@huawei.com, Paolo Bonzini <pbonzini@redhat.com>,
         peterx@redhat.com
-Subject: [PATCH v2 1/2] KVM: Documentation: Update fast page fault for indirect sp
-Date:   Thu,  5 Mar 2020 10:57:08 -0500
-Message-Id: <20200305155709.118503-2-peterx@redhat.com>
+Subject: [PATCH v2 2/2] KVM: Drop gfn_to_pfn_atomic()
+Date:   Thu,  5 Mar 2020 10:57:09 -0500
+Message-Id: <20200305155709.118503-3-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200305155709.118503-1-peterx@redhat.com>
 References: <20200305155709.118503-1-peterx@redhat.com>
@@ -79,43 +79,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gfn_to_pfn_atomic() is not used anywhere.  Before dropping it,
-reorganize the locking document to state the fact that we're not
-enabling fast page fault for indirect sps.  The previous wording is
-confusing that it seems we have implemented it however it's not.
+It's never used anywhere now.
 
+Reviewed-by: linmiaohe <linmiaohe@huawei.com>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- Documentation/virt/kvm/locking.rst | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ include/linux/kvm_host.h | 1 -
+ virt/kvm/kvm_main.c      | 6 ------
+ 2 files changed, 7 deletions(-)
 
-diff --git a/Documentation/virt/kvm/locking.rst b/Documentation/virt/kvm/locking.rst
-index c02291beac3f..d045b2a89505 100644
---- a/Documentation/virt/kvm/locking.rst
-+++ b/Documentation/virt/kvm/locking.rst
-@@ -96,8 +96,10 @@ will happen:
- We dirty-log for gfn1, that means gfn2 is lost in dirty-bitmap.
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index bcb9b2ac0791..3faa062ea108 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -704,7 +704,6 @@ void kvm_release_page_clean(struct page *page);
+ void kvm_release_page_dirty(struct page *page);
+ void kvm_set_page_accessed(struct page *page);
  
- For direct sp, we can easily avoid it since the spte of direct sp is fixed
--to gfn. For indirect sp, before we do cmpxchg, we call gfn_to_pfn_atomic()
--to pin gfn to pfn, because after gfn_to_pfn_atomic():
-+to gfn.  For indirect sp, we disabled fast page fault for simplicity.
-+
-+A solution for indirect sp is that, before we do cmpxchg, we pin the
-+pfn of the gfn atomically.  After the pinning:
+-kvm_pfn_t gfn_to_pfn_atomic(struct kvm *kvm, gfn_t gfn);
+ kvm_pfn_t gfn_to_pfn(struct kvm *kvm, gfn_t gfn);
+ kvm_pfn_t gfn_to_pfn_prot(struct kvm *kvm, gfn_t gfn, bool write_fault,
+ 		      bool *writable);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 70f03ce0e5c1..d29718c7017c 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1754,12 +1754,6 @@ kvm_pfn_t gfn_to_pfn_memslot_atomic(struct kvm_memory_slot *slot, gfn_t gfn)
+ }
+ EXPORT_SYMBOL_GPL(gfn_to_pfn_memslot_atomic);
  
- - We have held the refcount of pfn that means the pfn can not be freed and
-   be reused for another gfn.
-@@ -106,9 +108,6 @@ to pin gfn to pfn, because after gfn_to_pfn_atomic():
- 
- Then, we can ensure the dirty bitmaps is correctly set for a gfn.
- 
--Currently, to simplify the whole things, we disable fast page fault for
--indirect shadow page.
+-kvm_pfn_t gfn_to_pfn_atomic(struct kvm *kvm, gfn_t gfn)
+-{
+-	return gfn_to_pfn_memslot_atomic(gfn_to_memslot(kvm, gfn), gfn);
+-}
+-EXPORT_SYMBOL_GPL(gfn_to_pfn_atomic);
 -
- 2) Dirty bit tracking
- 
- In the origin code, the spte can be fast updated (non-atomically) if the
+ kvm_pfn_t kvm_vcpu_gfn_to_pfn_atomic(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+ 	return gfn_to_pfn_memslot_atomic(kvm_vcpu_gfn_to_memslot(vcpu, gfn), gfn);
 -- 
 2.24.1
 
