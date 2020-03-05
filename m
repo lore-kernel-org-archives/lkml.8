@@ -2,96 +2,56 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395DBC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0894CC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111AF207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:48:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WxFZB3Gw"
+	by mail.kernel.org (Postfix) with ESMTP id E01B020717
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCEXs3 (ORCPT
+        id S1726275AbgCEXua convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 18:48:29 -0500
-Received: from ozlabs.org ([203.11.71.1]:41713 "EHLO ozlabs.org"
+        Thu, 5 Mar 2020 18:50:30 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:54882 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgCEXs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 18:48:29 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48YSB155jSz9sP7;
-        Fri,  6 Mar 2020 10:48:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583452106;
-        bh=aKI80ctxF7IvsW1krFEsE8cXOaKoo4tVc2DQGlUj7rI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WxFZB3GwZo6Ut4w78eBhRwny/yH4RSgXiwcxD5cc3se6aUgSML98td+Lzj7j4WATJ
-         xa5dxrFC4sHrgN1WZ7CEn5GQ9ckIJG+C9pCbre539QRgCK5sgfyAL16gO0CB2h003n
-         +MaUlaahiBtvGaQG0/gWvHD/LSKOWs0L6fZYbHE7mITHkOXTqt3ZzbjmWzsw9lNHSn
-         e4oTj6M9j2VI3kJitMLrK5LlQvjtwa4cyC5h0/yhDYdUuGC7jGbuWDg3ZoxZCzxmzD
-         7gZN4qdrc3ogMuy8KYP5DubWvO05JEtbY/MmeeEjnATJsouquJCXnjv/OysBBAvm7S
-         GF1icts+c4YEA==
-Date:   Fri, 6 Mar 2020 10:48:25 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Samuel Ortiz <sameo@linux.intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: linux-next: the nfc-next tree seems to be old
-Message-ID: <20200306104825.068268eb@canb.auug.org.au>
-In-Reply-To: <20200130105538.7b07b150@canb.auug.org.au>
-References: <20200130105538.7b07b150@canb.auug.org.au>
+        id S1726173AbgCEXua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 18:50:30 -0500
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jA0G3-0006bt-CC; Fri, 06 Mar 2020 00:50:27 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Andy Yan <andy.yan@rock-chips.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/4] arm64: dts: rockchip: remove enable-gpio of backlight on rk3399 evb
+Date:   Fri, 06 Mar 2020 00:50:26 +0100
+Message-ID: <79203414.aRzC3Zld2O@phil>
+In-Reply-To: <20200305113912.32226-4-andy.yan@rock-chips.com>
+References: <20200305113912.32226-1-andy.yan@rock-chips.com> <20200305113912.32226-4-andy.yan@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/jZ4rfO48cZsNWT59fxfh2e/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jZ4rfO48cZsNWT59fxfh2e/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Am Donnerstag, 5. März 2020, 12:39:11 CET schrieb Andy Yan:
+> There is no enable-gpio for backlight control on rk3399 evb,
+> actually GPIO1_B5 is for LCD panle enable. So remove it from backlight
+> dt node.
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-Hi all,
+applied for 5.7
 
-On Thu, 30 Jan 2020 10:55:38 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi Samuel,
->=20
-> I noticed that the nfc-next tree has not changed since June 2018 and
-> has been orphaned in May 2019, so am wondering if the commits in it are
-> still relevant or should I just remove the tree from linux-next.
+Thanks
+Heiko
 
-Since I have had no response, I will remove it tomorrow.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/jZ4rfO48cZsNWT59fxfh2e/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5hj8kACgkQAVBC80lX
-0GxKXQf/QrO0WJTnS2wQvjtyNK40yRXdrrmm6M8Oim+Rwv3/BL6RCTPSXkoXngAD
-bkKuOZ1S3hs6dJy9YI31pFjJ4dU80gZgyKidcAggX5zBba2xqlAaBm5n7f4BMkis
-z13+zYkHlnD0KSFtItp3rZa0eXbW3lx24baJxzluJFfJxMH8PUx9uM5uiPxUO48U
-uo77cNLpiyfRXTHYu8t+hpTwhfXZkPacpQM4fSCkK9CdfJV0ibbO5xMsia4GfhLl
-KeC1+EHvKTt6G/PECYLr08Oi776kFAZLeHkZxS1EHE2WLGo6HYKOJtVKm0uM+yyT
-Q/4VzFZx0GuQeHieQ3Bpu7LPGL849g==
-=OkeH
------END PGP SIGNATURE-----
-
---Sig_/jZ4rfO48cZsNWT59fxfh2e/--
