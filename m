@@ -2,209 +2,103 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABE4C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506A0C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BDB2072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238F520848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:58:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VTsX+xwi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V12JsjHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgCEP5Y (ORCPT
+        id S1726275AbgCEP6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:57:24 -0500
-Received: from mail-lj1-f179.google.com ([209.85.208.179]:39484 "EHLO
-        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgCEP5X (ORCPT
+        Thu, 5 Mar 2020 10:58:40 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29948 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726143AbgCEP6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:57:23 -0500
-Received: by mail-lj1-f179.google.com with SMTP id f10so6640814ljn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:57:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=rqIqdBCD5RRhq+ESzxD263ZwH1pSyIOt6ZovmEQfZgE=;
-        b=VTsX+xwi+BhtN9rKWpyqs4TWKRtygG01WC2LSwSBHFue9EJ7EzvYEPZU9ZNzSQtr0l
-         +B2ENQr5HvYeTEm+4ov1YyAbYiNNOUh7pkofZmttovqvegUgLDkRRjobGx21XVNNLu9y
-         0CKRDpuwyUt2hYyAia1wzF9hlJEXQMAPttwVr9N0qu9VZiKIGeZPpo75QXLbjwGSkPHZ
-         8DPDnGX3Qm9833P4CGEIsJt2RPofO3GlXd3bSFOMB7eJKV2AZFCBl/eoBA0UMuTmI0FD
-         7igysT3ydC/9TOIzmiQrJzxhJqRYGAvnNMCipfhk/zvhcvRjjIVJKAqmBmENNuwiK87J
-         +3jg==
+        Thu, 5 Mar 2020 10:58:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583423919;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vcmbPSG7Ns1BCQM6qMZvbDUeuBY81aAMlv0waXN9f5o=;
+        b=V12JsjHTImEGtUWIvsWV9HLWkNDzBEKSGyTp82xGobfleUqg149FBO/KyA+MWks4nVlzj8
+        V0wDetNxi2fmDjDucbXxigscxiUbEtowV2YB2gTguESik5KLjXsX+D7xAZLj0RGl0idpT/
+        9TVy38AU7yIcCA8Ywgyml+UOfN64ToE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-317-PIHivq34MQeIWEw2WWR3zQ-1; Thu, 05 Mar 2020 10:58:37 -0500
+X-MC-Unique: PIHivq34MQeIWEw2WWR3zQ-1
+Received: by mail-wm1-f71.google.com with SMTP id d129so2259628wmd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:58:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=rqIqdBCD5RRhq+ESzxD263ZwH1pSyIOt6ZovmEQfZgE=;
-        b=Z2XI2ZECUYbQqAc8M384Dxe7HCSU3X5K5jPEXtkPT1WFBWgLlNP0EXMEFkuU2ycaFg
-         fgZuz1V49E6XLlbuVoQmX457ABLi8kz3C21ba4Tl4jwpBvjFCuGdiDsuGlk6pqGh/Iqr
-         qrpa+fVilJ/FlHr/nGjXZNHXCt3EhuRCfoDigqGFmrPueSrMOF7L7ZaYYxVLUGKJAD0z
-         9YWjb1VMSs4enVaLw9dN4NkRY96u8gXTGcX0wcrRYqlQUvb615N8rWW42PPS29dGLzKN
-         DwkLdYr4khWfy33+1khCdWHR33lh9LdgBqjQKwdwnFvfAIkQTZS3yA2krj7Z4wctdHKB
-         q+9g==
-X-Gm-Message-State: ANhLgQ1Z8n0ihyO9KNtZ7qlEfq3HEOcGzo7IsKnSR+U6dCKYaFUM7NKa
-        cShKDMcGEIObA7TkWtkhe2vyD+q9Tfq4DTL24G32kLmIwnPXXw==
-X-Google-Smtp-Source: ADFU+vtnKNMxf8ks11Or7LeIRcYocTA0s0SdaX2VTCM3EMu3hKgmm3RGEwJyJHDqRCPwkQTUkUWQO0OLobb4dR2cqog=
-X-Received: by 2002:a05:651c:414:: with SMTP id 20mr5404820lja.165.1583423839387;
- Thu, 05 Mar 2020 07:57:19 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=vcmbPSG7Ns1BCQM6qMZvbDUeuBY81aAMlv0waXN9f5o=;
+        b=RtG3y3j92+nDH4S7eLy+dtLvO6HfIU/mIlPrbawOcXwJzZkUB1wGS2Z9Ly7I5WOaAu
+         n3Z6LXYkAZwgHNd2Qwufw6S+wxpgbs6umUuatSt8zTIyXAKxqUmG5qcboOT84zlN/1nN
+         fWE/xXXKEwm907GUqBlSm1bJH1jPJUDDPbKJTjMngqwg7KIQpCsrJHNBXgN81yw9bm2X
+         uT9e8g53HZpXzrQSGFWWTmzTSYBbc8zStCYhI1c2rp0cETwz9+5+jk+6yuqb4iGJq4lK
+         jFJl8ey8x87KjALkexF7srTqBrasMzcJWtiYtwlO+0EvAo9bqp+tkzUauDuIwZ3ehwOm
+         UJfA==
+X-Gm-Message-State: ANhLgQ3JIREiLLyFfN30koiok7Nti6jGdX7Id0V4emgdjSEsA+N8/6Zz
+        5qE3Wi94G3CRurdIkzQc/IbgPWk8Y52nZouTZVgepUQr6g+ny6tF+8gkh2gUuI8AIdQ6UN8w0LL
+        J3tIKsfexQLElE694bGxefu6m
+X-Received: by 2002:a5d:630a:: with SMTP id i10mr10613139wru.273.1583423916362;
+        Thu, 05 Mar 2020 07:58:36 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vs2tnnfpQubkBdyyW38Ps48EoLmLBMqtqEn0LHkSSBuz/+LpaZRPiwmvos+UYZioFDdZJfdLg==
+X-Received: by 2002:a5d:630a:: with SMTP id i10mr10613126wru.273.1583423916167;
+        Thu, 05 Mar 2020 07:58:36 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id d203sm9339731wmd.37.2020.03.05.07.58.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 07:58:35 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] KVM: x86: VMX: rename 'kvm_area' to 'vmxon_region'
+In-Reply-To: <20200305153623.GA11500@linux.intel.com>
+References: <20200305100123.1013667-1-vkuznets@redhat.com> <20200305100123.1013667-2-vkuznets@redhat.com> <20200305153623.GA11500@linux.intel.com>
+Date:   Thu, 05 Mar 2020 16:58:35 +0100
+Message-ID: <875zfig5ec.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 5 Mar 2020 21:27:07 +0530
-Message-ID: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
-Subject: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
-To:     open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Cc:     rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
-i386, arm and arm64. The steps to reproduce is running kselftests lib
-printf.sh test case.
-Which is doing modprobe operations.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-BTW, there are few RCU warnings from the boot log.
-Please refer below link for more details.
+> Super nit: can I convince you to use "KVM: VMX:" instead of "KVM: x86: VMX:"?
+>
+>   $ glo | grep -e "KVM: x86: nVMX" -e "KVM: x86: VMX:" | wc -l
+>   8
+>   $ glo | grep -e "KVM: nVMX" -e "KVM: VMX:" | wc -l
+>   1032
+>
+> I'm very conditioned to scan for "KVM: *VMX:", e.g. I was about to complain
+> that this used the wrong scope :-)   And in the event that Intel adds a new
+> technology I'd like to be able to use "KVM: Intel:" and "KVM: ***X:"
+> instead of "KVM: x86: Intel:" and "KVM: x86: Intel: ***X:" for code that is
+> common to Intel versus specific to a technology.
 
-Steps reproduce by using kselftests,
+What if someone else adds VMX instead? :-)
 
-          - lsmod || true
-          - cd /opt/kselftests/default-in-kernel/lib/
-          - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
-          - ./printf.sh || true
-          - ./bitmap.sh || true
-          - ./prime_numbers.sh || true
-          - ./strscpy.sh || true
-
-x86_64 kernel BUG dump.
-+ ./printf.sh
-[   32.594369] test_printf: loaded.
-[   32.599859] BUG: kernel NULL pointer dereference, address: 00000000
-[   32.606143] #PF: supervisor read access in kernel mode
-[   32.611280] #PF: error_code(0x0000) - not-present page
-[   32.616419] *pde = 00000000
-[   32.619306] Oops: 0000 [#1] SMP
-[   32.622452] CPU: 0 PID: 387 Comm: modprobe Not tainted
-5.6.0-rc4-next-20200305 #1
-[   32.629928] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.2 05/23/2018
-[   32.637314] EIP: ida_free+0x61/0x130
-[   32.640891] Code: 00 c7 45 e8 00 00 00 00 c7 45 ec 00 00 00 00 0f
-88 c4 00 00 00 89 d3 e8 9d ee 01 00 89 c7 8d 45 d8 e8 e3 18 01 00 a8
-01 75 3f <0f> a3 30 72 72 8b 45 d8 89 fa e8 70 f0 01 00 53 68 d8 61 01
-d3 e8
-[   32.659628] EAX: 00000000 EBX: 00000000 ECX: ffffffff EDX: 00000000
-[   32.665887] ESI: 00000000 EDI: 00000246 EBP: f21a7cc8 ESP: f21a7c9c
-[   32.672153] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010046
-[   32.678928] CR0: 80050033 CR2: 00000000 CR3: 32ff3000 CR4: 003406d0
-[   32.685186] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[   32.691442] DR6: fffe0ff0 DR7: 00000400
-[   32.695273] Call Trace:
-[   32.697721]  software_node_release+0x21/0x80
-[   32.701990]  kobject_put+0xa8/0x1c0
-[   32.705476]  kobject_del+0x40/0x60
-[   32.708881]  kobject_put+0x92/0x1c0
-[   32.712380]  fwnode_remove_software_node+0x30/0x50
-[   32.717201]  software_node_unregister_nodes+0x2b/0x50
-[   32.722246]  test_printf_init+0xe00/0x1d29 [test_printf]
-[   32.727563]  ? find_held_lock+0x27/0xa0
-[   32.731423]  ? test_hashed+0x54/0x54 [test_printf]
-[   32.736207]  ? test_hashed+0x54/0x54 [test_printf]
-[   32.741001]  do_one_initcall+0x54/0x2e0
-[   32.744841]  ? rcu_read_lock_sched_held+0x47/0x70
-[   32.749547]  ? kmem_cache_alloc_trace+0x285/0x2b0
-[   32.754249]  ? do_init_module+0x21/0x1ef
-[   32.758166]  ? do_init_module+0x21/0x1ef
-[   32.762087]  do_init_module+0x50/0x1ef
-[   32.765837]  load_module+0x1e32/0x2540
-[   32.769586]  ? kernel_read_file+0x295/0x2d0
-[   32.773771]  sys_finit_module+0x8a/0xe0
-[   32.777611]  do_fast_syscall_32+0x8e/0x340
-[   32.781709]  entry_SYSENTER_32+0xaa/0x102
-[   32.785719] EIP: 0xb7f75ce1
-[   32.788508] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
-8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
-34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-8d 76
-[   32.807246] EAX: ffffffda EBX: 00000003 ECX: 0806233a EDX: 00000000
-[   32.813502] ESI: 085fb600 EDI: 085fb550 EBP: 085fb6e0 ESP: bffe839c
-[   32.819760] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
-[   32.826542] Modules linked in: test_printf(+) x86_pkg_temp_thermal fuse
-[   32.833150] CR2: 0000000000000000
-[   32.836461] ---[ end trace 69388c972b4562b8 ]---
-[   32.841072] EIP: ida_free+0x61/0x130
-[   32.844642] Code: 00 c7 45 e8 00 00 00 00 c7 45 ec 00 00 00 00 0f
-88 c4 00 00 00 89 d3 e8 9d ee 01 00 89 c7 8d 45 d8 e8 e3 18 01 00 a8
-01 75 3f <0f> a3 30 72 72 8b 45 d8 89 fa e8 70 f0 01 00 53 68 d8 61 01
-d3 e8
-[   32.863420] EAX: 00000000 EBX: 00000000 ECX: ffffffff EDX: 00000000
-[   32.869679] ESI: 00000000 EDI: 00000246 EBP: f21a7cc8 ESP: f21a7c9c
-[   32.875936] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010046
-[   32.882713] CR0: 80050033 CR2: 00000000 CR3: 32ff3000 CR4: 003406d0
-[   32.888970] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[   32.895227] DR6: fffe0ff0 DR7: 00000400
-[   32.899060] BUG: sleeping function called from invalid context at
-/usr/src/kernel/include/linux/percpu-rwsem.h:49
-[   32.909303] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid:
-387, name: modprobe
-[   32.917207] INFO: lockdep is turned off.
-[   32.921124] irq event stamp: 5120
-[   32.924434] hardirqs last  enabled at (5119): [<d20dea05>] kfree+0x135/0x270
-[   32.931472] hardirqs last disabled at (5120): [<d2b9ab04>]
-_raw_spin_lock_irqsave+0x14/0x40
-[   32.939809] softirqs last  enabled at (4978): [<d2b9f165>]
-__do_softirq+0x2c5/0x3c3
-[   32.947454] softirqs last disabled at (4969): [<d1ea67d5>]
-call_on_stack+0x45/0x50
-[   32.955009] CPU: 0 PID: 387 Comm: modprobe Tainted: G      D
-   5.6.0-rc4-next-20200305 #1
-[   32.963867] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.2 05/23/2018
-[   32.971250] Call Trace:
-[   32.973695]  dump_stack+0x6e/0x96
-[   32.977009]  ___might_sleep+0x14d/0x240
-[   32.980846]  __might_sleep+0x33/0x80
-[   32.984419]  exit_signals+0x2a/0x2d0
-[   32.987997]  do_exit+0x8e/0xb00
-[   32.991143]  ? do_fast_syscall_32+0x8e/0x340
-[   32.995421]  rewind_stack_do_exit+0x11/0x13
-[   32.999600] EIP: 0xb7f75ce1
-[   33.002416] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
-8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
-34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-8d 76
-[   33.021153] EAX: ffffffda EBX: 00000003 ECX: 0806233a EDX: 00000000
-[   33.027425] ESI: 085fb600 EDI: 085fb550 EBP: 085fb6e0 ESP: bffe839c
-[   33.033685] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
-[   33.040465] note: modprobe[387] exited with preempt_count 1
-./../kselftest/module.sh: line 56:   387 Killed
-$modprobe -q $module $args
-printf:  [FAIL]
-
-
-metadata:
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git branch: master
-  git describe: next-20200305
-  kernel-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-core2-32/lkft/linux-next/719/config
-
-ref:
-https://lkft.validation.linaro.org/scheduler/job/1267112#L1254
-https://lkft.validation.linaro.org/scheduler/job/1267041#L9795
+Point taken, will use 'KVM: VMX:' in the future (and I'm in no way
+object to changing this in the queue if it's not too late).
 
 -- 
-Linaro LKFT
-https://lkft.linaro.org
+Vitaly
+
