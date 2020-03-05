@@ -2,121 +2,93 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562FCC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BE0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2D221556
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 654F4208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:22:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ggxo3a7h"
+	dkim=pass (2048-bit key) header.d=kresin-me.20150623.gappssmtp.com header.i=@kresin-me.20150623.gappssmtp.com header.b="iWLNpIoE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbgCESWl (ORCPT
+        id S1726273AbgCESW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:22:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31973 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726080AbgCESWk (ORCPT
+        Thu, 5 Mar 2020 13:22:56 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54921 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbgCESWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:22:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583432559;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=90RLHPqVNEZEMrWwkgjpPMMkSbZ9eZRo8m2gr4E/ffQ=;
-        b=Ggxo3a7hdHrwjG4k3gtHSePRaYS7JCUUlBq8TkcngeHnEYq9fUY4witBaMGMgM815n/wtV
-        HeED+CbMbDPRDQ3q+P7oFnRDn3WQUy+T2a80xjIzQKSq2626SeZ/SXnf4ikjql/8OgQEm0
-        I61e3R0iTTjFamUNFl9Wq08zZj+295g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-140-FZVPSvRgM1yuOakSm6mTpA-1; Thu, 05 Mar 2020 13:22:35 -0500
-X-MC-Unique: FZVPSvRgM1yuOakSm6mTpA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23DBB13F6;
-        Thu,  5 Mar 2020 18:22:34 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B5AB8F34E;
-        Thu,  5 Mar 2020 18:22:31 +0000 (UTC)
-Date:   Thu, 5 Mar 2020 11:22:30 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: Re: [PATCH v2 5/7] vfio/pci: Add sriov_configure support
-Message-ID: <20200305112230.0dd77712@w520.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D79A943@SHSMSX104.ccr.corp.intel.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
-        <158213846731.17090.37693075723046377.stgit@gimli.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D79A943@SHSMSX104.ccr.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Thu, 5 Mar 2020 13:22:55 -0500
+Received: by mail-wm1-f68.google.com with SMTP id i9so7460584wml.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:22:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kresin-me.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=Fka8imS/1xK6KJNhtftXLfBrbLrzvdMLMZpCkl8cR10=;
+        b=iWLNpIoER9UnuztnR+05HmzAnfkAl3NxxjdwsiL9JsUcDyjTQ+V13sJDvRF/CwMzp4
+         o7gU/oN9zypjyyHUlSeZUAIP5obBfz+5CN3Z4B9+bodo9PsjTV3RbEadDxdJzocUxJxz
+         8XXzco+fhfKO3iq7fq6PYjmvJx/a4mVZ6tef1hhUyeZCNPGBxZnvNokhMORxph8P535M
+         4nwDuBxd3Jnqx0pBWanAFthwus7h1F4uRjM3ARF/qw7ixwaZfhfGeVI+vqi+mTTGoQYy
+         wR8FZJ1UXkCx0EYIe5Jp+fyYPhf6U5MJk8HnSvx8PIVjXdmdoMYhWH4Ym+7Urr5CFQ2s
+         xnaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Fka8imS/1xK6KJNhtftXLfBrbLrzvdMLMZpCkl8cR10=;
+        b=pYQ98VBA36AZU7/+yzXBn5N94ew5gq4kguyz71el1gnH/fi/Svy8wZm2gAQn2vlkGc
+         QcBoyZaq+w3zbi8va6AYj3VxOlPcfbPTw4UZBSwpoUxZFTqEgGUpMFrmmsjnkoR0ghlG
+         PIMuDq3TxJnISrCFCDHDVvar9FT9N+WhHs3pGk1xNUGg5VCxXHNsP/0sdwckOEpsDR0M
+         uT3XU1X14sx61vdNVTkR9immeEYDh3IDyb2Qrgzhw3JGtY1Thm8Kr1m9JPIxkhxckMtl
+         53oeKM9ZGh3w/+MpNsDWQBj0IgMLbL/bK5SUl9ETcVZjOGwb2oySwcCuIy1en7oa8gEC
+         76rQ==
+X-Gm-Message-State: ANhLgQ03whTcAeJZB77J+D/qYSH45DBFKr/QlvhdMVBq52Dkwd3v/QjT
+        YSXDR5Yyg+vwhp03pq+paD0VDQ==
+X-Google-Smtp-Source: ADFU+vsIJFiHCoLIv+/msfzl/lI5ZtLr2/v7pFClpu9/Qs0qrq4bL/6WVmA9WiCBf4ySO/dBx+hrzQ==
+X-Received: by 2002:a1c:9802:: with SMTP id a2mr57168wme.117.1583432573971;
+        Thu, 05 Mar 2020 10:22:53 -0800 (PST)
+Received: from desktop.wvd.kresin.me (p200300EC2F0EF80014FA05E763F3370C.dip0.t-ipconnect.de. [2003:ec:2f0e:f800:14fa:5e7:63f3:370c])
+        by smtp.gmail.com with ESMTPSA id a5sm10540509wmb.37.2020.03.05.10.22.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 10:22:53 -0800 (PST)
+From:   Mathias Kresin <dev@kresin.me>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] pinctrl: falcon: fix syntax error
+Date:   Thu,  5 Mar 2020 19:22:45 +0100
+Message-Id: <20200305182245.9636-1-dev@kresin.me>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 03:08:00 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+Add the missing semicolon after of_node_put to get the file compiled.
 
-> > From: Alex Williamson
-> > Sent: Thursday, February 20, 2020 2:54 AM
-> > 
-> > With the VF Token interface we can now expect that a vfio userspace
-> > driver must be in collaboration with the PF driver, an unwitting
-> > userspace driver will not be able to get past the GET_DEVICE_FD step
-> > in accessing the device.  We can now move on to actually allowing
-> > SR-IOV to be enabled by vfio-pci on the PF.  Support for this is not
-> > enabled by default in this commit, but it does provide a module option
-> > for this to be enabled (enable_sriov=1).  Enabling VFs is rather
-> > straightforward, except we don't want to risk that a VF might get
-> > autoprobed and bound to other drivers, so a bus notifier is used to
-> > "capture" VFs to vfio-pci using the driver_override support.  We
-> > assume any later action to bind the device to other drivers is
-> > condoned by the system admin and allow it with a log warning.
-> > 
-> > vfio-pci will disable SR-IOV on a PF before releasing the device,
-> > allowing a VF driver to be assured other drivers cannot take over the
-> > PF and that any other userspace driver must know the shared VF token.
-> > This support also does not provide a mechanism for the PF userspace
-> > driver itself to manipulate SR-IOV through the vfio API.  With this
-> > patch SR-IOV can only be enabled via the host sysfs interface and the
-> > PF driver user cannot create or remove VFs.  
-> 
-> I'm not sure how many devices can be properly configured simply 
-> with pci_enable_sriov. It is not unusual to require PF driver prepare
-> something before turning PCI SR-IOV capability. If you look kernel
-> PF drivers, there are only two using generic pci_sriov_configure_
-> simple (simple wrapper like pci_enable_sriov), while most others
-> implementing their own callback. However vfio itself has no idea
-> thus I'm not sure how an user knows whether using this option can
-> actually meet his purpose. I may miss something here, possibly 
-> using DPDK as an example will make it clearer.
+Fixes: f17d2f54d36d ("pinctrl: falcon: Add of_node_put() before return")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Mathias Kresin <dev@kresin.me>
+---
+ drivers/pinctrl/pinctrl-falcon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There is still the entire vfio userspace driver interface.  Imagine for
-example that QEMU emulates the SR-IOV capability and makes a call out
-to libvirt (or maybe runs with privs for the PF SR-IOV sysfs attribs)
-when the guest enables SR-IOV.  Can't we assume that any PF specific
-support can still be performed in the userspace/guest driver, leaving
-us with a very simple and generic sriov_configure callback in vfio-pci?
-Thanks,
-
-Alex
+diff --git a/drivers/pinctrl/pinctrl-falcon.c b/drivers/pinctrl/pinctrl-falcon.c
+index a454f57c264e..62c02b969327 100644
+--- a/drivers/pinctrl/pinctrl-falcon.c
++++ b/drivers/pinctrl/pinctrl-falcon.c
+@@ -451,7 +451,7 @@ static int pinctrl_falcon_probe(struct platform_device *pdev)
+ 		falcon_info.clk[*bank] = clk_get(&ppdev->dev, NULL);
+ 		if (IS_ERR(falcon_info.clk[*bank])) {
+ 			dev_err(&ppdev->dev, "failed to get clock\n");
+-			of_node_put(np)
++			of_node_put(np);
+ 			return PTR_ERR(falcon_info.clk[*bank]);
+ 		}
+ 		falcon_info.membase[*bank] = devm_ioremap_resource(&pdev->dev,
+-- 
+2.17.1
 
