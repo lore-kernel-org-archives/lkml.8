@@ -2,215 +2,150 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D00C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209CFC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D404320637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E4Y/lUsm"
+	by mail.kernel.org (Postfix) with ESMTP id F2E4520637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbgCERYe (ORCPT
+        id S1727588AbgCERY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:24:34 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38093 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgCERYd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:24:33 -0500
-Received: by mail-pl1-f196.google.com with SMTP id w3so44924plz.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:24:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mp5fWww43kwzuooPmGWsuVGO+tZOpFhcHE+Owcf1fPw=;
-        b=E4Y/lUsmZXp9+AAsZa7Zo5SzTQ9O+aYrU5ndNRs7WiK1c8XxM2exp14Q62BFn1Venr
-         djbBK0ms3ZbYweQUswq8VZGv8IkmQJfKAOH17R3IFd7GSLAKiPoGZsGuQ2RF56wnA37c
-         sqxdD/b+BVBMNEXe4fDRy18jx9RD6LINy4hrY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mp5fWww43kwzuooPmGWsuVGO+tZOpFhcHE+Owcf1fPw=;
-        b=tWt5ZT9aGd/5P9cQ3xbYvtQYP532rJmrBUZkCjjeXeKcdcfJ3t0MjUJIy+nYYOqFq8
-         v+iab5EZ/d+VmeNqfRRIDjvGolBzwLsG7YnxjMi1/mrjYRz/FSQC2fFFXn4aCAyihHuT
-         eujMvDWz5zDVTV14DJnYL7sMNOvY9OhfYulvf0VUlkYTBWnEif7xQnVSlw1vfLboPWMP
-         2oguhtjg5zhKDG/aJwfRTaxsItbgnaTV8bB/XQmk8TzqJF0AFYnkktjd4KkcOn7sAFMP
-         VZ3WRMeRhoIUhK9roXwFlzhnudCKrtrQnqnib3bhjytFB/kgjCalBOtapcRsvYPej7Q5
-         W6Zw==
-X-Gm-Message-State: ANhLgQ0nRVToyELz641/7xNQPxsc7JnVx/ggYoxuz0FJyoTifX6PUZA+
-        N+uhNpLx8FRIRLhFoDDyvYHGY05FTDc=
-X-Google-Smtp-Source: ADFU+vt9l0oVbJ6VNPpaOLHDblo5TqyZNoJVjyz+Iu+6pL5xZpvRVmjo1V8vi6bgpHk7AmIq2Mfksg==
-X-Received: by 2002:a17:90b:1983:: with SMTP id mv3mr9946768pjb.86.1583429072818;
-        Thu, 05 Mar 2020 09:24:32 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t4sm10049060pfd.52.2020.03.05.09.24.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 09:24:31 -0800 (PST)
-Date:   Thu, 5 Mar 2020 09:24:30 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     cl@rock-chips.com
-Cc:     heiko@sntech.de, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, akpm@linux-foundation.org, tglx@linutronix.de,
-        mpe@ellerman.id.au, surenb@google.com, ben.dooks@codethink.co.uk,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        will@kernel.org, luto@amacapital.net, wad@chromium.org,
-        mark.rutland@arm.com, geert+renesas@glider.be,
-        george_davis@mentor.com, sudeep.holla@arm.com,
-        linux@armlinux.org.uk, gregkh@linuxfoundation.org, info@metux.net,
-        kstewart@linuxfoundation.org, allison@lohutok.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        huangtao@rock-chips.com
-Subject: Re: [PATCH v2 1/1] sched/fair: do not preempt current task if it is
- going to call schedule()
-Message-ID: <202003050921.5559A8C3@keescook>
-References: <20200305095948.10873-1-cl@rock-chips.com>
- <20200305095948.10873-2-cl@rock-chips.com>
+        Thu, 5 Mar 2020 12:24:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57996 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbgCERY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:24:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 66418ABBE;
+        Thu,  5 Mar 2020 17:24:54 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 8AF3DE037F; Thu,  5 Mar 2020 18:24:53 +0100 (CET)
+Date:   Thu, 5 Mar 2020 18:24:53 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Era Mayflower <mayflowerera@gmail.com>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] macsec: Netlink support of XPN cipher suites (IEEE
+ 802.1AEbw)
+Message-ID: <20200305172453.GB28693@unicorn.suse.cz>
+References: <20200305220108.18780-1-mayflowerera@gmail.com>
+ <20200305220108.18780-2-mayflowerera@gmail.com>
+ <20200305140241.GA28693@unicorn.suse.cz>
+ <CAMdQvKv9tSoSBfyOyhtctQ9D7aU2WUmuMUsoLn_WZ8whD=3AzA@mail.gmail.com>
+ <CAMdQvKuzaBuKGj1-HR6+r=FY4X9GhZPvEHwRt3BjErFiu1+bgw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200305095948.10873-2-cl@rock-chips.com>
+In-Reply-To: <CAMdQvKuzaBuKGj1-HR6+r=FY4X9GhZPvEHwRt3BjErFiu1+bgw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 05:59:48PM +0800, cl@rock-chips.com wrote:
-> From: Liang Chen <cl@rock-chips.com>
-> 
-> when we create a kthread with ktrhead_create_on_cpu(),the child thread
-> entry is ktread.c:ktrhead() which will be preempted by the parent after
-> call complete(done) while schedule() is not called yet,then the parent
-> will call wait_task_inactive(child) but the child is still on the runqueue,
-> so the parent will schedule_hrtimeout() for 1 jiffy,it will waste a lot of
-> time,especially on startup.
-> 
->   parent                             child
-> ktrhead_create_on_cpu()
->   wait_fo_completion(&done) -----> ktread.c:ktrhead()
->                              |----- complete(done);--wakeup and preempted by parent
->  kthread_bind() <------------|  |-> schedule();--dequeue here
->   wait_task_inactive(child)     |
->    schedule_hrtimeout(1 jiffy) -|
-> 
-> So we hope the child just wakeup parent but not preempted by parent, and the
-> child is going to call schedule() soon,then the parent will not call
-> schedule_hrtimeout(1 jiffy) as the child is already dequeue.
-> 
-> The same issue for ktrhead_park()&&kthread_parkme().
-> This patch can save 120ms on rk312x startup with CONFIG_HZ=300.
-> 
-> Signed-off-by: Liang Chen <cl@rock-chips.com>
+On Thu, Mar 05, 2020 at 11:53:29PM +0000, Era Mayflower wrote:
+> Do you think that inserting those new enum values after *_PAD would be
+> a good solution?
 
-I'm not familiar with the subtleties of scheduler internals
-(e.g. is there a race between the end of "schedule();" and calling
-"task_clear_going_to_sched();" that effects the preemption test logic?),
-so I'll leave that review to the others. But speaking to the PFA change,
-it looks sane to me:
+Yes, new attribute identifiers should always be added as last so that
+you don't change existing values.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Michal
 
--Kees
-
-> ---
->  include/linux/sched.h |  5 +++++
->  kernel/kthread.c      |  4 ++++
->  kernel/sched/fair.c   | 13 +++++++++++++
->  3 files changed, 22 insertions(+)
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 04278493bf15..54bf336f5790 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1533,6 +1533,7 @@ static inline bool is_percpu_thread(void)
->  #define PFA_SPEC_IB_DISABLE		5	/* Indirect branch speculation restricted */
->  #define PFA_SPEC_IB_FORCE_DISABLE	6	/* Indirect branch speculation permanently restricted */
->  #define PFA_SPEC_SSB_NOEXEC		7	/* Speculative Store Bypass clear on execve() */
-> +#define PFA_GOING_TO_SCHED		8	/* task is going to call schedule() */
->  
->  #define TASK_PFA_TEST(name, func)					\
->  	static inline bool task_##func(struct task_struct *p)		\
-> @@ -1575,6 +1576,10 @@ TASK_PFA_CLEAR(SPEC_IB_DISABLE, spec_ib_disable)
->  TASK_PFA_TEST(SPEC_IB_FORCE_DISABLE, spec_ib_force_disable)
->  TASK_PFA_SET(SPEC_IB_FORCE_DISABLE, spec_ib_force_disable)
->  
-> +TASK_PFA_TEST(GOING_TO_SCHED, going_to_sched)
-> +TASK_PFA_SET(GOING_TO_SCHED, going_to_sched)
-> +TASK_PFA_CLEAR(GOING_TO_SCHED, going_to_sched)
-> +
->  static inline void
->  current_restore_flags(unsigned long orig_flags, unsigned long flags)
->  {
-> diff --git a/kernel/kthread.c b/kernel/kthread.c
-> index b262f47046ca..bc96de2648f6 100644
-> --- a/kernel/kthread.c
-> +++ b/kernel/kthread.c
-> @@ -199,8 +199,10 @@ static void __kthread_parkme(struct kthread *self)
->  		if (!test_bit(KTHREAD_SHOULD_PARK, &self->flags))
->  			break;
->  
-> +		task_set_going_to_sched(current);
->  		complete(&self->parked);
->  		schedule();
-> +		task_clear_going_to_sched(current);
->  	}
->  	__set_current_state(TASK_RUNNING);
->  }
-> @@ -245,8 +247,10 @@ static int kthread(void *_create)
->  	/* OK, tell user we're spawned, wait for stop or wakeup */
->  	__set_current_state(TASK_UNINTERRUPTIBLE);
->  	create->result = current;
-> +	task_set_going_to_sched(current);
->  	complete(done);
->  	schedule();
-> +	task_clear_going_to_sched(current);
->  
->  	ret = -EINTR;
->  	if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 3c8a379c357e..78666cec794a 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4330,6 +4330,12 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
->  			hrtimer_active(&rq_of(cfs_rq)->hrtick_timer))
->  		return;
->  #endif
-> +	/*
-> +	 * current task is going to call schedule(), do not preempt it or
-> +	 * it will casue more useless contex_switch().
-> +	 */
-> +	if (task_going_to_sched(rq_of(cfs_rq)->curr))
-> +		return;
->  
->  	if (cfs_rq->nr_running > 1)
->  		check_preempt_tick(cfs_rq, curr);
-> @@ -6634,6 +6640,13 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
->  	if (test_tsk_need_resched(curr))
->  		return;
->  
-> +	/*
-> +	 * current task is going to call schedule(), do not preempt it or
-> +	 * it will casue more useless contex_switch().
-> +	 */
-> +	if (task_going_to_sched(curr))
-> +		return;
-> +
->  	/* Idle tasks are by definition preempted by non-idle tasks. */
->  	if (unlikely(task_has_idle_policy(curr)) &&
->  	    likely(!task_has_idle_policy(p)))
-> -- 
-> 2.17.1
-> 
-> 
-> 
-
--- 
-Kees Cook
+> On Thu, Mar 5, 2020 at 11:51 PM Era Mayflower <mayflowerera@gmail.com> wrote:
+> >
+> > Do you think that inserting those new enum values after *_PAD would be a good solution?
+> >
+> > On Thu, Mar 5, 2020 at 2:02 PM Michal Kubecek <mkubecek@suse.cz> wrote:
+> >>
+> >> On Thu, Mar 05, 2020 at 10:01:08PM +0000, Era Mayflower wrote:
+> >> > Netlink support of extended packet number cipher suites,
+> >> > allows adding and updating XPN macsec interfaces.
+> >> >
+> >> > Added support in:
+> >> >     * Creating interfaces with GCM-AES-XPN-128 and GCM-AES-XPN-256.
+> >> >     * Setting and getting packet numbers with 64bit of SAs.
+> >> >     * Settings and getting ssci of SCs.
+> >> >     * Settings and getting salt of SecYs.
+> >> >
+> >> > Depends on: macsec: Support XPN frame handling - IEEE 802.1AEbw.
+> >> >
+> >> > Signed-off-by: Era Mayflower <mayflowerera@gmail.com>
+> >> > ---
+> >> [...]
+> >> > diff --git a/include/net/macsec.h b/include/net/macsec.h
+> >> > index a0b1d0b5c..3c7914ff1 100644
+> >> > --- a/include/net/macsec.h
+> >> > +++ b/include/net/macsec.h
+> >> > @@ -11,6 +11,9 @@
+> >> >  #include <uapi/linux/if_link.h>
+> >> >  #include <uapi/linux/if_macsec.h>
+> >> >
+> >> > +#define MACSEC_DEFAULT_PN_LEN 4
+> >> > +#define MACSEC_XPN_PN_LEN 8
+> >> > +
+> >> >  #define MACSEC_SALT_LEN 12
+> >> >
+> >> >  typedef u64 __bitwise sci_t;
+> >> > diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+> >> > index 024af2d1d..ee424d915 100644
+> >> > --- a/include/uapi/linux/if_link.h
+> >> > +++ b/include/uapi/linux/if_link.h
+> >> > @@ -462,6 +462,8 @@ enum {
+> >> >       IFLA_MACSEC_SCB,
+> >> >       IFLA_MACSEC_REPLAY_PROTECT,
+> >> >       IFLA_MACSEC_VALIDATION,
+> >> > +     IFLA_MACSEC_SSCI,
+> >> > +     IFLA_MACSEC_SALT,
+> >> >       IFLA_MACSEC_PAD,
+> >> >       __IFLA_MACSEC_MAX,
+> >> >  };
+> >>
+> >> Doesn't this break backword compatibility? You change the value of
+> >> IFLA_MACSEC_PAD; even if it's only used as padding, if an old client
+> >> uses it, new kernel will interpret it as IFLA_MACSEC_SSCI (an the same
+> >> holds for new client with old kernel).
+> >>
+> >> > diff --git a/include/uapi/linux/if_macsec.h b/include/uapi/linux/if_macsec.h
+> >> > index 1d63c43c3..c8fab9673 100644
+> >> > --- a/include/uapi/linux/if_macsec.h
+> >> > +++ b/include/uapi/linux/if_macsec.h
+> >> > @@ -25,6 +25,8 @@
+> >> >  /* cipher IDs as per IEEE802.1AEbn-2011 */
+> >> >  #define MACSEC_CIPHER_ID_GCM_AES_128 0x0080C20001000001ULL
+> >> >  #define MACSEC_CIPHER_ID_GCM_AES_256 0x0080C20001000002ULL
+> >> > +#define MACSEC_CIPHER_ID_GCM_AES_XPN_128 0x0080C20001000003ULL
+> >> > +#define MACSEC_CIPHER_ID_GCM_AES_XPN_256 0x0080C20001000004ULL
+> >> >
+> >> >  /* deprecated cipher ID for GCM-AES-128 */
+> >> >  #define MACSEC_DEFAULT_CIPHER_ID     0x0080020001000001ULL
+> >> > @@ -66,6 +68,8 @@ enum macsec_secy_attrs {
+> >> >       MACSEC_SECY_ATTR_INC_SCI,
+> >> >       MACSEC_SECY_ATTR_ES,
+> >> >       MACSEC_SECY_ATTR_SCB,
+> >> > +     MACSEC_SECY_ATTR_SSCI,
+> >> > +     MACSEC_SECY_ATTR_SALT,
+> >> >       MACSEC_SECY_ATTR_PAD,
+> >> >       __MACSEC_SECY_ATTR_END,
+> >> >       NUM_MACSEC_SECY_ATTR = __MACSEC_SECY_ATTR_END,
+> >> > @@ -78,6 +82,7 @@ enum macsec_rxsc_attrs {
+> >> >       MACSEC_RXSC_ATTR_ACTIVE,  /* config/dump, u8 0..1 */
+> >> >       MACSEC_RXSC_ATTR_SA_LIST, /* dump, nested */
+> >> >       MACSEC_RXSC_ATTR_STATS,   /* dump, nested, macsec_rxsc_stats_attr */
+> >> > +     MACSEC_RXSC_ATTR_SSCI,    /* config/dump, u32 */
+> >> >       MACSEC_RXSC_ATTR_PAD,
+> >> >       __MACSEC_RXSC_ATTR_END,
+> >> >       NUM_MACSEC_RXSC_ATTR = __MACSEC_RXSC_ATTR_END,
+> >>
+> >> The same problem with these two.
+> >>
+> >> I'm also a bit unsure about the change of type and length of
+> >> MACSEC_SA_ATTR_PN but I would have to get more familiar with the code to
+> >> see if it is really a problem.
+> >>
+> >> Michal
