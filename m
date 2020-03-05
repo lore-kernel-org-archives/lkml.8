@@ -2,160 +2,87 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BE2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10410C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E892521556
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95232146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbgCEJ76 (ORCPT
+        id S1727399AbgCEJ76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 5 Mar 2020 04:59:58 -0500
-Received: from mga14.intel.com ([192.55.52.115]:52162 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgCEJ75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from lucky1.263xmail.com ([211.157.147.132]:48570 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbgCEJ75 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Mar 2020 04:59:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 01:59:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
-   d="scan'208";a="234366650"
-Received: from snr.bj.intel.com ([10.240.193.90])
-  by orsmga008.jf.intel.com with ESMTP; 05 Mar 2020 01:59:50 -0800
-From:   Luwei Kang <luwei.kang@intel.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
-        thomas.lendacky@amd.com, fenghua.yu@intel.com,
-        kan.liang@linux.intel.com, like.xu@linux.intel.com,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH v1 09/11] KVM: x86/pmu: Expose PEBS feature to guest
-Date:   Fri,  6 Mar 2020 01:57:03 +0800
-Message-Id: <1583431025-19802-10-git-send-email-luwei.kang@intel.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
-References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+Received: from localhost (unknown [192.168.167.8])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 84B5FA920D;
+        Thu,  5 Mar 2020 17:59:53 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P12225T140183483700992S1583402391050204_;
+        Thu, 05 Mar 2020 17:59:53 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <5fa7a28b1227fe0fca77ae2005852e54>
+X-RL-SENDER: cl@rock-chips.com
+X-SENDER: cl@rock-chips.com
+X-LOGIN-NAME: cl@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   <cl@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        akpm@linux-foundation.org, tglx@linutronix.de, mpe@ellerman.id.au,
+        surenb@google.com, ben.dooks@codethink.co.uk,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        will@kernel.org, keescook@chromium.org, luto@amacapital.net,
+        wad@chromium.org, mark.rutland@arm.com, geert+renesas@glider.be,
+        george_davis@mentor.com, sudeep.holla@arm.com,
+        linux@armlinux.org.uk, gregkh@linuxfoundation.org, info@metux.net,
+        kstewart@linuxfoundation.org, allison@lohutok.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        huangtao@rock-chips.com, Liang Chen <cl@rock-chips.com>
+Subject: [PATCH v2 0/1] wait_task_inactive() spend too much time on system startup
+Date:   Thu,  5 Mar 2020 17:59:47 +0800
+Message-Id: <20200305095948.10873-1-cl@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch exposed some bits of MSRs to KVM guest which realate with PEBS
-feature. It include some bits in IA32_PERF_CAPABILITIES and IA32_MISC_ENABLE.
+From: Liang Chen <cl@rock-chips.com>
 
-Originally-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/include/asm/kvm_host.h  |  1 +
- arch/x86/include/asm/msr-index.h |  3 +++
- arch/x86/kvm/vmx/pmu_intel.c     | 15 +++++++++++++++
- arch/x86/kvm/x86.c               |  6 +++++-
- 4 files changed, 24 insertions(+), 1 deletion(-)
+Changelog:
+v1: wait_task_inactive() frequently call schedule_hrtimeout() and spend a lot of time,
+i am trying to optimize it on rockchip platform.
+v2: Use atomic_flags(PFA) instead of TIF flag, and add some comments.
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 33b990b..35d230e 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -481,6 +481,7 @@ struct kvm_pmu {
- 	u64 pebs_enable;
- 	u64 pebs_enable_mask;
- 	u64 ds_area;
-+	u64 perf_cap;
- 	u8 version;
- 	struct kvm_pmc gp_counters[INTEL_PMC_MAX_GENERIC];
- 	struct kvm_pmc fixed_counters[INTEL_PMC_MAX_FIXED];
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index d5e517d..2bf66e9 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -151,6 +151,9 @@
- #define MSR_PEBS_DATA_CFG		0x000003f2
- #define MSR_IA32_DS_AREA		0x00000600
- #define MSR_IA32_PERF_CAPABILITIES	0x00000345
-+#define PERF_CAP_PEBS_TRAP		BIT_ULL(6)
-+#define PERF_CAP_ARCH_REG		BIT_ULL(7)
-+#define PERF_CAP_PEBS_FORMAT		0xf00
- #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
- 
- #define MSR_IA32_RTIT_CTL		0x00000570
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 227589a..8161488 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -180,6 +180,7 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
- 		break;
- 	case MSR_IA32_DS_AREA:
- 	case MSR_IA32_PEBS_ENABLE:
-+	case MSR_IA32_PERF_CAPABILITIES:
- 		ret = pmu->has_pebs_via_ds;
- 		break;
- 	default:
-@@ -244,6 +245,9 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
- 	case MSR_IA32_DS_AREA:
- 		*data = pmu->ds_area;
- 		return 0;
-+	case MSR_IA32_PERF_CAPABILITIES:
-+		*data = pmu->perf_cap;
-+		return 0;
- 	default:
- 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
- 			u64 val = pmc_read_counter(pmc);
-@@ -311,6 +315,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_IA32_DS_AREA:
- 		pmu->ds_area = data;
- 		return 0;
-+	case MSR_IA32_PERF_CAPABILITIES:
-+		break; /* RO MSR */
- 	default:
- 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
- 			if (!msr_info->host_initiated)
-@@ -396,6 +402,15 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 		pmu->pebs_enable_mask = ~pmu->global_ctrl;
- 	}
- 
-+	if (pmu->has_pebs_via_ds) {
-+		u64 perf_cap;
-+
-+		rdmsrl(MSR_IA32_PERF_CAPABILITIES, perf_cap);
-+		pmu->perf_cap = (perf_cap & (PERF_CAP_PEBS_TRAP |
-+					     PERF_CAP_ARCH_REG |
-+					     PERF_CAP_PEBS_FORMAT));
-+	}
-+
- 	entry = kvm_find_cpuid_entry(vcpu, 7, 0);
- 	if (entry &&
- 	    (boot_cpu_has(X86_FEATURE_HLE) || boot_cpu_has(X86_FEATURE_RTM)) &&
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 7a23406..5ab8447 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3086,7 +3086,11 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		msr_info->data = (u64)vcpu->arch.ia32_tsc_adjust_msr;
- 		break;
- 	case MSR_IA32_MISC_ENABLE:
--		msr_info->data = vcpu->arch.ia32_misc_enable_msr;
-+		if (vcpu_to_pmu(vcpu)->has_pebs_via_ds)
-+			msr_info->data = (vcpu->arch.ia32_misc_enable_msr &
-+					~MSR_IA32_MISC_ENABLE_PEBS_UNAVAIL);
-+		else
-+			msr_info->data = vcpu->arch.ia32_misc_enable_msr;
- 		break;
- 	case MSR_IA32_SMBASE:
- 		if (!msr_info->host_initiated)
+Liang Chen (1):
+  sched/fair: do not preempt current task if it is going to call
+    schedule()
+
+ include/linux/sched.h |  5 +++++
+ kernel/kthread.c      |  4 ++++
+ kernel/sched/fair.c   | 13 +++++++++++++
+ 3 files changed, 22 insertions(+)
+
 -- 
-1.8.3.1
+2.17.1
+
+
 
