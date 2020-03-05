@@ -2,158 +2,150 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48B5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D7FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D50420848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2109920848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vU/DIA2J"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="BRR/oVK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgCEMmo (ORCPT
+        id S1726889AbgCEMnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:42:44 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36452 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgCEMmn (ORCPT
+        Thu, 5 Mar 2020 07:43:17 -0500
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:37547 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbgCEMnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:42:43 -0500
-Received: by mail-pg1-f196.google.com with SMTP id d9so2725322pgu.3;
-        Thu, 05 Mar 2020 04:42:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Iv+8lkf0g9FKK4aGWH4FIny5NJBBPfHf9mcxAx6Usno=;
-        b=vU/DIA2JriGM1rc8p00USJ6gdHsZ5BR6i8mFgZBslRFCcZJf3lWyuL/hEcjDcjWXsQ
-         M2mM+hEBtRdN3ib2OsUf706OptuaUPu2sBlX1JBGSSMA1wJeWy34m23puTA8Tn5yND80
-         1V97QccuIFkkgVj55WkNTYelL6uVYDOHPV/qZUn553vCcU/XeBL+skLsNo/9xeucBLnF
-         mrEzTDnqMXzyKdeCKYZsEg03k+cwbZMbh77lG0OaOdRCzW6jK6FEjIdj4aSNEDdiqpDk
-         T6K79tf1w6PoN6Dh2FuW/7i0CZG+n0RGlaqO5mmlJpevaT6qcdesvhnp+ElkHKBKs1nd
-         qy7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Iv+8lkf0g9FKK4aGWH4FIny5NJBBPfHf9mcxAx6Usno=;
-        b=SQtXe60DpvefBlqUXV/ryMch3FJWacrL8qw5vogcEpvVDRJQ8LrgJRCOezMZoyBa58
-         YrfN8HpqApeHiWJn+AHS3sYojQnVPJ+DLvyHxNiPYxFZbjpOGXkEHSfJboBwdJa6gJZh
-         fzdi33SZtOdriMMTQFV5vFQNMvYvTXn081BA4+bqk131r1T4AvTdGlln8y2GMrSdO5ck
-         6WeG0/IDdmxA4jFTVLolVLE6bhq+yG3OoZTSTqBSfYogzNVvkZ6JBVAy+ft7qtFbc4k4
-         usE4Uovx/ExDcTjVJfWSp6ZzXGNnvYUMhczrvhqIbWSF538Qq8Y7a3X68e5yhSNgRXSa
-         DC5w==
-X-Gm-Message-State: ANhLgQ3sazcup6UliCixXGhwNEUAZ8Iyk8O1sh2QpY3hk0iQtfIAGzwG
-        mcMqO4980GLqwmmrN8kEck4=
-X-Google-Smtp-Source: ADFU+vtYWl43QzYXnKwbkZvQID3ixOcFBQpoNs4i8/pbVTarGyppbev2Io0/PMNQniAOpJVFs5jfRg==
-X-Received: by 2002:a63:d244:: with SMTP id t4mr7428763pgi.241.1583412162761;
-        Thu, 05 Mar 2020 04:42:42 -0800 (PST)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id z6sm7412661pfq.39.2020.03.05.04.42.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Mar 2020 04:42:42 -0800 (PST)
-Date:   Thu, 5 Mar 2020 18:12:40 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        John Crispin <john@phrozen.org>
-Subject: Re: [PATCH v3] MIPS: Replace setup_irq() by request_irq()
-Message-ID: <20200305124240.GA4940@afzalpc>
-References: <20200304005549.5832-1-afzal.mohd.ma@gmail.com>
- <20200304203144.GA4323@alpha.franken.de>
- <20200305122950.GA4981@afzalpc>
+        Thu, 5 Mar 2020 07:43:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1583412195;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=wATOkHyHfw1nttogMmLbBkJtCs3d5j9hHSTAkJY4KmE=;
+  b=BRR/oVK+Ltl2W4wq7qyebZWggBTMUx92tLo6DwpaRDe8a7dpSZmP6xwN
+   VRdv6L+m8+7o+qt7yhzQ7hVkyD/QVDtsDWpVhVvh+8qBe3Ew9RNBkckrX
+   eYGhfpaBePvoVJP+JcgX+b9D+FBlYyjqVruA/aM1oNmK9spWAjv8JTfbl
+   c=;
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: iR1cwtc6wIxZHy2095D3SobXiBpJi1pHjnR4cTvwIX4HwAo3C1DNnED/QdKE4qoxNmS2nAl6jV
+ dbJIfWoZdXEkP183BBYzQ6TbB8GAIJFJsQHT5i05dmAWRfPp9TMq78jYy6zAhB5tY8PZ+Q7C35
+ eA/Mk5kAW7Vl1HUChfFa3m08+pqPatmh5F6H00J2FJ3RrXlA6MT4yoduIrrON+HcCXhgi/Wx1X
+ VozdPrV+m5W8VHG95mKIH53r6u455YK/zwGOBAEcLqVjoFxNkKJ+9EpJ1DfbZb+f6uwBMlnkjs
+ NjI=
+X-SBRS: 2.7
+X-MesageID: 13885325
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.70,518,1574139600"; 
+   d="scan'208";a="13885325"
+Date:   Thu, 5 Mar 2020 13:42:55 +0100
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Juergen Gross <jgross@suse.com>
+CC:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v2] xen/blkfront: fix ring info addressing
+Message-ID: <20200305124255.GW24458@Air-de-Roger.citrite.net>
+References: <20200305114044.20235-1-jgross@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200305122950.GA4981@afzalpc>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200305114044.20235-1-jgross@suse.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL01.citrite.net (10.69.22.125)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Thu, Mar 05, 2020 at 12:40:44PM +0100, Juergen Gross wrote:
+> Commit 0265d6e8ddb890 ("xen/blkfront: limit allocated memory size to
+> actual use case") made struct blkfront_ring_info size dynamic. This is
+> fine when running with only one queue, but with multiple queues the
+> addressing of the single queues has to be adapted as the structs are
+> allocated in an array.
+> 
+> Fixes: 0265d6e8ddb890 ("xen/blkfront: limit allocated memory size to actual use case")
+> Reported-by: Sander Eikelenboom <linux@eikelenboom.it>
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
+> V2:
+> - get rid of rinfo_ptr() helper
+> - use proper parenthesis in for_each_rinfo()
+> - rename rinfo parameter of for_each_rinfo()
+> ---
+>  drivers/block/xen-blkfront.c | 79 +++++++++++++++++++++++---------------------
+>  1 file changed, 42 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
+> index e2ad6bba2281..8e844da826db 100644
+> --- a/drivers/block/xen-blkfront.c
+> +++ b/drivers/block/xen-blkfront.c
+> @@ -213,6 +213,7 @@ struct blkfront_info
+>  	struct blk_mq_tag_set tag_set;
+>  	struct blkfront_ring_info *rinfo;
+>  	unsigned int nr_rings;
+> +	unsigned int rinfo_size;
+>  	/* Save uncomplete reqs and bios for migration. */
+>  	struct list_head requests;
+>  	struct bio_list bio_list;
+> @@ -259,6 +260,18 @@ static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo);
+>  static void blkfront_gather_backend_features(struct blkfront_info *info);
+>  static int negotiate_mq(struct blkfront_info *info);
+>  
+> +#define for_each_rinfo(info, ptr, idx)				\
+> +	for ((ptr) = (info)->rinfo, (idx) = 0;			\
+> +	     (idx) < (info)->nr_rings;				\
+> +	     (idx)++, (ptr) = (void *)(ptr) + (info)->rinfo_size)
+> +
+> +static struct blkfront_ring_info *get_rinfo(struct blkfront_info *info,
 
-On Thu, Mar 05, 2020 at 05:59:50PM +0530, afzal mohammed wrote:
+I still think inline should be added here, but I don't have such a
+strong opinion to block the patch on it.
 
-> For your reference, diff between v4 & v3 below,
+Also, info should be constified AFAICT.
 
-i messed up with the diff b/n v4 & v3, correct one as follows, v4 is a
-proper one, only diff generation got messed up.
+With at least info constified:
 
-Regards
-afzal
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
 
-diff --git a/arch/mips/include/asm/sni.h b/arch/mips/include/asm/sni.h
-index b8653de25ca1..7dfa297ce597 100644
---- a/arch/mips/include/asm/sni.h
-+++ b/arch/mips/include/asm/sni.h
-@@ -11,6 +11,8 @@
- #ifndef __ASM_SNI_H
- #define __ASM_SNI_H
- 
-+#include <linux/irqreturn.h>
-+
- extern unsigned int sni_brd_type;
- 
- #define SNI_BRD_10		   2
-diff --git a/arch/mips/pmcs-msp71xx/msp_time.c b/arch/mips/pmcs-msp71xx/msp_time.c
-index 5f211d2d14ff..baf0da8b4c98 100644
---- a/arch/mips/pmcs-msp71xx/msp_time.c
-+++ b/arch/mips/pmcs-msp71xx/msp_time.c
-@@ -76,7 +76,7 @@ void __init plat_time_init(void)
- 
- unsigned int get_c0_compare_int(void)
- {
--	unsigned log flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED;
-+	unsigned long flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED;
- 
- 	/* MIPS_MT modes may want timer for second VPE */
- 	if ((get_current_vpe()) && !tim_installed) {
-diff --git a/arch/mips/ralink/cevt-rt3352.c b/arch/mips/ralink/cevt-rt3352.c
-index 84013214434a..269d4877d120 100644
---- a/arch/mips/ralink/cevt-rt3352.c
-+++ b/arch/mips/ralink/cevt-rt3352.c
-@@ -89,7 +89,7 @@ static int systick_shutdown(struct clock_event_device *evt)
- 	sdev = container_of(evt, struct systick_device, dev);
- 
- 	if (sdev->irq_requested)
--		free_irq(systick.dev.irq, &systick_irqaction);
-+		free_irq(systick.dev.irq, &systick.dev);
- 	sdev->irq_requested = 0;
- 	iowrite32(0, systick.membase + SYSTICK_CONFIG);
- 
-diff --git a/arch/mips/sni/time.c b/arch/mips/sni/time.c
-index 5254a3a1f37c..240bb68ec247 100644
---- a/arch/mips/sni/time.c
-+++ b/arch/mips/sni/time.c
-@@ -62,14 +62,12 @@ static irqreturn_t a20r_interrupt(int irq, void *dev_id)
- static void __init sni_a20r_timer_setup(void)
- {
- 	struct clock_event_device *cd = &a20r_clockevent_device;
--	struct irqaction *action = &a20r_irqaction;
- 	unsigned int cpu = smp_processor_id();
- 
- 	cd->cpumask		= cpumask_of(cpu);
- 	clockevents_register_device(cd);
--	action->dev_id = cd;
- 	if (request_irq(SNI_A20R_IRQ_TIMER, a20r_interrupt,
--			IRQF_PERCPU | IRQF_TIMER, "a20r-timer", NULL))
-+			IRQF_PERCPU | IRQF_TIMER, "a20r-timer", cd))
- 		pr_err("Failed to register a20r-timer interrupt\n");
- }
- 
+Can you queue this through the Xen tree?
+
+Thanks, Roger.
