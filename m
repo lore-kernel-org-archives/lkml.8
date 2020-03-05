@@ -2,123 +2,131 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF447C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8575CC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E372072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:56:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGOlfgPm"
+	by mail.kernel.org (Postfix) with ESMTP id 680532072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgCER4C (ORCPT
+        id S1726263AbgCER4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:56:02 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41415 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgCER4C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:56:02 -0500
-Received: by mail-wr1-f66.google.com with SMTP id v4so8122644wrs.8;
-        Thu, 05 Mar 2020 09:56:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rN0SehFieK1S420zrDd71gH/X37YlDRA2Yp0i/5B3us=;
-        b=TGOlfgPmAhqwkll3WqAAKHNmZ2gdI3Ge697YzJaY+rCSi3xMQzizkMuzt3YWBKUHlb
-         dI2hu949zJ+31YF2gvGrnyCo9U4yWb0q3M9ohSgYXS64qzYw7D6sqTnresX37Vp9UJk2
-         M/YE3o3OL/exmv95uZ4mm7P9f892HSuhixSmH85n2iog1Tw70fN6ByXYmIwBhSgcZmo7
-         Bj+dF7H1MVjVoB9MJgEpVucqvQ6UFkGioBhDKi68M6IDHT4KVAC9xlbw35QpP9Xr64nv
-         7en+exgOMGctDu7h0bn5Z9W83iHbAbrzS1tZO55kzO9dE8y/ijxsu2CAVYSW19KsTflM
-         Ygvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rN0SehFieK1S420zrDd71gH/X37YlDRA2Yp0i/5B3us=;
-        b=YTWgoz4PmIxxrkIMVhoKDoHN1q9UbiM8z/W2Cd2tuaaUrflZy9h8hHlLi+HPgGQlfR
-         bNTDL6m1m/fejyNfVm0XEMqbAnG6cUZQLcWD0AFz/e8rKUicIlkSdArCVN/cgEbSncqC
-         iUUqXw3RS8IIPAR0QJtD2J+c0pR9OUtW/hZoweSQhdsHDDUyD9EBV9TkAP+X1PpmXyct
-         FHWgI2Lmvjf7Tqh3QTK1KN30oWsI0q56QZMc7ub82w3XXeiLxU28tBX7+GVDlBC0fG5R
-         OvqVhA0vPQc9Ql7FYDfM7bOzlrrFIGyiG6UV6og4SX1DOYFVZBU2ZoLRdBJtJ3n0vOGy
-         gbLg==
-X-Gm-Message-State: ANhLgQ1hMrYmTwmEq0qppDMU/dOL7YXqB+OB1qunP51/ddfZGrvAc21t
-        SJHF4hiRA3E+0bNP/h0BEOCwH89HCcSCkA==
-X-Google-Smtp-Source: ADFU+vtoH1WRQrInN1LkTXr6vGuYhI9MXsSWsn3T/i1f631EP6LLtMuqU82IcVxHgTPmJ1daQ5wMfw==
-X-Received: by 2002:a05:6000:1081:: with SMTP id y1mr142652wrw.52.1583430959568;
-        Thu, 05 Mar 2020 09:55:59 -0800 (PST)
-Received: from localhost (hosting85.skyberate.net. [185.87.248.81])
-        by smtp.gmail.com with ESMTPSA id w206sm10631718wmg.11.2020.03.05.09.55.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 09:55:58 -0800 (PST)
-From:   Era Mayflower <mayflowerera@gmail.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Era Mayflower <mayflowerera@gmail.com>
-Subject: [PATCH 2/2] macsec: Fix frame loss in XPN mode when PN=0 bug
-Date:   Fri,  6 Mar 2020 02:55:23 +0000
-Message-Id: <20200306025523.63457-2-mayflowerera@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200306025523.63457-1-mayflowerera@gmail.com>
-References: <20200306025523.63457-1-mayflowerera@gmail.com>
+        Thu, 5 Mar 2020 12:56:53 -0500
+Received: from mga01.intel.com ([192.55.52.88]:26188 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbgCER4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:56:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 09:56:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="387572966"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 05 Mar 2020 09:56:52 -0800
+Received: from [10.251.16.243] (kliang2-mobl.ccr.corp.intel.com [10.251.16.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 4E8A75802A3;
+        Thu,  5 Mar 2020 09:56:51 -0800 (PST)
+Subject: Re: [PATCH] perf/core: Fix endless multiplex timer
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, irogers@google.com,
+        eranian@google.com, ak@linux.intel.com
+References: <20200303202819.3942-1-kan.liang@linux.intel.com>
+ <20200303210812.GA4745@worktop.programming.kicks-ass.net>
+ <b71515e4-484e-d80a-37db-2e51abe69928@linux.intel.com>
+ <20200304093344.GJ2596@hirez.programming.kicks-ass.net>
+ <6a271c19-9575-24ca-8ebc-9ff5a65bbe3d@linux.intel.com>
+ <20200305123851.GX2596@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <5c5b7fd1-4b85-8cce-b263-4a421b00f6df@linux.intel.com>
+Date:   Thu, 5 Mar 2020 12:56:49 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200305123851.GX2596@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to IEEE 802.1aebw figure 10-5,
-the PN of incoming frame can be 0 when XPN cipher suite is used.
 
-Fixed `macsec_validate_skb` to fail on PN=0 only if we are not using XPN.
 
-Depends on: macsec: Backward compatibility bugfix of consts values
+On 3/5/2020 7:38 AM, Peter Zijlstra wrote:
+> On Wed, Mar 04, 2020 at 09:20:42AM -0500, Liang, Kan wrote:
+>>
+>> NMI watchdog is pinned event.
+>> ctx_event_to_rotate() will only pick an event from the flexible_groups.
+>> So the cpu_ctx_sched_out() in perf_rotate_context() will never be called.
+> 
+> Surely that's fixable; same principle.
+> 
 
-Signed-off-by: Era Mayflower <mayflowerera@gmail.com>
----
- drivers/net/macsec.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Yes, after applying this patch, the issue has gone.
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index aff28ee89..418e1b126 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -386,7 +386,7 @@ static const struct macsec_ops *macsec_get_ops(struct macsec_dev *macsec,
- }
- 
- /* validate MACsec packet according to IEEE 802.1AE-2006 9.12 */
--static bool macsec_validate_skb(struct sk_buff *skb, u16 icv_len)
-+static bool macsec_validate_skb(struct sk_buff *skb, u16 icv_len, bool xpn)
- {
- 	struct macsec_eth_header *h = (struct macsec_eth_header *)skb->data;
- 	int len = skb->len - 2 * ETH_ALEN;
-@@ -411,8 +411,8 @@ static bool macsec_validate_skb(struct sk_buff *skb, u16 icv_len)
- 	if (h->unused)
- 		return false;
- 
--	/* rx.pn != 0 (figure 10-5) */
--	if (!h->packet_number)
-+	/* rx.pn != 0 if not XPN (figure 10-5) */
-+	if (!h->packet_number && !xpn)
- 		return false;
- 
- 	/* length check, f) g) h) i) */
-@@ -1117,7 +1117,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
- 	secy_stats = this_cpu_ptr(macsec->stats);
- 	rxsc_stats = this_cpu_ptr(rx_sc->stats);
- 
--	if (!macsec_validate_skb(skb, secy->icv_len)) {
-+	if (!macsec_validate_skb(skb, secy->icv_len, secy->xpn)) {
- 		u64_stats_update_begin(&secy_stats->syncp);
- 		secy_stats->stats.InPktsBadTag++;
- 		u64_stats_update_end(&secy_stats->syncp);
--- 
-2.20.1
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
 
+Thanks,
+Kan
+> ---
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 3f1f77de7247..595fb3decd43 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2182,6 +2182,7 @@ __perf_remove_from_context(struct perf_event *event,
+>   
+>   	if (!ctx->nr_events && ctx->is_active) {
+>   		ctx->is_active = 0;
+> +		ctx->rotate_necessary = 0;
+>   		if (ctx->task) {
+>   			WARN_ON_ONCE(cpuctx->task_ctx != ctx);
+>   			cpuctx->task_ctx = NULL;
+> @@ -3077,12 +3078,6 @@ static void ctx_sched_out(struct perf_event_context *ctx,
+>   	if (!ctx->nr_active || !(is_active & EVENT_ALL))
+>   		return;
+>   
+> -	/*
+> -	 * If we had been multiplexing, no rotations are necessary, now no events
+> -	 * are active.
+> -	 */
+> -	ctx->rotate_necessary = 0;
+> -
+>   	perf_pmu_disable(ctx->pmu);
+>   	if (is_active & EVENT_PINNED) {
+>   		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list)
+> @@ -3092,6 +3087,13 @@ static void ctx_sched_out(struct perf_event_context *ctx,
+>   	if (is_active & EVENT_FLEXIBLE) {
+>   		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list)
+>   			group_sched_out(event, cpuctx, ctx);
+> +
+> +		/*
+> +		 * Since we cleared EVENT_FLEXIBLE, also clear
+> +		 * rotate_necessary, is will be reset by
+> +		 * ctx_flexible_sched_in() when needed.
+> +		 */
+> +		ctx->rotate_necessary = 0;
+>   	}
+>   	perf_pmu_enable(ctx->pmu);
+>   }
+> @@ -3841,6 +3843,12 @@ ctx_event_to_rotate(struct perf_event_context *ctx)
+>   				      typeof(*event), group_node);
+>   	}
+>   
+> +	/*
+> +	 * Unconditionally clear rotate_necessary; if ctx_flexible_sched_in()
+> +	 * finds there are unschedulable events, it will set it again.
+> +	 */
+> +	ctx->rotate_necessary = 0;
+> +
+>   	return event;
+>   }
+>   
+> 
