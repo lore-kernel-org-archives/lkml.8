@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72400C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6160C3F2DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D92421556
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B222146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428461;
-	bh=3zwAAGqgpufsx4y8pQbdwAnCKRxrgtV++eEAQuyZAsw=;
+	s=default; t=1583428456;
+	bh=Fd5mXYSIkdYOZviVLVfQIG/AbZvQecDxCTGdLIxVWH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=prsW6QeD3dn2SEszb6s7H0ktfjygYNcSSaWQ9WQj0Ior2QQWdJZbwpLNaPZvDFy7x
-	 K9gUlgZ45HU0VuaWNvhWNTsNK0JOi/31hVUMbdPJAnXgVpBL6FZBQaRUEg861EU0RY
-	 gaBvnyk7ZEblEaLJrgj2XRk2AtPsWqR1aeMah5/Q=
+	b=ZQNhsytj/Jmsv0iNZE5ZGczq1LzfTztCJEiohUxLRIJHPppxvSyjo6NqYiNrUyQfD
+	 pF2Ce/uEO2RnGH9tYBunCIblRUjGTlkcLhir2jFWnTRcygoLdOl6L2KMpetSAt7H2/
+	 a74qsS32r7VsmvbcjY4FSEXunGizarb8997EJCu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgCEROT (ORCPT
+        id S1727628AbgCEROP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:14:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40044 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:14:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbgCEROI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:08 -0500
+        id S1727557AbgCEROH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53ACA21556;
-        Thu,  5 Mar 2020 17:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A6F32146E;
+        Thu,  5 Mar 2020 17:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428448;
-        bh=3zwAAGqgpufsx4y8pQbdwAnCKRxrgtV++eEAQuyZAsw=;
+        s=default; t=1583428446;
+        bh=Fd5mXYSIkdYOZviVLVfQIG/AbZvQecDxCTGdLIxVWH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dC9ymF3lflYnmBtGbh/F7fCURcd/qXu/he6r/Blm/XR1aiK3z+rpYc+iFsbMoVpun
-         iwfhd7Tqdt/ba+xXAhL7w1b2geICCNdlGrMWAmtZkh3j4pXUuY5T1JVEEpV59GeXZI
-         yJt58lvpCr5M1NGFPJI4Zr3Y3two9SU0lzWd8Cpc=
+        b=DJSup7gQwVkhjRiSWeH1J9Z1W7EpfjdmlddKsQFaev1Bfj7LauEFJ3bH1tERiQoK6
+         KCuAiWvPfyU/LzH6IdAIfpKggGNfJdhJPvxNGsyxHx+T5+pNE0jICHyxqYDgXqpDBV
+         YjKjaUpjDixEkuWdBApTkJy4/tfokBHERbE6UWmQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 43/67] kbuild: fix DT binding schema rule to detect command line changes
-Date:   Thu,  5 Mar 2020 12:12:44 -0500
-Message-Id: <20200305171309.29118-43-sashal@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org,
+        io-uring@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 42/67] io_uring: pick up link work on submit reference drop
+Date:   Thu,  5 Mar 2020 12:12:43 -0500
+Message-Id: <20200305171309.29118-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -59,48 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 7a04960560640ac5b0b89461f7757322b57d0c7a ]
+[ Upstream commit 2a44f46781617c5040372b59da33553a02b1f46d ]
 
-This if_change_rule is not working properly; it cannot detect any
-command line change.
+If work completes inline, then we should pick up a dependent link item
+in __io_queue_sqe() as well. If we don't do so, we're forced to go async
+with that item, which is suboptimal.
 
-The reason is because cmd-check in scripts/Kbuild.include compares
-$(cmd_$@) and $(cmd_$1), but cmd_dtc_dt_yaml does not exist here.
+This also fixes an issue with io_put_req_find_next(), which always looks
+up the next work item. That should only be done if we're dropping the
+last reference to the request, to prevent multiple lookups of the same
+work item.
 
-For if_change_rule to work properly, the stem part of cmd_* and rule_*
-must match. Because this cmd_and_fixdep invokes cmd_dtc, this rule must
-be named rule_dtc.
+Outside of being a fix, this also enables a good cleanup series for 5.7,
+where we never have to pass 'nxt' around or into the work handlers.
 
-Fixes: 4f0e3a57d6eb ("kbuild: Add support for DT binding schema checks")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Makefile.lib | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/io_uring.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 3fa32f83b2d74..a66fc0acad1e4 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -291,13 +291,13 @@ DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
- quiet_cmd_dtb_check =	CHECK   $@
-       cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@ ;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 95df7026ac5aa..39b18ab928210 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1099,10 +1099,10 @@ static void io_free_req(struct io_kiocb *req)
+ __attribute__((nonnull))
+ static void io_put_req_find_next(struct io_kiocb *req, struct io_kiocb **nxtptr)
+ {
+-	io_req_find_next(req, nxtptr);
+-
+-	if (refcount_dec_and_test(&req->refs))
++	if (refcount_dec_and_test(&req->refs)) {
++		io_req_find_next(req, nxtptr);
+ 		__io_free_req(req);
++	}
+ }
  
--define rule_dtc_dt_yaml
-+define rule_dtc
- 	$(call cmd_and_fixdep,dtc,yaml)
- 	$(call cmd,dtb_check)
- endef
+ static void io_put_req(struct io_kiocb *req)
+@@ -3559,7 +3559,7 @@ static void __io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
  
- $(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
--	$(call if_changed_rule,dtc_dt_yaml)
-+	$(call if_changed_rule,dtc)
+ err:
+ 	/* drop submission reference */
+-	io_put_req(req);
++	io_put_req_find_next(req, &nxt);
  
- dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
- 
+ 	if (linked_timeout) {
+ 		if (!ret)
 -- 
 2.20.1
 
