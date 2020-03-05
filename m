@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708E1C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DB0C3F2D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C2420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0334320870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 01:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgCEBeu (ORCPT
+        id S1726891AbgCEBez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 20:34:50 -0500
+        Wed, 4 Mar 2020 20:34:55 -0500
 Received: from mga03.intel.com ([134.134.136.65]:31873 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbgCEBel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726004AbgCEBel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Mar 2020 20:34:41 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 17:34:39 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 17:34:40 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,516,1574150400"; 
-   d="scan'208";a="234301753"
+   d="scan'208";a="234301764"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Mar 2020 17:34:39 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 04 Mar 2020 17:34:40 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Pu Wen <puwen@hygon.cn>
-Subject: [PATCH v2 4/7] KVM: x86: Fix CPUID range checks for Hypervisor and Centaur classes
-Date:   Wed,  4 Mar 2020 17:34:34 -0800
-Message-Id: <20200305013437.8578-5-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 7/7] KVM: x86: Refactor kvm_cpuid() param that controls out-of-range logic
+Date:   Wed,  4 Mar 2020 17:34:37 -0800
+Message-Id: <20200305013437.8578-8-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200305013437.8578-1-sean.j.christopherson@intel.com>
 References: <20200305013437.8578-1-sean.j.christopherson@intel.com>
@@ -49,159 +49,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rework the masking in the out-of-range CPUID logic to handle the
-Hypervisor sub-classes, as well as the Centaur class if the guest
-virtual CPU vendor is Centaur.
+Invert and rename the kvm_cpuid() param that controls out-of-range logic
+to better reflect the semantics of the affected callers, i.e. callers
+that bypass the out-of-range logic do so because they are looking up an
+exact guest CPUID entry, e.g. to query the maxphyaddr.
 
-Masking against 0x80000000 only handles basic and extended leafs, which
-results in Hypervisor range checks being performed against the basic
-CPUID class, and Centuar range checks being performed against the
-Extended class.  E.g. if CPUID.0x40000000.EAX returns 0x4000000A and
-there is no entry for CPUID.0x40000006, then function 0x40000006 would
-be incorrectly reported as out of bounds.
+Similarly, rename kvm_cpuid()'s internal "found" to "exact" to clarify
+that it tracks whether or not the exact requested leaf was found, as
+opposed to any usable leaf being found.
 
-While there is no official definition of what constitutes a class, the
-convention established for Hypervisor classes effectively uses bits 31:8
-as the mask by virtue of checking for different bases in increments of
-0x100, e.g. KVM advertises its CPUID functions starting at 0x40000100
-when HyperV features are advertised at the default base of 0x40000000.
+No functional change intended.
 
-The bad range check doesn't cause functional problems for any known VMM
-because out-of-range semantics only come into play if the exact entry
-isn't found, and VMMs either support a very limited Hypervisor range,
-e.g. the official KVM range is 0x40000000-0x40000001 (effectively no
-room for undefined leafs) or explicitly defines gaps to be zero, e.g.
-Qemu explicitly creates zeroed entries up to the Cenatur and Hypervisor
-limits (the latter comes into play when providing HyperV features).
-
-The bad behavior can be visually confirmed by dumping CPUID output in
-the guest when running Qemu with a stable TSC, as Qemu extends the limit
-of range 0x40000000 to 0x40000010 to advertise VMware's cpuid_freq,
-without defining zeroed entries for 0x40000002 - 0x4000000f.
-
-Note, documentation of Centaur/VIA CPUs is hard to come by.  Designating
-0xc0000000 - 0xcfffffff as the Centaur class is a best guess as to the
-behavior of a real Centaur/VIA CPU.
-
-Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
-Cc: Jim Mattson <jmattson@google.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
-
-I don't particularly like the "!basic" check in cpuid_function_in_range(),
-but it's semantically correct, it's just weird when verbalizing the logic.
-E.g. "all functions are in range if there are no ranges".  I thought about
-renaming and inverting the function so that the logic would read "all
-functions are out of range if there are no ranges", but that added churn
-without tangible value.
-
-I could have buried the check in the Centaur leaf handling, which is why
-it exists in this patch, but I didn't like the resulting code and the
-whole weirdness goes away once the code is refactored to put all the
-logic into a single helper.
-
- arch/x86/include/asm/kvm_emulate.h | 11 ++++++
- arch/x86/kvm/cpuid.c               | 54 ++++++++++++++++++++++++++----
- 2 files changed, 59 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/kvm_emulate.h |  2 +-
+ arch/x86/kvm/cpuid.c               | 14 +++++++-------
+ arch/x86/kvm/cpuid.h               |  2 +-
+ arch/x86/kvm/emulate.c             |  8 ++++----
+ arch/x86/kvm/svm.c                 |  2 +-
+ arch/x86/kvm/x86.c                 |  5 +++--
+ 6 files changed, 17 insertions(+), 16 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
-index 2754972c36e6..0fb41a2c972f 100644
+index 0fb41a2c972f..e20d16bd81d3 100644
 --- a/arch/x86/include/asm/kvm_emulate.h
 +++ b/arch/x86/include/asm/kvm_emulate.h
-@@ -393,6 +393,10 @@ struct x86_emulate_ctxt {
- #define X86EMUL_CPUID_VENDOR_GenuineIntel_ecx 0x6c65746e
- #define X86EMUL_CPUID_VENDOR_GenuineIntel_edx 0x49656e69
+@@ -221,7 +221,7 @@ struct x86_emulate_ops {
+ 			 enum x86_intercept_stage stage);
  
-+#define X86EMUL_CPUID_VENDOR_CentaurHauls_ebx 0x746e6543
-+#define X86EMUL_CPUID_VENDOR_CentaurHauls_ecx 0x736c7561
-+#define X86EMUL_CPUID_VENDOR_CentaurHauls_edx 0x48727561
-+
- static inline bool is_guest_vendor_intel(u32 ebx, u32 ecx, u32 edx)
- {
- 	return ebx == X86EMUL_CPUID_VENDOR_GenuineIntel_ebx &&
-@@ -417,6 +421,13 @@ static inline bool is_guest_vendor_hygon(u32 ebx, u32 ecx, u32 edx)
- 	       edx == X86EMUL_CPUID_VENDOR_HygonGenuine_edx;
- }
- 
-+static inline bool is_guest_vendor_centaur(u32 ebx, u32 ecx, u32 edx)
-+{
-+	return ebx == X86EMUL_CPUID_VENDOR_CentaurHauls_ebx &&
-+	       ecx == X86EMUL_CPUID_VENDOR_CentaurHauls_ecx &&
-+	       edx == X86EMUL_CPUID_VENDOR_CentaurHauls_edx;
-+}
-+
- enum x86_intercept_stage {
- 	X86_ICTP_NONE = 0,   /* Allow zero-init to not match anything */
- 	X86_ICPT_PRE_EXCEPT,
+ 	bool (*get_cpuid)(struct x86_emulate_ctxt *ctxt, u32 *eax, u32 *ebx,
+-			  u32 *ecx, u32 *edx, bool check_limit);
++			  u32 *ecx, u32 *edx, bool exact_only);
+ 	bool (*guest_has_long_mode)(struct x86_emulate_ctxt *ctxt);
+ 	bool (*guest_has_movbe)(struct x86_emulate_ctxt *ctxt);
+ 	bool (*guest_has_fxsr)(struct x86_emulate_ctxt *ctxt);
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 5a9891cb2bc6..dd3c91ffae11 100644
+index e4f104c7ace8..d8a190d5dac0 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -985,16 +985,58 @@ struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
- EXPORT_SYMBOL_GPL(kvm_find_cpuid_entry);
- 
- /*
-- * If the basic or extended CPUID leaf requested is higher than the
-- * maximum supported basic or extended leaf, respectively, then it is
-- * out of range.
-+ * Intel CPUID semantics treats any query for an out-of-range leaf as if the
-+ * highest basic leaf (i.e. CPUID.0H:EAX) were requested.  AMD CPUID semantics
-+ * returns all zeroes for any undefined leaf, whether or not the leaf is in
-+ * range.  Centaur/VIA follows Intel semantics.
-+ *
-+ * A leaf is considered out-of-range if its function is higher than the maximum
-+ * supported leaf of its associated class or if its associated class does not
-+ * exist.
-+ *
-+ * There are three primary classes to be considered, with their respective
-+ * ranges described as "<base> - <top>[,<base2> - <top2>] inclusive.  A primary
-+ * class exists if a guest CPUID entry for its <base> leaf exists.  For a given
-+ * class, CPUID.<base>.EAX contains the max supported leaf for the class.
-+ *
-+ *  - Basic:      0x00000000 - 0x3fffffff, 0x50000000 - 0x7fffffff
-+ *  - Hypervisor: 0x40000000 - 0x4fffffff
-+ *  - Extended:   0x80000000 - 0xffffffff
-+ *
-+ * The Hypervisor class is further subdivided into sub-classes that each act as
-+ * their own indepdent class associated with a 0x100 byte range.  E.g. if Qemu
-+ * is advertising support for both HyperV and KVM, the resulting Hypervisor
-+ * CPUID sub-classes are:
-+ *
-+ *  - HyperV:     0x40000000 - 0x400000ff
-+ *  - KVM:        0x40000100 - 0x400001ff
-+ *
-+ * If the guest vendor is Centaur, a fourth top-level class is defined and
-+ * effectively steals its range from the Extended class.  I.e. the primary
-+ * classes for a Centaur guest CPU become:
-+ *
-+ *  - Basic:      0x00000000 - 0x3fffffff, 0x50000000 - 0x7fffffff
-+ *  - Hypervisor: 0x40000000 - 0x4fffffff
-+ *  - Extended:   0x80000000 - 0xbfffffff, 0xd0000000 - 0xffffffff
-+ *  - Centaur:    0xc0000000 - 0xcfffffff
-  */
- static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
- {
--	struct kvm_cpuid_entry2 *max;
-+	struct kvm_cpuid_entry2 *basic, *class;
- 
--	max = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
--	return max && function <= max->eax;
-+	basic = kvm_find_cpuid_entry(vcpu, 0, 0);
-+	if (!basic)
-+		return true;
-+
-+	if (function >= 0x40000000 && function <= 0x4fffffff)
-+		class = kvm_find_cpuid_entry(vcpu, function & 0xffffff00, 0);
-+	else if (function >= 0xc0000000 && function <= 0xcfffffff &&
-+		 is_guest_vendor_centaur(basic->ebx, basic->ecx, basic->edx))
-+		class = kvm_find_cpuid_entry(vcpu, function & 0xc0000000, 0);
-+	else
-+		class = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
-+
-+	return class && function <= class->eax;
+@@ -1062,16 +1062,16 @@ get_out_of_range_cpuid_entry(struct kvm_vcpu *vcpu, u32 *fn_ptr, u32 index)
  }
  
  bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+-	       u32 *ecx, u32 *edx, bool check_limit)
++	       u32 *ecx, u32 *edx, bool exact_only)
+ {
+ 	u32 orig_function = *eax, function = *eax, index = *ecx;
+ 	struct kvm_cpuid_entry2 *entry;
+-	bool found;
++	bool exact;
+ 
+ 	entry = kvm_find_cpuid_entry(vcpu, function, index);
+-	found = entry;
++	exact = !!entry;
+ 
+-	if (!entry && check_limit)
++	if (!entry && !exact_only)
+ 		entry = get_out_of_range_cpuid_entry(vcpu, &function, index);
+ 
+ 	if (entry) {
+@@ -1102,8 +1102,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+ 			}
+ 		}
+ 	}
+-	trace_kvm_cpuid(orig_function, *eax, *ebx, *ecx, *edx, found);
+-	return found;
++	trace_kvm_cpuid(orig_function, *eax, *ebx, *ecx, *edx, exact);
++	return exact;
+ }
+ EXPORT_SYMBOL_GPL(kvm_cpuid);
+ 
+@@ -1116,7 +1116,7 @@ int kvm_emulate_cpuid(struct kvm_vcpu *vcpu)
+ 
+ 	eax = kvm_rax_read(vcpu);
+ 	ecx = kvm_rcx_read(vcpu);
+-	kvm_cpuid(vcpu, &eax, &ebx, &ecx, &edx, true);
++	kvm_cpuid(vcpu, &eax, &ebx, &ecx, &edx, false);
+ 	kvm_rax_write(vcpu, eax);
+ 	kvm_rbx_write(vcpu, ebx);
+ 	kvm_rcx_write(vcpu, ecx);
+diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+index 332068db0fc2..917ee014af55 100644
+--- a/arch/x86/kvm/cpuid.h
++++ b/arch/x86/kvm/cpuid.h
+@@ -23,7 +23,7 @@ int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
+ 			      struct kvm_cpuid2 *cpuid,
+ 			      struct kvm_cpuid_entry2 __user *entries);
+ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+-	       u32 *ecx, u32 *edx, bool check_limit);
++	       u32 *ecx, u32 *edx, bool exact_only);
+ 
+ int cpuid_query_maxphyaddr(struct kvm_vcpu *vcpu);
+ 
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index 7391e1471e53..d54e259fbbfd 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -2711,7 +2711,7 @@ static bool vendor_intel(struct x86_emulate_ctxt *ctxt)
+ 	u32 eax, ebx, ecx, edx;
+ 
+ 	eax = ecx = 0;
+-	ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, false);
++	ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, true);
+ 	return is_guest_vendor_intel(ebx, ecx, edx);
+ }
+ 
+@@ -2729,7 +2729,7 @@ static bool em_syscall_is_enabled(struct x86_emulate_ctxt *ctxt)
+ 
+ 	eax = 0x00000000;
+ 	ecx = 0x00000000;
+-	ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, false);
++	ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, true);
+ 	/*
+ 	 * remark: Intel CPUs only support "syscall" in 64bit longmode. Also a
+ 	 * 64bit guest with a 32bit compat-app running will #UD !! While this
+@@ -3980,7 +3980,7 @@ static int em_cpuid(struct x86_emulate_ctxt *ctxt)
+ 
+ 	eax = reg_read(ctxt, VCPU_REGS_RAX);
+ 	ecx = reg_read(ctxt, VCPU_REGS_RCX);
+-	ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, true);
++	ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, false);
+ 	*reg_write(ctxt, VCPU_REGS_RAX) = eax;
+ 	*reg_write(ctxt, VCPU_REGS_RBX) = ebx;
+ 	*reg_write(ctxt, VCPU_REGS_RCX) = ecx;
+@@ -4250,7 +4250,7 @@ static int check_cr_write(struct x86_emulate_ctxt *ctxt)
+ 			eax = 0x80000008;
+ 			ecx = 0;
+ 			if (ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx,
+-						 &edx, false))
++						 &edx, true))
+ 				maxphyaddr = eax & 0xff;
+ 			else
+ 				maxphyaddr = 36;
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 48c9390011d0..fbe5252be3d9 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -2171,7 +2171,7 @@ static void svm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+ 	}
+ 	init_vmcb(svm);
+ 
+-	kvm_cpuid(vcpu, &eax, &dummy, &dummy, &dummy, true);
++	kvm_cpuid(vcpu, &eax, &dummy, &dummy, &dummy, false);
+ 	kvm_rdx_write(vcpu, eax);
+ 
+ 	if (kvm_vcpu_apicv_active(vcpu) && !init_event)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 1a4836ed1230..3e44fac4fb09 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6205,9 +6205,10 @@ static int emulator_intercept(struct x86_emulate_ctxt *ctxt,
+ }
+ 
+ static bool emulator_get_cpuid(struct x86_emulate_ctxt *ctxt,
+-			u32 *eax, u32 *ebx, u32 *ecx, u32 *edx, bool check_limit)
++			      u32 *eax, u32 *ebx, u32 *ecx, u32 *edx,
++			      bool exact_only)
+ {
+-	return kvm_cpuid(emul_to_vcpu(ctxt), eax, ebx, ecx, edx, check_limit);
++	return kvm_cpuid(emul_to_vcpu(ctxt), eax, ebx, ecx, edx, exact_only);
+ }
+ 
+ static bool emulator_guest_has_long_mode(struct x86_emulate_ctxt *ctxt)
 -- 
 2.24.1
 
