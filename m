@@ -2,161 +2,139 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F27C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187A8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F8920870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E491720870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:39:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583393998;
+	bh=ivsFIIFD6FRIV16FX+WeKOoqLUxPp2IeROgzDd7nNK8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=W+dYH9Zj8wm0OAmU2IXwBYkGztdPsbGlh0Xr+WKogeUeIAaBvE3KW1g23CNtYUMZ0
+	 gYQmsUqw5K5z6c6dpBhMeeiy/vaceg1NbwGG8CXjhqoxaoHrqyOnxKVUV3qC5ExVqr
+	 bZrOQRiNTAeUuu74R/0Tm4DvEfiQ1vzP+xcxb+bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgCEHjV (ORCPT
+        id S1726020AbgCEHj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 02:39:21 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:32889 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbgCEHjU (ORCPT
+        Thu, 5 Mar 2020 02:39:56 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:52230 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgCEHj4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 02:39:20 -0500
-Received: from mail-wm1-f70.google.com ([209.85.128.70])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1j9l3v-0004nj-SJ
-        for linux-kernel@vger.kernel.org; Thu, 05 Mar 2020 07:36:55 +0000
-Received: by mail-wm1-f70.google.com with SMTP id q20so1240017wmg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 23:36:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9CtJGdUYHnqq8YEJwS2KCkXmlOvHXAh2xw0RAmgI+qI=;
-        b=YyBp+mJ1pMhCPASBPDMhVQF34rTdgmmBTO/mnAJ4o4diM7ebTsji9LxvQ1fNsscSEO
-         KhCFslVuvnGDTC5RediaV4ss57Xqhu2wxene7seEROICVkwx0YEAU5iluRI6uRUJGmQ7
-         DjK284Z6NjOJ+/fOefrt1R3pQv0IE5f4NUsi+YLB7wa6RsXTlxsD2QE8TNvVPkUGRLJ4
-         5RBasJQtdrlLOdOMYKzZnblaImBFZr8FOqZXw1+wnQ+EYTME54+i5zea6ZubohWH0CJ7
-         WgZV4LlWo4IJHD+Q2R1Emxv1VY/H1pcdY9054vLsQWr73NtTgq+qLguvWLtFn5D0b+lU
-         ELMg==
-X-Gm-Message-State: ANhLgQ1CSKj3TpjtpdZqV1ojM1gPnIH4E2mxETESuZZc2rLVoQTbAWZk
-        NryWZCoutZ/Iv5cht5czgZ/oAGY2Et1zkw8TYIpKUisgsJBn2lkyLFodkAmqKFxf8jvbiOysXvQ
-        afJUZrFkyt6QLqJOLdR80CdX4ZZl+anKf/5SpEob+7g==
-X-Received: by 2002:adf:f7c1:: with SMTP id a1mr8559537wrq.299.1583393815467;
-        Wed, 04 Mar 2020 23:36:55 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vs+cCHLCvfbTBArpsEG//QQD/rfqrcaua3+QIrsXxad2+Z6Ca4YiR4vehAh1+uayLJcx2rLBg==
-X-Received: by 2002:adf:f7c1:: with SMTP id a1mr8559502wrq.299.1583393815072;
-        Wed, 04 Mar 2020 23:36:55 -0800 (PST)
-Received: from localhost (host96-127-dynamic.32-79-r.retail.telecomitalia.it. [79.32.127.96])
-        by smtp.gmail.com with ESMTPSA id q12sm45991919wrg.71.2020.03.04.23.36.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 23:36:54 -0800 (PST)
-Date:   Thu, 5 Mar 2020 08:36:53 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Vladis Dronov <vdronov@redhat.com>
-Cc:     Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ptp: free ptp clock properly
-Message-ID: <20200305073653.GC267906@xps-13>
-References: <20200304175350.GB267906@xps-13>
- <1830360600.13123996.1583352704368.JavaMail.zimbra@redhat.com>
+        Thu, 5 Mar 2020 02:39:56 -0500
+X-Greylist: delayed 6532 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Mar 2020 02:39:54 EST
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 0257dgln022909;
+        Thu, 5 Mar 2020 16:39:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 0257dgln022909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583393983;
+        bh=DE9J2HMf/HaJpnaqnbOVLXd0Z69euyhFlSalQuaonbE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=e27tLHpq7GzU9nMefpwuksqrk+uwyaOINtOZ7FAUt6ytvta7tXaRbC6Pi6XJyQpSp
+         LbPyhIKnwQcW6uHIrqu4NmVesMzrHtsW8cqE+/adOVFYTrzk3Mj1geDZxducAJeXtZ
+         W5FdYrWJ89JO4QU/tIk/bJNPGuk25vexRYay25COTp+tktI1A9vhpEE0C8slzXtlHg
+         9TCJxSy1IjDX0hljXj/sfbDVsVK3XlEsWjaI1sAslW4HcWF5LcOn+0Hr5j0MnesffU
+         s/E11y4tc2xxAABn9SUIaPsRRksNg5LbyrIU6rxi4S/EXTuG6PgYbbH8yd5kJMpAnM
+         ym6qVVxj03REA==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id u24so2934798vso.11;
+        Wed, 04 Mar 2020 23:39:43 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2Ck5jk8GMqZUAGgmE3VS2Ucz/K3SVlSph2ZxHkk6USjtJbQ7H4
+        4OpEqMhoH0OGGZ11gQf3fgXiCPtCMbpnLX7/z5s=
+X-Google-Smtp-Source: ADFU+vuCr1dtv82gw0wXFgDh4OsJ2jvS3mMr3qSivpIWW2hyBlt4YX9KUTipyiQFX+m9dOLscgf0ErpoF9GeJ3DCVdg=
+X-Received: by 2002:a67:8c44:: with SMTP id o65mr4200678vsd.181.1583393982391;
+ Wed, 04 Mar 2020 23:39:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1830360600.13123996.1583352704368.JavaMail.zimbra@redhat.com>
+References: <20200305055047.6097-1-masahiroy@kernel.org> <CAKv+Gu8KfZZ_v-kUq=vwd+8MfhiOCpTG_AYA06bAuq7G-=c+WQ@mail.gmail.com>
+In-Reply-To: <CAKv+Gu8KfZZ_v-kUq=vwd+8MfhiOCpTG_AYA06bAuq7G-=c+WQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 5 Mar 2020 16:39:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATwBALmPjZiY6teac3FcA_BFsBVzwf5cqbVNCZSqGrHJg@mail.gmail.com>
+Message-ID: <CAK7LNATwBALmPjZiY6teac3FcA_BFsBVzwf5cqbVNCZSqGrHJg@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: avoid linking libstub/lib-ksyms.o into vmlinux
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 03:11:44PM -0500, Vladis Dronov wrote:
-> Hello, Andrea, all,
-> 
-> ----- Original Message -----
-> > From: "Andrea Righi" <andrea.righi@canonical.com>
-> > Subject: [PATCH] ptp: free ptp clock properly
-> > 
-> > There is a bug in ptp_clock_unregister() where ptp_clock_release() can
-> > free up resources needed by posix_clock_unregister() to properly destroy
-> > a related sysfs device.
-> > 
-> > Fix this by calling posix_clock_unregister() in ptp_clock_release().
-> 
-> Honestly, this does not seem right. The calls at PTP clock release are:
-> 
-> ptp_clock_unregister() -> posix_clock_unregister() -> cdev_device_del() ->
-> -> ... bla ... -> ptp_clock_release()
-> 
-> So, it looks like with this patch both posix_clock_unregister() and
-> ptp_clock_release() are not called at all. And it looks like the "fix" is
-> not removing PTP clock's cdev, i.e. leaking it and related sysfs resources.
+On Thu, Mar 5, 2020 at 4:21 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Thu, 5 Mar 2020 at 06:50, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > drivers/firmware/efi/libstub/Makefile is supposed to create a static
+> > library, which is not directly linked to vmlinux.
+> >
+>
+> This is not true for arm64. Does that matter?
 
-That's absolutely right, thanks for the clarification!
 
-With my "fix" we don't see the the kernel oops anymore, but we're
-leaking resources, so definitely not a valid fix.
 
-> 
-> I would guess that a kernel in question (5.3.0-40-generic) has the commit
-> a33121e5487b but does not have the commit 75718584cb3c, which should be
-> exactly fixing a docking station disconnect crash. Could you please,
-> check this?
+Yeah, I know.  arm64 vmlinux links it
+(but in a different manner from normal lib.a )
 
-Unfortunately the kernel in question already has 75718584cb3c:
-https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/bionic/commit/?h=hwe&id=c71b774732f997ef38ed7bd62e73891a01f2bbfe
 
-It looks like there's something else that can free up too early the
-resources required by posix_clock_unregister() to destroy the related
-sysfs files.
+Shall I rephrase this paragraph as follows?
 
-Maybe what we really need to call from ptp_clock_release() is
-pps_unregister_source()? Something like this:
+drivers/firmware/efi/libstub/Makefile is supposed to create a static
+library, which is not directly linked to vmlinux on ARCH=arm, x86.
 
-From: Andrea Righi <andrea.righi@canonical.com>
-Subject: [PATCH] ptp: free ptp clock properly
 
-There is a bug in ptp_clock_unregister() where ptp_clock_release() can
-free up resources needed by posix_clock_unregister() to properly destroy
-a related sysfs device.
 
-Fix this by calling pps_unregister_source() in ptp_clock_release().
+This is just a matter of whether linking
+unneeded lib-ksyms.o or not.
 
-See also:
-commit 75718584cb3c ("ptp: free ptp device pin descriptors properly").
 
-BugLink: https://bugs.launchpad.net/bugs/1864754
-Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
- drivers/ptp/ptp_clock.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index ac1f2bf9e888..468286ef61ad 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -170,6 +170,9 @@ static void ptp_clock_release(struct device *dev)
- {
- 	struct ptp_clock *ptp = container_of(dev, struct ptp_clock, dev);
- 
-+	/* Release the clock's resources. */
-+	if (ptp->pps_source)
-+		pps_unregister_source(ptp->pps_source);
- 	ptp_cleanup_pin_groups(ptp);
- 	mutex_destroy(&ptp->tsevq_mux);
- 	mutex_destroy(&ptp->pincfg_mux);
-@@ -298,11 +301,6 @@ int ptp_clock_unregister(struct ptp_clock *ptp)
- 		kthread_cancel_delayed_work_sync(&ptp->aux_work);
- 		kthread_destroy_worker(ptp->kworker);
- 	}
--
--	/* Release the clock's resources. */
--	if (ptp->pps_source)
--		pps_unregister_source(ptp->pps_source);
--
- 	posix_clock_unregister(&ptp->clock);
- 
- 	return 0;
+
+
+> > Since commit 7f2084fa55e6 ("[kbuild] handle exports in lib-y objects
+> > reliably"), any Makefile using lib-y generates lib-ksyms.o which is
+> > linked into vmlinux.
+> >
+> > In this case, the following garbage object is linked into vmlinux.
+> >
+> >   drivers/firmware/efi/libstub/lib-ksyms.o
+> >
+> > We do not want to link anything from libstub/ directly to vmlinux,
+> > so using subdir-y instead of obj-y is the correct way to descend into
+> > this directory.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  drivers/firmware/efi/Makefile | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
+> > index 554d795270d9..4fd2fa02f549 100644
+> > --- a/drivers/firmware/efi/Makefile
+> > +++ b/drivers/firmware/efi/Makefile
+> > @@ -19,7 +19,7 @@ obj-$(CONFIG_EFI_VARS_PSTORE)         += efi-pstore.o
+> >  obj-$(CONFIG_UEFI_CPER)                        += cper.o
+> >  obj-$(CONFIG_EFI_RUNTIME_MAP)          += runtime-map.o
+> >  obj-$(CONFIG_EFI_RUNTIME_WRAPPERS)     += runtime-wrappers.o
+> > -obj-$(CONFIG_EFI_STUB)                 += libstub/
+> > +subdir-$(CONFIG_EFI_STUB)              += libstub
+> >  obj-$(CONFIG_EFI_FAKE_MEMMAP)          += fake_map.o
+> >  obj-$(CONFIG_EFI_BOOTLOADER_CONTROL)   += efibc.o
+> >  obj-$(CONFIG_EFI_TEST)                 += test/
+> > --
+> > 2.17.1
+> >
+
+
+
 -- 
-2.25.0
+Best Regards
+Masahiro Yamada
