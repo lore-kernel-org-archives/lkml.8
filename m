@@ -2,153 +2,206 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5990C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4500CC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5AE20637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:41:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S0On6Qfl"
+	by mail.kernel.org (Postfix) with ESMTP id 10B3620637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583426500;
+	bh=9OnnZX1w9W6Px9XZ0IzkdJbVvjqPeEBu0iTRJFzpfUM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=GR98Xg2uZr886WlH9fqDLMeJkPtdHXOIhiV5v8gGJdeEkrNO8+CIfSgeEz7kEquwi
+	 RTbcNJ4qkHEEr20CJhNsJOJGoaUWVUIgKkKtdbZzLnuITqb6SrO4VNC4WKX1InZY82
+	 atJziuvMvHmCYhpcsU7qhKPcuVScFVZZmlCQbSa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgCEQlR (ORCPT
+        id S1726179AbgCEQlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:41:17 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55425 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgCEQlR (ORCPT
+        Thu, 5 Mar 2020 11:41:39 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36317 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgCEQli (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:41:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583426476;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=stJeKdSC+Wyig8nOc8URVbuDCJaVJQbI9Q0Eokb7KMg=;
-        b=S0On6Qflan1Y3BWaY+LfD8OmccE+rTxYPC0ZNQNQsjRbtWyKBM6Agj1ax0pIbXRbJtSJlx
-        5Kh/00Nj0EYkRIuoLkyeRB9s1MvtZ5jJDOD6/lBDiQkK4onA/mD55+xu+tGJv3zwyoXFnf
-        czikHT4o2QgV2fA4R97zRL0Vulvtm1I=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-OPHL368sNDWQqJxO3jt-9A-1; Thu, 05 Mar 2020 11:41:08 -0500
-X-MC-Unique: OPHL368sNDWQqJxO3jt-9A-1
-Received: by mail-wm1-f71.google.com with SMTP id p17so961189wmc.9
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:41:07 -0800 (PST)
+        Thu, 5 Mar 2020 11:41:38 -0500
+Received: by mail-io1-f67.google.com with SMTP id d15so7204756iog.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:41:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xJ9IuCwpxwFw+yjT3QnESkIrBNpzfhchcrrtRf86kyQ=;
+        b=EuEZm5h4KIrb8zG2A2yc61eZabzsnffCxSDvlEazTx2aMc+0Te2fTsPoO8W/B6xDtF
+         ZddgiZi1/ibsj/fgNGEGFjcUe6A79b9s3eUyEbiozbEjv7/sPzA2A3EnwhVt44jPCSSn
+         TX4Hf+vFCbIv2cuvcwhbu8MSG2AsDwYuAVrF4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=stJeKdSC+Wyig8nOc8URVbuDCJaVJQbI9Q0Eokb7KMg=;
-        b=CPTKx2lP4AiC3aET9pwzc3nUPUmpMdOcP0CvmOcQwM0hzke9hQ8bHqF1+fQ8Xcow5f
-         D8TuR0ZvEJTklv8NSfhE7b/OrdkPkbZghRzrIG0V3SAcKUD5AvWB7LgK7mgR4b0miGrl
-         If7n1Nv/+7OYUMrAk3phi7vcOLEX+xpxGKY4mQc1bYUILMyKV8AHVTCminMY5DEAGxEU
-         CcShuVynKZJxqgFsPNfYg1FzJgUgoLjeJrVtJcavewqXcCKJy/9DcytGvmfzyYxLb5PA
-         iz8m9JlqZToT5Q20fkGzO1Tcg9QDO/+kkdMNOlD29aCzI0pWcTAHzJC4cG6x6D4yJzXG
-         h+VQ==
-X-Gm-Message-State: ANhLgQ032K0RRMz7S77ma620sFkj5qEoKQWVLIT4EXtB3bSkHocfVS8R
-        tXLh+Y3z4WtJr7DJC86F02Px2gHX0FWHWrH4AQHoHwt7cU5UNs7f8yk4kIw5B1TS+awzxVUFidr
-        8fHvPT66zNXs/XuoBUQMgVPB7
-X-Received: by 2002:adf:aa9e:: with SMTP id h30mr11559466wrc.288.1583426466396;
-        Thu, 05 Mar 2020 08:41:06 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vvIRURKAgOSIvMEgAlaIX1+gfcD5nWklGx0bgkXynnCMfd09Tx4Bg7BqopFIY/UJQ2dyoc+DQ==
-X-Received: by 2002:adf:aa9e:: with SMTP id h30mr11559440wrc.288.1583426466108;
-        Thu, 05 Mar 2020 08:41:06 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id w8sm11151809wmm.0.2020.03.05.08.41.05
+        bh=xJ9IuCwpxwFw+yjT3QnESkIrBNpzfhchcrrtRf86kyQ=;
+        b=VCL/kJlwPHJEwCcoWHNVo4wwh47IoO15mDNPMnAF22mWDgpDSutdkPe0XUX0plBL3I
+         lD6ae9k+4po1dL9/BDtZUhUIHmYnD3MBjXpUtq/HZ3SJHTliI7m56AQ3vjliTbVMn5yV
+         GCrMTF7JfJUP609D/wh0EOUDvBDrmnbSiibttsFBCXQ2/LfJTdvCGOQf61k1zJ/apsQW
+         i2RK7O9G+LVWR+zp7DFSdF5B1XAM9PcB6d1hYHFEkuHnDAtALeEuXOpk6iC/U0Q+I/mq
+         E3qqMrmqhmcjTqwW/t7KozM2R0ppVmMPev1eSBlP70M+SE4t/NLImjuIRBHtE9d1J5+s
+         MgPA==
+X-Gm-Message-State: ANhLgQ0d+RHj2cdFg/g1/M4ze2rc0yY0JEgmI3GMfLk6Pm0dSTwE9aox
+        3FWRe0bvWvyviLUPIKvD1DUl7eyGVCw=
+X-Google-Smtp-Source: ADFU+vsOjyY3/T4qkHy41VLOvrwcLfGSPjRT+kAbzxP4YEIQ71dFbU0bx4zo+eS9xrmFRaT1R5Iwiw==
+X-Received: by 2002:a6b:4417:: with SMTP id r23mr7148912ioa.262.1583426496596;
+        Thu, 05 Mar 2020 08:41:36 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id m10sm5467738ioa.65.2020.03.05.08.41.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 08:41:05 -0800 (PST)
-Subject: Re: [PATCH 0/3] drm/dp_mst: Fix bandwidth checking regressions from
- DSC patches
-To:     Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Cc:     Mikita Lipski <mikita.lipski@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sean Paul <seanpaul@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Maxime Ripard <mripard@kernel.org>
-References: <20200304223614.312023-1-lyude@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <89275eb6-662d-73d1-a593-8271df5aadc0@redhat.com>
-Date:   Thu, 5 Mar 2020 17:41:04 +0100
+        Thu, 05 Mar 2020 08:41:35 -0800 (PST)
+Subject: Re: [PATCH v2 2/4] selftests: Fix seccomp to support relocatable
+ build (O=objdir)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
+        daniel@iogearbox.net, kafai@fb.com, yhs@fb.com, andriin@fb.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        khilman@baylibre.com, mpe@ellerman.id.au,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200305003627.31900-1-skhan@linuxfoundation.org>
+ <202003041815.B8C73DEC@keescook>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <f4cf1527-4565-9f08-a8a2-9f51022eac63@linuxfoundation.org>
+Date:   Thu, 5 Mar 2020 09:41:34 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200304223614.312023-1-lyude@redhat.com>
+In-Reply-To: <202003041815.B8C73DEC@keescook>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lyude,
-
-On 3/4/20 11:36 PM, Lyude Paul wrote:
-> AMD's patch series for adding DSC support to the MST helpers
-> unfortunately introduced a few regressions into the kernel that I didn't
-> get around to fixing until just now. I would have reverted the changes
-> earlier, but seeing as that would have reverted all of amd's DSC support
-> + everything that was done on top of that I realllllly wanted to avoid
-> doing that.
+On 3/4/20 7:20 PM, Kees Cook wrote:
+> On Wed, Mar 04, 2020 at 05:36:27PM -0700, Shuah Khan wrote:
+>> Fix seccomp relocatable builds. This is a simple fix to use the
+>> right lib.mk variable TEST_CUSTOM_PROGS to continue to do custom
+>> build to preserve dependency on kselftest_harness.h local header.
+>> This change applies cutom rule to seccomp_bpf seccomp_benchmark
+>> for a simpler logic.
+>>
+>> Uses $(OUTPUT) defined in lib.mk to handle build relocation.
+>>
+>> The following use-cases work with this change:
+>>
+>> In seccomp directory:
+>> make all and make clean
 > 
-> Anyway, this should fix everything as far as I can tell. Note that I
-> don't have any DSC displays locally yet, so if someone from AMD could
-> sanity check this I would appreciate it ♥.
-
-Thank you for trying to fix this, unfortunately for me this is not fixed,
-with this series. My setup:
-
-5.6-rc4 + your 3 patches (+ some unrelated patches outside of drm)
-
--Lenovo x1 7th gen +
-  Lenovo TB3 dock gen 2 +
-  2 external 1920x1080@60 monitors connected to the 2 HDMI interfaces on the dock
--System booted with the LID closed, so that the firmware/BIOS has already
-  initialized both monitors when the kernel boots
-
-This should be fairly easy to reproduce on a similar setup, other
-users are seeing similar problems when connecting more then 1 monitor
-to DP-MST docks, see e.g. :
-
-https://bugzilla.redhat.com/show_bug.cgi?id=1809681
-https://bugzilla.redhat.com/show_bug.cgi?id=1810070
-
-Let me know if you want me to collect some drm.debug logs, I guess
-if you do, you want me to use drm.debug=0x114 ?
-
-Regards,
-
-Hans
-
-
-
-
-
+> This works.
 > 
-> Cc: Mikita Lipski <mikita.lipski@amd.com>
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Cc: Sean Paul <seanpaul@google.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
+>>
+>>  From top level from main Makefile:
+>> make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc \
+>>   CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
 > 
-> Lyude Paul (3):
->    drm/dp_mst: Rename drm_dp_mst_is_dp_mst_end_device() to be less
->      redundant
->    drm/dp_mst: Don't show connectors as connected before probing
->      available PBN
->    drm/dp_mst: Rewrite and fix bandwidth limit checks
+> This fails for me:
 > 
->   drivers/gpu/drm/drm_dp_mst_topology.c | 124 ++++++++++++++++++++------
->   1 file changed, 96 insertions(+), 28 deletions(-)
+> $ make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
+> make[1]: Entering directory '/home/kees/src/linux/objdir'
+> make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
+>          ARCH=arm64 -C ../../.. headers_install
+> make[4]: ../scripts/Makefile.build: No such file or directory
+> make[4]: *** No rule to make target '../scripts/Makefile.build'.  Stop.
+> make[3]: *** [Makefile:501: scripts_basic] Error 2
+> make[2]: *** [Makefile:151: khdr] Error 2
+> make[1]: *** [/home/kees/src/linux/Makefile:1221: kselftest-install] Error 2
+> make[1]: Leaving directory '/home/kees/src/linux/objdir'
+> make: *** [Makefile:180: sub-make] Error 2
 > 
+> (My "objdir" is empty)
+> 
+> If I remove O=objdir everything is fine. And see below...
+> 
+>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>> ---
+>>   tools/testing/selftests/seccomp/Makefile | 19 +++++++++----------
+>>   1 file changed, 9 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
+>> index 1760b3e39730..355bcbc0394a 100644
+>> --- a/tools/testing/selftests/seccomp/Makefile
+>> +++ b/tools/testing/selftests/seccomp/Makefile
+>> @@ -1,17 +1,16 @@
+>>   # SPDX-License-Identifier: GPL-2.0
+>> -all:
+>> -
+>> -include ../lib.mk
+>> +CFLAGS += -Wl,-no-as-needed -Wall
+>> +LDFLAGS += -lpthread
+>>   
+>>   .PHONY: all clean
+>>   
+>> -BINARIES := seccomp_bpf seccomp_benchmark
+>> -CFLAGS += -Wl,-no-as-needed -Wall
+>> +include ../lib.mk
+>> +
+>> +# OUTPUT set by lib.mk
+>> +TEST_CUSTOM_PROGS := $(OUTPUT)/seccomp_bpf $(OUTPUT)/seccomp_benchmark
+>>   
+>> -seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
+>> -	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
+>> +$(TEST_CUSTOM_PROGS): ../kselftest_harness.h
+>>   
+>> -TEST_PROGS += $(BINARIES)
+>> -EXTRA_CLEAN := $(BINARIES)
+>> +all: $(TEST_CUSTOM_PROGS)
+>>   
+>> -all: $(BINARIES)
+>> +EXTRA_CLEAN := $(TEST_CUSTOM_PROGS)
+>> -- 
+>> 2.20.1
+>>
+> 
+> Instead of the TEST_CUSTOM_PROGS+all dance, you can just add an explicit
+> dependency, with the final seccomp/Makefile looking like this:
+> 
+> 
+> # SPDX-License-Identifier: GPL-2.0
+> CFLAGS += -Wl,-no-as-needed -Wall
+> LDFLAGS += -lpthread
+> 
+> TEST_GEN_PROGS := seccomp_bpf seccomp_benchmark
+> 
+
+TEST_CUSTOM_PROGS is for differentiating test programs that
+can't use lib.mk generic rules. It is appropriate to use
+for seccomp_bpf
+
+> include ../lib.mk
+> 
+> # Additional dependencies
+> $(OUTPUT)/seccomp_bpf: ../kselftest_harness.h
+> 
+> 
+> (Though this fails in the same way as above when run from the top-level
+> directory.)
+> 
+
+I didn't see this because I have been the same directory I used
+for relocated cross-build kernel. :(
+
+Thanks for testing this. I know the problem here. all is a dependency
+for install step and $(OUTPUT) is referencing the objdir before it
+gets created. It is a Makefile/lib.mk problem to fix.
+
+I will do a separate patch for this. This will show up in any test
+that is using $(OUTPUT) to relocate objects mainly the ones that
+require custom build rule like seeccomp.
+
+thanks,
+-- Shuah
 
