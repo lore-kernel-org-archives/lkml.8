@@ -2,152 +2,140 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8518C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C036C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0DD820870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6211A214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dP7vZatJ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d1bUy29c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388611AbgCEAYw (ORCPT
+        id S2388564AbgCEA1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 19:24:52 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36526 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388407AbgCEAYv (ORCPT
+        Wed, 4 Mar 2020 19:27:46 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:33646 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388468AbgCEA1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 19:24:51 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0250On3E111485;
-        Wed, 4 Mar 2020 18:24:49 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583367889;
-        bh=gPlToXhRUJtK9e9DoSo5lalTp1nN8pSY5/iPOikv2KQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dP7vZatJTqnDdmIrK2bhM3EHsBsgvQy348iXBeGumZyirUdTfmU9wYxTwVrGIbMv6
-         EYI8a5bQIbrOWRa458lqhF6qhJkw+I7KwNHp/tGdls3kB5c+w2G1pM3D+3eMjkeDgo
-         D7oXvStmiiIiUxD032FrDZ2RwaG0zPE4KIWCifzw=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0250OneV018428
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Mar 2020 18:24:49 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
- 2020 18:24:49 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Mar 2020 18:24:49 -0600
-Received: from [128.247.81.254] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0250OnjP104237;
-        Wed, 4 Mar 2020 18:24:49 -0600
-Subject: Re: [PATCHv7 15/15] remoteproc/omap: Switch to SPDX license
- identifiers
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Tero Kristo <t-kristo@ti.com>
-CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>, <afd@ti.com>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
-References: <20200221101936.16833-1-t-kristo@ti.com>
- <20200221101936.16833-16-t-kristo@ti.com> <20200304224220.GC2799@xps15>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <28ab188e-9e6e-35dd-c423-30aaa80afb90@ti.com>
-Date:   Wed, 4 Mar 2020 18:24:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 4 Mar 2020 19:27:45 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0250NVsI111069;
+        Thu, 5 Mar 2020 00:27:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
+ message-id : date : from : to : cc : subject : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=J0cB+5uaIKU59IltR6LnNDAssuAfjcBm0kwfXlCbFlE=;
+ b=d1bUy29c3itgpVq08n4CkzgUcO8B0y2HjmCSDJYebHNo2rvmNrm1dJHuv39nycYU7skw
+ Wi1cmFotYKfPFGHwj/uRrgPmzlnFpWlXQBotYUjT7ALUU0Y247Wv070Cazfmh1MCAFzR
+ GaN57ulOwsFMINBcWhOtDkCe33lcKz9BfmUljZkEDhnkHKOxf7WG79heqvX84dltethj
+ S6h4rK/dA9wvaFTGNLZQmCGPQYHAA8visJf1SIp2y22w+4QRAC9+v8d/BR7JGAFYKO/L
+ QSiWciwE11u6G4XUlOBam9YIDsHNjBZW2rmPXh4clA7S8zISPXou1o9pWzJFQFREHwg5 mw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2yghn3dk67-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Mar 2020 00:27:33 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0250GY9T062838;
+        Thu, 5 Mar 2020 00:27:33 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2yg1p8wer4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Mar 2020 00:27:33 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0250RVuE017682;
+        Thu, 5 Mar 2020 00:27:31 GMT
+Received: from monkey.oracle.com (/71.63.128.209) by default (Oracle Beehive
+ Gateway v4.0) with ESMTP ; Wed, 04 Mar 2020 16:26:56 -0800
 MIME-Version: 1.0
-In-Reply-To: <20200304224220.GC2799@xps15>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Message-ID: <20200305002650.160855-1-mike.kravetz@oracle.com>
+Date:   Wed, 4 Mar 2020 16:26:48 -0800 (PST)
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Michal Hocko <mhocko@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Prakash Sangappa <prakash.sangappa@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH 0/2] hugetlbfs: use i_mmap_rwsem for more synchronization
+X-Mailer: git-send-email 2.24.1
+Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=487 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=522 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1011 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003050000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+While discussing the issue with huge_pte_offset [1], I remembered that
+there were more outstanding hugetlb races.  These issues are:
 
-On 3/4/20 4:42 PM, Mathieu Poirier wrote:
-> On Fri, Feb 21, 2020 at 12:19:36PM +0200, Tero Kristo wrote:
->> From: Suman Anna <s-anna@ti.com>
->>
->> Use the appropriate SPDX license identifiers in various OMAP remoteproc
->> source files and drop the previous boilerplate license text.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>  drivers/remoteproc/omap_remoteproc.h | 27 +--------------------------
->>  1 file changed, 1 insertion(+), 26 deletions(-)
->>
->> diff --git a/drivers/remoteproc/omap_remoteproc.h b/drivers/remoteproc/omap_remoteproc.h
->> index 13f17d9135c0..828e13256c02 100644
->> --- a/drivers/remoteproc/omap_remoteproc.h
->> +++ b/drivers/remoteproc/omap_remoteproc.h
->> @@ -1,35 +1,10 @@
->> +/* SPDX-License-Identifier: BSD-3-Clause */
-> 
-> This is odd considering omap_remoteproc.c is GPL-2.0-only
+1) For shared pmds, huge PTE pointers returned by huge_pte_alloc can become
+   invalid via a call to huge_pmd_unshare by another thread.
+2) hugetlbfs page faults can race with truncation causing invalid global
+   reserve counts and state.
 
-We were using these enums on the firmware-side as well. The first
-version of this in v1 [1] is actually using Dual BSD and GPL-2.0-only,
-but even that one had posed some questions, so just converting to use
-the SPDX for the original license text.
+A previous attempt was made to use i_mmap_rwsem in this manner as described
+at [2].  However, those patches were reverted starting with [3] due to
+locking issues.
 
-regards
-Suman
+To effectively use i_mmap_rwsem to address the above issues it needs to
+be held (in read mode) during page fault processing.  However, during
+fault processing we need to lock the page we will be adding.  Lock
+ordering requires we take page lock before i_mmap_rwsem.  Waiting until
+after taking the page lock is too late in the fault process for the
+synchronization we want to do.
 
-[1] https://patchwork.kernel.org/patch/11215415/
-> 
-> Thanks,
-> Mathieu
-> 
->>  /*
->>   * Remote processor messaging
->>   *
->>   * Copyright (C) 2011-2020 Texas Instruments, Inc.
->>   * Copyright (C) 2011 Google, Inc.
->>   * All rights reserved.
->> - *
->> - * Redistribution and use in source and binary forms, with or without
->> - * modification, are permitted provided that the following conditions
->> - * are met:
->> - *
->> - * * Redistributions of source code must retain the above copyright
->> - *   notice, this list of conditions and the following disclaimer.
->> - * * Redistributions in binary form must reproduce the above copyright
->> - *   notice, this list of conditions and the following disclaimer in
->> - *   the documentation and/or other materials provided with the
->> - *   distribution.
->> - * * Neither the name Texas Instruments nor the names of its
->> - *   contributors may be used to endorse or promote products derived
->> - *   from this software without specific prior written permission.
->> - *
->> - * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
->> - * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
->> - * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
->> - * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
->> - * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
->> - * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
->> - * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
->> - * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
->> - * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
->> - * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
->> - * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->>   */
->>  
->>  #ifndef _OMAP_RPMSG_H
->> -- 
->> 2.17.1
->>
->> --
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+To address this lock ordering issue, the following patches change the
+lock ordering for hugetlb pages.  This is not too invasive as hugetlbfs
+processing is done separate from core mm in many places.  However, I
+don't really like this idea.  Much ugliness is contained in the new
+routine hugetlb_page_mapping_lock_write() of patch 1.
+
+The only other way I can think of to address these issues is by catching
+all the races.  After catching a race, cleanup, backout, retry ... etc,
+as needed.  This can get really ugly, especially for huge page reservations.
+At one time, I started writing some of the reservation backout code for
+page faults and it got so ugly and complicated I went down the path of
+adding synchronization to avoid the races.  Any other suggestions would
+be welcome.
+
+[1] https://lore.kernel.org/linux-mm/1582342427-230392-1-git-send-email-longpeng2@huawei.com/
+[2] https://lore.kernel.org/linux-mm/20181222223013.22193-1-mike.kravetz@oracle.com/
+[3] https://lore.kernel.org/linux-mm/20190103235452.29335-1-mike.kravetz@oracle.com
+
+Mike Kravetz (2):
+  hugetlbfs: use i_mmap_rwsem for more pmd sharing synchronization
+  hugetlbfs: Use i_mmap_rwsem to address page fault/truncate race
+
+ fs/hugetlbfs/inode.c    |  34 +++++---
+ include/linux/fs.h      |   5 ++
+ include/linux/hugetlb.h |   8 ++
+ mm/hugetlb.c            | 175 +++++++++++++++++++++++++++++++++++-----
+ mm/memory-failure.c     |  29 ++++++-
+ mm/migrate.c            |  24 +++++-
+ mm/rmap.c               |  17 +++-
+ mm/userfaultfd.c        |  11 ++-
+ 8 files changed, 264 insertions(+), 39 deletions(-)
+
+-- 
+2.24.1
 
