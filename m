@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59E7C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10501C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F07D207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D0B207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428680;
-	bh=mtnlBCmHerKf8Q879eLnDJEOQK8W1BiYUPGGqs279ZE=;
+	s=default; t=1583428684;
+	bh=+P8sB4H5yi+g9UNuOWK2JO1vju8lSiUvedGXcJ/u/nk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAIG9A6aKmlmkpSpfyb2vfiPG+yF/uprZqLnZFN3+kO1bxggx6WkUjtsSuUIjRkhu
-	 XM8reYA2p7y3cpbkLJbOG3d9EfUXruL7LZmINrjJnnyVJTqQeLRDVpGYJx+cLLYVR+
-	 xLlYc4KqSToSN7R8HFIBFgAZUJRRy7KfYBDbZwq8=
+	b=eZMnI7jAQ7RlIsfAIw9aFoIV2cTZFw8jpblr5o5MwmsJqy9kXMjfD4e6r2WUbAjht
+	 EkppUW8tG8eyECeLDEfUnb41kUSRotwuk/XkggNH44v4+ACSPjsxVrRivoFjn8JPuy
+	 JFHTTpiqxpORZx1CZB8rF+QIPpSAZzVH5AJeb3jY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgCERR7 (ORCPT
+        id S1728185AbgCERPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:17:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42538 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:15:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728212AbgCERPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:44 -0500
+        id S1728061AbgCERP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 349802146E;
-        Thu,  5 Mar 2020 17:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E32A8208CD;
+        Thu,  5 Mar 2020 17:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428543;
-        bh=mtnlBCmHerKf8Q879eLnDJEOQK8W1BiYUPGGqs279ZE=;
+        s=default; t=1583428525;
+        bh=+P8sB4H5yi+g9UNuOWK2JO1vju8lSiUvedGXcJ/u/nk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Znflrc9hibjkRvGdutaffncv8JW26YNyCc3YPdqDGP5Krg7sFaFiKPLxkERCAuLJ5
-         +ylQs4xgPQMc2Qo8qJ3CkXYEsf3A3O5IwiMN2bsSzdu0dA4ScO//vrN8zMg5CcLPsx
-         tIQbcSChqbxN9TGssa3HE5GRq/g0vxwQM3LU84+M=
+        b=FZV/5FWHwEOZ3T6tvBrHPVPs8+xsM61xr3+UaTYIXeGNV1DfvXEHlUeMpmBNqgDSx
+         Z6cu7RUiNUsaGhuEGm3e/0FfrlkTKJKVxjGCjMhYVRKylOkVw++70Yfe7Uo0YK8MI0
+         DD5KoD0KFeDK6d3QMDP1a3X3Ssk7acEqudEvaJVY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mansour Behabadi <mansour@oxplot.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/19] HID: apple: Add support for recent firmware on Magic Keyboards
-Date:   Thu,  5 Mar 2020 12:15:23 -0500
-Message-Id: <20200305171540.30250-2-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 07/31] i2c: altera: Fix potential integer overflow
+Date:   Thu,  5 Mar 2020 12:14:51 -0500
+Message-Id: <20200305171516.30028-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171540.30250-1-sashal@kernel.org>
-References: <20200305171540.30250-1-sashal@kernel.org>
+In-Reply-To: <20200305171516.30028-1-sashal@kernel.org>
+References: <20200305171516.30028-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,35 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mansour Behabadi <mansour@oxplot.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit e433be929e63265b7412478eb7ff271467aee2d7 ]
+[ Upstream commit 54498e8070e19e74498a72c7331348143e7e1f8c ]
 
-Magic Keyboards with more recent firmware (0x0100) report Fn key differently.
-Without this patch, Fn key may not behave as expected and may not be
-configurable via hid_apple fnmode module parameter.
+Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
+instead of 64-bit.
 
-Signed-off-by: Mansour Behabadi <mansour@oxplot.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
+and there is no need for div_u64().
+
+Addresses-Coverity: 1458369 ("Unintentional integer overflow")
+Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
+Suggested-by: David Laight <David.Laight@ACULAB.COM>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-apple.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-altera.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index d0a81a03ddbdd..8ab8f2350bbcd 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -343,7 +343,8 @@ static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
- 		unsigned long **bit, int *max)
- {
- 	if (usage->hid == (HID_UP_CUSTOM | 0x0003) ||
--			usage->hid == (HID_UP_MSVENDOR | 0x0003)) {
-+			usage->hid == (HID_UP_MSVENDOR | 0x0003) ||
-+			usage->hid == (HID_UP_HPVENDOR2 | 0x0003)) {
- 		/* The fn key on Apple USB keyboards */
- 		set_bit(EV_REP, hi->input->evbit);
- 		hid_map_usage_clear(hi, usage, bit, max, EV_KEY, KEY_FN);
+diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+index f5e1941e65b5a..a1cdcfc74acf6 100644
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -182,7 +182,7 @@ static void altr_i2c_init(struct altr_i2c_dev *idev)
+ 	/* SCL Low Time */
+ 	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
+ 	/* SDA Hold Time, 300ns */
+-	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
++	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
+ 
+ 	/* Mask all master interrupt bits */
+ 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
 -- 
 2.20.1
 
