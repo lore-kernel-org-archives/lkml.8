@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6FCC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4199C3F2D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585F6208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70924208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgCEJ64 (ORCPT
+        id S1727080AbgCEJ7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:58:56 -0500
-Received: from mga01.intel.com ([192.55.52.88]:50986 "EHLO mga01.intel.com"
+        Thu, 5 Mar 2020 04:59:04 -0500
+Received: from mga09.intel.com ([134.134.136.24]:64850 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgCEJ64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:58:56 -0500
+        id S1725880AbgCEJ7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 04:59:03 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 01:58:55 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 01:59:02 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
-   d="scan'208";a="234366402"
+   d="scan'208";a="234366434"
 Received: from snr.bj.intel.com ([10.240.193.90])
-  by orsmga008.jf.intel.com with ESMTP; 05 Mar 2020 01:58:49 -0800
+  by orsmga008.jf.intel.com with ESMTP; 05 Mar 2020 01:58:56 -0800
 From:   Luwei Kang <luwei.kang@intel.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
@@ -40,9 +40,9 @@ Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
         thomas.lendacky@amd.com, fenghua.yu@intel.com,
         kan.liang@linux.intel.com, like.xu@linux.intel.com
-Subject: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a dedicated counter for guest PEBS
-Date:   Fri,  6 Mar 2020 01:56:55 +0800
-Message-Id: <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
+Subject: [PATCH v1 02/11] perf/x86/ds: Handle guest PEBS events overflow and inject fake PMI
+Date:   Fri,  6 Mar 2020 01:56:56 +0800
+Message-Id: <1583431025-19802-3-git-send-email-luwei.kang@intel.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
 References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
@@ -53,165 +53,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The PEBS event created by host needs to be assigned specific counters
-requested by the guest, which means the guest and host counter indexes
-have to be the same or fail to create. This is needed because PEBS leaks
-counter indexes into the guest. Otherwise, the guest driver will be
-confused by the counter indexes in the status field of the PEBS record.
+With PEBS virtualization, the PEBS record gets delivered to the guest,
+but host still sees the PMI. This would normally result in a spurious
+PEBS PMI that is ignored. But we need to inject the PMI into the guest,
+so that the guest PMI handler can handle the PEBS record.
 
-A guest_dedicated_idx field is added to indicate the counter index
-specifically requested by KVM. The dedicated event constraints would
-constrain the counter in the host to the same numbered counter in guest.
+Check for this case in the perf PEBS handler. If a guest PEBS counter
+overflowed, a fake event will be triggered. The fake event results in
+calling the KVM PMI callback, which injects the PMI into the guest.
 
-A intel_ctrl_guest_dedicated_mask field is added to indicate the enabled
-counters for guest PEBS events. The IA32_PEBS_ENABLE MSR will be switched
-during the VMX transitions if intel_ctrl_guest_owned is set.
+No matter how many PEBS counters are overflowed, only triggering one
+fake event is enough. Then the guest handler would retrieve the correct
+information from its own PEBS records including the guest state.
 
 Originally-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 60 +++++++++++++++++++++++++++++++++++++++++++-
- arch/x86/events/perf_event.h |  1 +
- include/linux/perf_event.h   |  2 ++
- kernel/events/core.c         |  1 +
- 4 files changed, 63 insertions(+), 1 deletion(-)
+ arch/x86/events/intel/ds.c | 59 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index dff6623..ef95076 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -368,6 +368,29 @@
- 	EVENT_CONSTRAINT_END
- };
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index dc43cc1..6722f39 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1721,6 +1721,62 @@ void intel_pmu_auto_reload_read(struct perf_event *event)
+ 	return 0;
+ }
  
-+#define GUEST_DEDICATED_CONSTRAINT(idx) {          \
-+	{ .idxmsk64 = (1ULL << (idx)) },        \
-+	.weight = 1,                            \
++/*
++ * We may be running with virtualized PEBS, so the PEBS record
++ * was logged into the guest's DS and is invisible to host.
++ *
++ * For guest-dedicated counters we always have to check if the
++ * counters are overflowed, because PEBS thresholds
++ * are not reported in the PERF_GLOBAL_STATUS.
++ *
++ * In this case we just trigger a fake event for KVM to forward
++ * to the guest as PMI. The guest will then see the real PEBS
++ * record and read the counter values.
++ *
++ * The contents of the event do not matter.
++ */
++static int intel_pmu_handle_guest_pebs(struct cpu_hw_events *cpuc,
++				       struct pt_regs *iregs,
++				       struct debug_store *ds)
++{
++	struct perf_sample_data data;
++	struct perf_event *event;
++	int bit;
++
++	/*
++	 * Ideally, we should check guest DS to understand if the
++	 * guest-dedicated PEBS counters are overflowed.
++	 *
++	 * However, it brings high overhead to retrieve guest DS in host.
++	 * The host and guest cannot have pending PEBS events simultaneously.
++	 * So we check host DS instead.
++	 *
++	 * If PEBS interrupt threshold on host is not exceeded in a NMI,
++	 * the guest-dedicated counter must be overflowed.
++	 */
++	if (!cpuc->intel_ctrl_guest_dedicated_mask || !in_nmi() ||
++	    (ds->pebs_interrupt_threshold <= ds->pebs_index))
++		return 0;
++
++	for_each_set_bit(bit,
++		(unsigned long *)&cpuc->intel_ctrl_guest_dedicated_mask,
++			INTEL_PMC_IDX_FIXED + x86_pmu.num_counters_fixed) {
++
++		event = cpuc->events[bit];
++		if (!event->attr.precise_ip)
++			continue;
++
++		perf_sample_data_init(&data, 0, event->hw.last_period);
++		if (perf_event_overflow(event, &data, iregs))
++			x86_pmu_stop(event, 0);
++
++		/* Inject one fake event is enough. */
++		return 1;
++	}
++
++	return 0;
 +}
 +
-+static struct event_constraint dedicated_gp_c[MAX_PEBS_EVENTS] = {
-+	GUEST_DEDICATED_CONSTRAINT(0),
-+	GUEST_DEDICATED_CONSTRAINT(1),
-+	GUEST_DEDICATED_CONSTRAINT(2),
-+	GUEST_DEDICATED_CONSTRAINT(3),
-+	GUEST_DEDICATED_CONSTRAINT(4),
-+	GUEST_DEDICATED_CONSTRAINT(5),
-+	GUEST_DEDICATED_CONSTRAINT(6),
-+	GUEST_DEDICATED_CONSTRAINT(7),
-+};
+ static void __intel_pmu_pebs_event(struct perf_event *event,
+ 				   struct pt_regs *iregs,
+ 				   void *base, void *top,
+@@ -1954,6 +2010,9 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs)
+ 	if (!x86_pmu.pebs_active)
+ 		return;
+ 
++	if (intel_pmu_handle_guest_pebs(cpuc, iregs, ds))
++		return;
 +
-+static struct event_constraint dedicated_fixed_c[MAX_FIXED_PEBS_EVENTS] = {
-+	GUEST_DEDICATED_CONSTRAINT(INTEL_PMC_IDX_FIXED),
-+	GUEST_DEDICATED_CONSTRAINT(INTEL_PMC_IDX_FIXED + 1),
-+	GUEST_DEDICATED_CONSTRAINT(INTEL_PMC_IDX_FIXED + 2),
-+	GUEST_DEDICATED_CONSTRAINT(INTEL_PMC_IDX_FIXED + 3),
-+};
-+
- static u64 intel_pmu_event_map(int hw_event)
- {
- 	return intel_perfmon_event_map[hw_event];
-@@ -2158,6 +2181,7 @@ static void intel_pmu_disable_event(struct perf_event *event)
- 	}
+ 	base = (struct pebs_basic *)(unsigned long)ds->pebs_buffer_base;
+ 	top = (struct pebs_basic *)(unsigned long)ds->pebs_index;
  
- 	cpuc->intel_ctrl_guest_mask &= ~(1ull << hwc->idx);
-+	cpuc->intel_ctrl_guest_dedicated_mask &= ~(1ull << hwc->idx);
- 	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
- 	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
- 
-@@ -2246,6 +2270,10 @@ static void intel_pmu_enable_event(struct perf_event *event)
- 	if (event->attr.exclude_guest)
- 		cpuc->intel_ctrl_host_mask |= (1ull << hwc->idx);
- 
-+	if (unlikely(event->guest_dedicated_idx >= 0)) {
-+		WARN_ON(hwc->idx != event->guest_dedicated_idx);
-+		cpuc->intel_ctrl_guest_dedicated_mask |= (1ull << hwc->idx);
-+	}
- 	if (unlikely(event_is_checkpointed(event)))
- 		cpuc->intel_cp_status |= (1ull << hwc->idx);
- 
-@@ -3036,7 +3064,21 @@ static void intel_commit_scheduling(struct cpu_hw_events *cpuc, int idx, int cnt
- 	if (cpuc->excl_cntrs)
- 		return intel_get_excl_constraints(cpuc, event, idx, c2);
- 
--	return c2;
-+	if (event->guest_dedicated_idx < 0)
-+		return c2;
-+
-+	BUILD_BUG_ON(ARRAY_SIZE(dedicated_fixed_c) != MAX_FIXED_PEBS_EVENTS);
-+	if (c2->idxmsk64 & (1ULL << event->guest_dedicated_idx)) {
-+		if (event->guest_dedicated_idx < MAX_PEBS_EVENTS)
-+			return &dedicated_gp_c[event->guest_dedicated_idx];
-+		else if ((event->guest_dedicated_idx >= INTEL_PMC_IDX_FIXED) &&
-+			 (event->guest_dedicated_idx < INTEL_PMC_IDX_FIXED +
-+							MAX_FIXED_PEBS_EVENTS))
-+			return &dedicated_fixed_c[event->guest_dedicated_idx -
-+							INTEL_PMC_IDX_FIXED];
-+	}
-+
-+	return &emptyconstraint;
- }
- 
- static void intel_put_excl_constraints(struct cpu_hw_events *cpuc,
-@@ -3373,6 +3415,22 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr)
- 		*nr = 2;
- 	}
- 
-+	if (cpuc->intel_ctrl_guest_dedicated_mask) {
-+		arr[0].guest |= cpuc->intel_ctrl_guest_dedicated_mask;
-+		arr[1].msr = MSR_IA32_PEBS_ENABLE;
-+		arr[1].host = cpuc->pebs_enabled &
-+				~cpuc->intel_ctrl_guest_dedicated_mask;
-+		arr[1].guest = cpuc->intel_ctrl_guest_dedicated_mask;
-+		*nr = 2;
-+	} else {
-+		/* Remove MSR_IA32_PEBS_ENABLE from MSR switch list in KVM */
-+		if (*nr == 1) {
-+			arr[1].msr = MSR_IA32_PEBS_ENABLE;
-+			arr[1].host = arr[1].guest = 0;
-+			*nr = 2;
-+		}
-+	}
-+
- 	return arr;
- }
- 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index f1cd1ca..621529c 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -242,6 +242,7 @@ struct cpu_hw_events {
- 	 * Intel host/guest exclude bits
- 	 */
- 	u64				intel_ctrl_guest_mask;
-+	u64				intel_ctrl_guest_dedicated_mask;
- 	u64				intel_ctrl_host_mask;
- 	struct perf_guest_switch_msr	guest_switch_msrs[X86_PMC_IDX_MAX];
- 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 547773f..3bccb88 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -750,6 +750,8 @@ struct perf_event {
- 	void *security;
- #endif
- 	struct list_head		sb_list;
-+	/* the guest specified counter index of KVM owned event, e.g PEBS */
-+	int				guest_dedicated_idx;
- #endif /* CONFIG_PERF_EVENTS */
- };
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index e453589..7a7b56c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10731,6 +10731,7 @@ static void account_event(struct perf_event *event)
- 	event->id		= atomic64_inc_return(&perf_event_id);
- 
- 	event->state		= PERF_EVENT_STATE_INACTIVE;
-+	event->guest_dedicated_idx = -1;
- 
- 	if (task) {
- 		event->attach_state = PERF_ATTACH_TASK;
 -- 
 1.8.3.1
 
