@@ -2,113 +2,87 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57BCC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C72C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD5420801
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE692072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QiMaHeiS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQ7kI+vZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgCEQRE (ORCPT
+        id S1726368AbgCEQSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:17:04 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33387 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgCEQRD (ORCPT
+        Thu, 5 Mar 2020 11:18:34 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36787 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgCEQSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:17:03 -0500
-Received: by mail-io1-f65.google.com with SMTP id r15so7126048iog.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:17:03 -0800 (PST)
+        Thu, 5 Mar 2020 11:18:33 -0500
+Received: by mail-lj1-f193.google.com with SMTP id 195so6742294ljf.3;
+        Thu, 05 Mar 2020 08:18:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EKjzEJMa9fe0PK3n0GkSSdo/FdjChSUpIwJDlTYh97U=;
-        b=QiMaHeiSTJFP6UFJmbCXKjB+4nX0XCEjJu+Rsrs6hvaZ9brVoePcMg71hYOmttDytV
-         Dhk1MdOs+qEZGatjDQ4OlqOsagcAfN6ua+iOtlMCg4Vu25OgIbsoGMIkI+TWobK3/lz2
-         o78biGJDirONtSS2xRidOq8Mq6L2qZ3tTogPcEaKZ+XxidOZqmPXMBScwoIS6xajXiBn
-         MdnAXtKjreVO43RPngwPA8kFjwZfPAjIF/Cfu4tjSQZWDBHgMnCokRplyIQqtnNPKk3z
-         v3Xy7ZlT8IAc789E7dXAto/cJFpLbHbSA0H7ZdET+f/HWzkny87uDeD9uBWle7cMAqni
-         qjVw==
+        bh=gL5vBbbeMCoQRZdd2e1f8gMNmmGKEAstYFkdjKYQP2U=;
+        b=tQ7kI+vZlDdHob+x+uy3xOsqzwzkF3iMNJrWA7mPzmfVQrGmL5R6GniM8JLUlteZMk
+         78OZEIZFjYz4KxTlUst1zuwa8OHDTMjvnAM+4UQaR0r5KaKun8XLSk8pzuNny7s4pHvt
+         NI2np9vW4ogMKbXlRBE2KZ8WhETsFDJ+2uut78ZMM423sQQudi9A34C60j8ms/IJl1UY
+         j71kgX0CBDuPLvraUriJp4ns0FgXV9HM21Q6TfVW5hH0ERji0lPVNeEJe9fEo579JUy2
+         k1eHTvcUaZixyzUeb9TxymRo/J9IN/fWV9GzmU+HF0CodeySV7SBo6G0v/nTPoe3TACw
+         py1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EKjzEJMa9fe0PK3n0GkSSdo/FdjChSUpIwJDlTYh97U=;
-        b=dlwmznAAgOtsidQ8r7HFXEB9z7U+tJzGGLI7g/ryeuNtHlQNnzSFuyV52jkLKEgDd2
-         qe1Utk4u405zdxyLwKp7WJvKJAAPPbvsIQDIDDBdwNGxKr3FgtDwSG3xSA33l5IuKXty
-         7Q+HIY9k7lxrW2cXyzJxg1mL2Nq+Lr7y1Vp3xcwMSN3HAAQKE4UoiFxrZLAn/uc1HkxQ
-         iTwx/zLUb6s1iKfCyWzw0dPMTgQmdBg5v785Cw9BqyT9kedlOnnLD4Exob4pYzBCZf51
-         3MwG0hAHViZyH7xgLuKdfmbUzBn4SNxHAbxImq/QsnY+CAKDpxnSKwlkGZJcm2d7ZmPR
-         EV9w==
-X-Gm-Message-State: ANhLgQ2ArPjAQ2NiDEoOvl91ITD5WC2fK5T/0/zPF3IyRC5qJrLHrK+U
-        QrjakLC46q+zf3Pn5kGTDNF90ziGBX523b32yGPcTg==
-X-Google-Smtp-Source: ADFU+vs/EhZ+fp249v7LdQYx8Y8WWjr0qHKosDWHsPMEx9WRmNCCS8qpg2xo/DQYa5d00clxO7cglhbSPdx+Pwph6Us=
-X-Received: by 2002:a5d:9b94:: with SMTP id r20mr7035294iom.140.1583425022687;
- Thu, 05 Mar 2020 08:17:02 -0800 (PST)
+        bh=gL5vBbbeMCoQRZdd2e1f8gMNmmGKEAstYFkdjKYQP2U=;
+        b=IfW7JXDaJurUnavZk/pt4vT1a9LpWTG/xE8YogHx9/R1be2aiL5y8eG4qZIQCLG+Vr
+         QyX8VptXsgme4N93lIQ6QQo2UVjRHB+DUmG8S+n7aXNQ1Oq0aM0kMlGpl+J6Mwz/7Rrd
+         DA5D79WMmNG5Hm/oEx6Yud6JYP+camxPU1UgBGbXBssRjaZVT5OLZ8CjJ+UNYYXt2xe+
+         814HINWdKcIgmi0bSJsz8lz2X3mkmOwC0INM8T7oqS/E3QS91gfHIDn9qJicTMaSsNoj
+         wbKylmYrQrzsDB1guD975SU7ZNEr70kbBTtg0EMwIEMIwAfAt+XXtALpiDQg2RXB1YrJ
+         3vIQ==
+X-Gm-Message-State: ANhLgQ2moHaUPIvzrElmATP2KMbrE4N1y8F6OaRIBq4Bg+hByxYMDAem
+        SGvVayiqgcUUahCDLt8gA4nvSv8+LtmVFfRpxgw=
+X-Google-Smtp-Source: ADFU+vvp3u9GLRfD1+dhOGMdYX1FlWnML3O5d5yjTuDlsEDFfAlc3TL+sRTabNGpYAHGUGOtvTQdg0X41+kRh1xVA3k=
+X-Received: by 2002:a2e:b5a2:: with SMTP id f2mr5926578ljn.212.1583425111097;
+ Thu, 05 Mar 2020 08:18:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20200304142628.8471-1-NShubin@topcon.com>
-In-Reply-To: <20200304142628.8471-1-NShubin@topcon.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 5 Mar 2020 09:16:51 -0700
-Message-ID: <CANLsYkzPROdphvmtpZ6YiajZ2dYLrojC-rGYkq4jK2yzTnAJ5A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] remoteproc: imx_rproc: dummy kick method
-To:     Nikita Shubin <NShubin@topcon.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200305175528.5b3ccc09@canb.auug.org.au> <715919f5-e256-fbd1-44ff-8934bda78a71@infradead.org>
+In-Reply-To: <715919f5-e256-fbd1-44ff-8934bda78a71@infradead.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 5 Mar 2020 08:18:19 -0800
+Message-ID: <CAADnVQ+TYiVu+Ksstj4LmYa=+UPwbv-dv-tscRaKn_0FcpstBg@mail.gmail.com>
+Subject: Re: linux-next: Tree for Mar 5 (bpf_trace)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        KP Singh <kpsingh@chromium.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 07:25, Nikita Shubin <NShubin@topcon.com> wrote:
+On Thu, Mar 5, 2020 at 8:13 AM Randy Dunlap <rdunlap@infradead.org> wrote:
 >
-> add kick method that does nothing, to avoid errors in rproc_virtio_notify.
+> On 3/4/20 10:55 PM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Changes since 20200304:
+> >
 >
-> Signed-off-by: Nikita Shubin <NShubin@topcon.com>
-> ---
->  drivers/remoteproc/imx_rproc.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+> on i386:
 >
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 3e72b6f38d4b..796b6b86550a 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -240,9 +240,15 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
->         return va;
->  }
->
-> +static void imx_rproc_kick(struct rproc *rproc, int vqid)
-> +{
-> +
-> +}
-> +
+> ld: kernel/trace/bpf_trace.o:(.rodata+0x38): undefined reference to `bpf_prog_test_run_tracing'
 
-If rproc::kick() is empty, how does the MCU know there is packets to
-fetch in the virtio queues?
-
->  static const struct rproc_ops imx_rproc_ops = {
->         .start          = imx_rproc_start,
->         .stop           = imx_rproc_stop,
-> +       .kick           = imx_rproc_kick,
->         .da_to_va       = imx_rproc_da_to_va,
->  };
->
-> --
-> 2.24.1
->
+KP,
+Please take a look.
