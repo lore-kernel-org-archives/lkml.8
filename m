@@ -2,134 +2,142 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6132BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2B4C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4BA2146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F472073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:23:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="R6IiSv/X"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="VV6L61Jz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgCEKTv (ORCPT
+        id S1726822AbgCEKXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:19:51 -0500
-Received: from mout.web.de ([217.72.192.78]:48089 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbgCEKTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:19:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1583403552;
-        bh=lJOB1aL2yujJXbCPVYtxOIud1lD5R8oZYw6lYmIfD/U=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=R6IiSv/X/CNA8Lat1J19v594k0jTkI94dUo0hdazGSKbX/xLg97aov8D+bjjnCxK0
-         X+4+qiJRZIOBLN07rwp8NSY0VR+Pyr3yg600fJ/3WkgsaMZnOWzCm5YAGJKVpvLIFQ
-         6lKV/udIpI19Wv3yAdsSY4X3BbUmQhDbGd2oegz0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.16.47]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LaCbS-1jdxHC1G62-00m3k7; Thu, 05
- Mar 2020 11:19:12 +0100
-Subject: Re: [PATCH v5] Documentation: bootconfig: Update boot configuration
- documentation
-To:     Masami Hiramatsu <mhiramat@kernel.org>, linux-doc@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <158339065180.26602.26457588086834858.stgit@devnote2>
- <158339066140.26602.7533299987467005089.stgit@devnote2>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <967d6fee-e0cd-c53f-c1f6-b367a979762c@web.de>
-Date:   Thu, 5 Mar 2020 11:19:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 05:23:34 -0500
+Received: from mail-eopbgr60075.outbound.protection.outlook.com ([40.107.6.75]:42574
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725897AbgCEKXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 05:23:34 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iYX+a8Rb77I3E0wwuCpEqmGW4sfKQ+y1W9+fgp7WYnHWT5h9IQN+KCbWfQaHHkmRliFnV4/eJD+qS/Fe+h5+CG0Bh2cp8aIWYZCRCn7oYMfg2VXQZswvvouJ8xUys9VIOVRnRB0tKqSc4+TYYqsbaOX41D0a9FBA9hIti3SCQIu6q0YRNvg39tXQ5kHECJYljhSpAMQWXMfF1ndPWx/kNqfdhHmvPgl0SPEIwvcfRwwXTqdNDlgvgdr/AIMx+AlEG25MiGgqcY6BbTpC4BdiYmKb4ULpI0rDRDNFqFJoFOLCRUIsyGLzV/RYdG4jDOwOnY3ag08BvRtTFRF99h7u0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0exbbkXHQ2cHuzFW/2uOKkV9aNQc1rpgKk7uwG5zUvg=;
+ b=YFcjMCtN6coyk0V/3bEfqCNbh1jjGUU0U2EycUl28567I0hqQL91hESnXqn48PEZbXNuTBhp8bXSFwuO6bgEvy5OpUU54pMZpjFazUI7KVEDnDBk9JcpJRhkbEbvuMt0kESeilIDyCRh2HAHpCKM7hHeqZPLrM+zEZGvXoeYSKtbCfEXJuNjjhbIbuIAXrL3gUSr6AU8HwsBCBxcvSWf8n7/GuX66kgZoDx/ss/zvDVWy/cl+WlqiIS/Xfguv4k9EF2CBW8PgFkWqPujm4b9jnextYpyd4TLx/3oV2inMpctvYpDlbiZk84lKd4LqRuPjLs5zDEIOM/nVImKOhh+/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0exbbkXHQ2cHuzFW/2uOKkV9aNQc1rpgKk7uwG5zUvg=;
+ b=VV6L61JzUQ1l1T7ZFoQThMYEam/K5CCsBs285bD3wL4OixmBWvyVANlzIiTwWJVhsydLmSJcIATns4yp3GIcuh1e5zAypnxpyzzUBOVlr6g4xHVXp5hadxaEzopHaANZoGB7tjsDu+NgmYnC+DBEucH3UIMm6QfjvdsvVlQGZpc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=andrei.botila@oss.nxp.com; 
+Received: from VI1PR04MB5437.eurprd04.prod.outlook.com (20.178.124.33) by
+ VI1PR04MB5408.eurprd04.prod.outlook.com (20.178.121.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.15; Thu, 5 Mar 2020 10:23:30 +0000
+Received: from VI1PR04MB5437.eurprd04.prod.outlook.com
+ ([fe80::4c6d:1d2f:bcd9:e639]) by VI1PR04MB5437.eurprd04.prod.outlook.com
+ ([fe80::4c6d:1d2f:bcd9:e639%4]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
+ 10:23:30 +0000
+From:   Andrei Botila <andrei.botila@oss.nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC] crypto: xts - add check for input length equal to zero
+Date:   Thu,  5 Mar 2020 12:22:55 +0200
+Message-Id: <20200305102255.12548-1-andrei.botila@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: AM5PR0701CA0055.eurprd07.prod.outlook.com
+ (2603:10a6:203:2::17) To VI1PR04MB5437.eurprd04.prod.outlook.com
+ (2603:10a6:803:d8::33)
 MIME-Version: 1.0
-In-Reply-To: <158339066140.26602.7533299987467005089.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xWBI6zTTz8hNTjcNVKd7ehcNlQ/ItTYRXwHWz8eaiaMEovd4k+8
- M6xHc5cxEa+vtWlD9AEenMzwQTeJlZ8gpwkcKmbhfFTDl69VxfEI+tYJKpguZpgVQw+86sf
- 9zozuORH+2pLSWEjGCFOKiWOMJpOvOmZXn31sqHZKH5VvD1j1EXjEdCTqYTpVVKTAv8K32V
- Lj4wBGnv4qsCywGHbheFw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yTzcAZIslp4=:S2nNct0Gk7wv8vFYPQiKdM
- SEmYJ+Ua71IOYxb0J5QgyhiPumtQYgpR++yqGIbAX6XtdAgT2MflJTLtf6GYA4TDRRd+zON83
- +j8TNGi+Pat2XVVpla2SDvdE6dvL8SMDgFk087oc2Nf3FkTxvKoXojkJbcHWPfXktf3+CDsap
- S+aBP342CrBe202ee4uCntmgDHmSDuX5ejjBBjQKeP3lWrcrfQwiT9gStaYglh0ffhdWNBF+U
- FS/a26N3xnbUxqaBLZpgYXgQ7qd37/FcWeSxfdzp6Vd55LTANDv7dEXQYwu54gQwmLiG5m3iz
- WsWyRJ1LNTRRhqUJnTLKhCC+7Ox+xAScYKE6XvnV4hzFQNkCsf/1slJ6NKF7SwpLTWew08Tun
- hjdl8F+wkKJHFG2FavLzVt/ipMdHcgXzYBGNMoV6jDNnDXTuPDSJoE7I1vOajY7E9nYh32SOh
- O0IvMaZiekuXGAPBEW1q+pncG8+gEzUBOevYaHOK4LmnuXt1OCDsYCftOLy+fZnN+CjMyzp5W
- Q8ckVgXt4KpaSayR7SrpoRDbGuSZ8Dq9IPQ7r7/DUxFA5subhx31XkOtcFA5cO95uWzXjFxj+
- nPs4E+/kJzXB7FMZmFCkLw7n3f+mgdc/4P5997xm/xRZqm1gbzU0gz1ijOpXooQx+36mbuVVe
- x5k+9f/G9gfJchLQVPgdEt2RXt3yIATOgOUhQ6L+vzGX0EdImsb1xZI8kTaofkOmyKH/6403d
- cVe1gpE7GlgF0UI0cA+CaRzQx2tLJs+jBYBlLbHOB1IicLSuCY5a27v4P1DGNHIXiyI324hA/
- LgiwSrSWDEA1HHNdvVJitFs7ybLT06ENxw5Pbw2gjJ0RqMtdd7UB3u9gGr1Qbkb/gAJ1Z4qBD
- OKWkR9HnbBzo6n6nSqdpaCuej/qYCIiwW9D8uPqgeJ3rPLQDtg+m71oeEj1a4yX5POO0NZ38w
- N1S8fr40y50JvOD65Fubgln18ZZi+ui71LozuXQqriiLI7+jWGdLgSPkRnQ/oV1v6moYD+381
- 7QNHPzrz/1/hfS2ZE3oHmGxCl2Q+ibSm+A4vm8wpufkV9r+2me67Q7+zi3UB3pRy5umArYQPj
- SvyOHsudSHlMy0n4IbvImkNa6r2QnLji0hYifrVLmcyFxCJ+uqcZLn9h5rYy6xLC3R9qmEtjF
- keph37I+bPFZAcXWx1T0gzXSaNopggiNXp8qbO7xu058oLNkWMiNCMt/65cIW1fytMxzZPLLZ
- PRPOBhL4a3WB6WgP4
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv15007.swis.ro-buh01.nxp.com (212.146.100.6) by AM5PR0701CA0055.eurprd07.prod.outlook.com (2603:10a6:203:2::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.6 via Frontend Transport; Thu, 5 Mar 2020 10:23:29 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [212.146.100.6]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 827c5279-dae9-4f4a-5106-08d7c0ef402b
+X-MS-TrafficTypeDiagnostic: VI1PR04MB5408:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB54087E2D96155250BAE7871DB4E20@VI1PR04MB5408.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 03333C607F
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(376002)(39860400002)(346002)(199004)(189003)(66556008)(66946007)(956004)(66476007)(186003)(16526019)(26005)(44832011)(2616005)(86362001)(2906002)(81166006)(110136005)(316002)(6486002)(81156014)(1076003)(6666004)(8676002)(8936002)(52116002)(5660300002)(478600001)(6506007)(6512007)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5408;H:VI1PR04MB5437.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 63fQ3EhkzEfDVuwdeii5lX+6BhFXCkL2wReibdkbGywj+eLPo8q1xvuEImtyuVTYHqrKBdYATGoE2xgXnykR/40PIIDK7PWP4VapKRhaIgLEOoVIR9YEVsQAd6LUsBKSFaGcELIK8soD7VOfYBvs4XMLpgCUCVTZ7Gk4lv/2NotFWrGkapeVfWd8p2cIe05zQRaO8EUakIIh0PO2nQYey0k1D5JW4wdssIzbkWQeljCb3MMmH/W34jZwNC9sY7qhmjBAqNojvJ3WXouuvmwQzs0Bo+T6mTQIkSku9NUSZCou8zBoN69KMuu+rJ1BsYJAuGUuPEq5LCZJQ//UYwh2zt24lX6ucMCr8caDJjLjdi/QPr+56iXMVpxKWi9zO0zw4vhIabYd1nv+KbLNH2BmBpUNTXvpvPvrqe0zhsq8lq2MpG96vAYWpjKbAA4i1JRT
+X-MS-Exchange-AntiSpam-MessageData: zq3RTYpl2VnShqNMHxK5pewOB+vmulzIc2jKZHKfZnG0Qv8GyKrhc6US6zuHOfaylp75+9IllSZezNNZXxEoRQ0mLLVIEsa7BJQumTY9zrY/hXn/DPaIQRElzxPX7BwtO3X7QTsVYLeks/b8cUI/0A==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 827c5279-dae9-4f4a-5106-08d7c0ef402b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2020 10:23:30.4330
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H6NWq9G72N+C7CxnPz3IHSZnBGSnyTpN6xOFqjyB7sYL9j4FOgQg6m7pqorNIqqqBkn2+IQGapm1xxKjh4BdBw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5408
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/Documentation/admin-guide/bootconfig.rst
-=E2=80=A6
->  =E2=80=A6 word must contain only alphabets, numbers, =E2=80=A6
+From: Andrei Botila <andrei.botila@nxp.com>
 
-Would the wording =E2=80=9C=E2=80=A6 alphanumeric characters =E2=80=A6=E2=
-=80=9D be nicer?
+Through this RFC we try to standardize the way input lengths equal to 0
+are handled in all skcipher algorithms. Currently, in xts when an input
+has a length smaller than XTS_BLOCK_SIZE it returns -EINVAL while the
+other algorithms return 0 for input lengths equal to zero.
+The algorithms that implement this check are CBC, ARC4, CFB, OFB, SALSA20,
+CTR, ECB and PCBC, XTS being the outlier here. All of them call
+skcipher_walk_virt() which returns 0 if skcipher_walk_skcipher() finds
+that input length is equal to 0.
+This case was discovered when fuzz testing was enabled since it generates
+this input length.
+This RFC wants to find out if the approach is ok before updating the
+other xts implementations.
 
-Regards,
-Markus
+Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
+---
+ crypto/xts.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/crypto/xts.c b/crypto/xts.c
+index 29efa15f1495..51eaf08603af 100644
+--- a/crypto/xts.c
++++ b/crypto/xts.c
+@@ -258,6 +258,9 @@ static int encrypt(struct skcipher_request *req)
+ 	struct skcipher_request *subreq = &rctx->subreq;
+ 	int err;
+ 
++	if (!req->cryptlen)
++		return 0;
++
+ 	err = init_crypt(req, encrypt_done) ?:
+ 	      xor_tweak_pre(req, true) ?:
+ 	      crypto_skcipher_encrypt(subreq) ?:
+@@ -275,6 +278,9 @@ static int decrypt(struct skcipher_request *req)
+ 	struct skcipher_request *subreq = &rctx->subreq;
+ 	int err;
+ 
++	if (!req->cryptlen)
++		return 0;
++
+ 	err = init_crypt(req, decrypt_done) ?:
+ 	      xor_tweak_pre(req, false) ?:
+ 	      crypto_skcipher_decrypt(subreq) ?:
+-- 
+2.17.1
+
