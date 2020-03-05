@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AE3C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1DDC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4C420801
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C259320801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:44:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="DLRMzf7h"
+	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="Gjc6mRDc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCEXoV (ORCPT
+        id S1726579AbgCEXo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 18:44:21 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37678 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCEXoV (ORCPT
+        Thu, 5 Mar 2020 18:44:26 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33976 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgCEXo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 18:44:21 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b8so70438plx.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 15:44:20 -0800 (PST)
+        Thu, 5 Mar 2020 18:44:26 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y21so164598pfp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 15:44:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cs.washington.edu; s=goo201206;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aODloWMH+16G+jblYOYaP3wMYDm9EtGNGFqttSX2s+c=;
-        b=DLRMzf7h4mpOskip4ouIPR0SHCDuIPqH5OncwsmFJzBEKqHKjlJmeE2yLIz5+a+nez
-         z1CihklS33zvnR8+UsqoMQpolFyiH/grjxX2KwacBuA4ve8c3cTN43i+meX3/mUdfZur
-         JwZ9Gpo/sdNhdNq4WzQ70/nSHFX2JJGGQ2oeM=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8CXMX6fYDwGAYuQgw3gIIoEsDSy+htyQIvrI+wvb2+8=;
+        b=Gjc6mRDcST67ch0F2d8snDJxaX0MY/pG5uwlIGr31+nbXp8S0uE3YwChQ1qHzuQLxL
+         P6vxhKDB5gDhglRfvnEYHG0bCTQo2prlA1AIn/BGmKqFUo8ZR4Pibv0u9NO8/pFdRN8J
+         d5CvL4rE2OsCeveuUbpV8Ki2YiPQsBHoatL1Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aODloWMH+16G+jblYOYaP3wMYDm9EtGNGFqttSX2s+c=;
-        b=J5EJzcuaAYidWn75PfzPRAraL3iLAffWwfh03n5Y3I/WcMW1enQ3zD9wcfU5eUY7xs
-         /VUfyK7rhiuhShdpveUPmGENtvH15AJmEOc9nl9wct41xHyA1iXspdPR+c0LNy1B3mOf
-         MKpOUKQ8NV7f3YBrZU2VaEkHeXA3aBBckl7/eO1UBgqiIoRuzUUL4/Qht/J3knBpps9u
-         l0uNmed1HT3Nm5jrC4cg3XkCHG59mom3oeeGgQusEEokOdJ3r2YepSqZGxx3hUHGbf3W
-         +Hu7fhX9Ouvw9Aw7XGSeEv0qjjq7NpZE3kAnpykwGU2GiPOCgXUwv+cIpTk9WP0TLkNo
-         uBcw==
-X-Gm-Message-State: ANhLgQ3viIrAJOMTWzg26k7LGgmm516YV2aQTRpy3csFd1juKWRgN5fu
-        AVBLZVA64Q0JpoVrvyV9MuAVKQ==
-X-Google-Smtp-Source: ADFU+vso9fE7zT/rV4B3bXR5NWkoobXDHEh3h6d5W3kgqFGDXSuUEjPGN9nvGO5Gfot1rEhID2VWzQ==
-X-Received: by 2002:a17:902:bc88:: with SMTP id bb8mr224807plb.274.1583451859886;
-        Thu, 05 Mar 2020 15:44:19 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8CXMX6fYDwGAYuQgw3gIIoEsDSy+htyQIvrI+wvb2+8=;
+        b=gxBUjQRxZOazbFAmQeF1vXvTPB6AoX0JpTy2kmpPQmR+ZE3aoqPVlRPudn9XVX6wLz
+         zxgHn3hUvadJhhAasK3C919r49O67/xLKK5r0byeRr9hOG6pj93U3U4vLDQQRS5KmESo
+         dfNAyL8lsaVAzg8NSv3R9J1hAVKrmGN9QdneEJhKrIJYfT5ZOveaJBJoD0ZhmWAljx9M
+         +JOQsuinG8WTgQw8aIbtOguAD0q+DSvJ9qb+p6iDjkZuqzAjvX3IiSnaNBfQorbQiqro
+         m0m2C33e/IztcPWPSPgYh2CMiyZVldZgs80AZOUP9lAHeN3PM6neeWpiZZLIGNM1ZP+l
+         8qDg==
+X-Gm-Message-State: ANhLgQ0vFJQOqxgeq23Ow3KTk9FRzD9wM1knDa+qGbD+IDgGveHX4j6V
+        /VWtzu0GUyszdDZbISMfcyrchQ==
+X-Google-Smtp-Source: ADFU+vtF3P2k33NweA6Fex6hDs6vqelTVn0FS2/nOnTCDUSCKFMa3p1xx2Dagpz3OcKZWwoRk2B67Q==
+X-Received: by 2002:a63:1a5b:: with SMTP id a27mr546605pgm.249.1583451864784;
+        Thu, 05 Mar 2020 15:44:24 -0800 (PST)
 Received: from ryzen.cs.washington.edu ([2607:4000:200:11:60e4:c000:39d0:c5af])
-        by smtp.gmail.com with ESMTPSA id s123sm30103856pfs.21.2020.03.05.15.44.19
+        by smtp.gmail.com with ESMTPSA id s123sm30103856pfs.21.2020.03.05.15.44.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 15:44:19 -0800 (PST)
+        Thu, 05 Mar 2020 15:44:24 -0800 (PST)
 From:   Luke Nelson <lukenels@cs.washington.edu>
 X-Google-Original-From: Luke Nelson <luke.r.nels@gmail.com>
 To:     bpf@vger.kernel.org
@@ -72,10 +72,12 @@ Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
         Shuah Khan <shuah@kernel.org>,
         Jiong Wang <jiong.wang@netronome.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf 1/2] bpf, x32: fix bug with JMP32 JSET BPF_X checking upper bits
-Date:   Thu,  5 Mar 2020 15:44:12 -0800
-Message-Id: <20200305234416.31597-1-luke.r.nels@gmail.com>
+Subject: [PATCH bpf 2/2] selftests: bpf: add test for JMP32 JSET BPF_X with upper bits set
+Date:   Thu,  5 Mar 2020 15:44:13 -0800
+Message-Id: <20200305234416.31597-2-luke.r.nels@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200305234416.31597-1-luke.r.nels@gmail.com>
+References: <20200305234416.31597-1-luke.r.nels@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,80 +85,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current x32 BPF JIT is incorrect for JMP32 JSET BPF_X when the upper
-32 bits of operand registers are non-zero in certain situations.
+The existing tests attempt to check that JMP32 JSET ignores the upper
+bits in the operand registers. However, the tests missed one such bug in
+the x32 JIT that is only uncovered when a previous instruction pollutes
+the upper 32 bits of the registers.
 
-The problem is in the following code:
+This patch adds a new test case that catches the bug by first executing
+a 64-bit JSET to pollute the upper 32-bits of the temporary registers,
+followed by a 32-bit JSET which should ignore the upper 32 bits.
 
-  case BPF_JMP | BPF_JSET | BPF_X:
-  case BPF_JMP32 | BPF_JSET | BPF_X:
-  ...
-
-  /* and dreg_lo,sreg_lo */
-  EMIT2(0x23, add_2reg(0xC0, sreg_lo, dreg_lo));
-  /* and dreg_hi,sreg_hi */
-  EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
-  /* or dreg_lo,dreg_hi */
-  EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
-
-This code checks the upper bits of the operand registers regardless if
-the BPF instruction is BPF_JMP32 or BPF_JMP64. Registers dreg_hi and
-dreg_lo are not loaded from the stack for BPF_JMP32, however, they can
-still be polluted with values from previous instructions.
-
-The following BPF program demonstrates the bug. The jset64 instruction
-loads the temporary registers and performs the jump, since ((u64)r7 &
-(u64)r8) is non-zero. The jset32 should _not_ be taken, as the lower
-32 bits are all zero, however, the current JIT will take the branch due
-the pollution of temporary registers from the earlier jset64.
-
-  mov64    r0, 0
-  ld64     r7, 0x8000000000000000
-  ld64     r8, 0x8000000000000000
-  jset64   r7, r8, 1
-  exit
-  jset32   r7, r8, 1
-  mov64    r0, 2
-  exit
-
-The expected return value of this program is 2; under the buggy x32 JIT
-it returns 0. The fix is to skip using the upper 32 bits for jset32 and
-compare the upper 32 bits for jset64 only.
-
-All tests in test_bpf.ko and selftests/bpf/test_verifier continue to
-pass with this change.
-
-We found this bug using our automated verification tool, Serval.
-
-Fixes: 69f827eb6e14 ("x32: bpf: implement jitting of JMP32")
 Co-developed-by: Xi Wang <xi.wang@gmail.com>
 Signed-off-by: Xi Wang <xi.wang@gmail.com>
 Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 ---
- arch/x86/net/bpf_jit_comp32.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ tools/testing/selftests/bpf/verifier/jmp32.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
-index 393d251798c0..4d2a7a764602 100644
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -2039,10 +2039,12 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 			}
- 			/* and dreg_lo,sreg_lo */
- 			EMIT2(0x23, add_2reg(0xC0, sreg_lo, dreg_lo));
--			/* and dreg_hi,sreg_hi */
--			EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
--			/* or dreg_lo,dreg_hi */
--			EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
-+			if (is_jmp64) {
-+				/* and dreg_hi,sreg_hi */
-+				EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
-+				/* or dreg_lo,dreg_hi */
-+				EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
-+			}
- 			goto emit_cond_jmp;
- 		}
- 		case BPF_JMP | BPF_JSET | BPF_K:
+diff --git a/tools/testing/selftests/bpf/verifier/jmp32.c b/tools/testing/selftests/bpf/verifier/jmp32.c
+index bf0322eb5346..bd5cae4a7f73 100644
+--- a/tools/testing/selftests/bpf/verifier/jmp32.c
++++ b/tools/testing/selftests/bpf/verifier/jmp32.c
+@@ -61,6 +61,21 @@
+ 	},
+ 	.flags = F_NEEDS_EFFICIENT_UNALIGNED_ACCESS,
+ },
++{
++	"jset32: ignores upper bits",
++	.insns = {
++	BPF_MOV64_IMM(BPF_REG_0, 0),
++	BPF_LD_IMM64(BPF_REG_7, 0x8000000000000000),
++	BPF_LD_IMM64(BPF_REG_8, 0x8000000000000000),
++	BPF_JMP_REG(BPF_JSET, BPF_REG_7, BPF_REG_8, 1),
++	BPF_EXIT_INSN(),
++	BPF_JMP32_REG(BPF_JSET, BPF_REG_7, BPF_REG_8, 1),
++	BPF_MOV64_IMM(BPF_REG_0, 2),
++	BPF_EXIT_INSN(),
++	},
++	.result = ACCEPT,
++	.retval = 2,
++},
+ {
+ 	"jset32: min/max deduction",
+ 	.insns = {
 -- 
 2.20.1
 
