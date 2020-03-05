@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F2FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E65C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2D11207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659EE207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428671;
-	bh=hM7fyA5DA5hZEW3ARzBK5410/eV42ZPwygmb1d01Q2M=;
+	s=default; t=1583428676;
+	bh=dWLOOtgs8r0BCpXxpbJ3caJNYAxwdp5YiDEViJrweIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i6N9+UMUV5BrPgWfHHTyuMlVSjcl9ig36+76sXkdPv9RnuVjwIEu9EfflQlO9MjJ8
-	 zcwxPIfgR+kz3lRnG32ySAitl2U+AjUHdYnwReYmD3aPd8L+tpjn8s1LfHw5n1UjLm
-	 k/EE/L15QfmwRhniDwBaw5W3uunz/NqGZZcpPhs8=
+	b=cnHlACeANiulofowdeZgHfF/KAVdHNPQM3XeTut0joAPAdBH2XVK7BUPWJb9RsAJQ
+	 0BAuf8D9qAh2qQlNkq0fKGUgBF9YtO2TmzHlXu4j+1Xdnrv98VIf2vdfK/Sztv46v2
+	 gP7lH1kVTW1s75GVYccIBOX5NIU8/qs9OWKvjpvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgCERPs (ORCPT
+        id S1727707AbgCERRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:15:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42368 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:17:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728107AbgCERPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:32 -0500
+        id S1728228AbgCERPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62B2F2146E;
-        Thu,  5 Mar 2020 17:15:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44A3220848;
+        Thu,  5 Mar 2020 17:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428532;
-        bh=hM7fyA5DA5hZEW3ARzBK5410/eV42ZPwygmb1d01Q2M=;
+        s=default; t=1583428545;
+        bh=dWLOOtgs8r0BCpXxpbJ3caJNYAxwdp5YiDEViJrweIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bc2PKl1I5ucZgP90EfKORlEQgzOzWVOeJSqjMQEI+YMnzyhPbMmgwjNIqM/Qw4gQP
-         JF2hwKjhKwQHUPVMZcQ1f6WqTykzrM4LsSHC3Z8DnkJQjhLwZZIMVimdb1txOTGPHZ
-         dSf5pbw4mKcbwvHTzn1TgWcvAmHWb0c+zvK6klsI=
+        b=dd0uiytXYLPBTg8QTD1NeQZRNmx84WFVttz8wv7GKG2RSXK0+p4f+/Y9+XAQaErBO
+         GXWICnIuUBZtKdPm3F0IWwIwQftRDA85Cw59grmRWrZqaMZvdBqRPseNsVCYfnulW7
+         Sh1IyBRcyrZ+mlsZ/MfbVmUOx3Svr75xmDyLKIU4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-        syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/31] vhost: Check docket sk_family instead of call getname
-Date:   Thu,  5 Mar 2020 12:14:56 -0500
-Message-Id: <20200305171516.30028-12-sashal@kernel.org>
+Cc:     Johan Korsnes <jkorsnes@cisco.com>,
+        Armando Visconti <armando.visconti@st.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/19] HID: core: fix off-by-one memset in hid_report_raw_event()
+Date:   Thu,  5 Mar 2020 12:15:24 -0500
+Message-Id: <20200305171540.30250-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171516.30028-1-sashal@kernel.org>
-References: <20200305171516.30028-1-sashal@kernel.org>
+In-Reply-To: <20200305171540.30250-1-sashal@kernel.org>
+References: <20200305171540.30250-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,56 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugenio Pérez <eperezma@redhat.com>
+From: Johan Korsnes <jkorsnes@cisco.com>
 
-[ Upstream commit 42d84c8490f9f0931786f1623191fcab397c3d64 ]
+[ Upstream commit 5ebdffd25098898aff1249ae2f7dbfddd76d8f8f ]
 
-Doing so, we save one call to get data we already have in the struct.
+In case a report is greater than HID_MAX_BUFFER_SIZE, it is truncated,
+but the report-number byte is not correctly handled. This results in a
+off-by-one in the following memset, causing a kernel Oops and ensuing
+system crash.
 
-Also, since there is no guarantee that getname use sockaddr_ll
-parameter beyond its size, we add a little bit of security here.
-It should do not do beyond MAX_ADDR_LEN, but syzbot found that
-ax25_getname writes more (72 bytes, the size of full_sockaddr_ax25,
-versus 20 + 32 bytes of sockaddr_ll + MAX_ADDR_LEN in syzbot repro).
+Note: With commit 8ec321e96e05 ("HID: Fix slab-out-of-bounds read in
+hid_field_extract") I no longer hit the kernel Oops as we instead fail
+"controlled" at probe if there is a report too long in the HID
+report-descriptor. hid_report_raw_event() is an exported symbol, so
+presumabely we cannot always rely on this being the case.
 
-Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
-Reported-by: syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com
-Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 966922f26c7f ("HID: fix a crash in hid_report_raw_event()
+                     function.")
+Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
+Cc: Armando Visconti <armando.visconti@st.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/net.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ drivers/hid/hid-core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 124356dc39e14..88c8c158ec25c 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1187,10 +1187,6 @@ static int vhost_net_release(struct inode *inode, struct file *f)
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 2d089d3954e38..75b0a337114df 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -1567,7 +1567,9 @@ int hid_report_raw_event(struct hid_device *hid, int type, u8 *data, u32 size,
  
- static struct socket *get_raw_socket(int fd)
- {
--	struct {
--		struct sockaddr_ll sa;
--		char  buf[MAX_ADDR_LEN];
--	} uaddr;
- 	int r;
- 	struct socket *sock = sockfd_lookup(fd, &r);
+ 	rsize = ((report->size - 1) >> 3) + 1;
  
-@@ -1203,11 +1199,7 @@ static struct socket *get_raw_socket(int fd)
- 		goto err;
- 	}
+-	if (rsize > HID_MAX_BUFFER_SIZE)
++	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
++		rsize = HID_MAX_BUFFER_SIZE - 1;
++	else if (rsize > HID_MAX_BUFFER_SIZE)
+ 		rsize = HID_MAX_BUFFER_SIZE;
  
--	r = sock->ops->getname(sock, (struct sockaddr *)&uaddr.sa, 0);
--	if (r < 0)
--		goto err;
--
--	if (uaddr.sa.sll_family != AF_PACKET) {
-+	if (sock->sk->sk_family != AF_PACKET) {
- 		r = -EPFNOSUPPORT;
- 		goto err;
- 	}
+ 	if (csize < rsize) {
 -- 
 2.20.1
 
