@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE355C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498E7C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0CE20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 212222166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428517;
-	bh=DSVLmcHuc32RxTyihN1Xc6Ef2bEnbbW4cyvwhbxU2pI=;
+	s=default; t=1583428520;
+	bh=apxNGTTawxO88AhaRt5S23Z7rTLns5Lk95jgyvF3/SA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EKRfLJs2P5a/JUWALOesK9AfIYvWSMYYKDiQltTuU865x52AZJssnwpMPh7mmx2ZU
-	 a6NI3YcZbQHJV8bNLM9goCungnWOEfykhtrDcSI0xVKLtNuLV9dicOSiSzR9ALJttS
-	 6tIGco4fv5EWfj9u2/mRR4rOhVb0vB01Vzsmf2K4=
+	b=sm5yixORfA/gsBgrtZIJ1SIVXZTvfxGSn2sbm/Xrs8fS7ccoEMTYNjNgKr0JmVBA9
+	 ovcPvd1qvy1W07ddE8ZFoXh1ICKLBeL4+UzGbaArBI3R0ErQyUnwROIMd/zNDZLsfp
+	 XooRA/3h9xSTpWu3cPQuyS/YcAVt+Le1GoZroQp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgCERPQ (ORCPT
+        id S1728010AbgCERPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:15:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41312 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:15:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgCEROw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:52 -0500
+        id S1727902AbgCERPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44083217F4;
-        Thu,  5 Mar 2020 17:14:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3977121744;
+        Thu,  5 Mar 2020 17:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428492;
-        bh=DSVLmcHuc32RxTyihN1Xc6Ef2bEnbbW4cyvwhbxU2pI=;
+        s=default; t=1583428500;
+        bh=apxNGTTawxO88AhaRt5S23Z7rTLns5Lk95jgyvF3/SA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nz6YA8FzMIQW06sWzoSitQwhw3KNqhsFr87eAT5vfMKRk1DibPr18uRIqU0WG5i1M
-         Faq+qVuGeORuTR30u+vDZ5HFD8J6FrjMtJEF16BzDlfenzZJ5kSfC28Gi4exKBv5Vq
-         AQQFXuylC4Z7DtkOwfgObKNNpX1TQ/CWGkubbnck=
+        b=CoZOH9iOeGrfO+vDOpcrnzac+irrY91dazaVwZriKToLGNwtlgUi3DDUWiMnFSbQD
+         Tfl9c25LxVyTRVCOkQBMx3g1by2Q7nL570oWIpqwKaG+Kq4ZuI75/Bc2wpDxuwcIO8
+         KM0OIfun/IBvIVsibjBjFowDy/nTBbj9aVhBcj0E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        syzbot+6a86565c74ebe30aea18@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 25/58] netfilter: ipset: Fix forceadd evaluation path
-Date:   Thu,  5 Mar 2020 12:13:46 -0500
-Message-Id: <20200305171420.29595-25-sashal@kernel.org>
+Cc:     Esben Haabendal <esben@geanix.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 31/58] net: ll_temac: Fix race condition causing TX hang
+Date:   Thu,  5 Mar 2020 12:13:52 -0500
+Message-Id: <20200305171420.29595-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
 References: <20200305171420.29595-1-sashal@kernel.org>
@@ -61,36 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jozsef Kadlecsik <kadlec@netfilter.org>
+From: Esben Haabendal <esben@geanix.com>
 
-[ Upstream commit 8af1c6fbd9239877998c7f5a591cb2c88d41fb66 ]
+[ Upstream commit 84823ff80f7403752b59e00bb198724100dc611c ]
 
-When the forceadd option is enabled, the hash:* types should find and replace
-the first entry in the bucket with the new one if there are no reuseable
-(deleted or timed out) entries. However, the position index was just not set
-to zero and remained the invalid -1 if there were no reuseable entries.
+It is possible that the interrupt handler fires and frees up space in
+the TX ring in between checking for sufficient TX ring space and
+stopping the TX queue in temac_start_xmit. If this happens, the
+queue wake from the interrupt handler will occur before the queue is
+stopped, causing a lost wakeup and the adapter's transmit hanging.
 
-Reported-by: syzbot+6a86565c74ebe30aea18@syzkaller.appspotmail.com
-Fixes: 23c42a403a9c ("netfilter: ipset: Introduction of new commands and protocol version 7")
-Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+To avoid this, after stopping the queue, check again whether there is
+sufficient space in the TX ring. If so, wake up the queue again.
+
+This is a port of the similar fix in axienet driver,
+commit 7de44285c1f6 ("net: axienet: Fix race condition causing TX hang").
+
+Fixes: 23ecc4bde21f ("net: ll_temac: fix checksum offload logic")
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_hash_gen.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipset/ip_set_hash_gen.h
-index 2ac28c5c7e957..2389c9f89e481 100644
---- a/net/netfilter/ipset/ip_set_hash_gen.h
-+++ b/net/netfilter/ipset/ip_set_hash_gen.h
-@@ -931,6 +931,8 @@ mtype_add(struct ip_set *set, void *value, const struct ip_set_ext *ext,
- 		}
+diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+index 21c1b4322ea78..fd578568b3bff 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+@@ -788,6 +788,9 @@ static void temac_start_xmit_done(struct net_device *ndev)
+ 		stat = be32_to_cpu(cur_p->app0);
  	}
- 	if (reuse || forceadd) {
-+		if (j == -1)
-+			j = 0;
- 		data = ahash_data(n, j, set->dsize);
- 		if (!deleted) {
- #ifdef IP_SET_HASH_WITH_NETS
+ 
++	/* Matches barrier in temac_start_xmit */
++	smp_mb();
++
+ 	netif_wake_queue(ndev);
+ }
+ 
+@@ -830,9 +833,19 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+ 
+ 	if (temac_check_tx_bd_space(lp, num_frag + 1)) {
+-		if (!netif_queue_stopped(ndev))
+-			netif_stop_queue(ndev);
+-		return NETDEV_TX_BUSY;
++		if (netif_queue_stopped(ndev))
++			return NETDEV_TX_BUSY;
++
++		netif_stop_queue(ndev);
++
++		/* Matches barrier in temac_start_xmit_done */
++		smp_mb();
++
++		/* Space might have just been freed - check again */
++		if (temac_check_tx_bd_space(lp, num_frag))
++			return NETDEV_TX_BUSY;
++
++		netif_wake_queue(ndev);
+ 	}
+ 
+ 	cur_p->app0 = 0;
 -- 
 2.20.1
 
