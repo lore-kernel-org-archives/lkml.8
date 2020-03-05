@@ -2,99 +2,81 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A46C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 588D1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C999020848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:52:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583419923;
-	bh=b3+JFLkZ6vcp4pzQhkXCAbgg9XJb+w2v77GsD2/Sotc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N6gdwmdYutSyKVaKGkWUNDqHPIZiqc+JPAxsLwRaizFABBNC8OxSM8yfSkHlv8k5V
-	 dYKTw2P2tfkOQdqiiN5reOvCVChqVxvi+GRIrhFlFc86Nf7G87i2SZ7oJaeVk574fl
-	 Z8dPScNIzuteE3noPK3sCJUUzTIRHtE62P2s579g=
+	by mail.kernel.org (Postfix) with ESMTP id 2D783208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgCEOwC (ORCPT
+        id S1726892AbgCEOwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:52:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40540 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 09:52:23 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43722 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbgCEOwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:52:02 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865FC20732;
-        Thu,  5 Mar 2020 14:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583419922;
-        bh=b3+JFLkZ6vcp4pzQhkXCAbgg9XJb+w2v77GsD2/Sotc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qVotdRTvp/AYf0WKIbBVywqCH4uqSPWXDLT90qzd8pTJ1xbsNjnqMbIyT1j+pHTP4
-         2BIcXk5nDDjV7S/Re7TL6IXjAYjDYr3ki+/KgOayA8tXC3EZL3hctTpQU6X3S/iJnS
-         pUpgcueLTtak6NchIfTySrpA8YEsiuGHSI3GnbvE=
-Date:   Thu, 5 Mar 2020 15:51:59 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [BUGFIX PATCH] tools: Let O= makes handle a relative path with
- -C option
-Message-ID: <20200305145159.GB1950999@kroah.com>
-References: <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org>
- <158338818292.25448.7161196505598269976.stgit@devnote2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158338818292.25448.7161196505598269976.stgit@devnote2>
+        id S1725938AbgCEOwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 09:52:22 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 39B34B2C1;
+        Thu,  5 Mar 2020 14:52:21 +0000 (UTC)
+Date:   Thu, 05 Mar 2020 15:52:21 +0100
+Message-ID: <s5h7dzyg8gq.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Christian Lachner <gladiac@gmail.com>
+Cc:     perex@perex.cz, tiwai@suse.com, kailang@realtek.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Master
+In-Reply-To: <20200303153619.24720-2-gladiac@gmail.com>
+References: <20200303153619.24720-1-gladiac@gmail.com>
+        <20200303153619.24720-2-gladiac@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 03:03:03PM +0900, Masami Hiramatsu wrote:
-> When I compiled tools/bootconfig from top directory with
-> -C option, the O= option didn't work correctly if I passed
-> a relative path.
+On Tue, 03 Mar 2020 16:36:19 +0100,
+Christian Lachner wrote:
 > 
->   $ make O=./builddir/ -C tools/bootconfig/
->   make: Entering directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
->   ../scripts/Makefile.include:4: *** O=./builddir/ does not exist.  Stop.
->   make: Leaving directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
+> The Gigabyte X570 Aorus Master motherboard with ALC1220 codec
+> requires a similar workaround for Clevo laptops to enforce the
+> DAC/mixer connection path. Set up a quirk entry for that.
 > 
-> The O= directory existence check failed because the check
-> script ran in the build target directory instead of the
-> directory where I ran the make command.
-> 
-> To fix that, once change directory to $(PWD) and check O=
-> directory, since the PWD is set to where the make command
-> runs.
-> 
-> Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
+> Signed-off-by: Christian Lachner <gladiac@gmail.com>
+
+What's the difference from v1?  I already applied v1.
+
+
+thanks,
+
+Takashi
+
+
 > ---
->  tools/scripts/Makefile.include |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-
-<formletter>
-
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
-
-</formletter>
+>  sound/pci/hda/patch_realtek.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> index 477589e7ec1d..8722616c6cc6 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -2447,6 +2447,7 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
+>  	SND_PCI_QUIRK(0x1071, 0x8258, "Evesham Voyaeger", ALC882_FIXUP_EAPD),
+>  	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
+>  	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+> +	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
+>  	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+>  	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+>  	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
+> -- 
+> 2.25.1
+> 
