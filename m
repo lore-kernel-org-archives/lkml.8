@@ -2,255 +2,116 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB09C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B78C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A50A220848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:10:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pqB+BlbS"
+	by mail.kernel.org (Postfix) with ESMTP id 8DE56207FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCFAKH (ORCPT
+        id S1726524AbgCFAQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 19:10:07 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:52848 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgCFAKG (ORCPT
+        Thu, 5 Mar 2020 19:16:57 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.3]:50966 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726317AbgCFAQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 19:10:06 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02608R7r051036;
-        Fri, 6 Mar 2020 00:09:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=1uqopwS4yz6Y2tWDAA94cnLce4rYml9GDblU748neAc=;
- b=pqB+BlbSWlpVQ4jDAE10GBlREt2L0DJER/JXIFdaVsoyVLf/rJS/yFcKEkQ7gPuDcn4b
- GCN7PtfXjqVru05ub1vFmBSbKD0WR5B6GfyA0xVn+IL3/s0ytHuhi9XU0XuP5/Z89cfR
- mXhz8FzFBRnI6ubsUAynZ3GVDE/8+3QB9xWiTsWdsmRf3VZ/Jqay7q2pB+uMcowSHblL
- rMXdcJQAdN7OkDjz6YfHMaaWLZNJscPhEYFDSvX0mE7VZKrx6Q+GoXoWVxzTNNH7zkgB
- DtmY9SUFsYwmAKQHDJL8y35JvKvnVfchdNiuPIv/mlYA9FMAi1fm+kHTjTITt+q/rwh8 /A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2yffcv0dk2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Mar 2020 00:09:47 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02606flg176108;
-        Fri, 6 Mar 2020 00:09:47 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2yg1pbwj3v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Mar 2020 00:09:46 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02609iCT032157;
-        Fri, 6 Mar 2020 00:09:44 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Mar 2020 16:09:43 -0800
-Subject: Re: [PATCH] mm/hugetlb: avoid weird message in hugetlb_init
-To:     "Longpeng (Mike)" <longpeng2@huawei.com>
-Cc:     arei.gonglei@huawei.com, huangzhichao@huawei.com,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200305033014.1152-1-longpeng2@huawei.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <fe9af2ff-01de-93ce-9628-10a54543be07@oracle.com>
-Date:   Thu, 5 Mar 2020 16:09:42 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 19:16:57 -0500
+Received: from [100.113.1.43] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-a.eu-central-1.aws.symcld.net id 81/89-64587-576916E5; Fri, 06 Mar 2020 00:16:53 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRWlGSWpSXmKPExsVy8MN7Xd3SaYl
+  xBk0npC3mnG9hsWhevJ7NYtXCa2wWl3fNYbN4/6mTyeL/nh3sDmweW1beZPJoOfKW1WPTqk42
+  j/1z17B7fN4kF8AaxZqZl5RfkcCasfnSUraCrZwVW7+tYGxg3MDRxcjFISSwhlFiycnvLF2Mn
+  EBOpcS0gx+ZQGxegQiJZccmgdmcAmYSUxr+AtkcQDWmEk/bQ0HCbAI6Eo9mrgcLswioSEw8kA
+  cSFhaIk9jy6DIzyHgRgYuMEk8e/2EDSTADJWY1LGeFGC8ocXLmExaIuITEwRcvmCFO0JI4t2Y
+  V4wRG3llIymYhKVvAyLSK0TKpKDM9oyQ3MTNH19DAQNfQ0FgXRBroJVbpJuqlluomp+aVFCUC
+  ZfUSy4v1iitzk3NS9PJSSzYxAsM2pZAhbwdj4/z3eocYJTmYlER5d8QnxgnxJeWnVGYkFmfEF
+  5XmpBYfYpTh4FCS4LWeApQTLEpNT61Iy8wBxhBMWoKDR0mEN3oqUJq3uCAxtzgzHSJ1ilGXY+
+  fReYuYhVjy8vNSpcR5U0GKBECKMkrz4EbA4vkSo6yUMC8jAwODEE9BalFuZgmq/CtGcQ5GJWF
+  eb5BLeDLzSuA2vQI6ggnoiPt34kGOKElESEk1MB1oPsQ14cLUZXIKu+/OdWereX8/p64htUXg
+  u5TzsV3si1ffWc708+CD3wwRnOpzzOI3xt3zibqTy8ew5YLC8s3u1it7/h5W2LHy9+sb9WKuS
+  9u31Tp7X1Gx7fV7OW9ihFX/Tud3/03dHn/ezrf5Q0vd6voV7SZRxYZpLnc8XvsuUc35HC4zpY
+  zt0YvAqWziSesbGrcUd2hKaV05sfbzB+1Og0JBb1uXY+UKkcZ+L2RWJa6+FR8Z+NNI0/GwRl6
+  Fgk1fOItels2UrxoZe1U1klenfDbYcIh/23pN6Q8a/3zt/NYW9Tw4cMR00+FJLUxfRcUyXh1P
+  qV/XuFO/ab19o9Ij+TBRx8myhVGM8jxvlFiKMxINtZiLihMBqNOS/mIDAAA=
+X-Env-Sender: roy.im.opensource@diasemi.com
+X-Msg-Ref: server-31.tower-229.messagelabs.com!1583453812!553913!2
+X-Originating-IP: [193.240.239.45]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 9183 invoked from network); 6 Mar 2020 00:16:53 -0000
+Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
+  by server-31.tower-229.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 6 Mar 2020 00:16:53 -0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Fri, 6 Mar 2020 01:16:51 +0100
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 518A213F670; Fri,  6 Mar 2020 09:16:50 +0900 (KST)
+Message-ID: <61bdb616dbfe403f95ce33587e6ce0d5c6959dcd.1583425388.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1583425388.git.Roy.Im@diasemi.com>
+References: <cover.1583425388.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Fri, 6 Mar 2020 01:23:07 +0900
+Subject: [PATCH V10 1/3] MAINTAINERS: da7280 updates to the Dialog
+ Semiconductor search terms
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Support Opensource <support.opensource@diasemi.com>
 MIME-Version: 1.0
-In-Reply-To: <20200305033014.1152-1-longpeng2@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9551 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9551 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- adultscore=0 suspectscore=0 spamscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003050137
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 7:30 PM, Longpeng(Mike) wrote:
-> From: Longpeng <longpeng2@huawei.com>
-> 
-> Some architectures(e.g. x86,risv) doesn't add 2M-hstate by default,
-> so if we add 'default_hugepagesz=2M' but without 'hugepagesz=2M' in
-> cmdline, we'll get a message as follow:
-> "HugeTLB: unsupported default_hugepagesz 2097152. Reverting to 2097152"
+This patch adds the da7280 bindings doc and driver to the Dialog
+Semiconductor support list.
 
-Yes, that is a weird message that should not be printed.  Thanks for
-pointing out the issue!
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
 
-> As architecture-specific HPAGE_SIZE hstate should be supported by
-> default, we can avoid this weird message by add it if we hadn't yet.
+---
+v10: No changes.
+v9: No changes.
+v8: No changes.
+v7: No changes.
+v6: No changes.
+v5: No changes.
+v4: No changes.
+v3: No changes.
+v2: No changes.
 
-As you have discovered, some of the hugetlb size setup is done in
-architecture specific code.  And other code is architecture independent.
 
-The code which verifies huge page sizes (hugepagesz=) is architecture
-specific.  The code which reads default_hugepagesz= is architecture
-independent.  In fact, no verification of the 'default_hugepagesz' value
-is made when value is read from the command line.  The value is verified
-later after command line processing.  Current code considers the value
-'valid' if it corresponds to a hstate previously setup by architecture
-specific code.  If architecture specific code did not set up a corresponding 
-hstate, an error like that above is reported.
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Some architectures such as arm, powerpc and sparc set up hstates for all
-supported sizes.  Other architectures such as riscv, s390 and x86 only
-set up hstates for those requested on the command line with hugepagesz=.
-Depending on config options, x86 and riscv may or may not set up PUD_SIZE
-hstates.
-
-Therefore, on s390 and x86 and riscv (with certain config options) it
-would be possible to specify a valid huge page size (PUD_SIZE) with
-default_hugepagesz=, and have that value be rejected.  This is because
-the architecture specific code will not set up that hstate by default.
-
-The code you have proposed handles the case where the value specified
-by default_hugepagesz= coresponds to HPAGE_SIZE.  That is because the
-architecture independent code will set up the hstate for HPAGE_SIZE.
-HPAGE_SIZE is the only valid huge page size known by the architecture
-independent code.
-
-I am thinking we may want to have a more generic solution by allowing
-the default_hugepagesz= processing code to verify the passed size and
-set up the corresponding hstate.  This would require more cooperation
-between architecture specific and independent code.  This could be
-accomplished with a simple arch_hugetlb_valid_size() routine provided
-by the architectures.  Below is an untested patch to add such support
-to the architecture independent code and x86.  Other architectures would
-be similar.
-
-In addition, with architectures providing arch_hugetlb_valid_size() it
-should be possible to have a common routine in architecture independent
-code to read/process hugepagesz= command line arguments.
-
-Of course, another approach would be to simply require ALL architectures
-to set up hstates for ALL supported huge page sizes.
-
-Thoughts?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 56765f5..3f71379 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4856,6 +4856,7 @@ S:	Supported
+ F:	Documentation/hwmon/da90??.rst
+ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
++F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
+ F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
+ F:	Documentation/devicetree/bindings/regulator/slg51000.txt
+@@ -4865,6 +4866,7 @@ F:	drivers/gpio/gpio-da90??.c
+ F:	drivers/hwmon/da90??-hwmon.c
+ F:	drivers/iio/adc/da91??-*.c
+ F:	drivers/input/misc/da90??_onkey.c
++F:	drivers/input/misc/da72??.[ch]
+ F:	drivers/input/touchscreen/da9052_tsi.c
+ F:	drivers/leds/leds-da90??.c
+ F:	drivers/mfd/da903x.c
 -- 
-Mike Kravetz
+end-of-patch for PATCH V10
 
-diff --git a/arch/x86/include/asm/hugetlb.h b/arch/x86/include/asm/hugetlb.h
-index f65cfb48cfdd..dc00c3df1f22 100644
---- a/arch/x86/include/asm/hugetlb.h
-+++ b/arch/x86/include/asm/hugetlb.h
-@@ -7,6 +7,9 @@
- 
- #define hugepages_supported() boot_cpu_has(X86_FEATURE_PSE)
- 
-+#define __HAVE_ARCH_HUGETLB_VALID_SIZE
-+extern bool __init arch_hugetlb_valid_size(unsigned long size);
-+
- static inline int is_hugepage_only_range(struct mm_struct *mm,
- 					 unsigned long addr,
- 					 unsigned long len) {
-diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
-index 5bfd5aef5378..1c4372bfe782 100644
---- a/arch/x86/mm/hugetlbpage.c
-+++ b/arch/x86/mm/hugetlbpage.c
-@@ -181,13 +181,22 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
- #endif /* CONFIG_HUGETLB_PAGE */
- 
- #ifdef CONFIG_X86_64
-+bool __init arch_hugetlb_valid_size(unsigned long size)
-+{
-+	if (size == PMD_SIZE)
-+		return true;
-+	else if (size == PUD_SIZE && boot_cpu_has(X86_FEATURE_GBPAGES))
-+		return true;
-+	else
-+		return false;
-+}
-+
- static __init int setup_hugepagesz(char *opt)
- {
- 	unsigned long ps = memparse(opt, &opt);
--	if (ps == PMD_SIZE) {
--		hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
--	} else if (ps == PUD_SIZE && boot_cpu_has(X86_FEATURE_GBPAGES)) {
--		hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
-+
-+	if (arch_hugetlb_valid_size(ps)) {
-+		hugetlb_add_hstate(ilog2(ps) - PAGE_SHIFT);
- 	} else {
- 		hugetlb_bad_size();
- 		printk(KERN_ERR "hugepagesz: Unsupported page size %lu M\n",
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 50480d16bd33..822d0d8559c7 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -678,6 +678,13 @@ static inline spinlock_t *huge_pte_lockptr(struct hstate *h,
- 	return &mm->page_table_lock;
- }
- 
-+#ifndef __HAVE_ARCH_HUGETLB_VALID_SIZE
-+static inline bool arch_hugetlb_valid_size(unsigned long size)
-+{
-+	return (size == HPAGE_SIZE);
-+}
-+#endif
-+
- #ifndef hugepages_supported
- /*
-  * Some platform decide whether they support huge pages at boot
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 7fb31750e670..fc3f0f1e3a27 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3078,17 +3078,13 @@ static int __init hugetlb_init(void)
- 	if (!hugepages_supported())
- 		return 0;
- 
-+	/* if default_hstate_size != 0, corresponding hstate was added */
- 	if (!size_to_hstate(default_hstate_size)) {
--		if (default_hstate_size != 0) {
--			pr_err("HugeTLB: unsupported default_hugepagesz %lu. Reverting to %lu\n",
--			       default_hstate_size, HPAGE_SIZE);
--		}
--
- 		default_hstate_size = HPAGE_SIZE;
--		if (!size_to_hstate(default_hstate_size))
--			hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
-+		hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
- 	}
- 	default_hstate_idx = hstate_index(size_to_hstate(default_hstate_size));
-+
- 	if (default_hstate_max_huge_pages) {
- 		if (!default_hstate.max_huge_pages)
- 			default_hstate.max_huge_pages = default_hstate_max_huge_pages;
-@@ -3195,7 +3191,15 @@ __setup("hugepages=", hugetlb_nrpages_setup);
- 
- static int __init hugetlb_default_setup(char *s)
- {
--	default_hstate_size = memparse(s, &s);
-+	unsigned long size = memparse(s, &s);
-+
-+	if (arch_hugetlb_valid_size(size)) {
-+		default_hstate_size = size;
-+		hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
-+	} else {
-+		pr_err("HugeTLB: unsupported default_hugepagesz %lu.\n", size);
-+		hugetlb_bad_size();
-+	}
- 	return 1;
- }
- __setup("default_hugepagesz=", hugetlb_default_setup);
