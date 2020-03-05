@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A12C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD74DC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8980620870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899CB2166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428544;
-	bh=+IjVORKh/seQrNgXksEThu2KTYNq7FzrhANnMv4hTSA=;
+	s=default; t=1583428546;
+	bh=DS4d0xy1Khr+6R+77xJv4V21rN4lNRAPhTHaX8q9uow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vABtdJeluCRiUQfZjfB9UjYolZU+VW+MfaQhutJgzoER5APpnjJB+7DS8jvz9s6pB
-	 1zwdA5rmgaAyCVtV5Q71nP4WO+1DsBeweEJVQE2x6nroQPjE7w4GgZ1k8QEZ/l7yz7
-	 O3ucWHmvjKROJ+JKZwikNQzgjQLMXf+KuKMEWpSY=
+	b=mcvXiRfCz/KByJWxFXVv/umUraVdlTdVto7SFgmQyBTmvaEFFv9HNCShHusc0U837
+	 clczdAqyCNjTatnZYRL0Mn9qZp5jI1FRgXvfgOmL8vfOq2U/8u13hAVApF9pFBX6X3
+	 wXWlrmWo/oJ8kuNs5IdaKtFl4hfDbLH6U4uEsm2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgCERPm (ORCPT
+        id S1728221AbgCERPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:15:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42222 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:15:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbgCERP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:27 -0500
+        id S1728089AbgCERPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F3862146E;
-        Thu,  5 Mar 2020 17:15:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A73A922B48;
+        Thu,  5 Mar 2020 17:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428526;
-        bh=+IjVORKh/seQrNgXksEThu2KTYNq7FzrhANnMv4hTSA=;
+        s=default; t=1583428529;
+        bh=DS4d0xy1Khr+6R+77xJv4V21rN4lNRAPhTHaX8q9uow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCX8cIjyFKjAJufkczJxTWgtfr2LD1eQUu1G682DekQb+ZxaPIVRFiHlEew4WF2y1
-         gMe1kF7rs3ZZ0FQmL1DoBJcvjeJINjzqbf4IWaJBXH5Z96VANoHa4N4ajKP9L9DQI5
-         kp7dTkUrFqviX2JZigsiix4ldY8Lc0M37b88SrME=
+        b=SonVuiPqHi6TPGgU5WF4XC7DTeXUsdjbugBcsVkJD0psx5bkHdONNsrqPwbZvJGa7
+         +2Y9Xh8yp+/b2i2ocJEHHTAoxKk4mTG3C/Kvz/HKEI2urXaRbKOJx641iOASJDa2wN
+         2oRZ6zH0GtkIxFoIA+Rn+DeAkTAJBp0kZhkyEhpE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 08/31] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
-Date:   Thu,  5 Mar 2020 12:14:52 -0500
-Message-Id: <20200305171516.30028-8-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/31] cfg80211: check reg_rule for NULL in handle_channel_custom()
+Date:   Thu,  5 Mar 2020 12:14:54 -0500
+Message-Id: <20200305171516.30028-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171516.30028-1-sashal@kernel.org>
 References: <20200305171516.30028-1-sashal@kernel.org>
@@ -60,41 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit be0aba826c4a6ba5929def1962a90d6127871969 ]
+[ Upstream commit a7ee7d44b57c9ae174088e53a668852b7f4f452d ]
 
-The Surfbook E11B uses the SIPODEV SP1064 touchpad, which does not supply
-descriptors, so it has to be added to the override list.
+We may end up with a NULL reg_rule after the loop in
+handle_channel_custom() if the bandwidth didn't fit,
+check if this is the case and bail out if so.
 
-BugLink: https://bugs.launchpad.net/bugs/1858299
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://lore.kernel.org/r/20200221104449.3b558a50201c.I4ad3725c4dacaefd2d18d3cc65ba6d18acd5dbfe@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/wireless/reg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-index 10af8585c820d..95052373a8282 100644
---- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -341,6 +341,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
- 		},
- 		.driver_data = (void *)&sipodev_desc
- 	},
-+	{
-+		.ident = "Trekstor SURFBOOK E11B",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SURFBOOK E11B"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
- 	{
- 		.ident = "Direkt-Tek DTLAPY116-2",
- 		.matches = {
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 018c60be153a7..32f575857e415 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -2269,7 +2269,7 @@ static void handle_channel_custom(struct wiphy *wiphy,
+ 			break;
+ 	}
+ 
+-	if (IS_ERR(reg_rule)) {
++	if (IS_ERR_OR_NULL(reg_rule)) {
+ 		pr_debug("Disabling freq %d MHz as custom regd has no rule that fits it\n",
+ 			 chan->center_freq);
+ 		if (wiphy->regulatory_flags & REGULATORY_WIPHY_SELF_MANAGED) {
 -- 
 2.20.1
 
