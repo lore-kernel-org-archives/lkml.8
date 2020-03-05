@@ -2,126 +2,128 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460B4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D162EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160EF20801
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A492520801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:21:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sQN0vEkP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjlglfJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgCEWVW (ORCPT
+        id S1726608AbgCEWV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 17:21:22 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45635 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgCEWVW (ORCPT
+        Thu, 5 Mar 2020 17:21:57 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43817 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgCEWV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 17:21:22 -0500
-Received: by mail-qk1-f194.google.com with SMTP id z12so426898qkg.12;
-        Thu, 05 Mar 2020 14:21:22 -0800 (PST)
+        Thu, 5 Mar 2020 17:21:57 -0500
+Received: by mail-wr1-f65.google.com with SMTP id v9so39952wrf.10;
+        Thu, 05 Mar 2020 14:21:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Hjtx1RhxIJ79+HtjekmYaD6b4sMC5UbYlDmlzGRDS1o=;
-        b=sQN0vEkP3aC1hSrFZP7n9s8CPuE2ahPRI4xmxKaklhHA0PgzPO3hoHAxPlCw/E6QAj
-         LJLrjFAzAHGpQa4qWLneFXVGAhy9xmmRsBQYGTgi0ZaoOPF/iBG/v68GL+Gcksb9Bhln
-         jzE/lfzrVzIDqnpC/g9pfgA7TBaaB1iDjxIqpofWxpasTENLg3TLRpN2AKKRiY652TOg
-         42IaLoNBIQY+hQvcWg3am5RDrCyUWmp+eCtlooyZPY2W6Ae4IHfZfpX+y81a3Q2msCWb
-         T6B2VJfsyi72VL1y39OomY3tM5cUwlwwFFl7LWZ4y5gHB0XPOab6Xb8pdbrBjVMquRbu
-         6cUQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Z7TiigNdjz+orfMlREKYMBZDrTKamsieMAuLprR2Fyw=;
+        b=DjlglfJNJgBMOUmIioZMi+av2xMFnc/T2klMGdKaUEe06g41gCfZe+GdBgLANYqHFX
+         YEy+LhwwPcxS+IzUlpR7Yu0fPJoFIsO/YtQgKWkHJPOux8wQCWy4uMX1phLX2cozPtbA
+         rZ6TESS/7JM35YzciXup4yFqEK6ME98LnEQfT41dSfiIBHJd3vvhqaYwm4Z1jOJ8+YJ1
+         hO2mdK6OiIT0dZmXXy/Ll4eoQYtZhPg7DTU/hoVFRNrzQ6GTnIe9O838s6bWWtTKQMJm
+         /mx8ecIwB4CdKPG+vxVFkqaknTLQhfHIg6DRiLB+ENIwkvWiqj7rj1GnLe6WvxhvV8AD
+         3+aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hjtx1RhxIJ79+HtjekmYaD6b4sMC5UbYlDmlzGRDS1o=;
-        b=tlGFm7OsUAVc1V9wUY9+CjDEYRZ/dVtNmaeTR+WNcroeRizKne7DeTeofgc5mYwANu
-         8vHzgukXA1tnOfBs2k2FqxaO/JJAMmCc0xtseO+derrY0WpwxQ6/iaZg8Ck8j/5h4P3U
-         feHx1RxmaP1wX1v/GjMfYHXr8Hdic9f9XLXoh3idI48J6XGVaXMR4H8G/RTshDZY+5HL
-         4L9DYwAKhU0n7sCYa+PrkyrJ1xgew9XPSSDrrkhCH91U1wGXc4EryCsFbfsj5cNK8jvh
-         Sazxek2TXH8oev68cMppBrBkr1Vc4O59aBR9kuvWvx0pNhO05rERWWQ9NTWatYF3pxa6
-         jPUA==
-X-Gm-Message-State: ANhLgQ345Jo43ywLzbZ+dzn7cAsMzjc0pOANZTg63mqYLq3uENWkXqpJ
-        PM/DoMJkBYp+OAfpUsKeE10=
-X-Google-Smtp-Source: ADFU+vuEnZNTb7dSSUASyTV4BlDR1ihIyk5njV2lS+G7xSQ3ykeQaeW06bH51aV/12YnCLqp6wK1CQ==
-X-Received: by 2002:a05:620a:1186:: with SMTP id b6mr214359qkk.59.1583446881492;
-        Thu, 05 Mar 2020 14:21:21 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id d9sm16120639qth.34.2020.03.05.14.21.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 14:21:21 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 5 Mar 2020 17:21:18 -0500
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Ignat Korchagin <ignat@cloudflare.com>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@cloudflare.com
-Subject: Re: [PATCH] mnt: add support for non-rootfs initramfs
-Message-ID: <20200305222117.GA1291132@rani.riverdale.lan>
-References: <20200305193511.28621-1-ignat@cloudflare.com>
- <1583442550.3927.47.camel@HansenPartnership.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Z7TiigNdjz+orfMlREKYMBZDrTKamsieMAuLprR2Fyw=;
+        b=NhC7ezAQ53FGACFE5l3zMh9frzYcv+rVsfNSRXn7cIY/sM6hneN4hXol6C+hbqKBNb
+         4sh2gBsMq77k1cKXg9Ab1QYEvu54ePG8dVujxIPWM09R6oRu4Nvdaovu0HQLvG63mwAH
+         rcH0ib5Izpdisba24oBQBVVonPA/8TyMo5oDZrAYvKVu3f5lgtTGKsyzAeYwdGurOPQk
+         uoeWlp1NcMLZ8B9IOvdgFS+oCqadCcO+fNFahiqj8gbZcEeqv0RNq8AJFqgnnSKA5Im3
+         uAcsffMcqUu527V9ib5CthQayTGmjy0/amrFjoVQfhJImCiLPOJnkyBoPQ3cfjICoJGW
+         JjsQ==
+X-Gm-Message-State: ANhLgQ2NCGlnx3Af74WKFxoOSEI7jlzYQ0G8Iz8o8L76Tv8NB096F71p
+        7OSxfLh1ESCLfQPm79Yc9R9CRk15
+X-Google-Smtp-Source: ADFU+vsPqjTKstCk+aKgW/j6ZMymiLJfuaIaKNq2Eq1mnpCpBxTW05y745VZ2m97812uXc1VuwMZOg==
+X-Received: by 2002:a5d:518b:: with SMTP id k11mr132122wrv.114.1583446914878;
+        Thu, 05 Mar 2020 14:21:54 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id l5sm11017229wml.3.2020.03.05.14.21.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 14:21:54 -0800 (PST)
+Subject: Re: [PATCH 2/3] ARM: dts: rockchip: add missing @0 to memory
+ nodenames
+To:     Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200304074051.8742-1-jbx6244@gmail.com>
+ <20200304074051.8742-2-jbx6244@gmail.com> <1784340.9KJLpVao5L@phil>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <2a5ef6fc-2487-91ef-24ce-97dd47b0a137@gmail.com>
+Date:   Thu, 5 Mar 2020 23:21:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <1784340.9KJLpVao5L@phil>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1583442550.3927.47.camel@HansenPartnership.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 01:09:10PM -0800, James Bottomley wrote:
-> On Thu, 2020-03-05 at 19:35 +0000, Ignat Korchagin wrote:
-> > The main need for this is to support container runtimes on stateless
-> > Linux system (pivot_root system call from initramfs).
-> > 
-> > Normally, the task of initramfs is to mount and switch to a "real"
-> > root filesystem. However, on stateless systems (booting over the
-> > network) it is just convenient to have your "real" filesystem as
-> > initramfs from the start.
-> > 
-> > This, however, breaks different container runtimes, because they
-> > usually use pivot_root system call after creating their mount
-> > namespace. But pivot_root does not work from initramfs, because
-> > initramfs runs form rootfs, which is the root of the mount tree and
-> > can't be unmounted.
-> 
-> Can you say more about why this is a problem?  We use pivot_root to
-> pivot from the initramfs rootfs to the newly discovered and mounted
-> real root ... the same mechanism should work for a container (mount
-> namespace) running from initramfs ... why doesn't it?
+Hi Heiko,
 
-Not sure how it interacts with mount namespaces, but we don't use
-pivot_root to go from rootfs to the real root. We use switch_root, which
-moves the new root onto the old / using mount with MS_MOVE and then
-chroot to it.
+Goal was to reduce the error output of existing code a little bit,
+so that we can use it for the review of new patches.
+Some questions:
+As I don't have the hardware, where else is coreboot used?
+Is this a rk3288-veyron.dtsi problem only?
+ie. Is it a option to produce a patch serie v2 without veyron?
+Can someone help testing?
 
-https://www.kernel.org/doc/Documentation/filesystems/ramfs-rootfs-initramfs.txt
+Johan
 
-> 
-> The sequence usually looks like: create and enter a mount namespace,
-> build a tmpfs for the container in some $root directory then do
-> 
-> 
->     cd $root
->     mkdir old-root
->     pivot_root . old-root
->     mount --
-> make-rprivate /old-root
->     umount -l /old-root
->     rmdir /old-root
-> 
-> Once that's done you're disconnected from the initramfs root.  The
-> sequence is really no accident because it's what the initramfs would
-> have done to pivot to the new root anyway (that's where container
-> people got it from).
-> 
-> 
-> James
-> 
+On 3/5/20 10:31 PM, Heiko Stuebner wrote:
+> Hi Johan,
+>
+> Am Mittwoch, 4. März 2020, 08:40:50 CET schrieb Johan Jonker:
+>> A test with the command below gives for example this error:
+>>
+>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
+>> False schema does not allow
+>> {'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
+>>
+>> The memory nodes all have a reg property that requires '@' in
+>> the nodename. Fix this error by adding the missing '@0' to
+>> the involved memory nodenames.
+>>
+>> make ARCH=arm dtbs_check
+>> DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
+>> schemas/root-node.yaml
+>
+> changes to memory nodes you sadly cannot do in such an automated fashion.
+> If you read the comment in rk3288-veyron.dtsi you'll see that a previous
+> similar iteration broke all of those machines as their coreboot doesn't
+> copy with memory@0 and would insert another memory node without @0
+>
+> In the past iteration the consensus then was that memory without @0
+> is also ok (as it isn't changeable anyway).
+>
+
+> As I don't really want to repeat that, I'd like actual hardware tests
+> before touching memory nodes.
+
+Any suggestion/feedback rapport welcome.
+
+>
+> Heiko
+>
+>
