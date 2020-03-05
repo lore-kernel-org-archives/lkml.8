@@ -2,184 +2,184 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0454C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48E1C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A546B20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="sicxL9wm";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wGSyBhJA"
+	by mail.kernel.org (Postfix) with ESMTP id 7CC8C20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgCEVR2 (ORCPT
+        id S1727097AbgCEVRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:17:28 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:42803 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726222AbgCEVQx (ORCPT
+        Thu, 5 Mar 2020 16:17:52 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:35642 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbgCEVRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:16:53 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 643AF21EAE;
-        Thu,  5 Mar 2020 16:16:52 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 05 Mar 2020 16:16:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=lc0QBU1yCIerk
-        rnOWmO0QlaRB2GRt3K2i1+d3aZJ1TU=; b=sicxL9wmiwBe+sqV6OzjfsxNNC5cM
-        OL8PUiuU4z/6bW8GeMnHQ881pNYEpwWhe6Z2c/OYYqPR3PZWsVNl0oUaN53IDV3O
-        A+mfezR7QYu0HhReZMgm7PGJxJ5NnYVah2p831BCR5a5ATs8BS7s7nZzM+B9CwOs
-        ulNzOkjcCEmr63Z3X/RerQPlwjzAz1PZYZKeWeUfepgzJGxvCu+g4dvWTVwjMAPM
-        NJxiVXHOXmmNTBspWj33i53TEVIzm8dtBMMcfzseaWOoh5xBJXgT6xEm2xK7D44a
-        8H13tZs0Bb9Mr4AVvc70fq7ocNcLO8V/clPfDm1WJ49Pne0mCS+kjLMbQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=lc0QBU1yCIerkrnOWmO0QlaRB2GRt3K2i1+d3aZJ1TU=; b=wGSyBhJA
-        WCUrhe9ttgzuIakkGKdTbreNT5uDRVozrEM1batQ7GkcHOOuiVhQ/pKv+8lm6odO
-        rsFJNNWTbLCzzfo1fHvIQHsnfGh7PeX6qpir4OY08eJuSt17JQWFSFwSny6Id5pY
-        HNclTdYTv+a9PCotBMcYd5bbKckjRr1zL65Pe/2l3tIoAwXZ6qooZGA9XehG9dEQ
-        L53ZIeKEnuI6YN4/qW0lDef3FGbIZJpEIYLBizeWp7LA63GI5X+VfRDpEyJEydPw
-        drkKoP1uuRlFBVGzGhTUk5/FG0ShrAWL66tgirjaV2AV1o7iHLHmJUWeF4NDMF0o
-        jMMPKK8K5uELUQ==
-X-ME-Sender: <xms:RGxhXgr7MyroLKM9OUGEBBtgHWgng1RBbtar144XYVALMkErcCSWzA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddutddgudehudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephf
-    fvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceo
-    ugiguhesugiguhhuuhdrgiihiieqnecukfhppeduieefrdduudegrddufedvrddunecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugig
-    uhhuuhdrgiihii
-X-ME-Proxy: <xmx:RGxhXhKfFQjn00ut7aGJSBO8GtdC2sn-z0uWrICXjZ8kC49XIkAulg>
-    <xmx:RGxhXjBqvaDKJekByjba6cT9pKxzBz_nzavNypIku07oFBz3k4E0Gg>
-    <xmx:RGxhXk7t1Tov8ZbDhqfqRePsYvhQ5f2OhkaoLbpLGyekhGl0aIitOQ>
-    <xmx:RGxhXpp3kOE_cT3ImiSmz0agYXAHDAjDh2DcpezUvRMkpO5wzLPa7Q>
-Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [163.114.132.1])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 38F9D3060BD1;
-        Thu,  5 Mar 2020 16:16:51 -0500 (EST)
-From:   Daniel Xu <dxu@dxuuu.xyz>
-To:     cgroups@vger.kernel.org, tj@kernel.org, lizefan@huawei.com,
-        hannes@cmpxchg.org
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, shakeelb@google.com,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        kernel-team@fb.com
-Subject: [PATCH v2 2/4] kernfs: Add removed_size out param for simple_xattr_set
-Date:   Thu,  5 Mar 2020 13:16:30 -0800
-Message-Id: <20200305211632.15369-3-dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200305211632.15369-1-dxu@dxuuu.xyz>
-References: <20200305211632.15369-1-dxu@dxuuu.xyz>
+        Thu, 5 Mar 2020 16:17:52 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j9xsM-0000pK-Gf; Thu, 05 Mar 2020 14:17:50 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j9xsL-0006Wy-Nd; Thu, 05 Mar 2020 14:17:50 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87k142lpfz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <875zfmloir.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nmjulm.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <202003021531.C77EF10@keescook>
+        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nlii0b.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87a74xi4kz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+Date:   Thu, 05 Mar 2020 15:15:36 -0600
+In-Reply-To: <87tv32cxmf.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Thu, 05 Mar 2020 15:14:48 -0600")
+Message-ID: <87o8tacxl3.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1j9xsL-0006Wy-Nd;;;mid=<87o8tacxl3.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19NkA3NbUrDnw7DDors6fjDf+oECzNhv98=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH 1/2] exec: Properly mark the point of no return
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This helps set up size accounting in the next commit. Without this out
-param, it's difficult to find out the removed xattr size without taking
-a lock for longer and walking the xattr linked list twice.
 
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+Add a flag binfmt->unrecoverable to mark when execution has gotten to
+the point where it is impossible to return to userspace with the
+calling process unchanged.
+
+While techinically this state starts as soon as de_thread starts
+killing threads, the only return path at that point is if there is a
+fatal signal pending.  I have choosen instead to set unrecoverable
+when the killing stops, and there are possibilities of failures other
+than fatal signals.  In particular it is possible for the allocation
+of a new sighand structure to fail.
+
+Setting unrecoverable at this point has the benefit that other actions
+can be taken after the other threads are all dead, and the
+unrecoverable flag can double as a flag that those actions have been
+taken.
+
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- fs/kernfs/inode.c     |  2 +-
- fs/xattr.c            | 11 ++++++++++-
- include/linux/xattr.h |  3 ++-
- mm/shmem.c            |  2 +-
- 4 files changed, 14 insertions(+), 4 deletions(-)
+ fs/exec.c               | 7 ++++---
+ include/linux/binfmts.h | 7 ++++++-
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
-index d0f7a5abd9a9..5f10ae95fbfa 100644
---- a/fs/kernfs/inode.c
-+++ b/fs/kernfs/inode.c
-@@ -303,7 +303,7 @@ int kernfs_xattr_set(struct kernfs_node *kn, const char *name,
- 	if (!attrs)
- 		return -ENOMEM;
- 
--	return simple_xattr_set(&attrs->xattrs, name, value, size, flags);
-+	return simple_xattr_set(&attrs->xattrs, name, value, size, flags, NULL);
- }
- 
- static int kernfs_vfs_xattr_get(const struct xattr_handler *handler,
-diff --git a/fs/xattr.c b/fs/xattr.c
-index 0d3c9b4d1914..e13265e65871 100644
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -860,6 +860,7 @@ int simple_xattr_get(struct simple_xattrs *xattrs, const char *name,
-  * @value: value of the xattr. If %NULL, will remove the attribute.
-  * @size: size of the new xattr
-  * @flags: %XATTR_{CREATE|REPLACE}
-+ * @removed_size: returns size of the removed xattr, -1 if none removed
-  *
-  * %XATTR_CREATE is set, the xattr shouldn't exist already; otherwise fails
-  * with -EEXIST.  If %XATTR_REPLACE is set, the xattr should exist;
-@@ -868,7 +869,8 @@ int simple_xattr_get(struct simple_xattrs *xattrs, const char *name,
-  * Returns 0 on success, -errno on failure.
+diff --git a/fs/exec.c b/fs/exec.c
+index db17be51b112..c243f9660d46 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1061,7 +1061,7 @@ static int exec_mmap(struct mm_struct *mm)
+  * disturbing other processes.  (Other processes might share the signal
+  * table via the CLONE_SIGHAND option to clone().)
   */
- int simple_xattr_set(struct simple_xattrs *xattrs, const char *name,
--		     const void *value, size_t size, int flags)
-+		     const void *value, size_t size, int flags,
-+		     ssize_t *removed_size)
+-static int de_thread(struct task_struct *tsk)
++static int de_thread(struct linux_binprm *bprm, struct task_struct *tsk)
  {
- 	struct simple_xattr *xattr;
- 	struct simple_xattr *new_xattr = NULL;
-@@ -895,8 +897,12 @@ int simple_xattr_set(struct simple_xattrs *xattrs, const char *name,
- 				err = -EEXIST;
- 			} else if (new_xattr) {
- 				list_replace(&xattr->list, &new_xattr->list);
-+				if (removed_size)
-+					*removed_size = xattr->size;
- 			} else {
- 				list_del(&xattr->list);
-+				if (removed_size)
-+					*removed_size = xattr->size;
- 			}
- 			goto out;
- 		}
-@@ -908,6 +914,9 @@ int simple_xattr_set(struct simple_xattrs *xattrs, const char *name,
- 		list_add(&new_xattr->list, &xattrs->head);
- 		xattr = NULL;
+ 	struct signal_struct *sig = tsk->signal;
+ 	struct sighand_struct *oldsighand = tsk->sighand;
+@@ -1182,6 +1182,7 @@ static int de_thread(struct task_struct *tsk)
+ 		release_task(leader);
  	}
-+
-+	if (removed_size)
-+		*removed_size = -1;
- out:
- 	spin_unlock(&xattrs->lock);
- 	if (xattr) {
-diff --git a/include/linux/xattr.h b/include/linux/xattr.h
-index 6dad031be3c2..4cf6e11f4a3c 100644
---- a/include/linux/xattr.h
-+++ b/include/linux/xattr.h
-@@ -102,7 +102,8 @@ struct simple_xattr *simple_xattr_alloc(const void *value, size_t size);
- int simple_xattr_get(struct simple_xattrs *xattrs, const char *name,
- 		     void *buffer, size_t size);
- int simple_xattr_set(struct simple_xattrs *xattrs, const char *name,
--		     const void *value, size_t size, int flags);
-+		     const void *value, size_t size, int flags,
-+		     ssize_t *removed_size);
- ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs, char *buffer,
- 			  size_t size);
- void simple_xattr_list_add(struct simple_xattrs *xattrs,
-diff --git a/mm/shmem.c b/mm/shmem.c
-index aad3ba74b0e9..f47347cb30f6 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -3243,7 +3243,7 @@ static int shmem_xattr_handler_set(const struct xattr_handler *handler,
- 	struct shmem_inode_info *info = SHMEM_I(inode);
  
- 	name = xattr_full_name(handler, name);
--	return simple_xattr_set(&info->xattrs, name, value, size, flags);
-+	return simple_xattr_set(&info->xattrs, name, value, size, flags, NULL);
- }
++	bprm->unrecoverable = true;
+ 	sig->group_exit_task = NULL;
+ 	sig->notify_count = 0;
  
- static const struct xattr_handler shmem_security_xattr_handler = {
+@@ -1266,7 +1267,7 @@ int flush_old_exec(struct linux_binprm * bprm)
+ 	 * Make sure we have a private signal table and that
+ 	 * we are unassociated from the previous thread group.
+ 	 */
+-	retval = de_thread(current);
++	retval = de_thread(bprm, current);
+ 	if (retval)
+ 		goto out;
+ 
+@@ -1664,7 +1665,7 @@ int search_binary_handler(struct linux_binprm *bprm)
+ 
+ 		read_lock(&binfmt_lock);
+ 		put_binfmt(fmt);
+-		if (retval < 0 && !bprm->mm) {
++		if (retval < 0 && bprm->unrecoverable) {
+ 			/* we got to flush_old_exec() and failed after it */
+ 			read_unlock(&binfmt_lock);
+ 			force_sigsegv(SIGSEGV);
+diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+index b40fc633f3be..12263115ce7a 100644
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@ -44,7 +44,12 @@ struct linux_binprm {
+ 		 * exec has happened. Used to sanitize execution environment
+ 		 * and to set AT_SECURE auxv for glibc.
+ 		 */
+-		secureexec:1;
++		secureexec:1,
++		/*
++		 * Set when changes have been made that prevent returning
++		 * to userspace.
++		 */
++		unrecoverable:1;
+ #ifdef __alpha__
+ 	unsigned int taso:1;
+ #endif
 -- 
-2.21.1
+2.25.0
 
