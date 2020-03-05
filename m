@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05A5C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EECC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8762A207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC19207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428736;
-	bh=PSf3N2di/O3d2/Fv7BAPgBIxqwvJC4exNOCrpSNCm3Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltXjgiLZq55MWsskwz8ox+YOA0l0Mci+ORUAoG0FO5hzoJcPGy24xuRCurCt/ZrB1
-	 8WoVgY6NxUyQVTHop8LsOrJzpFRzwlQGB8jHr/VGVqYx8I9a0WGFl21Fh9qBkUunnx
-	 cte7AuWV/lYYAY0t9ZfIDQZqsYJhTMQ0vnE5U05s=
+	s=default; t=1583428747;
+	bh=cZr6PQdmiL0Y5o22uj5yyFQjh/COZT2QBmPyV9LF2xA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Eb3f1wlUhzCNdpFyImI9SdYEGC1EA9LeCzcTdLsMa2A9BszAXnENHvaF+fZKL9hmG
+	 wrWK0a5ujKHIV88nTz7zlcMAG7BCVy2Vv4jVNkfJlNQ34OI8An8RnYH/zVsu4mJJtu
+	 fy7hFacPKu/QdAHdgyz7EMgIbNFcpvLTa76lIDwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgCERSz (ORCPT
+        id S1728239AbgCERTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:18:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:19:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgCERPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:22 -0500
+        id S1728008AbgCERPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C61620848;
-        Thu,  5 Mar 2020 17:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3234C207FD;
+        Thu,  5 Mar 2020 17:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428521;
-        bh=PSf3N2di/O3d2/Fv7BAPgBIxqwvJC4exNOCrpSNCm3Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AB6cygDUmVigawxYnpbJ/WdxtZVVN47yTEzJu3sxo7qEZ6F1ZmTn8mHr2HsH8Ee8S
-         doK/YuHGiJeT1SFqJV2wHVqS6MM+MfGjYLjolOT8gXxeMsZFdw8jiHtY81oMKcRB+Q
-         OiXM9JlMtbW+nVROyD+FgaoDcFAWVulFNV2k/Bk0=
+        s=default; t=1583428518;
+        bh=cZr6PQdmiL0Y5o22uj5yyFQjh/COZT2QBmPyV9LF2xA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=O5o4zH6uBRMgYUdIS61ti0g0F4ugazmvtokGw0NkSUZ7TyC/OluK+uPGHlQipQetY
+         iq3GtgwQIRw/AWddhnjqiV/DmqeCbXSKmqCtQNQ9vO5wW+cjDtZEiFYxWJ9VkcnhEY
+         gLsKlsYraesdri2OEA54BtscznK3KIBOwxGJEXiM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Korsnes <jkorsnes@cisco.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Armando Visconti <armando.visconti@st.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/31] HID: core: increase HID report buffer size to 8KiB
-Date:   Thu,  5 Mar 2020 12:14:48 -0500
-Message-Id: <20200305171516.30028-4-sashal@kernel.org>
+Cc:     Jean Delvare <jdelvare@suse.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 01/31] ACPI: watchdog: Allow disabling WDAT at boot
+Date:   Thu,  5 Mar 2020 12:14:45 -0500
+Message-Id: <20200305171516.30028-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171516.30028-1-sashal@kernel.org>
-References: <20200305171516.30028-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,39 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Korsnes <jkorsnes@cisco.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-[ Upstream commit 84a4062632462c4320704fcdf8e99e89e94c0aba ]
+[ Upstream commit 3f9e12e0df012c4a9a7fd7eb0d3ae69b459d6b2c ]
 
-We have a HID touch device that reports its opens and shorts test
-results in HID buffers of size 8184 bytes. The maximum size of the HID
-buffer is currently set to 4096 bytes, causing probe of this device to
-fail. With this patch we increase the maximum size of the HID buffer to
-8192 bytes, making device probe and acquisition of said buffers succeed.
+In case the WDAT interface is broken, give the user an option to
+ignore it to let a native driver bind to the watchdog device instead.
 
-Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Armando Visconti <armando.visconti@st.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/hid.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/admin-guide/kernel-parameters.txt |  4 ++++
+ drivers/acpi/acpi_watchdog.c                    | 12 +++++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index 8b3e5e8a72fbc..8506637f070d1 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -495,7 +495,7 @@ struct hid_report_enum {
- };
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 8bf0c0532046f..1a5101b7e853c 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -136,6 +136,10 @@
+ 			dynamic table installation which will install SSDT
+ 			tables to /sys/firmware/acpi/tables/dynamic.
  
- #define HID_MIN_BUFFER_SIZE	64		/* make sure there is at least a packet size of space */
--#define HID_MAX_BUFFER_SIZE	4096		/* 4kb */
-+#define HID_MAX_BUFFER_SIZE	8192		/* 8kb */
- #define HID_CONTROL_FIFO_SIZE	256		/* to init devices with >100 reports */
- #define HID_OUTPUT_FIFO_SIZE	64
++	acpi_no_watchdog	[HW,ACPI,WDT]
++			Ignore the ACPI-based watchdog interface (WDAT) and let
++			a native driver control the watchdog device instead.
++
+ 	acpi_rsdp=	[ACPI,EFI,KEXEC]
+ 			Pass the RSDP address to the kernel, mostly used
+ 			on machines running EFI runtime service to boot the
+diff --git a/drivers/acpi/acpi_watchdog.c b/drivers/acpi/acpi_watchdog.c
+index 95600309ce420..685fd0ef9e8f2 100644
+--- a/drivers/acpi/acpi_watchdog.c
++++ b/drivers/acpi/acpi_watchdog.c
+@@ -58,12 +58,14 @@ static bool acpi_watchdog_uses_rtc(const struct acpi_table_wdat *wdat)
+ }
+ #endif
  
++static bool acpi_no_watchdog;
++
+ static const struct acpi_table_wdat *acpi_watchdog_get_wdat(void)
+ {
+ 	const struct acpi_table_wdat *wdat = NULL;
+ 	acpi_status status;
+ 
+-	if (acpi_disabled)
++	if (acpi_disabled || acpi_no_watchdog)
+ 		return NULL;
+ 
+ 	status = acpi_get_table(ACPI_SIG_WDAT, 0,
+@@ -91,6 +93,14 @@ bool acpi_has_watchdog(void)
+ }
+ EXPORT_SYMBOL_GPL(acpi_has_watchdog);
+ 
++/* ACPI watchdog can be disabled on boot command line */
++static int __init disable_acpi_watchdog(char *str)
++{
++	acpi_no_watchdog = true;
++	return 1;
++}
++__setup("acpi_no_watchdog", disable_acpi_watchdog);
++
+ void __init acpi_watchdog_init(void)
+ {
+ 	const struct acpi_wdat_entry *entries;
 -- 
 2.20.1
 
