@@ -2,162 +2,119 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1F9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC9BC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2071B207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B4E207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:16:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="isUdIXzz"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="1DIq3i5M";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0OTpwfoc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgCEVQt (ORCPT
+        id S1726400AbgCEVQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:16:49 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34710 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgCEVQt (ORCPT
+        Thu, 5 Mar 2020 16:16:54 -0500
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:42779 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726067AbgCEVQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:16:49 -0500
-Received: by mail-wm1-f68.google.com with SMTP id x3so2811982wmj.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 13:16:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=rFYE9qU6hfZLMjbuv+Lw+SiZtkHRJmxeQZgCYrPMhQA=;
-        b=isUdIXzz1WywdtIB6ayzczG6D27adzp5OvZ+mwE5OAioulxSPjDaDutrYz88lS5//h
-         8gDvO0A0RNZ+xrP4i3PSqfYZQizRnLpAk1S7jcK2ysbU7KL5FXPhBQSp6wMbgWrIKgnG
-         as59ZuFJ+uo1o9AqL2xYldyROmTL5aIFXgVSA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=rFYE9qU6hfZLMjbuv+Lw+SiZtkHRJmxeQZgCYrPMhQA=;
-        b=MhOpyGejReFUuClNEX3Lv+lcnZkB1DsNqvTrm1D/Q56mUyMYAXTr1dYyBkDbFE7gPf
-         By5iA8I1/dcjOpBVLqy8YgCcnSPxGHBK4GNARAPRMzKPxWd2Nfo7MRT0hIaorFiFQ0Wg
-         zKF+Dmwb7crJkpDls8AVkJGE2FhmO5AbuzIhBKaHUYvKafTttcHGepPeEJUqHPJOunsQ
-         O5J2ifiBNFNWOKV/avLreK+yLC/0Q78uonHFW3BDImQdqkgg9iHZ0z0qLDyIhCYpyrlS
-         Zl0LDyuxsLlQ9gjT8OIB+zk2ZF3lkDNZWntMW0ejpagu9odrnBpcoK6BtXxCN6RvOfoE
-         m0lg==
-X-Gm-Message-State: ANhLgQ1ZriyHjfGEbNFtkvJ84bzOQNRWeo0YPKoHvXL6czAN1GM2xkJz
-        PZVQFIZwlrXpaFQ+sf/GsZTnMw==
-X-Google-Smtp-Source: ADFU+vuwbPUqEfT9MYVYDIUGPBhYImhXKM8fUAOSLCzk+p4JfLVCw9oSKX/YzU7LYBOvnLdNGrs3gg==
-X-Received: by 2002:a05:600c:218d:: with SMTP id e13mr686605wme.127.1583443006355;
-        Thu, 05 Mar 2020 13:16:46 -0800 (PST)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id j5sm10577968wmi.33.2020.03.05.13.16.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 13:16:45 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Thu, 5 Mar 2020 22:16:43 +0100
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>, jmorris@namei.org,
-        Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: Re: [PATCH bpf-next v4 3/7] bpf: Introduce BPF_MODIFY_RETURN
-Message-ID: <20200305211643.GA12094@chromium.org>
-References: <20200304191853.1529-1-kpsingh@chromium.org>
- <20200304191853.1529-4-kpsingh@chromium.org>
- <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com>
- <20200305155421.GA209155@google.com>
- <CAEjxPJ5u7tsa_9-7Oq_Wi28mZD_aDC1tVWj5Tb8ud=bfEYsY9Q@mail.gmail.com>
+        Thu, 5 Mar 2020 16:16:52 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 2C24221F30;
+        Thu,  5 Mar 2020 16:16:51 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 05 Mar 2020 16:16:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=XdQ+RswJL5NMl40GJb5WlNSbRs
+        qA/OCEL8OeWLu2sac=; b=1DIq3i5Mt+pRb3sS1NWiHTIjIc5XjG+qFV/shkSg7t
+        5ImiieuJc4T4WVs/zoYa7Opp1+m7pH9G1ywxke1GdTvSA0D6G96Ypqyn224PyUdS
+        Dt0umj6zdkKMZ2YGrmwIAWok2NXr9Tku7MZZtrV7BF9vat0KOt2ivalobkI+wEso
+        /LLMrwm9UlLUAeBQBqRUIcfQ6o83Sh+jJT+f7KkmmIRKgglgu3duqYD56XcrfG68
+        wv9M2S9gYjpsDSJC90uC2Yog1ruukVZKUc4ItroCh99rAi4mD/I9mMc8Ly+b4GYP
+        1wErySk6oWNXkoObGVZnuPKyPUbfTkgGwPotTBU0tczw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=XdQ+RswJL5NMl40GJ
+        b5WlNSbRsqA/OCEL8OeWLu2sac=; b=0OTpwfocD7+OQI1L/9PVGL6W/rkk4lJ5y
+        v1IhvdOz0k7PzDsjzl/lDBL7ZRH4VLbYmc7cy7u3SGOEvXfKEiP63tOzyLWPu270
+        bbgUhagy20rsMqAc962xRxJWU5KjqJn6TPwNSh7KvCeu/EvMU5wgzXiZDMzGnapu
+        286DLXK2xBiqxQAlitIsFKACqGingzdu0HEuZkA43ztVr7xD2U6ALuvefGASqIhr
+        9J1fdZOLlmJacgqwjZdHv9qXxFBF5qbEZzkpRvAozkJhetGr6MWhbHXbztqnQWiq
+        zbkIILNl6BCnf/PEXKGRjRSOE7gqQUHkQsl/Q7mh7y677UxS1AF0A==
+X-ME-Sender: <xms:QWxhXvufCl5LLvh4p7IDvwtoIPvWOGRcX32ZjEkKiKVoMPgy2yPpfA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddutddgudehudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephf
+    fvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougig
+    uhesugiguhhuuhdrgiihiieqnecukfhppeduieefrdduudegrddufedvrddunecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhu
+    uhdrgiihii
+X-ME-Proxy: <xmx:QWxhXlBrp9PbfGlIhWaCtCW88XfMO5wBCM-Mgd6c5LcJ5XbC6Q_Kag>
+    <xmx:QWxhXoMUI_ZlbcZ1RRIZg8CuoqW5UVWuHAr2wY4JY-h4AhbXcXkyKA>
+    <xmx:QWxhXg3WDzctGthjck1v_tjKYQirNQyaJWH6Lk2_yzml0Cay8k6vcg>
+    <xmx:Q2xhXkz98o39WExgDbaqENUSLugCyw4Kg8daYR6N_Rc8GOQki4txqw>
+Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [163.114.132.1])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E630B30612AF;
+        Thu,  5 Mar 2020 16:16:48 -0500 (EST)
+From:   Daniel Xu <dxu@dxuuu.xyz>
+To:     cgroups@vger.kernel.org, tj@kernel.org, lizefan@huawei.com,
+        hannes@cmpxchg.org
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, shakeelb@google.com,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        kernel-team@fb.com
+Subject: [PATCH v2 0/4] Support user xattrs in cgroupfs
+Date:   Thu,  5 Mar 2020 13:16:28 -0800
+Message-Id: <20200305211632.15369-1-dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEjxPJ5u7tsa_9-7Oq_Wi28mZD_aDC1tVWj5Tb8ud=bfEYsY9Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-Mär 14:43, Stephen Smalley wrote:
-> On Thu, Mar 5, 2020 at 10:54 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > On 05-Mar 08:51, Stephen Smalley wrote:
-> > > IIUC you've switched from a model where the BPF program would be
-> > > invoked after the original function logic
-> > > and the BPF program is skipped if the original function logic returns
-> > > non-zero to a model where the BPF program is invoked first and
-> > > the original function logic is skipped if the BPF program returns
-> > > non-zero.  I'm not keen on that for userspace-loaded code attached
-> >
-> > We do want to continue the KRSI series and the effort to implement a
-> > proper BPF LSM. In the meantime, the tracing + error injection
-> > solution helps us to:
-> >
-> >   * Provide better debug capabilities.
-> >   * And parallelize the effort to come up with the right helpers
-> >     for our LSM work and work on sleepable BPF which is also essential
-> >     for some of the helpers.
-> >
-> > As you noted, in the KRSI v4 series, we mentioned that we would like
-> > to have the user-space loaded BPF programs be unable to override the
-> > decision made by the in-kernel logic/LSMs, but this got shot down:
-> >
-> >    https://lore.kernel.org/bpf/00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com
-> >
-> > I would like to continue this discussion when we post the v5 series
-> > for KRSI as to what the correct precedence order should be for the
-> > BPF_PROG_TYPE_LSM and would appreciate if you also bring it up there.
-> 
-> That's fine but I guess I don't see why you or anyone else would
-> bother with introducing a BPF_PROG_TYPE_LSM
-> if BPF_PROG_MODIFY_RETURN is accepted and is allowed to attach to the
-> LSM hooks.  What's the benefit to you
-> if you can achieve your goals directly with MODIFY_RETURN?
+User extended attributes are useful as metadata storage for kernfs
+consumers like cgroups. Especially in the case of cgroups, it is useful
+to have a central metadata store that multiple processes/services can
+use to coordinate actions.
 
-There is still value in being a proper LSM, as I had mentioned in KRSI
-v3 that not all security_* wrappers simply call the attached hooks and
-return their exit code.
+A concrete example is for userspace out of memory killers. We want to
+let delegated cgroup subtree owners (running as non-root) to be able to
+say "please avoid killing this cgroup". This is especially important for
+desktop linux as delegated subtrees owners are less likely to run as
+root.
 
-It's also okay, taking into consideration Casey's objections and Kees'
-suggestion, to be properly registered with the LSM framework (even if
-it is with LSM_ORDER_LAST) and work towards improving some of the
-performance bottle-necks in the framework. It would be a positive
-outcome for all LSMs.
+The first two commits set up some stuff for the third commit which
+intro introduce a new flag, KERNFS_ROOT_SUPPORT_USER_XATTR,
+that lets kernfs consumers enable user xattr support. The final commit
+turns on user xattr support for cgroupfs.
 
-BPF_MODIFY_RETURN is just a first step which lays the foundation for
-BPF_PROG_TYPE_LSM and facilitates us to build BPF infrastructure for
-it.
+Changes from v1:
+- use kvmalloc for xattr values
+- modify simple_xattr_set to return removed size
+- add accounting for total user xattr size per cgroup
 
-- KP
+Daniel Xu (4):
+  kernfs: kvmalloc xattr value instead of kmalloc
+  kernfs: Add removed_size out param for simple_xattr_set
+  kernfs: Add option to enable user xattrs
+  cgroupfs: Support user xattrs
 
-> 
-> > > to LSM hooks; it means that userspace BPF programs can run even if
-> > > SELinux would have denied access and SELinux hooks get
-> > > skipped entirely if the BPF program returns an error.  I think Casey
-> > > may have wrongly pointed you in this direction on the grounds
-> > > it can already happen with the base DAC checking logic.  But that's
-> >
-> > What we can do for this tracing/modify_ret series, is to remove
-> > the special casing for "security_" functions in the BPF code and add
-> > ALLOW_ERROR_INJECTION calls to the security hooks. This way, if
-> > someone needs to disable the BPF programs being able to modify
-> > security hooks, they can disable error injection. If that's okay, we
-> > can send a patch.
-> 
-> Realistically distros tend to enable lots of developer-friendly
-> options including error injection, and most users don't build their
-> own kernels
-> and distros won't support them when they do. So telling users they can
-> just rebuild their kernel without error injection if they care about
-> BPF programs being able to modify security hooks isn't really viable.
-> The security modules need a way to veto it based on their policies.
-> That's why I suggested a security hook here.
+ fs/kernfs/inode.c           | 91 ++++++++++++++++++++++++++++++++++++-
+ fs/kernfs/kernfs-internal.h |  2 +
+ fs/xattr.c                  | 17 +++++--
+ include/linux/kernfs.h      | 11 ++++-
+ include/linux/xattr.h       |  3 +-
+ kernel/cgroup/cgroup.c      |  3 +-
+ mm/shmem.c                  |  2 +-
+ 7 files changed, 119 insertions(+), 10 deletions(-)
+
+-- 
+2.21.1
+
