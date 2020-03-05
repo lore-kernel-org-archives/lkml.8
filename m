@@ -2,90 +2,88 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646C7C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306B4C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C0420658
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583410326;
-	bh=2lpSsnV5V9Oa5sNvXz0IcGl2n2PCqLJrUGHbh++pFUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FHMVEOeiqCxTAXEX5JU9tSrzSDUHgIxeagEBc2tW16K0aW1stCcA27uEPpsgB6Gan
-	 xAnNeaiKXjH4MY4e4iZ0+Dp8Q0ASoc1bY3Ls+H0TpAd7+brZYeu4MOcoQKO8/vC6L8
-	 fZvF6Vh1+4L2dbxo+/brgerYxfOBA4p3+1jZEMqU=
+	by mail.kernel.org (Postfix) with ESMTP id 0B6C820658
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:12:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgCEMMF (ORCPT
+        id S1726131AbgCEMMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:12:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:47830 "EHLO foss.arm.com"
+        Thu, 5 Mar 2020 07:12:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:47852 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgCEMMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:12:05 -0500
+        id S1725903AbgCEMMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 07:12:47 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67D0431B;
-        Thu,  5 Mar 2020 04:12:04 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEDF23F6C4;
-        Thu,  5 Mar 2020 04:12:03 -0800 (PST)
-Date:   Thu, 5 Mar 2020 12:12:02 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eha@deif.com, angelo@sysam.it, andrew.smirnov@gmail.com,
-        gustavo@embeddedor.com, weic@nvidia.com, mhosny@nvidia.com
-Subject: Re: [PATCH 07/12] spi: Do spi_take_timestamp_pre for as many times
- as necessary
-Message-ID: <20200305121202.GB4046@sirena.org.uk>
-References: <20200304220044.11193-1-olteanv@gmail.com>
- <20200304220044.11193-8-olteanv@gmail.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BEB9A4B2;
+        Thu,  5 Mar 2020 04:12:46 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E34463F6C4;
+        Thu,  5 Mar 2020 04:12:45 -0800 (PST)
+Subject: Re: 5.6-rc3: WARNING: CPU: 48 PID: 17435 at kernel/sched/fair.c:380
+ enqueue_task_fair+0x328/0x440
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200228163545.GA18662@vingu-book>
+ <be45b190-d96c-1893-3ef0-f574eb595256@de.ibm.com>
+ <49a2ebb7-c80b-9e2b-4482-7f9ff938417d@de.ibm.com>
+ <ad0f263a-6837-e793-5761-fda3264fd8ad@de.ibm.com>
+ <CAKfTPtCX4padfJm8aLrP9+b5KVgp-ff76=teu7MzMZJBYrc-7w@mail.gmail.com>
+ <CAKfTPtD9b6o=B6jkbWNjfAw9e1UjT9Z07vxdsVfikEQdeCtfPw@mail.gmail.com>
+ <2108173c-beaa-6b84-1bc3-8f575fb95954@de.ibm.com>
+ <7be92e79-731b-220d-b187-d38bde80ad16@arm.com>
+ <805cbe05-2424-7d74-5e11-37712c189eb6@de.ibm.com>
+ <f28bc5ac-87fa-2494-29db-ff7d98b7372a@de.ibm.com>
+ <20200305093003.GA32088@vingu-book>
+ <15252de5-9a2d-19ae-607a-594ee88d1ba1@de.ibm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <ef1be100-2c6a-bcff-69a2-25878589a111@arm.com>
+Date:   Thu, 5 Mar 2020 13:12:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
-Content-Disposition: inline
-In-Reply-To: <20200304220044.11193-8-olteanv@gmail.com>
-X-Cookie: When among apes, one must play the ape.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <15252de5-9a2d-19ae-607a-594ee88d1ba1@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05/03/2020 12:28, Christian Borntraeger wrote:
+> 
+> On 05.03.20 10:30, Vincent Guittot wrote:
+>> Le mercredi 04 mars 2020 à 20:59:33 (+0100), Christian Borntraeger a écrit :
+>>>
+>>> On 04.03.20 20:38, Christian Borntraeger wrote:
+>>>>
+>>>>
+>>>> On 04.03.20 20:19, Dietmar Eggemann wrote:
 
---7ZAtKRhVyVSsbBD2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-On Thu, Mar 05, 2020 at 12:00:39AM +0200, Vladimir Oltean wrote:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
->=20
-> When dealing with a SPI controller driver that is sending more than 1
-> byte at once (or the entire buffer at once), and the SPI peripheral
-> driver has requested timestamping for a byte in the middle of the
-> buffer, we find that spi_take_timestamp_pre never records a "pre"
-> timestamp.
+> It seems to speed up the issue when I do a compile job in parallel on the host:
+> 
+> Do you also need the sysfs tree?
 
-This is a fix and so should have been at the start of the series to make
-sure there aren't any dependencies.
+[   87.932552] CPU23 path=/machine.slice/machine-test.slice/machine-qemu\x2d18\x2dtest10. on_list=1 nr_running=1 throttled=0 p=[CPU 2/KVM 2662]
+[   87.932559] CPU23 path=/machine.slice/machine-test.slice/machine-qemu\x2d18\x2dtest10. on_list=0 nr_running=3 throttled=0 p=[CPU 2/KVM 2662]
+[   87.932562] CPU23 path=/machine.slice/machine-test.slice on_list=1 nr_running=1 throttled=1 p=[CPU 2/KVM 2662]
+[   87.932564] CPU23 path=/machine.slice on_list=1 nr_running=0 throttled=0 p=[CPU 2/KVM 2662]
+[   87.932566] CPU23 path=/ on_list=1 nr_running=1 throttled=0 p=[CPU 2/KVM 2662]
+[   87.951872] CPU23 path=/ on_list=1 nr_running=2 throttled=0 p=[ksoftirqd/23 126]
+[   87.987528] CPU23 path=/user.slice on_list=1 nr_running=2 throttled=0 p=[as 6737]
+[   87.987533] CPU23 path=/ on_list=1 nr_running=1 throttled=0 p=[as 6737]
 
---7ZAtKRhVyVSsbBD2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5g7JEACgkQJNaLcl1U
-h9Chiwf+On3bebnRG/0bCvM4m9UoJ3euPVdOY1kKcGGzF0tOUWjGenpRsTQh+vsp
-vAE31eCPdss6Fv5wvgdS3KtJGvcXjptXipSFu3KSrKBoBls23CXGD+c8IpFRvdQ8
-tbvLtb3jelZt45+TVASwIKlUXplBRqcpxOKo4wi+9LWYjwK+5HRYJLT9RyS8sTRM
-e/2YTw6MMpqAaSTh0S6BOHgg/MNQT9aB2rzDigkO+JbfI84w9eiAzDAN9J/OuT0Z
-8j1upFtnkq2vQ4wfg0btLD2ZgWUvr6sr7qC7uyuTw5/D594N1/GPGqg9xIsT5Ayp
-dV9ERzRx6f85sqEtI5VbchtOOYN9eg==
-=WVjV
------END PGP SIGNATURE-----
-
---7ZAtKRhVyVSsbBD2--
+Arrh, looks like 'char path[64]' is too small to hold 'machine.slice/machine-test.slice/machine-qemu\x2d18\x2dtest10.scope/vcpuX' !
+                                                                                                                    ^  
+But I guess that the 'on_list=0' for 'machine-qemu\x2d18\x2dtest10.scope' could be the missing hint?
