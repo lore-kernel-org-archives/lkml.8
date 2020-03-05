@@ -2,180 +2,117 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31175C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D412C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D50207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0945320801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:12:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EW642PHI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lSOEVXpU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCEWKT (ORCPT
+        id S1726269AbgCEWM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 17:10:19 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40639 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCEWKT (ORCPT
+        Thu, 5 Mar 2020 17:12:27 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37011 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCEWM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 17:10:19 -0500
-Received: by mail-pl1-f196.google.com with SMTP id y1so3221957plp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 14:10:18 -0800 (PST)
+        Thu, 5 Mar 2020 17:12:26 -0500
+Received: by mail-io1-f65.google.com with SMTP id k4so136962ior.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 14:12:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wP8ZLcoVfjRLy2wd1F6p7whOnIttnSe9o981shhqduQ=;
-        b=EW642PHINIK0QQBXUVu9+0zYb98h6yXBQ6W1ECVmuPNBpv+xTNekh/mPEorDGkXbrP
-         8R/GZTy5gtZKaGotUgRHMrfabg8VJ1UKudix3XnEE4X0wo4xpwsNgzn259YyN7kdpphX
-         +NkbZc+7O2mRuEKZocKBF4+CZJu68vbYYfirA=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BLO01LFdRSFqT4wIw42RwnApKJS//R7HNVPhSavIu5E=;
+        b=lSOEVXpUwzFvtYV9lmGONQikqTAtuG6EdUXH5lWDTLve2DThE4B1xwkm9WSm76mNUr
+         k5OHw4ZuGMBo7+b4+fVJKErhm5b91u/FFMCVf9hsgub8ILjTywxxIaF3nLWmilri1RFY
+         bVOmmMwSmsD7otMDz2bROoDXi/a2zqW5FIa/YQGT3d4V4e2LZTKnx7pM+yqBTa7Fpd+Z
+         ZkcqwlFl/2YWKTg6Cl008e9wMsm40T/Ul89O7qGJjK1mL/MNsn3HbqMCiQaLlTT/p3iN
+         NeBiQ1ndS49Vo7LW2B7z81RGKHiC0SZ9VgYN3raQ5bld/JqDFAotR0FA9IooxwofPU6x
+         cZvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wP8ZLcoVfjRLy2wd1F6p7whOnIttnSe9o981shhqduQ=;
-        b=ON0qglO8dONNgxKfagKWk6WMLEJlvRAv3L2LihJMeNRFZj4hbMlWc9R7zMmfPzL9KL
-         ray+B4JCDA+RZTl/vnrfzX+i2q77K+PcmWt4P6qer0Um5QaAx4TgfWkBW3sTYj9gLFfA
-         04PPcw84Qwv8XW2mArUmrwkvfeTqSSrR7V61EioHTaI0bXaByHF6ytanUkjdQEHoyaWZ
-         KxoYKDk/Eg/fdzDEJ6Ca+nDy2lyXKZkV0lYkOb33DnBQfehgD3S58PDzMXI74i5LNVOD
-         IBWb7V/cVie0Mzb2a7a5RLvKtTHH+BarHKxX4uMGoUMdJM7P2NyCG1CYhO+YTc1AhBM7
-         NdqQ==
-X-Gm-Message-State: ANhLgQ3oVzJF6/6YxuXnMaVus31BzDvfy7Sek/mO3IhzKqRfMteraR1b
-        2YwjslwHsEvTqjTpwbwPNEiARg==
-X-Google-Smtp-Source: ADFU+vsGiwCvQZPWkXv7TRZ4jmXWr6psRLovg1wV5hcbdmqIqfAlL8UTuWw6Uuwi0lyBRg1ClCAohw==
-X-Received: by 2002:a17:90a:9416:: with SMTP id r22mr293883pjo.2.1583446217711;
-        Thu, 05 Mar 2020 14:10:17 -0800 (PST)
-Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id q9sm32286268pgs.89.2020.03.05.14.10.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 14:10:17 -0800 (PST)
-Date:   Thu, 5 Mar 2020 14:10:16 -0800
-From:   Prashant Malani <pmalani@chromium.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2] dt-bindings: Convert usb-connector to YAML format.
-Message-ID: <20200305221016.GE142502@google.com>
-References: <20200305030135.210675-1-pmalani@chromium.org>
- <CAL_JsqJcJf0JZVHEuY5y0eHLyw3e0Wr2ZDJvPs4=cZaSMWg97A@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BLO01LFdRSFqT4wIw42RwnApKJS//R7HNVPhSavIu5E=;
+        b=JPLggpi0XtDZLIjs6PL2OkrLQcDN+y/xeWALVsEUvb6uQK33Z2JIynw2InJ0xPw2u5
+         MI/L1L0C3AXoVgjetyQBArsduA7xc+buVAMP6SaIfv8c9DyAlwNxVQe6HDF6lU4kPv+E
+         KiiYCDrrqiBnDMLWAP9SIzb+W60B3d0VBhFIV/u1GitCcjumHyrql58nR+Q2/c2iXkBg
+         KZab3uj/wAnFOXz0l8n8d7vTG2FJynz2Un4HahRwcK864JP2/iB3qr79nUnS/b55YjlA
+         p55lPOuZCEW25mzS375AxqQm2FGsO2jmZtcPGgM6yNexgYBMiwl+GX+OxsolBYjNQjNI
+         7ojg==
+X-Gm-Message-State: ANhLgQ2dPTL4qped6ZSU/Ako+8OhRrz7xec51yVCWBv7olw7HHn/Dvoy
+        vnSRlW5QznHutsNb1wal9brepJuwv55e4hxEg9hhFQ==
+X-Google-Smtp-Source: ADFU+vtr8PA4SQjv1gXhZGUToTCIG22z8a7yUXMj8YNFxabC8mrUU/NGdHrPnu7HyImc63wibQZdJgkJs7O1TlkPbxQ=
+X-Received: by 2002:a02:13ca:: with SMTP id 193mr58093jaz.54.1583446345383;
+ Thu, 05 Mar 2020 14:12:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJcJf0JZVHEuY5y0eHLyw3e0Wr2ZDJvPs4=cZaSMWg97A@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200304213941.112303-1-xii@google.com> <20200305075742.GR2596@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200305075742.GR2596@hirez.programming.kicks-ass.net>
+From:   Paul Turner <pjt@google.com>
+Date:   Thu, 5 Mar 2020 14:11:49 -0800
+Message-ID: <CAPM31RJdNtxmOi2eeRYFyvRKG9nofhqZfPgZGA5U7u8uZ2WXwA@mail.gmail.com>
+Subject: Re: [PATCH] sched: watchdog: Touch kernel watchdog in sched code
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Xi Wang <xii@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Don <joshdon@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob, Kindly see inline. Thanks as always.
+On Wed, Mar 4, 2020 at 11:57 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Mar 04, 2020 at 01:39:41PM -0800, Xi Wang wrote:
+> > The main purpose of kernel watchdog is to test whether scheduler can
+> > still schedule tasks on a cpu. In order to reduce latency from
+> > periodically invoking watchdog reset in thread context, we can simply
+> > touch watchdog from pick_next_task in scheduler. Compared to actually
+> > resetting watchdog from cpu stop / migration threads, we lose coverage
+> > on: a migration thread actually get picked and we actually context
+> > switch to the migration thread. Both steps are heavily protected by
+> > kernel locks and unlikely to silently fail. Thus the change would
+> > provide the same level of protection with less overhead.
+> >
+> > The new way vs the old way to touch the watchdogs is configurable
+> > from:
+> >
+> > /proc/sys/kernel/watchdog_touch_in_thread_interval
+> >
+> > The value means:
+> > 0: Always touch watchdog from pick_next_task
+> > 1: Always touch watchdog from migration thread
+> > N (N>0): Touch watchdog from migration thread once in every N
+> >          invocations, and touch watchdog from pick_next_task for
+> >          other invocations.
+> >
+>
+> This is configurable madness. What are we really trying to do here?
 
+See reply to Thomas, no config is actually required here.  Focusing on
+the intended outcome:
 
-On Thu, Mar 05, 2020 at 03:29:00PM -0600, Rob Herring wrote:
-> On Wed, Mar 4, 2020 at 9:01 PM Prashant Malani <pmalani@chromium.org> wrote:
-> >
-> > Convert the usb-connector.txt bindings file to YAML format. This allows
-> > it to be used in dt_bindings_check verification. This patch was
-> > born out of a patch series for the addition of a Type C connector
-> > class port driver[1].
-> >
-> > An attempt has been made to maintain the same documentation text and
-> > example structure as was in the .txt file, but wherever needed
-> > modifications have been made to satisfy dt_bindings_check.
-> >
-> > Also, update all references to usb-connector.txt to now use
-> > usb-connector.yaml.
-> >
-> > [1]: https://lkml.org/lkml/2020/2/19/1232
-> >
-> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> > ---
-> >
-> > Changes in v2:
-> > - Added type references for some properties.
-> > - Removed pinctrl properties.
-> > - Updated power-role, try-power-role and data-role properties to be in
-> >   valid schema format.
-> > - Added OF graph data bus binding property according to reviewer
-> >   suggestions.
-> >
-> >  .../connector/samsung,usb-connector-11pin.txt |   2 +-
-> >  .../bindings/connector/usb-connector.txt      | 135 ------------
-> >  .../bindings/connector/usb-connector.yaml     | 203 ++++++++++++++++++
-> >  .../devicetree/bindings/usb/fcs,fusb302.txt   |   2 +-
-> >  .../devicetree/bindings/usb/generic.txt       |   2 +-
-> >  .../devicetree/bindings/usb/mediatek,mtu3.txt |   2 +-
-> >  .../devicetree/bindings/usb/mediatek,musb.txt |   2 +-
-> >  .../bindings/usb/richtek,rt1711h.txt          |   2 +-
-> >  .../devicetree/bindings/usb/ti,hd3ss3220.txt  |   2 +-
-> >  .../devicetree/bindings/usb/typec-tcpci.txt   |   2 +-
-> >  .../devicetree/bindings/usb/usb-conn-gpio.txt |   4 +-
-> >  11 files changed, 213 insertions(+), 145 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/connector/usb-connector.txt
-> >  create mode 100644 Documentation/devicetree/bindings/connector/usb-connector.yaml
-> 
-> 
-> > diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> > new file mode 100644
-> > index 0000000000000..b386e2880405c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> > @@ -0,0 +1,203 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/connector/usb-connector.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: USB Connector
-> > +
-> > +maintainers:
-> > +  - linux-usb@vger.kernel.org
-> 
-> Person please. You can put me if no one else.
-> 
+The goal is to improve jitter since we're constantly periodically
+preempting other classes to run the watchdog.   Even on a single CPU
+this is measurable as jitter in the us range.  But, what increases the
+motivation is this disruption has been recently magnified by CPU
+"gifts" which require evicting the whole core when one of the siblings
+schedules one of these watchdog threads.
 
-I will list you as the maintainer.
-> > +description:
-> > +  A USB connector node represents a physical USB connector. It should be a child
-> > +  of a USB interface controller.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - usb-a-connector
-> > +      - usb-b-connector
-> > +      - usb-c-connector
-> > +
-> > +  label:
-> > +    description: Symbolic name for the connector.
-> > +
-> > +  type:
-> > +    description: Size of the connector, should be specified in case of USB-A,
-> > +      USB-B non-fullsize connectors.
-> > +    $ref: /schemas/types.yaml#definitions/string
-> 
-> Needs to be under an 'allOf' or the enum is ignored.
-
-Done.
-> 
-> Rob
+The majority outcome being asserted here is that we could actually
+exercise pick_next_task if required -- there are other potential
+things this will catch, but they are much more braindead generally
+speaking (e.g. a bug in pick_next_task itself).
