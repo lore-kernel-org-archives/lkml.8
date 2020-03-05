@@ -2,168 +2,241 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB07C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452F2C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55138207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 105D92073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="RWxHDXt+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EXDr6Rod"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgCETf4 (ORCPT
+        id S1726067AbgCETlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 14:35:56 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44836 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgCETfz (ORCPT
+        Thu, 5 Mar 2020 14:41:08 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39386 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgCETlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 14:35:55 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n7so8438573wrt.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 11:35:53 -0800 (PST)
+        Thu, 5 Mar 2020 14:41:08 -0500
+Received: by mail-pj1-f66.google.com with SMTP id d8so16931pje.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 11:41:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=38DgGiPjwZSpDF6N7m93SvJVUYapT7VRD+CEpbcc/1g=;
-        b=RWxHDXt+4syqnJPIwJ2HB8p/I2BbkFMJ9IUSLJFs2bBxyrKhYsftdIcfkxy8ycJgsG
-         J6Iuqm41XaysUCVFVwmyr295oYDY/vFX1MatpGuMVYld7r5GTzn6kiKFU8EWF1hnOC5T
-         zRNSuYWUqHZaGQIucodznSpMlpetewcq+pJRU=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+32SAMShzFc9RiMKQoVwzpevpnCbB5DftyvOF5cOceQ=;
+        b=EXDr6Rod3rKxTQ7ADG2JRkNJRFEWACbapoyB3v8mIgYcXGB3wvAqJZuHDzGh6rPyh3
+         dgAgb2/MCkuChVSLeTirzUO/vlPCIbUcoQArbcTNwfy6c5yWoOfk8+78YQXYDB5Vn5zK
+         RZ6fQp7iH7iK/KxTTFsxWqBUmP2QPOXifqhC7VSC63nGvUuMal1nqVHKb8rHYTDd2XMX
+         dZF1Sgq5FnxtFG4KaEy1knHeBH4baQDzxgbJQT+dXW1leTtoO2ApKvquWmYdr3CwbkJC
+         8sOmzFvzu3r8DRtefmJoP0TfnzLarxvkTB9yQgBnkT9tez82ZtunE0pJfLUJTpnIX6vg
+         5DYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=38DgGiPjwZSpDF6N7m93SvJVUYapT7VRD+CEpbcc/1g=;
-        b=jKCcgWw9kMpV++8Kiee0dpSkynDimMFZ/qvkEGGYBnXHSdBRTe+1l2EgLbMLOWZYjg
-         VbddQX4/RsOYAMMbVLE6Qsw3nQEdX5bv3eZL06n39qW0gcwnk2BhOAXWwsmMkWCMeZPO
-         50M2H6JaplFU3F0Fj9TvVQfyw0JNAMGK6SIjEi4WNfjuSvCZrIgI5tiBi7sVwzmfaBt+
-         ONlldQk8Ao7JNlcz+CruOlS+Mp4PbawlsgoarTJE/3LG82Gcgx1AN3Z02SX8o9Gx2y+I
-         uOU708olP/GNFYGSFMY92+WuKzWOtPW/TP6IrYzPQ83nuJm2q2VpJ1sEp6//cZFutRqp
-         ocIQ==
-X-Gm-Message-State: ANhLgQ0dFZJznmqTFd/KhW8cGWhQJ8/bRXVQg8IbXifH3BtD9LxgW9BR
-        kqSG/unO571153IRF8sJg81HvA==
-X-Google-Smtp-Source: ADFU+vu0oJrA1+m4P9vna1RTuRkGjRwiIL6Hy+SKK9W1YqIlpXJU1vl6yJ5AVNo88S4yAen8RpmeqQ==
-X-Received: by 2002:a5d:4f03:: with SMTP id c3mr465574wru.336.1583436952398;
-        Thu, 05 Mar 2020 11:35:52 -0800 (PST)
-Received: from localhost.localdomain ([217.138.62.245])
-        by smtp.gmail.com with ESMTPSA id f127sm10751327wma.4.2020.03.05.11.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 11:35:51 -0800 (PST)
-From:   Ignat Korchagin <ignat@cloudflare.com>
-To:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ignat Korchagin <ignat@cloudflare.com>, kernel-team@cloudflare.com
-Subject: [PATCH] mnt: add support for non-rootfs initramfs
-Date:   Thu,  5 Mar 2020 19:35:11 +0000
-Message-Id: <20200305193511.28621-1-ignat@cloudflare.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+32SAMShzFc9RiMKQoVwzpevpnCbB5DftyvOF5cOceQ=;
+        b=HV4oUAGp4ADPyiCG4EV6V9VCwBz3veuUcj0V6GzzUgaqJS2amHDxmdE+F+16AyrvLj
+         3GTwjyznOXRAEDD2h4zWdX19aQ0rvveyoJSYLJHLwWfY6dMCEI68QbFAis3gVsYBNAAx
+         yRrlyti9WQpRsFFNYZVQBE/FjqcXbwzdi1Y+ii1Xfsr5q5SOYhwWnPzuoGfW1aqDQpu9
+         z0lO2lFgNtoMHyhXzOOPYTRgBj5bFfV44pihI2r3plAywAi1jYHU7susPkTKDxtkWa+7
+         WIQI2iqAyzo/Xmu+2qG5Q/GjtSuvCO6IcNMZ9QNHzqjj9PNBxUZQ4wKcqm0PuJtPKQlf
+         Sw3Q==
+X-Gm-Message-State: ANhLgQ2sHQyqKv2QMQT/dzkDo/fDtdsEFMM6F6dJ95YvC/jDJRe8uTU/
+        8pKrPM+7wUOTFnrkMl0N0UAxvRJLUTcNG7n98CTY9Q==
+X-Google-Smtp-Source: ADFU+vtS46rebyFU3E0rDavKWogmZFUqPrK3UoXJ8qI+P6FvkOzYE3lklkHl5xxBGbmQjccHkSdW3akQ+ZG1jKuUisQ=
+X-Received: by 2002:a17:90a:3a90:: with SMTP id b16mr221897pjc.29.1583437266524;
+ Thu, 05 Mar 2020 11:41:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
+ <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
+In-Reply-To: <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 5 Mar 2020 11:40:55 -0800
+Message-ID: <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
+Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        heikki.krogerus@linux.intel.com, hdegoede@redhat.com,
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The main need for this is to support container runtimes on stateless Linux
-system (pivot_root system call from initramfs).
+On Thu, Mar 5, 2020 at 11:18 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> +Cc: Sakari
+>
+> On Thu, Mar 5, 2020 at 6:00 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
+> > i386, arm and arm64. The steps to reproduce is running kselftests lib
+> > printf.sh test case.
+> > Which is doing modprobe operations.
+> >
+> > BTW, there are few RCU warnings from the boot log.
+> > Please refer below link for more details.
+> >
+> > Steps reproduce by using kselftests,
+> >
+> >           - lsmod || true
+> >           - cd /opt/kselftests/default-in-kernel/lib/
+> >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
+> >           - ./printf.sh || true
+> >           - ./bitmap.sh || true
+> >           - ./prime_numbers.sh || true
+> >           - ./strscpy.sh || true
+> >
+> > x86_64 kernel BUG dump.
+> > + ./printf.sh
 
-Normally, the task of initramfs is to mount and switch to a "real" root
-filesystem. However, on stateless systems (booting over the network) it is just
-convenient to have your "real" filesystem as initramfs from the start.
+Oops, I am wondering if I broke this with my change "Revert "software
+node: Simplify software_node_release() function"":
 
-This, however, breaks different container runtimes, because they usually use
-pivot_root system call after creating their mount namespace. But pivot_root does
-not work from initramfs, because initramfs runs form rootfs, which is the root
-of the mount tree and can't be unmounted.
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
 
-One can solve this problem from userspace, but it is much more cumbersome. We
-either have to create a multilayered archive for initramfs, where the outer
-layer creates a tmpfs filesystem and unpacks the inner layer, switches root and
-does not forget to properly cleanup the old rootfs. Or we need to use keepinitrd
-kernel cmdline option, unpack initramfs to rootfs, run a script to create our
-target tmpfs root, unpack the same initramfs there, switch root to it and again
-properly cleanup the old root, thus unpacking the same archive twice and also
-wasting memory, because kernel stores compressed initramfs image indefinitely.
+I am still investigating, will update later.
 
-With this change we can ask the kernel (by specifying nonroot_initramfs kernel
-cmdline option) to create a "leaf" tmpfs mount for us and switch root to it
-before the initramfs handling code, so initramfs gets unpacked directly into
-the "leaf" tmpfs with rootfs being empty and no need to clean up anything.
-
-Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
----
- fs/namespace.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 85b5f7bea82e..a1ec862e8146 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -3701,6 +3701,49 @@ static void __init init_mount_tree(void)
- 	set_fs_root(current->fs, &root);
- }
- 
-+#if IS_ENABLED(CONFIG_TMPFS)
-+static int __initdata nonroot_initramfs;
-+
-+static int __init nonroot_initramfs_param(char *str)
-+{
-+	if (*str)
-+		return 0;
-+	nonroot_initramfs = 1;
-+	return 1;
-+}
-+__setup("nonroot_initramfs", nonroot_initramfs_param);
-+
-+static void __init init_nonroot_initramfs(void)
-+{
-+	int err;
-+
-+	if (!nonroot_initramfs)
-+		return;
-+
-+	err = ksys_mkdir("/root", 0700);
-+	if (err < 0)
-+		goto out;
-+
-+	err = do_mount("tmpfs", "/root", "tmpfs", 0, NULL);
-+	if (err)
-+		goto out;
-+
-+	err = ksys_chdir("/root");
-+	if (err)
-+		goto out;
-+
-+	err = do_mount(".", "/", NULL, MS_MOVE, NULL);
-+	if (err)
-+		goto out;
-+
-+	err = ksys_chroot(".");
-+	if (!err)
-+		return;
-+out:
-+	printk(KERN_WARNING "Failed to create a non-root filesystem for initramfs\n");
-+}
-+#endif /* IS_ENABLED(CONFIG_TMPFS) */
-+
- void __init mnt_init(void)
- {
- 	int err;
-@@ -3734,6 +3777,10 @@ void __init mnt_init(void)
- 	shmem_init();
- 	init_rootfs();
- 	init_mount_tree();
-+
-+#if IS_ENABLED(CONFIG_TMPFS)
-+	init_nonroot_initramfs();
-+#endif
- }
- 
- void put_mnt_ns(struct mnt_namespace *ns)
--- 
-2.20.1
-
+> > [   32.594369] test_printf: loaded.
+> > [   32.599859] BUG: kernel NULL pointer dereference, address: 00000000
+> > [   32.606143] #PF: supervisor read access in kernel mode
+> > [   32.611280] #PF: error_code(0x0000) - not-present page
+> > [   32.616419] *pde = 00000000
+> > [   32.619306] Oops: 0000 [#1] SMP
+> > [   32.622452] CPU: 0 PID: 387 Comm: modprobe Not tainted
+> > 5.6.0-rc4-next-20200305 #1
+> > [   32.629928] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> > 2.2 05/23/2018
+> > [   32.637314] EIP: ida_free+0x61/0x130
+> > [   32.640891] Code: 00 c7 45 e8 00 00 00 00 c7 45 ec 00 00 00 00 0f
+> > 88 c4 00 00 00 89 d3 e8 9d ee 01 00 89 c7 8d 45 d8 e8 e3 18 01 00 a8
+> > 01 75 3f <0f> a3 30 72 72 8b 45 d8 89 fa e8 70 f0 01 00 53 68 d8 61 01
+> > d3 e8
+> > [   32.659628] EAX: 00000000 EBX: 00000000 ECX: ffffffff EDX: 00000000
+> > [   32.665887] ESI: 00000000 EDI: 00000246 EBP: f21a7cc8 ESP: f21a7c9c
+> > [   32.672153] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010046
+> > [   32.678928] CR0: 80050033 CR2: 00000000 CR3: 32ff3000 CR4: 003406d0
+> > [   32.685186] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+> > [   32.691442] DR6: fffe0ff0 DR7: 00000400
+> > [   32.695273] Call Trace:
+> > [   32.697721]  software_node_release+0x21/0x80
+> > [   32.701990]  kobject_put+0xa8/0x1c0
+> > [   32.705476]  kobject_del+0x40/0x60
+> > [   32.708881]  kobject_put+0x92/0x1c0
+> > [   32.712380]  fwnode_remove_software_node+0x30/0x50
+> > [   32.717201]  software_node_unregister_nodes+0x2b/0x50
+> > [   32.722246]  test_printf_init+0xe00/0x1d29 [test_printf]
+> > [   32.727563]  ? find_held_lock+0x27/0xa0
+> > [   32.731423]  ? test_hashed+0x54/0x54 [test_printf]
+> > [   32.736207]  ? test_hashed+0x54/0x54 [test_printf]
+> > [   32.741001]  do_one_initcall+0x54/0x2e0
+> > [   32.744841]  ? rcu_read_lock_sched_held+0x47/0x70
+> > [   32.749547]  ? kmem_cache_alloc_trace+0x285/0x2b0
+> > [   32.754249]  ? do_init_module+0x21/0x1ef
+> > [   32.758166]  ? do_init_module+0x21/0x1ef
+> > [   32.762087]  do_init_module+0x50/0x1ef
+> > [   32.765837]  load_module+0x1e32/0x2540
+> > [   32.769586]  ? kernel_read_file+0x295/0x2d0
+> > [   32.773771]  sys_finit_module+0x8a/0xe0
+> > [   32.777611]  do_fast_syscall_32+0x8e/0x340
+> > [   32.781709]  entry_SYSENTER_32+0xaa/0x102
+> > [   32.785719] EIP: 0xb7f75ce1
+> > [   32.788508] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
+> > 8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
+> > 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
+> > 8d 76
+> > [   32.807246] EAX: ffffffda EBX: 00000003 ECX: 0806233a EDX: 00000000
+> > [   32.813502] ESI: 085fb600 EDI: 085fb550 EBP: 085fb6e0 ESP: bffe839c
+> > [   32.819760] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
+> > [   32.826542] Modules linked in: test_printf(+) x86_pkg_temp_thermal fuse
+> > [   32.833150] CR2: 0000000000000000
+> > [   32.836461] ---[ end trace 69388c972b4562b8 ]---
+> > [   32.841072] EIP: ida_free+0x61/0x130
+> > [   32.844642] Code: 00 c7 45 e8 00 00 00 00 c7 45 ec 00 00 00 00 0f
+> > 88 c4 00 00 00 89 d3 e8 9d ee 01 00 89 c7 8d 45 d8 e8 e3 18 01 00 a8
+> > 01 75 3f <0f> a3 30 72 72 8b 45 d8 89 fa e8 70 f0 01 00 53 68 d8 61 01
+> > d3 e8
+> > [   32.863420] EAX: 00000000 EBX: 00000000 ECX: ffffffff EDX: 00000000
+> > [   32.869679] ESI: 00000000 EDI: 00000246 EBP: f21a7cc8 ESP: f21a7c9c
+> > [   32.875936] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010046
+> > [   32.882713] CR0: 80050033 CR2: 00000000 CR3: 32ff3000 CR4: 003406d0
+> > [   32.888970] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+> > [   32.895227] DR6: fffe0ff0 DR7: 00000400
+> > [   32.899060] BUG: sleeping function called from invalid context at
+> > /usr/src/kernel/include/linux/percpu-rwsem.h:49
+> > [   32.909303] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid:
+> > 387, name: modprobe
+> > [   32.917207] INFO: lockdep is turned off.
+> > [   32.921124] irq event stamp: 5120
+> > [   32.924434] hardirqs last  enabled at (5119): [<d20dea05>] kfree+0x135/0x270
+> > [   32.931472] hardirqs last disabled at (5120): [<d2b9ab04>]
+> > _raw_spin_lock_irqsave+0x14/0x40
+> > [   32.939809] softirqs last  enabled at (4978): [<d2b9f165>]
+> > __do_softirq+0x2c5/0x3c3
+> > [   32.947454] softirqs last disabled at (4969): [<d1ea67d5>]
+> > call_on_stack+0x45/0x50
+> > [   32.955009] CPU: 0 PID: 387 Comm: modprobe Tainted: G      D
+> >    5.6.0-rc4-next-20200305 #1
+> > [   32.963867] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> > 2.2 05/23/2018
+> > [   32.971250] Call Trace:
+> > [   32.973695]  dump_stack+0x6e/0x96
+> > [   32.977009]  ___might_sleep+0x14d/0x240
+> > [   32.980846]  __might_sleep+0x33/0x80
+> > [   32.984419]  exit_signals+0x2a/0x2d0
+> > [   32.987997]  do_exit+0x8e/0xb00
+> > [   32.991143]  ? do_fast_syscall_32+0x8e/0x340
+> > [   32.995421]  rewind_stack_do_exit+0x11/0x13
+> > [   32.999600] EIP: 0xb7f75ce1
+> > [   33.002416] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
+> > 8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
+> > 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
+> > 8d 76
+> > [   33.021153] EAX: ffffffda EBX: 00000003 ECX: 0806233a EDX: 00000000
+> > [   33.027425] ESI: 085fb600 EDI: 085fb550 EBP: 085fb6e0 ESP: bffe839c
+> > [   33.033685] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
+> > [   33.040465] note: modprobe[387] exited with preempt_count 1
+> > ./../kselftest/module.sh: line 56:   387 Killed
+> > $modprobe -q $module $args
+> > printf:  [FAIL]
+> >
+> >
+> > metadata:
+> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> >   git branch: master
+> >   git describe: next-20200305
+> >   kernel-config:
+> > http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-core2-32/lkft/linux-next/719/config
+> >
+> > ref:
+> > https://lkft.validation.linaro.org/scheduler/job/1267112#L1254
+> > https://lkft.validation.linaro.org/scheduler/job/1267041#L9795
+> >
+> > --
+> > Linaro LKFT
+> > https://lkft.linaro.org
+>
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
