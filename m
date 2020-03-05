@@ -2,98 +2,111 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20214C3F2D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589A3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E956F208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLCvUgvq"
+	by mail.kernel.org (Postfix) with ESMTP id 2A72220848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:36:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583419003;
+	bh=MzDZD+FfIKQou6Nwtg8kdu9u+L3j+ISOEDIAbyK8Jyk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=JarOmgdKV/HPW/sqh01A6Fyl20Feos0nnoC0ZKp8eg3UEcL9pOWlm16ifXhYtdMgg
+	 2/stFxPbPAtPkiE7vVARiTBUP6napBXpfm0u9a2h1rOUMHCK1y2xKAA/X/jOzv+zEz
+	 WaAtLKx5ZpPztg2yhpPcALPeb/QluhBZ1wbtpox0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgCEOgc (ORCPT
+        id S1726982AbgCEOgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:36:32 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39653 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbgCEOg1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:36:27 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j1so5988351wmi.4;
-        Thu, 05 Mar 2020 06:36:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QlXzIeykIQUpEBdYcwxd+wvAWmRVIxL3eGhm6mPv2tU=;
-        b=bLCvUgvqw8iVKbPkM4EtHEjlr9hoXI6ts2HiI7NyS33acPByckia3FvdKNdmCw+shk
-         dzqU7y7L3wfAuvNZSkXea2DmXqj9gOftfhhf3HnhWtGd5rQgdfsWBmyIvQpcTFftHPYr
-         Yy2JE8V7sk/cTfBwh0xdC4AX7qlqgQAqPpUyOikjfX4/zrT0gDtySOja6ziWgHJZS7TF
-         THFlRkQYf2xwcxogTqSRleSo5Tsxrdc5y+ksVnpEU38JWpZVU4NbBZH+hSfcYeqZ3oto
-         inPT+91oHpIhwEjHmow5anaiUDsBUjQPRKyQv7iJ+9RFwOB7JR28vmSJIx7EqUGuay9f
-         X79A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=QlXzIeykIQUpEBdYcwxd+wvAWmRVIxL3eGhm6mPv2tU=;
-        b=KVy8ZaYAnP6yoPhwdk1sC6ZAHsAUN3ZgAaedb5uF16FzJaCyh/W2WpsNLtGzh8JUir
-         UtOP93zCdL77Iux8rGbMQpiwbXRjTUcPBU0f0NM/k6kP4NfoAMNFdEFKNOjCrJw8h/eT
-         Ujf2hzVfwtkFWFOOtBpo+GvgnP5oHcPoKcCT9ehUUrJDM4v9bXMlT/W/WscfTOClsb9X
-         Gq4yxqjI4Ja3iFOyQ6+mWw3YZkynArSSEjzRZlg+Ac4TNqsICFznfZeHQUDkgVVvYJqY
-         ShAc1nL9lnqTxbSFuMYzcKBxfUDUjYVPaoDVsy/6qRZSHtHgvjdRRM+pk1vVADc6DGOe
-         rv0Q==
-X-Gm-Message-State: ANhLgQ3UZZlj4X4P/J+vcXUDbyfjt4NT5VGO+7QFmjVA5AeeQq5w2Ism
-        HRESlNWdBhi9dhOrk40oTpo=
-X-Google-Smtp-Source: ADFU+vsdfwf4i6qjYFXBcYbvtQoEzb0ZAfQyCvkvWDrzRecAr1kQ48Dp8uEzHOKDHtF8X0uY5u9yIg==
-X-Received: by 2002:a7b:c3d4:: with SMTP id t20mr4123131wmj.102.1583418984953;
-        Thu, 05 Mar 2020 06:36:24 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g201sm9365124wme.23.2020.03.05.06.36.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Mar 2020 06:36:24 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 5/5] dt-bindings: i2c: i2c-rk3x: add description for px30
-Date:   Thu,  5 Mar 2020 15:36:11 +0100
-Message-Id: <20200305143611.10733-5-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200305143611.10733-1-jbx6244@gmail.com>
-References: <20200305143611.10733-1-jbx6244@gmail.com>
+        Thu, 5 Mar 2020 09:36:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:49180 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726947AbgCEOgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 09:36:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB6DD4B2;
+        Thu,  5 Mar 2020 06:36:39 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D5073F534;
+        Thu,  5 Mar 2020 06:36:39 -0800 (PST)
+Date:   Thu, 05 Mar 2020 14:36:37 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     broonie@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Applied "dt-bindings: spi: spi-rockchip: add description for rk3328" to the spi tree
+In-Reply-To:  <20200304184203.9548-3-jbx6244@gmail.com>
+Message-Id:  <applied-20200304184203.9548-3-jbx6244@gmail.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The description below is already in use for px30.dtsi,
+The patch
+
+   dt-bindings: spi: spi-rockchip: add description for rk3328
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 6ac12131699b4ec1d8f339e40528bdd474542075 Mon Sep 17 00:00:00 2001
+From: Johan Jonker <jbx6244@gmail.com>
+Date: Wed, 4 Mar 2020 19:42:03 +0100
+Subject: [PATCH] dt-bindings: spi: spi-rockchip: add description for rk3328
+
+The description below is already in use for rk3328.dtsi,
 but was somehow never added to a document, so add
-"rockchip,px30-i2c", "rockchip,rk3399-i2c"
-for i2c nodes on a px30 platform to i2c-rk3x.yaml.
+"rockchip,rk3328-spi", "rockchip,rk3066-spi"
+for spi nodes on a rk3328 platform to spi-rockchip.yaml.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20200304184203.9548-3-jbx6244@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml | 1 +
+ Documentation/devicetree/bindings/spi/spi-rockchip.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml b/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
-index edee8f699..61eac76c8 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
-+++ b/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
-@@ -33,6 +33,7 @@ properties:
-           - const: rockchip,rk3288-i2c
-       - items:
-           - enum:
-+            - rockchip,px30-i2c
-             - rockchip,rk3308-i2c
-             - rockchip,rk3328-i2c
-           - const: rockchip,rk3399-i2c
+diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+index 456896e2d514..81ad4b761502 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+@@ -30,6 +30,7 @@ properties:
+             - rockchip,rk3188-spi
+             - rockchip,rk3288-spi
+             - rockchip,rk3308-spi
++            - rockchip,rk3328-spi
+             - rockchip,rk3368-spi
+             - rockchip,rk3399-spi
+           - const: rockchip,rk3066-spi
 -- 
-2.11.0
+2.20.1
 
