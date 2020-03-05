@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A895C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B5EC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D25207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA14620848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583429052;
-	bh=kJdYtdkXoUJqBCbsGNBYogiLr8GIFp4ngkilDarlmMY=;
+	s=default; t=1583429056;
+	bh=Myet+OUMfpjkM+ThPePJlaV0an6jHRhSsTs8Gakel20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rqikmV0QQcDppSvCp8pySZ2XjswgHnTpxNrt1BqBMPKtSHsxR3oWfSIfedCrIwGgl
-	 OM0QhsFwPGJVkwrGyAveCfQiXUU6pN513nZVXnhIWaIsfo9OLvlXvYJfRGdqFxgg9m
-	 OPE9WnY9rpfmUa4O06zYbhOjZE16Je9waVS2yvEI=
+	b=tazyxdTy/2fybsSxoB7zBZlfZyxvkARlZDqZLIaT2FDd/lHFsENcR/8bzkAK4BGv5
+	 hlWpGR+fzonTRw3IkdXA/DuwK6F3PaEiKeBuYxvN1ttvrr+Sy0bTIkEIeT6kC++23o
+	 p7XpOq67cU2rEaaLhTLIJdqVEK9Rha6UvlY6WSjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgCERYK (ORCPT
+        id S1728086AbgCERYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:24:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38818 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:24:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbgCERNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:25 -0500
+        id S1726436AbgCERNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8AB21556;
-        Thu,  5 Mar 2020 17:13:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADF1220848;
+        Thu,  5 Mar 2020 17:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428403;
-        bh=kJdYtdkXoUJqBCbsGNBYogiLr8GIFp4ngkilDarlmMY=;
+        s=default; t=1583428399;
+        bh=Myet+OUMfpjkM+ThPePJlaV0an6jHRhSsTs8Gakel20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e8ZeQqPe8yLy8Kpys082g7lf12klGpp12kfomwXWEVW+HLPJvnL/E7ca+LQM2FYSN
-         CPgW+GDoROKqhtstImWRaFy1VpVoCW5/IZfu2gjbTFDx9Qoz5F3bI3QVBTAyrdt6oh
-         U+YMKSdMx5krzFEDL65L5P1oEE+GTvX6yG4f14Xw=
+        b=pKg9dx2Q+rAPr25vyhkwmMW43tx0w9JfOs1zon5iP3qJIywiMAdZoYki5r+l+n8GW
+         3lXed1amo30FKdM+pqeDaz+fYcmikotDrt2UluSRwK6vbmfpfdp6NozbsRxCO7QClQ
+         vWybXqgxjXp6kEE3aHkYoHUpry7y+cJ9df5etgQY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Victor Kamensky <kamensky@cisco.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        richard.purdie@linuxfoundation.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 10/67] mips: vdso: fix 'jalr t9' crash in vdso code
-Date:   Thu,  5 Mar 2020 12:12:11 -0500
-Message-Id: <20200305171309.29118-10-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 07/67] i2c: altera: Fix potential integer overflow
+Date:   Thu,  5 Mar 2020 12:12:08 -0500
+Message-Id: <20200305171309.29118-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -63,62 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Victor Kamensky <kamensky@cisco.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit d3f703c4359ff06619b2322b91f69710453e6b6d ]
+[ Upstream commit 54498e8070e19e74498a72c7331348143e7e1f8c ]
 
-Observed that when kernel is built with Yocto mips64-poky-linux-gcc,
-and mips64-poky-linux-gnun32-gcc toolchain, resulting vdso contains
-'jalr t9' instructions in its code and since in vdso case nobody
-sets GOT table code crashes when instruction reached. On other hand
-observed that when kernel is built mips-poky-linux-gcc toolchain, the
-same 'jalr t9' instruction are replaced with PC relative function
-calls using 'bal' instructions.
+Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
+instead of 64-bit.
 
-The difference boils down to -mrelax-pic-calls and -mexplicit-relocs
-gcc options that gets different default values depending on gcc
-target triplets and corresponding binutils. -mrelax-pic-calls got
-enabled by default only in mips-poky-linux-gcc case. MIPS binutils
-ld relies on R_MIPS_JALR relocation to convert 'jalr t9' into 'bal'
-and such relocation is generated only if -mrelax-pic-calls option
-is on.
+Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
+and there is no need for div_u64().
 
-Please note 'jalr t9' conversion to 'bal' can happen only to static
-functions. These static PIC calls use mips local GOT entries that
-are supposed to be filled with start of DSO value by run-time linker
-(missing in VDSO case) and they do not have dynamic relocations.
-Global mips GOT entries must have dynamic relocations and they should
-be prevented by cmd_vdso_check Makefile rule.
-
-Solution call out -mrelax-pic-calls and -mexplicit-relocs options
-explicitly while compiling MIPS vdso code. That would get correct
-and consistent between different toolchains behaviour.
-
-Reported-by: Bruce Ashfield <bruce.ashfield@gmail.com>
-Signed-off-by: Victor Kamensky <kamensky@cisco.com>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: richard.purdie@linuxfoundation.org
+Addresses-Coverity: 1458369 ("Unintentional integer overflow")
+Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
+Suggested-by: David Laight <David.Laight@ACULAB.COM>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/vdso/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-altera.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-index e05938997e696..96afd73c94e8a 100644
---- a/arch/mips/vdso/Makefile
-+++ b/arch/mips/vdso/Makefile
-@@ -29,6 +29,7 @@ endif
- cflags-vdso := $(ccflags-vdso) \
- 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
- 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
-+	-mrelax-pic-calls -mexplicit-relocs \
- 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
- 	$(call cc-option, -fno-asynchronous-unwind-tables) \
- 	$(call cc-option, -fno-stack-protector)
+diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+index 5255d3755411b..1de23b4f3809c 100644
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -171,7 +171,7 @@ static void altr_i2c_init(struct altr_i2c_dev *idev)
+ 	/* SCL Low Time */
+ 	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
+ 	/* SDA Hold Time, 300ns */
+-	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
++	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
+ 
+ 	/* Mask all master interrupt bits */
+ 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
 -- 
 2.20.1
 
