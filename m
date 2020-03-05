@@ -2,69 +2,84 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBF7C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01695C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52A32073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35002073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:22:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fviuiFVN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgCELWA (ORCPT
+        id S1727388AbgCELWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:22:00 -0500
-Received: from mga02.intel.com ([134.134.136.20]:22736 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725880AbgCELV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:21:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 03:21:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
-   d="scan'208";a="234385272"
-Received: from unknown (HELO jsakkine-mobl1) ([10.237.50.161])
-  by orsmga008.jf.intel.com with ESMTP; 05 Mar 2020 03:21:56 -0800
-Message-ID: <a54d6cffe536d568a9fde46f1f32616e89a42d30.camel@linux.intel.com>
-Subject: Re: [PATCH v6 3/3] tpm: ibmvtpm: Add support for TPM2
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
-        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
-        gcwilson@linux.ibm.com, jgg@ziepe.ca,
-        Stefan Berger <stefanb@linux.ibm.com>
-Date:   Thu, 05 Mar 2020 13:21:56 +0200
-In-Reply-To: <20200304132243.179402-4-stefanb@linux.vnet.ibm.com>
-References: <20200304132243.179402-1-stefanb@linux.vnet.ibm.com>
-         <20200304132243.179402-4-stefanb@linux.vnet.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.35.92-1 
+        Thu, 5 Mar 2020 06:22:21 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38874 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgCELWV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 06:22:21 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 025BMJFg075252;
+        Thu, 5 Mar 2020 05:22:19 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583407339;
+        bh=H5n4ZR/2MzSw0KYHcIl651TeKAPvxmf3E4BR3l6yDmY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fviuiFVN6eGX5vxKxG/LIlWW+J2u5JqNEsu+fuU3Rs6uykL2L33XvS09W1vmsuwun
+         rJtepSwpapaLOAL0/lRwLNt7kSfbmYABED473OzJGCG1wXe4+ubqmocUfvXAm9PdMJ
+         kyBnAUZVtTVtf74nOx9MDad6vaHDJUPGUGR6CjY4=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 025BMJa2069072
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Mar 2020 05:22:19 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Mar
+ 2020 05:22:19 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Mar 2020 05:22:19 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 025BMHm0050701;
+        Thu, 5 Mar 2020 05:22:18 -0600
+Subject: Re: [PATCH v4] phy: qcom: qmp: Use power_on/off ops for PCIe
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200106081142.3192204-1-bjorn.andersson@linaro.org>
+ <20200221140933.GM2618@vkoul-mobl>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <418bbbf3-15c3-d1ea-a07a-ff510e254e40@ti.com>
+Date:   Thu, 5 Mar 2020 16:56:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200221140933.GM2618@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-04 at 08:22 -0500, Stefan Berger wrote:
-> From: Stefan Berger <stefanb@linux.ibm.com>
-> 
-> Support TPM2 in the IBM vTPM driver. The hypervisor tells us what
-> version of TPM is connected through the vio_device_id.
-> 
-> In case a TPM2 device is found, we set the TPM_CHIP_FLAG_TPM2 flag
-> and get the command codes attributes table. The driver does
-> not need the timeouts and durations, though.
-> 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
 
-There is huge bunch of people in the cc-list and these patches
-have total zero tested-by's. Why is that?
 
-/Jarkko
+On 21/02/20 7:39 pm, Vinod Koul wrote:
+> On 06-01-20, 00:11, Bjorn Andersson wrote:
+>> The PCIe PHY initialization requires the attached device to be present,
+>> which is primarily achieved by the PCI controller driver.  So move the
+>> logic from init/exit to power_on/power_off.
+> 
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> 
+merged, thanks!
 
+-Kishon
