@@ -2,114 +2,129 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140FDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7AEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D730320801
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C872073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:02:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="s2zqd62W";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="C5aupyJy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KbmLfbIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgCELCB (ORCPT
+        id S1727327AbgCELCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:02:01 -0500
-Received: from mail.z3ntu.xyz ([128.199.32.197]:52142 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgCELCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:02:01 -0500
-Received: by mail.z3ntu.xyz (Postfix, from userid 182)
-        id 8EC30C3EBA; Thu,  5 Mar 2020 11:01:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1583406118; bh=A09JhYuXQtiWQSwwySPckNq277KWrsZWySE9b6TpTII=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=s2zqd62WGhhJRbiNUaAzO6lQNDZOaLkJJUiU00RDzoE9Y+OzY5aLO/K9MwPLQ/Tqa
-         1yw3gKTr+znjBMyIK6RxrMsQLVHYo8ymWDjSWXYvOK1qvIfKfGjPWLwkTRnPR1JFiv
-         2c2uwTcTx3D/ixkwLEEfdF0Wtb8w4UYa5UYEzXXI=
-Received: from g550jk.localnet (unknown [10.0.11.2])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id B467FC3EB1;
-        Thu,  5 Mar 2020 11:01:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1583406115; bh=A09JhYuXQtiWQSwwySPckNq277KWrsZWySE9b6TpTII=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=C5aupyJy9waLsz9CE+dvC8yOrj0oT4kfsSm3Wgx1idF/b/gGbxoeO7dBlVkBZ9Mt5
-         tt3q0+x5URr9RgEtcJoTMwpeAyJaWb9tph9pLAyE0c7KhozHGC0bG09+opJtRk9aCU
-         0HfCq09ytnu3/pTyFoAyKs+e5gX1tBCto+p7BqnI=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] leds: add sgm3140 driver
-Date:   Thu, 05 Mar 2020 12:01:49 +0100
-Message-ID: <11515555.O9o76ZdvQC@g550jk>
-In-Reply-To: <7742f98c-fd96-7f0e-c33c-fbac61a4881c@ti.com>
-References: <20200227185015.212479-1-luca@z3ntu.xyz> <7742f98c-fd96-7f0e-c33c-fbac61a4881c@ti.com>
+        Thu, 5 Mar 2020 06:02:15 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37070 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgCELCP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 06:02:15 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 025B2CHG070950;
+        Thu, 5 Mar 2020 05:02:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583406132;
+        bh=Xf1sRmkJiwnY8rrWe4eV5yH+UcPKjlexHlXHcZvFUcA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=KbmLfbIYtekCXup3DzahcPLAG6PjYGXDRJQqtLSPGx3/XRkROU6Vyw6xXsVWxs4lp
+         IHDLzIQvPsIKqkDhP5tMJNuNqoWVZg0+uoG3CYrSEvDml6Ns8yDx3SUEv7L4xE8mou
+         qymDTlEym8/Y9U/t/gFQG0EN4iWTAm4JlZDbXN2I=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 025B2C90041167
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Mar 2020 05:02:12 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Mar
+ 2020 05:02:11 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Mar 2020 05:02:11 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 025B28qQ080091;
+        Thu, 5 Mar 2020 05:02:09 -0600
+Subject: Re: [for-next PATCH v2 1/5] phy: ti: gmii-sel: simplify config
+ dependencies between net drivers and gmii phy
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        netdev <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200303160029.345-1-grygorii.strashko@ti.com>
+ <20200303160029.345-2-grygorii.strashko@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <a6dc55bb-090f-d1de-90c7-247197d3748e@ti.com>
+Date:   Thu, 5 Mar 2020 16:36:44 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5372931.DvuYhMxLoT"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+In-Reply-To: <20200303160029.345-2-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart5372931.DvuYhMxLoT
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Hi Dave,
 
-On Donnerstag, 27. Februar 2020 20:50:40 CET Dan Murphy wrote:
-> Luca
+On 03/03/20 9:30 pm, Grygorii Strashko wrote:
+> The phy-gmii-sel can be only auto selected in Kconfig and now the pretty
+> complex Kconfig dependencies are defined for phy-gmii-sel driver, which
+> also need to be updated every time phy-gmii-sel is re-used for any new
+> networking driver.
 > 
-> On 2/27/20 12:50 PM, Luca Weiss wrote:
-> > Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
-> > 
-> > This device is controller by two GPIO lines, one for enabling the LED
-> > and the second one for switching between torch and flash mode.
-> > 
-> > The device will automatically switch to torch mode after being in flash
-> > mode for about 250-300ms, so after that time the driver will turn the
-> > LED off again automatically.
-> > 
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> > ---
+> Simplify Kconfig definition for phy-gmii-sel PHY driver - drop all
+> dependencies and from networking drivers and rely on using 'imply
+> PHY_TI_GMII_SEL' in Kconfig definitions for networking drivers instead.
 > 
-> You seem to be missing the devictree bindings doc for the GPIOs.
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  drivers/net/ethernet/ti/Kconfig | 1 +
 
-As written in the initial email:
+I can pick this in my tree. Can you give your Acked-by since there is a
+small change in drivers/net?
 
-> I will also write dt bindings for the driver once I have "strobe"
-> working.
-
-I was hoping to get some guidance on the code by posting the WIP patch - the 
-issues I see are documented in the initial email.
-
-Regards
-Luca
---nextPart5372931.DvuYhMxLoT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEObrSLwgs2pG6FY/6cthDuJ1N11YFAl5g3B0ACgkQcthDuJ1N
-11buvA/+NFLsy6B/FPSdwuK2kinJ9IlHsLxP9npxN6SnuDnNP4VchYVswpz8pYog
-YXOMiFpMXIIVSR1mplUUhsWQ2AbuUdKk3sR4Y6lYz2+c07Yozp3Qr3pds5XKd4+9
-XSheq/jsrQKO8gPGmoGiivutBHv+LJ8YZ/KjC6NVV0nxR4V5yI0NUWcrJvhd6N8Z
-JA3C6wFlg/SYg3b7fCbb0yj3YM6V1HLWwFgrXWZeM0X8//YMeOeTE5eHOcexw92E
-1DKrYa02kfIfbwkfqnOM1Q2DNmBNnhgsOs1prRwiBTUjGkeXciuHqELjFIPjN2z6
-LDAfWsZlk4UP6XKiRnc4535+TKJub3Mx6YWdpIEhNrk8rxovdIyrHOIjJdH8IP1C
-0ZCOsBVxi9o7zyAYqm4uxWJl66WJKU4nVBo7Haq7aR0yU+sIhFkTpB+cpsuSnFDg
-/7ram8GZjlU+A+GRRaj7RK9PoDNc6Ic/iodUBqRGD7o7WdRJtmXrw6tB8AQzs5Ih
-9A7A1/ayYr/hktPyzn1U/lhJDttqZ6gcMxCQodLcOeZVJ1VLCd75xxpBtZxLjGXg
-uKwv5rcr/s4d2ngeJtjoW5kpy09Fim6yKi7LJZ+awPP+pxgpvGDhsLDXBy9kXYIu
-ud5ZjRhMRDgSoeJJN+RPMxUxp+R6CoL0ENHIny9+jXwoviE2doE=
-=VJcI
------END PGP SIGNATURE-----
-
---nextPart5372931.DvuYhMxLoT--
-
-
-
+Thanks
+Kishon
+>  drivers/phy/ti/Kconfig          | 3 ---
+>  2 files changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+> index bf98e0fa7d8b..8a6ca16eee3b 100644
+> --- a/drivers/net/ethernet/ti/Kconfig
+> +++ b/drivers/net/ethernet/ti/Kconfig
+> @@ -53,6 +53,7 @@ config TI_CPSW
+>  	select MFD_SYSCON
+>  	select PAGE_POOL
+>  	select REGMAP
+> +	imply PHY_TI_GMII_SEL
+>  	---help---
+>  	  This driver supports TI's CPSW Ethernet Switch.
+>  
+> diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
+> index 6dbe9d0b9ff3..15a3bcf32308 100644
+> --- a/drivers/phy/ti/Kconfig
+> +++ b/drivers/phy/ti/Kconfig
+> @@ -106,11 +106,8 @@ config TWL4030_USB
+>  
+>  config PHY_TI_GMII_SEL
+>  	tristate
+> -	default y if TI_CPSW=y || TI_CPSW_SWITCHDEV=y
+> -	depends on TI_CPSW || TI_CPSW_SWITCHDEV || COMPILE_TEST
+>  	select GENERIC_PHY
+>  	select REGMAP
+> -	default m
+>  	help
+>  	  This driver supports configuring of the TI CPSW Port mode depending on
+>  	  the Ethernet PHY connected to the CPSW Port.
+> 
