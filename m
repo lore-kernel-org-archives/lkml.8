@@ -2,109 +2,137 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1A0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD8AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBAD208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 515F5208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:20:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="SlXihPvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgCELSK (ORCPT
+        id S1727323AbgCELUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:18:10 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35089 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgCELSK (ORCPT
+        Thu, 5 Mar 2020 06:20:04 -0500
+Received: from gateway20.websitewelcome.com ([192.185.64.36]:47619 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726170AbgCELUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:18:10 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1j9oVi-0005IW-4W; Thu, 05 Mar 2020 12:17:50 +0100
-Message-ID: <bbe8a83fade9c0cffbf439f06f94e8b5bc7fcfd3.camel@pengutronix.de>
-Subject: Re: [PATCH][next] drm: etnaviv_gem.h: Replace zero-length array
- with flexible-array member
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 05 Mar 2020 12:17:48 +0100
-In-Reply-To: <20200305105137.GA18628@embeddedor>
-References: <20200305105137.GA18628@embeddedor>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 5 Mar 2020 06:20:03 -0500
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 274C1400C5D2B
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Mar 2020 03:42:23 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 9oBfjp6IhvBMd9oBfjjT9x; Thu, 05 Mar 2020 04:57:07 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/M5a41L/6lkk9po/XjdkGYtN8HrY6a7NbSP7ZLR7U80=; b=SlXihPvEXqOywcXiQN+/R3+OuP
+        4S4KGRq1wTQHgW8COyQMcOrjARF0U1rfdZNiZzIcXAIDmC75tQAConF2rlstjKmvCVtzXHAvAyOh9
+        38gfEDHqtbx5jXoRURv4S5dSMVY/evu6qbor8dVkRyk5l99Eewbx2gYzmu6zD3syZvfwcWauycRAU
+        JavPSFW3cQyla4S8mjyxZZG5H0wMENIwBEllcFIFHtRxzOsWJGO742rX/N8bvBpwC2k2BpOPXIAyd
+        +i5MopXH6uLVargaQ0jbmspQGnNgvr3nL+Rc5Ju3bqjYpWJQEFN2XdmOMzMUjvxcFEu71zZ0z9Rcy
+        2Dfr/aQw==;
+Received: from [201.166.169.220] (port=6678 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j9oBd-003i4f-9X; Thu, 05 Mar 2020 04:57:05 -0600
+Date:   Thu, 5 Mar 2020 05:00:11 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] drm/bridge/mhl.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200305110011.GA21056@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.169.220
+X-Source-L: No
+X-Exim-ID: 1j9oBd-003i4f-9X
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.169.220]:6678
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 41
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-I've adjusted the subject a bit to match the style of the other etnaviv
-driver commits and applied this to the etnaviv/next branch.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Regards,
-Lucas
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-On Do, 2020-03-05 at 04:51 -0600, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/gpu/drm/etnaviv/etnaviv_gem.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.h b/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-> index 6b68fe16041b..98e60df882b6 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.h
-> @@ -105,7 +105,7 @@ struct etnaviv_gem_submit {
->  	unsigned int nr_pmrs;
->  	struct etnaviv_perfmon_request *pmrs;
->  	unsigned int nr_bos;
-> -	struct etnaviv_gem_submit_bo bos[0];
-> +	struct etnaviv_gem_submit_bo bos[];
->  	/* No new members here, the previous one is variable-length! */
->  };
->  
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ include/drm/bridge/mhl.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/drm/bridge/mhl.h b/include/drm/bridge/mhl.h
+index 1cc77bf38324..d96626a0e3fa 100644
+--- a/include/drm/bridge/mhl.h
++++ b/include/drm/bridge/mhl.h
+@@ -327,13 +327,13 @@ struct mhl_burst_bits_per_pixel_fmt {
+ 	struct {
+ 		u8 stream_id;
+ 		u8 pixel_format;
+-	} __packed desc[0];
++	} __packed desc[];
+ } __packed;
+ 
+ struct mhl_burst_emsc_support {
+ 	struct mhl3_burst_header hdr;
+ 	u8 num_entries;
+-	__be16 burst_id[0];
++	__be16 burst_id[];
+ } __packed;
+ 
+ struct mhl_burst_audio_descr {
+-- 
+2.25.0
 
