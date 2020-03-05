@@ -2,199 +2,168 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A04C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF566C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CDE20732
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F1720732
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:53:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/Lx6Xul"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0xOKWX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgCEOxI (ORCPT
+        id S1726894AbgCEOxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:53:08 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42770 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgCEOxI (ORCPT
+        Thu, 5 Mar 2020 09:53:49 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:41336 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgCEOxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:53:08 -0500
-Received: by mail-qt1-f195.google.com with SMTP id r6so4293627qtt.9
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:53:07 -0800 (PST)
+        Thu, 5 Mar 2020 09:53:49 -0500
+Received: by mail-qv1-f67.google.com with SMTP id s15so2521138qvn.8;
+        Thu, 05 Mar 2020 06:53:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HRrEhEN79eJRcPS27NqKFVT1ofNhGlJsDkYPXYilXv0=;
-        b=L/Lx6XuldIolthi+k2y5sow3sFv3wZlinQNwDvdkQwQcMqjzMnWtvKEzaM7lffuCfd
-         2oS+hq57j/CcHdeReKRyj/6zFbRU1TewMolaAv/G7UTLX+YRtX8vOm9V5dWs82bux9on
-         Prt79RBKPu8SaA/+b4MBxpB+u6Uo1iMeo5svtUlHSh3/5PQBFwcirBQV1dHdYDW3GpSj
-         ANPbYgo0T5QGR7KBaDZWdTTvLRhLPQi0yNOy9FcwLeUxzG9TY4kJZTRItM6A5TsSRqe5
-         14G4UsLcylL3p2QwEDYKekNn5hDhSx9kc0bJtUpfCcJjhlPWjh+qJ7Gj1hfQW5jHf0Oj
-         L6wg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VxuhUCC4n+HG3AgUkytKe/eT7ToYukorM5sgQRyWjQU=;
+        b=f0xOKWX8qNAzNupu5nlpzWfh81iFksOdx2LiItmWH5+9asvPAsRWUFTunBaxxaYBTv
+         qv3JbBlUuYlH9NTFcOlP8Gq+eDGP1J0tTf5u9mbjg7ZRQQR1g7P0r4Yk7+foaNXicH2D
+         Pf0O6ubtAp1nHxOyClotBqMdZP2pYr9FVTOwouVc+W+zqOI1VoW7/Ulz0yoBCEAt4pST
+         mv7BiCoF1bRK6bYDrjTJPo5mB+h2xbdddrof61DuUFnxIFgLIelBYEc0CcflY6fp0JYn
+         giTNKjpMcJaUiHZ4Rpdqb/rx/s+9oFWs9rMmCEMQGHsZ9f81NnSLn20fA2OI1VNfIvSk
+         FbEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HRrEhEN79eJRcPS27NqKFVT1ofNhGlJsDkYPXYilXv0=;
-        b=dOC+Eg1IAO5zj/LdrpsgMlmtof7pXqpVeAuem1/THDODPTQTdi9H0QvsrzQl878jld
-         +90w9bcRMksZOWNFYpvMFIn4CpPO2QHb9k0yfGbfTrF5OMfrdVgOOfqu3rWsrvxQZG3P
-         oa0F9xOMC9jFDj48yGeAT1pY0IPlbh9hwxDMBh0zdyKisAOjTMINoFDrohbQbewoxBwO
-         mFKFW3664r1JmhzzA/F2TRSyTX9RR8xNd7SNSUBrgfmGOBnuoAVNDZJ+waSjI/v50hcA
-         zq1OvM9PahIUAL6JR8A5xlHeobzW2MceuiwcaShElxCXtd65IgBRRxXQmn2jnERfqKdp
-         UsGQ==
-X-Gm-Message-State: ANhLgQ0GS18PhBrK83ELoqVEEcgsiR3LS6EMrhifcT072aGAAG/jyvi3
-        fD53Bb4N7RP/ies7lx00tRE=
-X-Google-Smtp-Source: ADFU+vtKdkIn8+gnmqWAltQ5uXueBcDgJNW61sDDfN6g+Xp0BN+lUEXdcO9U891Lpqqdn6VXOcbf5A==
-X-Received: by 2002:ac8:7511:: with SMTP id u17mr7325946qtq.316.1583419986708;
-        Thu, 05 Mar 2020 06:53:06 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id o16sm15915918qke.35.2020.03.05.06.53.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 06:53:06 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 47390403AD; Thu,  5 Mar 2020 11:53:04 -0300 (-03)
-Date:   Thu, 5 Mar 2020 11:53:04 -0300
-To:     Tommi Rantala <tommi.t.rantala@nokia.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Changbin Du <changbin.du@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf bench: Clear struct sigaction before
- sigaction() syscall
-Message-ID: <20200305145304.GC7895@kernel.org>
-References: <20200305083714.9381-1-tommi.t.rantala@nokia.com>
- <20200305083714.9381-4-tommi.t.rantala@nokia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VxuhUCC4n+HG3AgUkytKe/eT7ToYukorM5sgQRyWjQU=;
+        b=oPCqzesbp6D7+zhK+MbTrtwFhoN31p9+MqkL9obL085UpyW16p/Rk2+hxoKpEJLzF0
+         4BTl9paIBQ9ixOrPJ0lC2TYYKPeM9HpIUhoDGQPdHP9iU9h7Di6xRdguDnb0IY/oweFi
+         VJX7Fq4Iq1iUlIQM4vYhFoVFbxaXIEiFJklHQliYpaS3m/2kKBpCLJHTv8DGOqEQfSfG
+         OS6R/zeYnDmWBrQNcY2fmoCIUTbOCesnKKPloVeQ8j1B566eKXlOggXx8O/dfklV9h8v
+         t2tal6YQ7lOlY1eNAl17Me1+9epDyU2RvTo+khPEs2K1ikra4667pJlSpplUASjgQTm5
+         s0/g==
+X-Gm-Message-State: ANhLgQ1AdefHa8ObTk4eM0e4+58sjwXxzXXCSIXAh2hDrLZ69ly8FPlv
+        JDZ3m6TdAb+07P7vWHvZgMd8UQeRA5aPHbYywYE=
+X-Google-Smtp-Source: ADFU+vvEbdeciibEt6Hrq92wQ3v5gNAzAqdWRfPoKAj87boYm/+Z7me5O2hb9UostwnS1QPcgbJLwx/2ELu6kWicWjM=
+X-Received: by 2002:a05:6214:1552:: with SMTP id t18mr6513046qvw.113.1583420027929;
+ Thu, 05 Mar 2020 06:53:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305083714.9381-4-tommi.t.rantala@nokia.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200305220108.18780-1-mayflowerera@gmail.com>
+ <20200305220108.18780-2-mayflowerera@gmail.com> <20200305140241.GA28693@unicorn.suse.cz>
+ <CAMdQvKv9tSoSBfyOyhtctQ9D7aU2WUmuMUsoLn_WZ8whD=3AzA@mail.gmail.com>
+In-Reply-To: <CAMdQvKv9tSoSBfyOyhtctQ9D7aU2WUmuMUsoLn_WZ8whD=3AzA@mail.gmail.com>
+From:   Era Mayflower <mayflowerera@gmail.com>
+Date:   Thu, 5 Mar 2020 23:53:29 +0000
+Message-ID: <CAMdQvKuzaBuKGj1-HR6+r=FY4X9GhZPvEHwRt3BjErFiu1+bgw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] macsec: Netlink support of XPN cipher suites (IEEE 802.1AEbw)
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 05, 2020 at 10:37:14AM +0200, Tommi Rantala escreveu:
-> Avoid garbage in sigaction structs used in sigaction() syscalls.
-> Valgrind is complaining about it.
+Do you think that inserting those new enum values after *_PAD would be
+a good solution?
 
-Thanks, applied.
 
-- Arnaldo
- 
-> Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
-> ---
->  tools/perf/bench/epoll-ctl.c           | 1 +
->  tools/perf/bench/epoll-wait.c          | 1 +
->  tools/perf/bench/futex-hash.c          | 1 +
->  tools/perf/bench/futex-lock-pi.c       | 1 +
->  tools/perf/bench/futex-requeue.c       | 1 +
->  tools/perf/bench/futex-wake-parallel.c | 1 +
->  tools/perf/bench/futex-wake.c          | 1 +
->  7 files changed, 7 insertions(+)
-> 
-> diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
-> index bb617e5688412..63e2520017d81 100644
-> --- a/tools/perf/bench/epoll-ctl.c
-> +++ b/tools/perf/bench/epoll-ctl.c
-> @@ -313,6 +313,7 @@ int bench_epoll_ctl(int argc, const char **argv)
->  		exit(EXIT_FAILURE);
->  	}
->  
-> +	memset(&act, 0, sizeof(act));
->  	sigfillset(&act.sa_mask);
->  	act.sa_sigaction = toggle_done;
->  	sigaction(SIGINT, &act, NULL);
-> diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
-> index 7af694437f4ea..5336e628b404c 100644
-> --- a/tools/perf/bench/epoll-wait.c
-> +++ b/tools/perf/bench/epoll-wait.c
-> @@ -427,6 +427,7 @@ int bench_epoll_wait(int argc, const char **argv)
->  		exit(EXIT_FAILURE);
->  	}
->  
-> +	memset(&act, 0, sizeof(act));
->  	sigfillset(&act.sa_mask);
->  	act.sa_sigaction = toggle_done;
->  	sigaction(SIGINT, &act, NULL);
-> diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-> index 8ba0c3330a9a2..c441aa446c7f8 100644
-> --- a/tools/perf/bench/futex-hash.c
-> +++ b/tools/perf/bench/futex-hash.c
-> @@ -137,6 +137,7 @@ int bench_futex_hash(int argc, const char **argv)
->  	if (!cpu)
->  		goto errmem;
->  
-> +	memset(&act, 0, sizeof(act));
->  	sigfillset(&act.sa_mask);
->  	act.sa_sigaction = toggle_done;
->  	sigaction(SIGINT, &act, NULL);
-> diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
-> index d0cae8125423f..27c6e1944cbed 100644
-> --- a/tools/perf/bench/futex-lock-pi.c
-> +++ b/tools/perf/bench/futex-lock-pi.c
-> @@ -161,6 +161,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
->  	if (!cpu)
->  		err(EXIT_FAILURE, "calloc");
->  
-> +	memset(&act, 0, sizeof(act));
->  	sigfillset(&act.sa_mask);
->  	act.sa_sigaction = toggle_done;
->  	sigaction(SIGINT, &act, NULL);
-> diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
-> index a00a6891447ab..7a15c2e610228 100644
-> --- a/tools/perf/bench/futex-requeue.c
-> +++ b/tools/perf/bench/futex-requeue.c
-> @@ -128,6 +128,7 @@ int bench_futex_requeue(int argc, const char **argv)
->  	if (!cpu)
->  		err(EXIT_FAILURE, "cpu_map__new");
->  
-> +	memset(&act, 0, sizeof(act));
->  	sigfillset(&act.sa_mask);
->  	act.sa_sigaction = toggle_done;
->  	sigaction(SIGINT, &act, NULL);
-> diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/futex-wake-parallel.c
-> index a053cf2b70397..cd2b81a845acb 100644
-> --- a/tools/perf/bench/futex-wake-parallel.c
-> +++ b/tools/perf/bench/futex-wake-parallel.c
-> @@ -234,6 +234,7 @@ int bench_futex_wake_parallel(int argc, const char **argv)
->  		exit(EXIT_FAILURE);
->  	}
->  
-> +	memset(&act, 0, sizeof(act));
->  	sigfillset(&act.sa_mask);
->  	act.sa_sigaction = toggle_done;
->  	sigaction(SIGINT, &act, NULL);
-> diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
-> index 58906e9499bb0..2dfcef3e371e4 100644
-> --- a/tools/perf/bench/futex-wake.c
-> +++ b/tools/perf/bench/futex-wake.c
-> @@ -136,6 +136,7 @@ int bench_futex_wake(int argc, const char **argv)
->  	if (!cpu)
->  		err(EXIT_FAILURE, "calloc");
->  
-> +	memset(&act, 0, sizeof(act));
->  	sigfillset(&act.sa_mask);
->  	act.sa_sigaction = toggle_done;
->  	sigaction(SIGINT, &act, NULL);
-> -- 
-> 2.21.1
-> 
-
--- 
-
-- Arnaldo
+On Thu, Mar 5, 2020 at 11:51 PM Era Mayflower <mayflowerera@gmail.com> wrote:
+>
+> Do you think that inserting those new enum values after *_PAD would be a good solution?
+>
+> On Thu, Mar 5, 2020 at 2:02 PM Michal Kubecek <mkubecek@suse.cz> wrote:
+>>
+>> On Thu, Mar 05, 2020 at 10:01:08PM +0000, Era Mayflower wrote:
+>> > Netlink support of extended packet number cipher suites,
+>> > allows adding and updating XPN macsec interfaces.
+>> >
+>> > Added support in:
+>> >     * Creating interfaces with GCM-AES-XPN-128 and GCM-AES-XPN-256.
+>> >     * Setting and getting packet numbers with 64bit of SAs.
+>> >     * Settings and getting ssci of SCs.
+>> >     * Settings and getting salt of SecYs.
+>> >
+>> > Depends on: macsec: Support XPN frame handling - IEEE 802.1AEbw.
+>> >
+>> > Signed-off-by: Era Mayflower <mayflowerera@gmail.com>
+>> > ---
+>> [...]
+>> > diff --git a/include/net/macsec.h b/include/net/macsec.h
+>> > index a0b1d0b5c..3c7914ff1 100644
+>> > --- a/include/net/macsec.h
+>> > +++ b/include/net/macsec.h
+>> > @@ -11,6 +11,9 @@
+>> >  #include <uapi/linux/if_link.h>
+>> >  #include <uapi/linux/if_macsec.h>
+>> >
+>> > +#define MACSEC_DEFAULT_PN_LEN 4
+>> > +#define MACSEC_XPN_PN_LEN 8
+>> > +
+>> >  #define MACSEC_SALT_LEN 12
+>> >
+>> >  typedef u64 __bitwise sci_t;
+>> > diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+>> > index 024af2d1d..ee424d915 100644
+>> > --- a/include/uapi/linux/if_link.h
+>> > +++ b/include/uapi/linux/if_link.h
+>> > @@ -462,6 +462,8 @@ enum {
+>> >       IFLA_MACSEC_SCB,
+>> >       IFLA_MACSEC_REPLAY_PROTECT,
+>> >       IFLA_MACSEC_VALIDATION,
+>> > +     IFLA_MACSEC_SSCI,
+>> > +     IFLA_MACSEC_SALT,
+>> >       IFLA_MACSEC_PAD,
+>> >       __IFLA_MACSEC_MAX,
+>> >  };
+>>
+>> Doesn't this break backword compatibility? You change the value of
+>> IFLA_MACSEC_PAD; even if it's only used as padding, if an old client
+>> uses it, new kernel will interpret it as IFLA_MACSEC_SSCI (an the same
+>> holds for new client with old kernel).
+>>
+>> > diff --git a/include/uapi/linux/if_macsec.h b/include/uapi/linux/if_macsec.h
+>> > index 1d63c43c3..c8fab9673 100644
+>> > --- a/include/uapi/linux/if_macsec.h
+>> > +++ b/include/uapi/linux/if_macsec.h
+>> > @@ -25,6 +25,8 @@
+>> >  /* cipher IDs as per IEEE802.1AEbn-2011 */
+>> >  #define MACSEC_CIPHER_ID_GCM_AES_128 0x0080C20001000001ULL
+>> >  #define MACSEC_CIPHER_ID_GCM_AES_256 0x0080C20001000002ULL
+>> > +#define MACSEC_CIPHER_ID_GCM_AES_XPN_128 0x0080C20001000003ULL
+>> > +#define MACSEC_CIPHER_ID_GCM_AES_XPN_256 0x0080C20001000004ULL
+>> >
+>> >  /* deprecated cipher ID for GCM-AES-128 */
+>> >  #define MACSEC_DEFAULT_CIPHER_ID     0x0080020001000001ULL
+>> > @@ -66,6 +68,8 @@ enum macsec_secy_attrs {
+>> >       MACSEC_SECY_ATTR_INC_SCI,
+>> >       MACSEC_SECY_ATTR_ES,
+>> >       MACSEC_SECY_ATTR_SCB,
+>> > +     MACSEC_SECY_ATTR_SSCI,
+>> > +     MACSEC_SECY_ATTR_SALT,
+>> >       MACSEC_SECY_ATTR_PAD,
+>> >       __MACSEC_SECY_ATTR_END,
+>> >       NUM_MACSEC_SECY_ATTR = __MACSEC_SECY_ATTR_END,
+>> > @@ -78,6 +82,7 @@ enum macsec_rxsc_attrs {
+>> >       MACSEC_RXSC_ATTR_ACTIVE,  /* config/dump, u8 0..1 */
+>> >       MACSEC_RXSC_ATTR_SA_LIST, /* dump, nested */
+>> >       MACSEC_RXSC_ATTR_STATS,   /* dump, nested, macsec_rxsc_stats_attr */
+>> > +     MACSEC_RXSC_ATTR_SSCI,    /* config/dump, u32 */
+>> >       MACSEC_RXSC_ATTR_PAD,
+>> >       __MACSEC_RXSC_ATTR_END,
+>> >       NUM_MACSEC_RXSC_ATTR = __MACSEC_RXSC_ATTR_END,
+>>
+>> The same problem with these two.
+>>
+>> I'm also a bit unsure about the change of type and length of
+>> MACSEC_SA_ATTR_PN but I would have to get more familiar with the code to
+>> see if it is really a problem.
+>>
+>> Michal
