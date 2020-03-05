@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD69C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06058C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054322072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA2B2072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428950;
-	bh=fIW9RpwBzvjkRLCfM9sJ2cMeptlTr1Gs34EZQL58bpw=;
+	s=default; t=1583428956;
+	bh=Ij2MEWRjjy9It1Ke61TFe1l8jjI4fJ1Dr5t94RjaqVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WlFLmPRKAC9zeSRUEf2K/W/AMOXYUiEEqxpXvS+UrDSs9OLFN4LUeDzZXm+lA4VMI
-	 EHHZ/9p2G18Gz70TeCUiIJoih/vWGWKHqEwCtMxB5Xt4nquAXmGn/W5aib/QNegUL4
-	 wEtJmOnaAo2BDkdBLQLjQ6A72NWwdkSXavWNh6pg=
+	b=u2V020Gigb0rantnsFgvOhlQXbhkqB06voLyvkgRCLmwhC2LzHF9YO0sSx1t8NsM0
+	 A34trYF98ChDitQLDi0LR6WTF4r2489Y4zdf0vKHY+psWaJfQYXUE/mGCuHjWmAp27
+	 fuMbshg1b83qUuQkTocJZzJWU46Dwy7Z1TrZnFRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgCERW2 (ORCPT
+        id S1728000AbgCERWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:22:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39736 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:22:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727461AbgCERN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:56 -0500
+        id S1726440AbgCERNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B2B220848;
-        Thu,  5 Mar 2020 17:13:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CE9E21556;
+        Thu,  5 Mar 2020 17:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428435;
-        bh=fIW9RpwBzvjkRLCfM9sJ2cMeptlTr1Gs34EZQL58bpw=;
+        s=default; t=1583428434;
+        bh=Ij2MEWRjjy9It1Ke61TFe1l8jjI4fJ1Dr5t94RjaqVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vJLSMpucl/Fb9BswW/dAdM+zY8wwwpQnQQ0Qnw6m3LwW4tdp3p1LsxEP/8mYSIqX/
-         PnuOYq7JrYq+Mo3smJGDYQB9t5J4E69lRHojf3wgnWbVT1Bo/kTUCCqWn+PyEJMcTj
-         WBoCRSmlOKbE9YNt2sDGCKDahO1+WpUnIKo2rCtI=
+        b=A1oeuaHFdnpSz2VjTyPUIASebVfsTjl86hCgAisi3peDXP5NIiz3Pb/vMo3gklhqv
+         LnDyAMB8rJB+wfNd5OVhC1m2JLV6mGKK3JHeWYshMx+tKtxhglthqWuQsetTgv/qFZ
+         rWL6EyFp9SjnGdu+ePx8ipNdgWnck3hY5YVFO1Bc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Vasut <marex@denx.de>,
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 33/67] net: ks8851-ml: Fix IRQ handling and locking
-Date:   Thu,  5 Mar 2020 12:12:34 -0500
-Message-Id: <20200305171309.29118-33-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 32/67] hv_netvsc: Fix unwanted wakeup in netvsc_attach()
+Date:   Thu,  5 Mar 2020 12:12:33 -0500
+Message-Id: <20200305171309.29118-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -61,100 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-[ Upstream commit 44343418d0f2f623cb9da6f5000df793131cbe3b ]
+[ Upstream commit f6f13c125e05603f68f5bf31f045b95e6d493598 ]
 
-The KS8851 requires that packet RX and TX are mutually exclusive.
-Currently, the driver hopes to achieve this by disabling interrupt
-from the card by writing the card registers and by disabling the
-interrupt on the interrupt controller. This however is racy on SMP.
+When netvsc_attach() is called by operations like changing MTU, etc.,
+an extra wakeup may happen while netvsc_attach() calling
+rndis_filter_device_add() which sends rndis messages when queue is
+stopped in netvsc_detach(). The completion message will wake up queue 0.
 
-Replace this approach by expanding the spinlock used around the
-ks_start_xmit() TX path to ks_irq() RX path to assure true mutual
-exclusion and remove the interrupt enabling/disabling, which is
-now not needed anymore. Furthermore, disable interrupts also in
-ks_net_stop(), which was missing before.
+We can reproduce the issue by changing MTU etc., then the wake_queue
+counter from "ethtool -S" will increase beyond stop_queue counter:
+     stop_queue: 0
+     wake_queue: 1
+The issue causes queue wake up, and counter increment, no other ill
+effects in current code. So we didn't see any network problem for now.
 
-Note that a massive improvement here would be to re-use the KS8851
-driver approach, which is to move the TX path into a worker thread,
-interrupt handling to threaded interrupt, and synchronize everything
-with mutexes, but that would be a much bigger rework, for a separate
-patch.
+To fix this, initialize tx_disable to true, and set it to false when
+the NIC is ready to be attached or registered.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
+Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/hyperv/netvsc.c     | 2 +-
+ drivers/net/hyperv/netvsc_drv.c | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index a41a90c589db2..20cb5b500661a 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -548,14 +548,17 @@ static irqreturn_t ks_irq(int irq, void *pw)
- {
- 	struct net_device *netdev = pw;
- 	struct ks_net *ks = netdev_priv(netdev);
-+	unsigned long flags;
- 	u16 status;
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index eab83e71567a9..6c0732fc8c250 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -99,7 +99,7 @@ static struct netvsc_device *alloc_net_device(void)
  
-+	spin_lock_irqsave(&ks->statelock, flags);
- 	/*this should be the first in IRQ handler */
- 	ks_save_cmd_reg(ks);
+ 	init_waitqueue_head(&net_device->wait_drain);
+ 	net_device->destroy = false;
+-	net_device->tx_disable = false;
++	net_device->tx_disable = true;
  
- 	status = ks_rdreg16(ks, KS_ISR);
- 	if (unlikely(!status)) {
- 		ks_restore_cmd_reg(ks);
-+		spin_unlock_irqrestore(&ks->statelock, flags);
- 		return IRQ_NONE;
+ 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
+ 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index f3f9eb8a402a2..ee1ad7ae75550 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -977,6 +977,7 @@ static int netvsc_attach(struct net_device *ndev,
  	}
  
-@@ -581,6 +584,7 @@ static irqreturn_t ks_irq(int irq, void *pw)
- 		ks->netdev->stats.rx_over_errors++;
- 	/* this should be the last in IRQ handler*/
- 	ks_restore_cmd_reg(ks);
-+	spin_unlock_irqrestore(&ks->statelock, flags);
- 	return IRQ_HANDLED;
- }
+ 	/* In any case device is now ready */
++	nvdev->tx_disable = false;
+ 	netif_device_attach(ndev);
  
-@@ -650,6 +654,7 @@ static int ks_net_stop(struct net_device *netdev)
+ 	/* Note: enable and attach happen when sub-channels setup */
+@@ -2354,6 +2355,8 @@ static int netvsc_probe(struct hv_device *dev,
+ 	else
+ 		net->max_mtu = ETH_DATA_LEN;
  
- 	/* shutdown RX/TX QMU */
- 	ks_disable_qmu(ks);
-+	ks_disable_int(ks);
- 
- 	/* set powermode to soft power down to save power */
- 	ks_set_powermode(ks, PMECR_PM_SOFTDOWN);
-@@ -706,10 +711,9 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	netdev_tx_t retv = NETDEV_TX_OK;
- 	struct ks_net *ks = netdev_priv(netdev);
-+	unsigned long flags;
- 
--	disable_irq(netdev->irq);
--	ks_disable_int(ks);
--	spin_lock(&ks->statelock);
-+	spin_lock_irqsave(&ks->statelock, flags);
- 
- 	/* Extra space are required:
- 	*  4 byte for alignment, 4 for status/length, 4 for CRC
-@@ -723,9 +727,7 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- 		dev_kfree_skb(skb);
- 	} else
- 		retv = NETDEV_TX_BUSY;
--	spin_unlock(&ks->statelock);
--	ks_enable_int(ks);
--	enable_irq(netdev->irq);
-+	spin_unlock_irqrestore(&ks->statelock, flags);
- 	return retv;
- }
- 
++	nvdev->tx_disable = false;
++
+ 	ret = register_netdevice(net);
+ 	if (ret != 0) {
+ 		pr_err("Unable to register netdev.\n");
 -- 
 2.20.1
 
