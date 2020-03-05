@@ -2,161 +2,103 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65CAC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41DFC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6B320842
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:53:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PPWo8s6t"
+	by mail.kernel.org (Postfix) with ESMTP id B211C20842
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725919AbgCEAxZ (ORCPT
+        id S1725937AbgCEAyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 19:53:25 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:23200 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725797AbgCEAxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 19:53:24 -0500
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 0250lcsx008926
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 16:53:23 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=twg6TfX4Tjm/9SDqIgA1ox77n0eMPIL78l+2O1ogRVg=;
- b=PPWo8s6tarK9LT01CFvvcK/ql3KjMxGmvI2/I/U+fd38sZij4E33EEku0aimHULADxzU
- hqNp/z9QA/w3kZVU0tXCS6SP93uAzop+AkLpJys0nUStC07GJdbh5PknLxfL9mtq2Kte
- YZBE3865LAGo1Bu7zMsnYivZXoZnyuDbyKo= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 2yhwxxqp1d-8
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:53:23 -0800
-Received: from intmgw001.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 4 Mar 2020 16:53:17 -0800
-Received: by devvm4439.prn2.facebook.com (Postfix, from userid 111017)
-        id 2158B10332086; Wed,  4 Mar 2020 16:53:15 -0800 (PST)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm4439.prn2.facebook.com
-To:     Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>
-CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-team@fb.com>, Rik van Riel <riel@surriel.com>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2] btrfs: implement migratepage callback
-Date:   Wed, 4 Mar 2020 16:53:12 -0800
-Message-ID: <20200305005312.563782-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Wed, 4 Mar 2020 19:54:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:41510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725777AbgCEAyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 19:54:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D656F31B;
+        Wed,  4 Mar 2020 16:54:54 -0800 (PST)
+Received: from [10.163.1.88] (unknown [10.163.1.88])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60E2D3F534;
+        Wed,  4 Mar 2020 16:54:46 -0800 (PST)
+Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Qian Cai <cai@lca.pw>, Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390@vger.kernel.org, linux-riscv@lists.infradead.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-arch@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+References: <c022e863-0807-fab1-cd41-3c320381f448@c-s.fr>
+ <11F41980-97CF-411F-8120-41287DC1A382@lca.pw>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <57a3bc61-bbd5-e251-9621-7bc28f7901a1@arm.com>
+Date:   Thu, 5 Mar 2020 06:24:44 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_10:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 clxscore=1015
- malwarescore=0 mlxlogscore=856 impostorscore=0 lowpriorityscore=0
- adultscore=0 phishscore=0 bulkscore=0 spamscore=0 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050002
-X-FB-Internal: deliver
+In-Reply-To: <11F41980-97CF-411F-8120-41287DC1A382@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently btrfs doesn't provide a migratepage callback. It means that
-fallback_migrate_page()	is used to migrate btrfs pages.
 
-fallback_migrate_page() cannot move dirty pages, instead it tries to
-flush them (in sync mode) or just fails (in async mode).
 
-In the sync mode pages which are scheduled to be processed by
-btrfs_writepage_fixup_worker() can't be effectively flushed by the
-migration code, because there is no established way to wait for the
-completion of the delayed work.
+On 03/04/2020 04:59 PM, Qian Cai wrote:
+> 
+> 
+>> On Mar 4, 2020, at 1:49 AM, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+>>
+>> AFAIU, you are not taking an interrupt here. You are stuck in the pte_update(), most likely due to nested locks. Try with LOCKDEP ?
+> 
+> Not exactly sure what did you mean here, but the kernel has all lockdep enabled and did not flag anything here.
 
-It all leads to page migration failures.
+As the patch has been dropped from Linux next (next-20200304) perhaps in
+order to fold back the __pa_symbol() fix [1], so I am planning to respin
+the original patch once more as V15 while adding Qian's signed off by for
+the powerpc part. For now lets enable radix MMU ppc64 along with existing
+ppc32. As PPC_RADIX_MMU depends on PPC_BOOK3S_64, the following change
+should be good enough ?
 
-To fix it the patch implements a btrs-specific migratepage callback,
-which is similar to iomap_migrate_page() used by some other fs, except
-it does take care of the PagePrivate2 flag which is used for data
-ordering purposes.
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 497b7d0b2d7e..8d5ae14c5d4c 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -116,6 +116,7 @@  config PPC
+ 	#
+ 	select ARCH_32BIT_OFF_T if PPC32
+ 	select ARCH_HAS_DEBUG_VIRTUAL
++	select ARCH_HAS_DEBUG_VM_PGTABLE if (PPC_RADIX_MMU || PPC32)
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_FORTIFY_SOURCE
 
-v2: fixed the build issue found by the kbuild test robot <lkp@intel.com>
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Chris Mason <clm@fb.com>
----
- fs/btrfs/inode.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
-
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 7735ce6127c3..da0d02adaaf3 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -28,6 +28,7 @@
- #include <linux/magic.h>
- #include <linux/iversion.h>
- #include <linux/swap.h>
-+#include <linux/migrate.h>
- #include <linux/sched/mm.h>
- #include <asm/unaligned.h>
- #include "misc.h"
-@@ -8323,6 +8324,37 @@ static int btrfs_releasepage(struct page *page, gfp_t gfp_flags)
- 	return __btrfs_releasepage(page, gfp_flags);
- }
- 
-+static int btrfs_migratepage(struct address_space *mapping,
-+			     struct page *newpage, struct page *page,
-+			     enum migrate_mode mode)
-+{
-+	int ret;
-+
-+	ret = migrate_page_move_mapping(mapping, newpage, page, 0);
-+	if (ret != MIGRATEPAGE_SUCCESS)
-+		return ret;
-+
-+	if (page_has_private(page)) {
-+		ClearPagePrivate(page);
-+		get_page(newpage);
-+		set_page_private(newpage, page_private(page));
-+		set_page_private(page, 0);
-+		put_page(page);
-+		SetPagePrivate(newpage);
-+	}
-+
-+	if (PagePrivate2(page)) {
-+		ClearPagePrivate2(page);
-+		SetPagePrivate2(newpage);
-+	}
-+
-+	if (mode != MIGRATE_SYNC_NO_COPY)
-+		migrate_page_copy(newpage, page);
-+	else
-+		migrate_page_states(newpage, page);
-+	return MIGRATEPAGE_SUCCESS;
-+}
-+
- static void btrfs_invalidatepage(struct page *page, unsigned int offset,
- 				 unsigned int length)
- {
-@@ -10525,6 +10557,9 @@ static const struct address_space_operations btrfs_aops = {
- 	.direct_IO	= btrfs_direct_IO,
- 	.invalidatepage = btrfs_invalidatepage,
- 	.releasepage	= btrfs_releasepage,
-+#ifdef CONFIG_MIGRATION
-+	.migratepage	= btrfs_migratepage,
-+#endif
- 	.set_page_dirty	= btrfs_set_page_dirty,
- 	.error_remove_page = generic_error_remove_page,
- 	.swap_activate	= btrfs_swap_activate,
--- 
-2.24.1
-
+[1] https://patchwork.kernel.org/patch/11407715/
