@@ -2,177 +2,302 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC1FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99077C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE5920870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 639CF21556
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583368162;
-	bh=LXMiZGn7WQguRaonRX3+udH76MPkkFFGfMmHgnOHruI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=WyozZunWW8426wcmxIyLWT9yvadZ0j0h+D+yHPYJ0Q8iu5S5p9DRim7Ehi/Yo73ec
-	 UKtsfPJD5NALUN8Qrjbr4F6QUZvUT9Rnpw9x9YT9mvzBvklH67BQB4PV4yL4bX7T1R
-	 QecYs2qoL+HuT4EkU0Rrr1rAzQgGXUB1sxvhOexE=
+	s=default; t=1583368193;
+	bh=Wz53iSrHoH12eaO1ZzdY27GsNfIgPY1/Udu6PPk+MbU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AVe1P9wArkPbBIuAt1ws8S343SVON/AxOsaB6SfRCAfgfcxgGnLir+hnxow5LIuSJ
+	 MUyvk96iH/msXDbrfjcFjaJ9+gXqO26Wrzjue1if+bzcN8doxaF/tiHEhlZSj4Jwi3
+	 e/4U09IC79jLQwB/yS0QRgofIfeJhETMXz73l6Dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388615AbgCEA3V (ORCPT
+        id S2388629AbgCEA3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 19:29:21 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35994 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388589AbgCEA3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 19:29:20 -0500
-Received: by mail-il1-f194.google.com with SMTP id b17so3505123iln.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:29:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DMuXBI4n6VFH3vcmCnA8kWV3eDknxjUy9BFc+h/MzKY=;
-        b=BzVBYccsXnBXQL8L4nriLT4wgNKsO/qjfzqlAJN1M5w8pTENcT4OLw0Esd5zBKM4Ws
-         l08LyYnuwPv6FKWz7kZMosKXMI5dnF1gmkRPzi5UCbCLEbsb6s6ThdBHDyArCXk8HVZ7
-         miNbYmMMN1oklJ9Lg93WhI0agt1FOPlhhvsq0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DMuXBI4n6VFH3vcmCnA8kWV3eDknxjUy9BFc+h/MzKY=;
-        b=Qy85d5nQYu7ZTg1Url8oWLfH6LSTohFtxTFBu+W4CthLuFW+5OhX0xftxI1mG19xtT
-         DULxI1gcDyzxvcYu5uEeyr52/xG2N0dvpDe6Jug6uecACCFk+fjzensKX0+fl26A3QL+
-         aPycSN9rzXWNnpYAZS9nlE2DtlZy23g6gndiK367sQKOx9rN7xVqP5kiEpQgqMPd0S6g
-         mB8g7unUufN8P9stT6eBOzvFK3qzS2IR0MFilGqQMN8cgEZYUzIO5cBfkHPzvCSwX8ip
-         yun07YfX8GAHlvc4rvYEs9bTM83ikzbVcx2p1VzjSqJiJSkLtweW7111H52MgRPCHpgI
-         hHhA==
-X-Gm-Message-State: ANhLgQ2trLE90dgesYJmMbJw3XH5OcssxJ0pD9LbzqgNA1SiS/1yU1A+
-        fWRmNDILkD8LHsGhNOpuYbsVgA==
-X-Google-Smtp-Source: ADFU+vsj6BlimOUY1cjq4xUk/QovllsyeGkV1HNUuBRFKOYD/q6CBKOvI+ohh2SeR6TANE6+s96y1Q==
-X-Received: by 2002:a92:914a:: with SMTP id t71mr4854237ild.108.1583368158380;
-        Wed, 04 Mar 2020 16:29:18 -0800 (PST)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id i16sm9674080ils.41.2020.03.04.16.29.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 16:29:17 -0800 (PST)
-Subject: Re: [PATCH 2/4] selftests: Fix seccomp to support relocatable build
- (O=objdir)
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Kees Cook <keescook@chromium.org>
-Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
-        daniel@iogearbox.net, kafai@fb.com, yhs@fb.com, andriin@fb.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        khilman@baylibre.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1583358715.git.skhan@linuxfoundation.org>
- <11967e5f164f0cd717921bd382ff9c13ef740146.1583358715.git.skhan@linuxfoundation.org>
- <202003041442.A46000C@keescook>
- <11ffe43f-f777-7881-623d-c93196a44cb6@linuxfoundation.org>
- <87eeu7r6qf.fsf@mpe.ellerman.id.au>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <da1b2591-bb19-9dc7-ed5f-cc2481c24f87@linuxfoundation.org>
-Date:   Wed, 4 Mar 2020 17:29:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 4 Mar 2020 19:29:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51492 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388509AbgCEA3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 19:29:51 -0500
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3983220870;
+        Thu,  5 Mar 2020 00:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583368191;
+        bh=Wz53iSrHoH12eaO1ZzdY27GsNfIgPY1/Udu6PPk+MbU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JURF8BgDpWX7KcSMfRxLCARa08Ys/3368WqhVu3K4ty01k+Zst5eILUwNvCHwsQtG
+         e+9BXd4/G1WlsuXPIRf8WzeW5cOyVxnVwo+rfiKRFHZd9CxdAh6RFm0cx5zp8dw74n
+         Zf7G7JXoqOwszsAR9BrNCaL8hvMyTInkHf5m/ftY=
+Date:   Wed, 4 Mar 2020 16:29:50 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH v2] f2fs: introduce F2FS_IOC_RELEASE_COMPRESS_BLOCKS
+Message-ID: <20200305002950.GA193721@google.com>
+References: <20200227112621.126505-1-yuchao0@huawei.com>
+ <20200227183052.GA55284@google.com>
+ <8cb4552e-e6a2-e57b-1baa-40171e53e120@huawei.com>
+ <20200304182635.GA87370@google.com>
 MIME-Version: 1.0
-In-Reply-To: <87eeu7r6qf.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304182635.GA87370@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 5:22 PM, Michael Ellerman wrote:
-> Shuah Khan <skhan@linuxfoundation.org> writes:
->> On 3/4/20 3:42 PM, Kees Cook wrote:
->>> On Wed, Mar 04, 2020 at 03:13:33PM -0700, Shuah Khan wrote:
->>>> Fix seccomp relocatable builds. This is a simple fix to use the
->>>> right lib.mk variable TEST_GEN_PROGS for objects to leverage
->>>> lib.mk common framework for relocatable builds.
->>>>
->>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->>>> ---
->>>>    tools/testing/selftests/seccomp/Makefile | 16 +++-------------
->>>>    1 file changed, 3 insertions(+), 13 deletions(-)
->>>>
->>>> diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
->>>> index 1760b3e39730..a8a9717fc1be 100644
->>>> --- a/tools/testing/selftests/seccomp/Makefile
->>>> +++ b/tools/testing/selftests/seccomp/Makefile
->>>> @@ -1,17 +1,7 @@
->>>>    # SPDX-License-Identifier: GPL-2.0
->>>> -all:
->>>> -
->>>> -include ../lib.mk
->>>> -
->>>> -.PHONY: all clean
->>>> -
->>>> -BINARIES := seccomp_bpf seccomp_benchmark
->>>>    CFLAGS += -Wl,-no-as-needed -Wall
->>>> +LDFLAGS += -lpthread
->>>>    
->>>> -seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
->>>
->>> How is the ../kselftest_harness.h dependency detected in the resulting
->>> build rules?
->>>
->>> Otherwise, looks good.
->>
->> Didn't see any problems. I will look into adding the dependency.
-> 
-> Before:
-> 
->    $ make --no-print-directory -C tools/testing/selftests/ TARGETS=seccomp
->    make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
->            ARCH=powerpc -C ../../.. headers_install
->      INSTALL /home/michael/build/adhoc/kselftest/usr/include
->    gcc -Wl,-no-as-needed -Wall  seccomp_bpf.c -lpthread -o seccomp_bpf
->    gcc -Wl,-no-as-needed -Wall    seccomp_benchmark.c   -o seccomp_benchmark
->    
->    $ touch tools/testing/selftests/kselftest_harness.h
->    
->    $ make --no-print-directory -C tools/testing/selftests/ TARGETS=seccomp
->    make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
->            ARCH=powerpc -C ../../.. headers_install
->      INSTALL /home/michael/build/adhoc/kselftest/usr/include
->    gcc -Wl,-no-as-needed -Wall  seccomp_bpf.c -lpthread -o seccomp_bpf
->    $
-> 
-> Note that touching the header causes it to rebuild seccomp_bpf.
-> 
-> With this patch applied:
-> 
->    $ make --no-print-directory -C tools/testing/selftests/ TARGETS=seccomp
->    make -s --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
->            ARCH=powerpc -C ../../.. headers_install
->    gcc -Wl,-no-as-needed -Wall  -lpthread  seccomp_bpf.c  -o /home/michael/build/adhoc/kselftest/seccomp/seccomp_bpf
->    gcc -Wl,-no-as-needed -Wall  -lpthread  seccomp_benchmark.c  -o /home/michael/build/adhoc/kselftest/seccomp/seccomp_benchmark
->    
->    $ touch tools/testing/selftests/kselftest_harness.h
->    
->    $ make --no-print-directory -C tools/testing/selftests/ TARGETS=seccomp
->    make -s --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
->            ARCH=powerpc -C ../../.. headers_install
->    make[1]: Nothing to be done for 'all'.
->    $
-> 
-> 
+On 03/04, Jaegeuk Kim wrote:
+> On 02/28, Chao Yu wrote:
+> > On 2020/2/28 2:30, Jaegeuk Kim wrote:
+> > > On 02/27, Chao Yu wrote:
+> > >> There are still reserved blocks on compressed inode, this patch
+> > >> introduce a new ioctl to help release reserved blocks back to
+> > >> filesystem, so that userspace can reuse those freed space.
 
-Thanks. I realized I overlooked header dependency case.
+BTW, this patch makes i_blocks breakages. Could you please check?
 
-> So yeah it still needs:
+> > > 
+> > > Hmm, once we release the blocks, what happens if we remove the immutable
+> > > bit back?
+> > 
+> > Oh, if we allow to overwrite on compress file, i_blocks and real physical blocks
+> > usage may be inconsistent?
+> > 
+> > So if we need to support above scenario, should we add another ioctl interface
+> > to rollback all compress inode status:
+> > - add reserved blocks in dnode blocks
+> > - increase i_compr_blocks, i_blocks, total_valid_block_count
+> > - remove immutable
 > 
-> seccomp_bpf: ../kselftest_harness.h
+> I think that'd be doable.
 > 
-> 
-Yes v2 coming up. It also has to handle OUTPUT relocation.
-
-thanks,
--- Shuah
+> > 
+> > Thanks,
+> > 
+> > > 
+> > >>
+> > >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> > >> ---
+> > >> v2:
+> > >> - set inode as immutable in ioctl.
+> > >>  fs/f2fs/f2fs.h |   6 +++
+> > >>  fs/f2fs/file.c | 136 ++++++++++++++++++++++++++++++++++++++++++++++++-
+> > >>  2 files changed, 141 insertions(+), 1 deletion(-)
+> > >>
+> > >> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > >> index 23b93a116c73..4a02edc2454b 100644
+> > >> --- a/fs/f2fs/f2fs.h
+> > >> +++ b/fs/f2fs/f2fs.h
+> > >> @@ -427,6 +427,8 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+> > >>  #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
+> > >>  #define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
+> > >>  #define F2FS_IOC_GET_COMPRESS_BLOCKS	_IOR(F2FS_IOCTL_MAGIC, 17, __u64)
+> > >> +#define F2FS_IOC_RELEASE_COMPRESS_BLOCKS				\
+> > >> +					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
+> > >>  
+> > >>  #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
+> > >>  #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
+> > >> @@ -3956,6 +3958,10 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
+> > >>  {
+> > >>  	int diff = F2FS_I(inode)->i_cluster_size - blocks;
+> > >>  
+> > >> +	/* don't update i_compr_blocks if saved blocks were released */
+> > >> +	if (!add && !F2FS_I(inode)->i_compr_blocks)
+> > >> +		return;
+> > >> +
+> > >>  	if (add) {
+> > >>  		F2FS_I(inode)->i_compr_blocks += diff;
+> > >>  		stat_add_compr_blocks(inode, diff);
+> > >> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > >> index 37c1147eb244..b8f01ee9d698 100644
+> > >> --- a/fs/f2fs/file.c
+> > >> +++ b/fs/f2fs/file.c
+> > >> @@ -550,6 +550,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+> > >>  	bool compressed_cluster = false;
+> > >>  	int cluster_index = 0, valid_blocks = 0;
+> > >>  	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+> > >> +	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
+> > >>  
+> > >>  	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+> > >>  		base = get_extra_isize(dn->inode);
+> > >> @@ -588,7 +589,9 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+> > >>  			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
+> > >>  
+> > >>  		f2fs_invalidate_blocks(sbi, blkaddr);
+> > >> -		nr_free++;
+> > >> +
+> > >> +		if (released && blkaddr != COMPRESS_ADDR)
+> > >> +			nr_free++;
+> > >>  	}
+> > >>  
+> > >>  	if (compressed_cluster)
+> > >> @@ -3403,6 +3406,134 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
+> > >>  	return put_user(blocks, (u64 __user *)arg);
+> > >>  }
+> > >>  
+> > >> +static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
+> > >> +{
+> > >> +	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
+> > >> +	unsigned int released_blocks = 0;
+> > >> +	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+> > >> +
+> > >> +	while (count) {
+> > >> +		int compr_blocks = 0;
+> > >> +		block_t blkaddr = f2fs_data_blkaddr(dn);
+> > >> +		int i;
+> > >> +
+> > >> +		if (blkaddr != COMPRESS_ADDR) {
+> > >> +			dn->ofs_in_node += cluster_size;
+> > >> +			goto next;
+> > >> +		}
+> > >> +
+> > >> +		for (i = 0; i < cluster_size; i++, dn->ofs_in_node++) {
+> > >> +			blkaddr = f2fs_data_blkaddr(dn);
+> > >> +
+> > >> +			if (__is_valid_data_blkaddr(blkaddr)) {
+> > >> +				compr_blocks++;
+> > >> +				if (unlikely(!f2fs_is_valid_blkaddr(sbi, blkaddr,
+> > >> +							DATA_GENERIC_ENHANCE)))
+> > >> +					return -EFSCORRUPTED;
+> > >> +			}
+> > >> +
+> > >> +			if (blkaddr != NEW_ADDR)
+> > >> +				continue;
+> > >> +
+> > >> +			dn->data_blkaddr = NULL_ADDR;
+> > >> +			f2fs_set_data_blkaddr(dn);
+> > >> +		}
+> > >> +
+> > >> +		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
+> > >> +		dec_valid_block_count(sbi, dn->inode,
+> > >> +					cluster_size - compr_blocks);
+> > >> +
+> > >> +		released_blocks += cluster_size - compr_blocks;
+> > >> +next:
+> > >> +		count -= cluster_size;
+> > >> +	}
+> > >> +
+> > >> +	return released_blocks;
+> > >> +}
+> > >> +
+> > >> +static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+> > >> +{
+> > >> +	struct inode *inode = file_inode(filp);
+> > >> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> > >> +	pgoff_t page_idx = 0, last_idx;
+> > >> +	unsigned int released_blocks = 0;
+> > >> +	int ret;
+> > >> +
+> > >> +	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
+> > >> +		return -EOPNOTSUPP;
+> > >> +
+> > >> +	if (!f2fs_compressed_file(inode))
+> > >> +		return -EINVAL;
+> > >> +
+> > >> +	if (f2fs_readonly(sbi->sb))
+> > >> +		return -EROFS;
+> > >> +
+> > >> +	ret = mnt_want_write_file(filp);
+> > >> +	if (ret)
+> > >> +		return ret;
+> > >> +
+> > >> +	if (!F2FS_I(inode)->i_compr_blocks)
+> > >> +		goto out;
+> > >> +
+> > >> +	f2fs_balance_fs(F2FS_I_SB(inode), true);
+> > >> +
+> > >> +	inode_lock(inode);
+> > >> +
+> > >> +	if (!IS_IMMUTABLE(inode)) {
+> > >> +		F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
+> > >> +		f2fs_set_inode_flags(inode);
+> > >> +		inode->i_ctime = current_time(inode);
+> > >> +		f2fs_mark_inode_dirty_sync(inode, true);
+> > >> +	}
+> > >> +
+> > >> +	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> > >> +	down_write(&F2FS_I(inode)->i_mmap_sem);
+> > >> +
+> > >> +	last_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
+> > >> +
+> > >> +	while (page_idx < last_idx) {
+> > >> +		struct dnode_of_data dn;
+> > >> +		pgoff_t end_offset, count;
+> > >> +
+> > >> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
+> > >> +		ret = f2fs_get_dnode_of_data(&dn, page_idx, LOOKUP_NODE);
+> > >> +		if (ret) {
+> > >> +			if (ret == -ENOENT) {
+> > >> +				page_idx = f2fs_get_next_page_offset(&dn,
+> > >> +								page_idx);
+> > >> +				ret = 0;
+> > >> +				continue;
+> > >> +			}
+> > >> +			break;
+> > >> +		}
+> > >> +
+> > >> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+> > >> +		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
+> > >> +
+> > >> +		ret = release_compress_blocks(&dn, count);
+> > >> +
+> > >> +		f2fs_put_dnode(&dn);
+> > >> +
+> > >> +		if (ret < 0)
+> > >> +			break;
+> > >> +
+> > >> +		page_idx += count;
+> > >> +		released_blocks += ret;
+> > >> +	}
+> > >> +
+> > >> +	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> > >> +	up_write(&F2FS_I(inode)->i_mmap_sem);
+> > >> +
+> > >> +	inode_unlock(inode);
+> > >> +out:
+> > >> +	mnt_drop_write_file(filp);
+> > >> +
+> > >> +	if (!ret)
+> > >> +		ret = put_user(released_blocks, (u64 __user *)arg);
+> > >> +
+> > >> +	return ret;
+> > >> +}
+> > >> +
+> > >>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> > >>  {
+> > >>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+> > >> @@ -3483,6 +3614,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> > >>  		return f2fs_set_volume_name(filp, arg);
+> > >>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+> > >>  		return f2fs_get_compress_blocks(filp, arg);
+> > >> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+> > >> +		return f2fs_release_compress_blocks(filp, arg);
+> > >>  	default:
+> > >>  		return -ENOTTY;
+> > >>  	}
+> > >> @@ -3643,6 +3776,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+> > >>  	case F2FS_IOC_GET_VOLUME_NAME:
+> > >>  	case F2FS_IOC_SET_VOLUME_NAME:
+> > >>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+> > >> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+> > >>  		break;
+> > >>  	default:
+> > >>  		return -ENOIOCTLCMD;
+> > >> -- 
+> > >> 2.18.0.rc1
+> > > .
+> > > 
