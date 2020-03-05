@@ -2,89 +2,71 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C65CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC90C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7312073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC492073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgCEPTr (ORCPT
+        id S1726889AbgCEPVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:19:47 -0500
-Received: from www62.your-server.de ([213.133.104.62]:39268 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgCEPTq (ORCPT
+        Thu, 5 Mar 2020 10:21:42 -0500
+Received: from smtprelay0254.hostedemail.com ([216.40.44.254]:48150 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726243AbgCEPVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:19:46 -0500
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j9sHZ-000311-Dl; Thu, 05 Mar 2020 16:19:29 +0100
-Received: from [85.7.42.192] (helo=pc-9.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j9sHY-000BjU-MB; Thu, 05 Mar 2020 16:19:28 +0100
-Subject: Re: [PATCH bpf-next v5 0/4] eBPF JIT for RV32G
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Luke Nelson <lukenels@cs.washington.edu>
-Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
+        Thu, 5 Mar 2020 10:21:42 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id EEE36100E7B45;
+        Thu,  5 Mar 2020 15:21:40 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: love54_65c8d50a17e50
+X-Filterd-Recvd-Size: 1591
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  5 Mar 2020 15:21:39 +0000 (UTC)
+Message-ID: <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
+Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
+ flexible-array member
+From:   Joe Perches <joe@perches.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
-References: <20200305050207.4159-1-luke.r.nels@gmail.com>
- <CAJ+HfNjrUxVqpBgC-WLHbZX7_7Gd-Lk7ghrmASTmaNySuXVUfg@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <4633123d-dc61-ab79-d2ee-e0cef66e4cea@iogearbox.net>
-Date:   Thu, 5 Mar 2020 16:19:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 05 Mar 2020 07:20:04 -0800
+In-Reply-To: <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
+References: <20200305111216.GA24982@embeddedor>
+         <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <CAJ+HfNjrUxVqpBgC-WLHbZX7_7Gd-Lk7ghrmASTmaNySuXVUfg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25742/Thu Mar  5 15:10:18 2020)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 6:40 AM, Björn Töpel wrote:
-> On Thu, 5 Mar 2020 at 06:02, Luke Nelson <lukenels@cs.washington.edu> wrote:
->>
->> This series adds an eBPF JIT for 32-bit RISC-V (RV32G) to the kernel,
->> adapted from the RV64 JIT and the 32-bit ARM JIT.
->>
+On Thu, 2020-03-05 at 16:50 +0200, Kalle Valo wrote:
+> "Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+[]
+> >  drivers/net/wireless/zydas/zd1211rw/zd_usb.h | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> Nice work! Thanks for hanging in there!
+> "zd1211rw: " is enough, no need to have the filename in the title.
 > 
-> For the series,
-> Acked-by: Björn Töpel <bjorn.topel@gmail.com>
-> Reviewed-by: Björn Töpel <bjorn.topel@gmail.com>
+> But I asked this already in an earlier patch, who prefers this format?
+> It already got opposition so I'm not sure what to do.
 
-Applied, thanks everyone!
+I think it doesn't matter.
 
-P.s.: I fixed the MAINTAINERS entry in the last one to have both netdev and bpf
-to be consistent with all the other JIT entries there.
+Trivial inconsistencies in patch subject and word choice
+don't have much overall impact.
+
+
