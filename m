@@ -2,473 +2,248 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CFBC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1E2C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CD520637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81F920637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eys7fdE1"
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="A93gzN+Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgCERXU (ORCPT
+        id S1727732AbgCERXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:23:20 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41252 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbgCERXR (ORCPT
+        Thu, 5 Mar 2020 12:23:24 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37961 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727178AbgCERXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:23:17 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b1so3063135pgm.8;
-        Thu, 05 Mar 2020 09:23:16 -0800 (PST)
+        Thu, 5 Mar 2020 12:23:19 -0500
+Received: by mail-lf1-f67.google.com with SMTP id x22so5289874lff.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:23:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+bkKk7iqoi5S/dJdHL0QBNekmkV769PZZtmx/GwHqBo=;
-        b=eys7fdE1n2U1j26tUKuWBHshY3aZK0tSN4hWFCgB/QtOQdGdLf1ibb914YTCSvS9zQ
-         KBUCP1hUxGH2ylh0nC5IntewaSuMaFs0ycxIcQtgu2p8rFVrCcP+2ofTSCllsP9FirMj
-         dR3n7P+BPwwLJop/FIFtLmw5p5jrY2rgf3cPcuJSHjwgCGqluu82txU1eSCCPm/rKVK7
-         KrFt9DpwwZNqPm/PVYnWWjpkefCUYVzRHY3RVWTfKukiE3s9cGQbqR9/RyV7N+eYuUzE
-         GYLEGl+gXduG0ciASI8MuarnzVbMKJWS3Dnuh84RXh85A0v/jd5VDCxMOMw1/xqGD6yZ
-         eYdw==
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=fPcaCIVhLaLkGll6nxgOHW5KQZcIBDxuWhoHfzoQVN0=;
+        b=A93gzN+Zn4n6r51CIk1zU+p7sSs6MHMyNSevDZnnZZEu1MeBqkV5MxsmltQ8zkYhoV
+         poNcTljr1IQ1u3tXPUeE5CYCAa/ERTJuTgCXXV6CQjn1ZF/y8TTTqOl25hxkR8/opX9h
+         T2NKn1GvTVrWyHuRCWCfhRGwDenKqHGKYyDfae3kMCOAmosGzdzAbaHwpTA+O2E6srg4
+         b44Nw3mfA0NRhqNr+8Mv9iU89qEV58OZrBG2wP7SohzKVz5lm1akkF15NTvQKvoohsYL
+         mVlocBmDFWM2ruQj64AnISnwbVehPDNvXEAsN7uLZtLyFlWh48EqIwsBwz3NO2mp+JCG
+         djZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+bkKk7iqoi5S/dJdHL0QBNekmkV769PZZtmx/GwHqBo=;
-        b=SijzvfKmINOysgQuFsAH/aQAjuQfaOKQyb6NVaY2UYJv23LSgN9YfNJTtW5PTKE7xf
-         M0GhO73uQhBuC0DwgnGFyXB/2Qs80J2WWhzt2Nbv5k/2z+wXC1yXpguxD2G2fp+BgwAX
-         tSpkw/SFagYzyXbvrTQ7RTJ8s3yepr7wJefhAKS8YxqNAGhFFy/+Qh1xfr0m4D1M+0eM
-         nthShIL/1ysMKF8pEgkU7nCu58+cbzSIDdEaARZuV/+v+3nGeD0TlAPXKMvswFRbQ11C
-         ByXKoj4I8tMqB2FifJq13p2/NiQYk36oQkoimh6JKdhBATPaby/fhc295f7WREksyRcM
-         9pTw==
-X-Gm-Message-State: ANhLgQ14XEc7WBes6rr5cPzr+/tcUNlvMGC5bnFeMpo+QwvtJe9SNg7d
-        tc5DkvsHmy0Y5DFf+O+DkQ==
-X-Google-Smtp-Source: ADFU+vu4j+inyYadCyilJ3hXHI8AzN8fyupEmSz2mx28zb9hg7p6jbB0rnTFeXepS6BdYfqfBbNrbg==
-X-Received: by 2002:a63:5251:: with SMTP id s17mr8678269pgl.160.1583428996112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fPcaCIVhLaLkGll6nxgOHW5KQZcIBDxuWhoHfzoQVN0=;
+        b=KqtBB+Wk/kxIkHhKyHFe/dakX59R1gCbPtXlqVJ/Qae2cIcmbe0RHk2Rz3252yxMXc
+         IrUf+MD2Pf12R+TGEtpW03zA6tGj9PH0Ct6vykGdwUN/0q8e/dLV/lXHeykCcvlQYBYU
+         qvasD94ER4ueWu0m6z6WYqVKXMZ3UWG53ynNrOBVR3QdXgz+9WAhQpaO1DIW+GyxrWls
+         LWddZvlz2zmjd0QXXsPRqnmotGOkKxReuNs26dgJl5diKfO9m1eD/tsuAako710ESi+Y
+         xuubV7MF52mPiduJB1Mwr58ZHXP92at7Vmsbwtn2IL7BoxGXxzN6Z4vEjcc3vyvfineg
+         Xegg==
+X-Gm-Message-State: ANhLgQ0SvAujK/+0Vr3HIEup5RTKxEEx2Qu+iZRKrCtkLbZmjUtKioIT
+        CbJPlyRKypNPTqCagy485hF6WA==
+X-Google-Smtp-Source: ADFU+vsqiH7bKpeE49BGJmj5PDxA/JYqwdl/zBQkFoVsaIP8ZhQ8uEjo2q86RcuN2IJjBI9sjuNwXg==
+X-Received: by 2002:ac2:58ee:: with SMTP id v14mr6276462lfo.62.1583428996947;
         Thu, 05 Mar 2020 09:23:16 -0800 (PST)
-Received: from madhuparna-HP-Notebook ([2402:3a80:1ee0:fa4c:45f1:8421:bfd8:b0fb])
-        by smtp.gmail.com with ESMTPSA id p94sm7065663pjp.15.2020.03.05.09.23.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Mar 2020 09:23:15 -0800 (PST)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Thu, 5 Mar 2020 22:53:00 +0530
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     madhuparnabhowmik10@gmail.com, paulmck@kernel.org,
-        josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        Amol Grover <frextrite@gmail.com>,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] Default enable RCU list lockdep debugging with PROVE_RCU
-Message-ID: <20200305172300.GA9915@madhuparna-HP-Notebook>
-References: <20200228092451.10455-1-madhuparnabhowmik10@gmail.com>
- <CGME20200305105038eucas1p1bad0e1bd4b12a28e05ecd14615b31af2@eucas1p1.samsung.com>
- <59f5554c-3343-7bf6-d7d8-bba53710afae@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <59f5554c-3343-7bf6-d7d8-bba53710afae@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: from rad-H81M-S1.semihalf.local (31-172-191-173.noc.fibertech.net.pl. [31.172.191.173])
+        by smtp.gmail.com with ESMTPSA id x23sm2377621ljj.8.2020.03.05.09.23.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 09:23:16 -0800 (PST)
+From:   Radoslaw Biernacki <rad@semihalf.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     Ben Zhang <benzh@chromium.org>, Marcin Wojtas <mw@semihalf.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Vamshi Krishna <vamshi.krishna.gopal@intel.com>,
+        Harshapriya <harshapriya.n@intel.com>,
+        michal.sienkiewicz@intel.com, Lech Betlej <Lech.Betlej@intel.com>,
+        Radoslaw Biernacki <rad@semihalf.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        John Hsu <KCHSU0@nuvoton.com>, Yong Zhi <yong.zhi@intel.com>,
+        Mac Chiang <mac.chiang@intel.com>
+Subject: [PATCH] ASoC: Intel: boards: Use FS as nau8825 sysclk in nau88125_ssm4567 machine
+Date:   Thu,  5 Mar 2020 18:22:19 +0100
+Message-Id: <eec72ad35e45a9898027f2d4da82c5c1998febad.1583356568.git.rad@semihalf.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 11:50:37AM +0100, Marek Szyprowski wrote:
-> Dear All,
-> 
-> On 28.02.2020 10:24, madhuparnabhowmik10@gmail.com wrote:
-> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> >
-> > This patch default enables CONFIG_PROVE_RCU_LIST option with
-> > CONFIG_PROVE_RCU for RCU list lockdep debugging.
-> >
-> > With this change, RCU list lockdep debugging will be default
-> > enabled in CONFIG_PROVE_RCU=y kernels.
-> >
-> > Most of the RCU users (in core kernel/, drivers/, and net/
-> > subsystem) have already been modified to include lockdep
-> > expressions hence RCU list debugging can be enabled by
-> > default.
-> >
-> > However, there are still chances of enountering
-> > false-positive lockdep splats because not everything is converted,
-> > in case RCU list primitives are used in non-RCU read-side critical
-> > section but under the protection of a lock. It would be okay to
-> > have a few false-positives, as long as bugs are identified, since this
-> > patch only affects debugging kernels.
-> >
-> > Co-developed-by: Amol Grover <frextrite@gmail.com>
-> > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> This patch landed in today's linux-next (20200305) as commit 
-> c9af03c14bfdfd21515e556c3a90ffe2aadc964d. It causes the following kernel 
-> warning during system suspend/resume cycle on all ARM 32bit Samsung 
-> Exynos-based boards (kernel compiled from exynos_defconfig):
-> 
-> # rtcwake -s 10 -m mem
-> rtcwake: wakeup from "mem" using /dev/rtc0 at Sat Jan  1 00:01:13 2000
-> PM: suspend entry (deep)
-> Filesystems sync: 0.008 seconds
-> Freezing user space processes ... (elapsed 0.003 seconds) done.
-> OOM killer disabled.
-> Freezing remaining freezable tasks ... (elapsed 0.013 seconds) done.
-> printk: Suspending console(s) (use no_console_suspend to debug)
->
-Hi,
+From: Ben Zhang <benzh@chromium.org>
 
-These warnings in power/main.c and power/wakeup.c  are already
-addressed.
-Check this https://lore.kernel.org/patchwork/patch/1204515/
-Thank you,
-Madhuparna
-> =============================
-> WARNING: suspicious RCU usage
-> 5.6.0-rc1-00177-gc9af03c14bfd #7728 Not tainted
-> -----------------------------
-> drivers/base/power/main.c:326 RCU-list traversed in non-reader section!!
-> 
-> other info that might help us debug this:
-> 
-> 
-> rcu_scheduler_active = 2, debug_locks = 1
-> 5 locks held by rtcwake/1452:
->   #0: edba7270 (sb_writers#7){.+.+}, at: vfs_write+0x16c/0x180
->   #1: ece71f44 (&of->mutex){+.+.}, at: kernfs_fop_write+0xd0/0x228
->   #2: eda72008 (kn->count#98){.+.+}, at: kernfs_fop_write+0xd8/0x228
->   #3: c121223c (system_transition_mutex){+.+.}, at: pm_suspend+0xc0/0x480
->   #4: c1285d98 (device_links_srcu){....}, at: 
-> device_links_read_lock+0x0/0x50
-> 
-> stack backtrace:
-> CPU: 7 PID: 1452 Comm: rtcwake Not tainted 5.6.0-rc1-00177-gc9af03c14bfd 
-> #7728
-> Hardware name: Samsung Exynos (Flattened Device Tree)
-> [<c0112710>] (unwind_backtrace) from [<c010e1f4>] (show_stack+0x10/0x14)
-> [<c010e1f4>] (show_stack) from [<c0b5c50c>] (dump_stack+0xb4/0xe0)
-> [<c0b5c50c>] (dump_stack) from [<c061ea2c>] 
-> (dpm_wait_for_subordinate+0xf4/0xfc)
-> [<c061ea2c>] (dpm_wait_for_subordinate) from [<c061f578>] 
-> (__device_suspend+0x20/0x838)
-> [<c061f578>] (__device_suspend) from [<c0622e1c>] (dpm_suspend+0x188/0x57c)
-> [<c0622e1c>] (dpm_suspend) from [<c0623bfc>] (dpm_suspend_start+0x98/0xa0)
-> [<c0623bfc>] (dpm_suspend_start) from [<c0197e20>] 
-> (suspend_devices_and_enter+0xec/0xc74)
-> [<c0197e20>] (suspend_devices_and_enter) from [<c0198da0>] 
-> (pm_suspend+0x3f8/0x480)
-> [<c0198da0>] (pm_suspend) from [<c019696c>] (state_store+0x6c/0xc8)
-> [<c019696c>] (state_store) from [<c0356c78>] (kernfs_fop_write+0x10c/0x228)
-> [<c0356c78>] (kernfs_fop_write) from [<c02b52c8>] (__vfs_write+0x30/0x1d0)
-> [<c02b52c8>] (__vfs_write) from [<c02b8264>] (vfs_write+0xa4/0x180)
-> [<c02b8264>] (vfs_write) from [<c02b84c0>] (ksys_write+0x60/0xd8)
-> [<c02b84c0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-> Exception stack(0xeac89fa8 to 0xeac89ff0)
-> 9fa0:                   00000004 0002b440 00000004 0002b440 00000004 
-> 00000000
-> 9fc0: 00000004 0002b440 000291b0 00000004 0002b440 00000004 be980bfc 
-> 00028160
-> 9fe0: 0000006c be980ac8 b6eae000 b6f0b634
-> 
-> =============================
-> WARNING: suspicious RCU usage
-> 5.6.0-rc1-00177-gc9af03c14bfd #7728 Not tainted
-> -----------------------------
-> drivers/base/power/main.c:1698 RCU-list traversed in non-reader section!!
-> 
-> other info that might help us debug this:
-> 
-> 
-> rcu_scheduler_active = 2, debug_locks = 1
-> 6 locks held by rtcwake/1452:
->   #0: edba7270 (sb_writers#7){.+.+}, at: vfs_write+0x16c/0x180
->   #1: ece71f44 (&of->mutex){+.+.}, at: kernfs_fop_write+0xd0/0x228
->   #2: eda72008 (kn->count#98){.+.+}, at: kernfs_fop_write+0xd8/0x228
->   #3: c121223c (system_transition_mutex){+.+.}, at: pm_suspend+0xc0/0x480
->   #4: ebecd984 (&dev->mutex){....}, at: __device_suspend+0xf8/0x838
->   #5: c1285d98 (device_links_srcu){....}, at: 
-> device_links_read_lock+0x0/0x50
-> 
-> stack backtrace:
-> CPU: 7 PID: 1452 Comm: rtcwake Not tainted 5.6.0-rc1-00177-gc9af03c14bfd 
-> #7728
-> Hardware name: Samsung Exynos (Flattened Device Tree)
-> [<c0112710>] (unwind_backtrace) from [<c010e1f4>] (show_stack+0x10/0x14)
-> [<c010e1f4>] (show_stack) from [<c0b5c50c>] (dump_stack+0xb4/0xe0)
-> [<c0b5c50c>] (dump_stack) from [<c061f8bc>] (__device_suspend+0x364/0x838)
-> [<c061f8bc>] (__device_suspend) from [<c0622e1c>] (dpm_suspend+0x188/0x57c)
-> [<c0622e1c>] (dpm_suspend) from [<c0623bfc>] (dpm_suspend_start+0x98/0xa0)
-> [<c0623bfc>] (dpm_suspend_start) from [<c0197e20>] 
-> (suspend_devices_and_enter+0xec/0xc74)
-> [<c0197e20>] (suspend_devices_and_enter) from [<c0198da0>] 
-> (pm_suspend+0x3f8/0x480)
-> [<c0198da0>] (pm_suspend) from [<c019696c>] (state_store+0x6c/0xc8)
-> [<c019696c>] (state_store) from [<c0356c78>] (kernfs_fop_write+0x10c/0x228)
-> [<c0356c78>] (kernfs_fop_write) from [<c02b52c8>] (__vfs_write+0x30/0x1d0)
-> [<c02b52c8>] (__vfs_write) from [<c02b8264>] (vfs_write+0xa4/0x180)
-> [<c02b8264>] (vfs_write) from [<c02b84c0>] (ksys_write+0x60/0xd8)
-> [<c02b84c0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-> Exception stack(0xeac89fa8 to 0xeac89ff0)
-> 9fa0:                   00000004 0002b440 00000004 0002b440 00000004 
-> 00000000
-> 9fc0: 00000004 0002b440 000291b0 00000004 0002b440 00000004 be980bfc 
-> 00028160
-> 9fe0: 0000006c be980ac8 b6eae000 b6f0b634
-> wake enabled for irq 160
-> wake enabled for irq 164
-> samsung-pinctrl 13400000.pinctrl: Setting external wakeup interrupt 
-> mask: 0xffffffe7
-> 
-> =============================
-> WARNING: suspicious RCU usage
-> 5.6.0-rc1-00177-gc9af03c14bfd #7728 Not tainted
-> -----------------------------
-> drivers/base/power/wakeup.c:408 RCU-list traversed in non-reader section!!
-> 
-> other info that might help us debug this:
-> 
-> 
-> rcu_scheduler_active = 2, debug_locks = 1
-> 5 locks held by rtcwake/1452:
->   #0: edba7270 (sb_writers#7){.+.+}, at: vfs_write+0x16c/0x180
->   #1: ece71f44 (&of->mutex){+.+.}, at: kernfs_fop_write+0xd0/0x228
->   #2: eda72008 (kn->count#98){.+.+}, at: kernfs_fop_write+0xd8/0x228
->   #3: c121223c (system_transition_mutex){+.+.}, at: pm_suspend+0xc0/0x480
->   #4: c128722c (wakeup_srcu){....}, at: 
-> device_wakeup_arm_wake_irqs+0x0/0x124
-> 
-> stack backtrace:
-> CPU: 5 PID: 1452 Comm: rtcwake Not tainted 5.6.0-rc1-00177-gc9af03c14bfd 
-> #7728
-> Hardware name: Samsung Exynos (Flattened Device Tree)
-> [<c0112710>] (unwind_backtrace) from [<c010e1f4>] (show_stack+0x10/0x14)
-> [<c010e1f4>] (show_stack) from [<c0b5c50c>] (dump_stack+0xb4/0xe0)
-> [<c0b5c50c>] (dump_stack) from [<c0625740>] 
-> (device_wakeup_arm_wake_irqs+0xdc/0x124)
-> [<c0625740>] (device_wakeup_arm_wake_irqs) from [<c0622120>] 
-> (dpm_suspend_noirq+0x1c/0x5a0)
-> [<c0622120>] (dpm_suspend_noirq) from [<c019805c>] 
-> (suspend_devices_and_enter+0x328/0xc74)
-> [<c019805c>] (suspend_devices_and_enter) from [<c0198da0>] 
-> (pm_suspend+0x3f8/0x480)
-> [<c0198da0>] (pm_suspend) from [<c019696c>] (state_store+0x6c/0xc8)
-> [<c019696c>] (state_store) from [<c0356c78>] (kernfs_fop_write+0x10c/0x228)
-> [<c0356c78>] (kernfs_fop_write) from [<c02b52c8>] (__vfs_write+0x30/0x1d0)
-> [<c02b52c8>] (__vfs_write) from [<c02b8264>] (vfs_write+0xa4/0x180)
-> [<c02b8264>] (vfs_write) from [<c02b84c0>] (ksys_write+0x60/0xd8)
-> [<c02b84c0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-> Exception stack(0xeac89fa8 to 0xeac89ff0)
-> 9fa0:                   00000004 0002b440 00000004 0002b440 00000004 
-> 00000000
-> 9fc0: 00000004 0002b440 000291b0 00000004 0002b440 00000004 be980bfc 
-> 00028160
-> 9fe0: 0000006c be980ac8 b6eae000 b6f0b634
-> 
-> =============================
-> WARNING: suspicious RCU usage
-> 5.6.0-rc1-00177-gc9af03c14bfd #7728 Not tainted
-> -----------------------------
-> drivers/base/power/main.c:1238 RCU-list traversed in non-reader section!!
-> 
-> other info that might help us debug this:
-> 
-> 
-> rcu_scheduler_active = 2, debug_locks = 1
-> 5 locks held by rtcwake/1452:
->   #0: edba7270 (sb_writers#7){.+.+}, at: vfs_write+0x16c/0x180
->   #1: ece71f44 (&of->mutex){+.+.}, at: kernfs_fop_write+0xd0/0x228
->   #2: eda72008 (kn->count#98){.+.+}, at: kernfs_fop_write+0xd8/0x228
->   #3: c121223c (system_transition_mutex){+.+.}, at: pm_suspend+0xc0/0x480
->   #4: c1285d98 (device_links_srcu){....}, at: 
-> device_links_read_lock+0x0/0x50
-> 
-> stack backtrace:
-> CPU: 5 PID: 1452 Comm: rtcwake Not tainted 5.6.0-rc1-00177-gc9af03c14bfd 
-> #7728
-> Hardware name: Samsung Exynos (Flattened Device Tree)
-> [<c0112710>] (unwind_backtrace) from [<c010e1f4>] (show_stack+0x10/0x14)
-> [<c010e1f4>] (show_stack) from [<c0b5c50c>] (dump_stack+0xb4/0xe0)
-> [<c0b5c50c>] (dump_stack) from [<c06202d4>] 
-> (__device_suspend_noirq+0x234/0x304)
-> [<c06202d4>] (__device_suspend_noirq) from [<c0622284>] 
-> (dpm_suspend_noirq+0x180/0x5a0)
-> [<c0622284>] (dpm_suspend_noirq) from [<c019805c>] 
-> (suspend_devices_and_enter+0x328/0xc74)
-> [<c019805c>] (suspend_devices_and_enter) from [<c0198da0>] 
-> (pm_suspend+0x3f8/0x480)
-> [<c0198da0>] (pm_suspend) from [<c019696c>] (state_store+0x6c/0xc8)
-> [<c019696c>] (state_store) from [<c0356c78>] (kernfs_fop_write+0x10c/0x228)
-> [<c0356c78>] (kernfs_fop_write) from [<c02b52c8>] (__vfs_write+0x30/0x1d0)
-> [<c02b52c8>] (__vfs_write) from [<c02b8264>] (vfs_write+0xa4/0x180)
-> [<c02b8264>] (vfs_write) from [<c02b84c0>] (ksys_write+0x60/0xd8)
-> [<c02b84c0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-> Exception stack(0xeac89fa8 to 0xeac89ff0)
-> 9fa0:                   00000004 0002b440 00000004 0002b440 00000004 
-> 00000000
-> 9fc0: 00000004 0002b440 000291b0 00000004 0002b440 00000004 be980bfc 
-> 00028160
-> 9fe0: 0000006c be980ac8 b6eae000 b6f0b634
-> Disabling non-boot CPUs ...
-> IRQ 51: no longer affine to CPU1
-> IRQ 52: no longer affine to CPU2
-> IRQ 53: no longer affine to CPU3
-> IRQ 54: no longer affine to CPU4
-> IRQ 55: no longer affine to CPU5
-> IRQ 56: no longer affine to CPU6
-> IRQ 57: no longer affine to CPU7
-> Enabling non-boot CPUs ...
-> CPU1 is up
-> CPU2 is up
-> CPU3 is up
-> CPU4: detected I-Cache line size mismatch, workaround enabled
-> CPU4 is up
-> CPU5: detected I-Cache line size mismatch, workaround enabled
-> CPU5 is up
-> CPU6: detected I-Cache line size mismatch, workaround enabled
-> CPU6 is up
-> CPU7: detected I-Cache line size mismatch, workaround enabled
-> CPU7 is up
-> 
-> =============================
-> WARNING: suspicious RCU usage
-> 5.6.0-rc1-00177-gc9af03c14bfd #7728 Not tainted
-> -----------------------------
-> drivers/base/power/main.c:269 RCU-list traversed in non-reader section!!
-> 
-> other info that might help us debug this:
-> 
-> 
-> rcu_scheduler_active = 2, debug_locks = 1
-> 5 locks held by rtcwake/1452:
->   #0: edba7270 (sb_writers#7){.+.+}, at: vfs_write+0x16c/0x180
->   #1: ece71f44 (&of->mutex){+.+.}, at: kernfs_fop_write+0xd0/0x228
->   #2: eda72008 (kn->count#98){.+.+}, at: kernfs_fop_write+0xd8/0x228
->   #3: c121223c (system_transition_mutex){+.+.}, at: pm_suspend+0xc0/0x480
->   #4: c1285d98 (device_links_srcu){....}, at: 
-> device_links_read_lock+0x0/0x50
-> 
-> stack backtrace:
-> CPU: 0 PID: 1452 Comm: rtcwake Not tainted 5.6.0-rc1-00177-gc9af03c14bfd 
-> #7728
-> Hardware name: Samsung Exynos (Flattened Device Tree)
-> [<c0112710>] (unwind_backtrace) from [<c010e1f4>] (show_stack+0x10/0x14)
-> [<c010e1f4>] (show_stack) from [<c0b5c50c>] (dump_stack+0xb4/0xe0)
-> [<c0b5c50c>] (dump_stack) from [<c061ebf0>] 
-> (dpm_wait_for_superior+0x114/0x12c)
-> [<c061ebf0>] (dpm_wait_for_superior) from [<c061fe98>] 
-> (device_resume_noirq+0x74/0x238)
-> [<c061fe98>] (device_resume_noirq) from [<c0620a34>] 
-> (dpm_resume_noirq+0x160/0x53c)
-> [<c0620a34>] (dpm_resume_noirq) from [<c01983c8>] 
-> (suspend_devices_and_enter+0x694/0xc74)
-> [<c01983c8>] (suspend_devices_and_enter) from [<c0198da0>] 
-> (pm_suspend+0x3f8/0x480)
-> [<c0198da0>] (pm_suspend) from [<c019696c>] (state_store+0x6c/0xc8)
-> [<c019696c>] (state_store) from [<c0356c78>] (kernfs_fop_write+0x10c/0x228)
-> [<c0356c78>] (kernfs_fop_write) from [<c02b52c8>] (__vfs_write+0x30/0x1d0)
-> [<c02b52c8>] (__vfs_write) from [<c02b8264>] (vfs_write+0xa4/0x180)
-> [<c02b8264>] (vfs_write) from [<c02b84c0>] (ksys_write+0x60/0xd8)
-> [<c02b84c0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-> Exception stack(0xeac89fa8 to 0xeac89ff0)
-> 9fa0:                   00000004 0002b440 00000004 0002b440 00000004 
-> 00000000
-> 9fc0: 00000004 0002b440 000291b0 00000004 0002b440 00000004 be980bfc 
-> 00028160
-> 9fe0: 0000006c be980ac8 b6eae000 b6f0b634
-> s3c-i2c 12c80000.i2c: slave address 0x00
-> s3c-i2c 12c80000.i2c: bus frequency set to 65 KHz
-> 
-> =============================
-> WARNING: suspicious RCU usage
-> 5.6.0-rc1-00177-gc9af03c14bfd #7728 Not tainted
-> -----------------------------
-> drivers/base/power/wakeup.c:424 RCU-list traversed in non-reader section!!
-> 
-> other info that might help us debug this:
-> 
-> 
-> rcu_scheduler_active = 2, debug_locks = 1
-> 5 locks held by rtcwake/1452:
->   #0: edba7270 (sb_writers#7){.+.+}, at: vfs_write+0x16c/0x180
->   #1: ece71f44 (&of->mutex){+.+.}, at: kernfs_fop_write+0xd0/0x228
->   #2: eda72008 (kn->count#98){.+.+}, at: kernfs_fop_write+0xd8/0x228
->   #3: c121223c (system_transition_mutex){+.+.}, at: pm_suspend+0xc0/0x480
->   #4: c128722c (wakeup_srcu){....}, at: 
-> device_wakeup_disarm_wake_irqs+0x0/0x124
-> 
-> stack backtrace:
-> CPU: 0 PID: 1452 Comm: rtcwake Not tainted 5.6.0-rc1-00177-gc9af03c14bfd 
-> #7728
-> Hardware name: Samsung Exynos (Flattened Device Tree)
-> [<c0112710>] (unwind_backtrace) from [<c010e1f4>] (show_stack+0x10/0x14)
-> [<c010e1f4>] (show_stack) from [<c0b5c50c>] (dump_stack+0xb4/0xe0)
-> [<c0b5c50c>] (dump_stack) from [<c0625864>] 
-> (device_wakeup_disarm_wake_irqs+0xdc/0x124)
-> [<c0625864>] (device_wakeup_disarm_wake_irqs) from [<c0620b84>] 
-> (dpm_resume_noirq+0x2b0/0x53c)
-> [<c0620b84>] (dpm_resume_noirq) from [<c01983c8>] 
-> (suspend_devices_and_enter+0x694/0xc74)
-> [<c01983c8>] (suspend_devices_and_enter) from [<c0198da0>] 
-> (pm_suspend+0x3f8/0x480)
-> [<c0198da0>] (pm_suspend) from [<c019696c>] (state_store+0x6c/0xc8)
-> [<c019696c>] (state_store) from [<c0356c78>] (kernfs_fop_write+0x10c/0x228)
-> [<c0356c78>] (kernfs_fop_write) from [<c02b52c8>] (__vfs_write+0x30/0x1d0)
-> [<c02b52c8>] (__vfs_write) from [<c02b8264>] (vfs_write+0xa4/0x180)
-> [<c02b8264>] (vfs_write) from [<c02b84c0>] (ksys_write+0x60/0xd8)
-> [<c02b84c0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-> Exception stack(0xeac89fa8 to 0xeac89ff0)
-> 9fa0:                   00000004 0002b440 00000004 0002b440 00000004 
-> 00000000
-> 9fc0: 00000004 0002b440 000291b0 00000004 0002b440 00000004 be980bfc 
-> 00028160
-> 9fe0: 0000006c be980ac8 b6eae000 b6f0b634
-> 
-> I can help debugging this issue.
-> 
-> > ---
-> >   kernel/rcu/Kconfig.debug | 11 +++--------
-> >   1 file changed, 3 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-> > index 4aa02eee8f6c..ec4bb6c09048 100644
-> > --- a/kernel/rcu/Kconfig.debug
-> > +++ b/kernel/rcu/Kconfig.debug
-> > @@ -9,15 +9,10 @@ config PROVE_RCU
-> >   	def_bool PROVE_LOCKING
-> >   
-> >   config PROVE_RCU_LIST
-> > -	bool "RCU list lockdep debugging"
-> > -	depends on PROVE_RCU && RCU_EXPERT
-> > -	default n
-> > +	def_bool PROVE_RCU
-> >   	help
-> > -	  Enable RCU lockdep checking for list usages. By default it is
-> > -	  turned off since there are several list RCU users that still
-> > -	  need to be converted to pass a lockdep expression. To prevent
-> > -	  false-positive splats, we keep it default disabled but once all
-> > -	  users are converted, we can remove this config option.
-> > +	  Enable RCU lockdep checking for list usages. It is default
-> > +	  enabled with CONFIG_PROVE_RCU.
-> >   
-> >   config TORTURE_TEST
-> >   	tristate
-> 
-> Best regards
-> -- 
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
-> 
+This single fix address two issues on machine with nau88125 + ssm4567:
+1) Audio distortion, due to lack of required clock rate on MCLK line
+2) Loud audible "pops" on headphones if there is no sysclk during nau8825
+   playback power up sequence
+
+Explanation for:
+1) Due to Skylake HW limitation, MCLK pin can only output 24MHz clk
+   rate (it can be only connected to XTAL parent clk). The BCLK pin 
+   can be driven by dividers and therefore FW is able to set it to rate
+   required by chosen audio format. According to nau8825 datasheet, 256*FS
+   sysclk gives the best audio quality and the only way to achieve this
+   (taking into account the above limitations) its to regenerate the MCLK
+   from BCLK on nau8825 side by FFL. Without required clk rate, audio is
+   distorted by added harmonics.
+
+2) Currently Skylake does not output MCLK/FS when the back-end DAI op
+   hw_param is called, so we cannot switch to MCLK/FS in hw_param.  This
+   patch reduces pop by letting nau8825 keep using its internal VCO clock
+   during widget power up sequence, until SNDRV_PCM_TRIGGER_START when
+   MCLK/FS is available. Once device resumes, the system will only enable
+   power sequence for playback without doing hardware parameter, audio
+   format, and PLL configure. In the mean time, the jack detecion sequence
+   has changed PLL parameters and switched to internal clock. Thus, the
+   playback signal distorted without correct PLL parameters.  That is why
+   we need to configure the PLL again in SNDRV_PCM_TRIGGER_RESUME case.
+
+Signed-off-by: John Hsu <KCHSU0@nuvoton.com>
+Signed-off-by: Yong Zhi <yong.zhi@intel.com>
+Signed-off-by: Mac Chiang <mac.chiang@intel.com>
+Signed-off-by: Ben Zhang <benzh@chromium.org>
+Signed-off-by: Radoslaw Biernacki <rad@semihalf.com>
+---
+ sound/soc/intel/boards/skl_nau88l25_ssm4567.c | 71 ++++++++++++++-----
+ 1 file changed, 52 insertions(+), 19 deletions(-)
+
+diff --git a/sound/soc/intel/boards/skl_nau88l25_ssm4567.c b/sound/soc/intel/boards/skl_nau88l25_ssm4567.c
+index c99c8b23e509..c5354da49670 100644
+--- a/sound/soc/intel/boards/skl_nau88l25_ssm4567.c
++++ b/sound/soc/intel/boards/skl_nau88l25_ssm4567.c
+@@ -12,6 +12,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/delay.h>
+ #include <sound/core.h>
+ #include <sound/pcm.h>
+ #include <sound/soc.h>
+@@ -57,7 +58,7 @@ static const struct snd_kcontrol_new skylake_controls[] = {
+ };
+ 
+ static int platform_clock_control(struct snd_soc_dapm_widget *w,
+-		struct snd_kcontrol *k, int  event)
++		struct snd_kcontrol *k, int event)
+ {
+ 	struct snd_soc_dapm_context *dapm = w->dapm;
+ 	struct snd_soc_card *card = dapm->card;
+@@ -70,14 +71,7 @@ static int platform_clock_control(struct snd_soc_dapm_widget *w,
+ 		return -EIO;
+ 	}
+ 
+-	if (SND_SOC_DAPM_EVENT_ON(event)) {
+-		ret = snd_soc_dai_set_sysclk(codec_dai,
+-				NAU8825_CLK_MCLK, 24000000, SND_SOC_CLOCK_IN);
+-		if (ret < 0) {
+-			dev_err(card->dev, "set sysclk err = %d\n", ret);
+-			return -EIO;
+-		}
+-	} else {
++	if (!SND_SOC_DAPM_EVENT_ON(event)) {
+ 		ret = snd_soc_dai_set_sysclk(codec_dai,
+ 				NAU8825_CLK_INTERNAL, 0, SND_SOC_CLOCK_IN);
+ 		if (ret < 0) {
+@@ -85,6 +79,7 @@ static int platform_clock_control(struct snd_soc_dapm_widget *w,
+ 			return -EIO;
+ 		}
+ 	}
++
+ 	return ret;
+ }
+ 
+@@ -344,24 +339,40 @@ static int skylake_dmic_fixup(struct snd_soc_pcm_runtime *rtd,
+ 	return 0;
+ }
+ 
+-static int skylake_nau8825_hw_params(struct snd_pcm_substream *substream,
+-	struct snd_pcm_hw_params *params)
++static int skylake_nau8825_trigger(struct snd_pcm_substream *substream, int cmd)
+ {
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	struct snd_soc_dai *codec_dai = rtd->codec_dai;
+-	int ret;
+-
+-	ret = snd_soc_dai_set_sysclk(codec_dai,
+-			NAU8825_CLK_MCLK, 24000000, SND_SOC_CLOCK_IN);
++	int ret = 0;
+ 
+-	if (ret < 0)
+-		dev_err(rtd->dev, "snd_soc_dai_set_sysclk err = %d\n", ret);
++	switch (cmd) {
++	case SNDRV_PCM_TRIGGER_START:
++		ret = snd_soc_dai_set_sysclk(codec_dai, NAU8825_CLK_FLL_FS, 0,
++					     SND_SOC_CLOCK_IN);
++		if (ret < 0) {
++			dev_err(codec_dai->dev, "can't set FS clock %d\n", ret);
++			break;
++		}
++		ret = snd_soc_dai_set_pll(codec_dai, 0, 0, runtime->rate,
++					  runtime->rate * 256);
++		if (ret < 0)
++			dev_err(codec_dai->dev, "can't set FLL: %d\n", ret);
++		break;
++	case SNDRV_PCM_TRIGGER_RESUME:
++		ret = snd_soc_dai_set_pll(codec_dai, 0, 0, runtime->rate,
++					  runtime->rate * 256);
++		if (ret < 0)
++			dev_err(codec_dai->dev, "can't set FLL: %d\n", ret);
++		msleep(20);
++		break;
++	}
+ 
+ 	return ret;
+ }
+ 
+-static const struct snd_soc_ops skylake_nau8825_ops = {
+-	.hw_params = skylake_nau8825_hw_params,
++static struct snd_soc_ops skylake_nau8825_ops = {
++	.trigger = skylake_nau8825_trigger,
+ };
+ 
+ static const unsigned int channels_dmic[] = {
+@@ -671,10 +682,32 @@ static int skylake_card_late_probe(struct snd_soc_card *card)
+ 	return hdac_hdmi_jack_port_init(component, &card->dapm);
+ }
+ 
++static int __maybe_unused skylake_nau8825_resume_post(struct snd_soc_card *card)
++{
++	struct snd_soc_dai *codec_dai;
++
++	codec_dai = snd_soc_card_get_codec_dai(card, SKL_NUVOTON_CODEC_DAI);
++	if (!codec_dai) {
++		dev_err(card->dev, "Codec dai not found\n");
++		return -EIO;
++	}
++
++	dev_dbg(codec_dai->dev, "playback_active:%d playback_widget->active:%d codec_dai->rate:%d\n",
++		codec_dai->playback_active, codec_dai->playback_widget->active,
++		codec_dai->rate);
++
++	if (codec_dai->playback_active && codec_dai->playback_widget->active)
++		snd_soc_dai_set_sysclk(codec_dai, NAU8825_CLK_FLL_FS, 0,
++				       SND_SOC_CLOCK_IN);
++
++	return 0;
++}
++
+ /* skylake audio machine driver for SPT + NAU88L25 */
+ static struct snd_soc_card skylake_audio_card = {
+ 	.name = "sklnau8825adi",
+ 	.owner = THIS_MODULE,
++	.resume_post = skylake_nau8825_resume_post,
+ 	.dai_link = skylake_dais,
+ 	.num_links = ARRAY_SIZE(skylake_dais),
+ 	.controls = skylake_controls,
+-- 
+2.17.1
+
