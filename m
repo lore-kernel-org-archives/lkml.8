@@ -2,88 +2,129 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37748C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB44C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFF720848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8C620848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:40:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjmpFRwS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMqAXVvp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgCERi5 (ORCPT
+        id S1726170AbgCERkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:38:57 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39868 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgCERi5 (ORCPT
+        Thu, 5 Mar 2020 12:40:04 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46762 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgCERkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:38:57 -0500
-Received: by mail-lj1-f196.google.com with SMTP id f10so7023066ljn.6;
-        Thu, 05 Mar 2020 09:38:54 -0800 (PST)
+        Thu, 5 Mar 2020 12:40:04 -0500
+Received: by mail-pl1-f194.google.com with SMTP id w12so2769680pll.13
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:40:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AjhdRYjDPFMTb22nPTZry4E/4CciJROpmnc6zv5X8Vg=;
-        b=QjmpFRwS72p2y1jT2grAaixO/Fj7ExldbHvxqFnHIKGSN7mp6yvTg0LTjqIIv4VkKO
-         +WeHfN069Od8rFuh/KQVN97gl+DSe7axo04atuXl9f3nNPKdqwsDBqrUMpoT2V8i02oJ
-         MjGAgwBStoHwVRPFDWUhNYSUsc2fxLk30NSWpX8qyhTNw3DJKe/NsN+H0MngerHmysdz
-         gc9BtobLIwkInmSNYyuVRObjuP6pEt2iY/14lT0IiZobgAqfvVHTaqrTnVTU9woZ7WFD
-         XL29FtnZZ4By9EgqLR3pNX2T1zSNcbFPYE2VNu88hLdnvbnWXVujtgYn+zf5tih+K5nJ
-         hOyQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fwow6K7jsM635u4hX7uuA9k3vOkPSqTTypNUyW6/TUY=;
+        b=qMqAXVvphxubq/lxkcZ85TqcPWB9iEOe7HMOwCW0BoGX157x/CVL9Bmy5s0JRX44j1
+         1BA2lRXB0a4OJqQo3McZFfbhbU63nhep8v9tfp8T7KMErGp/N6jZXZFHAHB9ojJzw3RL
+         lYAQB6JT1FsqgJjQGkjZ3OY9Rczgbq94Oemnxkj9Yx+8/TR4jnoRycjJ3DCehlKgss9r
+         KdYG7gw/vEe+hnsa7JGbkqgVgSBn5QG2fYyx37bJq8TqnDvTV0bIoTG8cdlL1iBbeqhg
+         8KDdIhmJryfaxjXNzebYoXuiCtohwx/D/yOQdIiZ0yF2k2SReOgY7jH3fN1+dQEEFiTJ
+         rRog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AjhdRYjDPFMTb22nPTZry4E/4CciJROpmnc6zv5X8Vg=;
-        b=Jhg03ol3zo4hbt5US8iK0uzRlCfkKwsW1IAnEWT0i/vr42AqXODx4+q1Y4/sUTQg4Q
-         pVouh4L444sCv20uBWafL2bnOmVb+XnXOxgAK8bY03300HqI1zvlQpiChtqKzRl5cKBG
-         ty6PAYcyI97+tCENqdAuUYJwYZKGNV23F19Hl7v8UVFPQhZMyr36WuN7/NmTka85Ukyr
-         JpXIGGP4Hjw+kmQGzqACfK/2tju0WOHgQCK1DYDO7mBy1OoaWLciHLDOq77fGK+jI2Qo
-         rzkvAneHFMf7uPDvA/R5CUgpIOyWJoBaXjEOTd4knxHV4QMVvuzMmnOZyl5o+7VZ9U0X
-         UhkQ==
-X-Gm-Message-State: ANhLgQ0EgScrLtixEzC3APjZm87hSr/9ruFKFN79VfY66tZvpqapqhwS
-        DmcqC1Q52ntHYAyurFbJ8bxJuwhuhqc3dYDKp3U=
-X-Google-Smtp-Source: ADFU+vtXBGwHlMSdbyhPktHbkhplsEt4jfLLEKNjPpDTwBv5BGuitJHDawiTWbUYw94VLKGibffNlVaOONDOSHX362Y=
-X-Received: by 2002:a2e:760f:: with SMTP id r15mr6128149ljc.234.1583429933466;
- Thu, 05 Mar 2020 09:38:53 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fwow6K7jsM635u4hX7uuA9k3vOkPSqTTypNUyW6/TUY=;
+        b=sDELOVTdnmyc12jDNY+h1GiB1YDRJpl/H2xIDfm/1GooU97rTOMudxMyvfr+G0+acP
+         cwwOe9L2p+Wo+iqLlO+XJE3iviOzOfMOjM+hDVrCcKCQDbQTPdm5E0O681x4Tkizr2MJ
+         A7DlPggoGjT6tR/uB7+Aq2wytfOScnVNT64hNvGAyqiy98ZFAc6GlYInjwYjp9mnlzQK
+         1Xnix9JF2KcOYyquSdwGIcv9KS9Zl68agx4NKrACzQrQcDj8dVwji8tlzQh+nECySJZz
+         tj/yXOfC77T7IQi8kGsd5g9mt8g1d886mQxNFSC0isLX439ai8YszgpoYUdsPGxgNYYK
+         /nxw==
+X-Gm-Message-State: ANhLgQ0kvEN4Tq+9ebA25jgKOoUQZFyPUTeO4N26/nbU4xpQpN7QgruY
+        8aQy9WU9KsGIxoOLvY214m8sCCI=
+X-Google-Smtp-Source: ADFU+vsEiecdkVptIoIkzpBcZJEM2BircXIFYz4xLout7u/nfoCzPAi1DZqkZ2ny15wjU2cu5gcSOw==
+X-Received: by 2002:a17:902:8b8a:: with SMTP id ay10mr9372833plb.288.1583430001634;
+        Thu, 05 Mar 2020 09:40:01 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([2402:3a80:1ee0:fa4c:45f1:8421:bfd8:b0fb])
+        by smtp.gmail.com with ESMTPSA id y18sm31808475pfe.19.2020.03.05.09.39.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Mar 2020 09:40:00 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Thu, 5 Mar 2020 23:09:54 +0530
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     madhuparnabhowmik10@gmail.com, paulmck@kernel.org,
+        josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
+        Amol Grover <frextrite@gmail.com>
+Subject: Re: [PATCH] Default enable RCU list lockdep debugging with PROVE_RCU
+Message-ID: <20200305173953.GA10538@madhuparna-HP-Notebook>
+References: <20200228092451.10455-1-madhuparnabhowmik10@gmail.com>
+ <20200305155238.GA8669@roeck-us.net>
 MIME-Version: 1.0
-References: <20200305175528.5b3ccc09@canb.auug.org.au> <715919f5-e256-fbd1-44ff-8934bda78a71@infradead.org>
- <CAADnVQ+TYiVu+Ksstj4LmYa=+UPwbv-dv-tscRaKn_0FcpstBg@mail.gmail.com>
- <CACYkzJ4ks6VgxeGpJApvqJdx6Q-8PZwk-r=q4ySWsDBDy1jp+g@mail.gmail.com> <CACYkzJ5_8yQV2JPHFz_ZE0vYdASmrAes3Boy_sjbicX6LuiORw@mail.gmail.com>
-In-Reply-To: <CACYkzJ5_8yQV2JPHFz_ZE0vYdASmrAes3Boy_sjbicX6LuiORw@mail.gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 5 Mar 2020 09:38:42 -0800
-Message-ID: <CAADnVQ+K4Vc2_=tB7COFFBy3uswike-TERoSF=1=GdnWFDUutQ@mail.gmail.com>
-Subject: Re: linux-next: Tree for Mar 5 (bpf_trace)
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305155238.GA8669@roeck-us.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 9:32 AM KP Singh <kpsingh@chromium.org> wrote:
+On Thu, Mar 05, 2020 at 07:52:38AM -0800, Guenter Roeck wrote:
+> On Fri, Feb 28, 2020 at 02:54:51PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > This patch default enables CONFIG_PROVE_RCU_LIST option with
+> > CONFIG_PROVE_RCU for RCU list lockdep debugging.
+> > 
+> > With this change, RCU list lockdep debugging will be default
+> > enabled in CONFIG_PROVE_RCU=y kernels.
+> > 
+> > Most of the RCU users (in core kernel/, drivers/, and net/
+> > subsystem) have already been modified to include lockdep
+> > expressions hence RCU list debugging can be enabled by
+> > default.
+> > 
+> > However, there are still chances of enountering
+> > false-positive lockdep splats because not everything is converted,
+> > in case RCU list primitives are used in non-RCU read-side critical
+> > section but under the protection of a lock. It would be okay to
+> > have a few false-positives, as long as bugs are identified, since this
+> > patch only affects debugging kernels.
+> > 
+> > Co-developed-by: Amol Grover <frextrite@gmail.com>
+> > Signed-off-by: Amol Grover <frextrite@gmail.com>
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> Who is going to fix the fallout ?
+> 
+> fs/btrfs/block-group.c:2011 RCU-list traversed in non-reader section!!
+> kernel/kprobes.c:329 RCU-list traversed in non-reader section!!
+> net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
 >
-> This fails as we added bpf_test_run_tracing in net/bpf/test_run.c
-> which gets built only CONFIG_NET is enabled. Which, this particular
-> config, disables.
->
-> Alexei, if it's okay with you. I can send a patch that separates the
-> tracing test code into kernel/bpf/test_run_trace.c which depends
-> only on CONFIG_BPF_SYSCALL.
+Hi,
+There is already a patch for fixing the warnings in kernel/kprobes.c :
+https://lore.kernel.org/lkml/157905963533.2268.4672153983131918123.stgit@devnote2/
 
-In such situation we typically add __weak dummy call.
-May be split will work too.
-or move tracing_prog_ops to kernel/bpf/core.c ?
+Same for net/ipv4/ipmr:
+https://lore.kernel.org/patchwork/patch/1198934/
+
+Can you please send the warning with the stack backtrace and locks held
+for btrfs/block-group.c, I will work on it.
+
+Thank you,
+Madhuparna
+> This is just from my boot tests. I'll keep PROVE_RCU enabled for the
+> time being, but unless the noise is addressed I'll have to disable it
+> because otherwise the real problems disappear in the noise.
+> 
+> Guenter
