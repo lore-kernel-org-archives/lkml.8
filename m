@@ -2,117 +2,116 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D412C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56899C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0945320801
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF6F208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lSOEVXpU"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yUJonfYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgCEWM1 (ORCPT
+        id S1726368AbgCEWNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 17:12:27 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37011 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCEWM0 (ORCPT
+        Thu, 5 Mar 2020 17:13:39 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:40293 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCEWNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 17:12:26 -0500
-Received: by mail-io1-f65.google.com with SMTP id k4so136962ior.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 14:12:26 -0800 (PST)
+        Thu, 5 Mar 2020 17:13:38 -0500
+Received: by mail-qv1-f68.google.com with SMTP id u17so54408qvv.7
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 14:13:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BLO01LFdRSFqT4wIw42RwnApKJS//R7HNVPhSavIu5E=;
-        b=lSOEVXpUwzFvtYV9lmGONQikqTAtuG6EdUXH5lWDTLve2DThE4B1xwkm9WSm76mNUr
-         k5OHw4ZuGMBo7+b4+fVJKErhm5b91u/FFMCVf9hsgub8ILjTywxxIaF3nLWmilri1RFY
-         bVOmmMwSmsD7otMDz2bROoDXi/a2zqW5FIa/YQGT3d4V4e2LZTKnx7pM+yqBTa7Fpd+Z
-         ZkcqwlFl/2YWKTg6Cl008e9wMsm40T/Ul89O7qGJjK1mL/MNsn3HbqMCiQaLlTT/p3iN
-         NeBiQ1ndS49Vo7LW2B7z81RGKHiC0SZ9VgYN3raQ5bld/JqDFAotR0FA9IooxwofPU6x
-         cZvg==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+B1geMfKugZ9/Y0qjQLB48rxQUh2J0QAO4pKzK9MPtc=;
+        b=yUJonfYkzQmASLfePqIhRviUDsAM+NazCmszFozaooCnRqJBeQ04Ol7bzuEhApnWu/
+         6z+YcC4kmkO9bpOh0sQ7sXKgWLpk6VI9cD97Lv69w9p65AnjBmQDn5Tak8mcpvMakWa1
+         lHaM3zQB9LWo5dvFjy/l6+RnJAzC3oJsttK1Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BLO01LFdRSFqT4wIw42RwnApKJS//R7HNVPhSavIu5E=;
-        b=JPLggpi0XtDZLIjs6PL2OkrLQcDN+y/xeWALVsEUvb6uQK33Z2JIynw2InJ0xPw2u5
-         MI/L1L0C3AXoVgjetyQBArsduA7xc+buVAMP6SaIfv8c9DyAlwNxVQe6HDF6lU4kPv+E
-         KiiYCDrrqiBnDMLWAP9SIzb+W60B3d0VBhFIV/u1GitCcjumHyrql58nR+Q2/c2iXkBg
-         KZab3uj/wAnFOXz0l8n8d7vTG2FJynz2Un4HahRwcK864JP2/iB3qr79nUnS/b55YjlA
-         p55lPOuZCEW25mzS375AxqQm2FGsO2jmZtcPGgM6yNexgYBMiwl+GX+OxsolBYjNQjNI
-         7ojg==
-X-Gm-Message-State: ANhLgQ2dPTL4qped6ZSU/Ako+8OhRrz7xec51yVCWBv7olw7HHn/Dvoy
-        vnSRlW5QznHutsNb1wal9brepJuwv55e4hxEg9hhFQ==
-X-Google-Smtp-Source: ADFU+vtr8PA4SQjv1gXhZGUToTCIG22z8a7yUXMj8YNFxabC8mrUU/NGdHrPnu7HyImc63wibQZdJgkJs7O1TlkPbxQ=
-X-Received: by 2002:a02:13ca:: with SMTP id 193mr58093jaz.54.1583446345383;
- Thu, 05 Mar 2020 14:12:25 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+B1geMfKugZ9/Y0qjQLB48rxQUh2J0QAO4pKzK9MPtc=;
+        b=aoBCVSUnXofvIDaxw9Yy48ZMfppLGpXCGeW5mWq30RPBS3UO3Jn5djZbfSLysXCa3O
+         fyD17CsZwek6x9Gs/yN1h1vzSTgPCuvG6y503lt1RUAOrpz7CEDIq1Ww43ML1cV+QayW
+         9mYcLu0kJq45r9PToOgJIs/c4ise6IEZAUqJMrw8Dfnfkpfq+y/CC8yFLhubQiXREkND
+         vfmOcLdSY2qL4gj7Ebg9IqV99gwSezksF4Wwzk60gdBvHzbX5T/5jPCOFi+bLDbxE5ML
+         sGZmkKpqB3KC/M40MZY91e+D8HwJdhK4N63kdMl6KdsGfTh5sXUz345WYS/ipRUTypsC
+         QaKA==
+X-Gm-Message-State: ANhLgQ0R+mlnqZscJP499I62LsHtHcD8Rc4QJw9/SNlS+yPI1fqhezwE
+        Ru5t71Hdyy6RmJNF7SFg5kYafLBBq4k=
+X-Google-Smtp-Source: ADFU+vt6v0+EF3++rFKijcSaojGu0jqGRlv6a89byICbegBod4UGPa8P3gUncs01N8yuFqjTtyMQTQ==
+X-Received: by 2002:a05:6214:1404:: with SMTP id n4mr374856qvx.237.1583446417238;
+        Thu, 05 Mar 2020 14:13:37 -0800 (PST)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id n8sm16366198qke.37.2020.03.05.14.13.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 14:13:36 -0800 (PST)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>, urezki@gmail.com
+Subject: [PATCH linus/master 1/2] rcuperf: Add ability to increase object allocation size
+Date:   Thu,  5 Mar 2020 17:13:22 -0500
+Message-Id: <20200305221323.66051-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 MIME-Version: 1.0
-References: <20200304213941.112303-1-xii@google.com> <20200305075742.GR2596@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200305075742.GR2596@hirez.programming.kicks-ass.net>
-From:   Paul Turner <pjt@google.com>
-Date:   Thu, 5 Mar 2020 14:11:49 -0800
-Message-ID: <CAPM31RJdNtxmOi2eeRYFyvRKG9nofhqZfPgZGA5U7u8uZ2WXwA@mail.gmail.com>
-Subject: Re: [PATCH] sched: watchdog: Touch kernel watchdog in sched code
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Xi Wang <xii@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Don <joshdon@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 11:57 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Mar 04, 2020 at 01:39:41PM -0800, Xi Wang wrote:
-> > The main purpose of kernel watchdog is to test whether scheduler can
-> > still schedule tasks on a cpu. In order to reduce latency from
-> > periodically invoking watchdog reset in thread context, we can simply
-> > touch watchdog from pick_next_task in scheduler. Compared to actually
-> > resetting watchdog from cpu stop / migration threads, we lose coverage
-> > on: a migration thread actually get picked and we actually context
-> > switch to the migration thread. Both steps are heavily protected by
-> > kernel locks and unlikely to silently fail. Thus the change would
-> > provide the same level of protection with less overhead.
-> >
-> > The new way vs the old way to touch the watchdogs is configurable
-> > from:
-> >
-> > /proc/sys/kernel/watchdog_touch_in_thread_interval
-> >
-> > The value means:
-> > 0: Always touch watchdog from pick_next_task
-> > 1: Always touch watchdog from migration thread
-> > N (N>0): Touch watchdog from migration thread once in every N
-> >          invocations, and touch watchdog from pick_next_task for
-> >          other invocations.
-> >
->
-> This is configurable madness. What are we really trying to do here?
+This allows us to increase memory pressure dynamically using a new
+rcuperf boot command line parameter called 'rcumult'.
 
-See reply to Thomas, no config is actually required here.  Focusing on
-the intended outcome:
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-The goal is to improve jitter since we're constantly periodically
-preempting other classes to run the watchdog.   Even on a single CPU
-this is measurable as jitter in the us range.  But, what increases the
-motivation is this disruption has been recently magnified by CPU
-"gifts" which require evicting the whole core when one of the siblings
-schedules one of these watchdog threads.
+---
+ kernel/rcu/rcuperf.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-The majority outcome being asserted here is that we could actually
-exercise pick_next_task if required -- there are other potential
-things this will catch, but they are much more braindead generally
-speaking (e.g. a bug in pick_next_task itself).
+diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+index da94b89cd5310..36f0ed75c7cf3 100644
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -87,6 +87,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
+ torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
+ torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
+ torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
++torture_param(int, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
+ 
+ static char *perf_type = "rcu";
+ module_param(perf_type, charp, 0444);
+@@ -627,7 +628,7 @@ kfree_perf_thread(void *arg)
+ 
+ 	do {
+ 		for (i = 0; i < kfree_alloc_num; i++) {
+-			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
++			alloc_ptr = kmalloc(kfree_mult * sizeof(struct kfree_obj), GFP_KERNEL);
+ 			if (!alloc_ptr)
+ 				return -ENOMEM;
+ 
+@@ -712,6 +713,8 @@ kfree_perf_init(void)
+ 		schedule_timeout_uninterruptible(1);
+ 	}
+ 
++	pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
++
+ 	kfree_reader_tasks = kcalloc(kfree_nrealthreads, sizeof(kfree_reader_tasks[0]),
+ 			       GFP_KERNEL);
+ 	if (kfree_reader_tasks == NULL) {
+-- 
+2.25.0.265.gbab2e86ba0-goog
+
