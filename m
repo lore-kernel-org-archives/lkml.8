@@ -2,116 +2,141 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E78C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC203C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB2E24654
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F8A20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nV/RvK1Q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T6R/TbBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgCESvZ (ORCPT
+        id S1726300AbgCESvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:51:25 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44234 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgCESvZ (ORCPT
+        Thu, 5 Mar 2020 13:51:35 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36778 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgCESvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:51:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=rSjMjSKSsVB1va+0Y7qf1amnEaMdNXb7x5DEMVwi2Bo=; b=nV/RvK1QPSm1IHAjb6H3lF5aud
-        lETLI7i5jBERVaSxCL/7z0GGP9QdKKCGiLAkvqxvz7YgisWpYXhO8djaAX56pNP0BZU2Bvb1I0+Ht
-        tS0C/WN27lx/zsSaNcwdaThi00JCWZzXnP6U06YZhWQUPTLGXUKHmj4Qm5VicETj6H7hXNiqRLpcx
-        IhQt7nxF1WOmatY023WFAW9DdXcbh60Qn0Wf6tmczHfVjBnpHq7WPaxunL1nplPEQJ+xjWUMx9iPW
-        yvOdSSguGGBwaI7ZDrHhj2H2yLZqQQ2hsDRlns/RzUYtaY+kDT2KgS79elqWTFq39g7VzmbY5k/kv
-        lfZBMr2g==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9vad-0005a5-VH; Thu, 05 Mar 2020 18:51:24 +0000
-Subject: Re: [PATCH 1/2] bootconfig: Support O=<builddir> option
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <158323467008.10560.4307464503748340855.stgit@devnote2>
- <158323468033.10560.14661631369326294355.stgit@devnote2>
- <27ae25f5-29c6-62f3-5531-78fcc28b7d3c@infradead.org>
- <20200304221716.007587c7@oasis.local.home>
- <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org>
- <CAMuHMdVSSGbHBOvFbYaPuRH59Nmh_AaqJFfu-csJnZHOtd7mGQ@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d305e626-bc6e-8185-df4d-c57d912039a5@infradead.org>
-Date:   Thu, 5 Mar 2020 10:51:23 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 13:51:35 -0500
+Received: by mail-pg1-f194.google.com with SMTP id d9so3182885pgu.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:51:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b2SYpooN63pazq0FfnqZHc+uxwAjM4uCksmrGzVts2w=;
+        b=T6R/TbBMZV7uHQBepmxCCgBZMqhYWNOwyyeTy6uM9j1D7K8dLSXPY8913e8XdQFyyg
+         E6BBrRRQnHNtFaJCY1Nq+VriqP8MXlCgyeUSLUrHSh0mDaOmKtQgks/c4kQVmyH+B3e/
+         /okMrvgeUcd/pXFsCkPBD9L9oB07xFAkt2LE4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b2SYpooN63pazq0FfnqZHc+uxwAjM4uCksmrGzVts2w=;
+        b=OS/2SAeh47X1wVTqarx0w5SXayqftz9r7+r2ENX+S/FUqO0j1aKCxDz/mNAKaLDomp
+         ca5RtIumwP0JemegujKEV9MgSzP2M6HhAqqbMkwERs2pnMzHQAPBzA4tD/iiMzL2q5UM
+         U8yUgPGsyX/bg/RQ15dv65imQOCiCEMVlzoQqIwpB/anTyIVQx+TWvzcgFJQ8MfMSAL/
+         v4G8/vO1wgTJnnQUKpkTlD3Da6Z4oh9AVZ0S+GoE3541ZQaDRTSr3aKSSmEQATlHnjOM
+         JRM8+S9Q6wmQQErwnMqiHTY5yLYeIfuCcpc/nBPzYpmPJW4zgdxG+Z864jQyYDywkwa5
+         zwsQ==
+X-Gm-Message-State: ANhLgQ1scisuP/tSr9Kyp5mgULuPj52xomb4JsR6RG5ZwJaoekhbb3KV
+        1zs8FaKhmQgqXDlk/z+pZz6k5A==
+X-Google-Smtp-Source: ADFU+vuQNeWvfy1Ogmc1Uka7w7eUI2r4KaKy912PspK9k/vyYD+DBZjUL7iC552BrrUD9Cmofq3a7g==
+X-Received: by 2002:a63:de4c:: with SMTP id y12mr8908651pgi.107.1583434294313;
+        Thu, 05 Mar 2020 10:51:34 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id f81sm29905073pfa.44.2020.03.05.10.51.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 10:51:33 -0800 (PST)
+Date:   Thu, 5 Mar 2020 10:51:32 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 0/8] Add QUSB2 PHY support for SC7180
+Message-ID: <20200305185132.GT24720@google.com>
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
+ <20200203185649.GK3948@builder>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdVSSGbHBOvFbYaPuRH59Nmh_AaqJFfu-csJnZHOtd7mGQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200203185649.GK3948@builder>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 11:41 PM, Geert Uytterhoeven wrote:
-> Hi Randy,
+On Mon, Feb 03, 2020 at 10:56:49AM -0800, Bjorn Andersson wrote:
+> On Wed 29 Jan 05:51 PST 2020, Sandeep Maheswaram wrote:
 > 
-> On Thu, Mar 5, 2020 at 5:53 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->> On 3/4/20 7:17 PM, Steven Rostedt wrote:
->>> On Wed, 4 Mar 2020 15:04:43 -0800
->>> Randy Dunlap <rdunlap@infradead.org> wrote:
->>>
->>>> On 3/3/20 3:24 AM, Masami Hiramatsu wrote:
->>>>> Support O=<builddir> option to build bootconfig tool in
->>>>> the other directory. As same as other tools, if you specify
->>>>> O=<builddir>, bootconfig command is build under <builddir>.
->>>>
->>>> Hm.  If I use
->>>> $ make O=~/tmp -C tools/bootconfig
->>>>
->>>> that works: it builds bootconfig in ~/tmp.
->>>>
->>>> OTOH, if I sit at the top of the kernel source tree
->>>> and I enter
->>>> $ mkdir builddir
->>>> $ make O=builddir -C tools/bootconfig
->>>>
->>>> I get this:
->>>> make: Entering directory '/home/rdunlap/lnx/next/linux-next-20200304/tools/bootconfig'
->>>> ../scripts/Makefile.include:4: *** O=builddir does not exist.  Stop.
->>>> make: Leaving directory '/home/rdunlap/lnx/next/linux-next-20200304/tools/bootconfig'
->>>>
->>>> so it looks like tools/scripts/Makefile.include doesn't handle this case correctly
->>>> (which is how I do all of my builds).
->>>>
->>>
->>> Do you build perf that way?
->>
->> No.  It should also be fixed.
-> 
-> There are lots of issues when (cross)building the tools and selftest with O=.
-> I tried to fix some of them a while ago, but I lost interest.
-> https://lore.kernel.org/lkml/20190114135144.26096-1-geert+renesas@glider.be/
-> 
-> The only thing you can rely on when (cross)building with O=, is the kernel
-> itself ;-)
+> Kishon, afaict this is all reviewed, let me know when you're taking the
+> phy pieces and I'll pick up the dts changes.
 
-Yeah, oh well.  I'm not ready to just give up on it though.
+The series has a few minor comments. Sandeep, could you respin the
+series so that it can be landed?
 
-thanks.
+Thanks
 
--- 
-~Randy
+Matthias
 
+> > Converting dt binding to yaml.
+> > Adding compatible for SC7180 in dt bindings.
+> > Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
+> > 
+> > Changes in v4:
+> > *Addressed Rob Herrings comments in dt bindings.
+> > *Added new structure for all the overriding tuning params.
+> > *Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy. 
+> > *Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845. 
+> > 
+> > Changes in v3:
+> > *Using the generic phy cfg table for QUSB2 V2 phy.
+> > *Added support for overriding tuning parameters in QUSB2 V2 PHY
+> > from device tree.
+> > 
+> > Changes in v2:
+> > Sorted the compatible in driver.
+> > Converted dt binding to yaml.
+> > Added compatible in yaml.
+> > 
+> > Sandeep Maheswaram (8):
+> >   dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
+> >   dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
+> >     SC7180
+> >   phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
+> >   dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
+> >     parameters
+> >   phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
+> >     V2 PHY
+> >   arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
+> >   arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
+> >   arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
+> >     device
+> > 
+> >  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 182 +++++++++++++++++++++
+> >  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
+> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
+> >  drivers/phy/qualcomm/phy-qcom-qusb2.c              | 143 +++++++++++-----
+> >  6 files changed, 291 insertions(+), 114 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> > 
+> > -- 
+> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> > of Code Aurora Forum, hosted by The Linux Foundation
+> > 
