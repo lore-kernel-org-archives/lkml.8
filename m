@@ -2,199 +2,145 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5A5C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D085C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62772072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE0A2072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bp/oVG+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgCET62 (ORCPT
+        id S1726162AbgCET65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 14:58:28 -0500
-Received: from mga01.intel.com ([192.55.52.88]:36686 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbgCET62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 14:58:28 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 11:58:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,519,1574150400"; 
-   d="scan'208";a="439708418"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Mar 2020 11:58:26 -0800
-Date:   Thu, 5 Mar 2020 11:58:26 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pu Wen <puwen@hygon.cn>
-Subject: Re: [PATCH v2 2/7] KVM: x86: Add helpers to perform CPUID-based
- guest vendor check
-Message-ID: <20200305195826.GP11500@linux.intel.com>
-References: <20200305013437.8578-1-sean.j.christopherson@intel.com>
- <20200305013437.8578-3-sean.j.christopherson@intel.com>
- <b752a4d4-b469-1a1f-c064-bf98a0467d49@intel.com>
+        Thu, 5 Mar 2020 14:58:57 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59450 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726111AbgCET65 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 14:58:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583438335;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sjNlsKr8cYuTWQZFPGpix1p72ETxPzBpElmBC4ikTQ0=;
+        b=Bp/oVG+8Eo+GTLSyPMmCJcMuYFFxCILitXfd/rHDOdPDJ37LtVhqmOc+IvtMm7jUC6I+kP
+        tMbR5st1pHin0hKcq1MbgP85Kuw//g+Z/PneDGi01gpGNqcTNx3L+weDshFP58K3TwBT1v
+        AUqt3vTaozbk0kCnWxkYfsUC61cR0qM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-89-F9cq20IJMQyPoxTd_jUKlw-1; Thu, 05 Mar 2020 14:58:50 -0500
+X-MC-Unique: F9cq20IJMQyPoxTd_jUKlw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AB3F8017CC;
+        Thu,  5 Mar 2020 19:58:47 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (ovpn-112-13.phx2.redhat.com [10.3.112.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9AE4110016EB;
+        Thu,  5 Mar 2020 19:58:46 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 6C41A121; Thu,  5 Mar 2020 16:58:43 -0300 (BRT)
+Date:   Thu, 5 Mar 2020 16:58:43 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     zhe.he@windriver.com
+Cc:     Andi Kleen <ak@linux.intel.com>, jolsa@kernel.org, meyerk@hpe.com,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        acme@kernel.org
+Subject: Re: [PATCH] perf: Fix crash due to null pointer dereference when
+ iterating cpu map
+Message-ID: <20200305195843.GA7262@redhat.com>
+References: <1583405239-352868-1-git-send-email-zhe.he@windriver.com>
+ <20200305152755.GA6958@redhat.com>
+ <20200305183206.GA1454533@tassilo.jf.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b752a4d4-b469-1a1f-c064-bf98a0467d49@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200305183206.GA1454533@tassilo.jf.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 11:48:20AM +0800, Xiaoyao Li wrote:
-> On 3/5/2020 9:34 AM, Sean Christopherson wrote:
-> >Add helpers to provide CPUID-based guest vendor checks, i.e. to do the
-> >ugly register comparisons.  Use the new helpers to check for an AMD
-> >guest vendor in guest_cpuid_is_amd() as well as in the existing emulator
-> >flows.
-> >
-> >Using the new helpers fixes a _very_ theoretical bug where
-> >guest_cpuid_is_amd() would get a false positive on a non-AMD virtual CPU
-> >with a vendor string beginning with "Auth" due to the previous logic
-> >only checking EBX.  It also fixes a marginally less theoretically bug
-> >where guest_cpuid_is_amd() would incorrectly return false for a guest
-> >CPU with "AMDisbetter!" as its vendor string.
-> >
-> >Fixes: a0c0feb57992c ("KVM: x86: reserve bit 8 of non-leaf PDPEs and PML4Es in 64-bit mode on AMD")
-> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >---
-> >  arch/x86/include/asm/kvm_emulate.h | 24 ++++++++++++++++++++
-> >  arch/x86/kvm/cpuid.h               |  2 +-
-> >  arch/x86/kvm/emulate.c             | 36 +++++++-----------------------
-> >  3 files changed, 33 insertions(+), 29 deletions(-)
-> >
-> >diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
-> >index bf5f5e476f65..2754972c36e6 100644
-> >--- a/arch/x86/include/asm/kvm_emulate.h
-> >+++ b/arch/x86/include/asm/kvm_emulate.h
-> >@@ -393,6 +393,30 @@ struct x86_emulate_ctxt {
-> >  #define X86EMUL_CPUID_VENDOR_GenuineIntel_ecx 0x6c65746e
-> >  #define X86EMUL_CPUID_VENDOR_GenuineIntel_edx 0x49656e69
-> >+static inline bool is_guest_vendor_intel(u32 ebx, u32 ecx, u32 edx)
-> >+{
-> >+	return ebx == X86EMUL_CPUID_VENDOR_GenuineIntel_ebx &&
-> >+	       ecx == X86EMUL_CPUID_VENDOR_GenuineIntel_ecx &&
-> >+	       edx == X86EMUL_CPUID_VENDOR_GenuineIntel_edx;
-> >+}
-> >+
-> >+static inline bool is_guest_vendor_amd(u32 ebx, u32 ecx, u32 edx)
-> >+{
-> >+	return (ebx == X86EMUL_CPUID_VENDOR_AuthenticAMD_ebx &&
-> >+		ecx == X86EMUL_CPUID_VENDOR_AuthenticAMD_ecx &&
-> >+		edx == X86EMUL_CPUID_VENDOR_AuthenticAMD_edx) ||
-> >+	       (ebx == X86EMUL_CPUID_VENDOR_AMDisbetterI_ebx &&
-> >+		ecx == X86EMUL_CPUID_VENDOR_AMDisbetterI_ecx &&
-> >+		edx == X86EMUL_CPUID_VENDOR_AMDisbetterI_edx);
-> >+}
-> >+
-> >+static inline bool is_guest_vendor_hygon(u32 ebx, u32 ecx, u32 edx)
-> >+{
-> >+	return ebx == X86EMUL_CPUID_VENDOR_HygonGenuine_ebx &&
-> >+	       ecx == X86EMUL_CPUID_VENDOR_HygonGenuine_ecx &&
-> >+	       edx == X86EMUL_CPUID_VENDOR_HygonGenuine_edx;
-> >+}
-> >+
+Em Thu, Mar 05, 2020 at 10:32:06AM -0800, Andi Kleen escreveu:
+> On Thu, Mar 05, 2020 at 12:27:55PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Mar 05, 2020 at 06:47:19PM +0800, zhe.he@windriver.com escreveu:
+> > > From: He Zhe <zhe.he@windriver.com>
+> > > 
+> > > NULL pointer may be passed to perf_cpu_map__cpu and then cause the
+> > > following crash.
+> > > 
+> > > perf ftrace -G start_kernel ls
+> > > failed to set tracing filters
+> > > [  208.710716] perf[341]: segfault at 4 ip 00000000567c7c98
+> > >                sp 00000000ff937ae0 error 4 in perf[56630000+1b2000]
+> > > [  208.724778] Code: fc ff ff e8 aa 9b 01 00 8d b4 26 00 00 00 00 8d
+> > >                      76 00 55 89 e5 83 ec 18 65 8b 0d 14 00 00 00 89
+> > >                      4d f4 31 c9 8b 45 08 8b9
+> > > Segmentation fault
+> > 
+> > I'm not being able to repro this here, what is the tree you are using?
 > 
-> Why not define those in cpuid.h ?
-> And also move X86EMUL_CPUID_VENDOR_* to cpuid.h and remove the "EMUL"
-> prefix.
+> I believe that's the same bug that Jann Horn reported recently for perf trace.
+> I thought the patch for that went in.
 
-To avoid pulling cpuid.h into the emulator.  Ideally, the emulator would
-only use KVM APIs defined in kvm_emulate.h.  Obviously that's a bit of a
-pipe dream at the moment :-)
+Ok, Zhe, that patch is at the end of this message, and it is in:
 
-  #include <linux/kvm_host.h>
-  #include "kvm_cache_regs.h"
-  #include <asm/kvm_emulate.h>
-  #include <linux/stringify.h>
-  #include <asm/fpu/api.h>
-  #include <asm/debugreg.h>
-  #include <asm/nospec-branch.h>
+[acme@five perf]$ git tag --contains cb71f7d43ece3d5a4f400f510c61b2ec7c9ce9a1 | grep ^v
+v5.6-rc1
+v5.6-rc2
+v5.6-rc3
+v5.6-rc4
+[acme@five perf]$
 
-  #include "x86.h"
-  #include "tss.h"
-  #include "mmu.h"
-  #include "pmu.h"
+Can you try with that?
 
-> >  enum x86_intercept_stage {
-> >  	X86_ICTP_NONE = 0,   /* Allow zero-init to not match anything */
-> >  	X86_ICPT_PRE_EXCEPT,
-> >diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> >index 7366c618aa04..13eb3e92c6a9 100644
-> >--- a/arch/x86/kvm/cpuid.h
-> >+++ b/arch/x86/kvm/cpuid.h
-> >@@ -145,7 +145,7 @@ static inline bool guest_cpuid_is_amd(struct kvm_vcpu *vcpu)
-> >  	struct kvm_cpuid_entry2 *best;
-> >  	best = kvm_find_cpuid_entry(vcpu, 0, 0);
-> >-	return best && best->ebx == X86EMUL_CPUID_VENDOR_AuthenticAMD_ebx;
-> >+	return best && is_guest_vendor_amd(best->ebx, best->ecx, best->edx);
-> >  }
-> >  static inline int guest_cpuid_family(struct kvm_vcpu *vcpu)
-> >diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-> >index dd19fb3539e0..9cf303984fe5 100644
-> >--- a/arch/x86/kvm/emulate.c
-> >+++ b/arch/x86/kvm/emulate.c
-> >@@ -2712,9 +2712,7 @@ static bool vendor_intel(struct x86_emulate_ctxt *ctxt)
-> >  	eax = ecx = 0;
-> >  	ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, false);
-> >-	return ebx == X86EMUL_CPUID_VENDOR_GenuineIntel_ebx
-> >-		&& ecx == X86EMUL_CPUID_VENDOR_GenuineIntel_ecx
-> >-		&& edx == X86EMUL_CPUID_VENDOR_GenuineIntel_edx;
-> >+	return is_guest_vendor_intel(ebx, ecx, edx);
-> >  }
-> >  static bool em_syscall_is_enabled(struct x86_emulate_ctxt *ctxt)
-> >@@ -2733,34 +2731,16 @@ static bool em_syscall_is_enabled(struct x86_emulate_ctxt *ctxt)
-> >  	ecx = 0x00000000;
-> >  	ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, false);
-> >  	/*
-> >-	 * Intel ("GenuineIntel")
-> >-	 * remark: Intel CPUs only support "syscall" in 64bit
-> >-	 * longmode. Also an 64bit guest with a
-> >-	 * 32bit compat-app running will #UD !! While this
-> >-	 * behaviour can be fixed (by emulating) into AMD
-> >-	 * response - CPUs of AMD can't behave like Intel.
-> >+	 * remark: Intel CPUs only support "syscall" in 64bit longmode. Also a
-> >+	 * 64bit guest with a 32bit compat-app running will #UD !! While this
-> >+	 * behaviour can be fixed (by emulating) into AMD response - CPUs of
-> >+	 * AMD can't behave like Intel.
-> >  	 */
-> >-	if (ebx == X86EMUL_CPUID_VENDOR_GenuineIntel_ebx &&
-> >-	    ecx == X86EMUL_CPUID_VENDOR_GenuineIntel_ecx &&
-> >-	    edx == X86EMUL_CPUID_VENDOR_GenuineIntel_edx)
-> >+	if (is_guest_vendor_intel(ebx, ecx, edx))
-> >  		return false;
-> >-	/* AMD ("AuthenticAMD") */
-> >-	if (ebx == X86EMUL_CPUID_VENDOR_AuthenticAMD_ebx &&
-> >-	    ecx == X86EMUL_CPUID_VENDOR_AuthenticAMD_ecx &&
-> >-	    edx == X86EMUL_CPUID_VENDOR_AuthenticAMD_edx)
-> >-		return true;
-> >-
-> >-	/* AMD ("AMDisbetter!") */
-> >-	if (ebx == X86EMUL_CPUID_VENDOR_AMDisbetterI_ebx &&
-> >-	    ecx == X86EMUL_CPUID_VENDOR_AMDisbetterI_ecx &&
-> >-	    edx == X86EMUL_CPUID_VENDOR_AMDisbetterI_edx)
-> >-		return true;
-> >-
-> >-	/* Hygon ("HygonGenuine") */
-> >-	if (ebx == X86EMUL_CPUID_VENDOR_HygonGenuine_ebx &&
-> >-	    ecx == X86EMUL_CPUID_VENDOR_HygonGenuine_ecx &&
-> >-	    edx == X86EMUL_CPUID_VENDOR_HygonGenuine_edx)
-> >+	if (is_guest_vendor_amd(ebx, ecx, edx) ||
-> >+	    is_guest_vendor_hygon(ebx, ecx, edx))
-> >  		return true;
-> >  	/*
-> >
-> 
+- Arnaldo
+
+commit cb71f7d43ece3d5a4f400f510c61b2ec7c9ce9a1
+Author: Jiri Olsa <jolsa@kernel.org>
+Date:   Fri Jan 10 16:15:37 2020 +0100
+
+    libperf: Setup initial evlist::all_cpus value
+    
+    Jann Horn reported crash in perf ftrace because evlist::all_cpus isn't
+    initialized if there's evlist without events, which is the case for perf
+    ftrace.
+    
+    Adding initial initialization of evlist::all_cpus from given cpus,
+    regardless of events in the evlist.
+    
+    Fixes: 7736627b865d ("perf stat: Use affinity for closing file descriptors")
+    Reported-by: Jann Horn <jannh@google.com>
+    Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+    Acked-by: Andi Kleen <ak@linux.intel.com>
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Michael Petlan <mpetlan@redhat.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Link: http://lore.kernel.org/lkml/20200110151537.153012-1-jolsa@kernel.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index ae9e65aa2491..5b9f2ca50591 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -164,6 +164,9 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
+ 		evlist->threads = perf_thread_map__get(threads);
+ 	}
+ 
++	if (!evlist->all_cpus && cpus)
++		evlist->all_cpus = perf_cpu_map__get(cpus);
++
+ 	perf_evlist__propagate_maps(evlist);
+ }
+ 
+
