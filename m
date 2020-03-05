@@ -2,225 +2,117 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE2DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6C8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E33E20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C0A20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="OiRMEtlu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fzqeEciF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgCEWHc (ORCPT
+        id S1726608AbgCEWIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 17:07:32 -0500
-Received: from mail-bn7nam10on2060.outbound.protection.outlook.com ([40.107.92.60]:26476
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726209AbgCEWHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 17:07:31 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lYND0VQRxxfOplPQ0bJWQ8ZRpzOkI+m+ZPgQ7QZHUlVsDBD09N/Hbk/TE1aA1o+RXzHmhZ0f7H6aBgaMARGR6Ua+LROMZzJJqkx86D2tNqqT8ZlrBGtX8rtdcXeXQnU0kiXwPFVjJF9J5SR0Gamo7IRSdQJ8hOxhdQPx3rC7XcdDntOwc+LpFU+EbjUVYZQ5bu2x5m6ea9NA0jrr4ctIYb0EKmqAV9UFX5j3oUN8sf7zOv850vJ/RmeKCsVOz378frEJCgvB5TGVlqGK/FA0Bl7hd4HHXthfrw4TzJ94QPnEXYzdD6ESoQ3+jBsoeplqlgWNR+8736V9wlMLnB1MTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TvaJvMAO4X/6KtlJktfWtK6KTJ3YKH2bT8+MOJZYH+Q=;
- b=Wq/Tqb9rp28SgWz/swZtAJlf5xrPupf1KXEyc1NEBoUUTPX0/lBxZPpxV98RQ8zrA7Nql+HDd3x54LWjWafVhMUFHupOjPl9qoOE2bzfY4C0EtShX31k+pmntW4AwSetRDknU4l0cnvJg2LQgQMt2Xdmf9kOC+QVQR/CAfLO9J98shTLPwmr2hPAWHmWkOPTW1ioHx28tfs2o9o0DlbbsB/z1xYP1V57XkSl/t5Zn0CLx4qVCkOiH8nGjZaVLXXCmtb9Epidj3fNLcmF4+00tcc9sXA+4MPEMNbKMYHP6vWI3AVOX0aoOWfO/X6zsln64iDDDovYLodKhN076RsSKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 5 Mar 2020 17:08:16 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40548 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgCEWIQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 17:08:16 -0500
+Received: by mail-io1-f65.google.com with SMTP id d8so111254ion.7
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 14:08:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TvaJvMAO4X/6KtlJktfWtK6KTJ3YKH2bT8+MOJZYH+Q=;
- b=OiRMEtluv8+AjNkOq7MHG5XxmJRoHLONc4ni+J9Pg7QWrwjTLF4Fj5bRkOMgQRjdtyI9gPX4RmvuBwv5r3CsA154VUiGEngJJPfu5VCug04W7Z5eTGI10nfWlmAoKIi3cfA47GtNrbUuIiLBqmszDTu1Da4SeBhzxyppjtW1sfk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
- by SN6PR12MB2751.namprd12.prod.outlook.com (2603:10b6:805:6c::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18; Thu, 5 Mar
- 2020 22:06:59 +0000
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2793.013; Thu, 5 Mar 2020
- 22:06:59 +0000
-Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
- information
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        yao.jin@linux.intel.com, Robert Richter <robert.richter@amd.com>,
-        maddy@linux.ibm.com
-References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
- <20200302101332.GS18400@hirez.programming.kicks-ass.net>
- <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
- <df966d6e-8898-029f-e697-8496500a1663@amd.com>
- <2550ec4d-a015-4625-ca24-ff10632dbe2e@linux.ibm.com>
-From:   Kim Phillips <kim.phillips@amd.com>
-Message-ID: <d3c82708-dd09-80e0-4e9f-1cbab118a169@amd.com>
-Date:   Thu, 5 Mar 2020 16:06:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <2550ec4d-a015-4625-ca24-ff10632dbe2e@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN6PR01CA0021.prod.exchangelabs.com (2603:10b6:805:b6::34)
- To SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OGS8rnXzHLbpXsJJAH3jh30eyIA7p3nGgcBVwa0A2w8=;
+        b=fzqeEciFPF22o5uyQb5nHvkhVF8jr5xf2Wo5iKCh1x0QlRNspF7nqIhsmjI6R0JPN3
+         tEi8EvQg+inlv/MZY/54d5x7ow47ExRcP9TN/GAsrIS1QseaOW3dXjAgAuotTHd1SuqV
+         ap65h9Hkwnl1INBV+i9n2vvRw9p/S2xfuN7/ilfX8B2CIGzQ1/2M+qxLydAVK46c2LRS
+         WDYy39RorrBeZYlr+8liVxg6aCqJj6o6vxBtEgPtYT8GgiTuN0cG7NYJPqe+vjD5yxW+
+         5udG5txKOInbYOZbpMrrUpx2jq6Vcgl4vcCnIXy7A1eK5Npk0zFKcuDVPHxzAQlYoeox
+         ZAfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OGS8rnXzHLbpXsJJAH3jh30eyIA7p3nGgcBVwa0A2w8=;
+        b=SPb3C6kcBV6/iskoZzGJqc1nlYUqZoG6WK4xGKM0NeG//ppgPAoiY189AYg1bd9vQR
+         LsDaiE/Wg2sI5Yn4Fg3nzhCJVQG8kCYbB4C/u/SgaKICi/WduH/ZJHbTy8eqJ4/KXrvz
+         0mHCl+lmwqS1arSytiGpMc9ELWgR2C3SHGFXUUPaM1pCh56Jb3xD37rTT1Q4jHgcRSck
+         E9vc/STd2/uGIFS3xO8dv7NN8aV4ph078DQqucAtJNNriACZQE5VauK2RmulHQzxVSM1
+         0Yjunyi84xsuoP7+e8lWXrbaJrsliTYvoukUyWd+tPP1ObGEHY16SMbLDv1Kf0rGFxwJ
+         WdEg==
+X-Gm-Message-State: ANhLgQ3cCJLgqcblfz/8F5jr6AYYcF31tzIOXOdf7C4H4UhkxTYgpr4X
+        nktgOgNmWJrG0CXRI574yVSabTYN7p1zAFzHzT3X8A==
+X-Google-Smtp-Source: ADFU+vveEQCvuJ7btQNldSOgXGFAeDpBOkfuEX1g8TVAtm4CcqZ0jqP7fo30nSwwhYYivnaHCnk+9qqz5ORdkzcvwIk=
+X-Received: by 2002:a02:3093:: with SMTP id q141mr650220jaq.121.1583446094877;
+ Thu, 05 Mar 2020 14:08:14 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.136.247] (165.204.77.1) by SN6PR01CA0021.prod.exchangelabs.com (2603:10b6:805:b6::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18 via Frontend Transport; Thu, 5 Mar 2020 22:06:58 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 247a078f-1247-4889-d972-08d7c151869f
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2751:|SN6PR12MB2751:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB2751542223B6575A1BB1820987E20@SN6PR12MB2751.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
-X-Forefront-PRVS: 03333C607F
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(366004)(136003)(199004)(189003)(16576012)(316002)(81166006)(2906002)(81156014)(53546011)(956004)(478600001)(54906003)(2616005)(66946007)(44832011)(52116002)(6486002)(8936002)(8676002)(5660300002)(31686004)(66556008)(6916009)(66476007)(86362001)(186003)(16526019)(26005)(4326008)(31696002)(36756003)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2751;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: C3wy1n78yHKbo1yOTw0br2y0U2+ybLHpiE9arrdmwNEcIwG9v0MOcMRbJs4AFlWsgUsR9F6T3z+fAs4k7g/Ev25Ka6Q1TAJvOIN47GqoTA/8JVQzSb7mOf4J2Xcdcu1ef5Ou/3NLAt9R82ZY82tvJtrKWlyGWfcKrisM8A5bk6jr/2yKvaZ8MfzOSFGCN6baLS/g8M/UWjYX2F0hbIWoCflrZxTmOsva/Y/eKvD4Z8KIlfBZQB3caQZyO0Ldt1D0k2eNBecuAmcdK2UoeJti+IpZU7xrn3TuK5OJMCIZXP+rmPLlamY0RxTd1A5k7/ztpjDQjvFbNJO27RoaI1NETGH4coV788e6CUoHDDPlGJ3iARBQH9w51pHJGMiBC1jB3/3gZs5lLFm28xMpSXcw1BiaRsqZW7V9pX1Df7COiQ5pSKMfEz6LlAbWvXxvE69H
-X-MS-Exchange-AntiSpam-MessageData: pdcyoGlB0kdn6NcbczrywneCcIt8TFBr+J1wiM9KDRC/QA9qe0t+ZilunFVmoTdZxtICCn0xXtwZCkG9mZ7UCijWwbsYjlpANYn2O2uK7V2PFZl17YQEvEv47GZJ72nfa6ryvJwf45hQ2BipItCnsQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 247a078f-1247-4889-d972-08d7c151869f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2020 22:06:59.3897
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3YSiA6ZTZmnA9NNF6icuBw7YzVBmcY+8kHN2Lu25xAB1g0jNZKXBn0Z2BX8ug/jSJJSv11oaoqPDc3JsAuUWXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2751
+References: <20200304213941.112303-1-xii@google.com> <20200305075742.GR2596@hirez.programming.kicks-ass.net>
+ <87blpad6b2.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87blpad6b2.fsf@nanos.tec.linutronix.de>
+From:   Paul Turner <pjt@google.com>
+Date:   Thu, 5 Mar 2020 14:07:37 -0800
+Message-ID: <CAPM31RKR4w75Y8oNxS-cZ77AauvCFFXRzH=hhWXfr6LLQt2Myw@mail.gmail.com>
+Subject: Re: [PATCH] sched: watchdog: Touch kernel watchdog in sched code
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>, Xi Wang <xii@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Don <joshdon@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 10:46 PM, Ravi Bangoria wrote:
-> Hi Kim,
+On Thu, Mar 5, 2020 at 10:07 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Peter Zijlstra <peterz@infradead.org> writes:
+>
+> > On Wed, Mar 04, 2020 at 01:39:41PM -0800, Xi Wang wrote:
+> >> The main purpose of kernel watchdog is to test whether scheduler can
+> >> still schedule tasks on a cpu. In order to reduce latency from
+> >> periodically invoking watchdog reset in thread context, we can simply
+> >> touch watchdog from pick_next_task in scheduler. Compared to actually
+> >> resetting watchdog from cpu stop / migration threads, we lose coverage
+> >> on: a migration thread actually get picked and we actually context
+> >> switch to the migration thread. Both steps are heavily protected by
+> >> kernel locks and unlikely to silently fail. Thus the change would
+> >> provide the same level of protection with less overhead.
+> >>
+> >> The new way vs the old way to touch the watchdogs is configurable
+> >> from:
+> >>
+> >> /proc/sys/kernel/watchdog_touch_in_thread_interval
+> >>
+> >> The value means:
+> >> 0: Always touch watchdog from pick_next_task
+> >> 1: Always touch watchdog from migration thread
+> >> N (N>0): Touch watchdog from migration thread once in every N
+> >>          invocations, and touch watchdog from pick_next_task for
+> >>          other invocations.
+> >>
+> >
+> > This is configurable madness. What are we really trying to do here?
+>
+> Create yet another knob which will be advertised in random web blogs to
+> solve all problems of the world and some more. Like the one which got
+> silently turned into a NOOP ~10 years ago :)
+>
 
-Hi Ravi,
-
-> On 3/3/20 3:55 AM, Kim Phillips wrote:
->> On 3/2/20 2:21 PM, Stephane Eranian wrote:
->>> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
->>>>
->>>> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
->>>>> Modern processors export such hazard data in Performance
->>>>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
->>>>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
->>>>> AMD[3] provides similar information.
->>>>>
->>>>> Implementation detail:
->>>>>
->>>>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
->>>>> If it's set, kernel converts arch specific hazard information
->>>>> into generic format:
->>>>>
->>>>>    struct perf_pipeline_haz_data {
->>>>>           /* Instruction/Opcode type: Load, Store, Branch .... */
->>>>>           __u8    itype;
->>>>>           /* Instruction Cache source */
->>>>>           __u8    icache;
->>>>>           /* Instruction suffered hazard in pipeline stage */
->>>>>           __u8    hazard_stage;
->>>>>           /* Hazard reason */
->>>>>           __u8    hazard_reason;
->>>>>           /* Instruction suffered stall in pipeline stage */
->>>>>           __u8    stall_stage;
->>>>>           /* Stall reason */
->>>>>           __u8    stall_reason;
->>>>>           __u16   pad;
->>>>>    };
->>>>
->>>> Kim, does this format indeed work for AMD IBS?
->>
->> It's not really 1:1, we don't have these separations of stages
->> and reasons, for example: we have missed in L2 cache, for example.
->> So IBS output is flatter, with more cycle latency figures than
->> IBM's AFAICT.
-> 
-> AMD IBS captures pipeline latency data incase Fetch sampling like the
-> Fetch latency, tag to retire latency, completion to retire latency and
-> so on. Yes, Ops sampling do provide more data on load/store centric
-> information. But it also captures more detailed data for Branch instructions.
-> And we also looked at ARM SPE, which also captures more details pipeline
-> data and latency information.
-> 
->>> Personally, I don't like the term hazard. This is too IBM Power
->>> specific. We need to find a better term, maybe stall or penalty.
->>
->> Right, IBS doesn't have a filter to only count stalled or otherwise
->> bad events.  IBS' PPR descriptions has one occurrence of the
->> word stall, and no penalty.  The way I read IBS is it's just
->> reporting more sample data than just the precise IP: things like
->> hits, misses, cycle latencies, addresses, types, etc., so words
->> like 'extended', or the 'auxiliary' already used today even
->> are more appropriate for IBS, although I'm the last person to
->> bikeshed.
-> 
-> We are thinking of using "pipeline" word instead of Hazard.
-
-Hm, the word 'pipeline' occurs 0 times in IBS documentation.
-
-I realize there are a couple of core pipeline-specific pieces
-of information coming out of it, but the vast majority
-are addresses, latencies of various components in the memory
-hierarchy, and various component hit/miss bits.
-
-What's needed here is a vendor-specific extended
-sample information that all these technologies gather,
-of which things like e.g., 'L1 TLB cycle latency' we
-all should have in common.
-
-I'm not sure why a new PERF_SAMPLE_PIPELINE_HAZ is needed
-either.  Can we use PERF_SAMPLE_AUX instead?  Take a look at
-commit 98dcf14d7f9c "perf tools: Add kernel AUX area sampling
-definitions".  The sample identifier can be used to determine
-which vendor's sampling IP's data is in it, and events can
-be recorded just by copying the content of the SIER, etc.
-registers, and then events get synthesized from the aux
-sample at report/inject/annotate etc. time.  This allows
-for less sample recording overhead, and moves all the vendor
-specific decoding and common event conversions for userspace
-to figure out.
-
->>> Also worth considering is the support of ARM SPE (Statistical
->>> Profiling Extension) which is their version of IBS.
->>> Whatever gets added need to cover all three with no limitations.
->>
->> I thought Intel's various LBR, PEBS, and PT supported providing
->> similar sample data in perf already, like with perf mem/c2c?
-> 
-> perf-mem is more of data centric in my opinion. It is more towards
-> memory profiling. So proposal here is to expose pipeline related
-> details like stalls and latencies.
-
-Like I said, I don't see it that way, I see it as "any particular
-vendor's event's extended details', and these pipeline details
-have overlap with existing infrastructure within perf, e.g., L2
-cache misses.
-
-Kim
+The knob can obviously be removed, it's vestigial and reflects caution
+from when we were implementing / rolling things over to it.  We have
+default values that we know work at scale. I don't think this actually
+needs or wants to be tunable beyond on or off (and even that could be
+strictly compile or boot time only).
