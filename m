@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697E4C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D62C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341222166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09CB521744
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428574;
-	bh=rQtpOupHwYghPhu9ux5RH9W43MapO5C+KildPvDQBqQ=;
+	s=default; t=1583428576;
+	bh=e4jvY61xOcbu9LI74RFGFacI91cQt3nqJsfa0fBZKFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XYVLo0l/sezMaBdo0Q8MFIXAvjQFLkeSbsPbvPVCbie1eB5Eus38t1Sn4za10E/YY
-	 rQ4aM79U8tqgZZQT3SiPYo6XLUW3ul4fpzCBDpdC1uIfEhThx733QW27N//b34M8lB
-	 PNzF2J6gWzuR21E1dGt4Y1knvoHGrsDqfpZHbCPA=
+	b=ImsQUF3kpgxaBtBJNujyRAzSYR05onxFZph6tRWLWr0FsQrYgyTyL3VF73AzOup87
+	 4AuvW40O/KCdypMvuYKv47aJ0mOlJTRTuQ8XtOnHMfkDGnt3hVSWIZ3Lg+n8NvxerO
+	 Co1v0YTA90Mfr52a6LZNIlHhi6yBBzObUorsTEuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgCERQM (ORCPT
+        id S1728440AbgCERQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:16:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42766 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:16:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbgCERPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:54 -0500
+        id S1728310AbgCERP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C484E2146E;
-        Thu,  5 Mar 2020 17:15:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2855921556;
+        Thu,  5 Mar 2020 17:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428553;
-        bh=rQtpOupHwYghPhu9ux5RH9W43MapO5C+KildPvDQBqQ=;
+        s=default; t=1583428556;
+        bh=e4jvY61xOcbu9LI74RFGFacI91cQt3nqJsfa0fBZKFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x2z3SBLNM8HobRstAUAriSD5qzukeHmpNNAQvj+CYqf5Wc0/L5W5iO6Kt20M0TBc6
-         vFhi5U2t7i76HQN7f5wOmePMky2PJHtOOUa6oVgRavrF9YBvDaUOHnegXQeLPL705Y
-         6Dpslf55a+ajNnyJD4saxH4watRDnfAL5lWhPles=
+        b=fR0C4YO8gkh56MTLXJli/pcbNzr6yOMH1XOq3KAgKtXLCrSdmm8FzGoDh3wQ6m2S/
+         LI+XQXX3GR/TpdJuhxGHzhLWvsXfVM1eyyISFdV5OSo2ZS/GFRU15KAO5yQOKHQQkR
+         IA+S5Ul+Fa2ryvAByD6Yi2TEEpcl2+R2N1jNpffc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Igor Druzhinin <igor.druzhinin@citrix.com>,
-        Hannes Reinecke <hare@suse.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/19] scsi: libfc: free response frame from GPN_ID
-Date:   Thu,  5 Mar 2020 12:15:31 -0500
-Message-Id: <20200305171540.30250-10-sashal@kernel.org>
+Cc:     Marek Vasut <marex@denx.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 12/19] net: ks8851-ml: Fix IRQ handling and locking
+Date:   Thu,  5 Mar 2020 12:15:33 -0500
+Message-Id: <20200305171540.30250-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171540.30250-1-sashal@kernel.org>
 References: <20200305171540.30250-1-sashal@kernel.org>
@@ -60,35 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Druzhinin <igor.druzhinin@citrix.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit ff6993bb79b9f99bdac0b5378169052931b65432 ]
+[ Upstream commit 44343418d0f2f623cb9da6f5000df793131cbe3b ]
 
-fc_disc_gpn_id_resp() should be the last function using it so free it here
-to avoid memory leak.
+The KS8851 requires that packet RX and TX are mutually exclusive.
+Currently, the driver hopes to achieve this by disabling interrupt
+from the card by writing the card registers and by disabling the
+interrupt on the interrupt controller. This however is racy on SMP.
 
-Link: https://lore.kernel.org/r/1579013000-14570-2-git-send-email-igor.druzhinin@citrix.com
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Replace this approach by expanding the spinlock used around the
+ks_start_xmit() TX path to ks_irq() RX path to assure true mutual
+exclusion and remove the interrupt enabling/disabling, which is
+now not needed anymore. Furthermore, disable interrupts also in
+ks_net_stop(), which was missing before.
+
+Note that a massive improvement here would be to re-use the KS8851
+driver approach, which is to move the TX path into a worker thread,
+interrupt handling to threaded interrupt, and synchronize everything
+with mutexes, but that would be a much bigger rework, for a separate
+patch.
+
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_disc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
-index bb9c1c0166439..28b50ab2fbb01 100644
---- a/drivers/scsi/libfc/fc_disc.c
-+++ b/drivers/scsi/libfc/fc_disc.c
-@@ -652,6 +652,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index adbe0a6fe0db9..3dc961d2689f0 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -866,14 +866,17 @@ static irqreturn_t ks_irq(int irq, void *pw)
+ {
+ 	struct net_device *netdev = pw;
+ 	struct ks_net *ks = netdev_priv(netdev);
++	unsigned long flags;
+ 	u16 status;
+ 
++	spin_lock_irqsave(&ks->statelock, flags);
+ 	/*this should be the first in IRQ handler */
+ 	ks_save_cmd_reg(ks);
+ 
+ 	status = ks_rdreg16(ks, KS_ISR);
+ 	if (unlikely(!status)) {
+ 		ks_restore_cmd_reg(ks);
++		spin_unlock_irqrestore(&ks->statelock, flags);
+ 		return IRQ_NONE;
  	}
- out:
- 	kref_put(&rdata->kref, fc_rport_destroy);
-+	if (!IS_ERR(fp))
-+		fc_frame_free(fp);
+ 
+@@ -899,6 +902,7 @@ static irqreturn_t ks_irq(int irq, void *pw)
+ 		ks->netdev->stats.rx_over_errors++;
+ 	/* this should be the last in IRQ handler*/
+ 	ks_restore_cmd_reg(ks);
++	spin_unlock_irqrestore(&ks->statelock, flags);
+ 	return IRQ_HANDLED;
  }
  
- /**
+@@ -968,6 +972,7 @@ static int ks_net_stop(struct net_device *netdev)
+ 
+ 	/* shutdown RX/TX QMU */
+ 	ks_disable_qmu(ks);
++	ks_disable_int(ks);
+ 
+ 	/* set powermode to soft power down to save power */
+ 	ks_set_powermode(ks, PMECR_PM_SOFTDOWN);
+@@ -1024,10 +1029,9 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	netdev_tx_t retv = NETDEV_TX_OK;
+ 	struct ks_net *ks = netdev_priv(netdev);
++	unsigned long flags;
+ 
+-	disable_irq(netdev->irq);
+-	ks_disable_int(ks);
+-	spin_lock(&ks->statelock);
++	spin_lock_irqsave(&ks->statelock, flags);
+ 
+ 	/* Extra space are required:
+ 	*  4 byte for alignment, 4 for status/length, 4 for CRC
+@@ -1041,9 +1045,7 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 		dev_kfree_skb(skb);
+ 	} else
+ 		retv = NETDEV_TX_BUSY;
+-	spin_unlock(&ks->statelock);
+-	ks_enable_int(ks);
+-	enable_irq(netdev->irq);
++	spin_unlock_irqrestore(&ks->statelock, flags);
+ 	return retv;
+ }
+ 
 -- 
 2.20.1
 
