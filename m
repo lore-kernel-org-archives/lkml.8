@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F580C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB36C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223042072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090A7207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428980;
-	bh=T/N6searkn/741FSLMAo4Cm8Zx59t2ps/5DqLkc5Mmg=;
+	s=default; t=1583428983;
+	bh=N3h6q8tCGOh4BWQmsC7dtfhBTXK5drPci7XihK3wjb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xcFeBGe6KjZZjHasiT90vRj7p7M8qrzpM4ypLdMBovXHwyegAWRQQXiBkuTtXp88m
-	 bbj0OVkeHoJZ4F44GISa+UfGN9G5NDVBfeNJTdWodDeHkpepJFJu2K3uhn1xAQ49gP
-	 U2xBhS2qFd7nPyaPY4G+8eWw6o+8r3Rb9Z05SmUk=
+	b=AP15tpbMCTuS4TevbzTIvODeKG2NdYmw8iR0MXZiPUpJyQNd4FU/oSEmszRJ/hTjU
+	 aU3AZiTs4HHcqtwTsa7ykqtCNllVCico8f8NcC2++5I3Be3TUnMYzfw6uRI6peERFt
+	 AzNK2urJXoWvsekHjJ9qJKOEX2M4RXDFrNIcHsCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgCERW7 (ORCPT
+        id S1727799AbgCERXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:22:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39638 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:23:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727409AbgCERNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:52 -0500
+        id S1727381AbgCERNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B7420870;
-        Thu,  5 Mar 2020 17:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A28D207FD;
+        Thu,  5 Mar 2020 17:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428431;
-        bh=T/N6searkn/741FSLMAo4Cm8Zx59t2ps/5DqLkc5Mmg=;
+        s=default; t=1583428426;
+        bh=N3h6q8tCGOh4BWQmsC7dtfhBTXK5drPci7XihK3wjb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=owooDXD1iHi5kw05LhRYxDHMjOSsOsdOBTSfdgb4B68iUzZRaxuLbfj0TMXmCEMpZ
-         ftSKSdCdypJtPY7lGFlvLHplb4U7gGmVUPqiwN+7akXhcHD4/Y76swOauzmIgOLS8E
-         Fu9p3Od6Jn938EWwPxlwSE3XDfJmXmkzW2lz0cas=
+        b=j6aBP/V0agNKztaFyOrJ4W8wEe0ADwtKwcOgctjcwH0uDyEVuoQyIJuQl5vGc0zam
+         ubr8rRg9BIU6E9ojjYdrMK5KuiiJSs3X0YabSdlTo9JL4MpER05tlyZcegiBwaUygK
+         3rx5i8/Rdww+R3RKt2hZE14B6mmAsUame5Tz30EQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-        syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 30/67] vhost: Check docket sk_family instead of call getname
-Date:   Thu,  5 Mar 2020 12:12:31 -0500
-Message-Id: <20200305171309.29118-30-sashal@kernel.org>
+Cc:     Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Hannes Reinecke <hare@suse.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 27/67] scsi: libfc: free response frame from GPN_ID
+Date:   Thu,  5 Mar 2020 12:12:28 -0500
+Message-Id: <20200305171309.29118-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,56 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugenio Pérez <eperezma@redhat.com>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-[ Upstream commit 42d84c8490f9f0931786f1623191fcab397c3d64 ]
+[ Upstream commit ff6993bb79b9f99bdac0b5378169052931b65432 ]
 
-Doing so, we save one call to get data we already have in the struct.
+fc_disc_gpn_id_resp() should be the last function using it so free it here
+to avoid memory leak.
 
-Also, since there is no guarantee that getname use sockaddr_ll
-parameter beyond its size, we add a little bit of security here.
-It should do not do beyond MAX_ADDR_LEN, but syzbot found that
-ax25_getname writes more (72 bytes, the size of full_sockaddr_ax25,
-versus 20 + 32 bytes of sockaddr_ll + MAX_ADDR_LEN in syzbot repro).
-
-Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
-Reported-by: syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com
-Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/1579013000-14570-2-git-send-email-igor.druzhinin@citrix.com
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/net.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ drivers/scsi/libfc/fc_disc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index e158159671fa2..18e205eeb9af7 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1414,10 +1414,6 @@ static int vhost_net_release(struct inode *inode, struct file *f)
- 
- static struct socket *get_raw_socket(int fd)
- {
--	struct {
--		struct sockaddr_ll sa;
--		char  buf[MAX_ADDR_LEN];
--	} uaddr;
- 	int r;
- 	struct socket *sock = sockfd_lookup(fd, &r);
- 
-@@ -1430,11 +1426,7 @@ static struct socket *get_raw_socket(int fd)
- 		goto err;
+diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
+index 9c5f7c9178c66..2b865c6423e29 100644
+--- a/drivers/scsi/libfc/fc_disc.c
++++ b/drivers/scsi/libfc/fc_disc.c
+@@ -628,6 +628,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
  	}
+ out:
+ 	kref_put(&rdata->kref, fc_rport_destroy);
++	if (!IS_ERR(fp))
++		fc_frame_free(fp);
+ }
  
--	r = sock->ops->getname(sock, (struct sockaddr *)&uaddr.sa, 0);
--	if (r < 0)
--		goto err;
--
--	if (uaddr.sa.sll_family != AF_PACKET) {
-+	if (sock->sk->sk_family != AF_PACKET) {
- 		r = -EPFNOSUPPORT;
- 		goto err;
- 	}
+ /**
 -- 
 2.20.1
 
