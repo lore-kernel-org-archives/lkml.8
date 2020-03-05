@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC33C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74ECC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A1224655
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B08121D56
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428410;
-	bh=qeSR8s+xjYKgRtoXDhAo+RN2PMmTP5CX+CKt41Yu3xQ=;
+	s=default; t=1583428414;
+	bh=HGhLDtQYFxY08JXW4Ft/KL+dTQ8RtbcoOb3raUrOpP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B0uE8Twi0h+o6hYDQR3vu3Fj5x6VInXCzc5HYAgtiYgSPPxulMqQLho7VXZ6zXbHk
-	 oiPBDrJzVwzBVrpkQFHtWIFGBu0NkTPTjvuoY2nRM6zKLZi0NvO4qzhoyBjXfncUBV
-	 MMBL/wal5J3DY6YTV+ORDuUZLWU8NESYcc41tLkk=
+	b=TYthc5bfgKEtjrtlrjRAVQSQRBBYbiYLtWKVweHnVN0CfxmArGWplwDISX9xMGr7B
+	 ovV+sxnEF1ElbLDJw0GtCigrr400VSNR3iExkzBDDpNmxUDIBBeDLxZ+WvervXuZUl
+	 JYdNIIKF11uLhZ3uyUOULHoBLq5Af9RXyQje1JQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgCERN3 (ORCPT
+        id S1725944AbgCERNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:13:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38874 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:13:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbgCERNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:25 -0500
+        id S1726920AbgCERN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B35252166E;
-        Thu,  5 Mar 2020 17:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D9E21556;
+        Thu,  5 Mar 2020 17:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428405;
-        bh=qeSR8s+xjYKgRtoXDhAo+RN2PMmTP5CX+CKt41Yu3xQ=;
+        s=default; t=1583428408;
+        bh=HGhLDtQYFxY08JXW4Ft/KL+dTQ8RtbcoOb3raUrOpP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gCgsaGCNXbb+2j/PbE5Zzb+j1oApB6P4z0MPovpsN1sivbjbce4Nm/RSi76li7GgV
-         cV2i/6SPDRK+l6Rhw93iOHdHwYYZO4qynMU0FNg3qW/GCWU0hiSLypDGJ74XyE4DII
-         4ftnWr08bIvpK7XIMBzhIZw+MtD407KDITi5C/2E=
+        b=FNls6EzuFwmsX7O1XayB37TiyWwoJByvq+Jo0gvARAhoAbVn2baMK4IVpV9XDCrMV
+         mkBTAI78JsCA9AQWogzwh3yz9S0MqU8ge9eOQ5gB7SzoN2zAUYU5OEzCx7IIjMpUqs
+         Cz9zHUYJFrO1kpa/KI6qF22EXMgpxXqQwDy3K5Ys=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Burton <paulburton@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 11/67] MIPS: Disable VDSO time functionality on microMIPS
-Date:   Thu,  5 Mar 2020 12:12:12 -0500
-Message-Id: <20200305171309.29118-11-sashal@kernel.org>
+Cc:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 13/67] MIPS: cavium_octeon: Fix syncw generation.
+Date:   Thu,  5 Mar 2020 12:12:14 -0500
+Message-Id: <20200305171309.29118-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -58,62 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paulburton@kernel.org>
+From: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 
-[ Upstream commit 07015d7a103c4420b69a287b8ef4d2535c0f4106 ]
+[ Upstream commit 97e914b7de3c943011779b979b8093fdc0d85722 ]
 
-A check we're about to add to pick up on function calls that depend on
-bogus use of the GOT in the VDSO picked up on instances of such function
-calls in microMIPS builds. Since the code appears genuinely problematic,
-and given the relatively small amount of use & testing that microMIPS
-sees, go ahead & disable the VDSO for microMIPS builds.
+The Cavium Octeon CPU uses a special sync instruction for implementing
+wmb, and due to a CPU bug, the instruction must appear twice. A macro
+had been defined to hide this:
 
+ #define __SYNC_rpt(type)     (1 + (type == __SYNC_wmb))
+
+which was intended to evaluate to 2 for __SYNC_wmb, and 1 for any other
+type of sync. However, this expression is evaluated by the assembler,
+and not the compiler, and the result of '==' in the assembler is 0 or
+-1, not 0 or 1 as it is in C. The net result was wmb() producing no code
+at all. The simple fix in this patch is to change the '+' to '-'.
+
+Fixes: bf92927251b3 ("MIPS: barrier: Add __SYNC() infrastructure")
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Tested-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/vdso/Makefile | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ arch/mips/include/asm/sync.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-index 96afd73c94e8a..e8585a22b925c 100644
---- a/arch/mips/vdso/Makefile
-+++ b/arch/mips/vdso/Makefile
-@@ -48,6 +48,8 @@ endif
- 
- CFLAGS_REMOVE_vgettimeofday.o = -pg
- 
-+DISABLE_VDSO := n
-+
- #
- # For the pre-R6 code in arch/mips/vdso/vdso.h for locating
- # the base address of VDSO, the linker will emit a R_MIPS_PC32
-@@ -61,11 +63,24 @@ CFLAGS_REMOVE_vgettimeofday.o = -pg
- ifndef CONFIG_CPU_MIPSR6
-   ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
-     $(warning MIPS VDSO requires binutils >= 2.25)
--    obj-vdso-y := $(filter-out vgettimeofday.o, $(obj-vdso-y))
--    ccflags-vdso += -DDISABLE_MIPS_VDSO
-+    DISABLE_VDSO := y
-   endif
- endif
- 
-+#
-+# GCC (at least up to version 9.2) appears to emit function calls that make use
-+# of the GOT when targeting microMIPS, which we can't use in the VDSO due to
-+# the lack of relocations. As such, we disable the VDSO for microMIPS builds.
-+#
-+ifdef CONFIG_CPU_MICROMIPS
-+  DISABLE_VDSO := y
-+endif
-+
-+ifeq ($(DISABLE_VDSO),y)
-+  obj-vdso-y := $(filter-out vgettimeofday.o, $(obj-vdso-y))
-+  ccflags-vdso += -DDISABLE_MIPS_VDSO
-+endif
-+
- # VDSO linker flags.
- VDSO_LDFLAGS := \
- 	-Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1 \
+diff --git a/arch/mips/include/asm/sync.h b/arch/mips/include/asm/sync.h
+index 7c6a1095f5562..aabd097933fe9 100644
+--- a/arch/mips/include/asm/sync.h
++++ b/arch/mips/include/asm/sync.h
+@@ -155,9 +155,11 @@
+  * effective barrier as noted by commit 6b07d38aaa52 ("MIPS: Octeon: Use
+  * optimized memory barrier primitives."). Here we specify that the affected
+  * sync instructions should be emitted twice.
++ * Note that this expression is evaluated by the assembler (not the compiler),
++ * and that the assembler evaluates '==' as 0 or -1, not 0 or 1.
+  */
+ #ifdef CONFIG_CPU_CAVIUM_OCTEON
+-# define __SYNC_rpt(type)	(1 + (type == __SYNC_wmb))
++# define __SYNC_rpt(type)	(1 - (type == __SYNC_wmb))
+ #else
+ # define __SYNC_rpt(type)	1
+ #endif
 -- 
 2.20.1
 
