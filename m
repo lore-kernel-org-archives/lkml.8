@@ -2,287 +2,147 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3500DC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D7DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F141821556
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E242F20828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ji9tVXHn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K6lRtbIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgCEOVb (ORCPT
+        id S1726111AbgCEOWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:21:31 -0500
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:53487 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgCEOVa (ORCPT
+        Thu, 5 Mar 2020 09:22:45 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42430 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725944AbgCEOWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:21:30 -0500
-Received: by mail-wr1-f73.google.com with SMTP id w11so2349078wrp.20
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:21:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=R7b8JJ9ZwHsRnaGbo6IVVSmSzWDTP61ESXIDdbshLCY=;
-        b=ji9tVXHnNWRk47lx3rHyk6YRTtosV++W28AWMCAr59Cbsf7yqi4HVOaoi2fKa+SrID
-         IriAjGAKoEumztP0Z/swgdCr3991ukzzDTPfqy6cLso6VvEDnrxaHEraQrkSK7yHzPVz
-         z6FBTN1i43lsZwSh6bzUKwMayyAOvJzwjNEIrVxN5ISXZk1H21BQcKx4uFbgLZlVoVlh
-         /C+M8tPdZIIbW43WDrbL1TyYlwD5sNEE1/Vd7aFIV+Of1OpRFHXvb5DT2yZkeLeKkYpo
-         4nxmJwhbvaI8QEj3LC4+l7HkqJ05zlBSRl1usOOPxn86O+8fRq1RXk8qGtlU11YLkPyY
-         agxA==
+        Thu, 5 Mar 2020 09:22:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583418165;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6noagWxZ5YiSaEFMdQzCHre9EJD3npDKEFOYBbGNFrU=;
+        b=K6lRtbIFnpB7TQ3j7+DzFzYuiSMr/Jd7aUBnptwA0FfV8paPGfcewQtzDpo3g2Oc7Iy3C5
+        DOQhPDPe0E1Eax1sFyaqmPtgAQcXfYvJbFIHUiswsVqR2h8V1GBfV5CMjzLl0MCON76re4
+        aQQhNAn8FfKaNyn6T8oFiZBYrrL/zJo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-329-PAs0eptSNEKmdrGC8pDG_g-1; Thu, 05 Mar 2020 09:22:41 -0500
+X-MC-Unique: PAs0eptSNEKmdrGC8pDG_g-1
+Received: by mail-wm1-f69.google.com with SMTP id w12so1643624wmc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:22:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=R7b8JJ9ZwHsRnaGbo6IVVSmSzWDTP61ESXIDdbshLCY=;
-        b=NIRGfwdOzXuxdEiuzh6BWWAsrfBp+Jysz52X9sO95J+EvykoqqOoNBspytl/w63jPr
-         1Zrw3MY4BwUUWn8/kmfxuASRN6RnlQmIsBcD920naoSc/mbn6M10E5QnOuRzx1G0rJUC
-         ocQYVNmDhsAhZOXiZWjGu4hRW/AYhm/2pz/H7DckwcXJ4NkvqLAJaDNqmOKAkNza2vl2
-         Id0E5PhpagZNWf+GVrbGoalBl0AzSk8Du0Eg/mo+XaKeR/0SZCFm/87Hbwl6Mtxzl1Qy
-         4nSfyU5XIvROypENMB7oJLCei+n8O3pZwsty3PhLePxfmr4JOLxWCIWonBUZTvAtnutl
-         5U7w==
-X-Gm-Message-State: ANhLgQ3LoFyIAFTiAuFspOT8r2uXJVagXevA80ExE1LM8hF3CBIcxlrq
-        kDN3bVy5Hv2kQPNmX1DhWPJ4FB74dQ==
-X-Google-Smtp-Source: ADFU+vvb7Vh2TQTwawDTChJM3ls+KlVkNmyX0j7Ks22BOxANZZqtxKV7P86xhAPvp1lY4LFecodt+HoExg==
-X-Received: by 2002:adf:f504:: with SMTP id q4mr10007007wro.28.1583418086225;
- Thu, 05 Mar 2020 06:21:26 -0800 (PST)
-Date:   Thu,  5 Mar 2020 15:21:09 +0100
-In-Reply-To: <20200305142109.50945-1-elver@google.com>
-Message-Id: <20200305142109.50945-3-elver@google.com>
-Mime-Version: 1.0
-References: <20200305142109.50945-1-elver@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2 3/3] kcsan: Update API documentation in kcsan-checks.h
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6noagWxZ5YiSaEFMdQzCHre9EJD3npDKEFOYBbGNFrU=;
+        b=XrCWbKZqO7kZTjtNS9T2OIIc2h4MvsSEhq96BolEfqT9F53sztPNDEYTeJ+5VKXIgJ
+         uUdf7cSk92e6XrSyOaeyyC1R27U+Byq6Wwtwu7c2r7peTGsPvequ9m6KwTcyCQ0OvfsM
+         YwuKe85qHt+NeSwejPKZYRZ7WdpVEa/qwijSv5DkZLJnp/Bj+LkDBwA8RYox5Tzamu9G
+         7kzKtB9tme507oMHb3RmUsgedTCWiTOOW5X1OztncJnew06lb9OVq47bDV0emziQh8dD
+         FFRRuXSW+LJcPL1QKFuqN0R09qWu2YRTWpy0BP/rcnZVI7bjmRJ9LgAYZU58/o6dOpLs
+         3rwQ==
+X-Gm-Message-State: ANhLgQ0/J6ZLV+gTdIj2R8tJTLxqIZrLrU/lkT2h6UL9RE/FzBF7HYnS
+        xyk2tuGkvRHKEdWcFmH0z4+GxY9J1HF60+NZ1tHuR5fA/FWeHUPXDn/NZPPOyDK//GVV54PPEJs
+        3bKS65FlrTNuZQITbeQjhKkZc
+X-Received: by 2002:a5d:6146:: with SMTP id y6mr10560244wrt.107.1583418159921;
+        Thu, 05 Mar 2020 06:22:39 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsVPpJ1Cv7XI3CgGNNoNJ0eAJgUXSnFi1wfWwG4CQQJ1K56cUcw027pOLSq+CkOV+HtsaXJ9g==
+X-Received: by 2002:a5d:6146:: with SMTP id y6mr10560228wrt.107.1583418159722;
+        Thu, 05 Mar 2020 06:22:39 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id z2sm40199326wrq.95.2020.03.05.06.22.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 06:22:39 -0800 (PST)
+Subject: Re: [PATCH][next] drm/vboxvideo/vboxvideo.h: Replace zero-length
+ array with flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200305105558.GA19124@embeddedor>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <8e2ab9a2-fb47-1d61-d09c-0510ad5ee5ff@redhat.com>
+Date:   Thu, 5 Mar 2020 15:22:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200305105558.GA19124@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the API documentation for ASSERT_EXCLUSIVE_* macros and make them
-generate readable documentation for the code examples.
+Hi,
 
-All @variable short summaries were missing ':', which was updated for
-the whole file.
+On 3/5/20 11:55 AM, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>          int stuff;
+>          struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Tested with "make htmldocs".
+Patch looks good to me:
 
-Signed-off-by: Marco Elver <elver@google.com>
----
- include/linux/kcsan-checks.h | 98 ++++++++++++++++++++++--------------
- 1 file changed, 61 insertions(+), 37 deletions(-)
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
-index 1b8aac5d6a0b5..14fd10e5a9177 100644
---- a/include/linux/kcsan-checks.h
-+++ b/include/linux/kcsan-checks.h
-@@ -26,9 +26,9 @@
- /**
-  * __kcsan_check_access - check generic access for races
-  *
-- * @ptr address of access
-- * @size size of access
-- * @type access type modifier
-+ * @ptr: address of access
-+ * @size: size of access
-+ * @type: access type modifier
-  */
- void __kcsan_check_access(const volatile void *ptr, size_t size, int type);
- 
-@@ -64,7 +64,7 @@ void kcsan_flat_atomic_end(void);
-  * Force treating the next n memory accesses for the current context as atomic
-  * operations.
-  *
-- * @n number of following memory accesses to treat as atomic.
-+ * @n: number of following memory accesses to treat as atomic.
-  */
- void kcsan_atomic_next(int n);
- 
-@@ -74,7 +74,7 @@ void kcsan_atomic_next(int n);
-  * Set the access mask for all accesses for the current context if non-zero.
-  * Only value changes to bits set in the mask will be reported.
-  *
-- * @mask bitmask
-+ * @mask: bitmask
-  */
- void kcsan_set_access_mask(unsigned long mask);
- 
-@@ -106,16 +106,16 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
- /**
-  * __kcsan_check_read - check regular read access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
-  */
- #define __kcsan_check_read(ptr, size) __kcsan_check_access(ptr, size, 0)
- 
- /**
-  * __kcsan_check_write - check regular write access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
-  */
- #define __kcsan_check_write(ptr, size)                                         \
- 	__kcsan_check_access(ptr, size, KCSAN_ACCESS_WRITE)
-@@ -123,16 +123,16 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
- /**
-  * kcsan_check_read - check regular read access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
-  */
- #define kcsan_check_read(ptr, size) kcsan_check_access(ptr, size, 0)
- 
- /**
-  * kcsan_check_write - check regular write access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
-  */
- #define kcsan_check_write(ptr, size)                                           \
- 	kcsan_check_access(ptr, size, KCSAN_ACCESS_WRITE)
-@@ -158,14 +158,26 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * allowed. This assertion can be used to specify properties of concurrent code,
-  * where violation cannot be detected as a normal data race.
-  *
-- * For example, if a per-CPU variable is only meant to be written by a single
-- * CPU, but may be read from other CPUs; in this case, reads and writes must be
-- * marked properly, however, if an off-CPU WRITE_ONCE() races with the owning
-- * CPU's WRITE_ONCE(), would not constitute a data race but could be a harmful
-- * race condition. Using this macro allows specifying this property in the code
-- * and catch such bugs.
-+ * For example, if we only have a single writer, but multiple concurrent
-+ * readers, to avoid data races, all these accesses must be marked; even
-+ * concurrent marked writes racing with the single writer are bugs.
-+ * Unfortunately, due to being marked, they are no longer data races. For cases
-+ * like these, we can use the macro as follows:
-  *
-- * @var variable to assert on
-+ * .. code-block:: c
-+ *
-+ *	void writer(void) {
-+ *		spin_lock(&update_foo_lock);
-+ *		ASSERT_EXCLUSIVE_WRITER(shared_foo);
-+ *		WRITE_ONCE(shared_foo, ...);
-+ *		spin_unlock(&update_foo_lock);
-+ *	}
-+ *	void reader(void) {
-+ *		// update_foo_lock does not need to be held!
-+ *		... = READ_ONCE(shared_foo);
-+ *	}
-+ *
-+ * @var: variable to assert on
-  */
- #define ASSERT_EXCLUSIVE_WRITER(var)                                           \
- 	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_ASSERT)
-@@ -177,16 +189,22 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * writers). This assertion can be used to specify properties of concurrent
-  * code, where violation cannot be detected as a normal data race.
-  *
-- * For example, in a reference-counting algorithm where exclusive access is
-- * expected after the refcount reaches 0. We can check that this property
-- * actually holds as follows:
-+ * For example, where exclusive access is expected after determining no other
-+ * users of an object are left, but the object is not actually freed. We can
-+ * check that this property actually holds as follows:
-+ *
-+ * .. code-block:: c
-  *
-  *	if (refcount_dec_and_test(&obj->refcnt)) {
-  *		ASSERT_EXCLUSIVE_ACCESS(*obj);
-- *		safely_dispose_of(obj);
-+ *		do_some_cleanup(obj);
-+ *		release_for_reuse(obj);
-  *	}
-  *
-- * @var variable to assert on
-+ * Note: For cases where the object is freed, `KASAN <kasan.html>`_ is a better
-+ * fit to detect use-after-free bugs.
-+ *
-+ * @var: variable to assert on
-  */
- #define ASSERT_EXCLUSIVE_ACCESS(var)                                           \
- 	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT)
-@@ -200,7 +218,7 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * concurrent readers are permitted. This assertion captures more detailed
-  * bit-level properties, compared to the other (word granularity) assertions.
-  * Only the bits set in @mask are checked for concurrent modifications, while
-- * ignoring the remaining bits, i.e. concurrent writes (or reads) to ~@mask bits
-+ * ignoring the remaining bits, i.e. concurrent writes (or reads) to ~mask bits
-  * are ignored.
-  *
-  * Use this for variables, where some bits must not be modified concurrently,
-@@ -210,17 +228,21 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * but other bits may still be modified concurrently. A reader may wish to
-  * assert that this is true as follows:
-  *
-+ * .. code-block:: c
-+ *
-  *	ASSERT_EXCLUSIVE_BITS(flags, READ_ONLY_MASK);
-  *	foo = (READ_ONCE(flags) & READ_ONLY_MASK) >> READ_ONLY_SHIFT;
-  *
-- *   Note: The access that immediately follows ASSERT_EXCLUSIVE_BITS() is
-- *   assumed to access the masked bits only, and KCSAN optimistically assumes it
-- *   is therefore safe, even in the presence of data races, and marking it with
-- *   READ_ONCE() is optional from KCSAN's point-of-view. We caution, however,
-- *   that it may still be advisable to do so, since we cannot reason about all
-- *   compiler optimizations when it comes to bit manipulations (on the reader
-- *   and writer side). If you are sure nothing can go wrong, we can write the
-- *   above simply as:
-+ * Note: The access that immediately follows ASSERT_EXCLUSIVE_BITS() is assumed
-+ * to access the masked bits only, and KCSAN optimistically assumes it is
-+ * therefore safe, even in the presence of data races, and marking it with
-+ * READ_ONCE() is optional from KCSAN's point-of-view. We caution, however, that
-+ * it may still be advisable to do so, since we cannot reason about all compiler
-+ * optimizations when it comes to bit manipulations (on the reader and writer
-+ * side). If you are sure nothing can go wrong, we can write the above simply
-+ * as:
-+ *
-+ * .. code-block:: c
-  *
-  * 	ASSERT_EXCLUSIVE_BITS(flags, READ_ONLY_MASK);
-  *	foo = (flags & READ_ONLY_MASK) >> READ_ONLY_SHIFT;
-@@ -230,15 +252,17 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * be modified concurrently. Writers, where other bits may change concurrently,
-  * could use the assertion as follows:
-  *
-+ * .. code-block:: c
-+ *
-  *	spin_lock(&foo_lock);
-  *	ASSERT_EXCLUSIVE_BITS(flags, FOO_MASK);
-- *	old_flags = READ_ONCE(flags);
-+ *	old_flags = flags;
-  *	new_flags = (old_flags & ~FOO_MASK) | (new_foo << FOO_SHIFT);
-  *	if (cmpxchg(&flags, old_flags, new_flags) != old_flags) { ... }
-  *	spin_unlock(&foo_lock);
-  *
-- * @var variable to assert on
-- * @mask only check for modifications to bits set in @mask
-+ * @var: variable to assert on
-+ * @mask: only check for modifications to bits set in @mask
-  */
- #define ASSERT_EXCLUSIVE_BITS(var, mask)                                       \
- 	do {                                                                   \
--- 
-2.25.0.265.gbab2e86ba0-goog
+Regards,
+
+Hans
+
+
+> ---
+>   drivers/gpu/drm/vboxvideo/vboxvideo.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/vboxvideo/vboxvideo.h b/drivers/gpu/drm/vboxvideo/vboxvideo.h
+> index 0592004f71aa..a5de40fe1a76 100644
+> --- a/drivers/gpu/drm/vboxvideo/vboxvideo.h
+> +++ b/drivers/gpu/drm/vboxvideo/vboxvideo.h
+> @@ -138,7 +138,7 @@ struct vbva_buffer {
+>   
+>   	u32 data_len;
+>   	/* variable size for the rest of the vbva_buffer area in VRAM. */
+> -	u8 data[0];
+> +	u8 data[];
+>   } __packed;
+>   
+>   #define VBVA_MAX_RECORD_SIZE (128 * 1024 * 1024)
+> 
 
