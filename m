@@ -2,99 +2,105 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E50F5C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F77C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E86208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:29:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583432950;
-	bh=u0ta6nm59YBnC8llGbljGPYCdoxiJJKotM4+vC53CMA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Al4I3eQb1Vn6exbro+x0Tkg3fiQiFlb/3G4TBxiA2Bs0zyJ0ZoO1Lq5Uq7i9W2joU
-	 YcT4afeXprG6u6k5/RqZN6NIUOui5YoS0zJx6e+EYhaf+HpIq2mxRszi/Je6cMGCrk
-	 oEj6bbQwDAjBOL9XoFSuPxNncB/cbzMksm3+5S+k=
+	by mail.kernel.org (Postfix) with ESMTP id 2C6F2208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:29:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvOU9y2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgCES3J (ORCPT
+        id S1726087AbgCES3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:29:09 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35668 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgCES3J (ORCPT
+        Thu, 5 Mar 2020 13:29:35 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44418 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgCES3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:29:09 -0500
-Received: by mail-lj1-f196.google.com with SMTP id a12so7212343ljj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:29:08 -0800 (PST)
+        Thu, 5 Mar 2020 13:29:34 -0500
+Received: by mail-qk1-f193.google.com with SMTP id f198so6270308qke.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:29:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lbDd5+msqmDyxpq6Lb6ucz4ESNTgElObbSpMaShcyms=;
-        b=F3N0wZelss6cZK4QjAM8jWJ06sQQW3F4y8SDKE0irQdX19FJEsxMHK5XaReoIXNZ2x
-         xAe1gUgz8okG6bAlHMI32BK/x7Gt3mMAGKYGD0lZomRxOWuvHYQhuJwNSVJvx+5ViBEs
-         UALKk37VHLJG+gq7UTF61v3tIkdser14tfAO4=
+        bh=aO2Nq+upn1lfouLFIykWQjQaxMLKoHNR//pZLEIFyDY=;
+        b=jvOU9y2jIyuus28lCdGSa29MRkBfX+AYfa5dfh0jIofGHb60Kox/pvSem+UEw4v45i
+         bEK4m8apx06qK2bXZLYnmrQLG7H6sS962p/so7lwIXzHijeZ1GCFtKfq2u8atHdw211U
+         q4YjG1gpJhref3SVpbLge9rRpDiEn5bk3H2y1jWijafqK1aPMHAgHsEtrB4wS7aVJH7V
+         ITm4r4BXl4VO+6XWjwbvp5PE1U9Gbj4i9JFQsnAzHDzRSrVk0qWn4wgc709ZaaVdqKOQ
+         bLddG18m4X9KkYtRuvEbYEhr5Y9Weui9eLIZrWbF2OEkP/iuXz3h5dx6S56m3q0IXKLa
+         IA4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lbDd5+msqmDyxpq6Lb6ucz4ESNTgElObbSpMaShcyms=;
-        b=c9eKA/0i4Tna++74Fv86Ge9ivVCFU3jdFDjvhnWyLmTWElkEa3/KYR/L7poiUV853y
-         vVj4kRpmTpmlva3wkZtb1xycabppuGtqfbv6k7Z7QpPkWJiBkM4wSUkyMECMq3VnO9uI
-         GCvlRwnCCmHkMtLlv0I7ULglPLSpHDj4qkKUPVcy0+ly33xTsOH97hYQuh5MsxASYloZ
-         zCVmaAtmWHD8AV84TWzi53IeCsc95RsxfTtr4LrACiLVXfOuehFt6xoEkyuOMkMBZr4f
-         sOadGud9p1EiU6tIN9KA5i3xVAY+tPtAHZxz5uEf0kCO1kbz6Rb/Qlk3NGhp/dPh/EUZ
-         uUKw==
-X-Gm-Message-State: ANhLgQ1xr5u/OaIwkcrhotfyxX/3W5RPBJUzLS73/quMGQda5Ew162gz
-        PjlI6RapJYOiNTWjBA7AAFSJ9heKLfHocg==
-X-Google-Smtp-Source: ADFU+vs8wF/ddMvqGXZAZ1G8/a5Wa98x+BmPKg6kOJDgESJkuM7M1zmUXFmO2u9aQeaukmToP6Yclg==
-X-Received: by 2002:a2e:818e:: with SMTP id e14mr6050471ljg.2.1583432946288;
-        Thu, 05 Mar 2020 10:29:06 -0800 (PST)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id z1sm4002000ljh.17.2020.03.05.10.29.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 10:29:06 -0800 (PST)
-Received: by mail-lj1-f177.google.com with SMTP id e18so7207109ljn.12
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:29:05 -0800 (PST)
-X-Received: by 2002:a05:651c:502:: with SMTP id o2mr6142302ljp.150.1583432944420;
- Thu, 05 Mar 2020 10:29:04 -0800 (PST)
+        bh=aO2Nq+upn1lfouLFIykWQjQaxMLKoHNR//pZLEIFyDY=;
+        b=VRfoJEPuTQQeDORy6bTC6A7sg1LIHwyH1RU+7hA2utI0Hxsu8oIPrhHvOkteZPN/OM
+         n+8RSdHJlzlxhGoURcgPYyVwWZC8+5x+8kgJu3KGiZ2LjjlDjf8eT+jJU8Ooozn2qyBO
+         SD6h3J7rZHJ2xlzYiPOqIH5Jf7fq79q+IGuNfr7g0bkGTLb37Fieoz5AP5gaTjMGG+Q/
+         FI3tTYG6mWueSGLSItyAtu0XMp+tBxBphK8JtmaMnYl61dr5CCYJRPAH081ZuyfDwkfw
+         F/z9uiDBvk6525RsQvQubz/j7PiWRq+7lIdj1d2+oba1T71yZiE5sZ7LmbqfpYkp2URp
+         Qhvw==
+X-Gm-Message-State: ANhLgQ2b7Rv86gaJy8rjV6vvlvY3rTbCXpBBGqMpE6GkqbRL5mvaym5d
+        pqS/v7KE9yRMWzwU9P0xspP2x/UkJO3LCVs5bT0=
+X-Google-Smtp-Source: ADFU+vsq2/P0E2CDnX7KV7FdX1+WD1Ea4vTrjXDFHtSlnmi/MkBaggpukFlmsbWyGUmeM7eR/CtWPLqYjK5bAud44Y4=
+X-Received: by 2002:a05:620a:12a2:: with SMTP id x2mr9530926qki.276.1583432974202;
+ Thu, 05 Mar 2020 10:29:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20200305155901.xmstcqwutrb6s7pi@debian>
-In-Reply-To: <20200305155901.xmstcqwutrb6s7pi@debian>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 5 Mar 2020 12:28:48 -0600
-X-Gmail-Original-Message-ID: <CAHk-=wisKNsaOOCO8TfigKwmuqX83+KvntYeGq-KbOcSPunQbg@mail.gmail.com>
-Message-ID: <CAHk-=wisKNsaOOCO8TfigKwmuqX83+KvntYeGq-KbOcSPunQbg@mail.gmail.com>
-Subject: Re: [GIT PULL] Hyper-V commits for 5.6-rc
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     kys@microsoft.com, Stephen Hemminger <sthemmin@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        Sasha Levin <sashal@kernel.org>, haiyangz@microsoft.com
+References: <20200213145416.890080-1-enric.balletbo@collabora.com>
+ <20200213145416.890080-2-enric.balletbo@collabora.com> <CA+E=qVffVzZwRTk9K7=xhWn-AOKExkew0aPcyL_W1nokx-mDdg@mail.gmail.com>
+ <CAFqH_53crnC6hLExNgQRjMgtO+TLJjT6uzA4g8WXvy7NkwHcJg@mail.gmail.com>
+ <CA+E=qVfGiQseZZVBvmmK6u2Mu=-91ViwLuhNegu96KRZNAHr_w@mail.gmail.com>
+ <CAFqH_505eWt9UU7Wj6tCQpQCMZFMfy9e1ETSkiqi7i5Zx6KULQ@mail.gmail.com>
+ <CA+E=qVff5_hdPFdaG4Lrg7Uzorea=JbEdPoy+sQd7rUGNTTZ5g@mail.gmail.com> <5245a8e4-2320-46bd-04fd-f86ce6b17ce7@collabora.com>
+In-Reply-To: <5245a8e4-2320-46bd-04fd-f86ce6b17ce7@collabora.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Thu, 5 Mar 2020 10:29:33 -0800
+Message-ID: <CA+E=qVcyRW4LNC5db27d-8x-T_Nk9QAhkBPwu5rwthTc6ewbYA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] drm/bridge: anx7688: Add anx7688 bridge driver support
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
+Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>, Torsten Duwe <duwe@suse.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Collabora Kernel ML <kernel@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 9:59 AM Wei Liu <wei.liu@kernel.org> wrote:
+On Thu, Mar 5, 2020 at 7:28 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
 >
-> This is mostly a "dry-run" attempt to sort out any wrinkles on my end.
-> If I have done something stupid, let me know.
+> Hi Vasily,
 
-Looks fine. I generally like seeing the commits being a bit older than
-these are - you seem to have applied or rebased them not all that long
-before sending the pull request. I prefer seeing that they've been in
-linux-next etc, but for soemthing small like this I guess it doesn't
-much matter. Next time?
+CC: Icenowy and Ondrej
+>
+> Would you mind to check which firmware version is running the anx7688 in
+> PinePhone, I think should be easy to check with i2c-tools.
 
-Also, it would generally be lovely to see signatures of the old
-maintainer on the new maintainer's pgp key when transitions like this
-happen, but it's not like we've really required that in the past
-either. Literally just a "that would be nice"
+Icenowy, Ondrej, can you guys please check anx7688 firmware version?
 
-                Linus
+> Thanks in advance,
+>  Enric
+>
+> [snip]
