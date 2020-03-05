@@ -2,164 +2,146 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F64BC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0521C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3298320637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9535520637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:48:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L82TiN1R"
+	dkim=pass (1024-bit key) header.d=rambus.com header.i=@rambus.com header.b="HdyEWBeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgCEQq6 (ORCPT
+        id S1726020AbgCEQsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:46:58 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34580 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgCEQq6 (ORCPT
+        Thu, 5 Mar 2020 11:48:12 -0500
+Received: from us-smtp-delivery-148.mimecast.com ([216.205.24.148]:53627 "EHLO
+        us-smtp-delivery-148.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725944AbgCEQsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:46:58 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 025GkkKE102543;
-        Thu, 5 Mar 2020 10:46:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583426806;
-        bh=dLFUF+hs+lohm/Cy6tRRvf897Y3mN6z0nkcwCI41Suc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=L82TiN1RIfnn7kmuwg7lIQk58WqJrf2UENT7X++AbV7KhQr6RrLWHAto6743DqU10
-         29Z21bS0cz0D515Ns09f10dXHBcDpVzO6Gp82bMWGKK0jwoaF+LdQnt8uQqGHjbXCb
-         uLhMST0d/sfxrGm2/Zri8vPmMzIFMMzWm0SkPiIA=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 025Gkk6G047305
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 5 Mar 2020 10:46:46 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Mar
- 2020 10:46:45 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Mar 2020 10:46:45 -0600
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 025Gkhkl105579;
-        Thu, 5 Mar 2020 10:46:43 -0600
-Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
-To:     Robin Murphy <robin.murphy@arm.com>, <tony@atomide.com>,
-        Nishanth Menon <nm@ti.com>
-CC:     <yan-liu@ti.com>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Nori, Sekhar" <nsekhar@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-References: <20200304090031.30360-1-rogerq@ti.com>
- <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <eb4e97f2-9afd-41a9-e239-88798c326a86@ti.com>
-Date:   Thu, 5 Mar 2020 18:46:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Thu, 5 Mar 2020 11:48:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rambus.com;
+        s=mimecast20161209; t=1583426890;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g5Puqy9yI7JgdwGwojW1NcsFNpiHcJichm2gxg3ZJ/k=;
+        b=HdyEWBebkH8jJrd0SzGnwLumCHzH6iFNWM8bkxdSLuiN2vljMI1Vb7z0sER7s7QYVMulNH
+        tHLaRcKeLjxraR8X0YaZmPlyfaNHzVtQSsFjeEh4xtTixs0uwJvQJGkwvLVXKhtHgayPKj
+        aIwMEVP7U0/a0HmIGOSdU8wUeOKGjkc=
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com
+ (mail-bn8nam11lp2174.outbound.protection.outlook.com [104.47.58.174])
+ (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-455-rXAOwNMyNGCCnSkk0dt39Q-1; Thu, 05 Mar 2020 11:48:09 -0500
+X-MC-Unique: rXAOwNMyNGCCnSkk0dt39Q-1
+Received: from CY4PR0401MB3652.namprd04.prod.outlook.com
+ (2603:10b6:910:8a::27) by CY4PR0401MB3651.namprd04.prod.outlook.com
+ (2603:10b6:910:8f::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18; Thu, 5 Mar
+ 2020 16:48:06 +0000
+Received: from CY4PR0401MB3652.namprd04.prod.outlook.com
+ ([fe80::9486:c6fe:752d:5eda]) by CY4PR0401MB3652.namprd04.prod.outlook.com
+ ([fe80::9486:c6fe:752d:5eda%3]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
+ 16:48:06 +0000
+From:   "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>
+To:     =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta@nxp.com>,
+        "Andrei Botila (OSS)" <andrei.botila@oss.nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>
+Subject: Re: [RFC] crypto: xts - limit accepted key length
+Thread-Topic: [RFC] crypto: xts - limit accepted key length
+Thread-Index: AQHV8Gr7c7FFE6Bn/kS7vrAYuVJAN6g09vgAgAHW44CAAAkGMIADTCMAgAAOtN4=
+Date:   Thu, 5 Mar 2020 16:48:06 +0000
+Message-ID: <CY4PR0401MB365264BDC0F6ECE487E826A9C3E20@CY4PR0401MB3652.namprd04.prod.outlook.com>
+References: <b8c0cbbf0cb94e389bae5ae3da77596d@DM6PR20MB2762.namprd20.prod.outlook.com>
+ <CY4PR0401MB3652818432E5A28BC5089E15C3E70@CY4PR0401MB3652.namprd04.prod.outlook.com>
+ <c69cebf0d6cb48ff93389d73dea6ba3e@DM6PR20MB2762.namprd20.prod.outlook.com>
+ <CY4PR0401MB3652485437D698D9F9FD1603C3E40@CY4PR0401MB3652.namprd04.prod.outlook.com>,<a9b2a676329c4905be6efe088cbb7663@DM6PR20MB2762.namprd20.prod.outlook.com>
+In-Reply-To: <a9b2a676329c4905be6efe088cbb7663@DM6PR20MB2762.namprd20.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [159.100.118.162]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ccf0e84d-6443-413b-3390-08d7c124faab
+x-ms-traffictypediagnostic: CY4PR0401MB3651:
+x-microsoft-antispam-prvs: <CY4PR0401MB3651747009A118EADA1C9989C3E20@CY4PR0401MB3651.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 03333C607F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(346002)(39850400004)(366004)(199004)(189003)(6506007)(7696005)(81166006)(478600001)(81156014)(2906002)(8676002)(186003)(86362001)(26005)(4326008)(55016002)(71200400001)(66476007)(5660300002)(76116006)(91956017)(66946007)(66556008)(66446008)(52536014)(9686003)(64756008)(33656002)(8936002)(110136005)(54906003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR0401MB3651;H:CY4PR0401MB3652.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4TpjahJxqI3SA+OZaCKPMfMBGUQqzLFiS/YqAf0G8/xDiDAGr/sOmFRGU7o341NYiFC5c070T3o57+6m5yaWjXX8wGYeuUctEEOTiz3ANBGaB7scO9MSE567EB+92z4qBWnKG4zlqkTM+jcP40CphrEoj9tjhslIp9u9JgMoQ2ez9U8/50JPGBote2/249cUcQ94DqmcPDvDufoH4seJbQxBRu6F9Z3UY7cxXovYZCPcKtm3SbefqNY6Qd14tgPxDE4OJ7P2dlxHi0tmNvnL6qMnX4svnosVvVJql7VdvyqGN+prHH7Vyw0CtWID9+fLra0UBJAYvhlR5oDKQUcLxPLvuGUT4eJt1uHxjvcpe/U1ZAYz2qqSGZZNkrEQEmgAX9LgZag7oGfyMGIcTTBHn2WuIvhHkGIXPVkukYf/kxWld3ed78lmvRqJmhFDfIVl
+x-ms-exchange-antispam-messagedata: h+XzHVd43AQsM8gZzKq+7aHuziyXDz6dimADrLK5kcEz+YTx8tvLBwEYXf8Jj1PHw/QLLsEosSr4IKCvIzbbeozdE7WshLc+ZetIEAanveaHfBOrOjRGxIWi/FO9MY5LbfrhG/sbMZtn+YZKEH/fuw==
+x-ms-exchange-transport-forked: True
+MIME-Version: 1.0
+X-OriginatorOrg: rambus.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccf0e84d-6443-413b-3390-08d7c124faab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2020 16:48:06.3402
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bd0ba799-c2b9-413c-9c56-5d1731c4827c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: liJCsNHA3z//I+fRB38mccsM+DLJB5j/heGw+EjHSpcTanj021esZ2K+9qAI8yNG2A7WxsR43Lw5eZhXldDpLw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0401MB3651
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: rambus.com
+Content-Type: text/plain; charset=ISO-8859-2
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Nishanth
+>> What is wrong with software fallback for the 192 bit keys in your driver=
+?
+> More code to maintain.
+>
+That applies to many corner cases not relevant to and therefore not support=
+ed by "my" HW as well ...
+From personal experience, it's not generally accepted as an excuse though.
 
-Robin,
+> AES-XTS-192 should be:
+> -either rejected (since there's a standard in place) or
+>
+There is a standard for storage encryption _using_ AES in XTS mode, i.e. IE=
+EE-P1619, which indeed does not mention 192 bit keys.
+But there is no _standard_ for _generic_ XTS mode that prohibits the use of=
+ keysizes of the underlying blockcipher.
+There really is no good reason to disallow the use of 192 bit keys with AES=
+ for XTS. As the software implementation as well as other hardware implemen=
+tations can do it just fine.
+Also, making an exception specifically for one particular blockcipher (bein=
+g AES) inside the XTS wrapper is pretty ugly.
 
-On 05/03/2020 18:04, Robin Murphy wrote:
-> On 04/03/2020 9:00 am, Roger Quadros wrote:
->> Even though the TRM says that SATA IP has 36 address bits
->> wired in the SoC, we see bus errors whenever any address
->> greater than 32-bit is given to the controller.
-> 
-> Actually, is it really just SATA? I pulled up a couple of DRA7xx TRMs out of curiosity - thanks for having such easy-to-access documentation by the way :) - and they both give me a clear impression that the entire L3_MAIN interconnect is limited to 32-bit addresses and thus pretty much all the DMA masters should only be able to touch the lower 2GB of DRAM. Especially the bit that explicitly says "This is a high address range (Q8 – Q15) that requires an address greater than 32 bits. This space is visible only for the MPU Subsystem."
+> -at most made optional (allowing for implementations to *optionally* supp=
+ort
+> more key sizes), meaning crypto fuzz testing shouldn't fail.
+>
+Agree that it is a major burden on hardware device drivers to support every=
+ possible corner of a generic software implementation though software fallb=
+ack mechanisms. Some mechanism allowing hardware drivers some freedom not t=
+o support certain corner cases that are not relevant to the scenarios where=
+ the driver is _known_ to be actually used would be terribly nice.
 
-You are right that L3 interconnect can only access first 2GB of DRAM.
-Which means we should add the bus_dma_limit to the entire L3 bus
-instead of just SATA?
+Regards,
+Pascal van Leeuwen
+Silicon IP Architect Multi-Protocol Engines, Rambus Security
+Rambus ROTW Holding BV
++31-73 6581953
 
-> 
-> Is it in fact the case that the SATA driver happens to be the only one to set a >32-bit DMA mask on your system?
+** This message and any attachments are for the sole use of the intended re=
+cipient(s). It may contain information that is confidential and privileged.=
+ If you are not the intended recipient of this message, you are prohibited =
+from printing, copying, forwarding or saving it. Please delete the message =
+and attachments and notify the sender immediately. **
 
-This looks like the case. Other device drivers might not be overriding
-dma_mask at all thus using the default 32-bit dma_mask.
+Rambus Inc.<http://www.rambus.com>
 
-cheers,
--roger
-
-> 
-> Robin.
-> 
->> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
->>
->> As a workaround we limit the DMA address range to 32-bits
->> for SATA.
->>
->> Cc: Christoph Hellwig <hch@lst.de>
->> Cc: Robin Murphy <robin.murphy@arm.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Reported-by: Yan Liu <yan-liu@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>
->> NOTE: Currently ARM dma-mapping code doesn't account for devices
->> bus_dma_limit. This is fixed in [1].
->>
->> [1] https://lkml.org/lkml/2020/2/18/712
->>
->>   arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
->>   1 file changed, 16 insertions(+), 9 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index d78b684e7fca..895462c22d1c 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -642,15 +642,22 @@
->>           };
->>           /* OCP2SCP3 */
->> -        sata: sata@4a141100 {
->> -            compatible = "snps,dwc-ahci";
->> -            reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
->> -            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->> -            phys = <&sata_phy>;
->> -            phy-names = "sata-phy";
->> -            clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
->> -            ti,hwmods = "sata";
->> -            ports-implemented = <0x1>;
->> +        sata_aux_bus {
->> +            #address-cells = <1>;
->> +            #size-cells = <2>;
->> +            compatible = "simple-bus";
->> +            ranges = <0x0 0x4a140000 0x0 0x1200>;
->> +            dma-ranges = <0x0 0x0 0x1 0x00000000>;
->> +            sata: sata@4a141100 {
->> +                compatible = "snps,dwc-ahci";
->> +                reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
->> +                interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->> +                phys = <&sata_phy>;
->> +                phy-names = "sata-phy";
->> +                clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
->> +                ti,hwmods = "sata";
->> +                ports-implemented = <0x1>;
->> +            };
->>           };
->>           /* OCP2SCP1 */
->>
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
