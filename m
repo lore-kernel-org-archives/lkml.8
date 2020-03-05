@@ -1,152 +1,97 @@
-Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7906C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5EEC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BE420848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0551C208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:17:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iImtYUMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgCDJl5 convert rfc822-to-8bit (ORCPT
+        id S1726079AbgCESRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:41:57 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:57959 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729126AbgCDJl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:41:57 -0500
-Received: from [IPv6:2601:646:8600:3281:d841:929b:f37:3a31] ([IPv6:2601:646:8600:3281:d841:929b:f37:3a31])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0249eM5n306088
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Wed, 4 Mar 2020 01:40:22 -0800
-Authentication-Results: mail.zytor.com; dkim=permerror (bad message/signature format)
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-Id: <202003040940.0249eM5n306088@mail.zytor.com>
-Date:   Wed, 04 Mar 2020 01:40:15 -0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <202003031314.1AFFC0E@keescook>
-References: <20200228000105.165012-1-thgarnie@chromium.org> <202003022100.54CEEE60F@keescook> <20200303095514.GA2596@hirez.programming.kicks-ass.net> <CAJcbSZH1oON2VC2U8HjfC-6=M-xn5eU+JxHG2575iMpVoheKdA@mail.gmail.com> <6e7e4191612460ba96567c16b4171f2d2f91b296.camel@linux.intel.com> <202003031314.1AFFC0E@keescook>
+        Thu, 5 Mar 2020 13:17:23 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35547 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgCESRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 13:17:23 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m3so6793454wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:17:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ur7gy1iBTjpshiGwn7PHFKRCZKN/EqCC/bRu0X/qyjI=;
+        b=iImtYUMXg9gyEfPpN6j0wtKnybFmfih1SfNntEvPgSKVqSNzIWYwqVA5ucEiEzTvpD
+         yZqKFDabhXvjfFheAMTPtlVso8ONAcoo+XtdsuRau0kiq7I3tS22meFiHsUCPX9eiUIq
+         qDHif+8/lmfO05BuZJZpnk8Wuf8ZHkfZu1QZVtzlCn0sK2aKyP01FAoOFmJJLOppsA4l
+         ZZJfyLFF3rcy1MUWvP79OmIFsx+KiYAzavZdud4ulwIY/zQQXdSEqImdcaJB4nuavcjy
+         YTFsnhVjhRjxjVxYVqmZJ1b1WAbmeRnIrI4YNGhCHFN4ifXVPLL7qKzz+z1+4RB39U6N
+         mY1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ur7gy1iBTjpshiGwn7PHFKRCZKN/EqCC/bRu0X/qyjI=;
+        b=kLh5aEy7DFpIU6g50gXVyZplQe33Gxp7ENGSDsNrLeWEOSIol2tp0E39zSpt5rHzUX
+         mHzLWxolV2Gl7YEupwHH5EOFf80dB97b3Y21sdBwcnGDJ+k+X5RyjyC57x4Y/DNuecED
+         MJSvVNSVjX8I3MmuwBDHrerL3BuqM2l+LOSdbsgohMcyYO2yvEons1WiN1Q0rjn6e/Vj
+         wvz6xRSDwhK7QhofvxgH2jGG36n+2YXzTCr36TsJFYDx33DJ7iqIV6nXEwrW0SZrlJfR
+         xCngysC/Zw8lo/RKuK48FSTE0ktr/tOY78h8UZrpnNf1RhZjgU9Mx3IcQFQPwFYgPjuR
+         yF7w==
+X-Gm-Message-State: ANhLgQ2iWbkH606Asd1xpQuTc+E6BBuzGK7GQWlTs6frtHs8AIqcUxGN
+        Url7C0T0Le6UwANxLO6N+Q==
+X-Google-Smtp-Source: ADFU+vsKpOKjyZZ2sdfPleEssK0P/iXY3amRp8rqYqgctOT1C2k+RMpUAPE2OoUVfiaY5pyfPriW+A==
+X-Received: by 2002:a1c:2ecc:: with SMTP id u195mr26937wmu.167.1583432241952;
+        Thu, 05 Mar 2020 10:17:21 -0800 (PST)
+Received: from avx2 ([46.53.249.49])
+        by smtp.gmail.com with ESMTPSA id v7sm38843379wrm.49.2020.03.05.10.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 10:17:21 -0800 (PST)
+Date:   Thu, 5 Mar 2020 21:17:19 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86_64: fixup TASK_SIZE_MAX comment
+Message-ID: <20200305181719.GA5490@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v11 00/11] x86: PIE support to extend KASLR randomization
-To:     Kees Cook <keescook@chromium.org>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>
-CC:     Thomas Garnier <thgarnie@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Cao jin <caoj.fnst@cn.fujitsu.com>,
-        Allison Randal <allison@lohutok.net>, Linux.Crypto@zytor.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mailing List <linux-crypto@vger.kernel.org>,LKML <linux-kernel@vger.kernel.org>,virtualization@lists.linux-foundation.org,Linux PM list <linux-pm@vger.kernel.org>
-From: hpa@zytor.com
-Message-ID: <F35C8DBD-9AC3-46F2-9043-6CB9A4FDDDC9@zytor.com>
+Comment says "by preventing anything executable" which is not true.
+Even PROT_NONE mapping can't be installed at (1<<47 - 4096).
 
-On March 3, 2020 1:19:22 PM PST, Kees Cook <keescook@chromium.org> wrote:
->On Tue, Mar 03, 2020 at 01:01:26PM -0800, Kristen Carlson Accardi
->wrote:
->> On Tue, 2020-03-03 at 07:43 -0800, Thomas Garnier wrote:
->> > On Tue, Mar 3, 2020 at 1:55 AM Peter Zijlstra
-><peterz@infradead.org>
->> > wrote:
->> > > On Mon, Mar 02, 2020 at 09:02:15PM -0800, Kees Cook wrote:
->> > > > On Thu, Feb 27, 2020 at 04:00:45PM -0800, Thomas Garnier wrote:
->> > > > > Minor changes based on feedback and rebase from v10.
->> > > > > 
->> > > > > Splitting the previous serie in two. This part contains
->> > > > > assembly code
->> > > > > changes required for PIE but without any direct dependencies
->> > > > > with the
->> > > > > rest of the patchset.
->> > > > > 
->> > > > > Note: Using objtool to detect non-compliant PIE relocations
->is
->> > > > > not yet
->> > > > > possible as this patchset only includes the simplest PIE
->> > > > > changes.
->> > > > > Additional changes are needed in kvm, xen and percpu code.
->> > > > > 
->> > > > > Changes:
->> > > > >  - patch v11 (assembly);
->> > > > >    - Fix comments on x86/entry/64.
->> > > > >    - Remove KASLR PIE explanation on all commits.
->> > > > >    - Add note on objtool not being possible at this stage of
->> > > > > the patchset.
->> > > > 
->> > > > This moves us closer to PIE in a clean first step. I think
->these
->> > > > patches
->> > > > look good to go, and unblock the work in kvm, xen, and percpu
->> > > > code. Can
->> > > > one of the x86 maintainers pick this series up?
->> > > 
->> > > But,... do we still need this in the light of that fine-grained
->> > > kaslr
->> > > stuff?
->> > > 
->> > > What is the actual value of this PIE crud in the face of that?
->> > 
->> > If I remember well, it makes it easier/better but I haven't seen a
->> > recent update on that. Is that accurate Kees?
->> 
->> I believe this patchset is valuable if people are trying to brute
->force
->> guess the kernel location, but not so awesome in the event of
->> infoleaks. In the case of the current fgkaslr implementation, we only
->> randomize within the existing text segment memory area - so with PIE
->> the text segment base can move around more, but within that it
->wouldn't
->> strengthen anything. So, if you have an infoleak, you learn the base
->> instantly, and are just left with the same extra protection you get
->> without PIE.
->
->Right -- PIE improves both non- and fg- KASLR similarly, in the sense
->that the possible entropy for base offset is expanded. It also opens
->the
->door to doing even more crazy things. (e.g. why keep the kernel text
->all
->in one contiguous chunk?)
->
->And generally speaking, it seems a nice improvement to me, as it gives
->the kernel greater addressing flexibility.
+	mmap(0x7ffffffff000, 4096, PROT_NONE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = -1 ENOMEM
 
-The difference in entropy between fgkaslr and extending the kernel to the PIC memory model (which is the real thing this is doing) is immense:
+I wonder if CPUs with wider address space carried the bugs...
 
-The current kASLR has maybe 9 bits of entropy. PIC-model could extend that by at most 16 bits at considerable cost in performance and complexity. Fgkaslr would provide many kilobits worth of entropy; the limiting factor would be the random number source used! With a valid RNG, no two boots across all the computers in the world across all time would have an infinitesimal probability of ever being the same; never mind the infoleak issue.
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
-In addition to the combinatorics, fgkaslr pushes randomization right as well as left, so even for the address of any one individual function you get a gain of 15-17 bits.
+ arch/x86/include/asm/processor.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-"More is better" is a truism, but so is Amdahl's Law.
-
-
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -887,7 +887,7 @@ static inline void spin_lock_prefetch(const void *x)
+  * On Intel CPUs, if a SYSCALL instruction is at the highest canonical
+  * address, then that syscall will enter the kernel with a
+  * non-canonical return address, and SYSRET will explode dangerously.
+- * We avoid this particular problem by preventing anything executable
++ * We avoid this particular problem by preventing anything
+  * from being mapped at the maximum canonical address.
+  *
+  * On AMD CPUs in the Ryzen family, there's a nasty bug in which the
