@@ -2,171 +2,89 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1E4C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C65CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872E32070E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:18:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LydZnWZI"
+	by mail.kernel.org (Postfix) with ESMTP id 1F7312073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgCEPSg (ORCPT
+        id S1726947AbgCEPTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:18:36 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:32925 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgCEPSf (ORCPT
+        Thu, 5 Mar 2020 10:19:47 -0500
+Received: from www62.your-server.de ([213.133.104.62]:39268 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgCEPTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:18:35 -0500
-Received: by mail-vs1-f65.google.com with SMTP id n27so3807099vsa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:18:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=phO1fjFkXHP5aJjwLHsIxyYf9QWL4a+ZWZL5UkWICQE=;
-        b=LydZnWZIWOS4wpTtuLtiaYTY/40HZEDPw/0VNCexamYkwKWR5oZWCAAClj/qdG7USz
-         PHIXMsf2PAjSDYO+Msw7jMTytfHZVJhbOV0awiORGVrrBFMlDru1xy6umOiB4UN6lAvJ
-         extns31knyFdUjRiXZQ9LOCDK1BJKtneAcCXwOnDbaVgtayOBeOod4uuEcknP9PTsMx4
-         6ct7acLNOVCVZSL2mGoen6qeqE+TS48cr7/IQQqwKK7YbfuGqqG5PHJc/VgzpESHk7DF
-         Vmx2TB09ECyaG4+DFTToAITpKV19qFGGY2m4DUUvTA33jvhBitnbm4/rBbSvmwpPE6P0
-         AHkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=phO1fjFkXHP5aJjwLHsIxyYf9QWL4a+ZWZL5UkWICQE=;
-        b=pBtKTZ0EgsX+PpVShYuyQh5q3lccCZIQJn/1NHxezakDbym1XBCtDkOKbkFJ1uz0TU
-         4hJOUAJ6ULq0eQJ3lFoOOmEnK1aL9DIHsAsjTId7Xy+LtFPu6WGKJ2U1TjPtXY3gPXdM
-         k5o4W6xQtUYtDwGW6hiIa7AoPNMZYbxbDt2PlnFsHyYamVS62pksCI6WxCxYrRyUIHi0
-         gJup9QiPeMzo5HMxMmryItU3U6aIp2KqdCY5SWp55qgXsKdr6SQtnmW316sR7/3iJTz/
-         xJ+x5L35AIqsWbFZIPR9eA2g6CSpYfpp9Y/Oy0S93Q/zjpAPgGsrw0/RwWTxvZQqEuyi
-         TGDg==
-X-Gm-Message-State: ANhLgQ2ny35bb36y6Zad3ChRbyxmXae+k7aM9z7Q/0w6cwfA7+TQ8hJW
-        aDX0gCNNOWPjzC7f4aRph/DCQp5KRhtH6sLG5kbocg==
-X-Google-Smtp-Source: ADFU+vvp1nUMnGB1rMTb5fKqa4fTspuLvjSjBhaseJ0iawjaPufKTvj5uW5Ajlu8u7x64uJVnuSdHUa+JVCrdDe1c9Y=
-X-Received: by 2002:a67:f4cf:: with SMTP id s15mr5356964vsn.165.1583421513606;
- Thu, 05 Mar 2020 07:18:33 -0800 (PST)
+        Thu, 5 Mar 2020 10:19:46 -0500
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j9sHZ-000311-Dl; Thu, 05 Mar 2020 16:19:29 +0100
+Received: from [85.7.42.192] (helo=pc-9.home)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j9sHY-000BjU-MB; Thu, 05 Mar 2020 16:19:28 +0100
+Subject: Re: [PATCH bpf-next v5 0/4] eBPF JIT for RV32G
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
+References: <20200305050207.4159-1-luke.r.nels@gmail.com>
+ <CAJ+HfNjrUxVqpBgC-WLHbZX7_7Gd-Lk7ghrmASTmaNySuXVUfg@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <4633123d-dc61-ab79-d2ee-e0cef66e4cea@iogearbox.net>
+Date:   Thu, 5 Mar 2020 16:19:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200212024220.GA32111@seokyung-mobl1> <CAPDyKFr9H2XcgCk9AmHgJfHC+PySh66KxegMJ4yb4aqKSVt3kg@mail.gmail.com>
- <BYAPR11MB269638142E2BF2C6E108B40A9CE20@BYAPR11MB2696.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB269638142E2BF2C6E108B40A9CE20@BYAPR11MB2696.namprd11.prod.outlook.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 5 Mar 2020 16:17:57 +0100
-Message-ID: <CAPDyKFr=hE6diZmaVy-os3rFScHe+8OphBS+edkVGK+Z-J_=HA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in mmc
-To:     "Seo, Kyungmin" <kyungmin.seo@intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAJ+HfNjrUxVqpBgC-WLHbZX7_7Gd-Lk7ghrmASTmaNySuXVUfg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25742/Thu Mar  5 15:10:18 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Adrian, Chaotian
+On 3/5/20 6:40 AM, Björn Töpel wrote:
+> On Thu, 5 Mar 2020 at 06:02, Luke Nelson <lukenels@cs.washington.edu> wrote:
+>>
+>> This series adds an eBPF JIT for 32-bit RISC-V (RV32G) to the kernel,
+>> adapted from the RV64 JIT and the 32-bit ARM JIT.
+>>
+> 
+> Nice work! Thanks for hanging in there!
+> 
+> For the series,
+> Acked-by: Björn Töpel <bjorn.topel@gmail.com>
+> Reviewed-by: Björn Töpel <bjorn.topel@gmail.com>
 
-On Thu, 5 Mar 2020 at 09:57, Seo, Kyungmin <kyungmin.seo@intel.com> wrote:
->
-> The mmc_hs400_to_hs200 function is called only in HS400 mode.
-> I saw the clock change from 200MHz to 52MHz via oscilloscope on real platform.
->
-> I think CMD6 is sent in HS400 mode with 200MHz clock, but it's not.
-> First CMD6 in mmc_hs400_to_hs200 function is sent with 52MHz clock.
+Applied, thanks everyone!
 
-I had a vague memory that we have discussed a similar problem as your
-are pointing out on the mailing list already. And I was right.
-
-Please read up on the below references, [1], [2] for the earlier
-discussions. I suggested a solution for Chaotian to try, but it seems
-like he never managed to give it a go, as I don't recall new patch
-being posted.
-
-Perhaps you can pick up were Chaotian left and see if you can
-implement the suggested solution(s). My main concern is breaking other
-host drivers, as that seems quite likely to happen, if we aren't
-careful about this.
-
-Kind regards
-Uffe
-
-[1]
-https://lore.kernel.org/linux-mmc/1548921212-5219-1-git-send-email-chaotian.jing@mediatek.com/
-[2]
-https://lore.kernel.org/linux-mmc/CAPDyKFquyyXx1MqNLVXuFxcEDB9nKzN8LGGNUP2yxoVMQrWiUg@mail.gmail.com/
-
-
-
->
-> Thanks
-> KM
->
-> -----Original Message-----
-> From: Ulf Hansson <ulf.hansson@linaro.org>
-> Sent: Wednesday, March 4, 2020 8:09 PM
-> To: Seo, Kyungmin <kyungmin.seo@intel.com>
-> Cc: linux-mmc@vger.kernel.org; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in mmc
->
-> On Wed, 12 Feb 2020 at 03:40, Kyungmin Seo <kyungmin.seo@intel.com> wrote:
-> >
-> > The clock has to be changed after sending CMD6 for HS mode selection
-> > in
-> > mmc_hs400_to_hs200() function.
-> >
-> > The JEDEC 5.0 and 5.1 said that "High-speed" mode selection has to
-> > enable the the high speed mode timing in the Device, before chaning
-> > the clock frequency to a frequency between 26MHz and 52MHz.
->
-> I think that is based upon the assumption that you are using a lower frequency to start with.
->
-> For example, assume that you are running with 400KHz during card initialization, then you want to send the CMD6 to switch to HS mode and that should be done, before updating the clock rate.
->
-> mmc_hs400_to_hs200() goes the opposite direction, so I think the current code looks correct to me.
->
-> Kind regards
-> Uffe
->
-> >
-> > Signed-off-by: Kyungmin Seo <kyungmin.seo@intel.com>
-> > ---
-> >  drivers/mmc/core/mmc.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c index
-> > 3486bc7fbb64..98640b51c73e 100644
-> > --- a/drivers/mmc/core/mmc.c
-> > +++ b/drivers/mmc/core/mmc.c
-> > @@ -1196,10 +1196,6 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
-> >         int err;
-> >         u8 val;
-> >
-> > -       /* Reduce frequency to HS */
-> > -       max_dtr = card->ext_csd.hs_max_dtr;
-> > -       mmc_set_clock(host, max_dtr);
-> > -
-> >         /* Switch HS400 to HS DDR */
-> >         val = EXT_CSD_TIMING_HS;
-> >         err = __mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
-> > EXT_CSD_HS_TIMING, @@ -1210,6 +1206,10 @@ int
-> > mmc_hs400_to_hs200(struct mmc_card *card)
-> >
-> >         mmc_set_timing(host, MMC_TIMING_MMC_DDR52);
-> >
-> > +       /* Reduce frequency to HS */
-> > +       max_dtr = card->ext_csd.hs_max_dtr;
-> > +       mmc_set_clock(host, max_dtr);
-> > +
-> >         err = mmc_switch_status(card);
-> >         if (err)
-> >                 goto out_err;
-> > --
-> > 2.17.1
-> >
+P.s.: I fixed the MAINTAINERS entry in the last one to have both netdev and bpf
+to be consistent with all the other JIT entries there.
