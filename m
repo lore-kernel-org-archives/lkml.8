@@ -2,241 +2,134 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452F2C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B39C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105D92073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E082073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:41:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EXDr6Rod"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kz1O1/Kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgCETlI (ORCPT
+        id S1726128AbgCETl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 14:41:08 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:39386 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgCETlI (ORCPT
+        Thu, 5 Mar 2020 14:41:57 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45483 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgCETl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 14:41:08 -0500
-Received: by mail-pj1-f66.google.com with SMTP id d8so16931pje.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 11:41:07 -0800 (PST)
+        Thu, 5 Mar 2020 14:41:57 -0500
+Received: by mail-ot1-f67.google.com with SMTP id f21so6480otp.12;
+        Thu, 05 Mar 2020 11:41:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+32SAMShzFc9RiMKQoVwzpevpnCbB5DftyvOF5cOceQ=;
-        b=EXDr6Rod3rKxTQ7ADG2JRkNJRFEWACbapoyB3v8mIgYcXGB3wvAqJZuHDzGh6rPyh3
-         dgAgb2/MCkuChVSLeTirzUO/vlPCIbUcoQArbcTNwfy6c5yWoOfk8+78YQXYDB5Vn5zK
-         RZ6fQp7iH7iK/KxTTFsxWqBUmP2QPOXifqhC7VSC63nGvUuMal1nqVHKb8rHYTDd2XMX
-         dZF1Sgq5FnxtFG4KaEy1knHeBH4baQDzxgbJQT+dXW1leTtoO2ApKvquWmYdr3CwbkJC
-         8sOmzFvzu3r8DRtefmJoP0TfnzLarxvkTB9yQgBnkT9tez82ZtunE0pJfLUJTpnIX6vg
-         5DYA==
+        bh=xgpZmEtXtUnXzdjflmvnfXtJf2QN3RICWNEoFCC9Fuo=;
+        b=kz1O1/KvzwF2FSey5oAcJkszo7ONwn8pPWHFyYeLWcpUpkjs7tJj9K6d7KFHPbvbJr
+         xyBwFwxkxbtwZ+M19iBnX36SqjN+Xefce93rjQYiNhHKcwieOvTO+H7Ub9h6I+HlTT0O
+         B/PAEjljcL3dem0afDYZ1K95cmKrxO4gZTQxDqy3ho/pbnreEFUA5SFU/EgWMTirG4Qs
+         bmm/pu4pWDtGioihnEey3Q8s1kvW3OHjEE0tIOodKCEcZR6QqhVASW7E1y9eS5GC1Yi4
+         Oz8DeVaeI5LPwCDrvFtyIA++6XYLAN6P6vI396fyZO9s9PGN9Q94M0m9oG5fb2WYN4T7
+         n6aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+32SAMShzFc9RiMKQoVwzpevpnCbB5DftyvOF5cOceQ=;
-        b=HV4oUAGp4ADPyiCG4EV6V9VCwBz3veuUcj0V6GzzUgaqJS2amHDxmdE+F+16AyrvLj
-         3GTwjyznOXRAEDD2h4zWdX19aQ0rvveyoJSYLJHLwWfY6dMCEI68QbFAis3gVsYBNAAx
-         yRrlyti9WQpRsFFNYZVQBE/FjqcXbwzdi1Y+ii1Xfsr5q5SOYhwWnPzuoGfW1aqDQpu9
-         z0lO2lFgNtoMHyhXzOOPYTRgBj5bFfV44pihI2r3plAywAi1jYHU7susPkTKDxtkWa+7
-         WIQI2iqAyzo/Xmu+2qG5Q/GjtSuvCO6IcNMZ9QNHzqjj9PNBxUZQ4wKcqm0PuJtPKQlf
-         Sw3Q==
-X-Gm-Message-State: ANhLgQ2sHQyqKv2QMQT/dzkDo/fDtdsEFMM6F6dJ95YvC/jDJRe8uTU/
-        8pKrPM+7wUOTFnrkMl0N0UAxvRJLUTcNG7n98CTY9Q==
-X-Google-Smtp-Source: ADFU+vtS46rebyFU3E0rDavKWogmZFUqPrK3UoXJ8qI+P6FvkOzYE3lklkHl5xxBGbmQjccHkSdW3akQ+ZG1jKuUisQ=
-X-Received: by 2002:a17:90a:3a90:: with SMTP id b16mr221897pjc.29.1583437266524;
- Thu, 05 Mar 2020 11:41:06 -0800 (PST)
+        bh=xgpZmEtXtUnXzdjflmvnfXtJf2QN3RICWNEoFCC9Fuo=;
+        b=LOYF3qT1ERirWoUgh0sfNTwLKlMFJ94/YM/gvq43kdvRZ1jqBr2T9rsiW0LpQMGn/o
+         MDuNtNwGdehO724gpiBZcbghawlyFXB8KsN5Fr8/398HyCaO+GeELA+wwNwHr8QXvl/R
+         WZ7j7RBiYu5CfNeEmm/6I1ieJaZQX0emHpsTsLgikbBPKduzOQ5+WN150AJXRX+WPdfF
+         G8gw+O21z6UDtjROMfokm2MR9ngWsEKlb/Ztpq+oHdlHbinvANOyKmNla5JvJC6HiYTw
+         TaAynxy77tfuyd7GT8FZsAhgsiyvU7CPh9zdX25X6KCidiuOQKJy9q9GTSOCLmpPqcwb
+         Sg0Q==
+X-Gm-Message-State: ANhLgQ2fsWL6n5UgnCHUx58KAjz0k9P/DhoSk8HzvqkuZmfsNRmXS1Vb
+        JXy+i1fIPpPO2K45D3d2UeN/u1tqr/isvZ3cg94=
+X-Google-Smtp-Source: ADFU+vuF6qr530ZXMU50IfbbDKehJtz6mxtmhJ13ocNVHx1IdRrwZlYKkFbXkb3nGtgwQ7VbR3+WVNXV0ktTy6Mme4E=
+X-Received: by 2002:a9d:6457:: with SMTP id m23mr93769otl.162.1583437315076;
+ Thu, 05 Mar 2020 11:41:55 -0800 (PST)
 MIME-Version: 1.0
-References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
- <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
-In-Reply-To: <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 5 Mar 2020 11:40:55 -0800
-Message-ID: <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
-Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        heikki.krogerus@linux.intel.com, hdegoede@redhat.com,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+References: <20200304191853.1529-1-kpsingh@chromium.org> <20200304191853.1529-4-kpsingh@chromium.org>
+ <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com> <20200305155421.GA209155@google.com>
+In-Reply-To: <20200305155421.GA209155@google.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 5 Mar 2020 14:43:01 -0500
+Message-ID: <CAEjxPJ5u7tsa_9-7Oq_Wi28mZD_aDC1tVWj5Tb8ud=bfEYsY9Q@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 3/7] bpf: Introduce BPF_MODIFY_RETURN
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>, jmorris@namei.org,
+        Paul Moore <paul@paul-moore.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 11:18 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Thu, Mar 5, 2020 at 10:54 AM KP Singh <kpsingh@chromium.org> wrote:
 >
-> +Cc: Sakari
+> On 05-Mar 08:51, Stephen Smalley wrote:
+> > IIUC you've switched from a model where the BPF program would be
+> > invoked after the original function logic
+> > and the BPF program is skipped if the original function logic returns
+> > non-zero to a model where the BPF program is invoked first and
+> > the original function logic is skipped if the BPF program returns
+> > non-zero.  I'm not keen on that for userspace-loaded code attached
 >
-> On Thu, Mar 5, 2020 at 6:00 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
-> > i386, arm and arm64. The steps to reproduce is running kselftests lib
-> > printf.sh test case.
-> > Which is doing modprobe operations.
-> >
-> > BTW, there are few RCU warnings from the boot log.
-> > Please refer below link for more details.
-> >
-> > Steps reproduce by using kselftests,
-> >
-> >           - lsmod || true
-> >           - cd /opt/kselftests/default-in-kernel/lib/
-> >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
-> >           - ./printf.sh || true
-> >           - ./bitmap.sh || true
-> >           - ./prime_numbers.sh || true
-> >           - ./strscpy.sh || true
-> >
-> > x86_64 kernel BUG dump.
-> > + ./printf.sh
+> We do want to continue the KRSI series and the effort to implement a
+> proper BPF LSM. In the meantime, the tracing + error injection
+> solution helps us to:
+>
+>   * Provide better debug capabilities.
+>   * And parallelize the effort to come up with the right helpers
+>     for our LSM work and work on sleepable BPF which is also essential
+>     for some of the helpers.
+>
+> As you noted, in the KRSI v4 series, we mentioned that we would like
+> to have the user-space loaded BPF programs be unable to override the
+> decision made by the in-kernel logic/LSMs, but this got shot down:
+>
+>    https://lore.kernel.org/bpf/00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com
+>
+> I would like to continue this discussion when we post the v5 series
+> for KRSI as to what the correct precedence order should be for the
+> BPF_PROG_TYPE_LSM and would appreciate if you also bring it up there.
 
-Oops, I am wondering if I broke this with my change "Revert "software
-node: Simplify software_node_release() function"":
+That's fine but I guess I don't see why you or anyone else would
+bother with introducing a BPF_PROG_TYPE_LSM
+if BPF_PROG_MODIFY_RETURN is accepted and is allowed to attach to the
+LSM hooks.  What's the benefit to you
+if you can achieve your goals directly with MODIFY_RETURN?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
+> > to LSM hooks; it means that userspace BPF programs can run even if
+> > SELinux would have denied access and SELinux hooks get
+> > skipped entirely if the BPF program returns an error.  I think Casey
+> > may have wrongly pointed you in this direction on the grounds
+> > it can already happen with the base DAC checking logic.  But that's
+>
+> What we can do for this tracing/modify_ret series, is to remove
+> the special casing for "security_" functions in the BPF code and add
+> ALLOW_ERROR_INJECTION calls to the security hooks. This way, if
+> someone needs to disable the BPF programs being able to modify
+> security hooks, they can disable error injection. If that's okay, we
+> can send a patch.
 
-I am still investigating, will update later.
-
-> > [   32.594369] test_printf: loaded.
-> > [   32.599859] BUG: kernel NULL pointer dereference, address: 00000000
-> > [   32.606143] #PF: supervisor read access in kernel mode
-> > [   32.611280] #PF: error_code(0x0000) - not-present page
-> > [   32.616419] *pde = 00000000
-> > [   32.619306] Oops: 0000 [#1] SMP
-> > [   32.622452] CPU: 0 PID: 387 Comm: modprobe Not tainted
-> > 5.6.0-rc4-next-20200305 #1
-> > [   32.629928] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > 2.2 05/23/2018
-> > [   32.637314] EIP: ida_free+0x61/0x130
-> > [   32.640891] Code: 00 c7 45 e8 00 00 00 00 c7 45 ec 00 00 00 00 0f
-> > 88 c4 00 00 00 89 d3 e8 9d ee 01 00 89 c7 8d 45 d8 e8 e3 18 01 00 a8
-> > 01 75 3f <0f> a3 30 72 72 8b 45 d8 89 fa e8 70 f0 01 00 53 68 d8 61 01
-> > d3 e8
-> > [   32.659628] EAX: 00000000 EBX: 00000000 ECX: ffffffff EDX: 00000000
-> > [   32.665887] ESI: 00000000 EDI: 00000246 EBP: f21a7cc8 ESP: f21a7c9c
-> > [   32.672153] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010046
-> > [   32.678928] CR0: 80050033 CR2: 00000000 CR3: 32ff3000 CR4: 003406d0
-> > [   32.685186] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> > [   32.691442] DR6: fffe0ff0 DR7: 00000400
-> > [   32.695273] Call Trace:
-> > [   32.697721]  software_node_release+0x21/0x80
-> > [   32.701990]  kobject_put+0xa8/0x1c0
-> > [   32.705476]  kobject_del+0x40/0x60
-> > [   32.708881]  kobject_put+0x92/0x1c0
-> > [   32.712380]  fwnode_remove_software_node+0x30/0x50
-> > [   32.717201]  software_node_unregister_nodes+0x2b/0x50
-> > [   32.722246]  test_printf_init+0xe00/0x1d29 [test_printf]
-> > [   32.727563]  ? find_held_lock+0x27/0xa0
-> > [   32.731423]  ? test_hashed+0x54/0x54 [test_printf]
-> > [   32.736207]  ? test_hashed+0x54/0x54 [test_printf]
-> > [   32.741001]  do_one_initcall+0x54/0x2e0
-> > [   32.744841]  ? rcu_read_lock_sched_held+0x47/0x70
-> > [   32.749547]  ? kmem_cache_alloc_trace+0x285/0x2b0
-> > [   32.754249]  ? do_init_module+0x21/0x1ef
-> > [   32.758166]  ? do_init_module+0x21/0x1ef
-> > [   32.762087]  do_init_module+0x50/0x1ef
-> > [   32.765837]  load_module+0x1e32/0x2540
-> > [   32.769586]  ? kernel_read_file+0x295/0x2d0
-> > [   32.773771]  sys_finit_module+0x8a/0xe0
-> > [   32.777611]  do_fast_syscall_32+0x8e/0x340
-> > [   32.781709]  entry_SYSENTER_32+0xaa/0x102
-> > [   32.785719] EIP: 0xb7f75ce1
-> > [   32.788508] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
-> > 8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
-> > 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-> > 8d 76
-> > [   32.807246] EAX: ffffffda EBX: 00000003 ECX: 0806233a EDX: 00000000
-> > [   32.813502] ESI: 085fb600 EDI: 085fb550 EBP: 085fb6e0 ESP: bffe839c
-> > [   32.819760] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
-> > [   32.826542] Modules linked in: test_printf(+) x86_pkg_temp_thermal fuse
-> > [   32.833150] CR2: 0000000000000000
-> > [   32.836461] ---[ end trace 69388c972b4562b8 ]---
-> > [   32.841072] EIP: ida_free+0x61/0x130
-> > [   32.844642] Code: 00 c7 45 e8 00 00 00 00 c7 45 ec 00 00 00 00 0f
-> > 88 c4 00 00 00 89 d3 e8 9d ee 01 00 89 c7 8d 45 d8 e8 e3 18 01 00 a8
-> > 01 75 3f <0f> a3 30 72 72 8b 45 d8 89 fa e8 70 f0 01 00 53 68 d8 61 01
-> > d3 e8
-> > [   32.863420] EAX: 00000000 EBX: 00000000 ECX: ffffffff EDX: 00000000
-> > [   32.869679] ESI: 00000000 EDI: 00000246 EBP: f21a7cc8 ESP: f21a7c9c
-> > [   32.875936] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010046
-> > [   32.882713] CR0: 80050033 CR2: 00000000 CR3: 32ff3000 CR4: 003406d0
-> > [   32.888970] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> > [   32.895227] DR6: fffe0ff0 DR7: 00000400
-> > [   32.899060] BUG: sleeping function called from invalid context at
-> > /usr/src/kernel/include/linux/percpu-rwsem.h:49
-> > [   32.909303] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid:
-> > 387, name: modprobe
-> > [   32.917207] INFO: lockdep is turned off.
-> > [   32.921124] irq event stamp: 5120
-> > [   32.924434] hardirqs last  enabled at (5119): [<d20dea05>] kfree+0x135/0x270
-> > [   32.931472] hardirqs last disabled at (5120): [<d2b9ab04>]
-> > _raw_spin_lock_irqsave+0x14/0x40
-> > [   32.939809] softirqs last  enabled at (4978): [<d2b9f165>]
-> > __do_softirq+0x2c5/0x3c3
-> > [   32.947454] softirqs last disabled at (4969): [<d1ea67d5>]
-> > call_on_stack+0x45/0x50
-> > [   32.955009] CPU: 0 PID: 387 Comm: modprobe Tainted: G      D
-> >    5.6.0-rc4-next-20200305 #1
-> > [   32.963867] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > 2.2 05/23/2018
-> > [   32.971250] Call Trace:
-> > [   32.973695]  dump_stack+0x6e/0x96
-> > [   32.977009]  ___might_sleep+0x14d/0x240
-> > [   32.980846]  __might_sleep+0x33/0x80
-> > [   32.984419]  exit_signals+0x2a/0x2d0
-> > [   32.987997]  do_exit+0x8e/0xb00
-> > [   32.991143]  ? do_fast_syscall_32+0x8e/0x340
-> > [   32.995421]  rewind_stack_do_exit+0x11/0x13
-> > [   32.999600] EIP: 0xb7f75ce1
-> > [   33.002416] Code: 5e 5d c3 8d b6 00 00 00 00 b8 40 42 0f 00 eb c1
-> > 8b 04 24 c3 8b 1c 24 c3 8b 34 24 c3 8b 3c 24 c3 90 51 52 55 89 e5 0f
-> > 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-> > 8d 76
-> > [   33.021153] EAX: ffffffda EBX: 00000003 ECX: 0806233a EDX: 00000000
-> > [   33.027425] ESI: 085fb600 EDI: 085fb550 EBP: 085fb6e0 ESP: bffe839c
-> > [   33.033685] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000292
-> > [   33.040465] note: modprobe[387] exited with preempt_count 1
-> > ./../kselftest/module.sh: line 56:   387 Killed
-> > $modprobe -q $module $args
-> > printf:  [FAIL]
-> >
-> >
-> > metadata:
-> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> >   git branch: master
-> >   git describe: next-20200305
-> >   kernel-config:
-> > http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-core2-32/lkft/linux-next/719/config
-> >
-> > ref:
-> > https://lkft.validation.linaro.org/scheduler/job/1267112#L1254
-> > https://lkft.validation.linaro.org/scheduler/job/1267041#L9795
-> >
-> > --
-> > Linaro LKFT
-> > https://lkft.linaro.org
->
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Realistically distros tend to enable lots of developer-friendly
+options including error injection, and most users don't build their
+own kernels
+and distros won't support them when they do. So telling users they can
+just rebuild their kernel without error injection if they care about
+BPF programs being able to modify security hooks isn't really viable.
+The security modules need a way to veto it based on their policies.
+That's why I suggested a security hook here.
