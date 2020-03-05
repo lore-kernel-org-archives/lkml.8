@@ -2,163 +2,178 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E99C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE701C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3964820842
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B738C20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Oj+tVF6M"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ymv11zso"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgCECTD (ORCPT
+        id S1726007AbgCECUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 21:19:03 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35479 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgCECTC (ORCPT
+        Wed, 4 Mar 2020 21:20:52 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33916 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbgCECUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 21:19:02 -0500
-Received: by mail-ot1-f67.google.com with SMTP id v10so4213785otp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 18:19:00 -0800 (PST)
+        Wed, 4 Mar 2020 21:20:50 -0500
+Received: by mail-pl1-f195.google.com with SMTP id j7so1946932plt.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 18:20:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8Gmox/kCX2AOvaG1blFHqNiRizW+Wg7yNRzLpxgtKLU=;
-        b=Oj+tVF6Mg8622gqzDs/4jpJI1NLx3VtEGWbfX7g0xxhbdfx+25pa99Lsk7g38hu0xr
-         bW6MHWgTJ/Q+hCiWynOOt8aZ2fAfmlQtHHEkSS8/Woxe1P+Z2eOgeKdbM0LZxKpP0NPa
-         LbatkAZDksdGn3Gadji/3AY/vi/Hd7HTMvZ/r8OKOtvZ9n4mCVwgjQ4O3yfxY84GfAZd
-         d3EIO690GmWj4Pml5zsgwrTmFrey0GMiLKB0DrcSKznw8GLyRghPPl8B+d2mqC38Is09
-         UQEPTrGsxGNV4g+AwmUv8YPXlOErgDtVtchuGrujjcxTIuWDEzOPO96OVkfArkdzm+wC
-         5SzQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=o7EoAC0uRM8GPyBvo7DIt0uzNdUVYvkGswKAIdWl07g=;
+        b=Ymv11zsoqj+1jPfTSuqq1+O5QZKNyI1Zpv3lSfH5TkQPlk9VjfVJ75WHgXD3D9eWaZ
+         pALGV+GU0/1woinJclUpH+wq+coH/o67/15kiSpuFGUy0GTYVaE7xSUYZo0M0lGjMlBM
+         ysd1WVAvhITtOUGS5hQB3UnogP+VoFec4vz64=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Gmox/kCX2AOvaG1blFHqNiRizW+Wg7yNRzLpxgtKLU=;
-        b=SDDlKlqyoOHyb9HZZVlew0sstXdkXyckcxuV7qeJC9HrS8QQnJcJdjp5zvyQJZ+gaL
-         hjjFB1Q1tDUPfu2n+FYIY614lkEKUv1kLNKT7Zy7NZ1C7gH+mZhuz8U13HVpMVnpnk1F
-         bOBnimO2U4ihRw03kAh2JAOBqCPdG3HsjWlnsodOSJd1CaR+gSuIjqQ/NGAakRyAlsYv
-         NrWXMDuyPW77+r+QCmjV04EE5vT7u7F+BqLD9S/5KdiPQ41WlBv7TVY1XLwRGbn45hJi
-         T0Qeqf2q8nS5G4xmKVWdNY0Lxj5pcCNgPSoV1/HCA36L4Lh5yUCgW+PZYbGUONAegbJe
-         3Qww==
-X-Gm-Message-State: ANhLgQ3oWCQrfyByJ0m/uwPm3/p+8Sas0drD4MYVkYQM0MQcqJUq8ESZ
-        4enJFu3UDdpu/gEt/aap0kJvWubt6FIUAS6dr0Z7lw==
-X-Google-Smtp-Source: ADFU+vucht722GyYw42Nwlm95SH5G6wJ3ZVu/v034CHYYgRaQtLUnV72QjnUmxeeCj4dZxFLaNJk5PCxnSwz75EsPJI=
-X-Received: by 2002:a05:6830:46:: with SMTP id d6mr4856010otp.81.1583374739727;
- Wed, 04 Mar 2020 18:18:59 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=o7EoAC0uRM8GPyBvo7DIt0uzNdUVYvkGswKAIdWl07g=;
+        b=hHKgiJx/j60Ysr8XOdHEGU/r4IlPH7bCzA9D75mdPM7KkM1cnhDEOxvdeaqkVYPb84
+         vja6uMyLQof2nuaYoa9vQX7GroJ9YSMI/dZx3gc8AEFUVlkEE+FLrSCYSUICGSnB5EGW
+         AFxzZx3TyIpJptoZ4LjDKW2Uyusgbo6bPKD3RZUlRi1rDyGEh0+y76lk6EPBpd4XK7l5
+         yXjKTdd5WsbSwueIy0W0nT6iwUVOHo/UJ9YEb370qFpJrzEOxhhIQNv45o5gaVIUjxTv
+         8xD6TMGmUxy2fUEWGKKrdc0VaLdXBo8O9L++f36czxoS6P6G86ZcguOC4LqVVTSfvK13
+         apMg==
+X-Gm-Message-State: ANhLgQ39wCCx7biNVWoJF6ehZBg9imSSWuKyOcujeWWTlNYVhkJAAo+6
+        pnXJUn3TV1OYkSAb6aTxMWSA0A==
+X-Google-Smtp-Source: ADFU+vsYvHRJ7Or2bcedq/UlSMlYWHcozxCBOy/f+j+Ny96xn3FvobNbqYF1wBvt1WxXN7QWfnNysA==
+X-Received: by 2002:a17:90a:8a09:: with SMTP id w9mr6257968pjn.0.1583374847828;
+        Wed, 04 Mar 2020 18:20:47 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a9sm4006971pjk.1.2020.03.04.18.20.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 18:20:46 -0800 (PST)
+Date:   Wed, 4 Mar 2020 18:20:45 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
+        daniel@iogearbox.net, kafai@fb.com, yhs@fb.com, andriin@fb.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        khilman@baylibre.com, mpe@ellerman.id.au,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] selftests: Fix seccomp to support relocatable
+ build (O=objdir)
+Message-ID: <202003041815.B8C73DEC@keescook>
+References: <20200305003627.31900-1-skhan@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20200304233856.257891-1-shakeelb@google.com> <CANn89i+TiiLKsE7k4TyRqr03uNPW=UpkvpXL1LVWvTmhE_AUpA@mail.gmail.com>
-In-Reply-To: <CANn89i+TiiLKsE7k4TyRqr03uNPW=UpkvpXL1LVWvTmhE_AUpA@mail.gmail.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 4 Mar 2020 18:18:48 -0800
-Message-ID: <CALvZod7MSXGsV6nDngWS+mS-5tfu0ww3aJyXQ8GV2hRkEEcYDg@mail.gmail.com>
-Subject: Re: [PATCH v2] net: memcg: late association of sock to memcg
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Roman Gushchin <guro@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev <netdev@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305003627.31900-1-skhan@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 5:36 PM Eric Dumazet <edumazet@google.com> wrote:
->
-> On Wed, Mar 4, 2020 at 3:39 PM Shakeel Butt <shakeelb@google.com> wrote:
-> >
-> > If a TCP socket is allocated in IRQ context or cloned from unassociated
-> > (i.e. not associated to a memcg) in IRQ context then it will remain
-> > unassociated for its whole life. Almost half of the TCPs created on the
-> > system are created in IRQ context, so, memory used by such sockets will
-> > not be accounted by the memcg.
-> >
-> > This issue is more widespread in cgroup v1 where network memory
-> > accounting is opt-in but it can happen in cgroup v2 if the source socket
-> > for the cloning was created in root memcg.
-> >
-> > To fix the issue, just do the late association of the unassociated
-> > sockets at accept() time in the process context and then force charge
-> > the memory buffer already reserved by the socket.
-> >
-> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > ---
-> > Changes since v1:
-> > - added sk->sk_rmem_alloc to initial charging.
-> > - added synchronization to get memory usage and set sk_memcg race-free.
-> >
-> >  net/ipv4/inet_connection_sock.c | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> > diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-> > index a4db79b1b643..7bcd657cd45e 100644
-> > --- a/net/ipv4/inet_connection_sock.c
-> > +++ b/net/ipv4/inet_connection_sock.c
-> > @@ -482,6 +482,25 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
-> >                 }
-> >                 spin_unlock_bh(&queue->fastopenq.lock);
-> >         }
-> > +
-> > +       if (mem_cgroup_sockets_enabled && !newsk->sk_memcg) {
-> > +               int amt;
-> > +
-> > +               /* atomically get the memory usage and set sk->sk_memcg. */
-> > +               lock_sock(newsk);
-> > +
-> > +               /* The sk has not been accepted yet, no need to look at
-> > +                * sk->sk_wmem_queued.
-> > +                */
-> > +               amt = sk_mem_pages(newsk->sk_forward_alloc +
-> > +                                  atomic_read(&sk->sk_rmem_alloc));
-> > +               mem_cgroup_sk_alloc(newsk);
-> > +
-> > +               release_sock(newsk);
-> > +
-> > +               if (newsk->sk_memcg)
->
-> Most sockets in accept queue should have amt == 0, so maybe avoid
-> calling this thing only when amt == 0 ?
->
+On Wed, Mar 04, 2020 at 05:36:27PM -0700, Shuah Khan wrote:
+> Fix seccomp relocatable builds. This is a simple fix to use the
+> right lib.mk variable TEST_CUSTOM_PROGS to continue to do custom
+> build to preserve dependency on kselftest_harness.h local header.
+> This change applies cutom rule to seccomp_bpf seccomp_benchmark
+> for a simpler logic. 
+> 
+> Uses $(OUTPUT) defined in lib.mk to handle build relocation.
+> 
+> The following use-cases work with this change:
+> 
+> In seccomp directory:
+> make all and make clean
 
-Thanks, will do in the next version. BTW I have tested with adding
-mdelay() here and running iperf3 and I did see non-zero amt.
+This works.
 
-> Also  I would release_sock(newsk) after this, otherwise incoming
-> packets could mess with newsk->sk_forward_alloc
->
+> 
+> From top level from main Makefile:
+> make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc \
+>  CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
 
-I think that is fine. Once sk->sk_memcg is set then
-mem_cgroup_charge_skmem() will be called for new incoming packets.
-Here we just need to call mem_cgroup_charge_skmem() with amt before
-sk->sk_memcg was set.
+This fails for me:
 
-> if (amt && newsk->sk_memcg)
->       mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
-> release_sock(newsk);
->
-> Also, I wonder if     mem_cgroup_charge_skmem() has been used at all
-> these last four years
-> on arches with PAGE_SIZE != 4096
->
-> ( SK_MEM_QUANTUM is not anymore PAGE_SIZE, but 4096)
->
+$ make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
+make[1]: Entering directory '/home/kees/src/linux/objdir'
+make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
+        ARCH=arm64 -C ../../.. headers_install
+make[4]: ../scripts/Makefile.build: No such file or directory
+make[4]: *** No rule to make target '../scripts/Makefile.build'.  Stop.
+make[3]: *** [Makefile:501: scripts_basic] Error 2
+make[2]: *** [Makefile:151: khdr] Error 2
+make[1]: *** [/home/kees/src/linux/Makefile:1221: kselftest-install] Error 2
+make[1]: Leaving directory '/home/kees/src/linux/objdir'
+make: *** [Makefile:180: sub-make] Error 2
 
-Oh so sk_mem_pages() does not really give the number of pages. Yeah
-this needs a fix for non-4906 page size architectures. Though I can
-understand why this has not been caught yet. Network memory accounting
-is opt-in in cgroup v1 and most of the users still use v1. In cgroup
-v2, it is enabled and there is no way to opt-out. Facebook is a
-well-known v2 user and it seems like they don't have non-4096 page
-size arch systems.
+(My "objdir" is empty)
+
+If I remove O=objdir everything is fine. And see below...
+
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> ---
+>  tools/testing/selftests/seccomp/Makefile | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
+> index 1760b3e39730..355bcbc0394a 100644
+> --- a/tools/testing/selftests/seccomp/Makefile
+> +++ b/tools/testing/selftests/seccomp/Makefile
+> @@ -1,17 +1,16 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -all:
+> -
+> -include ../lib.mk
+> +CFLAGS += -Wl,-no-as-needed -Wall
+> +LDFLAGS += -lpthread
+>  
+>  .PHONY: all clean
+>  
+> -BINARIES := seccomp_bpf seccomp_benchmark
+> -CFLAGS += -Wl,-no-as-needed -Wall
+> +include ../lib.mk
+> +
+> +# OUTPUT set by lib.mk
+> +TEST_CUSTOM_PROGS := $(OUTPUT)/seccomp_bpf $(OUTPUT)/seccomp_benchmark
+>  
+> -seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
+> -	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
+> +$(TEST_CUSTOM_PROGS): ../kselftest_harness.h
+>  
+> -TEST_PROGS += $(BINARIES)
+> -EXTRA_CLEAN := $(BINARIES)
+> +all: $(TEST_CUSTOM_PROGS)
+>  
+> -all: $(BINARIES)
+> +EXTRA_CLEAN := $(TEST_CUSTOM_PROGS)
+> -- 
+> 2.20.1
+> 
+
+Instead of the TEST_CUSTOM_PROGS+all dance, you can just add an explicit
+dependency, with the final seccomp/Makefile looking like this:
+
+
+# SPDX-License-Identifier: GPL-2.0
+CFLAGS += -Wl,-no-as-needed -Wall
+LDFLAGS += -lpthread
+
+TEST_GEN_PROGS := seccomp_bpf seccomp_benchmark
+
+include ../lib.mk
+
+# Additional dependencies
+$(OUTPUT)/seccomp_bpf: ../kselftest_harness.h
+
+
+(Though this fails in the same way as above when run from the top-level
+directory.)
+
+-Kees
+
+-- 
+Kees Cook
