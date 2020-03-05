@@ -2,118 +2,142 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6ED5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEA2C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE66020870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4205E207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J5/XLyRv"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hOJsO3Ce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgCEHDv (ORCPT
+        id S1726382AbgCEHHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 02:03:51 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36854 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgCEHDu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 02:03:50 -0500
-Received: by mail-pg1-f193.google.com with SMTP id d9so2298796pgu.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 23:03:50 -0800 (PST)
+        Thu, 5 Mar 2020 02:07:04 -0500
+Received: from mail-bn8nam12on2065.outbound.protection.outlook.com ([40.107.237.65]:6059
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725877AbgCEHHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 02:07:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OvEEeguQK8Z+8VUGdT769sGnr1+Ba6/If1alXPGvgTjkcAxZNkNwrV//AJGiuENc2rHJigdEijQbvo8pdCokxmMKwEzTRqPCigvrPsikXhAvQmMF4QYPe2g1mGBqmmcT6BpNBV+qtTv814d4viRgkGhe6TMLoHJqTy5EPnJNJHGMDKixRfMqalqnIDCqH0LYkUxucZ/G4mZ+mUP+TXUjB/XQLnS9s0TJTC467BQR8WTr5UfJvPh2e6BMOJXTN1ymttyKHZwvbBMYlgltO0YVMLTuNGF6duwB7fnwRwzqD8Vdc+HjgZyC7cPfVSOL+RezY2DkISbc3cf9IvowZnxl5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p91bTofGqjLPFIff0yanPg5p7fSvw+Ak+aofAZHpFoM=;
+ b=DVuZl8tvcd7NHLCfHPbVscia56/D+ZCZiW5+f82epqVPfXtYlKYnbAeMt48FS/bGtx7ClscCC7YEfCK9HbLocrYanB+Cg1JJXYJjOxV2gSMJQcwBv5GXplHsIjU5yy+8DMYkFxHMAIvkDtyK+UbPd7WGDFfNqWcCrVZeAoih6U1uqSQxV0WRUWV8nGdKlxn3ek4ds+iBt0NJeVYeJfW+OUOFKVWsOxSl+Cy67sN/BuCZv32Ru7hA1YpgfKR0nerhcMxBUl4laOJ60BqbDyHyS53knZ9HIuPT0qd9xblxB6L3d2k5SGRCdjNLMGrz00au8WKsUJev8zlen+wYxxqKyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=7jbRLVAVV1t65FhLF/sdJH2G4CKA2x85deohg6GB6iI=;
-        b=J5/XLyRvp+Bv76NsT3de+Xrs6fP5DiCuG1OM+6lCJs2Rbavj0QmJUJGIwZYaHDj2FG
-         hkx0cfUFC8aMhWP+S46As+6w0GdN3uVF+cVakmCy11bRyN0/q3uXOjxOLMsauL44w8Wp
-         Y7sEq5Q8OdOHQNuC1F7HVBH8oLoQ505ezE6dM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=7jbRLVAVV1t65FhLF/sdJH2G4CKA2x85deohg6GB6iI=;
-        b=UQinlJAX/q9PI7BRNLQMg96MfN7nj2f7HFI+bxlFtCGizaDYKhrUj9FBOjcMYeTeYy
-         lEIi6dMLhtPnyTtWSR91pE4nhBGsv7h2sCRH3cfuYaVNkVtdqa61hnVI83pY7M/7okGU
-         BpuDkcGuj7TCnwQihy70rhNUkl0l0fLwfaSwfhEwb2/EO+je0MpxRcZrNAupDvnnJbMg
-         WHFkwZyCfKuGvCQ0hHRQjUJwL45GeRMmbBLkQs/aOjXV5dNI37HN+mfyCA7Y2c1rB+wV
-         basTOxy6V4i/J1RqfaZOel8zM9ha1bR7RzDm0NpMQf0OVOIAVU56ijNtjsOBswAYHvcF
-         VmGw==
-X-Gm-Message-State: ANhLgQ2XCS69C5rlPXhps3dQnjRl74aYVl3JCX66hwnwx28fLSI3h082
-        3pRMb9JaVg88qg0Dtmy+3lA4eA==
-X-Google-Smtp-Source: ADFU+vv+pJU9j0cc+gV1qWb3HeKiPK5T36bnZ8WPFOYn7N3xvpDTcqkOYgzQPIQrf9EAfh/CWaIS0g==
-X-Received: by 2002:aa7:87ca:: with SMTP id i10mr6808918pfo.169.1583391829762;
-        Wed, 04 Mar 2020 23:03:49 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o66sm16817935pfb.93.2020.03.04.23.03.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 23:03:48 -0800 (PST)
-Date:   Wed, 4 Mar 2020 23:03:47 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     James Troup <james.troup@canonical.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] docs: deprecated.rst: Add %p to the list
-Message-ID: <202003042301.F844A8C0EC@keescook>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p91bTofGqjLPFIff0yanPg5p7fSvw+Ak+aofAZHpFoM=;
+ b=hOJsO3Ce3rmg0W6KpAqX+0Pegg8Ww+0jpinc0N1c8y1lwTTPmQjFcANbMoTvULRh+8gGeyPUZSMJQQvzUBAdhessOgw+xXee0hhgP/rWTCXSBqPT89kNvWmdgBAqSBFn0JWCAT8uWAwIX7ujEVdwOMHAaKyWY+//DQxmiWHbB10=
+Received: from DM3PR12CA0131.namprd12.prod.outlook.com (2603:10b6:0:51::27) by
+ MN2PR12MB4335.namprd12.prod.outlook.com (2603:10b6:208:1d4::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Thu, 5 Mar
+ 2020 07:07:01 +0000
+Received: from DM6NAM11FT062.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:0:51:cafe::35) by DM3PR12CA0131.outlook.office365.com
+ (2603:10b6:0:51::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11 via Frontend
+ Transport; Thu, 5 Mar 2020 07:07:01 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=permerror action=none
+ header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ DM6NAM11FT062.mail.protection.outlook.com (10.13.173.40) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.2793.11 via Frontend Transport; Thu, 5 Mar 2020 07:07:00 +0000
+Received: from [10.217.80.179] (10.180.168.240) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 5 Mar 2020
+ 01:06:59 -0600
+Subject: Re: v5.5-rc1 and beyond insta-kills some Comcast wifi routers
+To:     Tony Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+References: <DM6PR12MB4331FD3C4EF86E6AF2B3EBC7E5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
+ <4e2a1fc1-4c14-733d-74e2-750ef1f81bf6@infradead.org>
+ <87h7z4r9p5.fsf@kamboji.qca.qualcomm.com>
+ <4bd036de86c94545af3e5d92f0920ac2@realtek.com>
+ <DM6PR12MB433132A38F2AA6A5946B75CBE5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
+ <c185b1f27e4a4b66941b50697dba006c@realtek.com>
+From:   Jason Mancini <Jason.Mancini@amd.com>
+Message-ID: <ed6e071d-00c0-fb4d-4bbe-1f3668a0c140@amd.com>
+Date:   Wed, 4 Mar 2020 23:06:58 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <c185b1f27e4a4b66941b50697dba006c@realtek.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB01.amd.com (10.181.40.142) To SATLEXMB01.amd.com
+ (10.181.40.142)
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(136003)(376002)(428003)(199004)(189003)(70206006)(478600001)(2906002)(426003)(70586007)(8676002)(31686004)(81166006)(31696002)(2616005)(53546011)(110136005)(54906003)(336012)(316002)(81156014)(4326008)(16576012)(5660300002)(26005)(16526019)(66574012)(36756003)(8936002)(356004)(186003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4335;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1e8b58b4-9fee-4f90-b252-08d7c0d3cd34
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4335:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB4335C2185558DB38CF1B8F21E5E20@MN2PR12MB4335.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 03333C607F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: biigbgUVKPaf67Vp5smU0u+9hn1yWkhDiUL27uko2WCr7o6eNsc62Z7QW/cKFHQ35mJeyOYH3vrhpcHSIcm3VgX5YEkB1Sbu35veF3MRK+i8MsRgNZVWvRf42BlBHdNuq2JhgqiTKdkjCLyLL89FBMv6ngnKigZtPsfHM9lGATCLbK+knz1U8SMi4BwGWijO2VBGSXceVs39xwLPkvQBgZrW7i3zpVfEeXhqN1S7yxF74+s1/sEjn+j1G9/3MnVY5kNbi4JqyLc8MOuSC8m58Yd5ATbM3U954hF80Ee6Q+TByV8F5OeFaVJI+ofIMUNnK+CsmaaYv89pGdXwaQ839ShRun5/Ek+GvG/Rdze3btnOF7HfIaUHn0bFFrkfeF4gyhWI5mFX6kE4+cZgW59OyNACztNCO/eL0m9jrIk7mU4aDqzg20bKDaKRlYLk+I03
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2020 07:07:00.8790
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e8b58b4-9fee-4f90-b252-08d7c0d3cd34
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4335
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Once in a while %p usage comes up, and I've needed to have a reference
-to point people to. Add %p details to deprecated.rst.
+On 3/4/20 2:41 AM, Tony Chuang wrote:
+> Unfortunately, no, there's no flag to turn off this.
+> But, from your experiments, if you applied that patch,
+> ("rtw88: disable TX-AMSDU on 2.4G band") connect to AP on 2.4G, and still crash
+> the Comcast AP, then it looks like it's not TX-AMSDU to be blamed.
+>
+> Assume the return value you mentioned is max_rc_amsdu_len, if you always
+> return 1, it will just disable all of the AMSDU process.
+> You can try it, and to see if sending AMSDU will crash the router or not.
+>
+> Yen-Hsuan
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2: rewrite much of the text to be more clear (James Troup)
----
- Documentation/process/deprecated.rst | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+(Specifically, this Comcast router is "Arris TG1682G" firmware 10.1.27B.SIP.PC20.CT hardware version 9.0)
 
-diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-index f9f196d3a69b..8965446f0b71 100644
---- a/Documentation/process/deprecated.rst
-+++ b/Documentation/process/deprecated.rst
-@@ -109,6 +109,28 @@ the given limit of bytes to copy. This is inefficient and can lead to
- linear read overflows if a source string is not NUL-terminated. The
- safe replacement is :c:func:`strscpy`.
- 
-+%p format specifier
-+-------------------
-+Traditionally, using "%p" in format strings would lead to regular address
-+exposure flaws in dmesg, proc, sysfs, etc. Instead of leaving these to
-+be exploitable, all "%p" uses in the kernel are being printed as a hashed
-+value, rendering them unusable for addressing. New uses of "%p" should not
-+be added to the kernel. For text addresses, using "%pS" is likely better,
-+as it produces the more useful symbol name instead. For nearly everything
-+else, just do not add "%p" at all.
-+
-+Paraphrasing Linus's current `guidance <https://lore.kernel.org/lkml/CA+55aFwQEd_d40g4mUCSsVRZzrFPUJt74vc6PPpb675hYNXcKw@mail.gmail.com/>`_:
-+
-+- If the hashed "%p" value is pointless, ask yourself whether the pointer
-+  itself is important. Maybe it should be removed entirely?
-+- If you really think the true pointer value is important, why is some
-+  system state or user privilege level considered "special"? If you think
-+  you can justify it (in comments and commit log) well enough to stand
-+  up to Linus's scrutiny, maybe you can use "%px", along with making sure
-+  you have sensible permissions.
-+
-+And finally, know that a toggle for "%p" hashing will `not be accepted <https://lore.kernel.org/lkml/CA+55aFwieC1-nAs+NFq9RTwaR8ef9hWa4MjNBWL41F-8wM49eA@mail.gmail.com/>`_.
-+
- Variable Length Arrays (VLAs)
- -----------------------------
- Using stack VLAs produces much worse machine code than statically
--- 
-2.20.1
+I re-tested tonight, here are the results, from *unpatched* kernels:
 
+(1) 2.4G only w/5G disabled via router control panel: kernel 5.5/5.6 seemingly doesn't upset router.
+(2) 5G only w/2.4G disabled via router control panel: kernel 5.5/5.6 definitely kill router wifi.
+(3) 5G only w/2.4G disabled via router control panel: plus get_max_amsdu_len forced to return 1: kernel 5.6-rc4 seemingly doesn't upset router.
 
--- 
-Kees Cook
+As you can see, the suggested patch isn't going to help result (2), and apparently isn't needed for (1).  And this router's 5G seems
+allergic to amsdu per (3), so somehow amsdu is involved it seems.
+
+Well, I'll just work around it with (3) custom kernels, or (1) leave the router in 2.4G mode.  But be aware that apparently there's at least
+one common buggy wifi router that's going to puke on 5G + amsdu.
+
+Jason
+
