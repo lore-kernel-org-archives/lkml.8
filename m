@@ -2,254 +2,107 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC9CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B487EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D002146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5D02146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583402428;
+	bh=obXZL3pxfqCKI1sDzh0MKMWH+M/KHTscXMQWxSLr9dk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=smUI48PYm7R6669lAYjzN0TEFYdHwpZkseYL+sMQp49r5KPIpPrWSFiJS22F8uAR3
+	 97CzPQ8pJmcDdpCDddHVg1uNd5SJNw7sNUUVfxR24SKhXjg1QUaB0FvbKKe8w+jYpI
+	 T5ls6d/4nFx/xNjz5mu+1JdD2AGX1yRAGFiy8xH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgCEKAP (ORCPT
+        id S1727463AbgCEKA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:00:15 -0500
-Received: from mga02.intel.com ([134.134.136.20]:16971 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727052AbgCEKAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:00:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 02:00:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
-   d="scan'208";a="234366830"
-Received: from snr.bj.intel.com ([10.240.193.90])
-  by orsmga008.jf.intel.com with ESMTP; 05 Mar 2020 02:00:05 -0800
-From:   Luwei Kang <luwei.kang@intel.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
-        thomas.lendacky@amd.com, fenghua.yu@intel.com,
-        kan.liang@linux.intel.com, like.xu@linux.intel.com,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH v1 11/11] KVM: x86/pmu: Adaptive PEBS virtualization enabling
-Date:   Fri,  6 Mar 2020 01:57:05 +0800
-Message-Id: <1583431025-19802-12-git-send-email-luwei.kang@intel.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
-References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+        Thu, 5 Mar 2020 05:00:27 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37958 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbgCEKA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 05:00:26 -0500
+Received: by mail-wm1-f65.google.com with SMTP id u9so5004430wml.3;
+        Thu, 05 Mar 2020 02:00:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=N+VHYLrvI+7e0ZVMs5A2YwvXMlQT1Gheq6HEnWaXrHg=;
+        b=bhyksl/2dsNRmdBN5+5IiXymbHl3MnUtSSq7uoI1qNzqAbKktR97O0QY4ngO6yBIXl
+         Fcfhmnw31EaYAdgnRSCb6o6TarDXeLq3+1GyHQHEAQoZcvdGX7AfIKnBaZ4Lfba5YDRz
+         3OUfoZxt8m2YtXo4iXO69ksFpf/MOEL9urYFdVgZboBDteLAqIDCt4Xs2dBwODjE+Woi
+         SD/7WhGiPxCkT35LgHtoWpxdsVh0reff7DjUhGrh2bYObZPrzpoCOHtNzgv61kY0AdTn
+         Nj5euNAbnfCG5RdCGRT1SYnUz9hDk6v4Yg1aduBDGuJIA5tS7UyzUIkR1yBwBt6MB1uV
+         dXTg==
+X-Gm-Message-State: ANhLgQ10h5UM/MqBv3IyVHgd1FKmdv1Tj2uX1J2Mk3rgAaQUsC88mKt4
+        xsM+vyVH2clz4LjzF7VH9Cw=
+X-Google-Smtp-Source: ADFU+vsjaigYaEU+QZdTj0scvF+IN/q3UIp8DX+Zj1RxoQokICpr/pwGVXS7WJffS4KX2QC2pN6duQ==
+X-Received: by 2002:a1c:7c08:: with SMTP id x8mr8419345wmc.71.1583402424648;
+        Thu, 05 Mar 2020 02:00:24 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id 25sm8514392wmg.30.2020.03.05.02.00.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 02:00:23 -0800 (PST)
+Date:   Thu, 5 Mar 2020 11:00:23 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm: Make mem_cgroup_id_get_many dependent on MMU and
+ MEMCG_SWAP
+Message-ID: <20200305100023.GR16139@dhcp22.suse.cz>
+References: <20200304142348.48167-1-vincenzo.frascino@arm.com>
+ <20200304165336.GO16139@dhcp22.suse.cz>
+ <8c489836-b824-184e-7cfe-25e55ab73000@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8c489836-b824-184e-7cfe-25e55ab73000@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PEBS feature enabled the collection of the GPRs, eventing IP, TSC and
-memory access related information. On Icelake, it has been enhanced to collect
-more CPU state information like XMM register values, and LBR To and FROM
-addresses as per customer usage requests. With the addition of these new
-groups of data, the PEBS record size is greatly increased. Adaptive PEBS
-provides Software the capability to configure the PEBS records to capture
-only the data of interest, keeping the record size compact. By default, the
-PEBS record will only contain the Basic group. Optionally, each counter can
-be configured to generate a PEBS records with the groups specified in
-MSR_PEBS_DATA_CFG.
+On Thu 05-03-20 09:49:23, Vincenzo Frascino wrote:
+> Hi Michal,
+> 
+> On 3/4/20 4:53 PM, Michal Hocko wrote:
+> > On Wed 04-03-20 14:23:48, Vincenzo Frascino wrote:
+> >> mem_cgroup_id_get_many() is currently used only when MMU or MEMCG_SWAP
+> >> configuration options are enabled. Having them disabled triggers the
+> >> following warning at compile time:
+> >>
+> >> linux/mm/memcontrol.c:4797:13: warning: ‘mem_cgroup_id_get_many’ defined
+> >> but not used [-Wunused-function]
+> >>  static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned
+> >>  int n)
+> >>
+> >> Make mem_cgroup_id_get_many() dependent on MMU and MEMCG_SWAP to address
+> >> the issue.
+> > 
+> > A similar patch has been proposed recently
+> > http://lkml.kernel.org/r/87fthjh2ib.wl-kuninori.morimoto.gx@renesas.com.
+> > The conclusion was that the warning is not really worth adding code.
+> > 
+> 
+> Thank you for pointing this out, I was not aware of it. I understand that you
+> are against "#ifdeffery" in this case, but isn't it the case of adding at least
+> __maybe_unused? This would prevent people from reporting it over and over again
+> and you to have to push them back :) Let me know what do you think, in case I am
+> happy to change my patch accordingly.
 
-This patch implement the adaptive PEBS virtualization enabling in
-KVM guest, include feature detection, MSRs emulation, expose
-capability.
-
-Signed-off-by: Luwei Kang <luwei.kang@intel.com>
----
- arch/x86/include/asm/kvm_host.h  |  3 +++
- arch/x86/include/asm/msr-index.h |  1 +
- arch/x86/kvm/pmu.h               |  1 +
- arch/x86/kvm/vmx/pmu_intel.c     | 46 ++++++++++++++++++++++++++++++++++++++--
- arch/x86/kvm/x86.c               |  6 ++++++
- 5 files changed, 55 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 6f82fb7..7b0a023 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -482,6 +482,8 @@ struct kvm_pmu {
- 	u64 pebs_enable;
- 	u64 pebs_enable_mask;
- 	u64 ds_area;
-+	u64 pebs_data_cfg;
-+	u64 pebs_data_cfg_mask;
- 	u64 perf_cap;
- 	u8 version;
- 	struct kvm_pmc gp_counters[INTEL_PMC_MAX_GENERIC];
-@@ -498,6 +500,7 @@ struct kvm_pmu {
- 	bool need_cleanup;
- 
- 	bool has_pebs_via_ds;
-+	bool has_pebs_adaptive;
- 
- 	/*
- 	 * The total number of programmed perf_events and it helps to avoid
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 2bf66e9..d3d6e48 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -154,6 +154,7 @@
- #define PERF_CAP_PEBS_TRAP		BIT_ULL(6)
- #define PERF_CAP_ARCH_REG		BIT_ULL(7)
- #define PERF_CAP_PEBS_FORMAT		0xf00
-+#define PERF_CAP_PEBS_BASELINE		BIT_ULL(14)
- #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
- 
- #define MSR_IA32_RTIT_CTL		0x00000570
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 476780b..9de6ef1 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -33,6 +33,7 @@ struct kvm_pmu_ops {
- 	int (*is_valid_rdpmc_ecx)(struct kvm_vcpu *vcpu, unsigned int idx);
- 	bool (*is_valid_msr)(struct kvm_vcpu *vcpu, u32 msr);
- 	bool (*is_pebs_via_ds_supported)(void);
-+	bool (*is_pebs_baseline_supported)(void);
- 	int (*get_msr)(struct kvm_vcpu *vcpu, u32 msr, u64 *data);
- 	int (*set_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr_info);
- 	void (*refresh)(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 578b830..6a0eef3 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -70,14 +70,21 @@ static void global_ctrl_changed(struct kvm_pmu *pmu, u64 data)
- static void pebs_enable_changed(struct kvm_pmu *pmu, u64 data)
- {
- 	struct vcpu_vmx *vmx = to_vmx(pmu_to_vcpu(pmu));
--	u64 host_ds_area;
-+	u64 host_ds_area, host_pebs_data_cfg;
- 
- 	if (data) {
- 		rdmsrl_safe(MSR_IA32_DS_AREA, &host_ds_area);
- 		add_atomic_switch_msr(vmx, MSR_IA32_DS_AREA,
- 			pmu->ds_area, host_ds_area, false);
--	} else
-+
-+		rdmsrl_safe(MSR_PEBS_DATA_CFG, &host_pebs_data_cfg);
-+		add_atomic_switch_msr(vmx, MSR_PEBS_DATA_CFG,
-+			pmu->pebs_data_cfg, host_pebs_data_cfg, false);
-+
-+	} else {
- 		clear_atomic_switch_msr(vmx, MSR_IA32_DS_AREA);
-+		clear_atomic_switch_msr(vmx, MSR_PEBS_DATA_CFG);
-+	}
- 
- 	pmu->pebs_enable = data;
- }
-@@ -183,6 +190,9 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
- 	case MSR_IA32_PERF_CAPABILITIES:
- 		ret = pmu->has_pebs_via_ds;
- 		break;
-+	case MSR_PEBS_DATA_CFG:
-+		ret = pmu->has_pebs_adaptive;
-+		break;
- 	default:
- 		ret = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0) ||
- 			get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0) ||
-@@ -209,6 +219,18 @@ static bool intel_is_pebs_via_ds_supported(void)
- 	return true;
- }
- 
-+static bool intel_is_pebs_baseline_supported(void)
-+{
-+	u64 perf_cap;
-+
-+	rdmsrl(MSR_IA32_PERF_CAPABILITIES, perf_cap);
-+	if (intel_is_pebs_via_ds_supported() &&
-+			(perf_cap & PERF_CAP_PEBS_BASELINE))
-+		return true;
-+
-+	return false;
-+}
-+
- static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu, u32 msr)
- {
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-@@ -245,6 +267,9 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
- 	case MSR_IA32_DS_AREA:
- 		*data = pmu->ds_area;
- 		return 0;
-+	case MSR_PEBS_DATA_CFG:
-+		*data = pmu->pebs_data_cfg;
-+		return 0;
- 	case MSR_IA32_PERF_CAPABILITIES:
- 		*data = pmu->perf_cap;
- 		return 0;
-@@ -315,6 +340,12 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_IA32_DS_AREA:
- 		pmu->ds_area = data;
- 		return 0;
-+	case MSR_PEBS_DATA_CFG:
-+		if (!(data & pmu->pebs_data_cfg_mask)) {
-+			pmu->pebs_data_cfg = data;
-+			return 0;
-+		}
-+		break;
- 	case MSR_IA32_PERF_CAPABILITIES:
- 		break; /* RO MSR */
- 	default:
-@@ -414,6 +445,16 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 		pmu->perf_cap = (perf_cap & (PERF_CAP_PEBS_TRAP |
- 					     PERF_CAP_ARCH_REG |
- 					     PERF_CAP_PEBS_FORMAT));
-+
-+		if (perf_cap & PERF_CAP_PEBS_BASELINE) {
-+			pmu->has_pebs_adaptive = 1;
-+			pmu->perf_cap |= PERF_CAP_PEBS_BASELINE;
-+			pmu->pebs_data_cfg_mask = ~0xff00000full;
-+			pmu->reserved_bits &= ~ICL_EVENTSEL_ADAPTIVE;
-+			for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
-+				pmu->fixed_ctr_ctrl_mask &= ~(1ULL <<
-+						(INTEL_PMC_IDX_FIXED + i * 4));
-+		}
- 	}
- 
- 	entry = kvm_find_cpuid_entry(vcpu, 7, 0);
-@@ -484,6 +525,7 @@ struct kvm_pmu_ops intel_pmu_ops = {
- 	.is_valid_rdpmc_ecx = intel_is_valid_rdpmc_ecx,
- 	.is_valid_msr = intel_is_valid_msr,
- 	.is_pebs_via_ds_supported = intel_is_pebs_via_ds_supported,
-+	.is_pebs_baseline_supported = intel_is_pebs_baseline_supported,
- 	.get_msr = intel_pmu_get_msr,
- 	.set_msr = intel_pmu_set_msr,
- 	.refresh = intel_pmu_refresh,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5ab8447..aa1344b 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1194,6 +1194,7 @@ bool kvm_rdpmc(struct kvm_vcpu *vcpu)
- 	MSR_ARCH_PERFMON_EVENTSEL0 + 14, MSR_ARCH_PERFMON_EVENTSEL0 + 15,
- 	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
- 	MSR_IA32_PEBS_ENABLE, MSR_IA32_DS_AREA,
-+	MSR_PEBS_DATA_CFG,
- };
- 
- static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_all)];
-@@ -5274,6 +5275,11 @@ static void kvm_init_msr_list(void)
- 			    !kvm_x86_ops->pmu_ops->is_pebs_via_ds_supported())
- 				continue;
- 			break;
-+		case MSR_PEBS_DATA_CFG:
-+			if (!kvm_x86_ops->pmu_ops ||
-+			    !kvm_x86_ops->pmu_ops->is_pebs_baseline_supported())
-+				continue;
-+			break;
- 		case MSR_IA32_RTIT_CTL:
- 		case MSR_IA32_RTIT_STATUS:
- 			if (!kvm_x86_ops->pt_supported())
+We have discussed __maybe_unused in the email thread as well. I am not a
+great fan of that as mentioed there.
 -- 
-1.8.3.1
-
+Michal Hocko
+SUSE Labs
