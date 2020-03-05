@@ -2,110 +2,134 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7BAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2173DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7198A20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E778A20732
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="uRFzyUvB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DiLLZ921"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgCEUwH (ORCPT
+        id S1726191AbgCEUzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 15:52:07 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:37401 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgCEUwH (ORCPT
+        Thu, 5 Mar 2020 15:55:37 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:50755 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgCEUzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 15:52:07 -0500
-Received: by mail-yw1-f65.google.com with SMTP id g206so95131ywb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 12:52:06 -0800 (PST)
+        Thu, 5 Mar 2020 15:55:36 -0500
+Received: by mail-pl1-f201.google.com with SMTP id g5so77765plq.17
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 12:55:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rH1kRgRamv58/PWKnkrnSTZWeEPtKbW21oLiW57uMY8=;
-        b=uRFzyUvBwn6/q/kY0ilgjuzyuH6Z4OE1w9PzgdiwYLKHPiHjGNAxLmJn8z/C6zuJ82
-         zyhdRkdrYTsRXXCr/XScXu6ZjFv8YDd24ruOvHuzRTFfKOTrqxmOZ+TofbRvReGhN8ZG
-         /sKtSunD8xqVXLbEg4PnvoVVJ0pYcnUVQ/l7VbxiYC2Q03oTO9zWuVxrY77WGSr/U/lx
-         Z9aYehlB4+OtaZ9UTnS34vvEZV9vOhNnoS6i6PtqW4AIKUzuwyyg4RBrlq6ky4QExcce
-         MqAbBx7AF6/E3ekKGZTx54gf1FOP9huiNGf87bhRm3quItdUYVh9+Wk/AbYCOtZStlR/
-         L9Bw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=mljG1c45tyBHCNvH//AiEZZTlDTTk3P0kV7UDMwCvTs=;
+        b=DiLLZ921cvStv9VpgT9chw1u+67yb+Jf1wZHKgKeRrtR6Vd+VVjzBFoE3075eabKkB
+         vL9Q1THdoudDtlzUB2SlXnPecVbbuAg124mgQ8cq9H95q1YMiqQXbrNKd7dT2fAnUn3n
+         dPRVeotMzxE6Byy9sl8GMe1jbOn5REl2Dx/4Jw3dbu3R5Z0VldYTbblzUPZ/nq/hvU5m
+         UW41Z7wBfxhTTlXQkI1TtX3zZrz8D1ZvUtgjIr8/MH5OdVN/TMfeA6uQ38HLwN+syvBs
+         NSC1Z9sBv8MySgOXqKr3+c5YO5Dh9yruYybkpx5dtHt7G3kaEndhLvrvjxgKLh+C3qkQ
+         DSTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rH1kRgRamv58/PWKnkrnSTZWeEPtKbW21oLiW57uMY8=;
-        b=XiWsAYP9VXVG5yQwGJNYnRZBhj1MuQJx96RppGvlz7XrX4ffq7AyVDI0v6nfm5Zmqm
-         T3zQNN/bfeNfWnAlrwjFzIu6Q023n8KoL2fXyutCBpTQw89HQ/L3JsJRvmJnZaF4NRqv
-         SakQ1B0TUuesLFSaqtH2FVCvwqeV2Yl5t7zyn8xA5xruloeobaL2SAvXUpQX9pWnKViC
-         +8XKOHx0IbsvIXHMj5ndtlqq5O4KELkWDFLSIrIC9Cd+SnKfAeEKLoxN/EP5gwKTZgzf
-         zcx/IBLghfN0U0hzkV8gFSbTrjEP3hPD12HDTnn4hw0fpW/BnPkQCOpe40DP08oqGm6b
-         gr9A==
-X-Gm-Message-State: ANhLgQ0VcV5lFgYmIDr3X/v47EyTVej3RXcx1Gqia62VeMJTNTC0ykOg
-        o+7q2Vp+GVFIXJzsUet1n+9HIggRB+H/Fw==
-X-Google-Smtp-Source: ADFU+vuUrQamPRTnwCtkAj507QoOwrXbHzBwwWDHh1EiihLsrBz1jv619SOn66N1Nsiie+NG8gSp+w==
-X-Received: by 2002:a25:4843:: with SMTP id v64mr101146yba.315.1583441524439;
-        Thu, 05 Mar 2020 12:52:04 -0800 (PST)
-Received: from cisco ([2607:fb90:17d4:133:1002:9a44:e2a2:4464])
-        by smtp.gmail.com with ESMTPSA id y77sm6647112ywg.66.2020.03.05.12.52.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 12:52:03 -0800 (PST)
-Date:   Thu, 5 Mar 2020 13:51:58 -0700
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        kernel-hardening@lists.openwall.com,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sh: Stop printing the virtual memory layout
-Message-ID: <20200305205158.GF6506@cisco>
-References: <202003021038.8F0369D907@keescook>
- <20200305151010.835954-1-nivedita@alum.mit.edu>
- <f672417e-1323-4ef2-58a1-1158c482d569@physik.fu-berlin.de>
- <31d1567c4c195f3bc5c6b610386cf0f559f9094f.camel@perches.com>
- <3c628a5a-35c7-3d92-b94b-23704500f7c4@physik.fu-berlin.de>
- <20200305154657.GA848330@rani.riverdale.lan>
- <456fddd9-c980-b0f2-9dd0-19befee7861e@physik.fu-berlin.de>
- <20200305155628.GA857024@rani.riverdale.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305155628.GA857024@rani.riverdale.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=mljG1c45tyBHCNvH//AiEZZTlDTTk3P0kV7UDMwCvTs=;
+        b=nFCi0irMW3RxLmnioahoCixHRfwl4f/RU9/7qSNtybwq1LqoiyBFLDjZMAfpvUBcJC
+         g14ThA4vuiEgx1/CooT5tpmAcBI2bUNaoL5IgCw+YiznITaFp2Y3+Mw70ozLsok5khYP
+         jZ9Xfu9uV7AHkgRVnxhOUJNUUgyUYRwUnEO/aZHk4rX+FJLckw+sutjlG0N73kAX2miY
+         NjYuAnOsXhlDBTYEho1UPGcRUJyZDoQAoQL17mlzZiIgTYRfzAkBIAOhApNqLFON2+g1
+         pww8ZctAXmEPy1zdvYHir+TJKZdqffct3CySP2EeT6LlzJRMvPHOLynFBF98T6EA+EwG
+         6grw==
+X-Gm-Message-State: ANhLgQ0DCSfs0IsWCdDXIqc3vuWhy4O48y5RRdLeKh/y749a8lBvKLVw
+        IhtKJvkXCbEWy9QhY01A5sSrpm2r1IE0FA==
+X-Google-Smtp-Source: ADFU+vtVGz7DVOErF5e2OURgUg2ecxIgD7Eb6KdrmeesDbmcr0yLA+SUXXXVg19kGdyFzvBxzDpSLTmT/w31sA==
+X-Received: by 2002:a63:74b:: with SMTP id 72mr19359pgh.320.1583441733885;
+ Thu, 05 Mar 2020 12:55:33 -0800 (PST)
+Date:   Thu,  5 Mar 2020 12:55:25 -0800
+Message-Id: <20200305205525.245058-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v3] net: memcg: late association of sock to memcg
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Eric Dumazet <edumazet@google.com>, Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 10:56:29AM -0500, Arvind Sankar wrote:
-> On Thu, Mar 05, 2020 at 04:49:22PM +0100, John Paul Adrian Glaubitz wrote:
-> > On 3/5/20 4:46 PM, Arvind Sankar wrote:
-> > > Not really too late. I can do s/pr_info/pr_devel and resubmit.
-> > > 
-> > > parisc for eg actually hides this in #if 0 rather than deleting the
-> > > code.
-> > > 
-> > > Kees, you fine with that?
-> > 
-> > But wasn't it removed for all the other architectures already? Or are these
-> > changes not in Linus' tree yet?
-> > 
-> > Adrian
-> 
-> The ones mentioned in the commit message, yes, those are long gone. But
-> I don't see any reason why the remaining ones (there are 6 left that I
-> submitted patches just now for) couldn't switch to pr_devel instead.
+If a TCP socket is allocated in IRQ context or cloned from unassociated
+(i.e. not associated to a memcg) in IRQ context then it will remain
+unassociated for its whole life. Almost half of the TCPs created on the
+system are created in IRQ context, so, memory used by such sockets will
+not be accounted by the memcg.
 
-If you do happen to re-send with pr_debug() instead, feel free to add
-my ack to that series as well. But in any case, this one is also:
+This issue is more widespread in cgroup v1 where network memory
+accounting is opt-in but it can happen in cgroup v2 if the source socket
+for the cloning was created in root memcg.
 
-Acked-by: Tycho Andersen <tycho@tycho.ws>
+To fix the issue, just do the late association of the unassociated
+sockets at accept() time in the process context and then force charge
+the memory buffer already reserved by the socket.
+
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+---
+Changes since v2:
+- Additional check for charging.
+- Release the sock after charging.
+
+Changes since v1:
+- added sk->sk_rmem_alloc to initial charging.
+- added synchronization to get memory usage and set sk_memcg race-free.
+
+ net/ipv4/inet_connection_sock.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index a4db79b1b643..5face55cf818 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -482,6 +482,26 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
+ 		}
+ 		spin_unlock_bh(&queue->fastopenq.lock);
+ 	}
++
++	if (mem_cgroup_sockets_enabled && !newsk->sk_memcg) {
++		int amt;
++
++		/* atomically get the memory usage, set and charge the
++		 * sk->sk_memcg.
++		 */
++		lock_sock(newsk);
++
++		/* The sk has not been accepted yet, no need to look at
++		 * sk->sk_wmem_queued.
++		 */
++		amt = sk_mem_pages(newsk->sk_forward_alloc +
++				   atomic_read(&sk->sk_rmem_alloc));
++		mem_cgroup_sk_alloc(newsk);
++		if (newsk->sk_memcg && amt)
++			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
++
++		release_sock(newsk);
++	}
+ out:
+ 	release_sock(sk);
+ 	if (req)
+-- 
+2.25.0.265.gbab2e86ba0-goog
+
