@@ -2,101 +2,131 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEEAC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D99C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8E7207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32BA4207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583444012;
-	bh=UAkkVtAIcBiv7Kgg3hYGacmAVvf3X0xV2e5Lqy4jM3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UWppDP6YEMs/eqjZjEm6vqi2OYMkATHVygcjJPINcQsIjsjQ3QZeXOCdVm3BLRx7m
-	 JRmzckNuRpumWRifuZeJDlruJenuEN8hlTHTpNJKLfBOH+rs8TIrQW7JICBR0kJgR5
-	 /i+fOJf9KgCc+sh6KMBFd0vIzzycum/ZskAFCkvs=
+	s=default; t=1583444065;
+	bh=IlGxCo+3Eu420GZyWp84Ltnm/C3wZdDdgPLWI4ZtJOo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hvIHd2bTaPIs/pEtxha4DMfeT6ByPgrH0kV7r2pcBypxwgGqaxknV1VU8ynJ/uZVD
+	 oCduKww+2UfdTYXfKAUWqptkr5jEDkL2E8r14KUOog7OCldkaUURsVhQKwzYrQCfj5
+	 5De9SGeB9AV3ntTO+bczx0dUeY+69qoHFMtR6U4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgCEVdb (ORCPT
+        id S1726222AbgCEVeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:33:31 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40789 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgCEVdb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:33:31 -0500
-Received: by mail-qk1-f195.google.com with SMTP id m2so333954qka.7;
-        Thu, 05 Mar 2020 13:33:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1hqcOTK1dJgrJ1iFfuQIBp15f05oDajZgVRCIxl8Yg8=;
-        b=GEmwi5CDQU3MHJdmzPep2GKKvpnZFemhz1UkqVBBcUhyksSiZzGc1vmCEtFeiH2mCZ
-         Xbw4nfcQTQBId+JXSuvcMRczWyYKbMZLbylRBnBURWtETfoFlTr0PYGN5T210DuvXP/4
-         vedNJEecGMHvUOW+hzytnQbpcg6j/BpFtazBbVn1iRs7ZzRzK5BctNwlJ9HT3otAwlUA
-         l0F0b5px7Y+3lIzVBhApigPAMSSMMaYqnfn2tGSaafKeNjnQ8E9PTkDGxC2LeAJhehoB
-         +oEkzpRfBrDlp5aHp/82611z8uGLW10kUTg3EzsRYafhbB9kvSch/JhT4TgeOeUuhX4f
-         wJxA==
-X-Gm-Message-State: ANhLgQ11V4rsC+UIu/YnxxRUTziq+4g3neiHkUDugKQxkrLFyWD67MvT
-        Q5bRLm4RGCf5pvd+cu5Mh6b7eSMmLMIZ+A==
-X-Google-Smtp-Source: ADFU+vsyXjn1vZXA8f6HdMoYTygQMmO8graEQEtQbxVme3Ctqcasz4Ib4j/OXMG/TgEudCyljFw6AQ==
-X-Received: by 2002:a37:f518:: with SMTP id l24mr21381qkk.441.1583444010072;
-        Thu, 05 Mar 2020 13:33:30 -0800 (PST)
-Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c091:500::b9df])
-        by smtp.gmail.com with ESMTPSA id r40sm756817qtc.39.2020.03.05.13.33.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 13:33:29 -0800 (PST)
-Date:   Thu, 5 Mar 2020 16:33:27 -0500
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Dennis Zhou <dennis@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-doc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] include/bitmap.h: add new functions to documentation
-Message-ID: <20200305213327.GA79880@dennisz-mbp.dhcp.thefacebook.com>
-References: <20200304140920.6109-1-wsa+renesas@sang-engineering.com>
- <20200304140920.6109-3-wsa+renesas@sang-engineering.com>
- <20200304204026.GA55400@dennisz-mbp>
- <20200305082415.GA1079@ninjato>
+        Thu, 5 Mar 2020 16:34:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725991AbgCEVeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 16:34:24 -0500
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A417F20728;
+        Thu,  5 Mar 2020 21:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583444063;
+        bh=IlGxCo+3Eu420GZyWp84Ltnm/C3wZdDdgPLWI4ZtJOo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=e1YXpkQepYP5f+HafW//7Je967kcdVYeqvoupSSIaZUrc1aKzrfRENakXJU8OmR0S
+         1kn6Geug/qUNt46YbkNWW8xLnCqLFlKsouexXNZZNBivk63o4iI/dJrENO+oKWZWVd
+         yJcKx4NQ2MKxCQhrfHAHgaeXn6Us8xZj1U6RGFl8=
+Date:   Thu, 5 Mar 2020 22:34:16 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Markus Heiser <markus.heiser@darmarit.de>
+Cc:     "Bird, Tim" <Tim.Bird@sony.com>, Jonathan Corbet <corbet@lwn.net>,
+        "tbird20d@gmail.com" <tbird20d@gmail.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scripts/sphinx-pre-install: add '-p python3' to
+ virtualenv
+Message-ID: <20200305223416.6a0fdedc@coco.lan>
+In-Reply-To: <c491adf3-ae49-fefc-ea6d-32b75f4f9ca9@darmarit.de>
+References: <1582594481-23221-1-git-send-email-tim.bird@sony.com>
+        <20200302130911.05a7e465@lwn.net>
+        <MWHPR13MB0895EFDA9EBF7740875E661CFDE40@MWHPR13MB0895.namprd13.prod.outlook.com>
+        <20200304064214.64341a49@onda.lan>
+        <31a69fe7-c08d-9381-a111-5f522a4c9ffd@darmarit.de>
+        <20200304093138.6aced5a0@coco.lan>
+        <c491adf3-ae49-fefc-ea6d-32b75f4f9ca9@darmarit.de>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305082415.GA1079@ninjato>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 09:24:15AM +0100, Wolfram Sang wrote:
-> 
-> > > I found these functions only by chance although I was looking exactly
-> > > for something like them. So, add them to the list of functions to make
-> > > them more visible.
-> > > 
-> > > Fixes: e837dfde15a4 ("bitmap: genericize percpu bitmap region iterators")
-> > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > > Cc: Dennis Zhou <dennis@kernel.org>
-> > 
-> > Ah thanks. That was a miss not adding the documentation. I can pick
-> > these up unless Andrew would rather run them through his tree. I have a
-> > few other miscellaneous documentation cleanups for percpu I need to run
-> > anyway.
-> 
-> That sounds like a good fit to me. Will you take both of the patches?
-> 
-> Thanks,
-> 
->    Wolfram
-> 
+Em Wed, 4 Mar 2020 10:20:34 +0100
+Markus Heiser <markus.heiser@darmarit.de> escreveu:
 
-I've picked up both in percpu for-5.7.
+> 
+> Am 04.03.20 um 09:31 schrieb Mauro Carvalho Chehab:
+> > Em Wed, 4 Mar 2020 07:20:48 +0100
+> > Markus Heiser <markus.heiser@darmarit.de> escreveu:
+> >> With py3 the recommended way to install virtual environments is::
+> >>
+> >>     python3 -m venv sphinx-env
+> >>
+> >> This (python3) is what worked for me on RHEL/CentOS (dnf),
+> >> archlinux and debian/ubuntu (tested from 16.04 up to 20.04).
+> > 
+> > Hmm... from:
+> > 
+> > 	https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
+> > 
+> > This works since Python version 3.3. It sounds doable to use it.
+> > 
+> > Yet, if we'll be switching to this method, the script should check if
+> > the version is 3.3 or newer. The logic inside get_sphinx_fname() would
+> > also require some changes, as it won't need to install anymore the
+> > virtualenv program for Python >= 3.3.
+> 
+> I guess you can ignore 3.2 and downwards
+> 
+>    https://en.wikipedia.org/wiki/History_of_Python#Table_of_versions
+> 
+> Support for py2.7 and >=py3.3 should match nearly all use cases / distributions 
+> we support.
+> 
+> BTW: starting scripts with:
+> 
+> -m <module-name>
+>      Searches sys.path for the named module and runs the
+>      corresponding .py file as a script.
+> 
+> is mostly more robust.  The option exists also in py2.  From py3.3 on
+> a subset of virtualenv is built-in, so you can run '-m venv' ot of the
+> box.
+
+I did some tests... as everything with python, it is not so simple...
+The thing is that "-mvenv" requires a python module called "ensurepip".
+
+On Fedora, openSuse and archlinux, this is installed together with
+python3, but Debian maintainers had a different idea about how to package it.
+There, ensurepip is inside a python3-venv-3.x (where x is 5, 6 or 7 -
+depending on the Ubuntu/Debian version, and if backports repository is
+been used or not).
+
+There is a package python3-venv too, with installs the right package,
+together with some unneeded stuff (pyvenv, with is a deprecated script). 
+
+Yet, installing python3-venv seems to be a reliable way to install
+the proper package without having to deal with more fragile heuristics.
+
+I'm working on some patches that should hopefully add support for
+using "python3 -mvenv", but testing it is not trivial, as I want
+to ensure that it won't cause troubles on other distros. So, I'm
+installing a myriad of distros with lxc, in order to test how the
+script will actually work with some different environments.
 
 Thanks,
-Dennis
+Mauro
