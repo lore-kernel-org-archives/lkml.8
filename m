@@ -2,136 +2,173 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA162C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B05C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873F72073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CB720848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:54:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bob5i7Hx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="SZ8uvajC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgCENup (ORCPT
+        id S1726128AbgCENyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:50:45 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38338 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgCENup (ORCPT
+        Thu, 5 Mar 2020 08:54:09 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:40878 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbgCENyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:50:45 -0500
-Received: by mail-oi1-f196.google.com with SMTP id x75so5990445oix.5;
-        Thu, 05 Mar 2020 05:50:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fcCTfa/+b2H8bD6/l2jkw8E4TRC6mBDpyhRVH0rkeuw=;
-        b=bob5i7Hx/1c84xrjeDHggoA7v1P27/LaFo+Tv1+2TxOFFyU6cuvCSz7SHlOOspW8Fs
-         AgDpkhqBum4Tb5nRKQP5LEZNWteQW+XO5aV2rLWhs7C3kVnZWlXBBFpTW815/ib5loHl
-         Lte9VAzb954Y+9kOYs3Zoj3CIawohp39tvMtbhkPH073pg8hSpC5HeRbJ9gsHlQIM2mA
-         MMzNaJVtN1XHin5uT4UKfWT7HOlnGQCsSptHEWHriu7ByFd8D4K/wv66VvC+76qbNJGW
-         i1XWeWsA6B67rMal1OugqQJWDfFLuDAGtWFC6tOloj7dkiBD7nAjtqjXz1c6lGuGJJZR
-         ouFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fcCTfa/+b2H8bD6/l2jkw8E4TRC6mBDpyhRVH0rkeuw=;
-        b=jHULGypSb6U4xMr3J0gXv7rjwXJVycoP79vibY8OzyWbSgr5v00N71xnBppfQqytcE
-         cM+fWNlZGXEPPBdYkHl+U8nEN92Od9Ms5BrwlDnr1J1pSNTDr00W4u7znIOq3VewQ+mc
-         Shb4WoDkQIkal9YQnm3LnRPNobbFFS7s9fi2wTKA5fSV49xZ8GdWarTZBwYal2qdkpGS
-         huF3I90mY5+AV/MtVXioxY+kdC82mRnRr624VM3vZTHJZz2Bh7430DYAIIfb7kPFdZKJ
-         XiFJGvnWw4z7SORdHGRNC6lftc0wydX2USFHYWMDmo051H01MskkTpW5JHuhP1sS0NPa
-         m+7w==
-X-Gm-Message-State: ANhLgQ3ZaozaziZsff7vSgM1CUHcuCKyCqn0tRB97wEBAbjH6zq3mzSy
-        hyE2cR+uF3O2dSAb/tVgtbcuTvfWGMVReTiRqGE=
-X-Google-Smtp-Source: ADFU+vtIByz2R0kLCeIr1TlairntfhCiMv9MbVfDdAkVKlBSQ+hpH0fDPPDbLe5Vog30q1evW1THoDq5tC/2YlQmzv4=
-X-Received: by 2002:aca:3544:: with SMTP id c65mr5488952oia.160.1583416244454;
- Thu, 05 Mar 2020 05:50:44 -0800 (PST)
+        Thu, 5 Mar 2020 08:54:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/znnv7ajhQ5TmvcAKLfdrl+ierT+u9g1+qLprIJAs1U=; b=SZ8uvajCpIK3VzpBXQRGwDD4w
+        abJQR1HorYMMElSvKzqJ6WMG0iTiNmyfo9hHrTdhuoFR55g7Dvk/JxUV+3v580AtWUhfMF+u8bAKI
+        js8f5AjrTFYYkBnGaT1/KUlDTvCcYqmZYSOVjjN8TMkhPFtP5aSqOo47OwqkggAyaC5X+UdMiIqFS
+        g22Hq38sKP27NW7+p/HreshsRvSyCdchAaqyHkHnaceGv72s8rQGPV8nCgg8YBPCIPntGg963Iyhf
+        qwQPpMB+zRjDG/y4dYlvS8c6OBGnsD2SPzRLN3PMka+1g9AN2CBdDnEOI6aRahn1Ns1fMInV8eFAp
+        /S7g8J8RQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:56526)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j9qwh-0006mH-7U; Thu, 05 Mar 2020 13:53:51 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j9qwc-0007y5-JN; Thu, 05 Mar 2020 13:53:46 +0000
+Date:   Thu, 5 Mar 2020 13:53:46 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: mach-imx6q: add ksz9131rn_phy_fixup
+Message-ID: <20200305135346.GD25745@shell.armlinux.org.uk>
+References: <20200305134928.19775-1-philippe.schenker@toradex.com>
 MIME-Version: 1.0
-References: <20200304191853.1529-1-kpsingh@chromium.org> <20200304191853.1529-4-kpsingh@chromium.org>
-In-Reply-To: <20200304191853.1529-4-kpsingh@chromium.org>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 5 Mar 2020 08:51:58 -0500
-Message-ID: <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 3/7] bpf: Introduce BPF_MODIFY_RETURN
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>, jmorris@namei.org,
-        Paul Moore <paul@paul-moore.com>, casey@schaufler-ca.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305134928.19775-1-philippe.schenker@toradex.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 2:20 PM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> When multiple programs are attached, each program receives the return
-> value from the previous program on the stack and the last program
-> provides the return value to the attached function.
->
-> The fmod_ret bpf programs are run after the fentry programs and before
-> the fexit programs. The original function is only called if all the
-> fmod_ret programs return 0 to avoid any unintended side-effects. The
-> success value, i.e. 0 is not currently configurable but can be made so
-> where user-space can specify it at load time.
->
-> For example:
->
-> int func_to_be_attached(int a, int b)
-> {  <--- do_fentry
->
-> do_fmod_ret:
->    <update ret by calling fmod_ret>
->    if (ret != 0)
->         goto do_fexit;
->
-> original_function:
->
->     <side_effects_happen_here>
->
-> }  <--- do_fexit
->
-> The fmod_ret program attached to this function can be defined as:
->
-> SEC("fmod_ret/func_to_be_attached")
-> int BPF_PROG(func_name, int a, int b, int ret)
-> {
->         // This will skip the original function logic.
->         return 1;
-> }
->
-> The first fmod_ret program is passed 0 in its return argument.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
+On Thu, Mar 05, 2020 at 02:49:28PM +0100, Philippe Schenker wrote:
+> The MAC of the i.MX6 SoC is compliant with RGMII v1.3. The KSZ9131 PHY
+> is like KSZ9031 adhering to RGMII v2.0 specification. This means the
+> MAC should provide a delay to the TXC line. Because the i.MX6 MAC does
+> not provide this delay this has to be done in the PHY.
+> 
+> This patch adds by default ~1.6ns delay to the TXC line. This should
+> be good for all boards that have the RGMII signals routed with the
+> same length.
+> 
+> The KSZ9131 has relatively high tolerances on skew registers from
+> MMD 2.4 to MMD 2.8. Therefore the new DLL-based delay of 2ns is used
+> and then as little as possibly subtracted from that so we get more
+> accurate delay. This is actually needed because the i.MX6 SoC has
+> an asynchron skew on TXC from -100ps to 900ps, to get all RGMII
+> values within spec.
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> 
+> ---
+> 
+>  arch/arm/mach-imx/mach-imx6q.c | 37 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+> index edd26e0ffeec..8ae5f2fa33e2 100644
+> --- a/arch/arm/mach-imx/mach-imx6q.c
+> +++ b/arch/arm/mach-imx/mach-imx6q.c
+> @@ -61,6 +61,14 @@ static void mmd_write_reg(struct phy_device *dev, int device, int reg, int val)
+>  	phy_write(dev, 0x0e, val);
+>  }
+>  
+> +static int mmd_read_reg(struct phy_device *dev, int device, int reg)
+> +{
+> +	phy_write(dev, 0x0d, device);
+> +	phy_write(dev, 0x0e, reg);
+> +	phy_write(dev, 0x0d, (1 << 14) | device);
+> +	return phy_read(dev, 0x0e);
+> +}
 
-IIUC you've switched from a model where the BPF program would be
-invoked after the original function logic
-and the BPF program is skipped if the original function logic returns
-non-zero to a model where the BPF program is invoked first and
-the original function logic is skipped if the BPF program returns
-non-zero.  I'm not keen on that for userspace-loaded code attached
-to LSM hooks; it means that userspace BPF programs can run even if
-SELinux would have denied access and SELinux hooks get
-skipped entirely if the BPF program returns an error.  I think Casey
-may have wrongly pointed you in this direction on the grounds
-it can already happen with the base DAC checking logic.  But that's
-kernel DAC checking logic, not userspace-loaded code.
-And the existing checking on attachment is not sufficient for SELinux
-since CAP_MAC_ADMIN is not all powerful to SELinux.
-Be careful about designing your mechanisms around Smack because Smack
-is not the only LSM.
+These look like the standard MII MMD registers, and it also looks like
+you're reinventing phy_read_mmd() - but badly due to lack of locking.
+
+I guess you need this because phy_read_mmd() may be modular - maybe
+we should arrange for the accessors to be separately buildable into
+the kernel, so that such fixups can stop badly reinventing the wheel?
+
+> +
+>  static int ksz9031rn_phy_fixup(struct phy_device *dev)
+>  {
+>  	/*
+> @@ -74,6 +82,33 @@ static int ksz9031rn_phy_fixup(struct phy_device *dev)
+>  	return 0;
+>  }
+>  
+> +#define KSZ9131_RXTXDLL_BYPASS	12
+> +
+> +static int ksz9131rn_phy_fixup(struct phy_device *dev)
+> +{
+> +	int tmp;
+> +
+> +	tmp = mmd_read_reg(dev, 2, 0x4c);
+> +	/* disable rxdll bypass (enable 2ns skew delay on RXC) */
+> +	tmp &= ~(1 << KSZ9131_RXTXDLL_BYPASS);
+> +	mmd_write_reg(dev, 2, 0x4c, tmp);
+> +
+> +	tmp = mmd_read_reg(dev, 2, 0x4d);
+> +	/* disable txdll bypass (enable 2ns skew delay on TXC) */
+> +	tmp &= ~(1 << KSZ9131_RXTXDLL_BYPASS);
+> +	mmd_write_reg(dev, 2, 0x4d, tmp);
+> +
+> +	/*
+> +	 * Subtract ~0.6ns from txdll = ~1.4ns delay.
+> +	 * leave RXC path untouched
+> +	 */
+> +	mmd_write_reg(dev, 2, 4, 0x007d);
+> +	mmd_write_reg(dev, 2, 6, 0xdddd);
+> +	mmd_write_reg(dev, 2, 8, 0x0007);
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * fixup for PLX PEX8909 bridge to configure GPIO1-7 as output High
+>   * as they are used for slots1-7 PERST#
+> @@ -167,6 +202,8 @@ static void __init imx6q_enet_phy_init(void)
+>  				ksz9021rn_phy_fixup);
+>  		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
+>  				ksz9031rn_phy_fixup);
+> +		phy_register_fixup_for_uid(PHY_ID_KSZ9131, MICREL_PHY_ID_MASK,
+> +				ksz9131rn_phy_fixup);
+>  		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
+>  				ar8031_phy_fixup);
+>  		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
+> -- 
+> 2.25.1
+> 
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
