@@ -2,72 +2,137 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BD0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB627C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A3420717
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B942072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgCEMWj (ORCPT
+        id S1726036AbgCEM2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:22:39 -0500
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:7367 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgCEMWj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:22:39 -0500
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65e60eeef659-ff156; Thu, 05 Mar 2020 20:22:09 +0800 (CST)
-X-RM-TRANSID: 2ee65e60eeef659-ff156
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.0.146.245])
-        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65e60eeeec2d-dd790;
-        Thu, 05 Mar 2020 20:22:09 +0800 (CST)
-X-RM-TRANSID: 2ee65e60eeeec2d-dd790
-From:   tangbin <tangbin@cmss.chinamobile.com>
-To:     davem@davemloft.net
-Cc:     f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        tangbin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH] ethernet:broadcom:bcm63xx_enet:remove redundant variable definitions
-Date:   Thu,  5 Mar 2020 20:22:59 +0800
-Message-Id: <20200305122259.6104-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Thu, 5 Mar 2020 07:28:06 -0500
+Received: from mga06.intel.com ([134.134.136.31]:28113 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725880AbgCEM2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 07:28:06 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 04:28:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="352352187"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2020 04:28:02 -0800
+Date:   Thu, 5 Mar 2020 20:31:31 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v9 7/7] KVM: X86: Add user-space access interface for CET
+ MSRs
+Message-ID: <20200305123130.GA17242@local-michael-cet-test.sh.intel.com>
+References: <20191227021133.11993-1-weijiang.yang@intel.com>
+ <20191227021133.11993-8-weijiang.yang@intel.com>
+ <20200303222827.GC1439@linux.intel.com>
+ <20200304151815.GD5831@local-michael-cet-test.sh.intel.com>
+ <20200304154538.GB21662@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304154538.GB21662@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-in this function,‘ret’ is always assigned,so this's definition
-'ret = 0' make no sense.
+On Wed, Mar 04, 2020 at 07:45:38AM -0800, Sean Christopherson wrote:
+> On Wed, Mar 04, 2020 at 11:18:15PM +0800, Yang Weijiang wrote:
+> > On Tue, Mar 03, 2020 at 02:28:27PM -0800, Sean Christopherson wrote:
+> > > > @@ -1886,6 +1976,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> > > >  		else
+> > > >  			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
+> > > >  		break;
+> > > > +	case MSR_IA32_S_CET:
+> > > > +		if (!cet_ctl_access_allowed(vcpu, msr_info))
+> > > > +			return 1;
+> > > > +		msr_info->data = vmcs_readl(GUEST_S_CET);
+> > > > +		break;
+> > > > +	case MSR_IA32_INT_SSP_TAB:
+> > > > +		if (!cet_ssp_access_allowed(vcpu, msr_info))
+> > > > +			return 1;
+> > > > +		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
+> > > > +		break;
+> > > > +	case MSR_IA32_U_CET:
+> > > > +		if (!cet_ctl_access_allowed(vcpu, msr_info))
+> > > > +			return 1;
+> > > > +		rdmsrl(MSR_IA32_U_CET, msr_info->data);
+> > > > +		break;
+> > > > +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+> > > > +		if (!cet_ssp_access_allowed(vcpu, msr_info))
+> > > > +			return 1;
+> > > > +		rdmsrl(msr_info->index, msr_info->data);
+> > > 
+> > > Ugh, thought of another problem.  If a SoftIRQ runs after an IRQ it can
+> > > load the kernel FPU state.  So for all the XSAVES MSRs we'll need a helper
+> > > similar to vmx_write_guest_kernel_gs_base(), except XSAVES has to be even
+> > > more restrictive and disable IRQs entirely.  E.g.
+> > > 
+> > > static void vmx_get_xsave_msr(struct msr_data *msr_info)
+> > > {
+> > > 	local_irq_disable();
+> > > 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+> > > 		switch_fpu_return();
+> > > 	rdmsrl(msr_info->index, msr_info->data);
+> > > 	local_irq_enable();
+> > In this case, would SoftIRQ destroy vcpu->arch.guest.fpu states which
+> > had been restored to XSAVES MSRs that we were accessing?
+> 
+> Doing kernel_fpu_begin() from a softirq would swap guest.fpu out of the
+> CPUs registers.  It sets TIF_NEED_FPU_LOAD to mark the tasks has needing to
+> reload its FPU state prior to returning to userspace.  So it doesn't
+> destroy it per se.  The result is that KVM would read/write the CET MSRs
+> after they're loaded from the kernel's FPU state instead of reading the
+> MSRs loaded from the guest's FPU state.
+>
+OK, will wrap the access code with a helper, thank you!
+> > So should we restore
+> > guest.fpu or? In previous patch, we have restored guest.fpu before
+> > access the XSAVES MSRs.
+> 
+> There are three different FPU states:
+> 
+>   - kernel
+>   - userspace
+>   - guest
+> 
+> RDMSR/WRMSR for CET MSRs need to run while the guest.fpu state is loaded
+> into the CPU registers[1].  At the beginning of the syscall from userspace,
+> i.e. the vCPU ioctl(), the task's FPU state[2] holds userspace FPU state.
+> Patch 6/7 swaps out the userspace state and loads the guest state.
+> 
+> But, if a softirq runs between kvm_load_guest_fpu() and now, and executes
+> kernel_fpu_begin(), it will swap the guest state (out of CPU registers)
+> and load the kernel state (into PCU registers).  The actual RDMSR/WRMSR
+> needs to ensure the guest state is still loaded by checking and handling
+> TIF_NEED_FPU_LOAD.
+> 
+> [1] An alternative to doing switch_fpu_return() on TIF_NEED_FPU_LOAD would
+>     be to calculate the offset into the xsave and read/write directly
+>     to/from memory.  But IMO that's unnecessary complexity as the guest's
+>     fpu state still needs to be reloaded before re-entering the guest, e.g.
+>     if vmx_{g,s}et_msr() is invoked on {RD,WR}MSR intercept, while loading
+>     or saving MSR state from userspace isn't a hot path.
+> 
+> [2] I worded this to say "task's FPU state" because it's also possible the
+>     CPU registers hold kernel state at the beginning of the vCPU ioctl(),
+>     e.g. because of softirq.
 
-Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
----
- drivers/net/ethernet/broadcom/bcm63xx_enet.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-index 620cd3fc1..ea5087a8e 100644
---- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-+++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-@@ -1706,7 +1706,6 @@ static int bcm_enet_probe(struct platform_device *pdev)
- 	if (!res_irq || !res_irq_rx || !res_irq_tx)
- 		return -ENODEV;
- 
--	ret = 0;
- 	dev = alloc_etherdev(sizeof(*priv));
- 	if (!dev)
- 		return -ENOMEM;
--- 
-2.20.1.windows.1
-
-
-
+It's clear to me, thanks for the explanation.
