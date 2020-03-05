@@ -2,97 +2,110 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCC3C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7BAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E2920732
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7198A20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:52:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kHLPFozq"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="uRFzyUvB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgCEUvd (ORCPT
+        id S1726400AbgCEUwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 15:51:33 -0500
-Received: from mout.gmx.net ([212.227.17.22]:59309 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbgCEUvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 15:51:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583441488;
-        bh=7rYudHkLaPWYz1EG6XE2+tdiDV5EtkdgykUVDPUIQrg=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=kHLPFozql360H4pez2iNYogmkVoKmmhR73v2BUwAW8mFAtdGpvDS6rklh8MChW98P
-         n06AAhtkHI+aPP/i+TjYKEik++5ULTY02Ngjdkr25D1j1qbT7yuESJKwfC1Fgv/55K
-         OwIOT/AKHSIXaeVhbqnBoaLFEJtlvl4QR85Q5sX4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.153]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1McYCb-1jmK9l00lh-00d0g3; Thu, 05
- Mar 2020 21:51:28 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: it_IT: netdev-FAQ: Fix link to original document
-Date:   Thu,  5 Mar 2020 21:51:21 +0100
-Message-Id: <20200305205123.8569-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Thu, 5 Mar 2020 15:52:07 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:37401 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgCEUwH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 15:52:07 -0500
+Received: by mail-yw1-f65.google.com with SMTP id g206so95131ywb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 12:52:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rH1kRgRamv58/PWKnkrnSTZWeEPtKbW21oLiW57uMY8=;
+        b=uRFzyUvBwn6/q/kY0ilgjuzyuH6Z4OE1w9PzgdiwYLKHPiHjGNAxLmJn8z/C6zuJ82
+         zyhdRkdrYTsRXXCr/XScXu6ZjFv8YDd24ruOvHuzRTFfKOTrqxmOZ+TofbRvReGhN8ZG
+         /sKtSunD8xqVXLbEg4PnvoVVJ0pYcnUVQ/l7VbxiYC2Q03oTO9zWuVxrY77WGSr/U/lx
+         Z9aYehlB4+OtaZ9UTnS34vvEZV9vOhNnoS6i6PtqW4AIKUzuwyyg4RBrlq6ky4QExcce
+         MqAbBx7AF6/E3ekKGZTx54gf1FOP9huiNGf87bhRm3quItdUYVh9+Wk/AbYCOtZStlR/
+         L9Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rH1kRgRamv58/PWKnkrnSTZWeEPtKbW21oLiW57uMY8=;
+        b=XiWsAYP9VXVG5yQwGJNYnRZBhj1MuQJx96RppGvlz7XrX4ffq7AyVDI0v6nfm5Zmqm
+         T3zQNN/bfeNfWnAlrwjFzIu6Q023n8KoL2fXyutCBpTQw89HQ/L3JsJRvmJnZaF4NRqv
+         SakQ1B0TUuesLFSaqtH2FVCvwqeV2Yl5t7zyn8xA5xruloeobaL2SAvXUpQX9pWnKViC
+         +8XKOHx0IbsvIXHMj5ndtlqq5O4KELkWDFLSIrIC9Cd+SnKfAeEKLoxN/EP5gwKTZgzf
+         zcx/IBLghfN0U0hzkV8gFSbTrjEP3hPD12HDTnn4hw0fpW/BnPkQCOpe40DP08oqGm6b
+         gr9A==
+X-Gm-Message-State: ANhLgQ0VcV5lFgYmIDr3X/v47EyTVej3RXcx1Gqia62VeMJTNTC0ykOg
+        o+7q2Vp+GVFIXJzsUet1n+9HIggRB+H/Fw==
+X-Google-Smtp-Source: ADFU+vuUrQamPRTnwCtkAj507QoOwrXbHzBwwWDHh1EiihLsrBz1jv619SOn66N1Nsiie+NG8gSp+w==
+X-Received: by 2002:a25:4843:: with SMTP id v64mr101146yba.315.1583441524439;
+        Thu, 05 Mar 2020 12:52:04 -0800 (PST)
+Received: from cisco ([2607:fb90:17d4:133:1002:9a44:e2a2:4464])
+        by smtp.gmail.com with ESMTPSA id y77sm6647112ywg.66.2020.03.05.12.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 12:52:03 -0800 (PST)
+Date:   Thu, 5 Mar 2020 13:51:58 -0700
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>,
+        kernel-hardening@lists.openwall.com,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sh: Stop printing the virtual memory layout
+Message-ID: <20200305205158.GF6506@cisco>
+References: <202003021038.8F0369D907@keescook>
+ <20200305151010.835954-1-nivedita@alum.mit.edu>
+ <f672417e-1323-4ef2-58a1-1158c482d569@physik.fu-berlin.de>
+ <31d1567c4c195f3bc5c6b610386cf0f559f9094f.camel@perches.com>
+ <3c628a5a-35c7-3d92-b94b-23704500f7c4@physik.fu-berlin.de>
+ <20200305154657.GA848330@rani.riverdale.lan>
+ <456fddd9-c980-b0f2-9dd0-19befee7861e@physik.fu-berlin.de>
+ <20200305155628.GA857024@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JAFLwR2jXa4Awfyyo2fmfzgSHQARdU0kgjH/ZvdO9cslYVRO+hg
- VgKzce52rnmt5tBni8r/O1NJK/P59Dfum7pGNL7+xYtyEkWmBG6HMoUncd1uVYi03YogENF
- gI1DbD6CE3AdH9Ro2uFXt88s0mQGyLbumGcC/gfcUURonUOMpa4sLwkge7np1lzLKgr48tN
- y/LnRzZipKS5KOfATUNmA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:T4YW+/QoZ6Y=:utr/OCfyZevLvoe7p6jTH2
- vXTS+33v/vtnwxWKqrZ8rcNltfHLHFQ8PC0x7y+MKRGBq9caEo0yJoAuTxiJWXf585jcohDBd
- O0aiREqDDSbx/L/GwMHnxZNKG/87yBjAo1ohBk6pqdseC2CJHRNKZ7arGWmCp6NQ/KgDJ9Jqg
- GBOVwgsOEeyNYxulNvuFhuQKFDkZJvZrRONSBfphmTPVVLiuVUqhlMCiZU/G8aHkTWIUqINcr
- QiAUlkT7PFWpyjCaCP6ZYWfudMgq2gpgCIkUkx4iTpQkYgWVUeSyPNHkWdBc7EZPK6euAs4U1
- egJwAbO6eVJiULLsFu7o4DXbxoI9+ryTt09I5J38GvoamhzfwmQ0OsP4EPhhxslDkBvlmDmHm
- hPrcvGaE2f67FSCTYpd7WsSjoiyBWrucJ8BpBlG9zW5T3iG8sPMX0rItAE7yx0rUYlZUJI7+K
- ga8YwXYRwyscmPa9DxsFDwsRFQ/HmRTmxmneeZDuU6CmhMkFlPRdcz8h5DchUsrxXQ25F+2FW
- v+iGQROrJjjF/zXLQLf1o24M51B0Op1T3OR7MoxY7LtVvahvnswK50/NWDQX+Tc85+z2F45tD
- SgyGPyry5HwL8fh8l0TzomSVz29gWZMShQebUW5aHKtRi8MEWSsBGFPwlqyvUy9NQaAA2Fnmf
- JO9rHVjd2E6YZw38KLRfn9PMSySGKndw6Qo11Zzi6Kg9+RjWvvozeCVqHNWTXvPqsd4/0/ZtH
- 76h1twGdrksmf81aJ+gH5gAh1CJaSPjHKGOMyWqccX9gLj22E5fYFrrIh1fHfMXYi+Ln0G3EW
- 3X0z0w1MOp/pGKFFxuPbDoU1320EGYp2USvRE40DbO3ZdQL/hGF0twjMbxiyGzEbOnIGwXiu2
- 1foT7ee+8G6W1DFhHDgAuk83R2M89qBDLRfeoMrJ9C/RbPtsZjhdlPojIyCjLASgvdZrYwnqr
- 4/2K0UQDE3+wOaKxB7+l96n5GuRTlafuKYLt7mcEk2m8HBHkWWXMfrS7lwlDPUHuVfaLTdJJG
- 3xVA15OyNJCm71vfUmALAyf6lUurak9ctQiinDP1tyE0gSxryZ2B4Xd/dR7zFwP0eGxFcEuM4
- D4poEvjwl/fPVaQUAXtgGF7sqRUxaqsYN1pXQEzD7bPu8oftoYBA8593SgSmOlys8EJPb+KAi
- hNzVcbEEXXwcnKin7XlrVh6ahmuibCrKwF3FViucHRGMWFcK+l2jkg5XWplM4RGRGsEW8kS8k
- tGcStAq05ccRe7PnO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305155628.GA857024@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/translations/it_IT/networking/netdev-FAQ.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Mar 05, 2020 at 10:56:29AM -0500, Arvind Sankar wrote:
+> On Thu, Mar 05, 2020 at 04:49:22PM +0100, John Paul Adrian Glaubitz wrote:
+> > On 3/5/20 4:46 PM, Arvind Sankar wrote:
+> > > Not really too late. I can do s/pr_info/pr_devel and resubmit.
+> > > 
+> > > parisc for eg actually hides this in #if 0 rather than deleting the
+> > > code.
+> > > 
+> > > Kees, you fine with that?
+> > 
+> > But wasn't it removed for all the other architectures already? Or are these
+> > changes not in Linus' tree yet?
+> > 
+> > Adrian
+> 
+> The ones mentioned in the commit message, yes, those are long gone. But
+> I don't see any reason why the remaining ones (there are 6 left that I
+> submitted patches just now for) couldn't switch to pr_devel instead.
 
-diff --git a/Documentation/translations/it_IT/networking/netdev-FAQ.rst b/=
-Documentation/translations/it_IT/networking/netdev-FAQ.rst
-index 8489ead7cff1..7e2456bb7d92 100644
-=2D-- a/Documentation/translations/it_IT/networking/netdev-FAQ.rst
-+++ b/Documentation/translations/it_IT/networking/netdev-FAQ.rst
-@@ -1,6 +1,6 @@
- .. include:: ../disclaimer-ita.rst
+If you do happen to re-send with pr_debug() instead, feel free to add
+my ack to that series as well. But in any case, this one is also:
 
--:Original: :ref:`Documentation/process/stable-kernel-rules.rst <stable_ke=
-rnel_rules>`
-+:Original: :ref:`Documentation/networking/netdev-FAQ.rst <netdev-FAQ>`
-
- .. _it_netdev-FAQ:
-
-=2D-
-2.20.1
-
+Acked-by: Tycho Andersen <tycho@tycho.ws>
