@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D148C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C354C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381E1207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3B220848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428637;
-	bh=B7U4y1G8Hkc2+m8EO/fVKBZoqtrAXBcPI24GT88iQwA=;
+	s=default; t=1583428639;
+	bh=hpF8zznMm4m0JJ0G+TbKS/PfMRfN2OuwKsWCkHwXLbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uSCNsabrTSd6dNb7fpVMkEzun6AT8hklkksf10WiCknHVJNYlfun6gdmI5G+bRQpe
-	 LzSDXIf6elfxw2KNYhk4I67Z4ERwtU42bqiGFZmvpPaotJx+xuQJOhqzitKzozgOWv
-	 7x4AYcoh/UcKkQ6HFFKhvTTII7QpOUNelAgWKvmM=
+	b=pJm587JuY0aQa8WgM27Nr3pJfPTQphFJ0ZZ5qBCj3vGIjskkUfx/J3Qtq6aAS401M
+	 BGSlSIn80Y2Lc5pJxcg/vtWWj9O1FB9H5H5UUBn3Z2UMZQiSK3AZHu/kqZvzRiU771
+	 1Zklb9igySObP9bg3IkrUTwPPf7bFnWz+tKepv7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgCERRP (ORCPT
+        id S1728351AbgCERQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:17:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:16:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728355AbgCERQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:16:03 -0500
+        id S1728241AbgCERPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A263F207FD;
-        Thu,  5 Mar 2020 17:16:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBF620870;
+        Thu,  5 Mar 2020 17:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428563;
-        bh=B7U4y1G8Hkc2+m8EO/fVKBZoqtrAXBcPI24GT88iQwA=;
+        s=default; t=1583428547;
+        bh=hpF8zznMm4m0JJ0G+TbKS/PfMRfN2OuwKsWCkHwXLbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cUiRfpExCSoJWZgjRjcNo8DjK6epIU2jPsV55qh+F1ygoDUItMhPeSljprttUJqSW
-         XEehcaf3s0dtsv36b/fUSvVuJKANuD+t2RLyUcsE5rM3XV+NvhbGCZDTm2snpgtJj9
-         Xgw9ADzRB4z1bUWqc3T0iQ8JwkHxVnVyJ2+X8+pI=
+        b=hkJNPkHXYFPyZCrwjsuWG7rNYxpznNC8VgHetNKvjm9kgllVsf0FRE+MPKuCYohrZ
+         9v+s81Mrd73RZs2rJI1BQGK2XVOjForsNhG+CaaGxIQuWTGM3RShE5WNZdNas9tShx
+         EmgCkxkzleTRA7fDFsci4MxLzC+EsXQEw+MJAeek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Korsnes <jkorsnes@cisco.com>,
-        Armando Visconti <armando.visconti@st.com>,
-        Jiri Kosina <jkosina@suse.cz>,
+Cc:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com,
         Alan Stern <stern@rowland.harvard.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/12] HID: core: fix off-by-one memset in hid_report_raw_event()
-Date:   Thu,  5 Mar 2020 12:15:50 -0500
-Message-Id: <20200305171559.30422-3-sashal@kernel.org>
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/19] HID: hiddev: Fix race in in hiddev_disconnect()
+Date:   Thu,  5 Mar 2020 12:15:26 -0500
+Message-Id: <20200305171540.30250-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171559.30422-1-sashal@kernel.org>
-References: <20200305171559.30422-1-sashal@kernel.org>
+In-Reply-To: <20200305171540.30250-1-sashal@kernel.org>
+References: <20200305171540.30250-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,48 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Korsnes <jkorsnes@cisco.com>
+From: "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>
 
-[ Upstream commit 5ebdffd25098898aff1249ae2f7dbfddd76d8f8f ]
+[ Upstream commit 5c02c447eaeda29d3da121a2e17b97ccaf579b51 ]
 
-In case a report is greater than HID_MAX_BUFFER_SIZE, it is truncated,
-but the report-number byte is not correctly handled. This results in a
-off-by-one in the following memset, causing a kernel Oops and ensuing
-system crash.
+Syzbot reports that "hiddev" is used after it's free in hiddev_disconnect().
+The hiddev_disconnect() function sets "hiddev->exist = 0;" so
+hiddev_release() can free it as soon as we drop the "existancelock"
+lock.  This patch moves the mutex_unlock(&hiddev->existancelock) until
+after we have finished using it.
 
-Note: With commit 8ec321e96e05 ("HID: Fix slab-out-of-bounds read in
-hid_field_extract") I no longer hit the kernel Oops as we instead fail
-"controlled" at probe if there is a report too long in the HID
-report-descriptor. hid_report_raw_event() is an exported symbol, so
-presumabely we cannot always rely on this being the case.
-
-Fixes: 966922f26c7f ("HID: fix a crash in hid_report_raw_event()
-                     function.")
-Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
-Cc: Armando Visconti <armando.visconti@st.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com
+Fixes: 7f77897ef2b6 ("HID: hiddev: fix potential use-after-free")
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hid/usbhid/hiddev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index e382d6f23097d..b4b9d81525369 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -1547,7 +1547,9 @@ int hid_report_raw_event(struct hid_device *hid, int type, u8 *data, u32 size,
+diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
+index bccd97cdc53f9..d9602f3a359e1 100644
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -954,9 +954,9 @@ void hiddev_disconnect(struct hid_device *hid)
+ 	hiddev->exist = 0;
  
- 	rsize = ((report->size - 1) >> 3) + 1;
- 
--	if (rsize > HID_MAX_BUFFER_SIZE)
-+	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
-+		rsize = HID_MAX_BUFFER_SIZE - 1;
-+	else if (rsize > HID_MAX_BUFFER_SIZE)
- 		rsize = HID_MAX_BUFFER_SIZE;
- 
- 	if (csize < rsize) {
+ 	if (hiddev->open) {
+-		mutex_unlock(&hiddev->existancelock);
+ 		hid_hw_close(hiddev->hid);
+ 		wake_up_interruptible(&hiddev->wait);
++		mutex_unlock(&hiddev->existancelock);
+ 	} else {
+ 		mutex_unlock(&hiddev->existancelock);
+ 		kfree(hiddev);
 -- 
 2.20.1
 
