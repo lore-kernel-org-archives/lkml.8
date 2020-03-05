@@ -2,106 +2,77 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB81C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32459C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC96B2146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583388189;
-	bh=XW2ZNSFlFmMVeYr0rjiUOC93TZvwKYxKJYjlF/01hdA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1YDoHJTUQL/62G3Kb+F1f7B6RUlR4sKPTuInilspmS8zVng9UG/5jUwliV1O4W0c
-	 DWiYtxmLTdN/gyQifIs6f9XcidsEhtJESzxbePC8/ccM0Yeoq+TCBrEqLAkLj6s5ha
-	 ch/KzjjDq/OG3aQYYunuKF92zx2YfVBuqQ/Toluw=
+	by mail.kernel.org (Postfix) with ESMTP id 011F8208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:06:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="hqjjb1oP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgCEGDI (ORCPT
+        id S1726020AbgCEGGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 01:03:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36692 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 01:06:22 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:60245 "EHLO frisell.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgCEGDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 01:03:08 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 456A0208CD;
-        Thu,  5 Mar 2020 06:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583388187;
-        bh=XW2ZNSFlFmMVeYr0rjiUOC93TZvwKYxKJYjlF/01hdA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZAOY8gEF3weg5zbUQESI7T9fEbk+NiKoEOYFZAS3Q7E5furtEWQwONyMw5mxRQvzf
-         VXJXkOU0DZvl5XmbDLSBAblv/ubo+0iZ9O/ljmHYmeIusQIxLYQI4gdtMl6Lme5DSt
-         O3KtHGaIHWr5t+yeS92QMnEz5Y58DFnY9uPIJB34=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [BUGFIX PATCH] tools: Let O= makes handle a relative path with -C option
-Date:   Thu,  5 Mar 2020 15:03:03 +0900
-Message-Id: <158338818292.25448.7161196505598269976.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org>
-References: <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org>
-User-Agent: StGit/0.17.1-dirty
+        id S1725838AbgCEGGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 01:06:22 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 08a2443c;
+        Thu, 5 Mar 2020 06:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
+        :subject:date:message-id:in-reply-to:references:mime-version
+        :content-transfer-encoding; s=mail; bh=qf7iBnoAP1jFyvRyxTLvRHeDZ
+        Gw=; b=hqjjb1oPQyzgtuRHxsmeTnPMhLgFEGmjPwrYAhrnEz+awDd8V/6AG0VQE
+        WSf3c5f5/Hq2YKx0cNHxhawSVObj9ZfX3ddsaMbq3qQP1ycGVZ+QtnVmRxNUWgqm
+        I6MY0pvNK+oU9qCybL7j7U3FmpgOYhDsOl+oQR3NCsw+R5JxerzupqC0Ru+XOAOW
+        78BmlQkh9mPkIHnO7WRddf+X2we6OGpN1e3gck80CAgXYny4dFzBgAP5GZ+HyjNK
+        QcTrIi+IsUD6rT8ik6Jsjyvm4lE52toOye2GjaHLGLr83qUzZWxV9XnCdEraxCTQ
+        umpWOehP+LLOvv9GKiIwRvBuJR5qA==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f156eac8 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 5 Mar 2020 06:01:41 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     pbonzini@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: [PATCH v2] KVM: fix Kconfig menu text for -Werror
+Date:   Thu,  5 Mar 2020 14:06:04 +0800
+Message-Id: <20200305060604.8076-1-Jason@zx2c4.com>
+In-Reply-To: <20200304190750.GF21662@linux.intel.com>
+References: <20200304190750.GF21662@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I compiled tools/bootconfig from top directory with
--C option, the O= option didn't work correctly if I passed
-a relative path.
+This was evidently copy and pasted from the i915 driver, but the text
+wasn't updated.
 
-  $ make O=./builddir/ -C tools/bootconfig/
-  make: Entering directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
-  ../scripts/Makefile.include:4: *** O=./builddir/ does not exist.  Stop.
-  make: Leaving directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
-
-The O= directory existence check failed because the check
-script ran in the build target directory instead of the
-directory where I ran the make command.
-
-To fix that, once change directory to $(PWD) and check O=
-directory, since the PWD is set to where the make command
-runs.
-
-Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Fixes: 4f337faf1c55 ("KVM: allow disabling -Werror")
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
 ---
- tools/scripts/Makefile.include |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index ded7a950dc40..6d2f3a1b2249 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- ifneq ($(O),)
- ifeq ($(origin O), command line)
--	dummy := $(if $(shell test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
--	ABSOLUTE_O := $(shell cd $(O) ; pwd)
-+	dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
-+	ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
- 	OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
- 	COMMAND_O := O=$(ABSOLUTE_O)
- ifeq ($(objtree),)
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 1bb4927030af..9fea0757db92 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -68,7 +68,7 @@ config KVM_WERROR
+ 	depends on (X86_64 && !KASAN) || !COMPILE_TEST
+ 	depends on EXPERT
+ 	help
+-	  Add -Werror to the build flags for (and only for) i915.ko.
++	  Add -Werror to the build flags for KVM.
+ 
+ 	  If in doubt, say "N".
+ 
+-- 
+2.25.1
 
