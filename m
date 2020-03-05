@@ -2,147 +2,148 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D7DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AC0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E242F20828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:22:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K6lRtbIF"
+	by mail.kernel.org (Postfix) with ESMTP id D319120828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:22:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583418168;
+	bh=TJrx6Vvx7IBPDbBVQ+OIz/BKikJsmMyfPgbEMTzoUJ8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=NKFTK1PRZ/85m8z8FM6LD+JU9CUvlp+LglbaF1XbFYBjSJbgrikAktzhAynizZI6U
+	 SHt7nu3xRjFYjYYugt0KLLSNpHuyXja7/mTeNjnhj2SLk0rAOmXVfgqrsPKoBH42qg
+	 Ly1duDfUV5/h/IfPnPkxErcvn9tMsdaq1HtEs9gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgCEOWp (ORCPT
+        id S1726317AbgCEOWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:22:45 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42430 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725944AbgCEOWp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:22:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583418165;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6noagWxZ5YiSaEFMdQzCHre9EJD3npDKEFOYBbGNFrU=;
-        b=K6lRtbIFnpB7TQ3j7+DzFzYuiSMr/Jd7aUBnptwA0FfV8paPGfcewQtzDpo3g2Oc7Iy3C5
-        DOQhPDPe0E1Eax1sFyaqmPtgAQcXfYvJbFIHUiswsVqR2h8V1GBfV5CMjzLl0MCON76re4
-        aQQhNAn8FfKaNyn6T8oFiZBYrrL/zJo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-329-PAs0eptSNEKmdrGC8pDG_g-1; Thu, 05 Mar 2020 09:22:41 -0500
-X-MC-Unique: PAs0eptSNEKmdrGC8pDG_g-1
-Received: by mail-wm1-f69.google.com with SMTP id w12so1643624wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:22:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6noagWxZ5YiSaEFMdQzCHre9EJD3npDKEFOYBbGNFrU=;
-        b=XrCWbKZqO7kZTjtNS9T2OIIc2h4MvsSEhq96BolEfqT9F53sztPNDEYTeJ+5VKXIgJ
-         uUdf7cSk92e6XrSyOaeyyC1R27U+Byq6Wwtwu7c2r7peTGsPvequ9m6KwTcyCQ0OvfsM
-         YwuKe85qHt+NeSwejPKZYRZ7WdpVEa/qwijSv5DkZLJnp/Bj+LkDBwA8RYox5Tzamu9G
-         7kzKtB9tme507oMHb3RmUsgedTCWiTOOW5X1OztncJnew06lb9OVq47bDV0emziQh8dD
-         FFRRuXSW+LJcPL1QKFuqN0R09qWu2YRTWpy0BP/rcnZVI7bjmRJ9LgAYZU58/o6dOpLs
-         3rwQ==
-X-Gm-Message-State: ANhLgQ0/J6ZLV+gTdIj2R8tJTLxqIZrLrU/lkT2h6UL9RE/FzBF7HYnS
-        xyk2tuGkvRHKEdWcFmH0z4+GxY9J1HF60+NZ1tHuR5fA/FWeHUPXDn/NZPPOyDK//GVV54PPEJs
-        3bKS65FlrTNuZQITbeQjhKkZc
-X-Received: by 2002:a5d:6146:: with SMTP id y6mr10560244wrt.107.1583418159921;
-        Thu, 05 Mar 2020 06:22:39 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsVPpJ1Cv7XI3CgGNNoNJ0eAJgUXSnFi1wfWwG4CQQJ1K56cUcw027pOLSq+CkOV+HtsaXJ9g==
-X-Received: by 2002:a5d:6146:: with SMTP id y6mr10560228wrt.107.1583418159722;
-        Thu, 05 Mar 2020 06:22:39 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id z2sm40199326wrq.95.2020.03.05.06.22.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 06:22:39 -0800 (PST)
-Subject: Re: [PATCH][next] drm/vboxvideo/vboxvideo.h: Replace zero-length
- array with flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200305105558.GA19124@embeddedor>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <8e2ab9a2-fb47-1d61-d09c-0510ad5ee5ff@redhat.com>
-Date:   Thu, 5 Mar 2020 15:22:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 09:22:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbgCEOWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 09:22:46 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACFAB2073D;
+        Thu,  5 Mar 2020 14:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583418165;
+        bh=TJrx6Vvx7IBPDbBVQ+OIz/BKikJsmMyfPgbEMTzoUJ8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=u7vjh0iKHd4Ot1+Kf4/5E1OvS+n+5cebbcrUIk2mcJNUkYzcCZljz23uOmj7LFN9U
+         aw4mICHUMS87+HRBERcKpZBDlwRbKbctUZqI8V/x6kD6Z5rvdLw0qWlQiHGWoGX/M2
+         jsM1qtZdlpJnYrWhdBeqnRv3vtS2KAxZzuynIxWg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7BBD435226D4; Thu,  5 Mar 2020 06:22:45 -0800 (PST)
+Date:   Thu, 5 Mar 2020 06:22:45 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: Pinning down a blocked task to extract diagnostics
+Message-ID: <20200305142245.GB2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200305005049.GA21120@paulmck-ThinkPad-P72>
+ <20200305080755.GS2596@hirez.programming.kicks-ass.net>
+ <20200305081337.GA2619@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200305105558.GA19124@embeddedor>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305081337.GA2619@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Mar 05, 2020 at 09:13:37AM +0100, Peter Zijlstra wrote:
+> On Thu, Mar 05, 2020 at 09:07:55AM +0100, Peter Zijlstra wrote:
+> > On Wed, Mar 04, 2020 at 04:50:49PM -0800, Paul E. McKenney wrote:
+> > > Hello!
+> > > 
+> > > Suppose that I need to extract diagnostics information from a blocked
+> > > task, but that I absolutely cannot tolerate this task awakening in the
+> > > midst of this extraction process.  Is the following code the right way
+> > > to make this work given a task "t"?
+> > > 
+> > > 	raw_spin_lock_irq(&t->pi_lock);
+> > > 	if (t->on_rq) {
+> > > 		/* Task no longer blocked, so ignore it. */
+> > > 	} else {
+> > > 		/* Extract consistent diagnostic information. */
+> > > 	}
+> > > 	raw_spin_unlock_irq(&t->pi_lock);
+> > > 
+> > > It looks like all the wakeup paths acquire ->pi_lock, but I figured I
+> > > should actually ask...
+> > 
+> > Close, the thing pi_lock actually guards is the t->state transition *to*
+> > TASK_WAKING/TASK_RUNNING, so something like this:
+> 
+> Almost, we must indeed also check ->on_rq, otherwise it might change the
+> state back itself.
+> 
+> > 
+> > 	raw_spin_lock_irq(&t->pi_lock);
+> > 	switch (t->state) {
+> > 	case TASK_RUNNING:
+> > 	case TASK_WAKING:
+> > 		/* ignore */
+> > 		break;
+> > 
+> > 	default:
+> 		if (t->on_rq)
+> 			break;
+> 
+> > 		/* Extract consistent diagnostic information. */
+> > 		break;
+> > 	}
+> > 	raw_spin_unlock_irq(&t->pi_lock);
+> > 
+> > ought to work. But if you're going to do this, please add a reference to
+> > that code in a comment on top of try_to_wake_up(), such that we can
+> > later find all the code that relies on this.
 
-On 3/5/20 11:55 AM, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->          int stuff;
->          struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+How about if I add something like this, located right by try_to_wake_up()?
 
-Patch looks good to me:
+	bool try_to_keep_sleeping(struct task_struct *t)
+	{
+		raw_spin_lock_irq(&t->pi_lock);
+		switch (t->state) {
+		case TASK_RUNNING:
+		case TASK_WAKING:
+			raw_spin_unlock_irq(&t->pi_lock);
+			return false;
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+		default:
+			if (t->on_rq) {
+				raw_spin_unlock_irq(&t->pi_lock);
+				return false;
+			}
 
-Regards,
+			/* OK to extract consistent diagnostic information. */
+			return true;
+		}
+		/* NOTREACHED */
+	}
 
-Hans
+Then a use might look like this:
 
+	if (try_to_keep_sleeping(t))
+		/* Extract consistent diagnostic information. */
+		raw_spin_unlock_irq(&t->pi_lock);
+	} else {
+		/* Woo-hoo!  It started running again!!! */
+	}
 
-> ---
->   drivers/gpu/drm/vboxvideo/vboxvideo.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/vboxvideo/vboxvideo.h b/drivers/gpu/drm/vboxvideo/vboxvideo.h
-> index 0592004f71aa..a5de40fe1a76 100644
-> --- a/drivers/gpu/drm/vboxvideo/vboxvideo.h
-> +++ b/drivers/gpu/drm/vboxvideo/vboxvideo.h
-> @@ -138,7 +138,7 @@ struct vbva_buffer {
->   
->   	u32 data_len;
->   	/* variable size for the rest of the vbva_buffer area in VRAM. */
-> -	u8 data[0];
-> +	u8 data[];
->   } __packed;
->   
->   #define VBVA_MAX_RECORD_SIZE (128 * 1024 * 1024)
-> 
+Is there a better way to approach this?
 
+							Thanx, Paul
