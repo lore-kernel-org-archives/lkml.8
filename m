@@ -2,33 +2,36 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B19CC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E70BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6902073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F39D2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 23:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgCEXLD (ORCPT
+        id S1726251AbgCEXQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 18:11:03 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:64946 "EHLO
+        Thu, 5 Mar 2020 18:16:53 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:44259 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCEXLC (ORCPT
+        with ESMTP id S1726049AbgCEXQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 18:11:02 -0500
+        Thu, 5 Mar 2020 18:16:53 -0500
 Received: from 79.184.237.41.ipv4.supernova.orange.pl (79.184.237.41) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id b4ff29ff2f5c3147; Fri, 6 Mar 2020 00:11:01 +0100
+ id bb12227a4152f3b0; Fri, 6 Mar 2020 00:16:51 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/2] ACPI: EC: More updates related to initialization
-Date:   Fri, 06 Mar 2020 00:09:18 +0100
-Message-ID: <2656743.kaaXMJBMQx@kreacher>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH 2/2] ACPI: EC: Do not clear boot_ec_is_ecdt in acpi_ec_add()
+Date:   Fri, 06 Mar 2020 00:15:24 +0100
+Message-ID: <3824376.HkUXRVnQtS@kreacher>
+In-Reply-To: <2656743.kaaXMJBMQx@kreacher>
+References: <2656743.kaaXMJBMQx@kreacher>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -37,16 +40,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-This series contains two more cleanup patches for ACPI EC initialization on top
-of the series at
+The reason for clearing boot_ec_is_ecdt in acpi_ec_add() (if a
+PNP0C09 device object matching the ECDT boot EC had been found in
+the namespace) was to cause acpi_ec_ecdt_start() to return early,
+but since the latter does not look at boot_ec_is_ecdt any more,
+acpi_ec_add() need not clear it.
 
-https://lore.kernel.org/linux-acpi/2411774.6kdisLRoUK@kreacher/T/#u
+Moreover, doing that may be confusing as it may cause "DSDT" to be
+printed instead of "ECDT" in the EC initialization completion
+message, so stop doing it.
 
-Please refer to the patch changelogs for details.
+While at it, split the EC initialization completion message into
+two messages, one regarding the boot EC and another one printed
+regardless of whether or not the EC at hand is the boot one.
 
-Thanks!
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/ec.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+index 9e7ee6ae4706..8025a070335e 100644
+--- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -1621,7 +1621,6 @@ static int acpi_ec_add(struct acpi_device *device)
+ 
+ 		if (boot_ec && ec->command_addr == boot_ec->command_addr &&
+ 		    ec->data_addr == boot_ec->data_addr) {
+-			boot_ec_is_ecdt = false;
+ 			/*
+ 			 * Trust PNP0C09 namespace location rather than
+ 			 * ECDT ID. But trust ECDT GPE rather than _GPE
+@@ -1641,9 +1640,12 @@ static int acpi_ec_add(struct acpi_device *device)
+ 
+ 	if (ec == boot_ec)
+ 		acpi_handle_info(boot_ec->handle,
+-				 "Boot %s EC used to handle transactions and events\n",
++				 "Boot %s EC initialization complete\n",
+ 				 boot_ec_is_ecdt ? "ECDT" : "DSDT");
+ 
++	acpi_handle_info(ec->handle,
++			 "EC: Used to handle transactions and events\n");
++
+ 	device->driver_data = ec;
+ 
+ 	ret = !!request_region(ec->data_addr, 1, "EC data");
+-- 
+2.16.4
+
 
 
 
