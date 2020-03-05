@@ -2,108 +2,144 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F23C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B56EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A52020732
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:50:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WQLH2x8p"
+	by mail.kernel.org (Postfix) with ESMTP id 3C48520848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgCEOuP (ORCPT
+        id S1726910AbgCEOur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:50:15 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:58408 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726222AbgCEOuO (ORCPT
+        Thu, 5 Mar 2020 09:50:47 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55388 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgCEOuq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:50:14 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583419814; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=EQk0KCf8GS+eddjuRJP/6UWlL8WvGJW4Y9Or4QcCRFc=; b=WQLH2x8p80hZv5kHZu9J0IwvV82/J7V6REWVadRu+iW2AtQX+MD4yh4gZjA3CsKkZPC0pV9R
- C1SMg/MWB62l2TT85131uQRF8YC9CWxx7KVJ8YTsV3quwK2YYGsG302euVuIyN3XHXNZp2C7
- 3j4Zkt7u9GIFn/OSQ2mF9FMrozY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6111a0.7faf999d98f0-smtp-out-n01;
- Thu, 05 Mar 2020 14:50:08 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6F02EC447A0; Thu,  5 Mar 2020 14:50:08 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC02CC43383;
-        Thu,  5 Mar 2020 14:50:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC02CC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with flexible-array member
-References: <20200305111216.GA24982@embeddedor>
-Date:   Thu, 05 Mar 2020 16:50:03 +0200
-In-Reply-To: <20200305111216.GA24982@embeddedor> (Gustavo A. R. Silva's
-        message of "Thu, 5 Mar 2020 05:12:16 -0600")
-Message-ID: <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 5 Mar 2020 09:50:46 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 41E97295EE7
+Subject: Re: [PATCH v3 0/4] Implement FUTEX_WAIT_MULTIPLE operation
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "kernel@collabora.com" <kernel@collabora.com>
+References: <20200229105130.15436-1-hdanton@sina.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <fdcd5f32-803f-7665-22a2-d674840a3e54@collabora.com>
+Date:   Thu, 5 Mar 2020 11:48:07 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200229105130.15436-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+On 2/29/20 7:51 AM, Hillf Danton wrote:
+> 
+> On Thu, 13 Feb 2020 18:45:21 -0300 Andre Almeida wrote:
+>>
+>> When a write or a read operation in an eventfd file succeeds, it will try
+>> to wake up all threads that are waiting to perform some operation to
+>> the file. The lock (ctx->wqh.lock) that hold the access to the file value
+>> (ctx->count) is the same lock used to control access the waitqueue. When
+>> all those those thread woke, they will compete to get this lock. Along
+>> with that, the poll() also manipulates the waitqueue and need to hold
+>> this same lock. This lock is specially hard to acquire when poll() calls
+>> poll_freewait(), where it tries to free all waitqueues associated with
+>> this poll. While doing that, it will compete with a lot of read and
+>> write operations that have been waken.
+> 
+> Want to know if a rwsem is likely to help mitigate the tension between the
+> readers and writers in your workloads.
+> 
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
->
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
->
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/net/wireless/zydas/zd1211rw/zd_usb.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks for the suggestion Hillf. However, keep in mind that the lock
+that is causing the tension (ctx->wqh.lock) is shared between eventfd()
+and poll() syscall, so a solution to help mitigate the tension would
+need to be shared between both codes. And since wqh.lock isn't a
+read/write lock, even if a lot of readers manage to get this lock in
+parallel, they will compete wqh.lock
 
-"zd1211rw: " is enough, no need to have the filename in the title.
+> --- a/fs/eventfd.c
+> +++ b/fs/eventfd.c
+> @@ -40,6 +40,7 @@ struct eventfd_ctx {
+>  	__u64 count;
+>  	unsigned int flags;
+>  	int id;
+> +	struct rw_semaphore rwsem;
+>  };
+>  
+>  /**
+> @@ -212,6 +213,8 @@ static ssize_t eventfd_read(struct file
+>  	if (count < sizeof(ucnt))
+>  		return -EINVAL;
+>  
+> +	/* take sem in write mode for event read */
+> +	down_write(&ctx->rwsem);
+>  	spin_lock_irq(&ctx->wqh.lock);
+>  	res = -EAGAIN;
+>  	if (ctx->count > 0)
+> @@ -229,7 +232,9 @@ static ssize_t eventfd_read(struct file
+>  				break;
+>  			}
+>  			spin_unlock_irq(&ctx->wqh.lock);
+> +			up_write(&ctx->rwsem);
+>  			schedule();
+> +			down_write(&ctx->rwsem);
+>  			spin_lock_irq(&ctx->wqh.lock);
+>  		}
+>  		__remove_wait_queue(&ctx->wqh, &wait);
+> @@ -241,6 +246,7 @@ static ssize_t eventfd_read(struct file
+>  			wake_up_locked_poll(&ctx->wqh, EPOLLOUT);
+>  	}
+>  	spin_unlock_irq(&ctx->wqh.lock);
+> +	up_write(&ctx->rwsem);
+>  
+>  	if (res > 0 && put_user(ucnt, (__u64 __user *)buf))
+>  		return -EFAULT;
+> @@ -262,6 +268,8 @@ static ssize_t eventfd_write(struct file
+>  		return -EFAULT;
+>  	if (ucnt == ULLONG_MAX)
+>  		return -EINVAL;
+> +	/* take sem in read mode for event write */
+> +	down_read(&ctx->rwsem);
+>  	spin_lock_irq(&ctx->wqh.lock);
+>  	res = -EAGAIN;
+>  	if (ULLONG_MAX - ctx->count > ucnt)
+> @@ -279,7 +287,9 @@ static ssize_t eventfd_write(struct file
+>  				break;
+>  			}
+>  			spin_unlock_irq(&ctx->wqh.lock);
+> +			up_read(&ctx->rwsem);
+>  			schedule();
+> +			down_read(&ctx->rwsem);
+>  			spin_lock_irq(&ctx->wqh.lock);
+>  		}
+>  		__remove_wait_queue(&ctx->wqh, &wait);
+> @@ -291,6 +301,7 @@ static ssize_t eventfd_write(struct file
+>  			wake_up_locked_poll(&ctx->wqh, EPOLLIN);
+>  	}
+>  	spin_unlock_irq(&ctx->wqh.lock);
+> +	up_read(&ctx->rwsem);
+>  
+>  	return res;
+>  }
+> @@ -408,6 +419,7 @@ static int do_eventfd(unsigned int count
+>  	init_waitqueue_head(&ctx->wqh);
+>  	ctx->count = count;
+>  	ctx->flags = flags;
+> +	init_rwsem(&ctx->rwsem);
+>  	ctx->id = ida_simple_get(&eventfd_ida, 0, 0, GFP_KERNEL);
+>  
+>  	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
+> 
 
-But I asked this already in an earlier patch, who prefers this format?
-It already got opposition so I'm not sure what to do.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
