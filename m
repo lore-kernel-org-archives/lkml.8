@@ -2,214 +2,113 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AE4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57BCC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CAB207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD5420801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:17:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QiMaHeiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbgCEQRB (ORCPT
+        id S1726317AbgCEQRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:17:01 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56738 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgCEQRB (ORCPT
+        Thu, 5 Mar 2020 11:17:04 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33387 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgCEQRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:17:01 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 19154296C97
-Subject: Re: 'simple' futex interface [Was: [PATCH v3 1/4] futex: Implement
- mechanism to wait on any of several futexes]
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Florian Weimer <fweimer@redhat.com>
-Cc:     "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        krisman@collabora.com, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        ryao@gentoo.org, dvhart@infradead.org, mingo@redhat.com,
-        z.figura12@gmail.com, steven@valvesoftware.com,
-        steven@liquorix.net, malteskarupke@web.de, carlos@redhat.com,
-        adhemerval.zanella@linaro.org, libc-alpha@sourceware.org,
-        linux-api@vger.kernel.org
-References: <20200228190717.GM18400@hirez.programming.kicks-ass.net>
- <20200228194958.GO14946@hirez.programming.kicks-ass.net>
- <87tv3aflqm.fsf@nanos.tec.linutronix.de>
- <967d5047-2cb6-d6d8-6107-edb99a4c9696@valvesoftware.com>
- <87o8thg031.fsf@nanos.tec.linutronix.de>
- <beb82055-96fa-cb64-a06e-9d7a0946587b@valvesoftware.com>
- <20200303120050.GC2596@hirez.programming.kicks-ass.net>
- <87pndth9ur.fsf@oldenburg2.str.redhat.com>
- <20200303132150.GD2596@hirez.programming.kicks-ass.net>
- <878skhh7og.fsf@oldenburg2.str.redhat.com>
- <20200303150104.GE2596@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
-Message-ID: <52406c54-60b3-dcfe-65d8-4c425459e37b@collabora.com>
-Date:   Thu, 5 Mar 2020 13:14:17 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 11:17:03 -0500
+Received: by mail-io1-f65.google.com with SMTP id r15so7126048iog.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:17:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EKjzEJMa9fe0PK3n0GkSSdo/FdjChSUpIwJDlTYh97U=;
+        b=QiMaHeiSTJFP6UFJmbCXKjB+4nX0XCEjJu+Rsrs6hvaZ9brVoePcMg71hYOmttDytV
+         Dhk1MdOs+qEZGatjDQ4OlqOsagcAfN6ua+iOtlMCg4Vu25OgIbsoGMIkI+TWobK3/lz2
+         o78biGJDirONtSS2xRidOq8Mq6L2qZ3tTogPcEaKZ+XxidOZqmPXMBScwoIS6xajXiBn
+         MdnAXtKjreVO43RPngwPA8kFjwZfPAjIF/Cfu4tjSQZWDBHgMnCokRplyIQqtnNPKk3z
+         v3Xy7ZlT8IAc789E7dXAto/cJFpLbHbSA0H7ZdET+f/HWzkny87uDeD9uBWle7cMAqni
+         qjVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EKjzEJMa9fe0PK3n0GkSSdo/FdjChSUpIwJDlTYh97U=;
+        b=dlwmznAAgOtsidQ8r7HFXEB9z7U+tJzGGLI7g/ryeuNtHlQNnzSFuyV52jkLKEgDd2
+         qe1Utk4u405zdxyLwKp7WJvKJAAPPbvsIQDIDDBdwNGxKr3FgtDwSG3xSA33l5IuKXty
+         7Q+HIY9k7lxrW2cXyzJxg1mL2Nq+Lr7y1Vp3xcwMSN3HAAQKE4UoiFxrZLAn/uc1HkxQ
+         iTwx/zLUb6s1iKfCyWzw0dPMTgQmdBg5v785Cw9BqyT9kedlOnnLD4Exob4pYzBCZf51
+         3MwG0hAHViZyH7xgLuKdfmbUzBn4SNxHAbxImq/QsnY+CAKDpxnSKwlkGZJcm2d7ZmPR
+         EV9w==
+X-Gm-Message-State: ANhLgQ2ArPjAQ2NiDEoOvl91ITD5WC2fK5T/0/zPF3IyRC5qJrLHrK+U
+        QrjakLC46q+zf3Pn5kGTDNF90ziGBX523b32yGPcTg==
+X-Google-Smtp-Source: ADFU+vs/EhZ+fp249v7LdQYx8Y8WWjr0qHKosDWHsPMEx9WRmNCCS8qpg2xo/DQYa5d00clxO7cglhbSPdx+Pwph6Us=
+X-Received: by 2002:a5d:9b94:: with SMTP id r20mr7035294iom.140.1583425022687;
+ Thu, 05 Mar 2020 08:17:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200303150104.GE2596@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200304142628.8471-1-NShubin@topcon.com>
+In-Reply-To: <20200304142628.8471-1-NShubin@topcon.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 5 Mar 2020 09:16:51 -0700
+Message-ID: <CANLsYkzPROdphvmtpZ6YiajZ2dYLrojC-rGYkq4jK2yzTnAJ5A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] remoteproc: imx_rproc: dummy kick method
+To:     Nikita Shubin <NShubin@topcon.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 12:01 PM, Peter Zijlstra wrote:
-> On Tue, Mar 03, 2020 at 02:47:11PM +0100, Florian Weimer wrote:
->> (added missing Cc: for linux-api, better late than never I guess)
->>
->> * Peter Zijlstra:
->>
->>>> What's the actual type of *uaddr?  Does it vary by size (which I assume
->>>> is in bits?)?  Are there alignment constraints?
->>>
->>> Yeah, u8, u16, u32, u64 depending on the size specified in flags.
->>> Naturally aligned.
->>
->> So 4-byte alignment for u32 and 8-byte alignment for u64 on all
->> architectures?
->>
->> (I really want to nail this down, sorry.)
-> 
-> Exactly so.
-> 
->>>> These system calls seemed to be type-polymorphic still, which is
->>>> problematic for defining a really nice C interface.  I would really like
->>>> to have a strongly typed interface for this, with a nice struct futex
->>>> wrapper type (even if it means that we need four of them).
->>>
->>> You mean like: futex_wait1(u8 *,...) futex_wait2(u16 *,...)
->>> futex_wait4(u32 *,...) etc.. ?
->>>
->>> I suppose making it 16 or so syscalls (more if we want WAKE_OP or
->>> requeue across size) is a bit daft, so yeah, sucks.
->>
->> We could abstract this in the userspace wrapper.  It would help to have
->> an explicit size argument, or at least an extension-safe way to pass
->> this information to the kernel.  I guess if everything else fails, we
->> could use the flags bits for that, as long as it is clear that the
->> interface will only support these six types (four without NUMA, two with
->> NUMA).
-> 
-> The problem is the cmp_requeue syscall, that already has 6 arguments. I
-> don't see where else than the flags field we can stuff this :/
-> 
->>>> Will all architectures support all sizes?  If not, how do we probe which
->>>> size/flags combinations are supported?
->>>
->>> Up to the native word size (long), IOW ILP32 will not support u64.
->>
->> Many ILP32 targets could support atomic accesses on 8-byte storage
->> units, as long as there is 8-byte alignment.  But given how common
->> 4-byte-align u64 is on 32-bit, maybe that's not such a good idea.
-> 
-> 'Many' might be over-stating it, but yeah, there are definitely a bunch
-> of them that can do it (x86, armv7-lpae, arc, are the ones I know from
-> memory). The problem is that the syscalls then look like:
-> 
->   sys_futex_wait(void *uaddr, u64 val, unsigned long flags, ktime_t *timo);
->   struct futex_wait {
-> 	  void *uaddr;
-> 	  u64 val;
-> 	  u64 flags;
->   };
->   sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
-> 		  u64 flags, ktime_t *timo);
->   sys_futex_wake(void *uaddr, unsigned int nr, u64 flags);
->   sys_futex_cmp_requeue(void *uaddr1, void *uaddr2, unsigned int nr_wake,
-> 		  unsigned int nr_requeue, u64 cmpval, unsigned long flags);
-> 
-> And that makes 7 arguments for cmp_requeue, which can't be. Maybe we if
-> combine nr_wake and nr_requeue in one as 2 u16... ?
-> 
-> And then we need to go detector if the platform supports it or not..
-> 
+On Wed, 4 Mar 2020 at 07:25, Nikita Shubin <NShubin@topcon.com> wrote:
+>
+> add kick method that does nothing, to avoid errors in rproc_virtio_notify.
+>
+> Signed-off-by: Nikita Shubin <NShubin@topcon.com>
+> ---
+>  drivers/remoteproc/imx_rproc.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index 3e72b6f38d4b..796b6b86550a 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -240,9 +240,15 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+>         return va;
+>  }
+>
+> +static void imx_rproc_kick(struct rproc *rproc, int vqid)
+> +{
+> +
+> +}
+> +
 
-Thanks everyone for the feedback around our mechanism. Are the
-performance benefits of implementing a syscall to wait on a single futex
-significant enough to maintain it instead of just using
-`sys_futex_waitv()` with `nr_waiters = 1`? If we join both cases in a
-single interface, we may even add a new member for NUMA hint in `struct
-futex_wait`.
+If rproc::kick() is empty, how does the MCU know there is packets to
+fetch in the virtio queues?
 
->>>>> For NUMA I propose that when NUMA_FLAG is set, uaddr-4 will be 'int
->>>>> node_id', with the following semantics:
->>>>>
->>>>>  - on WAIT, node_id is read and when 0 <= node_id <= nr_nodes, is
->>>>>    directly used to index into per-node hash-tables. When -1, it is
->>>>>    replaced by the current node_id and an smp_mb() is issued before we
->>>>>    load and compare the @uaddr.
->>>>>
->>>>>  - on WAKE/REQUEUE, it is an immediate index.
->>>>
->>>> Does this mean the first waiter determines the NUMA index, and all
->>>> future waiters use the same chain even if they are on different nodes?
->>>
->>> Every new waiter could (re)set node_id, after all, when its not actually
->>> waiting, nobody cares what's in that field.
->>>
->>>> I think documenting this as a node index would be a mistake.  It could
->>>> be an arbitrary hint for locating the corresponding kernel data
->>>> structures.
->>>
->>> Nah, it allows explicit placement, after all, we have set_mempolicy()
->>> and sched_setaffinity() and all the other NUMA crud so that programs
->>> that think they know what they're doing, can do explicit placement.
->>
->> But I'm not sure if it makes sense to read the node ID from the
->> neighboring value of a futex used in this way.  Or do you think that
->> userspace might set the node ID to help the kernel implementation, and
->> not just relying on it to be set by the kernel after initializing it to
->> -1?
-> 
-> I'm fairly sure that there will be a number of users that will
-> definitely want to do that; this would be the same people that use
-> set_mempolicy() and sched_setaffinity() and do all the other numa
-> binding crud.
-> 
-> HPC, certain database vendors, possibly RT and KVM users.
-> 
->> Conversely, even for non-NUMA systems, a lookup hint that allows to
->> reduce in-kernel futex contention might be helpful.  If it's documented
->> to be the NUME node ID, that wouldn't be possible.
-> 
-> Do we really have significant contention on small systems? And how would
-> increasing the hash-table not solve that?
-> 
->>>>> Any invalid value with result in EINVAL.
->>>>
->>>> Using uaddr-4 is slightly tricky with a 64-bit futex value, due to the
->>>> need to maintain alignment and avoid padding.
->>>
->>> Yes, but it works, unlike uaddr+4 :-) Also, 1 and 2 byte futexes and
->>> NUMA_FLAG are incompatible due to this, but I feel short futexes and
->>> NUMA don't really make sense anyway, the only reason to use a short
->>> futex is to save space, so you don't want another 4 bytes for numa on
->>> top of that anyway.
->>
->> I think it would be much easier to make the NUMA hint the same size of
->> the futex, so 4 and 8 bytes.  It could also make sense to require 8 and
->> 16 byte alignment, to permit different implementation choices in the
->> future.
->>
->> So we'd have:
->>
->> struct futex8  { u8 value; };
->> struct futex16 { u16 value __attribute__ ((aligned (2))); };
->> struct futex32 { u32 value __attribute__ ((aligned (4))); };
->> struct futex64 { u64 value __attribute__ ((aligned (8))); };
->> struct futex32_numa { u32 value __attribute__ ((aligned (8))); u32 hint; };
->> struct futex64_numa { u64 value __attribute__ ((aligned (16))); u64 hint; };
-> 
-> That works, I suppose... although I'm sure someone will curse us for it
-> when trying to pack some extra things in his cacheline.
+>  static const struct rproc_ops imx_rproc_ops = {
+>         .start          = imx_rproc_start,
+>         .stop           = imx_rproc_stop,
+> +       .kick           = imx_rproc_kick,
+>         .da_to_va       = imx_rproc_da_to_va,
+>  };
+>
+> --
+> 2.24.1
 >
