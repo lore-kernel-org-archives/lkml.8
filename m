@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51243C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A895C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B131207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D25207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583429042;
-	bh=5iPR7XCLsazQnaDrcx+zT2BH4J3il51Isf+Aw05JtG4=;
+	s=default; t=1583429052;
+	bh=kJdYtdkXoUJqBCbsGNBYogiLr8GIFp4ngkilDarlmMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mOLcjH6uSRDdCgFL7t0F3CUtuCR7XNVFYp221WkjU/w1KzoU4GeJanRDS1D9739B5
-	 btH0SDvV/wZHhGcRwgSadB317bgp9IeOeYRiI4bguue37SixnVqmCIxDlLNHWFTMrN
-	 IsTBN+HQgTNFALI9lGcbZVnbg6dbg9Qg/JcwSaI4=
+	b=rqikmV0QQcDppSvCp8pySZ2XjswgHnTpxNrt1BqBMPKtSHsxR3oWfSIfedCrIwGgl
+	 OM0QhsFwPGJVkwrGyAveCfQiXUU6pN513nZVXnhIWaIsfo9OLvlXvYJfRGdqFxgg9m
+	 OPE9WnY9rpfmUa4O06zYbhOjZE16Je9waVS2yvEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgCERNb (ORCPT
+        id S1727883AbgCERYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:13:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38908 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:24:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbgCERN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:27 -0500
+        id S1726565AbgCERNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 016EC20870;
-        Thu,  5 Mar 2020 17:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC8AB21556;
+        Thu,  5 Mar 2020 17:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428407;
-        bh=5iPR7XCLsazQnaDrcx+zT2BH4J3il51Isf+Aw05JtG4=;
+        s=default; t=1583428403;
+        bh=kJdYtdkXoUJqBCbsGNBYogiLr8GIFp4ngkilDarlmMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PI8C1xyCw6UrWmS9ffswNMbPa4dKTI4bKgFUYA8nNOnxn+70/Y6WAiw43AcBm2aUb
-         ljHX5rAUPLAI8EHHfU4NVPoVlkBUG56w3OSmv+s3mRVODN77o5exRm3iOE3X0inLOw
-         2FGQX4isncVOy9OpOEgm4hRkYbt1eh3tK8Pez8mE=
+        b=e8ZeQqPe8yLy8Kpys082g7lf12klGpp12kfomwXWEVW+HLPJvnL/E7ca+LQM2FYSN
+         CPgW+GDoROKqhtstImWRaFy1VpVoCW5/IZfu2gjbTFDx9Qoz5F3bI3QVBTAyrdt6oh
+         U+YMKSdMx5krzFEDL65L5P1oEE+GTvX6yG4f14Xw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Victor Kamensky <kamensky@cisco.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
         Paul Burton <paulburton@kernel.org>,
         linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
         James Hogan <jhogan@kernel.org>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        bruce.ashfield@gmail.com, richard.purdie@linuxfoundation.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 12/67] mips: vdso: add build time check that no 'jalr t9' calls left
-Date:   Thu,  5 Mar 2020 12:12:13 -0500
-Message-Id: <20200305171309.29118-12-sashal@kernel.org>
+        richard.purdie@linuxfoundation.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 10/67] mips: vdso: fix 'jalr t9' crash in vdso code
+Date:   Thu,  5 Mar 2020 12:12:11 -0500
+Message-Id: <20200305171309.29118-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -65,63 +65,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Victor Kamensky <kamensky@cisco.com>
 
-[ Upstream commit 976c23af3ee5bd3447a7bfb6c356ceb4acf264a6 ]
+[ Upstream commit d3f703c4359ff06619b2322b91f69710453e6b6d ]
 
-vdso shared object cannot have GOT based PIC 'jalr t9' calls
-because nobody set GOT table in vdso. Contributing into vdso
-.o files are compiled in PIC mode and as result for internal
-static functions calls compiler will generate 'jalr t9'
-instructions. Those are supposed to be converted into PC
-relative 'bal' calls by linker when relocation are processed.
+Observed that when kernel is built with Yocto mips64-poky-linux-gcc,
+and mips64-poky-linux-gnun32-gcc toolchain, resulting vdso contains
+'jalr t9' instructions in its code and since in vdso case nobody
+sets GOT table code crashes when instruction reached. On other hand
+observed that when kernel is built mips-poky-linux-gcc toolchain, the
+same 'jalr t9' instruction are replaced with PC relative function
+calls using 'bal' instructions.
 
-Mips global GOT entries do have dynamic relocations and they
-will be caught by cmd_vdso_check Makefile rule. Static PIC
-calls go through mips local GOT entries that do not have
-dynamic relocations. For those 'jalr t9' calls could be present
-but without dynamic relocations and they need to be converted
-to 'bal' calls by linker.
+The difference boils down to -mrelax-pic-calls and -mexplicit-relocs
+gcc options that gets different default values depending on gcc
+target triplets and corresponding binutils. -mrelax-pic-calls got
+enabled by default only in mips-poky-linux-gcc case. MIPS binutils
+ld relies on R_MIPS_JALR relocation to convert 'jalr t9' into 'bal'
+and such relocation is generated only if -mrelax-pic-calls option
+is on.
 
-Add additional build time check to make sure that no 'jalr t9'
-slip through because of some toolchain misconfiguration that
-prevents 'jalr t9' to 'bal' conversion.
+Please note 'jalr t9' conversion to 'bal' can happen only to static
+functions. These static PIC calls use mips local GOT entries that
+are supposed to be filled with start of DSO value by run-time linker
+(missing in VDSO case) and they do not have dynamic relocations.
+Global mips GOT entries must have dynamic relocations and they should
+be prevented by cmd_vdso_check Makefile rule.
 
+Solution call out -mrelax-pic-calls and -mexplicit-relocs options
+explicitly while compiling MIPS vdso code. That would get correct
+and consistent between different toolchains behaviour.
+
+Reported-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 Signed-off-by: Victor Kamensky <kamensky@cisco.com>
 Signed-off-by: Paul Burton <paulburton@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: James Hogan <jhogan@kernel.org>
 Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: bruce.ashfield@gmail.com
 Cc: richard.purdie@linuxfoundation.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/vdso/Makefile | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/mips/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-index e8585a22b925c..bfb65b2d57c7f 100644
+index e05938997e696..96afd73c94e8a 100644
 --- a/arch/mips/vdso/Makefile
 +++ b/arch/mips/vdso/Makefile
-@@ -93,12 +93,18 @@ GCOV_PROFILE := n
- UBSAN_SANITIZE := n
- KCOV_INSTRUMENT := n
- 
-+# Check that we don't have PIC 'jalr t9' calls left
-+quiet_cmd_vdso_mips_check = VDSOCHK $@
-+      cmd_vdso_mips_check = if $(OBJDUMP) --disassemble $@ | egrep -h "jalr.*t9" > /dev/null; \
-+		       then (echo >&2 "$@: PIC 'jalr t9' calls are not supported"; \
-+			     rm -f $@; /bin/false); fi
-+
- #
- # Shared build commands.
- #
- 
- quiet_cmd_vdsold_and_vdso_check = LD      $@
--      cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check)
-+      cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check); $(cmd_vdso_mips_check)
- 
- quiet_cmd_vdsold = VDSO    $@
-       cmd_vdsold = $(CC) $(c_flags) $(VDSO_LDFLAGS) \
+@@ -29,6 +29,7 @@ endif
+ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+ 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
++	-mrelax-pic-calls -mexplicit-relocs \
+ 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+ 	$(call cc-option, -fno-asynchronous-unwind-tables) \
+ 	$(call cc-option, -fno-stack-protector)
 -- 
 2.20.1
 
