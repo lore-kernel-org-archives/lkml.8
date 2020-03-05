@@ -2,134 +2,82 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6CFC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF35C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40D220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583368598;
-	bh=K9IFr31pFu37LPR+Umf66+raJbdx8VqiMGO9oMTUh6M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=2A9+JAIeM6nS4+sz1jblvRxveN82ScE4JfkXd00KZZc7XMAJxloIDCBdj0bzRrJJn
-	 nwMURF7AX3xUQoevuz3QV+KJWUNXU7dlw86mgrnbYI5m5tZt6sn8KDosQtlKllcm65
-	 5vJaeazY2kfAj9hOUJOHZwR8c7UeTu8VugrJqjTw=
+	by mail.kernel.org (Postfix) with ESMTP id BAD0920866
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:45:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iA9cgqgR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388622AbgCEAgh (ORCPT
+        id S1725844AbgCEApN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 19:36:37 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34010 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388554AbgCEAgh (ORCPT
+        Wed, 4 Mar 2020 19:45:13 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46820 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgCEApN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 19:36:37 -0500
-Received: by mail-io1-f66.google.com with SMTP id z190so4563095iof.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:36:36 -0800 (PST)
+        Wed, 4 Mar 2020 19:45:13 -0500
+Received: by mail-il1-f196.google.com with SMTP id e8so3494309ilc.13;
+        Wed, 04 Mar 2020 16:45:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KIvX0AGMbgxv4/m6WT+pMJ8EIpqBiUC/PmxWkNGeTko=;
-        b=PhSdLw/yrpS/dRaAl33LSLQA0eklLHbyPx2WtBHA5gt3yB5fopfsk4mxkA+52xvqhX
-         LgFLy9u42Z2GC79/HmsDVlsg17To6S25aq6YzK7mzm+e8wSy4WoIKI7fwio8eyTX8hfl
-         TtTlUG7aQahYP7QAvSO2Ta5+kunpzaYoYdcdM=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aLm76SSXt/8qfqztUMP9aOaFuRUsyFDRwVe348t+6jg=;
+        b=iA9cgqgRepVrwDKiu8wG7aSjRLScY5si4vFQk3gCYepgpCXjSyjJyNTvYhRZ9ZunkH
+         jPRuk0JjlMsHXmfcWOva+5JnedzeaPTqo/9sSLcYZp6MGkFIV/mv3NGJmjag2B4nWCfP
+         4dTbRC9pdwJYd6eJu+SjM3JIM1/a7bxcOxdxoudRG6aE4ZlZD8di0fFpyGiLVs04ynbj
+         aLVwGA7eKTNaEYVZRIoiqeZVdIuEEgqGcgBbfdEzBGVBtn2kI7LEUOqEGEJBPlq2pa/s
+         NtPQCxOOOuNLHvnbbVfkUGB0P+Bzpzqr1wwd/oAfcuzqdtd3ZbQnbfBFGDogva/hX9A3
+         UQuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KIvX0AGMbgxv4/m6WT+pMJ8EIpqBiUC/PmxWkNGeTko=;
-        b=bUXUguKn/+veFF4OG/B5CNeSvbxP75ibn7gHjv39O0nxGAl77P8U6EFexmG5q/cSqA
-         CWIZ8oQ1QraGE2WXLBCMT4mhvuv8z0VLM2No+BRW6YJeS01DtOPuiMGM1PJyn1quTscc
-         z8KBVRc5gfQJs6L5dRRR2tz4bY+auRTkmX9AdmGJPTg2HkkEVM236m41gGN1+9hzAWaT
-         vOCslETWWEV05pRJ2RrUpVJ1F3q4ftITpaN7zLeKoL2xOqsV699XmBkq6O+7fS8xYmvw
-         2WqOt1CUtJREzbiygQtk3n5Exqp3/Y7e/ADBe4vhUBnBriZm6dP/vAEpeTffOkcN3Jbd
-         vAQQ==
-X-Gm-Message-State: ANhLgQ0qxS3dmusrNLdWRTjpqM2k4qSEOktRzO6mYgAiNAZEuGNhwPgT
-        xLOWmqdrzCV9gCx/KDKh/EUuvw==
-X-Google-Smtp-Source: ADFU+vu80pHUWuXIar7a/NeiyuPykachkqRMBLRI9m0O4J+f56mz7RGfR/avLQkVaOPdAnh7e3ivfA==
-X-Received: by 2002:a5e:c70c:: with SMTP id f12mr1029310iop.130.1583368596452;
-        Wed, 04 Mar 2020 16:36:36 -0800 (PST)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id y14sm2828404ilb.29.2020.03.04.16.36.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 16:36:35 -0800 (PST)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     shuah@kernel.org, keescook@chromium.org, luto@amacapital.net,
-        wad@chromium.org, daniel@iogearbox.net, kafai@fb.com, yhs@fb.com,
-        andriin@fb.com, gregkh@linuxfoundation.org, tglx@linutronix.de
-Cc:     Shuah Khan <skhan@linuxfoundation.org>, khilman@baylibre.com,
-        mpe@ellerman.id.au, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH v2 2/4] selftests: Fix seccomp to support relocatable build (O=objdir)
-Date:   Wed,  4 Mar 2020 17:36:27 -0700
-Message-Id: <20200305003627.31900-1-skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aLm76SSXt/8qfqztUMP9aOaFuRUsyFDRwVe348t+6jg=;
+        b=Vp+qKnl6q5aGjH0FIQaY0CZ5ZtXhZexZrsiN8hItsvjyYCSbrbFNrEiKnm4M8tS3Kr
+         h+7I60ILHN1x1N3A5DDtdPCwCbltaCeCbzR/uPVjJ3siRokt84e8ay8zKEaAX5wv0+Gs
+         gFnLLDudYfH4riKlves3uLCygVtfahkHz97gNIwMYBl62I7zGpKlT6Rpa88kumn7IVKO
+         jTiaZAFgeEAREt9mRxAXQs16ZqLow63+Fdihf8yVfrn2E2HVmiWqxVXWltstbd6/uRQb
+         w9Zzp0X9JCg0dMEAK3IZaKMbKgnM97H15iRId/3JffVJSC/WA7kyTZ4QRY0LfhKbrCA/
+         Eang==
+X-Gm-Message-State: ANhLgQ3RZ6jHTdOqFhHvTSf95MlNYQ8j+kHNV8EmTXgMnCQGS3XFalNG
+        dgkEUbtx3//ZkB+cqcSWD+CEQWjzGEzNFopiG5M5gq7C
+X-Google-Smtp-Source: ADFU+vtDk+RvwiAYEKFOTp3UI/Mlg2rH7N8O0tDxo65ym2aRyyBlcMvFgOZ4IxB9D6nIIqKkkiyM0rJYUKZ8A3KCtiI=
+X-Received: by 2002:a05:6e02:ea8:: with SMTP id u8mr5067361ilj.0.1583369112677;
+ Wed, 04 Mar 2020 16:45:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1583252499-16078-1-git-send-email-hqjagain@gmail.com> <f09ffef023cfb8740f6a9a289215e53a16bebb2d.camel@kernel.org>
+In-Reply-To: <f09ffef023cfb8740f6a9a289215e53a16bebb2d.camel@kernel.org>
+From:   Qiujun Huang <hqjagain@gmail.com>
+Date:   Thu, 5 Mar 2020 08:45:01 +0800
+Message-ID: <CAJRQjoeOPrJnXruVU-pTCCrkdQFLUF+ZSE1eBKteTpAve6AJBA@mail.gmail.com>
+Subject: Re: [PATCH] fs/ceph/export: remove unused variable 'err'
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix seccomp relocatable builds. This is a simple fix to use the
-right lib.mk variable TEST_CUSTOM_PROGS to continue to do custom
-build to preserve dependency on kselftest_harness.h local header.
-This change applies cutom rule to seccomp_bpf seccomp_benchmark
-for a simpler logic. 
+On Thu, Mar 5, 2020 at 4:36 AM Jeff Layton <jlayton@kernel.org> wrote:
+>
+> I think we probably ought to just return ERR_PTR(err) in that case
+> instead of discarding it. It looks like today we'll end up returning
+> ENOENT when that errors out which doesn't seem right when there is a
+> different issue.
 
-Uses $(OUTPUT) defined in lib.mk to handle build relocation.
+I get that, thanks.
 
-The following use-cases work with this change:
-
-In seccomp directory:
-make all and make clean
-
-From top level from main Makefile:
-make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc \
- CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
-
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- tools/testing/selftests/seccomp/Makefile | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
-
-diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
-index 1760b3e39730..355bcbc0394a 100644
---- a/tools/testing/selftests/seccomp/Makefile
-+++ b/tools/testing/selftests/seccomp/Makefile
-@@ -1,17 +1,16 @@
- # SPDX-License-Identifier: GPL-2.0
--all:
--
--include ../lib.mk
-+CFLAGS += -Wl,-no-as-needed -Wall
-+LDFLAGS += -lpthread
- 
- .PHONY: all clean
- 
--BINARIES := seccomp_bpf seccomp_benchmark
--CFLAGS += -Wl,-no-as-needed -Wall
-+include ../lib.mk
-+
-+# OUTPUT set by lib.mk
-+TEST_CUSTOM_PROGS := $(OUTPUT)/seccomp_bpf $(OUTPUT)/seccomp_benchmark
- 
--seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
--	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
-+$(TEST_CUSTOM_PROGS): ../kselftest_harness.h
- 
--TEST_PROGS += $(BINARIES)
--EXTRA_CLEAN := $(BINARIES)
-+all: $(TEST_CUSTOM_PROGS)
- 
--all: $(BINARIES)
-+EXTRA_CLEAN := $(TEST_CUSTOM_PROGS)
--- 
-2.20.1
-
+>
+> --
+> Jeff Layton <jlayton@kernel.org>
+>
