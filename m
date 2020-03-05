@@ -2,119 +2,99 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEB3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D09C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79424206E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B64F206E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:57:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oJhNIxjk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fv4ovc1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgCES5M (ORCPT
+        id S1726179AbgCES5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:57:12 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51948 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgCES5L (ORCPT
+        Thu, 5 Mar 2020 13:57:22 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:46106 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgCES5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:57:11 -0500
-Received: by mail-pj1-f65.google.com with SMTP id l8so2866867pjy.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:57:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=E18amESejxX3SO9T1u/Ey86tZ4T9qm09N4I6qlp3t+E=;
-        b=oJhNIxjkqCp00rgv7+T6qNzQ1Y4wBZqD21uHULGW2pzerjXJTGGcIWh06lvbzlHq8S
-         kM8h76cFQ5LOb1x4kFLSSW2u9+2r2RmdwbDxzS3i/LkqfbRYwGgLDNGSv8KbB44Dxc1A
-         Q7reKw2bg/dUDV8mjQ7bFCfGy+E3do9yOjAA0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E18amESejxX3SO9T1u/Ey86tZ4T9qm09N4I6qlp3t+E=;
-        b=ZgueKA86sV95AZve4qfG5h8VFLOSs42ToWFCM8LWTu6qgnVPzOZXPv3r8YwpPUI6on
-         2Io2qIGGB0ZnNqdiPK4yvDqikamPIWdt4aVoswlTVCs2q3xZQ/zk7pOZ4dNCXFgVOqTd
-         r78MLinW9BXuZaaK/WdKL/Lrv51TKgzbFRKCSuwwiY0A/8R4UPD08pUFKuqbKD/FSKuk
-         +GBYDJ90w+d1hkwUqY2j0aOQZj9X2K7zh+gLb6KThAsTKLYI5oxppspxCgh2GSZixvbe
-         VZYzWabTikwLxCSqABN5TiJQS9nIAizujZfM1C+W8m4odHU6mc0raiHzJC9rwTq1+aXK
-         nGBg==
-X-Gm-Message-State: ANhLgQ2iKgDypVKyLHRRXpco8UAP/S5qSyEzSemKprYT9i7iCSAASNTJ
-        sfv0muRJVGz1+U/McRUHcm96Hg==
-X-Google-Smtp-Source: ADFU+vv289MpugXlGsG6o7w2uERW2NVWNqrzvR82E0YfS1myAamsIGSEDKT1hLNOBGj6yz67f8OzdA==
-X-Received: by 2002:a17:902:76c8:: with SMTP id j8mr9175038plt.273.1583434630838;
-        Thu, 05 Mar 2020 10:57:10 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id r198sm35307970pfr.54.2020.03.05.10.57.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 10:57:09 -0800 (PST)
-Date:   Thu, 5 Mar 2020 10:57:08 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v3 0/4] Add QMP V3 USB3 PHY support for SC7180
-Message-ID: <20200305185708.GU24720@google.com>
-References: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
+        Thu, 5 Mar 2020 13:57:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=90PsQ4qn7idAg8om1vCTJLAiN2890cMWcnF24IYxgDc=; b=fv4ovc1qV3pLntR67dk++yLkwb
+        45T5B35drA0dkhLce4yh+6gnblKeOzfzPIOSFOI2LpFQoAMokFXJ7oaInLrFjbLbKEN85r/gaNC6J
+        u4400F13PHMp2TsMjbyzThatMdz84ck0N7RKtRL0JLbmulrJr5fRZEKEzXL2amqsxbf+VZEywOxZd
+        KqizugKOXlJKSb6+jdP5+1+JCQIqECD2lmV6DcZCa6Dl1P+tB40aGSwAyBjmZaBUPLcn97ZSed22o
+        GmRzUPwQp6JGn49ZWxnkOJQxk6cHa4Td9AmO3aaUXw23mB5IRlHLbLwUC7i8tMpKe1QDxSI6CT04S
+        1WG/5TSQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9vgP-0007Kr-Ks; Thu, 05 Mar 2020 18:57:21 +0000
+Subject: Re: [v5] Documentation: bootconfig: Update boot configuration
+ documentation
+To:     Markus Elfring <Markus.Elfring@web.de>, linux-doc@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+References: <158339065180.26602.26457588086834858.stgit@devnote2>
+ <158339066140.26602.7533299987467005089.stgit@devnote2>
+ <ef820445-25c5-a312-57d4-25ff3b4d08cf@infradead.org>
+ <3fb124a6-07d2-7a40-8981-07561aeb3c1e@web.de>
+ <f823204d-dcd1-2159-a525-02f15562e1af@infradead.org>
+ <29c599ef-991d-a253-9f27-5999fb55b228@web.de>
+ <997f73af-dc6c-bc8b-12ba-69270ee4b95d@infradead.org>
+ <dbef7b77-945a-585e-12fe-b5e30eb1a6bc@web.de>
+ <e20f52a0-e522-c2cf-17a4-384a1f3308bc@infradead.org>
+ <ecaffba3-fccd-32ee-763a-a2ec84a65148@web.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a6a216ce-8e41-ca35-bd65-25bcacde1d28@infradead.org>
+Date:   Thu, 5 Mar 2020 10:57:20 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <ecaffba3-fccd-32ee-763a-a2ec84a65148@web.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1581506488-26881-1-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sandeep,
+On 3/5/20 10:43 AM, Markus Elfring wrote:
+>>>> If you would (could) be more concrete (or discrete) in your suggestions,
+>>>> I would be glad to comment on them.
+>>>
+>>> Does this view indicate any communication difficulties?
+>>
+>> Probably.
+>>
+>>> Which of the possibly unanswered issues do you find not concrete enough so far?
+>>
+>> e.g.:
+>>>>>  Will the clarification become more constructive for remaining challenges?
+> 
+> Do you expect that known open issues need to be repeated for each patch revision?
 
-this series has a few minor outstanding comments that prevent it from
-landing. Do you plan to respin it soon?
+Ideally not, but not very much is ideal.
 
-Thanks
+IOW, it is sometimes required (if one cares enough; sometimes
+one just gives up).
 
-Matthias
+> How do you think about the desired tracking of bug reports
+> also for this software?
 
-On Wed, Feb 12, 2020 at 04:51:24PM +0530, Sandeep Maheswaram wrote:
-> Add QMP V3 USB3 PHY entries for SC7180 in phy driver and
-> device tree bindings.
-> 
-> changes in v3:
-> *Addressed Rob's comments in yaml file.
-> *Sepearated the SC7180 support in yaml patch.
-> *corrected the phy reset entries in device tree.
-> 
-> changes in v2:
-> *Remove global phy reset in QMP phy.
-> *Convert QMP phy bindings to yaml.
-> 
-> Sandeep Maheswaram (4):
->   dt-bindings: phy: qcom,qmp: Convert QMP phy bindings to yaml
->   dt-bindings: phy: qcom,qmp: Add support for SC7180
->   phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
->   arm64: dts: qcom: sc7180: Correct qmp phy reset entries
-> 
->  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 287 +++++++++++++++++++++
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 227 ----------------
->  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   4 +-
->  drivers/phy/qualcomm/phy-qcom-qmp.c                |  38 +++
->  4 files changed, 327 insertions(+), 229 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+I expect that more users will begin to use it and report problems
+as they see fit.  They can use mailing list(s) and/or
+bugzilla.kernel.org.  I'm not terribly concerned about it.
+Masami seems to be responsive.
+
+thanks.
+-- 
+~Randy
+
