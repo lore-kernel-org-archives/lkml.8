@@ -2,142 +2,131 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7D6C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F18C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208A4207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18622207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583433923;
+	bh=psjSyz6vdZGPl/xqFFUayAS2GQX1IEdZO+cta5jUIwc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z9KuOHZIBTjFfKR7fMwb8Dfz6GVHUrGb/QkPPWcXNoqJdfIWFNh/cf+ss+NX1EaQb
+	 jK/H0tbZ3frn34iQeM198NVU6fNjMB8XaeoL12A0wHiIhsJudwjgviuyIACsSzyEOS
+	 3Y/leMOiszrTIapz2+lxwWUCIf4pQduhOkR3q2q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgCESpM (ORCPT
+        id S1726811AbgCESpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:45:12 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:50422 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbgCESpL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:45:11 -0500
-Received: by mail-il1-f197.google.com with SMTP id z12so5401331ilh.17
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:45:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Us+arUmf9LULLEoI/2RUiRYdXpjh+bbbhvxTGcbSIJI=;
-        b=YkdMWZW+PNxUCitBTiNGE7U3TpAOJt0JoAHSYBKjKyoZRIR7E6GjbYi+qTFNhjxDM3
-         EaWsGWu2y7g67rtjUQTbMSmG25vHLTn9nLPBbNWBp0MeDwCeio8QhA11hJuy4foUdCd1
-         M52wSFDdw6GdJcaf9f61JHPUBVbea4S9iTt1Z81Yu3ScEZqZOSJy1l3A+63Q/quxy6Df
-         PxH+AYHLom9C6cFB9AWo2lrNbRMF/34onchflu3qsNWOjLcJOcXfXMK4kHX1K2rbUOuD
-         MDXZUBhUAcdk+r2iXQ1RHheHKX73aEy1eq2P2ugmNT5R1aD5zp75r60JJ2LJK3uqE7JD
-         dLQg==
-X-Gm-Message-State: ANhLgQ2tIutD9X3W4/wvFuiOpzVcxa2ASItAZ6BMBTuFZlfb10aBPGpZ
-        e9LM27qKlZ4AM1jBt7+r3Yq35GYeCkhI8RS/+sdJZA5N5Ggj
-X-Google-Smtp-Source: ADFU+vu+HBroAP8GhX4MgZZrEGf61yyeDI3yT6EXMomMaEI8pFEs2q62sNcHi5xcO3sBL5wVv+Omd3OdQPMp01s4UvTQ+s36wQBm
+        Thu, 5 Mar 2020 13:45:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgCESpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 13:45:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8692C2072D;
+        Thu,  5 Mar 2020 18:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583433920;
+        bh=psjSyz6vdZGPl/xqFFUayAS2GQX1IEdZO+cta5jUIwc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xq/t4n1rMZB+lbOw37tYhQzBztl2fGM/23HLuK70yNAC3quB28r8n/MjElg0f9vVt
+         lo8WWomFsAEbA225T9MNvASYCjaSHxYaVkJA/mWYUfGlC4PueoNzepaS0s7CYlXNWW
+         fI230MSCnOkOdPxsqyklMKSYmG9M71BHtju/IeCI=
+Date:   Thu, 5 Mar 2020 19:45:17 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Angelo Dureghello <angelo.dureghello@timesys.com>
+Cc:     linux-kernel@vger.kernel.org, zbr@ioremap.net
+Subject: Re: [PATCH] w1: ds2430: non functional fixes
+Message-ID: <20200305184517.GA2141048@kroah.com>
+References: <20200305183951.2647785-1-angelo.dureghello@timesys.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:3c8d:: with SMTP id j13mr295375ilf.267.1583433910278;
- Thu, 05 Mar 2020 10:45:10 -0800 (PST)
-Date:   Thu, 05 Mar 2020 10:45:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bf5ff105a01fef33@google.com>
-Subject: WARNING: ODEBUG bug in tcf_queue_work
-From:   syzbot <syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305183951.2647785-1-angelo.dureghello@timesys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Mar 05, 2020 at 07:39:51PM +0100, Angelo Dureghello wrote:
+> Mainly discovered a typo in the eeprom size that may lead to
+> misunderstandings.
+> 
+> Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
+> ---
+>  drivers/w1/slaves/w1_ds2430.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/w1/slaves/w1_ds2430.c b/drivers/w1/slaves/w1_ds2430.c
+> index 6fb0563fb2ae..67d168ddfb60 100644
+> --- a/drivers/w1/slaves/w1_ds2430.c
+> +++ b/drivers/w1/slaves/w1_ds2430.c
+> @@ -1,7 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+>   * w1_ds2430.c - w1 family 14 (DS2430) driver
+> - **
+> + *
+>   * Copyright (c) 2019 Angelo Dureghello <angelo.dureghello@timesys.com>
+>   *
+>   * Cloned and modified from ds2431
+> @@ -290,6 +290,6 @@ static struct w1_family w1_family_14 = {
+>  module_w1_family(w1_family_14);
+>  
+>  MODULE_AUTHOR("Angelo Dureghello <angelo.dureghello@timesys.com>");
+> -MODULE_DESCRIPTION("w1 family 14 driver for DS2430, 256kb EEPROM");
+> +MODULE_DESCRIPTION("w1 family 14 driver for DS2430, 256b EEPROM");
+>  MODULE_LICENSE("GPL");
+>  MODULE_ALIAS("w1-family-" __stringify(W1_EEPROM_DS2430));
+> -- 
+> 2.25.0
+> 
 
-syzbot found the following crash on:
+Hi,
 
-HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10535e45e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-dashboard link: https://syzkaller.appspot.com/bug?extid=9c2df9fd5e9445b74e01
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168c4839e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10587419e00000
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-------------[ cut here ]------------
-ODEBUG: activate active (active state 1) object type: rcu_head hint: 0x0
-WARNING: CPU: 0 PID: 9599 at lib/debugobjects.c:485 debug_print_object+0x168/0x250 lib/debugobjects.c:485
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9599 Comm: syz-executor772 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x3e kernel/panic.c:582
- report_bug+0x289/0x300 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
- do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:debug_print_object+0x168/0x250 lib/debugobjects.c:485
-Code: dd 00 e7 91 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48 8b 14 dd 00 e7 91 88 48 c7 c7 60 dc 91 88 e8 07 6e 9f fd <0f> 0b 83 05 03 6c ff 06 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
-RSP: 0018:ffffc90005cd70b0 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815ebe46 RDI: fffff52000b9ae08
-RBP: ffffc90005cd70f0 R08: ffff888093472400 R09: fffffbfff16a3370
-R10: fffffbfff16a336f R11: ffffffff8b519b7f R12: 0000000000000001
-R13: ffffffff89bac220 R14: 0000000000000000 R15: 1ffff92000b9ae24
- debug_object_activate+0x346/0x470 lib/debugobjects.c:652
- debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
- __call_rcu kernel/rcu/tree.c:2597 [inline]
- call_rcu+0x2f/0x700 kernel/rcu/tree.c:2683
- queue_rcu_work+0x8a/0xa0 kernel/workqueue.c:1742
- tcf_queue_work+0xd3/0x110 net/sched/cls_api.c:206
- route4_change+0x19e8/0x2250 net/sched/cls_route.c:550
- tc_new_tfilter+0xb82/0x2480 net/sched/cls_api.c:2103
- rtnetlink_rcv_msg+0x824/0xaf0 net/core/rtnetlink.c:5427
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2478
- rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5454
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:672
- ____sys_sendmsg+0x753/0x880 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
- __do_sys_sendmsg net/socket.c:2439 [inline]
- __se_sys_sendmsg net/socket.c:2437 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446709
-Code: e8 1c ba 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 ab 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb9e0c67d98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000006dbc68 RCX: 0000000000446709
-RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
-RBP: 00000000006dbc60 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc6c
-R13: 0000000000000005 R14: 00a3a20740000000 R15: 0507002400000038
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+- Your patch did many different things all at once, making it difficult
+  to review.  All Linux kernel patches need to only do one thing at a
+  time.  If you need to do multiple things (such as clean up all coding
+  style issues in a file/driver), do it in a sequence of patches, each
+  one doing only one thing.  This will make it easier to review the
+  patches to ensure that they are correct, and to help alleviate any
+  merge issues that larger patches can cause.
 
+- You did not specify a description of why the patch is needed, or
+  possibly, any description at all, in the email body.  Please read the
+  section entitled "The canonical patch format" in the kernel file,
+  Documentation/SubmittingPatches for what is needed in order to
+  properly describe the change.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+- You did not write a descriptive Subject: for the patch, allowing Greg,
+  and everyone else, to know what this patch is all about.  Please read
+  the section entitled "The canonical patch format" in the kernel file,
+  Documentation/SubmittingPatches for what a proper Subject: line should
+  look like.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
