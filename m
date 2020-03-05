@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAC4C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5338C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB344208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B98217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428560;
-	bh=avgxrIBeeT6c1QP2JTPKdYbvMYOWNOCRRBbf8p0twck=;
+	s=default; t=1583428565;
+	bh=+P8sB4H5yi+g9UNuOWK2JO1vju8lSiUvedGXcJ/u/nk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=clO8lTnZGf/03but66Xi3yFfmxyNORamsSe15c+2aSCwrh15lzLISEZjuEbW6b0/h
-	 dCfaJPeSg9BWxfU/kIjsS+LkGDlydJsM7ZwgYNwD4JF5BqT4+VxITFIv17SNrg28j3
-	 +mk5XjrwoOvGadLVOD44vrfExZBWRPd9rTikoEeo=
+	b=sDtV3/lhFFoBGfk5qC2ABgZ183Wgno3qgCxTD+lVTo/VUCwZOJcrVjok9LOZ7dIOn
+	 dMo0fY6Fp6GN/8cRUgXTBhnk7Azd8mARVp1cfixHCMigmLB0n9VNVN4QD/tQb5Nhed
+	 U3bmPDDpw+ULif3ej1r4TnObDbrIPw7adRfXqk7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgCERP7 (ORCPT
+        id S1728360AbgCERQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:15:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42608 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:16:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728234AbgCERPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:47 -0500
+        id S1728255AbgCERPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AAAE2146E;
-        Thu,  5 Mar 2020 17:15:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1743D20848;
+        Thu,  5 Mar 2020 17:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428546;
-        bh=avgxrIBeeT6c1QP2JTPKdYbvMYOWNOCRRBbf8p0twck=;
+        s=default; t=1583428548;
+        bh=+P8sB4H5yi+g9UNuOWK2JO1vju8lSiUvedGXcJ/u/nk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NXwaxkRD8y6O/vfMb25Q6Th6clWmImY784vYtTcsmVHn7nc2f9Znon+zg07bmeEvM
-         stS+HqChEndByKR94djVI42q2OnvRt8/g6wTN815ZoFowAiCfwdLiC05R9neDMmcRI
-         /RluVP/MDhlUddb2dY4jTEH5/CgcQTRAMC793Djc=
+        b=H/9wTZ8vG+O8Yey7uCX/WltamwmOcrG1F7UJkvtSsgJ/nO2GuS2ah8P9tJpMVsNbu
+         rzfZI9J1oJYQTm0/rzR2BlpWj3GbgwAB59Tzs/mUC7gf8uvJyyvGYI9rBTOZy1QaE8
+         xpBZOEin9QVvkJ2GNvC62BxvN/zWE4VFBx62PsaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Korsnes <jkorsnes@cisco.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Armando Visconti <armando.visconti@st.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 04/19] HID: core: increase HID report buffer size to 8KiB
-Date:   Thu,  5 Mar 2020 12:15:25 -0500
-Message-Id: <20200305171540.30250-4-sashal@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/19] i2c: altera: Fix potential integer overflow
+Date:   Thu,  5 Mar 2020 12:15:27 -0500
+Message-Id: <20200305171540.30250-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171540.30250-1-sashal@kernel.org>
 References: <20200305171540.30250-1-sashal@kernel.org>
@@ -61,39 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Korsnes <jkorsnes@cisco.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 84a4062632462c4320704fcdf8e99e89e94c0aba ]
+[ Upstream commit 54498e8070e19e74498a72c7331348143e7e1f8c ]
 
-We have a HID touch device that reports its opens and shorts test
-results in HID buffers of size 8184 bytes. The maximum size of the HID
-buffer is currently set to 4096 bytes, causing probe of this device to
-fail. With this patch we increase the maximum size of the HID buffer to
-8192 bytes, making device probe and acquisition of said buffers succeed.
+Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
+instead of 64-bit.
 
-Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Armando Visconti <armando.visconti@st.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
+and there is no need for div_u64().
+
+Addresses-Coverity: 1458369 ("Unintentional integer overflow")
+Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
+Suggested-by: David Laight <David.Laight@ACULAB.COM>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/hid.h | 2 +-
+ drivers/i2c/busses/i2c-altera.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index 3656a04d764ba..ba1f675598314 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -477,7 +477,7 @@ struct hid_report_enum {
- };
+diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+index f5e1941e65b5a..a1cdcfc74acf6 100644
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -182,7 +182,7 @@ static void altr_i2c_init(struct altr_i2c_dev *idev)
+ 	/* SCL Low Time */
+ 	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
+ 	/* SDA Hold Time, 300ns */
+-	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
++	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
  
- #define HID_MIN_BUFFER_SIZE	64		/* make sure there is at least a packet size of space */
--#define HID_MAX_BUFFER_SIZE	4096		/* 4kb */
-+#define HID_MAX_BUFFER_SIZE	8192		/* 8kb */
- #define HID_CONTROL_FIFO_SIZE	256		/* to init devices with >100 reports */
- #define HID_OUTPUT_FIFO_SIZE	64
- 
+ 	/* Mask all master interrupt bits */
+ 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
 -- 
 2.20.1
 
