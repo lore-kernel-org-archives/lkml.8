@@ -2,111 +2,137 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636D5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71043C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33EED208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36CC0208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:47:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LucVZ0Ih"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=eikelenboom.it header.i=@eikelenboom.it header.b="Jz13duDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgCEPrC (ORCPT
+        id S1727052AbgCEPrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:47:02 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:40508 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCEPrB (ORCPT
+        Thu, 5 Mar 2020 10:47:09 -0500
+Received: from server.eikelenboom.it ([91.121.65.215]:56692 "EHLO
+        server.eikelenboom.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCEPrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:47:01 -0500
-Received: by mail-qv1-f68.google.com with SMTP id u17so1295123qvv.7;
-        Thu, 05 Mar 2020 07:47:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2+6yZWLzWungFxfinpVR8DrsNx/2sba2y67ZFb8NhxY=;
-        b=LucVZ0IhRZuskZG477RZ59HOO2HEwkbxzbAF+WksjcG6JkEBMfrYnSJ6kIoJaxpe8U
-         D0H8In8ybFuNvyAKewp5CAtAdPuZ/7TMg4nCYtBQpggejWGCFQsIRdABK8dtz6mL+BeU
-         XuNCfqUDVbuMdbNxe7vJ4AzlSKD0qGCMcHM2302Xs1thPjBf1F40AbaQUxRK/9vs72R8
-         6FNXwtKbiWWvcIGLKKNt38De2MsTYv9jS1zWvICVa9OUWpkTu9iKq0OLx3Io8ko5LlW7
-         DOn81PctlHb5LVX3hralVTU0scu3W1+7e3gbfxIO+97njwh04F9Y0j9jzFLomBneRT9r
-         0uGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2+6yZWLzWungFxfinpVR8DrsNx/2sba2y67ZFb8NhxY=;
-        b=pFSE8EKUkyo1vI4lu8slSu3/Q0kzxggdMHUdm7n4a2FD/yiqCBMY7z3D0UZIWCdXIU
-         NkYn//rhJqG5xyJwLURNXmFlFBV8hwWM7gYCq1LYB+Dx/R9FGyBrbvi7F31RJjMpDjdA
-         N84w48jLGDFBgC3UfwN+si8Sp3Q9pFcYDZghWmXsCr+fDSwGllZWQEp241LTRssVfWmO
-         XKOpae87/AUMaBBCP3T6+QMicUx000AF+2fqJIg302WGRtINjRHeZ7BVGOXKGVYRCoeN
-         rev56B8KUqeOcb3F/PgiSVq8EhdXX12hl4cLM1d4+/7DHGiQT9NrZRdXA5izEohZoq20
-         erPw==
-X-Gm-Message-State: ANhLgQ2dpH6+3HhDi9XD0dstzEzGwMvtwc4IL1XomMt4ZOB2UOHgmfC2
-        kpA1KE6y3cYCkQ5Fi2BZ61E=
-X-Google-Smtp-Source: ADFU+vuDA7FZoPkQdDlfKUwDun6qmuJOcx4Ams7CpNGOdN41KFGO46LtijTZrAIP5HBnR1VjHAKw/A==
-X-Received: by 2002:a0c:c389:: with SMTP id o9mr7182654qvi.232.1583423220640;
-        Thu, 05 Mar 2020 07:47:00 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id f5sm6126935qtq.72.2020.03.05.07.46.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 07:47:00 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 5 Mar 2020 10:46:58 -0500
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Joe Perches <joe@perches.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>,
-        kernel-hardening@lists.openwall.com,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sh: Stop printing the virtual memory layout
-Message-ID: <20200305154657.GA848330@rani.riverdale.lan>
-References: <202003021038.8F0369D907@keescook>
- <20200305151010.835954-1-nivedita@alum.mit.edu>
- <f672417e-1323-4ef2-58a1-1158c482d569@physik.fu-berlin.de>
- <31d1567c4c195f3bc5c6b610386cf0f559f9094f.camel@perches.com>
- <3c628a5a-35c7-3d92-b94b-23704500f7c4@physik.fu-berlin.de>
+        Thu, 5 Mar 2020 10:47:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=eikelenboom.it; s=20180706; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7zaRKGsS0ZE69bPjVfBfvoMx3pCqo5nNA7n4fl7ujvw=; b=Jz13duDqLs43Wm1XWWqVFYDdVi
+        uowHRKPtI85xiEhqC1CHiWIVqwu5o8osd2w3ocR/lktYKldMi/jWfzSYsehwW7zq6dHMTyWbdu9of
+        OcmlvvPoZNMZ8i2Bb0effUlmmp2LE+ytNWqNMJMjKcWcOxVSE0totMaCx8pF35QZpVMA=;
+Received: from ip4da85049.direct-adsl.nl ([77.168.80.73]:54264 helo=[172.16.1.50])
+        by server.eikelenboom.it with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <linux@eikelenboom.it>)
+        id 1j9skC-0005zf-Kp; Thu, 05 Mar 2020 16:49:04 +0100
+Subject: Re: [Xen-devel] [PATCH v2] xen/blkfront: fix ring info addressing
+To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>
+Cc:     xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>
+References: <20200305114044.20235-1-jgross@suse.com>
+ <20200305124255.GW24458@Air-de-Roger.citrite.net>
+ <c2c1573a-8c98-4a99-64fb-1346ee724d08@suse.com>
+From:   Sander Eikelenboom <linux@eikelenboom.it>
+Message-ID: <68f09f4e-180f-0fb7-c329-f3f03be72eb6@eikelenboom.it>
+Date:   Thu, 5 Mar 2020 16:47:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <c2c1573a-8c98-4a99-64fb-1346ee724d08@suse.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3c628a5a-35c7-3d92-b94b-23704500f7c4@physik.fu-berlin.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 04:41:05PM +0100, John Paul Adrian Glaubitz wrote:
-> On 3/5/20 4:38 PM, Joe Perches wrote:
-> >> Aww, why wasn't this made configurable? I found these memory map printouts
-> >> very useful for development.
-> > 
-> > It could be changed from pr_info to pr_devel.
-> > 
-> > A #define DEBUG would have to be added to emit it.
+On 05/03/2020 14:40, Jürgen Groß wrote:
+> On 05.03.20 13:42, Roger Pau Monné wrote:
+>> On Thu, Mar 05, 2020 at 12:40:44PM +0100, Juergen Gross wrote:
+>>> Commit 0265d6e8ddb890 ("xen/blkfront: limit allocated memory size to
+>>> actual use case") made struct blkfront_ring_info size dynamic. This is
+>>> fine when running with only one queue, but with multiple queues the
+>>> addressing of the single queues has to be adapted as the structs are
+>>> allocated in an array.
+>>>
+>>> Fixes: 0265d6e8ddb890 ("xen/blkfront: limit allocated memory size to actual use case")
+>>> Reported-by: Sander Eikelenboom <linux@eikelenboom.it>
+>>> Signed-off-by: Juergen Gross <jgross@suse.com>
+>>> ---
+>>> V2:
+>>> - get rid of rinfo_ptr() helper
+>>> - use proper parenthesis in for_each_rinfo()
+>>> - rename rinfo parameter of for_each_rinfo()
+>>> ---
+>>>   drivers/block/xen-blkfront.c | 79 +++++++++++++++++++++++---------------------
+>>>   1 file changed, 42 insertions(+), 37 deletions(-)
+>>>
+>>> diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
+>>> index e2ad6bba2281..8e844da826db 100644
+>>> --- a/drivers/block/xen-blkfront.c
+>>> +++ b/drivers/block/xen-blkfront.c
+>>> @@ -213,6 +213,7 @@ struct blkfront_info
+>>>   	struct blk_mq_tag_set tag_set;
+>>>   	struct blkfront_ring_info *rinfo;
+>>>   	unsigned int nr_rings;
+>>> +	unsigned int rinfo_size;
+>>>   	/* Save uncomplete reqs and bios for migration. */
+>>>   	struct list_head requests;
+>>>   	struct bio_list bio_list;
+>>> @@ -259,6 +260,18 @@ static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo);
+>>>   static void blkfront_gather_backend_features(struct blkfront_info *info);
+>>>   static int negotiate_mq(struct blkfront_info *info);
+>>>   
+>>> +#define for_each_rinfo(info, ptr, idx)				\
+>>> +	for ((ptr) = (info)->rinfo, (idx) = 0;			\
+>>> +	     (idx) < (info)->nr_rings;				\
+>>> +	     (idx)++, (ptr) = (void *)(ptr) + (info)->rinfo_size)
+>>> +
+>>> +static struct blkfront_ring_info *get_rinfo(struct blkfront_info *info,
+>>
+>> I still think inline should be added here, but I don't have such a
+>> strong opinion to block the patch on it.
 > 
-> Well, from the discussion it seems the decision to cut it out has already been
-> made, so I guess it's too late :(.
+> I can add it if you like that better. Won't make much difference in the
+> end.
 > 
-> Adrian
+>> Also, info should be constified AFAICT.
 > 
-> -- 
->  .''`.  John Paul Adrian Glaubitz
-> : :' :  Debian Developer - glaubitz@debian.org
-> `. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
->   `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+> Yes.
+> 
+>>
+>> With at least info constified:
+>>
+>> Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+>>
+>> Can you queue this through the Xen tree?
+> 
+> Sure.
+> 
+> 
+> Juergen
+> 
 
-Not really too late. I can do s/pr_info/pr_devel and resubmit.
+Just tested v2 and it works for me, thanks !
 
-parisc for eg actually hides this in #if 0 rather than deleting the
-code.
+--
+Sander
 
-Kees, you fine with that?
