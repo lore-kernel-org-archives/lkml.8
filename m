@@ -2,137 +2,216 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB627C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D122C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B942072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B1D82072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:29:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sfLY1PVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgCEM2G (ORCPT
+        id S1726049AbgCEM34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:28:06 -0500
-Received: from mga06.intel.com ([134.134.136.31]:28113 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725880AbgCEM2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:28:06 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 04:28:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="352352187"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2020 04:28:02 -0800
-Date:   Thu, 5 Mar 2020 20:31:31 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v9 7/7] KVM: X86: Add user-space access interface for CET
- MSRs
-Message-ID: <20200305123130.GA17242@local-michael-cet-test.sh.intel.com>
-References: <20191227021133.11993-1-weijiang.yang@intel.com>
- <20191227021133.11993-8-weijiang.yang@intel.com>
- <20200303222827.GC1439@linux.intel.com>
- <20200304151815.GD5831@local-michael-cet-test.sh.intel.com>
- <20200304154538.GB21662@linux.intel.com>
+        Thu, 5 Mar 2020 07:29:56 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34995 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgCEM3z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 07:29:55 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so2590821plt.2;
+        Thu, 05 Mar 2020 04:29:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NsRFIJGbLn09Yax3ALyppTmkBEnV+CVKPbERHBMJArw=;
+        b=sfLY1PVAAba9flVNioMeI/lpgOvKqnCrbN/jvx2s7G2M/KM8LF5qFZI3vYwUVYwH8A
+         wu0rLrgHHp9lcLeR0qxEqY3tDGe4V0VjSvfEBl+n/To44sG45BiJMCge+7gy6VdmBJMy
+         z7wRevZFUrlGABpABDREyaCzhrONhlYC9LKSDpo0AvxgtthFEZgx5WAntPfSpWv8cHFE
+         0j+YqesLJSRZJA+47k+8KUAmBejbHzzxrCmlHiq2Fge2T0JcfXPF5/4hPecEmPt2w0Pq
+         MzQegrZy43EqqYn7u4bar67QlT5y/0NQLkMIkqG+CMa5fiuxtARUVY0mjL8FvpuihnUW
+         i6/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NsRFIJGbLn09Yax3ALyppTmkBEnV+CVKPbERHBMJArw=;
+        b=gBHN0I2kZy8H7ukueB2mpe6IkQmaYVNwj8pLdLDl7nzTUON0KRTMrc4Gt+L2XONy16
+         9mgAZVV3RFcWbgJSHmEIZIounZHyUrrtOQbMJPeE1Eo17A0KHn/3mxZq3qzq5l1AnI2E
+         eNXScWFLaC0N4NLkrvQ1Fpw09Mcng7eome+VASG/a9f9rwcNPOkcXaLyG4CT0YHnNag7
+         01mzNPKjqiiRc0/5u3I2Q/sYdPTllBHcGJFKl16p0zaWDOQRcJHcPjfhVHdMyONnLPQk
+         K98XVz+GkmN1R/GhbmOuFlhWk7tel6JD8S487r/AyDPdwMCTjr64q9+na0gBUrsoDHXb
+         4YhQ==
+X-Gm-Message-State: ANhLgQ0kd3i7AZFRP82v8e8W8B23XqhGY5qM3QvaGSP4oUa0WyXbYNex
+        0vIYcCQ632DvtRJi3T0N9jIBq9h4
+X-Google-Smtp-Source: ADFU+vvJHPjqW9pEsQ+KnwdNio1Po/d3nZ0nPLW6PPI8aKwONgI+eNX/DpuFxwpDPdA/m1IlT2WoMg==
+X-Received: by 2002:a17:90b:3542:: with SMTP id lt2mr7959300pjb.96.1583411393413;
+        Thu, 05 Mar 2020 04:29:53 -0800 (PST)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id h29sm29221565pfk.57.2020.03.05.04.29.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Mar 2020 04:29:52 -0800 (PST)
+Date:   Thu, 5 Mar 2020 17:59:50 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>
+Subject: Re: [PATCH v3] MIPS: Replace setup_irq() by request_irq()
+Message-ID: <20200305122950.GA4981@afzalpc>
+References: <20200304005549.5832-1-afzal.mohd.ma@gmail.com>
+ <20200304203144.GA4323@alpha.franken.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200304154538.GB21662@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20200304203144.GA4323@alpha.franken.de>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 07:45:38AM -0800, Sean Christopherson wrote:
-> On Wed, Mar 04, 2020 at 11:18:15PM +0800, Yang Weijiang wrote:
-> > On Tue, Mar 03, 2020 at 02:28:27PM -0800, Sean Christopherson wrote:
-> > > > @@ -1886,6 +1976,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> > > >  		else
-> > > >  			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
-> > > >  		break;
-> > > > +	case MSR_IA32_S_CET:
-> > > > +		if (!cet_ctl_access_allowed(vcpu, msr_info))
-> > > > +			return 1;
-> > > > +		msr_info->data = vmcs_readl(GUEST_S_CET);
-> > > > +		break;
-> > > > +	case MSR_IA32_INT_SSP_TAB:
-> > > > +		if (!cet_ssp_access_allowed(vcpu, msr_info))
-> > > > +			return 1;
-> > > > +		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
-> > > > +		break;
-> > > > +	case MSR_IA32_U_CET:
-> > > > +		if (!cet_ctl_access_allowed(vcpu, msr_info))
-> > > > +			return 1;
-> > > > +		rdmsrl(MSR_IA32_U_CET, msr_info->data);
-> > > > +		break;
-> > > > +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> > > > +		if (!cet_ssp_access_allowed(vcpu, msr_info))
-> > > > +			return 1;
-> > > > +		rdmsrl(msr_info->index, msr_info->data);
-> > > 
-> > > Ugh, thought of another problem.  If a SoftIRQ runs after an IRQ it can
-> > > load the kernel FPU state.  So for all the XSAVES MSRs we'll need a helper
-> > > similar to vmx_write_guest_kernel_gs_base(), except XSAVES has to be even
-> > > more restrictive and disable IRQs entirely.  E.g.
-> > > 
-> > > static void vmx_get_xsave_msr(struct msr_data *msr_info)
-> > > {
-> > > 	local_irq_disable();
-> > > 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-> > > 		switch_fpu_return();
-> > > 	rdmsrl(msr_info->index, msr_info->data);
-> > > 	local_irq_enable();
-> > In this case, would SoftIRQ destroy vcpu->arch.guest.fpu states which
-> > had been restored to XSAVES MSRs that we were accessing?
-> 
-> Doing kernel_fpu_begin() from a softirq would swap guest.fpu out of the
-> CPUs registers.  It sets TIF_NEED_FPU_LOAD to mark the tasks has needing to
-> reload its FPU state prior to returning to userspace.  So it doesn't
-> destroy it per se.  The result is that KVM would read/write the CET MSRs
-> after they're loaded from the kernel's FPU state instead of reading the
-> MSRs loaded from the guest's FPU state.
->
-OK, will wrap the access code with a helper, thank you!
-> > So should we restore
-> > guest.fpu or? In previous patch, we have restored guest.fpu before
-> > access the XSAVES MSRs.
-> 
-> There are three different FPU states:
-> 
->   - kernel
->   - userspace
->   - guest
-> 
-> RDMSR/WRMSR for CET MSRs need to run while the guest.fpu state is loaded
-> into the CPU registers[1].  At the beginning of the syscall from userspace,
-> i.e. the vCPU ioctl(), the task's FPU state[2] holds userspace FPU state.
-> Patch 6/7 swaps out the userspace state and loads the guest state.
-> 
-> But, if a softirq runs between kvm_load_guest_fpu() and now, and executes
-> kernel_fpu_begin(), it will swap the guest state (out of CPU registers)
-> and load the kernel state (into PCU registers).  The actual RDMSR/WRMSR
-> needs to ensure the guest state is still loaded by checking and handling
-> TIF_NEED_FPU_LOAD.
-> 
-> [1] An alternative to doing switch_fpu_return() on TIF_NEED_FPU_LOAD would
->     be to calculate the offset into the xsave and read/write directly
->     to/from memory.  But IMO that's unnecessary complexity as the guest's
->     fpu state still needs to be reloaded before re-entering the guest, e.g.
->     if vmx_{g,s}et_msr() is invoked on {RD,WR}MSR intercept, while loading
->     or saving MSR state from userspace isn't a hot path.
-> 
-> [2] I worded this to say "task's FPU state" because it's also possible the
->     CPU registers hold kernel state at the beginning of the vCPU ioctl(),
->     e.g. because of softirq.
+Hi Thomas,
 
-It's clear to me, thanks for the explanation.
+On Wed, Mar 04, 2020 at 09:31:44PM +0100, Thomas Bogendoerfer wrote:
+> On Wed, Mar 04, 2020 at 06:25:43AM +0530, afzal mohammed wrote:
+
+> > Hi mips maintainers,
+> > 
+> > if okay w/ this change, please consider taking it thr' your tree, else please
+> > let me know.
+> 
+> sorry this doesn't even compile for the first platform I've tested:
+
+i apologize for the mistake.
+
+Of the 15 architectures that were subjected to setup_irq() cleanup,
+i had done build & boot test only on ARM & x86_64, at the minimum i
+should have informed you upfront in the previous mail (in v2 & v1 it was
+mentioned in cover letter). i was trying to rely on kbuild test robot
+for help in building other arch's. Seems it is randomly selecting
+patches, since some of the issues were present in v2 & v1 as well and
+no error report were recieved on v1 & v2 MIPS patch.
+
+kbuild test robot had provided the way to create mips cross compiler
+as well as the config. The build error has been fixed that were
+spotted by you as well kbuild test robot, also there were a few more
+issues including other build error. v4 that resolves all these
+has been sent.
+
+All the files that has been modified has been verifed to generate
+object files w/o error or warnings. w/ the test robot provided config,
+not all changes in my patch were being compiled, so i had to manually
+select each machines one at a time to verify every change. Also i
+couldn't build 3 machines (msp71xx, loongson64 & bcm63xx) even w/o my
+changes. Those i had to find out defconfig's that can make those
+changes build, then they also could be verified.
+
+Sorry for the trouble, please let me know if further issues.
+
+For your reference, diff between v4 & v3 below,
+
+Regards
+afzal
+
+
+diff --git a/arch/alpha/kernel/irq_alpha.c b/arch/alpha/kernel/irq_alpha.c
+index d4f136c7fb11..d17e44c99df9 100644
+--- a/arch/alpha/kernel/irq_alpha.c
++++ b/arch/alpha/kernel/irq_alpha.c
+@@ -214,7 +214,7 @@ process_mcheck_info(unsigned long vector, unsigned long la_ptr,
+  * processed by PALcode, and comes in via entInt vector 1.
+  */
+ void __init
+-init_rtc_irq(irqreturn_t handler)
++init_rtc_irq(irq_handler_t handler)
+ {
+ 	irq_set_chip_and_handler_name(RTC_IRQ, &dummy_irq_chip,
+ 				      handle_percpu_irq, "RTC");
+diff --git a/arch/alpha/kernel/irq_impl.h b/arch/alpha/kernel/irq_impl.h
+index 7ac58be4ccf4..fbf21892e66d 100644
+--- a/arch/alpha/kernel/irq_impl.h
++++ b/arch/alpha/kernel/irq_impl.h
+@@ -23,7 +23,7 @@ extern void pyxis_device_interrupt(unsigned long);
+ 
+ extern void init_srm_irqs(long, unsigned long);
+ extern void init_pyxis_irqs(unsigned long);
+-extern void init_rtc_irq(irqreturn_t handler);
++extern void init_rtc_irq(irq_handler_t  handler);
+ 
+ extern void common_init_isa_dma(void);
+ 
+diff --git a/arch/mips/include/asm/sni.h b/arch/mips/include/asm/sni.h
+index b8653de25ca1..7dfa297ce597 100644
+--- a/arch/mips/include/asm/sni.h
++++ b/arch/mips/include/asm/sni.h
+@@ -11,6 +11,8 @@
+ #ifndef __ASM_SNI_H
+ #define __ASM_SNI_H
+ 
++#include <linux/irqreturn.h>
++
+ extern unsigned int sni_brd_type;
+ 
+ #define SNI_BRD_10		   2
+diff --git a/arch/mips/pmcs-msp71xx/msp_time.c b/arch/mips/pmcs-msp71xx/msp_time.c
+index 5f211d2d14ff..baf0da8b4c98 100644
+--- a/arch/mips/pmcs-msp71xx/msp_time.c
++++ b/arch/mips/pmcs-msp71xx/msp_time.c
+@@ -76,7 +76,7 @@ void __init plat_time_init(void)
+ 
+ unsigned int get_c0_compare_int(void)
+ {
+-	unsigned log flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED;
++	unsigned long flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED;
+ 
+ 	/* MIPS_MT modes may want timer for second VPE */
+ 	if ((get_current_vpe()) && !tim_installed) {
+diff --git a/arch/mips/ralink/cevt-rt3352.c b/arch/mips/ralink/cevt-rt3352.c
+index 84013214434a..269d4877d120 100644
+--- a/arch/mips/ralink/cevt-rt3352.c
++++ b/arch/mips/ralink/cevt-rt3352.c
+@@ -89,7 +89,7 @@ static int systick_shutdown(struct clock_event_device *evt)
+ 	sdev = container_of(evt, struct systick_device, dev);
+ 
+ 	if (sdev->irq_requested)
+-		free_irq(systick.dev.irq, &systick_irqaction);
++		free_irq(systick.dev.irq, &systick.dev);
+ 	sdev->irq_requested = 0;
+ 	iowrite32(0, systick.membase + SYSTICK_CONFIG);
+ 
+diff --git a/arch/mips/sni/time.c b/arch/mips/sni/time.c
+index 5254a3a1f37c..240bb68ec247 100644
+--- a/arch/mips/sni/time.c
++++ b/arch/mips/sni/time.c
+@@ -62,14 +62,12 @@ static irqreturn_t a20r_interrupt(int irq, void *dev_id)
+ static void __init sni_a20r_timer_setup(void)
+ {
+ 	struct clock_event_device *cd = &a20r_clockevent_device;
+-	struct irqaction *action = &a20r_irqaction;
+ 	unsigned int cpu = smp_processor_id();
+ 
+ 	cd->cpumask		= cpumask_of(cpu);
+ 	clockevents_register_device(cd);
+-	action->dev_id = cd;
+ 	if (request_irq(SNI_A20R_IRQ_TIMER, a20r_interrupt,
+-			IRQF_PERCPU | IRQF_TIMER, "a20r-timer", NULL))
++			IRQF_PERCPU | IRQF_TIMER, "a20r-timer", cd))
+ 		pr_err("Failed to register a20r-timer interrupt\n");
+ }
+ 
+
