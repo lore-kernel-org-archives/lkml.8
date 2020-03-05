@@ -2,121 +2,154 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE52FC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D276CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD37021556
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFBA21D56
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XNKMdglo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLDq4YaD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgCEVRH (ORCPT
+        id S1727023AbgCEVRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:17:07 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54805 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbgCEVRF (ORCPT
+        Thu, 5 Mar 2020 16:17:14 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:50911 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbgCEVRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:17:05 -0500
-Received: by mail-pj1-f66.google.com with SMTP id np16so120367pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 13:17:03 -0800 (PST)
+        Thu, 5 Mar 2020 16:17:12 -0500
+Received: by mail-pj1-f68.google.com with SMTP id nm6so128039pjb.0;
+        Thu, 05 Mar 2020 13:17:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=v1upWCD1mlNbaZtpOS/pHEyeFFYjDyZbTGORJ9Hi0Po=;
-        b=XNKMdglo9YOUj0vtGHLxx4w9M+D74XpIcU4euCxAw/oRnX95qUBq3YYOSLvlws4gkk
-         atLHgbiIjNl4Lp9deokObeR0JVIWdr2FmZPhgIfkwyijrv/GEYGYZm2UEGlBVLPDxs+J
-         0LEUO4jLu6BKbSOTzI6Mg6d7fY6bdnZ4QBEbQ=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sMCdEJuXdOhoW7m3gO5zM39AjW+YF/Rrads4zZrd1kg=;
+        b=QLDq4YaDIhaMBuukLE9flkTFbc+QtHMA/oiSdyTDoEucukwkh/qEIOtiLrIaSPrTK6
+         IbBwi9DE4rWJY/cRk6jqyRNQWADhqF4G3vuMdui0IZQ7kCZlXSJ6hvraMZnX89JIvTfq
+         BHstEMkSF+S53O+U2m43bKmbZaKOP7JCwhNQoCViZCDX8rGi8rzzaJV2caPcb181w2cV
+         5Ih7zwO2yZySaFOkknNUNLu46EQk/KI0nqyA5a2gSpyIvBCNIcrXNyv4auEuOR6S6rYO
+         wM8iKHLjtq8nNk20lh0Jm32XL9MiJhdHR8jU/J+3piz5zb/m8XsTiWgpo/DSCYRlR3js
+         37Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v1upWCD1mlNbaZtpOS/pHEyeFFYjDyZbTGORJ9Hi0Po=;
-        b=EEmXyQh3njkj9H2QbOIg1yVTWTXtlkuIP0+dwZqwkUOjofde21c/cOjbVLZOJ9idsQ
-         +71nspP2kuvGHLuYdkoiM7TX4tEZaQ1Kq/kTOs2+DUdFsrgNvkACbiPONaCAJBoUJ3Q7
-         LXDqbMfNBK21PIqUtG5sxBAtiWJ1ot8DwDz15aRTb7Ygnuh5CA2UYa1b7CjmnRinntVc
-         nhKsLKrcxUHhgn6RMAr1B69F9zBO4jqAwLnOPKzhHf5QDbnGNlfpaMtcW7jYRgN+2NDl
-         LA6jUl2E9lUCJ1Vv8QqdbwE0PfshWxQKl5cvfObnRyMMMOBHGisrDbM/HEO7+5Pr0JMT
-         UI2g==
-X-Gm-Message-State: ANhLgQ3Y0r040OM1gDoiOK0I/e932bYsqzWsi6z96EvcyJJcuUoNm9gQ
-        ima4+QcvgKKIBsD7HzelIPm2ugdVf4g=
-X-Google-Smtp-Source: ADFU+vuo71xr7b8efmkr7fBfrfvy+omdGcPEhfxnxPNTCL+ixBfzvYE9MKbAXGRIxUwFoXEpYSZksw==
-X-Received: by 2002:a17:902:b617:: with SMTP id b23mr10279367pls.285.1583443023339;
-        Thu, 05 Mar 2020 13:17:03 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y23sm13916086pfb.76.2020.03.05.13.17.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 13:17:02 -0800 (PST)
-Date:   Thu, 5 Mar 2020 13:17:01 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Joe Perches <joe@perches.com>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        kernel-hardening@lists.openwall.com,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sh: Stop printing the virtual memory layout
-Message-ID: <202003051310.F4AC41A@keescook>
-References: <202003021038.8F0369D907@keescook>
- <20200305151010.835954-1-nivedita@alum.mit.edu>
- <f672417e-1323-4ef2-58a1-1158c482d569@physik.fu-berlin.de>
- <31d1567c4c195f3bc5c6b610386cf0f559f9094f.camel@perches.com>
- <3c628a5a-35c7-3d92-b94b-23704500f7c4@physik.fu-berlin.de>
- <20200305154657.GA848330@rani.riverdale.lan>
- <456fddd9-c980-b0f2-9dd0-19befee7861e@physik.fu-berlin.de>
- <20200305155628.GA857024@rani.riverdale.lan>
- <20200305205158.GF6506@cisco>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sMCdEJuXdOhoW7m3gO5zM39AjW+YF/Rrads4zZrd1kg=;
+        b=CwBtAR2tzZ4odrHefeJPSc4FBYLSmeegGAXL5vRWFqcQObrVYEjpZEn8I3xFeET2yV
+         5lf8g6+SoqqPPgmPR60h0+pjdLz3OR968rHkuBbOzDUJWpDZkIqpxtTSVsCLT3JggrfV
+         UShLh98Pf643wZRuzCtBxf/XWnRLzlsn5GAG3ksRQSgbtVd99sQ8Drcd0gv4j4OQo+eW
+         0FBBLu/U2SRdx9z2RSOp0tt/0Du9ZEXRa3r8BfyWuDOik/bJukKZtezZMf5fXzTMLDCz
+         v+JF4gDH7kkJs2FItyk4USnQcGIm6xNRPXhP9NEuZ+rfc1cvtn/NdlvdEBt6NUzj0uVI
+         f2eg==
+X-Gm-Message-State: ANhLgQ3Y/9YPnGzOOgoVDGjlTQhMckKIudO8KFUt21PKzdaTEUz5h5B8
+        0Bd1HQ7QE15ovxOm+SU1HKfM2g9h
+X-Google-Smtp-Source: ADFU+vuBValh/xWu8eZS3JQlD4ct4iHhbaZw6HRIxQki/aNn7M/w9mK7wdAYuhReqpJGtbECQIuY/w==
+X-Received: by 2002:a17:902:401:: with SMTP id 1mr94281ple.177.1583443031459;
+        Thu, 05 Mar 2020 13:17:11 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id na18sm8053910pjb.9.2020.03.05.13.17.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 13:17:10 -0800 (PST)
+Subject: Re: [PATCH v3] net: memcg: late association of sock to memcg
+To:     Shakeel Butt <shakeelb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200305205525.245058-1-shakeelb@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <9505d35b-f9fc-149b-6df5-e65ad95acabb@gmail.com>
+Date:   Thu, 5 Mar 2020 13:17:09 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305205158.GF6506@cisco>
+In-Reply-To: <20200305205525.245058-1-shakeelb@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 01:51:58PM -0700, Tycho Andersen wrote:
-> On Thu, Mar 05, 2020 at 10:56:29AM -0500, Arvind Sankar wrote:
-> > On Thu, Mar 05, 2020 at 04:49:22PM +0100, John Paul Adrian Glaubitz wrote:
-> > > On 3/5/20 4:46 PM, Arvind Sankar wrote:
-> > > > Not really too late. I can do s/pr_info/pr_devel and resubmit.
-> > > > 
-> > > > parisc for eg actually hides this in #if 0 rather than deleting the
-> > > > code.
-> > > > 
-> > > > Kees, you fine with that?
-> > > 
-> > > But wasn't it removed for all the other architectures already? Or are these
-> > > changes not in Linus' tree yet?
-> > > 
-> > > Adrian
-> > 
-> > The ones mentioned in the commit message, yes, those are long gone. But
-> > I don't see any reason why the remaining ones (there are 6 left that I
-> > submitted patches just now for) couldn't switch to pr_devel instead.
+
+
+On 3/5/20 12:55 PM, Shakeel Butt wrote:
+> If a TCP socket is allocated in IRQ context or cloned from unassociated
+> (i.e. not associated to a memcg) in IRQ context then it will remain
+> unassociated for its whole life. Almost half of the TCPs created on the
+> system are created in IRQ context, so, memory used by such sockets will
+> not be accounted by the memcg.
 > 
-> If you do happen to re-send with pr_debug() instead, feel free to add
-
-(FYI, pr_devel() was suggested, not pr_debug() -- the former is
-compile-time enabled with DEBUG and the latter can be enabled dynamically
-in some cases in the kernel, so pr_debug() should not be used.)
-
-> my ack to that series as well. But in any case, this one is also:
+> This issue is more widespread in cgroup v1 where network memory
+> accounting is opt-in but it can happen in cgroup v2 if the source socket
+> for the cloning was created in root memcg.
 > 
-> Acked-by: Tycho Andersen <tycho@tycho.ws>
+> To fix the issue, just do the late association of the unassociated
+> sockets at accept() time in the process context and then force charge
+> the memory buffer already reserved by the socket.
+> 
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> ---
+> Changes since v2:
+> - Additional check for charging.
+> - Release the sock after charging.
+> 
+> Changes since v1:
+> - added sk->sk_rmem_alloc to initial charging.
+> - added synchronization to get memory usage and set sk_memcg race-free.
+> 
+>  net/ipv4/inet_connection_sock.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+> index a4db79b1b643..5face55cf818 100644
+> --- a/net/ipv4/inet_connection_sock.c
+> +++ b/net/ipv4/inet_connection_sock.c
+> @@ -482,6 +482,26 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
+>  		}
+>  		spin_unlock_bh(&queue->fastopenq.lock);
+>  	}
+> +
+> +	if (mem_cgroup_sockets_enabled && !newsk->sk_memcg) {
+> +		int amt;
+> +
+> +		/* atomically get the memory usage, set and charge the
+> +		 * sk->sk_memcg.
+> +		 */
+> +		lock_sock(newsk);
+> +
+> +		/* The sk has not been accepted yet, no need to look at
+> +		 * sk->sk_wmem_queued.
+> +		 */
+> +		amt = sk_mem_pages(newsk->sk_forward_alloc +
+> +				   atomic_read(&sk->sk_rmem_alloc));
+> +		mem_cgroup_sk_alloc(newsk);
+> +		if (newsk->sk_memcg && amt)
+> +			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
+> +
+> +		release_sock(newsk);
+> +	}
+>  out:
+>  	release_sock(sk);
+>  	if (req)
+> 
 
-Same for me. :) Consider the series:
+This patch looks fine, but why keeping the mem_cgroup_sk_alloc(newsk);
+in sk_clone_lock() ?
 
-Acked-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+Note that all TCP sk_clone_lock() calls happen in softirq context.
