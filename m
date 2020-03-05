@@ -2,110 +2,147 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123DDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EF7C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2001208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428876;
-	bh=F1D0R/proQlgrCAIHqb84XFSvyT3s+JQd9HSM/5D7iQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FS9toqszVzJFcAc6f5QVjURWfmQ1rb1jc7EJQSjMqDDn/VavHYI612HRvnWL3ZhrT
-	 V8OJIG5vNRjj6W0eczIpFTiHjIyyDy2qCJt3XMAhWvedtxKbwtUmqGjHR3itwNL4fS
-	 Y9mxFQhPSyNF+iTH4mFjdgaDNw3jmO4TP83c/pLE=
+	by mail.kernel.org (Postfix) with ESMTP id 2CCCA20637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q5In8rRR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgCERVP (ORCPT
+        id S1727867AbgCERVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:21:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727733AbgCEROi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:38 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EEFF217F4;
-        Thu,  5 Mar 2020 17:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428478;
-        bh=F1D0R/proQlgrCAIHqb84XFSvyT3s+JQd9HSM/5D7iQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W7SxEQF1mVAhLZYqDoXn5ssVdZaLqQNO9LM1HWM+YVe67nKu/2YGWXXOIXpMf1eqe
-         VifwgCXt7JBPzkrEjfiNNNBxgLPh5RZRy1sjHI07KmnpOOpSWZlJnZ14/RO1vGUl8Z
-         dDV+5CQT4z5oO8w5LWOt8lBXCGkbATereQfrNQ7k=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hanno Zulla <kontakt@hanno.de>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 14/58] HID: hid-bigbenff: fix general protection fault caused by double kfree
-Date:   Thu,  5 Mar 2020 12:13:35 -0500
-Message-Id: <20200305171420.29595-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
-References: <20200305171420.29595-1-sashal@kernel.org>
+        Thu, 5 Mar 2020 12:21:12 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36795 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbgCERVK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:21:10 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g12so2914597plo.3;
+        Thu, 05 Mar 2020 09:21:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N0N64ckCOqKc6ZJK0qMwyg/Ulb95IE0OLYm4Irt4HYc=;
+        b=q5In8rRR5y1BoKW12FK5C/a2p+hq/qxV3kRp3nGR64MvPMni5V0e8jQ8JpOBzgxx1O
+         csDdockVi0QpV/jYm7UwOehUxp9iqgpUHqureOBeNrQODecMWFGFpmJZQ37E1hQ57GoJ
+         WOqAnAoMOz51ARLYGg17SsB/IBrJ0Fa87ssJNs6OgBmbDdF5cl3MAnDuuu0ioc8II0rH
+         yfnHFDEzhn5OvKcHf46QOKx9nR4McQI7dbj7ht1JEGlHI0AMXlDpEEtuLNzfVixnMB6g
+         2vddGMidnAXZU8RKn+ywjF3ZfzosaWGjW+7ehDvS2q6OO6vjIA3ZGPsjqxHy93OxaCha
+         bESg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N0N64ckCOqKc6ZJK0qMwyg/Ulb95IE0OLYm4Irt4HYc=;
+        b=NXeGsdfKb4x1Iy+sfz5R//jdtQpuqVfVdQ9g+aorxn1PjdxXFV8su58bRZ2UecFM2v
+         Z0EBr+fxcH7nhamI9Y9AYHd+pJ4GnZWembtR/gpr/BD8BgY9GqaEL7KZgR30LGj3coFw
+         EKYJ+12n3qN8Dx90f+6esDXhNkRWpCCMYBCRRSYFPs7RU8GVgeb5lcIb7GEOFkU/QavX
+         HuWTzrVpduFnFq4/0PTeyByoewivPaStC60b5/AQP3eG6eie24BNoG7SUIKa633prg7i
+         Nl7DVbp4i7i7FI3t6ZCGUD7OKtHgVwF+pI88frihw648wsqE7RXWxOaieeO48vUdcZeD
+         szJQ==
+X-Gm-Message-State: ANhLgQ2L6dyuH1vTbHdkSimcD4da8dbwWlrjtcaf2YbUbd9bMd/yCS6N
+        kLa2F84/DYQexeaVUyY1+pQ=
+X-Google-Smtp-Source: ADFU+vtUW6mCHYJ00vUXWecjWj9VK7jBQBpZHz6iJxYZf0iSdfevdG45412meQQxE170SObQvgTPYA==
+X-Received: by 2002:a17:902:bd42:: with SMTP id b2mr9344237plx.34.1583428869489;
+        Thu, 05 Mar 2020 09:21:09 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:400::5:f0e7])
+        by smtp.gmail.com with ESMTPSA id s12sm9994271pgv.73.2020.03.05.09.21.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Mar 2020 09:21:08 -0800 (PST)
+Date:   Thu, 5 Mar 2020 09:21:05 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Paul Moore <paul@paul-moore.com>, jmorris@namei.org
+Subject: Re: [PATCH bpf-next v4 4/7] bpf: Attachment verification for
+ BPF_MODIFY_RETURN
+Message-ID: <20200305172103.uet5kf6uj5sudeie@ast-mbp>
+References: <20200304191853.1529-1-kpsingh@chromium.org>
+ <20200304191853.1529-5-kpsingh@chromium.org>
+ <CAEjxPJ4G4sp5_zHXxhe+crafNGV-oZZZ2YYbbMb61BZx0F_ujw@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEjxPJ4G4sp5_zHXxhe+crafNGV-oZZZ2YYbbMb61BZx0F_ujw@mail.gmail.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hanno Zulla <kontakt@hanno.de>
+On Thu, Mar 05, 2020 at 08:43:11AM -0500, Stephen Smalley wrote:
+> On Wed, Mar 4, 2020 at 2:20 PM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > - Allow BPF_MODIFY_RETURN attachment only to functions that are:
+> >
+> >     * Whitelisted for error injection by checking
+> >       within_error_injection_list. Similar discussions happened for the
+> >       bpf_override_return helper.
+> >
+> >     * security hooks, this is expected to be cleaned up with the LSM
+> >       changes after the KRSI patches introduce the LSM_HOOK macro:
+> >
+> >         https://lore.kernel.org/bpf/20200220175250.10795-1-kpsingh@chromium.org/
+> >
+> > - The attachment is currently limited to functions that return an int.
+> >   This can be extended later other types (e.g. PTR).
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > Acked-by: Andrii Nakryiko <andriin@fb.com>
+> > ---
+> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> > index 2460c8e6b5be..ae32517d4ccd 100644
+> > --- a/kernel/bpf/verifier.c
+> > +++ b/kernel/bpf/verifier.c
+> > @@ -9800,6 +9801,33 @@ static int check_struct_ops_btf_id(struct bpf_verifier_env *env)
+> >
+> >         return 0;
+> >  }
+> > +#define SECURITY_PREFIX "security_"
+> > +
+> > +static int check_attach_modify_return(struct bpf_verifier_env *env)
+> > +{
+> > +       struct bpf_prog *prog = env->prog;
+> > +       unsigned long addr = (unsigned long) prog->aux->trampoline->func.addr;
+> > +
+> > +       if (within_error_injection_list(addr))
+> > +               return 0;
+> > +
+> > +       /* This is expected to be cleaned up in the future with the KRSI effort
+> > +        * introducing the LSM_HOOK macro for cleaning up lsm_hooks.h.
+> > +        */
+> > +       if (!strncmp(SECURITY_PREFIX, prog->aux->attach_func_name,
+> > +                    sizeof(SECURITY_PREFIX) - 1)) {
+> > +
+> > +               if (!capable(CAP_MAC_ADMIN))
+> > +                       return -EPERM;
+> 
+> CAP_MAC_ADMIN was originally introduced for Smack and is not
+> all-powerful wrt SELinux, so this is not a sufficient check for
+> SELinux.
 
-[ Upstream commit 789a2c250340666220fa74bc6c8f58497e3863b3 ]
-
-The struct *bigben was allocated via devm_kzalloc() and then used as a
-parameter in input_ff_create_memless(). This caused a double kfree
-during removal of the device, since both the managed resource API and
-ml_ff_destroy() in drivers/input/ff-memless.c would call kfree() on it.
-
-Signed-off-by: Hanno Zulla <kontakt@hanno.de>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hid/hid-bigbenff.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
-index 3f6abd190df43..f7e85bacb6889 100644
---- a/drivers/hid/hid-bigbenff.c
-+++ b/drivers/hid/hid-bigbenff.c
-@@ -220,10 +220,16 @@ static void bigben_worker(struct work_struct *work)
- static int hid_bigben_play_effect(struct input_dev *dev, void *data,
- 			 struct ff_effect *effect)
- {
--	struct bigben_device *bigben = data;
-+	struct hid_device *hid = input_get_drvdata(dev);
-+	struct bigben_device *bigben = hid_get_drvdata(hid);
- 	u8 right_motor_on;
- 	u8 left_motor_force;
- 
-+	if (!bigben) {
-+		hid_err(hid, "no device data\n");
-+		return 0;
-+	}
-+
- 	if (effect->type != FF_RUMBLE)
- 		return 0;
- 
-@@ -341,7 +347,7 @@ static int bigben_probe(struct hid_device *hid,
- 
- 	INIT_WORK(&bigben->worker, bigben_worker);
- 
--	error = input_ff_create_memless(hidinput->input, bigben,
-+	error = input_ff_create_memless(hidinput->input, NULL,
- 		hid_bigben_play_effect);
- 	if (error)
- 		return error;
--- 
-2.20.1
-
+I think you're misunderstanding the intent here.
+This facility is just a faster version of kprobe based fault injection.
+It doesn't care about LSM. Security is not a focus here.
+It can fault inject in a lot of places in the kernel: syscalls,
+kmalloc, page_alloc, fs internals, etc
+I think above capable() check created this confusion and
+we should remove it.
