@@ -2,116 +2,100 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31273C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9919BC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F6C208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AA0208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eT8UZZeO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZZv6hqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbgCEFhy (ORCPT
+        id S1725930AbgCEFko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 00:37:54 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37913 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgCEFhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 00:37:53 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Xzzf3bpFz9sPg;
-        Thu,  5 Mar 2020 16:37:50 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583386671;
-        bh=uwsly7r56LR1gOgzYn8JlKEjCgBFw6Bgr3L0ffm2qGA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eT8UZZeOXhiytl80Ij4zcOXho21Uo/c2x5KatJ6sHGRwXQOq52Ful1deU/NwcTgZp
-         RMDKTV/ev6eQJZcr5bwtMql9wBhXRTPNNB4/7zu6NjTfmAfFuQowEGjoXHPowucrwX
-         R2/xOj+fTk3yWIR0TZYxkOJ5JjO67XGfEF1T3/R5tljltsQJ0ZCQds7sHIQ+vdQ2uC
-         WREf/4W+a9HX35mqsZlyJ9ehAGOuEzK+u9L1Pi8Qx5C1r/dXuLvb9vYzQuJhIiv+54
-         V2AR/H/niiD6mbagRRWRLEYY5N3GIng3oSzSlnoKQsGcl5IsQobl/eLMd9FP8ju/Xe
-         ojLY3Usxr/Vjw==
-Date:   Thu, 5 Mar 2020 16:37:43 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20200305163743.7128c251@canb.auug.org.au>
+        Thu, 5 Mar 2020 00:40:44 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:45554 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgCEFko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 00:40:44 -0500
+Received: by mail-qv1-f68.google.com with SMTP id r8so1911337qvs.12;
+        Wed, 04 Mar 2020 21:40:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=THBYMEY1yGfalLtbzYiKSYkmAX5Lj+jvZpr5bKLPTp0=;
+        b=EZZv6hqD7ymuE6lbhHNuFocVxoT/8FJaP+Xdqv6NKFkH2BKU/X52VI7p/f0086Cvex
+         A1xR+vIZOTlfJFozjl7vvRT12YHemz/A6ZbTZe9FB5ikmBiBbxI9W/q4qBGKIMHmWz9n
+         tPAQnLeUfE67fU17daLSM8SxDrAaIJBF5vsbTbLMf87QcxItNe9GtxLwZFUBT1Ov/yDQ
+         p4VkR/YCQzHiq7P42dX/faOLX8Rg3fb8D1jgQZ1QWXDM8BrfdVVCRui5QMvSAD9jyQCb
+         xe9VDdDqfkk8qtrS/XaXQajELx7JA1AomSuxIJrZv+L+cYhrzmFyUyP3gmWH5B2Y8mko
+         qbRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=THBYMEY1yGfalLtbzYiKSYkmAX5Lj+jvZpr5bKLPTp0=;
+        b=Bqr6jnkWOuh93IqQwI8pmzyIyvbhjMFazHdJLt3U9uAZNGmuouklLQlWG/XQXg8o8X
+         17J76YM5cJy5J3T5cbvdd4ai957f1zEvh4++K6SEgmloplgvPyvHDwQwZRp54U3+Aw1C
+         WFeLR0Cr9DWsE5Y6EEUo4QrvXkrdz40VbuteKk4yDW50CPQ9GEhsKs2KSGyQf9eiN2EM
+         2MuWZJFWLcDT/Ga7BrPhuubxlLaGW8q7Gd8w+FIz3cNFXqtwYEBx5pMinW4mIJCVsX4i
+         XkwSy8Ga6bJ5J+7SYH9Ew+u3AUIEgY4PKu/yMUiw+09/1uJzVjLxDl+KUMrx7jvljeAf
+         U4QA==
+X-Gm-Message-State: ANhLgQ1Eoo6mHb3Vd/iH/tWEJx0gvGDx5lNYxPPz8I6Wxvd+o+BjXL1b
+        CpXixewA8xf7oV11COcp3bNo8P3HcwTdyyH30CM=
+X-Google-Smtp-Source: ADFU+vtfOIyH1BW9riEZRACvPgvUTdUP01Lk72U0ekfmC8baXSmHIuWMubjgSVFDnAmUEs9i1uAgEiXwdE9VRISclzc=
+X-Received: by 2002:ad4:4f87:: with SMTP id em7mr4923418qvb.97.1583386840011;
+ Wed, 04 Mar 2020 21:40:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qCODnZABl+nVPlHcR_c1_U=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200305050207.4159-1-luke.r.nels@gmail.com>
+In-Reply-To: <20200305050207.4159-1-luke.r.nels@gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Thu, 5 Mar 2020 06:40:28 +0100
+Message-ID: <CAJ+HfNjrUxVqpBgC-WLHbZX7_7Gd-Lk7ghrmASTmaNySuXVUfg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 0/4] eBPF JIT for RV32G
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qCODnZABl+nVPlHcR_c1_U=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 5 Mar 2020 at 06:02, Luke Nelson <lukenels@cs.washington.edu> wrote=
+:
+>
+> This series adds an eBPF JIT for 32-bit RISC-V (RV32G) to the kernel,
+> adapted from the RV64 JIT and the 32-bit ARM JIT.
+>
 
-Hi all,
+Nice work! Thanks for hanging in there!
 
-After merging the akpm-current tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
-
-mm/kasan/common.o: warning: objtool: kasan_report()+0x17: call to report_en=
-abled() with UACCESS enabled
-In file included from include/linux/bitmap.h:9,
-                 from include/linux/cpumask.h:12,
-                 from arch/x86/include/asm/paravirt.h:17,
-                 from arch/x86/include/asm/irqflags.h:72,
-                 from include/linux/irqflags.h:16,
-                 from include/linux/rcupdate.h:26,
-                 from include/linux/rculist.h:11,
-                 from include/linux/pid.h:5,
-                 from include/linux/sched.h:14,
-                 from include/linux/uaccess.h:6,
-                 from arch/x86/include/asm/fpu/xstate.h:5,
-                 from arch/x86/include/asm/pgtable.h:26,
-                 from include/linux/kasan.h:15,
-                 from lib/test_kasan.c:12:
-In function 'memmove',
-    inlined from 'kmalloc_memmove_invalid_size' at lib/test_kasan.c:301:2:
-include/linux/string.h:441:9: warning: '__builtin_memmove' specified bound =
-18446744073709551614 exceeds maximum object size 9223372036854775807 [-Wstr=
-ingop-overflow=3D]
-  441 |  return __builtin_memmove(p, q, size);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Introduced by commit
-
-  519e500fac64 ("kasan: add test for invalid size in memmove")
-
-That's a bit annoying during a normal x86_64 allmodconfig build ...
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/qCODnZABl+nVPlHcR_c1_U=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5gkCcACgkQAVBC80lX
-0GxG5Qf/eCX+x5T2DJ2WL5i9H06GtsJzZX4xIvikvbcofdRdeMCP7mtZG2kEQhz/
-6WXEZ57/XNa7HCSLctFkGV1BSp8HeB2sESTOG7Augg392rUa8uej5zCzJC8wskkY
-vt0TfTjBEDeTHmUwLyYBheXAKcSWNiby8YIN9eIyu63UCZz/5Vvuf+LcJz4t7Vab
-elWzl4uEvqsKlVwkIkZJpn0vUJkHGdTatiGteu8m1OLdgKb1HBOXh+R003fhzrog
-cUftGsyZ69XVs8vf2fglw9D3BMkj5ywi88OoZvr+VFoWVNYPPdKziH9LASQwGkCa
-LA+EWqJ2NDhGmqBHNUY2D/mnq4tktg==
-=ugqg
------END PGP SIGNATURE-----
-
---Sig_/qCODnZABl+nVPlHcR_c1_U=--
+For the series,
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
