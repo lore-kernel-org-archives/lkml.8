@@ -2,119 +2,142 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A460AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB81AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B2A2146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TrXFGp1U"
+	by mail.kernel.org (Postfix) with ESMTP id 8AC1D208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbgCEGrV (ORCPT
+        id S1726178AbgCEGtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 01:47:21 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45212 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgCEGrU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 01:47:20 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so2270985pfg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 22:47:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Hi+ymt1+ZK+4/hZC+nU21CDGGtFU5NQQqT7q6q0SBFo=;
-        b=TrXFGp1UOLZ81xjjj8Ld6ZXKtw2LxXMuAhkikXLeq7NEU9qtgy78LQeOfi1M5k88Tu
-         Mg+W7wQdZK7P7xCvaJhZBT77l7k9ZZGWCjbdrgbnM6+30B5npV6eVynIAZ5IOJKx3hOc
-         iTHZaabE3ienA6Kld85mTCGrwU/WQhB/MtnOg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Hi+ymt1+ZK+4/hZC+nU21CDGGtFU5NQQqT7q6q0SBFo=;
-        b=AohL14Yj8yE5Ah3TX6chgLGugTmk1ZzJ/qOdvZ6Yy558A3DiLmXOMh5+SOeHF6Rwac
-         mj+t54m007/r3YbUYAK8q+lk5w+XlKpfMZH4q0w0KrMsgz9HVICIw860s6AjUekrI7Bi
-         4DS3qeBAV+W85UWZll4Ef1P1tWl7DSbNfThqJZqrEzt7ReymFB0yyFo8v/kwgYI8mZ1d
-         JHMicm95uQIfQ/pOrLPPN7m4LlfmkUUDmD3U0v8fzZBrVKp9H4AcTJfhSLjGvDZ5abYW
-         tDbCyY02wY3Cdt8E8iBOy55TsMBc7M+L0HuqqaG7nZMxPunhR5O6fJ1GiMCcIi4Kw47a
-         YWXw==
-X-Gm-Message-State: ANhLgQ1G7rth+/1CHHMSKT5/5/6WtgscJkGzOkXdlO/A/14jb5zw9f+x
-        jHeIUz+fBkLxO5274nkVWBihoA==
-X-Google-Smtp-Source: ADFU+vsbqls1nrbe9BpspSCMfdCIY41dz2xuWpmDc4hCJpU6bz5CXXDt1Q4w4Okrvft+R6Ri34q0Yw==
-X-Received: by 2002:a65:53cc:: with SMTP id z12mr5426000pgr.399.1583390839872;
-        Wed, 04 Mar 2020 22:47:19 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b133sm30300515pga.43.2020.03.04.22.47.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 22:47:19 -0800 (PST)
-Date:   Wed, 4 Mar 2020 22:47:18 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     James Troup <james.troup@canonical.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: deprecated.rst: Add %p to the list
-Message-ID: <202003042240.3F6201CC3@keescook>
-References: <202003041103.A5842AD@keescook>
- <87mu8vtj6g.fsf@canonical.com>
+        Thu, 5 Mar 2020 01:49:06 -0500
+Received: from mga18.intel.com ([134.134.136.126]:61801 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbgCEGtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 01:49:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 22:49:05 -0800
+X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
+   d="scan'208";a="234320571"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.168.47]) ([10.249.168.47])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 04 Mar 2020 22:49:01 -0800
+Subject: Re: [PATCH v3 3/8] x86/split_lock: Cache the value of MSR_TEST_CTRL
+ in percpu data
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
+        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200206070412.17400-1-xiaoyao.li@intel.com>
+ <20200206070412.17400-4-xiaoyao.li@intel.com>
+ <20200303191833.GT1439@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <e0bd572e-2f4f-743b-1df8-4d76e13d04ba@intel.com>
+Date:   Thu, 5 Mar 2020 14:48:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mu8vtj6g.fsf@canonical.com>
+In-Reply-To: <20200303191833.GT1439@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ah! A wild Troup appears! :)
-
-On Thu, Mar 05, 2020 at 07:22:31AM +0100, James Troup wrote:
-> Kees Cook <keescook@chromium.org> writes:
+On 3/4/2020 3:18 AM, Sean Christopherson wrote:
+> On Thu, Feb 06, 2020 at 03:04:07PM +0800, Xiaoyao Li wrote:
+>> Cache the value of MSR_TEST_CTRL in percpu data msr_test_ctrl_cache,
+>> which will be used by KVM module.
+>>
+>> It also avoids an expensive RDMSR instruction if SLD needs to be context
+>> switched.
+>>
+>> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>> ---
+>>   arch/x86/include/asm/cpu.h  |  2 ++
+>>   arch/x86/kernel/cpu/intel.c | 19 ++++++++++++-------
+>>   2 files changed, 14 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+>> index ff567afa6ee1..2b20829db450 100644
+>> --- a/arch/x86/include/asm/cpu.h
+>> +++ b/arch/x86/include/asm/cpu.h
+>> @@ -27,6 +27,8 @@ struct x86_cpu {
+>>   };
+>>   
+>>   #ifdef CONFIG_HOTPLUG_CPU
+>> +DECLARE_PER_CPU(u64, msr_test_ctrl_cache);
+>> +
+>>   extern int arch_register_cpu(int num);
+>>   extern void arch_unregister_cpu(int);
+>>   extern void start_cpu0(void);
+>> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+>> index 49535ed81c22..ff27d026cb4a 100644
+>> --- a/arch/x86/kernel/cpu/intel.c
+>> +++ b/arch/x86/kernel/cpu/intel.c
+>> @@ -46,6 +46,9 @@ enum split_lock_detect_state {
+>>    */
+>>   static enum split_lock_detect_state sld_state = sld_off;
+>>   
+>> +DEFINE_PER_CPU(u64, msr_test_ctrl_cache);
+>> +EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctrl_cache);
+>> +
+>>   /*
+>>    * Processors which have self-snooping capability can handle conflicting
+>>    * memory type across CPUs by snooping its own cache. However, there exists
+>> @@ -1043,20 +1046,22 @@ static void __init split_lock_setup(void)
+>>    */
+>>   static void __sld_msr_set(bool on)
+>>   {
+>> -	u64 test_ctrl_val;
+>> -
+>> -	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>> -
+>>   	if (on)
+>> -		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>> +		this_cpu_or(msr_test_ctrl_cache, MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
+>>   	else
+>> -		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>> +		this_cpu_and(msr_test_ctrl_cache, ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
 > 
-> > diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-> > index f9f196d3a69b..a4db119f4e09 100644
-> > --- a/Documentation/process/deprecated.rst
-> > +++ b/Documentation/process/deprecated.rst
-> > @@ -109,6 +109,23 @@ the given limit of bytes to copy. This is inefficient and can lead to
-> >  linear read overflows if a source string is not NUL-terminated. The
-> >  safe replacement is :c:func:`strscpy`.
-> >  
-> > +%p format specifier
-> > +-------------------
-> > +Using %p in format strings leads to a huge number of address exposures.
+> Updating the cache is at best unnecessary, and at worst dangerous, e.g. it
+> incorrectly implies that the cached value of SPLIT_LOCK_DETECT is reliable.
 > 
-> Perhaps this sentence should be in the past tense, since %p currently
-> prints a hashed value?
+> Tony's patch[*] is more what I had in mind, the only question is whether the
+> kernel should be paranoid about other bits in MSR_TEST_CTL.
 
-Yeah, good point; that should be more clear.
+OK, I'll use Tony's patch.
 
+> [*] 20200206004944.GA11455@agluck-desk2.amr.corp.intel.com
 > 
-> > +Instead of leaving these to be exploitable, "%p" should not be used in
-> > +the kernel.
-> 
-> On its face, this seems to contradict the guidance below?
-> 
-> > If used currently, it is a hashed value, rendering it
-> 
-> Perhaps: s/it is/it prints/ ?
+>> -	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>> +	wrmsrl(MSR_TEST_CTRL, this_cpu_read(msr_test_ctrl_cache));
+>>   }
+>>   
+>>   static void split_lock_init(void)
+>>   {
+>> +	u64 test_ctrl_val;
+>> +
+>> +	/* Cache MSR TEST_CTRL */
+>> +	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>> +	this_cpu_write(msr_test_ctrl_cache, test_ctrl_val);
+>> +
+>>   	if (sld_state == sld_off)
+>>   		return;
+>>   
+>> -- 
+>> 2.23.0
+>>
 
-I'll rewrite this whole area...
-
-> 
-> > +unusable for addressing. Paraphrasing Linus's current `guideance
-> > <https://lore.kernel.org/lkml/CA+55aFwQEd_d40g4mUCSsVRZzrFPUJt74vc6PPpb675hYNXcKw@mail.gmail.com/>`_:
-> 
-> Typo: guidance
-
-Thanks for the review! I wonder why ":set spell" missed that...
-
--Kees
-
--- 
-Kees Cook
