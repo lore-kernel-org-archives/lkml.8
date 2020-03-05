@@ -2,138 +2,108 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF12C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F23C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05882146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A52020732
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwn7De6D"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WQLH2x8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgCEOtu (ORCPT
+        id S1726867AbgCEOuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:49:50 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:37229 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgCEOts (ORCPT
+        Thu, 5 Mar 2020 09:50:15 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:58408 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726222AbgCEOuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:49:48 -0500
-Received: by mail-qv1-f68.google.com with SMTP id c19so2524142qvv.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:49:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SwhhEvZC8ISuj8BzMi7OAT03/sqD5YiHVmOJxZpeUc0=;
-        b=kwn7De6DXFSmNPiKMSYDdKClyFam7AxPe9nwxhpxbZjEW/7KPvChLZ2gb8UTEjVX2e
-         E1HtsyJP9sAdp4OrkOz+DIsO4ZQlY52ExmpE4hG16oRhJudMT5BxXkE0HoqqqCwy5Hxp
-         ur6q6pFG+CeJXfUzVZsmV48/SSswlljBs1IzcWiTpjFfigtA3dNaLDrTvOahZbbmNcFb
-         KSauIXXfs8e39qicjbYwuj8U5gVrBTNiHDb9rF9D5/TbIV8Aq3zS6W/4VxJbVGRAc2fh
-         A7wVFA/aoIzC84FatA42q9NvM/B5sU/pKubj/J13t5p1Hg9I+Ph52HVgF3DAGRDCvJ2Q
-         qsmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SwhhEvZC8ISuj8BzMi7OAT03/sqD5YiHVmOJxZpeUc0=;
-        b=icEYT9xO0hLW/3/lETFWlaoYlSpXzBD+FtJmAxWi8cEj15RpPM9eRJtNrMHVv7mUdG
-         TiI/hxttv8w+fmuAkT0hJNOEY4a8eK3I85AeUCJMPo10CvDRdqIqivcSBpcFOlQTUw7C
-         uPbmFzJQoC+ClCAXSqP0uErm5a4Bfuzij1QW0YJQJ2x+xC8xcc0QtIpv9rr4a+M0Lg9G
-         pL3g53H4iRgCvm+Pl95PMLJ6KZiBnMzk3phxmwkBgIgIVcrSw4BQ05sn/MchskVSCpES
-         boXobtgC0jo2d/u6bERhpxWEPAzT5qw6Aj4Na2daBSr45t7OQS9sxra1aofM867OKUof
-         M+7g==
-X-Gm-Message-State: ANhLgQ1aFDHjmjY5G320s/g2GbbgWKqtcdFiaNM7cTvs6TSjU79sg3p+
-        PMq1jotbsHdo0pbRSM/QgkI=
-X-Google-Smtp-Source: ADFU+vvRvwmhzZr9w0IPcVus8AMKk7bQmsJOZtj1su/2VaP1qN+jwwHQEqfc8s+3X0EcK7bEM0QuTg==
-X-Received: by 2002:ad4:47aa:: with SMTP id a10mr6515928qvz.230.1583419787021;
-        Thu, 05 Mar 2020 06:49:47 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id s56sm221196qtk.9.2020.03.05.06.49.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 06:49:46 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EC0DE403AD; Thu,  5 Mar 2020 11:49:43 -0300 (-03)
-Date:   Thu, 5 Mar 2020 11:49:43 -0300
-To:     Tommi Rantala <tommi.t.rantala@nokia.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Thu, 5 Mar 2020 09:50:14 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583419814; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=EQk0KCf8GS+eddjuRJP/6UWlL8WvGJW4Y9Or4QcCRFc=; b=WQLH2x8p80hZv5kHZu9J0IwvV82/J7V6REWVadRu+iW2AtQX+MD4yh4gZjA3CsKkZPC0pV9R
+ C1SMg/MWB62l2TT85131uQRF8YC9CWxx7KVJ8YTsV3quwK2YYGsG302euVuIyN3XHXNZp2C7
+ 3j4Zkt7u9GIFn/OSQ2mF9FMrozY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6111a0.7faf999d98f0-smtp-out-n01;
+ Thu, 05 Mar 2020 14:50:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6F02EC447A0; Thu,  5 Mar 2020 14:50:08 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC02CC43383;
+        Thu,  5 Mar 2020 14:50:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC02CC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf top: Fix stdio interface input handling with
- glibc 2.28+
-Message-ID: <20200305144943.GA7895@kernel.org>
-References: <20200305083714.9381-1-tommi.t.rantala@nokia.com>
- <20200305083714.9381-2-tommi.t.rantala@nokia.com>
+Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with flexible-array member
+References: <20200305111216.GA24982@embeddedor>
+Date:   Thu, 05 Mar 2020 16:50:03 +0200
+In-Reply-To: <20200305111216.GA24982@embeddedor> (Gustavo A. R. Silva's
+        message of "Thu, 5 Mar 2020 05:12:16 -0600")
+Message-ID: <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305083714.9381-2-tommi.t.rantala@nokia.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 05, 2020 at 10:37:12AM +0200, Tommi Rantala escreveu:
-> Since glibc 2.28 when running 'perf top --stdio', input handling no
-> longer works, but hitting any key always just prints the "Mapped keys"
-> help text.
-> 
-> To fix it, call clearerr() in the display_thread() loop to clear any EOF
-> sticky errors, as instructed in the glibc NEWS file
-> (https://sourceware.org/git/?p=glibc.git;a=blob;f=NEWS):
-> 
->  * All stdio functions now treat end-of-file as a sticky condition.  If you
->    read from a file until EOF, and then the file is enlarged by another
->    process, you must call clearerr or another function with the same effect
->    (e.g. fseek, rewind) before you can read the additional data.  This
->    corrects a longstanding C99 conformance bug.  It is most likely to affect
->    programs that use stdio to read interactive input from a terminal.
->    (Bug #1190.)
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
 
-Thanks for fixing this, I had stumbled on it at some point, but since I
-mostly use the TUI interface, it fell thru the cracks.
-
-Do you prefer it over the TUI one?
-
-Thanks, tested and applied.
-
-- Arnaldo
- 
-> Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  tools/perf/builtin-top.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index f6dd1a63f159e..d2539b793f9d4 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -684,7 +684,9 @@ static void *display_thread(void *arg)
->  	delay_msecs = top->delay_secs * MSEC_PER_SEC;
->  	set_term_quiet_input(&save);
->  	/* trash return*/
-> -	getc(stdin);
-> +	clearerr(stdin);
-> +	if (poll(&stdin_poll, 1, 0) > 0)
-> +		getc(stdin);
->  
->  	while (!done) {
->  		perf_top__print_sym_table(top);
-> -- 
-> 2.21.1
-> 
+>  drivers/net/wireless/zydas/zd1211rw/zd_usb.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+
+"zd1211rw: " is enough, no need to have the filename in the title.
+
+But I asked this already in an earlier patch, who prefers this format?
+It already got opposition so I'm not sure what to do.
 
 -- 
-
-- Arnaldo
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
