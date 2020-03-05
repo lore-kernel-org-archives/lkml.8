@@ -2,29 +2,29 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06704C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A07C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB571208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D0D2146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgCELMd (ORCPT
+        id S1727392AbgCELMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:12:33 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60624 "EHLO huawei.com"
+        Thu, 5 Mar 2020 06:12:35 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60754 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726101AbgCELMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:12:32 -0500
+        id S1727359AbgCELMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 06:12:34 -0500
 Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5EC35B4095B798895011;
+        by Forcepoint Email with ESMTP id 8BEFDADE6EC7917DF24A;
         Thu,  5 Mar 2020 19:12:28 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 5 Mar 2020 19:12:21 +0800
+ 14.3.439.0; Thu, 5 Mar 2020 19:12:19 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -32,12 +32,10 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 CC:     <will@kernel.org>, <ak@linux.intel.com>, <linuxarm@huawei.com>,
         <linux-kernel@vger.kernel.org>, <james.clark@arm.com>,
         <qiangqing.zhang@nxp.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH 5/6] perf pmu: Add is_pmu_core()
-Date:   Thu, 5 Mar 2020 19:08:05 +0800
-Message-ID: <1583406486-154841-6-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 0/6] perf test pmu-events case
+Date:   Thu, 5 Mar 2020 19:08:00 +0800
+Message-ID: <1583406486-154841-1-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1583406486-154841-1-git-send-email-john.garry@huawei.com>
-References: <1583406486-154841-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.58]
@@ -47,42 +45,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a function to decide whether a PMU is a core PMU.
+This series introduces a basic perf test pmu-events test case.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- tools/perf/util/pmu.c | 5 +++++
- tools/perf/util/pmu.h | 1 +
- 2 files changed, 6 insertions(+)
+The test works by verifying correctly created aliases for the HW PMUs in
+the host system.
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index c616a06a34a8..55129d09f19d 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1400,6 +1400,11 @@ static void wordwrap(char *s, int start, int max, int corr)
- 	}
- }
- 
-+bool is_pmu_core(const char *name)
-+{
-+	return !strcmp(name, "cpu") || is_arm_pmu_core(name);
-+}
-+
- void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
- 			bool long_desc, bool details_flag, bool deprecated)
- {
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 0b4a0efae38e..b756946ae78d 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -88,6 +88,7 @@ int perf_pmu__format_parse(char *dir, struct list_head *head);
- 
- struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
- 
-+bool is_pmu_core(const char *name);
- void print_pmu_events(const char *event_glob, bool name_only, bool quiet,
- 		      bool long_desc, bool details_flag,
- 		      bool deprecated);
+The aliases come from a set of invented test events, which are (mostly)
+arch agnostic (even though I copied these aliases from pre-existing x86
+and arm64 JSONs).
+
+In the test, core and uncore events are treated slightly differently. For
+core test events, all events are matched. However, for uncore test events,
+these have "Unit" property, so can only be matched when the corresponding
+HW PMU exists in the host sytem.
+
+A test run looks like this on my x86 dev box:
+
+kernel-dev$ tools/perf/perf test -vv 10
+Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+10: PMU event aliases                                     :
+--- start ---
+test child forked, pid 30869
+Using CPUID GenuineIntel-6-9E-9
+intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
+skipping testing PMU software
+testing PMU power: skip
+testing PMU cpu: matched event segment_reg_loads.any
+testing PMU cpu: matched event dispatch_blocked.any
+testing PMU cpu: matched event eist_trans
+testing PMU cpu: matched event bp_l1_btb_correct
+testing PMU cpu: matched event bp_l2_btb_correct
+testing PMU cpu: pass
+testing PMU cstate_core: skip
+testing PMU uncore_cbox_2: matched event unc_cbo_xsnp_response.miss_eviction
+testing PMU uncore_cbox_2: pass
+skipping testing PMU breakpoint
+testing PMU uncore_cbox_0: matched event unc_cbo_xsnp_response.miss_eviction
+testing PMU uncore_cbox_0: pass
+skipping testing PMU tracepoint
+testing PMU cstate_pkg: skip
+testing PMU uncore_arb: skip
+testing PMU msr: skip
+testing PMU uncore_cbox_3: matched event unc_cbo_xsnp_response.miss_eviction
+testing PMU uncore_cbox_3: pass
+testing PMU intel_pt: skip
+testing PMU uncore_cbox_1: matched event unc_cbo_xsnp_response.miss_eviction
+testing PMU uncore_cbox_1: pass
+test child finished with 0
+---- end ----
+PMU event aliases: Ok
+
+
+Comments welcome.
+
+John Garry (6):
+  perf jevents: Fix leak of mapfile memory
+  perf jevents: Support test events folder
+  perf jevents: Add some test events
+  perf pmu: Refactor pmu_add_cpu_aliases()
+  perf pmu: Add is_pmu_core()
+  perf test: Add pmu-events test
+
+ .../pmu-events/arch/test/test_cpu/branch.json |  12 ++
+ .../pmu-events/arch/test/test_cpu/other.json  |  26 +++
+ .../pmu-events/arch/test/test_cpu/uncore.json |  21 ++
+ tools/perf/pmu-events/jevents.c               |  59 +++++-
+ tools/perf/pmu-events/pmu-events.h            |   4 +
+ tools/perf/tests/Build                        |   1 +
+ tools/perf/tests/builtin-test.c               |   4 +
+ tools/perf/tests/pmu-events.c                 | 192 ++++++++++++++++++
+ tools/perf/tests/tests.h                      |   1 +
+ tools/perf/util/pmu.c                         |  26 ++-
+ tools/perf/util/pmu.h                         |   4 +
+ 11 files changed, 336 insertions(+), 14 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/other.json
+ create mode 100644 tools/perf/pmu-events/arch/test/test_cpu/uncore.json
+ create mode 100644 tools/perf/tests/pmu-events.c
+
 -- 
 2.17.1
 
