@@ -2,520 +2,111 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB383C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF35C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7F620842
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eqjIqyy1"
+	by mail.kernel.org (Postfix) with ESMTP id 6B99420842
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725924AbgCECOX (ORCPT
+        id S1725938AbgCECPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 21:14:23 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42124 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgCECOW (ORCPT
+        Wed, 4 Mar 2020 21:15:13 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:42639 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbgCECPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 21:14:22 -0500
-Received: by mail-wr1-f68.google.com with SMTP id v11so3110873wrm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 18:14:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h8I1xecVxNNi5tFU1gGTG9NyoLTUy5gavjvckL+7Wvw=;
-        b=eqjIqyy1DflD56NVzwfhp+29wLheq1lRGME/xjOK8seJmQu3GjgBOFleESYbVpWQ16
-         blXbbXudiiWDj4n2rJgkHmyA0q1o71lxUyhSBPzhuWR+2DanKepOyKrRLUhrvZ3Tntuy
-         pH2md8URPSu97pPjmRl8dppK/OxfSgzUNOHhkWzwPWumvgDrS0YLvnaF60SFtuYtiQjM
-         nyCNfBmMgitOWNRXlzJXExX7W7Xa+mUHF3IcMsrrAXKES9uaskUvSfBirGJ7aJp2qnpd
-         HCj2jGJpx4bsI8gFG+VxtAUzdaCz7flSE8d6MTONX7oPSHZ32air3cTVcgoTlcJtw2+U
-         riiQ==
+        Wed, 4 Mar 2020 21:15:13 -0500
+Received: by mail-il1-f197.google.com with SMTP id 142so3343544ilc.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 18:15:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h8I1xecVxNNi5tFU1gGTG9NyoLTUy5gavjvckL+7Wvw=;
-        b=OkSM2FYqoE4te1w8UqN54Z4ZrU9kFLQdAYX8oW74WhLa4qjQcA/eFW2U3NzBIjrGdC
-         Q2GPBPLSQm9IgZLX0U+i2mTxPNyP4PdOMuwMueyFqDiTs1KuTVFd8CxFburNNJZpDze9
-         czcl6UgZCg0y36Ep11rjD6T3kuOwoxc4b5s8ENiYeciALwn0HzjOv43u2Z9Y09/BxKSB
-         dVS7tc6KlX16DfwgwO9If/7mWZ56OLlVdKnEe132NWWlo25Q+HGau3lCH7lm5+GCVtdP
-         TJnxpkNUnnJ1qAduRhu0ulrm2L0VnDsYIq5VCAF5JubcW7x0BQGbUkOuiC6FTlLgUVJj
-         MzGQ==
-X-Gm-Message-State: ANhLgQ0NtpT/NkKpeOu0oNXQzLi1QqzEhjnFRzpYPjWg3Yt2gu2JovX7
-        4v6TXsgGebD7hq432PUKhykhC0mv4Sn3bI4/RVKJVg==
-X-Google-Smtp-Source: ADFU+vv3SfMV91UzeMQ24TmUvsiVMLnphaH27GCWzbPasOqluGacWVGIw22BykluBaVFRvQHD6oeFra2mpeRcOmci3E=
-X-Received: by 2002:adf:e38d:: with SMTP id e13mr6821734wrm.133.1583374458990;
- Wed, 04 Mar 2020 18:14:18 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=KosNoMY9v17iDXcHTJBpDff1UGW+eB08bYAxxRTDr4w=;
+        b=jnxomXQw8wZFQgUglDXnrrVtMU24n76RMm8Nscdp4mmXj27E8DA0KQmBqP+RCYJGes
+         1gotNtUmxf6zdioXYUNL8q1YKM9UpNP2ajszJllnqQh9E1ec0ZL7MNxUkpWKKqWymvLr
+         i8/+818pXrrBbqcV9d4aIq71rnolHK1klZZcl4rpZjTAUIRF3adxMTnKMnIKU+rZgmuE
+         h2uqu2SH+AWDGHkHMUOtF3q4hCBYz3c3e/we8D7GTn8/omQ5didezItMS5MdKSx9t4ST
+         4dqYggkGiuihZ2l6tOWEcyyuY6fUw/fqtSGb900WxNUqEWd9k9vse228Mm6lDSwCTKY3
+         E+Uw==
+X-Gm-Message-State: ANhLgQ3Aonm/p045i4TxLLeq4iGJXfbWd8tyWxAlK9wAylJPEfrOt7qQ
+        GXtFqF+L8vsC3ItVW7z/Hb682d1b9F+qgr79uxb9Jrx1JaK5
+X-Google-Smtp-Source: ADFU+vsYJrUQjDBgJFlBKDBKJz9xhrZVbcp0HALhImbeGn7/IPIYMCJhCT9mv2aPc0njJ/aGptKhckCzS56BX425CN+2WQBvwOZ5
 MIME-Version: 1.0
-References: <20200227024301.217042-1-trishalfonso@google.com>
- <20200227024301.217042-2-trishalfonso@google.com> <alpine.LRH.2.20.2002271136160.12417@dhcp-10-175-190-15.vpn.oracle.com>
- <CAKFsvUK2hFV3LePxwBXO_ubrgYoOk7fuKMOy+vSAH5Tf3SrMOA@mail.gmail.com> <alpine.LRH.2.20.2003031617400.13146@dhcp-10-175-165-222.vpn.oracle.com>
-In-Reply-To: <alpine.LRH.2.20.2003031617400.13146@dhcp-10-175-165-222.vpn.oracle.com>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Wed, 4 Mar 2020 18:14:07 -0800
-Message-ID: <CAKFsvUKk=ggYsRcaDrrtRuW3-A5cQh1Q5uA3NBMsnAL1nEUsLg@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
+X-Received: by 2002:a92:1310:: with SMTP id 16mr6027477ilt.45.1583374512443;
+ Wed, 04 Mar 2020 18:15:12 -0800 (PST)
+Date:   Wed, 04 Mar 2020 18:15:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005c66c305a0121be1@google.com>
+Subject: BUG: sleeping function called from invalid context in do_page_fault
+From:   syzbot <syzbot+7f59c1e54e5ce4d95cf7@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 8:40 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> On Fri, 28 Feb 2020, Patricia Alfonso wrote:
->
-> > On Thu, Feb 27, 2020 at 6:04 AM Alan Maguire <alan.maguire@oracle.com> wrote:
-> > >
-> > > On Wed, 26 Feb 2020, Patricia Alfonso wrote:
-> > >
-> > > > Integrate KASAN into KUnit testing framework.
-> > >
-> > > This is a great idea! Some comments/suggestions below...
-> > >
-> >
-> > Thank you so much for your suggestions!
-> >
->
-> No problem! Extending KUnit to test things like KASAN
-> is really valuable, as it shows us ways we can improve
-> the framework. More below...
->
-> > > >  - Fail tests when KASAN reports an error that is not expected
-> > > >  - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
-> > > >  - KUnit struct added to current task to keep track of the current test
-> > > > from KASAN code
-> > > >  - Booleans representing if a KASAN report is expected and if a KASAN
-> > > >  report is found added to kunit struct
-> > > >  - This prints "line# has passed" or "line# has failed"
-> > > >
-> > > > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> > > > ---
-> > > > If anyone has any suggestions on how best to print the failure
-> > > > messages, please share!
-> > > >
-> > > > One issue I have found while testing this is the allocation fails in
-> > > > kmalloc_pagealloc_oob_right() sometimes, but not consistently. This
-> > > > does cause the test to fail on the KUnit side, as expected, but it
-> > > > seems to skip all the tests before this one because the output starts
-> > > > with this failure instead of with the first test, kmalloc_oob_right().
-> > > >
-> > > >  include/kunit/test.h                | 24 ++++++++++++++++++++++++
-> > > >  include/linux/sched.h               |  7 ++++++-
-> > > >  lib/kunit/test.c                    |  7 ++++++-
-> > > >  mm/kasan/report.c                   | 19 +++++++++++++++++++
-> > > >  tools/testing/kunit/kunit_kernel.py |  2 +-
-> > > >  5 files changed, 56 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > > > index 2dfb550c6723..2e388f8937f3 100644
-> > > > --- a/include/kunit/test.h
-> > > > +++ b/include/kunit/test.h
-> > > > @@ -21,6 +21,8 @@ struct kunit_resource;
-> > > >  typedef int (*kunit_resource_init_t)(struct kunit_resource *, void *);
-> > > >  typedef void (*kunit_resource_free_t)(struct kunit_resource *);
-> > > >
-> > > > +void kunit_set_failure(struct kunit *test);
-> > > > +
-> > > >  /**
-> > > >   * struct kunit_resource - represents a *test managed resource*
-> > > >   * @allocation: for the user to store arbitrary data.
-> > > > @@ -191,6 +193,9 @@ struct kunit {
-> > > >        * protect it with some type of lock.
-> > > >        */
-> > > >       struct list_head resources; /* Protected by lock. */
-> > > > +
-> > > > +     bool kasan_report_expected;
-> > > > +     bool kasan_report_found;
-> > > >  };
-> > > >
-> > >
-> > > Is this needed here? You're testing something pretty
-> > > specific so it seems wrong to add to the generic
-> > > kunit resource unless there's a good reason. I see the
-> > > code around setting these values in mm/kasan/report.c,
-> > > but I wonder if we could do something more generic.
-> > >
-> > > How about the concept of a static resource (assuming a
-> > > dynamically allocated one is out because it messes
-> > > with memory allocation tests)? Something like this:
-> > >
-> > > #define kunit_add_static_resource(test, resource_ptr, resource_field)   \
-> > >         do {                                                            \
-> > >                 spin_lock(&test->lock);                                 \
-> > >                 (resource_ptr)->resource_field.init = NULL;             \
-> > >                 (resource_ptr)->resource_field.free = NULL;             \
-> > >                 list_add_tail(&(resource_ptr)->resource_field,          \
-> > >                               &test->resources);                        \
-> > >                 spin_unlock(&test->lock);                               \
-> > >         } while (0)
-> > >
-> > >
-> > > Within your kasan code you could then create a kasan-specific
-> > > structure that embends a kunit_resource, and contains the
-> > > values you need:
-> > >
-> > > struct kasan_report_resource {
-> > >         struct kunit_resource res;
-> > >         bool kasan_report_expected;
-> > >         bool kasan_report_found;
-> > > };
-> > >
-> > > (One thing we'd need to do for such static resources is fix
-> > > kunit_resource_free() to check if there's a free() function,
-> > > and if not assume a static resource)
-> > >
-> > > If you then create an init() function associated with your
-> > > kunit suite (which will be run for every case) it can do this:
-> > >
-> > > int kunit_kasan_test_init(struct kunit *test)
-> > > {
-> > >         kunit_add_static_resource(test, &my_kasan_report_resource, res);
-> > >         ...
-> > > }
-> > >
-> > > The above should also be used to initialize current->kasan_unit_test
-> > > instead of doing that in kunit_try_run_case().  With those
-> > > changes, you don't (I think) need to change anything in core
-> > > kunit (assuming support for static resources).
-> > >
-> > > To retrieve the resource during tests or in kasan context, the
-> > > method seems to be to use kunit_resource_find(). However, that
-> > > requires a match function which seems a bit heavyweight for the
-> > > static case.  We should probably have a default "find by name"
-> > > or similar function here, and add an optional "name" field
-> > > to kunit resources to simplify things.  Anyway here you'd
-> > > use something like:
-> > >
-> > >         kasan_report_resource = kunit_resource_find(test, matchfn,
-> > >                                                     NULL, matchdata);
-> > >
-> > >
-> > > Are there any barriers to taking this sort of approach (apart
-> > > from the support for static resources not being there yet)?
-> > >
-> >
-> > I'm not sure. I don't have any experience with kunit resources so I
-> > would have to put some more effort into understanding how this would
-> > work for myself. I wonder if this might be a bit of an over
-> > complicated way of eliminating an extraneous boolean... maybe we can
-> > find a simpler solution for the first version of this patch and add
-> > the notion of a static resource for generic use later.
-> >
->
-> My personal preference would be to try and learn what's needed
-> by KASAN and improve the KUnit APIs so the next developer finds
-> life a bit easier. More hassle for you I know, but actual use cases
-> like this are invaluable for improving the API.  I've sent
-> out an RFC patchset which has the functionality I _think_ you
-> need but I may be missing something:
->
-> https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-email-alan.maguire@oracle.com/T/#t
->
-> The idea is your test can do something like this:
->
-> struct kasan_data {
->         bool report_expected;
->         bool report_found;
-> };
->
->
-> my_kasan_test(struct kunit *test)
-> {
->         struct kunit_resource resource;
->         struct kasan_data kasan_data;
->
-> ...
->         // add our named resource using static resource/data
->         kunit_add_named_resource(test, NULL, NULL, &resource,
->                                  "kasan_data", &kasan_data);
-> ...
->
-> }
-Does this require the user to set up this kasan_data resource in each
-KASAN test? Or can we set up the resource on the KUnit side whenever a
-user writes a test that expects a KASAN failure? I've been playing
-around with it and I can only seem to get it to work when I add the
-resource within the test, but I could be missing something.
+Hello,
 
->
-> (The NULLs in the function arguments above reflect the fact we
-> don't require initialization or cleanup for such static resources)
->
-> Then, in KASAN context you can look the above resource up like so:
->
->         struct kunit_resource *resource;
->         struct kasan_data *kasan_data;
->
->         resource = kunit_find_named_resource(test, "kasan_data");
->         kasan_data = resource->data;
->
->         // when finished, reduce reference count on resource
->         kunit_put_resource(resource);
->
-> Does that work for your use case?
->
-> > > >  void kunit_init_test(struct kunit *test, const char *name);
-> > > > @@ -941,6 +946,25 @@ do {                                                                            \
-> > > >                                               ptr,                           \
-> > > >                                               NULL)
-> > > >
-> > > > +/**
-> > > > + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
-> > > > + * not cause a KASAN error.
-> > > > + *
-> > > > + */
-> > > > +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do {        \
-> > > > +     test->kasan_report_expected = true;     \
-> > > > +     test->kasan_report_found = false; \
-> > > > +     condition; \
-> > > > +     if (test->kasan_report_found == test->kasan_report_expected) { \
-> > > > +             pr_info("%d has passed", __LINE__); \
-> > > > +     } else { \
-> > > > +             kunit_set_failure(test); \
-> > > > +             pr_info("%d has failed", __LINE__); \
-> > > > +     } \
-> > > > +     test->kasan_report_expected = false;    \
-> > > > +     test->kasan_report_found = false;       \
-> > > > +} while (0)
-> > > > +
-> > >
-> > > Feels like this belongs in test_kasan.c, and could be reworked
-> > > to avoid adding test->kasan_report_[expected|found] as described
-> > > above.
-> >
-> > You're right. Since I don't see any reason why any other tests should
-> > want to expect a KASAN error, it does make sense to move this logic
-> > inside test_kasan.c. If, in the future, there is a need for this
-> > elsewhere, we can always move it back then.
-> >
-> > >  Instead of having your own pass/fail logic couldn't you
-> > > do this:
-> > >
-> > >         KUNIT_EXPECT_EQ(test, expected, found);
-> > >
-> > > ? That will set the failure state too so no need to export
-> > > a separate function for that, and no need to log anything
-> > > as KUNIT_EXPECT_EQ() should do that for you.
-> > >
-> >
-> > This is a great idea - I feel a little silly that I didn't think of
-> > that myself! Do we think the failure message for the KUNIT_EXPECT_EQ()
-> > would be sufficient for KASAN developers?
-> > i.e. "Expected kasan_report_expected == kasan_report_found, but
-> > kasan_report_expected == true
-> > kasan_report_found == false"
-> >
->
-> I guess the missing piece above is the line number where
-> the test failure was encountered, is that the concern?
->
-> > > >  /**
-> > > >   * KUNIT_EXPECT_TRUE() - Causes a test failure when the expression is not true.
-> > > >   * @test: The test context object.
-> > > > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > > > index 04278493bf15..db23d56061e7 100644
-> > > > --- a/include/linux/sched.h
-> > > > +++ b/include/linux/sched.h
-> > > > @@ -32,6 +32,8 @@
-> > > >  #include <linux/posix-timers.h>
-> > > >  #include <linux/rseq.h>
-> > > >
-> > > > +#include <kunit/test.h>
-> > > > +
-> > >
-> > > This feels like the wrong place to add this #include, and
-> > > when I attempted to build to test I ran into a bunch of
-> > > compilation errors; for example:
-> > >
-> > >  CC      kernel/sched/core.o
-> > > In file included from ./include/linux/uaccess.h:11,
-> > >                  from ./arch/x86/include/asm/fpu/xstate.h:5,
-> > >                  from ./arch/x86/include/asm/pgtable.h:26,
-> > >                  from ./include/linux/kasan.h:16,
-> > >                  from ./include/linux/slab.h:136,
-> > >                  from ./include/kunit/test.h:16,
-> > >                  from ./include/linux/sched.h:35,
-> > >                  from init/do_mounts.c:3:
-> > > ./arch/x86/include/asm/uaccess.h: In function 'set_fs':
-> > > ./arch/x86/include/asm/uaccess.h:32:9: error: dereferencing pointer to
-> > > incomplete type 'struct task_struct'
-> > >   current->thread.addr_limit = fs;
-> > >
-> > > (I'm testing with CONFIG_SLUB). Removing this #include
-> > > resolves these errors, but then causes problems for
-> > > lib/test_kasan.c. I'll dig around a bit more.
-> > >
-> >
-> > Yes, I was only testing with UML. Removing that #include fixed the
-> > problem for me for both x86 and UML. Could you share more about the
-> > errors you have encountered in lib/test_kasan.c?
-> >
->
-> I'll try this again and send details.
->
-> I think broadly the issue is that if we #include kunit headers
-> in the kasan headers, we end up creating all kinds of problems
-> for ourselves, since the kasan headers are in turn included
-> in so many places (including the kunit headers themselves, since
-> kunit uses memory allocation APIs). I suspect the way forward is
-> to try and ensure that we don't utilize the kunit headers in any
-> of the kasan headers, but rather just include kunit headers
-> in test_kasan.c, and any other kasan .c files we need KUnit APIs
-> for. Not sure if that's possible, but it's likely the best way to
-> go if it is.
->
-> > > >  /* task_struct member predeclarations (sorted alphabetically): */
-> > > >  struct audit_context;
-> > > >  struct backing_dev_info;
-> > > > @@ -1178,7 +1180,10 @@ struct task_struct {
-> > > >
-> > > >  #ifdef CONFIG_KASAN
-> > > >       unsigned int                    kasan_depth;
-> > > > -#endif
-> > > > +#ifdef CONFIG_KUNIT
-> > > > +     struct kunit *kasan_kunit_test;
-> > > > +#endif /* CONFIG_KUNIT */
-> > > > +#endif /* CONFIG_KASAN */
-> > > >
-> > > >  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> > > >       /* Index of current stored address in ret_stack: */
-> > > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > > > index 9242f932896c..d266b9495c67 100644
-> > > > --- a/lib/kunit/test.c
-> > > > +++ b/lib/kunit/test.c
-> > > > @@ -9,11 +9,12 @@
-> > > >  #include <kunit/test.h>
-> > > >  #include <linux/kernel.h>
-> > > >  #include <linux/sched/debug.h>
-> > > > +#include <linux/sched.h>
-> > > >
-> > > >  #include "string-stream.h"
-> > > >  #include "try-catch-impl.h"
-> > > >
-> > > > -static void kunit_set_failure(struct kunit *test)
-> > > > +void kunit_set_failure(struct kunit *test)
-> > > >  {
-> > > >       WRITE_ONCE(test->success, false);
-> > > >  }
-> > > > @@ -236,6 +237,10 @@ static void kunit_try_run_case(void *data)
-> > > >       struct kunit_suite *suite = ctx->suite;
-> > > >       struct kunit_case *test_case = ctx->test_case;
-> > > >
-> > > > +#ifdef CONFIG_KASAN
-> > > > +     current->kasan_kunit_test = test;
-> > > > +#endif
-> > > > +
-> > > >       /*
-> > > >        * kunit_run_case_internal may encounter a fatal error; if it does,
-> > > >        * abort will be called, this thread will exit, and finally the parent
-> > > > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> > > > index 5ef9f24f566b..5554d23799a5 100644
-> > > > --- a/mm/kasan/report.c
-> > > > +++ b/mm/kasan/report.c
-> > > > @@ -32,6 +32,8 @@
-> > > >
-> > > >  #include <asm/sections.h>
-> > > >
-> > > > +#include <kunit/test.h>
-> > > > +
-> > > >  #include "kasan.h"
-> > > >  #include "../slab.h"
-> > > >
-> > > > @@ -461,6 +463,15 @@ void kasan_report_invalid_free(void *object, unsigned long ip)
-> > > >       u8 tag = get_tag(object);
-> > > >
-> > > >       object = reset_tag(object);
-> > > > +
-> > > > +     if (current->kasan_kunit_test) {
-> > > > +             if (current->kasan_kunit_test->kasan_report_expected) {
-> > > > +                     current->kasan_kunit_test->kasan_report_found = true;
-> > > > +                     return;
-> > > > +             }
-> > > > +             kunit_set_failure(current->kasan_kunit_test);
-> > > > +     }
-> > > > +
-> > > >       start_report(&flags);
-> > > >       pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (void *)ip);
-> > > >       print_tags(tag, object);
-> > > > @@ -481,6 +492,14 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
-> > > >       if (likely(!report_enabled()))
-> > > >               return;
-> > > >
-> > > > +     if (current->kasan_kunit_test) {
-> > > > +             if (current->kasan_kunit_test->kasan_report_expected) {
-> > > > +                     current->kasan_kunit_test->kasan_report_found = true;
-> > > > +                     return;
-> > > > +             }
-> > > > +             kunit_set_failure(current->kasan_kunit_test);
-> > > > +     }
-> > > > +
-> > > >       disable_trace_on_warning();
-> > > >
-> > > >       tagged_addr = (void *)addr;
-> > > > diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-> > > > index cc5d844ecca1..63eab18a8c34 100644
-> > > > --- a/tools/testing/kunit/kunit_kernel.py
-> > > > +++ b/tools/testing/kunit/kunit_kernel.py
-> > > > @@ -141,7 +141,7 @@ class LinuxSourceTree(object):
-> > > >               return True
-> > > >
-> > > >       def run_kernel(self, args=[], timeout=None, build_dir=''):
-> > > > -             args.extend(['mem=256M'])
-> > > > +             args.extend(['mem=256M', 'kasan_multi_shot'])
-> > > >               process = self._ops.linux_bin(args, timeout, build_dir)
-> > > >               with open(os.path.join(build_dir, 'test.log'), 'w') as f:
-> > > >                       for line in process.stdout:
-> > >
-> > > I tried applying this to the "kunit" branch of linux-kselftest, and
-> > > the above failed. Which branch are you building with? Probably
-> > > best to use the kunit branch I think. Thanks!
-> > >
-> > I believe I am on Torvalds/master. There was some debate as to which
-> > branch I should be developing on when I started, but it probably makes
-> > sense for me to move to the "kunit" branch.
-> >
->
-> I think for this case - given that we may need some new KUnit
-> functionality - that would be best. Thanks!
->
-> Alan
->
-> > > Alan
-> > >
-> > > > --
-> > > > 2.25.0.265.gbab2e86ba0-goog
-> > > >
-> > > >
-> >
-> > --
-> > Thank you for all your comments!
-> > Patricia Alfonso
-> >
+syzbot found the following crash on:
+
+HEAD commit:    f8788d86 Linux 5.6-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16c2fd29e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+dashboard link: https://syzkaller.appspot.com/bug?extid=7f59c1e54e5ce4d95cf7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7f59c1e54e5ce4d95cf7@syzkaller.appspotmail.com
+
+BUG: sleeping function called from invalid context at arch/x86/mm/fault.c:1400
+in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 4262, name: udevd
+1 lock held by udevd/4262:
+ #0: ffff888093e19518 (&mm->mmap_sem#2){++++}, at: do_user_addr_fault arch/x86/mm/fault.c:1383 [inline]
+ #0: ffff888093e19518 (&mm->mmap_sem#2){++++}, at: do_page_fault+0x34b/0x12e1 arch/x86/mm/fault.c:1517
+irq event stamp: 5474812
+hardirqs last  enabled at (5474811): [<ffffffff81b3e158>] kmem_cache_free+0x98/0x320 mm/slab.c:3695
+hardirqs last disabled at (5474812): [<ffffffff8100a81a>] syscall_return_slowpath arch/x86/entry/common.c:277 [inline]
+hardirqs last disabled at (5474812): [<ffffffff8100a81a>] do_syscall_64+0x20a/0x790 arch/x86/entry/common.c:304
+softirqs last  enabled at (5473952): [<ffffffff882006cd>] __do_softirq+0x6cd/0x98c kernel/softirq.c:319
+softirqs last disabled at (5473911): [<ffffffff8147908b>] invoke_softirq kernel/softirq.c:373 [inline]
+softirqs last disabled at (5473911): [<ffffffff8147908b>] irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+CPU: 1 PID: 4262 Comm: udevd Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ ___might_sleep.cold+0x1fb/0x23e kernel/sched/core.c:6798
+ __might_sleep+0x95/0x190 kernel/sched/core.c:6751
+ do_user_addr_fault arch/x86/mm/fault.c:1400 [inline]
+ do_page_fault+0x378/0x12e1 arch/x86/mm/fault.c:1517
+ page_fault+0x39/0x40 arch/x86/entry/entry_64.S:1203
+RIP: 0010:prepare_exit_to_usermode arch/x86/entry/common.c:189 [inline]
+RIP: 0010:syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+RIP: 0010:do_syscall_64+0x2c9/0x790 arch/x86/entry/common.c:304
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900015d7f20 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffff888093e16640 RCX: ffffffff8100a857
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffffc900015d7f48 R08: ffff888093e16640 R09: ffffed10127c2cc9
+R10: ffffed10127c2cc8 R11: ffff888093e16647 R12: ffffc900015d7f58
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
--- 
-
-Patricia Alfonso
-Software Engineer
-trishalfonso@google.com
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
