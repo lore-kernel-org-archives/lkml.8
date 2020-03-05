@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90A0C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614A5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A258D2072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BDE20637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428925;
-	bh=wgmoLWEcseM6n7d6+U/LOI7cmzjZ0l1QeI4r/EulqzA=;
+	s=default; t=1583428931;
+	bh=wKyo751Qb290M1eueCeLhse11w1D722qA+2YbQAX6yU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hLn+bbUHmij9EIJ/D5J9ePFRFxRcMTYPf++XvtHo8QTeetTAcbTvp4+gD0PgerMwR
-	 IHLsoRQmW16Ak2XKO7BWyLsomuemnEBHks1HwRVSvmI+CaQspijHD2ojML4OS/98x5
-	 9IwtejVYhUNaix2PBXlKuCtG5fVLv7P/jiRS4ve8=
+	b=fKBp6wiYBgJiKaqgiMjbz8dWFiB7sIy9hgQBhb6yGuDpV+hfbzT7fDMh73ABFCKBU
+	 rbEw9gnTtBeZu+fpOwGNdMI/OAcoRJyBmVTUl9XK8FNyRZsEk178xdClmF+vdt7sR5
+	 UgTB5NiIi4uoQRSVNWRw3u2ZaqgIJ5F9b6IB6P6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbgCEROD (ORCPT
+        id S1727775AbgCERWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:14:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39814 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:22:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727502AbgCEROA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:00 -0500
+        id S1727508AbgCEROC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5211B20870;
-        Thu,  5 Mar 2020 17:13:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 073B22146E;
+        Thu,  5 Mar 2020 17:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428439;
-        bh=wgmoLWEcseM6n7d6+U/LOI7cmzjZ0l1QeI4r/EulqzA=;
+        s=default; t=1583428441;
+        bh=wKyo751Qb290M1eueCeLhse11w1D722qA+2YbQAX6yU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NsrOvlICqq/ozNDC9kCUr8WZMGBm6UF9797vc65IPh6+AQl6T3aI+jAhpKfXS/6tF
-         kUpYnnvWGkfH5NUmYgVjMmwEKu/Ka37v83YTLtCwYArfWZPcu1OvNpBPjnuXbsIZyX
-         hfWsynSdVM62aZfMdHMsCXEvOm5QXN5pZLuLBblo=
+        b=NIH1UFwrX7npMEaig6/XlDpkmz57fILKSNRKVu9QobfXpEbusmzuCgCTnVKEBNJTW
+         nn/3QtZu5WBUQBItjnYjzPf5QDDsbHIZ+UvJhiEwHY76E9gurQywWa7kpnG+sHdr4w
+         p5OocX5LY220GYhZrvwOJYJKRzfWyD/yTrnkXCgA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Esben Haabendal <esben@geanix.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 36/67] net: ll_temac: Add more error handling of dma_map_single() calls
-Date:   Thu,  5 Mar 2020 12:12:37 -0500
-Message-Id: <20200305171309.29118-36-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 38/67] net: ll_temac: Handle DMA halt condition caused by buffer underrun
+Date:   Thu,  5 Mar 2020 12:12:39 -0500
+Message-Id: <20200305171309.29118-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -62,74 +62,172 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Esben Haabendal <esben@geanix.com>
 
-[ Upstream commit d07c849cd2b97d6809430dfb7e738ad31088037a ]
+[ Upstream commit 1d63b8d66d146deaaedbe16c80de105f685ea012 ]
 
-This adds error handling to the remaining dma_map_single() calls, so that
-behavior is well defined if/when we run out of DMA memory.
+The SDMA engine used by TEMAC halts operation when it has finished
+processing of the last buffer descriptor in the buffer ring.
+Unfortunately, no interrupt event is generated when this happens,
+so we need to setup another mechanism to make sure DMA operation is
+restarted when enough buffers have been added to the ring.
 
 Fixes: 92744989533c ("net: add Xilinx ll_temac device driver")
 Signed-off-by: Esben Haabendal <esben@geanix.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/xilinx/ll_temac_main.c | 26 +++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/xilinx/ll_temac.h      |  3 ++
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 58 +++++++++++++++++++--
+ 2 files changed, 56 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/net/ethernet/xilinx/ll_temac.h b/drivers/net/ethernet/xilinx/ll_temac.h
+index 99fe059e5c7f3..53fb8141f1a67 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac.h
++++ b/drivers/net/ethernet/xilinx/ll_temac.h
+@@ -380,6 +380,9 @@ struct temac_local {
+ 	/* DMA channel control setup */
+ 	u32 tx_chnl_ctrl;
+ 	u32 rx_chnl_ctrl;
++	u8 coalesce_count_rx;
++
++	struct delayed_work restart_work;
+ };
+ 
+ /* Wrappers for temac_ior()/temac_iow() function pointers above */
 diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index fd578568b3bff..fd4231493449b 100644
+index 2e3f59dae586e..eb480204cdbeb 100644
 --- a/drivers/net/ethernet/xilinx/ll_temac_main.c
 +++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -367,6 +367,8 @@ static int temac_dma_bd_init(struct net_device *ndev)
- 		skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
- 					      XTE_MAX_JUMBO_FRAME_SIZE,
- 					      DMA_FROM_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr))
-+			goto out;
- 		lp->rx_bd_v[i].phys = cpu_to_be32(skb_dma_addr);
- 		lp->rx_bd_v[i].len = cpu_to_be32(XTE_MAX_JUMBO_FRAME_SIZE);
- 		lp->rx_bd_v[i].app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
-@@ -863,12 +865,13 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+@@ -51,6 +51,7 @@
+ #include <linux/ip.h>
+ #include <linux/slab.h>
+ #include <linux/interrupt.h>
++#include <linux/workqueue.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/processor.h>
+ #include <linux/platform_data/xilinx-ll-temac.h>
+@@ -866,8 +867,11 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
  	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
  				      skb_headlen(skb), DMA_TO_DEVICE);
  	cur_p->len = cpu_to_be32(skb_headlen(skb));
-+	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
-+		return NETDEV_TX_BUSY;
+-	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
+-		return NETDEV_TX_BUSY;
++	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr))) {
++		dev_kfree_skb_any(skb);
++		ndev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
  	cur_p->phys = cpu_to_be32(skb_dma_addr);
  	ptr_to_txbd((void *)skb, cur_p);
  
- 	for (ii = 0; ii < num_frag; ii++) {
--		lp->tx_bd_tail++;
--		if (lp->tx_bd_tail >= TX_BD_NUM)
-+		if (++lp->tx_bd_tail >= TX_BD_NUM)
- 			lp->tx_bd_tail = 0;
- 
- 		cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-@@ -876,6 +879,25 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 					      skb_frag_address(frag),
- 					      skb_frag_size(frag),
- 					      DMA_TO_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr)) {
-+			if (--lp->tx_bd_tail < 0)
-+				lp->tx_bd_tail = TX_BD_NUM - 1;
-+			cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-+			while (--ii >= 0) {
-+				--frag;
-+				dma_unmap_single(ndev->dev.parent,
-+						 be32_to_cpu(cur_p->phys),
-+						 skb_frag_size(frag),
-+						 DMA_TO_DEVICE);
-+				if (--lp->tx_bd_tail < 0)
-+					lp->tx_bd_tail = TX_BD_NUM - 1;
-+				cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-+			}
-+			dma_unmap_single(ndev->dev.parent,
-+					 be32_to_cpu(cur_p->phys),
-+					 skb_headlen(skb), DMA_TO_DEVICE);
-+			return NETDEV_TX_BUSY;
-+		}
+@@ -897,7 +901,9 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 			dma_unmap_single(ndev->dev.parent,
+ 					 be32_to_cpu(cur_p->phys),
+ 					 skb_headlen(skb), DMA_TO_DEVICE);
+-			return NETDEV_TX_BUSY;
++			dev_kfree_skb_any(skb);
++			ndev->stats.tx_dropped++;
++			return NETDEV_TX_OK;
+ 		}
  		cur_p->phys = cpu_to_be32(skb_dma_addr);
  		cur_p->len = cpu_to_be32(skb_frag_size(frag));
- 		cur_p->app0 = 0;
+@@ -920,6 +926,17 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	return NETDEV_TX_OK;
+ }
+ 
++static int ll_temac_recv_buffers_available(struct temac_local *lp)
++{
++	int available;
++
++	if (!lp->rx_skb[lp->rx_bd_ci])
++		return 0;
++	available = 1 + lp->rx_bd_tail - lp->rx_bd_ci;
++	if (available <= 0)
++		available += RX_BD_NUM;
++	return available;
++}
+ 
+ static void ll_temac_recv(struct net_device *ndev)
+ {
+@@ -990,6 +1007,18 @@ static void ll_temac_recv(struct net_device *ndev)
+ 			lp->rx_bd_ci = 0;
+ 	} while (rx_bd != lp->rx_bd_tail);
+ 
++	/* DMA operations will halt when the last buffer descriptor is
++	 * processed (ie. the one pointed to by RX_TAILDESC_PTR).
++	 * When that happens, no more interrupt events will be
++	 * generated.  No IRQ_COAL or IRQ_DLY, and not even an
++	 * IRQ_ERR.  To avoid stalling, we schedule a delayed work
++	 * when there is a potential risk of that happening.  The work
++	 * will call this function, and thus re-schedule itself until
++	 * enough buffers are available again.
++	 */
++	if (ll_temac_recv_buffers_available(lp) < lp->coalesce_count_rx)
++		schedule_delayed_work(&lp->restart_work, HZ / 1000);
++
+ 	/* Allocate new buffers for those buffer descriptors that were
+ 	 * passed to network stack.  Note that GFP_ATOMIC allocations
+ 	 * can fail (e.g. when a larger burst of GFP_ATOMIC
+@@ -1045,6 +1074,18 @@ static void ll_temac_recv(struct net_device *ndev)
+ 	spin_unlock_irqrestore(&lp->rx_lock, flags);
+ }
+ 
++/* Function scheduled to ensure a restart in case of DMA halt
++ * condition caused by running out of buffer descriptors.
++ */
++static void ll_temac_restart_work_func(struct work_struct *work)
++{
++	struct temac_local *lp = container_of(work, struct temac_local,
++					      restart_work.work);
++	struct net_device *ndev = lp->ndev;
++
++	ll_temac_recv(ndev);
++}
++
+ static irqreturn_t ll_temac_tx_irq(int irq, void *_ndev)
+ {
+ 	struct net_device *ndev = _ndev;
+@@ -1137,6 +1178,8 @@ static int temac_stop(struct net_device *ndev)
+ 
+ 	dev_dbg(&ndev->dev, "temac_close()\n");
+ 
++	cancel_delayed_work_sync(&lp->restart_work);
++
+ 	free_irq(lp->tx_irq, ndev);
+ 	free_irq(lp->rx_irq, ndev);
+ 
+@@ -1269,6 +1312,7 @@ static int temac_probe(struct platform_device *pdev)
+ 	lp->dev = &pdev->dev;
+ 	lp->options = XTE_OPTION_DEFAULTS;
+ 	spin_lock_init(&lp->rx_lock);
++	INIT_DELAYED_WORK(&lp->restart_work, ll_temac_restart_work_func);
+ 
+ 	/* Setup mutex for synchronization of indirect register access */
+ 	if (pdata) {
+@@ -1375,6 +1419,7 @@ static int temac_probe(struct platform_device *pdev)
+ 		 */
+ 		lp->tx_chnl_ctrl = 0x10220000;
+ 		lp->rx_chnl_ctrl = 0xff070000;
++		lp->coalesce_count_rx = 0x07;
+ 
+ 		/* Finished with the DMA node; drop the reference */
+ 		of_node_put(dma_np);
+@@ -1406,11 +1451,14 @@ static int temac_probe(struct platform_device *pdev)
+ 				(pdata->tx_irq_count << 16);
+ 		else
+ 			lp->tx_chnl_ctrl = 0x10220000;
+-		if (pdata->rx_irq_timeout || pdata->rx_irq_count)
++		if (pdata->rx_irq_timeout || pdata->rx_irq_count) {
+ 			lp->rx_chnl_ctrl = (pdata->rx_irq_timeout << 24) |
+ 				(pdata->rx_irq_count << 16);
+-		else
++			lp->coalesce_count_rx = pdata->rx_irq_count;
++		} else {
+ 			lp->rx_chnl_ctrl = 0xff070000;
++			lp->coalesce_count_rx = 0x07;
++		}
+ 	}
+ 
+ 	/* Error handle returned DMA RX and TX interrupts */
 -- 
 2.20.1
 
