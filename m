@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140DEC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5148C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADE92072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83ACE2072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jt6RQ8Tx"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bJq9OCMY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgCEUDF (ORCPT
+        id S1726524AbgCEUDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 15:03:05 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:44436 "EHLO
+        Thu, 5 Mar 2020 15:03:13 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:50748 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726131AbgCEUDE (ORCPT
+        by vger.kernel.org with ESMTP id S1726004AbgCEUDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 15:03:04 -0500
+        Thu, 5 Mar 2020 15:03:05 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2C420C10DA;
-        Thu,  5 Mar 2020 20:03:03 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 01BF643BE5;
+        Thu,  5 Mar 2020 20:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1583438583; bh=EKwbyzY3XBPQ6iAgNco3btTgOVO5oLf9gzGrqqpLQDs=;
+        t=1583438584; bh=z8K+s6BkPC/oacna9CqLYcFTbi2Th8Q7FqhPJrutiEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jt6RQ8Txu63PQ75IYUCUHmEMRIOHQZrv4llKEMrzvd/USvavsgoKFErqmKgwOHxe2
-         oad2IxA0dldY+ZotlqiP8joulYmbYZhjYDIWFinRiOY6t7nqmlfbLg/lPKCZULpYvz
-         jyJ0hXWpTyMsfK1dpFkP/ZCYhz15yhakl9C25+VpWfkXIsdjxCyTn5wDXorLV+wWln
-         Vcsm4iw4CYCIU0TXYPOzqIm/+ywA7YPXyk8/25OLRH4TjdUVkIIcTRzhgWD4aC3fMC
-         bAoqvb3OvWhhh7MIP/FrLriNuy2uEvxWkud99RE8g0nG5aEbdX4pQUL+AM18hGSCvh
-         64Ht0hAemrvUg==
+        b=bJq9OCMYRLNRvX6WwnSlocsYszDdo9UF6UD8G5Ol9mgDm1M1m0ZvZseU5Rkf9ZE32
+         ISXt8NUnyNFJPbejtwJcwwA42PWsXzZ+VBmdlOmgyQ8SnUYMZJERNrpbbBrCVhBbvi
+         uL6tYFlnqsjFW8gzV5UucuDini9LiczUftm2nnm/qf9YGSmHFXacYdDL5DQHzfblwP
+         iGUuMtgoeZIyTtSv9R4CPfB392ogbmubhYuhxFbuwnK4aT4kIacvbJfzUXYJPr6UDx
+         e1RsWfDmslU0IFwKKqcKTpnkZmTLDv7CN/5ceHYtsq5jvzrGGXoDT5M1Ek2o4lqTAI
+         MwIkPQRwIIYKQ==
 Received: from paltsev-e7480.internal.synopsys.com (unknown [10.121.8.79])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 85226A006D;
-        Thu,  5 Mar 2020 20:03:01 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 74589A005C;
+        Thu,  5 Mar 2020 20:03:00 +0000 (UTC)
 From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 To:     linux-snps-arc@lists.infradead.org,
         Vineet Gupta <Vineet.Gupta1@synopsys.com>
 Cc:     linux-kernel@vger.kernel.org,
         Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
         Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH v2 4/4] ARC: allow userspace DSP applications to use AGU extensions
-Date:   Thu,  5 Mar 2020 23:02:52 +0300
-Message-Id: <20200305200252.14278-5-Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v2 2/4] ARC: handle DSP presence in HW
+Date:   Thu,  5 Mar 2020 23:02:50 +0300
+Message-Id: <20200305200252.14278-3-Eugeniy.Paltsev@synopsys.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200305200252.14278-1-Eugeniy.Paltsev@synopsys.com>
 References: <20200305200252.14278-1-Eugeniy.Paltsev@synopsys.com>
@@ -59,170 +59,223 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To be able to run DSP-enabled userspace applications with AGU
-(address generation unit) extensions we additionally need to
-save and restore following registers at context switch:
- * AGU_AP*
- * AGU_OS*
- * AGU_MOD*
+In case of DSP extension presence in HW some instructions
+(related to integer multiply, multiply-accumulate, and divide
+operation) executes on this DSP execution unit. So their
+execution will depend on dsp configuration register (DSP_CTRL)
+
+As we want these instructions to execute the same way regardless
+of DSP presence we need to set DSP_CTRL properly. However this
+register can be modified bu any usersace app therefore any
+usersace may break kernel execution.
+
+Fix that by configure DSP_CTRL in CPU early code and in IRQs
+entries.
 
 Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- arch/arc/Kconfig                |  9 +++++++++
- arch/arc/include/asm/arcregs.h  | 12 ++++++++++++
- arch/arc/include/asm/asserts.h  | 10 ++++++++++
- arch/arc/include/asm/dsp-impl.h | 24 ++++++++++++++++++++++++
- arch/arc/include/asm/dsp.h      |  5 +++++
- arch/arc/kernel/setup.c         |  6 ++++++
- 6 files changed, 66 insertions(+)
+ arch/arc/Kconfig                   | 29 +++++++++++++++-
+ arch/arc/include/asm/arcregs.h     | 12 +++++++
+ arch/arc/include/asm/dsp-impl.h    | 54 ++++++++++++++++++++++++++++++
+ arch/arc/include/asm/entry-arcv2.h |  3 ++
+ arch/arc/kernel/head.S             |  4 +++
+ arch/arc/kernel/setup.c            |  3 ++
+ 6 files changed, 104 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arc/include/asm/dsp-impl.h
 
 diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index eb3bcb206882..ff306246d0f8 100644
+index 7124ab82dfa3..55432a8fc20d 100644
 --- a/arch/arc/Kconfig
 +++ b/arch/arc/Kconfig
-@@ -445,6 +445,15 @@ config ARC_DSP_USERSPACE
+@@ -401,13 +401,40 @@ config ARC_HAS_DIV_REM
+ 	default y
+ 
+ config ARC_HAS_ACCL_REGS
+-	bool "Reg Pair ACCL:ACCH (FPU and/or MPY > 6)"
++	bool "Reg Pair ACCL:ACCH (FPU and/or MPY > 6 and/or DSP)"
+ 	default y
  	help
- 	  DSP extension presence in HW, support save / restore DSP registers to
- 	  run DSP-enabled userspace applications
+ 	  Depending on the configuration, CPU can contain accumulator reg-pair
+ 	  (also referred to as r58:r59). These can also be used by gcc as GPR so
+ 	  kernel needs to save/restore per process
+ 
++config ARC_DSP_HANDLED
++	def_bool n
 +
-+config ARC_DSP_AGU_USERSPACE
-+	bool "Support DSP with AGU for userspace apps"
++choice
++	prompt "DSP support"
++	default ARC_DSP_NONE
++	help
++	  Depending on the configuration, CPU can contain DSP registers
++	  (ACC0_GLO, ACC0_GHI, DSP_BFLY0, DSP_CTRL, DSP_FFT_CTRL).
++	  Bellow is options describing how to handle these registers in
++	  interrupt entry / exit and in context switch.
++
++config ARC_DSP_NONE
++	bool "No DSP extension presence in HW"
++	help
++	  No DSP extension presence in HW
++
++config ARC_DSP_KERNEL
++	bool "DSP extension in HW, no support for userspace"
 +	select ARC_HAS_ACCL_REGS
 +	select ARC_DSP_HANDLED
-+	select ARC_DSP_SAVE_RESTORE_REGS
 +	help
-+	  DSP and AGU extensions presence in HW, support save / restore DSP
-+	  and AGU registers to run DSP-enabled userspace applications
- endchoice
- 
++	  DSP extension presence in HW, no support for DSP-enabled userspace
++	  applications. We don't save / restore DSP registers and only do
++	  some minimal preparations so userspace won't be able to break kernel
++endchoice
++
  config ARC_IRQ_NO_AUTOSAVE
+ 	bool "Disable hardware autosave regfile on interrupts"
+ 	default n
 diff --git a/arch/arc/include/asm/arcregs.h b/arch/arc/include/asm/arcregs.h
-index aee1ee263065..2162023195c5 100644
+index f7e432448e4b..135f6ec08a69 100644
 --- a/arch/arc/include/asm/arcregs.h
 +++ b/arch/arc/include/asm/arcregs.h
-@@ -132,6 +132,18 @@
- #define ARC_AUX_DSP_CTRL	0x59F
- #define ARC_AUX_DSP_FFT_CTRL	0x59E
+@@ -118,6 +118,18 @@
+ #define ARC_AUX_DPFP_2H         0x304
+ #define ARC_AUX_DPFP_STAT       0x305
  
-+#define ARC_AUX_AGU_BUILD	0xCC
-+#define ARC_AUX_AGU_AP0		0x5C0
-+#define ARC_AUX_AGU_AP1		0x5C1
-+#define ARC_AUX_AGU_AP2		0x5C2
-+#define ARC_AUX_AGU_AP3		0x5C3
-+#define ARC_AUX_AGU_OS0		0x5D0
-+#define ARC_AUX_AGU_OS1		0x5D1
-+#define ARC_AUX_AGU_MOD0	0x5E0
-+#define ARC_AUX_AGU_MOD1	0x5E1
-+#define ARC_AUX_AGU_MOD2	0x5E2
-+#define ARC_AUX_AGU_MOD3	0x5E3
++/*
++ * DSP-related registers
++ */
++#define ARC_AUX_DSP_BUILD	0x7A
++#define ARC_AUX_ACC0_LO		0x580
++#define ARC_AUX_ACC0_GLO	0x581
++#define ARC_AUX_ACC0_HI		0x582
++#define ARC_AUX_ACC0_GHI	0x583
++#define ARC_AUX_DSP_BFLY0	0x598
++#define ARC_AUX_DSP_CTRL	0x59F
++#define ARC_AUX_DSP_FFT_CTRL	0x59E
 +
  #ifndef __ASSEMBLY__
  
  #include <soc/arc/aux.h>
-diff --git a/arch/arc/include/asm/asserts.h b/arch/arc/include/asm/asserts.h
-index 3314efbeb528..108f33be6aa5 100644
---- a/arch/arc/include/asm/asserts.h
-+++ b/arch/arc/include/asm/asserts.h
-@@ -10,6 +10,7 @@
- /* Helpers to sanitize config options. */
- 
- void chk_opt_strict(char *opt_name, bool hw_exists, bool opt_ena);
-+void chk_opt_weak(char *opt_name, bool hw_exists, bool opt_ena);
- 
- /*
-  * Check required config option:
-@@ -21,4 +22,13 @@ void chk_opt_strict(char *opt_name, bool hw_exists, bool opt_ena);
- 	chk_opt_strict(#opt_name, hw_exists, IS_ENABLED(opt_name));	\
- })
- 
-+/*
-+ * Check optional config option:
-+ *  - panic in case of OPT enabled but corresponding HW absent.
-+*/
-+#define CHK_OPT_WEAK(opt_name, hw_exists)				\
-+({									\
-+	chk_opt_weak(#opt_name, hw_exists, IS_ENABLED(opt_name));	\
-+})
-+
- #endif /* __ASM_ARC_ASSERTS_H */
 diff --git a/arch/arc/include/asm/dsp-impl.h b/arch/arc/include/asm/dsp-impl.h
-index 8380f7bede81..e1aa212ca6eb 100644
---- a/arch/arc/include/asm/dsp-impl.h
+new file mode 100644
+index 000000000000..606620383eca
+--- /dev/null
 +++ b/arch/arc/include/asm/dsp-impl.h
-@@ -103,6 +103,21 @@ static inline void dsp_save_restore(struct task_struct *prev,
- 
- 	DSP_AUX_SAVE_RESTORE(saveto, readfrom, DSP_BFLY0);
- 	DSP_AUX_SAVE_RESTORE(saveto, readfrom, DSP_FFT_CTRL);
+@@ -0,0 +1,54 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2020 Synopsys, Inc. (www.synopsys.com)
++ *
++ * Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
++ */
++#ifndef __ASM_ARC_DSP_IMPL_H
++#define __ASM_ARC_DSP_IMPL_H
 +
-+#ifdef CONFIG_ARC_DSP_AGU_USERSPACE
-+	DSP_AUX_SAVE_RESTORE(saveto, readfrom, AGU_AP0);
-+	DSP_AUX_SAVE_RESTORE(saveto, readfrom, AGU_AP1);
-+	DSP_AUX_SAVE_RESTORE(saveto, readfrom, AGU_AP2);
-+	DSP_AUX_SAVE_RESTORE(saveto, readfrom, AGU_AP3);
++#define DSP_CTRL_DISABLED_ALL		0
 +
-+	DSP_AUX_SAVE_RESTORE(saveto, readfrom, AGU_OS0);
-+	DSP_AUX_SAVE_RESTORE(saveto, readfrom, AGU_OS1);
++#ifdef __ASSEMBLY__
 +
-+	DSP_AUX_SAVE_RESTORE(saveto, readfrom, AGU_MOD0);
-+	DSP_AUX_SAVE_RESTORE(saveto, readfrom, AGU_MOD1);
-+	DSP_AUX_SAVE_RESTORE(saveto, readfrom, AGU_MOD2);
-+	DSP_AUX_SAVE_RESTORE(saveto, readfrom, AGU_MOD3);
-+#endif /* CONFIG_ARC_DSP_AGU_USERSPACE */
- }
- 
- #else /* !CONFIG_ARC_DSP_SAVE_RESTORE_REGS */
-@@ -117,9 +132,18 @@ static inline bool dsp_exist(void)
- 	return !!bcr.ver;
- }
- 
-+static inline bool agu_exist(void)
++/* clobbers r5 register */
++.macro DSP_EARLY_INIT
++	lr	r5, [ARC_AUX_DSP_BUILD]
++	bmsk	r5, r5, 7
++	breq    r5, 0, 1f
++	mov	r5, DSP_CTRL_DISABLED_ALL
++	sr	r5, [ARC_AUX_DSP_CTRL]
++1:
++.endm
++
++/* clobbers r10, r11 registers pair */
++.macro DSP_SAVE_REGFILE_IRQ
++#if defined(CONFIG_ARC_DSP_KERNEL)
++	/*
++	 * Drop any changes to DSP_CTRL made by userspace so userspace won't be
++	 * able to break kernel - reset it to DSP_CTRL_DISABLED_ALL value
++	 */
++	mov	r10, DSP_CTRL_DISABLED_ALL
++	sr	r10, [ARC_AUX_DSP_CTRL]
++#endif /* ARC_DSP_KERNEL */
++.endm
++
++#else /* __ASEMBLY__ */
++
++#include <asm/asserts.h>
++
++static inline bool dsp_exist(void)
 +{
 +	struct bcr_generic bcr;
 +
-+	READ_BCR(ARC_AUX_AGU_BUILD, bcr);
++	READ_BCR(ARC_AUX_DSP_BUILD, bcr);
 +	return !!bcr.ver;
 +}
 +
- static inline void dsp_config_check(void)
- {
- 	CHK_OPT_STRICT(CONFIG_ARC_DSP_HANDLED, dsp_exist());
-+	CHK_OPT_WEAK(CONFIG_ARC_DSP_AGU_USERSPACE, agu_exist());
- }
- 
- #endif /* __ASEMBLY__ */
-diff --git a/arch/arc/include/asm/dsp.h b/arch/arc/include/asm/dsp.h
-index b016f4d2a09f..202c78e56704 100644
---- a/arch/arc/include/asm/dsp.h
-+++ b/arch/arc/include/asm/dsp.h
-@@ -17,6 +17,11 @@
-  */
- struct dsp_callee_regs {
- 	unsigned long ACC0_GLO, ACC0_GHI, DSP_BFLY0, DSP_FFT_CTRL;
-+#ifdef CONFIG_ARC_DSP_AGU_USERSPACE
-+	unsigned long AGU_AP0, AGU_AP1, AGU_AP2, AGU_AP3;
-+	unsigned long AGU_OS0, AGU_OS1;
-+	unsigned long AGU_MOD0, AGU_MOD1, AGU_MOD2, AGU_MOD3;
-+#endif
- };
- 
- #endif /* !__ASSEMBLY__ */
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 1ed1528d9045..b2b1cb645d9e 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -399,6 +399,12 @@ void chk_opt_strict(char *opt_name, bool hw_exists, bool opt_ena)
- 		panic("Disable %s, hardware NOT present\n", opt_name);
- }
- 
-+void chk_opt_weak(char *opt_name, bool hw_exists, bool opt_ena)
++static inline void dsp_config_check(void)
 +{
-+	if (!hw_exists && opt_ena)
-+		panic("Disable %s, hardware NOT present\n", opt_name);
++	CHK_OPT_STRICT(CONFIG_ARC_DSP_HANDLED, dsp_exist());
 +}
 +
- static void arc_chk_core_config(void)
- {
- 	struct cpuinfo_arc *cpu = &cpuinfo_arc700[smp_processor_id()];
++#endif /* __ASEMBLY__ */
++#endif /* __ASM_ARC_DSP_IMPL_H */
+diff --git a/arch/arc/include/asm/entry-arcv2.h b/arch/arc/include/asm/entry-arcv2.h
+index 0b8b63d0bec1..dd6aa18b51ca 100644
+--- a/arch/arc/include/asm/entry-arcv2.h
++++ b/arch/arc/include/asm/entry-arcv2.h
+@@ -4,6 +4,7 @@
+ #define __ASM_ARC_ENTRY_ARCV2_H
+ 
+ #include <asm/asm-offsets.h>
++#include <asm/dsp-impl.h>
+ #include <asm/irqflags-arcv2.h>
+ #include <asm/thread_info.h>	/* For THREAD_SIZE */
+ 
+@@ -165,6 +166,8 @@
+ 	ST2	r58, r59, PT_r58
+ #endif
+ 
++	/* clobbers r10, r11 registers pair */
++	DSP_SAVE_REGFILE_IRQ
+ .endm
+ 
+ /*------------------------------------------------------------------------*/
+diff --git a/arch/arc/kernel/head.S b/arch/arc/kernel/head.S
+index 6f41265f6250..6eb23f1545ee 100644
+--- a/arch/arc/kernel/head.S
++++ b/arch/arc/kernel/head.S
+@@ -14,6 +14,7 @@
+ #include <asm/entry.h>
+ #include <asm/arcregs.h>
+ #include <asm/cache.h>
++#include <asm/dsp-impl.h>
+ #include <asm/irqflags.h>
+ 
+ .macro CPU_EARLY_SETUP
+@@ -59,6 +60,9 @@
+ #endif
+ 	kflag	r5
+ #endif
++	; Config DSP_CTRL properly, so kernel may use integer multiply,
++	; multiply-accumulate, and divide operations
++	DSP_EARLY_INIT
+ .endm
+ 
+ 	.section .init.text, "ax",@progbits
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index 820c0cfb0702..1ed1528d9045 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -27,6 +27,7 @@
+ #include <asm/unwind.h>
+ #include <asm/mach_desc.h>
+ #include <asm/smp.h>
++#include <asm/dsp-impl.h>
+ 
+ #define FIX_PTR(x)  __asm__ __volatile__(";" : "+r"(x))
+ 
+@@ -440,6 +441,8 @@ static void arc_chk_core_config(void)
+ 		/* Accumulator Low:High pair (r58:59) present if DSP MPY or FPU */
+ 		present = cpu->extn_mpy.dsp | cpu->extn.fpu_sp | cpu->extn.fpu_dp;
+ 		CHK_OPT_STRICT(CONFIG_ARC_HAS_ACCL_REGS, present);
++
++		dsp_config_check();
+ 	}
+ }
+ 
 -- 
 2.21.1
 
