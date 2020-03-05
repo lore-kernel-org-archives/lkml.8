@@ -2,123 +2,162 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AA9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12908C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3708520870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D927A207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:54:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="at3VFiob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgCEHvN (ORCPT
+        id S1726037AbgCEHyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 02:51:13 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:60301 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgCEHvM (ORCPT
+        Thu, 5 Mar 2020 02:54:01 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34147 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgCEHyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 02:51:12 -0500
-Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mk178-1jcBCo3SLw-00kPug for <linux-kernel@vger.kernel.org>; Thu, 05 Mar
- 2020 08:51:11 +0100
-Received: by mail-qv1-f54.google.com with SMTP id r15so2029449qve.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 23:51:10 -0800 (PST)
-X-Gm-Message-State: ANhLgQ2U+8pPT5kfyGfFXqzd6MriA8KgQoFaWBDnMBNbsBeLzpZD8JjN
-        zxhE07MuCNtrq725d4vyOyeNKR2kU+YrfXuLmxc=
-X-Google-Smtp-Source: ADFU+vstp1h0CG3pY8NKD3dLm/x1PP0tZEXhU2VaJcMhmxB0PpHKWPcO9B09FS7oilMTPjj9fe4r4108YlpY1i3Z7Sk=
-X-Received: by 2002:a0c:f647:: with SMTP id s7mr5473438qvm.4.1583394669674;
- Wed, 04 Mar 2020 23:51:09 -0800 (PST)
+        Thu, 5 Mar 2020 02:54:01 -0500
+Received: by mail-lj1-f196.google.com with SMTP id j19so2686470lji.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 23:54:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1Vo7v3A29qLhL95wUBh6dD5eErodqSEdH9NgC3IKBcE=;
+        b=at3VFiobWlcoKRKBqRBBR4dPdUy3MfwRIWfL32V4+Pk6F99EfdSqYf+kYqbcV2BvtU
+         tIJvg/rCUgDZjkA2ILJi4FARJ3yGpcd3ZtHC6g7PAnxpGyujHbX/gSVrnbj+AGTR8ALc
+         i8MxK21jFKMsK0ThiSwUeWimpHeqLC+AJKlxrq07rxnPvmS4yClqY+84bE4Q5nCavZKA
+         MG8wDrOmXuBynBjcm1hhgM9w02ANxVUggNxgGj4PvkZ/608SORfPit9fVOhkMnMZg8r1
+         6zC/HbIfZv6843V1Vxs6jIvxfKIfyruOZSH8EA6h8ZlqMqzzDJZN9d8jLId9wLFcofHg
+         QZ9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1Vo7v3A29qLhL95wUBh6dD5eErodqSEdH9NgC3IKBcE=;
+        b=ltZRxQn+t84ejo4d8ME+yVlNDqBDvt7qYdeqVMed3gpeDXB4ieYoafldpg2C5eWeGm
+         /NClj5xCLjFMCM1Vr1DyGGmXV/5A3B8vXF6Jm9CeW3tc6gKURJPGjUi9q4iyDIbmxfzp
+         PArn4+FF+b4DfnhG0Uh4SE/qspSxIj7tLtFWieBr8WNdqHWs3B3W6fQ7DZecZDasu86P
+         TCa+22MkF5QN8J99TAq1VDyqv7T24koFoUWXZWOElvhYuWNDdG+SfFucLIQbvjCXbRCS
+         BS/U5QoKBIIZ324xWJmtLTl1BjFZ+ar3D1C722thWdZKscH+cHZNo6UWEiVpOQq4INir
+         7Wyw==
+X-Gm-Message-State: ANhLgQ0YGunt5F7fbMqSOldAVw1zgpmAjpV8DsQPpZdY8wec5ksXoIi2
+        uVNgjOE57MLF0dyRM4g8gq1OkDtPpT3GyIvXd8m2tw==
+X-Google-Smtp-Source: ADFU+vsQDhS1NhOYmtoB78Cs8xlsOI8ptRgqAIR3/ipW5v26RatXCDeMFuI3GYDNWZRyE9zz89U+6tFqiv6toQpK054=
+X-Received: by 2002:a2e:80cc:: with SMTP id r12mr4198517ljg.154.1583394839550;
+ Wed, 04 Mar 2020 23:53:59 -0800 (PST)
 MIME-Version: 1.0
-References: <4e90d9af-c1ec-020f-b66b-a5a02e7fbe59@infradead.org>
-In-Reply-To: <4e90d9af-c1ec-020f-b66b-a5a02e7fbe59@infradead.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 5 Mar 2020 08:50:53 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0yfaZM6_jtbcgam7+ku2K3ZROnk2VGx+UAk0EODGs5WQ@mail.gmail.com>
-Message-ID: <CAK8P3a0yfaZM6_jtbcgam7+ku2K3ZROnk2VGx+UAk0EODGs5WQ@mail.gmail.com>
-Subject: Re: [PATCH] char: group some /dev configs together and un-split tty configs
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <44fa1cee-08db-e4ab-e5ab-08d6fbd421d7@linux.alibaba.com>
+ <20200303195245.GF2596@hirez.programming.kicks-ass.net> <xm26o8tc3qkv.fsf@bsegall-linux.svl.corp.google.com>
+ <1180c6cd-ff61-2c9f-d689-ffe58f8c5a68@linux.alibaba.com>
+In-Reply-To: <1180c6cd-ff61-2c9f-d689-ffe58f8c5a68@linux.alibaba.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 5 Mar 2020 08:53:48 +0100
+Message-ID: <CAKfTPtCaPz2KBmagzpEurh5S9aNFzUomHGh1pDWBx6L_29w5hw@mail.gmail.com>
+Subject: Re: [RFC PATCH] sched: fix the nonsense shares when load of cfs_rq is
+ too, small
+To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Ben Segall <bsegall@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:oocrq4800gh6pLpqB35733BbJ3muCU01A0MOJSGXzY2Z2Qn4ML7
- 2txQYJBW2U6eHSIanq/6I88cOb/mCkBRWY8zxgIYig5GPAa3RhTfOll4oaQqpc033xyOShN
- z18NfFcqyCcmQmElJlEHGcHcDgqhYdE/GHs1XO+TdlOV1u7p3U0Az2bzbzo+ZGWmw/duKAK
- M/g0tt8ioUxGf34NHG12Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:H5vi0Qhmjfk=:TAQiCgTzDwnOb01NdSEckR
- DD5taXro6OT2UQ+I4kW0vKpf9xa66onSL7IswTaCF63coGTaeOD4UUaie1mNPJGwvNeXNlkjA
- 3XDxzkYvxJ5Efw/y4NstsCoFEChTlMQhM90UVqERfUB9YvBnsqcDz+XIYpdrw44Ow1PiMuoyz
- uyh11+9VNtDVY17CRZygM7DXJKCVOELbm/q9xB82icW0p8vQSbhLyf96gEceVBNmFW8piU1hC
- LoOQ6l+bTVwKRh/zpItN3Wpt+9nC6dTt2tVEsFWheXzbYAaPWUeTtQU3dRlVXf1mW+/ZP+trS
- J7Gqd0jBS5/SnMZiJQjpgiEZCAUCrTbNKiADtea/AhNPQEzI5/MT1ZgIIv4p38YZj7Y5WiXtA
- ZQE2BQmcPndVOvSSAgWuTs5SjODPEDEViHf1yZIuZPLVyJWRQ7NjdfOev2Yk6zeDuhbBifxN5
- NwCims9ZdR4L+WtEwYJB4Oa2sxe8OqLl5txpsyiCIuGaCjIk2ttmo/u4w4ZKXViRKK58vyqUz
- eeOH5zvZMoKdMxDMbqRnk+W6A1ud1hYotlEI2McxqgC01UfvXGFTMhMvB9hP8EzR7JbVHkCdn
- qNHV12U3wM0Ri4gCbAXFeAKdPr60Q6QmtfuLNp9vIRZbZqldPF4wnHoxV4JrjsNck/MA6IA+5
- CxkVHX6R+MDUMM9ZemTiGTFLwoVGR1KxkpgyPeLjdUPqdrTbGmqe/mdsGZulN+oYX60m6rZTW
- nE09m+gYAqoihiL/UMeALmtTh6S1ar190RI+wY4fmiw/Z51R2XS6t92cwx9ZKM/3RfYp/T8qp
- BIkXc66ZPrxAWP2FNibr5p+6Bw64+PkjE6hqiUTKptLM4PGRHw=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 7:45 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+On Thu, 5 Mar 2020 at 02:14, =E7=8E=8B=E8=B4=87 <yun.wang@linux.alibaba.com=
+> wrote:
 >
-> From: Randy Dunlap <rdunlap@infradead.org>
 >
-> Group /dev/{mem,kmem,nvram,raw,port} driver configs together.
-> This also means that tty configs are now grouped together instead
-> of being split up.
 >
-> This just moves Kconfig lines around. There are no other changes.
+> On 2020/3/5 =E4=B8=8A=E5=8D=882:47, bsegall@google.com wrote:
+> [snip]
+> >> Argh, because A->cfs_rq.load.weight is B->se.load.weight which is
+> >> B->shares/nr_cpus.
+> >>
+> >>> While the se of D on root cfs_rq is far more bigger than 2, so it
+> >>> wins the battle.
+> >>>
+> >>> This patch add a check on the zero load and make it as MIN_SHARES
+> >>> to fix the nonsense shares, after applied the group C wins as
+> >>> expected.
+> >>>
+> >>> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+> >>> ---
+> >>>  kernel/sched/fair.c | 2 ++
+> >>>  1 file changed, 2 insertions(+)
+> >>>
+> >>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> >>> index 84594f8aeaf8..53d705f75fa4 100644
+> >>> --- a/kernel/sched/fair.c
+> >>> +++ b/kernel/sched/fair.c
+> >>> @@ -3182,6 +3182,8 @@ static long calc_group_shares(struct cfs_rq *cf=
+s_rq)
+> >>>     tg_shares =3D READ_ONCE(tg->shares);
+> >>>
+> >>>     load =3D max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.lo=
+ad_avg);
+> >>> +   if (!load && cfs_rq->load.weight)
+> >>> +           load =3D MIN_SHARES;
+> >>>
+> >>>     tg_weight =3D atomic_long_read(&tg->load_avg);
+> >>
+> >> Yeah, I suppose that'll do. Hurmph, wants a comment though.
+> >>
+> >> But that has me looking at other users of scale_load_down(), and doesn=
+'t
+> >> at least update_tg_cfs_load() suffer the same problem?
+> >
+> > I think instead we should probably scale_load_down(tg_shares) and
+> > scale_load(load_avg). tg_shares is always a scaled integer, so just
+> > moving the source of the scaling in the multiply should do the job.
+> >
+> > ie
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index fcc968669aea..6d7a9d72d742 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -3179,9 +3179,9 @@ static long calc_group_shares(struct cfs_rq *cfs_=
+rq)
+> >         long tg_weight, tg_shares, load, shares;
+> >         struct task_group *tg =3D cfs_rq->tg;
+> >
+> > -       tg_shares =3D READ_ONCE(tg->shares);
+> > +       tg_shares =3D scale_load_down(READ_ONCE(tg->shares));
+> >
+> > -       load =3D max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.=
+load_avg);
+> > +       load =3D max(cfs_rq->load.weight, scale_load(cfs_rq->avg.load_a=
+vg));
+> >
+> >         tg_weight =3D atomic_long_read(&tg->load_avg);
 >
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/char/Kconfig |  100 ++++++++++++++++++++---------------------
->  1 file changed, 50 insertions(+), 50 deletions(-)
->
-> --- linux-next-20200304.orig/drivers/char/Kconfig
-> +++ linux-next-20200304/drivers/char/Kconfig
-> @@ -7,25 +7,6 @@ menu "Character devices"
->
->  source "drivers/tty/Kconfig"
->
-> -config DEVMEM
-> -       bool "/dev/mem virtual device support"
-> -       default y
-> -       help
-> -         Say Y here if you want to support the /dev/mem device.
-> -         The /dev/mem device is used to access areas of physical
-> -         memory.
-> -         When in doubt, say "Y".
-> -
-> -config DEVKMEM
-> -       bool "/dev/kmem virtual device support"
-> -       # On arm64, VMALLOC_START < PAGE_OFFSET, which confuses kmem read/write
-> -       depends on !ARM64
-> -       help
-> -         Say Y here if you want to support the /dev/kmem device. The
-> -         /dev/kmem device is rarely used, but can be used for certain
-> -         kind of kernel debugging operations.
-> -         When in doubt, say "N".
-> -
->  source "drivers/tty/serial/Kconfig"
->  source "drivers/tty/serdev/Kconfig"
+> Get the point, but IMHO fix scale_load_down() sounds better, to
+> cover all the similar cases, let's first try that way see if it's
+> working :-)
 
-Good idea!
+The problem with this solution is that the avg.load_avg of gse or
+cfs_rq might stay to 0 because it uses
+scale_load_down(se/cfs_rq->load.weight)
 
-Looking at the result though, how about including drivers/tty/*/Kconfig
-from drivers/tty/Kconfig after this? From the user point of view, it's
-the same, but it seems to be grouped more logically then.
-
-CONFIG_SYNCLINK_CS (in drivers/char/pcmcia/Kconfig) is also a
-tty option that should probably get moved, but I guess that's an unrelated
-change, and it would make sense to move the driver along with the
-option.
-
-      Arnd
+>
+> Regards,
+> Michael Wang
+>
+> >
+> >
+> >
