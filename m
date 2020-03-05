@@ -2,257 +2,178 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76309C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077D8C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B338208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5D9208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="E1sRSg0X"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="asNxu+Hz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgCESYb (ORCPT
+        id S1726177AbgCESZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:24:31 -0500
-Received: from mail-co1nam11on2113.outbound.protection.outlook.com ([40.107.220.113]:19937
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725946AbgCESYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:24:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CYp6SMck2l6XHnlJKbDVB3Pj0rBUb/IVZA9dtMQxnI3biHW/w4z6j5gV5BGF4tu2V4GoJUESwyex8cBIfKUqCZZmZEs6KosV28HUhkQTLTekCTeiHHFd0e1xnjBUzX/3JniQuOqmIDqLuuX4vcH4f1ZEzNzN7gJwy2Tb2x5E2b2KGjsxKIj1oSPt1B2mXN5TNPbF2GlrZ01weNQRFEGBakcmJ7NROHAZCbk5gRTo7VuEsKytDWCTs2ZqjeGc6lw3KeMpE5IJAHB6mjSH+XsrY4S16MaRfGbXQayjI7nZnWrPLh2GD/lGOLu/3AIRHder33Po8QKQtMgIlNfsQ63j0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Eppg20KTfgHZbVRr9lC7U3ImR5/7n3kmPGvKVGZLa/U=;
- b=ibyAVprzfLVr+KU70XPvOGLQjtVMWUksoP9m0qVR3hU7lNk9us0gVNdnymNi9WaQofbyf24MoeLRfdBRNjGFqTBe3HJ4VFKJbGdW9RQUYs/n21161HFk6wgE8hJcILH1KyaPX4iYifuDxlnDAGZrjG9cKSz0UHg3jfEFP9zRRXYTyqukliio4JE1Rxfg2M69TLbwfaqtW9BlV8pvbuxf0IzcOliWtEIvtht/E/W55yEhLazNLOq+EXy5mspDt0vGxZcpW5DkBgsBnO11nc/LBcFK+HFUO3aUy925RIqeypaUyOd37aGZf4L8CK2y+uRpRI5FpGhqruCVFyfloJnQaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fortanix.com; dmarc=pass action=none header.from=fortanix.com;
- dkim=pass header.d=fortanix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fortanix.onmicrosoft.com; s=selector2-fortanix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Eppg20KTfgHZbVRr9lC7U3ImR5/7n3kmPGvKVGZLa/U=;
- b=E1sRSg0X6ItnCvZSUEGqJO+UuMOJjjeCWAo+8nVpvqt7VMJIkCZ7/iNJP0CKggfXdgjOz6pR+pNeZZNXTnNm4mQ/vDUH1/uFHjaHJrsDDAw92GbSzCPDRe0ICSIdqQoj9BGJvOjnse+axVEzshIiSnXf1muwYX5TTW3rWieu0tM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jethro@fortanix.com; 
-Received: from BYAPR11MB3734.namprd11.prod.outlook.com (2603:10b6:a03:fe::29)
- by BYAPR11MB2919.namprd11.prod.outlook.com (2603:10b6:a03:8d::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Thu, 5 Mar
- 2020 18:24:23 +0000
-Received: from BYAPR11MB3734.namprd11.prod.outlook.com
- ([fe80::dc9c:f877:efd1:401a]) by BYAPR11MB3734.namprd11.prod.outlook.com
- ([fe80::dc9c:f877:efd1:401a%4]) with mapi id 15.20.2793.013; Thu, 5 Mar 2020
- 18:24:23 +0000
-Subject: Re: [PATCH v28 11/22] x86/sgx: Linux Enclave Driver
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-12-jarkko.sakkinen@linux.intel.com>
- <20200305174015.GJ11500@linux.intel.com>
-From:   Jethro Beekman <jethro@fortanix.com>
-Message-ID: <e445c2f8-fddd-5740-0e26-a03e023918bf@fortanix.com>
-Date:   Thu, 5 Mar 2020 19:24:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <20200305174015.GJ11500@linux.intel.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms070604070802020306060307"
-X-ClientProxiedBy: LNXP123CA0013.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::25) To BYAPR11MB3734.namprd11.prod.outlook.com
- (2603:10b6:a03:fe::29)
+        Thu, 5 Mar 2020 13:25:30 -0500
+Received: from gateway32.websitewelcome.com ([192.185.145.123]:30201 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725963AbgCESZ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 13:25:28 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 1CB70414B0
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Mar 2020 12:25:27 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 9vBWjzGlVRP4z9vBXjMXyr; Thu, 05 Mar 2020 12:25:27 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=a5iVU75uWZ6vyAD02p5FM4/7Wejch4hFSQ3BEuRPCL0=; b=asNxu+HzH/Tl9y/sONdA1gcjS9
+        6qsxIAw3OGsWUgpkPz8hx0ZUTi4C5KhRDQwItmIM3bzwcqgnnML+iVoL2k4KaIDtwJaONg3PPDIrJ
+        cgAluWZH+ZkV5y/ZryS/qpNUjUrN3qP9LmURsdzqNAKbWeaiZfG/anD5KGlNLxISUJH/6QdXDl7BU
+        qwcSWPLYuiW7mOvyO8EMufVte8tuUM1ytHWWI1mqV0ATVAY7qIQS3lHnrWHTNgCloANzaSnIIavp2
+        ZdMnheKB/hGN1B84MXQIIr9xr0iuf5SDgFWB2K82tJgzrGOyDY2mI53E5uUkPQMO8HsuAI4fRTW5F
+        iltcq5BA==;
+Received: from [201.166.169.220] (port=26027 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j9vBV-003PHS-MP; Thu, 05 Mar 2020 12:25:26 -0600
+To:     Kalle Valo <kvalo@codeaurora.org>, Joe Perches <joe@perches.com>
+Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200305111216.GA24982@embeddedor>
+ <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
+ <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
+ <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
+ 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
+ tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
+ DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
+ 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
+ YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
+ m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
+ NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
+ qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
+ LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzSxHdXN0YXZvIEEu
+ IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPsLBfQQTAQgAJwUCWywcDAIbIwUJ
+ CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
+ l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
+ obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
+ cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
+ ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
+ JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
+ JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
+ PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
+ R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
+ 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
+ e5YnLxF8ctRAp7K4yVlvA87BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
+ H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
+ DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
+ 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
+ otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
+ l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
+ jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
+ zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
+ I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
+ ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
+ EQEAAcLBZQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
+ UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
+ XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
+ WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
+ imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
+ fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
+ 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
+ ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
+ YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
+ GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
+Date:   Thu, 5 Mar 2020 12:28:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.195.0.226] (212.61.132.179) by LNXP123CA0013.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:d2::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Thu, 5 Mar 2020 18:24:16 +0000
-X-Originating-IP: [212.61.132.179]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 040bede7-85c3-4b74-4e8a-08d7c1326dbf
-X-MS-TrafficTypeDiagnostic: BYAPR11MB2919:
-X-Microsoft-Antispam-PRVS: <BYAPR11MB2919A086042435E01FEE106AAAE20@BYAPR11MB2919.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03333C607F
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(376002)(39830400003)(396003)(136003)(366004)(346002)(199004)(189003)(110136005)(81156014)(81166006)(956004)(4326008)(8936002)(52116002)(31686004)(6486002)(6666004)(33964004)(2616005)(508600001)(54906003)(31696002)(26005)(66946007)(186003)(2906002)(16526019)(7416002)(5660300002)(66556008)(16576012)(316002)(8676002)(53546011)(36756003)(86362001)(66476007)(235185007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR11MB2919;H:BYAPR11MB3734.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: fortanix.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Nezen3jYwPDPvAIPqeOF5SifCpODkfz+we0PtlfXpcTu3FHxxCd5NpIkBN0FeRBCv8/0QkyCc8m3yqkl0o4B0PPNC1SsO/zQoqIoW9vcNZUC2QARD1zCmAK3vIKJ6x7M1vB9r0+9PPSyxEIE8zTUyBtcjkup32AAKbgTaTqK5CA6rqqiKG7sM0OZDOigHMgllgz8+hvhFoGNbBWL53lz4wrPPPUF6cRMsOXPCtfKZhmQXNVBfXiNvsg/iJI7DTmaCl+q0H80Xim1tZYcSc9xZoKgwhnXSQAOGF/2U/uPCeYwCazMnsBsZHYhWjXoEhtQcB8dhA999VhIhhntLsUSHti1SWGN9heNrtAP8cXhLVIFIA98FNxB7EnVa1XJOK46ANr23scqyNgIbYwQjYCn/wcyM2FQjoId1Qhum1jIW+owE/BnJxZOHkEVu0mh5JRn
-X-MS-Exchange-AntiSpam-MessageData: A4SsgplaVBn/oE9Ru0ssdmMNC6dNQBVTz7uQic6p56OjOnpSBWlftE3TUdBQaj9Hj7MRTz28POprsJ4IVgeZcRehkPHPMVObqmNmc0GjcrtGgqumU6it/KTnd+8JhRGfwJcJuDVwgd4A2RTIEXEviw==
-X-OriginatorOrg: fortanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 040bede7-85c3-4b74-4e8a-08d7c1326dbf
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2020 18:24:23.5501
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: de7becae-4883-43e8-82c7-7dbdbb988ae6
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jrHpbZ1wankF/Z49R41NdhjJuVzleWEwEVJP0VmLpdp48C6Y8oHOOOC3zN1Qdg6MTa76qmC6mEI/kfGBNWxJnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2919
+In-Reply-To: <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.169.220
+X-Source-L: No
+X-Exim-ID: 1j9vBV-003PHS-MP
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.166.169.220]:26027
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------ms070604070802020306060307
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On 2020-03-05 18:40, Sean Christopherson wrote:
-> On Wed, Mar 04, 2020 at 01:35:58AM +0200, Jarkko Sakkinen wrote:
->> diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/a=
-sm/sgx.h
->> new file mode 100644
->> index 000000000000..5edb08ab8fd0
->> --- /dev/null
->> +++ b/arch/x86/include/uapi/asm/sgx.h
->> @@ -0,0 +1,66 @@
->> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) WITH Linux-sysc=
-all-note */
->> +/*
->> + * Copyright(c) 2016-19 Intel Corporation.
->> + */
->> +#ifndef _UAPI_ASM_X86_SGX_H
->> +#define _UAPI_ASM_X86_SGX_H
->> +
->> +#include <linux/types.h>
->> +#include <linux/ioctl.h>
->> +
->> +/**
->> + * enum sgx_epage_flags - page control flags
->> + * %SGX_PAGE_MEASURE:	Measure the page contents with a sequence of
->> + *			ENCLS[EEXTEND] operations.
->> + */
->> +enum sgx_page_flags {
->> +	SGX_PAGE_MEASURE	=3D 0x01,
->> +};
->> +
->> +#define SGX_MAGIC 0xA4
->> +
->> +#define SGX_IOC_ENCLAVE_CREATE \
->> +	_IOW(SGX_MAGIC, 0x00, struct sgx_enclave_create)
->> +#define SGX_IOC_ENCLAVE_ADD_PAGES \
->> +	_IOWR(SGX_MAGIC, 0x01, struct sgx_enclave_add_pages)
->> +#define SGX_IOC_ENCLAVE_INIT \
->> +	_IOW(SGX_MAGIC, 0x02, struct sgx_enclave_init)
->> +
->> +/**
->> + * struct sgx_enclave_create - parameter structure for the
->> + *                             %SGX_IOC_ENCLAVE_CREATE ioctl
->> + * @src:	address for the SECS page data
->> + */
->> +struct sgx_enclave_create  {
->> +	__u64	src;
->=20
-> Would it make sense to add reserved fields to the structs so that new
-> features can be added in a backwards compatible way?  E.g. if we want t=
-o
-> allow userspace to control the backing store by passing in a file
-> descriptor ENCLAVE_CREATE.
+On 3/5/20 10:10, Kalle Valo wrote:
+> Joe Perches <joe@perches.com> writes:
+> 
+>> On Thu, 2020-03-05 at 16:50 +0200, Kalle Valo wrote:
+>>> "Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+>> []
+>>>>  drivers/net/wireless/zydas/zd1211rw/zd_usb.h | 8 ++++----
+>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>
+>>> "zd1211rw: " is enough, no need to have the filename in the title.
+> 
+>>> But I asked this already in an earlier patch, who prefers this format?
+>>> It already got opposition so I'm not sure what to do.
+>>
+>> I think it doesn't matter.
+>>
+>> Trivial inconsistencies in patch subject and word choice
+>> don't have much overall impact.
+> 
+> I wrote in a confusing way, my question above was about the actual patch
+> and not the the title. For example, Jes didn't like this style change:
+> 
+> https://patchwork.kernel.org/patch/11402315/
+> 
 
-Reserving space for future fields is not necessary because the size of th=
-e struct is encoded in the ioctl number. The kernel can use this to diffe=
-rentiate between different call versions from userspace.
+It doesn't seem that that comment adds a lot to the conversation. The only
+thing that it says is literally "fix the compiler". By the way, more than
+a hundred patches have already been applied to linux-next[1] and he seems
+to be the only person that has commented such a thing. Qemu guys are adopting
+this format, too[2][3].
 
+On the other hand, the changelog text explains the reasons why we are
+implementing this change all across the kernel tree. :)
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/?qt=grep&q=flexible-array
+[2] https://lists.nongnu.org/archive/html/qemu-s390x/2020-03/msg00019.html
+[3] https://lists.nongnu.org/archive/html/qemu-s390x/2020-03/msg00020.html
+
+Thanks
 --
-Jethro Beekman | Fortanix
+Gustavo
 
-
---------------ms070604070802020306060307
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-C54wggVPMIIEN6ADAgECAhAFFr+cC0ZYZTtbKgQCBwyyMA0GCSqGSIb3DQEBCwUAMIGCMQsw
-CQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoM
-GkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBB
-dXRoZW50aWNhdGlvbiBDQSBHMTAeFw0xOTA5MTYwOTQ3MDlaFw0yMDA5MTYwOTQ3MDlaMB4x
-HDAaBgNVBAMME2pldGhyb0Bmb3J0YW5peC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
-ggEKAoIBAQDHWEhcRGkEl1ZnImSqBt/OXNJ4AyDZ86CejuWI9jYpWbtf/gXBQO6iaaEKBDlj
-Vffk2QxH9wcifkYsvCYfxFgD15dU9TABO7YOwvHa8NtxanWr1xomufu/P1ApI336+S7ZXfSe
-qMnookNJUMHuF3Nxw2lI69LXqZLCdcVXquM4DY1lVSV+DXIwpTMtB+pMyqOWrsgmrISMZYFw
-EUJOqVDvtU8KewhpuGAYXAQSDVLcAl2nZg7C2Mex8vT8stBoslPTkRXxAgMbslDNDUiKhy8d
-E3I78P+stNHlFAgALgoYLBiVVLZkVBUPvgr2yUApR63yosztqp+jFhqfeHbjTRlLAgMBAAGj
-ggIiMIICHjAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFH5g/Phspz09166ToXkCj7N0KTv1
-MEsGCCsGAQUFBwEBBD8wPTA7BggrBgEFBQcwAoYvaHR0cDovL2NhY2VydC5hY3RhbGlzLml0
-L2NlcnRzL2FjdGFsaXMtYXV0Y2xpZzEwHgYDVR0RBBcwFYETamV0aHJvQGZvcnRhbml4LmNv
-bTBHBgNVHSAEQDA+MDwGBiuBHwEYATAyMDAGCCsGAQUFBwIBFiRodHRwczovL3d3dy5hY3Rh
-bGlzLml0L2FyZWEtZG93bmxvYWQwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIHo
-BgNVHR8EgeAwgd0wgZuggZiggZWGgZJsZGFwOi8vbGRhcDA1LmFjdGFsaXMuaXQvY24lM2RB
-Y3RhbGlzJTIwQ2xpZW50JTIwQXV0aGVudGljYXRpb24lMjBDQSUyMEcxLG8lM2RBY3RhbGlz
-JTIwUy5wLkEuLzAzMzU4NTIwOTY3LGMlM2RJVD9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0
-O2JpbmFyeTA9oDugOYY3aHR0cDovL2NybDA1LmFjdGFsaXMuaXQvUmVwb3NpdG9yeS9BVVRI
-Q0wtRzEvZ2V0TGFzdENSTDAdBgNVHQ4EFgQUAXkM7yNq6pH6j+IC/7IsDPSTMnowDgYDVR0P
-AQH/BAQDAgWgMA0GCSqGSIb3DQEBCwUAA4IBAQC8z+2tLUwep0OhTQBgMaybrxTHCxRZ4/en
-XB0zGVrry94pItE4ro4To/t86Kfcic41ZsaX8/SFVUW2NNHjEodJu94UhYqPMDUVjO6Y14s2
-jznFHyKQdXMrhIBU5lzYqyh97w6s82Z/qoMy3OuLek+8rXirwju9ATSNLsFTzt2CEoyCSRtl
-yOmR7Z9wgSvD7C7XoBdGEFVdGCXwCy1t9AT7UCIHKssnguVaMGN9vWqLPVKOVTwc4g3RAQC7
-J1Aoo6U5d6wCIX4MxEZhICxnUgAKHULxsWMGjBfQAo3QGXjJ4wDEu7O/5KCyUfn6lyhRYa+t
-YgyFAX0ZU9Upovd+aOw0MIIGRzCCBC+gAwIBAgIILNSK07EeD4kwDQYJKoZIhvcNAQELBQAw
-azELMAkGA1UEBhMCSVQxDjAMBgNVBAcMBU1pbGFuMSMwIQYDVQQKDBpBY3RhbGlzIFMucC5B
-Li8wMzM1ODUyMDk2NzEnMCUGA1UEAwweQWN0YWxpcyBBdXRoZW50aWNhdGlvbiBSb290IENB
-MB4XDTE1MDUxNDA3MTQxNVoXDTMwMDUxNDA3MTQxNVowgYIxCzAJBgNVBAYTAklUMQ8wDQYD
-VQQIDAZNaWxhbm8xDzANBgNVBAcMBk1pbGFubzEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4v
-MDMzNTg1MjA5NjcxLDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIENB
-IEcxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwPzBiVbZiOL0BGW/zQk1qygp
-MP4MyvcnqxwR7oY9XeT1bES2DFczlZfeiIqNLanbkyqTxydXZ+kxoS9071qWsZ6zS+pxSqXL
-s+RTvndEaWx5hdHZcKNWGzhy5FiO4GZvGlFInFEiaY+dOEpjjWvSeXpvcDpnYw6M9AXuHo4J
-hjC3P/OK//5QFXnztTa4iU66RpLteOTgCtiRCwZNKx8EFeqqfTpYvfEb4H91E7n+Y61jm0d2
-E8fJ2wGTaSSwjc8nTI2ApXujoczukb2kHqwaGP3q5UuedWcnRZc65XUhK/Z6K32KvrQuNP32
-F/5MxkvEDnJpUnnt9iMExvEzn31zDQIDAQABo4IB1TCCAdEwQQYIKwYBBQUHAQEENTAzMDEG
-CCsGAQUFBzABhiVodHRwOi8vb2NzcDA1LmFjdGFsaXMuaXQvVkEvQVVUSC1ST09UMB0GA1Ud
-DgQWBBR+YPz4bKc9Pdeuk6F5Ao+zdCk79TAPBgNVHRMBAf8EBTADAQH/MB8GA1UdIwQYMBaA
-FFLYiDrIn3hm7YnzezhwlMkCAjbQMEUGA1UdIAQ+MDwwOgYEVR0gADAyMDAGCCsGAQUFBwIB
-FiRodHRwczovL3d3dy5hY3RhbGlzLml0L2FyZWEtZG93bmxvYWQwgeMGA1UdHwSB2zCB2DCB
-lqCBk6CBkIaBjWxkYXA6Ly9sZGFwMDUuYWN0YWxpcy5pdC9jbiUzZEFjdGFsaXMlMjBBdXRo
-ZW50aWNhdGlvbiUyMFJvb3QlMjBDQSxvJTNkQWN0YWxpcyUyMFMucC5BLiUyZjAzMzU4NTIw
-OTY3LGMlM2RJVD9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0O2JpbmFyeTA9oDugOYY3aHR0
-cDovL2NybDA1LmFjdGFsaXMuaXQvUmVwb3NpdG9yeS9BVVRILVJPT1QvZ2V0TGFzdENSTDAO
-BgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcNAQELBQADggIBAE2TztUkvkEbShZYc19lifLZej5Y
-jLzLxA/lWxZnssFLpDPySfzMmndz3F06S51ltwDe+blTwcpdzUl3M2alKH3bOr855ku9Rr6u
-edya+HGQUT0OhqDo2K2CAE9nBcfANxifjfT8XzCoC3ctf9ux3og1WuE8WTcLZKgCMuNRBmJt
-e9C4Ug0w3iXqPzq8KuRRobNKqddPjk3EiK+QA+EFCCka1xOLh/7cPGTJMNta1/0u5oLiXaOA
-HeALt/nqeZ2kZ+lizK8oTv4in5avIf3ela3oL6vrwpTca7TZxTX90e805dZQN4qRVPdPbrBl
-WtNozH7SdLeLrcoN8l2EXO6190GAJYdynTc2E6EyrLVGcDKUX91VmCSRrqEppZ7W05TbWRLi
-6+wPjAzmTq2XSmKfajq7juTKgkkw7FFJByixa0NdSZosdQb3VkLqG8EOYOamZLqH+v7ua0+u
-lg7FOviFbeZ7YR9eRO81O8FC1uLgutlyGD2+GLjgQnsvneDsbNAWfkory+qqAxvVzX5PSaQp
-2pJ52AaIH1MN1i2/geRSP83TRMrFkwuIMzDhXxKFQvpspNc19vcTryzjtwP4xq0WNS4YWPS4
-U+9mW+U0Cgnsgx9fMiJNbLflf5qSb53j3AGHnjK/qJzPa39wFTXLXB648F3w1Qf9R7eZeTRJ
-fCQY/fJUMYID9jCCA/ICAQEwgZcwgYIxCzAJBgNVBAYTAklUMQ8wDQYDVQQIDAZNaWxhbm8x
-DzANBgNVBAcMBk1pbGFubzEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5Njcx
-LDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEcxAhAFFr+cC0ZY
-ZTtbKgQCBwyyMA0GCWCGSAFlAwQCAQUAoIICLzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMDAzMDUxODI0MTFaMC8GCSqGSIb3DQEJBDEiBCCVAwcv1B+N
-1o5Gg7KW6mHmOD2F1XL540RgRcHzggIj4DBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQB
-KjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMC
-AgFAMAcGBSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGoBgkrBgEEAYI3EAQxgZowgZcwgYIxCzAJ
-BgNVBAYTAklUMQ8wDQYDVQQIDAZNaWxhbm8xDzANBgNVBAcMBk1pbGFubzEjMCEGA1UECgwa
-QWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5NjcxLDAqBgNVBAMMI0FjdGFsaXMgQ2xpZW50IEF1
-dGhlbnRpY2F0aW9uIENBIEcxAhAFFr+cC0ZYZTtbKgQCBwyyMIGqBgsqhkiG9w0BCRACCzGB
-mqCBlzCBgjELMAkGA1UEBhMCSVQxDzANBgNVBAgMBk1pbGFubzEPMA0GA1UEBwwGTWlsYW5v
-MSMwIQYDVQQKDBpBY3RhbGlzIFMucC5BLi8wMzM1ODUyMDk2NzEsMCoGA1UEAwwjQWN0YWxp
-cyBDbGllbnQgQXV0aGVudGljYXRpb24gQ0EgRzECEAUWv5wLRlhlO1sqBAIHDLIwDQYJKoZI
-hvcNAQEBBQAEggEAM2r/fecuoObSDyo/x1AVp7l3XCN1HtCZdPAZmIoNoAxSkGhAvZ0JSfN3
-PKOaDnz8Of3GlXpek2pg9xUhZg0pWVs0icHghyFs+eBfJnHwk6oka4onhpAWzHKPGR5KuJco
-zqgu3KrCzzOU2yZ/SXtmR6zS1rGI8UXwZlCkjK3mBz+3RQen9phFfp7LrX/v58wuiY1dTSEV
-sfUJHDBMVd8IAtO/gPMG9hz9ZAlOLCI2j+8LAr93RN+d2pSNIXJuKagGb5xkTPTwlG5K6YOd
-4r1GOl6NLsgkteVfEnnkUFopO9bAA0S1z8LpeJzxykeSYcVpfj1mA0jguEKRzZ+ZSDYbNwAA
-AAAAAA==
-
---------------ms070604070802020306060307--
