@@ -3,93 +3,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB3EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE547C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D1720801
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2F620801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgCETZI (ORCPT
+        id S1726220AbgCETZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 14:25:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55442 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 14:25:33 -0500
+Received: from mga02.intel.com ([134.134.136.20]:59653 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbgCETZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 14:25:08 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5124E207FD;
-        Thu,  5 Mar 2020 19:25:07 +0000 (UTC)
-Date:   Thu, 5 Mar 2020 14:25:05 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: Re: [v5] Documentation: bootconfig: Update boot configuration
- documentation
-Message-ID: <20200305142505.714a5121@gandalf.local.home>
-In-Reply-To: <af5d4af0-9e06-cc6e-c29e-4c4eebdb9b0e@web.de>
-References: <158339065180.26602.26457588086834858.stgit@devnote2>
-        <158339066140.26602.7533299987467005089.stgit@devnote2>
-        <ef820445-25c5-a312-57d4-25ff3b4d08cf@infradead.org>
-        <3fb124a6-07d2-7a40-8981-07561aeb3c1e@web.de>
-        <f823204d-dcd1-2159-a525-02f15562e1af@infradead.org>
-        <29c599ef-991d-a253-9f27-5999fb55b228@web.de>
-        <997f73af-dc6c-bc8b-12ba-69270ee4b95d@infradead.org>
-        <dbef7b77-945a-585e-12fe-b5e30eb1a6bc@web.de>
-        <e20f52a0-e522-c2cf-17a4-384a1f3308bc@infradead.org>
-        <ecaffba3-fccd-32ee-763a-a2ec84a65148@web.de>
-        <20200305140004.535eeb1a@gandalf.local.home>
-        <af5d4af0-9e06-cc6e-c29e-4c4eebdb9b0e@web.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725963AbgCETZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 14:25:33 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 11:25:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,519,1574150400"; 
+   d="scan'208";a="413628452"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 05 Mar 2020 11:25:32 -0800
+Date:   Thu, 5 Mar 2020 11:25:32 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Pu Wen <puwen@hygon.cn>
+Subject: Re: [PATCH v2 4/7] KVM: x86: Fix CPUID range checks for Hypervisor
+ and Centaur classes
+Message-ID: <20200305192532.GN11500@linux.intel.com>
+References: <20200305013437.8578-1-sean.j.christopherson@intel.com>
+ <20200305013437.8578-5-sean.j.christopherson@intel.com>
+ <CALMp9eRRWZ54kzMXdTqRCy2KmaUAq+HVVVzbxJNVdgktg65XCA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eRRWZ54kzMXdTqRCy2KmaUAq+HVVVzbxJNVdgktg65XCA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Mar 2020 20:14:00 +0100
-Markus Elfring <Markus.Elfring@web.de> wrote:
-
-> >>>> Which of the possibly unanswered issues do you find not concrete enough so far?  
-> >>>
-> >>> e.g.:  
-> >>>>>>  Will the clarification become more constructive for remaining challenges?  
-> >>
-> >> Do you expect that known open issues need to be repeated for each patch revision?  
+On Thu, Mar 05, 2020 at 10:43:51AM -0800, Jim Mattson wrote:
+> On Wed, Mar 4, 2020 at 5:34 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
 > >
-> > I'm clueless about what you are talking about.  
-> 
-> I suggest to take another look at review comments for previous patch versions.
-
-I have, and I believe Masami has satisfactory addressed them, if they
-needed addressing.
-
-> 
-> 
-> > Yes there's communication difficulties.  
-> 
-> I hope that we can reduce them somehow.
-
-Then please be more specific in your correspondence.
-
-> 
-> 
-> >> How do you think about the desired tracking of bug reports
-> >> also for this software?  
+> > Rework the masking in the out-of-range CPUID logic to handle the
+> > Hypervisor sub-classes, as well as the Centaur class if the guest
+> > virtual CPU vendor is Centaur.
 > >
-> > What does that statement have to do with this patch series????  
+> > Masking against 0x80000000 only handles basic and extended leafs, which
+> > results in Hypervisor range checks being performed against the basic
+> > CPUID class, and Centuar range checks being performed against the
+> > Extended class.  E.g. if CPUID.0x40000000.EAX returns 0x4000000A and
+> > there is no entry for CPUID.0x40000006, then function 0x40000006 would
+> > be incorrectly reported as out of bounds.
+> >
+> > While there is no official definition of what constitutes a class, the
+> > convention established for Hypervisor classes effectively uses bits 31:8
+> > as the mask by virtue of checking for different bases in increments of
+> > 0x100, e.g. KVM advertises its CPUID functions starting at 0x40000100
+> > when HyperV features are advertised at the default base of 0x40000000.
+> >
+> > The bad range check doesn't cause functional problems for any known VMM
+> > because out-of-range semantics only come into play if the exact entry
+> > isn't found, and VMMs either support a very limited Hypervisor range,
+> > e.g. the official KVM range is 0x40000000-0x40000001 (effectively no
+> > room for undefined leafs) or explicitly defines gaps to be zero, e.g.
+> > Qemu explicitly creates zeroed entries up to the Cenatur and Hypervisor
+> > limits (the latter comes into play when providing HyperV features).
+> >
+> > The bad behavior can be visually confirmed by dumping CPUID output in
+> > the guest when running Qemu with a stable TSC, as Qemu extends the limit
+> > of range 0x40000000 to 0x40000010 to advertise VMware's cpuid_freq,
+> > without defining zeroed entries for 0x40000002 - 0x4000000f.
+> >
+> > Note, documentation of Centaur/VIA CPUs is hard to come by.  Designating
+> > 0xc0000000 - 0xcfffffff as the Centaur class is a best guess as to the
+> > behavior of a real Centaur/VIA CPU.
 > 
-> Do you identify any feedback as a bug report (or clarification request) here?
+> Don't forget Transmeta's CPUID range at 0x80860000 through 0x8086FFFF!
 
-I still don't have the foggiest clue what you are talking about. What bug
-are you reporting?
-
--- Steve
+Hmm, is it actually needed here?  KVM doesn't advertise support for that
+range in KVM_GET_SUPPORTED_CPUID.  That's also why I limited the Centaur
+range to vendor==CENTAUR, as KVM_GET_SUPPORTED_CPUID enumerates the
+Centaur range if and only if the host CPU is Centaur.
