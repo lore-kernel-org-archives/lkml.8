@@ -2,173 +2,306 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6C9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C874C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2D820637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:00:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ckuzOiV4"
+	by mail.kernel.org (Postfix) with ESMTP id 54C1020637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCEOA0 (ORCPT
+        id S1726992AbgCEOAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:00:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52075 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725946AbgCEOAZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:00:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583416824;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=REYAw8IXLNs9Tf/q5p/SCoSNcXTUik9NnIPit8ULeAI=;
-        b=ckuzOiV4gYobC83DCZdKi0ycdgzo0cNLZPSmgkdj7XC0ary/vxfZ9y2CqgYUP1ATdDhlVo
-        KjZno8CGjsN1Lg3pjr6XhjS050tXdDszOnS0kTeIbCKlqVclavHfr7m7ROFaI3fHIpAsIN
-        LhmxoTAD9WRQUpChUM8b6sjbjUjCkKI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-105-hvSTJJlZOh-zYB2Db2leLA-1; Thu, 05 Mar 2020 09:00:22 -0500
-X-MC-Unique: hvSTJJlZOh-zYB2Db2leLA-1
-Received: by mail-wr1-f69.google.com with SMTP id 72so2346008wrc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:00:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=REYAw8IXLNs9Tf/q5p/SCoSNcXTUik9NnIPit8ULeAI=;
-        b=tQLImr/k8cGplswHQHt8l4jx1kKMP/ubYSRzOcocIxTm3krR9q4VESAD6LYk18qPxT
-         yJKDsvj7k8eZezvBSPSvZqdfah1VRHUFAdrStVMvaD9+U1zhGX3t9tRPUSwMt6pI5lwc
-         xkc7XWVXVVmlJtN4g9Pk0z958XrXxgy5QBwMmxjbD5QI51jyN9YOLOh01P/rptr53bA7
-         nGtmzjYAeJDQ/9P6VvhFxaHbGcWG/QfktmdQnRz7WXBM1m/TkKMH2u2seWVck7JcGVlK
-         zw9+SQBPRBMbvrMv2oJdtqvxyszBEkhRHPWrt7FM5GYHHaoKECIbzdLJX6oIuxv4SI9L
-         F3CQ==
-X-Gm-Message-State: ANhLgQ0ZmkPPzo91u2pFQ5eHgGl7j4KLL7ttB6U6743wOTs1vZhWq+Jf
-        TVH+6b/hy5cmMC8gN7+7M0Ew6O1Mb+EO01I1u6Q739jpeWnqH+MV4wtceBvlvG2aNgd1gCTc7Wu
-        1awnsgnBrSMSRx0SZzQeTnYHr
-X-Received: by 2002:a05:6000:104f:: with SMTP id c15mr9964895wrx.376.1583416820832;
-        Thu, 05 Mar 2020 06:00:20 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vtpgbLzB8p/rJAQcpMUSyR7T+t+wKqbw1eij43GDthY7l3e1Uv5a9zNtcXrmhPB10Lozrx0fw==
-X-Received: by 2002:a05:6000:104f:: with SMTP id c15mr9964863wrx.376.1583416820573;
-        Thu, 05 Mar 2020 06:00:20 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id w19sm8707521wmc.22.2020.03.05.06.00.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 06:00:19 -0800 (PST)
-Subject: Re: Updating cypress/brcm firmware in linux-firmware for
- CVE-2019-15126
-To:     David Woodhouse <dwmw2@infradead.org>, chi-hsien.lin@cypress.com,
-        Christopher Rumpf <Christopher.Rumpf@cypress.com>,
-        Chung-Hsien Hsu <cnhu@cypress.com>
-List-Id: <linux-firmware.lore.kernel.org>
-Cc:     linux-firmware@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <93dba8d2-6e46-9157-d292-4d93feb8ec1a@redhat.com>
- <c2f75e84-6c8d-f4f0-bcc6-5fb2b662de33@redhat.com>
- <3cf961a6-56c8-81fb-3bf9-fc36e2601d2c@cypress.com>
- <17ec344e-80c5-02a9-59a3-35789a2eaaf9@redhat.com>
- <40403657934d090d4668916a02878f476b34c9fd.camel@infradead.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <e6c7ec6c-8619-1511-8626-70ebdea3cec5@redhat.com>
-Date:   Thu, 5 Mar 2020 15:00:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 09:00:41 -0500
+Received: from mga07.intel.com ([134.134.136.100]:17072 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726970AbgCEOAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 09:00:40 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 06:00:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="gz'50?scan'50,208,50";a="352366430"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2020 06:00:31 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j9r38-000DSi-Du; Thu, 05 Mar 2020 22:00:30 +0800
+Date:   Thu, 5 Mar 2020 21:59:42 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     cl@rock-chips.com
+Cc:     kbuild-all@lists.01.org, heiko@sntech.de, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        akpm@linux-foundation.org, tglx@linutronix.de, mpe@ellerman.id.au,
+        surenb@google.com, ben.dooks@codethink.co.uk,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        will@kernel.org, keescook@chromium.org, luto@amacapital.net,
+        wad@chromium.org, mark.rutland@arm.com, geert+renesas@glider.be,
+        george_davis@mentor.com, sudeep.holla@arm.com,
+        linux@armlinux.org.uk, gregkh@linuxfoundation.org, info@metux.net,
+        kstewart@linuxfoundation.org, allison@lohutok.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        huangtao@rock-chips.com, Liang Chen <cl@rock-chips.com>
+Subject: Re: [PATCH v1 1/1] sched/fair: do not preempt current task if it is
+ going to call schedule()
+Message-ID: <202003052148.c4gEyOrD%lkp@intel.com>
+References: <20200305081611.29323-2-cl@rock-chips.com>
 MIME-Version: 1.0
-In-Reply-To: <40403657934d090d4668916a02878f476b34c9fd.camel@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="AqsLC8rIMeq19msA"
+Content-Disposition: inline
+In-Reply-To: <20200305081611.29323-2-cl@rock-chips.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
 Hi,
 
-On 3/5/20 10:16 AM, David Woodhouse wrote:
-> On Thu, 2020-03-05 at 07:24 +0100, Hans de Goede wrote:
->>> also clm_blob download is not supported in kernels prior to 4.15 so
->>> those files won't work with older kernels.
->>
->> That is a valid concern, I'm not sure what the rules for linux-firmware
->> are with regards to this.
-> 
-> Not quite sure I understand the problem.
-> 
-> The rules for Linux firmware are just the same as basic engineering
-> practice for loadable libraries.
-> 
-> If you change the ABI, you change the "soname" of a library, which
-> equates to changing the filename of a linux-firmware object.
-> 
-> So if you make a new file format for the firmware which requires new
-> driver support, then you give it a new name. The updated driver can
-> attempt to load the old firmware filename as a fallback, if it still
-> supports that, or you just have a clean separation between the two.
-> 
-> The linux-firmware repository then carries *both* files, supporting
-> both old and new kernels in parallel.
+Thank you for the patch! Yet something to improve:
 
-That is true, adding support to the brcm drivers for that should
-be easy enough and backporting that to older still supported drivers
-(which already support the separate regulatory db the new firmware
-uses) should also be easy enough.
+[auto build test ERROR on tip/sched/core]
+[also build test ERROR on arm64/for-next/core tip/auto-latest linus/master v5.6-rc4 next-20200305]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-So that removes one concern, leaving just the regulatory concerns.
+url:    https://github.com/0day-ci/linux/commits/cl-rock-chips-com/wait_task_inactive-spend-too-much-time-on-system-startup/20200305-201639
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git a0f03b617c3b2644d3d47bf7d9e60aed01bd5b10
+config: um-x86_64_defconfig (attached as .config)
+compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
+reproduce:
+        # save the attached .config to linux build tree
+        make ARCH=um SUBARCH=x86_64
 
-To be honest I do not completely understand the regulatory concerns
-about using the drivers from the SDK.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-Chi-hsien, you say that the clm_blob files from the Cypress SDK are
-only valid for the Cypress reference designs, but AFAIK the clm_blob
-only contains per country regulatory info, so which channels can
-be used, how much mW/dB signal strength is allowed in those channels,
-etc.  Which I would expect to not change on a per design basis.
-Parameters which can change on a per design basis like antenna gain,
-are stored in the nvram and not part of the clm_blob (AFAIK).
+All errors (new ones prefixed by >>):
 
-So I still do not understand why using the clm_blob files files from
-the SDK would be a problem? Can you explain this in more detail?
+   In file included from arch/x86/um/shared/sysdep/kernel-offsets.h:3:0,
+                    from arch/um/kernel/asm-offsets.c:1:
+   include/linux/sched.h: In function 'set_tsk_going_to_sched':
+>> include/linux/sched.h:1776:27: error: 'TIF_GOING_TO_SCHED' undeclared (first use in this function); did you mean 'TIF_NEED_RESCHED'?
+     set_tsk_thread_flag(tsk, TIF_GOING_TO_SCHED);
+                              ^~~~~~~~~~~~~~~~~~
+                              TIF_NEED_RESCHED
+   include/linux/sched.h:1776:27: note: each undeclared identifier is reported only once for each function it appears in
+   include/linux/sched.h: In function 'clear_tsk_going_to_sched':
+   include/linux/sched.h:1781:29: error: 'TIF_GOING_TO_SCHED' undeclared (first use in this function); did you mean 'TIF_NEED_RESCHED'?
+     clear_tsk_thread_flag(tsk, TIF_GOING_TO_SCHED);
+                                ^~~~~~~~~~~~~~~~~~
+                                TIF_NEED_RESCHED
+   In file included from include/asm-generic/bug.h:5:0,
+                    from ./arch/um/include/generated/asm/bug.h:1,
+                    from include/linux/bug.h:5,
+                    from include/linux/thread_info.h:12,
+                    from include/asm-generic/current.h:5,
+                    from ./arch/um/include/generated/asm/current.h:1,
+                    from include/linux/sched.h:12,
+                    from arch/x86/um/shared/sysdep/kernel-offsets.h:3,
+                    from arch/um/kernel/asm-offsets.c:1:
+   include/linux/sched.h: In function 'test_tsk_going_to_sched':
+   include/linux/sched.h:1786:44: error: 'TIF_GOING_TO_SCHED' undeclared (first use in this function); did you mean 'TIF_NEED_RESCHED'?
+     return unlikely(test_tsk_thread_flag(tsk, TIF_GOING_TO_SCHED));
+                                               ^
+   include/linux/compiler.h:78:42: note: in definition of macro 'unlikely'
+    # define unlikely(x) __builtin_expect(!!(x), 0)
+                                             ^
+   make[2]: *** [scripts/Makefile.build:101: arch/um/kernel/asm-offsets.s] Error 1
+   make[2]: Target '__build' not remade because of errors.
+   make[1]: *** [Makefile:1112: prepare0] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:179: sub-make] Error 2
+   49 real  6 user  8 sys  31.64% cpu 	make prepare
 
-Even if the clm_blob as distributed in the SDK is a problem, then
-I believe there should be a way to make a generic clm_blob which
-is not tied to the reference designs. The current brcm firmware
-files in linux-firmware have such a generic clm_blob builtin,
-if one can be builtin, then it should be possible to also create
-a generic clm_blob for the newer style firmware where the clm_blob
-is a separate binary ?
+vim +1776 include/linux/sched.h
 
-Note that going this route (combined with different names for the
-new style firmware so that we can keep the old files for old kernels)
-will mean less work for Cypress. I believe that the current problem
-is that Cypress needs to do firmware builds for each chipset twice,
-once for the new-style format used inside Cypress' SDK and once for
-the old-style format used in linux-firmware. And it seems that there
-are not enough resources to do the old-style builds causing the firmware
-versions in linux-firmware to lag behind by multiple years!
+  1773	
+  1774	static inline void set_tsk_going_to_sched(struct task_struct *tsk)
+  1775	{
+> 1776		set_tsk_thread_flag(tsk, TIF_GOING_TO_SCHED);
+  1777	}
+  1778	
 
-Regards,
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-Hans
+--AqsLC8rIMeq19msA
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
+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
+aXev9oIAAA==
 
-
-p.s.
-
-Also note that the Linux 802.11 stack already takes care of only
-selecting channels which are allowed in the country where the wifi
-card is (as advertised by the access-point). AFAIK by some other
-vendors this alone is enough for regulatory concerns and there is
-no firmware level country settting.
-
-
-
-
+--AqsLC8rIMeq19msA--
