@@ -2,78 +2,69 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77061C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A45C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4819520637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B2620637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWquPoin"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4LsRk2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgCER1K (ORCPT
+        id S1726674AbgCER1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:27:10 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45612 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgCER1J (ORCPT
+        Thu, 5 Mar 2020 12:27:54 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45654 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgCER1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:27:09 -0500
-Received: by mail-pl1-f195.google.com with SMTP id b22so2900917pls.12;
-        Thu, 05 Mar 2020 09:27:09 -0800 (PST)
+        Thu, 5 Mar 2020 12:27:54 -0500
+Received: by mail-pl1-f194.google.com with SMTP id b22so2901727pls.12;
+        Thu, 05 Mar 2020 09:27:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hM+3hR3nYd1ZUs9brVuH0Yagy5ovOQGBqoH01WL3Fwo=;
-        b=hWquPoinrb/xmUBjZEO5Tl6AvaMrbUGWw2qwxqKPUsKZ93yuYotF2uNyNB7V7nA0Uk
-         /Fmqcfy6aJY1yn0qNFgeoJJiG/slDXU2FiF3cAKxy5g2mphUGhOQMnNlCDWdHlnk7TlU
-         yBA5VZNHC3M23velbLEvaWyjGFCUHM/c1pk33oVkTtaTu1yyVRiIL78J4DVKFGliXsVK
-         Wm2X9Qr1fCEa/t0XiTDfm0CAYbKAITivDUdU3bU4xJVBk2rzcT4z1XRV/a6jzkRcZ4ll
-         iMtGR3PzincB7avp6walxKzqXKNqupexTYrFKZiG9lLvLQGdSUgBgL3mbSAggx+ppTPH
-         FWgg==
+        bh=D8D3vmEglvdfYXRsW6jSW3qpPxZDOdsUg5idUKVuC7o=;
+        b=F4LsRk2zho1RJv9AKx7r9afMFsEHDgLrY3hp1pA7KZs8WS/twZqxG31SOkO938WRsX
+         J1frGVG74kEYsPauOfRMFD61D1YbxkIkXGOuotRHalOnhJ7bEWtHQzutj7xnKLcPxvO2
+         sszt/aLqeAJB+sAV1oLIfNG7TsjpZpL4xhcn55MQEEnLRKYOHoUUSxBEcnYwXXXlV3+x
+         TH1Bz9A640nHAumSF9tSSC3vDLXZwkDeSAlX9IkgNnSyF17o3uzfqHemmbQZ3B6jL2BA
+         LegcjQ8HrEQXcJ5eigsF+QZnoo3IpEWWNvyNAjEZu1pzt6QOCZC1LCQ1rTaWBSCS4B97
+         dtiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=hM+3hR3nYd1ZUs9brVuH0Yagy5ovOQGBqoH01WL3Fwo=;
-        b=nnzWeEwyIxmWol3QqG4b0qySgjz8QAiB+ukw8Pn5g8UIXfNKRF2uiQYq3BjtCX1oJo
-         Kb9HzKCMrQtdzXTki7v4cCfTrgtwGJsW24J6H5qR8D2QOYvbmsfTPdNyCSkqgRkdRHNA
-         PP5pJXhhe5/RIvNcXf6xOVCpSUL4z8VUYIwuB5xca2o5hyPUPfDku31/LwraKGPrBAky
-         rJEFyzj51WNc6G2GaN6NyKSy6iHTagrcoSFQ6wcH4mIDLBDhyrPpedhEZQTYwo73fQus
-         0Y4+OtNR3AKjGthOzTEqO+R8+c7cLTsnj2aU7lLBZE3HNFzZ0DkYeUSGrR6V3s72fRg9
-         822g==
-X-Gm-Message-State: ANhLgQ0puAzFdR7tgLWyuoZxZHfgECfS22M0YUK9MIP1cTx20vGbAc4C
-        xjEkhlNPanOpe6PG8Oz8flENbDCQ
-X-Google-Smtp-Source: ADFU+vt0ZK77C8pYKUIAt1vrLyRBFi/scWxuhEdXpn4NvM7i+N+CxgpCkvtRLHseidUOyBOmwhzsBQ==
-X-Received: by 2002:a17:902:8215:: with SMTP id x21mr9575592pln.59.1583429228049;
-        Thu, 05 Mar 2020 09:27:08 -0800 (PST)
+        bh=D8D3vmEglvdfYXRsW6jSW3qpPxZDOdsUg5idUKVuC7o=;
+        b=aTydOKrOW/YZU2bKSBfj6cJqQ3BzLjKSxM5oGfPx/lHT4ASrTUuQtQcpCxE9wbYPP3
+         KHX07NPAUpR7pW9LreV0jnWwO0b5NoQY9q3ilbj8+yIpikKpsZYHn+VlP7xMM7hdeXJa
+         Lx6h9inGRsFtL2649XzAWN4JyKF9+V10aB/liVDlp6a5qNLn9VQ0jTxVRD62HlaWU9CK
+         o76/sHGi1UKsx55TlKDhzQ49TVX6NUxVi4ptYtx9yDMHMngv5Rvi5W1mSsmSB9HhEcMc
+         LVQ4vFpSxfZmsCjXyaraqA5Dys04NqaqdoYiX0y0HRXABI4PVJY0ujkFAc7xBdDm1k/5
+         5OlQ==
+X-Gm-Message-State: ANhLgQ3F2R2cLY/yIwjTUrUk4yEJUbQ04Ez7+rrnhklzWt2OyXBV2kCU
+        A16vmmCL8A6b6+errDQ/Qhg=
+X-Google-Smtp-Source: ADFU+vt+S07xVrBqhIWDK4dFYJ9Q7VSPhbqvrKQ6iybbRiDw53iVQHI+fILUL+jxuuBkXD+foKwbUg==
+X-Received: by 2002:a17:902:b903:: with SMTP id bf3mr5814213plb.144.1583429271404;
+        Thu, 05 Mar 2020 09:27:51 -0800 (PST)
 Received: from [10.67.50.123] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id g18sm33216771pfi.80.2020.03.05.09.27.04
+        by smtp.googlemail.com with ESMTPSA id h6sm16831034pfg.88.2020.03.05.09.27.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 09:27:06 -0800 (PST)
-Subject: Re: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
-To:     Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <1583201219-15839-1-git-send-email-peng.fan@nxp.com>
- <1583201219-15839-3-git-send-email-peng.fan@nxp.com>
- <20200304103954.GA25004@bogus>
- <AM0PR04MB4481A6DB7339C22A848DAFC988E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <AM0PR04MB44814B71E92C02956F4BED4588E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200304170319.GB44525@bogus>
- <AM0PR04MB4481B90D03D1F68573B05BE088E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200305160613.GA53631@bogus>
+        Thu, 05 Mar 2020 09:27:50 -0800 (PST)
+Subject: Re: [PATCH] ethernet:broadcom:bcm63xx_enet:remove redundant variable
+ definitions
+To:     tangbin <tangbin@cmss.chinamobile.com>, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20200305122259.6104-1-tangbin@cmss.chinamobile.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -129,45 +120,32 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <d9734fd6-f855-296b-3a0b-ffc45ed0e3cb@gmail.com>
-Date:   Thu, 5 Mar 2020 09:27:00 -0800
+Message-ID: <a419c6e1-47e8-64a0-4d58-9b2d8186f8bf@gmail.com>
+Date:   Thu, 5 Mar 2020 09:27:49 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200305160613.GA53631@bogus>
+In-Reply-To: <20200305122259.6104-1-tangbin@cmss.chinamobile.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 8:06 AM, Sudeep Holla wrote:
-> On Thu, Mar 05, 2020 at 11:25:35AM +0000, Peng Fan wrote:
+On 3/5/20 4:22 AM, tangbin wrote:
+> in this function,‘ret’ is always assigned,so this's definition
+> 'ret = 0' make no sense.
 > 
-> [...]
-> 
->>>
->>> Yes, this may fix the issue. However I would like to know if we need to support
->>> multiple channels/shared memory simultaneously. It is fair requirement and
->>> may need some work which should be fine.
->>
->> Do you have any suggestions? Currently I have not worked out an good
->> solution.
->>
-> 
-> TBH, I haven't given it a much thought. I would like to know if people
-> are happy with just one SMC channel for SCMI or do they need more ?
-> If they need it, we can try to solve it. Otherwise, what you have will
-> suffice IMO.
+> Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
 
-On our platforms we have one channel/shared memory area/mailbox instance
-for all standard SCMI protocols, and we have a separate channel/shared
-memory area/mailbox driver instance for a proprietary one. They happen
-to have difference throughput requirements, hence the split.
+This looks fine, but your subject should be:
 
-If I read Peng's submission correctly, it seems to me that the usage
-model described before is still fine.
+bcm63xx_enet: Remove redundant variable definitions
+
+to matchthe majority of commit subjects done to that file. With that:
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
 Florian
