@@ -2,134 +2,276 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B39C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5DFC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E082073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575082073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:42:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kz1O1/Kv"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="fjeRQagf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgCETl5 (ORCPT
+        id S1726173AbgCETmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 14:41:57 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45483 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgCETl5 (ORCPT
+        Thu, 5 Mar 2020 14:42:42 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37714 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgCETml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 14:41:57 -0500
-Received: by mail-ot1-f67.google.com with SMTP id f21so6480otp.12;
-        Thu, 05 Mar 2020 11:41:55 -0800 (PST)
+        Thu, 5 Mar 2020 14:42:41 -0500
+Received: by mail-qt1-f193.google.com with SMTP id j34so5099491qtk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 11:42:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xgpZmEtXtUnXzdjflmvnfXtJf2QN3RICWNEoFCC9Fuo=;
-        b=kz1O1/KvzwF2FSey5oAcJkszo7ONwn8pPWHFyYeLWcpUpkjs7tJj9K6d7KFHPbvbJr
-         xyBwFwxkxbtwZ+M19iBnX36SqjN+Xefce93rjQYiNhHKcwieOvTO+H7Ub9h6I+HlTT0O
-         B/PAEjljcL3dem0afDYZ1K95cmKrxO4gZTQxDqy3ho/pbnreEFUA5SFU/EgWMTirG4Qs
-         bmm/pu4pWDtGioihnEey3Q8s1kvW3OHjEE0tIOodKCEcZR6QqhVASW7E1y9eS5GC1Yi4
-         Oz8DeVaeI5LPwCDrvFtyIA++6XYLAN6P6vI396fyZO9s9PGN9Q94M0m9oG5fb2WYN4T7
-         n6aQ==
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=w9aoQTL/UgB1vjS1g1BNCEFf726wH1IBTlgPdnlXI/U=;
+        b=fjeRQagfXdDHJ9tX9UzUCHDLIRYnroBruHmgIET5qMJijpIVvgC0ui4ms8zm4UzETx
+         qp3y6SeLtxy4vuSto/2bfD5iqzG09QLY+omDnutMsTl9P42zubJINW1U3+uygzUfqRcX
+         rCBsRIoX7fr5DnA0zv4f0LKuY6LRaVQLxey8rncYou16dO6d8X1zdniHR/7BuER9ibfr
+         FjTz/WmRRZnhn2FLNpaFU1yD2E8pulQoGO4ZRwXe8XnU11dUJoenN/h+dYZpVj+JiVmr
+         fNLWNPv4kBYbx0VaGKTo6HoMSO8wsLZcmMJeM4fKUd4CmKNI6XMBOe3gWXCc6yoNH5KY
+         wdYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xgpZmEtXtUnXzdjflmvnfXtJf2QN3RICWNEoFCC9Fuo=;
-        b=LOYF3qT1ERirWoUgh0sfNTwLKlMFJ94/YM/gvq43kdvRZ1jqBr2T9rsiW0LpQMGn/o
-         MDuNtNwGdehO724gpiBZcbghawlyFXB8KsN5Fr8/398HyCaO+GeELA+wwNwHr8QXvl/R
-         WZ7j7RBiYu5CfNeEmm/6I1ieJaZQX0emHpsTsLgikbBPKduzOQ5+WN150AJXRX+WPdfF
-         G8gw+O21z6UDtjROMfokm2MR9ngWsEKlb/Ztpq+oHdlHbinvANOyKmNla5JvJC6HiYTw
-         TaAynxy77tfuyd7GT8FZsAhgsiyvU7CPh9zdX25X6KCidiuOQKJy9q9GTSOCLmpPqcwb
-         Sg0Q==
-X-Gm-Message-State: ANhLgQ2fsWL6n5UgnCHUx58KAjz0k9P/DhoSk8HzvqkuZmfsNRmXS1Vb
-        JXy+i1fIPpPO2K45D3d2UeN/u1tqr/isvZ3cg94=
-X-Google-Smtp-Source: ADFU+vuF6qr530ZXMU50IfbbDKehJtz6mxtmhJ13ocNVHx1IdRrwZlYKkFbXkb3nGtgwQ7VbR3+WVNXV0ktTy6Mme4E=
-X-Received: by 2002:a9d:6457:: with SMTP id m23mr93769otl.162.1583437315076;
- Thu, 05 Mar 2020 11:41:55 -0800 (PST)
-MIME-Version: 1.0
-References: <20200304191853.1529-1-kpsingh@chromium.org> <20200304191853.1529-4-kpsingh@chromium.org>
- <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com> <20200305155421.GA209155@google.com>
-In-Reply-To: <20200305155421.GA209155@google.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 5 Mar 2020 14:43:01 -0500
-Message-ID: <CAEjxPJ5u7tsa_9-7Oq_Wi28mZD_aDC1tVWj5Tb8ud=bfEYsY9Q@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 3/7] bpf: Introduce BPF_MODIFY_RETURN
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>, jmorris@namei.org,
-        Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=w9aoQTL/UgB1vjS1g1BNCEFf726wH1IBTlgPdnlXI/U=;
+        b=hQS8jfx10kjkBwRbUbhtmcYSzrnaesakiL21nuxAZ19MWf4u+4vyMYRPjft60Uo+Tg
+         CFBOaNoVq1ToF6QQw1kdxRnxHBkt4gRg9yfm7mD4NGxwyc0UfXpWp6kNx0hxvqZMHTFi
+         rM8FwkA6GB6j72C+rLZfoVbDmyWXiZ4X7bQ/C8jdVaskqYYi8lA/oAe2HCuffUSKcG6X
+         915kPeFSG9z3QJ/vrWJajBVnhl9PDznaRkPkX/53y7PdOpUPp5DPzZRzOmTJrKb/LLA7
+         oZkTIx7VbYzAoXZVp/ejROXyz+fLMJGrOKGb1427pQB+VacZZB7izUDEpLfKYHRrQL0n
+         pAoA==
+X-Gm-Message-State: ANhLgQ11GoI3YBmRyXV422ZPrIvjeWnfN5YoEbn4HnCAQy4PwVh2N8NY
+        u75Ssi3madRNy3B3VYy1z7bvyQ==
+X-Google-Smtp-Source: ADFU+vvWoq0qrg/FJ5my9DoTUbwc8qrtj5pyQOQnMQmrnKcEjOkZ19Er1lI2KcCU/OZ1arc+wQFMBg==
+X-Received: by 2002:ac8:530b:: with SMTP id t11mr274730qtn.277.1583437359636;
+        Thu, 05 Mar 2020 11:42:39 -0800 (PST)
+Received: from nicolas-tpx395.localdomain ([2610:98:8005::527])
+        by smtp.gmail.com with ESMTPSA id o16sm16335143qke.35.2020.03.05.11.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 11:42:38 -0800 (PST)
+Message-ID: <c7a88abfaf00c00a5c4c4239d1d9c7b348bc052e.camel@ndufresne.ca>
+Subject: Re: [PATCH v6 2/6] media: v4l2-core: Add helpers to build the H264
+ P/B0/B1 reflists
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Date:   Thu, 05 Mar 2020 14:42:34 -0500
+In-Reply-To: <20200302154426.5fb09f91@collabora.com>
+References: <20200220163016.21708-1-ezequiel@collabora.com>
+         <20200220163016.21708-3-ezequiel@collabora.com>
+         <20200302142433.0ad1b383@coco.lan> <20200302154426.5fb09f91@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 10:54 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> On 05-Mar 08:51, Stephen Smalley wrote:
-> > IIUC you've switched from a model where the BPF program would be
-> > invoked after the original function logic
-> > and the BPF program is skipped if the original function logic returns
-> > non-zero to a model where the BPF program is invoked first and
-> > the original function logic is skipped if the BPF program returns
-> > non-zero.  I'm not keen on that for userspace-loaded code attached
->
-> We do want to continue the KRSI series and the effort to implement a
-> proper BPF LSM. In the meantime, the tracing + error injection
-> solution helps us to:
->
->   * Provide better debug capabilities.
->   * And parallelize the effort to come up with the right helpers
->     for our LSM work and work on sleepable BPF which is also essential
->     for some of the helpers.
->
-> As you noted, in the KRSI v4 series, we mentioned that we would like
-> to have the user-space loaded BPF programs be unable to override the
-> decision made by the in-kernel logic/LSMs, but this got shot down:
->
->    https://lore.kernel.org/bpf/00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com
->
-> I would like to continue this discussion when we post the v5 series
-> for KRSI as to what the correct precedence order should be for the
-> BPF_PROG_TYPE_LSM and would appreciate if you also bring it up there.
+Le lundi 02 mars 2020 à 15:44 +0100, Boris Brezillon a écrit :
+> On Mon, 2 Mar 2020 14:24:33 +0100
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> 
+> > Em Thu, 20 Feb 2020 13:30:12 -0300
+> > Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+> > 
+> > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > 
+> > > Building those list is a standard procedure described in section
+> > > '8.2.4 Decoding process for reference picture lists construction' of
+> > > the H264 specification.
+> > > 
+> > > We already have 2 drivers needing the same logic (hantro and rkvdec) and
+> > > I suspect we will soon have more.
+> > > 
+> > > Let's provide generic helpers to create those lists.
+> > > 
+> > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > ---
+> > >  drivers/media/v4l2-core/Kconfig     |   4 +
+> > >  drivers/media/v4l2-core/Makefile    |   1 +
+> > >  drivers/media/v4l2-core/v4l2-h264.c | 258 ++++++++++++++++++++++++++++
+> > >  include/media/v4l2-h264.h           |  85 +++++++++
+> > >  4 files changed, 348 insertions(+)
+> > >  create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
+> > >  create mode 100644 include/media/v4l2-h264.h
+> > > 
+> > > diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-
+> > > core/Kconfig
+> > > index 39e3fb30ba0b..8a4ccfbca8cf 100644
+> > > --- a/drivers/media/v4l2-core/Kconfig
+> > > +++ b/drivers/media/v4l2-core/Kconfig
+> > > @@ -45,6 +45,10 @@ config VIDEO_PCI_SKELETON
+> > >  config VIDEO_TUNER
+> > >  	tristate
+> > >  
+> > > +# Used by drivers that need v4l2-h264.ko
+> > > +config V4L2_H264
+> > > +	tristate
+> > > +
+> > >  # Used by drivers that need v4l2-mem2mem.ko
+> > >  config V4L2_MEM2MEM_DEV
+> > >  	tristate
+> > > diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-
+> > > core/Makefile
+> > > index 786bd1ec4d1b..c5c53e0941ad 100644
+> > > --- a/drivers/media/v4l2-core/Makefile
+> > > +++ b/drivers/media/v4l2-core/Makefile
+> > > @@ -21,6 +21,7 @@ obj-$(CONFIG_VIDEO_V4L2) += v4l2-dv-timings.o
+> > >  obj-$(CONFIG_VIDEO_TUNER) += tuner.o
+> > >  
+> > >  obj-$(CONFIG_V4L2_MEM2MEM_DEV) += v4l2-mem2mem.o
+> > > +obj-$(CONFIG_V4L2_H264) += v4l2-h264.o
+> > >  
+> > >  obj-$(CONFIG_V4L2_FLASH_LED_CLASS) += v4l2-flash-led-class.o
+> > >  
+> > > diff --git a/drivers/media/v4l2-core/v4l2-h264.c b/drivers/media/v4l2-
+> > > core/v4l2-h264.c
+> > > new file mode 100644
+> > > index 000000000000..4f68c27ec7fd
+> > > --- /dev/null
+> > > +++ b/drivers/media/v4l2-core/v4l2-h264.c
+> > > @@ -0,0 +1,258 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * V4L2 H264 helpers.
+> > > + *
+> > > + * Copyright (C) 2019 Collabora, Ltd.
+> > > + *
+> > > + * Author: Boris Brezillon <boris.brezillon@collabora.com>
+> > > + */
+> > > +
+> > > +#include <linux/module.h>
+> > > +#include <linux/sort.h>
+> > > +
+> > > +#include <media/v4l2-h264.h>
+> > > +
+> > > +/**
+> > > + * v4l2_h264_init_reflist_builder() - Initialize a P/B0/B1 reference list
+> > > + *				      builder
+> > > + *
+> > > + * @b: the builder context to initialize
+> > > + * @dec_params: decode parameters control
+> > > + * @slice_params: first slice parameters control
+> > > + * @sps: SPS control
+> > > + * @dpb: DPB to use when creating the reference list
+> > > + */
+> > > +void
+> > > +v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
+> > > +		const struct v4l2_ctrl_h264_decode_params *dec_params,
+> > > +		const struct v4l2_ctrl_h264_slice_params *slice_params,
+> > > +		const struct v4l2_ctrl_h264_sps *sps,
+> > > +		const struct v4l2_h264_dpb_entry *dpb)  
+> > 
+> > The prototype here is not nice...
+> > 
+> > > +{
+> > > +	int cur_frame_num, max_frame_num;
+> > > +	unsigned int i;
+> > > +
+> > > +	max_frame_num = 1 << (sps->log2_max_frame_num_minus4 + 4);
+> > > +	cur_frame_num = slice_params->frame_num;
+> > > +
+> > > +	memset(b, 0, sizeof(*b));
+> > > +	if (!(slice_params->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC))
+> > > +		b->cur_pic_order_count = min(dec_params->bottom_field_order_cnt,
+> > > +					     dec_params->top_field_order_cnt);
+> > > +	else if (slice_params->flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
+> > > +		b->cur_pic_order_count = dec_params->bottom_field_order_cnt;
+> > > +	else
+> > > +		b->cur_pic_order_count = dec_params->top_field_order_cnt;
+> > > +
+> > > +	for (i = 0; i < 16; i++) {
+> > > +		u32 pic_order_count;
+> > > +
+> > > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> > > +			continue;
+> > > +
+> > > +		b->refs[i].pic_num = dpb[i].pic_num;  
+> > 
+> > ... as you're expecting a fixed number of elements at DPB array, and using
+> > a magic number (16) inside the for loop.
+> 
+> I used to have a '#define V4L2_H264_NUM_DPB_ENTRIES 16' but have been
+> told that this is an arbitrary limitation (the spec does not explicitly
+> limit the DPB size, even if all the HW we've seen seem to limit it to
+> 16). Maybe we can pass the DPB array size as an argument so it stays
+> HW-specific.
 
-That's fine but I guess I don't see why you or anyone else would
-bother with introducing a BPF_PROG_TYPE_LSM
-if BPF_PROG_MODIFY_RETURN is accepted and is allowed to attach to the
-LSM hooks.  What's the benefit to you
-if you can achieve your goals directly with MODIFY_RETURN?
+it's formalized in A.31 h), to quote it:
 
-> > to LSM hooks; it means that userspace BPF programs can run even if
-> > SELinux would have denied access and SELinux hooks get
-> > skipped entirely if the BPF program returns an error.  I think Casey
-> > may have wrongly pointed you in this direction on the grounds
-> > it can already happen with the base DAC checking logic.  But that's
->
-> What we can do for this tracing/modify_ret series, is to remove
-> the special casing for "security_" functions in the BPF code and add
-> ALLOW_ERROR_INJECTION calls to the security hooks. This way, if
-> someone needs to disable the BPF programs being able to modify
-> security hooks, they can disable error injection. If that's okay, we
-> can send a patch.
+max_dec_frame_buffering <= MaxDpbFrames, where MaxDpbFrames is equal to
 
-Realistically distros tend to enable lots of developer-friendly
-options including error injection, and most users don't build their
-own kernels
-and distros won't support them when they do. So telling users they can
-just rebuild their kernel without error injection if they care about
-BPF programs being able to modify security hooks isn't really viable.
-The security modules need a way to veto it based on their policies.
-That's why I suggested a security hook here.
+  Min( MaxDpbMbs / ( PicWidthInMbs * FrameHeightInMbs ), 16 )
+
+So a DPB larger then this is not an H.24 DPB.
+
+> 
+> > > +
+> > > +		/*
+> > > +		 * Handle frame_num wraparound as described in section
+> > > +		 * '8.2.4.1 Decoding process for picture numbers' of the spec.
+> > > +		 * TODO: This logic will have to be adjusted when we start
+> > > +		 * supporting interlaced content.
+> > > +		 */
+> > > +		if (dpb[i].frame_num > cur_frame_num)
+> > > +			b->refs[i].frame_num = (int)dpb[i].frame_num -
+> > > +					       max_frame_num;
+> > > +		else
+> > > +			b->refs[i].frame_num = dpb[i].frame_num;
+> > > +
+> > > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
+> > > +			pic_order_count = min(dpb[i].top_field_order_cnt,
+> > > +					      dpb[i].bottom_field_order_cnt);
+> > > +		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
+> > > +			pic_order_count = dpb[i].bottom_field_order_cnt;
+> > > +		else
+> > > +			pic_order_count = dpb[i].top_field_order_cnt;
+> > > +
+> > > +		b->refs[i].pic_order_count = pic_order_count;
+> > > +		b->unordered_reflist[b->num_valid] = i;
+> > > +		b->num_valid++;
+> > > +	}
+> > > +
+> > > +	for (i = b->num_valid; i < ARRAY_SIZE(b->unordered_reflist); i++)
+> > > +		b->unordered_reflist[i] = i;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(v4l2_h264_init_reflist_builder);
+> > > +
+> > > +static int v4l2_h264_p_ref_list_cmp(const void *ptra, const void *ptrb,
+> > > +				    const void *data)
+> > > +{
+> > > +	const struct v4l2_h264_reflist_builder *builder = data;
+> > > +	u8 idxa, idxb;
+> > > +
+> > > +	idxa = *((u8 *)ptra);
+> > > +	idxb = *((u8 *)ptrb);
+> > > +
+> > > +	if (builder->refs[idxa].longterm != builder->refs[idxb].longterm) {  
+> > 
+> > Where do you ensure that idxa and idxb won't be bigger than NUM_DPB_ENTRIES?
+> 
+> If it does that means something went wrong in the init func. I can add
+> a WARN_ON() and bail out if you want, but I can't return an error here
+> (that's not what the caller of the callback expects).
+
