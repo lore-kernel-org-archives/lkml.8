@@ -2,123 +2,91 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E0AC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1B9C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0161214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="NU7TC4TH"
+	by mail.kernel.org (Postfix) with ESMTP id 9C715214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583369892;
+	bh=qBHd9zT00b7CN2peWKuf3SotoS9UgrnfGTi/urSOl9I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sfGc/HokoUJF/VbHYgSNfDIrr6FwTNUBIGUilyxtBp0YnRM3nRaBwygy6y/SP+gm+
+	 Da1ivWyKHkaR/W+5HaHivER3w8nqvrjolrj27rOy8CG4Wr9UHAw6N67DV891i1cbbo
+	 JATxqRcAW/+Pr+92mEYgdgY0y+tRHuRF7+KS4SSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgCEA5w (ORCPT
+        id S1726263AbgCEA6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 19:57:52 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39698 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgCEA5v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 19:57:51 -0500
-Received: by mail-pl1-f194.google.com with SMTP id j20so1446086pll.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:57:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u1LASJZHEVADOcgCDErgATidiR4fKstgpk4kWwW4dDc=;
-        b=NU7TC4THpMmt27fu9J0XRc2lkNgYkkyprlqOo+Zx0eGQ+wbNpGEHaXLxzKsgJoiBeY
-         AvZbKO2rU0wTRPymd2zNp5FPtFqcx/mz8qAvmx8tO70Aw3LEXkNJSxGHWxTbEAV20bcq
-         NeYR+BfL2WV5Y8QtzZb6H++oNqWCgbLdO3bQ4utNTY9pnovDuExJdkZGLif2VPnTdHXn
-         brdvf+hIi6q5I6+WZtf+T4KtEKj0/+YiKzy7eOOOS0ZLvKfel4wnKNkVIUsYA1nYBv4w
-         bjoJJqcel0FVm/FoUC+bqSyUsxAEEygbFYZeM0swufJ1JY0xGjOlV1iwBu1Xpi01MmSv
-         Rcgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=u1LASJZHEVADOcgCDErgATidiR4fKstgpk4kWwW4dDc=;
-        b=UHOOL1h8DEQmOEXxh+G97eKOa7dUsXEol4EPQjrgYEKGFZTE6LN4XpEgLMokTJ5Qim
-         tO5ki2gH/AWHR/XHDV5zyQ4GDafqG6fzTvaK2A0OzQAqATyf1LwDVwOaPIWhy29abPSI
-         +gnObOQDY5AZFtoa7kGazC4MpgDee59on5l5gmrNrvvpHBf2HS9WlQoRs0x+jz0va72u
-         zRNqgetye5EnBA2Oj5jecEIcHqKQ/i2c/l90hJ3+gP+8GvsjZ+ORIqRk9uVVlghNRZIX
-         IwK/6EoSyun8hNV8yLv93Xd5rNsqXtsVAqFAbTTKXod3GXVGAC0o852M5H7LLXQ69XHF
-         FOug==
-X-Gm-Message-State: ANhLgQ0HFEmiix/zFNQzy/tXBKnzglNklplfBcg0aX9vC8hyI3cmC9Pi
-        L2L9IAX/dY22rBpenjtYxrQAMQ==
-X-Google-Smtp-Source: ADFU+vverMZoqPuEecOMVFwavY2c+li6RNYIA+/Iy1kyOle4EI+6N0/Ipmcoo8ibuRSPUPD2jyUjLQ==
-X-Received: by 2002:a17:902:7796:: with SMTP id o22mr5305888pll.315.1583369867017;
-        Wed, 04 Mar 2020 16:57:47 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
-        by smtp.gmail.com with ESMTPSA id v123sm2738273pfb.85.2020.03.04.16.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 16:57:45 -0800 (PST)
-Date:   Wed, 04 Mar 2020 16:57:45 -0800 (PST)
-X-Google-Original-Date: Wed, 04 Mar 2020 16:34:28 PST (-0800)
-Subject:     Re: [PATCH 3/8] riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
-In-Reply-To: <20200217083223.2011-4-zong.li@sifive.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        zong.li@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     zong.li@sifive.com
-Message-ID: <mhng-d2350cb4-e02f-4ee4-b093-6020e7a3d1bb@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 4 Mar 2020 19:58:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbgCEA6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 19:58:11 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A2CB20842;
+        Thu,  5 Mar 2020 00:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583369890;
+        bh=qBHd9zT00b7CN2peWKuf3SotoS9UgrnfGTi/urSOl9I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Oe/JVIOOL2NJ+2yNnt2zTB42B65tVfqHBaSFXBE2M3ztqk22pAO1uLMOIh7CQ2MKR
+         dKmTVQKvvKoTOE6lu2tS6Kp0N1c8DyjO90n7CJUfgf0/BNzRFeB8b1o9y6VfhFFSji
+         tEgsdcmztSbJ8nCVhFu2O1UAyBmoswbKimT4md/w=
+Date:   Thu, 5 Mar 2020 09:58:06 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Markus Elfring <Markus.Elfring@web.de>, linux-doc@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+Subject: Re: [v4] Documentation: bootconfig: Update boot configuration
+ documentation
+Message-Id: <20200305095806.3ba477b939c07d5bec298b48@kernel.org>
+In-Reply-To: <531371ef-354a-b0fa-f69f-c8cf9ecc9919@infradead.org>
+References: <158322634266.31847.8245359938993378502.stgit@devnote2>
+        <158322635301.31847.15011454479023637649.stgit@devnote2>
+        <ad1e9855-4c64-53bd-7da5-f7cdafe78571@infradead.org>
+        <20200304203722.8e8699c2a3e0a979aae091b1@kernel.org>
+        <3a3a5f1a-3654-d96d-3b4a-dd649a366c65@web.de>
+        <531371ef-354a-b0fa-f69f-c8cf9ecc9919@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 00:32:18 PST (-0800), zong.li@sifive.com wrote:
-> ARCH_SUPPORTS_DEBUG_PAGEALLOC provides a hook to map and unmap
-> pages for debugging purposes. Implement the __kernel_map_pages
-> functions to fill the poison pattern.
->
-> Signed-off-by: Zong Li <zong.li@sifive.com>
-> ---
->  arch/riscv/Kconfig       |  3 +++
->  arch/riscv/mm/pageattr.c | 13 +++++++++++++
->  2 files changed, 16 insertions(+)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 07bf1a7c0dd2..f524d7e60648 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -132,6 +132,9 @@ config ARCH_SELECT_MEMORY_MODEL
->  config ARCH_WANT_GENERAL_HUGETLB
->  	def_bool y
->
-> +config ARCH_SUPPORTS_DEBUG_PAGEALLOC
-> +	def_bool y
-> +
->  config SYS_SUPPORTS_HUGETLBFS
->  	def_bool y
->
-> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-> index 7be6cd67e2ef..728759eb530a 100644
-> --- a/arch/riscv/mm/pageattr.c
-> +++ b/arch/riscv/mm/pageattr.c
-> @@ -172,3 +172,16 @@ int set_direct_map_default_noflush(struct page *page)
->
->  	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
->  }
-> +
-> +void __kernel_map_pages(struct page *page, int numpages, int enable)
-> +{
-> +	if (!debug_pagealloc_enabled())
-> +		return;
-> +
-> +	if (enable)
-> +		__set_memory((unsigned long)page_address(page), numpages,
-> +			     __pgprot(_PAGE_PRESENT), __pgprot(0));
-> +	else
-> +		__set_memory((unsigned long)page_address(page), numpages,
-> +			     __pgprot(0), __pgprot(_PAGE_PRESENT));
-> +}
+On Wed, 4 Mar 2020 08:20:35 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> On 3/4/20 6:45 AM, Markus Elfring wrote:
+> >> What about the following?
+> >>
+> >> User can group identical parent keys together and use braces to list child keys
+> 
+>    The user
+> (as Markus noted)
+
+OK.
+
+> 
+> >> under them.
+> > 
+> > Another wording alternative:
+> > 
+> > The user can group settings together. Curly brackets enclose a configuration then
+> > according to a parent context.
+> 
+> I slightly prefer Masami's text.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
