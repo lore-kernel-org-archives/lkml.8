@@ -2,91 +2,151 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1B9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95728C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C715214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583369892;
-	bh=qBHd9zT00b7CN2peWKuf3SotoS9UgrnfGTi/urSOl9I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sfGc/HokoUJF/VbHYgSNfDIrr6FwTNUBIGUilyxtBp0YnRM3nRaBwygy6y/SP+gm+
-	 Da1ivWyKHkaR/W+5HaHivER3w8nqvrjolrj27rOy8CG4Wr9UHAw6N67DV891i1cbbo
-	 JATxqRcAW/+Pr+92mEYgdgY0y+tRHuRF7+KS4SSE=
+	by mail.kernel.org (Postfix) with ESMTP id 68B06214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:58:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="Aq2qqLvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgCEA6L (ORCPT
+        id S1726273AbgCEA6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 19:58:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgCEA6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 19:58:11 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A2CB20842;
-        Thu,  5 Mar 2020 00:58:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583369890;
-        bh=qBHd9zT00b7CN2peWKuf3SotoS9UgrnfGTi/urSOl9I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Oe/JVIOOL2NJ+2yNnt2zTB42B65tVfqHBaSFXBE2M3ztqk22pAO1uLMOIh7CQ2MKR
-         dKmTVQKvvKoTOE6lu2tS6Kp0N1c8DyjO90n7CJUfgf0/BNzRFeB8b1o9y6VfhFFSji
-         tEgsdcmztSbJ8nCVhFu2O1UAyBmoswbKimT4md/w=
-Date:   Thu, 5 Mar 2020 09:58:06 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Markus Elfring <Markus.Elfring@web.de>, linux-doc@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: Re: [v4] Documentation: bootconfig: Update boot configuration
- documentation
-Message-Id: <20200305095806.3ba477b939c07d5bec298b48@kernel.org>
-In-Reply-To: <531371ef-354a-b0fa-f69f-c8cf9ecc9919@infradead.org>
-References: <158322634266.31847.8245359938993378502.stgit@devnote2>
-        <158322635301.31847.15011454479023637649.stgit@devnote2>
-        <ad1e9855-4c64-53bd-7da5-f7cdafe78571@infradead.org>
-        <20200304203722.8e8699c2a3e0a979aae091b1@kernel.org>
-        <3a3a5f1a-3654-d96d-3b4a-dd649a366c65@web.de>
-        <531371ef-354a-b0fa-f69f-c8cf9ecc9919@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 4 Mar 2020 19:58:47 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35627 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgCEA6r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 19:58:47 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 7so1881078pgr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:58:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HhIcP1OmX7KCJe/LzPGyLrrs+To5FwKg4wadhbBvhh0=;
+        b=Aq2qqLvbqlU5Kjj4F0+/BOA9infgEg+KgkHaarF5Qd364tds3v0rBe1kM6S1n+VRFQ
+         KMbfEg959bSsq+g+BpJ+T5+0ObvEBeIPAd68I1k5uwjBYzsS1RX/pM6xaA4Wlf0etwy9
+         z0ZF3cd9owkVC8se+XXBMIhOnUaUIEbNAptYSZMYxA+LoO4r04W9v8y8hw5xP2vV2fSd
+         QB2nUS0hM9b3vsJeSeCh6VUmJcY2DSKkaubpIE1gdKZOmxvydMTwAUx5NWgbQSgfUfBs
+         B39SyxjVf2MrSiaU02IvghnrbuCMuy2SW3FUPjkTeMYflYtZC8xIAFCvW3aTW2GnVUjm
+         JFJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=HhIcP1OmX7KCJe/LzPGyLrrs+To5FwKg4wadhbBvhh0=;
+        b=EQ7A2CkcqvQ8sYUsAczIXp7BvIu7qcfId5/26uh4ppKsZGaq202OXppg8Yi3Ue2CdM
+         FkxAo0ToHUcNI6qdSwJKtxuBVDBtbI1m5Nvuk0y5ZDYyI8ftlDIFrJmftQv1lnuW3Zqr
+         SqQQQmDOPX8kV7fKXjJErm8FFgMSXDXAurhLRknbyqCMZtLTO4PuJLmpzxprMd/Pjyvz
+         KX/PG4UXLBl2Ac6/oWwjDz5O811OftWtQUYfFqw7ouE887QyZHZm8fi/HD8CLNb1Yfi1
+         tfhrALnVUKXuQQ9LUOpCz3cRYnsHqG3X0nGpEpV9UZR9qJk9OWO9hPEnI0e4P7xmGO/M
+         FXRA==
+X-Gm-Message-State: ANhLgQ0zFaasH7Xxz50xTbT2ZZeI9VUPywvUgM0SIj+CYPVeUImjmZB2
+        HwvwiGoOvwFJdMsW8Iyzr8KZVg==
+X-Google-Smtp-Source: ADFU+vvZlYvK0bH3igAzK6gimmXeABOtAKPRA5V8gdnRj1XWlcgdFrUaO6kH5XRHYEs1TUASkniV5g==
+X-Received: by 2002:aa7:8687:: with SMTP id d7mr5703217pfo.164.1583369925861;
+        Wed, 04 Mar 2020 16:58:45 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
+        by smtp.gmail.com with ESMTPSA id e9sm3910889pjt.16.2020.03.04.16.58.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 16:58:45 -0800 (PST)
+Date:   Wed, 04 Mar 2020 16:58:45 -0800 (PST)
+X-Google-Original-Date: Wed, 04 Mar 2020 16:58:05 PST (-0800)
+Subject:     Re: [PATCH 5/8] riscv: add alignment for text, rodata and data sections
+In-Reply-To: <20200217083223.2011-6-zong.li@sifive.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        zong.li@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     zong.li@sifive.com
+Message-ID: <mhng-fa489ba7-f1c7-459c-aae0-0dc68c826635@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 08:20:35 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+On Mon, 17 Feb 2020 00:32:20 PST (-0800), zong.li@sifive.com wrote:
+> The kernel mapping will tried to optimize its mapping by using bigger
+> size. In rv64, it tries to use PMD_SIZE, and tryies to use PGDIR_SIZE in
+> rv32. To ensure that the start address of these sections could fit the
+> mapping entry size, make them align to the biggest alignment.
+>
+> Define a macro SECTION_ALIGN because the HPAGE_SIZE or PMD_SIZE, etc.,
+> are invisible in linker script.
+>
+> This patch is prepared for STRICT_KERNEL_RWX support.
+>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>  arch/riscv/include/asm/set_memory.h | 13 +++++++++++++
+>  arch/riscv/kernel/vmlinux.lds.S     |  4 +++-
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
+> index a9783a878dca..a91f192063c2 100644
+> --- a/arch/riscv/include/asm/set_memory.h
+> +++ b/arch/riscv/include/asm/set_memory.h
+> @@ -6,6 +6,7 @@
+>  #ifndef _ASM_RISCV_SET_MEMORY_H
+>  #define _ASM_RISCV_SET_MEMORY_H
+>
+> +#ifndef __ASSEMBLY__
+>  /*
+>   * Functions to change memory attributes.
+>   */
+> @@ -17,4 +18,16 @@ int set_memory_nx(unsigned long addr, int numpages);
+>  int set_direct_map_invalid_noflush(struct page *page);
+>  int set_direct_map_default_noflush(struct page *page);
+>
+> +#endif /* __ASSEMBLY__ */
+> +
+> +#ifdef CONFIG_ARCH_HAS_STRICT_KERNEL_RWX
+> +#ifdef CONFIG_64BIT
+> +#define SECTION_ALIGN (1 << 21)
+> +#else
+> +#define SECTION_ALIGN (1 << 22)
+> +#endif
+> +#else /* !CONFIG_ARCH_HAS_STRICT_KERNEL_RWX */
+> +#define SECTION_ALIGN L1_CACHE_BYTES
+> +#endif /* CONFIG_ARCH_HAS_STRICT_KERNEL_RWX */
+> +
+>  #endif /* _ASM_RISCV_SET_MEMORY_H */
+> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+> index 4ba8a5397e8b..0b145b9c1778 100644
+> --- a/arch/riscv/kernel/vmlinux.lds.S
+> +++ b/arch/riscv/kernel/vmlinux.lds.S
+> @@ -37,6 +37,7 @@ SECTIONS
+>  	PERCPU_SECTION(L1_CACHE_BYTES)
+>  	__init_end = .;
+>
+> +	. = ALIGN(SECTION_ALIGN);
+>  	.text : {
+>  		_text = .;
+>  		_stext = .;
+> @@ -53,13 +54,14 @@ SECTIONS
+>  	}
+>
+>  	/* Start of data section */
+> -	RO_DATA(L1_CACHE_BYTES)
+> +	RO_DATA(SECTION_ALIGN)
+>  	.srodata : {
+>  		*(.srodata*)
+>  	}
+>
+>  	EXCEPTION_TABLE(0x10)
+>
+> +	. = ALIGN(SECTION_ALIGN);
+>  	_sdata = .;
+>
+>  	RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
 
-> On 3/4/20 6:45 AM, Markus Elfring wrote:
-> >> What about the following?
-> >>
-> >> User can group identical parent keys together and use braces to list child keys
-> 
->    The user
-> (as Markus noted)
-
-OK.
-
-> 
-> >> under them.
-> > 
-> > Another wording alternative:
-> > 
-> > The user can group settings together. Curly brackets enclose a configuration then
-> > according to a parent context.
-> 
-> I slightly prefer Masami's text.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
