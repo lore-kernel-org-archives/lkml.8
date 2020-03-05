@@ -2,150 +2,148 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D7FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFFBC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2109920848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="BRR/oVK+"
+	by mail.kernel.org (Postfix) with ESMTP id 0D2B7208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgCEMnR (ORCPT
+        id S1726894AbgCEMn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:43:17 -0500
-Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:37547 "EHLO
-        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgCEMnQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:43:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1583412195;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=wATOkHyHfw1nttogMmLbBkJtCs3d5j9hHSTAkJY4KmE=;
-  b=BRR/oVK+Ltl2W4wq7qyebZWggBTMUx92tLo6DwpaRDe8a7dpSZmP6xwN
-   VRdv6L+m8+7o+qt7yhzQ7hVkyD/QVDtsDWpVhVvh+8qBe3Ew9RNBkckrX
-   eYGhfpaBePvoVJP+JcgX+b9D+FBlYyjqVruA/aM1oNmK9spWAjv8JTfbl
-   c=;
-Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: iR1cwtc6wIxZHy2095D3SobXiBpJi1pHjnR4cTvwIX4HwAo3C1DNnED/QdKE4qoxNmS2nAl6jV
- dbJIfWoZdXEkP183BBYzQ6TbB8GAIJFJsQHT5i05dmAWRfPp9TMq78jYy6zAhB5tY8PZ+Q7C35
- eA/Mk5kAW7Vl1HUChfFa3m08+pqPatmh5F6H00J2FJ3RrXlA6MT4yoduIrrON+HcCXhgi/Wx1X
- VozdPrV+m5W8VHG95mKIH53r6u455YK/zwGOBAEcLqVjoFxNkKJ+9EpJ1DfbZb+f6uwBMlnkjs
- NjI=
-X-SBRS: 2.7
-X-MesageID: 13885325
-X-Ironport-Server: esa6.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,518,1574139600"; 
-   d="scan'208";a="13885325"
-Date:   Thu, 5 Mar 2020 13:42:55 +0100
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Juergen Gross <jgross@suse.com>
-CC:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v2] xen/blkfront: fix ring info addressing
-Message-ID: <20200305124255.GW24458@Air-de-Roger.citrite.net>
-References: <20200305114044.20235-1-jgross@suse.com>
+        Thu, 5 Mar 2020 07:43:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:48132 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbgCEMn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 07:43:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 274C131B;
+        Thu,  5 Mar 2020 04:43:28 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC1B23F6C4;
+        Thu,  5 Mar 2020 04:43:26 -0800 (PST)
+Date:   Thu, 5 Mar 2020 12:43:24 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] sched/rt: cpupri_find: Implement fallback
+ mechanism for !fit case
+Message-ID: <20200305124324.42x6ehjxbnjkklnh@e107158-lin.cambridge.arm.com>
+References: <20200302132721.8353-1-qais.yousef@arm.com>
+ <20200302132721.8353-2-qais.yousef@arm.com>
+ <20200304112739.7b99677e@gandalf.local.home>
+ <20200304173925.43xq4wztummxgs3x@e107158-lin.cambridge.arm.com>
+ <20200304135404.146c56eb@gandalf.local.home>
+ <20200304200153.c4e2p7qnko54pejt@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200305114044.20235-1-jgross@suse.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL01.citrite.net (10.69.22.125)
+In-Reply-To: <20200304200153.c4e2p7qnko54pejt@e107158-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 12:40:44PM +0100, Juergen Gross wrote:
-> Commit 0265d6e8ddb890 ("xen/blkfront: limit allocated memory size to
-> actual use case") made struct blkfront_ring_info size dynamic. This is
-> fine when running with only one queue, but with multiple queues the
-> addressing of the single queues has to be adapted as the structs are
-> allocated in an array.
+On 03/04/20 20:01, Qais Yousef wrote:
+> On 03/04/20 13:54, Steven Rostedt wrote:
+> > > If we fix 1, then assuming found == -1 for all level, we'll still have the
+> > > problem that the mask is stale.
+> > > 
+> > > We can do a full scan again as Tao was suggestion, the 2nd one without any
+> > > fitness check that is. But isn't this expensive?
+> > 
+> > I was hoping to try to avoid that, but it's not that expensive and will
+> > probably seldom happen. Perhaps we should run some test cases and trace the
+> > results to see how often that can happen.
+> > 
+> > > 
+> > > We risk the mask being stale anyway directly after selecting it. Or a priority
+> > > level might become the lowest level just after we dismissed it.
+> > 
+> > Sure, but that's still a better effort.
 > 
-> Fixes: 0265d6e8ddb890 ("xen/blkfront: limit allocated memory size to actual use case")
-> Reported-by: Sander Eikelenboom <linux@eikelenboom.it>
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-> ---
-> V2:
-> - get rid of rinfo_ptr() helper
-> - use proper parenthesis in for_each_rinfo()
-> - rename rinfo parameter of for_each_rinfo()
-> ---
->  drivers/block/xen-blkfront.c | 79 +++++++++++++++++++++++---------------------
->  1 file changed, 42 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-> index e2ad6bba2281..8e844da826db 100644
-> --- a/drivers/block/xen-blkfront.c
-> +++ b/drivers/block/xen-blkfront.c
-> @@ -213,6 +213,7 @@ struct blkfront_info
->  	struct blk_mq_tag_set tag_set;
->  	struct blkfront_ring_info *rinfo;
->  	unsigned int nr_rings;
-> +	unsigned int rinfo_size;
->  	/* Save uncomplete reqs and bios for migration. */
->  	struct list_head requests;
->  	struct bio_list bio_list;
-> @@ -259,6 +260,18 @@ static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo);
->  static void blkfront_gather_backend_features(struct blkfront_info *info);
->  static int negotiate_mq(struct blkfront_info *info);
->  
-> +#define for_each_rinfo(info, ptr, idx)				\
-> +	for ((ptr) = (info)->rinfo, (idx) = 0;			\
-> +	     (idx) < (info)->nr_rings;				\
-> +	     (idx)++, (ptr) = (void *)(ptr) + (info)->rinfo_size)
-> +
-> +static struct blkfront_ring_info *get_rinfo(struct blkfront_info *info,
+> Okay let me run some quick tests and send an updated series if it doesn't
+> return something suspicious.
 
-I still think inline should be added here, but I don't have such a
-strong opinion to block the patch on it.
+I ran my 6 tasks test which spawns 6 big tasks on 4 little + 2 big system.
+I verified that the 2nd fallback search happens during this scenario.
 
-Also, info should be constified AFAICT.
+The duration of the run was 10 seconds.
 
-With at least info constified:
+Using tace-cmd record --profile -l select_task_rq_rt I got the following
+results for
 
-Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+	A) Falling back to searching the last unfit_priority_idx only
+	B) Falling back to a full search with fitness check disabled
 
-Can you queue this through the Xen tree?
+A)
+  Event: func: select_task_rq_rt() (600) Total: 2486002 Avg: 4143 Max: 11400(ts:1084.358268) Min:1(ts:1080.258259)
+  Event: func: select_task_rq_rt() (2) Total: 11900 Avg: 5950 Max: 8680(ts:1079.659145) Min:3220(ts:1079.659288)
+  Event: func: select_task_rq_rt() (4) Total: 13080 Avg: 3270 Max: 3580(ts:1079.659815) Min:3080(ts:1079.659475)
+  Event: func: select_task_rq_rt() (3) Total: 15240 Avg: 5080 Max: 6260(ts:1079.659222) Min:4180(ts:1079.659591)
+  Event: func: select_task_rq_rt() (1) Total: 5500 Avg: 5500 Max: 5500(ts:1079.659344) Min:5500(ts:1079.659344)
+  Event: func: select_task_rq_rt() (2) Total: 8440 Avg: 4220 Max: 4600(ts:1079.659380) Min:3840(ts:1079.659786)
+  Event: func: select_task_rq_rt() (3) Total: 22920 Avg: 7640 Max: 11100(ts:1079.659672) Min:3620(ts:1079.659891)
 
-Thanks, Roger.
+B)
+  Event: func: select_task_rq_rt() (600) Total: 2468873 Avg: 4114 Max: 12580(ts:510.268625) Min:1(ts:516.868611)
+  Event: func: select_task_rq_rt() (4) Total: 19260 Avg: 4815 Max: 7920(ts:507.369259) Min:3340(ts:507.369669)
+  Event: func: select_task_rq_rt() (1) Total: 4700 Avg: 4700 Max: 4700(ts:507.369583) Min:4700(ts:507.369583)
+  Event: func: select_task_rq_rt() (3) Total: 7640 Avg: 2546 Max: 3320(ts:507.369403) Min:1300(ts:507.369428)
+  Event: func: select_task_rq_rt() (2) Total: 8760 Avg: 4380 Max: 5100(ts:507.369497) Min:3660(ts:507.369338)
+  Event: func: select_task_rq_rt() (1) Total: 3240 Avg: 3240 Max: 3240(ts:507.369450) Min:3240(ts:507.369450)
+
+So for both the max seems to be ~12us, which I think is fine.
+
+In the profile report I got something like this which I didn't know how to
+interpret. The max value is high; ~72ms.
+
+Did I use and look at the profile output correctly? I still have the trace.dat
+for the 2 runs.
+
+
+                |     + 0x266cb00000000
+                |     |   1% (1) time:72836320 max:72836320(ts:1079.785460) min:72836320(ts:1079.785460) avg:72836320
+                |     |    0x309000a
+                |     |    select_task_rq_rt (0xffff800010152c74)
+                |     |    0x0
+                |     |    0xe885dcc56c
+                |     |    0xe885dcdb24
+                |     |    0x2788400000000
+                |     |    0x1090047
+
+
+
+
+		...
+
+
+
+		                + select_task_rq_rt (0xffff800010152c74)
+                |   88% (1) time:72100 max:72100(ts:507.369339) min:72100(ts:507.369339) avg:72100
+                |    0x24e4b00000000
+                |    0x309000a
+                |    select_task_rq_rt (0xffff800010152c74)
+                |    0x0
+                |    0x53be002898
+                |    0x53be003b6c
+                |    0x26bc400000000
+                |
+
+
+Thanks
+
+--
+Qais Yousef
+
