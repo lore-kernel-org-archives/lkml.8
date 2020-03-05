@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706C2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A47C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BAB20637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B7F20637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583429014;
-	bh=Eqxcwe6hqlaj8Q4EMkWE8eXCmsUaeSppDr69o8tGO8c=;
+	s=default; t=1583429017;
+	bh=IUgSQBIgrx3acAIdWwuai6U1vJC+ObOnP/PsZf5UV9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2g1vbOlEivOV/K+kFqV/CUKhJhW+ur5Vr0Jbe9749rb7gvdlqlmU1YnTaTMsy76fS
-	 04M5Ha8IaCNGzWf9w/xbTIS+D83KztMROyy5jvfTzV+Da5vQPmo00LvICYFJ5qFpLh
-	 vHZD6iHbLOiCayLsj/uDAoJJbteZ7fp4xRExzFkw=
+	b=vDbaIi+Qp3kIp4WLvOWiu/vQzMqY8AKYPW3QDV2jE0hkbNGNalMyllzokxEQr7EH2
+	 aQRFgVLZFGkNMbUEq8p6iaTEwD6LJ3/bZ6R+E0MRC7MhDJ9e+dnrU2l+1Kr/3u0XqW
+	 3NoBmNjvYMxXeiyjaNpUqKRX+aRGy7A0o9iyksMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgCERNl (ORCPT
+        id S1727716AbgCERXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:13:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39090 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:23:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbgCERNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:35 -0500
+        id S1727195AbgCERNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 467BE20870;
-        Thu,  5 Mar 2020 17:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 827FA21556;
+        Thu,  5 Mar 2020 17:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428415;
-        bh=Eqxcwe6hqlaj8Q4EMkWE8eXCmsUaeSppDr69o8tGO8c=;
+        s=default; t=1583428420;
+        bh=IUgSQBIgrx3acAIdWwuai6U1vJC+ObOnP/PsZf5UV9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hu5Cpqt9MrLQlTT4RCmJzQUq5IHIRtjrFunEQtIK+4Al5RUHwWLFCIWNwH81l1qLK
-         kWyjW8CpdRttXrTQ1ZrDol6EL4RBpTrTFtElENJ7hZQHHIb+ase0RIKfjUWy5YlxQW
-         dZwK+i3rWcWw6AOUVWAlv50f4zOqOl4+9WDe1lLk=
+        b=Ng1lynTsrk+X6mYwsrXYvUfmseBAmhMUVgPBqrG6+EAVRZMMzfeNgN9RdjV/+tta5
+         gXgcvMe7JXSXAyLNvB0NcyK5RwKxGGmQDwrXRE40f6pMqZflw2/M+kBCo9Tj/EoZSW
+         OxrJ/Oz9T2Wv5X4lwBW5/oH6EYw4Y1ytl+71PLMM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greentime Hu <greentime.hu@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 18/67] riscv: set pmp configuration if kernel is running in M-mode
-Date:   Thu,  5 Mar 2020 12:12:19 -0500
-Message-Id: <20200305171309.29118-18-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 22/67] selftests/rseq: Fix out-of-tree compilation
+Date:   Thu,  5 Mar 2020 12:12:23 -0500
+Message-Id: <20200305171309.29118-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -60,73 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greentime Hu <greentime.hu@sifive.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit c68a9032299e837b56d356de9250c93094f7e0e3 ]
+[ Upstream commit ef89d0545132d685f73da6f58b7e7fe002536f91 ]
 
-When the kernel is running in S-mode, the expectation is that the
-bootloader or SBI layer will configure the PMP to allow the kernel to
-access physical memory.  But, when the kernel is running in M-mode and is
-started with the ELF "loader", there's probably no bootloader or SBI layer
-involved to configure the PMP.  Thus, we need to configure the PMP
-ourselves to enable the kernel to access all regions.
+Currently if you build with O=... the rseq tests don't build:
 
-Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+  $ make O=$PWD/output -C tools/testing/selftests/ TARGETS=rseq
+  make: Entering directory '/linux/tools/testing/selftests'
+  ...
+  make[1]: Entering directory '/linux/tools/testing/selftests/rseq'
+  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./  -shared -fPIC rseq.c -lpthread -o /linux/output/rseq/librseq.so
+  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./  basic_test.c -lpthread -lrseq -o /linux/output/rseq/basic_test
+  /usr/bin/ld: cannot find -lrseq
+  collect2: error: ld returned 1 exit status
+
+This is because the library search path points to the source
+directory, not the output.
+
+We can fix it by changing the library search path to $(OUTPUT).
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/include/asm/csr.h | 12 ++++++++++++
- arch/riscv/kernel/head.S     |  6 ++++++
- 2 files changed, 18 insertions(+)
+ tools/testing/selftests/rseq/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-index 435b65532e294..8e18d2c64399d 100644
---- a/arch/riscv/include/asm/csr.h
-+++ b/arch/riscv/include/asm/csr.h
-@@ -72,6 +72,16 @@
- #define EXC_LOAD_PAGE_FAULT	13
- #define EXC_STORE_PAGE_FAULT	15
+diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
+index d6469535630af..708c1b3452454 100644
+--- a/tools/testing/selftests/rseq/Makefile
++++ b/tools/testing/selftests/rseq/Makefile
+@@ -4,7 +4,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+ CLANG_FLAGS += -no-integrated-as
+ endif
  
-+/* PMP configuration */
-+#define PMP_R			0x01
-+#define PMP_W			0x02
-+#define PMP_X			0x04
-+#define PMP_A			0x18
-+#define PMP_A_TOR		0x08
-+#define PMP_A_NA4		0x10
-+#define PMP_A_NAPOT		0x18
-+#define PMP_L			0x80
-+
- /* symbolic CSR names: */
- #define CSR_CYCLE		0xc00
- #define CSR_TIME		0xc01
-@@ -100,6 +110,8 @@
- #define CSR_MCAUSE		0x342
- #define CSR_MTVAL		0x343
- #define CSR_MIP			0x344
-+#define CSR_PMPCFG0		0x3a0
-+#define CSR_PMPADDR0		0x3b0
- #define CSR_MHARTID		0xf14
+-CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ \
++CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L$(OUTPUT) -Wl,-rpath=./ \
+ 	  $(CLANG_FLAGS)
+ LDLIBS += -lpthread
  
- #ifdef CONFIG_RISCV_M_MODE
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index a4242be66966b..e4d9baf973232 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -58,6 +58,12 @@ _start_kernel:
- 	/* Reset all registers except ra, a0, a1 */
- 	call reset_regs
- 
-+	/* Setup a PMP to permit access to all of memory. */
-+	li a0, -1
-+	csrw CSR_PMPADDR0, a0
-+	li a0, (PMP_A_NAPOT | PMP_R | PMP_W | PMP_X)
-+	csrw CSR_PMPCFG0, a0
-+
- 	/*
- 	 * The hartid in a0 is expected later on, and we have no firmware
- 	 * to hand it to us.
 -- 
 2.20.1
 
