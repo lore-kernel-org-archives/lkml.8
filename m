@@ -2,110 +2,156 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA037C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5D7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF8A21739
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CBDA20842
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TINuTS5t"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a+BKBCwq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388582AbgCEADe (ORCPT
+        id S2388560AbgCEAII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 19:03:34 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45128 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388527AbgCEADe (ORCPT
+        Wed, 4 Mar 2020 19:08:08 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44138 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388425AbgCEAII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 19:03:34 -0500
-Received: by mail-io1-f67.google.com with SMTP id w9so4438083iob.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:03:32 -0800 (PST)
+        Wed, 4 Mar 2020 19:08:08 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n7so4791975wrt.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:08:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mcXMvP83pyGZ1I5nm90C47eaUp73C3wISS7XfIKSpxw=;
-        b=TINuTS5todeyzCYRdZD2BXIqFaI+WzyR6cIQeHZmA9pebcQh1OCN1McUIHLQvzczYe
-         /3FZTgioIXu60vuCoLPGW0Mb+4iQ7F0bOBUiD8IVzVpYbL2ricjrPBjtAfpuJEqZ13jN
-         AshqXEnsr4aLO3R/AUBRwQb3zm/9bYKz02t44=
+        bh=rhh6IhNFfdTMDzn5raC/7ABRe9JvD2oPC8LGUlDP/90=;
+        b=a+BKBCwqATbbXKlq1XXUlr635AZcS0pPhF7mDq2OWsaulwzm32OMpK2HPMcx+eX5oT
+         gUrk5/cYzS5OYDOwQaU+oY7zSw78IWeRutxEivfKKDdjqb7+NOngq3aPQv/V30IAhDjo
+         ao9s8z32Qj2c/pqHgXqqY8XLi/qlGHmxzgO0ev02GkhjYJVSfAeba7I3DqVc0Q0I1Sbn
+         jRybY4Ta0iPONmo8C9SIgtFtUncQtyLtLqeOX7J+31GiVLPJI2CA+RzgYZtJSAQ1A3WM
+         7llZZYEeQX0+GVNYKrQ4NOIwcZxXIAiF5jovY2JOfvTAjD5gBfNg+f6FBGw/vHzTkWdp
+         yadw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mcXMvP83pyGZ1I5nm90C47eaUp73C3wISS7XfIKSpxw=;
-        b=EbEkH3EIDj7HBbBGJ2tYPx7bIJ1PYbL1WN6EMy03POL9AAbKaCkzraY5BdZIA96Cwr
-         w/C5zP6B/Z1uZY1S/iBY0EBXtF6sIQ72thC6tHedKRUZZF0PCDPzjnpzRJg9f5G2L1Vc
-         aaM7v1Q65lE60J0+Gj25PWHIJIYfvOb3Jajb00c+yeQMoPc45areKh0mSqzpg6MHqukP
-         faw2Qylm78w328TcePzs0trJ1GDtO+7xrHPburYbUaD1oeYfzt6Ft/h/lKoH5zBstJWv
-         r5swfSaPaaf6o0d06a9xQYL1KDpzC0720aTFgSim77Ew8De9BRSn/zE0pxXqoSth07RX
-         J0HA==
-X-Gm-Message-State: ANhLgQ10td78T1EhEsCpyZYqZkXOJjWSMbGWTKin1E18OuKS8pJ2rCii
-        5hjbBGQytjTO+k4iqWz289BkzWvqhR4szKF5YZUb0A==
-X-Google-Smtp-Source: ADFU+vtyNe6CWanl85WP18h1v5gApJVgCinHIFhFfvX7Yln8ACBdfbhL0oNX3ybv2HV6wjzZLNBKpsQUroHrWzZCHxI=
-X-Received: by 2002:a6b:b414:: with SMTP id d20mr4331951iof.236.1583366612072;
- Wed, 04 Mar 2020 16:03:32 -0800 (PST)
+        bh=rhh6IhNFfdTMDzn5raC/7ABRe9JvD2oPC8LGUlDP/90=;
+        b=ewOsvwBLqVHlxHIfF3W6OHKxuV38VRycCRH++WbaPJMRmrClP5u+YWm1Aayi7scq0+
+         uYhaAu9mPl2E63Y5W8NgT64acN15psBt+xJAOpVmumLjo7HgmdAriuyOUgmUUag/2piY
+         5xYATxKuAmcB9K5+ZXwjPedCQtY78nSHZnczfmFx9q/JVSr+gMrDQc55+ol8pLaeFfJm
+         MANXg9OFGtiyiG7xS6CFUPgO4wku4+ovKemfSc2ttKcjZGcjDb7SvbTZwNc+QtkSa9xI
+         13B+deNPKbzl7577p22/AOuweYvgqrATdJxu4xxRQEV3SSlvmuJ87KvxkI5JP/hW0WLU
+         zBLQ==
+X-Gm-Message-State: ANhLgQ1X3tkAxLyEbdXBp5/jCNZK1G+e/Hp3dX9n6grWSJCEw2HFum6g
+        r8qXQMCjrBZ4Cj7QhX2viqD2i9M4GvdG02zyccd68g==
+X-Google-Smtp-Source: ADFU+vvTEJ1ZXYsJgUnLdCTiXOza2fR11hrZeHoPhLSw4Kq9qUMS/vOiA+MuBs83FO2V9MfxDXHldeSHqCJU3F64z3s=
+X-Received: by 2002:adf:ee02:: with SMTP id y2mr720131wrn.23.1583366884150;
+ Wed, 04 Mar 2020 16:08:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20200304232108.149553-1-gwendal@chromium.org>
-In-Reply-To: <20200304232108.149553-1-gwendal@chromium.org>
-From:   Benson Leung <bleung@chromium.org>
-Date:   Wed, 4 Mar 2020 16:03:20 -0800
-Message-ID: <CANLzEkvgFf4-TwP4iSgCzPJoJrFKAdnMdTmbnBHfg-aGm8x7Bg@mail.gmail.com>
-Subject: Re: [PATCH] platform: chrome: Fix cros-usbpd-notify notifier
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Jon Flatley <jflat@chromium.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Prashant Malani <pmalani@chromium.org>
+References: <20200227024301.217042-1-trishalfonso@google.com>
+ <20200227024301.217042-2-trishalfonso@google.com> <CACT4Y+YFewcbRnY62wLHueVNwyXCSZwO8K7SUR2cg=pxZv8uZA@mail.gmail.com>
+ <CAKFsvUJFovti=enpOefqMbtQpeorihQhugH3-1nv0BBwevCwQg@mail.gmail.com>
+ <CACT4Y+Y-zoiRfDWw6KJr1BJO_=yTpFsVaHMng5iaRn9HeJMNaw@mail.gmail.com>
+ <CAKFsvU+ruKWt-BdVz+OX-T9wNEBetqVFACsG1B9ucMS4zHrMBQ@mail.gmail.com> <CACT4Y+b5WaH8OkAJCDeAJcYQ1cbnbqgiF=tTb7CCmtY4UXHc0A@mail.gmail.com>
+In-Reply-To: <CACT4Y+b5WaH8OkAJCDeAJcYQ1cbnbqgiF=tTb7CCmtY4UXHc0A@mail.gmail.com>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Wed, 4 Mar 2020 16:07:52 -0800
+Message-ID: <CAKFsvUK84pD+K5rTbvKXB0MyW9XCknpSfMAO28iQ4S1=WBQK6Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Gwendal. Copying +Prashant Malani as well.
+On Tue, Mar 3, 2020 at 10:23 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Wed, Mar 4, 2020 at 2:26 AM Patricia Alfonso <trishalfonso@google.com> wrote:
+> >
+> > On Sat, Feb 29, 2020 at 10:29 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >
+> > > On Sat, Feb 29, 2020 at 2:23 AM Patricia Alfonso
+> > > <trishalfonso@google.com> wrote:
+> > > > >
+> > > > > On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
+> > > > > <kasan-dev@googlegroups.com> wrote:
+> > > > > >
+> > > > > > --- a/tools/testing/kunit/kunit_kernel.py
+> > > > > > +++ b/tools/testing/kunit/kunit_kernel.py
+> > > > > > @@ -141,7 +141,7 @@ class LinuxSourceTree(object):
+> > > > > >                 return True
+> > > > > >
+> > > > > >         def run_kernel(self, args=[], timeout=None, build_dir=''):
+> > > > > > -               args.extend(['mem=256M'])
+> > > > > > +               args.extend(['mem=256M', 'kasan_multi_shot'])
+> > > > >
+> > > > > This is better done somewhere else (different default value if
+> > > > > KASAN_TEST is enabled or something). Or overridden in the KASAN tests.
+> > > > > Not everybody uses tools/testing/kunit/kunit_kernel.py and this seems
+> > > > > to be a mandatory part now. This means people will always hit this, be
+> > > > > confused, figure out they need to flip the value, and only then be
+> > > > > able to run kunit+kasan.
+> > > > >
+> > > > I agree. Is the best way to do this with "bool multishot =
+> > > > kasan_save_enable_multi_shot();"  and
+> > > > "kasan_restore_multi_shot(multishot);" inside test_kasan.c like what
+> > > > was done in the tests before?
+> > >
+> > > This will fix KASAN tests, but not non-KASAN tests running under KUNIT
+> > > and triggering KASAN reports.
+> > > You set kasan_multi_shot for all KUNIT tests. I am reading this as
+> > > that we don't want to abort on the first test that triggered a KASAN
+> > > report. Or not?
+> >
+> > I don't think I understand the question, but let me try to explain my
+> > thinking and see if that resonates with you. We know that the KASAN
+> > tests will require more than one report, and we want that. For most
+> > users, since a KASAN error can cause unexpected kernel behavior for
+> > anything after a KASAN error, it is best for just one unexpected KASAN
+> > error to be the only error printed to the user, unless they specify
+> > kasan-multi-shot. The way I understand it, the way to implement this
+> > is to use  "bool multishot = kasan_save_enable_multi_shot();"  and
+> > "kasan_restore_multi_shot(multishot);" around the KASAN tests so that
+> > kasan-multi-shot is temporarily enabled for the tests we expect
+> > multiple reports. I assume "kasan_restore_multi_shot(multishot);"
+> > restores the value to what the user input was so after the KASAN tests
+> > are finished, if the user did not specify kasan-multi-shot and an
+> > unexpected kasan error is reported, it will print the full report and
+> > only that first one. Is this understanding correct? If you have a
+> > better way of implementing this or a better expected behavior, I
+> > appreciate your thoughts.
+>
+> Everything you say is correct.
+> What I tried to point at is that this new behavior is different from
+> the original behavior of your change. Initially you added
+> kasan_multi_shot to command line for _all_ kunit tests (not just
+> KASAN). The question is: do we want kasan_multi_shot for non-KASAN
+> tests or not?
 
-On Wed, Mar 4, 2020 at 3:21 PM Gwendal Grignou <gwendal@chromium.org> wrote:
->
-> cros-usbpd-notify notifier was returning NOTIFY_BAD when no host event
-> was available in the MKBP message.
-> But MKBP messages are used to transmit other information, so return
-> NOTIFY_DONE instead, to allow other notifier to be called.
->
-> Fixes: ec2daf6e33f9f ("platform: chrome: Add cros-usbpd-notify driver")
->
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> ---
->  drivers/platform/chrome/cros_usbpd_notify.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
-> index 3851bbd6e9a39..ca2c0181a1dbf 100644
-> --- a/drivers/platform/chrome/cros_usbpd_notify.c
-> +++ b/drivers/platform/chrome/cros_usbpd_notify.c
-> @@ -84,7 +84,7 @@ static int cros_usbpd_notify_plat(struct notifier_block *nb,
->         u32 host_event = cros_ec_get_host_event(ec_dev);
->
->         if (!host_event)
-> -               return NOTIFY_BAD;
-> +               return NOTIFY_DONE;
->
->         if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
->                 blocking_notifier_call_chain(&cros_usbpd_notifier_list,
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
+Ah, yes. I thought your first comment was suggesting I change it from
+printing all KASAN tests by default because the intended behavior of
+KASAN is to only print the first report. I think I'll pose the
+question back to you. Do we want kasan_multi_shot for non-KASAN tests?
+For functionality sake, it is only required for the KASAN tests so
+this is more of a judgement call for the user experience.
 
-
--- 
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
+--
+Best,
+Patricia Alfonso
