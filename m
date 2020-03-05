@@ -2,88 +2,167 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7A6C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942CCC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE50208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BC93208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:06:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="GIH9MsCP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X1Y1bh9g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgCEMEA (ORCPT
+        id S1727206AbgCEMGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:04:00 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37316 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbgCEMD7 (ORCPT
+        Thu, 5 Mar 2020 07:06:08 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36798 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbgCEMGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:03:59 -0500
-Received: by mail-wr1-f65.google.com with SMTP id 6so1263548wre.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 04:03:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=hT7S6vvpnxA0ApcPEejqGxLVzm717a4KSHt7eOw1Bck=;
-        b=GIH9MsCPmG16v2K7zrrevmV3g6eLk1wIcKUD9XnRWZuoOJXK1GkdfQGkFYZ928xMmM
-         Y3PnJAK/ssHCHqBUqfr96FgMu1N8MTdKO8DxCL5bgs/ODGHWiEnA4ZrWrxCmnB0Qk4kj
-         5csGyslb48TLPEaGgGdrIKegAW9qV+4WV2Iu0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=hT7S6vvpnxA0ApcPEejqGxLVzm717a4KSHt7eOw1Bck=;
-        b=hLhOVLgBypDYqaf3Av/STUE/CiAvOcGS3F53v/0bq9vOcon/5NJ9wzYZ4HJn0CmMR8
-         GogIfwgzOa9vFX9coYyj7f0r8fjtcGQDSHuhzeTj4bibwv3bM4rjWDtQbr9dqUk6Gd+H
-         bbOQiADJ3JltMquX7hRtSWHrUiDUlrTkdX1xNzh6U74B7ZtECqSQnn+yB38Gf+v351hY
-         WZjlik3aCRvroRSGUfzFrHfv/H729lqkyr0KXurn8dyLLaupzM/+pt4XzNXKNQ0keRzf
-         0fJmOSJPbx7U91mwv51/V6bYySiaGHPDh3eMgskvYKaHbtEnSFFZl6D4zLi/M5nSUKqG
-         QxHw==
-X-Gm-Message-State: ANhLgQ2jtSMwMhXvwUKwdQTkddb0sdah6lATG1kkrnufo8nWS8q0s2Xm
-        T7I+XkwnWNfJtKMg8j1Iw1BiTQ==
-X-Google-Smtp-Source: ADFU+vucLtTgYNewten9hKmRyZyvNiBAi0eWwE91eSAbKxv50uEY0RkR+AYp55iwZRNYjSqE2Bq4mg==
-X-Received: by 2002:a5d:5706:: with SMTP id a6mr9660460wrv.318.1583409836025;
-        Thu, 05 Mar 2020 04:03:56 -0800 (PST)
-Received: from cloudflare.com ([176.221.114.230])
-        by smtp.gmail.com with ESMTPSA id b186sm9170588wmb.40.2020.03.05.04.03.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 04:03:54 -0800 (PST)
-References: <20200304101318.5225-1-lmb@cloudflare.com> <20200304101318.5225-3-lmb@cloudflare.com>
-User-agent: mu4e 1.1.0; emacs 26.3
-From:   Jakub Sitnicki <jakub@cloudflare.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>
-Cc:     john.fastabend@gmail.com, Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v3 02/12] skmsg: update saved hooks only once
-In-reply-to: <20200304101318.5225-3-lmb@cloudflare.com>
-Date:   Thu, 05 Mar 2020 13:03:53 +0100
-Message-ID: <87ftenypna.fsf@cloudflare.com>
+        Thu, 5 Mar 2020 07:06:08 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 025C5wT8099985;
+        Thu, 5 Mar 2020 06:05:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583409958;
+        bh=TWp3S9CF5lmJGI7WNCRkfKVlRklSzi69IV1YHVJ3w5M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=X1Y1bh9gMxY9u7Be5WVbsRKHgWh74HAyi20y47FaE61fYrsfhAMM599I9Veeeq5vb
+         jhdOh7d9erR3jMLi9LFJgIJbwyO7+m14njrht2qtknQ1v2FwAqVRK2J0EHzEWKk3Fo
+         P97wN4Y2BGyy695IyRp6d94WWCZ8pJTdFTF9Hz0k=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 025C5wg3070466
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 5 Mar 2020 06:05:58 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Mar
+ 2020 06:05:58 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 5 Mar 2020 06:05:58 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 025C5uZN120032;
+        Thu, 5 Mar 2020 06:05:56 -0600
+Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
+To:     Tony Lindgren <tony@atomide.com>, Christoph Hellwig <hch@lst.de>
+CC:     <yan-liu@ti.com>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Nori, Sekhar" <nsekhar@ti.com>
+References: <20200304090031.30360-1-rogerq@ti.com>
+ <20200304162057.GV37466@atomide.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <145c0448-ea33-8704-4fde-03fb180100d6@ti.com>
+Date:   Thu, 5 Mar 2020 14:05:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200304162057.GV37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 11:13 AM CET, Lorenz Bauer wrote:
-> Only update psock->saved_* if psock->sk_proto has not been initialized
-> yet. This allows us to get rid of tcp_bpf_reinit_sk_prot.
->
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> ---
+Tony, Christoph,
 
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+On 04/03/2020 18:20, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [200304 09:01]:
+>> Even though the TRM says that SATA IP has 36 address bits
+>> wired in the SoC, we see bus errors whenever any address
+>> greater than 32-bit is given to the controller.
+>>
+>> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
+>>
+>> As a workaround we limit the DMA address range to 32-bits
+>> for SATA.
+>>
+>> Cc: Christoph Hellwig <hch@lst.de>
+>> Cc: Robin Murphy <robin.murphy@arm.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Reported-by: Yan Liu <yan-liu@ti.com>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>
+>> NOTE: Currently ARM dma-mapping code doesn't account for devices
+>> bus_dma_limit. This is fixed in [1].
+>>
+>> [1] https://lkml.org/lkml/2020/2/18/712
+> 
+> So is this dts patch safe to apply without the series above?
+> 
 
-[...]
+Yes. To my surprise this patch fixes the SATA issue even without [1].
+Without this patch dev->bus_dma_limit was being set to 0 and with the patch
+it is being set to 0xffffffff.
+
+> And should this dts patch be applied as a fix or can it wait
+> until the merge window?
+
+I think we should mark it for stable and apply it right away as fix for v5.6.
+
+Cc: stable@kernel.org
+
+cheers,
+-roger
+> 
+> Regards,
+> 
+> Tony
+> 
+>>   arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
+>>   1 file changed, 16 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>> index d78b684e7fca..895462c22d1c 100644
+>> --- a/arch/arm/boot/dts/dra7.dtsi
+>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>> @@ -642,15 +642,22 @@
+>>   		};
+>>   
+>>   		/* OCP2SCP3 */
+>> -		sata: sata@4a141100 {
+>> -			compatible = "snps,dwc-ahci";
+>> -			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+>> -			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+>> -			phys = <&sata_phy>;
+>> -			phy-names = "sata-phy";
+>> -			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+>> -			ti,hwmods = "sata";
+>> -			ports-implemented = <0x1>;
+>> +		sata_aux_bus {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <2>;
+>> +			compatible = "simple-bus";
+>> +			ranges = <0x0 0x4a140000 0x0 0x1200>;
+>> +			dma-ranges = <0x0 0x0 0x1 0x00000000>;
+>> +			sata: sata@4a141100 {
+>> +				compatible = "snps,dwc-ahci";
+>> +				reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
+>> +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+>> +				phys = <&sata_phy>;
+>> +				phy-names = "sata-phy";
+>> +				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+>> +				ti,hwmods = "sata";
+>> +				ports-implemented = <0x1>;
+>> +			};
+>>   		};
+>>   
+>>   		/* OCP2SCP1 */
+>> -- 
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
