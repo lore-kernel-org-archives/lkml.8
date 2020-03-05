@@ -2,123 +2,68 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D309C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DD0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F8A20637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428892;
-	bh=2+JddXm05lMAvMt7a5HtaUlUsXMzX06xKsrUO7VAvF8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XxwHcGQlT4n9a3j/yOrJ8DF1c/xhIYlDhyQG5GqrAqb9jmw74792xtyNWJ5sfE5TX
-	 Gg9SInrOl5AgM9IqE/Qc0zgnyDWdhNOtP7K7kMeXo8kNs58TYaetQw/Y7vYNRYJZx1
-	 4aZdM4ONsJKgSRa5d84coeXhXzLrafmkIRIYxxW0=
+	by mail.kernel.org (Postfix) with ESMTP id AB0B320637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgCERVa (ORCPT
+        id S1727837AbgCERVh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:21:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727714AbgCEROe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:34 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3023C21556;
-        Thu,  5 Mar 2020 17:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428473;
-        bh=2+JddXm05lMAvMt7a5HtaUlUsXMzX06xKsrUO7VAvF8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FJZM2Xzz7o5MDoypOMM8DijfrZFSaU2BAqINYfgsh+IjQcS3uf8UbgXnE/uTeF7Uj
-         uVbDNjt+O/7KNzoakYoLYlSR2KnvyLmpCDmrgbXJ6p32sDU1cA9u0ZArX4lhlXxy9t
-         yoqQS+07JV65OoWTiahaJhMQpDwOGWOPv4oopBq0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Victor Kamensky <kamensky@cisco.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        richard.purdie@linuxfoundation.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 10/58] mips: vdso: fix 'jalr t9' crash in vdso code
-Date:   Thu,  5 Mar 2020 12:13:31 -0500
-Message-Id: <20200305171420.29595-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
-References: <20200305171420.29595-1-sashal@kernel.org>
+        Thu, 5 Mar 2020 12:21:37 -0500
+Received: from mailoutvs55.siol.net ([185.57.226.246]:56836 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727604AbgCEROc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:32 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 87E02521A71;
+        Thu,  5 Mar 2020 18:14:29 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Uu7iizrBYcEZ; Thu,  5 Mar 2020 18:14:29 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 482BE5232A3;
+        Thu,  5 Mar 2020 18:14:29 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id 7D13B521A71;
+        Thu,  5 Mar 2020 18:14:28 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     a.hajda@samsung.com, narmstrong@baylibre.com
+Cc:     Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/4] drm/bridge: dw-hdmi: fix AVI frame colorimetry
+Date:   Thu, 05 Mar 2020 18:14:27 +0100
+Message-ID: <5332114.DvuYhMxLoT@jernej-laptop>
+In-Reply-To: <20200304232512.51616-2-jernej.skrabec@siol.net>
+References: <20200304232512.51616-1-jernej.skrabec@siol.net> <20200304232512.51616-2-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Victor Kamensky <kamensky@cisco.com>
+Dne četrtek, 05. marec 2020 ob 00:25:09 CET je Jernej Skrabec napisal(a):
+> CTA-861-F explicitly states that for RGB colorspace colorimetry should
+> be set to "none". Fix that.
+> 
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Fixes: def23aa7e982 ("drm: bridge: dw-hdmi: Switch to V4L bus format and
+> encodings") Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit d3f703c4359ff06619b2322b91f69710453e6b6d ]
+Applied to drm-next-fixes.
 
-Observed that when kernel is built with Yocto mips64-poky-linux-gcc,
-and mips64-poky-linux-gnun32-gcc toolchain, resulting vdso contains
-'jalr t9' instructions in its code and since in vdso case nobody
-sets GOT table code crashes when instruction reached. On other hand
-observed that when kernel is built mips-poky-linux-gcc toolchain, the
-same 'jalr t9' instruction are replaced with PC relative function
-calls using 'bal' instructions.
+Best regards,
+Jernej
 
-The difference boils down to -mrelax-pic-calls and -mexplicit-relocs
-gcc options that gets different default values depending on gcc
-target triplets and corresponding binutils. -mrelax-pic-calls got
-enabled by default only in mips-poky-linux-gcc case. MIPS binutils
-ld relies on R_MIPS_JALR relocation to convert 'jalr t9' into 'bal'
-and such relocation is generated only if -mrelax-pic-calls option
-is on.
-
-Please note 'jalr t9' conversion to 'bal' can happen only to static
-functions. These static PIC calls use mips local GOT entries that
-are supposed to be filled with start of DSO value by run-time linker
-(missing in VDSO case) and they do not have dynamic relocations.
-Global mips GOT entries must have dynamic relocations and they should
-be prevented by cmd_vdso_check Makefile rule.
-
-Solution call out -mrelax-pic-calls and -mexplicit-relocs options
-explicitly while compiling MIPS vdso code. That would get correct
-and consistent between different toolchains behaviour.
-
-Reported-by: Bruce Ashfield <bruce.ashfield@gmail.com>
-Signed-off-by: Victor Kamensky <kamensky@cisco.com>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: richard.purdie@linuxfoundation.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/vdso/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-index 996a934ece7d6..3fa4bbe1bae53 100644
---- a/arch/mips/vdso/Makefile
-+++ b/arch/mips/vdso/Makefile
-@@ -29,6 +29,7 @@ endif
- cflags-vdso := $(ccflags-vdso) \
- 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
- 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
-+	-mrelax-pic-calls -mexplicit-relocs \
- 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
- 	$(call cc-option, -fno-asynchronous-unwind-tables) \
- 	$(call cc-option, -fno-stack-protector)
--- 
-2.20.1
 
