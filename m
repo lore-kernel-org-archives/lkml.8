@@ -2,133 +2,89 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840CAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2C5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C32D208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FF2208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="q4Ud1DSu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zocv2NxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgCEKvt (ORCPT
+        id S1727083AbgCEKwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:51:49 -0500
-Received: from gateway33.websitewelcome.com ([192.185.145.87]:39079 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726101AbgCEKvs (ORCPT
+        Thu, 5 Mar 2020 05:52:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45848 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726979AbgCEKwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:51:48 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id D30C318E847
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Mar 2020 04:51:47 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 9o6Vjp1CxvBMd9o6VjjO6e; Thu, 05 Mar 2020 04:51:47 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=i+ZHZ2JVyHEj+om0jPMA5888/g8cqPU9hC9wyCq65OM=; b=q4Ud1DSux3DfZClKV3HOrVqd3o
-        7fIsWjoE+UIanmYTWP+vhoG7Y1vRXw+5v7Un6Z45Z2pV5ItrrPkeHerZFTUE3kHTGyIp32VRAJAwE
-        U7zMXvGDENe9DBeMzngD0w895DKZSn2nSIQn4s9U/BvejcWNA5wb9QMz1dnkG36MSSi8PD3wVW95J
-        CYkf9r3cWwcLdlPaQPfvnrZFttGXgcxJI7me072Wqg7Iu5k6A69CgRiiLojtQbq4/Qkz9PYLAGjRP
-        riAoVrbFxFtyXioh2AOUWQxA60baNAcHGkeeP7sMh3ZM7ycI7rJs7+rQTliXk/vW4lfcENiDOD8tB
-        epRM69+g==;
-Received: from [201.166.169.220] (port=3124 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j9o6T-003f7Y-TU; Thu, 05 Mar 2020 04:51:46 -0600
-Date:   Thu, 5 Mar 2020 04:54:51 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] drm/msm/msm_gem.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200305105451.GA18973@embeddedor>
+        Thu, 5 Mar 2020 05:52:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583405531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UI+jv9WRtSfSOrEtwCJt1VuJ+panaiTzk05DWwgj8hE=;
+        b=Zocv2NxYtS+xF7k3linUcXvCwyDCnMDz42RUMozA0PAqXhaP2NKLGXu49O3+axWAuJQFZU
+        xKDR5ZlZgCVBoBYE7Mpefq1CuUABRktWSIz9tWYmTDsHjF2OAVIYc12ru2+nsC9ebhoORO
+        g+1UIvf2Flv8dACQ63tWeeuuBdFUEo8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-421-Ix9rltTnOy6V2Odi6gbcew-1; Thu, 05 Mar 2020 05:52:05 -0500
+X-MC-Unique: Ix9rltTnOy6V2Odi6gbcew-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CE67800D50;
+        Thu,  5 Mar 2020 10:52:04 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 42E455C219;
+        Thu,  5 Mar 2020 10:52:04 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 3363D1809563;
+        Thu,  5 Mar 2020 10:52:04 +0000 (UTC)
+Date:   Thu, 5 Mar 2020 05:52:04 -0500 (EST)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>, joeyli <jlee@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <911968708.13281322.1583405524154.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CAKv+Gu_n8MhgRFw-BUFgN1UUfTh1R6wsCNxKRA9QrQK74z6g7g@mail.gmail.com>
+References: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com> <20200305084041.24053-1-vdronov@redhat.com> <20200305084041.24053-2-vdronov@redhat.com> <CAKv+Gu_n8MhgRFw-BUFgN1UUfTh1R6wsCNxKRA9QrQK74z6g7g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] efi: fix a race and a buffer overflow while
+ reading efivars via sysfs
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.169.220
-X-Source-L: No
-X-Exim-ID: 1j9o6T-003f7Y-TU
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.169.220]:3124
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.204.231, 10.4.195.11]
+Thread-Topic: fix a race and a buffer overflow while reading efivars via sysfs
+Thread-Index: ZwtG1mjZkaktWXHopN/M4SFWBKQyCQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Hello, Ard!
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+> > Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
+> > Link:
+> > https://lore.kernel.org/linux-efi/20200303085528.27658-1-vdronov@redhat.com/T/#u
+> 
+> For the future, please don't add these links. This one points to the
+> old version of the patch, not to this one. It will be added by the
+> tooling once the patch gets picked up.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Aha. I was under an impression Links: are added manually by authors. My intention
+here was to point at the root message of the whole discussion, not at the patch.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Anyway, thank you for the review and for bearing with me!
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/gpu/drm/msm/msm_gem.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-index 9e0953c2b7ce..37aa556c5f92 100644
---- a/drivers/gpu/drm/msm/msm_gem.h
-+++ b/drivers/gpu/drm/msm/msm_gem.h
-@@ -157,7 +157,7 @@ struct msm_gem_submit {
- 			uint32_t handle;
- 		};
- 		uint64_t iova;
--	} bos[0];
-+	} bos[];
- };
- 
- #endif /* __MSM_GEM_H__ */
--- 
-2.25.0
+Best regards,
+Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
 
