@@ -2,111 +2,79 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6EAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F98CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26C37208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4302208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:10:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EF6LLhF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbgCEJHY (ORCPT
+        id S1726036AbgCEJKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:07:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:45250 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbgCEJHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:07:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C7634B2;
-        Thu,  5 Mar 2020 01:07:20 -0800 (PST)
-Received: from e108754-lin.cambridge.arm.com (e108754-lin.cambridge.arm.com [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 117C43F534;
-        Thu,  5 Mar 2020 01:07:17 -0800 (PST)
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        lukasz.luba@arm.com, valentin.schneider@arm.com,
-        dietmar.eggemann@arm.com, rjw@rjwysocki.net,
-        pkondeti@codeaurora.org, ionela.voinescu@arm.com
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v6 7/7] clocksource/drivers/arm_arch_timer: validate arch_timer_rate
-Date:   Thu,  5 Mar 2020 09:06:27 +0000
-Message-Id: <20200305090627.31908-8-ionela.voinescu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200305090627.31908-1-ionela.voinescu@arm.com>
-References: <20200305090627.31908-1-ionela.voinescu@arm.com>
+        Thu, 5 Mar 2020 04:10:03 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:41311 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725816AbgCEJKC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 04:10:02 -0500
+X-UUID: 49dc4ff74c7643aa9c70799fe0c93137-20200305
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=lb8cJIrdrjqVwgkadpjFpgOFoiVn2GTpdvZVTRhG89U=;
+        b=EF6LLhF61AymTFvSM0TxDMZgRMHD5Q6q2bgGM8pMvNVlYeBLEgpmvDV//bbRqUqlDrp+RygCDVaIIgDbwKMIZnQehhMrzcofCsPNrd9ApcWQbvrIvCjtzY2Wx3ZxyizAf4XbdpdAubDqj516ZVwMuGcbH69JuhnSJcL6HUo2A4M=;
+X-UUID: 49dc4ff74c7643aa9c70799fe0c93137-20200305
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 822943832; Thu, 05 Mar 2020 17:09:55 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 5 Mar
+ 2020 17:08:31 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 5 Mar 2020 17:09:07 +0800
+Message-ID: <1583399393.14250.5.camel@mtksdccf07>
+Subject: Re: [PATCH v1 1/1] scsi: ufs: Fix possible unclocked access to auto
+ hibern8 timer register
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     <asutoshd@codeaurora.org>, <nguyenb@codeaurora.org>,
+        <hongwus@codeaurora.org>, <rnayak@codeaurora.org>,
+        <linux-scsi@vger.kernel.org>, <kernel-team@android.com>,
+        <saravanak@google.com>, <salyzyn@google.com>,
+        "Alim Akhtar" <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Bart Van Assche" <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        "open list" <linux-kernel@vger.kernel.org>
+Date:   Thu, 5 Mar 2020 17:09:53 +0800
+In-Reply-To: <1583398391-14273-1-git-send-email-cang@codeaurora.org>
+References: <1583398391-14273-1-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using an arch timer with a frequency of less than 1MHz can potentially
-result in incorrect functionality in systems that assume a reasonable
-rate of the arch timer of 1 to 50MHz, described as typical in the
-architecture specification.
-
-Therefore, warn if the arch timer rate is below 1MHz, which is
-considered atypical and worth emphasizing.
-
-Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Suggested-by: Valentin Schneider <valentin.schneider@arm.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
----
- drivers/clocksource/arm_arch_timer.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 9a5464c625b4..4faa930eabf8 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -885,6 +885,17 @@ static int arch_timer_starting_cpu(unsigned int cpu)
- 	return 0;
- }
- 
-+static int validate_timer_rate(void)
-+{
-+	if (!arch_timer_rate)
-+		return -EINVAL;
-+
-+	/* Arch timer frequency < 1MHz can cause trouble */
-+	WARN_ON(arch_timer_rate < 1000000);
-+
-+	return 0;
-+}
-+
- /*
-  * For historical reasons, when probing with DT we use whichever (non-zero)
-  * rate was probed first, and don't verify that others match. If the first node
-@@ -900,7 +911,7 @@ static void arch_timer_of_configure_rate(u32 rate, struct device_node *np)
- 		arch_timer_rate = rate;
- 
- 	/* Check the timer frequency. */
--	if (arch_timer_rate == 0)
-+	if (validate_timer_rate())
- 		pr_warn("frequency not available\n");
- }
- 
-@@ -1594,9 +1605,10 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
- 	 * CNTFRQ value. This *must* be correct.
- 	 */
- 	arch_timer_rate = arch_timer_get_cntfrq();
--	if (!arch_timer_rate) {
-+	ret = validate_timer_rate();
-+	if (ret) {
- 		pr_err(FW_BUG "frequency not available.\n");
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	arch_timer_uses_ppi = arch_timer_select_ppi();
--- 
-2.17.1
+SGkgQ2FuLA0KDQpPbiBUaHUsIDIwMjAtMDMtMDUgYXQgMDA6NTMgLTA4MDAsIENhbiBHdW8gd3Jv
+dGU6DQo+IEJlZm9yZSBhY2Nlc3MgYXV0byBoaWJuZXI4IHRpbWVyIHJlZ2lzdGVyLCBtYWtlIHN1
+cmUgcG93ZXIgYW5kIGNsb2NrIGFyZQ0KPiBwcm9wZXJseSBjb25maWd1cmVkIHRvIGF2b2lkIHVu
+Y2xvY2tlZCByZWdpc3RlciBhY2Nlc3MuDQo+IA0KPiBGaXhlczogYmE3YWY1ZWM1MTI2ICgic2Nz
+aTogdWZzOiBleHBvcnQgdWZzaGNkX2F1dG9faGliZXJuOF91cGRhdGUgZm9yIHZlbmRvciB1c2Fn
+ZSIpDQo+IFNpZ25lZC1vZmYtYnk6IENhbiBHdW8gPGNhbmdAY29kZWF1cm9yYS5vcmc+DQoNClRo
+YW5rcyBmb3IgZml4aW5nIHRoaXMhDQoNClJldmlld2VkLWJ5OiBTdGFubGV5IENodSA8c3Rhbmxl
+eS5jaHVAbWVkaWF0ZWsuY29tPg0KDQo=
 
