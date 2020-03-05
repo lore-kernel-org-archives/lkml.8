@@ -2,176 +2,158 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D511C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48B5C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C3F20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D50420848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:42:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vU/DIA2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgCEMlR convert rfc822-to-8bit (ORCPT
+        id S1726533AbgCEMmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:41:17 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29186 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725993AbgCEMlQ (ORCPT
+        Thu, 5 Mar 2020 07:42:44 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36452 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgCEMmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:41:16 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 025Cebdg100613
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Mar 2020 07:41:16 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yj4q2cwu5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:41:15 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
-        Thu, 5 Mar 2020 12:41:13 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Mar 2020 12:41:10 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 025Cf9I551576978
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Mar 2020 12:41:09 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E2949A4067;
-        Thu,  5 Mar 2020 12:41:08 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25C51A4054;
-        Thu,  5 Mar 2020 12:41:08 +0000 (GMT)
-Received: from localhost (unknown [9.199.53.44])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Mar 2020 12:41:07 +0000 (GMT)
-Date:   Thu, 05 Mar 2020 18:11:06 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: eh_frame confusion
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk>
-        <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
-        <877e01spfa.fsf@mpe.ellerman.id.au>
-In-Reply-To: <877e01spfa.fsf@mpe.ellerman.id.au>
+        Thu, 5 Mar 2020 07:42:43 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d9so2725322pgu.3;
+        Thu, 05 Mar 2020 04:42:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Iv+8lkf0g9FKK4aGWH4FIny5NJBBPfHf9mcxAx6Usno=;
+        b=vU/DIA2JriGM1rc8p00USJ6gdHsZ5BR6i8mFgZBslRFCcZJf3lWyuL/hEcjDcjWXsQ
+         M2mM+hEBtRdN3ib2OsUf706OptuaUPu2sBlX1JBGSSMA1wJeWy34m23puTA8Tn5yND80
+         1V97QccuIFkkgVj55WkNTYelL6uVYDOHPV/qZUn553vCcU/XeBL+skLsNo/9xeucBLnF
+         mrEzTDnqMXzyKdeCKYZsEg03k+cwbZMbh77lG0OaOdRCzW6jK6FEjIdj4aSNEDdiqpDk
+         T6K79tf1w6PoN6Dh2FuW/7i0CZG+n0RGlaqO5mmlJpevaT6qcdesvhnp+ElkHKBKs1nd
+         qy7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Iv+8lkf0g9FKK4aGWH4FIny5NJBBPfHf9mcxAx6Usno=;
+        b=SQtXe60DpvefBlqUXV/ryMch3FJWacrL8qw5vogcEpvVDRJQ8LrgJRCOezMZoyBa58
+         YrfN8HpqApeHiWJn+AHS3sYojQnVPJ+DLvyHxNiPYxFZbjpOGXkEHSfJboBwdJa6gJZh
+         fzdi33SZtOdriMMTQFV5vFQNMvYvTXn081BA4+bqk131r1T4AvTdGlln8y2GMrSdO5ck
+         6WeG0/IDdmxA4jFTVLolVLE6bhq+yG3OoZTSTqBSfYogzNVvkZ6JBVAy+ft7qtFbc4k4
+         usE4Uovx/ExDcTjVJfWSp6ZzXGNnvYUMhczrvhqIbWSF538Qq8Y7a3X68e5yhSNgRXSa
+         DC5w==
+X-Gm-Message-State: ANhLgQ3sazcup6UliCixXGhwNEUAZ8Iyk8O1sh2QpY3hk0iQtfIAGzwG
+        mcMqO4980GLqwmmrN8kEck4=
+X-Google-Smtp-Source: ADFU+vtYWl43QzYXnKwbkZvQID3ixOcFBQpoNs4i8/pbVTarGyppbev2Io0/PMNQniAOpJVFs5jfRg==
+X-Received: by 2002:a63:d244:: with SMTP id t4mr7428763pgi.241.1583412162761;
+        Thu, 05 Mar 2020 04:42:42 -0800 (PST)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id z6sm7412661pfq.39.2020.03.05.04.42.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Mar 2020 04:42:42 -0800 (PST)
+Date:   Thu, 5 Mar 2020 18:12:40 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>
+Subject: Re: [PATCH v3] MIPS: Replace setup_irq() by request_irq()
+Message-ID: <20200305124240.GA4940@afzalpc>
+References: <20200304005549.5832-1-afzal.mohd.ma@gmail.com>
+ <20200304203144.GA4323@alpha.franken.de>
+ <20200305122950.GA4981@afzalpc>
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20030512-4275-0000-0000-000003A8A160
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030512-4276-0000-0000-000038BDB137
-Message-Id: <1583411741.zbaz5p86qy.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-05_03:2020-03-05,2020-03-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305122950.GA4981@afzalpc>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman wrote:
-> "Naveen N. Rao" <naveen.n.rao@linux.ibm.com> writes:
->> Rasmus Villemoes wrote:
->>> I'm building a ppc32 kernel, and noticed that after upgrading from gcc-7
->>> to gcc-8 all object files now end up having .eh_frame section. For
->>> vmlinux, that's not a problem, because they all get discarded in
->>> arch/powerpc/kernel/vmlinux.lds.S . However, they stick around in
->>> modules, which doesn't seem to be useful - given that everything worked
->>> just fine with gcc-7, and I don't see anything in the module loader that
->>> handles .eh_frame.
->>> 
->>> The reason I care is that my target has a rather tight rootfs budget,
->>> and the .eh_frame section seem to occupy 10-30% of the file size
->>> (obviously very depending on the particular module).
->>> 
->>> Comparing the .foo.o.cmd files, I don't see change in options that might
->>> explain this (there's a bunch of new -Wno-*, and the -mspe=no spelling
->>> is apparently no longer supported in gcc-8). Both before and after, there's
->>> 
->>> -fno-dwarf2-cfi-asm
->>> 
->>> about which gcc's documentation says
->>> 
->>> '-fno-dwarf2-cfi-asm'
->>>      Emit DWARF unwind info as compiler generated '.eh_frame' section
->>>      instead of using GAS '.cfi_*' directives.
->>> 
->>> Looking into where that comes from got me even more confused, because
->>> both arm and unicore32 say
->>> 
->>> # Never generate .eh_frame
->>> KBUILD_CFLAGS           += $(call cc-option,-fno-dwarf2-cfi-asm)
->>> 
->>> while the ppc32 case at hand says
->>> 
->>> # FIXME: the module load should be taught about the additional relocs
->>> # generated by this.
->>> # revert to pre-gcc-4.4 behaviour of .eh_frame
->>
->> Michael opened a task to look into this recently and I had spent some 
->> time last week on this. The original commit/discussion adding 
->> -fno-dwarf2-cfi-asm refers to R_PPC64_REL32 relocations not being 
->> handled by our module loader:
->> http://lkml.kernel.org/r/20090224065112.GA6690@bombadil.infradead.org
-> 
-> I opened that issue purely based on noticing the wart in the Makefile,
-> not because I'd actually tested it.
-> 
->> However, that is now handled thanks to commit 9f751b82b491d:
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9f751b82b491d
-> 
-> Haha, written by me, what an idiot.
-> 
-> So the Makefile hack can presumably be dropped, because the module
-> loader can handle the relocations.
-> 
-> And then maybe we also want to turn off the unwind tables, but that
-> would be a separate patch.
-> 
->> I did a test build and a simple module loaded fine, so I think 
->> -fno-dwarf2-cfi-asm is not required anymore, unless Michael has seen 
->> some breakages with it. Michael?
-> 
-> No, as I said above it was just reading the Makefile.
+Hi Thomas,
 
-Ok, thanks for clarifying. To test, I did 'allmodconfig' builds across 
-three environments:
-- gcc (Ubuntu 9.2.1-9ubuntu2) 9.2.1 20191008 -- ppc64le
-- gcc (SUSE Linux) 7.5.0 -- ppc64le
-- gcc (GCC) 8.2.1 20181215 (Red Hat 8.2.1-6) -- ppc64 (BE)
+On Thu, Mar 05, 2020 at 05:59:50PM +0530, afzal mohammed wrote:
 
-Then, used the below command to list all relocations in the modules:
-$ find . -name '*.ko' | xargs -n 1 readelf -Wr  | grep -v "Relocation " | grep -v "Offset " | cut -d' ' -f4 | sort | uniq
+> For your reference, diff between v4 & v3 below,
 
-R_PPC64_ADDR32
-R_PPC64_ADDR64
-R_PPC64_ENTRY
-R_PPC64_REL24
-R_PPC64_REL32
-R_PPC64_REL64
-R_PPC64_TOC
-R_PPC64_TOC16_HA
-R_PPC64_TOC16_LO
-R_PPC64_TOC16_LO_DS
+i messed up with the diff b/n v4 & v3, correct one as follows, v4 is a
+proper one, only diff generation got messed up.
 
-All three environments show up similar set of relocations, all of which 
-we handle in the module loader today.
+Regards
+afzal
 
-If Rasmus/Christophe can confirm that this is true for ppc32 as well, 
-then we should be fine.
-
-- Naveen
-
+diff --git a/arch/mips/include/asm/sni.h b/arch/mips/include/asm/sni.h
+index b8653de25ca1..7dfa297ce597 100644
+--- a/arch/mips/include/asm/sni.h
++++ b/arch/mips/include/asm/sni.h
+@@ -11,6 +11,8 @@
+ #ifndef __ASM_SNI_H
+ #define __ASM_SNI_H
+ 
++#include <linux/irqreturn.h>
++
+ extern unsigned int sni_brd_type;
+ 
+ #define SNI_BRD_10		   2
+diff --git a/arch/mips/pmcs-msp71xx/msp_time.c b/arch/mips/pmcs-msp71xx/msp_time.c
+index 5f211d2d14ff..baf0da8b4c98 100644
+--- a/arch/mips/pmcs-msp71xx/msp_time.c
++++ b/arch/mips/pmcs-msp71xx/msp_time.c
+@@ -76,7 +76,7 @@ void __init plat_time_init(void)
+ 
+ unsigned int get_c0_compare_int(void)
+ {
+-	unsigned log flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED;
++	unsigned long flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED;
+ 
+ 	/* MIPS_MT modes may want timer for second VPE */
+ 	if ((get_current_vpe()) && !tim_installed) {
+diff --git a/arch/mips/ralink/cevt-rt3352.c b/arch/mips/ralink/cevt-rt3352.c
+index 84013214434a..269d4877d120 100644
+--- a/arch/mips/ralink/cevt-rt3352.c
++++ b/arch/mips/ralink/cevt-rt3352.c
+@@ -89,7 +89,7 @@ static int systick_shutdown(struct clock_event_device *evt)
+ 	sdev = container_of(evt, struct systick_device, dev);
+ 
+ 	if (sdev->irq_requested)
+-		free_irq(systick.dev.irq, &systick_irqaction);
++		free_irq(systick.dev.irq, &systick.dev);
+ 	sdev->irq_requested = 0;
+ 	iowrite32(0, systick.membase + SYSTICK_CONFIG);
+ 
+diff --git a/arch/mips/sni/time.c b/arch/mips/sni/time.c
+index 5254a3a1f37c..240bb68ec247 100644
+--- a/arch/mips/sni/time.c
++++ b/arch/mips/sni/time.c
+@@ -62,14 +62,12 @@ static irqreturn_t a20r_interrupt(int irq, void *dev_id)
+ static void __init sni_a20r_timer_setup(void)
+ {
+ 	struct clock_event_device *cd = &a20r_clockevent_device;
+-	struct irqaction *action = &a20r_irqaction;
+ 	unsigned int cpu = smp_processor_id();
+ 
+ 	cd->cpumask		= cpumask_of(cpu);
+ 	clockevents_register_device(cd);
+-	action->dev_id = cd;
+ 	if (request_irq(SNI_A20R_IRQ_TIMER, a20r_interrupt,
+-			IRQF_PERCPU | IRQF_TIMER, "a20r-timer", NULL))
++			IRQF_PERCPU | IRQF_TIMER, "a20r-timer", cd))
+ 		pr_err("Failed to register a20r-timer interrupt\n");
+ }
+ 
