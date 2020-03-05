@@ -2,161 +2,95 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15D8C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2A7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1D5208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C0DA208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbgCES3w (ORCPT
+        id S1726181AbgCESaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:29:52 -0500
-Received: from mga06.intel.com ([134.134.136.31]:54510 "EHLO mga06.intel.com"
+        Thu, 5 Mar 2020 13:30:24 -0500
+Received: from mga14.intel.com ([192.55.52.115]:28704 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbgCES3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:29:52 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1725944AbgCESaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 13:30:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 10:29:47 -0800
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 10:30:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="244358107"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga006.jf.intel.com with SMTP; 05 Mar 2020 10:29:43 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 05 Mar 2020 20:29:42 +0200
-Date:   Thu, 5 Mar 2020 20:29:42 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, Sean Paul <seanpaul@google.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Mikita Lipski <mikita.lipski@amd.com>
-Subject: Re: [PATCH 2/3] drm/dp_mst: Don't show connectors as connected
- before probing available PBN
-Message-ID: <20200305182942.GP13686@intel.com>
-References: <20200304223614.312023-1-lyude@redhat.com>
- <20200304223614.312023-3-lyude@redhat.com>
- <20200305131119.GJ13686@intel.com>
- <73f52c392431cd21a80a118dd2fd1986e2c535df.camel@redhat.com>
+   d="scan'208";a="233018095"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Mar 2020 10:30:22 -0800
+Message-ID: <dca80473b585c9491fa2f9410806b10aee4594f7.camel@intel.com>
+Subject: Re: [RFC PATCH v9 14/27] mm: Handle Shadow Stack page fault
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Date:   Thu, 05 Mar 2020 10:30:22 -0800
+In-Reply-To: <202002251218.F919026@keescook>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+         <20200205181935.3712-15-yu-cheng.yu@intel.com>
+         <202002251218.F919026@keescook>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <73f52c392431cd21a80a118dd2fd1986e2c535df.camel@redhat.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 01:13:36PM -0500, Lyude Paul wrote:
-> On Thu, 2020-03-05 at 15:11 +0200, Ville Syrjälä wrote:
-> > On Wed, Mar 04, 2020 at 05:36:12PM -0500, Lyude Paul wrote:
-> > > It's next to impossible for us to do connector probing on topologies
-> > > without occasionally racing with userspace, since creating a connector
-> > > itself causes a hotplug event which we have to send before probing the
-> > > available PBN of a connector. Even if we didn't have this hotplug event
-> > > sent, there's still always a chance that userspace started probing
-> > > connectors before we finished probing the topology.
-> > > 
-> > > This can be a problem when validating a new MST state since the
-> > > connector will be shown as connected briefly, but without any available
-> > > PBN - causing any atomic state which would enable said connector to fail
-> > > with -ENOSPC. So, let's simply workaround this by telling userspace new
-> > > MST connectors are disconnected until we've finished probing their PBN.
-> > > Since we always send a hotplug event at the end of the link address
-> > > probing process, userspace will still know to reprobe the connector when
-> > > we're ready.
-> > > 
-> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > > Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to MST
-> > > atomic check")
-> > > Cc: Mikita Lipski <mikita.lipski@amd.com>
-> > > Cc: Alex Deucher <alexander.deucher@amd.com>
-> > > Cc: Sean Paul <seanpaul@google.com>
-> > > Cc: Hans de Goede <hdegoede@redhat.com>
-> > > ---
-> > >  drivers/gpu/drm/drm_dp_mst_topology.c | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > > 
-> > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > index 207eef08d12c..7b0ff0cff954 100644
-> > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > @@ -4033,6 +4033,19 @@ drm_dp_mst_detect_port(struct drm_connector
-> > > *connector,
-> > >  			ret = connector_status_connected;
-> > >  		break;
-> > >  	}
-> > > +
-> > > +	/* We don't want to tell userspace the port is actually plugged into
-> > > +	 * anything until we've finished probing it's available_pbn, otherwise
+On Tue, 2020-02-25 at 12:20 -0800, Kees Cook wrote:
+> On Wed, Feb 05, 2020 at 10:19:22AM -0800, Yu-cheng Yu wrote:
+> > When a task does fork(), its Shadow Stack (SHSTK) must be duplicated for
+> > the child.  This patch implements a flow similar to copy-on-write of an
+> > anonymous page, but for SHSTK.
 > > 
-> > "its"
-> > 
-> > Why is the connector even registered before we've finished the probe?
-> > 
-> Oops, I'm not sure how I did this by accident but the explanation I gave in
-> the commit message was uh, completely wrong. I must have forgotten that I made
-> sure we didn't expose connectors before probing their PBN back when I started
-> my MST cleanup....
+> > A SHSTK PTE must be RO and Dirty.  This Dirty bit requirement is used to
+> > effect the copying.  In copy_one_pte(), clear the Dirty bit from a SHSTK
+> > PTE to cause a page fault upon the next SHSTK access.  At that time, fix
+> > the PTE and copy/re-use the page.
 > 
-> So: despite what I said before it's not actually when new connectors are
-> created, it's when downstream hotplugs happen which means that the conenctor's
-> always going to be there before we probe the available_pbn.
+> Just to confirm, during the fork, it's really not a SHSTK for a moment
+> (it's still RO, but not dirty). Can other racing threads muck this up,
+> or is this bit removed only on the copied side?
 
-Not sure I understand. You're saying this is going to change for already
-existing connectors when something else gets plugged in, and either we
-zero it out during the probe or it always was zero to begin with for
-whatever reason?
+In [RFC PATCH v9 12/27] x86/mm: Modify ptep_set_wrprotect and
+pmdp_set_wrprotect for _PAGE_DIRTY_SW, _PAGE_DIRTY_HW is changed to
+_PAGE_DIRTY_SW with cmpxchg.  That prevents racing.
 
-> I did just notice
-> though that we send a hotplug on connection status notifications even before
-> we've finished the PBN probe, so I might be able to improve on that as well.
-> We still definitely want to report the connector as disconnected before we
-> have the available PBN though, in case another probe was already going before
-> we got the connection status notification.
-> 
-> I'll make sure to fixup the explanation in the commit message on the next
-> respin
-> 
-> > > +	 * userspace will see racy atomic check failures
-> > > +	 *
-> > > +	 * Since we always send a hotplug at the end of probing topology
-> > > +	 * state, we can just let userspace reprobe this connector later.
-> > > +	 */
-> > > +	if (ret == connector_status_connected && !port->available_pbn) {
-> > > +		DRM_DEBUG_KMS("[CONNECTOR:%d:%s] not ready yet (PBN not
-> > > probed)\n",
-> > > +			      connector->base.id, connector->name);
-> > > +		ret = connector_status_disconnected;
-> > > +	}
-> > >  out:
-> > >  	drm_dp_mst_topology_put_port(port);
-> > >  	return ret;
-> > > -- 
-> > > 2.24.1
-> > > 
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> -- 
-> Cheers,
-> 	Lyude Paul (she/her)
-> 	Associate Software Engineer at Red Hat
+The hw dirty bit is removed from the original copy first.  The next shadow
+stack access to the page causes copying.  The copied page gets the hw dirty
+bit again.
 
--- 
-Ville Syrjälä
-Intel
+Yu-cheng
+
