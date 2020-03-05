@@ -2,132 +2,93 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935E7C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 03:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F709C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 03:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1742064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 03:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F19C20842
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 03:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbgCEDkD (ORCPT
+        id S1726049AbgCEDkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 22:40:03 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41596 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725810AbgCEDkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 22:40:02 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AD4361CEF13762CC0BFD;
-        Thu,  5 Mar 2020 11:40:00 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Mar 2020
- 11:39:52 +0800
-Subject: Re: [PATCH v5 00/23] irqchip/gic-v4: GICv4.1 architecture support
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <5613bec0-a207-1e59-82d0-8d44fc65a0a4@huawei.com>
-Date:   Thu, 5 Mar 2020 11:39:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 4 Mar 2020 22:40:39 -0500
+Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:51371 "EHLO
+        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725963AbgCEDki (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 22:40:38 -0500
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS2.zhaoxin.com
+ (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Thu, 5 Mar
+ 2020 11:40:33 +0800
+Received: from [10.32.64.44] (10.32.64.44) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Thu, 5 Mar
+ 2020 11:40:32 +0800
+Subject: Re: [PATCH] x86/Kconfig: Make X86_UMIP to cover Zhaoxin CPUs too
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <DavidWang@zhaoxin.com>, <CooperYan@zhaoxin.com>,
+        <QiyuanWang@zhaoxin.com>, <HerryYang@zhaoxin.com>
+References: <1583288285-2804-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+ <20200304171336.GD21662@linux.intel.com>
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Message-ID: <c3d9ad69-4a49-19de-1680-84f7d5afeb81@zhaoxin.com>
+Date:   Thu, 5 Mar 2020 11:40:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-1-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200304171336.GD21662@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.32.64.44]
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
 
-On 2020/3/5 4:33, Marc Zyngier wrote:
-> This (now shorter) series expands the existing GICv4 support to deal
-> with the new GICv4.1 architecture, which comes with a set of major
-> improvements compared to v4.0:
+On 05/03/2020 01:13, Sean Christopherson wrote:
+> On Wed, Mar 04, 2020 at 10:18:05AM +0800, Tony W Wang-oc wrote:
+>> New Zhaoxin family 7 CPUs support the UMIP (User-Mode Instruction
+>> Prevention) feature. So, modify X86_UMIP depends on Zhaoxin CPUs too.
+>>
+>> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+>> ---
+>>  arch/x86/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index 16a4b39..ca4beb8 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -1877,7 +1877,7 @@ config X86_SMAP
+>>  
+>>  config X86_UMIP
+>>  	def_bool y
+>> -	depends on CPU_SUP_INTEL || CPU_SUP_AMD
+>> +	depends on CPU_SUP_INTEL || CPU_SUP_AMD || CPU_SUP_CENTAUR || CPU_SUP_ZHAOXIN
 > 
-> - One architectural doorbell per vcpu, instead of one doorbell per VLPI
-> 
-> - Doorbell entirely managed by the HW, with an "at most once" delivery
->    guarantee per non-residency phase and only when requested by the
->    hypervisor
-> 
-> - A shared memory scheme between ITSs and redistributors, allowing for an
->    optimised residency sequence (the use of VMOVP becomes less frequent)
-> 
-> - Support for direct virtual SGI delivery (the injection path still involves
->    the hypervisor), at the cost of losing the active state on SGIs. It
->    shouldn't be a big deal, but some guest operating systems might notice
->    (Linux definitely won't care).
-> 
-> On the other hand, public documentation is not available yet, so that's a
-> bit annoying...
-> 
-> The series is roughly organised in 3 parts:
-> 
-> (0) Fixes
-> (1) v4.1 doorbell management
-> (2) Virtual SGI support
-> (3) Plumbing of virtual SGIs in KVM
-> 
-> Notes:
-> 
->    - The whole thing is tested on a FVP model, which can be obtained
->      free of charge on ARM's developer website. It requires you to
->      create an account, unfortunately... You'll need a fix for the
->      devicetree that is in the kernel tree (should be merged before
->      the 5.6 release).
-> 
->    - This series has uncovered a behaviour that looks like a HW bug on
->      the Cavium ThunderX (aka TX1) platform. I'd very much welcome some
->      clarification from the Marvell/Cavium folks on Cc, as well as an
->      official erratum number if this happens to be an actual bug.
-> 
->      [v3 update]
->      People have ignored for two months now, and it is fairly obvious
->      that support for this machine is slowly bit-rotting. Maybe I'll
->      drop the patch and instead start the process of removing all TX1
->      support from the kernel (we'd certainly be better off without it).
-> 
->      [v4 update]
->      TX1 is now broken in mainline, and nobody cares. Make of this what
->      you want.
-> 
->    - I'm extremely grateful for Zenghui Yu's huge effort in carefully
->      reviewing this rather difficult series (if we ever get to meet
->      face to face, drinks are definitely on me!).
+> The changelog only mentions Zhaoxin, but this also adds Centaur...
 
-It's a pleasure to review this work and it's pretty useful for
-understanding how Linux works as a GICv4.1-capable hypervisor.
-Yay, cheers ;-)!
+Sorry for this. Some Centaur family 7 CPUs also support the UMIP
+feature, so will resend this patch as a patch series.
 
-I'll go through the v4.1 spec one more time before the final
-review of this series, as we still have plenty of time to do
-some reviews (and even some tests) before the 5.7 MW.
-
+Sincerely
+TonyWWang-oc
 > 
->    - Unless someone cries wolf, I plan to take this into 5.7.
-
-Good news!
-
-
-Thanks,
-Zenghui
-
+>>  	prompt "User Mode Instruction Prevention" if EXPERT
+>>  	---help---
+>>  	  User Mode Instruction Prevention (UMIP) is a security feature in
+>> -- 
+>> 2.7.4
+>>
+> .
+> 
