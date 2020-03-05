@@ -2,101 +2,178 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07531C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68021C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D436D2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3944B2073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:32:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Dgl84ulZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgCEH2n (ORCPT
+        id S1725926AbgCEHcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 02:28:43 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:60987 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgCEH2n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 02:28:43 -0500
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1j9kvq-0003xu-83; Thu, 05 Mar 2020 07:28:34 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     gregkh@linuxfoundation.org
-Cc:     mathias.nyman@intel.com, stern@rowland.harvard.edu,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] usb: core: Set port link to RxDetect if port is not enabled after resume
-Date:   Thu,  5 Mar 2020 15:28:26 +0800
-Message-Id: <20200305072826.23231-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 5 Mar 2020 02:32:06 -0500
+Received: from ozlabs.org ([203.11.71.1]:55377 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbgCEHcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 02:32:05 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Y2WQ2xs3z9sPK;
+        Thu,  5 Mar 2020 18:32:02 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1583393522;
+        bh=AqqD/7BsFEb+Qk3QF29MUqu1eSjy6ruJUlUW2LliTO0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Dgl84ulZ2LAPoIca7ZyBw2dkmL+xADxZa+I8AfmyYqC1E0xR55k/k9rtG4XzEm26Q
+         YWYKS3Mobc+u0snLdNHK+LBL2WlisAtIEUkrZPGX05e+iyyiJ7YzQxjND2ENPiHuvq
+         CS/tK+lrFtv6aGmMLp/2UipjzBjCYSjhd9yVbTARL0F8a0eGtASYNDeyfLVhNkMEJ9
+         GKVIOrsJwiGAoj1MkK3b9neMISiJc3EcNgFjXznF+F1guSesp9gowucE1VLlRRuHu0
+         gkR2MBmYkjVcbc5hFbGCJEnF63iNMHwum8TBdrnJtijG+ivFMeIN+u6l5wE+6EhuHA
+         0SCPlU3ykZbdA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Po-Hsu Lin <po-hsu.lin@canonical.com>,
+        linux-kselftest@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        benh@kernel.crashing.org, paulus@samba.org, shuah@kernel.org
+Subject: Re: [PATCH] selftests/powerpc: Turn off timeout setting for benchmarks, dscr, signal, tm
+In-Reply-To: <20200304131553.27582-1-po-hsu.lin@canonical.com>
+References: <20200304131553.27582-1-po-hsu.lin@canonical.com>
+Date:   Thu, 05 Mar 2020 18:31:57 +1100
+Message-ID: <87zhcvp89e.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Dell TB16, Realtek USB ethernet (r8152) connects to an SMSC hub which
-then connects to ASMedia xHCI's root hub:
+Po-Hsu Lin <po-hsu.lin@canonical.com> writes:
+> Some specific tests in powerpc can take longer than the default 45
+> seconds that added in commit 852c8cbf (selftests/kselftest/runner.sh:
+> Add 45 second timeout per test) to run, the following test result was
+> collected across 2 Power8 nodes and 1 Power9 node in our pool:
+>   powerpc/benchmarks/futex_bench - 52s
+>   powerpc/dscr/dscr_sysfs_test - 116s
+>   powerpc/signal/signal_fuzzer - 88s
+>   powerpc/tm/tm_unavailable_test - 168s
+>   powerpc/tm/tm-poison - 240s
+>
+> Thus they will fail with TIMEOUT error. Disable the timeout setting
+> for these sub-tests to allow them finish properly.
 
-/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
-    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
-            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
+I run the powerpc tests with run-parts, rather than the kselftest
+script, we already have our own test runner with a 120s timeout.
 
-Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp. USB5537B
-Bus 004 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
+I didn't think the kselftests runner actually worked with the powerpc
+tests? Because we override RUN_TESTS.
 
-The port is disabled after resume:
-xhci_hcd 0000:3f:00.0: Get port status 4-1 read: 0x280, return 0x280
+cheers
 
-According to xHCI 4.19.1.2.1, we should set link to RxDetect to transit
-it from disabled state to disconnected state, which allows the port to
-be set to U0 and completes the resume process.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-
-P.S. This is and differnt (and should be more correct) approach to solve
-https://lore.kernel.org/lkml/20191129174115.31683-1-kai.heng.feng@canonical.com/
-
- drivers/usb/core/hub.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 54cd8ef795ec..352e33c84d6a 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -3537,12 +3537,24 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
- 
- 	/* Skip the initial Clear-Suspend step for a remote wakeup */
- 	status = hub_port_status(hub, port1, &portstatus, &portchange);
--	if (status == 0 && !port_is_suspended(hub, portstatus)) {
-+	if (status == 0 && !port_is_suspended(hub, portstatus)
-+	    && (portstatus & USB_PORT_STAT_ENABLE)) {
- 		if (portchange & USB_PORT_STAT_C_SUSPEND)
- 			pm_wakeup_event(&udev->dev, 0);
- 		goto SuspendCleared;
- 	}
- 
-+	/* xHCI 4.19.1.2.1 */
-+	if (hub_is_superspeed(hub->hdev)) {
-+		if (!(portstatus & USB_PORT_STAT_ENABLE))
-+			status = hub_set_port_link_state(hub, port1,
-+							 USB_SS_PORT_LS_RX_DETECT);
-+
-+		if (status)
-+			dev_dbg(&port_dev->dev,
-+				"can't set to RxDetect, status %d\n", status);
-+	}
-+
- 	/* see 7.1.7.7; affects power usage, but not budgeting */
- 	if (hub_is_superspeed(hub->hdev))
- 		status = hub_set_port_link_state(hub, port1, USB_SS_PORT_LS_U0);
--- 
-2.17.1
-
+> https://bugs.launchpad.net/bugs/1864642
+> Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+> ---
+>  tools/testing/selftests/powerpc/benchmarks/Makefile | 2 ++
+>  tools/testing/selftests/powerpc/benchmarks/settings | 1 +
+>  tools/testing/selftests/powerpc/dscr/Makefile       | 2 ++
+>  tools/testing/selftests/powerpc/dscr/settings       | 1 +
+>  tools/testing/selftests/powerpc/signal/Makefile     | 2 ++
+>  tools/testing/selftests/powerpc/signal/settings     | 1 +
+>  tools/testing/selftests/powerpc/tm/Makefile         | 2 ++
+>  tools/testing/selftests/powerpc/tm/settings         | 1 +
+>  8 files changed, 12 insertions(+)
+>  create mode 100644 tools/testing/selftests/powerpc/benchmarks/settings
+>  create mode 100644 tools/testing/selftests/powerpc/dscr/settings
+>  create mode 100644 tools/testing/selftests/powerpc/signal/settings
+>  create mode 100644 tools/testing/selftests/powerpc/tm/settings
+>
+> diff --git a/tools/testing/selftests/powerpc/benchmarks/Makefile b/tools/testing/selftests/powerpc/benchmarks/Makefile
+> index d40300a..a32a6ab 100644
+> --- a/tools/testing/selftests/powerpc/benchmarks/Makefile
+> +++ b/tools/testing/selftests/powerpc/benchmarks/Makefile
+> @@ -2,6 +2,8 @@
+>  TEST_GEN_PROGS := gettimeofday context_switch fork mmap_bench futex_bench null_syscall
+>  TEST_GEN_FILES := exec_target
+>  
+> +TEST_FILES := settings
+> +
+>  CFLAGS += -O2
+>  
+>  top_srcdir = ../../../../..
+> diff --git a/tools/testing/selftests/powerpc/benchmarks/settings b/tools/testing/selftests/powerpc/benchmarks/settings
+> new file mode 100644
+> index 0000000..e7b9417
+> --- /dev/null
+> +++ b/tools/testing/selftests/powerpc/benchmarks/settings
+> @@ -0,0 +1 @@
+> +timeout=0
+> diff --git a/tools/testing/selftests/powerpc/dscr/Makefile b/tools/testing/selftests/powerpc/dscr/Makefile
+> index 5df4763..cfa6eed 100644
+> --- a/tools/testing/selftests/powerpc/dscr/Makefile
+> +++ b/tools/testing/selftests/powerpc/dscr/Makefile
+> @@ -3,6 +3,8 @@ TEST_GEN_PROGS := dscr_default_test dscr_explicit_test dscr_user_test	\
+>  	      dscr_inherit_test dscr_inherit_exec_test dscr_sysfs_test	\
+>  	      dscr_sysfs_thread_test
+>  
+> +TEST_FILES := settings
+> +
+>  top_srcdir = ../../../../..
+>  include ../../lib.mk
+>  
+> diff --git a/tools/testing/selftests/powerpc/dscr/settings b/tools/testing/selftests/powerpc/dscr/settings
+> new file mode 100644
+> index 0000000..e7b9417
+> --- /dev/null
+> +++ b/tools/testing/selftests/powerpc/dscr/settings
+> @@ -0,0 +1 @@
+> +timeout=0
+> diff --git a/tools/testing/selftests/powerpc/signal/Makefile b/tools/testing/selftests/powerpc/signal/Makefile
+> index 113838f..153fafc 100644
+> --- a/tools/testing/selftests/powerpc/signal/Makefile
+> +++ b/tools/testing/selftests/powerpc/signal/Makefile
+> @@ -5,6 +5,8 @@ CFLAGS += -maltivec
+>  $(OUTPUT)/signal_tm: CFLAGS += -mhtm
+>  $(OUTPUT)/sigfuz: CFLAGS += -pthread -m64
+>  
+> +TEST_FILES := settings
+> +
+>  top_srcdir = ../../../../..
+>  include ../../lib.mk
+>  
+> diff --git a/tools/testing/selftests/powerpc/signal/settings b/tools/testing/selftests/powerpc/signal/settings
+> new file mode 100644
+> index 0000000..e7b9417
+> --- /dev/null
+> +++ b/tools/testing/selftests/powerpc/signal/settings
+> @@ -0,0 +1 @@
+> +timeout=0
+> diff --git a/tools/testing/selftests/powerpc/tm/Makefile b/tools/testing/selftests/powerpc/tm/Makefile
+> index b15a1a3..7b99d09 100644
+> --- a/tools/testing/selftests/powerpc/tm/Makefile
+> +++ b/tools/testing/selftests/powerpc/tm/Makefile
+> @@ -7,6 +7,8 @@ TEST_GEN_PROGS := tm-resched-dscr tm-syscall tm-signal-msr-resv tm-signal-stack
+>  	$(SIGNAL_CONTEXT_CHK_TESTS) tm-sigreturn tm-signal-sigreturn-nt \
+>  	tm-signal-context-force-tm tm-poison
+>  
+> +TEST_FILES := settings
+> +
+>  top_srcdir = ../../../../..
+>  include ../../lib.mk
+>  
+> diff --git a/tools/testing/selftests/powerpc/tm/settings b/tools/testing/selftests/powerpc/tm/settings
+> new file mode 100644
+> index 0000000..e7b9417
+> --- /dev/null
+> +++ b/tools/testing/selftests/powerpc/tm/settings
+> @@ -0,0 +1 @@
+> +timeout=0
+> -- 
+> 2.7.4
