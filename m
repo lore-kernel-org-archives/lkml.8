@@ -2,94 +2,133 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDDBC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20442C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0067F208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g5rhbu4N"
+	by mail.kernel.org (Postfix) with ESMTP id EDF6B20801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgCEPBS (ORCPT
+        id S1726981AbgCEPBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:01:18 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:50821 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726178AbgCEPBS (ORCPT
+        Thu, 5 Mar 2020 10:01:55 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35116 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbgCEPBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:01:18 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id DA8AC2241C;
-        Thu,  5 Mar 2020 10:01:16 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 05 Mar 2020 10:01:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+DeXsw
-        il40YIVs1J0/sih2u3eHdfb9FN+gx7TY4Aqzs=; b=g5rhbu4NYzRgkBKXiUm9jc
-        HjSUz1IJVrtHXo310LfJsM27A9295V6a32TVfust7uqueePGLlh8dwl/K+xCmEnO
-        2sa8xtJ1rhAfLXXRoLzyHfhfCeaLjGIQvPywYwvDoDrG9MlmhLWc9ocdOy/haqbV
-        aREQFhZQhotKzU/LjHWnfZZTdCNVJjIUXVA3Tf/EzIdWveBuFY74q9RmkDCvp1at
-        5xj3NVIaDj9dFqtiCa7J0neKVeyFjYJYRPJSBRBmQIaJJ98Ko7r+Rc0K0JsDZrqv
-        yoHY08VJXuv7tbdvYRe60yP9j1p4hitQPrEo+mkArvCwIwHjWmirmO9Nkxu5qXqQ
-        ==
-X-ME-Sender: <xms:PBRhXuBHVOGyzuq34MXwLexNc8isKu7ejjN2CP_tz9xhDVRkc5bjUg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddutddgjeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucfkphepudelfe
-    drgeejrdduieehrddvhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
-X-ME-Proxy: <xmx:PBRhXh9BwtudCWQlax5lRh2Du3NdpVSBcguW8cieAQpoc4QJ16e9eA>
-    <xmx:PBRhXoPqeLv_fhidAUgyP-1J8RVKvCFwDDms-RVJbeuYwXNGT_lReQ>
-    <xmx:PBRhXvLo-zdm-Bia_JEwNeb2D4fZdekvfgllZoUpXXhafXturfD70g>
-    <xmx:PBRhXrDSdbFYlvpnyxCq9tR31otmmRDol-SjrOKGSMdlH4jZ2x0jZA>
-Received: from localhost (unknown [193.47.165.251])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A840D3280064;
-        Thu,  5 Mar 2020 10:01:15 -0500 (EST)
-Date:   Thu, 5 Mar 2020 17:01:14 +0200
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
-Subject: Re: [RFC net-next 0/3] net: marvell: prestera: Add Switchdev driver
- for Prestera family ASIC device 98DX326x (AC3x)
-Message-ID: <20200305150114.GB132852@splinter>
-References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+        Thu, 5 Mar 2020 10:01:55 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 145so5566986qkl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:01:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=G+99kCRYMzeEWVxPvUrg7nF1DV74zPu+cLQl+vuE6tE=;
+        b=G/jeIy0iAn/fK9fqqOvAKBEuynpNzfpPvPjc2JDNeGOlRGFarZ6Gz72xf7WEsyI3SY
+         yFCVaPdGuS42LMy59qn27qo/UlzxFkZYclYBqc2zWw/zHfhJ/4KmGJytnr3xdfgGKQuy
+         6hr0eUMCULvQajSo36YYEIFXtsE1AzM0WQn8yLVkG+9mAPVnbncFhOrvazcu2Hyw33N6
+         2/NKzt8Qvw504nz+aOlVNkPisQdca1pXBwxggl9kXqXy9RHqsHhyMgrjDQjyRNNW94YW
+         hhNDzDBnu0RZMKusgJBB2BJmwefig0Nkox893MLAPzVuRTgZGikZ1rDxlzfoJXRmFU8a
+         D2Yw==
+X-Gm-Message-State: ANhLgQ0IFlPGybEmCYyh6xI1AqBxaucPcxX0rCcSbVIWzIPxgnwNLDFL
+        aPal+1Hkt43WBIZrxNTUAv8=
+X-Google-Smtp-Source: ADFU+vun+lE3H+kFlVWifa921exuOdYo+CsuSTA28nIHTavPtrQtBcLZ/jpFo/8YRdLeTKv6qbbgJg==
+X-Received: by 2002:a37:a14a:: with SMTP id k71mr8329570qke.321.1583420513686;
+        Thu, 05 Mar 2020 07:01:53 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id n8sm15800581qke.37.2020.03.05.07.01.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 07:01:52 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>,
+        kernel-hardening@lists.openwall.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] x86/mm/init_32: Stop printing the virtual memory layout
+Date:   Thu,  5 Mar 2020 10:01:52 -0500
+Message-Id: <20200305150152.831697-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <202003021039.257258E1B@keescook>
+References: <202003021039.257258E1B@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 04:30:52PM +0000, Vadym Kochan wrote:
-> Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
-> ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
-> wireless SMB deployment.
+For security, don't display the kernel's virtual memory layout.
 
-It seems that this device has enough ports to loopback to each other in
-order to create meaningful topologies. Therefore, I suggest running
-relevant existing tests under tools/testing/selftests/net/forwarding/
-and contributing new ones. See tools/testing/selftests/net/forwarding/README
-for details.
+Kees Cook points out:
+"These have been entirely removed on other architectures, so let's
+just do the same for ia32 and remove it unconditionally."
 
-One problem you will run into is that your netdev notifier only allows
-bridge uppers and will therefore veto VRF uppers, which is a
-prerequisite. However, since you don't support L3 offload, then all
-routed traffic should reach the CPU anyway and therefore VRF uppers can
-be allowed.
+071929dbdd86 ("arm64: Stop printing the virtual memory layout")
+1c31d4e96b8c ("ARM: 8820/1: mm: Stop printing the virtual memory layout")
+31833332f798 ("m68k/mm: Stop printing the virtual memory layout")
+fd8d0ca25631 ("parisc: Hide virtual kernel memory layout")
+adb1fe9ae2ee ("mm/page_alloc: Remove kernel address exposure in free_reserved_area()")
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ arch/x86/mm/init_32.c | 38 --------------------------------------
+ 1 file changed, 38 deletions(-)
+
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index 23df4885bbed..8ae0272c1c51 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -788,44 +788,6 @@ void __init mem_init(void)
+ 	x86_init.hyper.init_after_bootmem();
+ 
+ 	mem_init_print_info(NULL);
+-	printk(KERN_INFO "virtual kernel memory layout:\n"
+-		"    fixmap  : 0x%08lx - 0x%08lx   (%4ld kB)\n"
+-		"  cpu_entry : 0x%08lx - 0x%08lx   (%4ld kB)\n"
+-#ifdef CONFIG_HIGHMEM
+-		"    pkmap   : 0x%08lx - 0x%08lx   (%4ld kB)\n"
+-#endif
+-		"    vmalloc : 0x%08lx - 0x%08lx   (%4ld MB)\n"
+-		"    lowmem  : 0x%08lx - 0x%08lx   (%4ld MB)\n"
+-		"      .init : 0x%08lx - 0x%08lx   (%4ld kB)\n"
+-		"      .data : 0x%08lx - 0x%08lx   (%4ld kB)\n"
+-		"      .text : 0x%08lx - 0x%08lx   (%4ld kB)\n",
+-		FIXADDR_START, FIXADDR_TOP,
+-		(FIXADDR_TOP - FIXADDR_START) >> 10,
+-
+-		CPU_ENTRY_AREA_BASE,
+-		CPU_ENTRY_AREA_BASE + CPU_ENTRY_AREA_MAP_SIZE,
+-		CPU_ENTRY_AREA_MAP_SIZE >> 10,
+-
+-#ifdef CONFIG_HIGHMEM
+-		PKMAP_BASE, PKMAP_BASE+LAST_PKMAP*PAGE_SIZE,
+-		(LAST_PKMAP*PAGE_SIZE) >> 10,
+-#endif
+-
+-		VMALLOC_START, VMALLOC_END,
+-		(VMALLOC_END - VMALLOC_START) >> 20,
+-
+-		(unsigned long)__va(0), (unsigned long)high_memory,
+-		((unsigned long)high_memory - (unsigned long)__va(0)) >> 20,
+-
+-		(unsigned long)&__init_begin, (unsigned long)&__init_end,
+-		((unsigned long)&__init_end -
+-		 (unsigned long)&__init_begin) >> 10,
+-
+-		(unsigned long)&_etext, (unsigned long)&_edata,
+-		((unsigned long)&_edata - (unsigned long)&_etext) >> 10,
+-
+-		(unsigned long)&_text, (unsigned long)&_etext,
+-		((unsigned long)&_etext - (unsigned long)&_text) >> 10);
+ 
+ 	/*
+ 	 * Check boundaries twice: Some fundamental inconsistencies can
+-- 
+2.24.1
+
