@@ -2,140 +2,128 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBAAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DEBC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBA9208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401582146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="MhEVqnS8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qUykTYP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbgCEFHA (ORCPT
+        id S1725919AbgCEFLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 00:07:00 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49438 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725208AbgCEFG7 (ORCPT
+        Thu, 5 Mar 2020 00:11:47 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:59323 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725844AbgCEFLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 00:06:59 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0254xpHa054385
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Mar 2020 00:06:58 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yj6nk1xe9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 00:06:58 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Thu, 5 Mar 2020 05:06:56 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Mar 2020 05:06:50 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02556ma238338688
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Mar 2020 05:06:48 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A000EA4051;
-        Thu,  5 Mar 2020 05:06:48 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5BD0DA4053;
-        Thu,  5 Mar 2020 05:06:41 +0000 (GMT)
-Received: from [9.199.61.135] (unknown [9.199.61.135])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Mar 2020 05:06:40 +0000 (GMT)
-Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
- information
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, mpe@ellerman.id.au, paulus@samba.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, alexey.budankov@linux.intel.com,
-        yao.jin@linux.intel.com, robert.richter@amd.com,
-        kim.phillips@amd.com, maddy@linux.ibm.com,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
- <20200302101332.GS18400@hirez.programming.kicks-ass.net>
- <20200303013329.GB1319864@tassilo.jf.intel.com>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Thu, 5 Mar 2020 10:36:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 00:11:47 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 53C8E13EF;
+        Thu,  5 Mar 2020 00:11:46 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 05 Mar 2020 00:11:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=PScnJ6CuMqDBUUffmRP5+N0vni
+        LQnYGo+Aq7HzbeNwU=; b=MhEVqnS8+2y4D/730NbQnzZ/bz2kXU+ilZ3pQQv6Zv
+        YzvvplnLkQK45M+SNeUsSpubZ5DtMwwigWbbNWzX7ONNlVmBNKh96jfDja7dbviB
+        OH30EzR22Xru9xzKptdByEankPV7ceU09HwgT8xy+bhEVCSitWu7bkijHfw/ST5Z
+        wrMuu5s4+tlAwW8/DOEP1RAvoJsCuLwlmoOdhnqd6coIhNH8j949EBUxsJ9PBiD1
+        6UJbF6NOuMnMXFvPq5VXsVEw3vk3T0LreDyaj/gggZXD9JxP59963oNEal9Xi48/
+        4tXIkO35qCbnrJR6o+vgaBcxs0ae/F4oounUHAoDtxsw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=PScnJ6CuMqDBUUffm
+        RP5+N0vniLQnYGo+Aq7HzbeNwU=; b=qUykTYP/KzkfwrZuZuwsC+31/IWLifoTG
+        xUjgibR4b6J5uZvc7Ts1mphjsLIsk0vQELVDKs6DtJtGE0ipvnjc+3mZJulZEVxM
+        n98lErR7PIfPYTqtASJxsqujYkk4VeLTEq6N/V16FUmsV2Mv3CopPtFMMDhzBpqK
+        Tmj8lGQvvOzg4fuZV6cDa0ZN5YhHHZhFOaqHWTLkOkS0FQTs2rpx9DxZD8ZGuo+f
+        MTpqlCLPZmrZWle/iE3kowyEjuIKnJJbWNnR0+7XCb4OhPqX0pfMv8yrCgw21vdY
+        Wv2w2reDEMj3+EnMGmIaWt8E3qhxCoy8Nh9M49nI9yjGYRW+dOnMg==
+X-ME-Sender: <xms:EIpgXrdBjTZ1yWZ6NStxIgdJ4acssIIvZ1PddReLeCBWMJlIU1umRg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddtledgkedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgvlhcu
+    jfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkphepje
+    dtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:EIpgXuqqvbzx9JAHluhgUl7Uvf_7OaEXSJ4rNjr2CRUgrJrFnDbo3A>
+    <xmx:EIpgXke9WF6qju8u84TIBWMMKnOJt8NRPLurOi4RteH2ENcPFf2nrQ>
+    <xmx:EIpgXun5jl-qKOqwmPe4UZXYrAXm_hpJCHwJcMW1-29pC__Jl0EpEQ>
+    <xmx:EopgXrtnF6oh-p8fQUk3q0RlBgD_MA0-K35yteAbeFkvK2yo-ODJIA>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E82833280064;
+        Thu,  5 Mar 2020 00:11:43 -0500 (EST)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Samuel Holland <samuel@sholland.org>
+Subject: [PATCH v4 0/3] simple-audio-card codec2codec support
+Date:   Wed,  4 Mar 2020 23:11:40 -0600
+Message-Id: <20200305051143.60691-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200303013329.GB1319864@tassilo.jf.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030505-0008-0000-0000-00000359772C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030505-0009-0000-0000-00004A7AACFD
-Message-Id: <aaab8c6a-a02a-f96b-ec43-e9694c8aad02@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_10:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxlogscore=961 suspectscore=0
- impostorscore=0 priorityscore=1501 bulkscore=0 phishscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050028
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andi,
+We are currently using simple-audio-card on the Allwinner A64 SoC.
+The digital audio codec there (sun8i-codec) has 3 AIFs, one each for the
+CPU, the modem, and Bluetooth. Adding support for the secondary AIFs
+requires adding codec2codec DAI links.
 
-Sorry for being bit late.
+Since the modem and bt-sco codec DAI drivers only have one set of
+possible PCM parameters (namely, 8kHz mono S16LE), there's no real
+need for a machine driver to specify the DAI link configuration. The
+parameters for these "simple" DAI links can be chosen automatically.
 
-On 3/3/20 7:03 AM, Andi Kleen wrote:
-> On Mon, Mar 02, 2020 at 11:13:32AM +0100, Peter Zijlstra wrote:
->> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
->>> Modern processors export such hazard data in Performance
->>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
->>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
->>> AMD[3] provides similar information.
->>>
->>> Implementation detail:
->>>
->>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
->>> If it's set, kernel converts arch specific hazard information
->>> into generic format:
->>>
->>>    struct perf_pipeline_haz_data {
->>>           /* Instruction/Opcode type: Load, Store, Branch .... */
->>>           __u8    itype;
->>>           /* Instruction Cache source */
->>>           __u8    icache;
->>>           /* Instruction suffered hazard in pipeline stage */
->>>           __u8    hazard_stage;
->>>           /* Hazard reason */
->>>           __u8    hazard_reason;
->>>           /* Instruction suffered stall in pipeline stage */
->>>           __u8    stall_stage;
->>>           /* Stall reason */
->>>           __u8    stall_reason;
->>>           __u16   pad;
->>>    };
->>
->> Kim, does this format indeed work for AMD IBS?
-> 
-> Intel PEBS has a similar concept for annotation of memory accesses,
-> which is already exported through perf_mem_data_src. This is essentially
-> an extension. It would be better to have something unified here.
-> Right now it seems to duplicate at least part of the PEBS facility.
+This series adds codec2codec DAI link support to simple-audio-card.
+Codec to codec links are automatically detected when all DAIs in the
+link belong to codec components.
 
-IIUC there is a distinction from perf mem vs exposing the pipeline details.
-perf-mem/perf_mem_data_src is more of memory accesses profiling. And proposal
-here is to expose pipeline related details like stalls and latencies. Would
-prefer/suggest not to extend the current structure further to capture pipeline
-details.
+I tried to reuse as much code as possible, so the first two patches
+refactor a couple of helper functions to be more generic.
 
-Ravi
+The last patch adds the new feature and its documentation.
+
+Changes in v4:
+  - Rebased on top of asoc/for-next, several changes to patch 2
+  - Removed unused variable from patch 3
+Changes in v3:
+  - Update use of for_each_rtd_components for v5.6
+Changes in v2:
+  - Drop patch 1 as it was merged
+  - Automatically detect codec2codec links instead of using a DT property
+
+Samuel Holland (3):
+  ALSA: pcm: Add a standalone version of snd_pcm_limit_hw_rates
+  ASoC: pcm: Export parameter intersection logic
+  ASoC: simple-card: Add support for codec2codec DAI links
+
+ Documentation/sound/soc/codec-to-codec.rst |  9 +++-
+ include/sound/pcm.h                        |  9 +++-
+ include/sound/soc.h                        |  3 ++
+ sound/core/pcm_misc.c                      | 18 +++----
+ sound/soc/generic/simple-card-utils.c      | 48 ++++++++++++++++++
+ sound/soc/soc-pcm.c                        | 59 ++++++++++++++--------
+ 6 files changed, 114 insertions(+), 32 deletions(-)
+
+-- 
+2.24.1
 
