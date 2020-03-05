@@ -2,111 +2,104 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295C7C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F2AC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F168220848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6AF32072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="oDU5Pv5T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4gEN4fL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgCEPz1 (ORCPT
+        id S1726954AbgCEP4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:55:27 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34611 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgCEPz0 (ORCPT
+        Thu, 5 Mar 2020 10:56:32 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45254 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgCEP4c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:55:26 -0500
-Received: by mail-pl1-f194.google.com with SMTP id j7so2824215plt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:55:25 -0800 (PST)
+        Thu, 5 Mar 2020 10:56:32 -0500
+Received: by mail-qt1-f193.google.com with SMTP id a4so4467284qto.12;
+        Thu, 05 Mar 2020 07:56:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zlV2/HhklUPk+6HazhFg2c3NcHDRCugdQYzaRPS6yNU=;
-        b=oDU5Pv5Tq7eaDkdXZgiOnF2OrFlP5yNMtB7KGbTTN/Bon+6j0m3jnH5bSZGnDWBPGZ
-         DPHh0SnpRCxrWkKm+jyrDnIeiK/wGA3oiSLBoX86vLkwwGlV9ytRFKSyIETYjl610/iA
-         Gwdmez+Pq2qYts0kAvqLHLRctmWiVhyRfO5Oele2kYtm5nuFkTkBa2/MCTG91LXFaZuk
-         A7JJQixojSCqudwflVfKOOJUgDZXKkZSwNavS/lAVo/Ga1Ty7Bblk5hk4aEKJ4+MDjy5
-         eMhQLETOJiJ2Psrg4sei318QCkfAXFvX9/XQfVocIjeK3xREXHi92BnFrHCBKrvZKJ5+
-         E8yw==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mPwMNk+ywAAOySGwpStasV/rtFlsFxHauenyLwI0dE0=;
+        b=L4gEN4fLSHFIN8N2dbXqrF6tp+7Rewco/W77UH+Z5Oze++xHDVAyIZPFBz5ob/RIzk
+         VPY+kPGecWT+XCr50BHWwbO+Uu2QkMI0FF3nwltGYDZ+vqIY71waK7HabgWSkcMl1drq
+         OjHOwhH0wsGVNG2nisYFY2yqGgG45/nVLslURkTlWyRA+O3Y6HsAP0h/2zpsKjPOnwRy
+         O/vRXxOLw087pV89f4hQjZguVPJvyX0yVy8i4SLDT1EHHcka6hrM9uDylYX4ub3q7hZg
+         23wvYCsetBQ56/AMuGbF7rCBmBFm+MUB//3X18xct5f6pqrI08rru6mxdEvUh60ISYuu
+         tGVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=zlV2/HhklUPk+6HazhFg2c3NcHDRCugdQYzaRPS6yNU=;
-        b=ZSi3kld1GgkkGjt9ihIqn8vLbo3hiYbzAN45Z6K5xdPrYTKD/G61t9Q1w1MlqiveZJ
-         MZqaJHa4T5l38bpgWriinrCupsC9k3Q8nf+PqaTVoWR+AXv04CxOjrpZrrjRYFy8idgB
-         B8EdaWN5oFXTG2N1GZOkz7kHveJUY8gE7p04p5vU0O1o+0DY/98AhSCinu53KieAKQXU
-         EJRJFQE1Uh5BSZ28bOCfsR4dqSW+ZCzxyntQ5PfMA3V35OWg+ZUN10i5VvWQ1fik6DDx
-         tNhnSDIoNYP/XrwGomB5q6lIyJmtZH4w0RrztmAQRlirlCLL7ZnbYzUk6O0YYMdy5NeZ
-         xByQ==
-X-Gm-Message-State: ANhLgQ1EKHADRCdSDSn1f8QhPtqn3ZNs4196/R1W6KaO269ZL7NrkGT9
-        2EP6CfT8gObfmaFQaC6Dlxd6ng==
-X-Google-Smtp-Source: ADFU+vujL3wjPEssfVg2CK4Lcyyb6fMr4/WV3FRA1e4Tf9tofUg/l7ANxmbO8T6vy8+++Xmp2K6UxQ==
-X-Received: by 2002:a17:902:aa01:: with SMTP id be1mr8440330plb.293.1583423724799;
-        Thu, 05 Mar 2020 07:55:24 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
-        by smtp.gmail.com with ESMTPSA id v123sm7307086pfv.146.2020.03.05.07.55.23
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mPwMNk+ywAAOySGwpStasV/rtFlsFxHauenyLwI0dE0=;
+        b=B4v7jWsR7gQvBdYBjKoecATMtL7jMFeoFPju9GiVrCFQu61EHGDJxyvd3MejSijPyL
+         uWsx92eov125QYrbtjClRz1MHunpYVIbWZE0B+zeEYPRJJxZxzPVJ3tqmsfobqnyuyd5
+         AOdP93JUCpGlCN5bJiFV0fvKHs4FW8UpimIzhftUho0X6F2jOKmhykAYTWsEH6K5d4AA
+         avYdbjxFArXOsT/4F6C8MjE/JdiNpkhL9PIhnl1gZblWidhmxrCAYSZD/LE4X/72nJ/p
+         +iIBIfAt2cRIbpcdFW9fkUviGHl1tu5KqqLBd8ZJGbiIHHeDlrQc4bIS/W0maPQJpE7z
+         vCjA==
+X-Gm-Message-State: ANhLgQ1u6peI7uC6Ca6E8Wq5lXKcoMIdwo44eJXqVvp75XELcQ8+d5jx
+        qJsfNVho5Sv5gVzuEBK2wSI=
+X-Google-Smtp-Source: ADFU+vsxfLTudGX5w89SZdUaEJ48x598pdr0PQHinjq1b/mv0xOAvLSlNj6TCU0hcCEpRfTazoX45g==
+X-Received: by 2002:ac8:7956:: with SMTP id r22mr7925742qtt.323.1583423791213;
+        Thu, 05 Mar 2020 07:56:31 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id f7sm17099341qtc.29.2020.03.05.07.56.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 07:55:24 -0800 (PST)
-Date:   Thu, 05 Mar 2020 07:55:24 -0800 (PST)
-X-Google-Original-Date: Thu, 05 Mar 2020 07:55:22 PST (-0800)
-Subject:     Re: [PATCH 0/8] Support strict kernel memory permissions for security
-In-Reply-To: <20200217083223.2011-1-zong.li@sifive.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        zong.li@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     zong.li@sifive.com
-Message-ID: <mhng-f31549a4-4c1b-4f9d-a034-2d0217bc1ecd@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 05 Mar 2020 07:56:30 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 5 Mar 2020 10:56:29 -0500
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>,
+        kernel-hardening@lists.openwall.com,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sh: Stop printing the virtual memory layout
+Message-ID: <20200305155628.GA857024@rani.riverdale.lan>
+References: <202003021038.8F0369D907@keescook>
+ <20200305151010.835954-1-nivedita@alum.mit.edu>
+ <f672417e-1323-4ef2-58a1-1158c482d569@physik.fu-berlin.de>
+ <31d1567c4c195f3bc5c6b610386cf0f559f9094f.camel@perches.com>
+ <3c628a5a-35c7-3d92-b94b-23704500f7c4@physik.fu-berlin.de>
+ <20200305154657.GA848330@rani.riverdale.lan>
+ <456fddd9-c980-b0f2-9dd0-19befee7861e@physik.fu-berlin.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <456fddd9-c980-b0f2-9dd0-19befee7861e@physik.fu-berlin.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 00:32:15 PST (-0800), zong.li@sifive.com wrote:
-> The main purpose of this patch series is changing the kernel mapping permission
-> , make sure that code is not writeable, data is not executable, and read-only
-> data is neither writable nor executable.
->
-> This patch series also supports the relevant implementations such as
-> ARCH_HAS_SET_MEMORY, ARCH_HAS_SET_DIRECT_MAP,
-> ARCH_SUPPORTS_DEBUG_PAGEALLOC and DEBUG_WX.
->
-> Zong Li (8):
->   riscv: add ARCH_HAS_SET_MEMORY support
->   riscv: add ARCH_HAS_SET_DIRECT_MAP support
->   riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
->   riscv: move exception table immediately after RO_DATA
->   riscv: add alignment for text, rodata and data sections
->   riscv: add STRICT_KERNEL_RWX support
->   riscv: add DEBUG_WX support
->   riscv: add two hook functions of ftrace
->
->  arch/riscv/Kconfig                  |   6 +
->  arch/riscv/Kconfig.debug            |  30 +++++
->  arch/riscv/include/asm/ptdump.h     |   6 +
->  arch/riscv/include/asm/set_memory.h |  41 ++++++
->  arch/riscv/kernel/ftrace.c          |  18 +++
->  arch/riscv/kernel/vmlinux.lds.S     |  12 +-
->  arch/riscv/mm/Makefile              |   1 +
->  arch/riscv/mm/init.c                |  47 +++++++
->  arch/riscv/mm/pageattr.c            | 187 ++++++++++++++++++++++++++++
->  9 files changed, 344 insertions(+), 4 deletions(-)
->  create mode 100644 arch/riscv/include/asm/set_memory.h
->  create mode 100644 arch/riscv/mm/pageattr.c
+On Thu, Mar 05, 2020 at 04:49:22PM +0100, John Paul Adrian Glaubitz wrote:
+> On 3/5/20 4:46 PM, Arvind Sankar wrote:
+> > Not really too late. I can do s/pr_info/pr_devel and resubmit.
+> > 
+> > parisc for eg actually hides this in #if 0 rather than deleting the
+> > code.
+> > 
+> > Kees, you fine with that?
+> 
+> But wasn't it removed for all the other architectures already? Or are these
+> changes not in Linus' tree yet?
+> 
+> Adrian
 
-Sorry, I had to run last night without quite finishing the patch set.  Just so
-we're on the same page: there's some issues with the patch set, I'm assuming
-you're submitting a v2 so I'm dropping this from my inbox.
-
-Thanks!
+The ones mentioned in the commit message, yes, those are long gone. But
+I don't see any reason why the remaining ones (there are 6 left that I
+submitted patches just now for) couldn't switch to pr_devel instead.
