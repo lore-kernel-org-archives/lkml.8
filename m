@@ -2,92 +2,146 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99029C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263DAC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FEF20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:54:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583420044;
-	bh=3t25Yn1gvcl81+XR7DKIL9gthVsJPbGh2NF+lcogUkA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r0NQMjVqNO0R9A8G4gNwymMwt3xmj2VkS8XRQtAljLmS+BSnnmELGqwOYs6YVIu+D
-	 at+H5gL2srsgo2HE8CMLjUL2J308eCbiheRyeIHhp5UuYSTuZKAc7oFgn0zCPW3SNK
-	 +WJ31z+XuI+KDTJgaulDaDLE+FdpKHqc1qweVuF0=
+	by mail.kernel.org (Postfix) with ESMTP id 0603420848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgCEOyD (ORCPT
+        id S1727196AbgCEOyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:54:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42020 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 09:54:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44956 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbgCEOyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:54:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E1FF208CD;
-        Thu,  5 Mar 2020 14:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583420041;
-        bh=3t25Yn1gvcl81+XR7DKIL9gthVsJPbGh2NF+lcogUkA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M+Nf5Z5/7XFsDqdEzoEdxGlHlurv2x7xGjSYV6C1FqTpCst3BKrkEdEPEdBvLTmhq
-         NLHI8404QG6ioVo9FnmcaXdmEWwp4X0+AgLKvI9nzwEgRH0m+G4mZEkTu7w2yLmYWH
-         EpgmMy8V26rxASiFiRJTdY2ctfE7YCnMTr2wnZE0=
-Date:   Thu, 5 Mar 2020 15:53:58 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dmitry Osipenko <digetx@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 12/87] arm/ftrace: Fix BE text poking
-Message-ID: <20200305145358.GC1950999@kroah.com>
-References: <20200303174349.075101355@linuxfoundation.org>
- <20200303174350.172336594@linuxfoundation.org>
- <20200305134956.GD2367@duo.ucw.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305134956.GD2367@duo.ucw.cz>
+        id S1727070AbgCEOx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 09:53:59 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D73E2B2C1;
+        Thu,  5 Mar 2020 14:53:56 +0000 (UTC)
+Date:   Thu, 05 Mar 2020 15:53:56 +0100
+Message-ID: <s5h5zfig8e3.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] ALSA: pcm: Add a standalone version of snd_pcm_limit_hw_rates
+In-Reply-To: <20200305051143.60691-2-samuel@sholland.org>
+References: <20200305051143.60691-1-samuel@sholland.org>
+        <20200305051143.60691-2-samuel@sholland.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 02:49:57PM +0100, Pavel Machek wrote:
-> Hi!
+On Thu, 05 Mar 2020 06:11:41 +0100,
+Samuel Holland wrote:
 > 
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > 
-> > [ Upstream commit be993e44badc448add6a18d6f12b20615692c4c3 ]
-> > 
-> > The __patch_text() function already applies __opcode_to_mem_*(), so
-> > when __opcode_to_mem_*() is not the identity (BE*), it is applied
-> > twice, wrecking the instruction.
-> > 
-> > Fixes: 42e51f187f86 ("arm/ftrace: Use __patch_text()")
+> It can be useful to derive min/max rates of a snd_pcm_hardware without
+> having a snd_pcm_runtime, such as before constructing an ASoC DAI link.
 > 
-> I don't see 42e51f187f86 anywhere. Mainline contains
+> Create a new helper that takes a pointer to a snd_pcm_hardware directly,
+> and refactor the original function as a wrapper around it, to avoid
+> needing to update any call sites.
 > 
-> commit 5a735583b764750726621b0396d03e4782911b77
-> Author: Peter Zijlstra <peterz@infradead.org>
-> Date:   Tue Oct 15 21:07:35 2019 +0200
-> 
->     arm/ftrace: Use __patch_text()
-> 
-> But that one is not present in 4.19, so perhaps we should not need
-> this?
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-Good catch, I'll go drop this from everywhere.
+The code change looks OK to me.
 
-I think Sasha has now fixed up his scripts to handle things when the
-Fixes: tag does not point to a valid one.
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+
 
 thanks,
 
-greg k-h
+Takashi
+
+
+> ---
+>  include/sound/pcm.h   |  9 ++++++++-
+>  sound/core/pcm_misc.c | 18 +++++++++---------
+>  2 files changed, 17 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/sound/pcm.h b/include/sound/pcm.h
+> index 2628246b76fa..f7a95b711100 100644
+> --- a/include/sound/pcm.h
+> +++ b/include/sound/pcm.h
+> @@ -1127,7 +1127,14 @@ snd_pcm_kernel_readv(struct snd_pcm_substream *substream,
+>  	return __snd_pcm_lib_xfer(substream, bufs, false, frames, true);
+>  }
+>  
+> -int snd_pcm_limit_hw_rates(struct snd_pcm_runtime *runtime);
+> +int snd_pcm_hw_limit_rates(struct snd_pcm_hardware *hw);
+> +
+> +static inline int
+> +snd_pcm_limit_hw_rates(struct snd_pcm_runtime *runtime)
+> +{
+> +	return snd_pcm_hw_limit_rates(&runtime->hw);
+> +}
+> +
+>  unsigned int snd_pcm_rate_to_rate_bit(unsigned int rate);
+>  unsigned int snd_pcm_rate_bit_to_rate(unsigned int rate_bit);
+>  unsigned int snd_pcm_rate_mask_intersect(unsigned int rates_a,
+> diff --git a/sound/core/pcm_misc.c b/sound/core/pcm_misc.c
+> index a6a541511534..5dd2e5335900 100644
+> --- a/sound/core/pcm_misc.c
+> +++ b/sound/core/pcm_misc.c
+> @@ -474,32 +474,32 @@ int snd_pcm_format_set_silence(snd_pcm_format_t format, void *data, unsigned int
+>  EXPORT_SYMBOL(snd_pcm_format_set_silence);
+>  
+>  /**
+> - * snd_pcm_limit_hw_rates - determine rate_min/rate_max fields
+> - * @runtime: the runtime instance
+> + * snd_pcm_hw_limit_rates - determine rate_min/rate_max fields
+> + * @hw: the pcm hw instance
+>   *
+>   * Determines the rate_min and rate_max fields from the rates bits of
+> - * the given runtime->hw.
+> + * the given hw.
+>   *
+>   * Return: Zero if successful.
+>   */
+> -int snd_pcm_limit_hw_rates(struct snd_pcm_runtime *runtime)
+> +int snd_pcm_hw_limit_rates(struct snd_pcm_hardware *hw)
+>  {
+>  	int i;
+>  	for (i = 0; i < (int)snd_pcm_known_rates.count; i++) {
+> -		if (runtime->hw.rates & (1 << i)) {
+> -			runtime->hw.rate_min = snd_pcm_known_rates.list[i];
+> +		if (hw->rates & (1 << i)) {
+> +			hw->rate_min = snd_pcm_known_rates.list[i];
+>  			break;
+>  		}
+>  	}
+>  	for (i = (int)snd_pcm_known_rates.count - 1; i >= 0; i--) {
+> -		if (runtime->hw.rates & (1 << i)) {
+> -			runtime->hw.rate_max = snd_pcm_known_rates.list[i];
+> +		if (hw->rates & (1 << i)) {
+> +			hw->rate_max = snd_pcm_known_rates.list[i];
+>  			break;
+>  		}
+>  	}
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL(snd_pcm_limit_hw_rates);
+> +EXPORT_SYMBOL(snd_pcm_hw_limit_rates);
+>  
+>  /**
+>   * snd_pcm_rate_to_rate_bit - converts sample rate to SNDRV_PCM_RATE_xxx bit
+> -- 
+> 2.24.1
+> 
