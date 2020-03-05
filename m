@@ -2,150 +2,86 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209CFC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 612EEC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E4520637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C7020637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:25:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IYbAITBp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbgCERY5 (ORCPT
+        id S1727123AbgCERZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:24:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57996 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbgCERY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:24:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 66418ABBE;
-        Thu,  5 Mar 2020 17:24:54 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 8AF3DE037F; Thu,  5 Mar 2020 18:24:53 +0100 (CET)
-Date:   Thu, 5 Mar 2020 18:24:53 +0100
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Era Mayflower <mayflowerera@gmail.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net,
+        Thu, 5 Mar 2020 12:25:50 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33858 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725938AbgCERZt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:25:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583429148;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=LNaeYUuZ/I8N5sWDPpA8Jaa5r8899vfI3fz+QN5P+JQ=;
+        b=IYbAITBpPGA9mko9U1WWd+yI5eq1lE4e4oPdV82mVJ21f9COss20jKa2hmDNUKgVt9IdSb
+        zj81D+Y971N8ecGJBv8FKijv6Qa9gooEsaEz+vIinY0I+elRqXx6rzRYnAekfweHMsuaNU
+        Gnqart5c8f+u1SYXcX+cxFifPdk4XOc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-gvySo0gPN4e7waaKGzfUMA-1; Thu, 05 Mar 2020 12:25:47 -0500
+X-MC-Unique: gvySo0gPN4e7waaKGzfUMA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1B9C1005509;
+        Thu,  5 Mar 2020 17:25:45 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-124.gru2.redhat.com [10.97.116.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 704005C219;
+        Thu,  5 Mar 2020 17:25:41 +0000 (UTC)
+From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
+To:     kvm@vger.kernel.org, pbonzini@redhat.com
+Cc:     shuah@kernel.org, tglx@linutronix.de, thuth@redhat.com,
+        sean.j.christopherson@intel.com, linux-kselftest@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] macsec: Netlink support of XPN cipher suites (IEEE
- 802.1AEbw)
-Message-ID: <20200305172453.GB28693@unicorn.suse.cz>
-References: <20200305220108.18780-1-mayflowerera@gmail.com>
- <20200305220108.18780-2-mayflowerera@gmail.com>
- <20200305140241.GA28693@unicorn.suse.cz>
- <CAMdQvKv9tSoSBfyOyhtctQ9D7aU2WUmuMUsoLn_WZ8whD=3AzA@mail.gmail.com>
- <CAMdQvKuzaBuKGj1-HR6+r=FY4X9GhZPvEHwRt3BjErFiu1+bgw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMdQvKuzaBuKGj1-HR6+r=FY4X9GhZPvEHwRt3BjErFiu1+bgw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: [RFC PATCH 0/1] kvm: selftests: Add TEST_FAIL macro
+Date:   Thu,  5 Mar 2020 14:25:31 -0300
+Message-Id: <20200305172532.9360-1-wainersm@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 11:53:29PM +0000, Era Mayflower wrote:
-> Do you think that inserting those new enum values after *_PAD would be
-> a good solution?
+The following patch's commit message is self-explanatory about this proposal.
 
-Yes, new attribute identifiers should always be added as last so that
-you don't change existing values.
+I adjusted to use TEST_FAIL only a few source files, in reality it will
+need to change all the ones listed below. I will proceed with the
+adjustments if this new macro idea is accepted.
 
-Michal
+$ find . -type f -name "*.c" -exec grep -l "TEST_ASSERT(false" {} \;
+./lib/kvm_util.c
+./lib/io.c
+./lib/x86_64/processor.c
+./lib/aarch64/ucall.c
+./lib/aarch64/processor.c
+./x86_64/vmx_dirty_log_test.c
+./x86_64/state_test.c
+./x86_64/vmx_tsc_adjust_test.c
+./x86_64/svm_vmcall_test.c
+./x86_64/evmcs_test.c
+./x86_64/vmx_close_while_nested_test.c
 
-> On Thu, Mar 5, 2020 at 11:51 PM Era Mayflower <mayflowerera@gmail.com> wrote:
-> >
-> > Do you think that inserting those new enum values after *_PAD would be a good solution?
-> >
-> > On Thu, Mar 5, 2020 at 2:02 PM Michal Kubecek <mkubecek@suse.cz> wrote:
-> >>
-> >> On Thu, Mar 05, 2020 at 10:01:08PM +0000, Era Mayflower wrote:
-> >> > Netlink support of extended packet number cipher suites,
-> >> > allows adding and updating XPN macsec interfaces.
-> >> >
-> >> > Added support in:
-> >> >     * Creating interfaces with GCM-AES-XPN-128 and GCM-AES-XPN-256.
-> >> >     * Setting and getting packet numbers with 64bit of SAs.
-> >> >     * Settings and getting ssci of SCs.
-> >> >     * Settings and getting salt of SecYs.
-> >> >
-> >> > Depends on: macsec: Support XPN frame handling - IEEE 802.1AEbw.
-> >> >
-> >> > Signed-off-by: Era Mayflower <mayflowerera@gmail.com>
-> >> > ---
-> >> [...]
-> >> > diff --git a/include/net/macsec.h b/include/net/macsec.h
-> >> > index a0b1d0b5c..3c7914ff1 100644
-> >> > --- a/include/net/macsec.h
-> >> > +++ b/include/net/macsec.h
-> >> > @@ -11,6 +11,9 @@
-> >> >  #include <uapi/linux/if_link.h>
-> >> >  #include <uapi/linux/if_macsec.h>
-> >> >
-> >> > +#define MACSEC_DEFAULT_PN_LEN 4
-> >> > +#define MACSEC_XPN_PN_LEN 8
-> >> > +
-> >> >  #define MACSEC_SALT_LEN 12
-> >> >
-> >> >  typedef u64 __bitwise sci_t;
-> >> > diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-> >> > index 024af2d1d..ee424d915 100644
-> >> > --- a/include/uapi/linux/if_link.h
-> >> > +++ b/include/uapi/linux/if_link.h
-> >> > @@ -462,6 +462,8 @@ enum {
-> >> >       IFLA_MACSEC_SCB,
-> >> >       IFLA_MACSEC_REPLAY_PROTECT,
-> >> >       IFLA_MACSEC_VALIDATION,
-> >> > +     IFLA_MACSEC_SSCI,
-> >> > +     IFLA_MACSEC_SALT,
-> >> >       IFLA_MACSEC_PAD,
-> >> >       __IFLA_MACSEC_MAX,
-> >> >  };
-> >>
-> >> Doesn't this break backword compatibility? You change the value of
-> >> IFLA_MACSEC_PAD; even if it's only used as padding, if an old client
-> >> uses it, new kernel will interpret it as IFLA_MACSEC_SSCI (an the same
-> >> holds for new client with old kernel).
-> >>
-> >> > diff --git a/include/uapi/linux/if_macsec.h b/include/uapi/linux/if_macsec.h
-> >> > index 1d63c43c3..c8fab9673 100644
-> >> > --- a/include/uapi/linux/if_macsec.h
-> >> > +++ b/include/uapi/linux/if_macsec.h
-> >> > @@ -25,6 +25,8 @@
-> >> >  /* cipher IDs as per IEEE802.1AEbn-2011 */
-> >> >  #define MACSEC_CIPHER_ID_GCM_AES_128 0x0080C20001000001ULL
-> >> >  #define MACSEC_CIPHER_ID_GCM_AES_256 0x0080C20001000002ULL
-> >> > +#define MACSEC_CIPHER_ID_GCM_AES_XPN_128 0x0080C20001000003ULL
-> >> > +#define MACSEC_CIPHER_ID_GCM_AES_XPN_256 0x0080C20001000004ULL
-> >> >
-> >> >  /* deprecated cipher ID for GCM-AES-128 */
-> >> >  #define MACSEC_DEFAULT_CIPHER_ID     0x0080020001000001ULL
-> >> > @@ -66,6 +68,8 @@ enum macsec_secy_attrs {
-> >> >       MACSEC_SECY_ATTR_INC_SCI,
-> >> >       MACSEC_SECY_ATTR_ES,
-> >> >       MACSEC_SECY_ATTR_SCB,
-> >> > +     MACSEC_SECY_ATTR_SSCI,
-> >> > +     MACSEC_SECY_ATTR_SALT,
-> >> >       MACSEC_SECY_ATTR_PAD,
-> >> >       __MACSEC_SECY_ATTR_END,
-> >> >       NUM_MACSEC_SECY_ATTR = __MACSEC_SECY_ATTR_END,
-> >> > @@ -78,6 +82,7 @@ enum macsec_rxsc_attrs {
-> >> >       MACSEC_RXSC_ATTR_ACTIVE,  /* config/dump, u8 0..1 */
-> >> >       MACSEC_RXSC_ATTR_SA_LIST, /* dump, nested */
-> >> >       MACSEC_RXSC_ATTR_STATS,   /* dump, nested, macsec_rxsc_stats_attr */
-> >> > +     MACSEC_RXSC_ATTR_SSCI,    /* config/dump, u32 */
-> >> >       MACSEC_RXSC_ATTR_PAD,
-> >> >       __MACSEC_RXSC_ATTR_END,
-> >> >       NUM_MACSEC_RXSC_ATTR = __MACSEC_RXSC_ATTR_END,
-> >>
-> >> The same problem with these two.
-> >>
-> >> I'm also a bit unsure about the change of type and length of
-> >> MACSEC_SA_ATTR_PN but I would have to get more familiar with the code to
-> >> see if it is really a problem.
-> >>
-> >> Michal
+Wainer dos Santos Moschetta (1):
+  kvm: selftests: Add TEST_FAIL macro
+
+ tools/testing/selftests/kvm/dirty_log_test.c             | 7 +++----
+ tools/testing/selftests/kvm/include/test_util.h          | 3 +++
+ tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c | 4 ++--
+ 3 files changed, 8 insertions(+), 6 deletions(-)
+
+-- 
+2.17.2
+
