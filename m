@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B034AC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF20C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88577207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536ED20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428806;
-	bh=lO1UH01J7A3H2aiiOH7025Kaf9ZfmBqsMYKoSCLkem0=;
+	s=default; t=1583428812;
+	bh=LijBeT8ghRz4OhfDqJrmVw3kAoNl4ItiK+qJNyWxjHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lAd1ivYwyOR7IVazkvTUBvh59YAqterAeXT6Bh/WX5yKHZIY8fn7PNlmKgPmXY2gD
-	 0s1rJb21GObDcGgqv5Bau59zJ19vP4+s8ktx/bHlZrPgQclSLLPZRWMWxD6lYh+lHe
-	 +Roe5/lPrAaKurkSs5VAgDaXajqor91Ffgx4lqRk=
+	b=yZyOpk89UinFexeEi2Jh9SNyWVZ042cU6Jb6/o5hMUs9UXC/YdOtPElFJsE5glBzE
+	 01IiuclfjsJW1x+4AttFGfWd2Ntbaana92ZAf+M34nDnYmAgqJrdm3Be6ls0KASLAK
+	 9TuwLPqM1db4Xq4LgZFEgt9b9A8VFjM7LMfP/Vo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgCERUE (ORCPT
+        id S1728119AbgCERT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:20:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41432 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:19:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbgCERO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:56 -0500
+        id S1727899AbgCERO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68C1B208CD;
-        Thu,  5 Mar 2020 17:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06B192146E;
+        Thu,  5 Mar 2020 17:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428496;
-        bh=lO1UH01J7A3H2aiiOH7025Kaf9ZfmBqsMYKoSCLkem0=;
+        s=default; t=1583428498;
+        bh=LijBeT8ghRz4OhfDqJrmVw3kAoNl4ItiK+qJNyWxjHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MYZOWTiSvUF3k3vxP9c0j1rrQacjF8xP9HZBfBxgOLEsS6AR93BsCq7B/65Io8VdN
-         4KH2Tg/7ZupAPH2PsMnhT1M3DbSvucLinvxWFU1cbrZ14evmiUyfHmkkXTd0+6ir7L
-         Ci9oymwoIZPibkuSXcaf3kqSkaXa5gzY4AAakRwE=
+        b=wv3bw6XzrC/lntlHndNfDM/OrYZGsQ8xBVY/x6UhKQbDOaXMGzN/76xZb89LAoGqk
+         j6F+bI9dcR90IB28CVGE0/UZTA6y7NGgBGgPNGx/PRXCakTzgTnaVn1An8aD6mhGpB
+         QbOO/M4sA4bhtDZxMpEgxMLP/SalYgKLo0CsPl8k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 28/58] hv_netvsc: Fix unwanted wakeup in netvsc_attach()
-Date:   Thu,  5 Mar 2020 12:13:49 -0500
-Message-Id: <20200305171420.29595-28-sashal@kernel.org>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 30/58] mac80211: rx: avoid RCU list traversal under mutex
+Date:   Thu,  5 Mar 2020 12:13:51 -0500
+Message-Id: <20200305171420.29595-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
 References: <20200305171420.29595-1-sashal@kernel.org>
@@ -60,68 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit f6f13c125e05603f68f5bf31f045b95e6d493598 ]
+[ Upstream commit 253216ffb2a002a682c6f68bd3adff5b98b71de8 ]
 
-When netvsc_attach() is called by operations like changing MTU, etc.,
-an extra wakeup may happen while netvsc_attach() calling
-rndis_filter_device_add() which sends rndis messages when queue is
-stopped in netvsc_detach(). The completion message will wake up queue 0.
+local->sta_mtx is held in __ieee80211_check_fast_rx_iface().
+No need to use list_for_each_entry_rcu() as it also requires
+a cond argument to avoid false lockdep warnings when not used in
+RCU read-side section (with CONFIG_PROVE_RCU_LIST).
+Therefore use list_for_each_entry();
 
-We can reproduce the issue by changing MTU etc., then the wake_queue
-counter from "ethtool -S" will increase beyond stop_queue counter:
-     stop_queue: 0
-     wake_queue: 1
-The issue causes queue wake up, and counter increment, no other ill
-effects in current code. So we didn't see any network problem for now.
-
-To fix this, initialize tx_disable to true, and set it to false when
-the NIC is ready to be attached or registered.
-
-Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Link: https://lore.kernel.org/r/20200223143302.15390-1-madhuparnabhowmik10@gmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc.c     | 2 +-
- drivers/net/hyperv/netvsc_drv.c | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ net/mac80211/rx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index eab83e71567a9..6c0732fc8c250 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -99,7 +99,7 @@ static struct netvsc_device *alloc_net_device(void)
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 0e05ff0376726..0ba98ad9bc854 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -4114,7 +4114,7 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
  
- 	init_waitqueue_head(&net_device->wait_drain);
- 	net_device->destroy = false;
--	net_device->tx_disable = false;
-+	net_device->tx_disable = true;
+ 	lockdep_assert_held(&local->sta_mtx);
  
- 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
- 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 0dee358864f30..ca16ae8c83328 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -973,6 +973,7 @@ static int netvsc_attach(struct net_device *ndev,
- 	}
- 
- 	/* In any case device is now ready */
-+	nvdev->tx_disable = false;
- 	netif_device_attach(ndev);
- 
- 	/* Note: enable and attach happen when sub-channels setup */
-@@ -2350,6 +2351,8 @@ static int netvsc_probe(struct hv_device *dev,
- 	else
- 		net->max_mtu = ETH_DATA_LEN;
- 
-+	nvdev->tx_disable = false;
-+
- 	ret = register_netdevice(net);
- 	if (ret != 0) {
- 		pr_err("Unable to register netdev.\n");
+-	list_for_each_entry_rcu(sta, &local->sta_list, list) {
++	list_for_each_entry(sta, &local->sta_list, list) {
+ 		if (sdata != sta->sdata &&
+ 		    (!sta->sdata->bss || sta->sdata->bss != sdata->bss))
+ 			continue;
 -- 
 2.20.1
 
