@@ -2,189 +2,157 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978DEC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2667CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C1B2070E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDCA22070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:16:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H/SVGCet"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKdntnCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgCEPPw (ORCPT
+        id S1726751AbgCEPQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:15:52 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:56798 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgCEPPw (ORCPT
+        Thu, 5 Mar 2020 10:16:13 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:42588 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgCEPQM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:15:52 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 025FE8iK069453;
-        Thu, 5 Mar 2020 15:15:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=HWXS7sWP7MtSqYLHZPHK5VpfhN5mWLnNDXOltxT0TPw=;
- b=H/SVGCetLOOTQc14m/AFsu+Z9iaNKcFaoQduy5g30yQE14GXnQWNq3bh4p2RA2BIJYpg
- FrOw1UNLcbfDisZHWRmQIkDA/TKzevuM7QiyvJ6N1orNI6NaEiMbY0utdWYqGCNHEvAq
- bcW+5qXCpVc/ff9dT+F5Rg+7qZkxxdrCdRmj4CLW5lftvNBr2ja99oF24KnDpS2nupXy
- SfD9ECbfYkX+jDXz4TZUoGprhw9Q0CfKHYmyfdgXIP4EfOeH9yl/xMuHE5PM+hIDKhO6
- B4xrcTlLAShbud8eUfc6337A3nl7g6iPfRa8GFqliwzDIC3lH4VysHxw4E/CWSGww2+K dw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2yffwr5sk6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Mar 2020 15:15:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 025FCxnP110690;
-        Thu, 5 Mar 2020 15:15:35 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2yg1rvt4av-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Mar 2020 15:15:35 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 025FFV6b000307;
-        Thu, 5 Mar 2020 15:15:32 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Mar 2020 07:15:31 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] nfsd: Fix build error
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <ff3a1cae-c628-9324-f32f-c7e694585686@huawei.com>
-Date:   Thu, 5 Mar 2020 10:15:30 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B4220557-CDE0-4B74-ADB2-4B4CD6477A2B@oracle.com>
-References: <20200304131803.46560-1-yuehaibing@huawei.com>
- <BC0E3531-B282-4C04-9540-C39C6F4A1A5D@oracle.com>
- <20200304200609.GA26924@fieldses.org>
- <ff3a1cae-c628-9324-f32f-c7e694585686@huawei.com>
-To:     Yuehaibing <yuehaibing@huawei.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Olga Kornievskaia <kolga@netapp.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 adultscore=0 spamscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050099
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003050099
+        Thu, 5 Mar 2020 10:16:12 -0500
+Received: by mail-qv1-f68.google.com with SMTP id e7so2562169qvy.9;
+        Thu, 05 Mar 2020 07:16:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Qr9T4/HfHNjKQEoGnPMpOHpy/Tgp3MiA/ssiXAaRBcU=;
+        b=TKdntnCh9T9OceR6r5KJMZbWwbtVWrwUMfrde9/uPEKUCsO1IxxVBguSbk3Zfefyw/
+         O/sPEidM4LDyiCPa+QwlRiVfg5kxK04BfWsxp1MF+gngNX23T415jUPyxvkMBq4aykoO
+         iUEgOPPPaAuVpLpvTnselNkPnAoanY1mryl18l/QU9h4fNgCqXypbNNa2STqelFWiou/
+         pAmh6SH2mTPaRFaLH2fAQu2ExSr1z3xnzXN/o/rJa/eLT2ISp6QNJR2C720qbEKth3Q2
+         JLCG4XNjiF2XA038mO51V9ZVXy8ZT0lOKeTafx3WO/kSPIAPBliZ0Gtqt5qTNikgIDFO
+         aR4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qr9T4/HfHNjKQEoGnPMpOHpy/Tgp3MiA/ssiXAaRBcU=;
+        b=FQCe6KdWGi8bAKBgie8sSC8A535vM+FMEl7Kp+E0KQ76xj/Tr8CQRJGX38Yt69517I
+         5LOZ33wSmipQnqhwgdcg5c1NEL9UFisxXm3lJRN5hZdtGiMGeoh9cjopHEs2Ak+A+F2p
+         Pa4H7NpeMY0SKFCj+n4MMVkY5297YEJbeI1fvoW0bdKiM8sdrsSy0e7y2N1FI3YnUqPH
+         jsTi5pGOuQUpqQjUZnck4jdRgUKotyT5HAWe0WfIYjk4kS/YaWGAl/PL/WIH68AKXHZv
+         6+jo9RWX3iv5HeMGDT6CzpqKrW58r9Ih5wcMJRV7up7tDLm0NBVIcWqJGce1aQUyruDt
+         23Yw==
+X-Gm-Message-State: ANhLgQ0KWRipUgKwOsQEHmIbS/+m3tJnO31pwFc/PgbYXNBmrpUSbgyn
+        FNZVT5UzSgLloPvp/UG45FCBsRGYZ0E=
+X-Google-Smtp-Source: ADFU+vtDD5SoolymY435I3JgIVSFCVZwLKyiD32jrBVXmOt78Q17Y06DePByKUYqLmqiUvIFnWdzoQ==
+X-Received: by 2002:a0c:fdc5:: with SMTP id g5mr7055887qvs.194.1583421371779;
+        Thu, 05 Mar 2020 07:16:11 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id u18sm1537531qtv.96.2020.03.05.07.16.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 07:16:11 -0800 (PST)
+From:   Arnaldo Carvalho de MElo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de MElo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1A32C403AD; Thu,  5 Mar 2020 12:16:09 -0300 (-03)
+Date:   Thu, 5 Mar 2020 12:16:09 -0300
+To:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 4/5] perf bench: Share some global variables to fix build
+ with gcc 10
+Message-ID: <20200305151609.GE7895@kernel.org>
+References: <20200303194827.6461-1-acme@kernel.org>
+ <20200303194827.6461-5-acme@kernel.org>
+ <bb1a3048a0f75d1fdf497c67d16a022cdd15c437.camel@nokia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb1a3048a0f75d1fdf497c67d16a022cdd15c437.camel@nokia.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Thu, Mar 05, 2020 at 08:43:32AM +0000, Rantala, Tommi T. (Nokia - FI/Espoo) escreveu:
+> On Tue, 2020-03-03 at 16:48 -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> BTW there's also some div-by-zero bugs here if runtime is zero:
+> 
+> $ perf bench epoll wait --runtime=0
+> # Running 'epoll/wait' benchmark:
+> Run summary [PID 30859]: 7 threads monitoring on 64 file-descriptors for 0
+> secs.
+> 
+> Floating point exception (core dumped)
 
+Can you please submit a patch for that? 
 
-> On Mar 4, 2020, at 10:46 PM, Yuehaibing <yuehaibing@huawei.com> wrote:
->=20
-> On 2020/3/5 4:06, Bruce Fields wrote:
->> On Wed, Mar 04, 2020 at 01:00:12PM -0500, Chuck Lever wrote:
->>> Hi-
->>>=20
->>>> On Mar 4, 2020, at 8:18 AM, YueHaibing <yuehaibing@huawei.com> =
-wrote:
->>>>=20
->>>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_copy':
->>>> nfs4proc.c:(.text+0x23b7): undefined reference to `nfs42_ssc_close'
->>>> fs/nfsd/nfs4proc.o: In function `nfsd4_copy':
->>>> nfs4proc.c:(.text+0x5d2a): undefined reference to `nfs_sb_deactive'
->>>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_async_copy':
->>>> nfs4proc.c:(.text+0x61d5): undefined reference to `nfs42_ssc_open'
->>>> nfs4proc.c:(.text+0x6389): undefined reference to `nfs_sb_deactive'
->>>>=20
->>>> Add dependency to NFSD_V4_2_INTER_SSC to fix this.
->>>>=20
->>>> Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
->>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>> ---
->>>> fs/nfsd/Kconfig | 1 +
->>>> 1 file changed, 1 insertion(+)
->>>>=20
->>>> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
->>>> index f368f32..fc587a5 100644
->>>> --- a/fs/nfsd/Kconfig
->>>> +++ b/fs/nfsd/Kconfig
->>>> @@ -136,6 +136,7 @@ config NFSD_FLEXFILELAYOUT
->>>>=20
->>>> config NFSD_V4_2_INTER_SSC
->>>> 	bool "NFSv4.2 inter server to server COPY"
->>>> +	depends on !(NFSD=3Dy && NFS_FS=3Dm)
->>>=20
->>> The new dependency is not especially clear to me; more explanation
->>> in the patch description about the cause of the build failure
->>> would definitely be helpful.
->>>=20
->>> NFSD_V4 can't be set unless NFSD is also set.
->>>=20
->>> NFS_V4_2 can't be set unless NFS_V4_1 is also set, and that cannot
->>> be set unless NFS_FS is also set.
->>>=20
->>> So what's really going on here?
->>=20
->> I don't understand that "depends" either.
->>=20
->> The fundamental problem, though, is that nfsd is calling nfs code
->> directly.
->=20
-> Yes
->=20
->>=20
->> Which I noticed in earlier review and then forgot to follow up on,
->> sorry.
->>=20
->> So either we:
->>=20
->> 	- let nfsd depend on nfs, fix up Kconfig to reflect the fact, or
->=20
-> It only fails while NFSD=3Dy && NFS_FS=3Dm, other cases works fine as =
-Chuck Lever pointed.
+I've applied the other 3 fixes you submitted, thanks for that!
 
-TL;DR - we probably need both of Bruce's options, IMO.
+- Arnaldo
+ 
+> > diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-
+> > wait.c
+> > index 7af694437f4e..d1c5cb526b9f 100644
+> > --- a/tools/perf/bench/epoll-wait.c
+> > +++ b/tools/perf/bench/epoll-wait.c
+> > 
+> > @@ -519,7 +518,7 @@ int bench_epoll_wait(int argc, const char **argv)
+> >  		qsort(worker, nthreads, sizeof(struct worker), cmpworker);
+> >  
+> >  	for (i = 0; i < nthreads; i++) {
+> > -		unsigned long t = worker[i].ops/runtime.tv_sec;
+> > +		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
+> >  
+> >  		update_stats(&throughput_stats, t);
+> >  
+> > diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-
+> > hash.c
+> > index 8ba0c3330a9a..21776862e940 100644
+> > --- a/tools/perf/bench/futex-hash.c
+> > +++ b/tools/perf/bench/futex-hash.c
+> > 
+> > @@ -204,7 +204,7 @@ int bench_futex_hash(int argc, const char **argv)
+> >  	pthread_mutex_destroy(&thread_lock);
+> >  
+> >  	for (i = 0; i < nthreads; i++) {
+> > -		unsigned long t = worker[i].ops/runtime.tv_sec;
+> > +		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
+> >  		update_stats(&throughput_stats, t);
+> >  		if (!silent) {
+> >  			if (nfutexes == 1)
+> > diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-
+> > lock-pi.c
+> > index d0cae8125423..30d97121dc4f 100644
+> > --- a/tools/perf/bench/futex-lock-pi.c
+> > +++ b/tools/perf/bench/futex-lock-pi.c
+> > 
+> > @@ -211,7 +210,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
+> >  	pthread_mutex_destroy(&thread_lock);
+> >  
+> >  	for (i = 0; i < nthreads; i++) {
+> > -		unsigned long t = worker[i].ops/runtime.tv_sec;
+> > +		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
+> >  
+> >  		update_stats(&throughput_stats, t);
+> >  		if (!silent)
+> 
 
-IIUC current distributions have the NFS client and server built as
-separate modules. On an NFS server, most of the time there would be
-no NFS mounts, thus the NFS client module is unlikely to be in memory
-when an inter-SSC type request arrives.
+-- 
 
-Stated differently, enabling SSC cannot break the kernel build when
-the client is built as a module. So we need NFS_FS=3Dm to work because
-it is the most common configuration.
-
-If creating that fix will take longer than the next merge window, it
-would be good practice IMO if some kind of Kconfig dependency were
-introduced now to prevent SSC from being enabled when NFS_FS=3Dm. =
-Someone
-with better Kconfig fu than me should have a look at Yue's proposed
-patch. Once the long term solution is ready, this temporary fix can
-be reverted.
-
-
->> 	- write some code so nfsd can load nfs and find those symbols at
->> 	  runtime if it needs to do a copy.
->>=20
->> The latter's certainly doable, but it'd be simplest to do the former.
->> Are there actually a lot of people who want nfsd but not nfs?  Does =
-that
->> cause a real problem for anyone?
->>=20
->> --b.
-
---
-Chuck Lever
-
-
-
+- Arnaldo
