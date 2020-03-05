@@ -2,108 +2,93 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4A6C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8438DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808242073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57DF32073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="YKoU0Z9A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JLlvnkIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgCEWgr (ORCPT
+        id S1726275AbgCEWjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 17:36:47 -0500
-Received: from mout.gmx.net ([212.227.15.15]:55419 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbgCEWgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 17:36:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583447801;
-        bh=/WaLuzj4TZ/6evI6CZs56EGcPtyYDt3Dc3R7bY4tebg=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=YKoU0Z9AWaTbmwv47llElpyQMUQ3e2/srX25rDykJpVMyeO8ABlOyLpAZqs36nY47
-         8yAPbUrg10o2UUWXwlUxzj2CfRJLPiYcrzmqh+nYHQApjiLPXncxVEcOESIdkrwbgg
-         y90kBIQ2B7zT5rCgr65qeVaLXV85BMQp8mtkIY+A=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.153]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLQxN-1isagE1455-00IXL6; Thu, 05
- Mar 2020 23:36:41 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     devicetree@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: mfd: cros-ec: Fix indentation in the example
-Date:   Thu,  5 Mar 2020 23:36:30 +0100
-Message-Id: <20200305223631.27550-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Thu, 5 Mar 2020 17:39:04 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35944 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgCEWjE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 17:39:04 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d9so121087pgu.3;
+        Thu, 05 Mar 2020 14:39:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BH9SEY6sBAAworg6urGASTmP0JolCTW4zXLsv8vx0fM=;
+        b=JLlvnkIJTCIJ3NXqKzdDTG+m71bBc5wNzfTmXHmAXbD/kDeCQ9gQZj7mYTrgVSj1wW
+         zTeHtEXXkuas0n0KLPVW59kYAxfJQP6nCjGHGXOR+Sc9nCBAlMKLnOEyxhLDd/ebDbbK
+         5NbwPhaXVRDInHWzY71pTVa4o0DlFWkD0PQAIU2LGYn2QVreNx3dEIz8t2jJgWkbTIAX
+         UAObaMBBBajW9wBmY3F985iGRs/WcIJWyyOrhC4ilqx5xILHa0cDwpuqlzrNSf4kDR2Z
+         fjnXNgm9HUrs7964QxZ8bkyNjk6x3/IwR3Y7LqZw7Yt+Zx8oGWml335HLT+x+PSWMguZ
+         DoCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BH9SEY6sBAAworg6urGASTmP0JolCTW4zXLsv8vx0fM=;
+        b=rqxjWBz18ZlNNAU0pB+lUnqijGQhp19d1dGuggCBT/kGB68qOcQDLmO1GqA3y8apao
+         LQ2oY6Qgm4naMxcg714tQDIYDyUtOSsuZFgNPz/yJqg8c+QDbk72RrMvAp9KW0yIwyB2
+         TrR+PU44uGXlmQsKoCkaTe4P1hajxJQDe+dna0nXs25mEpkH9mG04T8+G03Ke54AAmKx
+         BFrpVkC20M5vIVGTnHsfM9QS7R7BZw56snQCEtecsfrxnEMyiwVhSvWIlqkshGrplL30
+         I3DKCxbczaTWBaGk0GPQMuei1hOyOj/PSDEdV1MFWh6zaOi7vhAWZg1TDa/oSsK8KQks
+         2MMQ==
+X-Gm-Message-State: ANhLgQ3tTA9uRY1/Ziw7Od5ol85HZQa2bpR/OqeDKdw4CkNBeDlY61Va
+        g2DeLv20i1i2WwmLL3z2Lsc=
+X-Google-Smtp-Source: ADFU+vtOChJvtEGPPChwrCfmKZhaaypCWfiV6Jb9Y7N4eDknBWmYPUwlemRkpnNp/0Q2PjhHzhoTmg==
+X-Received: by 2002:a63:dd06:: with SMTP id t6mr345743pgg.384.1583447942858;
+        Thu, 05 Mar 2020 14:39:02 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:400::5:f0e7])
+        by smtp.gmail.com with ESMTPSA id h29sm30356632pfk.57.2020.03.05.14.39.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Mar 2020 14:39:02 -0800 (PST)
+Date:   Thu, 5 Mar 2020 14:38:59 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: Re: [PATCH bpf-next] bpf: Remove unnecessary CAP_MAC_ADMIN check
+Message-ID: <20200305223858.qprrtu6jfbaqt3bk@ast-mbp>
+References: <20200305204955.31123-1-kpsingh@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RV732ro+WjnO8y3RvngeCN4jJkeyxaiS9dN5TImrSyuuC34ZZsX
- rcE93r8eUgrUv9FKhK+kJr5OeomlKPVCYRXDkKnccJh8ufGycx6BeRuf0OAv5OOaFGuB4Xo
- 8nq3B56Co6oqFGDT8bTnm/lx9MbeMAzIFqa3CoU5ccQU0VqlkFZaUNsjV+ff9cODS11k6DJ
- eBMtvGZWvhIReAEl3vn/A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+P2D811FeOY=:xwgXOY5rX1FQ8REHmDsIW+
- rRacRoTZkEZ8N9yYwJcCY0mllHWAg3PMwWf420MCzexAobAFo+f6COIkULu7rV/hIFZWjhSjo
- V7XJqOrQfTjgZg5YPt4ZofKzvrBmZhC/t6shPNpaqr6wbK74LjzuXYxqz+hQHTt5LD7DhZnp7
- N3EQUqzXn2r7oMKNqCmYP/MTv/PM1ANVGZbwtm3UtqXhOm71Vq0JhEjv4IZgNUki9pg/s2QnG
- wDkoi/tNJ7zKjDcSLcEu9eiboAQYagCcdgDmJ6ogT+KhdZKy53BH4lfcB9nkd/wwBh2BDMODk
- j1+r5HeX/xF0kk48CXUm3QXIARvO42MtcwWA5PxaRotveLEL4NMHrXtXW8LY6OVH/RhYdlJde
- BIYoQHPuqNECZrRWNd/haCJ/OOaElb6SkNjzqEfG+7TlgAX+eHakkRk4ES/4GkMLIvlaBoriR
- 543PPOaVo8ReBhJJQA8JPsQVhHG0pLtWYD9EaBIPQhlU7VVzLuFPg/mgP4PGOXcceBDh3rRfh
- Eh7stwfwQ82ezsNFs84kJxFLwhCBOgYbzI3vB2WxtMtt3F0AquWZibXN5hBDV2gt7UTnmD2ZJ
- hYFb/lzJwJ5O5pHBfm7oDKFp42l4jllxXpfGVMkVpgxOfMDHa8poOK3WE2FWdeNC/IxENK079
- cuehMoOlFwKgbbI37mOhl9fyX4XWEawccC3uJARkrMRha5ir24i1unaARoi6kDuOzQZoD1IPx
- PmIl3mbFW/hmzG1C4DoJHkiVgJxlrIlnLEHlikQa1nlYaQaXaMs60iLZfSET7Uf1x4y6i6zu8
- ojRlC/wE4eIgMXuAMAZtmNr5q5R7WxzLvMFJ70HhQ2VEpIqSH48EGaQI9IR66UTAuEVtqwIPl
- LON578Ry5mugFPdiNwsTfvN0EDusI0L3b/rTryFb1G56rZoCZe+G3qE2z5jEGLI2yP+PsJztE
- 5XmL5n4vzuqAIahA1Qq1pSCzDy+7GYI1gQ7DHd/RJwy29AoQRO11GghASy6VIt/PXBx4zGYWJ
- VNcY+cgxHjMlXUKj8yXWqsJh6N6UrobqS85RBsyUjZ9mSNUnj0qzqGkCXTz7EMV5lW7/8F4VO
- Nth7Ol6xmH2dGelQb+rghbMnYPXB0p0SL+soD4io5Mqve8OTNNVCFG5lMaKrNECsEGNRF81GA
- nmjgQ9vt63Ip9gypIn+JOrNGvB3t93E+6WMKNwArGCF9p07UwYD1pSYppXJBZrkqUTzgfyz8u
- t0PzdATbf2F8cHmDQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305204955.31123-1-kpsingh@chromium.org>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Properties get one more level of indentation than the node they are in.
+On Thu, Mar 05, 2020 at 09:49:55PM +0100, KP Singh wrote:
+> From: KP Singh <kpsingh@google.com>
+> 
+> While well intentioned, checking CAP_MAC_ADMIN for attaching
+> BPF_MODIFY_RETURN tracing programs to "security_" functions is not
+> necessary as tracing BPF programs already require CAP_SYS_ADMIN.
+> 
+> Fixes: 6ba43b761c41 ("bpf: Attachment verification for BPF_MODIFY_RETURN")
+> Signed-off-by: KP Singh <kpsingh@google.com>
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/devicetree/bindings/mfd/cros-ec.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documenta=
-tion/devicetree/bindings/mfd/cros-ec.txt
-index 4860eabd0f72..3bf9d0868b98 100644
-=2D-- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-@@ -65,9 +65,9 @@ spi@131b0000 {
- 		wakeup-source;
- 		spi-max-frequency =3D <5000000>;
- 		controller-data {
--		cs-gpio =3D <&gpf0 3 4 3 0>;
--		samsung,spi-cs;
--		samsung,spi-feedback-delay =3D <2>;
-+			cs-gpio =3D <&gpf0 3 4 3 0>;
-+			samsung,spi-cs;
-+			samsung,spi-feedback-delay =3D <2>;
- 		};
- 	};
- };
-=2D-
-2.20.1
-
+Applied. Thanks
