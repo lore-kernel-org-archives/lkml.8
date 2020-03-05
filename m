@@ -2,128 +2,208 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E87C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2CDC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F695207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:15:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="EozR9uSi"
+	by mail.kernel.org (Postfix) with ESMTP id 6B10C207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:15:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgCEUPN (ORCPT
+        id S1726358AbgCEUPm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 15:15:13 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42623 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgCEUPN (ORCPT
+        Thu, 5 Mar 2020 15:15:42 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59160 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgCEUPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 15:15:13 -0500
-Received: by mail-qt1-f194.google.com with SMTP id r6so31807qtt.9
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 12:15:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=lsTlhJGBqft/K5JqQFXCrVXt13xPv+FZ9nKG6t7UOmg=;
-        b=EozR9uSiJiM39xnIz4HVrzXuclwRJ8+ZZWJqMpNzGsvACotrZKpiUdmxNGGOd4Zf4c
-         uZMnz5PgJrNe2sDXh/C/iKo7dev0UQl+t1n4s4xFFJDtQ9JGSgFlt9LPlemc8RR/QGjQ
-         xQ9EYr5qy3G64IR3Z75yZYReixPS3W6+7w2oo5wU11XvorZQsbQZmXVEUU3UqP6rdjvz
-         GHFOoyklE45X30nXTExNtPA1sVRNHLl+N0L5iw2pjJL3H/AuxdKGcQ/mRpXZwHOxq3l4
-         nqdrWH4IAvurhiRjxe2SJWT1DzbFHWyHqfdlfY+b1YE/srNb8V9NxWxarem2B5G2V0Xu
-         mEuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lsTlhJGBqft/K5JqQFXCrVXt13xPv+FZ9nKG6t7UOmg=;
-        b=iKOC1blWO94nqmdNwzkQIF+hwY14Wbc7V4o46bziBMFkT3M7/M8HC42GdBkbIxEY7N
-         2ibdWmZY6iMpx/QEcbk9mXuqy6ySNNjiCESempKO/Tya2MNMV/0pTiV2aoJP8uMbeUI1
-         NTFHdDUa/6GWpoEFV7jYXXBjT8eL3kusAMCKDMT5QDujY7zTqZAyLL9yYfLxtCz9YtYE
-         /X7k+1PumpW9yp7CuuagDp/eqSuyUUL74vSQw3Oz2BVVVTCQfQ538I/WYnGQccgvIt34
-         QqM47jW0Q2lOx8f9ojCAT30sJnqmy81Hzgf4K/HygAN0bzc/yJaorJbt0zP55qt4qEIY
-         C4KQ==
-X-Gm-Message-State: ANhLgQ0qQYiJEMhTT2ePeWOY6Y4Ne0nvlWfqRgbRR/ROyDJHoZpYd+m4
-        YFApSNakdIM0ZgyfI6t99oHh6g==
-X-Google-Smtp-Source: ADFU+vsb7AANSdnCAfTh/bngRu53s2/B2h3q2rb2sPLMZz471ReHsGfGqA8mIvynejrExfdyPbRMnQ==
-X-Received: by 2002:aed:218f:: with SMTP id l15mr399544qtc.247.1583439310499;
-        Thu, 05 Mar 2020 12:15:10 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id z6sm16254300qka.34.2020.03.05.12.15.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Mar 2020 12:15:09 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     jroedel@suse.de
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] iommu/dmar: silence RCU-list debugging warnings
-Date:   Thu,  5 Mar 2020 15:15:02 -0500
-Message-Id: <1583439302-11393-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 5 Mar 2020 15:15:42 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4419728B941;
+        Thu,  5 Mar 2020 20:15:39 +0000 (GMT)
+Date:   Thu, 5 Mar 2020 21:15:35 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 2/6] media: v4l2-core: Add helpers to build the H264
+ P/B0/B1 reflists
+Message-ID: <20200305211535.2e9a6673@collabora.com>
+In-Reply-To: <c7a88abfaf00c00a5c4c4239d1d9c7b348bc052e.camel@ndufresne.ca>
+References: <20200220163016.21708-1-ezequiel@collabora.com>
+        <20200220163016.21708-3-ezequiel@collabora.com>
+        <20200302142433.0ad1b383@coco.lan>
+        <20200302154426.5fb09f91@collabora.com>
+        <c7a88abfaf00c00a5c4c4239d1d9c7b348bc052e.camel@ndufresne.ca>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to the commit 02d715b4a818 ("iommu/vt-d: Fix RCU list debugging
-warnings"), there are several other places that call
-list_for_each_entry_rcu() outside of an RCU read side critical section
-but with dmar_global_lock held. Silence those false positives as well.
+On Thu, 05 Mar 2020 14:42:34 -0500
+Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
 
- drivers/iommu/intel-iommu.c:4288 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
-  #0: ffffffff935892c8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1ad/0xb97
+> Le lundi 02 mars 2020 à 15:44 +0100, Boris Brezillon a écrit :
+> > On Mon, 2 Mar 2020 14:24:33 +0100
+> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> >   
+> > > Em Thu, 20 Feb 2020 13:30:12 -0300
+> > > Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+> > >   
+> > > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > 
+> > > > Building those list is a standard procedure described in section
+> > > > '8.2.4 Decoding process for reference picture lists construction' of
+> > > > the H264 specification.
+> > > > 
+> > > > We already have 2 drivers needing the same logic (hantro and rkvdec) and
+> > > > I suspect we will soon have more.
+> > > > 
+> > > > Let's provide generic helpers to create those lists.
+> > > > 
+> > > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > > ---
+> > > >  drivers/media/v4l2-core/Kconfig     |   4 +
+> > > >  drivers/media/v4l2-core/Makefile    |   1 +
+> > > >  drivers/media/v4l2-core/v4l2-h264.c | 258 ++++++++++++++++++++++++++++
+> > > >  include/media/v4l2-h264.h           |  85 +++++++++
+> > > >  4 files changed, 348 insertions(+)
+> > > >  create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
+> > > >  create mode 100644 include/media/v4l2-h264.h
+> > > > 
+> > > > diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-
+> > > > core/Kconfig
+> > > > index 39e3fb30ba0b..8a4ccfbca8cf 100644
+> > > > --- a/drivers/media/v4l2-core/Kconfig
+> > > > +++ b/drivers/media/v4l2-core/Kconfig
+> > > > @@ -45,6 +45,10 @@ config VIDEO_PCI_SKELETON
+> > > >  config VIDEO_TUNER
+> > > >  	tristate
+> > > >  
+> > > > +# Used by drivers that need v4l2-h264.ko
+> > > > +config V4L2_H264
+> > > > +	tristate
+> > > > +
+> > > >  # Used by drivers that need v4l2-mem2mem.ko
+> > > >  config V4L2_MEM2MEM_DEV
+> > > >  	tristate
+> > > > diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-
+> > > > core/Makefile
+> > > > index 786bd1ec4d1b..c5c53e0941ad 100644
+> > > > --- a/drivers/media/v4l2-core/Makefile
+> > > > +++ b/drivers/media/v4l2-core/Makefile
+> > > > @@ -21,6 +21,7 @@ obj-$(CONFIG_VIDEO_V4L2) += v4l2-dv-timings.o
+> > > >  obj-$(CONFIG_VIDEO_TUNER) += tuner.o
+> > > >  
+> > > >  obj-$(CONFIG_V4L2_MEM2MEM_DEV) += v4l2-mem2mem.o
+> > > > +obj-$(CONFIG_V4L2_H264) += v4l2-h264.o
+> > > >  
+> > > >  obj-$(CONFIG_V4L2_FLASH_LED_CLASS) += v4l2-flash-led-class.o
+> > > >  
+> > > > diff --git a/drivers/media/v4l2-core/v4l2-h264.c b/drivers/media/v4l2-
+> > > > core/v4l2-h264.c
+> > > > new file mode 100644
+> > > > index 000000000000..4f68c27ec7fd
+> > > > --- /dev/null
+> > > > +++ b/drivers/media/v4l2-core/v4l2-h264.c
+> > > > @@ -0,0 +1,258 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +/*
+> > > > + * V4L2 H264 helpers.
+> > > > + *
+> > > > + * Copyright (C) 2019 Collabora, Ltd.
+> > > > + *
+> > > > + * Author: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > + */
+> > > > +
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/sort.h>
+> > > > +
+> > > > +#include <media/v4l2-h264.h>
+> > > > +
+> > > > +/**
+> > > > + * v4l2_h264_init_reflist_builder() - Initialize a P/B0/B1 reference list
+> > > > + *				      builder
+> > > > + *
+> > > > + * @b: the builder context to initialize
+> > > > + * @dec_params: decode parameters control
+> > > > + * @slice_params: first slice parameters control
+> > > > + * @sps: SPS control
+> > > > + * @dpb: DPB to use when creating the reference list
+> > > > + */
+> > > > +void
+> > > > +v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
+> > > > +		const struct v4l2_ctrl_h264_decode_params *dec_params,
+> > > > +		const struct v4l2_ctrl_h264_slice_params *slice_params,
+> > > > +		const struct v4l2_ctrl_h264_sps *sps,
+> > > > +		const struct v4l2_h264_dpb_entry *dpb)    
+> > > 
+> > > The prototype here is not nice...
+> > >   
+> > > > +{
+> > > > +	int cur_frame_num, max_frame_num;
+> > > > +	unsigned int i;
+> > > > +
+> > > > +	max_frame_num = 1 << (sps->log2_max_frame_num_minus4 + 4);
+> > > > +	cur_frame_num = slice_params->frame_num;
+> > > > +
+> > > > +	memset(b, 0, sizeof(*b));
+> > > > +	if (!(slice_params->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC))
+> > > > +		b->cur_pic_order_count = min(dec_params->bottom_field_order_cnt,
+> > > > +					     dec_params->top_field_order_cnt);
+> > > > +	else if (slice_params->flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
+> > > > +		b->cur_pic_order_count = dec_params->bottom_field_order_cnt;
+> > > > +	else
+> > > > +		b->cur_pic_order_count = dec_params->top_field_order_cnt;
+> > > > +
+> > > > +	for (i = 0; i < 16; i++) {
+> > > > +		u32 pic_order_count;
+> > > > +
+> > > > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> > > > +			continue;
+> > > > +
+> > > > +		b->refs[i].pic_num = dpb[i].pic_num;    
+> > > 
+> > > ... as you're expecting a fixed number of elements at DPB array, and using
+> > > a magic number (16) inside the for loop.  
+> > 
+> > I used to have a '#define V4L2_H264_NUM_DPB_ENTRIES 16' but have been
+> > told that this is an arbitrary limitation (the spec does not explicitly
+> > limit the DPB size, even if all the HW we've seen seem to limit it to
+> > 16). Maybe we can pass the DPB array size as an argument so it stays
+> > HW-specific.  
+> 
+> it's formalized in A.31 h), to quote it:
+> 
+> max_dec_frame_buffering <= MaxDpbFrames, where MaxDpbFrames is equal to
+> 
+>   Min( MaxDpbMbs / ( PicWidthInMbs * FrameHeightInMbs ), 16 )
+> 
+> So a DPB larger then this is not an H.24 DPB.
 
- drivers/iommu/dmar.c:366 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
-  #0: ffffffff935892c8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x125/0xb97
-
- drivers/iommu/intel-iommu.c:5057 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
-  #0: ffffffffa71892c8 (dmar_global_lock){++++}, at: intel_iommu_init+0x61a/0xb13
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/iommu/dmar.c | 3 ++-
- include/linux/dmar.h | 6 ++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 071bb42bbbc5..7b16c4db40b4 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -363,7 +363,8 @@ static int dmar_pci_bus_notifier(struct notifier_block *nb,
- {
- 	struct dmar_drhd_unit *dmaru;
- 
--	list_for_each_entry_rcu(dmaru, &dmar_drhd_units, list)
-+	list_for_each_entry_rcu(dmaru, &dmar_drhd_units, list,
-+				dmar_rcu_check())
- 		if (dmaru->segment == drhd->segment &&
- 		    dmaru->reg_base_addr == drhd->address)
- 			return dmaru;
-diff --git a/include/linux/dmar.h b/include/linux/dmar.h
-index 712be8bc6a7c..d7bf029df737 100644
---- a/include/linux/dmar.h
-+++ b/include/linux/dmar.h
-@@ -74,11 +74,13 @@ struct dmar_pci_notify_info {
- 				dmar_rcu_check())
- 
- #define for_each_active_drhd_unit(drhd)					\
--	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
-+	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
-+				dmar_rcu_check())			\
- 		if (drhd->ignored) {} else
- 
- #define for_each_active_iommu(i, drhd)					\
--	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
-+	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
-+				dmar_rcu_check())			\
- 		if (i=drhd->iommu, drhd->ignored) {} else
- 
- #define for_each_iommu(i, drhd)						\
--- 
-1.8.3.1
-
+My bad, I mixed "max number of slices per frame" and "max number of
+entries in the DPB". The first one I couldn't find a clear answer to,
+while the second one has been 16 from the start. Sorry for the
+confusion.
