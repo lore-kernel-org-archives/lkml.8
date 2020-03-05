@@ -2,77 +2,138 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32459C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22B6C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011F8208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7432073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:07:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="hqjjb1oP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHBb5sJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgCEGGW (ORCPT
+        id S1726173AbgCEGHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 01:06:22 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:60245 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbgCEGGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 01:06:22 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 08a2443c;
-        Thu, 5 Mar 2020 06:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=qf7iBnoAP1jFyvRyxTLvRHeDZ
-        Gw=; b=hqjjb1oPQyzgtuRHxsmeTnPMhLgFEGmjPwrYAhrnEz+awDd8V/6AG0VQE
-        WSf3c5f5/Hq2YKx0cNHxhawSVObj9ZfX3ddsaMbq3qQP1ycGVZ+QtnVmRxNUWgqm
-        I6MY0pvNK+oU9qCybL7j7U3FmpgOYhDsOl+oQR3NCsw+R5JxerzupqC0Ru+XOAOW
-        78BmlQkh9mPkIHnO7WRddf+X2we6OGpN1e3gck80CAgXYny4dFzBgAP5GZ+HyjNK
-        QcTrIi+IsUD6rT8ik6Jsjyvm4lE52toOye2GjaHLGLr83qUzZWxV9XnCdEraxCTQ
-        umpWOehP+LLOvv9GKiIwRvBuJR5qA==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f156eac8 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 5 Mar 2020 06:01:41 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     pbonzini@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: [PATCH v2] KVM: fix Kconfig menu text for -Werror
-Date:   Thu,  5 Mar 2020 14:06:04 +0800
-Message-Id: <20200305060604.8076-1-Jason@zx2c4.com>
-In-Reply-To: <20200304190750.GF21662@linux.intel.com>
-References: <20200304190750.GF21662@linux.intel.com>
+        Thu, 5 Mar 2020 01:07:11 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:37055 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgCEGHL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 01:07:11 -0500
+Received: by mail-il1-f195.google.com with SMTP id a6so4033789ilc.4;
+        Wed, 04 Mar 2020 22:07:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JM+ymBtB23jWt4sfUg5MQFutpMp62S4P16xrVlgqOis=;
+        b=WHBb5sJKYb2k/0/vunyclRnGZlRtx5R94rwqcuJ5s+jnTIF0KVle1NGm7yQKzyygLJ
+         J3L45LIc0f0xGux9ZKwHotDlkYfarw/H1iuHIcDruxed2K6BfAmSemK76OHitCu6RAfB
+         lsMk4JbpUGZXdjV3o0MuDZzXfLfiqHG/OtUnklTJU2xKDe+MtyPjyb11145CU6D6TYYM
+         Q1A5eIEVGtEsBcPIp4eIqWQBojOhVW4pvJH2iMHMVh8pUIha8A1+IXnrpvy1yU/XegYy
+         msaBo+Gpu564Z1/7tTZPhQVhWNStJXBdPprEwhnUt7Yr9PzcXxsdndTckNJYryXlBcDK
+         qaeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JM+ymBtB23jWt4sfUg5MQFutpMp62S4P16xrVlgqOis=;
+        b=iGRerJPrilPsVo9gZNYkPrPEjYXCB8wo5YkAzR9EgNtPeDZqyQcySwvU8iQmPOINkw
+         0zSCdiiqzKbR/OcKf8nxxs44YTty08v3UA5C9VK3HEkAD63EOWtx7wN1DVX8THbe2pZx
+         LYkaAPwULQDOMOVYP/A/mZlE/M0C0xFxcUNDjJS63/0w7OiYoeI3IJMQMcUSAatxWxad
+         2dNCiU8C38j/ucjiVjH1KAlb0Yq6Wa3DWFsA8txEtKMFYm6KLNrx3Tvfz/WURrDAiWCC
+         CyopMdhmbtaJHjEjOtpH7Jv+bfSciMW4k2iKID0o+PGEVvSOKXqHaoQ8zfOAEU1gEJGu
+         adPw==
+X-Gm-Message-State: ANhLgQ1lMhgh7Mje8ZPCH0xZMcvPiBhFKHr5XMaCaxgy/qM1zdA+af5S
+        izODiSt/GhMwHce3ykd+KEwDjwcuTAv0iFQqh78=
+X-Google-Smtp-Source: ADFU+vsDoKo1QxnK3q1eCpUxaItHC7KhhteG/IlUOH5+jITUVIhTXJPg4CSqeuxLBwGFNmax5uW6bCuDTkuUjHvYYag=
+X-Received: by 2002:a92:c848:: with SMTP id b8mr6226142ilq.153.1583388428722;
+ Wed, 04 Mar 2020 22:07:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191225192118.283637-1-kasong@redhat.com> <20200222165631.GA213225@google.com>
+ <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com>
+ <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
+ <CABeXuvonZpwWfcUef4PeihTJkgH2ZC_RCKuLR3rH3Re4hx36Aw@mail.gmail.com>
+ <20200305035329.GD4433@MiWiFi-R3L-srv> <CABeXuvogFGv8-i4jsJYN5ya0hjf35EXLkmPqYWayDUvXaBKidA@mail.gmail.com>
+In-Reply-To: <CABeXuvogFGv8-i4jsJYN5ya0hjf35EXLkmPqYWayDUvXaBKidA@mail.gmail.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Wed, 4 Mar 2020 22:06:58 -0800
+Message-ID: <CABeXuvog9KEJQ41Kox8T60fAZ4owip-3bB8XAsndFWF1-udwPQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Kairui Song <kasong@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Khalid Aziz <khalid@gonehiking.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Randy Wright <rwright@hpe.com>, Dave Young <dyoung@redhat.com>,
+        Myron Stowe <myron.stowe@redhat.com>, jroedel@suse.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This was evidently copy and pasted from the i915 driver, but the text
-wasn't updated.
+On Wed, Mar 4, 2020 at 8:53 PM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+>
+> On Wed, Mar 4, 2020 at 7:53 PM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > +Joerg to CC.
+> >
+> > On 03/03/20 at 01:01pm, Deepa Dinamani wrote:
+> > > I looked at this some more. Looks like we do not clear irqs when we do
+> > > a kexec reboot. And, the bootup code maintains the same table for the
+> > > kexec-ed kernel. I'm looking at the following code in
+> >
+> > I guess you are talking about kdump reboot here, right? Kexec and kdump
+> > boot take the similar mechanism, but differ a little.
+>
+> Right I meant kdump kernel here. And, clearly the is_kdump_kernel() case below.
+>
+> >
+> > > intel_irq_remapping.c:
+> > >
+> > >         if (ir_pre_enabled(iommu)) {
+> > >                 if (!is_kdump_kernel()) {
+> > >                         pr_warn("IRQ remapping was enabled on %s but
+> > > we are not in kdump mode\n",
+> > >                                 iommu->name);
+> > >                         clear_ir_pre_enabled(iommu);
+> > >                         iommu_disable_irq_remapping(iommu);
+> > >                 } else if (iommu_load_old_irte(iommu))
+> >
+> > Here, it's for kdump kernel to copy old ir table from 1st kernel.
+>
+> Correct.
+>
+> > >                         pr_err("Failed to copy IR table for %s from
+> > > previous kernel\n",
+> > >                                iommu->name);
+> > >                 else
+> > >                         pr_info("Copied IR table for %s from previous kernel\n",
+> > >                                 iommu->name);
+> > >         }
+> > >
+> > > Would cleaning the interrupts(like in the non kdump path above) just
+> > > before shutdown help here? This should clear the interrupts enabled
+> > > for all the devices in the current kernel. So when kdump kernel
+> > > starts, it starts clean. This should probably help block out the
+> > > interrupts from a device that does not have a driver.
+> >
+> > I think stopping those devices out of control from continue sending
+> > interrupts is a good idea. While not sure if only clearing the interrupt
+> > will be enough. Those devices which will be initialized by their driver
+> > will brake, but devices which drivers are not loaded into kdump kernel
+> > may continue acting. Even though interrupts are cleaning at this time,
+> > the on-flight DMA could continue triggerring interrupt since the ir
+> > table and iopage table are rebuilt.
+>
+> This should be handled by the IOMMU, right? And, hence you are getting
+> UR. This seems like the correct execution flow to me.
 
-Fixes: 4f337faf1c55 ("KVM: allow disabling -Werror")
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
- arch/x86/kvm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 1bb4927030af..9fea0757db92 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -68,7 +68,7 @@ config KVM_WERROR
- 	depends on (X86_64 && !KASAN) || !COMPILE_TEST
- 	depends on EXPERT
- 	help
--	  Add -Werror to the build flags for (and only for) i915.ko.
-+	  Add -Werror to the build flags for KVM.
- 
- 	  If in doubt, say "N".
- 
--- 
-2.25.1
-
+One small correction, I meant the IOMMU and BME here.
