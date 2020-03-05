@@ -2,142 +2,232 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85099C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56088C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A3F20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27FA420870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:43:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B7ByMAXR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YEeZ3QLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgCERng (ORCPT
+        id S1726259AbgCERnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:43:36 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43641 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgCERng (ORCPT
+        Thu, 5 Mar 2020 12:43:43 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54078 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726179AbgCERnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:43:36 -0500
-Received: by mail-wr1-f67.google.com with SMTP id v9so1473191wrf.10
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:43:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bHAy6+6uVDKeAvvnXhbkpLjB9BJYv+SeoKQESBQgb5A=;
-        b=B7ByMAXR5naWc1+YE2RUrPsLSK32XIdadhkGFNwpvWzfffhIEjyiJWifTv9SKmv2bO
-         n6BsQ128MM+4tDd6R+anpfCUKI51CQNcGsIvj3p8zlFWuNrhBJ1v8KHRYadbIalTqT3o
-         pSjWXL9ZcF3jRR+fpXN7Kbt9KAIy/VkoiKneU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bHAy6+6uVDKeAvvnXhbkpLjB9BJYv+SeoKQESBQgb5A=;
-        b=s1q3aJ33I1JDQ9ufRYqhcP+P/RAxtagJvnCKB8gyNnvCLIwF7M91ARVafV3tIDDPb5
-         bUJwRRB20kpV/mm3010mr2Xbl6tXr50k/wrvX53geiIJOWumS0WVm6EvUHpR39R/CrqD
-         K6XYSUveJAufSJOItlKxBBFEuFeM5qS+mkvOzVLWKl/ksIDyh4vODBaBhY9G2xy5s5IX
-         EkK2FTesNmyeGlBsaPTpVLBUyLB1tGpu+HfmoYRC5Ackhno7ZUf4D4zOEWCiGX7JykFQ
-         pd1c0EZXmdhNNQ55RocnwkzLl01K1uNzLkzA5070hPvs7U9gP0OZ5KOe+AstVYyItwkR
-         /e4Q==
-X-Gm-Message-State: ANhLgQ1SS4grZYi9sZ2ZKZny7vYfiRT9PimUwC/Zvcv5N1JVgjc/JEcP
-        6tQ7JIH9aRu9VHe9Guyghbqlwg==
-X-Google-Smtp-Source: ADFU+vuBaQeq7T+aAwt7sz91tfVB0ZAv9LkjOxPLyX/Y+ANhz2j+FsQMTsQ8cYSfkzQK1svpOp3/Tg==
-X-Received: by 2002:adf:f20f:: with SMTP id p15mr44839wro.219.1583430214477;
-        Thu, 05 Mar 2020 09:43:34 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id k66sm7470957wmf.0.2020.03.05.09.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 09:43:33 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Thu, 5 Mar 2020 18:43:32 +0100
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next v4 0/7] Introduce BPF_MODIFY_RET tracing progs
-Message-ID: <20200305174332.GA167686@google.com>
-References: <20200304191853.1529-1-kpsingh@chromium.org>
- <20200304221729.d6omw6tltqhbw5xr@ast-mbp>
+        Thu, 5 Mar 2020 12:43:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583430221;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+47MZRdP4eySwBBvI9Z4qJ2/RVGABmp0e90Oh4PvK+U=;
+        b=YEeZ3QLvTamb/QKTGs6S1voXx2LQk8BCDNDdMva8eoHYgFs+abhyXqE5c9CHebGSJiFUdv
+        V45ohUjCq1quFvaX+zHKgc2Ux3VxeZJ5I+/KAuP3AroL9Z8Xyvp5uRTXHCpGKxeQllqoiW
+        x4NYneijWZ4vzLLsup5H3ZR8PJwAmdQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-413-NwK1P_MQO6-93JL8IGBKmQ-1; Thu, 05 Mar 2020 12:43:37 -0500
+X-MC-Unique: NwK1P_MQO6-93JL8IGBKmQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EDFE800D54;
+        Thu,  5 Mar 2020 17:43:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CE17460BE0;
+        Thu,  5 Mar 2020 17:43:33 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     linux-api@vger.kernel.org
+cc:     viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        dhowells@redhat.com, metze@samba.org, cyphar@cyphar.com,
+        christian.brauner@ubuntu.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC][PATCH] Mark AT_* path flags as deprecated and add missing RESOLVE_ flags
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304221729.d6omw6tltqhbw5xr@ast-mbp>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3774366.1583430213.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 05 Mar 2020 17:43:33 +0000
+Message-ID: <3774367.1583430213@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-Mar 14:17, Alexei Starovoitov wrote:
-> On Wed, Mar 04, 2020 at 08:18:46PM +0100, KP Singh wrote:
-> > 
-> > Here is an example of how a fmod_ret program behaves:
-> > 
-> > int func_to_be_attached(int a, int b)
-> V> {  <--- do_fentry
-> > 
-> > do_fmod_ret:
-> >    <update ret by calling fmod_ret>
-> >    if (ret != 0)
-> >         goto do_fexit;
-> > 
-> > original_function:
-> > 
-> >     <side_effects_happen_here>
-> > 
-> > }  <--- do_fexit
-> > 
-> > ALLOW_ERROR_INJECTION(func_to_be_attached, ERRNO)
-> > 
-> > The fmod_ret program attached to this function can be defined as:
-> > 
-> > SEC("fmod_ret/func_to_be_attached")
-> > int BPF_PROG(func_name, int a, int b, int ret)
-> > {
-> >         // This will skip the original function logic.
-> >         return -1;
-> > }
-> 
-> Applied to bpf-next. Thanks.
+Do we want to do this?  Or should we duplicate the RESOLVE_* flags to AT_*
+flags so that existing *at() syscalls can make use of them?
 
-Thanks.
+David
+---
+commit 448731bf3b29f2b1f7c969d7efe1f0673ae13b5e
+Author: David Howells <dhowells@redhat.com>
+Date:   Thu Mar 5 17:40:02 2020 +0000
 
-> 
-> I think it sets up a great base to parallelize further work.
+    Mark AT_* flags as deprecated and add missing RESOLVE_ flags
+    =
 
-Totally Agreed!
+    It has been suggested that new path-using system calls should use RESO=
+LVE_*
+    flags instead of AT_* flags, but the RESOLVE_* flag functions are not =
+a
+    superset of the AT_* flag functions.  So formalise this by:
+    =
 
-> 
-> 1. I'm rebasing my sleepable BPF patches on top.
-> It's necessary to read enviroment variables without the
-> 'opportunistic copy before hand' hack I saw in your github tree
+     (1) In linux/fcntl.h, add a comment noting that the AT_* flags are
+         deprecated for new system calls and that RESOLVE_* flags should b=
+e
+         used instead.
+    =
 
-:) Sleepable BPF would indeed make it much simpler.
+     (2) Add some missing flags:
+    =
 
-> to do bpf_get_env_var() helper.
-> 
-> 2. please continue on LSM_HOOK patches to go via security tree.
-> 
-> 3. we need a volunteer to generalize bpf_sk_storage to task and inode structs.
+            RESOLVE_NO_TERMINAL_SYMLINKS    for AT_SYMLINK_NOFOLLOW
+            RESOLVE_NO_TERMINAL_AUTOMOUNTS  for AT_NO_AUTOMOUNT
+            RESOLVE_EMPTY_PATH              for AT_EMPTY_PATH
+    =
 
-This is quite important, especially for some of the examples we had
-brought up.
+     (3) Make openat2() support RESOLVE_NO_TERMINAL_SYMLINKS.  LOOKUP_OPEN
+         internally implies LOOKUP_AUTOMOUNT, and AT_EMPTY_PATH is probabl=
+y not
+         worth supporting (maybe use dup2() instead?).
+    =
 
-I can take a look at the generalization of bpf_sk_storage.
+    Reported-by: Stefan Metzmacher <metze@samba.org>
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    cc: Aleksa Sarai <cyphar@cyphar.com>
 
-Thanks!
-- KP
+diff --git a/fs/open.c b/fs/open.c
+index 0788b3715731..6946ad09b42b 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -977,7 +977,7 @@ inline struct open_how build_open_how(int flags, umode=
+_t mode)
+ inline int build_open_flags(const struct open_how *how, struct open_flags=
+ *op)
+ {
+ 	int flags =3D how->flags;
+-	int lookup_flags =3D 0;
++	int lookup_flags =3D LOOKUP_FOLLOW | LOOKUP_AUTOMOUNT;
+ 	int acc_mode =3D ACC_MODE(flags);
+ =
 
-> This work will be super useful for all bpf tracing too.
-> Sleepable progs are useful for tracing as well.
+ 	/* Must never be set by userspace */
+@@ -1055,8 +1055,8 @@ inline int build_open_flags(const struct open_how *h=
+ow, struct open_flags *op)
+ =
+
+ 	if (flags & O_DIRECTORY)
+ 		lookup_flags |=3D LOOKUP_DIRECTORY;
+-	if (!(flags & O_NOFOLLOW))
+-		lookup_flags |=3D LOOKUP_FOLLOW;
++	if (flags & O_NOFOLLOW)
++		lookup_flags &=3D ~LOOKUP_FOLLOW;
+ =
+
+ 	if (how->resolve & RESOLVE_NO_XDEV)
+ 		lookup_flags |=3D LOOKUP_NO_XDEV;
+@@ -1068,6 +1068,8 @@ inline int build_open_flags(const struct open_how *h=
+ow, struct open_flags *op)
+ 		lookup_flags |=3D LOOKUP_BENEATH;
+ 	if (how->resolve & RESOLVE_IN_ROOT)
+ 		lookup_flags |=3D LOOKUP_IN_ROOT;
++	if (how->resolve & RESOLVE_NO_TERMINAL_SYMLINKS)
++		lookup_flags &=3D ~LOOKUP_FOLLOW;
+ =
+
+ 	op->lookup_flags =3D lookup_flags;
+ 	return 0;
+diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
+index 7bcdcf4f6ab2..fd6ee34cce0f 100644
+--- a/include/linux/fcntl.h
++++ b/include/linux/fcntl.h
+@@ -19,7 +19,8 @@
+ /* List of all valid flags for the how->resolve argument: */
+ #define VALID_RESOLVE_FLAGS \
+ 	(RESOLVE_NO_XDEV | RESOLVE_NO_MAGICLINKS | RESOLVE_NO_SYMLINKS | \
+-	 RESOLVE_BENEATH | RESOLVE_IN_ROOT)
++	 RESOLVE_BENEATH | RESOLVE_IN_ROOT | RESOLVE_NO_TERMINAL_SYMLINKS | \
++	 RESOLVE_NO_TERMINAL_AUTOMOUNTS | RESOLVE_EMPTY_PATH)
+ =
+
+ /* List of all open_how "versions". */
+ #define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
+diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+index ca88b7bce553..9f5432dbd213 100644
+--- a/include/uapi/linux/fcntl.h
++++ b/include/uapi/linux/fcntl.h
+@@ -84,9 +84,20 @@
+ #define DN_ATTRIB	0x00000020	/* File changed attibutes */
+ #define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
+ =
+
+-#define AT_FDCWD		-100    /* Special value used to indicate
+-                                           openat should use the current
+-                                           working directory. */
++
++/*
++ * Special dfd/dirfd file descriptor value used to indicate that *at() sy=
+stem
++ * calls should use the current working directory for relative paths.
++ */
++#define AT_FDCWD		-100
++
++/*
++ * Pathwalk control flags, used for the *at() syscalls.  These should be
++ * considered deprecated and should not be used for new system calls.  Th=
+e
++ * RESOLVE_* flags in <linux/openat2.h> should be used instead.
++ *
++ * There are also system call-specific flags here (REMOVEDIR, STATX, RECU=
+RSIVE).
++ */
+ #define AT_SYMLINK_NOFOLLOW	0x100   /* Do not follow symbolic links.  */
+ #define AT_REMOVEDIR		0x200   /* Remove directory instead of
+                                            unlinking file.  */
+diff --git a/include/uapi/linux/openat2.h b/include/uapi/linux/openat2.h
+index 58b1eb711360..bb8d0a7f82c2 100644
+--- a/include/uapi/linux/openat2.h
++++ b/include/uapi/linux/openat2.h
+@@ -22,7 +22,10 @@ struct open_how {
+ 	__u64 resolve;
+ };
+ =
+
+-/* how->resolve flags for openat2(2). */
++/*
++ * Path resolution paths to replace AT_* paths in all new syscalls that w=
+ould
++ * use them.
++ */
+ #define RESOLVE_NO_XDEV		0x01 /* Block mount-point crossings
+ 					(includes bind-mounts). */
+ #define RESOLVE_NO_MAGICLINKS	0x02 /* Block traversal through procfs-styl=
+e
+@@ -35,5 +38,8 @@ struct open_how {
+ #define RESOLVE_IN_ROOT		0x10 /* Make all jumps to "/" and ".."
+ 					be scoped inside the dirfd
+ 					(similar to chroot(2)). */
++#define RESOLVE_NO_TERMINAL_SYMLINKS	0x20 /* Don't follow terminal symlin=
+ks in the path */
++#define RESOLVE_NO_TERMINAL_AUTOMOUNTS	0x40 /* Don't follow terminal auto=
+mounts in the path */
++#define RESOLVE_EMPTY_PATH	0x80	/* Permit a path of "" to indicate the df=
+d exactly */
+ =
+
+ #endif /* _UAPI_LINUX_OPENAT2_H */
+
