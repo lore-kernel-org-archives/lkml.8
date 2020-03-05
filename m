@@ -2,341 +2,160 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E03C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF98C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C85208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AF9208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:13:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ji17C/Va"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgCELMs (ORCPT
+        id S1727367AbgCELNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:12:48 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60682 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726635AbgCELMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:12:33 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 75239EA63A111208039D;
-        Thu,  5 Mar 2020 19:12:28 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 5 Mar 2020 19:12:22 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>
-CC:     <will@kernel.org>, <ak@linux.intel.com>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <james.clark@arm.com>,
-        <qiangqing.zhang@nxp.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH 6/6] perf test: Add pmu-events test
-Date:   Thu, 5 Mar 2020 19:08:06 +0800
-Message-ID: <1583406486-154841-7-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1583406486-154841-1-git-send-email-john.garry@huawei.com>
-References: <1583406486-154841-1-git-send-email-john.garry@huawei.com>
+        Thu, 5 Mar 2020 06:13:20 -0500
+Received: from gateway21.websitewelcome.com ([192.185.45.38]:17350 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbgCELNT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 06:13:19 -0500
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 807E34010522D
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Mar 2020 05:09:12 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 9oNMjpP0ovBMd9oNMjjll8; Thu, 05 Mar 2020 05:09:12 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=P2Op+mBXz77ucWJILHHJw8eByoBg+MewO1F656lbx2E=; b=ji17C/Vaif3YLuwY5Eupaw96C3
+        UkR/HtBh0rxG6oqJeCoxCqvqpi8ybYvNhPQZc4u4PspBum9K9otRdwHGpp+z6kQ1uO9p92AV+U9o7
+        cw9NCmRgwQgYR6IKYvyO4Pn0kx2NMJLQKHNufslluDwqCrWy57oC1/EufE58QHrSsbRocu4B48Kql
+        vv2w6FXCFADmLqKzJGTHjOyf5h6EC1YVaRTCLN7T8DrqS+2XhYCUtytm54y3AwCZv0MZ78p/tN7i3
+        OdDZH28+0ahQ1sIeoZbD9r6KcdhTMUJXEzFN69oODHqCrukUWxVQX3K/N+6C4WecmGUZzLpD+tbP8
+        M6etCAWw==;
+Received: from [201.166.169.220] (port=30902 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j9oNK-003q3G-0k; Thu, 05 Mar 2020 05:09:10 -0600
+Date:   Thu, 5 Mar 2020 05:12:16 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200305111216.GA24982@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.169.220
+X-Source-L: No
+X-Exim-ID: 1j9oNK-003q3G-0k
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.169.220]:30902
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a pmu-events test.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-This test will scan all PMUs in the system, and run a PMU event aliasing
-test for each CPU or uncore PMU.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-For known aliases added in pmu-events/arch/test, we need to add an entry
-in test_cpu_aliases[] or test_uncore_aliases[].
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-A sample run is as follows for x86:
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-10: PMU event aliases                                     :
---- start ---
-test child forked, pid 30869
-Using CPUID GenuineIntel-6-9E-9
-intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-skipping testing PMU software
-testing PMU power: skip
-testing PMU cpu: matched event segment_reg_loads.any
-testing PMU cpu: matched event dispatch_blocked.any
-testing PMU cpu: matched event eist_trans
-testing PMU cpu: matched event bp_l1_btb_correct
-testing PMU cpu: matched event bp_l2_btb_correct
-testing PMU cpu: pass
-testing PMU cstate_core: skip
-testing PMU uncore_cbox_2: matched event unc_cbo_xsnp_response.miss_eviction
-testing PMU uncore_cbox_2: pass
-skipping testing PMU breakpoint
-testing PMU uncore_cbox_0: matched event unc_cbo_xsnp_response.miss_eviction
-testing PMU uncore_cbox_0: pass
-skipping testing PMU tracepoint
-testing PMU cstate_pkg: skip
-testing PMU uncore_arb: skip
-testing PMU msr: skip
-testing PMU uncore_cbox_3: matched event unc_cbo_xsnp_response.miss_eviction
-testing PMU uncore_cbox_3: pass
-testing PMU intel_pt: skip
-testing PMU uncore_cbox_1: matched event unc_cbo_xsnp_response.miss_eviction
-testing PMU uncore_cbox_1: pass
-test child finished with 0
----- end ----
-PMU event aliases: Ok
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
+This issue was found with the help of Coccinelle.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- tools/perf/tests/Build          |   1 +
- tools/perf/tests/builtin-test.c |   4 +
- tools/perf/tests/pmu-events.c   | 192 ++++++++++++++++++++++++++++++++
- tools/perf/tests/tests.h        |   1 +
- 4 files changed, 198 insertions(+)
- create mode 100644 tools/perf/tests/pmu-events.c
+ drivers/net/wireless/zydas/zd1211rw/zd_usb.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 1692529639b0..b3d1bf13ca07 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -14,6 +14,7 @@ perf-y += evsel-roundtrip-name.o
- perf-y += evsel-tp-sched.o
- perf-y += fdarray.o
- perf-y += pmu.o
-+perf-y += pmu-events.o
- perf-y += hists_common.o
- perf-y += hists_link.o
- perf-y += hists_filter.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 5f05db75cdd8..e8f56740d14a 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -72,6 +72,10 @@ static struct test generic_tests[] = {
- 		.desc = "Parse perf pmu format",
- 		.func = test__pmu,
- 	},
-+	{
-+		.desc = "PMU event aliases",
-+		.func = test__pmu_event_aliases,
-+	},
- 	{
- 		.desc = "DSO data read",
- 		.func = test__dso_data,
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-new file mode 100644
-index 000000000000..176b80666b5e
---- /dev/null
-+++ b/tools/perf/tests/pmu-events.c
-@@ -0,0 +1,192 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "parse-events.h"
-+#include "pmu.h"
-+#include "tests.h"
-+#include <errno.h>
-+#include <stdio.h>
-+#include <linux/kernel.h>
-+
-+#include <linux/zalloc.h>
-+
-+#include "debug.h"
-+#include "../pmu-events/pmu-events.h"
-+
-+static struct perf_pmu_alias test_cpu_aliases[] = {
-+	{
-+		.name = (char *)"segment_reg_loads.any",
-+		.str = (char *)"umask=0x80,(null)=0x30d40,event=0x6",
-+		.desc = (char *)"Number of segment register loads",
-+		.topic = (char *)"other",
-+
-+	},
-+	{
-+		.name = (char *)"dispatch_blocked.any",
-+		.str = (char *)"umask=0x20,(null)=0x30d40,event=0x9",
-+		.desc = (char *)"Memory cluster signals to block micro-op dispatch for any reason",
-+		.topic = (char *)"other",
-+
-+	},
-+	{
-+		.name = (char *)"eist_trans",
-+		.str = (char *)"umask=0,(null)=0x30d40,event=0x3a",
-+		.desc = (char *)"Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
-+		.topic = (char *)"other",
-+
-+	},
-+	{
-+		.name = (char *)"bp_l1_btb_correct",
-+		.str = (char *)"event=0x8a",
-+		.desc = (char *)"L1 BTB Correction",
-+		.topic = (char *)"branch",
-+
-+	},
-+	{
-+		.name = (char *)"bp_l2_btb_correct",
-+		.str = (char *)"event=0x8b",
-+		.desc = (char *)"L2 BTB Correction",
-+		.topic = (char *)"branch",
-+
-+	},
-+	{ /* sentinel */
-+	}
-+};
-+
-+static struct perf_pmu_alias test_uncore_aliases[] = {
-+	{
-+		.name = (char *)"uncore_hisi_ddrc.flux_wcmd",
-+		.str = (char *)"event=0x2",
-+		.desc = (char *)"DDRC write commands. Unit: hisi_sccl,ddrc ",
-+		.topic = (char *)"uncore",
-+
-+	},
-+	{
-+		.name = (char *)"unc_cbo_xsnp_response.miss_eviction",
-+		.str = (char *)"umask=0x81,event=0x22",
-+		.desc = (char *)"Unit: uncore_cbox A cross-core snoop resulted from L3 Eviction which misses in some processor core",
-+		.long_desc = (char *)"A cross-core snoop resulted from L3 Eviction which misses in some processor core",
-+		.topic = (char *)"uncore",
-+
-+	},
-+	{ /* sentinel */
-+	}
-+
-+};
-+
-+static bool is_same(char *reference, char *test)
-+{
-+	if (!test)
-+		return false;
-+
-+	return !strcmp(reference, test);
-+}
-+
-+static struct perf_pmu_alias *find_alias(char *pmu_name, char *alias_name)
-+{
-+	struct perf_pmu_alias *alias;
-+
-+	if (is_pmu_core(pmu_name))
-+		alias = &test_cpu_aliases[0];
-+	else
-+		alias = &test_uncore_aliases[0];
-+
-+	for (; alias->name; alias++)
-+		if (!strcmp(alias_name, alias->name))
-+			return alias;
-+
-+	return NULL;
-+}
-+
-+static int __test__pmu_event_aliases(char *pmu_name, int *count)
-+{
-+	struct perf_pmu_alias *alias;
-+	struct perf_pmu *pmu;
-+	LIST_HEAD(aliases);
-+	int res = 0;
-+
-+	pmu = zalloc(sizeof(*pmu));
-+	if (!pmu)
-+		return -1;
-+
-+	pmu->name = pmu_name;
-+
-+	pmu_add_cpu_aliases_map(&aliases, pmu, &pmu_events_map_test);
-+
-+	list_for_each_entry(alias, &aliases, list) {
-+		struct perf_pmu_alias *test_alias;
-+
-+		test_alias = find_alias(pmu_name, alias->name);
-+
-+		if (!test_alias) {
-+			pr_debug2("no alias for PMU %s\n", pmu_name);
-+			res = -1;
-+			break;
-+		}
-+
-+		if (test_alias->desc &&
-+		    !is_same(test_alias->desc, alias->desc)) {
-+			pr_debug2("mismatched desc for PMU %s, %s vs %s\n",
-+				  pmu_name, test_alias->desc, alias->desc);
-+			res = -1;
-+			break;
-+		}
-+
-+		if (test_alias->long_desc &&
-+		    !is_same(test_alias->long_desc, alias->long_desc)) {
-+			pr_debug2("mismatched long_desc for PMU %s, %s vs %s\n",
-+				  pmu_name, test_alias->long_desc,
-+				  alias->long_desc);
-+			res = -1;
-+			break;
-+		}
-+
-+		if (test_alias->str && !is_same(test_alias->str, alias->str)) {
-+			pr_debug2("mismatched str for PMU %s, %s vs %s\n",
-+				  pmu_name, test_alias->str, alias->str);
-+			res = -1;
-+			break;
-+		}
-+
-+		if (test_alias->topic &&
-+		    !is_same(test_alias->topic, alias->topic)) {
-+			pr_debug2("mismatched topic for PMU %s, %s vs %s\n",
-+				  pmu_name, test_alias->topic, alias->topic);
-+			res = -1;
-+			break;
-+		}
-+
-+		(*count)++;
-+
-+		pr_debug2("testing PMU %s: matched event %s\n",
-+			  pmu_name, test_alias->name);
-+	}
-+
-+	free(pmu);
-+	return res;
-+}
-+
-+int test__pmu_event_aliases(struct test *test __maybe_unused,
-+			    int subtest __maybe_unused)
-+{
-+	struct perf_pmu *pmu = NULL;
-+
-+	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
-+		int count = 0;
-+
-+		if (list_empty(&pmu->format)) {
-+			pr_debug2("skipping testing PMU %s\n", pmu->name);
-+			continue;
-+		}
-+
-+		if (__test__pmu_event_aliases(pmu->name, &count)) {
-+			pr_debug("testing PMU %s: failed\n", pmu->name);
-+			return -1;
-+		}
-+
-+		if (count == 0)
-+			pr_debug("testing PMU %s: skip\n", pmu->name);
-+		else
-+			pr_debug("testing PMU %s: pass\n", pmu->name);
-+	}
-+
-+	return 0;
-+}
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 9a160fef47c9..a7ca3bb1c9cd 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -49,6 +49,7 @@ int test__perf_evsel__roundtrip_name_test(struct test *test, int subtest);
- int test__perf_evsel__tp_sched_test(struct test *test, int subtest);
- int test__syscall_openat_tp_fields(struct test *test, int subtest);
- int test__pmu(struct test *test, int subtest);
-+int test__pmu_event_aliases(struct test *test, int subtest);
- int test__attr(struct test *test, int subtest);
- int test__dso_data(struct test *test, int subtest);
- int test__dso_data_cache(struct test *test, int subtest);
+diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_usb.h b/drivers/net/wireless/zydas/zd1211rw/zd_usb.h
+index a52ee323a142..8f03b09a602c 100644
+--- a/drivers/net/wireless/zydas/zd1211rw/zd_usb.h
++++ b/drivers/net/wireless/zydas/zd1211rw/zd_usb.h
+@@ -69,7 +69,7 @@ enum control_requests {
+ 
+ struct usb_req_read_regs {
+ 	__le16 id;
+-	__le16 addr[0];
++	__le16 addr[];
+ } __packed;
+ 
+ struct reg_data {
+@@ -79,7 +79,7 @@ struct reg_data {
+ 
+ struct usb_req_write_regs {
+ 	__le16 id;
+-	struct reg_data reg_writes[0];
++	struct reg_data reg_writes[];
+ } __packed;
+ 
+ enum {
+@@ -95,7 +95,7 @@ struct usb_req_rfwrite {
+ 	/* 2: other (default) */
+ 	__le16 bits;
+ 	/* RF2595: 24 */
+-	__le16 bit_values[0];
++	__le16 bit_values[];
+ 	/* (ZD_CR203 & ~(RF_IF_LE | RF_CLK | RF_DATA)) | (bit ? RF_DATA : 0) */
+ } __packed;
+ 
+@@ -118,7 +118,7 @@ struct usb_int_header {
+ 
+ struct usb_int_regs {
+ 	struct usb_int_header hdr;
+-	struct reg_data regs[0];
++	struct reg_data regs[];
+ } __packed;
+ 
+ struct usb_int_retry_fail {
 -- 
-2.17.1
+2.25.0
 
