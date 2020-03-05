@@ -2,141 +2,109 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC203C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACC3C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F8A20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T6R/TbBM"
+	by mail.kernel.org (Postfix) with ESMTP id BB6CC20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583434306;
+	bh=ZC3B/czm5sXyN+zg1eniDW4R7/IH4E7e99uEpDEQv3k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FjDGFZ3der+I3+vdWI160JNiK+pYnczQbbmGYP3W5IFQELFwFELwEu1S3NvTmHqsH
+	 Y0npqzqXQbGYKp/5dwGuLra6prTKeueLwJ9b7t2b8ebLD7zIx/Q1v/YNQ0Ys3Z8Jyt
+	 1t1pCl3MbpsSL30I14N/iPjOcw5WoZsz9sBE/N48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgCESvf (ORCPT
+        id S1726390AbgCESvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:51:35 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36778 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgCESvf (ORCPT
+        Thu, 5 Mar 2020 13:51:45 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37012 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgCESvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:51:35 -0500
-Received: by mail-pg1-f194.google.com with SMTP id d9so3182885pgu.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:51:34 -0800 (PST)
+        Thu, 5 Mar 2020 13:51:45 -0500
+Received: by mail-io1-f65.google.com with SMTP id k4so2116035ior.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:51:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b2SYpooN63pazq0FfnqZHc+uxwAjM4uCksmrGzVts2w=;
-        b=T6R/TbBMZV7uHQBepmxCCgBZMqhYWNOwyyeTy6uM9j1D7K8dLSXPY8913e8XdQFyyg
-         E6BBrRRQnHNtFaJCY1Nq+VriqP8MXlCgyeUSLUrHSh0mDaOmKtQgks/c4kQVmyH+B3e/
-         /okMrvgeUcd/pXFsCkPBD9L9oB07xFAkt2LE4=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FVv6AJd6bBrTXrDKZfvcwskLDNuykZnEwGxDnO6gleo=;
+        b=NosQg/dDBPylczuOudsaCOt2Wy3lcV1PT7hKYOVRoSkfJ+eNlJfzNDp8iKCEPyabBs
+         7ijGVjmDDkVeHS+mphZq8yulaRZIrDr0ERC2vSfh5WEDhfJi0aWFUsuDUCABp1zGL29i
+         GzZi3kYiPM96HwrrhGF/bVmIWhCcRegdRwoRg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b2SYpooN63pazq0FfnqZHc+uxwAjM4uCksmrGzVts2w=;
-        b=OS/2SAeh47X1wVTqarx0w5SXayqftz9r7+r2ENX+S/FUqO0j1aKCxDz/mNAKaLDomp
-         ca5RtIumwP0JemegujKEV9MgSzP2M6HhAqqbMkwERs2pnMzHQAPBzA4tD/iiMzL2q5UM
-         U8yUgPGsyX/bg/RQ15dv65imQOCiCEMVlzoQqIwpB/anTyIVQx+TWvzcgFJQ8MfMSAL/
-         v4G8/vO1wgTJnnQUKpkTlD3Da6Z4oh9AVZ0S+GoE3541ZQaDRTSr3aKSSmEQATlHnjOM
-         JRM8+S9Q6wmQQErwnMqiHTY5yLYeIfuCcpc/nBPzYpmPJW4zgdxG+Z864jQyYDywkwa5
-         zwsQ==
-X-Gm-Message-State: ANhLgQ1scisuP/tSr9Kyp5mgULuPj52xomb4JsR6RG5ZwJaoekhbb3KV
-        1zs8FaKhmQgqXDlk/z+pZz6k5A==
-X-Google-Smtp-Source: ADFU+vuQNeWvfy1Ogmc1Uka7w7eUI2r4KaKy912PspK9k/vyYD+DBZjUL7iC552BrrUD9Cmofq3a7g==
-X-Received: by 2002:a63:de4c:: with SMTP id y12mr8908651pgi.107.1583434294313;
-        Thu, 05 Mar 2020 10:51:34 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id f81sm29905073pfa.44.2020.03.05.10.51.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 10:51:33 -0800 (PST)
-Date:   Thu, 5 Mar 2020 10:51:32 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 0/8] Add QUSB2 PHY support for SC7180
-Message-ID: <20200305185132.GT24720@google.com>
-References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
- <20200203185649.GK3948@builder>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FVv6AJd6bBrTXrDKZfvcwskLDNuykZnEwGxDnO6gleo=;
+        b=W5ueEf+2TH3S5R6FZnV4n71YEChhvvwd50SN2dLVfc0PXmnUlm6z+qpdESi5qM0hH4
+         diFRmkcju6n1+7cxTW7ju2qXkZ9Sf23y9tqOccQGtdClADJ0LNDiwtl5NcKB+J3UTGQC
+         F0/ZDDDVzW6cNfmycxDzTQXbfSg7rL5ECOQFITYf/wn28iU4gfcuK5GLVBKkTlv3/MS8
+         lDDxgQ2ufj6Hzct98DFJ4WjRAhCnyXODI9EhiTT5x8b0Qlb+lnIg5Bj9rQGVoiFaqb37
+         AeNFLJtUDtXOa3ZiWmVDDFgBMTxvJJdMMOe2hAfgYN4JyuIweDewq5/ifVOQT46Aq99q
+         nbbA==
+X-Gm-Message-State: ANhLgQ2/JU5JwGpmK8wxHBCmt4m87W/6Fe5ZiHYWeCCZB+r6fGPGHwIA
+        ebP9M9p+8qFgC7w/O3fsuwvoSRUrHy56XZaweHQTgg==
+X-Google-Smtp-Source: ADFU+vsbcs2QgeYXIqkD+c4bTE0VoOgWuVE+so2YReoLzqoxVPopVlkOtVPt0fcQ4lBq2p8/yZ+g4Aa9dVjEkBhbM+c=
+X-Received: by 2002:a6b:ec05:: with SMTP id c5mr376507ioh.107.1583434304466;
+ Thu, 05 Mar 2020 10:51:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200203185649.GK3948@builder>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200304124707.22650-1-yanaijie@huawei.com> <202003041022.26AF0178@keescook>
+ <b5854fd867982527c107138d52a61010079d2321.camel@buserror.net>
+In-Reply-To: <b5854fd867982527c107138d52a61010079d2321.camel@buserror.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 5 Mar 2020 12:51:33 -0600
+Message-ID: <CAADWXX8guqt=Yz-Lo+qU6Ed0t-mG-B=UkqSDaSr3bH+Q2aOn-Q@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
+To:     Scott Wood <oss@buserror.net>
+Cc:     Kees Cook <keescook@chromium.org>, Jason Yan <yanaijie@huawei.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Daniel Axtens <dja@axtens.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 10:56:49AM -0800, Bjorn Andersson wrote:
-> On Wed 29 Jan 05:51 PST 2020, Sandeep Maheswaram wrote:
-> 
-> Kishon, afaict this is all reviewed, let me know when you're taking the
-> phy pieces and I'll pick up the dts changes.
+On Wed, Mar 4, 2020 at 3:16 PM Scott Wood <oss@buserror.net> wrote:
+>
+> The frustration is with the inability to set a flag to say, "I'm debugging and
+> don't care about leaks... in fact I'd like as much information as possible to
+> leak to me."
 
-The series has a few minor comments. Sandeep, could you respin the
-series so that it can be landed?
+Well, I definitely don't want to tie it to "I turned off kaslr in
+order to help debugging". That just means that now you're debugging a
+kernel that is fundamentally different from what people are running.
 
-Thanks
+So I'd much rather have people just set a really magic flag, perhaps
+when kgdb is in use or something.
 
-Matthias
+> In any case, this came up now due to a question about what to use when
+> printing crash dumps.  PowerPC currently prints stack and return addresses
+> with %lx (in addition to %pS in the latter case) and someone proposed
+> converting them to %p and/or removing them altogether.
 
-> > Converting dt binding to yaml.
-> > Adding compatible for SC7180 in dt bindings.
-> > Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
-> > 
-> > Changes in v4:
-> > *Addressed Rob Herrings comments in dt bindings.
-> > *Added new structure for all the overriding tuning params.
-> > *Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy. 
-> > *Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845. 
-> > 
-> > Changes in v3:
-> > *Using the generic phy cfg table for QUSB2 V2 phy.
-> > *Added support for overriding tuning parameters in QUSB2 V2 PHY
-> > from device tree.
-> > 
-> > Changes in v2:
-> > Sorted the compatible in driver.
-> > Converted dt binding to yaml.
-> > Added compatible in yaml.
-> > 
-> > Sandeep Maheswaram (8):
-> >   dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
-> >   dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
-> >     SC7180
-> >   phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
-> >   dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
-> >     parameters
-> >   phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
-> >     V2 PHY
-> >   arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
-> >   arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
-> >   arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
-> >     device
-> > 
-> >  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 182 +++++++++++++++++++++
-> >  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
-> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
-> >  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
-> >  drivers/phy/qualcomm/phy-qcom-qusb2.c              | 143 +++++++++++-----
-> >  6 files changed, 291 insertions(+), 114 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-> > 
-> > -- 
-> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> > of Code Aurora Forum, hosted by The Linux Foundation
-> > 
+Please just use '%pS'.
+
+The symbol and offset is what is useful when users send crash-dumps.
+The hex value is entirely pointless with kaslr - which should
+basically be the default.
+
+Note that this isn't about security at that point - crash dumps are
+something that shouldn't happen, but if they do happen, we want the
+pointers. But the random hex value just isn't _useful_, so it's just
+making things less legible.
+
+                  Linus
