@@ -2,106 +2,86 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37920C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325BEC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1804E20637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0630020637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgCEN6X (ORCPT
+        id S1726436AbgCEN7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:58:23 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36408 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725946AbgCEN6X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:58:23 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 025DsGLM010806;
-        Thu, 5 Mar 2020 08:58:19 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhryevqjy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Mar 2020 08:58:19 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 025Dq3dI024309;
-        Thu, 5 Mar 2020 13:58:17 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma05wdc.us.ibm.com with ESMTP id 2yffk6uh61-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Mar 2020 13:58:17 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 025DwH6j49545712
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Mar 2020 13:58:17 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 01653C6059;
-        Thu,  5 Mar 2020 13:58:17 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 31BBDC6057;
-        Thu,  5 Mar 2020 13:58:16 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Mar 2020 13:58:16 +0000 (GMT)
-Subject: Re: [PATCH v6 3/3] tpm: ibmvtpm: Add support for TPM2
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
-        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
-        gcwilson@linux.ibm.com, jgg@ziepe.ca
-References: <20200304132243.179402-1-stefanb@linux.vnet.ibm.com>
- <20200304132243.179402-4-stefanb@linux.vnet.ibm.com>
- <a54d6cffe536d568a9fde46f1f32616e89a42d30.camel@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <8dcd22c1-b05f-d619-58c5-fd2248c75b9e@linux.ibm.com>
-Date:   Thu, 5 Mar 2020 08:58:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 5 Mar 2020 08:59:43 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:49196 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbgCEN7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 08:59:42 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7E2462006FA;
+        Thu,  5 Mar 2020 14:59:40 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 70B4820057C;
+        Thu,  5 Mar 2020 14:59:40 +0100 (CET)
+Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id DDE322059D;
+        Thu,  5 Mar 2020 14:59:39 +0100 (CET)
+From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] ARM: dts: imx: use generic name for crypto node
+Date:   Thu,  5 Mar 2020 15:59:04 +0200
+Message-Id: <20200305135909.8180-1-horia.geanta@nxp.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <a54d6cffe536d568a9fde46f1f32616e89a42d30.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-05_04:2020-03-05,2020-03-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- bulkscore=0 phishscore=0 impostorscore=0 spamscore=0 adultscore=0
- clxscore=1015 mlxlogscore=999 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050090
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 6:21 AM, Jarkko Sakkinen wrote:
-> On Wed, 2020-03-04 at 08:22 -0500, Stefan Berger wrote:
->> From: Stefan Berger <stefanb@linux.ibm.com>
->>
->> Support TPM2 in the IBM vTPM driver. The hypervisor tells us what
->> version of TPM is connected through the vio_device_id.
->>
->> In case a TPM2 device is found, we set the TPM_CHIP_FLAG_TPM2 flag
->> and get the command codes attributes table. The driver does
->> not need the timeouts and durations, though.
->>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> There is huge bunch of people in the cc-list and these patches
-> have total zero tested-by's. Why is that?
+This patch set aligns / fixes the naming of the crypto node
+(and its child nodes) for sahara, dcp and caam crypto engines
+used in i.MX SoCs.
 
+Horia Geantă (4):
+  dt-bindings: crypto: sahara: use generic node name
+  dt-bindings: crypto: dcp: use generic node name
+  dt-bindings: crypto: caam: use generic node name
+  ARM: dts: imx: align name for crypto node and child nodes
 
-I cc'ed them because of their involvement in other layers. That's all I 
-can say.
+Silvano di Ninno (1):
+  arm64: dts: imx8mn: align name for crypto child nodes
 
-   Stefan
+ Documentation/devicetree/bindings/crypto/fsl-dcp.txt      | 2 +-
+ .../devicetree/bindings/crypto/fsl-imx-sahara.txt         | 2 +-
+ Documentation/devicetree/bindings/crypto/fsl-sec4.txt     | 2 +-
+ arch/arm/boot/dts/imx23.dtsi                              | 2 +-
+ arch/arm/boot/dts/imx27.dtsi                              | 2 +-
+ arch/arm/boot/dts/imx28.dtsi                              | 2 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                            | 6 +++---
+ arch/arm/boot/dts/imx6sl.dtsi                             | 2 +-
+ arch/arm/boot/dts/imx6sll.dtsi                            | 2 +-
+ arch/arm/boot/dts/imx6sx.dtsi                             | 6 +++---
+ arch/arm/boot/dts/imx6ul.dtsi                             | 8 ++++----
+ arch/arm/boot/dts/imx7s.dtsi                              | 8 ++++----
+ arch/arm/boot/dts/imx7ulp.dtsi                            | 4 ++--
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi                 | 6 +++---
+ 14 files changed, 27 insertions(+), 27 deletions(-)
 
->
-> /Jarkko
->
+-- 
+2.17.1
 
