@@ -2,99 +2,275 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F21C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835D4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 384072073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB232073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kI+RhCb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgCEL3m (ORCPT
+        id S1727326AbgCELao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:29:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:47440 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbgCEL3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:29:42 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 933A431B;
-        Thu,  5 Mar 2020 03:29:41 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1C5B3F6C4;
-        Thu,  5 Mar 2020 03:29:40 -0800 (PST)
-Date:   Thu, 5 Mar 2020 11:29:31 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Replace zero-length array with flexible-array member
-Message-ID: <20200305112923.GA5576@e121166-lin.cambridge.arm.com>
-References: <20200213005221.GA10532@embeddedor.com>
+        Thu, 5 Mar 2020 06:30:44 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:42326 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbgCELan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 06:30:43 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583407843; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=kDJD4mNwabwWuj0s0vUcdkYgT7NlN6oMEkF3seKfQqg=; b=kI+RhCb1Wpqo99ka6yxvmXZxgu3xNcKoVOXjNOZ/LHP9nqaniA59PNdF3QU1lAb9s7oG3dIV
+ rhPlYzmjs1c42F9m4FjJ3lKLpBvMI89x43/K8Lx0w7fX2qSYMAvBiQh9vgyiUTFJGjpwlOub
+ bmJGEOrKq9m55BFNFFgcMTz8GSQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e60e2d9.7f59f3e5b458-smtp-out-n02;
+ Thu, 05 Mar 2020 11:30:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C02FFC447A0; Thu,  5 Mar 2020 11:30:33 +0000 (UTC)
+Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6AE9AC43383;
+        Thu,  5 Mar 2020 11:30:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6AE9AC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v10 3/3] soc: qcom: rpmh: Invoke rpmh_flush() for dirty
+ caches
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1583238415-18686-1-git-send-email-mkshah@codeaurora.org>
+ <1583238415-18686-4-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=VG2dirykoGB93s3xCW8CKJjrGDS76koTyww_gy-jv7RQ@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <92bf14b7-b7ae-3060-312e-74f57c1f9a63@codeaurora.org>
+Date:   Thu, 5 Mar 2020 17:00:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213005221.GA10532@embeddedor.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAD=FV=VG2dirykoGB93s3xCW8CKJjrGDS76koTyww_gy-jv7RQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 06:52:21PM -0600, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/pci/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied to pci/hv for v5.7, thanks.
+On 3/5/2020 4:52 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Tue, Mar 3, 2020 at 4:27 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>> Add changes to invoke rpmh flush() from within cache_lock when the data
+>> in cache is dirty.
+>>
+>> This is done only if OSI is not supported in PSCI. If OSI is supported
+>> rpmh_flush can get invoked when the last cpu going to power collapse
+>> deepest low power mode.
+>>
+>> Also remove "depends on COMPILE_TEST" for Kconfig option QCOM_RPMH so the
+>> driver is only compiled for arm64 which supports psci_has_osi_support()
+>> API.
+>>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
+>> ---
+>>  drivers/soc/qcom/Kconfig |  2 +-
+>>  drivers/soc/qcom/rpmh.c  | 37 ++++++++++++++++++++++---------------
+>>  2 files changed, 23 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+>> index d0a73e7..2e581bc 100644
+>> --- a/drivers/soc/qcom/Kconfig
+>> +++ b/drivers/soc/qcom/Kconfig
+>> @@ -105,7 +105,7 @@ config QCOM_RMTFS_MEM
+>>
+>>  config QCOM_RPMH
+>>         bool "Qualcomm RPM-Hardened (RPMH) Communication"
+>> -       depends on ARCH_QCOM && ARM64 || COMPILE_TEST
+>> +       depends on ARCH_QCOM && ARM64
+>>         help
+>>           Support for communication with the hardened-RPM blocks in
+>>           Qualcomm Technologies Inc (QTI) SoCs. RPMH communication uses an
+>> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+>> index f28afe4..dafb0da 100644
+>> --- a/drivers/soc/qcom/rpmh.c
+>> +++ b/drivers/soc/qcom/rpmh.c
+>> @@ -12,6 +12,7 @@
+>>  #include <linux/module.h>
+>>  #include <linux/of.h>
+>>  #include <linux/platform_device.h>
+>> +#include <linux/psci.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/spinlock.h>
+>>  #include <linux/types.h>
+>> @@ -158,6 +159,13 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
+>>         }
+>>
+>>  unlock:
+>> +       if (ctrlr->dirty && !psci_has_osi_support()) {
+>> +               if (rpmh_flush(ctrlr)) {
+>> +                       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>> +                       return ERR_PTR(-EINVAL);
+>> +               }
+>> +       }
+>> +
+>>         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>>
+>>         return req;
+>> @@ -285,26 +293,35 @@ int rpmh_write(const struct device *dev, enum rpmh_state state,
+>>  }
+>>  EXPORT_SYMBOL(rpmh_write);
+>>
+>> -static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
+>> +static int cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
+>>  {
+>>         unsigned long flags;
+>>
+>>         spin_lock_irqsave(&ctrlr->cache_lock, flags);
+>> +
+>>         list_add_tail(&req->list, &ctrlr->batch_cache);
+>>         ctrlr->dirty = true;
+>> +
+>> +       if (!psci_has_osi_support()) {
+>> +               if (rpmh_flush(ctrlr)) {
+> The whole API here is a bit unfortunate.  From what I can tell,
+> callers of this code almost always call rpmh_write_batch() in
+> triplicate, AKA:
+>
+> rpmh_write_batch(active, ...)
+> rpmh_write_batch(wake, ...)
+> rpmh_write_batch(sleep, ...)
+>
+> ...that's going to end up writing the whole sleep/wake sets twice
+> every single time, right?  I know you talked about trying to keep
+> separate dirty bits for sleep/wake and maybe that would help, but it
+> might not be so easy due to the comparison of "sleep_val" and
+> "wake_val" in is_req_valid().
+>
+> I guess we can keep the inefficiency for now and see how much it hits
+> us, but it feels ugly.
+>
+>
+>> +                       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>> +                       return -EINVAL;
+> nit: why not add "int ret = 0" to the top of the function, then here:
+>
+> if (rpmh_flush(ctrl))
+>   ret = -EINVAL;
+>
+> ...then at the end "return ret".  It avoids the 2nd copy of the unlock?
+Done.
+>
+> Also: Why throw away the return value of rpmh_flush and replace it
+> with -EINVAL?  Trying to avoid -EBUSY?  ...oh, should you handle
+> -EBUSY?  AKA:
+>
+> if (!psci_has_osi_support()) {
+>   do {
+>     ret = rpmh_flush(ctrl);
+>   } while (ret == -EBUSY);
+> }
 
-Lorenzo
+Done, the return value from rpmh_flush() can be -EAGAIN, not -EBUSY.
 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index d828ca835a98..3217b8cdb1e0 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1521,7 +1521,7 @@ EXPORT_SYMBOL(pci_restore_state);
->  
->  struct pci_saved_state {
->  	u32 config_space[16];
-> -	struct pci_cap_saved_data cap[0];
-> +	struct pci_cap_saved_data cap[];
->  };
->  
->  /**
-> -- 
-> 2.23.0
-> 
+i will update the comment accordingly and will include below change as well in next series.
+
+https://patchwork.kernel.org/patch/11364067/
+
+this should address for caller to not handle -EAGAIN.
+
+>
+>
+>> +               }
+>> +       }
+>> +
+>>         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>> +
+>> +       return 0;
+>>  }
+>>
+>>  static int flush_batch(struct rpmh_ctrlr *ctrlr)
+>>  {
+>>         struct batch_cache_req *req;
+>>         const struct rpmh_request *rpm_msg;
+>> -       unsigned long flags;
+>>         int ret = 0;
+>>         int i;
+>>
+>>         /* Send Sleep/Wake requests to the controller, expect no response */
+>> -       spin_lock_irqsave(&ctrlr->cache_lock, flags);
+>>         list_for_each_entry(req, &ctrlr->batch_cache, list) {
+>>                 for (i = 0; i < req->count; i++) {
+>>                         rpm_msg = req->rpm_msgs + i;
+>> @@ -314,7 +331,6 @@ static int flush_batch(struct rpmh_ctrlr *ctrlr)
+>>                                 break;
+>>                 }
+>>         }
+>> -       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>>
+>>         return ret;
+>>  }
+>> @@ -386,10 +402,8 @@ int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
+>>                 cmd += n[i];
+>>         }
+>>
+>> -       if (state != RPMH_ACTIVE_ONLY_STATE) {
+>> -               cache_batch(ctrlr, req);
+>> -               return 0;
+>> -       }
+>> +       if (state != RPMH_ACTIVE_ONLY_STATE)
+>> +               return cache_batch(ctrlr, req);
+>>
+>>         for (i = 0; i < count; i++) {
+>>                 struct completion *compl = &compls[i];
+>> @@ -455,9 +469,6 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
+>>   * Return: -EBUSY if the controller is busy, probably waiting on a response
+>>   * to a RPMH request sent earlier.
+>>   *
+>> - * This function is always called from the sleep code from the last CPU
+>> - * that is powering down the entire system. Since no other RPMH API would be
+>> - * executing at this time, it is safe to run lockless.
+> nit: you've now got an extra "blank" (just has a "*" on it) line at
+> the end of your comment block.
+Done.
+> nit: in v9, Evan suggested "We should probably replace that with a
+> comment indicating that we assume ctrlr->cache_lock is already held".
+> Maybe you could do that?
+yes i left it for below reason since we still can call it from sleep code.
+i will mention same in v11.
+
+Thanks,
+Maulik
+>
+> Also: presumably you _will_ still be called by the sleep code from the
+> last CPU on systems with OSI.  Is that true?  If that's not true then
+> you should change your function to static.  If that is true, then your
+> comment should be something like "this function will either be called
+> from sleep code on the last CPU (thus no spinlock needed) or with the
+> spinlock already held".
+>
+>
+> -Doug
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
