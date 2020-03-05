@@ -2,101 +2,165 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAA2C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D72C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D2B21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:42:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lg0+fmto"
+	by mail.kernel.org (Postfix) with ESMTP id 3BF3D208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:43:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583397793;
+	bh=DlwmQmp/mwTHAZamG/vOYPxGoDK0+BIIYn++idLjXr0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=VgQNi9VuIBEN8jfwgC4MRjevQsM4HRGYi0JxPTqLJb997TGXfDm49d6AuvT5P4hj1
+	 6sGHywWW+Vi+/i59VmSUtIPC4FB9smiKVQk+25yuJkWfMKAVv/+wOrzp62MXK0ZrtA
+	 XtfS9uTlu6/+6O1fjCMU0UidBS8yLcIyAKFObcMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgCEImA (ORCPT
+        id S1726222AbgCEInL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:42:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53306 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726390AbgCEIl5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:41:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583397716;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5lvGyLMLbn4ylBoP2RsTzaqAcqw4HeX+JB/H+P3l+b8=;
-        b=Lg0+fmtoMIeLxOQNHCYEFclVHtBKPERy8bgkDRaVmd2pvoo/oscuXnsT+DwoBoMZJ8r3vO
-        dK7Kl4s6uuPy4OSVbz2gxd7x62jSqJEl+taDoMGWuN5KufRahORpC384qGdnXTbpjY/s5o
-        Ddd34khuM+B30Du/uP9Fl2SpSYQ2GFg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-9g2vDRckN5mHt24YZVwaKQ-1; Thu, 05 Mar 2020 03:41:54 -0500
-X-MC-Unique: 9g2vDRckN5mHt24YZVwaKQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 5 Mar 2020 03:43:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgCEInL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 03:43:11 -0500
+Received: from localhost (unknown [106.201.121.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88C4D8017CC;
-        Thu,  5 Mar 2020 08:41:53 +0000 (UTC)
-Received: from rules.brq.redhat.com (ovpn-204-231.brq.redhat.com [10.40.204.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE17046;
-        Thu,  5 Mar 2020 08:41:49 +0000 (UTC)
-From:   Vladis Dronov <vdronov@redhat.com>
-To:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
-        joeyli <jlee@suse.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] efi: fix a mistype in comments mentioning efivar_entry_iter_begin()
-Date:   Thu,  5 Mar 2020 09:40:41 +0100
-Message-Id: <20200305084041.24053-4-vdronov@redhat.com>
-In-Reply-To: <20200305084041.24053-1-vdronov@redhat.com>
-References: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
- <20200305084041.24053-1-vdronov@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id AAC77208CD;
+        Thu,  5 Mar 2020 08:43:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583397790;
+        bh=DlwmQmp/mwTHAZamG/vOYPxGoDK0+BIIYn++idLjXr0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=vviui3Qi8EmVg7dqGtudm4TC9foxyWMckpMTaeH7SSSR/qAvhyhjoo8jBqnYg3mS/
+         kPD3BxJB7lbH9fEGi0hTwyDoQFjfPROsfy5bVvUeMf4oNrdzMUg3wpWpclSppfNv4p
+         tpKuTNFJLvNog4CkdJPO5664dy4i70m3ahm9UIxo=
+Date:   Thu, 5 Mar 2020 14:13:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        dma <dmaengine@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v5.6-rc5
+Message-ID: <20200305084304.GY4148@vkoul-mobl>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
----
- drivers/firmware/efi/efi-pstore.c | 2 +-
- drivers/firmware/efi/vars.c       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi=
--pstore.c
-index 9ea13e8d12ec..e4767a7ce973 100644
---- a/drivers/firmware/efi/efi-pstore.c
-+++ b/drivers/firmware/efi/efi-pstore.c
-@@ -161,7 +161,7 @@ static int efi_pstore_scan_sysfs_exit(struct efivar_e=
-ntry *pos,
-  *
-  * @record: pstore record to pass to callback
-  *
-- * You MUST call efivar_enter_iter_begin() before this function, and
-+ * You MUST call efivar_entry_iter_begin() before this function, and
-  * efivar_entry_iter_end() afterwards.
-  *
-  */
-diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
-index 436d1776bc7b..5f2a4d162795 100644
---- a/drivers/firmware/efi/vars.c
-+++ b/drivers/firmware/efi/vars.c
-@@ -1071,7 +1071,7 @@ EXPORT_SYMBOL_GPL(efivar_entry_iter_end);
-  * entry on the list. It is safe for @func to remove entries in the
-  * list via efivar_entry_delete().
-  *
-- * You MUST call efivar_enter_iter_begin() before this function, and
-+ * You MUST call efivar_entry_iter_begin() before this function, and
-  * efivar_entry_iter_end() afterwards.
-  *
-  * It is possible to begin iteration from an arbitrary entry within
+--VrqPEDrXMn8OVzN4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Linus,
+
+Please pull to receive fixes for dmaengine.
+
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.6-=
+rc5
+
+for you to fetch changes up to 25962e1a7f1d522f1b57ead2f266fab570042a70:
+
+  dmaengine: imx-sdma: Fix the event id check to include RX event for UART6=
+ (2020-02-25 14:15:26 +0530)
+
+----------------------------------------------------------------
+dmaengine fixes for v5.6-rc5
+
+Bunch of driver fixes:
+ - Doc updates to clean warnings for dmaengine
+ - Fixes for newly added Intel idxd driver
+ - More fixes for newly added TI k3-udma driver
+ - Fixes for IMX and Tegra drivers.
+
+----------------------------------------------------------------
+Changbin Du (1):
+      dmaengine: doc: fix warnings/issues of client.rst
+
+Dan Carpenter (2):
+      dmaengine: idxd: Fix error handling in idxd_wq_cdev_dev_setup()
+      dmaengine: coh901318: Fix a double lock bug in dma_tc_handle()
+
+Dave Jiang (4):
+      dmaengine: idxd: fix runaway module ref count on device driver bind
+      dmaengine: idxd: correct reserved token calculation
+      dmaengine: idxd: sysfs input of wq incorrect wq type should return er=
+ror
+      dmaengine: idxd: wq size configuration needs to check global max size
+
+Dmitry Osipenko (2):
+      dmaengine: tegra-apb: Fix use-after-free
+      dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+
+Frieder Schrempf (1):
+      dmaengine: imx-sdma: Fix the event id check to include RX event for U=
+ART6
+
+Martin Fuzzey (1):
+      dmaengine: imx-sdma: fix context cache
+
+Peter Ujfalusi (5):
+      dmaengine: ti: k3-udma: Workaround for RX teardown with stale data in=
+ peer
+      dmaengine: ti: k3-udma: Move the TR counter calculation to helper fun=
+ction
+      dmaengine: ti: k3-udma: Use the TR counter helper for slave_sg and cy=
+clic
+      dmaengine: ti: k3-udma: Use the channel direction in pause/resume fun=
+ctions
+      dmaengine: ti: k3-udma: Fix terminated transfer handling
+
+Vignesh Raghavendra (1):
+      dmaengine: ti: k3-udma: Use ktime/usleep_range based TX completion ch=
+eck
+
+ Documentation/driver-api/dmaengine/client.rst |  14 +-
+ drivers/dma/coh901318.c                       |   4 -
+ drivers/dma/idxd/cdev.c                       |   4 +-
+ drivers/dma/idxd/sysfs.c                      |  27 +-
+ drivers/dma/imx-sdma.c                        |   5 +-
+ drivers/dma/tegra20-apb-dma.c                 |   6 +-
+ drivers/dma/ti/k3-udma.c                      | 493 +++++++++++++++++++---=
+----
+ 7 files changed, 400 insertions(+), 153 deletions(-)
+
+Thanks
 --=20
-2.20.1
+~Vinod
 
+--VrqPEDrXMn8OVzN4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl5gu5IACgkQfBQHDyUj
+g0fdZRAAiryLPp2bODYPcHDiJjdfWr3teNjTpcFn84VaAfR6GwOSnTyVA3o84VtV
+JCJtDRc9SJKqCcUiQ9n2vgyIpJKTQra8LxoeodPyCbNBmS1q1+Jr3qzBZ1PM43ir
+DmTDmrGkkqHvcvJYYi74ADTQ8JWA5r8EJTFSsmhocEuGpOM8I8yUikD2iQu+YoBd
+T9aj2HtwUpjiWfx+mz+z+ISGcNXr2e2tzwY1XUvKAWt8A9c+7pDvB6jbS78siSAQ
+jNujLED8HkcAZdCszgOg6iRG2B3LBmc/ds7O8UT0sz0I4dPsXdl2CYbe897K17q+
+Mu3PBw7Is9K8n4bD89PMv39O5PAa10fcA3Iv2oAWrfouFZehCpBJIaqlz8ngx6MN
+2yZefR5wkgUgITN1AtT5uakqTOek59UGcUR5GY0U8IeOMreVRw+m5I0d3q2hG1bi
++Z2T+KYyvdlc8yvsn9KoIMxW7AE77CaMlCmETqUrxL+/VoUXR9BoiLRqxcYjDFgy
+5+WDyAbFDZxIkAG1ES7kM+muvI4GO7frlssu0qwY9J2zH8zdOtiWymP//p/MSV9+
+F6/CX+HVzMRILCwV73xB9V+F2m/pnCI5qRXyy0FsNuGwzgSuy3TprOZHJS/M2VyG
+J1FRox7eeUNociqoswliGhXmV4ttpGPjih/cv1DHVvHJgf9Wi+A=
+=zhDQ
+-----END PGP SIGNATURE-----
+
+--VrqPEDrXMn8OVzN4--
