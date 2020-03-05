@@ -2,206 +2,117 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F38C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E507C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573852072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ilhLt4Dt"
+	by mail.kernel.org (Postfix) with ESMTP id 44AD72072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgCETCB (ORCPT
+        id S1726259AbgCETCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 14:02:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31559 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725989AbgCETCA (ORCPT
+        Thu, 5 Mar 2020 14:02:18 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:44424 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726173AbgCETCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 14:02:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583434919;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DY5YqhvjQMnPrhbBNfCnQkD/xoye6AV9b4GrL7fHxYk=;
-        b=ilhLt4Dtb7W4kYssOErTG4+ay5GSKzeG2akTGWkfMKumG8N/+LYn+18F8CqHd0qtP8FQbA
-        HzQRZJ2GAiwc+pkPUeGv/fNW0CQSJ092heV7X8HV20XWxbZGdAIPHPwY8vfHosZE009cxn
-        F1OKnWtXS4KhLAeXtpZjTNDYvOCxqxI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-479-1FQ5pFhGPaui0hpv2b7jsg-1; Thu, 05 Mar 2020 14:01:55 -0500
-X-MC-Unique: 1FQ5pFhGPaui0hpv2b7jsg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA6BD8010EE;
-        Thu,  5 Mar 2020 19:01:53 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E2E094B20;
-        Thu,  5 Mar 2020 19:01:49 +0000 (UTC)
-Date:   Thu, 5 Mar 2020 12:01:49 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>
-Subject: Re: [PATCH v3 1/7] vfio: allow external user to get vfio group from
- device
-Message-ID: <20200305120149.52f71551@w520.home>
-In-Reply-To: <20200225033542.GE30338@joy-OptiPlex-7040>
-References: <20200224084350.31574-1-yan.y.zhao@intel.com>
-        <20200224084641.31696-1-yan.y.zhao@intel.com>
-        <20200224121504.367cdfb4@w520.home>
-        <20200225033542.GE30338@joy-OptiPlex-7040>
+        Thu, 5 Mar 2020 14:02:18 -0500
+Received: (qmail 3927 invoked by uid 2102); 5 Mar 2020 14:02:16 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 5 Mar 2020 14:02:16 -0500
+Date:   Thu, 5 Mar 2020 14:02:16 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+cc:     gregkh@linuxfoundation.org, <mathias.nyman@intel.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: core: Set port link to RxDetect if port is not
+ enabled after resume
+In-Reply-To: <20200305072826.23231-1-kai.heng.feng@canonical.com>
+Message-ID: <Pine.LNX.4.44L0.2003051357400.1298-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 22:35:42 -0500
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+On Thu, 5 Mar 2020, Kai-Heng Feng wrote:
 
-> On Tue, Feb 25, 2020 at 03:15:04AM +0800, Alex Williamson wrote:
-> > On Mon, 24 Feb 2020 03:46:41 -0500
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > external user is able to
-> > > 1. add a device into an vfio group  
-> > 
-> > How so?  The device is added via existing mechanisms, the only thing
-> > added here is an interface to get a group reference from a struct
-> > device.
-> >   
-> > > 2. call vfio_group_get_external_user_from_dev() with the device pointer
-> > > to get vfio_group associated with this device and increments the container
-> > > user counter to prevent the VFIO group from disposal before KVM exits.
-> > > 3. When the external KVM finishes, it calls vfio_group_put_external_user()
-> > > to release the VFIO group.
-> > > 
-> > > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > > ---
-> > >  drivers/vfio/vfio.c  | 37 +++++++++++++++++++++++++++++++++++++
-> > >  include/linux/vfio.h |  2 ++
-> > >  2 files changed, 39 insertions(+)
-> > > 
-> > > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> > > index c8482624ca34..914bdf4b9d73 100644
-> > > --- a/drivers/vfio/vfio.c
-> > > +++ b/drivers/vfio/vfio.c
-> > > @@ -1720,6 +1720,43 @@ struct vfio_group *vfio_group_get_external_user(struct file *filep)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(vfio_group_get_external_user);
-> > >  
-> > > +/**
-> > > + * External user API, exported by symbols to be linked dynamically.
-> > > + *
-> > > + * The protocol includes:
-> > > + * 1. External user add a device into a vfio group
-> > > + *
-> > > + * 2. The external user calls vfio_group_get_external_user_from_dev()
-> > > + * with the device pointer
-> > > + * to verify that:
-> > > + *	- there's a vfio group associated with it and is initialized;
-> > > + *	- IOMMU is set for the vfio group.
-> > > + * If both checks passed, vfio_group_get_external_user_from_dev()
-> > > + * increments the container user counter to prevent
-> > > + * the VFIO group from disposal before KVM exits.
-> > > + *
-> > > + * 3. When the external KVM finishes, it calls
-> > > + * vfio_group_put_external_user() to release the VFIO group.
-> > > + * This call decrements the container user counter.
-> > > + */  
-> > 
-> > I don't think we need to duplicate this whole comment block for a
-> > _from_dev() version of the existing vfio_group_get_external_user().
-> > Please merge the comments.  
-> ok. but I have a question: for an external user, as it already has group
-> fd, it can use vfio_group_get_external_user() directly, is there a
-> necessity for it to call vfio_group_get_external_user_from_dev() ?
+> On Dell TB16, Realtek USB ethernet (r8152) connects to an SMSC hub which
+> then connects to ASMedia xHCI's root hub:
 > 
-> If an external user wants to call this interface, it needs to first get
-> device fd, passes the device fd to kernel and kernel retrieves the pointer
-> to struct device, right?
-
-If you have the fd already, then yeah, let's not add a _from_dev()
-version, but how would an mdev vendor driver have the fd?  IIRC, the
-existing interface is designed this way to allow the user to prove
-ownership, whereas using a _from_dev() interface would be for trusted
-parts of the kernel, where we can theoretically trust that code isn't
-simply locating a device in order to perform malicious actions in the
-user (because they'd have more direct ways than this to be malicious to
-the user already).
-
-> > > +
-> > > +struct vfio_group *vfio_group_get_external_user_from_dev(struct device *dev)
-> > > +{
-> > > +	struct vfio_group *group;
-> > > +	int ret;
-> > > +
-> > > +	group = vfio_group_get_from_dev(dev);
-> > > +	if (!group)
-> > > +		return ERR_PTR(-ENODEV);
-> > > +
-> > > +	ret = vfio_group_add_container_user(group);
-> > > +	if (ret)
-> > > +		return ERR_PTR(ret);  
-> > 
-> > Error path leaks group reference.
-> >  
-> oops, sorry for that.
+> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
+>     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
+>             |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
 > 
-> > > +
-> > > +	return group;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(vfio_group_get_external_user_from_dev);
-> > > +
-> > >  void vfio_group_put_external_user(struct vfio_group *group)
-> > >  {
-> > >  	vfio_group_try_dissolve_container(group);
-> > > diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> > > index e42a711a2800..2e1fa0c7396f 100644
-> > > --- a/include/linux/vfio.h
-> > > +++ b/include/linux/vfio.h
-> > > @@ -94,6 +94,8 @@ extern void vfio_unregister_iommu_driver(
-> > >   */
-> > >  extern struct vfio_group *vfio_group_get_external_user(struct file *filep);
-> > >  extern void vfio_group_put_external_user(struct vfio_group *group);
-> > > +extern
-> > > +struct vfio_group *vfio_group_get_external_user_from_dev(struct device *dev);  
-> > 
-> > Slight cringe at this line wrap, personally would prefer to wrap the
-> > args as done repeatedly elsewhere in this file.  Thanks,
-> >  
-> yeah, I tried to do in that way, but the name of this interface is too long,
-> as well as its return type, it passes 80 characters limit even with just one
-> arg...
+> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+> Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp. USB5537B
+> Bus 004 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
 > 
-> is it better to wrap in below way?
-> extern struct vfio_group *vfio_group_get_external_user_from_dev(struct device
-> 								*dev);
+> The port is disabled after resume:
+> xhci_hcd 0000:3f:00.0: Get port status 4-1 read: 0x280, return 0x280
 > 
-> or just a shorter interface name?
-> extern struct vfio_group *vfio_group_get_user_from_dev(struct device *dev);
+> According to xHCI 4.19.1.2.1, we should set link to RxDetect to transit
+> it from disabled state to disconnected state, which allows the port to
+> be set to U0 and completes the resume process.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> 
+> P.S. This is and differnt (and should be more correct) approach to solve
+> https://lore.kernel.org/lkml/20191129174115.31683-1-kai.heng.feng@canonical.com/
+> 
+>  drivers/usb/core/hub.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 54cd8ef795ec..352e33c84d6a 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -3537,12 +3537,24 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
+>  
+>  	/* Skip the initial Clear-Suspend step for a remote wakeup */
+>  	status = hub_port_status(hub, port1, &portstatus, &portchange);
+> -	if (status == 0 && !port_is_suspended(hub, portstatus)) {
+> +	if (status == 0 && !port_is_suspended(hub, portstatus)
+> +	    && (portstatus & USB_PORT_STAT_ENABLE)) {
 
-I'd probably tend towards the former, keeping "external" in the name
-makes it clear that it belongs to a certain class of functions with
-similar conventions.  Thanks,
+This doesn't look right.  We want to skip the step the clears the
+port's suspend feature whenever the feature is already clear,
+regardless of whether the port is enabled.
 
-Alex
+Besides, isn't this new test racy?  Suppose the port was enabled when
+we called hub_port_status above, but it got disabled in the nanoseconds
+since then?
+
+>  		if (portchange & USB_PORT_STAT_C_SUSPEND)
+>  			pm_wakeup_event(&udev->dev, 0);
+>  		goto SuspendCleared;
+>  	}
+>  
+> +	/* xHCI 4.19.1.2.1 */
+> +	if (hub_is_superspeed(hub->hdev)) {
+> +		if (!(portstatus & USB_PORT_STAT_ENABLE))
+> +			status = hub_set_port_link_state(hub, port1,
+> +							 USB_SS_PORT_LS_RX_DETECT);
+> +
+> +		if (status)
+> +			dev_dbg(&port_dev->dev,
+> +				"can't set to RxDetect, status %d\n", status);
+> +	}
+> +
+
+So maybe this part belongs later in the routine.  Or maybe it shouldn't
+be in the hub driver at all -- since it is xHCI-specific, shouldn't it
+go into the xhci-hcd driver?
+
+Alan Stern
+
+>  	/* see 7.1.7.7; affects power usage, but not budgeting */
+>  	if (hub_is_superspeed(hub->hdev))
+>  		status = hub_set_port_link_state(hub, port1, USB_SS_PORT_LS_U0);
 
