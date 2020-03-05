@@ -2,180 +2,116 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83ECC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF294C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E32B208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73CD2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583422600;
-	bh=+OC8hL99FhpM++K8gHSbguliv26mWqwghQuaLYV90sk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=pC/eHIjepe5qlKDczYSmDqHEFo5CAG2S9HW5F4jib0E3/XUSb/dGjovT2usJcUokv
-	 xlrrgCn33hLcNZwzILaGnpY5Fk3Q+8cZBtoy97B0SQQqlnP+Jrzqf1rpcfB1WneE5Q
-	 2zz2xY4SOniQgmCdGxVoFjMNSbCCyayXcnF5NCnc=
+	s=default; t=1583422689;
+	bh=pFOZLiv0mIVHTNZOWfiOPa3A/ridTd7fa+fuzsFhe40=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AG8KTBWpwCXHYUFrSKr9niBSnbccJCuMq2jUa3bBirjViia2nKpXYFa4LWeuUuoBu
+	 REt4Pisys81lJ1bVn/Jlma/ag6fKsqypuWZeZzp6VfGBodHdF4ZD9fo6jl8rZqPUHt
+	 KTuIOpJzlIktqUT7CKxaAw7Td3KmBRo++m8n91w8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgCEPgj (ORCPT
+        id S1726887AbgCEPiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:36:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59252 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 10:38:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726897AbgCEPgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:36:39 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726563AbgCEPiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 10:38:08 -0500
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FA862073B;
-        Thu,  5 Mar 2020 15:36:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 219032073D;
+        Thu,  5 Mar 2020 15:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583422598;
-        bh=+OC8hL99FhpM++K8gHSbguliv26mWqwghQuaLYV90sk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=mdYwBxiq24s6cSA2R0kl1wB/qVP9VvrylTV2MAABJ5ft8vwjGMeJ31S9jRtbJSsLX
-         v2uBfn6oDjzpKeo+Y0AMHGtnLo70T0anhc7nRXnqJPEv5Dbi4NIylNFduk559GHMg3
-         NRyMEu2z+bdq20GMYbCLHszAsaO3e8OUdkQ8pxt0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3350B35226D4; Thu,  5 Mar 2020 07:36:38 -0800 (PST)
-Date:   Thu, 5 Mar 2020 07:36:38 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: Pinning down a blocked task to extract diagnostics
-Message-ID: <20200305153638.GC2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200305005049.GA21120@paulmck-ThinkPad-P72>
- <20200305080755.GS2596@hirez.programming.kicks-ass.net>
- <20200305081337.GA2619@hirez.programming.kicks-ass.net>
- <20200305142245.GB2935@paulmck-ThinkPad-P72>
- <20200305092845.4296c35e@gandalf.local.home>
+        s=default; t=1583422687;
+        bh=pFOZLiv0mIVHTNZOWfiOPa3A/ridTd7fa+fuzsFhe40=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K44rhoDh34OpJhwV62dvPm3zfh+dqxbN7xwYVMhfZ6ZtnzxuPOWZhfpLyZuQqa7WQ
+         NichaLzvxHrJDLkeBwtLMNXQRtD3/TVjiW+oqlRAriWQjYEti6aP1BLgLq7zNI2mxx
+         7X85qsau8d6izShQ8AZil0GgKS4OYGGK784FwZKk=
+Received: by mail-qt1-f176.google.com with SMTP id v22so4418939qtp.10;
+        Thu, 05 Mar 2020 07:38:07 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2FibSRIUifkvXSwNNXPqj3BiEkiU0K5UsMqj3iNdJIoZQzflF+
+        XnAF6ndI/ERNChGJMKgDxTS5X3oR3gg7Ko7M8w==
+X-Google-Smtp-Source: ADFU+vsQsV656cyzVfl1AIRiy+kSqBsXm03AeKkd3MEkLkSKnRjRFBKeqrqHktEL6J028OlhKaosK6M+LVN7lOLFI+w=
+X-Received: by 2002:ac8:7c9b:: with SMTP id y27mr7976141qtv.300.1583422686231;
+ Thu, 05 Mar 2020 07:38:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305092845.4296c35e@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1582528977.git.amit.kucheria@linaro.org>
+ <59d24f8ec98e29d119c5cbdb2abe6d4644cc51cf.1582528977.git.amit.kucheria@linaro.org>
+ <20200224184003.GA3607@bogus> <CAHLCerP1_xESMbLuSBsVz1XkrA0j_okbX+SxbefVSo4ttvX_fg@mail.gmail.com>
+In-Reply-To: <CAHLCerP1_xESMbLuSBsVz1XkrA0j_okbX+SxbefVSo4ttvX_fg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 5 Mar 2020 09:37:54 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK_8MbxwKb9D4U0Cfv1m61zHWku4hJwiLaeOO6wkS8WCQ@mail.gmail.com>
+Message-ID: <CAL_JsqK_8MbxwKb9D4U0Cfv1m61zHWku4hJwiLaeOO6wkS8WCQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 3/3] dt-bindings: thermal: Add yaml bindings for
+ thermal zones
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 09:28:45AM -0500, Steven Rostedt wrote:
-> On Thu, 5 Mar 2020 06:22:45 -0800
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > On Thu, Mar 05, 2020 at 09:13:37AM +0100, Peter Zijlstra wrote:
-> > > On Thu, Mar 05, 2020 at 09:07:55AM +0100, Peter Zijlstra wrote:  
-> > > > On Wed, Mar 04, 2020 at 04:50:49PM -0800, Paul E. McKenney wrote:  
-> > > > > Hello!
-> > > > > 
-> > > > > Suppose that I need to extract diagnostics information from a blocked
-> > > > > task, but that I absolutely cannot tolerate this task awakening in the
-> > > > > midst of this extraction process.  Is the following code the right way
-> > > > > to make this work given a task "t"?
-> > > > > 
-> > > > > 	raw_spin_lock_irq(&t->pi_lock);
-> > > > > 	if (t->on_rq) {
-> > > > > 		/* Task no longer blocked, so ignore it. */
-> > > > > 	} else {
-> > > > > 		/* Extract consistent diagnostic information. */
-> > > > > 	}
-> > > > > 	raw_spin_unlock_irq(&t->pi_lock);
-> > > > > 
-> > > > > It looks like all the wakeup paths acquire ->pi_lock, but I figured I
-> > > > > should actually ask...  
-> > > > 
-> > > > Close, the thing pi_lock actually guards is the t->state transition *to*
-> > > > TASK_WAKING/TASK_RUNNING, so something like this:  
-> > > 
-> > > Almost, we must indeed also check ->on_rq, otherwise it might change the
-> > > state back itself.
-> > >   
-> > > > 
-> > > > 	raw_spin_lock_irq(&t->pi_lock);
-> > > > 	switch (t->state) {
-> > > > 	case TASK_RUNNING:
-> > > > 	case TASK_WAKING:
-> > > > 		/* ignore */
-> > > > 		break;
-> > > > 
-> > > > 	default:  
-> > > 		if (t->on_rq)
-> > > 			break;
-> > >   
-> > > > 		/* Extract consistent diagnostic information. */
-> > > > 		break;
-> > > > 	}
-> > > > 	raw_spin_unlock_irq(&t->pi_lock);
-> > > > 
-> > > > ought to work. But if you're going to do this, please add a reference to
-> > > > that code in a comment on top of try_to_wake_up(), such that we can
-> > > > later find all the code that relies on this.  
-> > 
-> > How about if I add something like this, located right by try_to_wake_up()?
-> > 
-> > 	bool try_to_keep_sleeping(struct task_struct *t)
-> > 	{
-> > 		raw_spin_lock_irq(&t->pi_lock);
-> > 		switch (t->state) {
-> > 		case TASK_RUNNING:
-> > 		case TASK_WAKING:
-> > 			raw_spin_unlock_irq(&t->pi_lock);
-> > 			return false;
-> > 
-> > 		default:
-> > 			if (t->on_rq) {
-> 
-> Somehow I think there still needs to be a read barrier before the test to
-> on_rq.
+On Thu, Mar 5, 2020 at 6:50 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> On Tue, Feb 25, 2020 at 12:10 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Mon, 24 Feb 2020 12:55:37 +0530, Amit Kucheria wrote:
+> > > As part of moving the thermal bindings to YAML, split it up into 3
+> > > bindings: thermal sensors, cooling devices and thermal zones.
+> > >
+> > > The thermal-zone binding is a software abstraction to capture the
+> > > properties of each zone - how often they should be checked, the
+> > > temperature thresholds (trips) at which mitigation actions need to be
+> > > taken and the level of mitigation needed at those thresholds.
+> > >
+> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > ---
+> > >  .../bindings/thermal/thermal-zones.yaml       | 302 ++++++++++++++++++
+> > >  1 file changed, 302 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+>
+> This one isn't due to my patch, I believe.
 
-This is nowhere near a fastpath, so if there is uncertainty it gets
-the smp_rmb().  Or an smp_load_acquire() on t->state.
+Right, that's the one known warning...
 
-> > 				raw_spin_unlock_irq(&t->pi_lock);
-> > 				return false;
-> > 			}
-> > 
-> > 			/* OK to extract consistent diagnostic information. */
-> > 			return true;
-> > 		}
-> > 		/* NOTREACHED */
-> > 	}
-> > 
-> > Then a use might look like this:
-> > 
-> > 	if (try_to_keep_sleeping(t))
-> > 		/* Extract consistent diagnostic information. */
-> > 		raw_spin_unlock_irq(&t->pi_lock);
-> 
-> Perhaps we should have a allow_awake(t) to match it?
-> 
-> 		allow_awake(t);
-> 
-> Where we have:
-> 
-> static inline allow_awake(struct task_struct *t)
-> {
-> 	raw_spin_unlock_irq(&t->pi_lock);
-> }
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupt-names: ['uplow'] is too short
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c263000: interrupts: [[0, 506, 4]] is too short
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupt-names: ['uplow'] is too short
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-zones.example.dt.yaml: thermal-sensor@c265000: interrupts: [[0, 507, 4]] is too short
+>
+> Fixed. Just for my information, did the check somehow figure out that
+> this (incomplete) example needed the qcom-tsens.yaml binding (based on
+> compatible string?) and then apply those rules to throw this error?
 
-Makes sense to me!
+Yes. And setting DT_SCHEMA_FILES did change that to only check with
+the specified schema file. However, that's now changed in linux-next
+such that examples are always checked by all schemas and
+DT_SCHEMA_FILES just limits which bindings to build and check.
 
-							Thanx, Paul
-
-> -- Steve?
-> 
-> > 	} else {
-> > 		/* Woo-hoo!  It started running again!!! */
-> > 	}
-> > 
-> > Is there a better way to approach this?
-> > 
-> > 							Thanx, Paul
-> 
+Rob
