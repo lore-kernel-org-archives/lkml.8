@@ -2,116 +2,89 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C3BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4339C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44032207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954A220848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GP5tt6YW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrE+quKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgCEUeu (ORCPT
+        id S1726608AbgCEUfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 15:34:50 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35081 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgCEUet (ORCPT
+        Thu, 5 Mar 2020 15:35:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34951 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725991AbgCEUfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 15:34:49 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r7so8678787wro.2;
-        Thu, 05 Mar 2020 12:34:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=IDOTEX11cunJSK+e5Q+/5P0CmencMvVLWVjAvP7JoBg=;
-        b=GP5tt6YW+x2vfFIOuHGuEtOwPJ31wSu8bMffq4kwjBcgfaoO+KGCdoN2vf+B9m6j3A
-         Y1TpOMUaA0QHkG+w8eGXnC9mhtw4dWqZ8z3NT+d1/XIKd3gEENs/eZ0CPuH3SQdF7/gY
-         b0zTewP08bXCMySJQALV9PXB5veSyZ+l+BLIhUZWbt24HMJYPAq5XnGlu7pefpOipgqR
-         JfWHSuoN5DDS5z8LT2odU4FA66bHlaxDOYXlZC8Tn7Ji0z1cCVpK/xenUJpvErk2rXj0
-         NzB42/iq4DKY1LZ9aTRCVkW96KIiAT/aJkLx2vkN5txyi+G6MKWDpoIqlWyEmntITab7
-         aOtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=IDOTEX11cunJSK+e5Q+/5P0CmencMvVLWVjAvP7JoBg=;
-        b=C2My93hjjVGB724sV+Jeuj9fTBuRx94JlD5CZgLUxaFT9aVl2AwL67pHFRHxikZOjF
-         MDUDt759hmYu0tnjQHEp2406d2tbk9RipDhhzdW5WydvUzGTvgrgHlqJIvKeMqrfbe2g
-         2hOZjTcZ+fAfZDnWEVjPl7ssawId35mScgJj58zBiGeOQ1ixV+S6HTk0XXuNeo+vwFc/
-         pz3xcIaxQOjkTDP+2cwebs3BuUbhiOH3l0tRgxdbsD8JXS4H55cFNKWb4YtmMVRKNoSX
-         SDAXiNz0ZCyAXk6xAOsGP0oas2LuohJ6A01g1nkOJ/XICBPEkrhdPRB/frHffTNMFpGp
-         dZHQ==
-X-Gm-Message-State: ANhLgQ1n/U2FO86imDgDgZUqpydvctweOsEvIamXn/TKNU1nfIuFPeTZ
-        gFZWit6GAlFgbDHFV3yuWOo=
-X-Google-Smtp-Source: ADFU+vtY445MTs3NyObNXlzsuoAccoC6ePupE9JkiNBaYEwr8Mdj9KfVCySxnpTg0Xp8bL4N3rdaoA==
-X-Received: by 2002:adf:9282:: with SMTP id 2mr734439wrn.124.1583440487893;
-        Thu, 05 Mar 2020 12:34:47 -0800 (PST)
-Received: from felia ([2001:16b8:2d7c:7000:ec58:d834:7ed:456a])
-        by smtp.gmail.com with ESMTPSA id c14sm32242324wro.36.2020.03.05.12.34.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 12:34:47 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Thu, 5 Mar 2020 21:34:46 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: adjust to trusted keys subsystem creation
-In-Reply-To: <9127f0318e8507ca0b4e146d9b99d9ecb27f7f28.camel@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.2003052132540.5431@felia>
-References: <20200304160359.16809-1-lukas.bulwahn@gmail.com> <9127f0318e8507ca0b4e146d9b99d9ecb27f7f28.camel@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 5 Mar 2020 15:35:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583440515;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5U5JtOxyT2J/jqnRkTwxu/wWznmUdm4uGYD+aZ7B6ZU=;
+        b=WrE+quKr5n/HJuXB7AlmbOXHqOQOfGgkNfXravx9zlF5BTHV8nAtlVdThh6rk/yeWamGQZ
+        Efat6Wu+PCGIDjUkABnAqujhPRBisl1aC5rxV/z6h9wldPwW20aEhGi1NoTnoOam7OSD+4
+        l6bw2svgr4DeiAWBKNWee0Ov3whcQng=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198-HfKQmJQFOQCbDo7hC9AehQ-1; Thu, 05 Mar 2020 15:35:11 -0500
+X-MC-Unique: HfKQmJQFOQCbDo7hC9AehQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D7A1100550E;
+        Thu,  5 Mar 2020 20:35:09 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BB36E5D9CD;
+        Thu,  5 Mar 2020 20:35:07 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <4e915f46-093b-c566-1746-938dbd6dcf62@samba.org>
+References: <4e915f46-093b-c566-1746-938dbd6dcf62@samba.org> <3774367.1583430213@warthog.procyon.org.uk>
+To:     Stefan Metzmacher <metze@samba.org>
+Cc:     dhowells@redhat.com, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        cyphar@cyphar.com, christian.brauner@ubuntu.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH] Mark AT_* path flags as deprecated and add missing RESOLVE_ flags
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3786500.1583440507.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 05 Mar 2020 20:35:07 +0000
+Message-ID: <3786501.1583440507@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Stefan Metzmacher <metze@samba.org> wrote:
 
+> Where's the RESOLVE_NO_TERMINAL_AUTOMOUNTS check?
 
-On Thu, 5 Mar 2020, Jarkko Sakkinen wrote:
+See:
 
-> On Wed, 2020-03-04 at 17:03 +0100, Lukas Bulwahn wrote:
-> > Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys subsystem")
-> > renamed trusted.h to trusted_tpm.h in include/keys/, and moved trusted.c
-> > to trusted-keys/trusted_tpm1.c in security/keys/.
-> > 
-> > Since then, ./scripts/get_maintainer.pl --self-test complains:
-> > 
-> >   warning: no file matches F: security/keys/trusted.c
-> >   warning: no file matches F: include/keys/trusted.h
-> > 
-> > Rectify the KEYS-TRUSTED entry in MAINTAINERS now.
-> > 
-> > Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-> > Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > ---
-> > Sumit, please ack.
-> > Jarkko, please pick this patch.
-> 
-> I'll pick it when it is done. I acknowledge the regression but I
-> see no reason for rushing as this does not break any systems in
-> the wild.
-> 
+      (3) Make openat2() support RESOLVE_NO_TERMINAL_SYMLINKS.  LOOKUP_OPE=
+N
+          internally implies LOOKUP_AUTOMOUNT, and AT_EMPTY_PATH is probab=
+ly not
+          worth supporting (maybe use dup2() instead?).
 
-Agree. No need to rush this. I sent out a v3, and I hope to get Sumit's 
-ACK and then you can pick it for the next merge window.
+As things currently stand, automount following is explicitly forced on for
+open and create.  We can make it error out instead if this is desirable if
+RESOLVE_NO_TERMINAL_AUTOMOUNTS in such a case.
 
+David
 
-Lukas
