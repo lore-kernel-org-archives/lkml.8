@@ -2,181 +2,237 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C951FC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1291CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A331121556
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:38:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mPnvGwwI"
+	by mail.kernel.org (Postfix) with ESMTP id B968A2072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgCEEiJ (ORCPT
+        id S1725912AbgCEElc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 23:38:09 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:41174 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbgCEEiJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 23:38:09 -0500
-Received: by mail-vs1-f68.google.com with SMTP id k188so2733875vsc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 20:38:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wT7fX3XNpFUklA+4ubZ3A31ow/x3fc9U86BQ8duNKxk=;
-        b=mPnvGwwIyc8PT9pu6q66/Xy/ag6QPMQHDyXJlCIiDTmTeYgipFoyhF1mRpzK0vT54c
-         j7mVmd5I9pjGiM0Kgj4rIDhSIJ1vCE35gVKV5R9sD0dqxRnUnN479aGCHq4R0Ys/6QyJ
-         AjH5TUwEl45CjFaDUVfjZT20unJjwtiCN9dz0pvaeKRUn0xPvQnxO9qHz9fhctfmKFvL
-         ZfwXszJ3SCcT1z4FjJe6cdD3M1AQQoMtZmRVjvEPMhLufWXFeZsodXlZecriYJomGOdO
-         AyBlIXzJbV3MTnDG0/ULrakFCgJdCH61wd8ssnq08gHeSwTXFPy86ENlrDxluvER3aZk
-         eAZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wT7fX3XNpFUklA+4ubZ3A31ow/x3fc9U86BQ8duNKxk=;
-        b=ZyQNSUkySXoXCk2Xm+HsdU5FmR1NeI161EkbTxO+gzGamBIju/9mwV2eF1pZdSJse+
-         xHMA+PT09Z7yoOh5zb5jfOaXZ4m61+9hORBw8T0zuQPfCeRnU5wLuE/owyhg0Rzy1bLV
-         b/LlJ4WLpC5jJkv7x+zLHmyj642R7w5AG/WVFqI8fPrnP90QwTC/3B0Lx0JeQBzUA2WG
-         WSyTXjpS5/ruViE4ceY29WbUkV8+yIb29b4L9wRo+CwyLTm3W8qX36UzwwzPANj1PRFx
-         ALUuvpjMTFRrJFZR5vyZNGAVe8G7xtXWKFplEKswOBt+hXcMJEsxv6UF8ZUkpeGvsghK
-         L+Og==
-X-Gm-Message-State: ANhLgQ0iKsnddJNqW1Yl/EPAd7PMcb55XnSNHaojS0dceNgipVZ0jAY8
-        q32en4B2qGo54xuBQxkcsq88tVxcYB2fntkv1nXHOg==
-X-Google-Smtp-Source: ADFU+vtpr6/USWdDlF9OiCn6kxzaHvl/3Ges+ziOkGWGK22NIqrfWwtyXIjIUamxEVSJsteoPkHUpPj7fNkprubJfjE=
-X-Received: by 2002:a67:ea84:: with SMTP id f4mr4016914vso.218.1583383085993;
- Wed, 04 Mar 2020 20:38:05 -0800 (PST)
+        Wed, 4 Mar 2020 23:41:32 -0500
+Received: from mga17.intel.com ([192.55.52.151]:21012 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbgCEElc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 23:41:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 20:41:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,516,1574150400"; 
+   d="scan'208";a="240684644"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga003.jf.intel.com with ESMTP; 04 Mar 2020 20:41:27 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH -V2] mm: Add PageLayzyFree() helper functions for MADV_FREE
+References: <20200304081732.563536-1-ying.huang@intel.com>
+        <d7dcb472-76fa-9d8b-513a-793a7ab8580d@redhat.com>
+Date:   Thu, 05 Mar 2020 12:41:26 +0800
+In-Reply-To: <d7dcb472-76fa-9d8b-513a-793a7ab8580d@redhat.com> (David
+        Hildenbrand's message of "Wed, 4 Mar 2020 09:28:37 +0100")
+Message-ID: <87y2sf1ki1.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200304233856.257891-1-shakeelb@google.com> <CANn89i+TiiLKsE7k4TyRqr03uNPW=UpkvpXL1LVWvTmhE_AUpA@mail.gmail.com>
- <CALvZod7MSXGsV6nDngWS+mS-5tfu0ww3aJyXQ8GV2hRkEEcYDg@mail.gmail.com>
-In-Reply-To: <CALvZod7MSXGsV6nDngWS+mS-5tfu0ww3aJyXQ8GV2hRkEEcYDg@mail.gmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Wed, 4 Mar 2020 20:37:53 -0800
-Message-ID: <CANn89iJF3vSNG=uw5=-Knu48dKpceqXyYLm8z6d7aDoxaGDgTw@mail.gmail.com>
-Subject: Re: [PATCH v2] net: memcg: late association of sock to memcg
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Roman Gushchin <guro@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev <netdev@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 6:19 PM Shakeel Butt <shakeelb@google.com> wrote:
+David Hildenbrand <david@redhat.com> writes:
+
+> On 04.03.20 09:17, Huang, Ying wrote:
+>> From: Huang Ying <ying.huang@intel.com>
+>> 
+>> Now PageSwapBacked() is used as the helper function to check whether
+>> pages have been freed lazily via MADV_FREE.  This isn't very obvious.
+>> So Dave suggested to add PageLazyFree() family helper functions to
+>> improve the code readability.
+>> 
+>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+>> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Mel Gorman <mgorman@suse.de>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Zi Yan <ziy@nvidia.com>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Minchan Kim <minchan@kernel.org>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> ---
+>> 
+>> Changelog:
+>> 
+>> v2:
+>> 
+>> - Avoid code bloat via removing VM_BUG_ON_PAGE(), which doesn't exist
+>>   in the original code.  Now there is no any text/data/bss size
+>>   change.
+>> 
+>> - Fix one wrong replacement in try_to_unmap_one().
+>> ---
+>>  include/linux/page-flags.h | 25 +++++++++++++++++++++++++
+>>  mm/rmap.c                  |  4 ++--
+>>  mm/swap.c                  | 11 +++--------
+>>  mm/vmscan.c                |  7 +++----
+>>  4 files changed, 33 insertions(+), 14 deletions(-)
+>> 
+>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+>> index 49c2697046b9..192b593750d3 100644
+>> --- a/include/linux/page-flags.h
+>> +++ b/include/linux/page-flags.h
+>> @@ -498,6 +498,31 @@ static __always_inline int PageKsm(struct page *page)
+>>  TESTPAGEFLAG_FALSE(Ksm)
+>>  #endif
+>>  
+>> +/*
+>> + * For pages freed lazily via MADV_FREE.  lazyfree pages are clean
+>> + * anonymous pages.  They have SwapBacked flag cleared to distinguish
+>> + * with normal anonymous pages
 >
-> On Wed, Mar 4, 2020 at 5:36 PM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > On Wed, Mar 4, 2020 at 3:39 PM Shakeel Butt <shakeelb@google.com> wrote:
-> > >
-> > > If a TCP socket is allocated in IRQ context or cloned from unassociated
-> > > (i.e. not associated to a memcg) in IRQ context then it will remain
-> > > unassociated for its whole life. Almost half of the TCPs created on the
-> > > system are created in IRQ context, so, memory used by such sockets will
-> > > not be accounted by the memcg.
-> > >
-> > > This issue is more widespread in cgroup v1 where network memory
-> > > accounting is opt-in but it can happen in cgroup v2 if the source socket
-> > > for the cloning was created in root memcg.
-> > >
-> > > To fix the issue, just do the late association of the unassociated
-> > > sockets at accept() time in the process context and then force charge
-> > > the memory buffer already reserved by the socket.
-> > >
-> > > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > > ---
-> > > Changes since v1:
-> > > - added sk->sk_rmem_alloc to initial charging.
-> > > - added synchronization to get memory usage and set sk_memcg race-free.
-> > >
-> > >  net/ipv4/inet_connection_sock.c | 19 +++++++++++++++++++
-> > >  1 file changed, 19 insertions(+)
-> > >
-> > > diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-> > > index a4db79b1b643..7bcd657cd45e 100644
-> > > --- a/net/ipv4/inet_connection_sock.c
-> > > +++ b/net/ipv4/inet_connection_sock.c
-> > > @@ -482,6 +482,25 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
-> > >                 }
-> > >                 spin_unlock_bh(&queue->fastopenq.lock);
-> > >         }
-> > > +
-> > > +       if (mem_cgroup_sockets_enabled && !newsk->sk_memcg) {
-> > > +               int amt;
-> > > +
-> > > +               /* atomically get the memory usage and set sk->sk_memcg. */
-> > > +               lock_sock(newsk);
-> > > +
-> > > +               /* The sk has not been accepted yet, no need to look at
-> > > +                * sk->sk_wmem_queued.
-> > > +                */
-> > > +               amt = sk_mem_pages(newsk->sk_forward_alloc +
-> > > +                                  atomic_read(&sk->sk_rmem_alloc));
-> > > +               mem_cgroup_sk_alloc(newsk);
-> > > +
-> > > +               release_sock(newsk);
-> > > +
-> > > +               if (newsk->sk_memcg)
-> >
-> > Most sockets in accept queue should have amt == 0, so maybe avoid
-> > calling this thing only when amt == 0 ?
-> >
+> "They don't have PG_swapbacked set, to distinguish them from normal
+> anonymous pages." ?
+
+Thanks!
+
+>> + */
+>> +static __always_inline int __PageLazyFree(struct page *page)
+>> +{
+>> +	return !PageSwapBacked(page);
+>> +}
+>> +
+>> +static __always_inline int PageLazyFree(struct page *page)
+>> +{
+>> +	return PageAnon(page) && __PageLazyFree(page);
+>> +}
+>> +
+>> +static __always_inline void SetPageLazyFree(struct page *page)
+>> +{
+>> +	ClearPageSwapBacked(page);
+>> +}
+>> +
+>> +static __always_inline void ClearPageLazyFree(struct page *page)
+>> +{
+>> +	SetPageSwapBacked(page);
+>> +}
+>> +
+>>  u64 stable_page_flags(struct page *page);
+>>  
+>>  static inline int PageUptodate(struct page *page)
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index 1c02adaa233e..6ec96c8e7826 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -1609,7 +1609,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+>>  			}
+>>  
+>>  			/* MADV_FREE page check */
+>> -			if (!PageSwapBacked(page)) {
+>> +			if (__PageLazyFree(page)) {
+>>  				if (!PageDirty(page)) {
+>>  					/* Invalidate as we cleared the pte */
+>>  					mmu_notifier_invalidate_range(mm,
+>> @@ -1623,7 +1623,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+>>  				 * discarded. Remap the page to page table.
+>>  				 */
+>>  				set_pte_at(mm, address, pvmw.pte, pteval);
+>> -				SetPageSwapBacked(page);
+>> +				ClearPageLazyFree(page);
+>>  				ret = false;
+>>  				page_vma_mapped_walk_done(&pvmw);
+>>  				break;
+>> diff --git a/mm/swap.c b/mm/swap.c
+>> index c1d3ca80ea10..d83f2cd4cdb8 100644
+>> --- a/mm/swap.c
+>> +++ b/mm/swap.c
+>> @@ -563,7 +563,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+>>  static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+>>  			    void *arg)
+>>  {
+>> -	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
+>> +	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
 >
-> Thanks, will do in the next version. BTW I have tested with adding
-> mdelay() here and running iperf3 and I did see non-zero amt.
+> See my comment below
 >
-> > Also  I would release_sock(newsk) after this, otherwise incoming
-> > packets could mess with newsk->sk_forward_alloc
-> >
+>>  	    !PageSwapCache(page) && !PageUnevictable(page)) {
+>>  		bool active = PageActive(page);
+>>  
+>> @@ -571,12 +571,7 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+>>  				       LRU_INACTIVE_ANON + active);
+>>  		ClearPageActive(page);
+>>  		ClearPageReferenced(page);
+>> -		/*
+>> -		 * lazyfree pages are clean anonymous pages. They have
+>> -		 * SwapBacked flag cleared to distinguish normal anonymous
+>> -		 * pages
+>> -		 */
+>> -		ClearPageSwapBacked(page);
+>> +		SetPageLazyFree(page);
+>>  		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
+>>  
+>>  		__count_vm_events(PGLAZYFREE, hpage_nr_pages(page));
+>> @@ -678,7 +673,7 @@ void deactivate_page(struct page *page)
+>>   */
+>>  void mark_page_lazyfree(struct page *page)
+>>  {
+>> -	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
+>> +	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
 >
-> I think that is fine. Once sk->sk_memcg is set then
-> mem_cgroup_charge_skmem() will be called for new incoming packets.
-> Here we just need to call mem_cgroup_charge_skmem() with amt before
-> sk->sk_memcg was set.
-
-
-Unfortunately, as soon as release_sock(newsk) is done, incoming
-packets can be fed to the socket,
-and completely change memory usage of the socket.
-
-For example, the whole queue might have been zapped, or collapsed, if
-we receive a RST packet,
-or if memory pressure asks us to prune the out of order queue.
-
-So you might charge something, then never uncharge it, since at
-close() time the socket will have zero bytes to uncharge.
-
-
-
+> See my comment below.
 >
-> > if (amt && newsk->sk_memcg)
-> >       mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
-> > release_sock(newsk);
-> >
-> > Also, I wonder if     mem_cgroup_charge_skmem() has been used at all
-> > these last four years
-> > on arches with PAGE_SIZE != 4096
-> >
-> > ( SK_MEM_QUANTUM is not anymore PAGE_SIZE, but 4096)
-> >
+>>  	    !PageSwapCache(page) && !PageUnevictable(page)) {
+>>  		struct pagevec *pvec = &get_cpu_var(lru_lazyfree_pvecs);
+>>  
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index eca49a1c2f68..40bb41ada2d2 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -1043,8 +1043,7 @@ static void page_check_dirty_writeback(struct page *page,
+>>  	 * Anonymous pages are not handled by flushers and must be written
+>>  	 * from reclaim context. Do not stall reclaim based on them
+>>  	 */
+>> -	if (!page_is_file_cache(page) ||
+>> -	    (PageAnon(page) && !PageSwapBacked(page))) {
+>> +	if (!page_is_file_cache(page) || PageLazyFree(page)) {
+>>  		*dirty = false;
+>>  		*writeback = false;
+>>  		return;
+>> @@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>  		 * Try to allocate it some swap space here.
+>>  		 * Lazyfree page could be freed directly
+>>  		 */
+>> -		if (PageAnon(page) && PageSwapBacked(page)) {
+>> +		if (PageAnon(page) && !__PageLazyFree(page)) {
 >
-> Oh so sk_mem_pages() does not really give the number of pages. Yeah
-> this needs a fix for non-4906 page size architectures. Though I can
-> understand why this has not been caught yet. Network memory accounting
-> is opt-in in cgroup v1 and most of the users still use v1. In cgroup
-> v2, it is enabled and there is no way to opt-out. Facebook is a
-> well-known v2 user and it seems like they don't have non-4096 page
-> size arch systems.
+> I don't think this chunk makes this code easier to understand. I'd just
+> keep this as is. IOW, I prefer PageSwapBacked() over !__PageLazyFree().
+>
+>
+> In general, I don't think this patch really improves the situation ...
+> it's only a handful of places where this change slightly makes the code
+> easier to understand. And there, only slightly ... I'd prefer better
+> comments instead (e.g., in PageAnon()), documenting what it means for a
+> anon page to either have PageSwapBacked() set or not.
+
+Personally, I still prefer the better named functions than the comments
+here and there.  But I can understand that people may have different
+flavor.
+
+Best Regards,
+Huang, Ying
