@@ -2,117 +2,136 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5CBC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2968CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962E1208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECFC52146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RkT69pEM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XDSFNWk5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgCEJv3 (ORCPT
+        id S1726875AbgCEJyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:51:29 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:33751 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgCEJv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:51:29 -0500
-Received: from [IPv6:2601:646:8600:3281:d841:929b:f37:3a31] ([IPv6:2601:646:8600:3281:d841:929b:f37:3a31])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0259k9mj615657
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 5 Mar 2020 01:46:11 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0259k9mj615657
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020022001; t=1583401572;
-        bh=d3uk36S9Ty6MRwBU06LBDgFpBga8OPUr3RaLuQvKcLc=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=RkT69pEMwoDRqA7flEX01RVf8xBt7c8i+B0Dofc3n/oWvyXuJrbBO3qdQhZe2vVts
-         4n2TB0D+SIMKfXC+EUVcAdJVei//hjscj3KyQUnMX+2uiw8Qak5jyYZTTcaqogLaSQ
-         Mp8UQ+OlkrLC/NxY2tXDTOvnr4eEMc/CLyuMOVMwVlonTLn7CCAhbmhDVS9vTxsTBg
-         F/HMF4A3o2seD+/iMBqyMCsr/N5n5f/pYtnTlJyp002jpw1TnGape3yKA9tdZALlbn
-         Nso4JwQXPBYlHjERz1FjI3tnPCejaU+nBsj79dADEGC4e2BIA8FzAIxXtHEtB5YQxc
-         AaPcyNX6jdeJw==
-Date:   Thu, 05 Mar 2020 01:46:03 -0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200305093318.12235-1-chen.yu@easystack.cn>
-References: <20200305093318.12235-1-chen.yu@easystack.cn>
+        Thu, 5 Mar 2020 04:54:46 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44246 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgCEJyq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 04:54:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gGA7flVCST725vtJqB26uJyaaG/lu1I8Qz42onV745s=; b=XDSFNWk5Ipa30OZfsw2YqPZNqS
+        0jh9PBOidx9nmuBysUH6767sUR6aNmMdZt4qGxdwR02hSbr1E7usd6xToFhaU0uZL7oPlEuhj3/pv
+        wfTiZbVLTywcNIgleBztTZfHBKOtgF0Sj6/hW120Qik5I8TX252+LoAollcXU0MszWLZ1qXtOdwbS
+        s+3xbMeJhTzJ+GgQf2RLGzzT6xVU+GMtW0uEcBoM8MqcqFCWpaSrMh6KE0r4a8NcUJkadizEhA3ql
+        D9AsIBdHJQuq2dUkboUn+S5cYDknYz2dSIS56y0zcqyI+RQH87x7zbRFWHwfZtVJmPLV+CvhNTMuf
+        79sRhkpA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9nDC-0008AR-Rr; Thu, 05 Mar 2020 09:54:39 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 92D92300606;
+        Thu,  5 Mar 2020 10:52:37 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2106C23D4FA17; Thu,  5 Mar 2020 10:54:36 +0100 (CET)
+Date:   Thu, 5 Mar 2020 10:54:36 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, akpm@linux-foundation.org,
+        broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Josh Poimboeuf <jpoimboe@redhat.com>, dvyukov@google.com
+Subject: Re: mmotm 2020-03-03-22-28 uploaded (warning: objtool:)
+Message-ID: <20200305095436.GV2596@hirez.programming.kicks-ass.net>
+References: <20200304062843.9yA6NunM5%akpm@linux-foundation.org>
+ <cd1c6bd2-3db3-0058-f3b4-36b2221544a0@infradead.org>
+ <20200305081717.GT2596@hirez.programming.kicks-ass.net>
+ <20200305081842.GB2619@hirez.programming.kicks-ass.net>
+ <1583399782.17146.14.camel@mtksdccf07>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] x86/cpuid: Use macro instead of number in cpuid_read()
-To:     Yu Chen <chen.yu@easystack.cn>, tglx@linutronix.de
-CC:     linux-kernel@vger.kernel.org, x86@kernel.org, yuchen1988@aliyun.com
-From:   hpa@zytor.com
-Message-ID: <83699764-1956-4C58-8347-41A29A0687C4@zytor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583399782.17146.14.camel@mtksdccf07>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 5, 2020 1:33:18 AM PST, Yu Chen <chen=2Eyu@easystack=2Ecn> wrote:
->Make and use macro CHUNK_SIZE, instead of numeric value 16 in
->cpuid_read()=2E
->
->Signed-off-by: Yu Chen <chen=2Eyu@easystack=2Ecn>
->---
-> arch/x86/kernel/cpuid=2Ec | 13 ++++++++-----
-> 1 file changed, 8 insertions(+), 5 deletions(-)
->
->diff --git a/arch/x86/kernel/cpuid=2Ec b/arch/x86/kernel/cpuid=2Ec
->index 3492aa36b=2E=2Ef7d7e0ef7 100644
->--- a/arch/x86/kernel/cpuid=2Ec
->+++ b/arch/x86/kernel/cpuid=2Ec
->@@ -48,6 +48,9 @@ struct cpuid_regs_done {
-> 	struct completion done;
-> };
->=20
->+/* cpuid must be read in chunks of 16 bytes */
->+#define CHUNK_SIZE	16
->+
-> static void cpuid_smp_cpuid(void *cmd_block)
-> {
-> 	struct cpuid_regs_done *cmd =3D cmd_block;
->@@ -69,11 +72,11 @@ static ssize_t cpuid_read(struct file *file, char
->__user *buf,
-> 	ssize_t bytes =3D 0;
-> 	int err =3D 0;
->=20
->-	if (count % 16)
->+	if (count % CHUNK_SIZE)
-> 		return -EINVAL;	/* Invalid chunk size */
->=20
-> 	init_completion(&cmd=2Edone);
->-	for (; count; count -=3D 16) {
->+	for (; count; count -=3D CHUNK_SIZE) {
-> 		call_single_data_t csd =3D {
-> 			=2Efunc =3D cpuid_smp_cpuid,
-> 			=2Einfo =3D &cmd,
->@@ -86,12 +89,12 @@ static ssize_t cpuid_read(struct file *file, char
->__user *buf,
-> 		if (err)
-> 			break;
-> 		wait_for_completion(&cmd=2Edone);
->-		if (copy_to_user(tmp, &cmd=2Eregs, 16)) {
->+		if (copy_to_user(tmp, &cmd=2Eregs, CHUNK_SIZE)) {
-> 			err =3D -EFAULT;
-> 			break;
-> 		}
->-		tmp +=3D 16;
->-		bytes +=3D 16;
->+		tmp +=3D CHUNK_SIZE;
->+		bytes +=3D CHUNK_SIZE;
-> 		*ppos =3D ++pos;
-> 		reinit_completion(&cmd=2Edone);
-> 	}
+On Thu, Mar 05, 2020 at 05:16:22PM +0800, Walter Wu wrote:
+> On Thu, 2020-03-05 at 09:18 +0100, Peter Zijlstra wrote:
+> > On Thu, Mar 05, 2020 at 09:17:17AM +0100, Peter Zijlstra wrote:
+> > > On Wed, Mar 04, 2020 at 09:34:49AM -0800, Randy Dunlap wrote:
+> > 
+> > > > mm/kasan/common.o: warning: objtool: kasan_report()+0x13: call to report_enabled() with UACCESS enabled
+> > > 
+> > > I used next/master instead, and found the below broken commit
+> > > responsible for this.
+> > 
+> > > @@ -634,12 +637,20 @@ void kasan_free_shadow(const struct vm_struct *vm)
+> > >  #endif
+> > >  
+> > >  extern void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip);
+> > > +extern bool report_enabled(void);
+> > >  
+> > > -void kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
+> > > +bool kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
+> > >  {
+> > > -	unsigned long flags = user_access_save();
+> > > +	unsigned long flags;
+> > > +
+> > > +	if (likely(!report_enabled()))
+> > > +		return false;
+> > 
+> > This adds an explicit call before the user_access_save() and that is a
+> > straight on bug.
+> > 
+> Hi Peter,
+> 
+> Thanks for your help. Unfortunately, I don't reproduce it in our
+> environment, so I have asked Stephen, if I can reproduce it, then we
+> will send new patch.
 
-It would make more sense to define a structure and add it to a uapi header=
-=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+The patch is trivial; and all you need is an x86_64 (cross) compiler to
+reproduce.
+
+
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index ad2dc0c9cc17..2906358e42f0 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -618,16 +618,17 @@ extern bool report_enabled(void);
+ 
+ bool kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
+ {
+-	unsigned long flags;
++	unsigned long flags = user_access_save();
++	bool ret = false;
+ 
+-	if (likely(!report_enabled()))
+-		return false;
++	if (likely(report_enabled())) {
++		__kasan_report(addr, size, is_write, ip);
++		ret = true;
++	}
+ 
+-	flags = user_access_save();
+-	__kasan_report(addr, size, is_write, ip);
+ 	user_access_restore(flags);
+ 
+-	return true;
++	return ret;
+ }
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
