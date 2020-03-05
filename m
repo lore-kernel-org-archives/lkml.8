@@ -2,217 +2,151 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8692BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEEEC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 521E120848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58A920848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLqnB4nk"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JLFvXCWs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgCEKOE (ORCPT
+        id S1727347AbgCEKOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:14:04 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40013 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgCEKNz (ORCPT
+        Thu, 5 Mar 2020 05:14:16 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:38108 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbgCEKOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:13:55 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r17so6252252wrj.7;
-        Thu, 05 Mar 2020 02:13:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+xwiBse4pt803geshkaqIXQfeBC3a/woHHPXS73g1eU=;
-        b=VLqnB4nk88ex/qSKxOlbqQDpn9SK79T8EeMOmTOAIHiNWtuNHzoDFTUSfKgTv1cSxM
-         9s+UNG6EUf7SGkvNruSZVZX2Et95Uu527qR6zQ67s+nkIWU6vcpo2tUV+74Dw7kAJIUz
-         hj6KBM0ulmhTuF4H5GvXcmtwZuzUFWmL1XoPiO1jZaR/LNY5aMsVZrCKRBLe0Oltt/JP
-         lIOX2Mh+rFGVtQeEdNCQUyc2Hxcw8NWiFuuwk26x67I1AElNcxdNI9bsIMAn2qRissYR
-         4zbpBy07hY9gXBx5bYXN3p50pqTSuvxUZ1hqNkSv+IKGpw1Wstp8kcM9+GdP8gL/7h2n
-         Pyqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=+xwiBse4pt803geshkaqIXQfeBC3a/woHHPXS73g1eU=;
-        b=txtYuoLdq2sSxmBEGFzvz2oex6eYC6V7mjLbp3rNRrpAWlpOjkZHt+d2N6c90BaxPh
-         1+ZzHO+s/SMjtC6Nr/OJDRoiRVWjd0Uf6hODNGCdp6KU8B9Z/PA1Z5klqxgKTBw3pD9D
-         WJrP7gCxYxJfY6on8n1m9D5FfSOkC9FH6FFiX5dBhAepHmveLoyO+zOEcOLaBcAqw71T
-         gMwD3To1Jheu7VAkQ9Dy2jA3MFdO93rFkVIcbCmduA8awvsbVadIn/JcKQUhjISBiaD2
-         Mkx+3C2ZpfFk5eLhTn6WRAEX5TcSW+/noJCdK0s5KDt1uo98uhqiZeAP53cYMRApmXB4
-         uwpA==
-X-Gm-Message-State: ANhLgQ39F+05yp7WPSWKXU1xUXNVTE+frrSpARLH6oJZ5aOAuPKz46Rz
-        O3swg2RxM9y6++7kqDqsnV44Wz6u
-X-Google-Smtp-Source: ADFU+vsPhWayDDOue3Jq3I6tyJGpRlf2qH1ww5lksQll8aEO2W8Q812D1c9EDi+tZ49GFkp3XY+q2w==
-X-Received: by 2002:adf:de85:: with SMTP id w5mr8852269wrl.323.1583403233213;
-        Thu, 05 Mar 2020 02:13:53 -0800 (PST)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id p15sm8331066wma.40.2020.03.05.02.13.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Mar 2020 02:13:52 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     cavery@redhat.com, vkuznets@redhat.com, jan.kiszka@siemens.com,
-        wei.huang2@amd.com
-Subject: [PATCH 3/4] KVM: nSVM: implement check_nested_events for interrupts
-Date:   Thu,  5 Mar 2020 11:13:46 +0100
-Message-Id: <1583403227-11432-4-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1583403227-11432-1-git-send-email-pbonzini@redhat.com>
-References: <1583403227-11432-1-git-send-email-pbonzini@redhat.com>
+        Thu, 5 Mar 2020 05:14:15 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 025A7mv2038879;
+        Thu, 5 Mar 2020 10:13:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=SGXNoWNlZVLnSYJIxa2/4WB0jyZ02hYC4NTOct1cKkQ=;
+ b=JLFvXCWsTdaT86bZXB2zn8XjFgTtkJFosOBxbYl+jtJTDwQFO4EpD1WYdi3aWJ7FL1YW
+ 9FbJUMo4I0omrJiwDpGwmlpGvH68jzzALWaUDhfqSVmyPkWwi/PC1xEM0ZNXiVdeG1a4
+ 8Y0glEHr5VwcbOvDYKAt2GFV9JOoxJ9iDV29kNGHiUzyWIkdgfrA+e9KZWCDmMM1BM8w
+ uqAIZg2H5XW6VFAEW1FaVHXc0Id6yxv55s7t4F6ziMf5iKvvJ8TfqlIakpBlxMo+HB6K
+ 9pqrF575lSX0ietRKXPNhzozvi4npitTINZHJW4oWF6hw2b/XIoi+RzYKrFSHshyKtFG rQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2yffcuv8vb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Mar 2020 10:13:38 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 025ACuAd064867;
+        Thu, 5 Mar 2020 10:13:38 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2yg1rus3dv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Mar 2020 10:13:37 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 025ADYBw000924;
+        Thu, 5 Mar 2020 10:13:34 GMT
+Received: from [192.168.1.14] (/114.88.246.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Mar 2020 02:13:34 -0800
+Subject: Re: [PATCH v2] blktrace: fix dereference after null check
+To:     Cengiz Can <cengiz@kernel.wtf>, Jens Axboe <axboe@kernel.dk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200304105818.11781-1-cengiz@kernel.wtf>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <dd82137a-5152-7c93-a632-ac1766286be5@oracle.com>
+Date:   Thu, 5 Mar 2020 18:13:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20200304105818.11781-1-cengiz@kernel.wtf>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ suspectscore=2 malwarescore=0 adultscore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050064
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
+ adultscore=0 suspectscore=2 spamscore=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003050063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current implementation of physical interrupt delivery to a nested guest
-is quite broken.  It relies on svm_interrupt_allowed returning false if
-VINTR=1 so that the interrupt can be injected from enable_irq_window,
-but this does not work for guests that do not intercept HLT or that rely
-on clearing the host IF to block physical interrupts while L2 runs.
+On 3/4/20 6:58 PM, Cengiz Can wrote:
+> There was a recent change in blktrace.c that added a RCU protection to
+> `q->blk_trace` in order to fix a use-after-free issue during access.
+> 
+> However the change missed an edge case that can lead to dereferencing of
+> `bt` pointer even when it's NULL:
+> 
+> Coverity static analyzer marked this as a FORWARD_NULL issue with CID
+> 1460458.
+> 
+> ```
+> /kernel/trace/blktrace.c: 1904 in sysfs_blk_trace_attr_store()
+> 1898            ret = 0;
+> 1899            if (bt == NULL)
+> 1900                    ret = blk_trace_setup_queue(q, bdev);
+> 1901
+> 1902            if (ret == 0) {
+> 1903                    if (attr == &dev_attr_act_mask)
+>>>>     CID 1460458:  Null pointer dereferences  (FORWARD_NULL)
+>>>>     Dereferencing null pointer "bt".
+> 1904                            bt->act_mask = value;
+> 1905                    else if (attr == &dev_attr_pid)
+> 1906                            bt->pid = value;
+> 1907                    else if (attr == &dev_attr_start_lba)
+> 1908                            bt->start_lba = value;
+> 1909                    else if (attr == &dev_attr_end_lba)
+> ```
+> 
+> Added a reassignment with RCU annotation to fix the issue.
+> 
+> Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
+> 
+> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
 
-This patch can be split in two logical parts, but including only
-one breaks tests so I am combining both changes together.
+This version looks good to me, thanks.
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
 
-The first and easiest is simply to return true for svm_interrupt_allowed
-if HF_VINTR_MASK is set and HIF is set.  This way the semantics of
-svm_interrupt_allowed are respected: svm_interrupt_allowed being false
-does not mean "call enable_irq_window", it means "interrupts cannot
-be injected now".
-
-After doing this, however, we need another place to inject the
-interrupt, and fortunately we already have one, check_nested_events,
-which nested SVM does not implement but which is meant exactly for this
-purpose.  It is called before interrupts are injected, and it can
-therefore do the L2->L1 switch while leaving inject_pending_event
-none the wiser.
-
-This patch was developed together with Cathy Avery, who wrote the
-test and did a lot of the initial debugging.
-
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm.c | 68 ++++++++++++++++++++++++------------------------------
- 1 file changed, 30 insertions(+), 38 deletions(-)
-
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 25827b79cf96..0d773406f7ac 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -3133,43 +3133,36 @@ static int nested_svm_check_exception(struct vcpu_svm *svm, unsigned nr,
- 	return vmexit;
- }
- 
--/* This function returns true if it is save to enable the irq window */
--static inline bool nested_svm_intr(struct vcpu_svm *svm)
-+static void nested_svm_intr(struct vcpu_svm *svm)
- {
--	if (!is_guest_mode(&svm->vcpu))
--		return true;
--
--	if (!(svm->vcpu.arch.hflags & HF_VINTR_MASK))
--		return true;
--
--	if (!(svm->vcpu.arch.hflags & HF_HIF_MASK))
--		return false;
--
--	/*
--	 * if vmexit was already requested (by intercepted exception
--	 * for instance) do not overwrite it with "external interrupt"
--	 * vmexit.
--	 */
--	if (svm->nested.exit_required)
--		return false;
--
- 	svm->vmcb->control.exit_code   = SVM_EXIT_INTR;
- 	svm->vmcb->control.exit_info_1 = 0;
- 	svm->vmcb->control.exit_info_2 = 0;
- 
--	if (svm->nested.intercept & 1ULL) {
--		/*
--		 * The #vmexit can't be emulated here directly because this
--		 * code path runs with irqs and preemption disabled. A
--		 * #vmexit emulation might sleep. Only signal request for
--		 * the #vmexit here.
--		 */
--		svm->nested.exit_required = true;
--		trace_kvm_nested_intr_vmexit(svm->vmcb->save.rip);
--		return false;
-+	/* nested_svm_vmexit this gets called afterwards from handle_exit */
-+	svm->nested.exit_required = true;
-+	trace_kvm_nested_intr_vmexit(svm->vmcb->save.rip);
-+}
-+
-+static bool nested_exit_on_intr(struct vcpu_svm *svm)
-+{
-+	return (svm->nested.intercept & 1ULL);
-+}
-+
-+static int svm_check_nested_events(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_svm *svm = to_svm(vcpu);
-+	bool block_nested_events =
-+		kvm_event_needs_reinjection(vcpu) || svm->nested.exit_required;
-+
-+	if (kvm_cpu_has_interrupt(vcpu) && nested_exit_on_intr(svm)) {
-+		if (block_nested_events)
-+			return -EBUSY;
-+		nested_svm_intr(svm);
-+		return 0;
- 	}
- 
--	return true;
-+	return 0;
- }
- 
- /* This function returns true if it is save to enable the nmi window */
-@@ -5544,18 +5537,15 @@ static int svm_interrupt_allowed(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	struct vmcb *vmcb = svm->vmcb;
--	int ret;
- 
- 	if (!gif_set(svm) ||
- 	     (vmcb->control.int_state & SVM_INTERRUPT_SHADOW_MASK))
- 		return 0;
- 
--	ret = !!(kvm_get_rflags(vcpu) & X86_EFLAGS_IF);
--
--	if (is_guest_mode(vcpu))
--		return ret && !(svm->vcpu.arch.hflags & HF_VINTR_MASK);
--
--	return ret;
-+	if (is_guest_mode(vcpu) && (svm->vcpu.arch.hflags & HF_VINTR_MASK))
-+		return !!(svm->vcpu.arch.hflags & HF_HIF_MASK);
-+	else
-+		return !!(kvm_get_rflags(vcpu) & X86_EFLAGS_IF);
- }
- 
- static void enable_irq_window(struct kvm_vcpu *vcpu)
-@@ -5570,7 +5560,7 @@ static void enable_irq_window(struct kvm_vcpu *vcpu)
- 	 * enabled, the STGI interception will not occur. Enable the irq
- 	 * window under the assumption that the hardware will set the GIF.
- 	 */
--	if ((vgif_enabled(svm) || gif_set(svm)) && nested_svm_intr(svm)) {
-+	if (vgif_enabled(svm) || gif_set(svm)) {
- 		/*
- 		 * IRQ window is not needed when AVIC is enabled,
- 		 * unless we have pending ExtINT since it cannot be injected
-@@ -7465,6 +7455,8 @@ static void svm_pre_update_apicv_exec_ctrl(struct kvm *kvm, bool activate)
- 	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
- 
- 	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
-+
-+	.check_nested_events = svm_check_nested_events,
- };
- 
- static int __init svm_init(void)
--- 
-1.8.3.1
-
+> ---
+> 
+>     Patch Changelog
+>     * v2: Added RCU annotation to assignment
+> 
+>  kernel/trace/blktrace.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index 4560878f0bac..ca39dc3230cb 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -1896,8 +1896,11 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
+>  	}
+> 
+>  	ret = 0;
+> -	if (bt == NULL)
+> +	if (bt == NULL) {
+>  		ret = blk_trace_setup_queue(q, bdev);
+> +		bt = rcu_dereference_protected(q->blk_trace,
+> +				lockdep_is_held(&q->blk_trace_mutex));
+> +	}
+> 
+>  	if (ret == 0) {
+>  		if (attr == &dev_attr_act_mask)
+> --
+> 2.25.1
+> 
 
