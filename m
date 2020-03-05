@@ -2,73 +2,101 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FE2C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEEAC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAB720848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8E7207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583444012;
+	bh=UAkkVtAIcBiv7Kgg3hYGacmAVvf3X0xV2e5Lqy4jM3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UWppDP6YEMs/eqjZjEm6vqi2OYMkATHVygcjJPINcQsIjsjQ3QZeXOCdVm3BLRx7m
+	 JRmzckNuRpumWRifuZeJDlruJenuEN8hlTHTpNJKLfBOH+rs8TIrQW7JICBR0kJgR5
+	 /i+fOJf9KgCc+sh6KMBFd0vIzzycum/ZskAFCkvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgCEVcG convert rfc822-to-8bit (ORCPT
+        id S1726234AbgCEVdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:32:06 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:53744 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725991AbgCEVcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:32:06 -0500
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j9y64-00064u-IE; Thu, 05 Mar 2020 22:32:00 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] ARM: dts: rockchip: add missing @0 to memory nodenames
-Date:   Thu, 05 Mar 2020 22:31:59 +0100
-Message-ID: <1784340.9KJLpVao5L@phil>
-In-Reply-To: <20200304074051.8742-2-jbx6244@gmail.com>
-References: <20200304074051.8742-1-jbx6244@gmail.com> <20200304074051.8742-2-jbx6244@gmail.com>
+        Thu, 5 Mar 2020 16:33:31 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40789 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbgCEVdb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 16:33:31 -0500
+Received: by mail-qk1-f195.google.com with SMTP id m2so333954qka.7;
+        Thu, 05 Mar 2020 13:33:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1hqcOTK1dJgrJ1iFfuQIBp15f05oDajZgVRCIxl8Yg8=;
+        b=GEmwi5CDQU3MHJdmzPep2GKKvpnZFemhz1UkqVBBcUhyksSiZzGc1vmCEtFeiH2mCZ
+         Xbw4nfcQTQBId+JXSuvcMRczWyYKbMZLbylRBnBURWtETfoFlTr0PYGN5T210DuvXP/4
+         vedNJEecGMHvUOW+hzytnQbpcg6j/BpFtazBbVn1iRs7ZzRzK5BctNwlJ9HT3otAwlUA
+         l0F0b5px7Y+3lIzVBhApigPAMSSMMaYqnfn2tGSaafKeNjnQ8E9PTkDGxC2LeAJhehoB
+         +oEkzpRfBrDlp5aHp/82611z8uGLW10kUTg3EzsRYafhbB9kvSch/JhT4TgeOeUuhX4f
+         wJxA==
+X-Gm-Message-State: ANhLgQ11V4rsC+UIu/YnxxRUTziq+4g3neiHkUDugKQxkrLFyWD67MvT
+        Q5bRLm4RGCf5pvd+cu5Mh6b7eSMmLMIZ+A==
+X-Google-Smtp-Source: ADFU+vsyXjn1vZXA8f6HdMoYTygQMmO8graEQEtQbxVme3Ctqcasz4Ib4j/OXMG/TgEudCyljFw6AQ==
+X-Received: by 2002:a37:f518:: with SMTP id l24mr21381qkk.441.1583444010072;
+        Thu, 05 Mar 2020 13:33:30 -0800 (PST)
+Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c091:500::b9df])
+        by smtp.gmail.com with ESMTPSA id r40sm756817qtc.39.2020.03.05.13.33.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 13:33:29 -0800 (PST)
+Date:   Thu, 5 Mar 2020 16:33:27 -0500
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Dennis Zhou <dennis@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-doc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] include/bitmap.h: add new functions to documentation
+Message-ID: <20200305213327.GA79880@dennisz-mbp.dhcp.thefacebook.com>
+References: <20200304140920.6109-1-wsa+renesas@sang-engineering.com>
+ <20200304140920.6109-3-wsa+renesas@sang-engineering.com>
+ <20200304204026.GA55400@dennisz-mbp>
+ <20200305082415.GA1079@ninjato>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305082415.GA1079@ninjato>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan,
-
-Am Mittwoch, 4. März 2020, 08:40:50 CET schrieb Johan Jonker:
-> A test with the command below gives for example this error:
+On Thu, Mar 05, 2020 at 09:24:15AM +0100, Wolfram Sang wrote:
 > 
-> arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
-> False schema does not allow
-> {'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
+> > > I found these functions only by chance although I was looking exactly
+> > > for something like them. So, add them to the list of functions to make
+> > > them more visible.
+> > > 
+> > > Fixes: e837dfde15a4 ("bitmap: genericize percpu bitmap region iterators")
+> > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > > Cc: Dennis Zhou <dennis@kernel.org>
+> > 
+> > Ah thanks. That was a miss not adding the documentation. I can pick
+> > these up unless Andrew would rather run them through his tree. I have a
+> > few other miscellaneous documentation cleanups for percpu I need to run
+> > anyway.
 > 
-> The memory nodes all have a reg property that requires '@' in
-> the nodename. Fix this error by adding the missing '@0' to
-> the involved memory nodenames.
+> That sounds like a good fit to me. Will you take both of the patches?
 > 
-> make ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
-> schemas/root-node.yaml
+> Thanks,
+> 
+>    Wolfram
+> 
 
-changes to memory nodes you sadly cannot do in such an automated fashion.
-If you read the comment in rk3288-veyron.dtsi you'll see that a previous
-similar iteration broke all of those machines as their coreboot doesn't
-copy with memory@0 and would insert another memory node without @0
+I've picked up both in percpu for-5.7.
 
-In the past iteration the consensus then was that memory without @0
-is also ok (as it isn't changeable anyway).
-
-As I don't really want to repeat that, I'd like actual hardware tests
-before touching memory nodes.
-
-Heiko
-
-
+Thanks,
+Dennis
