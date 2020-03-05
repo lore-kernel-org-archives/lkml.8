@@ -2,126 +2,2927 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE77C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3C5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA6B208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UCg+E84G"
+	by mail.kernel.org (Postfix) with ESMTP id 9F477208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgCEFng (ORCPT
+        id S1726020AbgCEFoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 00:43:36 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:10515 "EHLO pegase1.c-s.fr"
+        Thu, 5 Mar 2020 00:44:14 -0500
+Received: from mga17.intel.com ([192.55.52.151]:26226 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgCEFnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 00:43:35 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48Y06D6b32z9v0Cs;
-        Thu,  5 Mar 2020 06:43:32 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=UCg+E84G; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id VTVXXCiiDbWA; Thu,  5 Mar 2020 06:43:32 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48Y06D4WRtz9v0Cr;
-        Thu,  5 Mar 2020 06:43:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1583387012; bh=O7lgY+PnhSJPbSOI4sr3mclek/SOkIJfidyuwCRZt5E=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UCg+E84GGdl1tJQVZH1Ovf1X2MFT1jANeg/avNyTa/wgDK/AFcZlsHC6wtBCTreEW
-         IIBoeTbu/OvYV0fGWK+oS5bBaBBh3LdZWCoVTQj2d42uZgyX7h61ciJf6DYFn7C5sq
-         y7FFPsJ/rH3Z+NZSn+w0vMP0V2uU5bzXosVLrKE4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5850C8B78D;
-        Thu,  5 Mar 2020 06:43:33 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id y-ltjW1KjHqS; Thu,  5 Mar 2020 06:43:33 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9213B8B756;
-        Thu,  5 Mar 2020 06:43:31 +0100 (CET)
-Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page
- table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Qian Cai <cai@lca.pw>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390@vger.kernel.org, linux-riscv@lists.infradead.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-arch@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-References: <c022e863-0807-fab1-cd41-3c320381f448@c-s.fr>
- <11F41980-97CF-411F-8120-41287DC1A382@lca.pw>
- <57a3bc61-bbd5-e251-9621-7bc28f7901a1@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <bcba7b7f-f351-4ee7-d74e-004a0bfbee47@c-s.fr>
-Date:   Thu, 5 Mar 2020 06:43:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1725839AbgCEFoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 00:44:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 21:44:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,516,1574150400"; 
+   d="scan'208";a="263857461"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Mar 2020 21:43:59 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j9jIc-0004Nh-L7; Thu, 05 Mar 2020 13:43:58 +0800
+Date:   Thu, 05 Mar 2020 13:43:36 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.02.29a] BUILD REGRESSION
+ 61f7110d6b78f4c84ea5d5480185740840889af7
+Message-ID: <5e609188.Hl+KSndTIea2sA36%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <57a3bc61-bbd5-e251-9621-7bc28f7901a1@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.02.29a
+branch HEAD: 61f7110d6b78f4c84ea5d5480185740840889af7  rcu-tasks: Add an RCU-tasks rude variant
 
+Regressions in current branch:
 
-Le 05/03/2020 à 01:54, Anshuman Khandual a écrit :
-> 
-> 
-> On 03/04/2020 04:59 PM, Qian Cai wrote:
->>
->>
->>> On Mar 4, 2020, at 1:49 AM, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
->>>
->>> AFAIU, you are not taking an interrupt here. You are stuck in the pte_update(), most likely due to nested locks. Try with LOCKDEP ?
->>
->> Not exactly sure what did you mean here, but the kernel has all lockdep enabled and did not flag anything here.
-> 
-> As the patch has been dropped from Linux next (next-20200304) perhaps in
-> order to fold back the __pa_symbol() fix [1], so I am planning to respin
-> the original patch once more as V15 while adding Qian's signed off by for
-> the powerpc part. For now lets enable radix MMU ppc64 along with existing
-> ppc32. As PPC_RADIX_MMU depends on PPC_BOOK3S_64, the following change
-> should be good enough ?
+include/linux/compiler_types.h:129:35: error: 'struct task_struct' has no member named 'rcu_tasks_holdout_list'
+include/linux/kernel.h:1012:51: error: 'struct task_struct' has no member named 'rcu_tasks_holdout_list'
+include/linux/kernel.h:987:51: error: 'struct task_struct' has no member named 'rcu_tasks_holdout_list'
+include/linux/kernel.h:994:51: error: 'struct task_struct' has no member named 'rcu_tasks_holdout_list'
+include/linux/list.h:537:18: error: 'struct task_struct' has no member named 'rcu_tasks_holdout_list'
+include/linux/list.h:689:7: note: in expansion of macro 'list_next_entry'
+kernel/rcu/tasks.h:212:18: error: 'struct task_struct' has no member named 'rcu_tasks_holdout'
+kernel/rcu/tasks.h:212:2: note: in expansion of macro 'if'
+kernel/rcu/tasks.h:212:7: note: in expansion of macro 'READ_ONCE'
+kernel/rcu/tasks.h:213:7: error: 'struct task_struct' has no member named 'rcu_tasks_nvcsw'
+kernel/rcu/tasks.h:216:28: error: 'struct task_struct' has no member named 'rcu_tasks_idle_cpu'
+kernel/rcu/tasks.h:218:19: error: 'struct task_struct' has no member named 'rcu_tasks_holdout_list'
+kernel/rcu/tasks.h:239:38: warning: 'struct rcu_tasks' declared inside parameter list
+kernel/rcu/tasks.h:239:38: warning: 'struct rcu_tasks' declared inside parameter list will not be visible outside of this definition or declaration
+kernel/rcu/tasks.h:239:38: warning: its scope is only this definition or declaration, which is probably not what you want
+kernel/rcu/tasks.h:286:20: error: 'tasks_rcu_exit_srcu' undeclared (first use in this function)
+kernel/rcu/tasks.h:313:20: error: 'rcu_task_stall_timeout' undeclared (first use in this function)
+kernel/rcu/tasks.h:313:20: error: 'rcu_task_stall_timeout' undeclared (first use in this function); did you mean 'rcu_cpu_stall_reset'?
+kernel/rcu/tasks.h:313:20: error: 'rcu_task_stall_timeout' undeclared (first use in this function); did you mean 'rcu_cpu_stall_timeout'?
+kernel/rcu/tasks.h:319:3: note: in expansion of macro 'list_for_each_entry_safe'
+kernel/rcu/tasks.h:347:1: error: type defaults to 'int' in declaration of 'DEFINE_RCU_TASKS' [-Werror=implicit-int]
+kernel/rcu/tasks.h:347:1: warning: data definition has no type or storage class
+kernel/rcu/tasks.h:347:1: warning: parameter names (without types) in function declaration
+kernel/rcu/tasks.h:369:2: error: implicit declaration of function 'call_rcu_tasks_generic' [-Werror=implicit-function-declaration]
+kernel/rcu/tasks.h:369:2: error: implicit declaration of function 'call_rcu_tasks_generic'; did you mean 'call_rcu_tasks'? [-Werror=implicit-function-declaration]
+kernel/rcu/tasks.h:369:37: error: 'rcu_tasks' undeclared (first use in this function)
+kernel/rcu/tasks.h:369:37: error: 'rcu_tasks' undeclared (first use in this function); did you mean 'rt_task'?
+kernel/rcu/tasks.h:393:2: error: implicit declaration of function 'synchronize_rcu_tasks_generic' [-Werror=implicit-function-declaration]
+kernel/rcu/tasks.h:393:2: error: implicit declaration of function 'synchronize_rcu_tasks_generic'; did you mean 'synchronize_rcu_tasks'? [-Werror=implicit-function-declaration]
+kernel/rcu/tasks.h:412:2: error: implicit declaration of function 'rcu_spawn_tasks_kthread_generic' [-Werror=implicit-function-declaration]
+kernel/rcu/tasks.h:412:2: error: implicit declaration of function 'rcu_spawn_tasks_kthread_generic'; did you mean 'rcu_spawn_tasks_kthread'? [-Werror=implicit-function-declaration]
+kernel/rcu/tasks.h:461:37: error: 'rcu_tasks_rude' undeclared (first use in this function)
+kernel/rcu/tasks.h:461:37: error: 'rcu_tasks_rude' undeclared (first use in this function); did you mean 'rcu_tasks_be_rude'?
 
-I don't think so, even if you have the Radix MMU compiled in, hash MMU 
-is used when Radix is not available or disabled. So until the Hash MMU 
-problem is fixed, you cannot enable it by default.
+Error ids grouped by kconfigs:
 
-Christophe
+recent_errors
+|-- alpha-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arc-alldefconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arc-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-at91_dt_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-bcm2835_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-cm_x300_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-imx_v6_v7_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-ixp4xx_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-lubbock_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-mps2_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-multi_v4t_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-multi_v7_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-mvebu_v7_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-mxs_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-netwinder_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-omap2plus_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-shmobile_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-spear6xx_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-sunxi_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-tct_hammer_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-versatile_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-vexpress_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm-xcep_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm64-alldefconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- arm64-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- c6x-evmc6474_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- c6x-evmc6678_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- c6x-randconfig-a001-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- csky-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- h8300-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- h8300-edosk2674_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- h8300-h8300h-sim_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- h8300-h8s-sim_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- h8300-randconfig-a001-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- h8300-randconfig-a001-20200305
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-alldefconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-randconfig-b003-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-randconfig-c003-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-randconfig-d003-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-randconfig-e001-20200305
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-randconfig-e003-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-if
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-randconfig-f001-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-randconfig-f003-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- i386-randconfig-g003-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- ia64-alldefconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- ia64-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- ia64-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- m68k-apollo_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- m68k-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- m68k-m5272c3_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- m68k-m5475evb_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- m68k-multi_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- m68k-q40_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- m68k-sun3_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- microblaze-mmu_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- microblaze-nommu_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- mips-32r2_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- mips-64r6el_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:its-scope-is-only-this-definition-or-declaration-which-is-probably-not-what-you-want
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list
+|-- mips-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- mips-ath25_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- mips-fuloong2e_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:its-scope-is-only-this-definition-or-declaration-which-is-probably-not-what-you-want
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list
+|-- mips-ip32_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- mips-malta_kvm_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:its-scope-is-only-this-definition-or-declaration-which-is-probably-not-what-you-want
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list
+|-- mips-maltasmvp_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:its-scope-is-only-this-definition-or-declaration-which-is-probably-not-what-you-want
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list
+|-- mips-maltasmvp_eva_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   `-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|-- mips-qi_lb60_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   `-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|-- mips-rm200_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:its-scope-is-only-this-definition-or-declaration-which-is-probably-not-what-you-want
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list
+|-- mips-sb1250_swarm_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- nds32-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- nios2-10m50_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- nios2-3c120_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- openrisc-or1ksim_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- openrisc-simple_smp_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- parisc-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- parisc-generic-32bit_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- parisc-generic-64bit_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-arches_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-icon_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-pmac32_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-ppc64_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-ps3_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-redwood_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-rhel-kconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-socrates_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-storcenter_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-tqm5200_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- powerpc-tqm8xx_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- riscv-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- riscv-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- riscv-nommu_virt_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- riscv-randconfig-a001-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-if
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- riscv-rv32_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- s390-alldefconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- s390-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- s390-zfcpdump_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- sh-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- sh-rsk7269_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- sh-se7712_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- sparc-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- sparc-randconfig-a001-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-if
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- sparc64-allnoconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- sparc64-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- um-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- um-i386_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- um-x86_64_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- x86_64-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- x86_64-randconfig-a001-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-if
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- x86_64-randconfig-c002-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-if
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- x86_64-randconfig-d002-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- x86_64-randconfig-f002-20200304
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- x86_64-randconfig-s1-20200305
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_timeout
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:its-scope-is-only-this-definition-or-declaration-which-is-probably-not-what-you-want
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   |-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- xtensa-common_defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+|-- xtensa-defconfig
+|   |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+|   |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+|   |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+|   |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+|   |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+|   |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+|   |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+|   |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+|   |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+|   |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+|   `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+`-- xtensa-iss_defconfig
+    |-- include-linux-compiler_types.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+    |-- include-linux-kernel.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+    |-- include-linux-list.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+    |-- include-linux-list.h:note:in-expansion-of-macro-list_next_entry
+    |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-call_rcu_tasks_generic-did-you-mean-call_rcu_tasks
+    |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-rcu_spawn_tasks_kthread_generic-did-you-mean-rcu_spawn_tasks_kthread
+    |-- kernel-rcu-tasks.h:error:implicit-declaration-of-function-synchronize_rcu_tasks_generic-did-you-mean-synchronize_rcu_tasks
+    |-- kernel-rcu-tasks.h:error:rcu_task_stall_timeout-undeclared-(first-use-in-this-function)-did-you-mean-rcu_cpu_stall_reset
+    |-- kernel-rcu-tasks.h:error:rcu_tasks-undeclared-(first-use-in-this-function)-did-you-mean-rt_task
+    |-- kernel-rcu-tasks.h:error:rcu_tasks_rude-undeclared-(first-use-in-this-function)-did-you-mean-rcu_tasks_be_rude
+    |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout
+    |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_holdout_list
+    |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_idle_cpu
+    |-- kernel-rcu-tasks.h:error:struct-task_struct-has-no-member-named-rcu_tasks_nvcsw
+    |-- kernel-rcu-tasks.h:error:tasks_rcu_exit_srcu-undeclared-(first-use-in-this-function)
+    |-- kernel-rcu-tasks.h:error:type-defaults-to-int-in-declaration-of-DEFINE_RCU_TASKS
+    |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-READ_ONCE
+    |-- kernel-rcu-tasks.h:note:in-expansion-of-macro-list_for_each_entry_safe
+    |-- kernel-rcu-tasks.h:warning:data-definition-has-no-type-or-storage-class
+    |-- kernel-rcu-tasks.h:warning:parameter-names-(without-types)-in-function-declaration
+    `-- kernel-rcu-tasks.h:warning:struct-rcu_tasks-declared-inside-parameter-list-will-not-be-visible-outside-of-this-definition-or-declaration
+
+elapsed time: 994m
+
+configs tested: 181
+configs skipped: 0
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+parisc                           allyesconfig
+ia64                                defconfig
+powerpc                             defconfig
+csky                                defconfig
+mips                              allnoconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+sh                          rsk7269_defconfig
+i386                              allnoconfig
+s390                       zfcpdump_defconfig
+sparc64                          allmodconfig
+riscv                             allnoconfig
+sh                               allmodconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allyesconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+alpha                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200304
+x86_64               randconfig-a002-20200304
+x86_64               randconfig-a003-20200304
+i386                 randconfig-a001-20200304
+i386                 randconfig-a002-20200304
+i386                 randconfig-a003-20200304
+alpha                randconfig-a001-20200304
+m68k                 randconfig-a001-20200304
+mips                 randconfig-a001-20200304
+nds32                randconfig-a001-20200304
+parisc               randconfig-a001-20200304
+riscv                randconfig-a001-20200304
+c6x                  randconfig-a001-20200305
+h8300                randconfig-a001-20200305
+microblaze           randconfig-a001-20200305
+nios2                randconfig-a001-20200305
+sparc64              randconfig-a001-20200305
+c6x                  randconfig-a001-20200304
+h8300                randconfig-a001-20200304
+microblaze           randconfig-a001-20200304
+nios2                randconfig-a001-20200304
+sparc64              randconfig-a001-20200304
+csky                 randconfig-a001-20200304
+openrisc             randconfig-a001-20200304
+s390                 randconfig-a001-20200304
+sh                   randconfig-a001-20200304
+xtensa               randconfig-a001-20200304
+x86_64               randconfig-b001-20200304
+x86_64               randconfig-b002-20200304
+x86_64               randconfig-b003-20200304
+i386                 randconfig-b001-20200304
+i386                 randconfig-b002-20200304
+i386                 randconfig-b003-20200304
+x86_64               randconfig-b001-20200305
+x86_64               randconfig-b002-20200305
+x86_64               randconfig-b003-20200305
+i386                 randconfig-b001-20200305
+i386                 randconfig-b002-20200305
+i386                 randconfig-b003-20200305
+x86_64               randconfig-c001-20200304
+x86_64               randconfig-c002-20200304
+x86_64               randconfig-c003-20200304
+i386                 randconfig-c001-20200304
+i386                 randconfig-c002-20200304
+i386                 randconfig-c003-20200304
+x86_64               randconfig-d001-20200304
+x86_64               randconfig-d002-20200304
+x86_64               randconfig-d003-20200304
+i386                 randconfig-d001-20200304
+i386                 randconfig-d002-20200304
+i386                 randconfig-d003-20200304
+x86_64               randconfig-e001-20200304
+x86_64               randconfig-e002-20200304
+x86_64               randconfig-e003-20200304
+i386                 randconfig-e001-20200304
+i386                 randconfig-e002-20200304
+i386                 randconfig-e003-20200304
+x86_64               randconfig-e001-20200305
+x86_64               randconfig-e002-20200305
+x86_64               randconfig-e003-20200305
+i386                 randconfig-e001-20200305
+i386                 randconfig-e002-20200305
+i386                 randconfig-e003-20200305
+x86_64               randconfig-f001-20200304
+x86_64               randconfig-f002-20200304
+x86_64               randconfig-f003-20200304
+i386                 randconfig-f001-20200304
+i386                 randconfig-f002-20200304
+i386                 randconfig-f003-20200304
+x86_64               randconfig-g001-20200304
+x86_64               randconfig-g002-20200304
+x86_64               randconfig-g003-20200304
+i386                 randconfig-g001-20200304
+i386                 randconfig-g002-20200304
+i386                 randconfig-g003-20200304
+x86_64               randconfig-h001-20200304
+x86_64               randconfig-h002-20200304
+x86_64               randconfig-h003-20200304
+i386                 randconfig-h001-20200304
+i386                 randconfig-h002-20200304
+i386                 randconfig-h003-20200304
+arc                  randconfig-a001-20200304
+ia64                 randconfig-a001-20200304
+sparc                randconfig-a001-20200304
+arm                  randconfig-a001-20200304
+arm64                randconfig-a001-20200304
+powerpc              randconfig-a001-20200304
+riscv                            allmodconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+sh                                allnoconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
