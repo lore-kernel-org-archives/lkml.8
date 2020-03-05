@@ -2,110 +2,159 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6214C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB15C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867002146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217BE20716
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:16:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L51CopMg"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uvMsy2gF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgCEINy (ORCPT
+        id S1726128AbgCEIQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:13:54 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:58598 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgCEINy (ORCPT
+        Thu, 5 Mar 2020 03:16:00 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41717 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbgCEIQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:13:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YdEB9LdscQVobrvA17oqJJGGJE1kljWNj63rZ1r26J0=; b=L51CopMgQxp/klLcoYR/ooVg5o
-        Tv8EWhZDfxO77RCfawXJEIDVXEkSOYwMmFDrn4C6nE92puh4AlfRiYdmeMAKJZAS1Qp5IH6oxmQoo
-        FOXw4Ed6zSqxRZBNx2k5lOZLHn4ISCOYf/DVN7KpxO22fsVbYAHgGh7HC3QKl12vjJUgNoD6lXUJ7
-        PnHE20l37riUnFiwQz2xK+W5iJS6QT2u5cWix9agnpqTG6mF5ZFDL20MJlvx07OysbY06ERHjGPQD
-        kp417MhOMqrD9kRUQR82EFFI1e4yC/9k9ZbJL9c5f37Ajvjy1Rf9CDC4n8NQtiBngP2LiDin2Y69g
-        Vxof6irA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9ldT-0007Uy-Si; Thu, 05 Mar 2020 08:13:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6A2083013A4;
-        Thu,  5 Mar 2020 09:11:38 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4F6E52599AFBF; Thu,  5 Mar 2020 09:13:37 +0100 (CET)
-Date:   Thu, 5 Mar 2020 09:13:37 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: Pinning down a blocked task to extract diagnostics
-Message-ID: <20200305081337.GA2619@hirez.programming.kicks-ass.net>
-References: <20200305005049.GA21120@paulmck-ThinkPad-P72>
- <20200305080755.GS2596@hirez.programming.kicks-ass.net>
+        Thu, 5 Mar 2020 03:16:00 -0500
+Received: by mail-wr1-f68.google.com with SMTP id v4so5816547wrs.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 00:15:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=59ResbYkgYYtyGS3yqL1pe7i5n25xfvpTn1SJGZoQcc=;
+        b=uvMsy2gFIQJuGwPQY4jTQZfM443hyAsMpQsWvt61TsBrrNb5+brqKR7fyXH16dpcUG
+         NKHn+FHej/vn1kTGDZAOiT3te05ZccNq2vpP9gefTXD4I8jUaaSMpDCA+puh6P7ugPyN
+         Mq7CTRQp8ON7UQ8wyQBrxWkNHSBgn0GUrhEMx1wbzjnVma9BXBHRHMUXZ0u2P0xEa8lJ
+         DaG2SUbfh2TZLAYPQNjz3QPd8SSGcSHivVrvmeFzY2wnQcFZQVrX8n1b+M7K41fDnb2V
+         eqa2HBw0fdA4F/n4kWCqTVQAxYnxfMrF2BbKv5TCUD4Ge+NID+Dhpu/0B5cPIlHVEg20
+         VWgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=59ResbYkgYYtyGS3yqL1pe7i5n25xfvpTn1SJGZoQcc=;
+        b=LHPML/ETqankU4Q5r/aAQ+93bUc49GISUe5Xl8PTU7ZGacjdvat2/hGUXfD80WOmVC
+         wwozEbZaRkWk9WqvKAVWnD1eatanGP0nbCvCD7AuWPBrEttfkHLsXmI8Yf9zjQEG0zpf
+         smFd0deHFB5Bsry6I6BseWxJHHvlAtbpi1wkaGxURIQqCyHD7mPhPC2uge/OklRphuhi
+         RHBkS9Wd87FnWjS6sRQcKAs1fPObj/OU7jdXvuelFk8RZH3RZukoNsV0NiaiyrZo0IaB
+         TuKvEHseC8yUx7gs27js1IAFs82Uo5MFQbsb+EPt/3WAwAcZnvkq+JtZct5+ISgQK35A
+         dx3g==
+X-Gm-Message-State: ANhLgQ2IPYip6lbxHDyF08UJs+IeVDaX3628gHbvreDJDkdFElHIuFj2
+        gaQ3yUOrK8lF+74jt3HJ3ONfjg==
+X-Google-Smtp-Source: ADFU+vuuoKy23fJWsGIKanNj5vBpIUf8a+/Rb9mL+rPcSl7wR8cgvC2houSQAoG3kJh7HFjBsXemgw==
+X-Received: by 2002:adf:f70f:: with SMTP id r15mr8903620wrp.269.1583396158372;
+        Thu, 05 Mar 2020 00:15:58 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c2sm8220616wma.39.2020.03.05.00.15.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 00:15:57 -0800 (PST)
+References: <1582991214-85209-1-git-send-email-christianshewitt@gmail.com> <1582991214-85209-3-git-send-email-christianshewitt@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: meson-g12a-tanix-tx5max: add initial device tree
+In-reply-to: <1582991214-85209-3-git-send-email-christianshewitt@gmail.com>
+Date:   Thu, 05 Mar 2020 09:15:56 +0100
+Message-ID: <1jh7z3cj43.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305080755.GS2596@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 09:07:55AM +0100, Peter Zijlstra wrote:
-> On Wed, Mar 04, 2020 at 04:50:49PM -0800, Paul E. McKenney wrote:
-> > Hello!
-> > 
-> > Suppose that I need to extract diagnostics information from a blocked
-> > task, but that I absolutely cannot tolerate this task awakening in the
-> > midst of this extraction process.  Is the following code the right way
-> > to make this work given a task "t"?
-> > 
-> > 	raw_spin_lock_irq(&t->pi_lock);
-> > 	if (t->on_rq) {
-> > 		/* Task no longer blocked, so ignore it. */
-> > 	} else {
-> > 		/* Extract consistent diagnostic information. */
-> > 	}
-> > 	raw_spin_unlock_irq(&t->pi_lock);
-> > 
-> > It looks like all the wakeup paths acquire ->pi_lock, but I figured I
-> > should actually ask...
-> 
-> Close, the thing pi_lock actually guards is the t->state transition *to*
-> TASK_WAKING/TASK_RUNNING, so something like this:
 
-Almost, we must indeed also check ->on_rq, otherwise it might change the
-state back itself.
+On Sat 29 Feb 2020 at 16:46, Christian Hewitt <christianshewitt@gmail.com> wrote:
 
-> 
-> 	raw_spin_lock_irq(&t->pi_lock);
-> 	switch (t->state) {
-> 	case TASK_RUNNING:
-> 	case TASK_WAKING:
-> 		/* ignore */
-> 		break;
-> 
-> 	default:
-		if (t->on_rq)
-			break;
+> The Oranth Tanix TX5 Max is based on the Amlogic U200 reference design
+> using the S905X2 chipset. Hardware specification:
+>
+> - 4GB LPDDR4 RAM
+> - 32GB eMMC storage
+> - 10/100/1000 Base-T Ethernet using External RGMII PHY
+> - 802.11 a/b/g/b/ac + BT 4.1 sdio wireless
+> - HDMI 2.0 (4k@60p) video
+> - Composite video + 2-channel audio output on 3.5mm jack
+> - S/PDIF audio output
+> - 1x USB 3.0
+> - 1x USB 2.0
+> - 1x micro SD card slot
+>
+> The device tree is based on the higher-spec X96 Max box device.
 
-> 		/* Extract consistent diagnostic information. */
-> 		break;
-> 	}
-> 	raw_spin_unlock_irq(&t->pi_lock);
-> 
-> ought to work. But if you're going to do this, please add a reference to
-> that code in a comment on top of try_to_wake_up(), such that we can
-> later find all the code that relies on this.
+Would you mind pointing out the differences ?
+Maybe I missed something, but do we really this dts ?
+Can't this device directly use the x96 dt, or the u200 ?
+
+All these boards, for which we don't have any documentation, add up 
+
+>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+>  .../boot/dts/amlogic/meson-g12a-tanix-tx5max.dts   | 481 +++++++++++++++++++++
+>  2 files changed, 482 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-tanix-tx5max.dts
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index eef0045..a1db803 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-g12a-tanix-tx5max.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-tanix-tx5max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-tanix-tx5max.dts
+> new file mode 100644
+> index 0000000..c3ef0ee
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-tanix-tx5max.dts
+> @@ -0,0 +1,481 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2018 BayLibre SAS. All rights reserved.
+> + */
+> +
+> +/dts-v1/;
+
+[...]
+
+> +&spdifout_b {
+> +	status = "okay";
+> +};
+
+Why do you need this ?
+This producer is dedicated to HDMI controller which does not support it
+ATM. Also it is not even used in your sound card
+
+Same goes for the x96 BTW.
+
+> +
+> +&tdmif_b {
+> +	status = "okay";
+> +};
+> +
+> +&tdmout_b {
+> +	status = "okay";
+> +};
+> +
+> +&tohdmitx {
+> +	status = "okay";
+> +};
+
