@@ -2,120 +2,137 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB7EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44B2C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C017F20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4BE2072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nJGM09Je"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z7S+oDI+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgCERxN (ORCPT
+        id S1726179AbgCERye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:53:13 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55766 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgCERxN (ORCPT
+        Thu, 5 Mar 2020 12:54:34 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42222 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgCERye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:53:13 -0500
-Received: by mail-wm1-f65.google.com with SMTP id 6so7384352wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:53:12 -0800 (PST)
+        Thu, 5 Mar 2020 12:54:34 -0500
+Received: by mail-io1-f68.google.com with SMTP id q128so7439572iof.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:54:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zOLC9otCZ1SIV9HUGqyUtds0dA8IbLQFlalxBZvds9o=;
-        b=nJGM09JeeGN/bIiSjLDTgOQ9n9N7i5SV+K6n7BXvNhRMbK8aV9wkXOy1j6MkwbmHng
-         m0BykEBGpy7Y9cK596I3j33SD929OLAr3SA2xlw5QbQYglRM5Hs2P0YkmkCGREf43/Ck
-         4DDo2p/8IYSYfNGlLi07+SKK/tDdEziRuDmVZiHdJejy5gHV04rOkig+75S1iDibDnte
-         DhgnuRGldrOEb06uWJ5YsFD3+AWrSDTvo1VeK0zxCA+DOnLo4n8pxcIFbnX6G/zhNcNa
-         KMN7Sy9VF2ojFS3atTNRYS8XL+HYYKF17tX36W/imoEghPdwv7CJEVdH7Tgu/7KR2k7F
-         aFvw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nWP6NJ5Ufnl/Qfwtyeq+O8joFfs1L0Y4YDlGJGw2HAo=;
+        b=z7S+oDI+x6CnRYCgv92/5OnTRsGdpp+y0t3e9oT0oJ/0BeDDJdVS9juXISjgw851gm
+         GGacPtojUoWQbfZ52pcikVXqGlB2VRO/fKMhYQTD8oWTTfFPhtb7xXXB8WyHznS25jWy
+         yv5oCb7CwJ2XoT8GMacjXi0cAGkhZcb9cTYw/3X1/hGYOqcsuYzvjWFQ1S4SeyEKuFNY
+         CmWwSw8emOAuD0yxmqR0DmUIiwjPHTaIGm+1dZ80F28Qj0ckaLydGJE+vDGd851gonG/
+         49t7i6mWE2mtVf06RGJAShRIKbpdzNzU3lEdkNO+AyffD2WWiKWcd7ww865xl7BcwvBL
+         xIRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zOLC9otCZ1SIV9HUGqyUtds0dA8IbLQFlalxBZvds9o=;
-        b=GpeQb2nv4WJM6YWPiar87gS1chpwZvPM9cT7vK9gIV9RRkGle+w1XGLZYDYorURA2F
-         4Gnj3hlpX/fV3gS+mLXMIaV8wBcQmImyQOyt7BKtuJujmJwjxgqXzyVpY/7vKVveNtZS
-         jnzcFfF1O+lz9+Y0a18TmVwffu3+7agiiRBpVePD7QxYVbrHeJhRq7cwZPhjs/MbC6rI
-         iYhgiAsOVaNkTU8EMZR/lHe8V0rw3GAiYBvPEey9nWcZY3FYk+9ihiRnH71EWqQgoaKJ
-         mC/eChQSUh5rzDm9MTk/ol8/ttoVgJOO27rAvmt7YKChZ+h/KgdZ5A6WFia8WOcuz964
-         8JYg==
-X-Gm-Message-State: ANhLgQ3qWLF/QuX3qBFlwJ1+Euw5KZG9dYTZZaUEOgo2pN3b2knnCRcR
-        1XfL+plB+NL62cxE4pJ5yetvVg==
-X-Google-Smtp-Source: ADFU+vuKmO6BoAfVtg5Ag4cHIkSD0MIjwghSUnCuGd4DlW1wi44m02J8f7mrrm2Zda3VZN7BoN7Ozg==
-X-Received: by 2002:a1c:6a13:: with SMTP id f19mr11079317wmc.134.1583430791173;
-        Thu, 05 Mar 2020 09:53:11 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id l5sm10165746wml.3.2020.03.05.09.53.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Mar 2020 09:53:10 -0800 (PST)
-Subject: Re: [PATCH v8 2/7] nvmem: add driver for JZ4780 efuse
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-References: <cover.1582905653.git.hns@goldelico.com>
- <86886abd9493d0d3b7c9b2eba4e928c2aa4be5d7.1582905653.git.hns@goldelico.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <e1c70dc7-05e4-ce64-d683-04aa7fc37e82@linaro.org>
-Date:   Thu, 5 Mar 2020 17:53:09 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nWP6NJ5Ufnl/Qfwtyeq+O8joFfs1L0Y4YDlGJGw2HAo=;
+        b=N9fzekCDSIVnbtspZIrwisLbKI9sagMGCJfuSHSXR1hOG+mhvxXQZs+9uAvItEt6mA
+         0o+m7wmSciE4df4vXUeNPvrwYX5nd02sqdsT7u3pqS6MxN8WevitZfyF+jy0sMBmVf9k
+         bHc5d7UKPfA7B/3C68L1dxwHlUr4qNtB9r9qmDaxKMGT2VO+8Eh5wcix/3kWaQwkAgDj
+         ydWdHQh2jXyIXc3yoUd54QMKHjYFQwvzFHx8WCoeZIJeJeEMqG1CTX6RKrhd4eVme+t/
+         z7fpgRzjpQnzJTiIca0svJucVK6t2R67Lf0otZDirF6a2u4oFisTpwE8hr3EqFkaQCi+
+         wY5Q==
+X-Gm-Message-State: ANhLgQ0OIRSK3MgOIdTf4ouIxyM+OVzFUfQnf58U3kqtzgdxR6Q3nlch
+        mUwfvKFIEBQGJt2RHT8v+K7o/4KI5zTKVpjhlitlYg==
+X-Google-Smtp-Source: ADFU+vt/zBlELi1bLdW+KjbrwUUGrSXJOGD1C1rzpYL6NqnOhhJywlgeLDkLobXKBOoTHfrNdD3BifjP1rQvlXDxd7w=
+X-Received: by 2002:a05:6638:44a:: with SMTP id r10mr8443557jap.36.1583430873469;
+ Thu, 05 Mar 2020 09:54:33 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <86886abd9493d0d3b7c9b2eba4e928c2aa4be5d7.1582905653.git.hns@goldelico.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200304142628.8471-1-NShubin@topcon.com> <CANLsYkzPROdphvmtpZ6YiajZ2dYLrojC-rGYkq4jK2yzTnAJ5A@mail.gmail.com>
+ <264561583429111@sas1-438a02fc058e.qloud-c.yandex.net>
+In-Reply-To: <264561583429111@sas1-438a02fc058e.qloud-c.yandex.net>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 5 Mar 2020 10:54:22 -0700
+Message-ID: <CANLsYkxj=1o8Y0V0WedbVirj9seZSArWeCvQvwk+N7wZa2_hPQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] remoteproc: imx_rproc: dummy kick method
+To:     nikita.shubin@maquefel.me
+Cc:     Nikita Shubin <nshubin@topcon.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 5 Mar 2020 at 10:29, <nikita.shubin@maquefel.me> wrote:
+>
+>
+>
+> 05.03.2020, 19:17, "Mathieu Poirier" <mathieu.poirier@linaro.org>:
+> > On Wed, 4 Mar 2020 at 07:25, Nikita Shubin <NShubin@topcon.com> wrote:
+> >>  add kick method that does nothing, to avoid errors in rproc_virtio_notify.
+> >>
+> >>  Signed-off-by: Nikita Shubin <NShubin@topcon.com>
+> >>  ---
+> >>   drivers/remoteproc/imx_rproc.c | 6 ++++++
+> >>   1 file changed, 6 insertions(+)
+> >>
+> >>  diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> >>  index 3e72b6f38d4b..796b6b86550a 100644
+> >>  --- a/drivers/remoteproc/imx_rproc.c
+> >>  +++ b/drivers/remoteproc/imx_rproc.c
+> >>  @@ -240,9 +240,15 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+> >>          return va;
+> >>   }
+> >>
+> >>  +static void imx_rproc_kick(struct rproc *rproc, int vqid)
+> >>  +{
+> >>  +
+> >>  +}
+> >>  +
+> >
+> > If rproc::kick() is empty, how does the MCU know there is packets to
+> > fetch in the virtio queues?
+>
+> Well, of course it doesn't i understand this perfectly - just following documentation citing:
+>
+> | Every remoteproc implementation should at least provide the ->start and ->stop
+> | handlers. If rpmsg/virtio functionality is also desired, then the ->kick handler
+> | should be provided as well.
+>
+> But i as i mentioned in "remoteproc: Fix NULL pointer dereference in rproc_virtio_notify" kick method will be called if
+> "resource_table exists in firmware and has "Virtio device entry" defined" anyway, the imx_rproc is not in control of what
+> exactly it is booting, so such situation can occur.
 
+If I understand correctly, the MCU can boot images that have a virtio
+device in its resource table and still do useful work even if the
+virtio device/rpmsg bus can't be setup - is this correct?
 
-On 28/02/2020 16:00, H. Nikolaus Schaller wrote:
-> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> 
-> This patch brings support for the JZ4780 efuse. Currently it only exposes
-> a read only access to the entire 8K bits efuse memory and nvmem cells.
-> 
-> To fetch for example the MAC address:
-> 
-> dd if=/sys/devices/platform/134100d0.efuse/jz4780-efuse0/nvmem bs=1 skip=34 count=6 status=none | xxd
-> 
-> Tested-by: Mathieu Malaterre <malat@debian.org>
-> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->   drivers/nvmem/Kconfig        |  12 ++
->   drivers/nvmem/Makefile       |   2 +
->   drivers/nvmem/jz4780-efuse.c | 239 +++++++++++++++++++++++++++++++++++
+Thanks,
+Mathieu
 
-Applied thanks,
---srini
+>
+> >
+> >>   static const struct rproc_ops imx_rproc_ops = {
+> >>          .start = imx_rproc_start,
+> >>          .stop = imx_rproc_stop,
+> >>  + .kick = imx_rproc_kick,
+> >>          .da_to_va = imx_rproc_da_to_va,
+> >>   };
+> >>
+> >>  --
+> >>  2.24.1
