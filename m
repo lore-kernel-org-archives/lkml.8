@@ -2,111 +2,73 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC13C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FE2C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1407120728
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:30:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VHSXHJ/Z"
+	by mail.kernel.org (Postfix) with ESMTP id 5EAB720848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCEVa2 (ORCPT
+        id S1726233AbgCEVcG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:30:28 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38887 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726092AbgCEVa2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:30:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583443827;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Hkim17AcBCnxI/wSF69dkEpIuJDcwbjPUSIQZbbuoHA=;
-        b=VHSXHJ/Zq82XJV3Zom1VBSY/UDpOIZIJ2U4Td7bQvuZyEBP0IvjRduLlD+N6OLfcnT8RCz
-        WdorG8VhK8JXwtFVj8L5YsXrKqeqFC0bnVT/JZiO7oLxJcvnBTaN3HW3OTVAA/dd8ZWTNC
-        qis/CsKN85UHBEidMZReMGkKwmCp7Yg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-217-QZ2WNUImOeqq3Z_tfIAuGA-1; Thu, 05 Mar 2020 16:30:23 -0500
-X-MC-Unique: QZ2WNUImOeqq3Z_tfIAuGA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 719268B789C;
-        Thu,  5 Mar 2020 21:30:20 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A47C49494C;
-        Thu,  5 Mar 2020 21:30:18 +0000 (UTC)
-Subject: Re: [PATCH] KEYS: Don't write out to userspace while holding key
- semaphore
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-References: <20200305210640.15315-1-longman@redhat.com>
- <20200305211651.GA225345@gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <f581aab4-1bad-64b8-59bf-2da6c34c53c5@redhat.com>
-Date:   Thu, 5 Mar 2020 16:30:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 5 Mar 2020 16:32:06 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:53744 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725991AbgCEVcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 16:32:06 -0500
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1j9y64-00064u-IE; Thu, 05 Mar 2020 22:32:00 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] ARM: dts: rockchip: add missing @0 to memory nodenames
+Date:   Thu, 05 Mar 2020 22:31:59 +0100
+Message-ID: <1784340.9KJLpVao5L@phil>
+In-Reply-To: <20200304074051.8742-2-jbx6244@gmail.com>
+References: <20200304074051.8742-1-jbx6244@gmail.com> <20200304074051.8742-2-jbx6244@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200305211651.GA225345@gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 4:16 PM, Eric Biggers wrote:
-> On Thu, Mar 05, 2020 at 04:06:40PM -0500, Waiman Long wrote:
->> diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
->> index 9b898c969558..564a4d187329 100644
->> --- a/security/keys/keyctl.c
->> +++ b/security/keys/keyctl.c
->> @@ -846,14 +846,36 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
->>  can_read_key:
->>  	ret = -EOPNOTSUPP;
->>  	if (key->type->read) {
->> -		/* Read the data with the semaphore held (since we might sleep)
->> +		/*
->> +		 * Read the data with the semaphore held (since we might sleep)
->>  		 * to protect against the key being updated or revoked.
->> +		 *
->> +		 * Allocating a temporary buffer to hold the keys before
->> +		 * transferring them to user buffer to avoid potential
->> +		 * deadlock involving page fault and mmap_sem.
->>  		 */
->> +		char *tmpbuf = kmalloc(buflen, GFP_KERNEL);
-> This is passing an arbitrarily large size from userspace into kmalloc().
->
-> - Eric
->
-That is true. Is there a limit of how much key data are expected to be
-returned from the kernel? We could set an internal limit here on how
-large the buffer can be.
+Hi Johan,
 
-Cheers,
-Longman
+Am Mittwoch, 4. März 2020, 08:40:50 CET schrieb Johan Jonker:
+> A test with the command below gives for example this error:
+> 
+> arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
+> False schema does not allow
+> {'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
+> 
+> The memory nodes all have a reg property that requires '@' in
+> the nodename. Fix this error by adding the missing '@0' to
+> the involved memory nodenames.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
+> schemas/root-node.yaml
+
+changes to memory nodes you sadly cannot do in such an automated fashion.
+If you read the comment in rk3288-veyron.dtsi you'll see that a previous
+similar iteration broke all of those machines as their coreboot doesn't
+copy with memory@0 and would insert another memory node without @0
+
+In the past iteration the consensus then was that memory without @0
+is also ok (as it isn't changeable anyway).
+
+As I don't really want to repeat that, I'd like actual hardware tests
+before touching memory nodes.
+
+Heiko
+
 
