@@ -2,144 +2,181 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F599C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03C7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E822120732
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583419087;
-	bh=RMSInfiEq4qYBRF7NiHxjH+JFDEr4/+eeptTpXAXM3g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Rc4b4HjaI1m8V4h1FMhjGN+QQxw2bgnuuNMXYoVpv1FhrHnSUz0I7kmBNTenWdXQG
-	 WFkgTUWXNn9w79ZhEEwn21vdVDtcuEmTJFxxuMF4T0Xb/R7OlvxaiSYifUrXyC/u0q
-	 SdU/T5mEuLo+Sz6YtgxgxM1P85ITFgIDMoTk9oW0=
+	by mail.kernel.org (Postfix) with ESMTP id 82A4E208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgCEOiG (ORCPT
+        id S1727002AbgCEOiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:38:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:49522 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgCEOiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:38:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFC664B2;
-        Thu,  5 Mar 2020 06:38:03 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 642A93F534;
-        Thu,  5 Mar 2020 06:38:03 -0800 (PST)
-Date:   Thu, 05 Mar 2020 14:38:01 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc:     andrew.smirnov@gmail.com, angelo@sysam.it, broonie@kernel.org,
-        eha@deif.com, gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        mhosny@nvidia.com, weic@nvidia.com
-Subject: Applied "spi: spi-fsl-dspi: Simplify bytes_per_word gymnastics" to the spi tree
-In-Reply-To:  <20200304220044.11193-2-olteanv@gmail.com>
-Message-Id:  <applied-20200304220044.11193-2-olteanv@gmail.com>
-X-Patchwork-Hint: ignore
+        Thu, 5 Mar 2020 09:38:19 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40923 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgCEOiS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 09:38:18 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1j9rdY-0001EN-Iq; Thu, 05 Mar 2020 15:38:08 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1j9rdV-000208-Sz; Thu, 05 Mar 2020 15:38:05 +0100
+Date:   Thu, 5 Mar 2020 15:38:05 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Allison Randal <allison@lohutok.net>
+Subject: Re: [PATCH] ARM: mach-imx6q: add ksz9131rn_phy_fixup
+Message-ID: <20200305143805.dk7fndblnqjnwxu6@pengutronix.de>
+References: <20200305134928.19775-1-philippe.schenker@toradex.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200305134928.19775-1-philippe.schenker@toradex.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 15:27:00 up 111 days,  5:45, 138 users,  load average: 0.18, 0.14,
+ 0.10
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Philippe,
 
-   spi: spi-fsl-dspi: Simplify bytes_per_word gymnastics
+On Thu, Mar 05, 2020 at 02:49:28PM +0100, Philippe Schenker wrote:
+> The MAC of the i.MX6 SoC is compliant with RGMII v1.3. The KSZ9131 PHY
+> is like KSZ9031 adhering to RGMII v2.0 specification. This means the
+> MAC should provide a delay to the TXC line. Because the i.MX6 MAC does
+> not provide this delay this has to be done in the PHY.
+> 
+> This patch adds by default ~1.6ns delay to the TXC line. This should
+> be good for all boards that have the RGMII signals routed with the
+> same length.
+> 
+> The KSZ9131 has relatively high tolerances on skew registers from
+> MMD 2.4 to MMD 2.8. Therefore the new DLL-based delay of 2ns is used
+> and then as little as possibly subtracted from that so we get more
+> accurate delay. This is actually needed because the i.MX6 SoC has
+> an asynchron skew on TXC from -100ps to 900ps, to get all RGMII
+> values within spec.
 
-has been applied to the spi tree at
+This configuration has nothing to do in mach-imx/* It belongs to the
+board devicetree. Please see DT binding documentation for needed
+properties:
+Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+All of this mach-imx fixups are evil and should be removed or disabled by Kconfig
+option. Since they will run on all i.MX based boards even if this PHY are
+connected to some switch and not connected to the FEC directly.
+And.. If driver didn't made this configuration all this changes will be lost on
+suspend/resume cycle or on PHY reset.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Regards,
+Oleksij
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> 
+> ---
+> 
+>  arch/arm/mach-imx/mach-imx6q.c | 37 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+> index edd26e0ffeec..8ae5f2fa33e2 100644
+> --- a/arch/arm/mach-imx/mach-imx6q.c
+> +++ b/arch/arm/mach-imx/mach-imx6q.c
+> @@ -61,6 +61,14 @@ static void mmd_write_reg(struct phy_device *dev, int device, int reg, int val)
+>  	phy_write(dev, 0x0e, val);
+>  }
+>  
+> +static int mmd_read_reg(struct phy_device *dev, int device, int reg)
+> +{
+> +	phy_write(dev, 0x0d, device);
+> +	phy_write(dev, 0x0e, reg);
+> +	phy_write(dev, 0x0d, (1 << 14) | device);
+> +	return phy_read(dev, 0x0e);
+> +}
+> +
+>  static int ksz9031rn_phy_fixup(struct phy_device *dev)
+>  {
+>  	/*
+> @@ -74,6 +82,33 @@ static int ksz9031rn_phy_fixup(struct phy_device *dev)
+>  	return 0;
+>  }
+>  
+> +#define KSZ9131_RXTXDLL_BYPASS	12
+> +
+> +static int ksz9131rn_phy_fixup(struct phy_device *dev)
+> +{
+> +	int tmp;
+> +
+> +	tmp = mmd_read_reg(dev, 2, 0x4c);
+> +	/* disable rxdll bypass (enable 2ns skew delay on RXC) */
+> +	tmp &= ~(1 << KSZ9131_RXTXDLL_BYPASS);
+> +	mmd_write_reg(dev, 2, 0x4c, tmp);
+> +
+> +	tmp = mmd_read_reg(dev, 2, 0x4d);
+> +	/* disable txdll bypass (enable 2ns skew delay on TXC) */
+> +	tmp &= ~(1 << KSZ9131_RXTXDLL_BYPASS);
+> +	mmd_write_reg(dev, 2, 0x4d, tmp);
+> +
+> +	/*
+> +	 * Subtract ~0.6ns from txdll = ~1.4ns delay.
+> +	 * leave RXC path untouched
+> +	 */
+> +	mmd_write_reg(dev, 2, 4, 0x007d);
+> +	mmd_write_reg(dev, 2, 6, 0xdddd);
+> +	mmd_write_reg(dev, 2, 8, 0x0007);
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * fixup for PLX PEX8909 bridge to configure GPIO1-7 as output High
+>   * as they are used for slots1-7 PERST#
+> @@ -167,6 +202,8 @@ static void __init imx6q_enet_phy_init(void)
+>  				ksz9021rn_phy_fixup);
+>  		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
+>  				ksz9031rn_phy_fixup);
+> +		phy_register_fixup_for_uid(PHY_ID_KSZ9131, MICREL_PHY_ID_MASK,
+> +				ksz9131rn_phy_fixup);
+>  		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
+>  				ar8031_phy_fixup);
+>  		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
+> -- 
+> 2.25.1
+> 
+> 
+> 
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 53fadb4d90c762b560a9d0983bb5894129057ea1 Mon Sep 17 00:00:00 2001
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-Date: Thu, 5 Mar 2020 00:00:33 +0200
-Subject: [PATCH] spi: spi-fsl-dspi: Simplify bytes_per_word gymnastics
-
-Reduce the if-then-else-if-then-else sequence to:
- - a simple division in the case of bytes_per_word calculation
- - a memcpy command with a variable size. The semantics of larger-than-8
-   xfer->bits_per_word is that those words are to be interpreted and
-   transmitted in CPU native endianness.
-
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Link: https://lore.kernel.org/r/20200304220044.11193-2-olteanv@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-fsl-dspi.c | 21 +++------------------
- 1 file changed, 3 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index c357c3247232..896d7a0f45b0 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -252,12 +252,7 @@ static u32 dspi_pop_tx(struct fsl_dspi *dspi)
- 	u32 txdata = 0;
- 
- 	if (dspi->tx) {
--		if (dspi->bytes_per_word == 1)
--			txdata = *(u8 *)dspi->tx;
--		else if (dspi->bytes_per_word == 2)
--			txdata = *(u16 *)dspi->tx;
--		else  /* dspi->bytes_per_word == 4 */
--			txdata = *(u32 *)dspi->tx;
-+		memcpy(&txdata, dspi->tx, dspi->bytes_per_word);
- 		dspi->tx += dspi->bytes_per_word;
- 	}
- 	dspi->len -= dspi->bytes_per_word;
-@@ -284,12 +279,7 @@ static void dspi_push_rx(struct fsl_dspi *dspi, u32 rxdata)
- 	/* Mask off undefined bits */
- 	rxdata &= (1 << dspi->bits_per_word) - 1;
- 
--	if (dspi->bytes_per_word == 1)
--		*(u8 *)dspi->rx = rxdata;
--	else if (dspi->bytes_per_word == 2)
--		*(u16 *)dspi->rx = rxdata;
--	else /* dspi->bytes_per_word == 4 */
--		*(u32 *)dspi->rx = rxdata;
-+	memcpy(dspi->rx, &rxdata, dspi->bytes_per_word);
- 	dspi->rx += dspi->bytes_per_word;
- }
- 
-@@ -814,12 +804,7 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
- 		dspi->progress = 0;
- 		/* Validated transfer specific frame size (defaults applied) */
- 		dspi->bits_per_word = transfer->bits_per_word;
--		if (transfer->bits_per_word <= 8)
--			dspi->bytes_per_word = 1;
--		else if (transfer->bits_per_word <= 16)
--			dspi->bytes_per_word = 2;
--		else
--			dspi->bytes_per_word = 4;
-+		dspi->bytes_per_word = DIV_ROUND_UP(dspi->bits_per_word, 8);
- 
- 		regmap_update_bits(dspi->regmap, SPI_MCR,
- 				   SPI_MCR_CLR_TXF | SPI_MCR_CLR_RXF,
 -- 
-2.20.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
