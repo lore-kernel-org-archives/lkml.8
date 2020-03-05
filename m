@@ -2,161 +2,178 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0720C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9147EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7807120848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:46:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nbjJ+edo"
+	by mail.kernel.org (Postfix) with ESMTP id 73B8D2146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgCEMqN (ORCPT
+        id S1726204AbgCEMqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:46:13 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44536 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgCEMqM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:46:12 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so5781917oia.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 04:46:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EBJiQx/MPyQ2hugQ5S0diNZxP8ij3c3rvZpbZvxi3j0=;
-        b=nbjJ+edob4wcEAnoswnNyP+pLHYUqojVTVp7wAaZTxnr3fi5TcwEr0MXNa/oZHh7xh
-         YywP+f0wo1k9fzezVsgVONxhuga2FzGKv6C9dPwH9nDS3dkZBqynk8RCmPoF85tbirBt
-         3m5RdwT7gU0M91d4vA7T30cRea9uA8cV1XPZYX1SYQ4Tc8iWWSUv7iCJGUyst68xulMo
-         FFTlWebAxu/wdRjpF/Jwr7UtMtKWCNcyPuwyVXAHcIeKBUHsfOG8580m7GkS8spotS5h
-         B8rclHh70hiN++lVZLl04OxZ/lJOEP7GttWhyVMN+0PzxuYgUa0RJCKBX5szy1nniwlv
-         hSbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EBJiQx/MPyQ2hugQ5S0diNZxP8ij3c3rvZpbZvxi3j0=;
-        b=rigkO46RBV43EnjzVP1omGTZZTE1srYX5zc8SMKIMhte6X8JrJJrt/5J3X6Lvarw+m
-         /NRCmz1Tw4QrAV0FE6leiqgO0Uz8UK3fEaabRCQHeJhIp3c/XMqq9Wr4LnXrlR1qJR4t
-         fuSnwSPrUWSo9XUjoG0hGJgoYogdLKIHgHDnBqOpkidqc2JHu0AxrArDYhAz6K+8VOmw
-         6Aqviqy8JhmlsNJuVXonCTVzpu6oMKoDREcfdDaQIiixzHtXDv+tWFKGCmgqhuHWZ6zs
-         osyKRJ3fHt7UfwgjAK0zChgeK8n2oMNk+ujsnFv+YcjekJWh5DEg6szqFptvxvHZ2iw+
-         zs1A==
-X-Gm-Message-State: ANhLgQ3mTd9h0/90G0SIDE2PTmb66v3kz4uKs4oR7LiLnteuVuYwzBz+
-        bdVAw//LJsyQUj3hbx8XKUxLOxUOSuI3LPImZoqpWQ==
-X-Google-Smtp-Source: ADFU+vso1w9mhfeUd+ur1ReAf47AM2hyb8bzzNFTdwBLB0Sbp0EkstxtFY56uOcWw4/dmeQ6pS9n5ARaJ8lPS979twY=
-X-Received: by 2002:a05:6808:8d0:: with SMTP id k16mr5503025oij.68.1583412371104;
- Thu, 05 Mar 2020 04:46:11 -0800 (PST)
+        Thu, 5 Mar 2020 07:46:36 -0500
+Received: from mga12.intel.com ([192.55.52.136]:21204 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgCEMqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 07:46:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 04:46:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="229680790"
+Received: from adhawale-mobl.amr.corp.intel.com (HELO [10.251.1.197]) ([10.251.1.197])
+  by orsmga007.jf.intel.com with ESMTP; 05 Mar 2020 04:46:33 -0800
+Subject: Re: [PATCH 1/8] soundwire: bus_type: add master_device/driver support
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+References: <20200227223206.5020-1-pierre-louis.bossart@linux.intel.com>
+ <20200227223206.5020-2-pierre-louis.bossart@linux.intel.com>
+ <20200303054136.GP4148@vkoul-mobl>
+ <8a04eda6-cbcf-582f-c229-5d6e4557344b@linux.intel.com>
+ <20200304095312.GT4148@vkoul-mobl>
+ <05dbe43c-abf8-9d5a-d808-35bf4defe4ba@linux.intel.com>
+ <20200305063646.GW4148@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <eb30ac49-788f-b856-6fcf-84ae580eb3c8@linux.intel.com>
+Date:   Thu, 5 Mar 2020 06:46:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200302130430.201037-1-glider@google.com> <20200302130430.201037-2-glider@google.com>
- <0eaac427354844a4fcfb0d9843cf3024c6af21df.camel@perches.com>
- <CAG_fn=VNnxjD6qdkAW_E0v3faBQPpSsO=c+h8O=yvNxTZowuBQ@mail.gmail.com>
- <4cac10d3e2c03e4f21f1104405a0a62a853efb4e.camel@perches.com>
- <CAG_fn=XOyPGau9m7x8eCLJHy3m-H=nbMODewWVJ1xb2e+BPdFw@mail.gmail.com>
- <CAG48ez3sPSFQjB7K64YiNYfemZ_W9cCcKQW34XAcLP_MkXUjCw@mail.gmail.com> <205aa3d8-7d18-1b73-4650-5ef534fe55da@rasmusvillemoes.dk>
-In-Reply-To: <205aa3d8-7d18-1b73-4650-5ef534fe55da@rasmusvillemoes.dk>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 5 Mar 2020 13:45:44 +0100
-Message-ID: <CAG48ez014nW8pie91cnrn_7N1zyziAN+9xrT9xN0iLecCoRwfA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] binder: do not initialize locals passed to copy_from_user()
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>, Todd Kjos <tkjos@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200305063646.GW4148@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 10:03 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
-> On 02/03/2020 19.31, Jann Horn wrote:
-> > On Mon, Mar 2, 2020 at 7:17 PM Alexander Potapenko <glider@google.com> wrote:
-> >> On Mon, Mar 2, 2020 at 3:00 PM Joe Perches <joe@perches.com> wrote:
-> >>>
-> >>> So?  CONFIG_INIT_STACK_ALL by design slows down code.
-> >> Correct.
-> >>
-> >>> This marking would likely need to be done for nearly all
-> >>> 3000+ copy_from_user entries.
-> >> Unfortunately, yes. I was just hoping to do so for a handful of hot
-> >> cases that we encounter, but in the long-term a compiler solution must
-> >> supersede them.
-> >>
-> >>> Why not try to get something done on the compiler side
-> >>> to mark the function itself rather than the uses?
-> >> This is being worked on in the meantime as well (see
-> >> http://lists.llvm.org/pipermail/cfe-dev/2020-February/064633.html)
-> >> Do you have any particular requisitions about how this should look on
-> >> the source level?
-> >
-> > Just thinking out loud: Should this be a function attribute, or should
-> > it be a builtin - something like __builtin_assume_initialized(ptr,
-> > len)? That would make it also work for macros,
->
-> But with macros (and static inlines), the compiler sees all the
-> initialization being done, no?
 
-Depends on how the macro writes to the buffer, whether it's a normal
-write or happens through another function call or whatever.
+>> If you want a technical objection, let me restate what I already mentioned:
+>>
+>> If you look at the hierarchy, we have
+>>
+>> PCI device -> PCI driver
+>>    soundwire_master_device0
+>>       soundwire_slave(s) -> codec driver
+>>    ...
+>>    soundwire_master_deviceN
+>>       soundwire_slave(s) -> codec driver
+>>
+>> You have not explained how I could possibly deal with power management
+>> without having a driver for the master_device(s). The pm_ops need to be
+>> inserted in a driver structure, which means we need a driver. And if we need
+>> a driver, then we might as well have a real driver with .probe .remove
+>> support, driver_register(), etc.
+> 
+> Please read the emails sent to you completely, including the reply on
+> 2nd patch of this series. I think i am repeating this 3rd or 4th time
+> now.  Am going to repeat this info here to help move things.
+> 
+> Why do you need a extra driver for this. Do you have another set of
+> device object and driver for DSP code? But you do manage that, right?
+> I am proposing to simplify the device model here and have only one
+> device (SOF PCI) and driver (SOF PCI driver), which is created by actual
+> bus (PCI here) as you have in rest of the driver like HDA, DSP etc.
+> 
+> I have already recommended is to make the int-sdw a module which is
+> invoked by SOF PCI driver code (thereby all code uses SOF PCI device and
+> SOF PCI driver) directly. The DSP in my time for skl was a separate
+> module but used the parent objects.
+ >
+> The SOF sdw init (the place where sdw routines are invoked after DSP
+> load) can call sdw_probe and startup. Based on DSP sequencing you can
+> call these functions directly without waiting for extra device to be
+> probed etc.
+> 
+> I feel your flows will be greatly simplified as a result of this.
 
-> and it might simplify
-> > the handling of inlining in the compiler. And you wouldn't need such a
-> > complicated attribute that refers to function arguments by index and
-> > such.
->
-> Does copy_from_user guarantee to zero-initialize the remaining buffer if
-> copying fails partway through?
+Not at all, no. This is not a simplification but an extremely invasive 
+proposal.
 
-Basically yes. From include/linux/uaccess.h:
+The parent-child relationship is extremely useful for power management, 
+and guarantees that the PCI device remains on while one or more of the 
+masters are used, and conversely can suspend when all links are idle. I 
+currently don't need to do anything, it's all taken care of by the 
+framework.
 
-static __always_inline unsigned long __must_check
-copy_from_user(void *to, const void __user *from, unsigned long n)
-{
-  if (likely(check_copy_size(to, n, false)))
-    n = _copy_from_user(to, from, n);
-  return n;
-}
+If I have to do all the power management at the PCI device level, then I 
+will need to keep track of which links are currently active. All these 
+links are used independently, so it's racy as hell to keep track of the 
+usage when the pm framework already does so quite elegantly. You really 
+want to use the pm_runtime_get/put refcount for each master device, not 
+manage them from the PCI level.
 
-check_copy_size() should be optimized out entirely for straightforward
-use of stack objects; it will only return false if the specified
-address range crosses beyond an allocation boundary.
-_copy_from_user() is defined as follows (there are two possible
-definitions, both of them have the same method body, but they differ
-in whether the function is inline - which one is used depends on the
-architecture):
+I might add that I don't see the logic in having pm support at the Slave 
+device level, but not at the master, and again at the PCI level. It's 
+just simpler to handle pm at each level rather that fudge layers.
 
-static inline __must_check unsigned long
-_copy_from_user(void *to, const void __user *from, unsigned long n)
-{
-  unsigned long res = n;
-  might_fault();
-  if (likely(access_ok(from, n))) {
-    kasan_check_write(to, n);
-    res = raw_copy_from_user(to, from, n);
-  }
-  if (unlikely(res))
-    memset(to + (n - res), 0, res);
-  return res;
-}
+I would also remind you that the solution you developed while at Intel 
+did in fact use the parent-child relationship for power management, and 
+I remember very clearly having discussions with you on this. I don't see 
+why replacing platform devices by master devices should change this 
+design choice.
 
-So annotating _copy_from_user(), or calling a magic
-fake-initialization builtin directly before calling _copy_from_user(),
-should be safe. As long as the compiler can eliminate the call to
-check_copy_size(), that should then make that propagate up to the
-caller of copy_from_user(). (You could also try to annotate
-copy_from_user() directly, but I'm not sure whether doing it before
-the bounds check might confuse the compiler somehow.)
+> Second issue of PM:
+>   You do manage the DSP PM right? Similar way.
+> So here I would expect you to add functions/callbacks from SOF driver to
+> this module and call PM routines from SOF PM routines allowing you to
+> suspend/resume. Similar way DSP used to be managed.  Something like:
+> .sdw_suspend .sdw_resume functions/callbacks which will do sdw specific
+> pm configurations. You do not need module specific pm_ops, you can do
+> the required steps in callbacks from SOF driver
+> 
+> Bonus, this can be tuned and called at the specific places in DSP
+> suspend/resume flow, which is something I suspect you would want.
+
+No. The links can only be resumed when the DSP is fully powered. We've 
+tried all sorts of optimizations already and worked with the hardware 
+team on this.
+
+> 
+> For places which need dev/driver objects like sdw dai's please pass the
+> SOF PCI dev object.
+> 
+> Is there any other technical reason left unexplored/unexplained?
+> 
+>> I really don't see what's broken or unnecessary with these patches.
+> 
+> Adding a layer for Intel in common code is unnecessary IMO. As
+> demonstrated above you can use the intel specific callback to do the
+> same task in intel specific way. I would very much prefer that approach
+> to solve this
+> 
+> We definitely need a sdw_master_device for everyone, but I don't believe
+> we need a sdw_master_device for Intel or anyone else.
+
+I will flip the argument: you can implement a lightweight master driver 
+in no time. All you need is to move the code you currently have in the 
+platform device .probe() to the master_device .probe(). Big deal, the 
+overhead is negligible - and you don't need to add pm_ops if you don't 
+need to.
+
+I would add that you cannot possibly compare the two implementations.
+
+Qualcomm has an extremely simple SoundWire link optimized for 2 PDM 
+amplifiers connected to a SLIMbus codec, with a fixed bit allocation. 
+There is currently no power management for this link.
+
+Intel has 4 links running in parallel and synchronized in hardware, with 
+complicated power management, different flavors of clock-stop - some not 
+controlled by the driver but by DSP firmware - , 5 hardware 
+configurations (more coming) and 6 third-party devices (more coming).
+
+You've got to give us some slack here, and leave us handle power 
+management in the simplest possible way.
