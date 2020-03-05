@@ -2,178 +2,149 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9147EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E521C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B8D2146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE71D20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgCEMqg (ORCPT
+        id S1726259AbgCEMrb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:46:36 -0500
-Received: from mga12.intel.com ([192.55.52.136]:21204 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgCEMqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:46:36 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 04:46:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="229680790"
-Received: from adhawale-mobl.amr.corp.intel.com (HELO [10.251.1.197]) ([10.251.1.197])
-  by orsmga007.jf.intel.com with ESMTP; 05 Mar 2020 04:46:33 -0800
-Subject: Re: [PATCH 1/8] soundwire: bus_type: add master_device/driver support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20200227223206.5020-1-pierre-louis.bossart@linux.intel.com>
- <20200227223206.5020-2-pierre-louis.bossart@linux.intel.com>
- <20200303054136.GP4148@vkoul-mobl>
- <8a04eda6-cbcf-582f-c229-5d6e4557344b@linux.intel.com>
- <20200304095312.GT4148@vkoul-mobl>
- <05dbe43c-abf8-9d5a-d808-35bf4defe4ba@linux.intel.com>
- <20200305063646.GW4148@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <eb30ac49-788f-b856-6fcf-84ae580eb3c8@linux.intel.com>
-Date:   Thu, 5 Mar 2020 06:46:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 5 Mar 2020 07:47:31 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54438 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725989AbgCEMrb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 07:47:31 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 025Cd7uF076815
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Mar 2020 07:47:30 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhhy7yegy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:47:29 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
+        Thu, 5 Mar 2020 12:47:27 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Mar 2020 12:47:24 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 025ClNjc29687814
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Mar 2020 12:47:23 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 617CA11C064;
+        Thu,  5 Mar 2020 12:47:23 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 029A011C04C;
+        Thu,  5 Mar 2020 12:47:23 +0000 (GMT)
+Received: from localhost (unknown [9.199.53.44])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Mar 2020 12:47:22 +0000 (GMT)
+Date:   Thu, 05 Mar 2020 18:17:21 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: eh_frame confusion
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Segher Boessenkool <segher@kernel.crashing.org>
+References: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk>
+        <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
+        <1583169883.zo43kx69lm.naveen@linux.ibm.com>
+In-Reply-To: <1583169883.zo43kx69lm.naveen@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200305063646.GW4148@vkoul-mobl>
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20030512-0008-0000-0000-0000035998EA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030512-0009-0000-0000-00004A7AD005
+Message-Id: <1583412126.fc8zskkv66.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-05_03:2020-03-05,2020-03-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 suspectscore=0 phishscore=0 mlxscore=0
+ impostorscore=0 bulkscore=0 malwarescore=0 adultscore=0 clxscore=1015
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->> If you want a technical objection, let me restate what I already mentioned:
->>
->> If you look at the hierarchy, we have
->>
->> PCI device -> PCI driver
->>    soundwire_master_device0
->>       soundwire_slave(s) -> codec driver
->>    ...
->>    soundwire_master_deviceN
->>       soundwire_slave(s) -> codec driver
->>
->> You have not explained how I could possibly deal with power management
->> without having a driver for the master_device(s). The pm_ops need to be
->> inserted in a driver structure, which means we need a driver. And if we need
->> a driver, then we might as well have a real driver with .probe .remove
->> support, driver_register(), etc.
+Naveen N. Rao wrote:
+> Naveen N. Rao wrote:
+>> Rasmus Villemoes wrote:
+<snip>
+> Can you check if the below patch works? I am yet to test this in more 
+> detail, but would be good to know the implications for ppc32.
 > 
-> Please read the emails sent to you completely, including the reply on
-> 2nd patch of this series. I think i am repeating this 3rd or 4th time
-> now.  Am going to repeat this info here to help move things.
+> - Naveen
 > 
-> Why do you need a extra driver for this. Do you have another set of
-> device object and driver for DSP code? But you do manage that, right?
-> I am proposing to simplify the device model here and have only one
-> device (SOF PCI) and driver (SOF PCI driver), which is created by actual
-> bus (PCI here) as you have in rest of the driver like HDA, DSP etc.
 > 
-> I have already recommended is to make the int-sdw a module which is
-> invoked by SOF PCI driver code (thereby all code uses SOF PCI device and
-> SOF PCI driver) directly. The DSP in my time for skl was a separate
-> module but used the parent objects.
- >
-> The SOF sdw init (the place where sdw routines are invoked after DSP
-> load) can call sdw_probe and startup. Based on DSP sequencing you can
-> call these functions directly without waiting for extra device to be
-> probed etc.
-> 
-> I feel your flows will be greatly simplified as a result of this.
+> ---
+> diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+> index f35730548e42..5b5bf98b8217 100644
+> --- a/arch/powerpc/Makefile
+> +++ b/arch/powerpc/Makefile
+> @@ -239,10 +239,7 @@ KBUILD_CFLAGS += $(call cc-option,-mno-vsx)
+>  KBUILD_CFLAGS += $(call cc-option,-mno-spe)
+>  KBUILD_CFLAGS += $(call cc-option,-mspe=no)
+>  
+> -# FIXME: the module load should be taught about the additional relocs
+> -# generated by this.
+> -# revert to pre-gcc-4.4 behaviour of .eh_frame
+> -KBUILD_CFLAGS  += $(call cc-option,-fno-dwarf2-cfi-asm)
+> +KBUILD_CFLAGS  += $(call cc-option,-fno-asynchronous-unwind-tables)
 
-Not at all, no. This is not a simplification but an extremely invasive 
-proposal.
+In terms of the CFI information, the primary difference I see with 
+-fno-dwarf2-cfi-asm is that when dumping the debug frames, CIE indicates 
+version 3, while otherwise (i.e., without -fno-dwarf2-cfi-asm and 
+with/without -fasynchronous-unwind-tables), it is version 1, regardless 
+of -gdwarf-2/-gdwarf-4. There are few more minor changes, but none of 
+these looked significant to me.
 
-The parent-child relationship is extremely useful for power management, 
-and guarantees that the PCI device remains on while one or more of the 
-masters are used, and conversely can suspend when all links are idle. I 
-currently don't need to do anything, it's all taken care of by the 
-framework.
+>  
+>  # Never use string load/store instructions as they are
+>  # often slow when they are implemented at all
+> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+> index e147bbdc12cd..d43b0b18137c 100644
+> --- a/arch/powerpc/kernel/vdso32/Makefile
+> +++ b/arch/powerpc/kernel/vdso32/Makefile
+> @@ -25,6 +25,7 @@ KCOV_INSTRUMENT := n
+>  UBSAN_SANITIZE := n
+>  
+>  ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
+> +       -fasynchronous-unwind-tables \
+>         -Wl,-soname=linux-vdso32.so.1 -Wl,--hash-style=both
+>  asflags-y := -D__VDSO32__ -s
+>  
+> diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vdso64/Makefile
+> index 32ebb3522ea1..b2cbb5c49bad 100644
+> --- a/arch/powerpc/kernel/vdso64/Makefile
+> +++ b/arch/powerpc/kernel/vdso64/Makefile
+> @@ -13,6 +13,7 @@ KCOV_INSTRUMENT := n
+>  UBSAN_SANITIZE := n
+>  
+>  ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
+> +       -fasynchronous-unwind-tables \
+>         -Wl,-soname=linux-vdso64.so.1 -Wl,--hash-style=both
+>  asflags-y := -D__VDSO64__ -s
 
-If I have to do all the power management at the PCI device level, then I 
-will need to keep track of which links are currently active. All these 
-links are used independently, so it's racy as hell to keep track of the 
-usage when the pm framework already does so quite elegantly. You really 
-want to use the pm_runtime_get/put refcount for each master device, not 
-manage them from the PCI level.
+The above vdso hunks can be dropped since all our VDSO are assembly, so 
+the above have no impact.
 
-I might add that I don't see the logic in having pm support at the Slave 
-device level, but not at the master, and again at the PCI level. It's 
-just simpler to handle pm at each level rather that fudge layers.
 
-I would also remind you that the solution you developed while at Intel 
-did in fact use the parent-child relationship for power management, and 
-I remember very clearly having discussions with you on this. I don't see 
-why replacing platform devices by master devices should change this 
-design choice.
+- Naveen
 
-> Second issue of PM:
->   You do manage the DSP PM right? Similar way.
-> So here I would expect you to add functions/callbacks from SOF driver to
-> this module and call PM routines from SOF PM routines allowing you to
-> suspend/resume. Similar way DSP used to be managed.  Something like:
-> .sdw_suspend .sdw_resume functions/callbacks which will do sdw specific
-> pm configurations. You do not need module specific pm_ops, you can do
-> the required steps in callbacks from SOF driver
-> 
-> Bonus, this can be tuned and called at the specific places in DSP
-> suspend/resume flow, which is something I suspect you would want.
-
-No. The links can only be resumed when the DSP is fully powered. We've 
-tried all sorts of optimizations already and worked with the hardware 
-team on this.
-
-> 
-> For places which need dev/driver objects like sdw dai's please pass the
-> SOF PCI dev object.
-> 
-> Is there any other technical reason left unexplored/unexplained?
-> 
->> I really don't see what's broken or unnecessary with these patches.
-> 
-> Adding a layer for Intel in common code is unnecessary IMO. As
-> demonstrated above you can use the intel specific callback to do the
-> same task in intel specific way. I would very much prefer that approach
-> to solve this
-> 
-> We definitely need a sdw_master_device for everyone, but I don't believe
-> we need a sdw_master_device for Intel or anyone else.
-
-I will flip the argument: you can implement a lightweight master driver 
-in no time. All you need is to move the code you currently have in the 
-platform device .probe() to the master_device .probe(). Big deal, the 
-overhead is negligible - and you don't need to add pm_ops if you don't 
-need to.
-
-I would add that you cannot possibly compare the two implementations.
-
-Qualcomm has an extremely simple SoundWire link optimized for 2 PDM 
-amplifiers connected to a SLIMbus codec, with a fixed bit allocation. 
-There is currently no power management for this link.
-
-Intel has 4 links running in parallel and synchronized in hardware, with 
-complicated power management, different flavors of clock-stop - some not 
-controlled by the driver but by DSP firmware - , 5 hardware 
-configurations (more coming) and 6 third-party devices (more coming).
-
-You've got to give us some slack here, and leave us handle power 
-management in the simplest possible way.
