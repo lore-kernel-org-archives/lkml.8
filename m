@@ -2,78 +2,161 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A668C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65CAC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F86520866
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583369451;
-	bh=vChol9pO7kDygComiayrT41Ba8h4bUJcsrtBd1jCgbk=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=ltLeAwMUNB7OPlyglOKYiyfJJBDYDqASwOqx7xgXKkiCfk3Gkm73/7YDuGowLmwDy
-	 K79RSUqx6SVENKSUYt1rD6Q6DfD8mnMMArb2S+ika5eVTv6QI2APufibV4bfHJYNMV
-	 zTF/yq9806k8+6PZKM+UD1qhAIUW3uFBrNTZcAr0=
+	by mail.kernel.org (Postfix) with ESMTP id 8E6B320842
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:53:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PPWo8s6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbgCEAuu (ORCPT
+        id S1725919AbgCEAxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 19:50:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbgCEAut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 19:50:49 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 456FC2084E;
-        Thu,  5 Mar 2020 00:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583369449;
-        bh=vChol9pO7kDygComiayrT41Ba8h4bUJcsrtBd1jCgbk=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=JnlUnxZEjfbxuBRZyX6b5DSsTDWk/E65DK4GSJvLSgr1DCoONlpQSvJaFSfKT7UVa
-         JMon4Qxr/KhMU1OhqKmqznD0tXuDA0ErOchQmvnUZxei9UJBwaGwp7IRK0i8zmNRnP
-         Ar5YfzhPx9FuBBpjOu6gBGIu0AdaU3xuSr72wCNE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 155113522731; Wed,  4 Mar 2020 16:50:49 -0800 (PST)
-Date:   Wed, 4 Mar 2020 16:50:49 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org
-Subject: Pinning down a blocked task to extract diagnostics
-Message-ID: <20200305005049.GA21120@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        Wed, 4 Mar 2020 19:53:25 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:23200 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725797AbgCEAxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 19:53:24 -0500
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 0250lcsx008926
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 16:53:23 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=twg6TfX4Tjm/9SDqIgA1ox77n0eMPIL78l+2O1ogRVg=;
+ b=PPWo8s6tarK9LT01CFvvcK/ql3KjMxGmvI2/I/U+fd38sZij4E33EEku0aimHULADxzU
+ hqNp/z9QA/w3kZVU0tXCS6SP93uAzop+AkLpJys0nUStC07GJdbh5PknLxfL9mtq2Kte
+ YZBE3865LAGo1Bu7zMsnYivZXoZnyuDbyKo= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2yhwxxqp1d-8
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:53:23 -0800
+Received: from intmgw001.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 4 Mar 2020 16:53:17 -0800
+Received: by devvm4439.prn2.facebook.com (Postfix, from userid 111017)
+        id 2158B10332086; Wed,  4 Mar 2020 16:53:15 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm4439.prn2.facebook.com
+To:     Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>
+CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-team@fb.com>, Rik van Riel <riel@surriel.com>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2] btrfs: implement migratepage callback
+Date:   Wed, 4 Mar 2020 16:53:12 -0800
+Message-ID: <20200305005312.563782-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_10:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 clxscore=1015
+ malwarescore=0 mlxlogscore=856 impostorscore=0 lowpriorityscore=0
+ adultscore=0 phishscore=0 bulkscore=0 spamscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050002
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Currently btrfs doesn't provide a migratepage callback. It means that
+fallback_migrate_page()	is used to migrate btrfs pages.
 
-Suppose that I need to extract diagnostics information from a blocked
-task, but that I absolutely cannot tolerate this task awakening in the
-midst of this extraction process.  Is the following code the right way
-to make this work given a task "t"?
+fallback_migrate_page() cannot move dirty pages, instead it tries to
+flush them (in sync mode) or just fails (in async mode).
 
-	raw_spin_lock_irq(&t->pi_lock);
-	if (t->on_rq) {
-		/* Task no longer blocked, so ignore it. */
-	} else {
-		/* Extract consistent diagnostic information. */
-	}
-	raw_spin_unlock_irq(&t->pi_lock);
+In the sync mode pages which are scheduled to be processed by
+btrfs_writepage_fixup_worker() can't be effectively flushed by the
+migration code, because there is no established way to wait for the
+completion of the delayed work.
 
-It looks like all the wakeup paths acquire ->pi_lock, but I figured I
-should actually ask...
+It all leads to page migration failures.
 
-							Thanx, Paul
+To fix it the patch implements a btrs-specific migratepage callback,
+which is similar to iomap_migrate_page() used by some other fs, except
+it does take care of the PagePrivate2 flag which is used for data
+ordering purposes.
+
+v2: fixed the build issue found by the kbuild test robot <lkp@intel.com>
+
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Chris Mason <clm@fb.com>
+---
+ fs/btrfs/inode.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 7735ce6127c3..da0d02adaaf3 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -28,6 +28,7 @@
+ #include <linux/magic.h>
+ #include <linux/iversion.h>
+ #include <linux/swap.h>
++#include <linux/migrate.h>
+ #include <linux/sched/mm.h>
+ #include <asm/unaligned.h>
+ #include "misc.h"
+@@ -8323,6 +8324,37 @@ static int btrfs_releasepage(struct page *page, gfp_t gfp_flags)
+ 	return __btrfs_releasepage(page, gfp_flags);
+ }
+ 
++static int btrfs_migratepage(struct address_space *mapping,
++			     struct page *newpage, struct page *page,
++			     enum migrate_mode mode)
++{
++	int ret;
++
++	ret = migrate_page_move_mapping(mapping, newpage, page, 0);
++	if (ret != MIGRATEPAGE_SUCCESS)
++		return ret;
++
++	if (page_has_private(page)) {
++		ClearPagePrivate(page);
++		get_page(newpage);
++		set_page_private(newpage, page_private(page));
++		set_page_private(page, 0);
++		put_page(page);
++		SetPagePrivate(newpage);
++	}
++
++	if (PagePrivate2(page)) {
++		ClearPagePrivate2(page);
++		SetPagePrivate2(newpage);
++	}
++
++	if (mode != MIGRATE_SYNC_NO_COPY)
++		migrate_page_copy(newpage, page);
++	else
++		migrate_page_states(newpage, page);
++	return MIGRATEPAGE_SUCCESS;
++}
++
+ static void btrfs_invalidatepage(struct page *page, unsigned int offset,
+ 				 unsigned int length)
+ {
+@@ -10525,6 +10557,9 @@ static const struct address_space_operations btrfs_aops = {
+ 	.direct_IO	= btrfs_direct_IO,
+ 	.invalidatepage = btrfs_invalidatepage,
+ 	.releasepage	= btrfs_releasepage,
++#ifdef CONFIG_MIGRATION
++	.migratepage	= btrfs_migratepage,
++#endif
+ 	.set_page_dirty	= btrfs_set_page_dirty,
+ 	.error_remove_page = generic_error_remove_page,
+ 	.swap_activate	= btrfs_swap_activate,
+-- 
+2.24.1
+
