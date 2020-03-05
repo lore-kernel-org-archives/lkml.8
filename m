@@ -2,89 +2,95 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB88C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40574C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E99120870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1985720870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgCEIYE (ORCPT
+        id S1726234AbgCEIYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:24:04 -0500
-Received: from lucky1.263xmail.com ([211.157.147.130]:41560 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgCEIYD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:24:03 -0500
-X-Greylist: delayed 452 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Mar 2020 03:24:02 EST
-Received: from localhost (unknown [192.168.167.209])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 045DC8B0D3;
-        Thu,  5 Mar 2020 16:16:27 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P32633T140274034538240S1583396184137610_;
-        Thu, 05 Mar 2020 16:16:26 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <e59db39a75117ec32bc961e850a9069c>
-X-RL-SENDER: cl@rock-chips.com
-X-SENDER: cl@rock-chips.com
-X-LOGIN-NAME: cl@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   <cl@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        akpm@linux-foundation.org, tglx@linutronix.de, mpe@ellerman.id.au,
-        surenb@google.com, ben.dooks@codethink.co.uk,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        will@kernel.org, keescook@chromium.org, luto@amacapital.net,
-        wad@chromium.org, mark.rutland@arm.com, geert+renesas@glider.be,
-        george_davis@mentor.com, sudeep.holla@arm.com,
-        linux@armlinux.org.uk, gregkh@linuxfoundation.org, info@metux.net,
-        kstewart@linuxfoundation.org, allison@lohutok.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        huangtao@rock-chips.com, Liang Chen <cl@rock-chips.com>
-Subject: [PATCH v1 0/1] wait_task_inactive() spend too much time on system startup
-Date:   Thu,  5 Mar 2020 16:16:10 +0800
-Message-Id: <20200305081611.29323-1-cl@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 5 Mar 2020 03:24:21 -0500
+Received: from sauhun.de ([88.99.104.3]:45142 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbgCEIYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 03:24:21 -0500
+Received: from localhost (p54B330C6.dip0.t-ipconnect.de [84.179.48.198])
+        by pokefinder.org (Postfix) with ESMTPSA id A7A422C1F28;
+        Thu,  5 Mar 2020 09:24:18 +0100 (CET)
+Date:   Thu, 5 Mar 2020 09:24:15 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Dennis Zhou <dennis@kernel.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-doc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] include/bitmap.h: add new functions to documentation
+Message-ID: <20200305082415.GA1079@ninjato>
+References: <20200304140920.6109-1-wsa+renesas@sang-engineering.com>
+ <20200304140920.6109-3-wsa+renesas@sang-engineering.com>
+ <20200304204026.GA55400@dennisz-mbp>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+Content-Disposition: inline
+In-Reply-To: <20200304204026.GA55400@dennisz-mbp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liang Chen <cl@rock-chips.com>
 
-Changelog:
-v1: wait_task_inactive() frequently call schedule_hrtimeout() and spend a lot of time,
-i am trying to optimize it on rockchip platform.
-
-Liang Chen (1):
-  sched/fair: do not preempt current task if it is going to call
-    schedule()
-
- arch/arm/include/asm/thread_info.h   |  1 +
- arch/arm64/include/asm/thread_info.h |  1 +
- include/linux/sched.h                | 15 +++++++++++++++
- kernel/kthread.c                     |  4 ++++
- kernel/sched/fair.c                  |  4 ++++
- 5 files changed, 25 insertions(+)
-
--- 
-2.17.1
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
+> > I found these functions only by chance although I was looking exactly
+> > for something like them. So, add them to the list of functions to make
+> > them more visible.
+> >=20
+> > Fixes: e837dfde15a4 ("bitmap: genericize percpu bitmap region iterators=
+")
+> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > Cc: Dennis Zhou <dennis@kernel.org>
+>=20
+> Ah thanks. That was a miss not adding the documentation. I can pick
+> these up unless Andrew would rather run them through his tree. I have a
+> few other miscellaneous documentation cleanups for percpu I need to run
+> anyway.
 
+That sounds like a good fit to me. Will you take both of the patches?
+
+Thanks,
+
+   Wolfram
+
+
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5gtysACgkQFA3kzBSg
+KbaSyQ//a6OXSGwK/vLNNCOnhGY6pviH+BI2Kt82p5SuaSru/5vIskDNeMCMALkn
+KX+e9JA87IyNXX8nGSznpbWOpS5Mr8Olmomhl6cYoEODwW06AEPvzsqxIKn/I1DO
+0Hvcj1bUbt/wCUuP1GdQAGBJvNYDdDUwwsNVixJCRdM6pxfmTPAWzybogTVy6g1I
+HIQkUqpZS3WQ2euffU0z4fJ/hThAGnLK5T3J9irqZnGDp054f+DS64ytrmMCeboD
+7aITrunzud7KaMYCSV3bf957MZiU7wqZJZZZbhsVnFdyTLRF9hE5bRVQdAb3SXYN
+lhHMhGTkUvZdgRLWPWMaRhGpEj7GWRvhIlql4+s+OK4GDUPHW/5X7EqwZEC2ZQ5r
+hX+hHi+cokiOTrHA6YvGWAnrC+6W0IlEVNJQ6phKC30x+wvNStnZLoa5htO+kNzT
+wvbHOgpaK/sGD2+cmTQMDgZ99v7Zok6pkBMs/Qu4e/HrnLALLIfH7DCkkBkI0w2i
+6cOARozzG7k1NPEGKjEj1N1Re+O3HfIqcHf33N3nbU2hcCmeiv4GL7AxA/g1Z3Nn
+mCVW6YL9PktQkc/zzAuD55h5BKBwuQtVBPwXAdSyhXwBaQwd1abbKDdiS42BmOA6
+C2PxnxZBr3q3tB8mhZjzM+y9DDpig4t1yuMo6RdFkcmE6UeJhIY=
+=vIoE
+-----END PGP SIGNATURE-----
+
+--45Z9DzgjV8m4Oswq--
