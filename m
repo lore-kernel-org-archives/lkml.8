@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02286C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0684C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6FF207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875C3207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428822;
-	bh=7Xpa5Qwe0lWcRf6rqT2U+lbAJA93ioiusi3vNGr++3Q=;
+	s=default; t=1583428830;
+	bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B6hzSCRNbSPqd5vmtcpQNiZBsqSCXwmuBr1UmWpWWgC2x7gJAe9Pypd+lBUzU7fc3
-	 FdENMDWf85Ja+ePZUd1EFEUKZyHi5CaEVSty3LojxIWVJYPZVxCohvyFKwULhYICeG
-	 H0ChOgZERfvG5EX4mtmNPJdQY59CSTEqAjP7SZ4M=
+	b=mCMrL92Pf4h9dOpMT4tF990IZErTUyN7H2fHSRFH/TstSPh0fZ/uiu3G80t2xKDeX
+	 OwFqjVDprYVdA011kxWyjggefj9R+Ca61m0+Ww4OEOUpMMOaj8gPQLbcg/PKiDQ3Bm
+	 NX9NwCZQ2YJFLaSxYQ+CaSLCR5D8HLrTrRrO6l3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgCERUV (ORCPT
+        id S1727856AbgCEROy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:20:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41406 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:14:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbgCEROz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:55 -0500
+        id S1727738AbgCEROj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0936021556;
-        Thu,  5 Mar 2020 17:14:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8221F21739;
+        Thu,  5 Mar 2020 17:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428494;
-        bh=7Xpa5Qwe0lWcRf6rqT2U+lbAJA93ioiusi3vNGr++3Q=;
+        s=default; t=1583428479;
+        bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d2dH8bhCyB1k54UzNqV0SR6FTX4OveKkoH4IMfcFDjbUSy34zkagxLRUSgOQ56FDB
-         4xVMszVfIM9zejilSsSPJlP0PRZrO97xNr9e5dxnLcOwxlxWKZRuXSa6V9qkOgHRSG
-         jZ4p1HtM/W1sQd4RY1nXdfsiGBsOUhewNMstLgTQ=
+        b=OXo7Ec8ve10hfeTlGavWaYwyQVtwuNZ7uRga1dILBTAuIYaGY8bKqtdTQsHGHOW4V
+         lq6acVWHxJb5V1kz00x9niQYi7LdZgB/iE9TkSuqiLHhn4nffhK9f/lMfQkl7DOdFm
+         oCqQjpK5XH5jKFPatoXeYGUxdhj1XmTFoGQbWc2I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniele Palmas <dnlplm@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 27/58] net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
-Date:   Thu,  5 Mar 2020 12:13:48 -0500
-Message-Id: <20200305171420.29595-27-sashal@kernel.org>
+Cc:     Hanno Zulla <kontakt@hanno.de>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 15/58] HID: hid-bigbenff: call hid_hw_stop() in case of error
+Date:   Thu,  5 Mar 2020 12:13:36 -0500
+Message-Id: <20200305171420.29595-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
 References: <20200305171420.29595-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,46 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Hanno Zulla <kontakt@hanno.de>
 
-[ Upstream commit eae7172f8141eb98e64e6e81acc9e9d5b2add127 ]
+[ Upstream commit 976a54d0f4202cb412a3b1fc7f117e1d97db35f3 ]
 
-usbnet creates network interfaces with min_mtu = 0 and
-max_mtu = ETH_MAX_MTU.
+It's required to call hid_hw_stop() once hid_hw_start() was called
+previously, so error cases need to handle this. Also, hid_hw_close() is
+not necessary during removal.
 
-These values are not modified by qmi_wwan when the network interface
-is created initially, allowing, for example, to set mtu greater than 1500.
-
-When a raw_ip switch is done (raw_ip set to 'Y', then set to 'N') the mtu
-values for the network interface are set through ether_setup, with
-min_mtu = ETH_MIN_MTU and max_mtu = ETH_DATA_LEN, not allowing anymore to
-set mtu greater than 1500 (error: mtu greater than device maximum).
-
-The patch restores the original min/max mtu values set by usbnet after a
-raw_ip switch.
-
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hanno Zulla <kontakt@hanno.de>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hid/hid-bigbenff.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 9485c8d1de8a3..9dcbca1f8f9aa 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -338,6 +338,9 @@ static void qmi_wwan_netdev_setup(struct net_device *net)
- 		netdev_dbg(net, "mode: raw IP\n");
- 	} else if (!net->header_ops) { /* don't bother if already set */
- 		ether_setup(net);
-+		/* Restoring min/max mtu values set originally by usbnet */
-+		net->min_mtu = 0;
-+		net->max_mtu = ETH_MAX_MTU;
- 		clear_bit(EVENT_NO_IP_ALIGN, &dev->flags);
- 		netdev_dbg(net, "mode: Ethernet\n");
+diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
+index f7e85bacb6889..f8c552b64a899 100644
+--- a/drivers/hid/hid-bigbenff.c
++++ b/drivers/hid/hid-bigbenff.c
+@@ -305,7 +305,6 @@ static void bigben_remove(struct hid_device *hid)
+ 	struct bigben_device *bigben = hid_get_drvdata(hid);
+ 
+ 	cancel_work_sync(&bigben->worker);
+-	hid_hw_close(hid);
+ 	hid_hw_stop(hid);
+ }
+ 
+@@ -350,7 +349,7 @@ static int bigben_probe(struct hid_device *hid,
+ 	error = input_ff_create_memless(hidinput->input, NULL,
+ 		hid_bigben_play_effect);
+ 	if (error)
+-		return error;
++		goto error_hw_stop;
+ 
+ 	name_sz = strlen(dev_name(&hid->dev)) + strlen(":red:bigben#") + 1;
+ 
+@@ -360,8 +359,10 @@ static int bigben_probe(struct hid_device *hid,
+ 			sizeof(struct led_classdev) + name_sz,
+ 			GFP_KERNEL
+ 		);
+-		if (!led)
+-			return -ENOMEM;
++		if (!led) {
++			error = -ENOMEM;
++			goto error_hw_stop;
++		}
+ 		name = (void *)(&led[1]);
+ 		snprintf(name, name_sz,
+ 			"%s:red:bigben%d",
+@@ -375,7 +376,7 @@ static int bigben_probe(struct hid_device *hid,
+ 		bigben->leds[n] = led;
+ 		error = devm_led_classdev_register(&hid->dev, led);
+ 		if (error)
+-			return error;
++			goto error_hw_stop;
  	}
+ 
+ 	/* initial state: LED1 is on, no rumble effect */
+@@ -389,6 +390,10 @@ static int bigben_probe(struct hid_device *hid,
+ 	hid_info(hid, "LED and force feedback support for BigBen gamepad\n");
+ 
+ 	return 0;
++
++error_hw_stop:
++	hid_hw_stop(hid);
++	return error;
+ }
+ 
+ static __u8 *bigben_report_fixup(struct hid_device *hid, __u8 *rdesc,
 -- 
 2.20.1
 
