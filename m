@@ -2,113 +2,108 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC13C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F624C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1ED12072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:43:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QO00FYAP"
+	by mail.kernel.org (Postfix) with ESMTP id 634042072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgCEUnI (ORCPT
+        id S1726251AbgCEUoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 15:43:08 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41331 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgCEUnH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 15:43:07 -0500
-Received: by mail-io1-f68.google.com with SMTP id m25so7950081ioo.8
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 12:43:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K+E8Uy+fBw/gh0nu1wLPFsLlAAWTt9S6/ny9LuQwDCk=;
-        b=QO00FYAP80gFlnAl/2izdrLs57u2D9HT6jeMy2jT8IJZ00MvsCRpYMrR8GU7doHvUI
-         6eTb+gVBX2QOOZOZE6/JRJOsscpRzWVzHoz5rbfegXEmZFRBLrs535y23DRBwzYpzKRs
-         yYISl+wAUCrtJHIv1OArKmUbI6XKyFB0hK4WqTeLu5SAdChBAk4eLwCN5E9Hq/1B96SE
-         aX4nzpp1eL0MeuF3Xxlufcvnn2Cz+opeQ61syEiQ9bsHv0LcNsJjSniFOxUF+kiarlpH
-         dp6RgdLzUypkBgWAfDoqyehybF1hN2UowVmdvdwQdP9/1lqSk2YqiAaOecvpB7MqHSYQ
-         5oig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K+E8Uy+fBw/gh0nu1wLPFsLlAAWTt9S6/ny9LuQwDCk=;
-        b=me6MHlM/85dGTQlWOF4m9ZpJZduNYmrEXhNLrzXAIuIoqgCyU3VStPUAxiMypblMiw
-         2IusTgNNNckvGSdfAjJOO7yDSxlNhj4IBIzoo73MuYylDqR4gTc/pFJRF7lRWOC3T19D
-         sZCbQRPkUTdDTStvrHHPeglfaQ8690VGokeB9jD1yjAKjXj4aS68+OGb2am/hF9gAa/4
-         5j0Rh+Gc83nzf+65bd7HepUzv0LbMCjY0OF1n3KFI9fD69pUFzqJJoKYHwqhUjBLOPfO
-         xFvz23TsGCEwW4Uyaix5v84jJAq0lMewbu4S5KNvn3Ks5p1/zU3ELvTlizeVJcTed6dC
-         JZ4Q==
-X-Gm-Message-State: ANhLgQ1QMV5bnp8erGvAq5sMHSDkerc+dAGVD0h5tPJS5+lw2EbsrW54
-        pIISwQGzI3zRoIz6ssxAw5KgaGhN3aQ=
-X-Google-Smtp-Source: ADFU+vsg6Vx5j+mQUD7KDzZWDaDV9fBiG168AJM8hU2Ibf4OZYImC2B1YX0K/3FJt5xcZ/NuarDTEg==
-X-Received: by 2002:a6b:7f01:: with SMTP id l1mr208223ioq.146.1583440986476;
-        Thu, 05 Mar 2020 12:43:06 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id g3sm1074323ilb.53.2020.03.05.12.43.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 12:43:05 -0800 (PST)
-Subject: Re: [PATCH v2] blktrace: fix dereference after null check
-To:     Cengiz Can <cengiz@kernel.wtf>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200304105818.11781-1-cengiz@kernel.wtf>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e6fe9883-2f51-a249-c5d2-ce11f6b449da@kernel.dk>
-Date:   Thu, 5 Mar 2020 13:43:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 5 Mar 2020 15:44:22 -0500
+Received: from mga04.intel.com ([192.55.52.120]:1390 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbgCEUoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 15:44:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 12:44:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,519,1574150400"; 
+   d="scan'208";a="244396203"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga006.jf.intel.com with ESMTP; 05 Mar 2020 12:44:19 -0800
+Message-ID: <6e9214021448a04bfad823535eaa2320496fdabf.camel@intel.com>
+Subject: Re: [RFC PATCH v9 04/27] x86/cet: Add control-protection fault
+ handler
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Date:   Thu, 05 Mar 2020 12:44:19 -0800
+In-Reply-To: <0bc74a85-7058-0cca-62b8-949c8a881c62@intel.com>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+         <20200205181935.3712-5-yu-cheng.yu@intel.com>
+         <0bc74a85-7058-0cca-62b8-949c8a881c62@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20200304105818.11781-1-cengiz@kernel.wtf>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 3:58 AM, Cengiz Can wrote:
-> There was a recent change in blktrace.c that added a RCU protection to
-> `q->blk_trace` in order to fix a use-after-free issue during access.
+On Wed, 2020-02-26 at 09:10 -0800, Dave Hansen wrote:
+> On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
+> > diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+> > index 87ef69a72c52..8ed406f469e7 100644
+> > --- a/arch/x86/kernel/idt.c
+> > +++ b/arch/x86/kernel/idt.c
+> > @@ -102,6 +102,10 @@ static const __initconst struct idt_data def_idts[] = {
+> >  #elif defined(CONFIG_X86_32)
+> >  	SYSG(IA32_SYSCALL_VECTOR,	entry_INT80_32),
+> >  #endif
+> > +
+> > +#ifdef CONFIG_X86_64
+> > +	INTG(X86_TRAP_CP,		control_protection),
+> > +#endif
+> >  };
 > 
-> However the change missed an edge case that can lead to dereferencing of
-> `bt` pointer even when it's NULL:
+> This patch in particular appears to have all of its code unconditionally
+> compiled in.  That's in contrast to things that have Kconfig options, like:
 > 
-> Coverity static analyzer marked this as a FORWARD_NULL issue with CID
-> 1460458.
+> #ifdef CONFIG_X86_MCE
+>         INTG(X86_TRAP_MC,               &machine_check),
+> #endif
 > 
-> ```
-> /kernel/trace/blktrace.c: 1904 in sysfs_blk_trace_attr_store()
-> 1898            ret = 0;
-> 1899            if (bt == NULL)
-> 1900                    ret = blk_trace_setup_queue(q, bdev);
-> 1901
-> 1902            if (ret == 0) {
-> 1903                    if (attr == &dev_attr_act_mask)
->>>>     CID 1460458:  Null pointer dereferences  (FORWARD_NULL)
->>>>     Dereferencing null pointer "bt".
-> 1904                            bt->act_mask = value;
-> 1905                    else if (attr == &dev_attr_pid)
-> 1906                            bt->pid = value;
-> 1907                    else if (attr == &dev_attr_start_lba)
-> 1908                            bt->start_lba = value;
-> 1909                    else if (attr == &dev_attr_end_lba)
-> ```
+> or:
 > 
-> Added a reassignment with RCU annotation to fix the issue.
+> #ifdef CONFIG_X86_THERMAL_VECTOR
+>         INTG(THERMAL_APIC_VECTOR,       thermal_interrupt),
+> #endif
+> 
+> Is there a reason this code is always compiled in on 64-bit even when
+> the config option is off?
 
-Applied, thanks.
+I will change it to CONFIG_X86_INTEL_CET.
 
--- 
-Jens Axboe
+Yu-cheng
 
