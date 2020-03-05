@@ -2,101 +2,94 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E34C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC76C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE2C20637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6206820637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:52:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PGya3HUy"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NKgKXtBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgCEQvj (ORCPT
+        id S1726191AbgCEQv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:51:39 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26311 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725944AbgCEQvj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:51:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583427098;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SqVNCIytxdHmAm4l+2tk3rB1xbxHOZa0mRnp6D7J+Ck=;
-        b=PGya3HUyi6by75HhAwHHTB0Im8tUjP+Tus1w9Y2BhvpIAIDun4TXkTUSrSgzjuGkICr8ID
-        IHBQhxXkCL8AXvqvElUDjdo4lKp5/MlCWvtOPhh0D0u4M/IUrGr5+jzypLTN5NedbWSlW9
-        tShl7YUFbbMM8RWlpUD8FIALb635Tv0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-Q1DKsTS0NXS6r6ALR0li_Q-1; Thu, 05 Mar 2020 11:51:34 -0500
-X-MC-Unique: Q1DKsTS0NXS6r6ALR0li_Q-1
-Received: by mail-wm1-f71.google.com with SMTP id g26so1799286wmk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:51:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SqVNCIytxdHmAm4l+2tk3rB1xbxHOZa0mRnp6D7J+Ck=;
-        b=Lfl6qEuwPGaT4yZj+xzUF86CAwb3rMyDpGH/TAk4u9kTr7jnA4MXOhjpMtH6B0GTYg
-         uN+zTmT72CYiiDDFz+UQCPpGGnpYMnERvpIBS4HpJSYjUeqVnCBkP6Pi9prWAqnA7duM
-         5n36MdRcgx94Hiy9v3NnGl3ZbKjfD79a0AsKCK5f4seX03tRFXVXj/EI2v3G6UO2Qk9u
-         zNwgPyLSudxmo2LTzasjDiZic6dkKSjsaqD/vCviv2GBEVTLjNtq9mwnYlXLpL/hPt4f
-         Im+zmqta3ope3iGr66w83aHG6q0qBpO1XKXvKwrovoxCZKzz662y9OODRCuXVM27fivp
-         LiiQ==
-X-Gm-Message-State: ANhLgQ1IzAk0LGQYqlRa6vBRrDYSyO8dxpnCEGr/nj7hTt+5aOKw23Ju
-        UB4CThMPNH2k6JhAgr1Jeft7rpmH3fKx/CASpNpGEbmv8B0dpp439mdle5lGU8wJX4oeiwUJZbl
-        xBcxyJmCK9DVevb4HLBPN5f/f
-X-Received: by 2002:a7b:c446:: with SMTP id l6mr10060480wmi.3.1583427091591;
-        Thu, 05 Mar 2020 08:51:31 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vty5v9FoOa0gGl9gu7HAojv2CNgZGjeX+xuelU6nsEMG9+BrIhKp6yHt4D+lPtraLEsiIFV/w==
-X-Received: by 2002:a7b:c446:: with SMTP id l6mr10060406wmi.3.1583427090476;
-        Thu, 05 Mar 2020 08:51:30 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
-        by smtp.gmail.com with ESMTPSA id e1sm32448187wrx.90.2020.03.05.08.51.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 08:51:29 -0800 (PST)
-Subject: Re: [PATCH v1 00/11] PEBS virtualization enabling via DS
-To:     Luwei Kang <luwei.kang@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, hpa@zytor.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, pawan.kumar.gupta@linux.intel.com,
-        ak@linux.intel.com, thomas.lendacky@amd.com, fenghua.yu@intel.com,
-        kan.liang@linux.intel.com, like.xu@linux.intel.com
-References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <da7e4734-a184-7f4f-6456-e57ac6d8063d@redhat.com>
-Date:   Thu, 5 Mar 2020 17:51:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 5 Mar 2020 11:51:59 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:47802 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbgCEQv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 11:51:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=zeR+H7dn9cUFtnRC0x5I2lV7x72XaKNcFrXhJbZx+zE=; b=NKgKXtBftkTbcpjFm+o7nq6lzK
+        +okGpzirVXjC1s0/urazl6+TZ6IW7vmFVZDvOhbZ7KQf1F1mh33r4dmd8ud4TF4YgAu5MxuKhyD7P
+        WCI8vBd7TKsJTceWVDQUK15C/PiWDXfJRYsPewdXKWNR+8pKwKtEzMRtCQN1unxh2urI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j9tir-0006jV-1a; Thu, 05 Mar 2020 17:51:45 +0100
+Date:   Thu, 5 Mar 2020 17:51:45 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: mach-imx6q: add ksz9131rn_phy_fixup
+Message-ID: <20200305165145.GA25183@lunn.ch>
+References: <20200305134928.19775-1-philippe.schenker@toradex.com>
+ <20200305143805.dk7fndblnqjnwxu6@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305143805.dk7fndblnqjnwxu6@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/03/20 18:56, Luwei Kang wrote:
-> BTW:
-> The PEBS virtualization via Intel PT patchset V1 has been posted out and the
-> later version will base on this patchset.
-> https://lkml.kernel.org/r/1572217877-26484-1-git-send-email-luwei.kang@intel.com/
+On Thu, Mar 05, 2020 at 03:38:05PM +0100, Oleksij Rempel wrote:
+> Hi Philippe,
+> 
+> On Thu, Mar 05, 2020 at 02:49:28PM +0100, Philippe Schenker wrote:
+> > The MAC of the i.MX6 SoC is compliant with RGMII v1.3. The KSZ9131 PHY
+> > is like KSZ9031 adhering to RGMII v2.0 specification. This means the
+> > MAC should provide a delay to the TXC line. Because the i.MX6 MAC does
+> > not provide this delay this has to be done in the PHY.
+> > 
+> > This patch adds by default ~1.6ns delay to the TXC line. This should
+> > be good for all boards that have the RGMII signals routed with the
+> > same length.
+> > 
+> > The KSZ9131 has relatively high tolerances on skew registers from
+> > MMD 2.4 to MMD 2.8. Therefore the new DLL-based delay of 2ns is used
+> > and then as little as possibly subtracted from that so we get more
+> > accurate delay. This is actually needed because the i.MX6 SoC has
+> > an asynchron skew on TXC from -100ps to 900ps, to get all RGMII
+> > values within spec.
+> 
+> This configuration has nothing to do in mach-imx/* It belongs to the
+> board devicetree. Please see DT binding documentation for needed
+> properties:
+> Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
 
-Thanks, I'll review both.
+It probably does not even need that. Just
 
-Paolo
+phy-mode = <rgmii-txid>
 
+Also, please Cc: netdev for network code.
+
+      Andrew
