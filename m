@@ -2,95 +2,114 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76248C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9976C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536042073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08EB2073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgCEKqC (ORCPT
+        id S1727076AbgCEKrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:46:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:47014 "EHLO foss.arm.com"
+        Thu, 5 Mar 2020 05:47:04 -0500
+Received: from lizzard.sbs.de ([194.138.37.39]:39663 "EHLO lizzard.sbs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgCEKqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:46:01 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F47731B;
-        Thu,  5 Mar 2020 02:46:01 -0800 (PST)
-Received: from [192.168.1.161] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09CC03F6C4;
-        Thu,  5 Mar 2020 02:45:59 -0800 (PST)
-Subject: Re: [PATCH] mm: Make mem_cgroup_id_get_many dependent on MMU and
- MEMCG_SWAP
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200304142348.48167-1-vincenzo.frascino@arm.com>
- <20200304165336.GO16139@dhcp22.suse.cz>
- <8c489836-b824-184e-7cfe-25e55ab73000@arm.com>
- <20200305100023.GR16139@dhcp22.suse.cz>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <acf13158-40a3-4027-f36a-25d24efe3242@arm.com>
-Date:   Thu, 5 Mar 2020 10:46:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725912AbgCEKrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 05:47:04 -0500
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 025AkuBR031175
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Mar 2020 11:46:56 +0100
+Received: from [167.87.9.24] ([167.87.9.24])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 025AktVZ007783;
+        Thu, 5 Mar 2020 11:46:55 +0100
+Subject: Re: [PATCH 4/4] KVM: nSVM: avoid loss of pending IRQ/NMI before
+ entering L2
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     cavery@redhat.com, vkuznets@redhat.com, wei.huang2@amd.com
+References: <1583403227-11432-1-git-send-email-pbonzini@redhat.com>
+ <1583403227-11432-5-git-send-email-pbonzini@redhat.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <fd74cfac-9b29-9710-0266-6aa743b9f9a7@siemens.com>
+Date:   Thu, 5 Mar 2020 11:46:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200305100023.GR16139@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1583403227-11432-5-git-send-email-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
+On 05.03.20 11:13, Paolo Bonzini wrote:
+> This patch reproduces for nSVM the change that was made for nVMX in
+> commit b5861e5cf2fc ("KVM: nVMX: Fix loss of pending IRQ/NMI before
+> entering L2").  While I do not have a test that breaks without it, I
+> cannot see why it would not be necessary since all events are unblocked
+> by VMRUN's setting of GIF back to 1.
 
-On 3/5/20 10:00 AM, Michal Hocko wrote:
-> On Thu 05-03-20 09:49:23, Vincenzo Frascino wrote:
->> Hi Michal,
->>
->> On 3/4/20 4:53 PM, Michal Hocko wrote:
->>> On Wed 04-03-20 14:23:48, Vincenzo Frascino wrote:
->>>> mem_cgroup_id_get_many() is currently used only when MMU or MEMCG_SWAP
->>>> configuration options are enabled. Having them disabled triggers the
->>>> following warning at compile time:
->>>>
->>>> linux/mm/memcontrol.c:4797:13: warning: ‘mem_cgroup_id_get_many’ defined
->>>> but not used [-Wunused-function]
->>>>  static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned
->>>>  int n)
->>>>
->>>> Make mem_cgroup_id_get_many() dependent on MMU and MEMCG_SWAP to address
->>>> the issue.
->>>
->>> A similar patch has been proposed recently
->>> http://lkml.kernel.org/r/87fthjh2ib.wl-kuninori.morimoto.gx@renesas.com.
->>> The conclusion was that the warning is not really worth adding code.
->>>
->>
->> Thank you for pointing this out, I was not aware of it. I understand that you
->> are against "#ifdeffery" in this case, but isn't it the case of adding at least
->> __maybe_unused? This would prevent people from reporting it over and over again
->> and you to have to push them back :) Let me know what do you think, in case I am
->> happy to change my patch accordingly.
-> 
-> We have discussed __maybe_unused in the email thread as well. I am not a
-> great fan of that as mentioed there.
-> 
+I suspect, running Jailhouse enable/disable in a tight loop as KVM guest 
+can stress this fairly well. At least that was the case last time I 
+tried (4 years ago, or so) - it broke it.
 
-I am aware of this. I was just exploring if there was a possibility of
-addressing the warning, since if we leave all the warnings in scenarios like
-randconfig can cause confusion in between real and non real issues.
-Is there anything we can do?
+Unfortunately, we have no up-to-date configuration for such a setup. 
+Some old pieces are lying around here, could try to hand them over if 
+someone is interested and has the time I lack ATM.
+
+Jan
+
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/svm.c | 18 ++++++++++++++++++
+>   1 file changed, 18 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 0d773406f7ac..3df62257889a 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -3574,6 +3574,10 @@ static bool nested_vmcb_checks(struct vmcb *vmcb)
+>   static void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+>   				 struct vmcb *nested_vmcb, struct kvm_host_map *map)
+>   {
+> +	bool evaluate_pending_interrupts =
+> +		is_intercept(svm, INTERCEPT_VINTR) ||
+> +		is_intercept(svm, INTERCEPT_IRET);
+> +
+>   	if (kvm_get_rflags(&svm->vcpu) & X86_EFLAGS_IF)
+>   		svm->vcpu.arch.hflags |= HF_HIF_MASK;
+>   	else
+> @@ -3660,7 +3664,21 @@ static void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+>   
+>   	svm->nested.vmcb = vmcb_gpa;
+>   
+> +	/*
+> +	 * If L1 had a pending IRQ/NMI before executing VMRUN,
+> +	 * which wasn't delivered because it was disallowed (e.g.
+> +	 * interrupts disabled), L0 needs to evaluate if this pending
+> +	 * event should cause an exit from L2 to L1 or be delivered
+> +	 * directly to L2.
+> +	 *
+> +	 * Usually this would be handled by the processor noticing an
+> +	 * IRQ/NMI window request.  However, VMRUN can unblock interrupts
+> +	 * by implicitly setting GIF, so force L0 to perform pending event
+> +	 * evaluation by requesting a KVM_REQ_EVENT.
+> +	 */
+>   	enable_gif(svm);
+> +	if (unlikely(evaluate_pending_interrupts))
+> +		kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
+>   
+>   	mark_all_dirty(svm->vmcb);
+>   }
+> 
 
 -- 
-Regards,
-Vincenzo
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
