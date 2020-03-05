@@ -2,237 +2,181 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A9BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8A4C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F25208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 650AA208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:13:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AKL6FAM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgCESL5 convert rfc822-to-8bit (ORCPT
+        id S1726211AbgCESNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:11:57 -0500
-Received: from mail-oln040092255109.outbound.protection.outlook.com ([40.92.255.109]:35264
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726048AbgCESL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:11:56 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XNKK2QXi3brlnVrxS1Q6WwHbW0O9fWmzMSannmnI8OZ62zuU+eBAvThavX8pc3Up+Hf2UnxLMf+32DbvkiF+X4yYQle0WWu4C9S98rCY0yPNm/bo+TfOeagCtmHXCb5wppeneHu1tZFstFIFyrRanZymFcJyPSK1NKs4tFHMf3dpY8Dq91TIMCpqi1g3N9Qh9ashl60xFNbLG7EYPGPDV3kwMVpq0JWv+HHZ2LItvLXwHBCFepe9i7T+3TLDfVkqai4sbRfm+OwPSLP/qLPx9yhtEHqKX5Yf8SDmD8jHd5H+09m71PW5SBjPAxgenuRlbfLQfWUtJ+hk7AwZFe9j4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pvkeE8oV5psjzX+t5+eRfdCpjWU6A0rDKs1YsGV8Rz0=;
- b=hBgGRPfav23CAOQeu42vFh1HcDJFg3eP/Hj5j3na73S4096pmkHpFUCLR6w8f8tv/aKeJX3xA3AdMLQi7ZfTBNFb1homu1Qutel27eCLDr+XR1BpxH2rB0iw67foIIZSM3Kndm70MlOSd48jo/Nw21vLVql0LRzKooCo/K+WFjHRpDfWKkCh/iKZYMIhnm2IlgMhwZrfkRzDjrAVZVwi5k1dnx2IB05UZ4EQ5D4/P/sPamfSfUwAXRLj8OhNqI6MkJkyLeGoiE0pOl22z4A5TRR2B0WPWsHBpD6TR1CrgwVCt7VUFHdmAhdfkxFLJ9ADbIBKARFNRDSVvzgoFlODyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT062.eop-APC01.prod.protection.outlook.com
- (2a01:111:e400:7ebe::3b) by
- PU1APC01HT096.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebe::311)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Thu, 5 Mar
- 2020 18:11:45 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.51) by
- PU1APC01FT062.mail.protection.outlook.com (10.152.253.51) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Thu, 5 Mar 2020 18:11:45 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
- 18:11:45 +0000
-Received: from nicholas-dell-linux (2001:44b8:605b:17:9373:6593:56ae:2c6d) by ME4P282CA0011.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:90::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Thu, 5 Mar 2020 18:11:43 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2 1/3] nvmem: Add support for write-only instances
-Thread-Topic: [PATCH v2 1/3] nvmem: Add support for write-only instances
-Thread-Index: AQHV8KkxXdrLTxYhU0iNsiLC1KLat6g6PpSAgAATH4A=
-Date:   Thu, 5 Mar 2020 18:11:45 +0000
-Message-ID: <PSXP216MB04383EBB7FFBAEA7D9ABCAEE80E20@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <PSXP216MB0438930B1FC30EF79F15FD1780E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <b934ddde-702a-1731-034d-1682a9df23e2@linaro.org>
-In-Reply-To: <b934ddde-702a-1731-034d-1682a9df23e2@linaro.org>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME4P282CA0011.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:220:90::21) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:4564178196FD58FB8CD942714C0EBBEDD952C999100F40A2508EC89F8527BE10;UpperCasedChecksum:4253889EC157680DF83DF4BB29CDE3173CD78B3865ED05E0EFCF0022107D8F45;SizeAsReceived:7860;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [Lo6S6a3wSOaAqaLL4160NdQbyE+egtvrK1JMQWKqyViYqUG9Cx37YSv8iSV5zgcV]
-x-microsoft-original-message-id: <20200305181137.GA1683@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 8dbd234b-f246-4236-1750-08d7c130a9cf
-x-ms-traffictypediagnostic: PU1APC01HT096:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7rqS5Q7MYL43QrbV4TkfxEeg7yizK32MuGAm7DPr0TztMEZxpd7wif8/ZvFEMnfWdzM+Uh6TKhDR9lvwd+5QrFCwxCvTlLcSUR574KZzciRg0SHShu3O3RHvOfQ7zY0AaDySOhIAnY4iULi8lJP1BngqRRorbg+acpzJk0llgrDDizOW6nuPPMYXjvQr4AsUvNNlfCUHeTTpKEDMZFNhiO7PBcEACOcNwvjzKqlbwtM=
-x-ms-exchange-antispam-messagedata: nOSYNI6mBFKThK5A9Gr3tLex/EXaFYMWjUIujzhuHex9Fx6SZe/EVVZ+Xm9SfVfdSdMbtFDy4ETsgL6luTfJh8aHq77DbHPaKCBXHbPnttogEVSLLptAn9I0QYRPmoNRHs7lRHXAJd8KO/jdo1QwLJVBsr1rEbOi+gxel2gqgJVySm9graI9eXtv6G0WaXKt1lxIC2uneHcQ6+VuyRhPLg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <027F41D670F16440916F786C84F5CB9D@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Thu, 5 Mar 2020 13:13:52 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25612 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726036AbgCESNv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 13:13:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583432030;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CISWnYCTgIHs8Q99tWvsNfg16hI8DJbFk1pD+36Cny4=;
+        b=AKL6FAM49eHEL63EyLnRh/qfmeWhcunRtggMgZb/0Z3uY0aCqGYgS44v+XRyr9ruEMIQ/P
+        tUhZUrCWSP4xPTgCy0/d/cfT5Wa3Wz6Jk3zHPzFsdd5myDkWIUqNX5/+aoPHe6CxAJAioi
+        gQbpYYL7Wwefg6n23jQgjnp1sg66LZA=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-132-d58nCAtcMYCc-4SjiJ04RQ-1; Thu, 05 Mar 2020 13:13:46 -0500
+X-MC-Unique: d58nCAtcMYCc-4SjiJ04RQ-1
+Received: by mail-qk1-f199.google.com with SMTP id e13so4355831qkm.23
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:13:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=CISWnYCTgIHs8Q99tWvsNfg16hI8DJbFk1pD+36Cny4=;
+        b=PZYX+f4TayFKX/CetgXoujy4NN/eWDOklIOCWziixfOHGG02xQfEHAMJvDZFcCRe/N
+         h2GRpLrdNB04vqBoV+QcjDzu4Z76Xgrwx1CEnMrt+DrfRB1uksgsFUGA12vGHyIGmvQ4
+         0dvRGz4PdFjLHs2nLiML/FWO7cgEXXbjWLdcasm1bTjjeOvT40iX8NV7XPOxNfwEJADv
+         0QB0tGd7PLyA1bNw/DLVphN76wREfiLy4CHa094ctKmdNI9s7nC1qFftS+azUDUKgsWA
+         3z6/tMEagd0FtBxu7MXuJf4mUs5gIyZOuU8Lal67DB+qFZ4tBfEznxjoBQ4oPa0NXdYk
+         POzg==
+X-Gm-Message-State: ANhLgQ1R6TWfxl7h1c/U8Svh8caTsGal80oO3B5qIpwEoEumdJjhr212
+        7i4GAPl+wP4R1e3DkYR+6v66cftHVBSCu+F0nmAeN4aN9nkhlcvCruZTfTvLNIVQ1ESef7OkbVx
+        rQ4M6HBd4VhvAF2L0CTHiE35C
+X-Received: by 2002:a37:e47:: with SMTP id 68mr8996556qko.17.1583432026339;
+        Thu, 05 Mar 2020 10:13:46 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vu9Di0TJjle9QFCxhPtgKkfebQZ/w1X7INadpj/G0J6OCnioF3WigU5h2qVIMfKm/UJg8NJJg==
+X-Received: by 2002:a37:e47:: with SMTP id 68mr8996532qko.17.1583432026089;
+        Thu, 05 Mar 2020 10:13:46 -0800 (PST)
+Received: from Ruby ([172.58.220.228])
+        by smtp.gmail.com with ESMTPSA id z19sm2921705qts.86.2020.03.05.10.13.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 10:13:45 -0800 (PST)
+Message-ID: <73f52c392431cd21a80a118dd2fd1986e2c535df.camel@redhat.com>
+Subject: Re: [PATCH 2/3] drm/dp_mst: Don't show connectors as connected
+ before probing available PBN
+From:   Lyude Paul <lyude@redhat.com>
+To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, Sean Paul <seanpaul@google.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>
+Date:   Thu, 05 Mar 2020 13:13:36 -0500
+In-Reply-To: <20200305131119.GJ13686@intel.com>
+References: <20200304223614.312023-1-lyude@redhat.com>
+         <20200304223614.312023-3-lyude@redhat.com>
+         <20200305131119.GJ13686@intel.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8dbd234b-f246-4236-1750-08d7c130a9cf
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2020 18:11:45.2904
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT096
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 05:03:11PM +0000, Srinivas Kandagatla wrote:
-> 
-> On 02/03/2020 15:42, Nicholas Johnson wrote:
-> > There is at least one real-world use-case for write-only nvmem
-> > instances. Refer to 03cd45d2e219 ("thunderbolt: Prevent crash if
-> > non-active NVMem file is read").
+On Thu, 2020-03-05 at 15:11 +0200, Ville Syrjälä wrote:
+> On Wed, Mar 04, 2020 at 05:36:12PM -0500, Lyude Paul wrote:
+> > It's next to impossible for us to do connector probing on topologies
+> > without occasionally racing with userspace, since creating a connector
+> > itself causes a hotplug event which we have to send before probing the
+> > available PBN of a connector. Even if we didn't have this hotplug event
+> > sent, there's still always a chance that userspace started probing
+> > connectors before we finished probing the topology.
 > > 
-> > Add support for write-only nvmem instances by adding attrs for 0200.
+> > This can be a problem when validating a new MST state since the
+> > connector will be shown as connected briefly, but without any available
+> > PBN - causing any atomic state which would enable said connector to fail
+> > with -ENOSPC. So, let's simply workaround this by telling userspace new
+> > MST connectors are disconnected until we've finished probing their PBN.
+> > Since we always send a hotplug event at the end of the link address
+> > probing process, userspace will still know to reprobe the connector when
+> > we're ready.
 > > 
-> > Change nvmem_register() to abort if NULL group is returned from
-> > nvmem_sysfs_get_groups().
-> > 
-> > Return NULL from nvmem_sysfs_get_groups() in invalid cases.
-> > 
-> 
-> > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to MST
+> > atomic check")
+> > Cc: Mikita Lipski <mikita.lipski@amd.com>
+> > Cc: Alex Deucher <alexander.deucher@amd.com>
+> > Cc: Sean Paul <seanpaul@google.com>
+> > Cc: Hans de Goede <hdegoede@redhat.com>
 > > ---
-> >   drivers/nvmem/core.c        |  2 ++
-> >   drivers/nvmem/nvmem-sysfs.c | 53 ++++++++++++++++++++++++++++++++-----
-> >   2 files changed, 48 insertions(+), 7 deletions(-)
+> >  drivers/gpu/drm/drm_dp_mst_topology.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
 > > 
-> > diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> > index ef326f243..27bd4c4e3 100644
-> > --- a/drivers/nvmem/core.c
-> > +++ b/drivers/nvmem/core.c
-> > @@ -388,6 +388,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
-> >   			   config->read_only || !nvmem->reg_write;
-> >   	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
-> > +	if (!nvmem->dev.groups)
-> > +		return NULL;
-> Returning here will be leaking in this function.
-Oops, I had thought about that but missed it. Will kfree(nvmem) in next 
-revision of this patch. I will probably break this change off into 
-another commit to make each commit smaller and do one thing.
-
-> 
-> >   	device_initialize(&nvmem->dev);
-> > diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
-> > index 9e0c429cd..00d3259ea 100644
-> > --- a/drivers/nvmem/nvmem-sysfs.c
-> > +++ b/drivers/nvmem/nvmem-sysfs.c
-> > @@ -196,16 +196,50 @@ static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
-> >   	NULL,
-> >   };
-> > +/* write only permission, root only */
-> > +static struct bin_attribute bin_attr_wo_root_nvmem = {
-> 
-> TBH, you would not need this patch once 2/3 patch is applied.
-> Unless there is a strong reason for you to have write only file.
-This was the whole reason. The Thunderbolt NULL dereference was because 
-write-only was needed but not available. Mika Westerberg thought that by 
-not providing reg_read, the nvmem would become write-only. I discovered 
-the NULL dereference and that is why I am here - to provide the 
-sought-after write-only support. So yes, there is a reason to have 
-write-only.
-
-> 
-> If for any reasons you would want to add Write only file then it should be
-> added for both with root and user privileges.
-Mika just advised me that we should not have world-writable files, so it 
-sounds like this needs some discussion between us. I am happy to provide 
-this if that is desired, as the world-writable will presumably only be 
-used if there is a driver that asks for it and has a good reason to use 
-it, so it should not be unsafe.
-
-Part of me agrees that there should be no need for world-writable (I 
-cannot think of a use-case) but the other part knows that something 
-could come along, and that we should cover all bases. Just like we did 
-not see the need for write-only.
-
-> 
-> >   const struct attribute_group **nvmem_sysfs_get_groups(
-> >   					struct nvmem_device *nvmem,
-> >   					const struct nvmem_config *config)
-> >   {
-> > -	if (config->root_only)
-> > -		return nvmem->read_only ?
-> > -			nvmem_ro_root_dev_groups :
-> > -			nvmem_rw_root_dev_groups;
-> > -
-> > -	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
-> > +	/* Read-only */
-> > +	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only))
-> > +		return config->root_only ?
-> > +			nvmem_ro_root_dev_groups : nvmem_ro_dev_groups;
+> > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > index 207eef08d12c..7b0ff0cff954 100644
+> > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > @@ -4033,6 +4033,19 @@ drm_dp_mst_detect_port(struct drm_connector
+> > *connector,
+> >  			ret = connector_status_connected;
+> >  		break;
+> >  	}
 > > +
-> > +	/* Read-write */
-> > +	if (nvmem->reg_read && nvmem->reg_write)
+> > +	/* We don't want to tell userspace the port is actually plugged into
+> > +	 * anything until we've finished probing it's available_pbn, otherwise
 > 
-> read_only flag will override this assumption!
-If reg_read != NULL and read_only set then we have already returned. 
-Setting read_only and having reg_read == NULL is clearly broken 
-behaviour. How about I explicitly check for reg_read == NULL and 
-read_only set, and return NULL?
+> "its"
+> 
+> Why is the connector even registered before we've finished the probe?
+> 
+Oops, I'm not sure how I did this by accident but the explanation I gave in
+the commit message was uh, completely wrong. I must have forgotten that I made
+sure we didn't expose connectors before probing their PBN back when I started
+my MST cleanup....
 
-> 
-> > +		return config->root_only ?
-> > +			nvmem_rw_root_dev_groups : nvmem_rw_dev_groups;
-> > +
-> > +	/* Write-only, do not honour request for global writable entry */
-> > +	if (!nvmem->reg_read && nvmem->reg_write)
-> > +		return config->root_only ? nvmem_wo_root_dev_groups : NULL;
-> > +
-> > +	/* Neither reg_read nor reg_write are provided, abort */
-> This should not be the case anymore after this check in place
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/srini/nvmem.git/commit/?h=for-next&id=f8f782f63bace8b08362e466747e648ca57b6c06
-Nice. I can change the comment, but all code paths need a return value. 
-I do not know if the compiler is smart enough to figure out that the 
-final return statement is unreachable. So I will still be returning NULL 
-at the end to avoid warnings.
+So: despite what I said before it's not actually when new connectors are
+created, it's when downstream hotplugs happen which means that the conenctor's
+always going to be there before we probe the available_pbn. I did just notice
+though that we send a hotplug on connection status notifications even before
+we've finished the PBN probe, so I might be able to improve on that as well.
+We still definitely want to report the connector as disconnected before we
+have the available PBN though, in case another probe was already going before
+we got the connection status notification.
 
-> 
-> thanks,
-> srini
-Thanks for reviewing.
-Kind regards,
-Nicholas
+I'll make sure to fixup the explanation in the commit message on the next
+respin
 
-> 
-> > +	return NULL;
-> >   }
-> >   /*
-> > @@ -224,11 +258,16 @@ int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
-> >   	if (!config->base_dev)
-> >   		return -EINVAL;
-> > -	if (nvmem->read_only) {
-> > +	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only)) {
-> >   		if (config->root_only)
-> >   			nvmem->eeprom = bin_attr_ro_root_nvmem;
-> >   		else
-> >   			nvmem->eeprom = bin_attr_ro_nvmem;
-> > +	} else if (!nvmem->reg_read && nvmem->reg_write) {
-> > +		if (config->root_only)
-> > +			nvmem->eeprom = bin_attr_wo_root_nvmem;
-> > +		else
-> > +			return -EPERM;
-> >   	} else {
-> >   		if (config->root_only)
-> >   			nvmem->eeprom = bin_attr_rw_root_nvmem;
+> > +	 * userspace will see racy atomic check failures
+> > +	 *
+> > +	 * Since we always send a hotplug at the end of probing topology
+> > +	 * state, we can just let userspace reprobe this connector later.
+> > +	 */
+> > +	if (ret == connector_status_connected && !port->available_pbn) {
+> > +		DRM_DEBUG_KMS("[CONNECTOR:%d:%s] not ready yet (PBN not
+> > probed)\n",
+> > +			      connector->base.id, connector->name);
+> > +		ret = connector_status_disconnected;
+> > +	}
+> >  out:
+> >  	drm_dp_mst_topology_put_port(port);
+> >  	return ret;
+> > -- 
+> > 2.24.1
 > > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+-- 
+Cheers,
+	Lyude Paul (she/her)
+	Associate Software Engineer at Red Hat
+
