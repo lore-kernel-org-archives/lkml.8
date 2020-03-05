@@ -2,164 +2,129 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A578BC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 002F9C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DEA21556
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC8C20842
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:57:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Fr0Yabb1"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="GyV8uU9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgCEA5u (ORCPT
+        id S1726173AbgCEA5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 19:57:50 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:38584 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725990AbgCEA5t (ORCPT
+        Wed, 4 Mar 2020 19:57:51 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43793 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgCEA5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 19:57:49 -0500
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 0250vbdO013149
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 16:57:47 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=t4z4q3EF442KjvHRBupQs53iCxAhVwgsYu5CWxCrAxo=;
- b=Fr0Yabb1GzmzQ5Ku84Ky7/meVzzH8Ae4h4LxtD/7OuTWL0T2J91wSb+qvSB6/zUcT0lA
- zMtjALjQQFn587l/ldXB294WA8v+yD4b8JadoLdpB8D9602hE23E7qAWL3tKELEP78Gp
- IJ4VabzqtAkjWvWoW1hAyXXT56MOfqXl6/8= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 2yhwxxqph3-13
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:57:47 -0800
-Received: from intmgw001.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 4 Mar 2020 16:57:38 -0800
-Received: by devvm4439.prn2.facebook.com (Postfix, from userid 111017)
-        id 2C93F103323E4; Wed,  4 Mar 2020 16:57:36 -0800 (PST)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm4439.prn2.facebook.com
-To:     Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>
-CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-team@fb.com>, Rik van Riel <riel@surriel.com>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v3] btrfs: implement migratepage callback
-Date:   Wed, 4 Mar 2020 16:57:35 -0800
-Message-ID: <20200305005735.583008-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_10:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 clxscore=1015
- malwarescore=0 mlxlogscore=835 impostorscore=0 lowpriorityscore=0
- adultscore=0 phishscore=0 bulkscore=0 spamscore=0 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050003
-X-FB-Internal: deliver
+        Wed, 4 Mar 2020 19:57:50 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u12so1864735pgb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:57:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r1cjoiRs5yfI/5ZwZNPh4J3Hd5wrkW8j/pkn8QIoYoI=;
+        b=GyV8uU9CINptKvdryE//p4TelPw6MzQUvY0bQByDvwZ36sulOY/unL5MnrAv9wv8jp
+         dbCtNJhdZqzKmlo0IJ3Ul5yzSPYC8JXWX7j022XR/Tlu2e/kdZZe4XozYLMywRja+sF1
+         /3S2SXr8G95/JN7RR0FkKRCfuymTF+nfmrPoYGO5rY+iPCmyiJ0rUGBe9I/CHqjqFV5z
+         xDi4kO9e4crpRXoqNb+7p82JDdnwLS1k7ei3KxeLySG8zxUiIF/Smw5JVRePLbGi5L8s
+         dLQmYA6DTO7lmSou9AkGpr5T2HqzJ6Sm+hg2fPXh5wXMTasN9sIlzXFIGFL1uSzJPQcZ
+         6f6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=r1cjoiRs5yfI/5ZwZNPh4J3Hd5wrkW8j/pkn8QIoYoI=;
+        b=VcXKKdLXBBLvV553+uELuUNwlZe5H9KuO5y8JV537kD9DHztR2NAjau048nNSbTtJz
+         TdzU9E5A0Z9zasUMZphgFPjrjKJl2d5qEcoTh5CaxYx00DUlBCRzuIGgwej1bh01eGjy
+         q1ESgVNaaI3f/tNsqAG+zS6R6IhcjW46LD+RBPjHr+EdgXOtakJzhpOBV3hHl21RG+jJ
+         /gRJNVMBKmQdgifQw0urF2crBiQ11Lzl/vR2ZxXp5mHmg5zldm2Z0/A0qO1GvioEreTB
+         1hlk7UmmqU2u7eRREMGN/a+6pw8mJSofr0RV5JNmMgygEBLWRQHp+QzENBNbHAZ7dpfS
+         32ZQ==
+X-Gm-Message-State: ANhLgQ3G0WFtsv+Q5FJFU34qnJJ3cGyD0SWm/g8hJfDmBTaBBCIEf1Bq
+        Ra7VhH2G7EhDl/CKGI4vEbLOJA==
+X-Google-Smtp-Source: ADFU+vsMu+SCwaGiTvNt7q5D3Z8AxBmHq9uvSeqYl34akVxe8tr0UJLcPLA5uAY0m8LsDJcoJulbmA==
+X-Received: by 2002:a62:a206:: with SMTP id m6mr5912639pff.254.1583369868705;
+        Wed, 04 Mar 2020 16:57:48 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
+        by smtp.gmail.com with ESMTPSA id w17sm24466490pfg.33.2020.03.04.16.57.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 16:57:48 -0800 (PST)
+Date:   Wed, 04 Mar 2020 16:57:48 -0800 (PST)
+X-Google-Original-Date: Wed, 04 Mar 2020 16:56:49 PST (-0800)
+Subject:     Re: [PATCH 4/8] riscv: move exception table immediately after RO_DATA
+In-Reply-To: <20200217083223.2011-5-zong.li@sifive.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        zong.li@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     zong.li@sifive.com
+Message-ID: <mhng-6a94c49b-419b-4b5a-a11d-dda1fb0aa896@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently btrfs doesn't provide a migratepage callback. It means that
-fallback_migrate_page()	is used to migrate btrfs pages.
+On Mon, 17 Feb 2020 00:32:19 PST (-0800), zong.li@sifive.com wrote:
+> Move EXCEPTION_TABLE immediately after RO_DATA. Make it easy to set the
+> attribution of the sections which should be read-only at a time.
+> Move .sdata to indicate the start of data section with write permission.
+> This patch is prepared for STRICT_KERNEL_RWX support.
+>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>  arch/riscv/kernel/vmlinux.lds.S | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+> index 1e0193ded420..4ba8a5397e8b 100644
+> --- a/arch/riscv/kernel/vmlinux.lds.S
+> +++ b/arch/riscv/kernel/vmlinux.lds.S
+> @@ -9,6 +9,7 @@
+>  #include <asm/page.h>
+>  #include <asm/cache.h>
+>  #include <asm/thread_info.h>
+> +#include <asm/set_memory.h>
+>
+>  OUTPUT_ARCH(riscv)
+>  ENTRY(_start)
+> @@ -52,12 +53,15 @@ SECTIONS
+>  	}
+>
+>  	/* Start of data section */
+> -	_sdata = .;
+>  	RO_DATA(L1_CACHE_BYTES)
+>  	.srodata : {
+>  		*(.srodata*)
+>  	}
+>
+> +	EXCEPTION_TABLE(0x10)
+> +
+> +	_sdata = .;
+> +
+>  	RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
+>  	.sdata : {
+>  		__global_pointer$ = . + 0x800;
+> @@ -69,8 +73,6 @@ SECTIONS
+>
+>  	BSS_SECTION(PAGE_SIZE, PAGE_SIZE, 0)
+>
+> -	EXCEPTION_TABLE(0x10)
+> -
+>  	.rel.dyn : {
+>  		*(.rel.dyn*)
+>  	}
 
-fallback_migrate_page() cannot move dirty pages, instead it tries to
-flush them (in sync mode) or just fails (in async mode).
-
-In the sync mode pages which are scheduled to be processed by
-btrfs_writepage_fixup_worker() can't be effectively flushed by the
-migration code, because there is no established way to wait for the
-completion of the delayed work.
-
-It all leads to page migration failures.
-
-To fix it the patch implements a btrs-specific migratepage callback,
-which is similar to iomap_migrate_page() used by some other fs, except
-it does take care of the PagePrivate2 flag which is used for data
-ordering purposes.
-
-v3: fixed the build issue once again
-v2: fixed the build issue found by the kbuild test robot <lkp@intel.com>
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Chris Mason <clm@fb.com>
----
- fs/btrfs/inode.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 7735ce6127c3..6ed6df4afe5a 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -28,6 +28,7 @@
- #include <linux/magic.h>
- #include <linux/iversion.h>
- #include <linux/swap.h>
-+#include <linux/migrate.h>
- #include <linux/sched/mm.h>
- #include <asm/unaligned.h>
- #include "misc.h"
-@@ -8323,6 +8324,39 @@ static int btrfs_releasepage(struct page *page, gfp_t gfp_flags)
- 	return __btrfs_releasepage(page, gfp_flags);
- }
- 
-+#ifdef CONFIG_MIGRATION
-+static int btrfs_migratepage(struct address_space *mapping,
-+			     struct page *newpage, struct page *page,
-+			     enum migrate_mode mode)
-+{
-+	int ret;
-+
-+	ret = migrate_page_move_mapping(mapping, newpage, page, 0);
-+	if (ret != MIGRATEPAGE_SUCCESS)
-+		return ret;
-+
-+	if (page_has_private(page)) {
-+		ClearPagePrivate(page);
-+		get_page(newpage);
-+		set_page_private(newpage, page_private(page));
-+		set_page_private(page, 0);
-+		put_page(page);
-+		SetPagePrivate(newpage);
-+	}
-+
-+	if (PagePrivate2(page)) {
-+		ClearPagePrivate2(page);
-+		SetPagePrivate2(newpage);
-+	}
-+
-+	if (mode != MIGRATE_SYNC_NO_COPY)
-+		migrate_page_copy(newpage, page);
-+	else
-+		migrate_page_states(newpage, page);
-+	return MIGRATEPAGE_SUCCESS;
-+}
-+#endif
-+
- static void btrfs_invalidatepage(struct page *page, unsigned int offset,
- 				 unsigned int length)
- {
-@@ -10525,6 +10559,9 @@ static const struct address_space_operations btrfs_aops = {
- 	.direct_IO	= btrfs_direct_IO,
- 	.invalidatepage = btrfs_invalidatepage,
- 	.releasepage	= btrfs_releasepage,
-+#ifdef CONFIG_MIGRATION
-+	.migratepage	= btrfs_migratepage,
-+#endif
- 	.set_page_dirty	= btrfs_set_page_dirty,
- 	.error_remove_page = generic_error_remove_page,
- 	.swap_activate	= btrfs_swap_activate,
--- 
-2.24.1
-
+As far as I can tell this is OK: core_kernel_data() explicitly says that RODATA
+may or may not be between _sdata and _edata.  That said, I think we should add
+__start_rodata and __end_rodata atomicly with this change (around RO_DATA and
+.srodata).
