@@ -2,102 +2,97 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 865C9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B44C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B478208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583399050;
-	bh=/6hF5scP1zvZeyIU0B87IO/MHTgoe9Adm/F7cTCYpYo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XwMziTKdDrGeKyysVM43FtTIKL297/xthuBpSI3r+npDmoalp7exiIVLV0YkWUxTG
-	 +NMc0LlvzwqTxMqGaQZ+Df/CldmhbG7hL9bkAZQf9+WorysDlsBTzKWMJ9IQtj3DXR
-	 3O2GvuOzg+St2pgtw+BePBFoBZXONhfmuJXJaOag=
+	by mail.kernel.org (Postfix) with ESMTP id 27AD420870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCEJEJ (ORCPT
+        id S1726702AbgCEJEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:04:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbgCEJEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:04:08 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1B5B2073D;
-        Thu,  5 Mar 2020 09:04:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583399048;
-        bh=/6hF5scP1zvZeyIU0B87IO/MHTgoe9Adm/F7cTCYpYo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LQ2cd7ZCPN5x1ut2556O2IwBvL2MV5hGs8f3FzN8+RLKaN89TV60Sq6vbuzpSa6ZG
-         fxpaOhNaW6swzZ6Ef02WvH3HetHoW9v2oIWmjb9ewYhZmSk4S6l1PDQwhDeVYfC+Eb
-         1iUifiF75fln9brFMB2ZyKjfenhb0PivuyJ1Wkos=
-Date:   Thu, 5 Mar 2020 18:04:02 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V4 03/13] kprobes: Add symbols for kprobe insn pages
-Message-Id: <20200305180402.cf9aa40f57880616d8c8d811@kernel.org>
-In-Reply-To: <CAADnVQL1nDy4Fa5Y02r0Mg89nhRTf81ow5tCQxuyHeAztTvj8g@mail.gmail.com>
-References: <20200304090633.420-1-adrian.hunter@intel.com>
-        <20200304090633.420-4-adrian.hunter@intel.com>
-        <20200305145852.5756764a9ffe5da10ae71c3e@kernel.org>
-        <CAADnVQL1nDy4Fa5Y02r0Mg89nhRTf81ow5tCQxuyHeAztTvj8g@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Mar 2020 04:04:20 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28336 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725866AbgCEJET (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 04:04:19 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0258wvVR001633
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Mar 2020 04:04:18 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhr4k0ag7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 04:04:16 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <mimu@linux.ibm.com>;
+        Thu, 5 Mar 2020 09:04:06 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Mar 2020 09:04:04 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 025942UE61603854
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Mar 2020 09:04:03 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 292684C046;
+        Thu,  5 Mar 2020 09:04:02 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB85B4C040;
+        Thu,  5 Mar 2020 09:04:01 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Mar 2020 09:04:01 +0000 (GMT)
+From:   Michael Mueller <mimu@linux.ibm.com>
+To:     linux-s390@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: [PATCH] s390/diag: fix display of diagnose call statistics
+Date:   Thu,  5 Mar 2020 10:03:55 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20030509-0028-0000-0000-000003E11438
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030509-0029-0000-0000-000024A64869
+Message-Id: <20200305090355.88036-1-mimu@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-05_02:2020-03-04,2020-03-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
+ mlxscore=0 phishscore=0 mlxlogscore=876 suspectscore=1 lowpriorityscore=0
+ impostorscore=0 bulkscore=0 spamscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003050057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 22:10:10 -0800
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+Show the full diag statistic table and not just parts of it.
 
-> On Wed, Mar 4, 2020 at 10:01 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > >
-> > >       # perf probe __schedule
-> > >       Added new event:
-> > >         probe:__schedule     (on __schedule)
-> > >       # cat /proc/kallsyms | grep '\[__builtin__kprobes\]'
-> > >       ffffffffc00d4000 t kprobe_insn_page     [__builtin__kprobes]
-> > >       ffffffffc00d6000 t kprobe_optinsn_page  [__builtin__kprobes]
-> > >
-> > > Note: This patch adds "__builtin__kprobes" as a module name in
-> > > /proc/kallsyms for symbols for pages allocated for kprobes' purposes, even
-> > > though "__builtin__kprobes" is not a module.
-> >
-> > Looks good to me.
-> >
-> > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> >
-> > BTW, would you also make a patch to change [bpf] to [__builtin__bpf]?
-> 
-> Please do not.
-> There is nothing 'builtin' about bpf.
+Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
+---
+ arch/s390/kernel/diag.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hmm, so, would we reject bpf.ko to be loaded ?
-
-Thank you,
-
+diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
+index e9dac9a24d3f..61f2b0412345 100644
+--- a/arch/s390/kernel/diag.c
++++ b/arch/s390/kernel/diag.c
+@@ -84,7 +84,7 @@ static int show_diag_stat(struct seq_file *m, void *v)
+ 
+ static void *show_diag_stat_start(struct seq_file *m, loff_t *pos)
+ {
+-	return *pos <= nr_cpu_ids ? (void *)((unsigned long) *pos + 1) : NULL;
++	return *pos <= NR_DIAG_STAT ? (void *)((unsigned long) *pos + 1) : NULL;
+ }
+ 
+ static void *show_diag_stat_next(struct seq_file *m, void *v, loff_t *pos)
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
