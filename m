@@ -2,154 +2,150 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D276CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADC7C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABFBA21D56
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLDq4YaD"
+	by mail.kernel.org (Postfix) with ESMTP id 2EA352166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCEVRO (ORCPT
+        id S1727066AbgCEVRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:17:14 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:50911 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbgCEVRM (ORCPT
+        Thu, 5 Mar 2020 16:17:19 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:35394 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbgCEVRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:17:12 -0500
-Received: by mail-pj1-f68.google.com with SMTP id nm6so128039pjb.0;
-        Thu, 05 Mar 2020 13:17:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sMCdEJuXdOhoW7m3gO5zM39AjW+YF/Rrads4zZrd1kg=;
-        b=QLDq4YaDIhaMBuukLE9flkTFbc+QtHMA/oiSdyTDoEucukwkh/qEIOtiLrIaSPrTK6
-         IbBwi9DE4rWJY/cRk6jqyRNQWADhqF4G3vuMdui0IZQ7kCZlXSJ6hvraMZnX89JIvTfq
-         BHstEMkSF+S53O+U2m43bKmbZaKOP7JCwhNQoCViZCDX8rGi8rzzaJV2caPcb181w2cV
-         5Ih7zwO2yZySaFOkknNUNLu46EQk/KI0nqyA5a2gSpyIvBCNIcrXNyv4auEuOR6S6rYO
-         wM8iKHLjtq8nNk20lh0Jm32XL9MiJhdHR8jU/J+3piz5zb/m8XsTiWgpo/DSCYRlR3js
-         37Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sMCdEJuXdOhoW7m3gO5zM39AjW+YF/Rrads4zZrd1kg=;
-        b=CwBtAR2tzZ4odrHefeJPSc4FBYLSmeegGAXL5vRWFqcQObrVYEjpZEn8I3xFeET2yV
-         5lf8g6+SoqqPPgmPR60h0+pjdLz3OR968rHkuBbOzDUJWpDZkIqpxtTSVsCLT3JggrfV
-         UShLh98Pf643wZRuzCtBxf/XWnRLzlsn5GAG3ksRQSgbtVd99sQ8Drcd0gv4j4OQo+eW
-         0FBBLu/U2SRdx9z2RSOp0tt/0Du9ZEXRa3r8BfyWuDOik/bJukKZtezZMf5fXzTMLDCz
-         v+JF4gDH7kkJs2FItyk4USnQcGIm6xNRPXhP9NEuZ+rfc1cvtn/NdlvdEBt6NUzj0uVI
-         f2eg==
-X-Gm-Message-State: ANhLgQ3Y/9YPnGzOOgoVDGjlTQhMckKIudO8KFUt21PKzdaTEUz5h5B8
-        0Bd1HQ7QE15ovxOm+SU1HKfM2g9h
-X-Google-Smtp-Source: ADFU+vuBValh/xWu8eZS3JQlD4ct4iHhbaZw6HRIxQki/aNn7M/w9mK7wdAYuhReqpJGtbECQIuY/w==
-X-Received: by 2002:a17:902:401:: with SMTP id 1mr94281ple.177.1583443031459;
-        Thu, 05 Mar 2020 13:17:11 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id na18sm8053910pjb.9.2020.03.05.13.17.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 13:17:10 -0800 (PST)
-Subject: Re: [PATCH v3] net: memcg: late association of sock to memcg
-To:     Shakeel Butt <shakeelb@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
+        Thu, 5 Mar 2020 16:17:18 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j9xrb-0000jm-0q; Thu, 05 Mar 2020 14:17:03 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j9xrZ-0006Hu-U8; Thu, 05 Mar 2020 14:17:02 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200305205525.245058-1-shakeelb@google.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <9505d35b-f9fc-149b-6df5-e65ad95acabb@gmail.com>
-Date:   Thu, 5 Mar 2020 13:17:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87k142lpfz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <875zfmloir.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nmjulm.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <202003021531.C77EF10@keescook>
+        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nlii0b.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87a74xi4kz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Thu, 05 Mar 2020 15:14:48 -0600
+In-Reply-To: <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        (Bernd Edlinger's message of "Thu, 5 Mar 2020 18:36:53 +0000")
+Message-ID: <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200305205525.245058-1-shakeelb@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1j9xrZ-0006Hu-U8;;;mid=<87tv32cxmf.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19PkZFb5/n1hZBXmR96TXlIgx1ImOcYE8M=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH 0/2] Infrastructure to allow fixing exec deadlocks
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Bernd, everyone
 
-On 3/5/20 12:55 PM, Shakeel Butt wrote:
-> If a TCP socket is allocated in IRQ context or cloned from unassociated
-> (i.e. not associated to a memcg) in IRQ context then it will remain
-> unassociated for its whole life. Almost half of the TCPs created on the
-> system are created in IRQ context, so, memory used by such sockets will
-> not be accounted by the memcg.
-> 
-> This issue is more widespread in cgroup v1 where network memory
-> accounting is opt-in but it can happen in cgroup v2 if the source socket
-> for the cloning was created in root memcg.
-> 
-> To fix the issue, just do the late association of the unassociated
-> sockets at accept() time in the process context and then force charge
-> the memory buffer already reserved by the socket.
-> 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> ---
-> Changes since v2:
-> - Additional check for charging.
-> - Release the sock after charging.
-> 
-> Changes since v1:
-> - added sk->sk_rmem_alloc to initial charging.
-> - added synchronization to get memory usage and set sk_memcg race-free.
-> 
->  net/ipv4/inet_connection_sock.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-> index a4db79b1b643..5face55cf818 100644
-> --- a/net/ipv4/inet_connection_sock.c
-> +++ b/net/ipv4/inet_connection_sock.c
-> @@ -482,6 +482,26 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
->  		}
->  		spin_unlock_bh(&queue->fastopenq.lock);
->  	}
-> +
-> +	if (mem_cgroup_sockets_enabled && !newsk->sk_memcg) {
-> +		int amt;
-> +
-> +		/* atomically get the memory usage, set and charge the
-> +		 * sk->sk_memcg.
-> +		 */
-> +		lock_sock(newsk);
-> +
-> +		/* The sk has not been accepted yet, no need to look at
-> +		 * sk->sk_wmem_queued.
-> +		 */
-> +		amt = sk_mem_pages(newsk->sk_forward_alloc +
-> +				   atomic_read(&sk->sk_rmem_alloc));
-> +		mem_cgroup_sk_alloc(newsk);
-> +		if (newsk->sk_memcg && amt)
-> +			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
-> +
-> +		release_sock(newsk);
-> +	}
->  out:
->  	release_sock(sk);
->  	if (req)
-> 
+This is how I think the infrastructure change should look that makes way
+for fixing this issue.
 
-This patch looks fine, but why keeping the mem_cgroup_sk_alloc(newsk);
-in sk_clone_lock() ?
+- Correct the point of no return.
+- Add a new mutex to replace cred_guard_mutex
 
-Note that all TCP sk_clone_lock() calls happen in softirq context.
+Then I think it is just going through the existing
+users of cred_guard_mutex and fixing them to use the new one.
+
+There really aren't that many users of cred_guard_mutex so we should be
+able to get through the easy ones fairly quickly.  And anything that
+isn't easy we can wait until we have a good fix.
+
+The users of cred_guard_mutex that I saw were:
+    fs/proc/base.c:
+       proc_pid_attr_write
+       do_io_accounting
+       proc_pid_stack
+       proc_pid_syscall
+       proc_pid_personality
+    
+    perf_event_open
+    mm_access
+    kcmp
+    pidfd_fget
+    seccomp_set_mode_filter
+
+Bernd does this make sense to you?  
+
+I think we can fix the seccomp/no_new_privs issue with some careful
+refactoring.  We can probably do the same for ptrace but that appears
+to need a little lsm bug fixing.
+
+My goal here is to allow us to fix the uncontroversial easy bits.  While
+still allowing the difficult tricky bits to be fixed.
+
+Eric W. Biederman (2):
+      exec: Properly mark the point of no return
+      exec: Add a exec_update_mutex to replace cred_guard_mutex
+
+ fs/exec.c                    | 11 ++++++++---
+ include/linux/binfmts.h      |  7 ++++++-
+ include/linux/sched/signal.h |  9 ++++++++-
+ kernel/fork.c                |  1 +
+ 4 files changed, 23 insertions(+), 5 deletions(-)
+
+Eric
