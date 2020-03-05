@@ -2,672 +2,212 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D104BC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0513C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D37A208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F68E208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:33:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaETOaEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725924AbgCEEbx (ORCPT
+        id S1725946AbgCEEdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 23:31:53 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725861AbgCEEbx (ORCPT
+        Wed, 4 Mar 2020 23:33:44 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44760 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgCEEdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 23:31:53 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0254SigE001051
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 23:31:52 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhr4js337-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 23:31:51 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Thu, 5 Mar 2020 04:31:49 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Mar 2020 04:31:42 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0254VfAe55574684
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Mar 2020 04:31:41 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C410A4040;
-        Thu,  5 Mar 2020 04:31:41 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7BD60A4051;
-        Thu,  5 Mar 2020 04:31:40 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Mar 2020 04:31:40 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 8AB7AA0264;
-        Thu,  5 Mar 2020 15:31:35 +1100 (AEDT)
-Subject: Re: [PATCH v3 17/27] powerpc/powernv/pmem: Implement the Read Error
- Log command
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Frederic Barrat <fbarrat@linux.ibm.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
+        Wed, 4 Mar 2020 23:33:43 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y26so2106794pfn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 20:33:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CmQ5FyHouNnsdD5UAEEsRkVBnVM3x/Md8IuYlmoi1Fk=;
+        b=aaETOaEHTcbQ+HBu2MR5sZx8ToLqh2MoLdegXaGqilVDbOBlKIndKonzypo9p3HR/n
+         aWxsghf9fsWhntui86tUKWKuagBXP/hEhBsU/+cUvrxLkdKrLxbpH5KJBXXgoJMT+BMD
+         pS0Bsy4MafIEP6X5cAKj7QDTrSLpRj7ylKenjkz9EiBJZgLDBm0pkjh9TAopj8N1uvg+
+         CB1rJUJQ9Q4CuuIn4kMu8XIvDzm10fntU1/nbzRph2njys4IPJ/d20LXolX7aDO38Eed
+         zHWIlltnut/PTU3tCi5Jb4X7Xy2L5pGeYRrncVMMteatHdX2riRBlYVmN6H8OeqIPJtE
+         DO4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CmQ5FyHouNnsdD5UAEEsRkVBnVM3x/Md8IuYlmoi1Fk=;
+        b=BZttk09yMBLnMF9SZ2cIgHEit4c+ucDbxYOVJyCyILavin9bS1kErFaJRGRKH2t0qT
+         7/4iUDHadWgqN7jNnNdBHpCKnJZJjVhh0XihU4tC/H3gFUSJqMfLrsupIv5205gh5HNp
+         w49WffKIYSid7m6p37wjOTFUbe+Y/WmY/p1Hqzh4bSpC3zcq6ndcTG2PgsnUeAz6t6Cn
+         MM8DYM/G6HM9ZAgHbLCA15JAfwrfJJZLVasZOwGE4jCsmEljwwZa4prhJ2ZTViRbPCMP
+         F2Nl2UTd7KgTXEKXJu2HAqdtujcWK7/FbkLXZbGiW3ry9ubAAKO/m+A+vebqTna6gjfT
+         85qw==
+X-Gm-Message-State: ANhLgQ2hUuPt8H4r1AtPTqMXdVwHhgzb2ryMTojzHSVJRgKiBpx6vyu+
+        +yQcZDR/fyNN2+2xPzRvHYhf3BtqBDY=
+X-Google-Smtp-Source: ADFU+vv0tZBE8q88rWgxSlobQOCg3AJvmbuZES749+zABhmZAcunrklOPupTsNvq1e9T59nFMSgsuQ==
+X-Received: by 2002:a62:d10b:: with SMTP id z11mr6676747pfg.38.1583382820915;
+        Wed, 04 Mar 2020 20:33:40 -0800 (PST)
+Received: from ziqianlu-desktop.localdomain ([47.89.83.64])
+        by smtp.gmail.com with ESMTPSA id 28sm29350300pgl.42.2020.03.04.20.33.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 20:33:39 -0800 (PST)
+Date:   Thu, 5 Mar 2020 12:33:30 +0800
+From:   Aaron Lu <aaron.lwe@gmail.com>
+To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Thu, 05 Mar 2020 15:31:39 +1100
-In-Reply-To: <7767dec4-fb78-dd3e-3720-8d15f544639e@linux.ibm.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <20200221032720.33893-18-alastair@au1.ibm.com>
-         <7767dec4-fb78-dd3e-3720-8d15f544639e@linux.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+Message-ID: <20200305043330.GA8755@ziqianlu-desktop.localdomain>
+References: <20200212230705.GA25315@sinkpad>
+ <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
+ <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
+ <20200225034438.GA617271@ziqianlu-desktop.localdomain>
+ <CANaguZD205ccu1V_2W-QuMRrJA9SjJ5ng1do4NCdLy8NDKKrbA@mail.gmail.com>
+ <CAERHkrscBs8WoHSGtnH9mVsN3thfkE0CCQYPRE=XFUWWkQooQQ@mail.gmail.com>
+ <CANaguZDQZg-Z6aNpeLcjQ-cGm3X8CQOkZ_hnJNUyqDRM=yVDFQ@mail.gmail.com>
+ <bcd601e7-3f15-e340-bebe-a6ca3635dacb@linux.intel.com>
+ <a55bb7a5-bb20-d3f3-e634-4dfda1ac6005@linux.intel.com>
+ <67e46f79-51c2-5b69-71c6-133ec10b68c4@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030504-0028-0000-0000-000003E10282
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030504-0029-0000-0000-000024A635EA
-Message-Id: <739066a997f83e7aa27dc364071223936fa753ef.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_10:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- mlxscore=0 phishscore=0 mlxlogscore=999 suspectscore=2 lowpriorityscore=0
- impostorscore=0 bulkscore=0 spamscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003050024
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67e46f79-51c2-5b69-71c6-133ec10b68c4@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-03 at 11:36 +0100, Frederic Barrat wrote:
-> 
-> Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
-> > From: Alastair D'Silva <alastair@d-silva.org>
+On Wed, Mar 04, 2020 at 07:54:39AM +0800, Li, Aubrey wrote:
+> On 2020/3/3 22:59, Li, Aubrey wrote:
+> > On 2020/2/29 7:55, Tim Chen wrote:
+...
+> >> In Vinnet's fix, we only look at the currently running task's weight in
+> >> src and dst rq.  Perhaps the load on the src and dst rq needs to be considered
+> >> to prevent too great an imbalance between the run queues?
 > > 
-> > The read error log command extracts information from the
-> > controller's
-> > internal error log.
-> > 
-> > This patch exposes this information in 2 ways:
-> > - During probe, if an error occurs & a log is available, print it
-> > to the
-> >    console
-> > - After probe, make the error log available to userspace via an
-> > IOCTL.
-> >    Userspace is notified of pending error logs in a later patch
-> >    ("powerpc/powernv/pmem: Forward events to userspace")
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >   arch/powerpc/platforms/powernv/pmem/ocxl.c    | 269
-> > ++++++++++++++++++
-> >   .../platforms/powernv/pmem/ocxl_internal.h    |   1 +
-> >   include/uapi/nvdimm/ocxl-pmem.h               |  46 +++
-> >   3 files changed, 316 insertions(+)
-> >   create mode 100644 include/uapi/nvdimm/ocxl-pmem.h
-> > 
-> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > index 63109a870d2c..2b64504f9129 100644
-> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> > @@ -447,10 +447,219 @@ static int file_release(struct inode *inode,
-> > struct file *file)
-> >   	return 0;
-> >   }
-> >   
-> > +/**
-> > + * error_log_header_parse() - Parse the first 64 bits of the error
-> > log command response
-> > + * @ocxlpmem: the device metadata
-> > + * @length: out, returns the number of bytes in the response
-> > (excluding the 64 bit header)
-> > + */
-> > +static int error_log_header_parse(struct ocxlpmem *ocxlpmem, u16
-> > *length)
-> > +{
-> > +	int rc;
-> > +	u64 val;
-> > +
+> > We are trying to migrate a task, can we just use cfs.h_nr_running? This signal
+> > is used to find the busiest run queue as well.
 > 
-> Empty line in the middle of declarations
-> 
+> How about this one? the cgroup weight issue seems fixed on my side.
 
-Ok
+It doesn't apply on top of your coresched_v4-v5.5.2 branch, so I
+manually allied it. Not sure if I missed something.
 
-> 
-> > +	u16 data_identifier;
-> > +	u32 data_length;
-> > +
-> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> > +				     ocxlpmem-
-> > >admin_command.data_offset,
-> > +				     OCXL_LITTLE_ENDIAN, &val);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	data_identifier = val >> 48;
-> > +	data_length = val & 0xFFFF;
-> > +
-> > +	if (data_identifier != 0x454C) { // 'EL'
-> > +		dev_err(&ocxlpmem->dev,
-> > +			"Bad data identifier for error log data,
-> > expected 'EL', got '%2s' (%#x), data_length=%u\n",
-> > +			(char *)&data_identifier,
-> > +			(unsigned int)data_identifier, data_length);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	*length = data_length;
-> > +	return 0;
-> > +}
-> > +
-> > +static int error_log_offset_0x08(struct ocxlpmem *ocxlpmem,
-> > +				 u32 *log_identifier, u32
-> > *program_ref_code)
-> > +{
-> > +	int rc;
-> > +	u64 val;
-> > +
-> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> > +				     ocxlpmem-
-> > >admin_command.data_offset + 0x08,
-> > +				     OCXL_LITTLE_ENDIAN, &val);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	*log_identifier = val >> 32;
-> > +	*program_ref_code = val & 0xFFFFFFFF;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int read_error_log(struct ocxlpmem *ocxlpmem,
-> > +			  struct ioctl_ocxl_pmem_error_log *log, bool
-> > buf_is_user)
-> > +{
-> > +	u64 val;
-> > +	u16 user_buf_length;
-> > +	u16 buf_length;
-> > +	u16 i;
-> > +	int rc;
-> > +
-> > +	if (log->buf_size % 8)
-> > +		return -EINVAL;
-> > +
-> > +	rc = ocxlpmem_chi(ocxlpmem, &val);
-> > +	if (rc)
-> > +		goto out;
-> 
-> 
-> "out" will unlock a mutex not yet taken.
-> 
+It's now getting 4 cpus in 2 cores. Better, but not back to normal yet..
 
-Thanks, that should have been a return.
-
-> 
-> 
-> > +
-> > +	if (!(val & GLOBAL_MMIO_CHI_ELA))
-> > +		return -EAGAIN;
-> > +
-> > +	user_buf_length = log->buf_size;
-> > +
-> > +	mutex_lock(&ocxlpmem->admin_command.lock);
-> > +
-> > +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_ERRLOG);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = admin_command_execute(ocxlpmem);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = admin_command_complete_timeout(ocxlpmem,
-> > ADMIN_COMMAND_ERRLOG);
-> > +	if (rc < 0) {
-> > +		dev_warn(&ocxlpmem->dev, "Read error log timed out\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	rc = admin_response(ocxlpmem);
-> > +	if (rc < 0)
-> > +		goto out;
-> > +	if (rc != STATUS_SUCCESS) {
-> > +		warn_status(ocxlpmem, "Unexpected status from retrieve
-> > error log", rc);
-> > +		goto out;
-> > +	}
-> > +
-> > +
-> > +	rc = error_log_header_parse(ocxlpmem, &log->buf_size);
-> > +	if (rc)
-> > +		goto out;
-> > +	// log->buf_size now contains the returned buffer size, not the
-> > user size
-> > +
-> > +	rc = error_log_offset_0x08(ocxlpmem, &log->log_identifier,
-> > +				       &log->program_reference_code);
-> > +	if (rc)
-> > +		goto out;
-> 
-> 
-> Offset 0x08 gets a preferential treatment compared to 0x10 below and 
-> it's not clear why.
-> I would create a subfonction which parses all the fields linearly.
-> 
-
-I'll inline the contents of error_log_offset_0x08() - I can't see a big
-benefit to factoring out the guts of that function.
-
-> 
-> 
-> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> > +				     ocxlpmem-
-> > >admin_command.data_offset + 0x10,
-> > +				     OCXL_LITTLE_ENDIAN, &val);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	log->error_log_type = val >> 56;
-> > +	log->action_flags = (log->error_log_type ==
-> > OCXL_PMEM_ERROR_LOG_TYPE_GENERAL) ?
-> > +			    (val >> 32) & 0xFFFFFF : 0;
-> > +	log->power_on_seconds = val & 0xFFFFFFFF;
-> > +
-> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> > +				     ocxlpmem-
-> > >admin_command.data_offset + 0x18,
-> > +				     OCXL_LITTLE_ENDIAN, &log-
-> > >timestamp);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> > +				     ocxlpmem-
-> > >admin_command.data_offset + 0x20,
-> > +				     OCXL_HOST_ENDIAN, &log->wwid[0]);
-> 
-> 
-> A bit of a moot point, but is there a reason why some of those MMIO
-> ops 
-> use OCXL_LITTLE_ENDIAN and the others OCXL_HOST_ENDIAN?
-> 
-
-Some are little endian values, and some are binary data. WWIDs should
-be LE though.
-
-> 
-> 
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> > +				     ocxlpmem-
-> > >admin_command.data_offset + 0x28,
-> > +				     OCXL_HOST_ENDIAN, &log->wwid[1]);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> > +				     ocxlpmem-
-> > >admin_command.data_offset + 0x30,
-> > +				     OCXL_HOST_ENDIAN, (u64 *)log-
-> > >fw_revision);
-> > +	if (rc)
-> > +		goto out;
-> > +	log->fw_revision[8] = '\0';
-> > +
-> > +	buf_length = (user_buf_length < log->buf_size) ?
-> > +		     user_buf_length : log->buf_size;
-> > +	for (i = 0; i < buf_length + 0x48; i += 8) {
-> > +		u64 val;
-> > +
-> > +		rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> > +					     ocxlpmem-
-> > >admin_command.data_offset + i,
-> > +					     OCXL_HOST_ENDIAN, &val);
-> > +		if (rc)
-> > +			goto out;
-> > +
-> > +		if (buf_is_user) {
-> > +			if (copy_to_user(&log->buf[i], &val,
-> > sizeof(u64))) {
-> > +				rc = -EFAULT;
-> > +				goto out;
-> > +			}
-> > +		} else
-> > +			log->buf[i] = val;
-> > +	}
-> 
-> 
-> I think it could be a bit simplified by keeping the handling of the
-> user 
-> buffer out of this function. Always call it with a kernel buffer.
-> And 
-> have only one copy_to_user() call on the ioctl() path. You'd need to 
-> allocate a kernel buf on the ioctl path, but you're already doing it
-> on 
-> the probe() path, so it should be doable to share code.
-
-Hmm, the problem then is that on the IOCTL side, I'll have to save,
-modify, then restore the buf member of struct
-ioctl_ocxl_pmem_error_log, which would be uglier.
-
-> 
-> 
-> > +
-> > +	rc = admin_response_handled(ocxlpmem);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +out:
-> > +	mutex_unlock(&ocxlpmem->admin_command.lock);
-> > +	return rc;
-> > +
-> > +}
-> > +
-> > +static int ioctl_error_log(struct ocxlpmem *ocxlpmem,
-> > +		struct ioctl_ocxl_pmem_error_log __user *uarg)
-> > +{
-> > +	struct ioctl_ocxl_pmem_error_log args;
-> > +	int rc;
-> > +
-> > +	if (copy_from_user(&args, uarg, sizeof(args)))
-> > +		return -EFAULT;
-> > +
-> > +	rc = read_error_log(ocxlpmem, &args, true);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	if (copy_to_user(uarg, &args, sizeof(args)))
-> > +		return -EFAULT;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static long file_ioctl(struct file *file, unsigned int cmd,
-> > unsigned long args)
-> > +{
-> > +	struct ocxlpmem *ocxlpmem = file->private_data;
-> > +	int rc = -EINVAL;
-> > +
-> > +	switch (cmd) {
-> > +	case IOCTL_OCXL_PMEM_ERROR_LOG:
-> > +		rc = ioctl_error_log(ocxlpmem,
-> > +				     (struct ioctl_ocxl_pmem_error_log
-> > __user *)args);
-> > +		break;
-> > +	}
-> > +	return rc;
-> > +}
-> > +
-> >   static const struct file_operations fops = {
-> >   	.owner		= THIS_MODULE,
-> >   	.open		= file_open,
-> >   	.release	= file_release,
-> > +	.unlocked_ioctl = file_ioctl,
-> > +	.compat_ioctl   = file_ioctl,
-> >   };
-> >   
-> >   /**
-> > @@ -527,6 +736,60 @@ static int read_device_metadata(struct
-> > ocxlpmem *ocxlpmem)
-> >   	return 0;
-> >   }
-> >   
-> > +static const char *decode_error_log_type(u8 error_log_type)
-> > +{
-> > +	switch (error_log_type) {
-> > +	case 0x00:
-> > +		return "general";
-> > +	case 0x01:
-> > +		return "predictive failure";
-> > +	case 0x02:
-> > +		return "thermal warning";
-> > +	case 0x03:
-> > +		return "data loss";
-> > +	case 0x04:
-> > +		return "health & performance";
-> > +	default:
-> > +		return "unknown";
-> > +	}
-> > +}
-> > +
-> > +static void dump_error_log(struct ocxlpmem *ocxlpmem)
-> > +{
-> > +	struct ioctl_ocxl_pmem_error_log log;
-> > +	u32 buf_size;
-> > +	u8 *buf;
-> > +	int rc;
-> > +
-> > +	if (ocxlpmem->admin_command.data_size == 0)
-> > +		return;
-> > +
-> > +	buf_size = ocxlpmem->admin_command.data_size - 0x48;
-> > +	buf = kzalloc(buf_size, GFP_KERNEL);
-> > +	if (!buf)
-> > +		return;
-> > +
-> > +	log.buf = buf;
-> > +	log.buf_size = buf_size;
-> > +
-> > +	rc = read_error_log(ocxlpmem, &log, false);
-> > +	if (rc < 0)
-> > +		goto out;
-> > +
-> > +	dev_warn(&ocxlpmem->dev,
-> > +		 "OCXL PMEM Error log: WWID=0x%016llx%016llx LID=0x%x
-> > PRC=%x type=0x%x %s, Uptime=%u seconds timestamp=0x%llx\n",
-> > +		 log.wwid[0], log.wwid[1],
-> > +		 log.log_identifier, log.program_reference_code,
-> > +		 log.error_log_type,
-> > +		 decode_error_log_type(log.error_log_type),
-> > +		 log.power_on_seconds, log.timestamp);
-> > +	print_hex_dump(KERN_WARNING, "buf", DUMP_PREFIX_OFFSET, 16, 1,
-> > buf,
-> > +		       log.buf_size, false);
-> 
-> dev_warn already logs a warning. Isn't KERN_DEBUG more appropriate
-> for 
-> the hex dump?
-> 
-> 
-
-The hex dump is associated binary data for the warning, it doesn't
-replicate the contents of the message.
-
-> 
-> > +
-> > +out:
-> > +	kfree(buf);
-> > +}
-> > +
-> >   /**
-> >    * probe_function0() - Set up function 0 for an OpenCAPI
-> > persistent memory device
-> >    * This is important as it enables templates higher than 0 across
-> > all other functions,
-> > @@ -568,6 +831,7 @@ static int probe(struct pci_dev *pdev, const
-> > struct pci_device_id *ent)
-> >   	struct ocxlpmem *ocxlpmem;
-> >   	int rc;
-> >   	u16 elapsed, timeout;
-> > +	u64 chi;
-> >   
-> >   	if (PCI_FUNC(pdev->devfn) == 0)
-> >   		return probe_function0(pdev);
-> > @@ -667,6 +931,11 @@ static int probe(struct pci_dev *pdev, const
-> > struct pci_device_id *ent)
-> >   	return 0;
-> >   
-> >   err:
-> > +	if (ocxlpmem &&
-> > +		    (ocxlpmem_chi(ocxlpmem, &chi) == 0) &&
-> > +		    (chi & GLOBAL_MMIO_CHI_ELA))
-> > +		dump_error_log(ocxlpmem);
-> > +
-> >   	/*
-> >   	 * Further cleanup is done in the release handler via
-> > free_ocxlpmem()
-> >   	 * This allows us to keep the character device live to handle
-> > IOCTLs to
-> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > index d2d81fec7bb1..b953ee522ed4 100644
-> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> > @@ -5,6 +5,7 @@
-> >   #include <linux/cdev.h>
-> >   #include <misc/ocxl.h>
-> >   #include <linux/libnvdimm.h>
-> > +#include <uapi/nvdimm/ocxl-pmem.h>
-> 
-> Can't we limit the extra include to ocxl.c?
-> 
-
-Yes, there are no consumers referred to in ocxl_interal.[hc]
-
-> Completely unrelated, but ocxl.c contains most of the code for this 
-> driver. We should consider renaming it to ocxlpmem.c or something
-> along 
-> those lines, since it does a lot more than just interfacing with the 
-> opencapi interface. And would avoid confusion with an other already 
-> existing ocxl.c file.
-> 
-
-Ok, my thinking was that it's already in a pmem directory, but I can
-see arguments both ways.
-
-> 
-> >   #include <linux/mm.h>
-> >   
-> >   #define LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
-> > diff --git a/include/uapi/nvdimm/ocxl-pmem.h
-> > b/include/uapi/nvdimm/ocxl-pmem.h
-> > new file mode 100644
-> > index 000000000000..b10f8ac0c20f
-> > --- /dev/null
-> > +++ b/include/uapi/nvdimm/ocxl-pmem.h
-> > @@ -0,0 +1,46 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
-> > +/* Copyright 2017 IBM Corp. */
-> > +#ifndef _UAPI_OCXL_SCM_H
-> > +#define _UAPI_OCXL_SCM_H
-> > +
-> > +#include <linux/types.h>
-> > +#include <linux/ioctl.h>
-> > +
-> > +#define OCXL_PMEM_ERROR_LOG_ACTION_RESET	(1 << (32-32))
-> > +#define OCXL_PMEM_ERROR_LOG_ACTION_CHKFW	(1 << (53-32))
-> > +#define OCXL_PMEM_ERROR_LOG_ACTION_REPLACE	(1 << (54-32))
-> > +#define OCXL_PMEM_ERROR_LOG_ACTION_DUMP		(1 << (55-32))
-> > +
-> > +#define OCXL_PMEM_ERROR_LOG_TYPE_GENERAL		(0x00)
-> > +#define OCXL_PMEM_ERROR_LOG_TYPE_PREDICTIVE_FAILURE	(0x01)
-> > +#define OCXL_PMEM_ERROR_LOG_TYPE_THERMAL_WARNING	(0x02)
-> > +#define OCXL_PMEM_ERROR_LOG_TYPE_DATA_LOSS		(0x03)
-> > +#define OCXL_PMEM_ERROR_LOG_TYPE_HEALTH_PERFORMANCE	(0x04)
-> > +
-> > +struct ioctl_ocxl_pmem_error_log {
-> > +	__u32 log_identifier; /* out */
-> > +	__u32 program_reference_code; /* out */
-> > +	__u32 action_flags; /* out, recommended course of action */
-> > +	__u32 power_on_seconds; /* out, Number of seconds the
-> > controller has been on when the error occurred */
-> > +	__u64 timestamp; /* out, relative time since the current IPL */
-> > +	__u64 wwid[2]; /* out, the NAA formatted WWID associated with
-> > the controller */
-> > +	char  fw_revision[8+1]; /* out, firmware revision as null
-> > terminated text */
-> 
-> The 8+1 size will make the compiler add some padding here. Are we 
-> confident that all the compilers, at least on powerpc, will do the
-> same 
-> thing and we can guarantee a kernel ABI? I would play it safe and
-> have a 
-> discussion with folks who understand compilers better.
-> 
-
-I'll add some explicit padding.
-
-> 
-> 
-> > +	__u16 buf_size; /* in/out, buffer size provided/required.
-> > +			 * If required is greater than provided, the
-> > buffer
-> > +			 * will be truncated to the amount provided. If
-> > its
-> > +			 * less, then only the required bytes will be
-> > populated.
-> > +			 * If it is 0, then there are no more error log
-> > entries.
-> > +			 */
-> > +	__u8  error_log_type;
-> > +	__u8  reserved1;
-> > +	__u32 reserved2;
-> > +	__u64 reserved3[2];
-> > +	__u8 *buf; /* pointer to output buffer */
-> > +};
-> > +
-> > +/* ioctl numbers */
-> > +#define OCXL_PMEM_MAGIC 0x5C
-> 
-> Randomly picked?
-> See (and add entry in) Documentation/userspace-api/ioctl/ioctl-
-> number.rst
-> 
-Ok
-
-> 
->    Fred
-> 
-> 
-> 
-> > +/* SCM devices */
-> > +#define IOCTL_OCXL_PMEM_ERROR_LOG			_IOWR(OCXL_PMEM
-> > _MAGIC, 0x01, struct ioctl_ocxl_pmem_error_log)
-> > +
-> > +#endif /* _UAPI_OCXL_SCM_H */
-> > 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
-
+Thanks,
+Aaron
+ 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index f42ceec..90024cf 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1767,6 +1767,8 @@ static void task_numa_compare(struct task_numa_env *env,
+>  	rcu_read_unlock();
+>  }
+>  
+> +static inline bool sched_core_cookie_match(struct rq *rq, struct task_struct *p);
+> +
+>  static void task_numa_find_cpu(struct task_numa_env *env,
+>  				long taskimp, long groupimp)
+>  {
+> @@ -5650,6 +5652,44 @@ static struct sched_group *
+>  find_idlest_group(struct sched_domain *sd, struct task_struct *p,
+>  		  int this_cpu, int sd_flag);
+>  
+> +#ifdef CONFIG_SCHED_CORE
+> +static inline bool sched_core_cookie_match(struct rq *rq, struct task_struct *p)
+> +{
+> +	struct rq *src_rq = task_rq(p);
+> +	bool idle_core = true;
+> +	int cpu;
+> +
+> +	/* Ignore cookie match if core scheduler is not enabled on the CPU. */
+> +	if (!sched_core_enabled(rq))
+> +		return true;
+> +
+> +	if (rq->core->core_cookie == p->core_cookie)
+> +		return true;
+> +
+> +	for_each_cpu(cpu, cpu_smt_mask(cpu_of(rq))) {
+> +		if (!available_idle_cpu(cpu)) {
+> +			idle_core = false;
+> +			break;
+> +		}
+> +	}
+> +	/*
+> +	 * A CPU in an idle core is always the best choice for tasks with
+> +	 * cookies.
+> +	 */
+> +	if (idle_core)
+> +		return true;
+> +
+> +	/*
+> +	 * Ignore cookie match if there is a big imbalance between the src rq
+> +	 * and dst rq.
+> +	 */
+> +	if ((src_rq->cfs.h_nr_running - rq->cfs.h_nr_running) > 1)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +#endif
+> +
+>  /*
+>   * find_idlest_group_cpu - find the idlest CPU among the CPUs in the group.
+>   */
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 7ae6858..8c607e9 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1061,28 +1061,6 @@ static inline raw_spinlock_t *rq_lockp(struct rq *rq)
+>  	return &rq->__lock;
+>  }
+>  
+> -static inline bool sched_core_cookie_match(struct rq *rq, struct task_struct *p)
+> -{
+> -	bool idle_core = true;
+> -	int cpu;
+> -
+> -	/* Ignore cookie match if core scheduler is not enabled on the CPU. */
+> -	if (!sched_core_enabled(rq))
+> -		return true;
+> -
+> -	for_each_cpu(cpu, cpu_smt_mask(cpu_of(rq))) {
+> -		if (!available_idle_cpu(cpu)) {
+> -			idle_core = false;
+> -			break;
+> -		}
+> -	}
+> -	/*
+> -	 * A CPU in an idle core is always the best choice for tasks with
+> -	 * cookies.
+> -	 */
+> -	return idle_core || rq->core->core_cookie == p->core_cookie;
+> -}
+> -
+>  extern void queue_core_balance(struct rq *rq);
+>  
+>  void sched_core_add(struct rq *rq, struct task_struct *p);
