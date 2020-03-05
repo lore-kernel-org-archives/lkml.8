@@ -2,87 +2,105 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 260FDC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0435C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13F420870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:44:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nAHJxLWF"
+	by mail.kernel.org (Postfix) with ESMTP id 86D1420870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbgCEHoj (ORCPT
+        id S1725989AbgCEHqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 02:44:39 -0500
-Received: from ozlabs.org ([203.11.71.1]:48623 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725880AbgCEHoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 02:44:38 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Y2nw0f0vz9sPg;
-        Thu,  5 Mar 2020 18:44:36 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583394276;
-        bh=HQOjKU2saBqKtdOf9baWYIhRvPXjw1G4W3YpNZ8OZqk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nAHJxLWFDPtlnBYT4HmR54r43miirPhFSU/Qr2A2f1h32UHtq1FY6YnEyYGVLwUI6
-         5TXLflfEe5juA6Q7vQTRfjK1GQ4RaPByDkvBGSk9Z2e6BJ5STHJ3kN1qGlTKNpYZxq
-         mM7G+Rv7OxXKd80+YzCbOuiOtOKqrGxGnPaVY7mTNHpTc1qT/CtMYi1vaG5M64Z0MF
-         QrJ6rNFfRcnmkY4IbCs+orcqYlJJlIYkWffT4WGUAE/CYIq5uDZuxxU9miVV1tqaM/
-         qmbZbpDr0/rUuU2aoPBJ/K1TEeA8+WzzqgQsjnbyEKeDxXXBB/NNFik4JiSs+Y+UgH
-         TRals66nXrUww==
-Date:   Thu, 5 Mar 2020 18:44:29 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rob Herring <robherring2@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the
- devicetree-fixes tree
-Message-ID: <20200305184429.0b6a38c3@canb.auug.org.au>
+        Thu, 5 Mar 2020 02:46:34 -0500
+Received: from hera.aquilenet.fr ([185.233.100.1]:51920 "EHLO
+        hera.aquilenet.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgCEHqd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 02:46:33 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id CAA4D148D;
+        Thu,  5 Mar 2020 08:46:31 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id J-IGOv4z-aAj; Thu,  5 Mar 2020 08:46:30 +0100 (CET)
+Received: from function (lfbn-bor-1-797-11.w86-234.abo.wanadoo.fr [86.234.239.11])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id BFC5312B7;
+        Thu,  5 Mar 2020 08:46:30 +0100 (CET)
+Received: from samy by function with local (Exim 4.93)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1j9lDB-001Dcl-Bm; Thu, 05 Mar 2020 08:46:29 +0100
+Date:   Thu, 5 Mar 2020 08:46:29 +0100
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, speakup@linux-speakup.org,
+        devel@driverdev.osuosl.org, William Hubbs <w.d.hubbs@gmail.com>,
+        Chris Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] staging: speakup: Fix a typo error print for softsynthu
+ device
+Message-ID: <20200305074629.i2ntpvmlpn4nwb7y@function>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        linux-kernel@vger.kernel.org, speakup@linux-speakup.org,
+        devel@driverdev.osuosl.org, William Hubbs <w.d.hubbs@gmail.com>,
+        Chris Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200305072151.403-1-zhenzhong.duan@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.Y2z2ubC4qh_XDeXpSz8noP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305072151.403-1-zhenzhong.duan@gmail.com>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.Y2z2ubC4qh_XDeXpSz8noP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Zhenzhong Duan, le jeu. 05 mars 2020 15:21:51 +0800, a ecrit:
+> When softsynthu device fails the register, "/dev/softsynthu" should be
+> printed instead of "/dev/softsynth".
 
-Hi all,
+Reviewed-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
 
-Commit
+Thanks!
 
-  9dbf66696d29 ("MAINTAINERS: update ALLWINNER CPUFREQ DRIVER entry")
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+> Cc: William Hubbs <w.d.hubbs@gmail.com>
+> Cc: Chris Brannon <chris@the-brannons.com>
+> Cc: Kirk Reiser <kirk@reisers.ca>
+> Cc: Samuel Thibault <samuel.thibault@ens-lyon.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/staging/speakup/speakup_soft.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/speakup/speakup_soft.c b/drivers/staging/speakup/speakup_soft.c
+> index 9d85a3a1af4c..28cedaec6d8a 100644
+> --- a/drivers/staging/speakup/speakup_soft.c
+> +++ b/drivers/staging/speakup/speakup_soft.c
+> @@ -388,7 +388,7 @@ static int softsynth_probe(struct spk_synth *synth)
+>  	synthu_device.name = "softsynthu";
+>  	synthu_device.fops = &softsynthu_fops;
+>  	if (misc_register(&synthu_device)) {
+> -		pr_warn("Couldn't initialize miscdevice /dev/softsynth.\n");
+> +		pr_warn("Couldn't initialize miscdevice /dev/softsynthu.\n");
+>  		return -ENODEV;
+>  	}
+>  
+> -- 
+> 2.17.1
+> 
 
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.Y2z2ubC4qh_XDeXpSz8noP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5grd0ACgkQAVBC80lX
-0GyflQf+KKUSw3VAQJn2uTDDbU6AXcwKeFuEwLlHZYdgh0I3RYe4HVZLvMixXFGR
-9MmlYUR2bQDDv4EoDwQzhi1sP5akFujAQ5Nb96CuCGIGHZfXuJy2stY1m1gbOCzt
-GF/Sovdx6eHpETUJ+Ky/Lz11mBwyoPPG6DhQAHQsViWc3xqNc5XX14iNAmD43tFK
-3hA4J+N1ZjxqFm1LWGd3diJ+CrIodW6Latxzsc/kh1UtF3VC8CiNQWa3rXSDuCgq
-06UZjQMq9LelRUAgRKr8/HvthLxTVtVjTfGpmAi6ZB7mTfb3nQr0iK+iFyZxJl5q
-SZMLJt0XT+6VFQr7EvLr5jZ9kDKCjQ==
-=Tyd7
------END PGP SIGNATURE-----
-
---Sig_/.Y2z2ubC4qh_XDeXpSz8noP--
+-- 
+Samuel
+N: beep beep Miam miam? 
+y: ++
+a: kill -MIAM -1
+ -+- #runtime < /dev/miam -+-
