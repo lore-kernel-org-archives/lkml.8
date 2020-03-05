@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F67C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC45C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662BA2146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462F32146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428780;
-	bh=qByTAWT7bl0J6/edNlwDbsUX9/OFfv2Y7B+vvlVndss=;
+	s=default; t=1583428789;
+	bh=wgmoLWEcseM6n7d6+U/LOI7cmzjZ0l1QeI4r/EulqzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A8whZ+zdbqxhZy8VA73kwiOXbypMuT4WdmGYNlwh6DRNdqzuVbH43kvulAGyEikot
-	 eL+J1GO6v2OeYpNAIA4ZgvhD1/dV1nHkWGV6PGNWohPkE+9eRwlXPfF7VaKbG2dLDq
-	 yDyQrH9pXuzjvhwPmKJop3HkYscDP82O4JDjX7Fc=
+	b=hzRdBBkNlSQyr+OvHXinA1sTCg8rb+Iyv+4oh2hBWR+un9Pf8x4PoQLT0HP7JSHBs
+	 6Yg/bmd8cDkrla1eIw6NW5/0WTtT6qFWKXQvfYM9khqIKwBT46/RAssigBCfyPlHfl
+	 R9BWsDNbUl8mppsccjyAq/C6alhFo/S9K1mtFgXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbgCERTi (ORCPT
+        id S1727946AbgCERTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:19:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:19:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbgCERPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:05 -0500
+        id S1727908AbgCERPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27B1D20848;
-        Thu,  5 Mar 2020 17:15:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69A86207FD;
+        Thu,  5 Mar 2020 17:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428505;
-        bh=qByTAWT7bl0J6/edNlwDbsUX9/OFfv2Y7B+vvlVndss=;
+        s=default; t=1583428501;
+        bh=wgmoLWEcseM6n7d6+U/LOI7cmzjZ0l1QeI4r/EulqzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=peK9GphUCu2SQ/UQ7KxrI0TzzZ+fOUDZkDE4y/ZTCs1vm3twfI4FnK0XwUaoEgVp9
-         lUCvmvmwus/hVMmVz6JdA+DVzs5VJ+fIkFCVl7XqgXvYMNjpXGtSx+KHAo/JGu9jtC
-         TBDwUhpZd58zET3m9Qy0CJq9oXadYr42uwvprioQ=
+        b=F/314om9EOMGQANqy2cFv9fKWwTphjrgXABub0jjb4eZnxkrtmrGcVuLDDmd5LhbV
+         qqfJ3+xVS6Cx6zuKnxpojEBeolxsqFkxqAqa8tklrH/DOKLfY//10YNK2koNceWIR8
+         p0tb0HjW1obmDyxIXKIGzwoU/R1YVwDuQ+PnWUPE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Ewan D . Milne" <emilne@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 35/58] blk-mq: insert passthrough request into hctx->dispatch directly
-Date:   Thu,  5 Mar 2020 12:13:56 -0500
-Message-Id: <20200305171420.29595-35-sashal@kernel.org>
+Cc:     Esben Haabendal <esben@geanix.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 32/58] net: ll_temac: Add more error handling of dma_map_single() calls
+Date:   Thu,  5 Mar 2020 12:13:53 -0500
+Message-Id: <20200305171420.29595-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
 References: <20200305171420.29595-1-sashal@kernel.org>
@@ -61,179 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Esben Haabendal <esben@geanix.com>
 
-[ Upstream commit 01e99aeca3979600302913cef3f89076786f32c8 ]
+[ Upstream commit d07c849cd2b97d6809430dfb7e738ad31088037a ]
 
-For some reason, device may be in one situation which can't handle
-FS request, so STS_RESOURCE is always returned and the FS request
-will be added to hctx->dispatch. However passthrough request may
-be required at that time for fixing the problem. If passthrough
-request is added to scheduler queue, there isn't any chance for
-blk-mq to dispatch it given we prioritize requests in hctx->dispatch.
-Then the FS IO request may never be completed, and IO hang is caused.
+This adds error handling to the remaining dma_map_single() calls, so that
+behavior is well defined if/when we run out of DMA memory.
 
-So passthrough request has to be added to hctx->dispatch directly
-for fixing the IO hang.
-
-Fix this issue by inserting passthrough request into hctx->dispatch
-directly together withing adding FS request to the tail of
-hctx->dispatch in blk_mq_dispatch_rq_list(). Actually we add FS request
-to tail of hctx->dispatch at default, see blk_mq_request_bypass_insert().
-
-Then it becomes consistent with original legacy IO request
-path, in which passthrough request is always added to q->queue_head.
-
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 92744989533c ("net: add Xilinx ll_temac device driver")
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-flush.c    |  2 +-
- block/blk-mq-sched.c | 22 +++++++++++++++-------
- block/blk-mq.c       | 18 +++++++++++-------
- block/blk-mq.h       |  3 ++-
- 4 files changed, 29 insertions(+), 16 deletions(-)
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 26 +++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-flush.c b/block/blk-flush.c
-index b1f0a1ac505c9..5aa6fada22598 100644
---- a/block/blk-flush.c
-+++ b/block/blk-flush.c
-@@ -399,7 +399,7 @@ void blk_insert_flush(struct request *rq)
- 	 */
- 	if ((policy & REQ_FSEQ_DATA) &&
- 	    !(policy & (REQ_FSEQ_PREFLUSH | REQ_FSEQ_POSTFLUSH))) {
--		blk_mq_request_bypass_insert(rq, false);
-+		blk_mq_request_bypass_insert(rq, false, false);
- 		return;
- 	}
+diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+index fd578568b3bff..fd4231493449b 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+@@ -367,6 +367,8 @@ static int temac_dma_bd_init(struct net_device *ndev)
+ 		skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
+ 					      XTE_MAX_JUMBO_FRAME_SIZE,
+ 					      DMA_FROM_DEVICE);
++		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr))
++			goto out;
+ 		lp->rx_bd_v[i].phys = cpu_to_be32(skb_dma_addr);
+ 		lp->rx_bd_v[i].len = cpu_to_be32(XTE_MAX_JUMBO_FRAME_SIZE);
+ 		lp->rx_bd_v[i].app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
+@@ -863,12 +865,13 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
+ 				      skb_headlen(skb), DMA_TO_DEVICE);
+ 	cur_p->len = cpu_to_be32(skb_headlen(skb));
++	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
++		return NETDEV_TX_BUSY;
+ 	cur_p->phys = cpu_to_be32(skb_dma_addr);
+ 	ptr_to_txbd((void *)skb, cur_p);
  
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index ca22afd47b3dc..856356b1619e8 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -361,13 +361,19 @@ static bool blk_mq_sched_bypass_insert(struct blk_mq_hw_ctx *hctx,
- 				       bool has_sched,
- 				       struct request *rq)
- {
--	/* dispatch flush rq directly */
--	if (rq->rq_flags & RQF_FLUSH_SEQ) {
--		spin_lock(&hctx->lock);
--		list_add(&rq->queuelist, &hctx->dispatch);
--		spin_unlock(&hctx->lock);
-+	/*
-+	 * dispatch flush and passthrough rq directly
-+	 *
-+	 * passthrough request has to be added to hctx->dispatch directly.
-+	 * For some reason, device may be in one situation which can't
-+	 * handle FS request, so STS_RESOURCE is always returned and the
-+	 * FS request will be added to hctx->dispatch. However passthrough
-+	 * request may be required at that time for fixing the problem. If
-+	 * passthrough request is added to scheduler queue, there isn't any
-+	 * chance to dispatch it given we prioritize requests in hctx->dispatch.
-+	 */
-+	if ((rq->rq_flags & RQF_FLUSH_SEQ) || blk_rq_is_passthrough(rq))
- 		return true;
--	}
+ 	for (ii = 0; ii < num_frag; ii++) {
+-		lp->tx_bd_tail++;
+-		if (lp->tx_bd_tail >= TX_BD_NUM)
++		if (++lp->tx_bd_tail >= TX_BD_NUM)
+ 			lp->tx_bd_tail = 0;
  
- 	if (has_sched)
- 		rq->rq_flags |= RQF_SORTED;
-@@ -391,8 +397,10 @@ void blk_mq_sched_insert_request(struct request *rq, bool at_head,
- 
- 	WARN_ON(e && (rq->tag != -1));
- 
--	if (blk_mq_sched_bypass_insert(hctx, !!e, rq))
-+	if (blk_mq_sched_bypass_insert(hctx, !!e, rq)) {
-+		blk_mq_request_bypass_insert(rq, at_head, false);
- 		goto run;
-+	}
- 
- 	if (e && e->type->ops.insert_requests) {
- 		LIST_HEAD(list);
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index ec791156e9ccd..3c1abab1fdf52 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -761,7 +761,7 @@ static void blk_mq_requeue_work(struct work_struct *work)
- 		 * merge.
- 		 */
- 		if (rq->rq_flags & RQF_DONTPREP)
--			blk_mq_request_bypass_insert(rq, false);
-+			blk_mq_request_bypass_insert(rq, false, false);
- 		else
- 			blk_mq_sched_insert_request(rq, true, false, false);
- 	}
-@@ -1313,7 +1313,7 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
- 			q->mq_ops->commit_rqs(hctx);
- 
- 		spin_lock(&hctx->lock);
--		list_splice_init(list, &hctx->dispatch);
-+		list_splice_tail_init(list, &hctx->dispatch);
- 		spin_unlock(&hctx->lock);
- 
- 		/*
-@@ -1668,12 +1668,16 @@ void __blk_mq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
-  * Should only be used carefully, when the caller knows we want to
-  * bypass a potential IO scheduler on the target device.
-  */
--void blk_mq_request_bypass_insert(struct request *rq, bool run_queue)
-+void blk_mq_request_bypass_insert(struct request *rq, bool at_head,
-+				  bool run_queue)
- {
- 	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
- 
- 	spin_lock(&hctx->lock);
--	list_add_tail(&rq->queuelist, &hctx->dispatch);
-+	if (at_head)
-+		list_add(&rq->queuelist, &hctx->dispatch);
-+	else
-+		list_add_tail(&rq->queuelist, &hctx->dispatch);
- 	spin_unlock(&hctx->lock);
- 
- 	if (run_queue)
-@@ -1863,7 +1867,7 @@ static blk_status_t __blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
- 	if (bypass_insert)
- 		return BLK_STS_RESOURCE;
- 
--	blk_mq_request_bypass_insert(rq, run_queue);
-+	blk_mq_request_bypass_insert(rq, false, run_queue);
- 	return BLK_STS_OK;
- }
- 
-@@ -1879,7 +1883,7 @@ static void blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
- 
- 	ret = __blk_mq_try_issue_directly(hctx, rq, cookie, false, true);
- 	if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE)
--		blk_mq_request_bypass_insert(rq, true);
-+		blk_mq_request_bypass_insert(rq, false, true);
- 	else if (ret != BLK_STS_OK)
- 		blk_mq_end_request(rq, ret);
- 
-@@ -1913,7 +1917,7 @@ void blk_mq_try_issue_list_directly(struct blk_mq_hw_ctx *hctx,
- 		if (ret != BLK_STS_OK) {
- 			if (ret == BLK_STS_RESOURCE ||
- 					ret == BLK_STS_DEV_RESOURCE) {
--				blk_mq_request_bypass_insert(rq,
-+				blk_mq_request_bypass_insert(rq, false,
- 							list_empty(list));
- 				break;
- 			}
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index 32c62c64e6c2b..f2075978db500 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -66,7 +66,8 @@ int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
-  */
- void __blk_mq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 				bool at_head);
--void blk_mq_request_bypass_insert(struct request *rq, bool run_queue);
-+void blk_mq_request_bypass_insert(struct request *rq, bool at_head,
-+				  bool run_queue);
- void blk_mq_insert_requests(struct blk_mq_hw_ctx *hctx, struct blk_mq_ctx *ctx,
- 				struct list_head *list);
- 
+ 		cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+@@ -876,6 +879,25 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 					      skb_frag_address(frag),
+ 					      skb_frag_size(frag),
+ 					      DMA_TO_DEVICE);
++		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr)) {
++			if (--lp->tx_bd_tail < 0)
++				lp->tx_bd_tail = TX_BD_NUM - 1;
++			cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
++			while (--ii >= 0) {
++				--frag;
++				dma_unmap_single(ndev->dev.parent,
++						 be32_to_cpu(cur_p->phys),
++						 skb_frag_size(frag),
++						 DMA_TO_DEVICE);
++				if (--lp->tx_bd_tail < 0)
++					lp->tx_bd_tail = TX_BD_NUM - 1;
++				cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
++			}
++			dma_unmap_single(ndev->dev.parent,
++					 be32_to_cpu(cur_p->phys),
++					 skb_headlen(skb), DMA_TO_DEVICE);
++			return NETDEV_TX_BUSY;
++		}
+ 		cur_p->phys = cpu_to_be32(skb_dma_addr);
+ 		cur_p->len = cpu_to_be32(skb_frag_size(frag));
+ 		cur_p->app0 = 0;
 -- 
 2.20.1
 
