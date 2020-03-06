@@ -2,89 +2,99 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B68C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9326DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B20206D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:48:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583534933;
-	bh=LWpHu1r84HlOjvwG3ioOylpqLJocbQRWsXQw7XgIK0E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ipGjAKzjsgs0JYefO+Lt34/GiB3YkfLaSNQlFHvPeb7dJAx5XoETQ+Cw4R5BaRGZy
-	 zSwdPteGkU0Np9eKecQLjePXL1x0Wsij2F5sC7fppwwcf3jiVJo2EchYaTfP7/92F9
-	 krv+rhTavwqmL4EgD6ZoElhNXpLl6c7CUQpevf34=
+	by mail.kernel.org (Postfix) with ESMTP id 66E1C20705
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgCFWsw (ORCPT
+        id S1726879AbgCFWsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 17:48:52 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46490 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFWsw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 17:48:52 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h18so3854380ljl.13
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 14:48:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4+hg26NRO9oToP0fK/zLY8Uu7C+0oO/4HrjLui3AwqI=;
-        b=SCWAY/NTkr7D0TyKU1ZdmrjUWU/TXc/sJGIzi8nKRo6pLPzoXL4lN9kNM4AFizNloC
-         apWBNk+7L+MMWPV7j8eyraj7m74+ytyyvYKKmBMvAbw+rVrBa4AKbooBvexoTiU6WsiW
-         bL/i1VKBUUl9G6Gm72kdmJBIe1k2GEtTh5WF0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4+hg26NRO9oToP0fK/zLY8Uu7C+0oO/4HrjLui3AwqI=;
-        b=duE8h8pivXJbx/snywyheB2IfTFCtO7aXp6LvWt5JMnPLLSqISEKBC0ylQKoenrLCq
-         wpN+icZDAtPBqyt4ZNmMuFQKMVYph3DRnD/9TM8cJTOhPy9UexvR2CYH0emAozKWRkN2
-         CN/chATQ5Mt8bUnzMtSQVpGwhbzxb1Tn2fZIzTQLVZshuUWh+cDOo40T+Q0z3EAWblFG
-         yz28K2QXwc2YbWoU0tZxyteMFq22zX82fISEAQI7nv8f3TMi0V+5RMJscesYQUFDe7B0
-         0pUX7DEVpadFtoBUYRtT/+l9GTDhpDjcPSkrp1IvGr/+B4l3IkdFmZDoysJPGQJO9R3/
-         jtRA==
-X-Gm-Message-State: ANhLgQ2/xSo0Qt6m6x6WnigTeJiIbjEuhy4Zl2DC18EgppHGTM2dsgYL
-        GOvu2tyfgWc3JW56DLE1UzGYRYn6qwsbMg==
-X-Google-Smtp-Source: ADFU+vsYBIHcaitTV0N8xWGtUdgiJ4qEZVH44WVMCzGofAb98n61Os2vQ/iiFW387BkETrpuZag4Kg==
-X-Received: by 2002:a2e:554:: with SMTP id 81mr3233164ljf.92.1583534929731;
-        Fri, 06 Mar 2020 14:48:49 -0800 (PST)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id n200sm1299443lfa.50.2020.03.06.14.48.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2020 14:48:48 -0800 (PST)
-Received: by mail-lf1-f54.google.com with SMTP id z9so3200351lfa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 14:48:48 -0800 (PST)
-X-Received: by 2002:ac2:5203:: with SMTP id a3mr3217720lfl.152.1583534928332;
- Fri, 06 Mar 2020 14:48:48 -0800 (PST)
+        Fri, 6 Mar 2020 17:48:55 -0500
+Received: from ms.lwn.net ([45.79.88.28]:45568 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726162AbgCFWsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 17:48:54 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 2401E537;
+        Fri,  6 Mar 2020 22:48:54 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 15:48:53 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH RFC 0/2] Move media uAPI and kAPI docs to a better place
+Message-ID: <20200306154853.7d5c3165@lwn.net>
+In-Reply-To: <cover.1583316037.git.mchehab+huawei@kernel.org>
+References: <cover.1583316037.git.mchehab+huawei@kernel.org>
+Organization: LWN.net
 MIME-Version: 1.0
-References: <20200306221312.11199-1-j.neuschaefer@gmx.net>
-In-Reply-To: <20200306221312.11199-1-j.neuschaefer@gmx.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 6 Mar 2020 16:48:31 -0600
-X-Gmail-Original-Message-ID: <CAHk-=wg9yNnh-0yuM1wif_8iSRyCNVTMxwJvf58PS=S=r4Ax+g@mail.gmail.com>
-Message-ID: <CAHk-=wg9yNnh-0yuM1wif_8iSRyCNVTMxwJvf58PS=S=r4Ax+g@mail.gmail.com>
-Subject: Re: [PATCH] parse-maintainers: Mark as executable
-To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 4:13 PM Jonathan Neusch=C3=A4fer
-<j.neuschaefer@gmx.net> wrote:
->
-> This makes the script more convenient to run.
+On Wed,  4 Mar 2020 11:51:01 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-Applied directly to my tree as I was busy merging stuff anyway..
+> This is something that you always wanted: move uAPI and kAPI to
+> separate books.
 
-               Linus
+Oh goodie...Christmas is coming early this year...:)
+
+> This RFC series start doing it for the media docs.
+> 
+> For now, this is just a RFC, being only an initial step for it. I'm sending
+> it on this early stage just to rise some discussions.
+> 
+> This changeset basically moves:
+> 
+>   - the media kAPI files to be under driver-api/media;
+>   - the media uAPI files to be under userspace-api/media.
+> 
+> This version keeps including both inside Documentation/media/index.rst.
+
+The moves make sense to me.  The including part I'm not so sure about.  It
+seems kind of strange to have the structure of the rendered docs be
+different from that of the plain-text docs; it suggests that one of the two
+placements is wrong.
+
+My own choice (as you suggest later) would be to keep the structure the
+same in both domains, and to use cross-references to create paths where
+they are needed.
+
+> The driver-specific information is messy, as each file there may contain
+> either one or more of the following items:
+> 
+> 	- driver-development information;
+> 	- on a few drivers, drivers-specific uAPI.
+> 	- modprobe parameters;
+> 	- List of devices supported by each driver;
+> 
+> The last two are probably contents for the admin-guide, but not sure
+> where to place driver-specific development information. Does it
+> belong to "driver-api" book too?
+> 
+> I guess that driver-specific uAPI could fit at the userspace-api, but I
+> don't want them to be at the same place as the core media API stuff.
+> 
+> Suggestions?
+
+That is a good question.  I've wondered for a bit if we need a separate
+hardware manual for documentation specific to a given device.  In cases
+like this, it could perhaps consist mostly of cross-references to the
+relevant documentation in the other manuals.  It's hard to argue, for
+example, that "modprobe parameters" should be somewhere other than with all
+the other command-line parameters...
+
+Thanks,
+
+jon
