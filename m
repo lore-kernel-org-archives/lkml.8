@@ -2,111 +2,415 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB49C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1E3C3F2DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0BA2146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5482146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:28:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WnxtFWEC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hpxLlEnq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgCFE2d (ORCPT
+        id S1726998AbgCFE2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 23:28:33 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56951 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbgCFE2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 23:28:32 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48YZP85T9xz9sPK;
-        Fri,  6 Mar 2020 15:28:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583468910;
-        bh=UfePkVSA84l8BSsUoSZSfTBbZjB/agquaNc0EpI8Bh0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WnxtFWECUD9o3ICzg/s7w6PxdSE8qLxNUc49BEGy4JF1Tfj9pDBX0Ruk+oNN/26fL
-         qL3+gSM8l6OVnx4CUG8O+9eFOzAGAQEnIZoMnEZff3gEZVTN1iU9qqiTyMFob5Ue/P
-         DFo8W3gJYC8MAW8eyzS8YIAqZT4wxepf1OZm3lFX9iS9E4b96mWZiMO8gWzurRoDPy
-         028FfqAH1cWWPBTewhExccGvwcekxwE8bneiDHpTVugUQNK8SeTVSUTXEGmlOIuStM
-         RFz4i6dY2l7NyzP4jEJzfd5Nwa2f/2xLmx1FFy9fQJSQE8EYTpIxs3r0OcnHE26gGp
-         cPEmwfMHketow==
-Date:   Fri, 6 Mar 2020 15:28:27 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: linux-next: build warning after merge of the nvmem tree
-Message-ID: <20200306152827.6fe507bd@canb.auug.org.au>
+        Thu, 5 Mar 2020 23:28:42 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:40121 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbgCFE2j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 23:28:39 -0500
+Received: by mail-yw1-f68.google.com with SMTP id t192so1078359ywe.7
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 20:28:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lsl9uUeVXVFev0pr72IiS4wSx+T+dt+j5N8Q5snoWc4=;
+        b=hpxLlEnqh3cBFo/xoDkNmA/6zyHRuaVTMieAIMgbR7/YU6RoRqp9ErFcWegiVlWSYT
+         gaSDvjjl2o7FmJpZ1OoeqIqivqROGdBrjsd8lLUrJtwKNQpmseLeEn7Yn9x0gQduKoae
+         g1dEC8sId362ONpMrYixof82EPoSW3SqlgJxRq5Y5iCeEM9Au7xuxP8oJV1Mx9u2JOkK
+         Pi0IcXyIgD7i5eYJiPVR4M10vJGAbE1v3JwqA6cx8J/kyX9K+DnlnTsffwAS/A9Unzy+
+         Rr11prIMbuTUMiNjgcRSdEFFUkIXvv7cDAyz8uGaKt99PDNOHt238m7g7fy87OW1VmJP
+         PYDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lsl9uUeVXVFev0pr72IiS4wSx+T+dt+j5N8Q5snoWc4=;
+        b=XJhY9BIkmgbMxgt+cIJle5qgcRZWybNz+3MDHaQmBowVwn2x5Kp/BQX5f0qbQWQq7k
+         qIVSmtADNxzvP6Zj3WPUinOg5qss4WxO0DSXc4/db3whMnB48FNc0Sk6PTAEqB8CYVUH
+         0/9exX0lG1J5xOu7RSdJK94F2i3bn3LvvVOwwlEV2IqSZQ1/rjkVieQAbpb7CK67yD1K
+         UhcyGKWOaeU/lCkcByKfbtXj4capnjvrDc4quNxR53HEconfMWjldKfFv8iTnIwGnweX
+         kawFFTSfTjI7D0O8MDWFjcbFmUdZcDong57LVasy6OBObDyJqALjA5Nss0HfcYHZCPOJ
+         VrjA==
+X-Gm-Message-State: ANhLgQ2P9aeqr+7NHI1N+7POW+W7++F9B7UO1WauuEoelnpuSdKkIoxR
+        Y1weG9scgOr2DQjpMabr8PSArA==
+X-Google-Smtp-Source: ADFU+vuRYxZOZPphsdvOnDb45ug/CKm8ATDPH49kPWOEMK/i/l1B0Dp71eC1VbLDKPxgRxBTLDrE3w==
+X-Received: by 2002:a25:3255:: with SMTP id y82mr1799048yby.208.1583468918320;
+        Thu, 05 Mar 2020 20:28:38 -0800 (PST)
+Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id x2sm12581836ywa.32.2020.03.05.20.28.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 20:28:37 -0800 (PST)
+From:   Alex Elder <elder@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        David Miller <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Andy Gross <agross@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Dan Williams <dcbw@redhat.com>,
+        Evan Green <evgreen@google.com>,
+        Eric Caruso <ejcaruso@google.com>,
+        Susheel Yadav Yadagiri <syadagir@codeaurora.org>,
+        Chaitanya Pratapa <cpratapa@codeaurora.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Siddharth Gupta <sidgup@codeaurora.org>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 01/17] remoteproc: add IPA notification to q6v5 driver
+Date:   Thu,  5 Mar 2020 22:28:15 -0600
+Message-Id: <20200306042831.17827-2-elder@linaro.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200306042831.17827-1-elder@linaro.org>
+References: <20200306042831.17827-1-elder@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/fLXQ7CvesYNnDtKNE+XJ+hD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/fLXQ7CvesYNnDtKNE+XJ+hD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Set up a subdev in the q6v5 modem remoteproc driver that generates
+event notifications for the IPA driver to use for initialization and
+recovery following a modem shutdown or crash.
 
-Hi all,
+A pair of new functions provides a way for the IPA driver to register
+and deregister a notification callback function that will be called
+whenever modem events (about to boot, running, about to shut down,
+etc.) occur.  A void pointer value (provided by the IPA driver at
+registration time) and an event type are supplied to the callback
+function.
 
-After merging the nvmem tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+One event, MODEM_REMOVING, is signaled whenever the q6v5 driver is
+about to remove the notification subdevice.  It requires the IPA
+driver de-register its callback.
 
-In file included from include/linux/clk.h:13,
-                 from drivers/nvmem/jz4780-efuse.c:25:
-drivers/nvmem/jz4780-efuse.c: In function 'jz4780_efuse_read':
-include/linux/kernel.h:842:29: warning: comparison of distinct pointer type=
-s lacks a cast
-  842 |   (!!(sizeof((typeof(x) *)1 =3D=3D (typeof(y) *)1)))
-      |                             ^~
-include/linux/kernel.h:856:4: note: in expansion of macro '__typecheck'
-  856 |   (__typecheck(x, y) && __no_side_effects(x, y))
-      |    ^~~~~~~~~~~
-include/linux/kernel.h:866:24: note: in expansion of macro '__safe_cmp'
-  866 |  __builtin_choose_expr(__safe_cmp(x, y), \
-      |                        ^~~~~~~~~~
-include/linux/kernel.h:875:19: note: in expansion of macro '__careful_cmp'
-  875 | #define min(x, y) __careful_cmp(x, y, <)
-      |                   ^~~~~~~~~~~~~
-drivers/nvmem/jz4780-efuse.c:76:24: note: in expansion of macro 'min'
-   76 |   unsigned int chunk =3D min(bytes, (start + JZ_EFU_READ_SIZE)
-      |                        ^~~
+This sub-device is only used by the modem subsystem (MSS) driver,
+so the code that adds the new subdev and allows registration and
+deregistration of the notifier is found in "qcom_q6v6_mss.c".
 
-Introduced by commit
+Signed-off-by: Alex Elder <elder@linaro.org>
+---
+ drivers/remoteproc/Kconfig                    |  6 ++
+ drivers/remoteproc/Makefile                   |  1 +
+ drivers/remoteproc/qcom_q6v5_ipa_notify.c     | 85 +++++++++++++++++++
+ drivers/remoteproc/qcom_q6v5_mss.c            | 38 +++++++++
+ .../linux/remoteproc/qcom_q6v5_ipa_notify.h   | 82 ++++++++++++++++++
+ 5 files changed, 212 insertions(+)
+ create mode 100644 drivers/remoteproc/qcom_q6v5_ipa_notify.c
+ create mode 100644 include/linux/remoteproc/qcom_q6v5_ipa_notify.h
 
-  50a09dfd394a ("nvmem: add driver for JZ4780 efuse")
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index de3862c15fcc..56084635dd63 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -167,6 +167,12 @@ config QCOM_Q6V5_WCSS
+ 	  Say y here to support the Qualcomm Peripheral Image Loader for the
+ 	  Hexagon V5 based WCSS remote processors.
+ 
++config QCOM_Q6V5_IPA_NOTIFY
++	tristate
++	depends on QCOM_IPA
++	depends on QCOM_Q6V5_MSS
++	default QCOM_IPA
++
+ config QCOM_SYSMON
+ 	tristate "Qualcomm sysmon driver"
+ 	depends on RPMSG
+diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+index e30a1b15fbac..0effd3825035 100644
+--- a/drivers/remoteproc/Makefile
++++ b/drivers/remoteproc/Makefile
+@@ -21,6 +21,7 @@ obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
+ obj-$(CONFIG_QCOM_Q6V5_MSS)		+= qcom_q6v5_mss.o
+ obj-$(CONFIG_QCOM_Q6V5_PAS)		+= qcom_q6v5_pas.o
+ obj-$(CONFIG_QCOM_Q6V5_WCSS)		+= qcom_q6v5_wcss.o
++obj-$(CONFIG_QCOM_Q6V5_IPA_NOTIFY)	+= qcom_q6v5_ipa_notify.o
+ obj-$(CONFIG_QCOM_SYSMON)		+= qcom_sysmon.o
+ obj-$(CONFIG_QCOM_WCNSS_PIL)		+= qcom_wcnss_pil.o
+ qcom_wcnss_pil-y			+= qcom_wcnss.o
+diff --git a/drivers/remoteproc/qcom_q6v5_ipa_notify.c b/drivers/remoteproc/qcom_q6v5_ipa_notify.c
+new file mode 100644
+index 000000000000..e1c10a128bfd
+--- /dev/null
++++ b/drivers/remoteproc/qcom_q6v5_ipa_notify.c
+@@ -0,0 +1,85 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Qualcomm IPA notification subdev support
++ *
++ * Copyright (C) 2019 Linaro Ltd.
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/remoteproc.h>
++#include <linux/remoteproc/qcom_q6v5_ipa_notify.h>
++
++static void
++ipa_notify_common(struct rproc_subdev *subdev, enum qcom_rproc_event event)
++{
++	struct qcom_rproc_ipa_notify *ipa_notify;
++	qcom_ipa_notify_t notify;
++
++	ipa_notify = container_of(subdev, struct qcom_rproc_ipa_notify, subdev);
++	notify = ipa_notify->notify;
++	if (notify)
++		notify(ipa_notify->data, event);
++}
++
++static int ipa_notify_prepare(struct rproc_subdev *subdev)
++{
++	ipa_notify_common(subdev, MODEM_STARTING);
++
++	return 0;
++}
++
++static int ipa_notify_start(struct rproc_subdev *subdev)
++{
++	ipa_notify_common(subdev, MODEM_RUNNING);
++
++	return 0;
++}
++
++static void ipa_notify_stop(struct rproc_subdev *subdev, bool crashed)
++
++{
++	ipa_notify_common(subdev, crashed ? MODEM_CRASHED : MODEM_STOPPING);
++}
++
++static void ipa_notify_unprepare(struct rproc_subdev *subdev)
++{
++	ipa_notify_common(subdev, MODEM_OFFLINE);
++}
++
++static void ipa_notify_removing(struct rproc_subdev *subdev)
++{
++	ipa_notify_common(subdev, MODEM_REMOVING);
++}
++
++/* Register the IPA notification subdevice with the Q6V5 MSS remoteproc */
++void qcom_add_ipa_notify_subdev(struct rproc *rproc,
++		struct qcom_rproc_ipa_notify *ipa_notify)
++{
++	ipa_notify->notify = NULL;
++	ipa_notify->data = NULL;
++	ipa_notify->subdev.prepare = ipa_notify_prepare;
++	ipa_notify->subdev.start = ipa_notify_start;
++	ipa_notify->subdev.stop = ipa_notify_stop;
++	ipa_notify->subdev.unprepare = ipa_notify_unprepare;
++
++	rproc_add_subdev(rproc, &ipa_notify->subdev);
++}
++EXPORT_SYMBOL_GPL(qcom_add_ipa_notify_subdev);
++
++/* Remove the IPA notification subdevice */
++void qcom_remove_ipa_notify_subdev(struct rproc *rproc,
++		struct qcom_rproc_ipa_notify *ipa_notify)
++{
++	struct rproc_subdev *subdev = &ipa_notify->subdev;
++
++	ipa_notify_removing(subdev);
++
++	rproc_remove_subdev(rproc, subdev);
++	ipa_notify->notify = NULL;	/* Make it obvious */
++}
++EXPORT_SYMBOL_GPL(qcom_remove_ipa_notify_subdev);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Qualcomm IPA notification remoteproc subdev");
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index a1cc9cbe038f..f9ccce76e44b 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -22,6 +22,7 @@
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/remoteproc.h>
++#include "linux/remoteproc/qcom_q6v5_ipa_notify.h"
+ #include <linux/reset.h>
+ #include <linux/soc/qcom/mdt_loader.h>
+ #include <linux/iopoll.h>
+@@ -201,6 +202,7 @@ struct q6v5 {
+ 	struct qcom_rproc_glink glink_subdev;
+ 	struct qcom_rproc_subdev smd_subdev;
+ 	struct qcom_rproc_ssr ssr_subdev;
++	struct qcom_rproc_ipa_notify ipa_notify_subdev;
+ 	struct qcom_sysmon *sysmon;
+ 	bool need_mem_protection;
+ 	bool has_alt_reset;
+@@ -1540,6 +1542,39 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
+ 	return 0;
+ }
+ 
++#if IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY)
++
++/* Register IPA notification function */
++int qcom_register_ipa_notify(struct rproc *rproc, qcom_ipa_notify_t notify,
++			     void *data)
++{
++	struct qcom_rproc_ipa_notify *ipa_notify;
++	struct q6v5 *qproc = rproc->priv;
++
++	if (!notify)
++		return -EINVAL;
++
++	ipa_notify = &qproc->ipa_notify_subdev;
++	if (ipa_notify->notify)
++		return -EBUSY;
++
++	ipa_notify->notify = notify;
++	ipa_notify->data = data;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(qcom_register_ipa_notify);
++
++/* Deregister IPA notification function */
++void qcom_deregister_ipa_notify(struct rproc *rproc)
++{
++	struct q6v5 *qproc = rproc->priv;
++
++	qproc->ipa_notify_subdev.notify = NULL;
++}
++EXPORT_SYMBOL_GPL(qcom_deregister_ipa_notify);
++#endif /* !IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY) */
++
+ static int q6v5_probe(struct platform_device *pdev)
+ {
+ 	const struct rproc_hexagon_res *desc;
+@@ -1664,6 +1699,7 @@ static int q6v5_probe(struct platform_device *pdev)
+ 	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
+ 	qcom_add_smd_subdev(rproc, &qproc->smd_subdev);
+ 	qcom_add_ssr_subdev(rproc, &qproc->ssr_subdev, "mpss");
++	qcom_add_ipa_notify_subdev(rproc, &qproc->ipa_notify_subdev);
+ 	qproc->sysmon = qcom_add_sysmon_subdev(rproc, "modem", 0x12);
+ 	if (IS_ERR(qproc->sysmon)) {
+ 		ret = PTR_ERR(qproc->sysmon);
+@@ -1677,6 +1713,7 @@ static int q6v5_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ detach_proxy_pds:
++	qcom_remove_ipa_notify_subdev(qproc->rproc, &qproc->ipa_notify_subdev);
+ 	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
+ detach_active_pds:
+ 	q6v5_pds_detach(qproc, qproc->active_pds, qproc->active_pd_count);
+@@ -1693,6 +1730,7 @@ static int q6v5_remove(struct platform_device *pdev)
+ 	rproc_del(qproc->rproc);
+ 
+ 	qcom_remove_sysmon_subdev(qproc->sysmon);
++	qcom_remove_ipa_notify_subdev(qproc->rproc, &qproc->ipa_notify_subdev);
+ 	qcom_remove_glink_subdev(qproc->rproc, &qproc->glink_subdev);
+ 	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
+ 	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
+diff --git a/include/linux/remoteproc/qcom_q6v5_ipa_notify.h b/include/linux/remoteproc/qcom_q6v5_ipa_notify.h
+new file mode 100644
+index 000000000000..0820edc0ab7d
+--- /dev/null
++++ b/include/linux/remoteproc/qcom_q6v5_ipa_notify.h
+@@ -0,0 +1,82 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (C) 2019 Linaro Ltd. */
++
++#ifndef __QCOM_Q6V5_IPA_NOTIFY_H__
++#define __QCOM_Q6V5_IPA_NOTIFY_H__
++
++#if IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY)
++
++#include <linux/remoteproc.h>
++
++enum qcom_rproc_event {
++	MODEM_STARTING	= 0,	/* Modem is about to be started */
++	MODEM_RUNNING	= 1,	/* Startup complete; modem is operational */
++	MODEM_STOPPING	= 2,	/* Modem is about to shut down */
++	MODEM_CRASHED	= 3,	/* Modem has crashed (implies stopping) */
++	MODEM_OFFLINE	= 4,	/* Modem is now offline */
++	MODEM_REMOVING	= 5,	/* Modem is about to be removed */
++};
++
++typedef void (*qcom_ipa_notify_t)(void *data, enum qcom_rproc_event event);
++
++struct qcom_rproc_ipa_notify {
++	struct rproc_subdev subdev;
++
++	qcom_ipa_notify_t notify;
++	void *data;
++};
++
++/**
++ * qcom_add_ipa_notify_subdev() - Register IPA notification subdevice
++ * @rproc:	rproc handle
++ * @ipa_notify:	IPA notification subdevice handle
++ *
++ * Register the @ipa_notify subdevice with the @rproc so modem events
++ * can be sent to IPA when they occur.
++ *
++ * This is defined in "qcom_q6v5_ipa_notify.c".
++ */
++void qcom_add_ipa_notify_subdev(struct rproc *rproc,
++		struct qcom_rproc_ipa_notify *ipa_notify);
++
++/**
++ * qcom_remove_ipa_notify_subdev() - Remove IPA SSR subdevice
++ * @rproc:	rproc handle
++ * @ipa_notify:	IPA notification subdevice handle
++ *
++ * This is defined in "qcom_q6v5_ipa_notify.c".
++ */
++void qcom_remove_ipa_notify_subdev(struct rproc *rproc,
++		struct qcom_rproc_ipa_notify *ipa_notify);
++
++/**
++ * qcom_register_ipa_notify() - Register IPA notification function
++ * @rproc:	Remote processor handle
++ * @notify:	Non-null IPA notification callback function pointer
++ * @data:	Data supplied to IPA notification callback function
++ *
++ * @Return: 0 if successful, or a negative error code otherwise
++ *
++ * This is defined in "qcom_q6v5_mss.c".
++ */
++int qcom_register_ipa_notify(struct rproc *rproc, qcom_ipa_notify_t notify,
++			     void *data);
++/**
++ * qcom_deregister_ipa_notify() - Deregister IPA notification function
++ * @rproc:	Remote processor handle
++ *
++ * This is defined in "qcom_q6v5_mss.c".
++ */
++void qcom_deregister_ipa_notify(struct rproc *rproc);
++
++#else /* !IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY) */
++
++struct qcom_rproc_ipa_notify { /* empty */ };
++
++#define qcom_add_ipa_notify_subdev(rproc, ipa_notify)		/* no-op */
++#define qcom_remove_ipa_notify_subdev(rproc, ipa_notify)	/* no-op */
++
++#endif /* !IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY) */
++
++#endif /* !__QCOM_Q6V5_IPA_NOTIFY_H__ */
+-- 
+2.20.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/fLXQ7CvesYNnDtKNE+XJ+hD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5h0WsACgkQAVBC80lX
-0GyV+wgAg+FiaFMEaZ35Qm1UwGX7SGVkaLig4Y96xXyXWnDGwhyO5jpox/fGKISb
-FprHwdTrQ1eR5Shm6CIeurNXI1toxGH1xTMTGOEjwYPtUSHVWjomhx78S+amJjad
-9WOGuyWuYMLorlccuWPqxua7GhrKTLw+plUltqY+BZlGKGnWLyGupExg8+LyfM2R
-/VKTeqQfBQQz2DP2RBqDA0T0SMafVHbA6fxF5HX4ViM1EaJcrJQSzaTNKycApFC7
-DimT4fWkVnQhGBpTveqsDCBijQY4kM7dAQVoo9QqbInvlk7/jh5cjRCi5oOP6YwJ
-5uMFeKd+nLFXmBUo+No5Dc+H1qLEWw==
-=RUKW
------END PGP SIGNATURE-----
-
---Sig_/fLXQ7CvesYNnDtKNE+XJ+hD--
