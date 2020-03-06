@@ -2,146 +2,111 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4487BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74EAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2886D2084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD112084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:17:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UIreHpWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCFQP6 (ORCPT
+        id S1726646AbgCFQRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:15:58 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:44420 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726171AbgCFQP5 (ORCPT
+        Fri, 6 Mar 2020 11:17:31 -0500
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:50733 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgCFQRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:15:57 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026GF32T021743;
-        Fri, 6 Mar 2020 11:15:56 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2yfnray0m7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 11:15:55 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 026GFscX039533
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 6 Mar 2020 11:15:54 -0500
-Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 6 Mar 2020 08:15:53 -0800
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 6 Mar 2020 08:15:19 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 6 Mar 2020 08:15:52 -0800
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 026GFmB9003555;
-        Fri, 6 Mar 2020 11:15:50 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <gregkh@linuxfoundation.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 2/2] uio: uio_pdrv_genirq: use new devm_uio_register_device() function
-Date:   Fri, 6 Mar 2020 18:18:53 +0200
-Message-ID: <20200306161853.25368-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200306161853.25368-1-alexandru.ardelean@analog.com>
-References: <20200306161853.25368-1-alexandru.ardelean@analog.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-06_05:2020-03-06,2020-03-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=545 bulkscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- malwarescore=0 clxscore=1015 spamscore=0 phishscore=0 mlxscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003060110
+        Fri, 6 Mar 2020 11:17:31 -0500
+Received: by mail-yw1-f74.google.com with SMTP id w197so3972404ywd.17
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 08:17:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=qIlBFT3Kt2tcWYPKabCBDwELz8TNxUv98gWkjXaoCOk=;
+        b=UIreHpWH6UQJs0j9K14EpJ0gqWwjNSF+b7PrYmigUOlohSwOL0kex8Xz7exblAYi2G
+         xcaFZnkuEQJ7jJ2SLpI1mfvF84qTbBbOghDHJhukDjLA8mg1ejNE6vWoROyFLkpC5D0O
+         GTx5M7VPnQgYxHocDwt6xCabK3Hv5uYXJVLv9hhqRKWlvvn3UTQm6JOqArgs4HSaYSRp
+         O6MGIV1MaE5xDhMiTX6xUF+5wYwF9MJNoe7nGW/srPKExRduR1QBwdQnEIzUbRPSTuLK
+         O2D46RZ2EVBZ2oEzSYna61xXhUVX2Ix2zzXCpuNB+xC/rennRT2M7F8Gn2hpFlJHL89Y
+         u8dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=qIlBFT3Kt2tcWYPKabCBDwELz8TNxUv98gWkjXaoCOk=;
+        b=t324EtD7u6s/k1/JPv4UjWtY4waMh9Z8Pu4RU6wPca9eTRDdgJyySVVgIP9WZasmG/
+         iBPR2yGWJbxSAI9CfR8R6sAKDcnkr1O3kMjhlcuw9uNDCvxcUZWOHH88OCszM/RHifDL
+         NmHmoVn2Netmsfcx5E0OS50Fwl2ZNCt5ypJUHJ23bUrLK++oBRIrKz3Cqj0qtuVhY/X8
+         Fo6o5f8K5ddcEmfGvGF3H0vuHPYHMbo1h2ShJMns0e9RuJ6KD6WUuzPu8ankdKRzKcjF
+         2kKk6PZY3esaZkoF43OeSCRHmM2jxw2GDjxWb1WTIGfyZ4JtHSQbwj7deNM9c1y+mbj/
+         PiEQ==
+X-Gm-Message-State: ANhLgQ2f669gZmn4RumwV6KYSF7Y5rZwUhziYTU2IIyI8JEVpwhwyLxU
+        NRMMi5MlgVi0k9emZn+hGcb6wDuT0w==
+X-Google-Smtp-Source: ADFU+vs6IS/KZfvFYayoFc3jA/lDIYq1RFJQe6OJepWFF6PKB2MkSFTognNkdS4kUdogR9vaeTPad1QfiA==
+X-Received: by 2002:a25:3dc4:: with SMTP id k187mr4535109yba.82.1583511448778;
+ Fri, 06 Mar 2020 08:17:28 -0800 (PST)
+Date:   Fri,  6 Mar 2020 17:17:18 +0100
+Message-Id: <20200306161718.50702-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH] afs: Use kfree_rcu() instead of casting kfree() to rcu_callback_t
+From:   Jann Horn <jannh@google.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change makes use of the new devm_uio_register_device() initializer.
-This cleans up the exit path quite nicely, and removes the remove function
-of the driver.
+afs_put_addrlist() casts kfree() to rcu_callback_t. Apart from being wrong
+in theory, this might also blow up when people start enforcing function
+types via compiler instrumentation, and it means the rcu_head has to be
+first in struct afs_addr_list.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Use kfree_rcu() instead, it's simpler and more correct.
+
+Signed-off-by: Jann Horn <jannh@google.com>
 ---
- drivers/uio/uio_pdrv_genirq.c | 34 ++++++++++++++--------------------
- 1 file changed, 14 insertions(+), 20 deletions(-)
+compile-tested only
 
-diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
-index fc25ce90da3b..ae319ef3a832 100644
---- a/drivers/uio/uio_pdrv_genirq.c
-+++ b/drivers/uio/uio_pdrv_genirq.c
-@@ -99,6 +99,13 @@ static int uio_pdrv_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
- 	return 0;
- }
- 
-+static void uio_pdrv_genirq_cleanup(void *data)
-+{
-+	struct device *dev = data;
-+
-+	pm_runtime_disable(dev);
-+}
-+
- static int uio_pdrv_genirq_probe(struct platform_device *pdev)
+ fs/afs/addr_list.c | 2 +-
+ fs/afs/internal.h  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/afs/addr_list.c b/fs/afs/addr_list.c
+index df415c05939e..de1ae0bead3b 100644
+--- a/fs/afs/addr_list.c
++++ b/fs/afs/addr_list.c
+@@ -19,7 +19,7 @@
+ void afs_put_addrlist(struct afs_addr_list *alist)
  {
- 	struct uio_info *uioinfo = dev_get_platdata(&pdev->dev);
-@@ -213,28 +220,16 @@ static int uio_pdrv_genirq_probe(struct platform_device *pdev)
- 	 */
- 	pm_runtime_enable(&pdev->dev);
- 
--	ret = uio_register_device(&pdev->dev, priv->uioinfo);
--	if (ret) {
--		dev_err(&pdev->dev, "unable to register uio device\n");
--		pm_runtime_disable(&pdev->dev);
-+	ret = devm_add_action_or_reset(&pdev->dev, uio_pdrv_genirq_cleanup,
-+				       &pdev->dev);
-+	if (ret)
- 		return ret;
--	}
--
--	platform_set_drvdata(pdev, priv);
--	return 0;
--}
--
--static int uio_pdrv_genirq_remove(struct platform_device *pdev)
--{
--	struct uio_pdrv_genirq_platdata *priv = platform_get_drvdata(pdev);
- 
--	uio_unregister_device(priv->uioinfo);
--	pm_runtime_disable(&pdev->dev);
--
--	priv->uioinfo->handler = NULL;
--	priv->uioinfo->irqcontrol = NULL;
-+	ret = devm_uio_register_device(&pdev->dev, priv->uioinfo);
-+	if (ret)
-+		dev_err(&pdev->dev, "unable to register uio device\n");
- 
--	return 0;
-+	return ret;
+ 	if (alist && refcount_dec_and_test(&alist->usage))
+-		call_rcu(&alist->rcu, (rcu_callback_t)kfree);
++		kfree_rcu(alist, rcu);
  }
  
- static int uio_pdrv_genirq_runtime_nop(struct device *dev)
-@@ -271,7 +266,6 @@ MODULE_PARM_DESC(of_id, "Openfirmware id of the device to be handled by uio");
- 
- static struct platform_driver uio_pdrv_genirq = {
- 	.probe = uio_pdrv_genirq_probe,
--	.remove = uio_pdrv_genirq_remove,
- 	.driver = {
- 		.name = DRIVER_NAME,
- 		.pm = &uio_pdrv_genirq_dev_pm_ops,
+ /*
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 1d81fc4c3058..35f951ac296f 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -81,7 +81,7 @@ enum afs_call_state {
+  * List of server addresses.
+  */
+ struct afs_addr_list {
+-	struct rcu_head		rcu;		/* Must be first */
++	struct rcu_head		rcu;
+ 	refcount_t		usage;
+ 	u32			version;	/* Version */
+ 	unsigned char		max_addrs;
+
+base-commit: aeb542a1b5c507ea117d21c3e3e012ba16f065ac
 -- 
-2.20.1
+2.25.0.265.gbab2e86ba0-goog
 
