@@ -2,145 +2,109 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B710C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10E3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C09320709
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:55:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kj36zf9h"
+	by mail.kernel.org (Postfix) with ESMTP id CBAC2206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgCFUz0 (ORCPT
+        id S1726958AbgCFU4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:55:26 -0500
-Received: from mail.efficios.com ([167.114.26.124]:42020 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFUzZ (ORCPT
+        Fri, 6 Mar 2020 15:56:30 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:39290 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgCFU43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:55:25 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id AA34A2690C5;
-        Fri,  6 Mar 2020 15:55:24 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id gEnsaX2owVTb; Fri,  6 Mar 2020 15:55:24 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 36502269214;
-        Fri,  6 Mar 2020 15:55:24 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 36502269214
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1583528124;
-        bh=nX7EnnV+jSctgcR9sDVdbgvtem6AIOc0p1CI0k+DUNE=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=kj36zf9htuTEQt1L3szwMd8vVQ+Ypy+N15CL9GeUykc6RcWINym08BLMu1V0l8oIm
-         aAY7f7v3wAjBsnp4zF+wcLTRhITNCkw/bkyo87Fu3w81M/k66wwe9R7i7etUNLn0p7
-         N83VzTGM3ZJnG/nB9nMW4WmK603KOoB1lodruNOPr2O3jm7zQngkz6pfGBxvz0V50O
-         rPy4jjzP7rqQyaCsFdaLQMXZ+oBCpCEI4swmA5WzI7edaK12OW5tcubuPnvK0nAOGS
-         PJGT4ZD7Zatd1LFFYWHD1DbRUGdlExRgFSddVsfGh0c82KS2Hg+Ji4Pq9y9hp/83DW
-         y7QfYrOA5HvpA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id tBQnlFexS270; Fri,  6 Mar 2020 15:55:24 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 25D18268DEE;
-        Fri,  6 Mar 2020 15:55:24 -0500 (EST)
-Date:   Fri, 6 Mar 2020 15:55:24 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     rostedt <rostedt@goodmis.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        dan carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Message-ID: <65796626.20397.1583528124078.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200306154556.6a829484@gandalf.local.home>
-References: <20200221133416.777099322@infradead.org> <20200306104335.GF3348@worktop.programming.kicks-ass.net> <20200306113135.GA8787@worktop.programming.kicks-ass.net> <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com> <1896740806.20220.1583510668164.JavaMail.zimbra@efficios.com> <20200306125500.6aa75c0d@gandalf.local.home> <609624365.20355.1583526166349.JavaMail.zimbra@efficios.com> <20200306154556.6a829484@gandalf.local.home>
-Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for
- _rcuidle tracepoints (again)
+        Fri, 6 Mar 2020 15:56:29 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jAK14-006Uhe-Ur; Fri, 06 Mar 2020 20:56:19 +0000
+Date:   Fri, 6 Mar 2020 20:56:18 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200306205618.GF23230@ZenIV.linux.org.uk>
+References: <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <20200306162549.GA28467@miu.piliscsaba.redhat.com>
+ <20200306194322.GY23230@ZenIV.linux.org.uk>
+ <20200306195823.GZ23230@ZenIV.linux.org.uk>
+ <20200306200522.GA23230@ZenIV.linux.org.uk>
+ <20200306203705.GB23230@ZenIV.linux.org.uk>
+ <20200306203844.GC23230@ZenIV.linux.org.uk>
+ <20200306204523.GD23230@ZenIV.linux.org.uk>
+ <20200306204926.GE23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
-Thread-Topic: tracing: Remove regular RCU context for _rcuidle tracepoints (again)
-Thread-Index: O+2BxyZ+gYfOWDMsabZK0oJx9bG+6Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306204926.GE23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Mar 6, 2020, at 3:45 PM, rostedt rostedt@goodmis.org wrote:
-
-> On Fri, 6 Mar 2020 15:22:46 -0500 (EST)
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Fri, Mar 06, 2020 at 08:49:26PM +0000, Al Viro wrote:
+> On Fri, Mar 06, 2020 at 08:45:23PM +0000, Al Viro wrote:
+> > On Fri, Mar 06, 2020 at 08:38:44PM +0000, Al Viro wrote:
+> > > On Fri, Mar 06, 2020 at 08:37:05PM +0000, Al Viro wrote:
+> > > 
+> > > > You are misreading mntput_no_expire(), BTW - your get_mount() can
+> > > > bloody well race with umount(2), hitting the moment when we are done
+> > > > figuring out whether it's busy but hadn't cleaned ->mnt_ns (let alone
+> > > > set MNT_DOOMED) yet.  If somebody calls umount(2) on a filesystem that
+> > > > is not mounted anywhere else, they are not supposed to see the sucker
+> > > > return 0 until the filesystem is shut down.  You break that.
+> > > 
+> > > While we are at it, d_alloc_parallel() requires i_rwsem on parent held
+> > > at least shared.
+> > 
+> > Egads...  Let me see if I got it right - you are providing procfs symlinks
+> > to objects on the internal mount of that thing.  And those objects happen
+> > to be directories, so one can get to their parent that way.  Or am I misreading
+> > that thing?
 > 
->> I agree with the overall approach. Just a bit of nitpicking on the API:
->> 
->> I understand that the "prio" argument is a separate argument because it can take
->> many values. However, "rcu" is just a boolean, so I wonder if we should not
->> rather
->> introduce a "int flags" with a bitmask enum, e.g.
-> 
-> I thought about this approach, but thought it was a bit overkill. As the
-> kernel doesn't have an internal API, I figured we can switch this over to
-> flags when we get another flag to add. Unless you can think of one in the
-> near future.
+> IDGI.  You have (in your lookup) kstrtoul, followed by snprintf, followed
+> by strcmp and WARN_ON() in case of mismatch?  Is there any point in having
+> stat(2) on "00" spew into syslog?  Confused...
 
-The additional feature I have in mind for near future would be to register
-a probe which can take a page fault to a "sleepable" tracepoint. This would
-require preemption to be enabled and use of SRCU.
-
-We can always change things when we get there.
-
-Thanks,
-
-Mathieu
-
-> 
->> 
->> int tracepoint_probe_register_prio_flags(struct tracepoint *tp, void *probe,
->>                                          void *data, int prio, int flags)
->> 
->> where flags would be populated through OR between labels of this enum:
->> 
->> enum tracepoint_flags {
->>   TRACEPOINT_FLAG_RCU = (1U << 0),
->> };
->> 
->> We can then be future-proof for additional flags without ending up calling e.g.
->> 
->> tracepoint_probe_register_featurea_featureb_featurec(tp, probe, data, 0, 1, 0,
->> 1)
-> 
-> No, as soon as there is another boolean to add, the rcu version would be
-> switched to flags. I even thought about making the rcu and prio into one,
-> and change prio to be a SHRT_MAX max, and have the other 16 bits be for
-> flags.
-> 
-> -- Steve
-> 
-> 
->> 
-> > which seems rather error-prone and less readable than a set of flags.
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+AFAICS, refcounting in there cannot be right:
++static struct dentry *mountfs_lookup(struct inode *dir, struct dentry *dentry,
++                                    unsigned int flags)
++{
++       struct mountfs_entry *entry = dir->i_private;
++       int i = 0;
++               
++       if (entry) {
++               for (i = 0; i < ARRAY_SIZE(mountfs_attrs); i++)
++                       if (strcmp(mountfs_attrs[i], dentry->d_name.name) == 0)
++                               break;
++               if (i == ARRAY_SIZE(mountfs_attrs))
++                       return ERR_PTR(-ENOMEM);
++               i++;
++       } else {
++               entry = mountfs_get_entry(dentry->d_name.name);
++               if (!entry)
++                       return ERR_PTR(-ENOENT);
++       }
++                          
++       return mountfs_lookup_entry(dentry, entry, i);
++}
+ends up consuming a reference in mountfs_lookup_entry() (at the very least,
+drops it in case of inode allocation hitting OOM) and nothing in the
+that loop in mountfs_lookup() appears to do a matching reference grab.
