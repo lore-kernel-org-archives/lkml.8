@@ -2,125 +2,163 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E16DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B5EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55CBE2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:52:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YI/lICwV"
+	by mail.kernel.org (Postfix) with ESMTP id 76E7E20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgCFEwO (ORCPT
+        id S1726811AbgCFExF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 23:52:14 -0500
-Received: from ozlabs.org ([203.11.71.1]:59643 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbgCFEwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 23:52:13 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48YZwT6J8nz9sRR;
-        Fri,  6 Mar 2020 15:52:09 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583470330;
-        bh=KXC3AaAgw0tWWpfFlcnONebvbosi/zh7zjM0fEYO3wU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YI/lICwVtIBymD95aG6pzDiy8BU2c6Uw09gA0u3Qc258hKmUPfeU0o8Zc9VzVn1x/
-         Uoom+3c0XjK8dFRTMBayuvC5A12BRw3xexaNUn6y9DvaUe8d8D3Bp7c/nLflveaCPp
-         YtasX7XSox1siXlq8lJwnDbW71bDxkS1VNvjtP7zPCKgwQRh2+xX3hwZFTT6ND6MPr
-         0aiStPyZBGCxNbqTD4hn3g7RGO7k/CX6drJE3Kzcbpd3xrjXgv3VFCX2Ak57jBgOa0
-         uDmMKZpF5rDfRBp2uEIR+PoDeBIxoRbF9SHc7jkepgC8RdXjSpHgnwLkr3umfHaj6M
-         O/rnQLpp50hvw==
-Date:   Fri, 6 Mar 2020 15:52:09 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Brian King <brking@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the scsi-mkp tree
-Message-ID: <20200306155209.34e85ab2@canb.auug.org.au>
-In-Reply-To: <5bff0f26-3b20-e240-e1b4-65af411a3a56@linux.vnet.ibm.com>
-References: <20200302133543.7052d654@canb.auug.org.au>
-        <5bff0f26-3b20-e240-e1b4-65af411a3a56@linux.vnet.ibm.com>
+        Thu, 5 Mar 2020 23:53:05 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63922 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726358AbgCFExE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 23:53:04 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0264oiqu066365;
+        Thu, 5 Mar 2020 23:52:38 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhsvbxhk3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Mar 2020 23:52:38 -0500
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0264qRB4070297;
+        Thu, 5 Mar 2020 23:52:37 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhsvbxhjq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Mar 2020 23:52:37 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0264oGbO030012;
+        Fri, 6 Mar 2020 04:52:36 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04wdc.us.ibm.com with ESMTP id 2yffk70t6a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Mar 2020 04:52:36 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0264qZKT62980478
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 6 Mar 2020 04:52:35 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 697116A047;
+        Fri,  6 Mar 2020 04:52:35 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 177716A04F;
+        Fri,  6 Mar 2020 04:52:29 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.31.186])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri,  6 Mar 2020 04:52:28 +0000 (GMT)
+Subject: Re: [PATCH v3 6/8] perf/tools: Enhance JSON/metric infrastructure to
+ handle "?"
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
+        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
+        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
+        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de
+References: <20200229094159.25573-1-kjain@linux.ibm.com>
+ <20200229094159.25573-7-kjain@linux.ibm.com> <20200302150819.GA259142@krava>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <d15a8aa6-e2d5-3edf-699a-8eda0862fd9b@linux.ibm.com>
+Date:   Fri, 6 Mar 2020 10:22:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/vAPUngZMh4Dp3uyQoC.V2fO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200302150819.GA259142@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-05_08:2020-03-05,2020-03-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=950 clxscore=1015 suspectscore=0 impostorscore=0 adultscore=0
+ spamscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/vAPUngZMh4Dp3uyQoC.V2fO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-On Mon, 2 Mar 2020 08:36:20 -0600 Brian King <brking@linux.vnet.ibm.com> wr=
-ote:
->
-> On 3/1/20 8:35 PM, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > After merging the scsi-mkp tree, today's linux-next build (powerpc
-> > ppc64_defconfig) produced this warning:
-> >=20
-> > In file included from include/uapi/linux/posix_types.h:5,
-> >                  from include/uapi/linux/types.h:14,
-> >                  from include/linux/types.h:6,
-> >                  from include/linux/list.h:5,
-> >                  from include/linux/module.h:12,
-> >                  from drivers/scsi/ibmvscsi/ibmvfc.c:10:
-> > drivers/scsi/ibmvscsi/ibmvfc.c: In function 'ibmvfc_tgt_implicit_logout=
-_and_del':
-> > include/linux/stddef.h:8:14: warning: 'return' with a value, in functio=
-n returning void [-Wreturn-type]
-> >     8 | #define NULL ((void *)0)
-> >       |              ^
-> > drivers/scsi/ibmvscsi/ibmvfc.c:3644:10: note: in expansion of macro 'NU=
-LL'
-> >  3644 |   return NULL;
-> >       |          ^~~~
-> > drivers/scsi/ibmvscsi/ibmvfc.c:3638:13: note: declared here
-> >  3638 | static void ibmvfc_tgt_implicit_logout_and_del(struct ibmvfc_ta=
-rget *tgt)
-> >       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >=20
-> > Introduced by commit
-> >=20
-> >   54b04c99d02e ("scsi: ibmvfc: Avoid loss of all paths during SVC node =
-reboot")
->=20
-> Thanks. I'll send the one line fix.
+On 3/2/20 8:38 PM, Jiri Olsa wrote:
+> On Sat, Feb 29, 2020 at 03:11:57PM +0530, Kajol Jain wrote:
+> 
+> SNIP
+> 
+>>  #define PVR_VER(pvr)    (((pvr) >>  16) & 0xFFFF) /* Version field */
+>>  #define PVR_REV(pvr)    (((pvr) >>   0) & 0xFFFF) /* Revison field */
+>>  
+>> +#define SOCKETS_INFO_FILE_PATH "/devices/hv_24x7/interface/"
+>> +
+>>  int
+>>  get_cpuid(char *buffer, size_t sz)
+>>  {
+>> @@ -44,3 +51,43 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+>>  
+>>  	return bufp;
+>>  }
+>> +
+>> +int arch_get_runtimeparam(void)
+>> +{
+>> +	int count = 0;
+>> +	DIR *dir;
+>> +	char path[PATH_MAX];
+>> +	const char *sysfs = sysfs__mountpoint();
+>> +	char filename[] = "sockets";
+>> +	FILE *file;
+>> +	char buf[16], *num;
+>> +	int data;
+>> +
+>> +	if (!sysfs)
+>> +		goto out;
+>> +
+>> +	snprintf(path, PATH_MAX,
+>> +		 "%s" SOCKETS_INFO_FILE_PATH, sysfs);
+>> +	dir = opendir(path);
+>> +
+>> +	if (!dir)
+>> +		goto out;
+>> +
+>> +	strcat(path, filename);
+>> +	file = fopen(path, "r");
+>> +
+>> +	if (!file)
+>> +		goto out;
+>> +
+>> +	data = fread(buf, 1, sizeof(buf), file);
+>> +
+>> +	if (data == 0)
+>> +		goto out;
+>> +
+>> +	count = strtol(buf, &num, 10);
+>> +out:
+>> +	if (!count)
+>> +		count = 1;
+>> +
+>> +	return count;
+> 
+> we have sysfs__read_ull for this
+> 
 
-I am still getting this warning, but it is now after the merge of the
-scsi tree.
+Hi Jiri,
+    Thanks for suggesting it. Will update.
 
---=20
-Cheers,
-Stephen Rothwell
+Kajol
 
---Sig_/vAPUngZMh4Dp3uyQoC.V2fO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5h1vkACgkQAVBC80lX
-0GxC1gf/Uoi4y91OkNEr3u7Er4m3Md3ex5UJ7/YEI63/deBaSOMG7AGzZnTJOrW1
-RDwr9kTIjp3ei1fUxyHCncXpYJPFAsuBhdvY9qwvj91uofu8fYLx1wcSjXzEIfM6
-E5DjLJ3BBWgJ2/YzmCnyj0AT0ZsDT44ixSDHb8SFyH0DtJjaKs45evCOQniijU8l
-sp9R/nzMGEi+1ESYFJXiGQj8Fneqc7IoaRjCcBbcQq+oO3Jvl4r8Db7Lw+eiufbS
-4wskLe/zCgYsjN8ZPL38N3wpaKwZz2rQNCsdSiZAwoTzJlnlxGqlbEXHWbE0kcwQ
-S/Io+bqndVpiGrzBbOGfdmCAWgy1Cw==
-=QgMQ
------END PGP SIGNATURE-----
-
---Sig_/vAPUngZMh4Dp3uyQoC.V2fO--
+> jirka
+> 
