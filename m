@@ -2,93 +2,108 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1D8C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA83C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECAD62073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F022073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQgitdoC"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="eDnly6+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgCFPbX (ORCPT
+        id S1726957AbgCFPcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:31:23 -0500
-Received: from mail-pj1-f48.google.com ([209.85.216.48]:53700 "EHLO
-        mail-pj1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgCFPbX (ORCPT
+        Fri, 6 Mar 2020 10:32:06 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44953 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgCFPcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:31:23 -0500
-Received: by mail-pj1-f48.google.com with SMTP id cx7so1198988pjb.3;
-        Fri, 06 Mar 2020 07:31:22 -0800 (PST)
+        Fri, 6 Mar 2020 10:32:05 -0500
+Received: by mail-wr1-f67.google.com with SMTP id n7so2838100wrt.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 07:32:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=VVTONCjty9yQikB9/1FIuVouvZO5dACbDh+vLUoJC3Q=;
-        b=fQgitdoCgLtWN3M8nTQPvrjKfQ2wgyWaZ/UhG1bSccHTykkV0UFPL+WlHRk94+n+9H
-         w48DARnGYTmkc57RzGjGwk4S8OdlbGtHfbKwnvzDim1mYmFpoh41RUuIt6WV2IfzzA9U
-         ROTGXHlZ4fLpRzUz5EPjydrJYTyfVtnboRm0k2lHClgR/u/9E6TaUslA9nbTYdf7cKeQ
-         7tbqa2zMMb3rJPXCPTDdXZlfdm1BQInL0DGmsHEltFAGlUik7l9BGs/sxqwU6A37cBPy
-         cAj3QioktAs9KyxGvCZSBIStNRLrTcu8sbFTawZ5q+Em2N4q2y0+N7CvVS00Y9rupbSY
-         6yCw==
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w97Pp2fKkn2kGX06OWuM0pYdHRbBbR8ZYFWEc1KVtOc=;
+        b=eDnly6+wEeDutBAHN/dpAogQanE64PUyaCrAQFzo+sbg1i1Zp6bT8pxKj3Na/J1/5t
+         XSxLDoR7a2Z5Af7faSCuE82OOz2Ud/uFgbw7auGxcmeUMNy7FnhLfwSwgC/w3HRFrmV8
+         fg2Jfo7z7bbdfgULDMeAZsrGQ4xJdXkrsLtPpdqQhDBR2LrQccnnyfUktExKwg/SOAhK
+         lXyVa5ppyTAU+Sap+/JyA9FEVxsmJnUxI4n4c3+RD6H7Z4zdrRWGVJFRd6q2yKULiikV
+         9lDi5qpSdA4Joe1trfiFfsTBr9qWNZ2XbVJ/S/GNtHf2+5IirdI7EPhm1JJI8r6SjXk0
+         4iRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=VVTONCjty9yQikB9/1FIuVouvZO5dACbDh+vLUoJC3Q=;
-        b=PDyEEgxcVviBN1Q23Lb04VMxiYW+hcuTEprFcxZm6JV/CDddEDQr5+AwwY6t1MpVs8
-         t1kWMWGaiTJIpf9aQnHukwTQ7zGdOfqnBXWKHcXK55Bs/jF/r1CBV8Tv7++ym4gpOESH
-         /XVx5nQKoTC6tDBq0ijoAGNhhZBpke1O7trq0hAXwF8HY2PbTXmBRCdek4XwNKOb47ak
-         7/ZGpRtc5m0FFVX3I28qk9wsuwUUrOyDIea4wCGTpPxQfv/3HaHqAl2LPztawfreFqk9
-         bxKJZLjTzAnid0sRHLw9kCtJ7hPWJbFRmV049mI1ssvcmcnqDtWtvMQIpooiv9Jw6xGJ
-         BLXg==
-X-Gm-Message-State: ANhLgQ2v3g8LJT6XcJUnrf0kTkvDHnKZJ9hZgO/poEPQefHmtiCLSYmf
-        J8pTYFosu8qcx7t667aAC4M=
-X-Google-Smtp-Source: ADFU+vta5drdjzqt7eYRNQPq2e1/++f24DY0V9eNOdAoiPlV/tXlFr2vClkyp5ANNT2OhhGRMn1EbQ==
-X-Received: by 2002:a17:90a:2466:: with SMTP id h93mr4132885pje.177.1583508682021;
-        Fri, 06 Mar 2020 07:31:22 -0800 (PST)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id d22sm10407517pja.14.2020.03.06.07.31.19
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w97Pp2fKkn2kGX06OWuM0pYdHRbBbR8ZYFWEc1KVtOc=;
+        b=FQ2LHs42JVfS+hETzPD/Cui4j3rsN/4qdjNOh35e4kupMUZ4yF7Zx9dLpVGgp/rtw4
+         omOzhlw8CNIFVTe02HFi9p/2Ixkp/JfrxHBWCcHgyVm8jTe5XpEug3PTcyZURVjcYrJi
+         Yo3sO9Nr68d5qL6sXrECBSlpuvXoAQeNVGF29WpqRISlyr5rv15nH6PGsvb4GF57bAzF
+         BkEJxMJXzqV8Op+F3jYwvJUx+8baLBjh4L65eTPXu5ZvsfL32IstCqM3nHkJVx//Bmak
+         Ul+JsRv4CKsgaXRd0T9GwERpwKjwrWAKjsyMYI+2u4P42xG7Yc8M6Q7QKNtFNelOH7Jn
+         D4lw==
+X-Gm-Message-State: ANhLgQ1valyk2KjkFCbSd+9RSMoCogc+O+5OA8rtRxqQ06IexVwyPpR3
+        2RO3XUxjxMv4/6twg+CpgMu8vynPOP8=
+X-Google-Smtp-Source: ADFU+vubD3BVDpKLzjLUgrQJ4T0Z9+TJjxru4N+98iWBwWsiW7iX3358rrmIOG6W/NTWUWg1/qivpA==
+X-Received: by 2002:adf:e911:: with SMTP id f17mr4357585wrm.87.1583508723318;
+        Fri, 06 Mar 2020 07:32:03 -0800 (PST)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id h20sm29006397wrc.47.2020.03.06.07.32.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 07:31:21 -0800 (PST)
-Date:   Fri, 06 Mar 2020 07:31:12 -0800
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>, john.fastabend@gmail.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <5e626cc0c86c1_17502acca07205b461@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200304101318.5225-9-lmb@cloudflare.com>
-References: <20200304101318.5225-1-lmb@cloudflare.com>
- <20200304101318.5225-9-lmb@cloudflare.com>
-Subject: RE: [PATCH bpf-next v3 08/12] bpf: sockmap: add UDP support
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Fri, 06 Mar 2020 07:32:02 -0800 (PST)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Jiri Slaby <jslaby@suse.com>, Joe Perches <joe@perches.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org
+Subject: [PATCH-next] serial/sysrq: Add a help-string for MAGIC_SYSRQ_SERIAL_SEQUENCE
+Date:   Fri,  6 Mar 2020 15:31:56 +0000
+Message-Id: <20200306153156.579921-1-dima@arista.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lorenz Bauer wrote:
-> Allow adding hashed UDP sockets to sockmaps.
-> 
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
-> ---
->  net/core/sock_map.c | 37 +++++++++++++++++++++++++++++++++----
->  1 file changed, 33 insertions(+), 4 deletions(-)
-> 
+To make it more obvious what almost everyone wants to set here.
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+Cc: Iurii Zaikin <yzaikin@google.com>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Vasiliy Khoruzhick <vasilykh@arista.com>
+Cc: linux-serial@vger.kernel.org
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+ lib/Kconfig.debug | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 38a8f3c99579..c4a45817918a 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -439,6 +439,8 @@ config MAGIC_SYSRQ_SERIAL_SEQUENCE
+ 	  Specifies a sequence of characters that can follow BREAK to enable
+ 	  SysRq on a serial console.
+ 
++	  If unsure, leave an empty string and the option will not be enabled.
++
+ config DEBUG_FS
+ 	bool "Debug Filesystem"
+ 	help
+-- 
+2.25.0
+
