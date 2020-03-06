@@ -2,154 +2,88 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E2BC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB16C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379C62072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D178E20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583503025;
+	bh=Y6OCmSPbA3jD52JAF+3WqvAQi2n/qqzlxvjWBCbtPNw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=umsrlstj34GlFaV25wro2ebyKVvmmCOzGNSFWElJvkSQI6I4NTbzTtDKyzpqqdEsD
+	 cEogm9QnB1sMgkPDBWUTMiyr6GbuaiMzCt6ReGnvLhMo81iU2NpZp3xPN95k+g74/Q
+	 e6fNKmO7V2Yu1sjYz+KiNuiZmU888zZM3X61euxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgCFN4f (ORCPT
+        id S1726891AbgCFN5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:56:35 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:55246 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbgCFN4f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:56:35 -0500
-Received: from b2b-5-147-251-51.unitymedia.biz ([5.147.251.51] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jADSq-000460-VQ; Fri, 06 Mar 2020 13:56:33 +0000
-Date:   Fri, 6 Mar 2020 14:56:32 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-api@vger.kernel.org, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, metze@samba.org, cyphar@cyphar.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH] Mark AT_* path flags as deprecated and add missing
- RESOLVE_ flags
-Message-ID: <20200306135632.j7kidnqm3edji6cz@wittgenstein>
-References: <3774367.1583430213@warthog.procyon.org.uk>
+        Fri, 6 Mar 2020 08:57:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726108AbgCFN5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:57:04 -0500
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68E120848;
+        Fri,  6 Mar 2020 13:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583503023;
+        bh=Y6OCmSPbA3jD52JAF+3WqvAQi2n/qqzlxvjWBCbtPNw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RCwFyKtLLVfrc7ymRU4nisTJcyXBwGlM7KTbIeYIW7QHK78RO7eWYhlKEcrKspb+D
+         zIU/t/o7tucig6QnSOS1gAWU1haVn6DYe4v+aaJDfnrShlWLM8yyfTvFZCYTKGJvN5
+         3tGejaYsAEgve1HcnDPgAe1LkUimZapdhW6bw27A=
+Received: by mail-qk1-f175.google.com with SMTP id e16so2327578qkl.6;
+        Fri, 06 Mar 2020 05:57:03 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2XkHUI/s/kY5DcoG9Or8DhzqE5vPbFHzK12uamBDOUFQVA2pmW
+        9AVgJpuW7oPnitawuz0BMAq+CLl7AqOiV1HL/w==
+X-Google-Smtp-Source: ADFU+vtsSDRikZpWPwBiQSZP0IHFW9C5JQmmRvCJ+DsH8dgxQVxMDbmTildHObv/rXXT7ImeYIPAFCIfIDj/lIR+Rj8=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr3090956qkg.152.1583503022804;
+ Fri, 06 Mar 2020 05:57:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3774367.1583430213@warthog.procyon.org.uk>
+References: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru> <20200306124823.38C2A80307C4@mail.baikalelectronics.ru>
+In-Reply-To: <20200306124823.38C2A80307C4@mail.baikalelectronics.ru>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 6 Mar 2020 07:56:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLSC818+vxgn7Yk0XOAk=NC057VGsFCBt-H65DDkc1W6w@mail.gmail.com>
+Message-ID: <CAL_JsqLSC818+vxgn7Yk0XOAk=NC057VGsFCBt-H65DDkc1W6w@mail.gmail.com>
+Subject: Re: [PATCH 01/22] dt-bindings: Permit platform devices in the
+ trivial-devices bindings
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 05:43:33PM +0000, David Howells wrote:
-> Do we want to do this?  Or should we duplicate the RESOLVE_* flags to AT_*
-> flags so that existing *at() syscalls can make use of them?
-> 
-> David
-> ---
-> commit 448731bf3b29f2b1f7c969d7efe1f0673ae13b5e
-> Author: David Howells <dhowells@redhat.com>
-> Date:   Thu Mar 5 17:40:02 2020 +0000
-> 
->     Mark AT_* flags as deprecated and add missing RESOLVE_ flags
->     
->     It has been suggested that new path-using system calls should use RESOLVE_*
->     flags instead of AT_* flags, but the RESOLVE_* flag functions are not a
->     superset of the AT_* flag functions.  So formalise this by:
->     
->      (1) In linux/fcntl.h, add a comment noting that the AT_* flags are
->          deprecated for new system calls and that RESOLVE_* flags should be
->          used instead.
->     
->      (2) Add some missing flags:
->     
->             RESOLVE_NO_TERMINAL_SYMLINKS    for AT_SYMLINK_NOFOLLOW
->             RESOLVE_NO_TERMINAL_AUTOMOUNTS  for AT_NO_AUTOMOUNT
->             RESOLVE_EMPTY_PATH              for AT_EMPTY_PATH
->     
->      (3) Make openat2() support RESOLVE_NO_TERMINAL_SYMLINKS.  LOOKUP_OPEN
->          internally implies LOOKUP_AUTOMOUNT, and AT_EMPTY_PATH is probably not
->          worth supporting (maybe use dup2() instead?).
->     
->     Reported-by: Stefan Metzmacher <metze@samba.org>
->     Signed-off-by: David Howells <dhowells@redhat.com>
->     cc: Aleksa Sarai <cyphar@cyphar.com>
-> 
-> diff --git a/fs/open.c b/fs/open.c
-> index 0788b3715731..6946ad09b42b 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -977,7 +977,7 @@ inline struct open_how build_open_how(int flags, umode_t mode)
->  inline int build_open_flags(const struct open_how *how, struct open_flags *op)
->  {
->  	int flags = how->flags;
-> -	int lookup_flags = 0;
-> +	int lookup_flags = LOOKUP_FOLLOW | LOOKUP_AUTOMOUNT;
->  	int acc_mode = ACC_MODE(flags);
->  
->  	/* Must never be set by userspace */
-> @@ -1055,8 +1055,8 @@ inline int build_open_flags(const struct open_how *how, struct open_flags *op)
->  
->  	if (flags & O_DIRECTORY)
->  		lookup_flags |= LOOKUP_DIRECTORY;
-> -	if (!(flags & O_NOFOLLOW))
-> -		lookup_flags |= LOOKUP_FOLLOW;
-> +	if (flags & O_NOFOLLOW)
-> +		lookup_flags &= ~LOOKUP_FOLLOW;
+On Fri, Mar 6, 2020 at 6:48 AM <Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+>
+> Indeed there are a log of trivial devices amongst platform controllers,
+> IP-blocks, etc. If they satisfy the trivial devices bindings requirements
+> like consisting of a compatible field, an address and possibly an interrupt
+> line why not having them in the generic trivial-devices bindings file?
 
-Odd change. But I guess you're doing it for the sake of consistency
-because of how you treat NO_TERMINAL_SYMLINKS below.
+NAK.
 
->  
->  	if (how->resolve & RESOLVE_NO_XDEV)
->  		lookup_flags |= LOOKUP_NO_XDEV;
-> @@ -1068,6 +1068,8 @@ inline int build_open_flags(const struct open_how *how, struct open_flags *op)
->  		lookup_flags |= LOOKUP_BENEATH;
->  	if (how->resolve & RESOLVE_IN_ROOT)
->  		lookup_flags |= LOOKUP_IN_ROOT;
-> +	if (how->resolve & RESOLVE_NO_TERMINAL_SYMLINKS)
-> +		lookup_flags &= ~LOOKUP_FOLLOW;
->  
->  	op->lookup_flags = lookup_flags;
->  	return 0;
-> diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
-> index 7bcdcf4f6ab2..fd6ee34cce0f 100644
-> --- a/include/linux/fcntl.h
-> +++ b/include/linux/fcntl.h
-> @@ -19,7 +19,8 @@
->  /* List of all valid flags for the how->resolve argument: */
->  #define VALID_RESOLVE_FLAGS \
->  	(RESOLVE_NO_XDEV | RESOLVE_NO_MAGICLINKS | RESOLVE_NO_SYMLINKS | \
-> -	 RESOLVE_BENEATH | RESOLVE_IN_ROOT)
-> +	 RESOLVE_BENEATH | RESOLVE_IN_ROOT | RESOLVE_NO_TERMINAL_SYMLINKS | \
-> +	 RESOLVE_NO_TERMINAL_AUTOMOUNTS | RESOLVE_EMPTY_PATH)
->  
->  /* List of all open_how "versions". */
->  #define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
-> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-> index ca88b7bce553..9f5432dbd213 100644
-> --- a/include/uapi/linux/fcntl.h
-> +++ b/include/uapi/linux/fcntl.h
-> @@ -84,9 +84,20 @@
->  #define DN_ATTRIB	0x00000020	/* File changed attibutes */
->  #define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
->  
-> -#define AT_FDCWD		-100    /* Special value used to indicate
-> -                                           openat should use the current
-> -                                           working directory. */
-> +
-> +/*
-> + * Special dfd/dirfd file descriptor value used to indicate that *at() system
-> + * calls should use the current working directory for relative paths.
-> + */
-> +#define AT_FDCWD		-100
-> +
-> +/*
-> + * Pathwalk control flags, used for the *at() syscalls.  These should be
-> + * considered deprecated and should not be used for new system calls.  The
-> + * RESOLVE_* flags in <linux/openat2.h> should be used instead.
+Do you have some documentation on what a platform bus is? Last I
+checked, that's a Linux thing.
 
-Agreed.
+If anything, we'd move toward getting rid of trivial-devices.yaml. For
+example, I'd like to start defining the node name which wouldn't work
+for trivial-devices.yaml unless we split by class.
+
+Rob
