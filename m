@@ -2,101 +2,233 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567E3C10F26
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EB3C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CED42072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521C92072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="Mo5EhILj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYMTN0wG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgCFIIX (ORCPT
+        id S1726171AbgCFIJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 03:08:23 -0500
-Received: from mx.kolabnow.com ([95.128.36.42]:30522 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgCFIIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 03:08:23 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTP id 3E96B6BE;
-        Fri,  6 Mar 2020 09:08:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received:received:received; s=dkim20160331; t=
-        1583482098; x=1585296499; bh=zjFxbFMg6zjLw7+euUvfK/141HdAfBUqTrp
-        GbamgKCs=; b=Mo5EhILjTIBt03Rq/861akwN2vNQhYaplKJnGa+qBKpI4dVTFvF
-        uNZnNVEz34LwGRJYcggf7bbSPoSu3JVJWFXfCeqrABszCgwExBwuVN6x+ZvO50cX
-        hB5x3S0qxyF/aJavIPxSywjOu2ZKrNiAmKXz9Nn4/78Qcb8bi8bBYWqVrlOj5Puy
-        ekhOHMc62oQofFyfq2okgV3C5fcjWkKu8pb7hvItbR2SyUVB9yjC9/S0pD9RRnMh
-        030z2tmP5+Dow7kz+Mr1xksgBTWkHCZQWC1OonSKm8T268L+hOaMG2rLVwSPZHkZ
-        TNmwLfLFelVyCHmqbu2+d5D6sE+9RPD+76iOIGqkNYubT8BXyMBPnlMrN5Xha7n/
-        WFquiKehs5xub0W1vbp7b5k/WMFl5S73pUa2E+g6/FosAjP9yRLv4ABDIH9MUnou
-        zucT38AgimtYW9eTZRCpZRGS9bywkfjTWAWo88JjrsXb8pjw46EfUFNJ4kjqwIX/
-        LdURhcTGTElz/k5OLwsgEIug8PZONuBuWbojMowWAcr6LIO+LH8Cig98j8hHxMf3
-        ySG7bsvg2ka8yOH5PDQ2OsmD0jdGwqOs7b21KeYr06XAJK+JRBSgGfi/GRK+9Qdg
-        4MXyiqu/kF1wbHmxWdGlM3Sxs+L9QIiHFoF43HknzL21eEkBZDMlOOok=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out001.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iovzI00V9jIo; Fri,  6 Mar 2020 09:08:18 +0100 (CET)
-Received: from int-mx002.mykolab.com (unknown [10.9.13.2])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTPS id 06CE656E;
-        Fri,  6 Mar 2020 09:08:17 +0100 (CET)
-Received: from ext-subm002.mykolab.com (unknown [10.9.6.2])
-        by int-mx002.mykolab.com (Postfix) with ESMTPS id 9F51F2401;
-        Fri,  6 Mar 2020 09:08:17 +0100 (CET)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: it_IT: netdev-FAQ: Fix link to original document
-Date:   Fri, 06 Mar 2020 09:08:16 +0100
-Message-ID: <2924047.tcjekT7ZY2@pcbe13614>
-In-Reply-To: <20200305205123.8569-1-j.neuschaefer@gmx.net>
-References: <20200305205123.8569-1-j.neuschaefer@gmx.net>
+        Fri, 6 Mar 2020 03:09:44 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33637 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgCFIJn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 03:09:43 -0500
+Received: by mail-pl1-f195.google.com with SMTP id ay11so561926plb.0;
+        Fri, 06 Mar 2020 00:09:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7TiOD25ZQuBocGWSYjvqKa3msFH5m2kuVO7nsDjKlwo=;
+        b=NYMTN0wG6q+cq6aqTvrP9llFnl30M4rXTg+zEDw75WgKwGfqHH1odu9d4WDLBoE7TN
+         PwOHuFwovG9TJWp/Hq8kcYY9ZQC3iYdTFjnpb/uc7dQt6+HnCiMG0mHThwgbHJKrPeDc
+         lIT1d+OXgu/TKT7KUckC7Q9CmT/B8I16f5Df49kXmc0uVa6E0p/2rareOGebjILOBdr5
+         Z12Bgs1bBXUibC/ue4p7pSzIEx7aMftiubqw9WQKH0STVLM2caaWgtVt+HTwWLkcdryH
+         5k4H4/5qfWQ9CFLX4N6kPOoOLjyEfJzivdHTu8IbGt35LlPmbZGtrEmxZ3f/Dlg47Wyc
+         GOug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=7TiOD25ZQuBocGWSYjvqKa3msFH5m2kuVO7nsDjKlwo=;
+        b=N7VMgqD+6vKtggsTohNgLlZCzPAj0i/bQB0VepOpiNEBxTYGH+uxtlSf4cG/bqAdQS
+         6ugek2JM5vzS4w8tkLqrEe3rkS6irLTHM2NlE4scuha+F8Pb+F7S210y5NXjWR2w3C0c
+         gm9Fsn+nsJw7w/s4bUKD5xCASpLX2Qk/nacrpigIvR7CtYXKtWTNxympxVVPu7vFiMad
+         7onIcGpe8Y4EVF9yuBU1pFJlhZ18TpizXE6Ul7f5vl9+UH9Gx0z+Jd1qsnGA79lSylUI
+         EACebf31wrNBwTSZWqNEFkPnZrZCmjqJKdJa1/RUgvA+wXhR0GGKp7EMPYvLcrjqNAGW
+         s83g==
+X-Gm-Message-State: ANhLgQ1viSRO+NTiyBybskLFoohcBgoOxHe3znMpgmNYfxqGR1himOf1
+        6ZBkqGANmzp9nurwI1rkCTc=
+X-Google-Smtp-Source: ADFU+vsb++EN7BBbPDSzAC6BTc8MhQ1pUQF5dlP8WpcswbDRkZeKP9dFhHsYJt/c3xvb9l36V0FUlQ==
+X-Received: by 2002:a17:90b:8c9:: with SMTP id ds9mr2422171pjb.11.1583482182196;
+        Fri, 06 Mar 2020 00:09:42 -0800 (PST)
+Received: from xps.vpn2.bfsu.edu.cn ([103.125.232.133])
+        by smtp.gmail.com with ESMTPSA id x65sm22614647pfd.34.2020.03.06.00.09.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 00:09:41 -0800 (PST)
+From:   YunQiang Su <syq@debian.org>
+To:     torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
+        akpm@linux-foundation.org, viro@zeniv.linux.org.uk,
+        James.Bottomley@hansenpartnership.com
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        libc-alpha@sourceware.org, Laurent Vivier <laurent@vivier.eu>,
+        YunQiang Su <syq@debian.org>
+Subject: [PATCH] binfmt_misc: pass binfmt_misc P flag to the interpreter
+Date:   Fri,  6 Mar 2020 16:09:05 +0800
+Message-Id: <20200306080905.173466-1-syq@debian.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indeed a copy'n'paste error, thanks
+From: Laurent Vivier <laurent@vivier.eu>
 
-Reviewed-by: Federico Vaga <federico.vaga@vaga.pv.it>
+It can be useful to the interpreter to know which flags are in use.
 
-On Thursday, March 5, 2020 9:51:21 PM CET Jonathan Neusch=E4fer wrote:
-> Signed-off-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
-> ---
->  Documentation/translations/it_IT/networking/netdev-FAQ.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/translations/it_IT/networking/netdev-FAQ.rst
-> b/Documentation/translations/it_IT/networking/netdev-FAQ.rst index
-> 8489ead7cff1..7e2456bb7d92 100644
-> --- a/Documentation/translations/it_IT/networking/netdev-FAQ.rst
-> +++ b/Documentation/translations/it_IT/networking/netdev-FAQ.rst
-> @@ -1,6 +1,6 @@
->  .. include:: ../disclaimer-ita.rst
->=20
-> -:Original: :ref:`Documentation/process/stable-kernel-rules.rst
-> <stable_kernel_rules>` +:Original:
-> :ref:`Documentation/networking/netdev-FAQ.rst <netdev-FAQ>`
->=20
->  .. _it_netdev-FAQ:
->=20
-> --
-> 2.20.1
+For instance, knowing if the preserve-argv[0] is in use would
+allow to skip the pathname argument.
 
+This patch uses an unused auxiliary vector, AT_FLAGS, to add a
+flag to inform interpreter if the preserve-argv[0] is enabled.
 
-=2D-=20
-=46ederico Vaga
-http://www.federicovaga.it/
+Signed-off-by: Laurent Vivier <laurent@vivier.eu>
+Signed-off-by: YunQiang Su <syq@debian.org>
+---
 
+Notes:
+    This patch uses AT_FLAGS, which has never been used. We need to make a decision.
+    since it is about the fundmental API of userland.
+
+    This can be tested with QEMU from my branch:
+
+      https://github.com/vivier/qemu/commits/binfmt-argv0
+
+    With something like:
+
+      # cp ..../qemu-ppc /chroot/powerpc/jessie
+
+      # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
+                            --persistent no --preserve-argv0 yes
+      # systemctl restart systemd-binfmt.service
+      # cat /proc/sys/fs/binfmt_misc/qemu-ppc
+      enabled
+      interpreter //qemu-ppc
+      flags: POC
+      offset 0
+      magic 7f454c4601020100000000000000000000020014
+      mask ffffffffffffff00fffffffffffffffffffeffff
+      # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
+      sh
+
+      # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
+                            --persistent no --preserve-argv0 no
+      # systemctl restart systemd-binfmt.service
+      # cat /proc/sys/fs/binfmt_misc/qemu-ppc
+      enabled
+      interpreter //qemu-ppc
+      flags: OC
+      offset 0
+      magic 7f454c4601020100000000000000000000020014
+      mask ffffffffffffff00fffffffffffffffffffeffff
+      # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
+      /bin/sh
+
+    v4: Update to merge with linux-next: 20200305.
+    v3: mix my patch with one from YunQiang Su and my comments on it
+        introduce a new flag in the uabi for the AT_FLAGS
+    v2: only pass special flags (remove Magic and Enabled flags)
+---
+ fs/binfmt_elf.c              | 6 ++++--
+ fs/binfmt_elf_fdpic.c        | 5 ++++-
+ fs/binfmt_misc.c             | 4 +++-
+ include/linux/binfmts.h      | 4 ++++
+ include/uapi/linux/binfmts.h | 4 ++++
+ 5 files changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 13f25e241ac4..e9f5d135b847 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -178,7 +178,7 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
+ 	const char *k_base_platform = ELF_BASE_PLATFORM;
+ 	unsigned char k_rand_bytes[16];
+ 	int items;
+-	elf_addr_t *elf_info;
++	elf_addr_t *elf_info, flags = 0;
+ 	int ei_index;
+ 	const struct cred *cred = current_cred();
+ 	struct vm_area_struct *vma;
+@@ -253,7 +253,9 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
+ 	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
+ 	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
+ 	NEW_AUX_ENT(AT_BASE, interp_load_addr);
+-	NEW_AUX_ENT(AT_FLAGS, 0);
++	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
++		flags |= AT_FLAGS_PRESERVE_ARGV0;
++	NEW_AUX_ENT(AT_FLAGS, flags);
+ 	NEW_AUX_ENT(AT_ENTRY, e_entry);
+ 	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
+ 	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
+diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+index 240f66663543..abb90d82aa58 100644
+--- a/fs/binfmt_elf_fdpic.c
++++ b/fs/binfmt_elf_fdpic.c
+@@ -507,6 +507,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
+ 	char __user *u_platform, *u_base_platform, *p;
+ 	int loop;
+ 	int nr;	/* reset for each csp adjustment */
++	unsigned long flags = 0;
+ 
+ #ifdef CONFIG_MMU
+ 	/* In some cases (e.g. Hyper-Threading), we want to avoid L1 evictions
+@@ -647,7 +648,9 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
+ 	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
+ 	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
+ 	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
+-	NEW_AUX_ENT(AT_FLAGS,	0);
++	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
++		flags |= AT_FLAGS_PRESERVE_ARGV0;
++	NEW_AUX_ENT(AT_FLAGS,	flags);
+ 	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
+ 	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
+ 	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
+diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
+index cdb45829354d..b9acdd26a654 100644
+--- a/fs/binfmt_misc.c
++++ b/fs/binfmt_misc.c
+@@ -154,7 +154,9 @@ static int load_misc_binary(struct linux_binprm *bprm)
+ 	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
+ 		goto ret;
+ 
+-	if (!(fmt->flags & MISC_FMT_PRESERVE_ARGV0)) {
++	if (fmt->flags & MISC_FMT_PRESERVE_ARGV0) {
++		bprm->interp_flags |= BINPRM_FLAGS_PRESERVE_ARGV0;
++	} else {
+ 		retval = remove_arg_zero(bprm);
+ 		if (retval)
+ 			goto ret;
+diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+index b40fc633f3be..265b80d5fd6f 100644
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@ -78,6 +78,10 @@ struct linux_binprm {
+ #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
+ #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
+ 
++/* if preserve the argv0 for the interpreter  */
++#define BINPRM_FLAGS_PRESERVE_ARGV0_BIT 3
++#define BINPRM_FLAGS_PRESERVE_ARGV0 (1 << BINPRM_FLAGS_PRESERVE_ARGV0_BIT)
++
+ /* Function parameter for binfmt->coredump */
+ struct coredump_params {
+ 	const kernel_siginfo_t *siginfo;
+diff --git a/include/uapi/linux/binfmts.h b/include/uapi/linux/binfmts.h
+index 689025d9c185..a70747416130 100644
+--- a/include/uapi/linux/binfmts.h
++++ b/include/uapi/linux/binfmts.h
+@@ -18,4 +18,8 @@ struct pt_regs;
+ /* sizeof(linux_binprm->buf) */
+ #define BINPRM_BUF_SIZE 256
+ 
++/* if preserve the argv0 for the interpreter  */
++#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
++#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
++
+ #endif /* _UAPI_LINUX_BINFMTS_H */
+-- 
+2.25.1
 
