@@ -2,127 +2,154 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA6BC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E2BC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F64C2072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379C62072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgCFNyt (ORCPT
+        id S1726788AbgCFN4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:54:49 -0500
-Received: from mga17.intel.com ([192.55.52.151]:41481 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbgCFNys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:54:48 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 05:54:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
-   d="scan'208";a="287977630"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Mar 2020 05:54:43 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jADR7-007NGR-NA; Fri, 06 Mar 2020 15:54:45 +0200
-Date:   Fri, 6 Mar 2020 15:54:45 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] i2c: designeware: Add Baikal-T1 SoC DW I2C specifics
- support
-Message-ID: <20200306135445.GE1748204@smile.fi.intel.com>
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+        Fri, 6 Mar 2020 08:56:35 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55246 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgCFN4f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:56:35 -0500
+Received: from b2b-5-147-251-51.unitymedia.biz ([5.147.251.51] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jADSq-000460-VQ; Fri, 06 Mar 2020 13:56:33 +0000
+Date:   Fri, 6 Mar 2020 14:56:32 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-api@vger.kernel.org, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, metze@samba.org, cyphar@cyphar.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH] Mark AT_* path flags as deprecated and add missing
+ RESOLVE_ flags
+Message-ID: <20200306135632.j7kidnqm3edji6cz@wittgenstein>
+References: <3774367.1583430213@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <3774367.1583430213@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-First of all, I got only 3 out of 6 patches. Are you sure you properly prepared
-the series?
-
-On Fri, Mar 06, 2020 at 04:19:49PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <fancer.lancer@gmail.com>
-
-Same comment as per DMA series, try next time to link the cover letter to the
-series correctly.
-
-> There are three DW I2C controllers embedded into the Baikal-T1 SoC. Two
-> of them are normal with standard DW I2C IP-core configurations and registers
-> accessible over normal MMIO space - so they are acceptable by the available
-> DW I2C driver with no modification.
-
-> But there is a third, which is a bit
-> different. Its registers are indirectly accessed be means of "command/data
-> in/data out" registers tuple. In order to have it also supported by the DW
-> I2C driver, we must modify the code a bit. This is a main purpose of this
-> patchset.
+On Thu, Mar 05, 2020 at 05:43:33PM +0000, David Howells wrote:
+> Do we want to do this?  Or should we duplicate the RESOLVE_* flags to AT_*
+> flags so that existing *at() syscalls can make use of them?
 > 
-> First of all traditionally we replaced the legacy plain text-based dt-binding
-> file with yaml-based one. Then we found and fixed a bug in the DW I2C FIFO size
-> detection algorithm which tried to do it too early before dw_readl/dw_writel
-> methods could be used.
+> David
+> ---
+> commit 448731bf3b29f2b1f7c969d7efe1f0673ae13b5e
+> Author: David Howells <dhowells@redhat.com>
+> Date:   Thu Mar 5 17:40:02 2020 +0000
+> 
+>     Mark AT_* flags as deprecated and add missing RESOLVE_ flags
+>     
+>     It has been suggested that new path-using system calls should use RESOLVE_*
+>     flags instead of AT_* flags, but the RESOLVE_* flag functions are not a
+>     superset of the AT_* flag functions.  So formalise this by:
+>     
+>      (1) In linux/fcntl.h, add a comment noting that the AT_* flags are
+>          deprecated for new system calls and that RESOLVE_* flags should be
+>          used instead.
+>     
+>      (2) Add some missing flags:
+>     
+>             RESOLVE_NO_TERMINAL_SYMLINKS    for AT_SYMLINK_NOFOLLOW
+>             RESOLVE_NO_TERMINAL_AUTOMOUNTS  for AT_NO_AUTOMOUNT
+>             RESOLVE_EMPTY_PATH              for AT_EMPTY_PATH
+>     
+>      (3) Make openat2() support RESOLVE_NO_TERMINAL_SYMLINKS.  LOOKUP_OPEN
+>          internally implies LOOKUP_AUTOMOUNT, and AT_EMPTY_PATH is probably not
+>          worth supporting (maybe use dup2() instead?).
+>     
+>     Reported-by: Stefan Metzmacher <metze@samba.org>
+>     Signed-off-by: David Howells <dhowells@redhat.com>
+>     cc: Aleksa Sarai <cyphar@cyphar.com>
+> 
+> diff --git a/fs/open.c b/fs/open.c
+> index 0788b3715731..6946ad09b42b 100644
+> --- a/fs/open.c
+> +++ b/fs/open.c
+> @@ -977,7 +977,7 @@ inline struct open_how build_open_how(int flags, umode_t mode)
+>  inline int build_open_flags(const struct open_how *how, struct open_flags *op)
+>  {
+>  	int flags = how->flags;
+> -	int lookup_flags = 0;
+> +	int lookup_flags = LOOKUP_FOLLOW | LOOKUP_AUTOMOUNT;
+>  	int acc_mode = ACC_MODE(flags);
+>  
+>  	/* Must never be set by userspace */
+> @@ -1055,8 +1055,8 @@ inline int build_open_flags(const struct open_how *how, struct open_flags *op)
+>  
+>  	if (flags & O_DIRECTORY)
+>  		lookup_flags |= LOOKUP_DIRECTORY;
+> -	if (!(flags & O_NOFOLLOW))
+> -		lookup_flags |= LOOKUP_FOLLOW;
+> +	if (flags & O_NOFOLLOW)
+> +		lookup_flags &= ~LOOKUP_FOLLOW;
 
-So far so good (looks like, I think colleagues of mine and myself will review
-individual patches later on).
+Odd change. But I guess you're doing it for the sake of consistency
+because of how you treat NO_TERMINAL_SYMLINKS below.
 
-> Finally we introduced a platform-specific flag
-> ACCESS_INDIRECT, which would enable the indirect access to the DW I2C registers
-> implemented for one of the Baikal-T1 SoC DW I2C controllers. See the commit
-> message of the corresponding patch for details.
+>  
+>  	if (how->resolve & RESOLVE_NO_XDEV)
+>  		lookup_flags |= LOOKUP_NO_XDEV;
+> @@ -1068,6 +1068,8 @@ inline int build_open_flags(const struct open_how *how, struct open_flags *op)
+>  		lookup_flags |= LOOKUP_BENEATH;
+>  	if (how->resolve & RESOLVE_IN_ROOT)
+>  		lookup_flags |= LOOKUP_IN_ROOT;
+> +	if (how->resolve & RESOLVE_NO_TERMINAL_SYMLINKS)
+> +		lookup_flags &= ~LOOKUP_FOLLOW;
+>  
+>  	op->lookup_flags = lookup_flags;
+>  	return 0;
+> diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
+> index 7bcdcf4f6ab2..fd6ee34cce0f 100644
+> --- a/include/linux/fcntl.h
+> +++ b/include/linux/fcntl.h
+> @@ -19,7 +19,8 @@
+>  /* List of all valid flags for the how->resolve argument: */
+>  #define VALID_RESOLVE_FLAGS \
+>  	(RESOLVE_NO_XDEV | RESOLVE_NO_MAGICLINKS | RESOLVE_NO_SYMLINKS | \
+> -	 RESOLVE_BENEATH | RESOLVE_IN_ROOT)
+> +	 RESOLVE_BENEATH | RESOLVE_IN_ROOT | RESOLVE_NO_TERMINAL_SYMLINKS | \
+> +	 RESOLVE_NO_TERMINAL_AUTOMOUNTS | RESOLVE_EMPTY_PATH)
+>  
+>  /* List of all open_how "versions". */
+>  #define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
+> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+> index ca88b7bce553..9f5432dbd213 100644
+> --- a/include/uapi/linux/fcntl.h
+> +++ b/include/uapi/linux/fcntl.h
+> @@ -84,9 +84,20 @@
+>  #define DN_ATTRIB	0x00000020	/* File changed attibutes */
+>  #define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
+>  
+> -#define AT_FDCWD		-100    /* Special value used to indicate
+> -                                           openat should use the current
+> -                                           working directory. */
+> +
+> +/*
+> + * Special dfd/dirfd file descriptor value used to indicate that *at() system
+> + * calls should use the current working directory for relative paths.
+> + */
+> +#define AT_FDCWD		-100
+> +
+> +/*
+> + * Pathwalk control flags, used for the *at() syscalls.  These should be
+> + * considered deprecated and should not be used for new system calls.  The
+> + * RESOLVE_* flags in <linux/openat2.h> should be used instead.
 
-This is quite questionable. In Intel SoCs we have indirect I²C controllers to
-access (inside PMIC, for example). The approach used to do that is usually to
-have an IPC mechanism and specific bus controller driver. See i2c-cht-wc.c for
-instance.
-
-I'm not sure if it makes a lot of duplication and if actually switching I²C
-DesignWare driver to regmap API will solve it. At least that is the second
-approach I would consider.
-
-But I'll wait others to comment on this. We have to settle the solution before
-going further.
-
-> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> commit 98d54f81e36b ("Linux 5.6-rc4").
-
-`git format-patch --base ...` should do the job.
-
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-
-Same comment as per UART patch. Who is the Alexey in relation to the work done?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Agreed.
