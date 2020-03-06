@@ -2,111 +2,80 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF423C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48292C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B554206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB5A206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cLRtfxoZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="opXbUk28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgCFVJE (ORCPT
+        id S1726490AbgCFVJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 16:09:04 -0500
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:33872 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgCFVJD (ORCPT
+        Fri, 6 Mar 2020 16:09:59 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44907 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgCFVJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 16:09:03 -0500
-Received: by mail-wr1-f43.google.com with SMTP id z15so3973269wrl.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 13:09:02 -0800 (PST)
+        Fri, 6 Mar 2020 16:09:58 -0500
+Received: by mail-lj1-f195.google.com with SMTP id a10so3649014ljp.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 13:09:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
-         :content-disposition;
-        bh=26Sq85vpjRSteJm5jvInxBanL+YHiCYPey00VEQD8F8=;
-        b=cLRtfxoZGwd49oQ/cSgBBxapBQC8Ed31LFCvLKWWm4zURoL5NCgL9T6gXU3O/YLX9b
-         bu2ClVKTMWAagnJmjZ8UVHBajmkrZ6AOI/4D6UohQnUw8oAacXTpoKIADxsE993noHXC
-         T7RZFsQ8UvKvgFY4lOe9GS/lvqoZMbcrzc3mY=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VgTxqzB2ddlD/i+D2EmIl9SHrUIZn4MxN31KBo15UKk=;
+        b=opXbUk28LqpuR5n8R9xiecRy0l13TCDjYEZkLAgwhP6/yN8WPPtvMCwHvy3otOssah
+         GuZahCDENlbFGlY1DAyrHXCqltOfx6qqoj3tRdtzc+W+7aYPrbDSncymDuhC+tSiEemr
+         pCpt5kGO892XdSiNyoDRStsIPeR0qPVcEtoMuNhzLwRHxXR+/fZ0WNKprHkkQpJQdy9t
+         t5tzwRRSBh0nnDtEiaRhvwI2mDSxEedQ4isLAJQ3ofEoGqT3LJEPIujXg4J61iq5hOGY
+         1R0jzt45Nd/GGvjNfw8qttfm5oTWJk4zhvi07T5ccNNFFr5+JrIdoagVeL//K1Qx/heB
+         Vm/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:mime-version:content-disposition;
-        bh=26Sq85vpjRSteJm5jvInxBanL+YHiCYPey00VEQD8F8=;
-        b=UOBRI/NvXJmyChTTDVbaLjO4cMnaN7phbx0fJrd3qcWfC6+MCU3TTPZiAYGzjpU6x2
-         mbeswvFMR8W/Us1K+AfVZcLpYWTvut2CcMCQ2sgzGDB/oNFvQBEWy1rt1kRRaQ4MYqrL
-         WgFaHPc+HeEKpOrfNQ4D6xYJOSsqBb4YANkE0CjAv8K/qJRZiCdcyWwvNR99O+jlwknZ
-         t6mw2cwY/6/Ia85T/7Tej/QP+uN1T/jQoWBhXEBdFSrmQiu37eYh9xdL733uvkh/S6Q8
-         VTEg3kDwNSzf+3C+/YZGYrYpCaElqTnad46+V+anZicj0xbzZJhH/H01pPeGkMMlCPTd
-         ERsQ==
-X-Gm-Message-State: ANhLgQ0n14kGWvrQ+LwOQ4oTQvGi0lbHcRaVe8jHgrb6MpQgVw9K1HLD
-        shr40N6N0DR1Cnz3QFmcbpmVmA==
-X-Google-Smtp-Source: ADFU+vsACGhb6mJONDejOXhmARY5fMWATKiKJGT1hnE1V39dTnC/f5B9Nuv19LJ5/6zOD+TOq1plsw==
-X-Received: by 2002:adf:ec45:: with SMTP id w5mr5661870wrn.230.1583528941542;
-        Fri, 06 Mar 2020 13:09:01 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id o16sm35619867wrj.5.2020.03.06.13.08.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 13:09:00 -0800 (PST)
-Date:   Fri, 6 Mar 2020 22:08:54 +0100
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     Dave Airlie <airlied@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PULL] drm-fixes
-Message-ID: <20200306210854.GA638432@phenom.ffwll.local>
-Mail-Followup-To: Dave Airlie <airlied@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dri-devel@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VgTxqzB2ddlD/i+D2EmIl9SHrUIZn4MxN31KBo15UKk=;
+        b=cxHWGaccGgwTYtdTNJxP9m3oAVR/MMG1AjL/0tB9J2EcApNg59Aad5j8tKMJdrgzae
+         pLGzXm0tn42YMLeFyHNVRvc4z7mT2sr1YZtCrrWbZDotPsYpRnxPwcMAwvlAmz1aQ+mB
+         Kt89nZnuPuVcRmeRt3RDsCZdOi2Ibjl2hnO0aCazzJJ1oDThbNuwHSvSn2cpV9W4kN53
+         0fE3nV7Lulu55F5IoKVLUMpM9JPY6LKPgAypyP7L47FFz9B8pcf/OtIu77Pl+1eKnOLu
+         URQ/z/Ed4kOdohwL9ibicvZvzKXB7vnzH1Inrgjt1C2HHaJtm8rhHJAYmnF+N/Iac6Gd
+         YMdA==
+X-Gm-Message-State: ANhLgQ3FEpxv/N4QJOz5WX1Vi1f8RXyxCaHQfgDvdXb6kcV/CwHH79cT
+        h6FIfYd6EpQnsv5D8wcQAInBZCWIOZhFycap5MLnM7Si
+X-Google-Smtp-Source: ADFU+vu0OX7N8vmMOZJ3kUsbGbbpzTQXOUdf+fFe7/DRFNX6P7sDOrBZkzuDpJLbWd5dLKqbioR6dNmdrzdHWRXlcVo=
+X-Received: by 2002:a2e:8015:: with SMTP id j21mr3093402ljg.194.1583528997442;
+ Fri, 06 Mar 2020 13:09:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+References: <20191229070419.5429-1-tiny.windzz@gmail.com>
+In-Reply-To: <20191229070419.5429-1-tiny.windzz@gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 6 Mar 2020 22:09:46 +0100
+Message-ID: <CANiq72k2Dy5a4NtCmCQeCt=iVB6JjftuQizy69vMW5RCcD3uCg@mail.gmail.com>
+Subject: Re: [PATCH] auxdisplay: img-ascii-lcd: convert to devm_platform_ioremap_resource
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     paulburton@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Yangtao,
 
-Here's the pull for the lone vgacon fix that we discussed. I added a short
-explanation to the commit message where the overflow safety check is.
+On Sun, Dec 29, 2019 at 8:04 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
+>
+> Use devm_platform_ioremap_resource() to simplify code.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-drm-fixes-2020-03-06-1:
-one vgacon input check for stable
+Thanks! Picking it up.
 
-Cheers, Daniel
-
-The following changes since commit 2ac4853e295bba53209917e14af701c45c99ce04:
-
-  Merge tag 'amd-drm-fixes-5.6-2020-03-05' of git://people.freedesktop.org/~agd5f/linux into drm-fixes (2020-03-06 11:06:33 +1000)
-
-are available in the Git repository at:
-
-  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-03-06-1
-
-for you to fetch changes up to 513dc792d6060d5ef572e43852683097a8420f56:
-
-  vgacon: Fix a UAF in vgacon_invert_region (2020-03-06 21:06:34 +0100)
-
-----------------------------------------------------------------
-one vgacon input check for stable
-
-----------------------------------------------------------------
-Zhang Xiaoxu (1):
-      vgacon: Fix a UAF in vgacon_invert_region
-
- drivers/video/console/vgacon.c | 3 +++
- 1 file changed, 3 insertions(+)
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Cheers,
+Miguel
