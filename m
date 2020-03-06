@@ -2,124 +2,114 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21DAC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1375AC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4805206E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE830206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TK+sI/Ld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCFQxB (ORCPT
+        id S1726676AbgCFQxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:53:01 -0500
-Received: from avon.wwwdotorg.org ([104.237.132.123]:42428 "EHLO
-        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgCFQxB (ORCPT
+        Fri, 6 Mar 2020 11:53:04 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54230 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgCFQxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:53:01 -0500
-Received: from [10.20.204.51] (unknown [216.228.112.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by avon.wwwdotorg.org (Postfix) with ESMTPSA id DD1AD1C01BF;
-        Fri,  6 Mar 2020 09:52:58 -0700 (MST)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.1 at avon.wwwdotorg.org
-Subject: Re: [PATCH v1 3/3] partitions: Introduce NVIDIA Tegra Partition Table
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200224231841.26550-1-digetx@gmail.com>
- <20200224231841.26550-4-digetx@gmail.com>
- <44c22925-a14e-96d0-1f93-1979c0c60525@wwwdotorg.org>
- <CAPDyKFoXnoukjH_2cM=f0DGHBHS6kVUQSYOa_5ffQppC7VOn2A@mail.gmail.com>
- <824a4d5f-8280-8860-3e80-68188a13aa3d@gmail.com>
- <CAPDyKFric6pZbJ5-2qkwAFoeJ0c0kcha99zHJ12AUrWO6FQmgg@mail.gmail.com>
-From:   Stephen Warren <swarren@wwwdotorg.org>
-Message-ID: <6fe6d262-c6b0-52d8-0150-4c32a4c36cbd@wwwdotorg.org>
-Date:   Fri, 6 Mar 2020 09:52:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 6 Mar 2020 11:53:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Hc8EBMbziFCPflui+tXZT2dPAWJHoF3kP2tPXgp7AkU=; b=TK+sI/Ld4B82lkfwn/6fJoY4P+
+        gkj8zAwtDF7zS03QcZEyuZaFrQkkqJ8TMExYdioC8sYW7FBqt2Go+0VwlvQagXXs0SPCYIVdBcH1n
+        Yy0Mf4ADrOFSbQPFxYmAtS8oULu3+gOG1IqcrLpRwzhePOC2CWGVGkCHJcXNoyWlun5UpH2NOaXW/
+        YmYx3SsXWWdkoX4jLsxEYIV5twmHnvFYxG7n8ZX/j6UbX6SwRI74i0m58oiezWmfBUTu2xiXmP4gX
+        AHVkS4s8Gq28FyFNtQ9lwpD2pWdu0CdFm1j02F65pvDkjsGCHbG/UiT9Ktekzl1MZAvzqC/QJwLgW
+        tW1dsiSw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jAGDd-0005Ys-2b; Fri, 06 Mar 2020 16:53:01 +0000
+Date:   Fri, 6 Mar 2020 08:53:00 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, Qian Cai <cai@lca.pw>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] lib: disable KCSAN for XArray
+Message-ID: <20200306165300.GC25710@bombadil.infradead.org>
+References: <20200304031551.1326-1-cai@lca.pw>
+ <20200304033329.GZ29971@bombadil.infradead.org>
+ <20200304040515.GX2935@paulmck-ThinkPad-P72>
+ <20200304043356.GC29971@bombadil.infradead.org>
+ <20200304141021.GY2935@paulmck-ThinkPad-P72>
+ <20200305151831.GM29971@bombadil.infradead.org>
+ <20200305213946.GL2935@paulmck-ThinkPad-P72>
+ <CANpmjNOtsdxh3YLcF-pUMua9afWfhg5P_2ziRGSMuT8Gi0c5TA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFric6pZbJ5-2qkwAFoeJ0c0kcha99zHJ12AUrWO6FQmgg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNOtsdxh3YLcF-pUMua9afWfhg5P_2ziRGSMuT8Gi0c5TA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 6:37 AM, Ulf Hansson wrote:
-> On Wed, 4 Mar 2020 at 18:09, Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> 04.03.2020 19:36, Ulf Hansson пишет:
->>> On Tue, 25 Feb 2020 at 01:20, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>>>
->>>> On 2/24/20 4:18 PM, Dmitry Osipenko wrote:
->>>>> All NVIDIA Tegra devices use a special partition table format for the
->>>>> internal storage partitioning. Most of Tegra devices have GPT partition
->>>>> in addition to TegraPT, but some older Android consumer-grade devices do
->>>>> not or GPT is placed in a wrong sector, and thus, the TegraPT is needed
->>>>> in order to support these devices properly in the upstream kernel. This
->>>>> patch adds support for NVIDIA Tegra Partition Table format that is used
->>>>> at least by all NVIDIA Tegra20 and Tegra30 devices.
->>>>
->>>>> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
->>>>
->>>>> +static void __init tegra_boot_config_table_init(void)
->>>>> +{
->>>>> +     void __iomem *bct_base;
->>>>> +     u16 pt_addr, pt_size;
->>>>> +
->>>>> +     bct_base = IO_ADDRESS(TEGRA_IRAM_BASE) + TEGRA_IRAM_BCT_OFFSET;
->>>>
->>>> This shouldn't be hard-coded. IIRC, the boot ROM writes a BIT (Boot
->>>> Information Table) to a fixed location in IRAM, and there's some value
->>>> in the BIT that points to where the BCT is in IRAM. In practice, it
->>>> might work out that the BCT is always at the same place in IRAM, but
->>>> this certainly isn't guaranteed. I think there's code in U-Boot which
->>>> extracts the BCT location from the BIT? Yes, see
->>>> arch/arm/mach-tegra/ap.c:get_odmdata().
->>>
->>> So, have you considered using the command line partition option,
->>> rather than adding yet another partition scheme to the kernel?
->>>
->>> In principle, you would let the boot loader scan for the partitions,
->>> likely from machine specific code in U-boot. Then you append these to
->>> the kernel command line and let block/partitions/cmdline.c scan for
->>> it.
->>
->> The bootloader is usually locked-down on a consumer Tegra machines (it's
->> signed / encrypted).
+On Fri, Mar 06, 2020 at 02:38:39PM +0100, Marco Elver wrote:
+> On Thu, 5 Mar 2020 at 22:39, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > On Thu, Mar 05, 2020 at 07:18:31AM -0800, Matthew Wilcox wrote:
+> > > I have found three locations where we use the ->marks array:
+> > >
+> > > 1.
+> > >                         unsigned long data = *addr & (~0UL << offset);
+> > >                         if (data)
+> > >                                 return __ffs(data);
+> > >
+> > > 2.
+> > >         return find_next_bit(addr, XA_CHUNK_SIZE, offset);
+> > > 3.
+> > >         return test_bit(offset, node_marks(node, mark));
+> > >
+> > > The modifications -- all done with the spinlock held -- use the non-atomic
+> > > bitops:
+> > >         return __test_and_set_bit(offset, node_marks(node, mark));
+> > >         return __test_and_clear_bit(offset, node_marks(node, mark));
+> > >         bitmap_fill(node_marks(node, mark), XA_CHUNK_SIZE);
+> > > (that last one doesn't really count -- it's done prior to placing the node
+> > > in the tree)
+> > >
+> > > The first read seems straightforward; I can place a READ_ONCE around
+> > > *addr.  The second & third reads are rather less straightforward.
+> > > find_next_bit() and test_bit() are common code and use plain loads today.
+> >
+> > Yes, those last two are a bit annoying, aren't they?  I guess the first
+> > thing would be placing READ_ONCE() inside them, and if that results in
+> > regressions, have an alternative API for concurrent access?
 > 
-> Right, you are you talking about this from a developer point of view,
-> not from an end product user?
-> 
-> I mean, for sure you can upgrade the bootloader on Nvidia products? No, really?
+> FWIW test_bit() is an "atomic" bitop (per atomic_bitops.txt), and
+> KCSAN treats it as such. On x86 arch_test_bit() is not instrumented,
+> and then in asm-generic/bitops/instrumented-non-atomic.h test_bit() is
+> instrumented with instrument_atomic_read(). So on x86, things should
+> already be fine for test_bit(). Not sure about other architectures.
 
-For developer-oriented products like Jetson developer kits, you can 
-upgrade the bootloader, and luckily they haven't used this partition 
-table format for many versions.
+Hum.  It may well be documented as atomic, but is it?  Here's the
+generic implementation:
 
-However, commercial Android products typically have secure boot enabled, 
-so you can't replace the bootloader unless you know the secure boot 
-keys, which only the manufacturer knows. Dmitry is working on 
-re-purposing such products.
+static inline int test_bit(int nr, const volatile unsigned long *addr)
+{
+        return 1UL & (addr[BIT_WORD(nr)] >> (nr & (BITS_PER_LONG-1)));
+}
+
+arch_test_bit is only used by the instrumented variants:
+
+$ git grep arch_test_bit include
+include/asm-generic/bitops/instrumented-non-atomic.h:   return arch_test_bit(nr, addr);
+
+As far as I can tell, the generic version is what's used on x86.  Does
+the 'volatile' qualifier save us here?
+
+find_next_bit() doesn't have the 'volatile' qualifier, so may still be
+a problem?
