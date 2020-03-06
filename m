@@ -2,231 +2,121 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17E9C3F2D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F00C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE89206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:47:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583527660;
-	bh=kQ/wG8H7x2ozJKKaOTCFl5qnbIv2rWONENO5bLZeRNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=palegPmxlAJHFLWSKjVzTZZuszyhFJdTVsiUEgzMkpEpjL9i/LBSwbummr58ZPYMg
-	 JwuhnYUnU30oBC7AjuDvm8/7gJVz6vgxpfiubDF7btd55gAdcHj+cZ/aBnM5p9yJK8
-	 wNIxR36cidTf4UgwZc7GkZQfcW/clLS03k41z600=
+	by mail.kernel.org (Postfix) with ESMTP id 192FD206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:49:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eep0Ugrc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgCFUrj (ORCPT
+        id S1726485AbgCFUtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:47:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgCFUrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:47:39 -0500
-Received: from earth.universe (unknown [185.62.205.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 603DC206CC;
-        Fri,  6 Mar 2020 20:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583527657;
-        bh=kQ/wG8H7x2ozJKKaOTCFl5qnbIv2rWONENO5bLZeRNs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CMkTzCC/gcWV0aUjLc4StqNtfaoOPKnKCTV8pZA7vQiCBws2F43DuvvOSx/yiI2cY
-         1Z+OWo/5VP4sYNmN5EJEBL4Dh92VvSTAzHp93i5i2NqBV7cZoe4CSlMRK/07t3lB1u
-         U4zPI7x+0x4y562eQq/bDwRjeUyUkRpaW2rkAaLo=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 041663C0C83; Fri,  6 Mar 2020 21:47:34 +0100 (CET)
-Date:   Fri, 6 Mar 2020 21:47:34 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Ashish Chavan <ashish.gschavan@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: supply: ab8500_charger: Fix typos in commit
- messages
-Message-ID: <20200306204734.c3na6twovxzh7a3q@earth.universe>
-References: <20200226175223.6371-1-ashish.gschavan@gmail.com>
+        Fri, 6 Mar 2020 15:49:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20469 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726090AbgCFUtL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 15:49:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583527750;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vnq654icNMC3OPciKhsbNTJjnPlwkjnJ6PM6ZwzuRt4=;
+        b=eep0UgrczUZwnbE+5nguzqVfj94v15Zxc6KMABuvfCy6RphpMMN61fVlKEhT1qFDCuTFl0
+        uvMPQDVqdkc+yQs1gzm31l3dxUkaaVjyBtFyVgmUuKP0Wnn+A9h33dCZILMnIk5yP82emf
+        2WQLldd3n1xT/o+9CpYwSRCROG5X7n4=
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
+ [209.85.166.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-441-3DAFd2zjMLGg53YzHlyjhQ-1; Fri, 06 Mar 2020 15:49:08 -0500
+X-MC-Unique: 3DAFd2zjMLGg53YzHlyjhQ-1
+Received: by mail-il1-f199.google.com with SMTP id x2so2469991ila.6
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 12:49:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vnq654icNMC3OPciKhsbNTJjnPlwkjnJ6PM6ZwzuRt4=;
+        b=W+hyii2cnYbqgd9AP9kWQrJz49pGp4/d+DmoGHz62P7kqi0MypfjGikB9lF7Oko/Fa
+         nErHfBj0GAz2kfRcGYu4hxlzcDZ3gGFLY3YkbrYOxpJTFt+xhhnRhwKDNPMo1f1o/icR
+         2RVgUAVuCvJ39fx05eIAMx/vTl6GXigFbAeA+d4ceuBBuGUa74B6CAg+fPZyu35MNHsa
+         M5fYBH3vcxlCOqCfXCIOuJC3dkqRimfo4hCwQ3946ZjZUzCf/3XGAuyxjblwnufQQwLh
+         ZDq+Nnv7f5+puP3OgkBfoixnUOA5Oick3qbDx7/1dFaFi0jG5vU+jEaqZcuVlHfs73Wd
+         oi1w==
+X-Gm-Message-State: ANhLgQ2IBkTk1bi3hTadeUYw2UAJUZpiGPX6Hr43QLWeUwfszuUqu1C+
+        YVKy5nLMoLD6X4Xoy3zn9q0SjjD1P4TNVj216b6avKeRLsmDd26A0K72912mqhUwVP0mpp+CYAa
+        VB6QxkqJ63cAt6dMutAfBoJgi3AX7X1JqXquyOVo4
+X-Received: by 2002:a92:bb93:: with SMTP id x19mr4950277ilk.304.1583527748222;
+        Fri, 06 Mar 2020 12:49:08 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vuvo2iGyk+ibtmVDUTdwqXvKVvixks2GLwbkE+VjCSp2qcV2nb/q6bheS6OfL3JOE3orHdl1mjXyKrLN9a056M=
+X-Received: by 2002:a92:bb93:: with SMTP id x19mr4950241ilk.304.1583527747749;
+ Fri, 06 Mar 2020 12:49:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xigrgwmdg4nmm3t5"
-Content-Disposition: inline
-In-Reply-To: <20200226175223.6371-1-ashish.gschavan@gmail.com>
+References: <20200306172010.1213899-1-ckuehl@redhat.com>
+In-Reply-To: <20200306172010.1213899-1-ckuehl@redhat.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Fri, 6 Mar 2020 15:48:57 -0500
+Message-ID: <CAOASepNfDLFw_uxbB59hg7B8Rmfaroj9NB8Gw82SFrSOaPbtMQ@mail.gmail.com>
+Subject: Re: [PATCH 0/1] crypto: ccp: use file mode for sev ioctl permissions
+To:     Connor Kuehl <ckuehl@redhat.com>
+Cc:     "Lendacky, Thomas" <thomas.lendacky@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        "Hook, Gary" <gary.hook@amd.com>, erdemaktas@google.com,
+        rientjes@google.com, "Singh, Brijesh" <brijesh.singh@amd.com>,
+        Bandan Das <bsd@redhat.com>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 6, 2020 at 12:20 PM Connor Kuehl <ckuehl@redhat.com> wrote:
+>
+> Some background:
+>
+> My team is working on a project that interacts very closely with
+> SEV so we have a layer of code that wraps around the SEV ioctl calls.
+> We have an automated test suite that ends up testing these ioctls
+> on our test machine.
+>
+> We are in the process of adding this test machine as a dedicated test
+> runner in our continuous integration process. Any time someone opens a
+> pull request against our project, this test runner automatically checks
+> that code out and executes the tests.
+>
+> Right now, the SEV ioctls that affect the state of the platform require
+> CAP_SYS_ADMIN to run. This is not a capability we can give to an
+> automated test runner, because it means that anyone who would like to
+> contribute to the project would be able to run any code they want (for
+> good or evil) as CAP_SYS_ADMIN on our machine.
+>
+> This patch replaces the check for CAP_SYS_ADMIN with a check that can
+> still be easily controlled by an administrator with the file permissions
+> ACL. This way access to the device can still be controlled, but without
+> also assigning such broad system privileges at the same time.
+>
+> Connor Kuehl (1):
+>   crypto: ccp: use file mode for sev ioctl permissions
+>
+>  drivers/crypto/ccp/sev-dev.c | 33 +++++++++++++++++----------------
+>  1 file changed, 17 insertions(+), 16 deletions(-)
+>
+> --
+> 2.24.1
+>
 
---xigrgwmdg4nmm3t5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+One additional note is that this permission structure is more flexible
+for general SEV usage anyway, and isn't special-case for our usage.
+Currently, the SEV admin commands are mostly limited to public key
+certificate management. I would imagine that it would be desirable to
+have a sev-admin account which can automate the certificate management
+without having CAP_SYS_ADMIN for the rest of the system. So we believe
+this patch has broader applicability than just our corner case.
 
-Hi,
-
-On Wed, Feb 26, 2020 at 11:22:23PM +0530, Ashish Chavan wrote:
-> Trivial fix to spelling mistake in commit messages.
->=20
-> Signed-off-by: Ashish Chavan <ashish.gschavan@gmail.com>
-> ---
-
-Thanks, queued.
-
--- Sebastian
-
->  drivers/power/supply/ab8500_charger.c | 35 +++++++++++++++------------
->  1 file changed, 19 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/power/supply/ab8500_charger.c b/drivers/power/supply=
-/ab8500_charger.c
-> index 98b335042ba6..65741bab8552 100644
-> --- a/drivers/power/supply/ab8500_charger.c
-> +++ b/drivers/power/supply/ab8500_charger.c
-> @@ -398,7 +398,7 @@ static void ab8500_enable_disable_sw_fallback(struct =
-ab8500_charger *di,
->  }
-> =20
->  /**
-> - * ab8500_power_supply_changed - a wrapper with local extentions for
-> + * ab8500_power_supply_changed - a wrapper with local extensions for
->   * power_supply_changed
->   * @di:	  pointer to the ab8500_charger structure
->   * @psy:  pointer to power_supply_that have changed.
-> @@ -677,7 +677,7 @@ static int ab8500_charger_max_usb_curr(struct ab8500_=
-charger *di,
->  	/*
->  	 * Platform only supports USB 2.0.
->  	 * This means that charging current from USB source
-> -	 * is maximum 500 mA. Every occurence of USB_STAT_*_HOST_*
-> +	 * is maximum 500 mA. Every occurrence of USB_STAT_*_HOST_*
->  	 * should set USB_CH_IP_CUR_LVL_0P5.
->  	 */
-> =20
-> @@ -1372,13 +1372,13 @@ static int ab8500_charger_ac_en(struct ux500_char=
-ger *charger,
-> =20
->  		/*
->  		 * Due to a bug in AB8500, BTEMP_HIGH/LOW interrupts
-> -		 * will be triggered everytime we enable the VDD ADC supply.
-> +		 * will be triggered every time we enable the VDD ADC supply.
->  		 * This will turn off charging for a short while.
->  		 * It can be avoided by having the supply on when
->  		 * there is a charger enabled. Normally the VDD ADC supply
-> -		 * is enabled everytime a GPADC conversion is triggered. We will
-> -		 * force it to be enabled from this driver to have
-> -		 * the GPADC module independant of the AB8500 chargers
-> +		 * is enabled every time a GPADC conversion is triggered.
-> +		 * We will force it to be enabled from this driver to have
-> +		 * the GPADC module independent of the AB8500 chargers
->  		 */
->  		if (!di->vddadc_en_ac) {
->  			ret =3D regulator_enable(di->regu);
-> @@ -1448,7 +1448,7 @@ static int ab8500_charger_ac_en(struct ux500_charge=
-r *charger,
->  		if (is_ab8500_1p1_or_earlier(di->parent)) {
->  			/*
->  			 * For ABB revision 1.0 and 1.1 there is a bug in the
-> -			 * watchdog logic. That means we have to continously
-> +			 * watchdog logic. That means we have to continuously
->  			 * kick the charger watchdog even when no charger is
->  			 * connected. This is only valid once the AC charger
->  			 * has been enabled. This is a bug that is not handled
-> @@ -1545,13 +1545,13 @@ static int ab8500_charger_usb_en(struct ux500_cha=
-rger *charger,
-> =20
->  		/*
->  		 * Due to a bug in AB8500, BTEMP_HIGH/LOW interrupts
-> -		 * will be triggered everytime we enable the VDD ADC supply.
-> +		 * will be triggered every time we enable the VDD ADC supply.
->  		 * This will turn off charging for a short while.
->  		 * It can be avoided by having the supply on when
->  		 * there is a charger enabled. Normally the VDD ADC supply
-> -		 * is enabled everytime a GPADC conversion is triggered. We will
-> -		 * force it to be enabled from this driver to have
-> -		 * the GPADC module independant of the AB8500 chargers
-> +		 * is enabled every time a GPADC conversion is triggered.
-> +		 * We will force it to be enabled from this driver to have
-> +		 * the GPADC module independent of the AB8500 chargers
->  		 */
->  		if (!di->vddadc_en_usb) {
->  			ret =3D regulator_enable(di->regu);
-> @@ -1575,7 +1575,10 @@ static int ab8500_charger_usb_en(struct ux500_char=
-ger *charger,
->  			return -ENXIO;
->  		}
-> =20
-> -		/* ChVoltLevel: max voltage upto which battery can be charged */
-> +		/*
-> +		 * ChVoltLevel: max voltage up to which battery can be
-> +		 * charged
-> +		 */
->  		ret =3D abx500_set_register_interruptible(di->dev, AB8500_CHARGER,
->  			AB8500_CH_VOLT_LVL_REG, (u8) volt_index);
->  		if (ret) {
-> @@ -2007,7 +2010,7 @@ static void ab8500_charger_check_hw_failure_work(st=
-ruct work_struct *work)
->   * Work queue function for kicking the charger watchdog.
->   *
->   * For ABB revision 1.0 and 1.1 there is a bug in the watchdog
-> - * logic. That means we have to continously kick the charger
-> + * logic. That means we have to continuously kick the charger
->   * watchdog even when no charger is connected. This is only
->   * valid once the AC charger has been enabled. This is
->   * a bug that is not handled by the algorithm and the
-> @@ -2255,7 +2258,7 @@ static void ab8500_charger_usb_link_status_work(str=
-uct work_struct *work)
->  	 * Some chargers that breaks the USB spec is
->  	 * identified as invalid by AB8500 and it refuse
->  	 * to start the charging process. but by jumping
-> -	 * thru a few hoops it can be forced to start.
-> +	 * through a few hoops it can be forced to start.
->  	 */
->  	if (is_ab8500(di->parent))
->  		ret =3D abx500_get_register_interruptible(di->dev, AB8500_USB,
-> @@ -3214,7 +3217,7 @@ static int ab8500_charger_resume(struct platform_de=
-vice *pdev)
-> =20
->  	/*
->  	 * For ABB revision 1.0 and 1.1 there is a bug in the watchdog
-> -	 * logic. That means we have to continously kick the charger
-> +	 * logic. That means we have to continuously kick the charger
->  	 * watchdog even when no charger is connected. This is only
->  	 * valid once the AC charger has been enabled. This is
->  	 * a bug that is not handled by the algorithm and the
-> @@ -3451,7 +3454,7 @@ static int ab8500_charger_probe(struct platform_dev=
-ice *pdev)
-> =20
->  	/*
->  	 * For ABB revision 1.0 and 1.1 there is a bug in the watchdog
-> -	 * logic. That means we have to continously kick the charger
-> +	 * logic. That means we have to continuously kick the charger
->  	 * watchdog even when no charger is connected. This is only
->  	 * valid once the AC charger has been enabled. This is
->  	 * a bug that is not handled by the algorithm and the
-> --=20
-> 2.17.1
->=20
-
---xigrgwmdg4nmm3t5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5ituUACgkQ2O7X88g7
-+po2Ug/9HYyGjT9+/aCLwtvY9axS4DKbH14NDBJzv79pLPaRPWy9vWuEi1oYXd0G
-gLCYHuynsOLuNkseX4ENKJNc3xRrP/teG7Si34eAAtstn8j+AicTTDkwiMAE1o3O
-XhTGMzCvWdNBxpI5wZSFM3nqE5/GI/veOSv88qW37dYuNg9FoVf0JinMYB920GnI
-xlDwiRNVgQcqWykvDMvi80yMOpc4n23Lr07e+nv0x5BiMBXkMEm2BIDNe/K8ZMoI
-qE6xYpFKsvfYxdAPsaStlbf+OJWKq/BX7KHlC1TBe4QpzIYoVCcYcuKOXTQcRsEv
-XYMB6AvrjOjar83IKspuF5oU2BMMYto74Mmz9OndB8LjDsEaWFE4EynqYloebfF7
-RY7UXlntJzce1jUo9b5IbLYZagi734FfjckkWWRsj9iVqZHisPIGrBRIVtEyawOP
-c+/13nwtluYbqtPO2exuDGfRQizd2do2SCeLwzbpDa0iFXI9L4OJkpPT9lRSPgMu
-injCDGy2DdkV31SZSUeiujAPV6WdP8zJkHHoNL8AyO7WaqExZGZBl0S4tyAvfspW
-gu19+0hYQgQ1x8Y4/2y5fa4qBgrxxyOEFEw4rPLRfd3uMAY44d3VCNRloxE+vTpH
-A1bLiXoXY6NQAUs43th8K2oyxlsUXKo26iUiWDAH6SjEaXOAvkc=
-=hVDy
------END PGP SIGNATURE-----
-
---xigrgwmdg4nmm3t5--
