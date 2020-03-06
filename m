@@ -2,180 +2,70 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84563C18E5A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BCFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4F82084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D53122B48
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583499906;
+	bh=84v6BZy0RWfqoW2l869ZZcrMZHtChI8eyri9daZ1tMU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=mRPIH64NyXe0oaO8FXpViMlur8cKMuOueCZh7oYeeqxNL7ubYflhy+gCL4gD2jnoL
+	 VLc4AFVjfAXpdcOhcEOI1HM03F9nPsiBn9UsAtJGAzKem4OFtuXJ6LLWzOS5HFRvQz
+	 x9OeohKWYlYtkX20MJU9fJYAIlB9Rb7Ns+APrUbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgCFNEE (ORCPT
+        id S1726928AbgCFNFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:04:04 -0500
-Received: from mail.baikalelectronics.com ([87.245.175.226]:36166 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbgCFNEE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:04:04 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C07838030795;
-        Fri,  6 Mar 2020 13:04:01 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9IZ3E-PxsihJ; Fri,  6 Mar 2020 16:03:56 +0300 (MSK)
-From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/4] dt-bindings: power: reset: Replace SYSCON reboot-mode legacy bindings with YAML-based one
-Date:   Fri, 6 Mar 2020 16:03:39 +0300
-In-Reply-To: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200306130401.C07838030795@mail.baikalelectronics.ru>
+        Fri, 6 Mar 2020 08:05:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgCFNFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:05:04 -0500
+Subject: Re: [git pull] drm fixes for 5.6-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583499904;
+        bh=84v6BZy0RWfqoW2l869ZZcrMZHtChI8eyri9daZ1tMU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=lM/615oopMhfDwhOkWQ3Y4JNTZJjbemHbPF7jbW0udOwIP/BpFze+Ea2Jn28eHYy3
+         mUyad1TLW+eZOeqFvRaFEov1zG6lsFIv9QND7f0YjMRX8MfpPa/PlDTYSla3tTGnbd
+         rpGDbF2u2Y6NCON1Jm/U3m7XeYk1zWLy+l0gZrQI=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAPM=9tzi8ZaowmegAgeHSO3cLB5VRid9h=TMX=v+YcHEb5Cx_A@mail.gmail.com>
+References: <CAPM=9tzi8ZaowmegAgeHSO3cLB5VRid9h=TMX=v+YcHEb5Cx_A@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPM=9tzi8ZaowmegAgeHSO3cLB5VRid9h=TMX=v+YcHEb5Cx_A@mail.gmail.com>
+X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
+ tags/drm-fixes-2020-03-06
+X-PR-Tracked-Commit-Id: 2ac4853e295bba53209917e14af701c45c99ce04
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ba0ae9ac46078c53adbb4485adbb3df779228287
+Message-Id: <158349990430.8760.10214214684051769960.pr-tracker-bot@kernel.org>
+Date:   Fri, 06 Mar 2020 13:05:04 +0000
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+The pull request you sent on Fri, 6 Mar 2020 12:35:37 +1000:
 
-Modern device tree bindings are supposed to be created as YAML-files
-in accordance with dt-schema. This commit replaces SYSCON reboot-mode
-legacy bare text bindings with YAML file. As before the bindings file
-states that the corresponding dts node is supposed to be compatible
-"syscon-reboot-mode" device and necessarily have an offset property
-to determine which register from the regmap is supposed to keep the
-mode on reboot.
+> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-03-06
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
----
- .../power/reset/syscon-reboot-mode.txt        | 35 ------------
- .../power/reset/syscon-reboot-mode.yaml       | 55 +++++++++++++++++++
- 2 files changed, 55 insertions(+), 35 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
- create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ba0ae9ac46078c53adbb4485adbb3df779228287
 
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
-deleted file mode 100644
-index f7ce1d8af04a..000000000000
---- a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
-+++ /dev/null
-@@ -1,35 +0,0 @@
--SYSCON reboot mode driver
--
--This driver gets reboot mode magic value form reboot-mode driver
--and stores it in a SYSCON mapped register. Then the bootloader
--can read it and take different action according to the magic
--value stored.
--
--This DT node should be represented as a sub-node of a "syscon", "simple-mfd"
--node.
--
--Required properties:
--- compatible: should be "syscon-reboot-mode"
--- offset: offset in the register map for the storage register (in bytes)
--
--Optional property:
--- mask: bits mask of the bits in the register to store the reboot mode magic value,
--  default set to 0xffffffff if missing.
--
--The rest of the properties should follow the generic reboot-mode description
--found in reboot-mode.txt
--
--Example:
--	pmu: pmu@20004000 {
--		compatible = "rockchip,rk3066-pmu", "syscon", "simple-mfd";
--		reg = <0x20004000 0x100>;
--
--		reboot-mode {
--			compatible = "syscon-reboot-mode";
--			offset = <0x40>;
--			mode-normal = <BOOT_NORMAL>;
--			mode-recovery = <BOOT_RECOVERY>;
--			mode-bootloader = <BOOT_FASTBOOT>;
--			mode-loader = <BOOT_BL_DOWNLOAD>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
-new file mode 100644
-index 000000000000..e09bb07b1abb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/reset/syscon-reboot-mode.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic SYSCON reboot mode driver
-+
-+maintainers:
-+  - Sebastian Reichel <sre@kernel.org>
-+
-+description: |
-+  This driver gets reboot mode magic value from reboot-mode driver
-+  and stores it in a SYSCON mapped register. Then the bootloader
-+  can read it and take different action according to the magic
-+  value stored. The SYSCON mapped register is retrieved from the
-+  parental dt-node plus the offset. So the SYSCON reboot-mode node
-+  should be represented as a sub-node of a "syscon", "simple-mfd" node.
-+
-+properties:
-+  compatible:
-+    const: syscon-reboot-mode
-+
-+  mask:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Update only the register bits defined by the mask (32 bit).
-+
-+  offset:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Offset in the register map for the mode register (in bytes).
-+
-+patternProperties:
-+  "^mode-.+":
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Vendor-specific mode value written to the mode register.
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - offset
-+
-+examples:
-+  - |
-+    #include <dt-bindings/soc/rockchip,boot-mode.h>
-+
-+    reboot-mode {
-+      compatible = "syscon-reboot-mode";
-+      offset = <0x40>;
-+      mode-normal = <BOOT_NORMAL>;
-+      mode-recovery = <BOOT_RECOVERY>;
-+      mode-bootloader = <BOOT_FASTBOOT>;
-+      mode-loader = <BOOT_BL_DOWNLOAD>;
-+    };
-+...
+Thank you!
+
 -- 
-2.25.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
