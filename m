@@ -2,65 +2,131 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519F1C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12481C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3039E2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95CA2072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:46:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fn4/ra0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgCFQpi (ORCPT
+        id S1726982AbgCFQqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:45:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgCFQph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:45:37 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C451C2072A;
-        Fri,  6 Mar 2020 16:45:35 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 11:45:34 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [BUGFIX PATCH] tools: Let O= makes handle a relative path with
- -C option
-Message-ID: <20200306114534.63319731@gandalf.local.home>
-In-Reply-To: <CAMuHMdXSNwPwxOTDxK09LKTyOwL=LqTH6+HZRd=RY4P5VHg5Ew@mail.gmail.com>
-References: <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org>
-        <158338818292.25448.7161196505598269976.stgit@devnote2>
-        <CAMuHMdXSNwPwxOTDxK09LKTyOwL=LqTH6+HZRd=RY4P5VHg5Ew@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 6 Mar 2020 11:46:08 -0500
+Received: from gateway21.websitewelcome.com ([192.185.46.113]:19884 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726099AbgCFQqI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:46:08 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 7AD12401471A4
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Mar 2020 10:46:07 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id AG6xj4YoGXVkQAG6xjO7ZM; Fri, 06 Mar 2020 10:46:07 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=a0yfOiyYtsn67/xw854Gi9PS9vsekXy7OaHr3ZdUtSM=; b=fn4/ra0rE4bp/rosZ9RYHUFyv6
+        /N3piaBjmUoMihSThSuzygMoAc0Usf1H8YHqkSquw1IJdl1W+p1tj4QSHiw5n2DOKPghBAaktwpMM
+        GV9aLkXqxd/NNC3vMLXsZxkqkheCUDa11IDKcKDiSdh0EYKPcwhFnoWTIFK1s6bodSLETOioXbWDu
+        oe37C4vPDVQiKjERSxXRzBszarIUXU6YXMooHMQ+sCk9xQkSEGfsBCfokb9FLVdWyae80IOOaOl5z
+        uhlzZn3QlnP1fhwjoCMcO48Z2q0BbKI2yBfsJqL14TDiOXDMzWtO6nX7ccJCSx81pFHZdLcBrRt9S
+        mJRtLPHg==;
+Received: from [201.166.190.186] (port=51790 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jAG6v-001sRG-Bx; Fri, 06 Mar 2020 10:46:06 -0600
+Date:   Fri, 6 Mar 2020 10:49:12 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] Btrfs: delayed-inode.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200306164912.GA22197@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.190.186
+X-Source-L: No
+X-Exim-ID: 1jAG6v-001sRG-Bx
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.190.186]:51790
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 13
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 08:52:40 +0100
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-> CC +kbuild, -stable
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Thank you, as these are kbuild specific changes and not bootconfig (as
-building anything in tools doesn't work here with top level O= command).
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Masami, any patches you send for this, they should go to the kbuild
-maintainers.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
--- Steve
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/btrfs/delayed-inode.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/btrfs/delayed-inode.h b/fs/btrfs/delayed-inode.h
+index 74ae226ffaf0..ca96ef007d8f 100644
+--- a/fs/btrfs/delayed-inode.h
++++ b/fs/btrfs/delayed-inode.h
+@@ -70,7 +70,7 @@ struct btrfs_delayed_item {
+ 	refcount_t refs;
+ 	int ins_or_del;
+ 	u32 data_len;
+-	char data[0];
++	char data[];
+ };
+ 
+ static inline void btrfs_init_delayed_root(
+-- 
+2.25.0
 
