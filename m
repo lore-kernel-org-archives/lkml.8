@@ -2,97 +2,243 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81E3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7754C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5AEF2072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:03:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UBgUHubs"
+	by mail.kernel.org (Postfix) with ESMTP id A51AE2072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:05:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgCFDDt (ORCPT
+        id S1726533AbgCFDFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 22:03:49 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:54426 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726300AbgCFDDt (ORCPT
+        Thu, 5 Mar 2020 22:05:11 -0500
+Received: from mo-csw1115.securemx.jp ([210.130.202.157]:40990 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgCFDFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 22:03:49 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583463828; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=ZOMWZQxHKmTjCuz4rH2EIO4fJcoj+hJ0hT38eLMHzdU=; b=UBgUHubs58fRMqNBSjtQtofYDSSA7YH9CLjtTdXrKLkbuvqeUDD7kCk8oL1XgFMYneLXzpPF
- 0J+Z2D8kP0EvK/LRJhPlkY3mmGU7SfqvUtUVu6EzVfR3vwiLzhpjoq9JyqR78vKgzQgfmAo9
- Zlj0n1XdacUfJ0uq7rosWxaOGIk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e61bd84.7f4a19a25fb8-smtp-out-n01;
- Fri, 06 Mar 2020 03:03:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C6C3BC4479D; Fri,  6 Mar 2020 03:03:32 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9FA0DC43383;
-        Fri,  6 Mar 2020 03:03:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9FA0DC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Fri, 6 Mar 2020 08:33:27 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 2/2] f2fs: Add a new CP flag to help fsck fix resize
- SPO issues
-Message-ID: <20200306030327.GH20234@codeaurora.org>
-References: <1583245766-3351-1-git-send-email-stummala@codeaurora.org>
- <1583245766-3351-2-git-send-email-stummala@codeaurora.org>
- <e164f166-5c3f-a2ce-aec6-ff01ecb902e8@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e164f166-5c3f-a2ce-aec6-ff01ecb902e8@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Thu, 5 Mar 2020 22:05:11 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1115) id 02634nJX016875; Fri, 6 Mar 2020 12:04:49 +0900
+X-Iguazu-Qid: 2wGrDj8Mc351USGAVM
+X-Iguazu-QSIG: v=2; s=0; t=1583463889; q=2wGrDj8Mc351USGAVM; m=ndyjnu0DcSyZsE2+a+ZGiFwf2uguWQoJZDmDke3PqmQ=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1112) id 02634lX7032172;
+        Fri, 6 Mar 2020 12:04:48 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id 02634lgr014218;
+        Fri, 6 Mar 2020 12:04:47 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id 02634lv1021124;
+        Fri, 6 Mar 2020 12:04:47 +0900
+From:   Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+To:     miquel.raynal@bootlin.com, vigneshr@ti.com
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Subject: [PATCH v3 2/2] mtd: spinand: toshiba: Support for new Kioxia Serial NAND
+Date:   Fri,  6 Mar 2020 12:04:45 +0900
+X-TSB-HOP: ON
+Message-Id: <fcd0899a764689dde17fa8d776d59dde8265b796.1583371913.git.ytc-mb-yfuruyama7@kioxia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1583371913.git.ytc-mb-yfuruyama7@kioxia.com>
+References: <cover.1583371913.git.ytc-mb-yfuruyama7@kioxia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+Add support for new Kioxia products.
+The new Kioxia products support program load x4 command, and have
+HOLD_D bit which is equivalent to QE bit.
 
-On Fri, Mar 06, 2020 at 09:19:39AM +0800, Chao Yu wrote:
-> On 2020/3/3 22:29, Sahitya Tummala wrote:
-> > Add and set a new CP flag CP_RESIZEFS_FLAG during
-> > online resize FS to help fsck fix the metadata mismatch
-> > that may happen due to SPO during resize, where SB
-> > got updated but CP data couldn't be written yet.
-> > 
-> > fsck errors -
-> > Info: CKPT version = 6ed7bccb
-> >         Wrong user_block_count(2233856)
-> > [f2fs_do_mount:3365] Checkpoint is polluted
-> 
-> I'm not against this patch, however without this change, could
-> fsck have any chance to repair old image?
+Signed-off-by: Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+changelog[v3]:No change.
+changelog[v2]:Split 2 patches.
 
-Sure, I will update the fsck patch to handle it.
+ drivers/mtd/nand/spi/toshiba.c | 119 +++++++++++++++++++++++++++++++++++------
+ 1 file changed, 103 insertions(+), 16 deletions(-)
 
-thanks,
-> 
-> > 
-> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> 
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
+diff --git a/drivers/mtd/nand/spi/toshiba.c b/drivers/mtd/nand/spi/toshiba.c
+index 700d86f..505f9f5 100644
+--- a/drivers/mtd/nand/spi/toshiba.c
++++ b/drivers/mtd/nand/spi/toshiba.c
+@@ -19,6 +19,18 @@ static SPINAND_OP_VARIANTS(read_cache_variants,
+ 		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+ 		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
+ 
++static SPINAND_OP_VARIANTS(write_cache_x4_variants,
++		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
++		SPINAND_PROG_LOAD(true, 0, NULL, 0));
++
++static SPINAND_OP_VARIANTS(update_cache_x4_variants,
++		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
++		SPINAND_PROG_LOAD(false, 0, NULL, 0));
++
++/**
++ * Backward compatibility for 1st generation Serial NAND devices
++ * which don't support Quad Program Load operation.
++ */
+ static SPINAND_OP_VARIANTS(write_cache_variants,
+ 		SPINAND_PROG_LOAD(true, 0, NULL, 0));
+ 
+@@ -94,7 +106,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
+ }
+ 
+ static const struct spinand_info toshiba_spinand_table[] = {
+-	/* 3.3V 1Gb */
++	/* 3.3V 1Gb (1st generation) */
+ 	SPINAND_INFO("TC58CVG0S3HRAIG", 0xC2,
+ 		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
+ 		     NAND_ECCREQ(8, 512),
+@@ -104,7 +116,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
+ 		     0,
+ 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
+ 				     tx58cxgxsxraix_ecc_get_status)),
+-	/* 3.3V 2Gb */
++	/* 3.3V 2Gb (1st generation) */
+ 	SPINAND_INFO("TC58CVG1S3HRAIG", 0xCB,
+ 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
+ 		     NAND_ECCREQ(8, 512),
+@@ -114,7 +126,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
+ 		     0,
+ 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
+ 				     tx58cxgxsxraix_ecc_get_status)),
+-	/* 3.3V 4Gb */
++	/* 3.3V 4Gb (1st generation) */
+ 	SPINAND_INFO("TC58CVG2S0HRAIG", 0xCD,
+ 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
+ 		     NAND_ECCREQ(8, 512),
+@@ -124,17 +136,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
+ 		     0,
+ 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
+ 				     tx58cxgxsxraix_ecc_get_status)),
+-	/* 3.3V 4Gb */
+-	SPINAND_INFO("TC58CVG2S0HRAIJ", 0xED,
+-		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
+-		     NAND_ECCREQ(8, 512),
+-		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
+-					      &write_cache_variants,
+-					      &update_cache_variants),
+-		     0,
+-		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
+-				     tx58cxgxsxraix_ecc_get_status)),
+-	/* 1.8V 1Gb */
++	/* 1.8V 1Gb (1st generation) */
+ 	SPINAND_INFO("TC58CYG0S3HRAIG", 0xB2,
+ 		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
+ 		     NAND_ECCREQ(8, 512),
+@@ -144,7 +146,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
+ 		     0,
+ 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
+ 				     tx58cxgxsxraix_ecc_get_status)),
+-	/* 1.8V 2Gb */
++	/* 1.8V 2Gb (1st generation) */
+ 	SPINAND_INFO("TC58CYG1S3HRAIG", 0xBB,
+ 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
+ 		     NAND_ECCREQ(8, 512),
+@@ -154,7 +156,7 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
+ 		     0,
+ 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
+ 				     tx58cxgxsxraix_ecc_get_status)),
+-	/* 1.8V 4Gb */
++	/* 1.8V 4Gb (1st generation) */
+ 	SPINAND_INFO("TC58CYG2S0HRAIG", 0xBD,
+ 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
+ 		     NAND_ECCREQ(8, 512),
+@@ -164,6 +166,91 @@ static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
+ 		     0,
+ 		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
+ 				     tx58cxgxsxraix_ecc_get_status)),
++
++	/*
++	 * 2nd generation serial nand has HOLD_D which is equivalent to
++	 * QE_BIT.
++	 */
++	/* 3.3V 1Gb (2nd generation) */
++	SPINAND_INFO("TC58CVG0S3HRAIJ", 0xE2,
++		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_x4_variants,
++					      &update_cache_x4_variants),
++		     SPINAND_HAS_QE_BIT,
++		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
++				     tx58cxgxsxraix_ecc_get_status)),
++	/* 3.3V 2Gb (2nd generation) */
++	SPINAND_INFO("TC58CVG1S3HRAIJ", 0xEB,
++		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_x4_variants,
++					      &update_cache_x4_variants),
++		     SPINAND_HAS_QE_BIT,
++		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
++				     tx58cxgxsxraix_ecc_get_status)),
++	/* 3.3V 4Gb (2nd generation) */
++	SPINAND_INFO("TC58CVG2S0HRAIJ", 0xED,
++		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_x4_variants,
++					      &update_cache_x4_variants),
++		     SPINAND_HAS_QE_BIT,
++		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
++				     tx58cxgxsxraix_ecc_get_status)),
++	/* 3.3V 8Gb (2nd generation) */
++	SPINAND_INFO("TH58CVG3S0HRAIJ", 0xE4,
++		     NAND_MEMORG(1, 4096, 256, 64, 4096, 80, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_x4_variants,
++					      &update_cache_x4_variants),
++		     SPINAND_HAS_QE_BIT,
++		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
++				     tx58cxgxsxraix_ecc_get_status)),
++	/* 1.8V 1Gb (2nd generation) */
++	SPINAND_INFO("TC58CYG0S3HRAIJ", 0xD2,
++		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_x4_variants,
++					      &update_cache_x4_variants),
++		     SPINAND_HAS_QE_BIT,
++		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
++				     tx58cxgxsxraix_ecc_get_status)),
++	/* 1.8V 2Gb (2nd generation) */
++	SPINAND_INFO("TC58CYG1S3HRAIJ", 0xDB,
++		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_x4_variants,
++					      &update_cache_x4_variants),
++		     SPINAND_HAS_QE_BIT,
++		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
++				     tx58cxgxsxraix_ecc_get_status)),
++	/* 1.8V 4Gb (2nd generation) */
++	SPINAND_INFO("TC58CYG2S0HRAIJ", 0xDD,
++		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_x4_variants,
++					      &update_cache_x4_variants),
++		     SPINAND_HAS_QE_BIT,
++		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
++				     tx58cxgxsxraix_ecc_get_status)),
++	/* 1.8V 8Gb (2nd generation) */
++	SPINAND_INFO("TH58CYG3S0HRAIJ", 0xD4,
++		     NAND_MEMORG(1, 4096, 256, 64, 4096, 80, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
++					      &write_cache_x4_variants,
++					      &update_cache_x4_variants),
++		     SPINAND_HAS_QE_BIT,
++		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
++				     tx58cxgxsxraix_ecc_get_status)),
+ };
+ 
+ static int toshiba_spinand_detect(struct spinand_device *spinand)
 -- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+1.9.1
+
