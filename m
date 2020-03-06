@@ -2,95 +2,152 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A137CC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD4FC10F27
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770752064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD2A2064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCFTbc (ORCPT
+        id S1726766AbgCFTbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:31:32 -0500
-Received: from mga03.intel.com ([134.134.136.65]:18455 "EHLO mga03.intel.com"
+        Fri, 6 Mar 2020 14:31:53 -0500
+Received: from mga02.intel.com ([134.134.136.20]:27677 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgCFTbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:31:32 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726533AbgCFTbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 14:31:52 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 11:31:30 -0800
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 11:31:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="275654131"
-Received: from sineadfi-mobl.ger.corp.intel.com (HELO localhost) ([10.252.15.28])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 11:31:27 -0800
-Date:   Fri, 6 Mar 2020 21:31:27 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] MAINTAINERS: adjust to trusted keys subsystem creation
-Message-ID: <20200306193127.GJ7472@linux.intel.com>
-References: <20200305203013.6189-1-lukas.bulwahn@gmail.com>
+   d="scan'208";a="234941927"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Mar 2020 11:31:51 -0800
+Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
+        by linux.intel.com (Postfix) with ESMTP id 462105802C8;
+        Fri,  6 Mar 2020 11:31:51 -0800 (PST)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [patch 7/7] PCI/AER: Fix the broken interrupt injection
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>
+References: <20200306130341.199467200@linutronix.de>
+ <20200306130624.098374457@linutronix.de>
+ <08c51309-0bd1-9696-4f4b-4f7425762268@linux.intel.com>
+Organization: Intel
+Message-ID: <0d48a902-3168-ed1e-3c25-f7af19f19fbc@linux.intel.com>
+Date:   Fri, 6 Mar 2020 11:29:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305203013.6189-1-lukas.bulwahn@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <08c51309-0bd1-9696-4f4b-4f7425762268@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 09:30:13PM +0100, Lukas Bulwahn wrote:
-> Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys subsystem")
-> renamed trusted.h to trusted_tpm.h in include/keys/, and moved trusted.c
-> to trusted-keys/trusted_tpm1.c in security/keys/.
-> 
-> Since then, ./scripts/get_maintainer.pl --self-test complains:
-> 
->   warning: no file matches F: security/keys/trusted.c
->   warning: no file matches F: include/keys/trusted.h
-> 
-> Rectify the KEYS-TRUSTED entry in MAINTAINERS now and ensure that all
-> files in security/keys/trusted-keys/ are identified as part of
-> KEYS-TRUSTED.
-> 
-> Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-> Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+On 3/6/20 10:32 AM, Kuppuswamy Sathyanarayanan wrote:
+>
+> On 3/6/20 5:03 AM, Thomas Gleixner wrote:
+>> The AER error injection mechanism just blindly abuses 
+>> generic_handle_irq()
+>> which is really not meant for consumption by random drivers. The 
+>> include of
+>> linux/irq.h should have been a red flag in the first place. Driver code,
+>> unless implementing interrupt chips or low level hypervisor 
+>> functionality
+>> has absolutely no business with that.
+>>
+>> Invoking generic_handle_irq() from non interrupt handling context can 
+>> have
+>> nasty side effects at least on x86 due to the hardware trainwreck which
+>> makes interrupt affinity changes a fragile beast. Sathyanarayanan 
+>> triggered
+>> a NULL pointer dereference in the low level APIC code that way. While 
+>> the
+>> particular pointer could be checked this would only paper over the issue
+>> because there are other ways to trigger warnings or silently corrupt 
+>> state.
+>>
+>> Invoke the new irq_inject_interrupt() mechanism, which has the necessary
+>> sanity checks in place and injects the interrupt via the irq_retrigger()
+>> mechanism, which is at least halfways safe vs. the fragile x86 affinity
+>> change mechanics.
+>>
+>> It's safe on x86 as it does not corrupt state, but it still can cause a
+>> premature completion of an interrupt affinity change causing the 
+>> interrupt
+>> line to become stale. Very unlikely, but possible.
+>>
+>> For regular operations this is a non issue as AER error injection is 
+>> meant
+>> for debugging and testing and not for usage on production systems. 
+>> People
+>> using this should better know what they are doing.
+> It looks good to me.
+>
+> Reviewed-by: Kuppuswamy Sathyanarayanan 
+> <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Tested-by: Kuppuswamy Sathyanarayanan 
+> <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> Fixes: 390e2db82480 ("PCI/AER: Abstract AER interrupt handling")
+This patch is merged in v4.20 kernel. So this fix could be a candidate 
+for stable fix.
+>> Reported-by: sathyanarayanan.kuppuswamy@linux.intel.com
+>> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>> ---
+>>   drivers/pci/pcie/Kconfig      |    1 +
+>>   drivers/pci/pcie/aer_inject.c |    6 ++----
+>>   2 files changed, 3 insertions(+), 4 deletions(-)
+>>
+>> --- a/drivers/pci/pcie/Kconfig
+>> +++ b/drivers/pci/pcie/Kconfig
+>> @@ -34,6 +34,7 @@ config PCIEAER
+>>   config PCIEAER_INJECT
+>>       tristate "PCI Express error injection support"
+>>       depends on PCIEAER
+>> +    select GENERIC_IRQ_INJECTION
+>>       help
+>>         This enables PCI Express Root Port Advanced Error Reporting
+>>         (AER) software error injector.
+>> --- a/drivers/pci/pcie/aer_inject.c
+>> +++ b/drivers/pci/pcie/aer_inject.c
+>> @@ -16,7 +16,7 @@
+>>     #include <linux/module.h>
+>>   #include <linux/init.h>
+>> -#include <linux/irq.h>
+>> +#include <linux/interrupt.h>
+>>   #include <linux/miscdevice.h>
+>>   #include <linux/pci.h>
+>>   #include <linux/slab.h>
+>> @@ -468,9 +468,7 @@ static int aer_inject(struct aer_error_i
+>>           }
+>>           pci_info(edev->port, "Injecting errors %08x/%08x into 
+>> device %s\n",
+>>                einj->cor_status, einj->uncor_status, pci_name(dev));
+>> -        local_irq_disable();
+>> -        generic_handle_irq(edev->irq);
+>> -        local_irq_enable();
+>> +        ret = irq_inject_interrupt(edev->irq);
+>>       } else {
+>>           pci_err(rpdev, "AER device not found\n");
+>>           ret = -ENODEV;
+>>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
-> Changes to v1:
->   - use a global pattern for matching the whole security/keys/trusted-keys/
->     directory.
-> Changes to v2:
->   - name the correct directory in the commit message
-> 
-> Sumit, please ack.
-> Jarkko, please pick this patch v3.
-
-Please tell me why you emphasize the moment when a patch that does not
-fix a critical bug is picked?
-
-Do you have systems that break because the MAINTAINERS file is not
-updated?
-
-It will end up in v5.7 PR for sure but saying things like that is same
-as saying that there would be some catastrophically urgent need to still
-squeeze the patch into v5.6. Unless you actually have something critical
-in your hand, please stop doing that.
-
-/Jarkko
