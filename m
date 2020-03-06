@@ -2,185 +2,120 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E490C10F26
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EAAC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5171A2070A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:14:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="miVpeDA7"
+	by mail.kernel.org (Postfix) with ESMTP id E6028207FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583489697;
+	bh=JrMs07MY2g+UKb5EDRgE23qQsFrvwRFqTNqqEh89w9I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=z78ZtcVQ74Sz2B+FgC+PaRmvtF9geMJkji2rQpNuPj58bEYISXnNvecwxeBwa2qr9
+	 /d4KWZuNed7QdZ4XW4VUTqq2V27Z+OCDQTc+V4J+GK3wjiRh/aNGnziUDeXohAStvI
+	 V0xIUCoou9LsvU9HuC6UcadNr9Wt0PyRazXSapMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgCFKOY (ORCPT
+        id S1726818AbgCFKO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:14:24 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46711 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726359AbgCFKOY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:14:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583489663; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=NtyrUOr8s94oXdyYaHt5f294dq+E37d+2TocPvyH+fA=; b=miVpeDA7PY0To4lgqvY8/Sk2nonCnnt9czcQ3M4817qF7ev4w5RQWhU/gZuP+oyzkcCes3nj
- ZrJOS5us1FLMiey5zJCHGAiOvE8TuoTquXIuqhdLnvGpsTEe6v72s85QGHbguYJVMdJ9eV+z
- mgjNI2hloGkRuwOFx90xypYsByE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e62227d.7f5ac5ecd570-smtp-out-n02;
- Fri, 06 Mar 2020 10:14:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 616F3C4478C; Fri,  6 Mar 2020 10:14:21 +0000 (UTC)
-Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        Fri, 6 Mar 2020 05:14:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726359AbgCFKOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 05:14:55 -0500
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 247A7C433D2;
-        Fri,  6 Mar 2020 10:14:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 247A7C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V2] mmc: sdhci-msm: Disable CQE during SDHC reset
-To:     Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>
-References: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
- <1583322863-21790-1-git-send-email-vbadigan@codeaurora.org>
- <da449444-1878-e387-6ebf-4ddb282a9b71@intel.com>
- <1430237a-9dc5-f046-1dfe-1d5c09c16ead@codeaurora.org>
- <3a1783c2-e8bb-f5af-4d3e-f4a45b487f0e@intel.com>
- <0e737f52-767f-05d4-829b-4f76c084062c@codeaurora.org>
- <460b7cbe-71f5-4bea-673f-2075ee5c5d6a@intel.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <cd306623-37a7-318e-8545-4b6a9c3765f4@codeaurora.org>
-Date:   Fri, 6 Mar 2020 15:44:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id BD8A9208C3
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Mar 2020 10:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583489695;
+        bh=JrMs07MY2g+UKb5EDRgE23qQsFrvwRFqTNqqEh89w9I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lSMfLZUTVY1802PpPFgv/mrHFXEMdr9bTh5ARukXUmNoOMNpSrVrzLwl48tTycssb
+         smNV3y2Uxtb4dqGRDGtUlT45KCkP7kBaeqEAdRVVEVUX32DJv+Etgpq6sT7MvJYMra
+         t3TQlgWX94UvmNkC2YtkNZ0gwR0XZEN151/r3QYc=
+Received: by mail-wm1-f43.google.com with SMTP id e26so1721079wme.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:14:54 -0800 (PST)
+X-Gm-Message-State: ANhLgQ0KD9+jb1TnJudPBY1VPdpp1XUG+VuzKG9WyEJwyE12wE4/VCm0
+        3wFzGgcaNdRbuIoZt9CZBGKrcbRf8y/nTHxNuN91bA==
+X-Google-Smtp-Source: ADFU+vsFANSACzYGytLz08mb68pZbS2PCm3O8i7TdajdJ592AHhe7xTjYxrFq3+qMx59PCDEw8uloFEVf2JUd1CVHok=
+X-Received: by 2002:a1c:9d43:: with SMTP id g64mr3184759wme.62.1583489692927;
+ Fri, 06 Mar 2020 02:14:52 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <460b7cbe-71f5-4bea-673f-2075ee5c5d6a@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20181124162123.21300-1-n.merinov@inango-systems.com>
+ <20191224092119.4581-1-n.merinov@inango-systems.com> <20200108133926.GC4455@infradead.org>
+ <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com>
+ <20200218185336.GA14242@infradead.org> <797777312.1324734.1582544319435.JavaMail.zimbra@inango-systems.com>
+ <20200224170813.GA27403@infradead.org> <711479725.2305.1583484191776.JavaMail.zimbra@inango-systems.com>
+ <CAKv+Gu8ufmONSU8SX=NaAZBAKuD4Coo19z6e2MJ7BegsseJ63A@mail.gmail.com>
+In-Reply-To: <CAKv+Gu8ufmONSU8SX=NaAZBAKuD4Coo19z6e2MJ7BegsseJ63A@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 6 Mar 2020 11:14:41 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu_22KX4q7SJxEQ_tUcWDXHrFOdFj2jmXxFR_04KawQXnA@mail.gmail.com>
+Message-ID: <CAKv+Gu_22KX4q7SJxEQ_tUcWDXHrFOdFj2jmXxFR_04KawQXnA@mail.gmail.com>
+Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID
+ partition entry
+To:     Nikolai Merinov <n.merinov@inango-systems.com>
+Cc:     hch <hch@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/5/2020 2:29 PM, Adrian Hunter wrote:
-> On 4/03/20 6:50 pm, Veerabhadrarao Badiganti wrote:
->> On 3/4/2020 7:40 PM, Adrian Hunter wrote:
->>> On 4/03/20 3:10 pm, Veerabhadrarao Badiganti wrote:
->>>> Hi Adrian
->>>>
->>>> On 3/4/2020 5:58 PM, Adrian Hunter wrote:
->>>>> On 4/03/20 1:54 pm, Veerabhadrarao Badiganti wrote:
->>>>>> When SDHC gets reset (E.g. in suspend path), CQE also gets reset
->>>>>> and goes to disable state. But s/w state still points it as CQE
->>>>>> is in enabled state. Since s/w and h/w states goes out of sync,
->>>>>> it results in s/w request timeout for subsequent CQE requests.
->>>>>>
->>>>>> To synchronize CQE s/w and h/w state during SDHC reset,
->>>>>> explicitly disable CQE after reset.
->>>>> Shouldn't you be calling cqhci_suspend() / cqhci_resume() in the suspend
->>>>> and
->>>>> resume paths?
->>>> This issue is seen during mmc runtime suspend.  I can add it
->>>> sdhci_msm_runtime_suspend
->>>>
->>>> but sdhci_msm runtime delay is aggressive, its 50ms. It may get invoked very
->>>> frequently.
->>>>
->>>> So Im of the opinion that disabling CQE very often from platform runtime
->>>> suspend is overkill.
->>> It doesn't look like sdhci-msm calls any sdhci.c pm ops, so how does SDHC
->>> get reset?
->> With MMC_CAP_AGGRESSIVE_PM flag enabled, it getting called from
->> mmc_runtime_suspend()
->>
->> Below is the call stack()
->>
->>     sdhci_reset
->>    sdhci_do_reset
->>    sdhci_init
->>    sdhci_set_ios
->>    mmc_set_initial_state
->>    mmc_power_off
->>   _mmc_suspend
->>    mmc_runtime_suspend
->>
-> OK, cqhci_suspend does the right thing, but it is not an
-> appropriate function for this.  I suggest introducing
-> cqhci_deactivate() as below.
+On Fri, 6 Mar 2020 at 10:25, Ard Biesheuvel <ardb@kernel.org> wrote:
 >
-> From: Adrian Hunter <adrian.hunter@intel.com>
-> Date: Thu, 5 Mar 2020 10:42:09 +0200
-> Subject: [PATCH] mmc: cqhci: Add cqhci_deactivate()
+> On Fri, 6 Mar 2020 at 09:43, Nikolai Merinov
+> <n.merinov@inango-systems.com> wrote:
+> >
+> > Hi Christoph,
+> >
+> > Should I perform any other steps in order to get this change in the master?
+> >
 >
-> Host controllers can reset CQHCI either directly or as a consequence of
-> host controller reset. Add cqhci_deactivate() which puts the CQHCI
-> driver into a state that is consistent with that.
+> I can take it via the EFI tree with an ack from Dave.
 >
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->   drivers/mmc/host/cqhci.c | 6 +++---
->   drivers/mmc/host/cqhci.h | 5 ++++-
->   2 files changed, 7 insertions(+), 4 deletions(-)
+
+... or actually, I'm sure Dave is fine with it, so I'll just queue it
+in efi/next directly (with Christoph's ack)
+
 >
-> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-> index e2ea2c4b6b94..d8d024a1682b 100644
-> --- a/drivers/mmc/host/cqhci.c
-> +++ b/drivers/mmc/host/cqhci.c
-> @@ -298,16 +298,16 @@ static void __cqhci_disable(struct cqhci_host *cq_host)
->   	cq_host->activated = false;
->   }
->   
-> -int cqhci_suspend(struct mmc_host *mmc)
-> +int cqhci_deactivate(struct mmc_host *mmc)
->   {
->   	struct cqhci_host *cq_host = mmc->cqe_private;
->   
-> -	if (cq_host->enabled)
-> +	if (cq_host->enabled && cq_host->activated)
->   		__cqhci_disable(cq_host);
->   
->   	return 0;
->   }
-> -EXPORT_SYMBOL(cqhci_suspend);
-> +EXPORT_SYMBOL(cqhci_deactivate);
->   
->   int cqhci_resume(struct mmc_host *mmc)
->   {
-> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
-> index def76e9b5cac..8648846a0213 100644
-> --- a/drivers/mmc/host/cqhci.h
-> +++ b/drivers/mmc/host/cqhci.h
-> @@ -230,7 +230,10 @@ irqreturn_t cqhci_irq(struct mmc_host *mmc, u32 intmask, int cmd_error,
->   		      int data_error);
->   int cqhci_init(struct cqhci_host *cq_host, struct mmc_host *mmc, bool dma64);
->   struct cqhci_host *cqhci_pltfm_init(struct platform_device *pdev);
-> -int cqhci_suspend(struct mmc_host *mmc);
-> +static inline int cqhci_suspend(struct mmc_host *mmc)
-> +{
-> +	return cqhci_deactivate(mmc);
-> +}
->   int cqhci_resume(struct mmc_host *mmc);
->   
->   #endif
-
-Thanks Adrian for the suggestion. Will post this change and my updated fix.
-
-Thanks
-
-Veera
+> >
+> > ----- Original Message -----
+> > > From: "hch" <hch@infradead.org>
+> > > To: "n merinov" <n.merinov@inango-systems.com>
+> > > Cc: "hch" <hch@infradead.org>, "Davidlohr Bueso" <dave@stgolabs.net>, "Jens Axboe" <axboe@kernel.dk>, "Ard Biesheuvel"
+> > > <ardb@kernel.org>, "linux-efi" <linux-efi@vger.kernel.org>, "linux-block" <linux-block@vger.kernel.org>, "linux-kernel"
+> > > <linux-kernel@vger.kernel.org>
+> > > Sent: Monday, February 24, 2020 10:08:13 PM
+> > > Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID partition entry
+> >
+> > > On Mon, Feb 24, 2020 at 01:38:39PM +0200, Nikolai Merinov wrote:
+> > >> Hi Christoph,
+> > >>
+> > >> > I'd rather use plain __le16 and le16_to_cpu here. Also the be
+> > >> > variants seems to be entirely unused.
+> > >>
+> > >> Looks like I misunderstood your comment from
+> > >> https://patchwork.kernel.org/patch/11309223/:
+> > >>
+> > >> > Please add a an efi_char_from_cpu or similarly named helper
+> > >> > to encapsulate this logic.
+> > >>
+> > >> The "le16_to_cpu(ptes[i].partition_name[label_count])" call is the
+> > >> full implementation of the "efi_char_from_cpu" logic. Do you want
+> > >> to encapsulate "utf16_le_to_7bit_string" logic entirely like in
+> > >> the attached version?
+> > >
+> > > I think I though of just the inner loop, but your new version looks even
+> > > better, so:
+> > >
+> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
