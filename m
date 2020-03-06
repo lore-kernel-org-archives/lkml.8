@@ -2,167 +2,194 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5607DC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C6EC10F27
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 242372072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="KjzxDw61"
+	by mail.kernel.org (Postfix) with ESMTP id 426042084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:46:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgCFLpw (ORCPT
+        id S1726898AbgCFLqG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:45:52 -0500
-Received: from mail-dm6nam11on2051.outbound.protection.outlook.com ([40.107.223.51]:6125
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        Fri, 6 Mar 2020 06:46:06 -0500
+Received: from mail-db8eur05olkn2106.outbound.protection.outlook.com ([40.92.89.106]:22182
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726054AbgCFLpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:45:51 -0500
+        id S1725827AbgCFLqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 06:46:05 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SK82t11p5Z+qE1WNOFcJ+y1u2POrLeAgj5Ri2dHIqCE9OnV8Nl6itF7BR+pvNhsxx7BfIHCCjH0VdRTHmdWB+YzGXUbDH9CHHSzOIZX9Xc5oR+enN3XNdG5L4Nl3BRzXNCKAQYQ4r0AmBzVHgKdQeNkIzhD1vWQxV3o+jMph8MlN0EBwSRkg5PYwC28HRf2vw5Xx2GZLYVo+Gk9nv3e3iDQ4dwhZl3XvlIc4vkFNuqI9SRjH7RmHSBK4ZM/YIcSddDQrTnBwni3HEkLinp9QZCG54RyD2dR7DmNhhWEFguX43vwsPxSWlLJKXGa7sn4o5EeQm7hNrKWPkfTetEVXPw==
+ b=lq29nZ0GrCm5ZBsRuzmUtTjNF9NMOGpbhQTgfihWLuP45FdBkK6qHNnOoOGvHEDDQKSvWY3wtZ86cjHmBYtEyipol+a4P98e0/g3aex7NbZdkcFMvnYVge2uEX74TZG6R1QMso4amIZNpTTiY3veCzWAXK5IDvMUMgJEBKS6i4cNsOGy6/cMaPS1vAeCpnuxmdAw39yt5Bdwzn+km/P0up5rKPTyZqD0eOOi6+Yz5WUgBS5oJlTJNy9vZshVUtBE6GDCuhapr5sJz1xhcAi98dkVBlX8FoxUX6M+ac7hzKhH3jMEN3mNun+N4WR8z0DeYmAo27sIAsxtUfJmSGwpUw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jM8TqAovF3wwt8GOhBC+nEGzEqvZcH9gN6EoKWasepU=;
- b=ilCi3YSJL7DdzMNvrux5O5khGCrg4MFe055c7k5T+gC7iM/KVfmKOjUCqErbSWdcXVWnZU7jWU48XPbKl1wpm1fm4j98dQwDzU6sS3K/mdYOK9zKTDjvrYDXLPHscH0ItUGFVWSKkmlkhOrBByDX0UosLxtEQVPqd1tvGNAoVxFufs1eIjNkHXUo0oSNlSO/ySwYQtD70CP7sEl2RiB1DRpMNn0+ubJAP1jHJLFDV72Z9wWNY7pcaRwhVXECZfQSb1EH34VuD/LZDjTQn2+TDx+7z1F6GTth7Vi1TzjXcPgzDd60nhgFLC/zuiSEWpz+ODFOGrfKVEwwa/bBwf/k0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jM8TqAovF3wwt8GOhBC+nEGzEqvZcH9gN6EoKWasepU=;
- b=KjzxDw61DDbiD9+pX2w9h+H2oe264EbKynpTPFiKrsS2vC+xyduzvY6PyULU+1fuFdyJKMtDrgDCntMrOK+eHpkMWIdHGGa2BAiBUBms3zgXw5bH7RR12stNHW5w3YLwDw620L64PWLi1AKQeVME3I5wGidj4x4XsVLYq6kcSYk=
-Received: from MN2PR02MB6336.namprd02.prod.outlook.com (2603:10b6:208:1b8::30)
- by MN2PR02MB5933.namprd02.prod.outlook.com (2603:10b6:208:118::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Fri, 6 Mar
- 2020 11:45:47 +0000
-Received: from MN2PR02MB6336.namprd02.prod.outlook.com
- ([fe80::b51f:8bc4:7e18:f227]) by MN2PR02MB6336.namprd02.prod.outlook.com
- ([fe80::b51f:8bc4:7e18:f227%7]) with mapi id 15.20.2793.013; Fri, 6 Mar 2020
- 11:45:47 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ bh=wtc5L0L14OZEoSj3a0yc699cWCHD/8WO21mqeEtzBLM=;
+ b=WpSskQj3jIEhQRZ4b8Ev6mTE91zMmNrE8Vd/5iziU2nduAs/7qXPsWTR7R0ViFDLbm9HLY9B5n8Hd2ZTEhfB0X1mTMxITGbzIy+1FMWH8t+s4HvqnLTD01jRHIAZ3/Cjj/SDn9yDG3nAp9x7FVGL4Yy/lRhTAwY8w96M3UCbqbmdET/3bE/lVYRqvvlXRFrdc5BrEQYiW281FNqhStpzkshFj1VvQ0NAF8HJeS1Yi9Iq6u0qBAG1Ltrwa263If4yi3S2hWqLQjEvaZnKLtN1L+l0SFNGiTFGBXHxdRwlBqFQMlxzW6SsdOLztmSELjMwwP5Pzhaww1UP230gXMEuKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from DB8EUR05FT060.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc0f::37) by
+ DB8EUR05HT100.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc0f::330)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Fri, 6 Mar
+ 2020 11:46:01 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.233.238.53) by
+ DB8EUR05FT060.mail.protection.outlook.com (10.233.238.218) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Fri, 6 Mar 2020 11:46:01 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Fri, 6 Mar 2020
+ 11:46:01 +0000
+Received: from [192.168.1.101] (92.77.140.102) by AM0PR01CA0078.eurprd01.prod.exchangelabs.com (2603:10a6:208:10e::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Fri, 6 Mar 2020 11:45:59 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>,
-        "maz@kernel.org" <maz@kernel.org>
-Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Thread-Topic: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Thread-Index: AQHV14gyqXPkldKNt0SLTelX37u03Kgr8Z6AgAAlV5CABIIlAIAAIZtQgArnjQCAAAJtIA==
-Date:   Fri, 6 Mar 2020 11:45:47 +0000
-Message-ID: <MN2PR02MB6336BBFDCB07F424C36742B0A5E30@MN2PR02MB6336.namprd02.prod.outlook.com>
-References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20200225114013.GB6913@e121166-lin.cambridge.arm.com>
- <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
- <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
- <MN2PR02MB6336569F378683B05B262D4AA5E80@MN2PR02MB6336.namprd02.prod.outlook.com>
- <20200306111620.GA10297@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200306111620.GA10297@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 2/2] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+Thread-Topic: [PATCH 2/2] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+Thread-Index: AQHV8zOjiaOX92PFsUy1cOGGFJ5V7ag6ihsAgAB9KjCAAGvuAA==
+Date:   Fri, 6 Mar 2020 11:46:01 +0000
+Message-ID: <AM6PR03MB5170FC44E102D4F8C1B2E854E4E30@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003021531.C77EF10@keescook>
+ <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87imjicxjw.fsf_-_@x220.int.ebiederm.org>
+ <AM6PR03MB5170375DBF699D4F3DC7A08DE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87k13yawpp.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87k13yawpp.fsf@x220.int.ebiederm.org>
+Accept-Language: en-US, en-GB, de-DE
 Content-Language: en-US
 X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=bharatku@xilinx.com; 
-x-originating-ip: [149.199.50.133]
+x-clientproxiedby: AM0PR01CA0078.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:10e::19) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+x-incomingtopheadermarker: OriginalChecksum:6A374852C01B3EF613757ABDC991B772716A76AF96AB389077CE5FA1ADE7F350;UpperCasedChecksum:A8F3CBDF8F5B3300EA6AFB7DAB9F6A9E9C28E2440B1F75B24AF0AA33A89505CC;SizeAsReceived:9962;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [Dq0iUjElK8FhGRtZy48KKV7ZMjH4c9jK]
+x-microsoft-original-message-id: <503bf661-9426-f9ea-5c1f-a1a9762f89c3@hotmail.de>
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e7133ba3-4801-46c9-a42b-08d7c1c3e97d
-x-ms-traffictypediagnostic: MN2PR02MB5933:|MN2PR02MB5933:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR02MB5933F1EAF20D61438DF3BDB4A5E30@MN2PR02MB5933.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0334223192
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(396003)(346002)(39860400002)(189003)(199004)(66946007)(53546011)(81166006)(7696005)(6916009)(76116006)(66476007)(71200400001)(81156014)(26005)(33656002)(6506007)(54906003)(8676002)(316002)(66446008)(52536014)(55016002)(186003)(64756008)(478600001)(8936002)(5660300002)(86362001)(2906002)(66556008)(9686003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB5933;H:MN2PR02MB6336.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 6ba5ec6f-ba76-4802-fac4-08d7c1c3f101
+x-ms-traffictypediagnostic: DB8EUR05HT100:
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GrjVgD16yi4AmNNbUpqRvZT+CLnLPA4EKjq4EgjE1Z6omd7JdO6WEHEBwOndaVKO02U/oe1sqLZQ3zQk6HRkZZ/ARNZQTUIlCQUDHa9udiNwG6Zba9Bri4tKCLYbUyPHhIl2VVmnZdadIcFZ6JOFUzeyttE7YNQiPgAlkJX7sKAk/3eXTqgctlpv7xfnNgCZ5ewdCouBQ+AGfrI3Dha7YA++URvH7cHK9+eZNWxLLYocYsfjntZxw1OPoo8rvrpNSyQxBsroYgV3uLQChejwfuPy+h0nPfpWHjrcCfuOfrzvi3uJ1UWLFX3msFVPHQzftPyG2afuyYZB7qqEEZeogzM+2G53eSxrDs14sXRjGdXk5i2HpONzvDRqZn6mbKTs/0VyeMK/rCBwD1nxATThCYvN8buwYNCDQ3blourAL8NtcSLUqeurifFiR0x/b/jj
-x-ms-exchange-antispam-messagedata: QTR2d3o1Jc6Dw9/o4gRQPGTNAFLR5XD4vqKe/Q7FPpWe+rkckapbnG1poACEVGrvrMsAWVBqzSqco8kVVF4M2yGDIjxftjxONMCZUykB2/LPO/lfPGd6xLgbTY7kDu8btCGMhJB3F8bn2uSq5J7i7A==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: ccWyuF+3K79hahWw5nqZBFdxKADIvjDYt9BhFhOlnYoAXTfBMBvQBsyh5knnwHo+WpwBPWHf+dozFWjZT38kIXZA076X9TBK0ITYEEphnO/gZCXHPBfk1NhTHsVqWLF9g+dRgUHhX9dMTvQ20TMmYONoh6fTQRluGtoJhVxXXsjpkX69+X453rFA1BeaE24qfafvFDis0Wd3FeebYoJhk1d709lnnCJ4728JuiLgMlY=
+x-ms-exchange-antispam-messagedata: joD90TpJxkAgvVm47IEsGXTTY+KcTvtpuerVZVWtSC/5TAyM5h/sAKp5hJQBlAyIcbdhfLE2Dri55KJWxH9Rp3Jq9y18JZOxAr5TRPlrUbkxYdwY+ZXx/2G8cnq1elXojxrdBUDi2HEgBVV44Pr9iA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <1C556EFF0DB20147A68F62658B55FF00@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7133ba3-4801-46c9-a42b-08d7c1c3e97d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2020 11:45:47.4464
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ba5ec6f-ba76-4802-fac4-08d7c1c3f101
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2020 11:46:01.1281
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RjX4k3gXaqB/L7BaqcwUw2rXxcWhiRnpIqUoI58idrRnx6pZiQtymiWX3pO5M1SXahmQAhSLDhgKtSMPzcW0Tg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB5933
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8EUR05HT100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Friday, March 6, 2020 4:46 PM
-> To: Bharat Kumar Gogada <bharatku@xilinx.com>
-> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
-> bhelgaas@google.com; Ravikiran Gummaluri <rgummal@xilinx.com>;
-> maz@kernel.org
-> Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port dri=
-ver
->=20
-> On Fri, Feb 28, 2020 at 12:48:48PM +0000, Bharat Kumar Gogada wrote:
-> > > Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root
-> > > Port driver
-> > >
-> > > [+MarcZ, FHI]
-> > >
-> > > On Tue, Feb 25, 2020 at 02:39:56PM +0000, Bharat Kumar Gogada wrote:
-> > >
-> > > [...]
-> > >
-> > > > > > +/* ECAM definitions */
-> > > > > > +#define ECAM_BUS_NUM_SHIFT		20
-> > > > > > +#define ECAM_DEV_NUM_SHIFT		12
-> > > > >
-> > > > > You don't need these ECAM_* defines, you can use
-> pci_generic_ecam_ops.
-> > > > Does this need separate ranges region for ECAM space ?
-> > > > We have ECAM and controller space in same region.
-> > >
-> > > You can create an ECAM window with pci_ecam_create where *cfgres
-> > > represent the ECAM area, I don't get what you mean by "same region".
-> > >
-> > > Do you mean "contiguous" ? Or something else ?
-> > Yes, contiguous; within ECAM region some space is for controller regist=
-ers.
->=20
-> What does that mean ? I don't get it. Can you explain to me how this addr=
-ess
-> space works please ?
->=20
-Hi Lorenzo,
-		reg =3D <0x6 0x00000000 0x0 0x1000000>,
-		      <0x0 0xFCA10000 0x0 0x1000>;
-		reg-names =3D "cfg", "cpm_slcr";
 
-In the above cfg region some region of it reserved for bridge registers and=
- rest for ECAM=20
-address space transactions. The bridge registers are mapped at an unused of=
-fset in config space
-of root port, when the offset hit it will access controller register space.
 
-This region is already being mapped=20
-res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-port->reg_base =3D devm_ioremap_resource(dev, res);
+Am 06.03.20 um 06:17 schrieb Eric W. Biederman:
+> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+> 
+>> On 3/5/20 10:16 PM, Eric W. Biederman wrote:
+>>>
+>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+>>> over the userspace accesses as the arguments from userspace are read.
+>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+>>> threads are killed.  The cred_guard_mutex is held over
+>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+>>>
+>>> Any of those can result in deadlock, as the cred_guard_mutex is held
+>>> over a possible indefinite userspace waits for userspace.
+>>>
+>>> Add exec_update_mutex that is only held over exec updating process
+>>> with the new contents of exec, so that code that needs not to be
+>>> confused by exec changing the mm and the cred in ways that can not
+>>> happen during ordinary execution of a process can take.
+>>>
+>>> The plan is to switch the users of cred_guard_mutex to
+>>> exed_udpate_mutex one by one.  This lets us move forward while still
+>>> being careful and not introducing any regressions.
+>>>
+>>> Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
+>>> Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
+>>> Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
+>>> Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
+>>> Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
+>>> Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
+>>> Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
+>>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>>> ---
+>>>  fs/exec.c                    | 4 ++++
+>>>  include/linux/sched/signal.h | 9 ++++++++-
+>>>  kernel/fork.c                | 1 +
+>>>  3 files changed, 13 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/exec.c b/fs/exec.c
+>>> index c243f9660d46..ad7b518f906d 100644
+>>> --- a/fs/exec.c
+>>> +++ b/fs/exec.c
+>>> @@ -1182,6 +1182,7 @@ static int de_thread(struct linux_binprm *bprm, struct task_struct *tsk)
+>>>  		release_task(leader);
+>>>  	}
+>>>  
+>>> +	mutex_lock(&current->signal->exec_update_mutex);
 
-Does pci_ecam_create will work along with above API simultaneously ?
+And by the way, could you make this mutex_lock_killable?
 
-Regards,
-Bharat=20
 
+Bernd.
