@@ -2,132 +2,125 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ECCC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7853C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C97A0206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9772084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gs+7G5F/"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZqdpCA9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgCFOPh (ORCPT
+        id S1726846AbgCFOQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:15:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39931 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726307AbgCFOPh (ORCPT
+        Fri, 6 Mar 2020 09:16:24 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44531 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgCFOQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:15:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583504136;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=D06inSyStwasfjDpHRxb2Ky6pokYblmZQS2S8Q2LExk=;
-        b=gs+7G5F/KRjA2xbSoUxrLc6Vr6Ady5Q8d569XAmOMc8qIPDV9xWQjtMqXWv61cCBsmhD5B
-        p6kAhAZrJVvrZIAbRBtrxjZOA2RMyVhiyoBLQXGhIr0joba9nftIqn78RONgEycWB3QXdY
-        AiKycDKahHRrinM1UbXFZbwUt7nWZGY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-93-EnmT9FR9PSGyc8B1uArEfg-1; Fri, 06 Mar 2020 09:15:34 -0500
-X-MC-Unique: EnmT9FR9PSGyc8B1uArEfg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7F2218AB2C5;
-        Fri,  6 Mar 2020 14:15:32 +0000 (UTC)
-Received: from krava (ovpn-205-205.brq.redhat.com [10.40.205.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F109A10002CD;
-        Fri,  6 Mar 2020 14:15:30 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 15:15:28 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 07/10] perf record: Support synthesizing cgroup events
-Message-ID: <20200306141528.GD290743@krava>
-References: <20200224043749.69466-1-namhyung@kernel.org>
- <20200224043749.69466-8-namhyung@kernel.org>
- <20200306141404.GC290743@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306141404.GC290743@krava>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Fri, 6 Mar 2020 09:16:24 -0500
+Received: by mail-qk1-f195.google.com with SMTP id f198so2357940qke.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 06:16:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DQUY3QDPMDTK1rQ8X2lwbSG72/yMK9wgJPmqxVwBErk=;
+        b=ZqdpCA9LxxE1FdBB5L90z4u8xd5+i9PbegTQwlFefCRUHZnd70UD/v5WxHspbbXlNb
+         m1zhkwzSreZCmdGCIqcmJDXsVoyW2Rymztklpg+dEPvjFg56U53n6mhvN85PpyJUYTBV
+         piciPbwADqL171F3KDaMnR1S6TRBZhjqtdmn2Ub0rOvyr4h9+K8hvoCVLcxh727Vx89f
+         W5Y61DJbIW6wdhEz8aaKa6ddLlDTFcnW8x/hri+R8XWcl2Mu/qOEn7fFKI2sFAylzFO1
+         F9K26YBs+qyLp2K1QPPAre+SsMR7dBhkclTIHPCAMma1lZNd4Pf3ryJYEeVSH5j2n9l/
+         Pf7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DQUY3QDPMDTK1rQ8X2lwbSG72/yMK9wgJPmqxVwBErk=;
+        b=rJwqi+niyWNxrPUHr5+Tr6A/4ukWH9crs2GPYrZiGngHlVXGz0dUfnq4pAQPDPytOh
+         Qlxxd9LtFu6irRqcHSAC7k11oeG/Dl2x9tgthlz5foCNrWUfcCHDYcpHHS3mnfuoSh4X
+         5p8tugVZjK80akEcX1+5wZUiZr1WcJ1NJ2yEsjEZVKMupAsIC44+pVxX9a35dlBSNJ56
+         p8wrG5pO1rslDAIrbs0YkdE/2BkQ6gvMR5Sm8GnxngHTLSutFsp/er+ErvavYAY81lKg
+         3/tyADbEpn5k2oWaXs9j7B9Bh3dVVngUmpq7l16CeLaGvxlFL36POdRBu5D0vjf99EEW
+         0Ajg==
+X-Gm-Message-State: ANhLgQ2UXfV2+yvMcpEeO+u4ztHfzU0RenNavlzOo+onvWXdpA6V4see
+        H8b6Yp57kMf7gLW4Bjsit03ktQ==
+X-Google-Smtp-Source: ADFU+vvkMsxohXrfARQj0UcaqMypxNcqS4qcoA2Uy1vzO/CcdN1RB9ht/HOZED17BkE+AVVtDmcZXA==
+X-Received: by 2002:a37:546:: with SMTP id 67mr2997085qkf.272.1583504182122;
+        Fri, 06 Mar 2020 06:16:22 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id o129sm2142898qke.109.2020.03.06.06.16.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Mar 2020 06:16:21 -0800 (PST)
+Message-ID: <1583504179.7365.158.camel@lca.pw>
+Subject: Re: [PATCH -next] x86/mm/pat: mark an intentional data race
+From:   Qian Cai <cai@lca.pw>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        elver@google.com, x86@kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 06 Mar 2020 09:16:19 -0500
+In-Reply-To: <1581343816-6490-1-git-send-email-cai@lca.pw>
+References: <1581343816-6490-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 03:14:09PM +0100, Jiri Olsa wrote:
-> On Mon, Feb 24, 2020 at 01:37:46PM +0900, Namhyung Kim wrote:
+On Mon, 2020-02-10 at 09:10 -0500, Qian Cai wrote:
+> cpa_4k_install could be accessed concurrently as noticed by KCSAN,
 > 
-> SNIP
+> read to 0xffffffffaa59a000 of 8 bytes by interrupt on cpu 7:
+> cpa_inc_4k_install arch/x86/mm/pat/set_memory.c:131 [inline]
+> __change_page_attr+0x10cf/0x1840 arch/x86/mm/pat/set_memory.c:1514
+> __change_page_attr_set_clr+0xce/0x490 arch/x86/mm/pat/set_memory.c:1636
+> __set_pages_np+0xc4/0xf0 arch/x86/mm/pat/set_memory.c:2148
+> __kernel_map_pages+0xb0/0xc8 arch/x86/mm/pat/set_memory.c:2178
+> kernel_map_pages include/linux/mm.h:2719 [inline] <snip>
 > 
-> > +	d = opendir(path);
-> > +	if (d == NULL) {
-> > +		pr_debug("failed to open directory: %s\n", path);
-> > +		return -1;
-> > +	}
-> > +
-> > +	while ((dent = readdir(d)) != NULL) {
-> > +		if (dent->d_type != DT_DIR)
-> > +			continue;
-> > +		if (!strcmp(dent->d_name, ".") ||
-> > +		    !strcmp(dent->d_name, ".."))
-> > +			continue;
-> > +
-> > +		/* any sane path should be less than PATH_MAX */
-> > +		if (strlen(path) + strlen(dent->d_name) + 1 >= PATH_MAX)
-> > +			continue;
-> > +
-> > +		if (path[pos - 1] != '/')
-> > +			strcat(path, "/");
-> > +		strcat(path, dent->d_name);
-> > +
-> > +		ret = perf_event__walk_cgroup_tree(tool, event, path,
-> > +						   mount_len, process, machine);
-> > +		if (ret < 0)
-> > +			break;
-> > +
-> > +		path[pos] = '\0';
-> > +	}
-> > +
-> > +	closedir(d);
-> > +	return ret;
-> > +}
-> > +
-> > +int perf_event__synthesize_cgroups(struct perf_tool *tool,
-> > +				   perf_event__handler_t process,
-> > +				   struct machine *machine)
-> > +{
-> > +	union perf_event event;
-> > +	char cgrp_root[PATH_MAX];
-> > +	size_t mount_len;  /* length of mount point in the path */
-> > +
-> > +	if (cgroupfs__mountpoint(cgrp_root, PATH_MAX, "perf_event") < 0) {
-> > +		pr_debug("cannot find cgroup mount point\n");
-> > +		return -1;
-> > +	}
-> > +
-> > +	mount_len = strlen(cgrp_root);
-> > +	/* make sure the path starts with a slash (after mount point) */
-> > +	strcat(cgrp_root, "/");
+> write to 0xffffffffaa59a000 of 8 bytes by task 1 on cpu 6:
+> cpa_inc_4k_install arch/x86/mm/pat/set_memory.c:131 [inline]
+> __change_page_attr+0x10ea/0x1840 arch/x86/mm/pat/set_memory.c:1514
+> __change_page_attr_set_clr+0xce/0x490 arch/x86/mm/pat/set_memory.c:1636
+> __set_pages_p+0xc4/0xf0 arch/x86/mm/pat/set_memory.c:2129
+> __kernel_map_pages+0x2e/0xc8 arch/x86/mm/pat/set_memory.c:2176
+> kernel_map_pages include/linux/mm.h:2719 [inline] <snip>
 > 
-> the code above checks on this and seems to add '/' if needed,
-> is this strcat necessary?
+> Both accesses are due to the same "cpa_4k_install++" in
+> cpa_inc_4k_install. A data race here could be potentially undesirable:
+> depending on compiler optimizations or how x86 executes a non-LOCK'd
+> increment, it may lose increments, corrupt the counter, etc. Since this
+> counter only seems to be used for printing some stats, this data race
+> itself is unlikely to cause harm to the system though. Thus, mark this
+> intentional data race using the data_race() marco.
 
-nah nevermind.. it's the recursive call check above, ok
+Borislav or any other maintainers, can you take a look at this patch when you
+had a chance?
 
-jirka
-
+> 
+> Suggested-by: Macro Elver <elver@google.com>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/x86/mm/pat/set_memory.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> index c4aedd00c1ba..ea0b6df950ee 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -128,7 +128,7 @@ static inline void cpa_inc_2m_checked(void)
+>  
+>  static inline void cpa_inc_4k_install(void)
+>  {
+> -	cpa_4k_install++;
+> +	data_race(cpa_4k_install++);
+>  }
+>  
+>  static inline void cpa_inc_lp_sameprot(int level)
