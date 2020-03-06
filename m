@@ -2,104 +2,179 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0076CC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157FEC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D620F2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F8920658
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:28:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ADVu63vj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgCFR1H (ORCPT
+        id S1726642AbgCFR2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:27:07 -0500
-Received: from smtprelay0133.hostedemail.com ([216.40.44.133]:60088 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725873AbgCFR1H (ORCPT
+        Fri, 6 Mar 2020 12:28:04 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:13141 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgCFR2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:27:07 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 5A66D1802929C;
-        Fri,  6 Mar 2020 17:27:06 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: iron26_5add7c5902505
-X-Filterd-Recvd-Size: 3551
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  6 Mar 2020 17:27:04 +0000 (UTC)
-Message-ID: <a7503afc9d561ae9c7116b97c7a960d7ad5cbff9.camel@perches.com>
-Subject: Re: [PATCH] sched/cputime: silence a -Wunused-function warning
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>, Qian Cai <cai@lca.pw>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, juri.lelli@redhat.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        dietmar.eggemann@arm.com, Steven Rostedt <rostedt@goodmis.org>,
-        bsegall@google.com, mgorman@suse.de,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Date:   Fri, 06 Mar 2020 09:25:29 -0800
-In-Reply-To: <CAKwvOd=V44ksbiffN5UYw-oVfTK_wdeP59ipWANkOUS_zavxew@mail.gmail.com>
-References: <1583509304-28508-1-git-send-email-cai@lca.pw>
-         <CAKwvOd=V44ksbiffN5UYw-oVfTK_wdeP59ipWANkOUS_zavxew@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 6 Mar 2020 12:28:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583515681;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=EMIkL6ZMx1o3uNQOsK/AuYhMq5YPX55+evrim/F2BFk=;
+        b=ADVu63vjxAIATIBaaaJII74iMFNeaKqAkJ4Q1Hmf6MtAVFBfpo6hRSnbM0pmN3jTE5
+        8c1+gu3+DrwnyFcE0Q5sJ8GXRe6LGmwNYtJpx7TkCgNAexgscJK74z2EAkxCuqf6ZZUQ
+        rgPXb9Hg1zFnP464kvLiR5hJ6z6UfcfIpav6HVq9iuFDkAusrOfGieKlfym/sUtGPEu1
+        2w+V54yFBrX/x1HMdPRQKmyngd/0v1VzVSZxOhjJvXfmD64x6J2Q4TctXaVaAEc1sXXI
+        X2BWh7DxEIDJZJF4QhhjjjcVVJdIQTExNhk08qf8jAdZ+E1SR4SJcjgtjJnT4T9+m9I4
+        2T5g==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6GQjzrz4="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw26HRxZtN
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 6 Mar 2020 18:27:59 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>, stable@vger.kernel.org
+Subject: [PATCH v6] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+Date:   Fri,  6 Mar 2020 18:27:58 +0100
+Message-Id: <cccce8a3866e54859d04b3f67c7414c3efb1eedd.1583515678.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-06 at 09:13 -0800, Nick Desaulniers wrote:
-> On Fri, Mar 6, 2020 at 7:42 AM Qian Cai <cai@lca.pw> wrote:
-> > account_other_time() is only used when CONFIG_IRQ_TIME_ACCOUNTING=y (in
-> > irqtime_account_process_tick()) or CONFIG_VIRT_CPU_ACCOUNTING_GEN=y (in
-> > get_vtime_delta()). When both are off, it will generate a compilation
-> > warning from Clang,
-> > 
-> > kernel/sched/cputime.c:255:19: warning: unused function
-> > 'account_other_time' [-Wunused-function]
-> > static inline u64 account_other_time(u64 max)
-> > 
-> > Rather than wrapping around this function with a macro expression,
-> > 
-> >  if defined(CONFIG_IRQ_TIME_ACCOUNTING) || \
-> >     defined(CONFIG_VIRT_CPU_ACCOUNTING_GEN)
-> > 
-> > just use __maybe_unused for this small function which seems like a good
-> > trade-off.
-> 
-> Generally, I'm not a fan of __maybe_unused.  It is a tool in the
-> toolbox for solving this issue, but it's my least favorite.  Should
-> the call sites be eliminated, this may mask an unused and entirely
-> dead function from being removed.  Preprocessor guards based on config
-> give more context into *why* a particular function may be unused.
-> 
-> So let's take a look at the call sites of account_other_time().  Looks
-> like irqtime_account_process_tick() (guarded by
-> CONFIG_IRQ_TIME_ACCOUNTING) and get_vtime_delta() (guarded by
-> CONFIG_VIRT_CPU_ACCOUNTING_GEN).  If it were one config guard, then I
-> would prefer to move the definition to be within the same guard, just
-> before the function definition that calls it, but we have a more
-> complicated case here.
-> 
-> The next thing I'd check to see is if there's a dependency between
-> configs.  In this case, both CONFIG_IRQ_TIME_ACCOUNTING and
-> CONFIG_VIRT_CPU_ACCOUNTING_GEN are defined in init/Kconfig.  In this
-> case there's also no dependency between configs, so specifying one
-> doesn't imply the other; so guarding on one of the two configs is also
-> not an option.
-> 
-> So, as much as I'm not a fan of __maybe_unused, it is indeed the
-> simplest option.  Though, I'd still prefer the ifdef you describe
-> instead, maybe the maintainers can provide guidance/preference?
+There is a ACT8600 on the CI20 board and the bindings of the
+ACT8865 driver have changed without updating the CI20 device
+tree. Therefore the PMU can not be probed successfully and
+is running in power-on reset state.
 
-Another option might be to move static inline functions
-where possible to an #include file (like sched.h) but the
-same possible dead function issue would still exist.
+Fix DT to match the latest act8865-regulator bindings.
 
+Fixes: 73f2b940474d ("MIPS: CI20: DTS: Add I2C nodes")
+Cc: stable@vger.kernel.org
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+---
+ arch/mips/boot/dts/ingenic/ci20.dts | 39 ++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 15 deletions(-)
+
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 37b93166bf22..8b5fb635c66f 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -4,6 +4,7 @@
+ #include "jz4780.dtsi"
+ #include <dt-bindings/clock/ingenic,tcu.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/regulator/active-semi,8865-regulator.h>
+ 
+ / {
+ 	compatible = "img,ci20", "ingenic,jz4780";
+@@ -163,63 +164,71 @@
+ 
+ 		regulators {
+ 			vddcore: SUDCDC1 {
+-				regulator-name = "VDDCORE";
++				regulator-name = "DCDC_REG1";
+ 				regulator-min-microvolt = <1100000>;
+ 				regulator-max-microvolt = <1100000>;
+ 				regulator-always-on;
+ 			};
+ 			vddmem: SUDCDC2 {
+-				regulator-name = "VDDMEM";
++				regulator-name = "DCDC_REG2";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_33: SUDCDC3 {
+-				regulator-name = "VCC33";
++				regulator-name = "DCDC_REG3";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_50: SUDCDC4 {
+-				regulator-name = "VCC50";
++				regulator-name = "SUDCDC_REG4";
+ 				regulator-min-microvolt = <5000000>;
+ 				regulator-max-microvolt = <5000000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_25: LDO_REG5 {
+-				regulator-name = "VCC25";
++				regulator-name = "LDO_REG5";
+ 				regulator-min-microvolt = <2500000>;
+ 				regulator-max-microvolt = <2500000>;
+ 				regulator-always-on;
+ 			};
+ 			wifi_io: LDO_REG6 {
+-				regulator-name = "WIFIIO";
++				regulator-name = "LDO_REG6";
+ 				regulator-min-microvolt = <2500000>;
+ 				regulator-max-microvolt = <2500000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_28: LDO_REG7 {
+-				regulator-name = "VCC28";
++				regulator-name = "LDO_REG7";
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_15: LDO_REG8 {
+-				regulator-name = "VCC15";
++				regulator-name = "LDO_REG8";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 			};
+-			vcc_18: LDO_REG9 {
+-				regulator-name = "VCC18";
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
++			vrtc_18: LDO_REG9 {
++				regulator-name = "LDO_REG9";
++				/* Despite the datasheet stating 3.3V
++				 * for REG9 and the driver expecting that,
++				 * REG9 outputs 1.8V.
++				 * Likely the CI20 uses a proprietary
++				 * factory programmed chip variant.
++				 * Since this is a simple on/off LDO the
++				 * exact values do not matter.
++				 */
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 			vcc_11: LDO_REG10 {
+-				regulator-name = "VCC11";
+-				regulator-min-microvolt = <1100000>;
+-				regulator-max-microvolt = <1100000>;
++				regulator-name = "LDO_REG10";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
+ 				regulator-always-on;
+ 			};
+ 		};
+-- 
+2.23.0
 
