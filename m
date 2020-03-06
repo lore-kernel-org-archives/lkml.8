@@ -2,101 +2,172 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018ABC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1606C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD9BC2072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583512750;
-	bh=jEBb7b0wm+3aAMl3SEruN7xfSZFWU17CRBiBaI4sbBY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=HkIm7NOIFeC4c5XBPhAgeh/rND3jVv58C8/oIfF0QkVwY0ZeP2dAppPyFrWkm9ywD
-	 HlvvhP+52qY3S/9T8RLrDlOivKYZ7w+GzRmndwKxAUHyYyIfcRuPMVaKWYsTbhFEaC
-	 GH5D52JKQcKXnjLO3R96oK2AhBTzxTv3ZEI7oMUU=
+	by mail.kernel.org (Postfix) with ESMTP id 9ECB42072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:40:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbSaDyS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCFQjJ (ORCPT
+        id S1726892AbgCFQko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:39:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:36300 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCFQjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:39:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADC5530E;
-        Fri,  6 Mar 2020 08:39:08 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2EBF03F237;
-        Fri,  6 Mar 2020 08:39:08 -0800 (PST)
-Date:   Fri, 6 Mar 2020 16:39:06 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
-Subject: [GIT PULL] regulator fixes for v5.6
-Message-ID: <20200306163906.GD4114@sirena.org.uk>
+        Fri, 6 Mar 2020 11:40:44 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38273 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgCFQko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:40:44 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t11so3135603wrw.5;
+        Fri, 06 Mar 2020 08:40:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XjHnSwyS0af+P6Jfh8Jzg4HPNo9WQiL8yOX1s0HApbQ=;
+        b=CbSaDyS3tlGIXzJPDGmj9+AIlYyU7Yowmve6GEk50xA6VmLmZxHH5HW67z5v9akxJN
+         nGmqQ1FAjSNx511yM1rus1wIj4/+IgiLa4jFXAq3t+VnZPbcJi2ejnaUkV6b5SKW6kyN
+         hzxB5IKSXIbWozwe8M041xvmZrKHB1s6eVUpG+MsHaDJ0Spfb05SAOeiwB8cKCN/Pn2e
+         fPhbdTuB2mYwsxcsDnol2mJBRBqcYUpJIndkM4bjmdNdbvdjzaAKHs5iHbBERWAoQ6Ed
+         IPbTM3kZsKjUscXO0/PBVdGu+tjOfbi+/lP9+Wz2T8EPTasDaTPRevA4VXyeTR6nXrpn
+         tWDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XjHnSwyS0af+P6Jfh8Jzg4HPNo9WQiL8yOX1s0HApbQ=;
+        b=HEHMBh0UYUlIFvTZojR6CHwOCMsQjOW+cbPCURX6XjucphBnqC8TznvHR9u9vAiZRG
+         +DT/3acVEwKjw7IiIS/DZtKHuU52z8qr2dS1lfADxTBainjTXzJnTn+pZwEdKmlqySrX
+         fqyWOY9+empd3EfgapmgA3tl5Kct0ML55a5VcRv3axKm1U+P18wMVYQ8N5HLwuB7bNv/
+         p8uG+fxfzrRdfnqZPIB0gRePPqL7j5n5RPauGjRsJ6Y8UPyOJaoESaxkR6Kk40E5sTtG
+         0rvADhpMlC7IHbRanrkDgq0avIxpY4vZ0u/e7Uf7/0/4Uso5rS1AMMiX0qGEBCHcanYD
+         1HNA==
+X-Gm-Message-State: ANhLgQ3tlARANZPWXha64Il9qcWpSTGzfJV6ejQHYCYCBJIQFsED7k/J
+        Y8vI4DEpdIrCVoupn8QAm8Y=
+X-Google-Smtp-Source: ADFU+vtU+an94UKd4UPfywLnbr+VHC0wDCwOSaA/3LsprBBI1hOWapF4bBHrYJWtYeuKNmQC60ln8A==
+X-Received: by 2002:adf:8162:: with SMTP id 89mr882490wrm.45.1583512841997;
+        Fri, 06 Mar 2020 08:40:41 -0800 (PST)
+Received: from localhost.localdomain ([2a02:810d:1b40:644:c890:7487:7d:ef6f])
+        by smtp.gmail.com with ESMTPSA id c11sm48946421wrp.51.2020.03.06.08.40.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 08:40:41 -0800 (PST)
+From:   Markus Fuchs <mklntf@gmail.com>
+To:     mklntf@gmail.com
+Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: stmmac: platform: Fix misleading interrupt error msg
+Date:   Fri,  6 Mar 2020 17:38:48 +0100
+Message-Id: <20200306163848.5910-1-mklntf@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tNQTSEo8WG/FKZ8E"
-Content-Disposition: inline
-X-Cookie: fortune: No such file or directory
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Not every stmmac based platform makes use of the eth_wake_irq or eth_lpi
+interrupts. Use the platform_get_irq_byname_optional variant for these
+interrupts, so no error message is displayed, if they can't be found.
+Rather print an information to hint something might be wrong to assist
+debugging on platforms which use these interrupts.
 
---tNQTSEo8WG/FKZ8E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Markus Fuchs <mklntf@gmail.com>
+---
+On my cyclone V socfpga platform I get error messages after updating to
+Linux Kernel 5.4.24
 
-The following changes since commit 44e9b3446423164dd04f58a5f9efd988c4d5e84b:
+Starting kernel ...
 
-  dt-bindings: regulator: add document bindings for mpq7920 (2020-01-27 17:23:47 +0000)
+Deasserting all peripheral resets
+[    1.206363] socfpga-dwmac ff700000.ethernet: IRQ eth_wake_irq not found
+[    1.213023] socfpga-dwmac ff700000.ethernet: IRQ eth_lpi not found
 
-are available in the Git repository at:
+These interrupts don't matter for my platform and many other stmmac based
+ones, as we can see by grepping for 'macirq'.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v5.6-rc4
+socfpga.dtsi:                   interrupt-names = "macirq";
+socfpga.dtsi:                   interrupt-names = "macirq";
+sun7i-a20.dtsi:                 interrupt-names = "macirq";
+spear600.dtsi:                  interrupt-names = "macirq", "eth_wake_irq";
+artpec6.dtsi:                   interrupt-names = "macirq", "eth_lpi";
+rk322x.dtsi:                    interrupt-names = "macirq";
+sun9i-a80.dtsi:                 interrupt-names = "macirq";
+spear1310.dtsi:                 interrupt-names = "macirq";
+spear1310.dtsi:                 interrupt-names = "macirq";
+spear1310.dtsi:                 interrupt-names = "macirq";
+spear1310.dtsi:                 interrupt-names = "macirq";
+stih407-family.dtsi:            interrupt-names = "macirq", "eth_wake_irq";
+stm32f429.dtsi:                 interrupt-names = "macirq";
+sun6i-a31.dtsi:                 interrupt-names = "macirq";
+meson.dtsi:                     interrupt-names = "macirq";
+rk3288.dtsi:                    interrupt-names = "macirq", "eth_wake_irq";
+sun8i-r40.dtsi:                 interrupt-names = "macirq";
+sunxi-h3-h5.dtsi:               interrupt-names = "macirq";
+spear3xx.dtsi:                  interrupt-names = "macirq", "eth_wake_irq";
+lpc18xx.dtsi:                   interrupt-names = "macirq";
+stm32h743.dtsi:                 interrupt-names = "macirq";
+socfpga_arria10.dtsi:           interrupt-names = "macirq";
+socfpga_arria10.dtsi:           interrupt-names = "macirq";
+socfpga_arria10.dtsi:           interrupt-names = "macirq";
+rv1108.dtsi:                    interrupt-names = "macirq", "eth_wake_irq";
+spear13xx.dtsi:                 interrupt-names = "macirq", "eth_wake_irq";
+stm32mp151.dtsi:                interrupt-names = "macirq";
+ox820.dtsi:                     interrupt-names = "macirq", "eth_wake_irq";
+sun8i-a83t.dtsi:                interrupt-names = "macirq";
 
-for you to fetch changes up to 02fbabd5f4ed182d2c616e49309f5a3efd9ec671:
+So, in my opinion, the error messages are missleading. I believe
+the right way to handle this would require more changes though. Some
+kind of configuration information, telling which interrupts are required
+by the platform and than conditionally call platform_get_irq_byname().
+This would print an error message, if something is wrong, on the right
+platforms and nothing at all on the others.
 
-  regulator: stm32-vrefbuf: fix a possible overshoot when re-enabling (2020-03-04 13:57:28 +0000)
+.../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-----------------------------------------------------------------
-regulator: Fixes for v5.6
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index d10ac54bf385..13fafd905db8 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -663,16 +663,22 @@ int stmmac_get_platform_resources(struct platform_device *pdev,
+ 	 * In case the wake up interrupt is not passed from the platform
+ 	 * so the driver will continue to use the mac irq (ndev->irq)
+ 	 */
+-	stmmac_res->wol_irq = platform_get_irq_byname(pdev, "eth_wake_irq");
++	stmmac_res->wol_irq =
++		platform_get_irq_byname_optional(pdev, "eth_wake_irq");
+ 	if (stmmac_res->wol_irq < 0) {
+ 		if (stmmac_res->wol_irq == -EPROBE_DEFER)
+ 			return -EPROBE_DEFER;
++		dev_info(&pdev->dev, "IRQ eth_wake_irq not found\n");
+ 		stmmac_res->wol_irq = stmmac_res->irq;
+ 	}
+ 
+-	stmmac_res->lpi_irq = platform_get_irq_byname(pdev, "eth_lpi");
+-	if (stmmac_res->lpi_irq == -EPROBE_DEFER)
+-		return -EPROBE_DEFER;
++	stmmac_res->lpi_irq =
++		platform_get_irq_byname_optional(pdev, "eth_lpi");
++	if (stmmac_res->lpi_irq < 0) {
++		if (stmmac_res->lpi_irq == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		dev_info(&pdev->dev, "IRQ eth_lpi not found\n");
++	}
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	stmmac_res->addr = devm_ioremap_resource(&pdev->dev, res);
+-- 
+2.25.1
 
-A couple of small fixes, one for a minor issue in the stm32-vrefbuf
-driver and a documentation fix in the Qualcomm code.
-
-----------------------------------------------------------------
-Fabrice Gasnier (1):
-      regulator: stm32-vrefbuf: fix a possible overshoot when re-enabling
-
-Petr Vorel (1):
-      regulator: qcom_spmi: Fix docs for PM8004
-
- Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt | 2 +-
- drivers/regulator/stm32-vrefbuf.c                                   | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
---tNQTSEo8WG/FKZ8E
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5ifKkACgkQJNaLcl1U
-h9Awqwf7B/gEu+vTEE/tS/qgqPsug8bOKWzx8++oB8la5C+5+ZhRTHZtZalTXx3S
-1/hClTik9cVtlq2RxOh5MytlXEFW9BE9Fqvf0mBaXvvBnAR3pqh8/OTwtaIn44Ls
-N162oiJSTazEL0moSERWRqNJT+p+yzX8n0z9VC1pcJMlQm2YPx8U/RtLdcYD0ja8
-K+dmRAS2QLj1URrekILHJ5tReJsOF0wprWH0aQzAE6ZlLaaKown33HVGkXeBNE3g
-MIYepdTOkiQ4CmnQdKv3le+dVFZwqtUPhNEwHNAG1b0W2uzCDbAHe3ZLzWg8Ot4a
-ABF7R2uAWDtLTadOZeJPlZ6+DxEZ/Q==
-=OUI/
------END PGP SIGNATURE-----
-
---tNQTSEo8WG/FKZ8E--
