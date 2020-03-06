@@ -2,208 +2,96 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AA8C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8E7C10F27
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3C12072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B073C208CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgCFMSE (ORCPT
+        id S1727061AbgCFMSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:18:04 -0500
-Received: from mail.baikalelectronics.com ([87.245.175.226]:35022 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgCFMSD (ORCPT
+        Fri, 6 Mar 2020 07:18:08 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35428 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgCFMSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:18:03 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7C5F78030797;
-        Fri,  6 Mar 2020 12:11:27 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LsuhP8CWDhqB; Fri,  6 Mar 2020 15:11:26 +0300 (MSK)
-From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 08/22] mips: Add MIPS Warrior P5600 support
-Date:   Fri, 6 Mar 2020 15:08:32 +0300
-In-Reply-To: <20200306120847.32690-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306120847.32690-1-Sergey.Semin@baikalelectronics.ru>
+        Fri, 6 Mar 2020 07:18:04 -0500
+Received: by mail-oi1-f194.google.com with SMTP id c1so2340049oiy.2;
+        Fri, 06 Mar 2020 04:18:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zCzopvBe5pClIDQDJUrJo6Mdp8tlxa91qM1CJIBUoZU=;
+        b=pmAH3Nl0rCv4tpkxXRd/+418oHnQ3rfDMD/Q/nM3HfFppl2u0zX4yqCzMSUyMek1gq
+         TIwmFGSpfHgBoSb6GU2GA9OQFklG7TSB5fK9C7ArCqWDgy77FD6GmnFBXNGW4ylxSsd6
+         1LEzlalcl2XpHDLFSveXEsY4ji0C2uvC3wzNJtzWwjiYV5k45X79MqT5aw3n0Wzh6YGW
+         K/vzooN38qK1lY8OccEIgxfAT2+EDvQaZ4LFByU7OR7uoKCMXsv5J3/wkPilpuregi/J
+         cxfo3jfV1jloDLsfcsn0VwX5JivCT6LKPNJBGcZ5uLzTz1+e25D3/SJl2u6YhQMI3Cpw
+         pJ9A==
+X-Gm-Message-State: ANhLgQ1VeaVoIN/Al9grAWokWspS6suIF7uxOBnJcT4c2yVXMF5aJuYu
+        XV9UbotuK1bd781243svRoHlZUGBfFlb3PnGo+o=
+X-Google-Smtp-Source: ADFU+vv2jlvbLhAc6REVXuwMcnoIkqf+yF7o6TIX59QZjp7iyI4Ry7WdpVGYuGOEEDGnsDWTufmFHi8kMV3eEpcMQTg=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr2240414oia.148.1583497083839;
+ Fri, 06 Mar 2020 04:18:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200306121127.7C5F78030797@mail.baikalelectronics.ru>
+References: <20200305175528.5b3ccc09@canb.auug.org.au> <fabd49c7-d72e-a5a2-7f2c-47a8bd6c36a1@infradead.org>
+In-Reply-To: <fabd49c7-d72e-a5a2-7f2c-47a8bd6c36a1@infradead.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 6 Mar 2020 13:17:52 +0100
+Message-ID: <CAMuHMdUs00Qtm0CMBTougPyTZxS_cN+x8QWezs_OtPFWB0B2Pw@mail.gmail.com>
+Subject: Re: linux-next: Tree for Mar 5 (sound/soc/codecs/wcd934x.o)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Hi Randy,
 
-This is a MIPS32 Release 5 based IP core with XPA, EVA, dual/quad issue
-exec pipes, MMU with two-levels TLB, UCA, MSA, MDU core level features
-and system level features like up to six P5600 calculation cores, CM2
-with L2 cache, IOCU/IOMMU (though might be unused depending on the
-system-specific IP core configuration), GIC, CPC, virtualisation module,
-eJTAG and PDtrace.
+On Thu, Mar 5, 2020 at 5:49 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 3/4/20 10:55 PM, Stephen Rothwell wrote:
+> > Changes since 20200304:
+> >
+>
+> on x86_64:
+>
+> CONFIG_MFD_WCD934X=m
+> CONFIG_SND_SOC_WCD934X=y
+>
+> ld: sound/soc/codecs/wcd934x.o: in function `wcd934x_trigger':
+> wcd934x.c:(.text+0x754): undefined reference to `slim_stream_prepare'
+> ld: wcd934x.c:(.text+0x768): undefined reference to `slim_stream_enable'
+> ld: wcd934x.c:(.text+0x797): undefined reference to `slim_stream_unprepare'
+> ld: wcd934x.c:(.text+0x7ab): undefined reference to `slim_stream_disable'
+> ld: sound/soc/codecs/wcd934x.o: in function `wcd934x_codec_probe':
+> wcd934x.c:(.text+0x4c6c): undefined reference to `of_slim_get_device'
+> ld: wcd934x.c:(.text+0x4cd4): undefined reference to `slim_get_logical_addr'
+> ld: wcd934x.c:(.text+0x4cfe): undefined reference to `__regmap_init_slimbus'
+> ld: sound/soc/codecs/wcd934x.o: in function `wcd934x_hw_params':
+> wcd934x.c:(.text+0x6027): undefined reference to `slim_stream_allocate'
 
-As being MIPS32 Release 5 based core it provides all the features
-available by the CPU_MIPS32_R5 config, while adding a few more like
-UCA attribute support, availability of CPU-freq (by means of L2/CM
-clock ratio setting), EI/VI GIC modes detection at runtime.
+This is fixed by:
+https://lore.kernel.org/linux-doc/20200302062340.21453-1-masahiroy@kernel.org/
 
-In addition to this if P5600 architecture is enabled modern GNU GCC
-provides a specific tuning for P5600 processors with respect to the
-classic MIPS32 Release 5. First of all branch-likely avoidance is
-activated only when the code is compiled with the speed optimization
-(avoidance is always enabled for the pure MIPS32 Release 5
-architecture). Secondly the madd/msub avoidance is enabled since
-madd/msub utilization isn't profitable due to overhead of getting the
-result out of the HI/LO registers. Multiply-accumulate instructions are
-activated and utilized together with the necessary code reorder when
-multiply-add/multiply-subtract statements are met. Finally load/store
-bonding is activated by default. All of these optimizations may make
-the code relatively faster than if just MIP32 release 5 architecture
-was requested.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
----
- arch/mips/Kconfig              | 38 +++++++++++++++++++++++++++++-----
- arch/mips/Makefile             |  1 +
- arch/mips/include/asm/module.h |  2 ++
- 3 files changed, 36 insertions(+), 5 deletions(-)
+                        Geert
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index d427d18b4bd3..fd1366921a80 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1650,6 +1650,28 @@ config CPU_MIPS64_R6
- 	  family, are based on a MIPS64r6 processor. If you own an older
- 	  processor, you probably need to select MIPS64r1 or MIPS64r2 instead.
- 
-+config CPU_P5600
-+	bool "MIPS Warrior P5600"
-+	depends on SYS_HAS_CPU_P5600
-+	select CPU_HAS_PREFETCH
-+	select CPU_SUPPORTS_32BIT_KERNEL
-+	select CPU_SUPPORTS_HIGHMEM
-+	select CPU_SUPPORTS_MSA
-+	select CPU_SUPPORTS_UNCACHED_ACCELERATED
-+	select CPU_SUPPORTS_CPUFREQ
-+	select CPU_MIPSR2_IRQ_VI
-+	select CPU_MIPSR2_IRQ_EI
-+	select HAVE_KVM
-+	select MIPS_O32_FP64_SUPPORT
-+	help
-+	  Choose this option to build a kernel for MIPS Warrior P5600 CPU.
-+	  It's based on MIPS32r5 ISA with XPA, EVA, dual/quad issue exec pipes,
-+	  MMU with two-levels TLB, UCA, MSA, MDU core level features and system
-+	  level features like up to six P5600 calculation cores, CM2 with L2
-+	  cache, IOCU/IOMMU (though might be unused depending on the system-
-+	  specific IP core configuration), GIC, CPC, virtualisation module,
-+	  eJTAG and PDtrace.
-+
- config CPU_R3000
- 	bool "R3000"
- 	depends on SYS_HAS_CPU_R3000
-@@ -1826,7 +1848,8 @@ endchoice
- config CPU_MIPS32_3_5_FEATURES
- 	bool "MIPS32 Release 3.5 Features"
- 	depends on SYS_HAS_CPU_MIPS32_R3_5
--	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_MIPS32_R6
-+	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_MIPS32_R6 || \
-+		   CPU_P5600
- 	help
- 	  Choose this option to build a kernel for release 2 or later of the
- 	  MIPS32 architecture including features from the 3.5 release such as
-@@ -1846,7 +1869,7 @@ config CPU_MIPS32_3_5_EVA
- config CPU_MIPS32_R5_FEATURES
- 	bool "MIPS32 Release 5 Features"
- 	depends on SYS_HAS_CPU_MIPS32_R5
--	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5
-+	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_P5600
- 	help
- 	  Choose this option to build a kernel for release 2 or later of the
- 	  MIPS32 architecture including features from release 5 such as
-@@ -2001,6 +2024,10 @@ config SYS_HAS_CPU_MIPS64_R6
- 	bool
- 	select ARCH_HAS_SYNC_DMA_FOR_CPU if DMA_NONCOHERENT
- 
-+config SYS_HAS_CPU_P5600
-+	bool
-+	select ARCH_HAS_SYNC_DMA_FOR_CPU if DMA_NONCOHERENT
-+
- config SYS_HAS_CPU_R3000
- 	bool
- 
-@@ -2085,7 +2112,7 @@ endmenu
- config CPU_MIPS32
- 	bool
- 	default y if CPU_MIPS32_R1 || CPU_MIPS32_R2 || CPU_MIPS32_R5 || \
--		     CPU_MIPS32_R6
-+		     CPU_MIPS32_R6 || CPU_P5600
- 
- config CPU_MIPS64
- 	bool
-@@ -2107,7 +2134,7 @@ config CPU_MIPSR2
- 
- config CPU_MIPSR5
- 	bool
--	default y if CPU_MIPS32_R5
-+	default y if CPU_MIPS32_R5 || CPU_P5600
- 	select CPU_HAS_RIXI
- 	select CPU_HAS_DIEI if !CPU_DIEI_BROKEN
- 	select MIPS_SPRAM
-@@ -2718,7 +2745,8 @@ config RELOCATABLE
- 	bool "Relocatable kernel"
- 	depends on SYS_SUPPORTS_RELOCATABLE
- 	depends on CPU_MIPS32_R2 || CPU_MIPS64_R2 || CPU_MIPS32_R5 || \
--		   CPU_MIPS32_R6 || CPU_MIPS64_R6 || CAVIUM_OCTEON_SOC
-+		   CPU_MIPS32_R6 || CPU_MIPS64_R6 || CPU_P5600 || \
-+		   CAVIUM_OCTEON_SOC
- 	help
- 	  This builds a kernel image that retains relocation information
- 	  so it can be loaded someplace besides the default 1MB.
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index 9172fb0f630b..264dead560f4 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -176,6 +176,7 @@ cflags-$(CONFIG_CPU_MIPS32_R6)	+= -march=mips32r6 -Wa,--trap -modd-spreg
- cflags-$(CONFIG_CPU_MIPS64_R1)	+= -march=mips64 -Wa,--trap
- cflags-$(CONFIG_CPU_MIPS64_R2)	+= -march=mips64r2 -Wa,--trap
- cflags-$(CONFIG_CPU_MIPS64_R6)	+= -march=mips64r6 -Wa,--trap
-+cflags-$(CONFIG_CPU_P5600)	+= -march=p5600 -Wa,--trap -modd-spreg
- cflags-$(CONFIG_CPU_R5000)	+= -march=r5000 -Wa,--trap
- cflags-$(CONFIG_CPU_R5500)	+= $(call cc-option,-march=r5500,-march=r5000) \
- 			-Wa,--trap
-diff --git a/arch/mips/include/asm/module.h b/arch/mips/include/asm/module.h
-index 65067edc52e0..fe4637ddbf49 100644
---- a/arch/mips/include/asm/module.h
-+++ b/arch/mips/include/asm/module.h
-@@ -99,6 +99,8 @@ search_module_dbetables(unsigned long addr)
- #define MODULE_PROC_FAMILY "MIPS64_R2 "
- #elif defined CONFIG_CPU_MIPS64_R6
- #define MODULE_PROC_FAMILY "MIPS64_R6 "
-+#elif defined CONFIG_CPU_P5600
-+#define MODULE_PROC_FAMILY "P5600 "
- #elif defined CONFIG_CPU_R3000
- #define MODULE_PROC_FAMILY "R3000 "
- #elif defined CONFIG_CPU_TX39XX
 -- 
-2.25.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
