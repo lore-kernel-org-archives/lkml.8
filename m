@@ -6,77 +6,100 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD2CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96384C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1CF3206D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6672B206D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583518213;
-	bh=UhXNAVre2EYkV7zoxOLBerLkdYc+pOutqOc+uFnYcec=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dPjynAYv/U5dG/A9VOneJFzzomBg8vbysS0jpW+2vApcbqxaSWUmaM0qx/pGPWGki
-	 Cw1265jEt5iaM72puzzuloQSPUHvxFs8/nNaUc/kpbip4Wn9OoGCeS4tGQH6is+sBn
-	 zAAn5PygsaVbgGlRhg8PQR2aA5Yma5FaQobajIH8=
+	s=default; t=1583518229;
+	bh=0YlfMj9B0kSnBGQccG/U0TuPPJY1j/6k2BUYIC6jeOM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Pg8pMHjDz9sAUlUqu2K+PYNiAd+D7fn3BevrbUxrXq8Ve93ZVJBPZzCzeijGlBJES
+	 bAclGe9cdAeZVuROU2xkGBO36sdWbtD1B8GX4X3YS4RLT9uj3r/jc346r0OmPjUZ1Y
+	 DdhnihVHQd0CNLR8YZH/+LV9CzYNth5X80L/GKN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCFSKM (ORCPT
+        id S1726846AbgCFSK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:10:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46734 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 13:10:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbgCFSKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:10:12 -0500
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726231AbgCFSK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:10:27 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC1F1206E2
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Mar 2020 18:10:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F14E02067C;
+        Fri,  6 Mar 2020 18:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583518212;
-        bh=UhXNAVre2EYkV7zoxOLBerLkdYc+pOutqOc+uFnYcec=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CtzbyL4NAuYPWgUAX3vsD5113YVohkpEKkM3GBJ7/Ljbn+aM6TuPN6NE36XRT2Ip3
-         YytmTdNIkpzDj4VTxeYwu818w+8rjvFxmaG7i4gGNjCF92lWI9PgOY6YlwINZc760Y
-         +HOBA2t6B57AClqmyM1q/YgD6iWRc0UQ5CbeLRyM=
-Received: by mail-wr1-f44.google.com with SMTP id v11so3421763wrm.9
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 10:10:11 -0800 (PST)
-X-Gm-Message-State: ANhLgQ27l/wAyrvCeHReHlrJEVAG7drCj6G5c90fo9xMsx4V6tGw4ylx
-        UlTvN9cl03SvtnIzfIST3nAi8eDIFXA1U1Xz1HnDbw==
-X-Google-Smtp-Source: ADFU+vv1AOG5tHij0fLjC8000q+s+EtpHoNrB7M+8B5/f4EEjxeLFOS1UA6gWYXyIrJPXB9ljG/iAUbN9+zB2vN/6Tg=
-X-Received: by 2002:adf:b641:: with SMTP id i1mr5258372wre.18.1583518210189;
- Fri, 06 Mar 2020 10:10:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20200305181719.GA5490@avx2>
-In-Reply-To: <20200305181719.GA5490@avx2>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 6 Mar 2020 10:09:58 -0800
-X-Gmail-Original-Message-ID: <CALCETrW2xH7FUKAXnREpak9tAcc-3yOFfvLnCYU_8e+D1jXApw@mail.gmail.com>
-Message-ID: <CALCETrW2xH7FUKAXnREpak9tAcc-3yOFfvLnCYU_8e+D1jXApw@mail.gmail.com>
-Subject: Re: [PATCH] x86_64: fixup TASK_SIZE_MAX comment
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1583518227;
+        bh=0YlfMj9B0kSnBGQccG/U0TuPPJY1j/6k2BUYIC6jeOM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jXDqVEljUPOoPOFVqF2HxQcbpLXUn6fpEtM8TtPcfNrWzh+6nA0iYaQEFrGdTwKA4
+         Ypto6zvgeLSKMODnhZ25ClUJB03/VR05Wf64knP6RcS7f4q7eBUBGY2VmSuu/N/BGI
+         uBHSbXZXXpn14GLJq4Eo9uUpD7HOBm1hx6h+8ymY=
+Date:   Sat, 7 Mar 2020 03:10:21 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [BUGFIX PATCH] tools: Let O= makes handle a relative path with
+ -C option
+Message-Id: <20200307031021.4e25253e7ff4aeb14b8a1095@kernel.org>
+In-Reply-To: <69916e54-f555-191b-a9b1-8e7bc1043002@infradead.org>
+References: <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org>
+        <158338818292.25448.7161196505598269976.stgit@devnote2>
+        <CAMuHMdXSNwPwxOTDxK09LKTyOwL=LqTH6+HZRd=RY4P5VHg5Ew@mail.gmail.com>
+        <20200307000712.62c32a04c794b9a12e2342bb@kernel.org>
+        <69916e54-f555-191b-a9b1-8e7bc1043002@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 10:17 AM Alexey Dobriyan <adobriyan@gmail.com> wrote:
->
-> Comment says "by preventing anything executable" which is not true.
-> Even PROT_NONE mapping can't be installed at (1<<47 - 4096).
->
->         mmap(0x7ffffffff000, 4096, PROT_NONE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = -1 ENOMEM
+On Fri, 6 Mar 2020 08:26:43 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
+> On 3/6/20 7:07 AM, Masami Hiramatsu wrote:
+> > Thanks Geert,
+> > 
+> > So Randy, what you will get if you add "echo $(PWD)" instead of "cd $(PWD)" ?
+> > Is that still empty or shows the tools/bootconfig directory?
+> > 
+> > Thanks,
+> 
+> OK, in these lines:
+> +       dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
+> +       ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
+> 
+> I changed both "cd $(PWD)" to "echo $(PWD)" and did
+> $ make O=BUILD -C tools/bootconfig/
+> 
+> and this is the build log:
+> 
+> make: Entering directory '/home/rdunlap/lnx/next/linux-next-20200306/tools/bootconfig'
+> cc ../../lib/bootconfig.c main.c -Wall -g -I./include -o bootconfig
+> make: Leaving directory '/home/rdunlap/lnx/next/linux-next-20200306/tools/bootconfig'
+> 
+> 
+> Does that help?
 
->
-> I wonder if CPUs with wider address space carried the bugs...
+Hmm, did you apply "[PATCH 1/2] bootconfig: Support O=<builddir> option" too?
 
-I believe they do.  I won't swear to it.
+Also, I found this is not enough for perf. perf does more tricky thing in its Makefile.
 
-FWIW, I specifically asked Intel to kindly fix this bug^Wfeature as
-part of LA57, and I did not get a helpful response.
+Thank you,
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
