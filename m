@@ -7,57 +7,61 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D2BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAAAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2D620709
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3F02070E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:49:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JQIXSOMh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SpKEoj7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgCFXtn (ORCPT
+        id S1727442AbgCFXts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 18:49:43 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36706 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727605AbgCFXtd (ORCPT
+        Fri, 6 Mar 2020 18:49:48 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60911 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727599AbgCFXtc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 18:49:33 -0500
+        Fri, 6 Mar 2020 18:49:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583538572;
+        s=mimecast20190719; t=1583538571;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=77mV7dMChSrLWq5rIbMFOAlvL63d0ZbvZ9seihNouTU=;
-        b=JQIXSOMhPJgYyH558fmTXQI6gBk4bVfqnCZ5KRYOK+mPzl6t8ht+Rdd1T7RyncyOj5eSwZ
-        dxyvF5rv/yTJzhi+kaMQOURlDCljNfj9oWlD+bLyLeRCaMgkJGGzM9QGWL+2hywoGCpGRD
-        aLAqtCSHdJ6iH7srJpA3vabWjU2U1/E=
+        bh=epJiNHcNlXrU/mKy0Mc+3UqF6n++TRVvv4Ahu8/c3RY=;
+        b=SpKEoj7SmwtkZnVHqDZlAGWzzva05/4J5qP7uD1j/HA1YVld4j2ydiAlJKAO9v/PBRA+KL
+        ZEaxTxmsDqmo31+s6sD/W2rUvyeYlj6Ck77MBUZDVDKcksTkfORdIXH6wtpim1FIoPr5tl
+        ZhBS/JbNs023H3AS4gqqoixrwGd7mAw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-G7T3Kw1sPsy-SN61B098Vw-1; Fri, 06 Mar 2020 18:49:30 -0500
-X-MC-Unique: G7T3Kw1sPsy-SN61B098Vw-1
+ us-mta-431-yc73RDNVM--k6bO1k8rr2A-1; Fri, 06 Mar 2020 18:49:29 -0500
+X-MC-Unique: yc73RDNVM--k6bO1k8rr2A-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FBA51005509;
-        Fri,  6 Mar 2020 23:49:29 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D92D48010E8;
+        Fri,  6 Mar 2020 23:49:27 +0000 (UTC)
 Received: from Ruby.bss.redhat.com (dhcp-10-20-1-196.bss.redhat.com [10.20.1.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D58591D9D;
-        Fri,  6 Mar 2020 23:49:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E96491D7A;
+        Fri,  6 Mar 2020 23:49:26 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
         Sean Paul <sean@poorly.run>,
-        Hans de Goede <hdegoede@redhat.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm/dp_mst: Fix drm_dp_check_mstb_guid() return code
-Date:   Fri,  6 Mar 2020 18:49:22 -0500
-Message-Id: <20200306234923.547873-3-lyude@redhat.com>
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Francis <David.Francis@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] drm/dp_mst: Make drm_dp_mst_dpcd_write() consistent with drm_dp_dpcd_write()
+Date:   Fri,  6 Mar 2020 18:49:21 -0500
+Message-Id: <20200306234923.547873-2-lyude@redhat.com>
 In-Reply-To: <20200306234923.547873-1-lyude@redhat.com>
 References: <20200306234923.547873-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -68,60 +72,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We actually expect this to return a 0 on success, or negative error code
-on failure. In order to do that, we check whether or not we managed to
-write the whole GUID and then return 0 if so, otherwise return a
-negative error code. Also, let's add an error message here so it's a
-little more obvious when this fails in the middle of a link address
-probe.
+Noticed this while having some problems with hubs sometimes not being
+detected on the first plug. Every single dpcd read or write function
+returns the number of bytes transferred on success or a negative error
+code, except apparently for drm_dp_mst_dpcd_write() - which returns 0 on
+success.
 
-This should fix issues with certain MST hubs seemingly stopping for no
-reason in the middle of the link address probe process.
+There's not really any good reason for this difference that I can tell,
+and having the two functions give differing behavior means that
+drm_dp_dpcd_write() will end up returning 0 on success for MST devices,
+but the number of bytes transferred for everything else.
 
-Fixes: cb897542c6d2 ("drm/dp_mst: Fix W=3D1 warnings")
-Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: Hans de Goede <hdegoede@redhat.com>
+So, fix that and update the kernel doc.
+
 Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: 2f221a5efed4 ("drm/dp_mst: Add MST support to DP DPCD R/W function=
+s")
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mikita Lipski <mikita.lipski@amd.com>
+Cc: Sean Paul <sean@poorly.run>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
 dp_mst_topology.c
-index e421c2d13267..b2ec6e8634ed 100644
+index 6c62ad8f4414..e421c2d13267 100644
 --- a/drivers/gpu/drm/drm_dp_mst_topology.c
 +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -2092,7 +2092,10 @@ static int drm_dp_check_mstb_guid(struct drm_dp_ms=
-t_branch *mstb, u8 *guid)
- 		}
- 	}
+@@ -2063,7 +2063,7 @@ ssize_t drm_dp_mst_dpcd_read(struct drm_dp_aux *aux=
+,
+  * sideband messaging as drm_dp_dpcd_write() does for local
+  * devices via actual AUX CH.
+  *
+- * Return: 0 on success, negative error code on failure.
++ * Return: number of bytes written on success, negative error code on fa=
+ilure.
+  */
+ ssize_t drm_dp_mst_dpcd_write(struct drm_dp_aux *aux,
+ 			      unsigned int offset, void *buffer, size_t size)
+@@ -3428,12 +3428,9 @@ static int drm_dp_send_dpcd_write(struct drm_dp_ms=
+t_topology_mgr *mgr,
+ 	drm_dp_queue_down_tx(mgr, txmsg);
 =20
--	return ret;
-+	if (ret < 16 && ret > 0)
-+		return -EPROTO;
+ 	ret =3D drm_dp_mst_wait_tx_reply(mstb, txmsg);
+-	if (ret > 0) {
+-		if (txmsg->reply.reply_type =3D=3D DP_SIDEBAND_REPLY_NAK)
+-			ret =3D -EIO;
+-		else
+-			ret =3D 0;
+-	}
++	if (ret > 0 && txmsg->reply.reply_type =3D=3D DP_SIDEBAND_REPLY_NAK)
++		ret =3D -EIO;
 +
-+	return ret =3D=3D 16 ? 0 : ret;
- }
-=20
- static void build_mst_prop_path(const struct drm_dp_mst_branch *mstb,
-@@ -2907,8 +2910,14 @@ static int drm_dp_send_link_address(struct drm_dp_=
-mst_topology_mgr *mgr,
- 	drm_dp_dump_link_address(reply);
-=20
- 	ret =3D drm_dp_check_mstb_guid(mstb, reply->guid);
--	if (ret)
-+	if (ret) {
-+		char buf[64];
-+
-+		drm_dp_mst_rad_to_str(mstb->rad, mstb->lct, buf, sizeof(buf));
-+		DRM_ERROR("GUID check on %s failed: %d\n",
-+			  buf, ret);
- 		goto out;
-+	}
-=20
- 	for (i =3D 0; i < reply->nports; i++) {
- 		port_mask |=3D BIT(reply->ports[i].port_number);
+ 	kfree(txmsg);
+ fail_put:
+ 	drm_dp_mst_topology_put_mstb(mstb);
 --=20
 2.24.1
 
