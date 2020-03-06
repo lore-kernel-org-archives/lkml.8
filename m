@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2883FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2A5C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80652072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD00A2084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:40:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCFSkz (ORCPT
+        id S1727101AbgCFSk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:40:55 -0500
+        Fri, 6 Mar 2020 13:40:57 -0500
 Received: from mail.kernel.org ([198.145.29.99]:55906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726646AbgCFSkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:40:53 -0500
+        id S1726781AbgCFSky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:40:54 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA5620705;
+        by mail.kernel.org (Postfix) with ESMTPSA id DE8F42072D;
         Fri,  6 Mar 2020 18:40:53 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jAHu0-002dz5-9t; Fri, 06 Mar 2020 13:40:52 -0500
-Message-Id: <20200306184052.169498175@goodmis.org>
+        id 1jAHu0-002e0Y-Qy; Fri, 06 Mar 2020 13:40:52 -0500
+Message-Id: <20200306184052.697292686@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 06 Mar 2020 13:40:38 -0500
+Date:   Fri, 06 Mar 2020 13:40:41 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -40,9 +40,8 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Scott Wood <swood@redhat.com>
-Subject: [PATCH RT 3/8] sched: migrate_enable: Remove __schedule() call
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: [PATCH RT 6/8] drm/vmwgfx: Drop preempt_disable() in vmw_fifo_ping_host()
 References: <20200306184035.948924528@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -56,40 +55,43 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Scott Wood <swood@redhat.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit b8162e61e9a33bd1de6452eb838fbf50a93ddd9a ]
+[ Upstream commit b901491e7b9b7a676818d84e482b69be72fc142f ]
 
-We can rely on preempt_enable() to schedule.  Besides simplifying the
-code, this potentially allows sequences such as the following to be
-permitted:
+vmw_fifo_ping_host() disables preemption around a test and a register
+write via vmw_write(). The write function acquires a spinlock_t typed
+lock which is not allowed in a preempt_disable()ed section on
+PREEMPT_RT. This has been reported in the bugzilla.
 
-migrate_disable();
-preempt_disable();
-migrate_enable();
-preempt_enable();
+It has been explained by Thomas Hellstrom that this preempt_disable()ed
+section is not required for correctness.
 
-Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Scott Wood <swood@redhat.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Remove the preempt_disable() section.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206591
+Link: https://lkml.kernel.org/r/0b5e1c65d89951de993deab06d1d197b40fd67aa.camel@vmware.com
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/sched/core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index c4290fa5c0b6..02e51c74e0bf 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7351,7 +7351,6 @@ void migrate_enable(void)
- 		stop_one_cpu_nowait(task_cpu(p), migration_cpu_stop,
- 				    arg, work);
- 		tlb_migrate_finish(p->mm);
--		__schedule(true);
- 	}
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c b/drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c
+index d0fd147ef75f..fb5a3461bb8c 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c
+@@ -167,10 +167,8 @@ void vmw_fifo_ping_host(struct vmw_private *dev_priv, uint32_t reason)
+ {
+ 	u32 *fifo_mem = dev_priv->mmio_virt;
  
- out:
+-	preempt_disable();
+ 	if (cmpxchg(fifo_mem + SVGA_FIFO_BUSY, 0, 1) == 0)
+ 		vmw_write(dev_priv, SVGA_REG_SYNC, reason);
+-	preempt_enable();
+ }
+ 
+ void vmw_fifo_release(struct vmw_private *dev_priv, struct vmw_fifo_state *fifo)
 -- 
 2.25.0
 
