@@ -2,83 +2,109 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BC4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F94C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A836820675
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D9F20675
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgCFTWV (ORCPT
+        id S1726811AbgCFTXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:22:21 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:36065 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCFTWV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:22:21 -0500
-X-Originating-IP: 109.190.253.14
-Received: from localhost (unknown [109.190.253.14])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id D557360006;
-        Fri,  6 Mar 2020 19:22:16 +0000 (UTC)
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH] net: stmmac: dwmac1000: Disable ACS if enhanced descs are not used
-Date:   Fri,  6 Mar 2020 20:30:36 +0100
-Message-Id: <20200306193036.18414-1-repk@triplefau.lt>
-X-Mailer: git-send-email 2.25.0
+        Fri, 6 Mar 2020 14:23:47 -0500
+Received: from muru.com ([72.249.23.125]:59268 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbgCFTXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 14:23:47 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id E22DC8027;
+        Fri,  6 Mar 2020 19:24:31 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 11:23:43 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Arthur Demchenkov <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>, ruleh <ruleh@gmx.de>
+Subject: Re: [PATCH 3/3] Input: omap4-keypad - check state again for lost
+ key-up interrupts
+Message-ID: <20200306192343.GN37466@atomide.com>
+References: <20200228171223.11444-1-tony@atomide.com>
+ <20200228171223.11444-4-tony@atomide.com>
+ <20200306191021.GH217608@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306191021.GH217608@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACS (auto PAD/FCS stripping) removes FCS off 802.3 packets (LLC) so that
-there is no need to manually strip it for such packets. The enhanced DMA
-descriptors allow to flag LLC packets so that the receiving callback can
-use that to strip FCS manually or not. On the other hand, normal
-descriptors do not support that.
+* Dmitry Torokhov <dmitry.torokhov@gmail.com> [200306 19:11]:
+> On Fri, Feb 28, 2020 at 09:12:23AM -0800, Tony Lindgren wrote:
+> > We only have partial errata i689 implemented with Commit 6c3516fed7b6
+> > ("Input: omap-keypad - fix keyboard debounce configuration"). We are
+> > still missing the check for lost key-up interrupts as described in the
+> > omap4 silicon errata documentation as Errata ID i689 "1.32 Keyboard Key
+> > Up Event Can Be Missed":
+> > 
+> > "When a key is released for a time shorter than the debounce time,
+> >  in-between 2 key press (KP1 and KP2), the keyboard state machine will go
+> >  to idle mode and will never detect the key release (after KP1, and also
+> >  after KP2), and thus will never generate a new IRQ indicating the key
+> >  release."
+> > 
+> > Let's check the keyboard state with delayed_work after each event. And
+> > if the problem state is detect, let's clear all events.
+> > 
+> > Cc: Arthur Demchenkov <spinal.by@gmail.com>
+> > Cc: Merlijn Wajer <merlijn@wizzup.org>
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Sebastian Reichel <sre@kernel.org>
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > ---
+> >  drivers/input/keyboard/omap4-keypad.c | 56 ++++++++++++++++++++++++---
+> >  1 file changed, 50 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
+> > --- a/drivers/input/keyboard/omap4-keypad.c
+> > +++ b/drivers/input/keyboard/omap4-keypad.c
+> > @@ -71,6 +71,8 @@ struct omap4_keypad {
+> >  	void __iomem *base;
+> >  	bool irq_wake_enabled;
+> >  	unsigned int irq;
+> > +	struct delayed_work key_work;
+> > +	struct mutex lock;		/* for key scan */
+> 
+> I think having threaded interrupt and delayed work together defeats the
+> purpose of having threaded interrupt. If you want to add a delay before
+> repeating scan I think you can add it directly in
+> omap4_keypad_irq_thread_fn(). Or is there a concern that we will not
+> rely quickly enough on additional key presses? It is unclear to me if
+> additional key press within the debounce time will result in additional
+> interrupt.
 
-Thus in order to not truncate LLC packet ACS should be disabled when
-using normal DMA descriptors.
+Well if we wait in threaded interrupt, we won't see a new interrupt.
+So yes, an additional key press will still produce an interrupt.
 
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+After a key press has been detected, we need to set a timer that checks
+the keyboard controller state after it has idled. Then check for a
+potentially stuck state, and clear all down events if the state is
+idle with keys down.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-index d0356fbd1e43..b468acf03b00 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -25,6 +25,7 @@ static void dwmac1000_core_init(struct mac_device_info *hw,
- 				struct net_device *dev)
- {
- 	void __iomem *ioaddr = hw->pcsr;
-+	struct stmmac_priv *priv = netdev_priv(dev);
- 	u32 value = readl(ioaddr + GMAC_CONTROL);
- 	int mtu = dev->mtu;
- 
-@@ -35,7 +36,7 @@ static void dwmac1000_core_init(struct mac_device_info *hw,
- 	 * Broadcom tags can look like invalid LLC/SNAP packets and cause the
- 	 * hardware to truncate packets on reception.
- 	 */
--	if (netdev_uses_dsa(dev))
-+	if (netdev_uses_dsa(dev) || !priv->plat->enh_desc)
- 		value &= ~GMAC_CONTROL_ACS;
- 
- 	if (mtu > 1500)
--- 
-2.25.0
+I don't think we can really use runtime PM autosuspend delay here as we
+already keep the device enabled with clock autogated so there's nothing
+to do. If we now added runtime PM calls, we'd end up in mode with
+clocks completely disabled. Maybe some tinkering of usage counts in
+the interrupt handler would allow using PM runtime though :)
+
+Regards,
+
+Tony
 
