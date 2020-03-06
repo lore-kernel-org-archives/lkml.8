@@ -2,174 +2,110 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C498FC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A140C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8FB2084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F6B72146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:20:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0SCpXGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgCFQSh (ORCPT
+        id S1726954AbgCFQUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:18:37 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2515 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726167AbgCFQSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:18:37 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id C1FECBAF6EA1B1F603D1;
-        Fri,  6 Mar 2020 16:18:34 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 6 Mar 2020 16:18:34 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 6 Mar 2020
- 16:18:34 +0000
-Subject: Re: About commit "io: change inX() to have their own IO barrier
- overrides"
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Sinan Kaya <okaya@kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
- <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
- <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
- <6115fa56-a471-1e9f-edbb-e643fa4e7e11@kernel.org>
- <7c955142-1fcb-d99e-69e4-1e0d3d9eb8c3@huawei.com>
- <CAK8P3a0f9hnKGd6GJ8qFZSu+J-n4fY23TCGxQkmgJaxbpre50Q@mail.gmail.com>
- <90af535f-00ef-c1e3-ec20-aae2bd2a0d88@kernel.org>
- <CAK8P3a2Grd0JsBNsB19oAxrAFtOdpvjrpGcfeArKe7zD_jrUZw@mail.gmail.com>
- <ae0a1bf1-948f-7df0-9efb-cd1e94e27d2d@huawei.com>
- <CAK8P3a2wdCrBP=a8ZypWoC=HyCU3oYYNeCddWM7oT+xM9gTPhw@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <182a37c2-7437-b1bd-8b86-5c9ce2e29f00@huawei.com>
-Date:   Fri, 6 Mar 2020 16:18:33 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2wdCrBP=a8ZypWoC=HyCU3oYYNeCddWM7oT+xM9gTPhw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Fri, 6 Mar 2020 11:20:02 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37375 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgCFQUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:20:01 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p14so1342146pfn.4;
+        Fri, 06 Mar 2020 08:20:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=HT85QxwdFTCLPqBgxQh69fgGjpwmL/OKcBc+DMSRtbY=;
+        b=U0SCpXGzRVAUN/CEpW1P2vaOBisrt31nPw63g11ueKaCltoVoyX5Wr7SuUysDk7M7R
+         pBjGeqAQSdG35me8VFTutvq/n4HG9wXCpjEoB8YnBTmHO5bbgnF13WhemvM1q2982NS9
+         /dkSjQecKSQdimDWgO9V6x6zg/ueJvzJ1veDWZonPveO3KjkwCVjm2S5b7jVooAkVosa
+         V+m5PsLLH/IuC1UJnM995wVZ7D47chcGqT4X08QYt4N2HzrGz8N19zyGqVTnungYB4yQ
+         ZdtF8HoY6vOEupmbSBi6NMD27J6AAjeWpKiwswq+83OmiSFDrax/wlQaE2489y+hqPKy
+         vb4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=HT85QxwdFTCLPqBgxQh69fgGjpwmL/OKcBc+DMSRtbY=;
+        b=eGJLZPXLXJZ41mBjffcrOq6SMaKRsfRNj8XeKFAv7ToYVDy3jwec1YxNlv7TYBFHu2
+         j8/pst8uAxkLsR3hwujxJO3UPnAhtzoIdVBZiL43vPvmzNB8dYabSIT1Zn0bL0Fqlss1
+         gWfNxeMaN3I+KjaUn0e1rUMVVwXnehCbbgsUQL2hzpTTzGnBa4mc59GMO4EMxXAri/GX
+         eRGakwtkOpotKyjw9ssWDjC7vNTaTZQSbBFlx+j95uD8XrcfBCfx8EZ0z0Z9nkjknR0d
+         jlXKK+9Y8K1rtXdIWXqCRcMjW8Q5vIyMhRZeoOKfmuUz34UvPfq7oX5tKCeBqC8By0Ut
+         CrBQ==
+X-Gm-Message-State: ANhLgQ1h9+fT7XcFCwxaJOesA8GLBqeOxg1B7sgthBc3wRFjldpQNON6
+        qIpstSbkEJcHjyYqbPjc7ypa4zMz
+X-Google-Smtp-Source: ADFU+vt/x/gDdrv8nW5YW6NkMcQXxfUC6YKNJVxfnaZBTijdPleSG0DWGOoyEKmWOZaaV6eb0f99xA==
+X-Received: by 2002:a63:9d04:: with SMTP id i4mr4055404pgd.294.1583511600857;
+        Fri, 06 Mar 2020 08:20:00 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r3sm30036021pfq.126.2020.03.06.08.19.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 06 Mar 2020 08:20:00 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hwmon fixes for v5.6-rc5
+Date:   Fri,  6 Mar 2020 08:19:58 -0800
+Message-Id: <20200306161958.31030-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/03/2020 15:16, Arnd Bergmann wrote:
-> On Fri, Mar 6, 2020 at 11:40 AM John Garry <john.garry@huawei.com> wrote:
->> On 06/03/2020 07:54, Arnd Bergmann wrote:
->>> On Fri, Mar 6, 2020 at 4:44 AM Sinan Kaya <okaya@kernel.org> wrote:
->> -- a/lib/logic_pio.c
->> +++ b/lib/logic_pio.c
->> @@ -229,13 +229,21 @@ unsigned long
->> logic_pio_trans_cpuaddr(resource_size_t addr)
->>    }
->>
->>    #if defined(CONFIG_INDIRECT_PIO) && defined(PCI_IOBASE)
->> +
->> +#define logic_in_to_cpu_b(x) (x)
->> +#define logic_in_to_cpu_w(x) __le16_to_cpu(x)
->> +#define logic_in_to_cpu_l(x) __le32_to_cpu(x)
->> +
->>    #define BUILD_LOGIC_IO(bw, type)                                      \
+Hi Linus,
 
-Note: The "bw" argument name could be improved to "bwl", since this 
-macro is used for building inl() also.
+Please pull hwmon fixes for Linux v5.6-rc5 from signed tag:
 
->>    type logic_in##bw(unsigned long addr)                                 \
->>    {                                                                     \
->>           type ret = (type)~0;                                           \
->>                                                                          \
->>           if (addr < MMIO_UPPER_LIMIT) {                                 \
->> -               ret = read##bw(PCI_IOBASE + addr);                     \
->> +               void __iomem *_addr = PCI_IOBASE + addr;               \
->> +               __io_pbr();                                            \
->> +               ret = logic_in_to_cpu_##bw(__raw_read##bw(_addr));     \
->> +               __io_par(ret);                                         \
->>           } else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {\
->>                   struct logic_pio_hwaddr *entry = find_io_rang
->>
->> We could prob combine the le_to_cpu and __raw_read into a single macro.
-> 
-> What is the purpose of splitting out the byteswap rather than leaving the
-> open-coded rather than __le16_to_cpu(__raw_readw(PCI_IOBASE + addr))?
-
-I'm just copying what is in asm-generic io.h, which uses the 16b and 32b 
-byteswaps in the w and l variants, respectively.
-
-> 
-> If this is needed to work across architectures, how about adding
-> an intermediate __raw_inw() etc in asm-generic/io.h like
-> 
-> #ifndef __raw_inw
-> #define __raw_inw(a) __raw_readw(PCI_IOBASE + addr));
-> #endif
-> 
-> #include <linux/logic_pio.h>
-> 
-> #ifndef inw
-> static inline u16 inw(unsigned long addr)
-> {
->          u16 val;
-> 
->          __io_pbr();
->          val = __le16_to_cpu(__raw_inw(addr));
->          __io_par(val);
->          return val;
-> }
-> #endif
-> 
-
-The idea is good, but it would be nice if we just somehow use a common 
-asm-generic io.h definition directly in logic_pio.c, like:
-
-asm-generic io.h:
-
-#ifndef __raw_inw // name?
-#define __raw_inw __raw_inw
-static inline u16 __raw_inw(unsigned long addr)
-{
-	u16 val;
-
-	__io_pbr();
-	val = __le16_to_cpu(__raw_readw(addr));
-	__io_par(val);
-	return val;
-}
-#endif
-
-#include <linux/logic_pio.h>
-
-#ifndef inw
-#define inw __raw_inw
-#endif
-
-logic_pio.c:
-
-  #define BUILD_LOGIC_IO(bw, type)                                      \
-  type logic_in##bw(unsigned long addr)                                 \
-  {                                                                     \
-         type ret = (type)~0;                                           \
-                                                                        \
-         if (addr < MMIO_UPPER_LIMIT) {                                 \
--               ret = read##bw(PCI_IOBASE + addr);                     \
-+               ret = __raw_in##bw(PCI_IOBASE + addr);                 \
-         } else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {\
-                 struct logic_pio_hwaddr *entry = find_io_rang
+    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.6-rc5
 
 Thanks,
-John
+Guenter
+------
+
+The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
+
+  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.6-rc5
+
+for you to fetch changes up to 44f2f882909fedfc3a56e4b90026910456019743:
+
+  hwmon: (adt7462) Fix an error return in ADT7462_REG_VOLT() (2020-03-03 12:42:55 -0800)
+
+----------------------------------------------------------------
+hwmon fixes for v5.6-rc5
+
+Fix an error return in the adt7462 driver, bad voltage limits
+reported by the xdpe12284 driver, and a broken documentation
+reference in the adm1177 driver documentation.
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      hwmon: (adt7462) Fix an error return in ADT7462_REG_VOLT()
+
+Mauro Carvalho Chehab (1):
+      docs: adm1177: fix a broken reference
+
+Vadim Pasternak (1):
+      hwmon: (pmbus/xdpe12284) Add callback for vout limits conversion
+
+ Documentation/hwmon/adm1177.rst |  3 +--
+ drivers/hwmon/adt7462.c         |  2 +-
+ drivers/hwmon/pmbus/xdpe12284.c | 54 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 56 insertions(+), 3 deletions(-)
