@@ -2,82 +2,153 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89086C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7EAC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6A72073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD882073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="td1xiA8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgCFPZh (ORCPT
+        id S1726954AbgCFPZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:25:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:35422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgCFPZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:25:36 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F33F30E;
-        Fri,  6 Mar 2020 07:25:36 -0800 (PST)
-Received: from e121896.warwick.arm.com (e121896.warwick.arm.com [10.32.36.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E65D23F237;
-        Fri,  6 Mar 2020 07:25:34 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     nd@arm.com, James Clark <james.clark@arm.com>
-Subject: [PATCH v6 0/3] perf tools: Add support for some spe events
-Date:   Fri,  6 Mar 2020 15:25:17 +0000
-Message-Id: <20200306152520.28233-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200228160126.GI36089@lakrids.cambridge.arm.com>
-References: <20200228160126.GI36089@lakrids.cambridge.arm.com>
+        Fri, 6 Mar 2020 10:25:44 -0500
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:44578 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgCFPZn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:25:43 -0500
+Received: by mail-pg1-f172.google.com with SMTP id n24so1215549pgk.11;
+        Fri, 06 Mar 2020 07:25:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=U0f7F5SJ5+QRDlAY1wTE5bYTykTqGGdr3VIDJvfMX9U=;
+        b=td1xiA8vNOG/zx1dA/9Svjes7a/vUU/L+C1MrQ9paZNHbMmIIvzK1CIUffxUlR/N9m
+         vuMRkdgTtceI34WKAhyQZThOH+j+GpOuGjSEav3MctVCUkHWiUG9Vx4xGNE+C0C/9IRb
+         bjgFi/EnuLcnhuVAhOZqP/3mzS8h/JPgM1r5bAxkuIJJpt5OrZWHUMFQwhuwMictEsnR
+         D1lrKqjdBm8PuCu0KsrZf+t4/rw/2fXSfI077UtQXy2i3m0kxngHOEs5bqXkvuy/uHD5
+         A1WfuMCosqPUMkNRcY64tfLmO3vTkwzNa3KI6A7G8UvHXv7tpd6Y9FR7vOFVgrSV+BDD
+         u2qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=U0f7F5SJ5+QRDlAY1wTE5bYTykTqGGdr3VIDJvfMX9U=;
+        b=SYBxsXW4+OskEd1ab4gwux/83pPCEa8rRHDttz0lXwxgUYnnFRCjDgYg0akvr9STRU
+         xEVRWRegxS7a1/eCNMg2ATeB9wvWB18waK2kSeOu0GfbYchLYCyTb0FZuylfzNhqP/Tw
+         qixgrtI5QKSurIVeYJOJf+LaYFoBCBlpcxM2YzMnpjvOnAT91AzUHQtrcYsDZvh1KIci
+         skj8/FlCj6KrIpSNMWnVwFZz7wjLx0KFZFA2eZP/g39IAgYbIUnbz5FgVhNOfbx4rsU5
+         oDAzLEz78vB+laVGUQbwl9pdVIY0giPoUkhTSZV7BIfAOWJPc+N4Htji5Gzu41fxoeNU
+         2RgA==
+X-Gm-Message-State: ANhLgQ3FM2WvDGnDfPJDdZnOYx9MMfCAcVdgDQLNNhwABG7VdIQOhipo
+        HULrhddpANfwC+GLQlpoo/s=
+X-Google-Smtp-Source: ADFU+vvFswTWSOFzoCgpKWpMnxUox1t9/PId67LHlatzi8Z2lX+XDaSQ7Z/XqGooyrLO0Zbwo0Iq1Q==
+X-Received: by 2002:a63:1459:: with SMTP id 25mr3941888pgu.427.1583508341870;
+        Fri, 06 Mar 2020 07:25:41 -0800 (PST)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id q187sm35905013pfq.185.2020.03.06.07.25.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 07:25:40 -0800 (PST)
+Date:   Fri, 06 Mar 2020 07:25:32 -0800
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Lorenz Bauer <lmb@cloudflare.com>, john.fastabend@gmail.com,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Message-ID: <5e626b6c364eb_17502acca07205b427@john-XPS-13-9370.notmuch>
+In-Reply-To: <20200304101318.5225-4-lmb@cloudflare.com>
+References: <20200304101318.5225-1-lmb@cloudflare.com>
+ <20200304101318.5225-4-lmb@cloudflare.com>
+Subject: RE: [PATCH bpf-next v3 03/12] bpf: tcp: move assertions into
+ tcp_bpf_get_proto
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+Lorenz Bauer wrote:
+> We need to ensure that sk->sk_prot uses certain callbacks, so that
+> code that directly calls e.g. tcp_sendmsg in certain corner cases
+> works. To avoid spurious asserts, we must to do this only if
+> sk_psock_update_proto has not yet been called. The same invariants
+> apply for tcp_bpf_check_v6_needs_rebuild, so move the call as well.
+> 
+> Doing so allows us to merge tcp_bpf_init and tcp_bpf_reinit.
+> 
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
 
-Yes I think this is something I can look into. For now I have removed
-that last patch because the current patch set already works very similarly anyway
-and allows people to use SPE in perf:
+Small nit if you update it just carry the acks through.
 
-    ./perf record -e arm_spe_0/branch_filter=1/
-vs
-    ./perf record -e arm_spe/branch-misses/pp
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+ 
+>  	skb_verdict = READ_ONCE(progs->skb_verdict);
+> @@ -191,18 +191,14 @@ static int sock_map_link(struct bpf_map *map, struct sk_psock_progs *progs,
+>  			ret = -ENOMEM;
+>  			goto out_progs;
+>  		}
+> -		sk_psock_is_new = true;
+>  	}
+>  
+>  	if (msg_parser)
+>  		psock_set_prog(&psock->progs.msg_parser, msg_parser);
+> -	if (sk_psock_is_new) {
+> -		ret = tcp_bpf_init(sk);
+> -		if (ret < 0)
+> -			goto out_drop;
+> -	} else {
+> -		tcp_bpf_reinit(sk);
+> -	}
+> +
+> +	ret = tcp_bpf_init(sk);
+> +	if (ret < 0)
+> +		goto out_drop;
+>  
+>  	write_lock_bh(&sk->sk_callback_lock);
+>  	if (skb_progs && !psock->parser.enabled) {
+> @@ -239,12 +235,9 @@ static int sock_map_link_no_progs(struct bpf_map *map, struct sock *sk)
+>  	if (IS_ERR(psock))
+>  		return PTR_ERR(psock);
+>  
+> -	if (psock) {
+> -		tcp_bpf_reinit(sk);
+> -		return 0;
+> -	}
+> +	if (!psock)
+> +		psock = sk_psock_init(sk, map->numa_node);
+>  
+> -	psock = sk_psock_init(sk, map->numa_node);
+>  	if (!psock)
+>  		return -ENOMEM;
 
-Also I don't have access to any big.LITTLE hardware with SPE so wouldn't be able
-to test collating all the SPE PMUs.
+also small nit this reads,
 
-Thanks
-James
+ if (!psock)
+    psock = ...
+ if (!psock)
+    return -ENOMEM
 
-Tan Xiaojun (3):
-  perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
-  perf tools: Add support for "report" for some spe events
-  perf report: Add SPE options to --itrace argument
+how about,
 
- tools/perf/Documentation/itrace.txt           |   5 +-
- tools/perf/util/Build                         |   2 +-
- tools/perf/util/arm-spe-decoder/Build         |   1 +
- .../util/arm-spe-decoder/arm-spe-decoder.c    | 225 ++++++
- .../util/arm-spe-decoder/arm-spe-decoder.h    |  66 ++
- .../arm-spe-pkt-decoder.c                     |   0
- .../arm-spe-pkt-decoder.h                     |   2 +
- tools/perf/util/arm-spe.c                     | 747 +++++++++++++++++-
- tools/perf/util/auxtrace.c                    |  13 +
- tools/perf/util/auxtrace.h                    |  13 +-
- 10 files changed, 1032 insertions(+), 42 deletions(-)
- create mode 100644 tools/perf/util/arm-spe-decoder/Build
- create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
- create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
- rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
- rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (96%)
-
--- 
-2.17.1
-
+ if (!psock) {
+   psock = ...
+   if (!psock) return -ENOMEM;
+ }
