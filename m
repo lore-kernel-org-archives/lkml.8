@@ -8,64 +8,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E18EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76C3C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F24F2072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4382072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:39:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JDBeq9tb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jX2u3qOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgCFKi4 (ORCPT
+        id S1726524AbgCFKjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:38:56 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:33587 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgCFKiz (ORCPT
+        Fri, 6 Mar 2020 05:39:00 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:38504 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgCFKi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:38:55 -0500
-Received: by mail-yw1-f67.google.com with SMTP id j186so1793188ywe.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:38:54 -0800 (PST)
+        Fri, 6 Mar 2020 05:38:57 -0500
+Received: by mail-yw1-f66.google.com with SMTP id 10so1760812ywv.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:38:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i8oFDlEjKTXEkp27gAlgE/r86E023g4raleT3ZcWqMY=;
-        b=JDBeq9tb1A5OkcYN7ne8hRchnK8x+Fq37ru+O+Q+fD7WVcbhle0adu+Cdmr0brRaM5
-         8vtoJn+q+iOBGjDEYBtmu3IjeIzh5p38VpPcORFAbmgXxKs6hDA2li882ZuOn6lOPZrk
-         +9Pe06OR22siPhRjC5gTI2JFmcopftpJcIONCxLlEr4IgED1/jWQQ45CmcUBruNnlLqJ
-         JXWmOiiOAq4ziwRWbhh75TcyyMeBjJby14CpboJt8h749mpqd9p/fH3TWb1j3a5X8l18
-         co1Ib79LCPsCCGe6hAaVPqmR6OotNq7BAFLNwByPqjvXJgTcyCsihLWtdlsvhrXRTtBC
-         qJKQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=NwT39Zmrk5nf0V1VVwAqtLl1QXPiCL2V82aJAhi4vfA=;
+        b=jX2u3qORktW5XuoKIWqnswVt8lzwsLlC4j1h4zXn3Q+LLavs4g4sU0uQ7Rr1I9Ax01
+         vRvys6knfWqQZRPt4slBnu8jjtFkqpAE6WoYSrJqLLfCLsNnCMb2qJ3eHRLJcg9GT14F
+         +kmdE+VF/yACRq6Zib2eKyMOHhsR9m7KscLM3i90s4vdN1J0PC9+HngvqDHNkla8zCHa
+         SImeyM9jcJVpAKOTrxtK0LKNkKCfSvj76kCBxBiKQx4BfCF9evsdlukNrySFcn397d7o
+         Od6zQEdAR5aUFPmac1hU3XQGWCXAfP5C2zS1Q73apy4ymSh7FMxwMQbQ187sd2Zsl+We
+         jo0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i8oFDlEjKTXEkp27gAlgE/r86E023g4raleT3ZcWqMY=;
-        b=p62TgJorddc8uBWh4+0VPf3kMvKhEGgSXZLu/4vW/9cPIxhbD3p2mQCpDyWCJN7+a9
-         xSE665ocXAZLYAYmIs3w9ZFjDXioPX4mOmzl1D8OKBrU+8oTZ5uIXGi/WMojbRn/kkgZ
-         Yc9zkBw4JqWZg97B/J9yU+d/XE92jP0h7KereQR8PuxeqQeDu217YhHfk2BiNQS8F3tB
-         QzmJQ6yScYpE+5cchrTpD+lv4yPAl2XzKZXgSwSqDJd6teyfLgzY2JBikS1L/y4EZUYt
-         laxBiczF8gUOm8HsNl+itMHgdTSXyjRKU+PQDFgxCusiMU+QBkchGqrXr0/EwtstYEEX
-         bcnA==
-X-Gm-Message-State: ANhLgQ1TXJa2XuVJEFjUUIKCc1pAGT4x+YzM5fHh2YuEMILsKImYXdSY
-        aNdmbfcrzMfCm4zc43g6MeM=
-X-Google-Smtp-Source: ADFU+vvKy8+4rNwuHHdT+UTdEbLzaEdtIoXz141O2iee73ZMJ6cAVqem+QhqWc3dAu9IKjJxAwh0ww==
-X-Received: by 2002:a0d:d303:: with SMTP id v3mr3167981ywd.299.1583491134096;
-        Fri, 06 Mar 2020 02:38:54 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NwT39Zmrk5nf0V1VVwAqtLl1QXPiCL2V82aJAhi4vfA=;
+        b=cAcEV6LPb1yEMKsY+g4gyuSrSMkhKlVAnJAz1WMiYKlGjzJQJ63C3j8Xys4IddvFH/
+         GAP18KsuXP3Ggc+KTMv10SOhaIGkaAC/cjFKOh5q10wj9YpqqExOe/hwMN+2hySy5gnI
+         3QzNSS5BIyRJkXfW2mTB9jDr7XImOn/UqPEXHI7XJH++0GxrHbhGuQA9YTBm9Zdruv8b
+         0qE+e49z5enOLEX/XyoWiNAafD23Mr2CEnlvtURnyMJboFlyJp2QKhWE/+O4nqTiwu5G
+         Bzs/hVMX7LOd96S2pxpgwUkL5CbnW8uBVAZcfLyxaXsIvTiAUdfKOmQnMJDwTfoyXraB
+         Vi3g==
+X-Gm-Message-State: ANhLgQ3EB+WtrZ2dLkP42FwczWI6uZLe1EvP/EBZAqE9++GRx8LmebZG
+        u0ZH7iRWhisp2c2c7YXI9ec=
+X-Google-Smtp-Source: ADFU+vt2Wodk6ZZipaUnakhUniHCN5Q8WvcLQuqEGAxC4+KijtJXNOtuyVZky/tgzET7m383AchW4A==
+X-Received: by 2002:a25:6902:: with SMTP id e2mr3171907ybc.349.1583491135617;
+        Fri, 06 Mar 2020 02:38:55 -0800 (PST)
 Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id w132sm13345575ywc.51.2020.03.06.02.38.52
+        by smtp.gmail.com with ESMTPSA id w132sm13345575ywc.51.2020.03.06.02.38.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 02:38:53 -0800 (PST)
+        Fri, 06 Mar 2020 02:38:55 -0800 (PST)
 From:   Adam Ford <aford173@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: defconfig: Enable IMX27 PWM controller
-Date:   Fri,  6 Mar 2020 04:38:37 -0600
-Message-Id: <20200306103839.1231057-1-aford173@gmail.com>
+Subject: [PATCH] arm64: defconfig: Enable IMX/FSL Audio Support for WM8962
+Date:   Fri,  6 Mar 2020 04:38:38 -0600
+Message-Id: <20200306103839.1231057-2-aford173@gmail.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200306103839.1231057-1-aford173@gmail.com>
+References: <20200306103839.1231057-1-aford173@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,23 +75,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX8M Mini and others use the i.MX27 PWM controller.
-This patch enables it as a module so various boards can use it.
+The Beacon EmbeddedWorks i.MX8M Mini kit has a WM8962 audio codec.
+This patch enables the required drivers as modules to enable sound.
 
 Signed-off-by: Adam Ford <aford173@gmail.com>
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a8de3d327d03..d19ca82b3c40 100644
+index d19ca82b3c40..ab71a407288f 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -830,6 +830,7 @@ CONFIG_MPL3115=m
- CONFIG_PWM=y
- CONFIG_PWM_BCM2835=m
- CONFIG_PWM_CROS_EC=m
-+CONFIG_PWM_IMX27=m
- CONFIG_PWM_MESON=m
- CONFIG_PWM_RCAR=m
- CONFIG_PWM_ROCKCHIP=y
+@@ -601,6 +601,9 @@ CONFIG_SND_HDA_TEGRA=m
+ CONFIG_SND_HDA_CODEC_HDMI=m
+ CONFIG_SND_SOC=y
+ CONFIG_SND_BCM2835_SOC_I2S=m
++CONFIG_SND_IMX_SOC=m
++CONFIG_SND_SOC_FSL_ASOC_CARD=m
++CONFIG_SND_SOC_IMX_AUDMIX=m
+ CONFIG_SND_MESON_AXG_SOUND_CARD=m
+ CONFIG_SND_SOC_ROCKCHIP=m
+ CONFIG_SND_SOC_ROCKCHIP_SPDIF=m
+@@ -614,6 +617,7 @@ CONFIG_SND_SOC_ES7134=m
+ CONFIG_SND_SOC_ES7241=m
+ CONFIG_SND_SOC_PCM3168A_I2C=m
+ CONFIG_SND_SOC_TAS571X=m
++CONFIG_SND_SOC_WM8962=m
+ CONFIG_SND_SIMPLE_CARD=m
+ CONFIG_SND_AUDIO_GRAPH_CARD=m
+ CONFIG_I2C_HID=m
 -- 
 2.25.0
 
