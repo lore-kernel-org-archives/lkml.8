@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5EFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C1EC3F2DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B974D208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1CD2208CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:29:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oY4TZ9T0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FGwdqCT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbgCFE3E (ORCPT
+        id S1727466AbgCFE30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 23:29:04 -0500
-Received: from mail-yw1-f54.google.com ([209.85.161.54]:44797 "EHLO
-        mail-yw1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbgCFE3A (ORCPT
+        Thu, 5 Mar 2020 23:29:26 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:33854 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbgCFE3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 23:29:00 -0500
-Received: by mail-yw1-f54.google.com with SMTP id t141so1054597ywc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 20:28:57 -0800 (PST)
+        Thu, 5 Mar 2020 23:29:07 -0500
+Received: by mail-yw1-f65.google.com with SMTP id o186so1120570ywc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 20:29:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VJkvWyOR2VMGHy2vTxTs8FEKS/5U75qQAP4/hY4Id2k=;
-        b=oY4TZ9T0QPRAFA3tTEDEfcBTp02lHfZXHu36sRsKZFdo/zA6dNhWBEd8SOuPXjY2+D
-         R/4Yjx5CeQnNiIB2prlNvJ910t7/IFW7M1myjUDrJuYqMfpRFEsuv9HDd7wIwkZ1tqxH
-         VjwDTFbhMIU64gRptda/tt/cYXVA+7rXjpIqMKTdgJkKRT9e1dHCBp5V7mrYc75CDMnC
-         A6W3OL2AndoyM3m7VOTc6CtPTQT4cawx604sieE59YZ+0rD+bBms31d+duMIhacsll5C
-         uS66XqGLChQ8f7vvJuh4selOEOzMFHzG06ghd2Zu77lNPLVd5HG0WN9vOase/ZoB3wo+
-         NMqg==
+        bh=LjIqQIN/2szfQ75PSKeiupXgUSHFFM6xFTZ/Ss1UYRs=;
+        b=FGwdqCT7fT/IWN+Y38w0FCNa/CgWHSS8UwbEubged5SWFysRdxaXpQFfr6kn81jTeL
+         kKMy3Qm2YFxb8sgeQxGVVfm2oYpZ71Hk7NOAEVninw0MXRfVEq0fBLo8PzHmhq28ZTGI
+         4btelsPz5yLX6kZHSi1EodeO2ZMg4+46aZNEMwAC3iaSYlqRZCQvPXK06IZuA70r3wsC
+         E6vtaT3mncZGUZdLIQCL1FQ5muWzjUass58VYQkNzOaqZM4jdMdAnmWToEanzHZ6mii0
+         x58eBQOrT/aXP0KW2Mv2abHQ9/x8Q3VgPkTbRHZ1cxrYfa80OEXFIs2sxBZDo0ekdGOK
+         fksA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VJkvWyOR2VMGHy2vTxTs8FEKS/5U75qQAP4/hY4Id2k=;
-        b=g44fJwdLvkxOK/pFWIRmTLaxgReaF7Bjhcpy2+9BL4ZHImFe7BvcJVYkEV7mdrMBhF
-         qgkj6Qs8j3T3Tt3r3zlXA7KrCC2Do+jZTlhL6EQv2k3/h4WT1qF4hRppVD6Bbpv4QJkT
-         UUyWCcZjNTjMwJQga7HxCbC6JaacYTbufKQsYSzyL+jWXZre6VlHy2hd5Q6KD2GAvsO/
-         SX3zZy6S9+Aqtl0lRRxTSBOAWmSzkBT6TrCyjjbK45pGVtEQfz3yMFXBG8VQl9tNaVkY
-         OYc0+EikPPahy/qyKVIjo0XxFCWKBY5pfDUMhuzHhS1WpsEgy4K0QEW11kSjgdeyUF1g
-         a9rw==
-X-Gm-Message-State: ANhLgQ00iZ4Xvw86V7zCAeYRb5PQH0Ogsdcd5qzPxJDSAqDhioUQtSe2
-        6QxkyD8L69WdSk9FeRNPgoXuQw==
-X-Google-Smtp-Source: ADFU+vu5unOtKSy8FnQyAzAuy59ww2GfjKD4QkwE71uDXyX08bciCMelQVNxSFu0OBxt6xiw7rHpVA==
-X-Received: by 2002:a81:67c2:: with SMTP id b185mr2261919ywc.250.1583468936190;
-        Thu, 05 Mar 2020 20:28:56 -0800 (PST)
+        bh=LjIqQIN/2szfQ75PSKeiupXgUSHFFM6xFTZ/Ss1UYRs=;
+        b=WvzgCbjPckXtQuRaO5Qr1DVwhdESCXfGv7wR6QMJW7hU8JdshVDrjif3Fn/QOZ/aJ8
+         JpKDDdMhZO1RmYwdVuFzurR87yLE9YcIqOtNZ4yCt5kUeKchga8ZzPsauoOHc96cXfMg
+         SmRGTVKJZzD0/X3xslYIZpBEsvolERy6mBhTKHmLmmbiHnTH4pwrfMA9xiIe9FX+9Z5n
+         db8Y62G9JIFHj9xMNptnxDt1rOqGpCzy+yxoul9A9ew4QViILXBqv2k/xUd7h2U7d8iC
+         GdDX0t6TDEG8qoPb4b2eMeUlZV+8Ozw2rhsNr53QXEgXCDnk6RJQD3DNtPqrN4FyieCG
+         liXA==
+X-Gm-Message-State: ANhLgQ13ZqN9RpatwsuZU3W5/E1cUeP8QRa4YMCL4pTc8F3bFx0e1hTW
+        pNfbMegZYx0wpLxpcWqdlIZ1EA==
+X-Google-Smtp-Source: ADFU+vuuyAuj7AdtF/lGQjlASBP1BaoTFy1BP25r0/bGAdrtVTd9IDZj18jkYsHe0TmF3VToKLorrg==
+X-Received: by 2002:a81:9d8:: with SMTP id 207mr2231269ywj.101.1583468943945;
+        Thu, 05 Mar 2020 20:29:03 -0800 (PST)
 Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id x2sm12581836ywa.32.2020.03.05.20.28.54
+        by smtp.gmail.com with ESMTPSA id x2sm12581836ywa.32.2020.03.05.20.29.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 20:28:55 -0800 (PST)
+        Thu, 05 Mar 2020 20:29:03 -0800 (PST)
 From:   Alex Elder <elder@linaro.org>
 To:     David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -75,9 +75,9 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 10/17] soc: qcom: ipa: IPA endpoints
-Date:   Thu,  5 Mar 2020 22:28:24 -0600
-Message-Id: <20200306042831.17827-11-elder@linaro.org>
+Subject: [PATCH v2 14/17] soc: qcom: ipa: AP/modem communications
+Date:   Thu,  5 Mar 2020 22:28:28 -0600
+Message-Id: <20200306042831.17827-15-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200306042831.17827-1-elder@linaro.org>
 References: <20200306042831.17827-1-elder@linaro.org>
@@ -88,35 +88,1565 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch includes the code implementing an IPA endpoint.  This is
-the primary abstraction implemented by the IPA.  An endpoint is one
-end of a network connection between two entities physically
-connected to the IPA.  Specifically, the AP and the modem implement
-endpoints, and an (AP endpoint, modem endpoint) pair implements the
-transfer of network data in one direction between the AP and modem.
+This patch implements two forms of out-of-band communication between
+the AP and modem.
 
-Endpoints are built on top of GSI channels, but IPA endpoints
-represent the higher-level functionality that the IPA provides.
-Data can be sent through a GSI channel, but it is the IPA endpoint
-that represents what is on the "other end" to receive that data.
-Other functionality, including aggregation, checksum offload and
-(at some future date) IP routing and filtering are all associated
-with the IPA endpoint.
+  - QMI is a mechanism that allows clients running on the AP
+    interact with services running on the modem (and vice-versa).
+    The AP IPA driver uses QMI to communicate with the corresponding
+    IPA driver resident on the modem, to agree on parameters used
+    with the IPA hardware and to ensure both sides are ready before
+    entering operational mode.
+
+  - SMP2P is a more primitive mechanism available for the modem and
+    AP to communicate with each other.  It provides a means for either
+    the AP or modem to interrupt the other, and furthermore, to provide
+    32 bits worth of information.  The IPA driver uses SMP2P to tell
+    the modem what the state of the IPA clock was in the event of a
+    crash.  This allows the modem to safely access the IPA hardware
+    (or avoid doing so) when a crash occurs, for example, to access
+    information within the IPA hardware.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_endpoint.c | 1707 ++++++++++++++++++++++++++++++++
- drivers/net/ipa/ipa_endpoint.h |  110 ++
- 2 files changed, 1817 insertions(+)
- create mode 100644 drivers/net/ipa/ipa_endpoint.c
- create mode 100644 drivers/net/ipa/ipa_endpoint.h
+ drivers/net/ipa/ipa_qmi.c     | 538 +++++++++++++++++++++++++++
+ drivers/net/ipa/ipa_qmi.h     |  41 +++
+ drivers/net/ipa/ipa_qmi_msg.c | 663 ++++++++++++++++++++++++++++++++++
+ drivers/net/ipa/ipa_qmi_msg.h | 252 +++++++++++++
+ drivers/net/ipa/ipa_smp2p.c   | 335 +++++++++++++++++
+ drivers/net/ipa/ipa_smp2p.h   |  48 +++
+ 6 files changed, 1877 insertions(+)
+ create mode 100644 drivers/net/ipa/ipa_qmi.c
+ create mode 100644 drivers/net/ipa/ipa_qmi.h
+ create mode 100644 drivers/net/ipa/ipa_qmi_msg.c
+ create mode 100644 drivers/net/ipa/ipa_qmi_msg.h
+ create mode 100644 drivers/net/ipa/ipa_smp2p.c
+ create mode 100644 drivers/net/ipa/ipa_smp2p.h
 
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
+diff --git a/drivers/net/ipa/ipa_qmi.c b/drivers/net/ipa/ipa_qmi.c
 new file mode 100644
-index 000000000000..915b4cd05dd2
+index 000000000000..5090f0f923ad
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -0,0 +1,1707 @@
++++ b/drivers/net/ipa/ipa_qmi.c
+@@ -0,0 +1,538 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Copyright (c) 2013-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++
++#include <linux/types.h>
++#include <linux/string.h>
++#include <linux/slab.h>
++#include <linux/qrtr.h>
++#include <linux/soc/qcom/qmi.h>
++
++#include "ipa.h"
++#include "ipa_endpoint.h"
++#include "ipa_mem.h"
++#include "ipa_table.h"
++#include "ipa_modem.h"
++#include "ipa_qmi_msg.h"
++
++/**
++ * DOC: AP/Modem QMI Handshake
++ *
++ * The AP and modem perform a "handshake" at initialization time to ensure
++ * both sides know when everything is ready to begin operating.  The AP
++ * driver (this code) uses two QMI handles (endpoints) for this; a client
++ * using a service on the modem, and server to service modem requests (and
++ * to supply an indication message from the AP).  Once the handshake is
++ * complete, the AP and modem may begin IPA operation.  This occurs
++ * only when the AP IPA driver, modem IPA driver, and IPA microcontroller
++ * are ready.
++ *
++ * The QMI service on the modem expects to receive an INIT_DRIVER request from
++ * the AP, which contains parameters used by the modem during initialization.
++ * The AP sends this request as soon as it is knows the modem side service
++ * is available.  The modem responds to this request, and if this response
++ * contains a success result, the AP knows the modem IPA driver is ready.
++ *
++ * The modem is responsible for loading firmware on the IPA microcontroller.
++ * This occurs only during the initial modem boot.  The modem sends a
++ * separate DRIVER_INIT_COMPLETE request to the AP to report that the
++ * microcontroller is ready.  The AP may assume the microcontroller is
++ * ready and remain so (even if the modem reboots) once it has received
++ * and responded to this request.
++ *
++ * There is one final exchange involved in the handshake.  It is required
++ * on the initial modem boot, but optional (but in practice does occur) on
++ * subsequent boots.  The modem expects to receive a final INIT_COMPLETE
++ * indication message from the AP when it is about to begin its normal
++ * operation.  The AP will only send this message after it has received
++ * and responded to an INDICATION_REGISTER request from the modem.
++ *
++ * So in summary:
++ * - Whenever the AP learns the modem has booted and its IPA QMI service
++ *   is available, it sends an INIT_DRIVER request to the modem.  The
++ *   modem supplies a success response when it is ready to operate.
++ * - On the initial boot, the modem sets up the IPA microcontroller, and
++ *   sends a DRIVER_INIT_COMPLETE request to the AP when this is done.
++ * - When the modem is ready to receive an INIT_COMPLETE indication from
++ *   the AP, it sends an INDICATION_REGISTER request to the AP.
++ * - On the initial modem boot, everything is ready when:
++ *	- AP has received a success response from its INIT_DRIVER request
++ *	- AP has responded to a DRIVER_INIT_COMPLETE request
++ *	- AP has responded to an INDICATION_REGISTER request from the modem
++ *	- AP has sent an INIT_COMPLETE indication to the modem
++ * - On subsequent modem boots, everything is ready when:
++ *	- AP has received a success response from its INIT_DRIVER request
++ *	- AP has responded to a DRIVER_INIT_COMPLETE request
++ * - The INDICATION_REGISTER request and INIT_COMPLETE indication are
++ *   optional for non-initial modem boots, and have no bearing on the
++ *   determination of when things are "ready"
++ */
++
++#define IPA_HOST_SERVICE_SVC_ID		0x31
++#define IPA_HOST_SVC_VERS		1
++#define IPA_HOST_SERVICE_INS_ID		1
++
++#define IPA_MODEM_SERVICE_SVC_ID	0x31
++#define IPA_MODEM_SERVICE_INS_ID	2
++#define IPA_MODEM_SVC_VERS		1
++
++#define QMI_INIT_DRIVER_TIMEOUT		60000	/* A minute in milliseconds */
++
++/* Send an INIT_COMPLETE indication message to the modem */
++static void ipa_server_init_complete(struct ipa_qmi *ipa_qmi)
++{
++	struct ipa *ipa = container_of(ipa_qmi, struct ipa, qmi);
++	struct qmi_handle *qmi = &ipa_qmi->server_handle;
++	struct sockaddr_qrtr *sq = &ipa_qmi->modem_sq;
++	struct ipa_init_complete_ind ind = { };
++	int ret;
++
++	ind.status.result = QMI_RESULT_SUCCESS_V01;
++	ind.status.error = QMI_ERR_NONE_V01;
++
++	ret = qmi_send_indication(qmi, sq, IPA_QMI_INIT_COMPLETE,
++				   IPA_QMI_INIT_COMPLETE_IND_SZ,
++				   ipa_init_complete_ind_ei, &ind);
++	if (ret)
++		dev_err(&ipa->pdev->dev,
++			"error %d sending init complete indication\n", ret);
++	else
++		ipa_qmi->indication_sent = true;
++}
++
++/* If requested (and not already sent) send the INIT_COMPLETE indication */
++static void ipa_qmi_indication(struct ipa_qmi *ipa_qmi)
++{
++	if (!ipa_qmi->indication_requested)
++		return;
++
++	if (ipa_qmi->indication_sent)
++		return;
++
++	ipa_server_init_complete(ipa_qmi);
++}
++
++/* Determine whether everything is ready to start normal operation.
++ * We know everything (else) is ready when we know the IPA driver on
++ * the modem is ready, and the microcontroller is ready.
++ *
++ * When the modem boots (or reboots), the handshake sequence starts
++ * with the AP sending the modem an INIT_DRIVER request.  Within
++ * that request, the uc_loaded flag will be zero (false) for an
++ * initial boot, non-zero (true) for a subsequent (SSR) boot.
++ */
++static void ipa_qmi_ready(struct ipa_qmi *ipa_qmi)
++{
++	struct ipa *ipa = container_of(ipa_qmi, struct ipa, qmi);
++	int ret;
++
++	/* We aren't ready until the modem and microcontroller are */
++	if (!ipa_qmi->modem_ready || !ipa_qmi->uc_ready)
++		return;
++
++	/* Send the indication message if it was requested */
++	ipa_qmi_indication(ipa_qmi);
++
++	/* The initial boot requires us to send the indication. */
++	if (ipa_qmi->initial_boot) {
++		if (!ipa_qmi->indication_sent)
++			return;
++
++		/* The initial modem boot completed successfully */
++		ipa_qmi->initial_boot = false;
++	}
++
++	/* We're ready.  Start up normal operation */
++	ipa = container_of(ipa_qmi, struct ipa, qmi);
++	ret = ipa_modem_start(ipa);
++	if (ret)
++		dev_err(&ipa->pdev->dev, "error %d starting modem\n", ret);
++}
++
++/* All QMI clients from the modem node are gone (modem shut down or crashed). */
++static void ipa_server_bye(struct qmi_handle *qmi, unsigned int node)
++{
++	struct ipa_qmi *ipa_qmi;
++
++	ipa_qmi = container_of(qmi, struct ipa_qmi, server_handle);
++
++	/* The modem client and server go away at the same time */
++	memset(&ipa_qmi->modem_sq, 0, sizeof(ipa_qmi->modem_sq));
++
++	/* initial_boot doesn't change when modem reboots */
++	/* uc_ready doesn't change when modem reboots */
++	ipa_qmi->modem_ready = false;
++	ipa_qmi->indication_requested = false;
++	ipa_qmi->indication_sent = false;
++}
++
++static struct qmi_ops ipa_server_ops = {
++	.bye		= ipa_server_bye,
++};
++
++/* Callback function to handle an INDICATION_REGISTER request message from the
++ * modem.  This informs the AP that the modem is now ready to receive the
++ * INIT_COMPLETE indication message.
++ */
++static void ipa_server_indication_register(struct qmi_handle *qmi,
++					   struct sockaddr_qrtr *sq,
++					   struct qmi_txn *txn,
++					   const void *decoded)
++{
++	struct ipa_indication_register_rsp rsp = { };
++	struct ipa_qmi *ipa_qmi;
++	struct ipa *ipa;
++	int ret;
++
++	ipa_qmi = container_of(qmi, struct ipa_qmi, server_handle);
++	ipa = container_of(ipa_qmi, struct ipa, qmi);
++
++	rsp.rsp.result = QMI_RESULT_SUCCESS_V01;
++	rsp.rsp.error = QMI_ERR_NONE_V01;
++
++	ret = qmi_send_response(qmi, sq, txn, IPA_QMI_INDICATION_REGISTER,
++				IPA_QMI_INDICATION_REGISTER_RSP_SZ,
++				ipa_indication_register_rsp_ei, &rsp);
++	if (!ret) {
++		ipa_qmi->indication_requested = true;
++		ipa_qmi_ready(ipa_qmi);		/* We might be ready now */
++	} else {
++		dev_err(&ipa->pdev->dev,
++			"error %d sending register indication response\n", ret);
++	}
++}
++
++/* Respond to a DRIVER_INIT_COMPLETE request message from the modem. */
++static void ipa_server_driver_init_complete(struct qmi_handle *qmi,
++					    struct sockaddr_qrtr *sq,
++					    struct qmi_txn *txn,
++					    const void *decoded)
++{
++	struct ipa_driver_init_complete_rsp rsp = { };
++	struct ipa_qmi *ipa_qmi;
++	struct ipa *ipa;
++	int ret;
++
++	ipa_qmi = container_of(qmi, struct ipa_qmi, server_handle);
++	ipa = container_of(ipa_qmi, struct ipa, qmi);
++
++	rsp.rsp.result = QMI_RESULT_SUCCESS_V01;
++	rsp.rsp.error = QMI_ERR_NONE_V01;
++
++	ret = qmi_send_response(qmi, sq, txn, IPA_QMI_DRIVER_INIT_COMPLETE,
++				IPA_QMI_DRIVER_INIT_COMPLETE_RSP_SZ,
++				ipa_driver_init_complete_rsp_ei, &rsp);
++	if (!ret) {
++		ipa_qmi->uc_ready = true;
++		ipa_qmi_ready(ipa_qmi);		/* We might be ready now */
++	} else {
++		dev_err(&ipa->pdev->dev,
++			"error %d sending init complete response\n", ret);
++	}
++}
++
++/* The server handles two request message types sent by the modem. */
++static struct qmi_msg_handler ipa_server_msg_handlers[] = {
++	{
++		.type		= QMI_REQUEST,
++		.msg_id		= IPA_QMI_INDICATION_REGISTER,
++		.ei		= ipa_indication_register_req_ei,
++		.decoded_size	= IPA_QMI_INDICATION_REGISTER_REQ_SZ,
++		.fn		= ipa_server_indication_register,
++	},
++	{
++		.type		= QMI_REQUEST,
++		.msg_id		= IPA_QMI_DRIVER_INIT_COMPLETE,
++		.ei		= ipa_driver_init_complete_req_ei,
++		.decoded_size	= IPA_QMI_DRIVER_INIT_COMPLETE_REQ_SZ,
++		.fn		= ipa_server_driver_init_complete,
++	},
++};
++
++/* Handle an INIT_DRIVER response message from the modem. */
++static void ipa_client_init_driver(struct qmi_handle *qmi,
++				   struct sockaddr_qrtr *sq,
++				   struct qmi_txn *txn, const void *decoded)
++{
++	txn->result = 0;	/* IPA_QMI_INIT_DRIVER request was successful */
++	complete(&txn->completion);
++}
++
++/* The client handles one response message type sent by the modem. */
++static struct qmi_msg_handler ipa_client_msg_handlers[] = {
++	{
++		.type		= QMI_RESPONSE,
++		.msg_id		= IPA_QMI_INIT_DRIVER,
++		.ei		= ipa_init_modem_driver_rsp_ei,
++		.decoded_size	= IPA_QMI_INIT_DRIVER_RSP_SZ,
++		.fn		= ipa_client_init_driver,
++	},
++};
++
++/* Return a pointer to an init modem driver request structure, which contains
++ * configuration parameters for the modem.  The modem may be started multiple
++ * times, but generally these parameters don't change so we can reuse the
++ * request structure once it's initialized.  The only exception is the
++ * skip_uc_load field, which will be set only after the microcontroller has
++ * reported it has completed its initialization.
++ */
++static const struct ipa_init_modem_driver_req *
++init_modem_driver_req(struct ipa_qmi *ipa_qmi)
++{
++	struct ipa *ipa = container_of(ipa_qmi, struct ipa, qmi);
++	static struct ipa_init_modem_driver_req req;
++	const struct ipa_mem *mem;
++
++	/* The microcontroller is initialized on the first boot */
++	req.skip_uc_load_valid = 1;
++	req.skip_uc_load = ipa->uc_loaded ? 1 : 0;
++
++	/* We only have to initialize most of it once */
++	if (req.platform_type_valid)
++		return &req;
++
++	req.platform_type_valid = 1;
++	req.platform_type = IPA_QMI_PLATFORM_TYPE_MSM_ANDROID;
++
++	mem = &ipa->mem[IPA_MEM_MODEM_HEADER];
++	if (mem->size) {
++		req.hdr_tbl_info_valid = 1;
++		req.hdr_tbl_info.start = ipa->mem_offset + mem->offset;
++		req.hdr_tbl_info.end = req.hdr_tbl_info.start + mem->size - 1;
++	}
++
++	mem = &ipa->mem[IPA_MEM_V4_ROUTE];
++	req.v4_route_tbl_info_valid = 1;
++	req.v4_route_tbl_info.start = ipa->mem_offset + mem->offset;
++	req.v4_route_tbl_info.count = mem->size / IPA_TABLE_ENTRY_SIZE;
++
++	mem = &ipa->mem[IPA_MEM_V6_ROUTE];
++	req.v6_route_tbl_info_valid = 1;
++	req.v6_route_tbl_info.start = ipa->mem_offset + mem->offset;
++	req.v6_route_tbl_info.count = mem->size / IPA_TABLE_ENTRY_SIZE;
++
++	mem = &ipa->mem[IPA_MEM_V4_FILTER];
++	req.v4_filter_tbl_start_valid = 1;
++	req.v4_filter_tbl_start = ipa->mem_offset + mem->offset;
++
++	mem = &ipa->mem[IPA_MEM_V6_FILTER];
++	req.v6_filter_tbl_start_valid = 1;
++	req.v6_filter_tbl_start = ipa->mem_offset + mem->offset;
++
++	mem = &ipa->mem[IPA_MEM_MODEM];
++	if (mem->size) {
++		req.modem_mem_info_valid = 1;
++		req.modem_mem_info.start = ipa->mem_offset + mem->offset;
++		req.modem_mem_info.size = mem->size;
++	}
++
++	req.ctrl_comm_dest_end_pt_valid = 1;
++	req.ctrl_comm_dest_end_pt =
++		ipa->name_map[IPA_ENDPOINT_AP_MODEM_RX]->endpoint_id;
++
++	/* skip_uc_load_valid and skip_uc_load are set above */
++
++	mem = &ipa->mem[IPA_MEM_MODEM_PROC_CTX];
++	if (mem->size) {
++		req.hdr_proc_ctx_tbl_info_valid = 1;
++		req.hdr_proc_ctx_tbl_info.start =
++			ipa->mem_offset + mem->offset;
++		req.hdr_proc_ctx_tbl_info.end =
++			req.hdr_proc_ctx_tbl_info.start + mem->size - 1;
++	}
++
++	/* Nothing to report for the compression table (zip_tbl_info) */
++
++	mem = &ipa->mem[IPA_MEM_V4_ROUTE_HASHED];
++	if (mem->size) {
++		req.v4_hash_route_tbl_info_valid = 1;
++		req.v4_hash_route_tbl_info.start =
++				ipa->mem_offset + mem->offset;
++		req.v4_hash_route_tbl_info.count =
++				mem->size / IPA_TABLE_ENTRY_SIZE;
++	}
++
++	mem = &ipa->mem[IPA_MEM_V6_ROUTE_HASHED];
++	if (mem->size) {
++		req.v6_hash_route_tbl_info_valid = 1;
++		req.v6_hash_route_tbl_info.start =
++			ipa->mem_offset + mem->offset;
++		req.v6_hash_route_tbl_info.count =
++			mem->size / IPA_TABLE_ENTRY_SIZE;
++	}
++
++	mem = &ipa->mem[IPA_MEM_V4_FILTER_HASHED];
++	if (mem->size) {
++		req.v4_hash_filter_tbl_start_valid = 1;
++		req.v4_hash_filter_tbl_start = ipa->mem_offset + mem->offset;
++	}
++
++	mem = &ipa->mem[IPA_MEM_V6_FILTER_HASHED];
++	if (mem->size) {
++		req.v6_hash_filter_tbl_start_valid = 1;
++		req.v6_hash_filter_tbl_start = ipa->mem_offset + mem->offset;
++	}
++
++	/* None of the stats fields are valid (IPA v4.0 and above) */
++
++	if (ipa->version != IPA_VERSION_3_5_1) {
++		mem = &ipa->mem[IPA_MEM_STATS_QUOTA];
++		if (mem->size) {
++			req.hw_stats_quota_base_addr_valid = 1;
++			req.hw_stats_quota_base_addr =
++				ipa->mem_offset + mem->offset;
++			req.hw_stats_quota_size_valid = 1;
++			req.hw_stats_quota_size = ipa->mem_offset + mem->size;
++		}
++
++		mem = &ipa->mem[IPA_MEM_STATS_DROP];
++		if (mem->size) {
++			req.hw_stats_drop_base_addr_valid = 1;
++			req.hw_stats_drop_base_addr =
++				ipa->mem_offset + mem->offset;
++			req.hw_stats_drop_size_valid = 1;
++			req.hw_stats_drop_size = ipa->mem_offset + mem->size;
++		}
++	}
++
++	return &req;
++}
++
++/* Send an INIT_DRIVER request to the modem, and wait for it to complete. */
++static void ipa_client_init_driver_work(struct work_struct *work)
++{
++	unsigned long timeout = msecs_to_jiffies(QMI_INIT_DRIVER_TIMEOUT);
++	const struct ipa_init_modem_driver_req *req;
++	struct ipa_qmi *ipa_qmi;
++	struct qmi_handle *qmi;
++	struct qmi_txn txn;
++	struct device *dev;
++	struct ipa *ipa;
++	int ret;
++
++	ipa_qmi = container_of(work, struct ipa_qmi, init_driver_work);
++	qmi = &ipa_qmi->client_handle,
++
++	ipa = container_of(ipa_qmi, struct ipa, qmi);
++	dev = &ipa->pdev->dev;
++
++	ret = qmi_txn_init(qmi, &txn, NULL, NULL);
++	if (ret < 0) {
++		dev_err(dev, "error %d preparing init driver request\n", ret);
++		return;
++	}
++
++	/* Send the request, and if successful wait for its response */
++	req = init_modem_driver_req(ipa_qmi);
++	ret = qmi_send_request(qmi, &ipa_qmi->modem_sq, &txn,
++			       IPA_QMI_INIT_DRIVER, IPA_QMI_INIT_DRIVER_REQ_SZ,
++			       ipa_init_modem_driver_req_ei, req);
++	if (ret)
++		dev_err(dev, "error %d sending init driver request\n", ret);
++	else if ((ret = qmi_txn_wait(&txn, timeout)))
++		dev_err(dev, "error %d awaiting init driver response\n", ret);
++
++	if (!ret) {
++		ipa_qmi->modem_ready = true;
++		ipa_qmi_ready(ipa_qmi);		/* We might be ready now */
++	} else {
++		/* If any error occurs we need to cancel the transaction */
++		qmi_txn_cancel(&txn);
++	}
++}
++
++/* The modem server is now available.  We will send an INIT_DRIVER request
++ * to the modem, but can't wait for it to complete in this callback thread.
++ * Schedule a worker on the global workqueue to do that for us.
++ */
++static int
++ipa_client_new_server(struct qmi_handle *qmi, struct qmi_service *svc)
++{
++	struct ipa_qmi *ipa_qmi;
++
++	ipa_qmi = container_of(qmi, struct ipa_qmi, client_handle);
++
++	ipa_qmi->modem_sq.sq_family = AF_QIPCRTR;
++	ipa_qmi->modem_sq.sq_node = svc->node;
++	ipa_qmi->modem_sq.sq_port = svc->port;
++
++	schedule_work(&ipa_qmi->init_driver_work);
++
++	return 0;
++}
++
++static struct qmi_ops ipa_client_ops = {
++	.new_server	= ipa_client_new_server,
++};
++
++/* This is called by ipa_setup().  We can be informed via remoteproc that
++ * the modem has shut down, in which case this function will be called
++ * again to prepare for it coming back up again.
++ */
++int ipa_qmi_setup(struct ipa *ipa)
++{
++	struct ipa_qmi *ipa_qmi = &ipa->qmi;
++	int ret;
++
++	ipa_qmi->initial_boot = true;
++
++	/* The server handle is used to handle the DRIVER_INIT_COMPLETE
++	 * request on the first modem boot.  It also receives the
++	 * INDICATION_REGISTER request on the first boot and (optionally)
++	 * subsequent boots.  The INIT_COMPLETE indication message is
++	 * sent over the server handle if requested.
++	 */
++	ret = qmi_handle_init(&ipa_qmi->server_handle,
++			      IPA_QMI_SERVER_MAX_RCV_SZ, &ipa_server_ops,
++			      ipa_server_msg_handlers);
++	if (ret)
++		return ret;
++
++	ret = qmi_add_server(&ipa_qmi->server_handle, IPA_HOST_SERVICE_SVC_ID,
++			     IPA_HOST_SVC_VERS, IPA_HOST_SERVICE_INS_ID);
++	if (ret)
++		goto err_server_handle_release;
++
++	/* The client handle is only used for sending an INIT_DRIVER request
++	 * to the modem, and receiving its response message.
++	 */
++	ret = qmi_handle_init(&ipa_qmi->client_handle,
++			      IPA_QMI_CLIENT_MAX_RCV_SZ, &ipa_client_ops,
++			      ipa_client_msg_handlers);
++	if (ret)
++		goto err_server_handle_release;
++
++	/* We need this ready before the service lookup is added */
++	INIT_WORK(&ipa_qmi->init_driver_work, ipa_client_init_driver_work);
++
++	ret = qmi_add_lookup(&ipa_qmi->client_handle, IPA_MODEM_SERVICE_SVC_ID,
++			     IPA_MODEM_SVC_VERS, IPA_MODEM_SERVICE_INS_ID);
++	if (ret)
++		goto err_client_handle_release;
++
++	return 0;
++
++err_client_handle_release:
++	/* Releasing the handle also removes registered lookups */
++	qmi_handle_release(&ipa_qmi->client_handle);
++	memset(&ipa_qmi->client_handle, 0, sizeof(ipa_qmi->client_handle));
++err_server_handle_release:
++	/* Releasing the handle also removes registered services */
++	qmi_handle_release(&ipa_qmi->server_handle);
++	memset(&ipa_qmi->server_handle, 0, sizeof(ipa_qmi->server_handle));
++
++	return ret;
++}
++
++void ipa_qmi_teardown(struct ipa *ipa)
++{
++	cancel_work_sync(&ipa->qmi.init_driver_work);
++
++	qmi_handle_release(&ipa->qmi.client_handle);
++	memset(&ipa->qmi.client_handle, 0, sizeof(ipa->qmi.client_handle));
++
++	qmi_handle_release(&ipa->qmi.server_handle);
++	memset(&ipa->qmi.server_handle, 0, sizeof(ipa->qmi.server_handle));
++}
+diff --git a/drivers/net/ipa/ipa_qmi.h b/drivers/net/ipa/ipa_qmi.h
+new file mode 100644
+index 000000000000..3993687593d0
+--- /dev/null
++++ b/drivers/net/ipa/ipa_qmi.h
+@@ -0,0 +1,41 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++#ifndef _IPA_QMI_H_
++#define _IPA_QMI_H_
++
++#include <linux/types.h>
++#include <linux/soc/qcom/qmi.h>
++
++struct ipa;
++
++/**
++ * struct ipa_qmi - QMI state associated with an IPA
++ * @client_handle	- used to send an QMI requests to the modem
++ * @server_handle	- used to handle QMI requests from the modem
++ * @initialized		- whether QMI initialization has completed
++ * @indication_register_received - tracks modem request receipt
++ * @init_driver_response_received - tracks modem response receipt
++ */
++struct ipa_qmi {
++	struct qmi_handle client_handle;
++	struct qmi_handle server_handle;
++
++	/* Information used for the client handle */
++	struct sockaddr_qrtr modem_sq;
++	struct work_struct init_driver_work;
++
++	/* Flags used in negotiating readiness */
++	bool initial_boot;
++	bool uc_ready;
++	bool modem_ready;
++	bool indication_requested;
++	bool indication_sent;
++};
++
++int ipa_qmi_setup(struct ipa *ipa);
++void ipa_qmi_teardown(struct ipa *ipa);
++
++#endif /* !_IPA_QMI_H_ */
+diff --git a/drivers/net/ipa/ipa_qmi_msg.c b/drivers/net/ipa/ipa_qmi_msg.c
+new file mode 100644
+index 000000000000..03a1d0e55964
+--- /dev/null
++++ b/drivers/net/ipa/ipa_qmi_msg.c
+@@ -0,0 +1,663 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++#include <linux/stddef.h>
++#include <linux/soc/qcom/qmi.h>
++
++#include "ipa_qmi_msg.h"
++
++/* QMI message structure definition for struct ipa_indication_register_req */
++struct qmi_elem_info ipa_indication_register_req_ei[] = {
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_indication_register_req,
++				     master_driver_init_complete_valid),
++		.tlv_type	= 0x10,
++		.offset		= offsetof(struct ipa_indication_register_req,
++					   master_driver_init_complete_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_1_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_indication_register_req,
++				     master_driver_init_complete),
++		.tlv_type	= 0x10,
++		.offset		= offsetof(struct ipa_indication_register_req,
++					   master_driver_init_complete),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_indication_register_req,
++				     data_usage_quota_reached_valid),
++		.tlv_type	= 0x11,
++		.offset		= offsetof(struct ipa_indication_register_req,
++					   data_usage_quota_reached_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_1_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_indication_register_req,
++				     data_usage_quota_reached),
++		.tlv_type	= 0x11,
++		.offset		= offsetof(struct ipa_indication_register_req,
++					   data_usage_quota_reached),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_indication_register_req,
++				     ipa_mhi_ready_ind_valid),
++		.tlv_type	= 0x11,
++		.offset		= offsetof(struct ipa_indication_register_req,
++					   ipa_mhi_ready_ind_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_1_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_indication_register_req,
++				     ipa_mhi_ready_ind),
++		.tlv_type	= 0x11,
++		.offset		= offsetof(struct ipa_indication_register_req,
++					   ipa_mhi_ready_ind),
++	},
++	{
++		.data_type	= QMI_EOTI,
++	},
++};
++
++/* QMI message structure definition for struct ipa_indication_register_rsp */
++struct qmi_elem_info ipa_indication_register_rsp_ei[] = {
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_indication_register_rsp,
++				     rsp),
++		.tlv_type	= 0x02,
++		.offset		= offsetof(struct ipa_indication_register_rsp,
++					   rsp),
++		.ei_array	= qmi_response_type_v01_ei,
++	},
++	{
++		.data_type	= QMI_EOTI,
++	},
++};
++
++/* QMI message structure definition for struct ipa_driver_init_complete_req */
++struct qmi_elem_info ipa_driver_init_complete_req_ei[] = {
++	{
++		.data_type	= QMI_UNSIGNED_1_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_driver_init_complete_req,
++				     status),
++		.tlv_type	= 0x01,
++		.offset		= offsetof(struct ipa_driver_init_complete_req,
++					   status),
++	},
++	{
++		.data_type	= QMI_EOTI,
++	},
++};
++
++/* QMI message structure definition for struct ipa_driver_init_complete_rsp */
++struct qmi_elem_info ipa_driver_init_complete_rsp_ei[] = {
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_driver_init_complete_rsp,
++				     rsp),
++		.tlv_type	= 0x02,
++		.elem_size	= offsetof(struct ipa_driver_init_complete_rsp,
++					   rsp),
++		.ei_array	= qmi_response_type_v01_ei,
++	},
++	{
++		.data_type	= QMI_EOTI,
++	},
++};
++
++/* QMI message structure definition for struct ipa_init_complete_ind */
++struct qmi_elem_info ipa_init_complete_ind_ei[] = {
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_complete_ind,
++				     status),
++		.tlv_type	= 0x02,
++		.elem_size	= offsetof(struct ipa_init_complete_ind,
++					   status),
++		.ei_array	= qmi_response_type_v01_ei,
++	},
++	{
++		.data_type	= QMI_EOTI,
++	},
++};
++
++/* QMI message structure definition for struct ipa_mem_bounds */
++struct qmi_elem_info ipa_mem_bounds_ei[] = {
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_mem_bounds, start),
++		.offset		= offsetof(struct ipa_mem_bounds, start),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_mem_bounds, end),
++		.offset		= offsetof(struct ipa_mem_bounds, end),
++	},
++	{
++		.data_type	= QMI_EOTI,
++	},
++};
++
++/* QMI message structure definition for struct ipa_mem_array */
++struct qmi_elem_info ipa_mem_array_ei[] = {
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_mem_array, start),
++		.offset		= offsetof(struct ipa_mem_array, start),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_mem_array, count),
++		.offset		= offsetof(struct ipa_mem_array, count),
++	},
++	{
++		.data_type	= QMI_EOTI,
++	},
++};
++
++/* QMI message structure definition for struct ipa_mem_range */
++struct qmi_elem_info ipa_mem_range_ei[] = {
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_mem_range, start),
++		.offset		= offsetof(struct ipa_mem_range, start),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_mem_range, size),
++		.offset		= offsetof(struct ipa_mem_range, size),
++	},
++	{
++		.data_type	= QMI_EOTI,
++	},
++};
++
++/* QMI message structure definition for struct ipa_init_modem_driver_req */
++struct qmi_elem_info ipa_init_modem_driver_req_ei[] = {
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     platform_type_valid),
++		.tlv_type	= 0x10,
++		.elem_size	= offsetof(struct ipa_init_modem_driver_req,
++					   platform_type_valid),
++	},
++	{
++		.data_type	= QMI_SIGNED_4_BYTE_ENUM,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     platform_type),
++		.tlv_type	= 0x10,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   platform_type),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     hdr_tbl_info_valid),
++		.tlv_type	= 0x11,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   hdr_tbl_info_valid),
++	},
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     hdr_tbl_info),
++		.tlv_type	= 0x11,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   hdr_tbl_info),
++		.ei_array	= ipa_mem_bounds_ei,
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v4_route_tbl_info_valid),
++		.tlv_type	= 0x12,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v4_route_tbl_info_valid),
++	},
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v4_route_tbl_info),
++		.tlv_type	= 0x12,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v4_route_tbl_info),
++		.ei_array	= ipa_mem_array_ei,
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v6_route_tbl_info_valid),
++		.tlv_type	= 0x13,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v6_route_tbl_info_valid),
++	},
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v6_route_tbl_info),
++		.tlv_type	= 0x13,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v6_route_tbl_info),
++		.ei_array	= ipa_mem_array_ei,
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v4_filter_tbl_start_valid),
++		.tlv_type	= 0x14,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v4_filter_tbl_start_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v4_filter_tbl_start),
++		.tlv_type	= 0x14,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v4_filter_tbl_start),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v6_filter_tbl_start_valid),
++		.tlv_type	= 0x15,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v6_filter_tbl_start_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v6_filter_tbl_start),
++		.tlv_type	= 0x15,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v6_filter_tbl_start),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     modem_mem_info_valid),
++		.tlv_type	= 0x16,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   modem_mem_info_valid),
++	},
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     modem_mem_info),
++		.tlv_type	= 0x16,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   modem_mem_info),
++		.ei_array	= ipa_mem_range_ei,
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     ctrl_comm_dest_end_pt_valid),
++		.tlv_type	= 0x17,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   ctrl_comm_dest_end_pt_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     ctrl_comm_dest_end_pt),
++		.tlv_type	= 0x17,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   ctrl_comm_dest_end_pt),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     skip_uc_load_valid),
++		.tlv_type	= 0x18,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   skip_uc_load_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_1_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     skip_uc_load),
++		.tlv_type	= 0x18,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   skip_uc_load),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     hdr_proc_ctx_tbl_info_valid),
++		.tlv_type	= 0x19,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   hdr_proc_ctx_tbl_info_valid),
++	},
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     hdr_proc_ctx_tbl_info),
++		.tlv_type	= 0x19,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   hdr_proc_ctx_tbl_info),
++		.ei_array	= ipa_mem_bounds_ei,
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     zip_tbl_info_valid),
++		.tlv_type	= 0x1a,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   zip_tbl_info_valid),
++	},
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     zip_tbl_info),
++		.tlv_type	= 0x1a,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   zip_tbl_info),
++		.ei_array	= ipa_mem_bounds_ei,
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v4_hash_route_tbl_info_valid),
++		.tlv_type	= 0x1b,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v4_hash_route_tbl_info_valid),
++	},
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v4_hash_route_tbl_info),
++		.tlv_type	= 0x1b,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v4_hash_route_tbl_info),
++		.ei_array	= ipa_mem_array_ei,
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v6_hash_route_tbl_info_valid),
++		.tlv_type	= 0x1c,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v6_hash_route_tbl_info_valid),
++	},
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v6_hash_route_tbl_info),
++		.tlv_type	= 0x1c,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v6_hash_route_tbl_info),
++		.ei_array	= ipa_mem_array_ei,
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v4_hash_filter_tbl_start_valid),
++		.tlv_type	= 0x1d,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v4_hash_filter_tbl_start_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v4_hash_filter_tbl_start),
++		.tlv_type	= 0x1d,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v4_hash_filter_tbl_start),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v6_hash_filter_tbl_start_valid),
++		.tlv_type	= 0x1e,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v6_hash_filter_tbl_start_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     v6_hash_filter_tbl_start),
++		.tlv_type	= 0x1e,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   v6_hash_filter_tbl_start),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     hw_stats_quota_base_addr_valid),
++		.tlv_type	= 0x1f,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   hw_stats_quota_base_addr_valid),
++	},
++	{
++		.data_type	= QMI_SIGNED_4_BYTE_ENUM,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     hw_stats_quota_base_addr),
++		.tlv_type	= 0x1f,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   hw_stats_quota_base_addr),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     hw_stats_quota_size_valid),
++		.tlv_type	= 0x1f,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   hw_stats_quota_size_valid),
++	},
++	{
++		.data_type	= QMI_SIGNED_4_BYTE_ENUM,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     hw_stats_quota_size),
++		.tlv_type	= 0x1f,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   hw_stats_quota_size),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     hw_stats_drop_size_valid),
++		.tlv_type	= 0x1f,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   hw_stats_drop_size_valid),
++	},
++	{
++		.data_type	= QMI_SIGNED_4_BYTE_ENUM,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_req,
++				     hw_stats_drop_size),
++		.tlv_type	= 0x1f,
++		.offset		= offsetof(struct ipa_init_modem_driver_req,
++					   hw_stats_drop_size),
++	},
++	{
++		.data_type	= QMI_EOTI,
++	},
++};
++
++/* QMI message structure definition for struct ipa_init_modem_driver_rsp */
++struct qmi_elem_info ipa_init_modem_driver_rsp_ei[] = {
++	{
++		.data_type	= QMI_STRUCT,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_rsp,
++				     rsp),
++		.tlv_type	= 0x02,
++		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
++					   rsp),
++		.ei_array	= qmi_response_type_v01_ei,
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_rsp,
++				     ctrl_comm_dest_end_pt_valid),
++		.tlv_type	= 0x10,
++		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
++					   ctrl_comm_dest_end_pt_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_rsp,
++				     ctrl_comm_dest_end_pt),
++		.tlv_type	= 0x10,
++		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
++					   ctrl_comm_dest_end_pt),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_rsp,
++				     default_end_pt_valid),
++		.tlv_type	= 0x11,
++		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
++					   default_end_pt_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_4_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_rsp,
++				     default_end_pt),
++		.tlv_type	= 0x11,
++		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
++					   default_end_pt),
++	},
++	{
++		.data_type	= QMI_OPT_FLAG,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_rsp,
++				     modem_driver_init_pending_valid),
++		.tlv_type	= 0x12,
++		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
++					   modem_driver_init_pending_valid),
++	},
++	{
++		.data_type	= QMI_UNSIGNED_1_BYTE,
++		.elem_len	= 1,
++		.elem_size	=
++			sizeof_field(struct ipa_init_modem_driver_rsp,
++				     modem_driver_init_pending),
++		.tlv_type	= 0x12,
++		.offset		= offsetof(struct ipa_init_modem_driver_rsp,
++					   modem_driver_init_pending),
++	},
++	{
++		.data_type	= QMI_EOTI,
++	},
++};
+diff --git a/drivers/net/ipa/ipa_qmi_msg.h b/drivers/net/ipa/ipa_qmi_msg.h
+new file mode 100644
+index 000000000000..cfac456cea0c
+--- /dev/null
++++ b/drivers/net/ipa/ipa_qmi_msg.h
+@@ -0,0 +1,252 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++#ifndef _IPA_QMI_MSG_H_
++#define _IPA_QMI_MSG_H_
++
++/* === Only "ipa_qmi" and "ipa_qmi_msg.c" should include this file === */
++
++#include <linux/types.h>
++#include <linux/soc/qcom/qmi.h>
++
++/* Request/response/indication QMI message ids used for IPA.  Receiving
++ * end issues a response for requests; indications require no response.
++ */
++#define IPA_QMI_INDICATION_REGISTER	0x20	/* modem -> AP request */
++#define IPA_QMI_INIT_DRIVER		0x21	/* AP -> modem request */
++#define IPA_QMI_INIT_COMPLETE		0x22	/* AP -> modem indication */
++#define IPA_QMI_DRIVER_INIT_COMPLETE	0x35	/* modem -> AP request */
++
++/* The maximum size required for message types.  These sizes include
++ * the message data, along with type (1 byte) and length (2 byte)
++ * information for each field.  The qmi_send_*() interfaces require
++ * the message size to be provided.
++ */
++#define IPA_QMI_INDICATION_REGISTER_REQ_SZ	12	/* -> server handle */
++#define IPA_QMI_INDICATION_REGISTER_RSP_SZ	7	/* <- server handle */
++#define IPA_QMI_INIT_DRIVER_REQ_SZ		162	/* client handle -> */
++#define IPA_QMI_INIT_DRIVER_RSP_SZ		25	/* client handle <- */
++#define IPA_QMI_INIT_COMPLETE_IND_SZ		7	/* <- server handle */
++#define IPA_QMI_DRIVER_INIT_COMPLETE_REQ_SZ	4	/* -> server handle */
++#define IPA_QMI_DRIVER_INIT_COMPLETE_RSP_SZ	7	/* <- server handle */
++
++/* Maximum size of messages we expect the AP to receive (max of above) */
++#define IPA_QMI_SERVER_MAX_RCV_SZ		8
++#define IPA_QMI_CLIENT_MAX_RCV_SZ		25
++
++/* Request message for the IPA_QMI_INDICATION_REGISTER request */
++struct ipa_indication_register_req {
++	u8 master_driver_init_complete_valid;
++	u8 master_driver_init_complete;
++	u8 data_usage_quota_reached_valid;
++	u8 data_usage_quota_reached;
++	u8 ipa_mhi_ready_ind_valid;
++	u8 ipa_mhi_ready_ind;
++};
++
++/* The response to a IPA_QMI_INDICATION_REGISTER request consists only of
++ * a standard QMI response.
++ */
++struct ipa_indication_register_rsp {
++	struct qmi_response_type_v01 rsp;
++};
++
++/* Request message for the IPA_QMI_DRIVER_INIT_COMPLETE request */
++struct ipa_driver_init_complete_req {
++	u8 status;
++};
++
++/* The response to a IPA_QMI_DRIVER_INIT_COMPLETE request consists only
++ * of a standard QMI response.
++ */
++struct ipa_driver_init_complete_rsp {
++	struct qmi_response_type_v01 rsp;
++};
++
++/* The message for the IPA_QMI_INIT_COMPLETE_IND indication consists
++ * only of a standard QMI response.
++ */
++struct ipa_init_complete_ind {
++	struct qmi_response_type_v01 status;
++};
++
++/* The AP tells the modem its platform type.  We assume Android. */
++enum ipa_platform_type {
++	IPA_QMI_PLATFORM_TYPE_INVALID		= 0,	/* Invalid */
++	IPA_QMI_PLATFORM_TYPE_TN		= 1,	/* Data card */
++	IPA_QMI_PLATFORM_TYPE_LE		= 2,	/* Data router */
++	IPA_QMI_PLATFORM_TYPE_MSM_ANDROID	= 3,	/* Android MSM */
++	IPA_QMI_PLATFORM_TYPE_MSM_WINDOWS	= 4,	/* Windows MSM */
++	IPA_QMI_PLATFORM_TYPE_MSM_QNX_V01	= 5,	/* QNX MSM */
++};
++
++/* This defines the start and end offset of a range of memory.  Both
++ * fields are offsets relative to the start of IPA shared memory.
++ * The end value is the last addressable byte *within* the range.
++ */
++struct ipa_mem_bounds {
++	u32 start;
++	u32 end;
++};
++
++/* This defines the location and size of an array.  The start value
++ * is an offset relative to the start of IPA shared memory.  The
++ * size of the array is implied by the number of entries (the entry
++ * size is assumed to be known).
++ */
++struct ipa_mem_array {
++	u32 start;
++	u32 count;
++};
++
++/* This defines the location and size of a range of memory.  The
++ * start is an offset relative to the start of IPA shared memory.
++ * This differs from the ipa_mem_bounds structure in that the size
++ * (in bytes) of the memory region is specified rather than the
++ * offset of its last byte.
++ */
++struct ipa_mem_range {
++	u32 start;
++	u32 size;
++};
++
++/* The message for the IPA_QMI_INIT_DRIVER request contains information
++ * from the AP that affects modem initialization.
++ */
++struct ipa_init_modem_driver_req {
++	u8			platform_type_valid;
++	u32			platform_type;	/* enum ipa_platform_type */
++
++	/* Modem header table information.  This defines the IPA shared
++	 * memory in which the modem may insert header table entries.
++	 */
++	u8			hdr_tbl_info_valid;
++	struct ipa_mem_bounds	hdr_tbl_info;
++
++	/* Routing table information.  These define the location and size of
++	 * non-hashable IPv4 and IPv6 filter tables.  The start values are
++	 * offsets relative to the start of IPA shared memory.
++	 */
++	u8			v4_route_tbl_info_valid;
++	struct ipa_mem_array	v4_route_tbl_info;
++	u8			v6_route_tbl_info_valid;
++	struct ipa_mem_array	v6_route_tbl_info;
++
++	/* Filter table information.  These define the location of the
++	 * non-hashable IPv4 and IPv6 filter tables.  The start values are
++	 * offsets relative to the start of IPA shared memory.
++	 */
++	u8			v4_filter_tbl_start_valid;
++	u32			v4_filter_tbl_start;
++	u8			v6_filter_tbl_start_valid;
++	u32			v6_filter_tbl_start;
++
++	/* Modem memory information.  This defines the location and
++	 * size of memory available for the modem to use.
++	 */
++	u8			modem_mem_info_valid;
++	struct ipa_mem_range	modem_mem_info;
++
++	/* This defines the destination endpoint on the AP to which
++	 * the modem driver can send control commands.  Must be less
++	 * than ipa_endpoint_max().
++	 */
++	u8			ctrl_comm_dest_end_pt_valid;
++	u32			ctrl_comm_dest_end_pt;
++
++	/* This defines whether the modem should load the microcontroller
++	 * or not.  It is unnecessary to reload it if the modem is being
++	 * restarted.
++	 *
++	 * NOTE: this field is named "is_ssr_bootup" elsewhere.
++	 */
++	u8			skip_uc_load_valid;
++	u8			skip_uc_load;
++
++	/* Processing context memory information.  This defines the memory in
++	 * which the modem may insert header processing context table entries.
++	 */
++	u8			hdr_proc_ctx_tbl_info_valid;
++	struct ipa_mem_bounds	hdr_proc_ctx_tbl_info;
++
++	/* Compression command memory information.  This defines the memory
++	 * in which the modem may insert compression/decompression commands.
++	 */
++	u8			zip_tbl_info_valid;
++	struct ipa_mem_bounds	zip_tbl_info;
++
++	/* Routing table information.  These define the location and size
++	 * of hashable IPv4 and IPv6 filter tables.  The start values are
++	 * offsets relative to the start of IPA shared memory.
++	 */
++	u8			v4_hash_route_tbl_info_valid;
++	struct ipa_mem_array	v4_hash_route_tbl_info;
++	u8			v6_hash_route_tbl_info_valid;
++	struct ipa_mem_array	v6_hash_route_tbl_info;
++
++	/* Filter table information.  These define the location and size
++	 * of hashable IPv4 and IPv6 filter tables.  The start values are
++	 * offsets relative to the start of IPA shared memory.
++	 */
++	u8			v4_hash_filter_tbl_start_valid;
++	u32			v4_hash_filter_tbl_start;
++	u8			v6_hash_filter_tbl_start_valid;
++	u32			v6_hash_filter_tbl_start;
++
++	/* Statistics information.  These define the locations of the
++	 * first and last statistics sub-regions.  (IPA v4.0 and above)
++	 */
++	u8			hw_stats_quota_base_addr_valid;
++	u32			hw_stats_quota_base_addr;
++	u8			hw_stats_quota_size_valid;
++	u32			hw_stats_quota_size;
++	u8			hw_stats_drop_base_addr_valid;
++	u32			hw_stats_drop_base_addr;
++	u8			hw_stats_drop_size_valid;
++	u32			hw_stats_drop_size;
++};
++
++/* The response to a IPA_QMI_INIT_DRIVER request begins with a standard
++ * QMI response, but contains other information as well.  Currently we
++ * simply wait for the the INIT_DRIVER transaction to complete and
++ * ignore any other data that might be returned.
++ */
++struct ipa_init_modem_driver_rsp {
++	struct qmi_response_type_v01	rsp;
++
++	/* This defines the destination endpoint on the modem to which
++	 * the AP driver can send control commands.  Must be less than
++	 * ipa_endpoint_max().
++	 */
++	u8				ctrl_comm_dest_end_pt_valid;
++	u32				ctrl_comm_dest_end_pt;
++
++	/* This defines the default endpoint.  The AP driver is not
++	 * required to configure the hardware with this value.  Must
++	 * be less than ipa_endpoint_max().
++	 */
++	u8				default_end_pt_valid;
++	u32				default_end_pt;
++
++	/* This defines whether a second handshake is required to complete
++	 * initialization.
++	 */
++	u8				modem_driver_init_pending_valid;
++	u8				modem_driver_init_pending;
++};
++
++/* Message structure definitions defined in "ipa_qmi_msg.c" */
++extern struct qmi_elem_info ipa_indication_register_req_ei[];
++extern struct qmi_elem_info ipa_indication_register_rsp_ei[];
++extern struct qmi_elem_info ipa_driver_init_complete_req_ei[];
++extern struct qmi_elem_info ipa_driver_init_complete_rsp_ei[];
++extern struct qmi_elem_info ipa_init_complete_ind_ei[];
++extern struct qmi_elem_info ipa_mem_bounds_ei[];
++extern struct qmi_elem_info ipa_mem_array_ei[];
++extern struct qmi_elem_info ipa_mem_range_ei[];
++extern struct qmi_elem_info ipa_init_modem_driver_req_ei[];
++extern struct qmi_elem_info ipa_init_modem_driver_rsp_ei[];
++
++#endif /* !_IPA_QMI_MSG_H_ */
+diff --git a/drivers/net/ipa/ipa_smp2p.c b/drivers/net/ipa/ipa_smp2p.c
+new file mode 100644
+index 000000000000..4d33aa7ebfbb
+--- /dev/null
++++ b/drivers/net/ipa/ipa_smp2p.c
+@@ -0,0 +1,335 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
@@ -125,1821 +1655,387 @@ index 000000000000..915b4cd05dd2
 +
 +#include <linux/types.h>
 +#include <linux/device.h>
-+#include <linux/slab.h>
-+#include <linux/bitfield.h>
-+#include <linux/if_rmnet.h>
-+#include <linux/version.h>
-+#include <linux/dma-direction.h>
++#include <linux/interrupt.h>
++#include <linux/notifier.h>
++#include <linux/soc/qcom/smem.h>
++#include <linux/soc/qcom/smem_state.h>
 +
-+#include "gsi.h"
-+#include "gsi_trans.h"
++#include "ipa_smp2p.h"
 +#include "ipa.h"
-+#include "ipa_data.h"
-+#include "ipa_endpoint.h"
-+#include "ipa_cmd.h"
-+#include "ipa_mem.h"
-+#include "ipa_modem.h"
-+#include "ipa_table.h"
-+#include "ipa_gsi.h"
++#include "ipa_uc.h"
++#include "ipa_clock.h"
 +
-+#define atomic_dec_not_zero(v)	atomic_add_unless((v), -1, 0)
-+
-+#define IPA_REPLENISH_BATCH	16
-+
-+#define IPA_RX_BUFFER_SIZE	(PAGE_SIZE << IPA_RX_BUFFER_ORDER)
-+#define IPA_RX_BUFFER_ORDER	1	/* 8KB endpoint RX buffers (2 pages) */
-+
-+/* The amount of RX buffer space consumed by standard skb overhead */
-+#define IPA_RX_BUFFER_OVERHEAD	(PAGE_SIZE - SKB_MAX_ORDER(NET_SKB_PAD, 0))
-+
-+#define IPA_ENDPOINT_STOP_RX_RETRIES		10
-+#define IPA_ENDPOINT_STOP_RX_SIZE		1	/* bytes */
-+
-+#define IPA_ENDPOINT_RESET_AGGR_RETRY_MAX	3
-+#define IPA_AGGR_TIME_LIMIT_DEFAULT		1000	/* microseconds */
-+
-+#define ENDPOINT_STOP_DMA_TIMEOUT		15	/* milliseconds */
-+
-+/** enum ipa_status_opcode - status element opcode hardware values */
-+enum ipa_status_opcode {
-+	IPA_STATUS_OPCODE_PACKET		= 0x01,
-+	IPA_STATUS_OPCODE_NEW_FRAG_RULE		= 0x02,
-+	IPA_STATUS_OPCODE_DROPPED_PACKET	= 0x04,
-+	IPA_STATUS_OPCODE_SUSPENDED_PACKET	= 0x08,
-+	IPA_STATUS_OPCODE_LOG			= 0x10,
-+	IPA_STATUS_OPCODE_DCMP			= 0x20,
-+	IPA_STATUS_OPCODE_PACKET_2ND_PASS	= 0x40,
-+};
-+
-+/** enum ipa_status_exception - status element exception type */
-+enum ipa_status_exception {
-+	/* 0 means no exception */
-+	IPA_STATUS_EXCEPTION_DEAGGR		= 0x01,
-+	IPA_STATUS_EXCEPTION_IPTYPE		= 0x04,
-+	IPA_STATUS_EXCEPTION_PACKET_LENGTH	= 0x08,
-+	IPA_STATUS_EXCEPTION_FRAG_RULE_MISS	= 0x10,
-+	IPA_STATUS_EXCEPTION_SW_FILT		= 0x20,
-+	/* The meaning of the next value depends on whether the IP version */
-+	IPA_STATUS_EXCEPTION_NAT		= 0x40,		/* IPv4 */
-+	IPA_STATUS_EXCEPTION_IPV6CT		= IPA_STATUS_EXCEPTION_NAT,
-+};
-+
-+/* Status element provided by hardware */
-+struct ipa_status {
-+	u8 opcode;		/* enum ipa_status_opcode */
-+	u8 exception;		/* enum ipa_status_exception */
-+	__le16 mask;
-+	__le16 pkt_len;
-+	u8 endp_src_idx;
-+	u8 endp_dst_idx;
-+	__le32 metadata;
-+	__le32 flags1;
-+	__le64 flags2;
-+	__le32 flags3;
-+	__le32 flags4;
-+};
-+
-+/* Field masks for struct ipa_status structure fields */
-+
-+#define IPA_STATUS_SRC_IDX_FMASK		GENMASK(4, 0)
-+
-+#define IPA_STATUS_DST_IDX_FMASK		GENMASK(4, 0)
-+
-+#define IPA_STATUS_FLAGS1_FLT_LOCAL_FMASK	GENMASK(0, 0)
-+#define IPA_STATUS_FLAGS1_FLT_HASH_FMASK	GENMASK(1, 1)
-+#define IPA_STATUS_FLAGS1_FLT_GLOBAL_FMASK	GENMASK(2, 2)
-+#define IPA_STATUS_FLAGS1_FLT_RET_HDR_FMASK	GENMASK(3, 3)
-+#define IPA_STATUS_FLAGS1_FLT_RULE_ID_FMASK	GENMASK(13, 4)
-+#define IPA_STATUS_FLAGS1_RT_LOCAL_FMASK	GENMASK(14, 14)
-+#define IPA_STATUS_FLAGS1_RT_HASH_FMASK		GENMASK(15, 15)
-+#define IPA_STATUS_FLAGS1_UCP_FMASK		GENMASK(16, 16)
-+#define IPA_STATUS_FLAGS1_RT_TBL_IDX_FMASK	GENMASK(21, 17)
-+#define IPA_STATUS_FLAGS1_RT_RULE_ID_FMASK	GENMASK(31, 22)
-+
-+#define IPA_STATUS_FLAGS2_NAT_HIT_FMASK		GENMASK_ULL(0, 0)
-+#define IPA_STATUS_FLAGS2_NAT_ENTRY_IDX_FMASK	GENMASK_ULL(13, 1)
-+#define IPA_STATUS_FLAGS2_NAT_TYPE_FMASK	GENMASK_ULL(15, 14)
-+#define IPA_STATUS_FLAGS2_TAG_INFO_FMASK	GENMASK_ULL(63, 16)
-+
-+#define IPA_STATUS_FLAGS3_SEQ_NUM_FMASK		GENMASK(7, 0)
-+#define IPA_STATUS_FLAGS3_TOD_CTR_FMASK		GENMASK(31, 8)
-+
-+#define IPA_STATUS_FLAGS4_HDR_LOCAL_FMASK	GENMASK(0, 0)
-+#define IPA_STATUS_FLAGS4_HDR_OFFSET_FMASK	GENMASK(10, 1)
-+#define IPA_STATUS_FLAGS4_FRAG_HIT_FMASK	GENMASK(11, 11)
-+#define IPA_STATUS_FLAGS4_FRAG_RULE_FMASK	GENMASK(15, 12)
-+#define IPA_STATUS_FLAGS4_HW_SPECIFIC_FMASK	GENMASK(31, 16)
-+
-+#ifdef IPA_VALIDATE
-+
-+static void ipa_endpoint_validate_build(void)
-+{
-+	/* The aggregation byte limit defines the point at which an
-+	 * aggregation window will close.  It is programmed into the
-+	 * IPA hardware as a number of KB.  We don't use "hard byte
-+	 * limit" aggregation, which means that we need to supply
-+	 * enough space in a receive buffer to hold a complete MTU
-+	 * plus normal skb overhead *after* that aggregation byte
-+	 * limit has been crossed.
-+	 *
-+	 * This check just ensures we don't define a receive buffer
-+	 * size that would exceed what we can represent in the field
-+	 * that is used to program its size.
-+	 */
-+	BUILD_BUG_ON(IPA_RX_BUFFER_SIZE >
-+		     field_max(AGGR_BYTE_LIMIT_FMASK) * SZ_1K +
-+		     IPA_MTU + IPA_RX_BUFFER_OVERHEAD);
-+
-+	/* I honestly don't know where this requirement comes from.  But
-+	 * it holds, and if we someday need to loosen the constraint we
-+	 * can try to track it down.
-+	 */
-+	BUILD_BUG_ON(sizeof(struct ipa_status) % 4);
-+}
-+
-+static bool ipa_endpoint_data_valid_one(struct ipa *ipa, u32 count,
-+			    const struct ipa_gsi_endpoint_data *all_data,
-+			    const struct ipa_gsi_endpoint_data *data)
-+{
-+	const struct ipa_gsi_endpoint_data *other_data;
-+	struct device *dev = &ipa->pdev->dev;
-+	enum ipa_endpoint_name other_name;
-+
-+	if (ipa_gsi_endpoint_data_empty(data))
-+		return true;
-+
-+	if (!data->toward_ipa) {
-+		if (data->endpoint.filter_support) {
-+			dev_err(dev, "filtering not supported for "
-+					"RX endpoint %u\n",
-+				data->endpoint_id);
-+			return false;
-+		}
-+
-+		return true;	/* Nothing more to check for RX */
-+	}
-+
-+	if (data->endpoint.config.status_enable) {
-+		other_name = data->endpoint.config.tx.status_endpoint;
-+		if (other_name >= count) {
-+			dev_err(dev, "status endpoint name %u out of range "
-+					"for endpoint %u\n",
-+				other_name, data->endpoint_id);
-+			return false;
-+		}
-+
-+		/* Status endpoint must be defined... */
-+		other_data = &all_data[other_name];
-+		if (ipa_gsi_endpoint_data_empty(other_data)) {
-+			dev_err(dev, "DMA endpoint name %u undefined "
-+					"for endpoint %u\n",
-+				other_name, data->endpoint_id);
-+			return false;
-+		}
-+
-+		/* ...and has to be an RX endpoint... */
-+		if (other_data->toward_ipa) {
-+			dev_err(dev,
-+				"status endpoint for endpoint %u not RX\n",
-+				data->endpoint_id);
-+			return false;
-+		}
-+
-+		/* ...and if it's to be an AP endpoint... */
-+		if (other_data->ee_id == GSI_EE_AP) {
-+			/* ...make sure it has status enabled. */
-+			if (!other_data->endpoint.config.status_enable) {
-+				dev_err(dev,
-+					"status not enabled for endpoint %u\n",
-+					other_data->endpoint_id);
-+				return false;
-+			}
-+		}
-+	}
-+
-+	if (data->endpoint.config.dma_mode) {
-+		other_name = data->endpoint.config.dma_endpoint;
-+		if (other_name >= count) {
-+			dev_err(dev, "DMA endpoint name %u out of range "
-+					"for endpoint %u\n",
-+				other_name, data->endpoint_id);
-+			return false;
-+		}
-+
-+		other_data = &all_data[other_name];
-+		if (ipa_gsi_endpoint_data_empty(other_data)) {
-+			dev_err(dev, "DMA endpoint name %u undefined "
-+					"for endpoint %u\n",
-+				other_name, data->endpoint_id);
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
-+static bool ipa_endpoint_data_valid(struct ipa *ipa, u32 count,
-+				    const struct ipa_gsi_endpoint_data *data)
-+{
-+	const struct ipa_gsi_endpoint_data *dp = data;
-+	struct device *dev = &ipa->pdev->dev;
-+	enum ipa_endpoint_name name;
-+
-+	ipa_endpoint_validate_build();
-+
-+	if (count > IPA_ENDPOINT_COUNT) {
-+		dev_err(dev, "too many endpoints specified (%u > %u)\n",
-+			count, IPA_ENDPOINT_COUNT);
-+		return false;
-+	}
-+
-+	/* Make sure needed endpoints have defined data */
-+	if (ipa_gsi_endpoint_data_empty(&data[IPA_ENDPOINT_AP_COMMAND_TX])) {
-+		dev_err(dev, "command TX endpoint not defined\n");
-+		return false;
-+	}
-+	if (ipa_gsi_endpoint_data_empty(&data[IPA_ENDPOINT_AP_LAN_RX])) {
-+		dev_err(dev, "LAN RX endpoint not defined\n");
-+		return false;
-+	}
-+	if (ipa_gsi_endpoint_data_empty(&data[IPA_ENDPOINT_AP_MODEM_TX])) {
-+		dev_err(dev, "AP->modem TX endpoint not defined\n");
-+		return false;
-+	}
-+	if (ipa_gsi_endpoint_data_empty(&data[IPA_ENDPOINT_AP_MODEM_RX])) {
-+		dev_err(dev, "AP<-modem RX endpoint not defined\n");
-+		return false;
-+	}
-+
-+	for (name = 0; name < count; name++, dp++)
-+		if (!ipa_endpoint_data_valid_one(ipa, count, data, dp))
-+			return false;
-+
-+	return true;
-+}
-+
-+#else /* !IPA_VALIDATE */
-+
-+static bool ipa_endpoint_data_valid(struct ipa *ipa, u32 count,
-+				    const struct ipa_gsi_endpoint_data *data)
-+{
-+	return true;
-+}
-+
-+#endif /* !IPA_VALIDATE */
-+
-+/* Allocate a transaction to use on a non-command endpoint */
-+static struct gsi_trans *ipa_endpoint_trans_alloc(struct ipa_endpoint *endpoint,
-+						  u32 tre_count)
-+{
-+	struct gsi *gsi = &endpoint->ipa->gsi;
-+	u32 channel_id = endpoint->channel_id;
-+	enum dma_data_direction direction;
-+
-+	direction = endpoint->toward_ipa ? DMA_TO_DEVICE : DMA_FROM_DEVICE;
-+
-+	return gsi_channel_trans_alloc(gsi, channel_id, tre_count, direction);
-+}
-+
-+/* suspend_delay represents suspend for RX, delay for TX endpoints.
-+ * Note that suspend is not supported starting with IPA v4.0.
++/**
++ * DOC: IPA SMP2P communication with the modem
++ *
++ * SMP2P is a primitive communication mechanism available between the AP and
++ * the modem.  The IPA driver uses this for two purposes:  to enable the modem
++ * to state that the GSI hardware is ready to use; and to communicate the
++ * state of the IPA clock in the event of a crash.
++ *
++ * GSI needs to have early initialization completed before it can be used.
++ * This initialization is done either by Trust Zone or by the modem.  In the
++ * latter case, the modem uses an SMP2P interrupt to tell the AP IPA driver
++ * when the GSI is ready to use.
++ *
++ * The modem is also able to inquire about the current state of the IPA
++ * clock by trigging another SMP2P interrupt to the AP.  We communicate
++ * whether the clock is enabled using two SMP2P state bits--one to
++ * indicate the clock state (on or off), and a second to indicate the
++ * clock state bit is valid.  The modem will poll the valid bit until it
++ * is set, and at that time records whether the AP has the IPA clock enabled.
++ *
++ * Finally, if the AP kernel panics, we update the SMP2P state bits even if
++ * we never receive an interrupt from the modem requesting this.
 + */
-+static int
-+ipa_endpoint_init_ctrl(struct ipa_endpoint *endpoint, bool suspend_delay)
++
++/**
++ * struct ipa_smp2p - IPA SMP2P information
++ * @ipa:		IPA pointer
++ * @valid_state:	SMEM state indicating enabled state is valid
++ * @enabled_state:	SMEM state to indicate clock is enabled
++ * @valid_bit:		Valid bit in 32-bit SMEM state mask
++ * @enabled_bit:	Enabled bit in 32-bit SMEM state mask
++ * @enabled_bit:	Enabled bit in 32-bit SMEM state mask
++ * @clock_query_irq:	IPA interrupt triggered by modem for clock query
++ * @setup_ready_irq:	IPA interrupt triggered by modem to signal GSI ready
++ * @clock_on:		Whether IPA clock is on
++ * @notified:		Whether modem has been notified of clock state
++ * @disabled:		Whether setup ready interrupt handling is disabled
++ * @mutex mutex:	Motex protecting ready interrupt/shutdown interlock
++ * @panic_notifier:	Panic notifier structure
++*/
++struct ipa_smp2p {
++	struct ipa *ipa;
++	struct qcom_smem_state *valid_state;
++	struct qcom_smem_state *enabled_state;
++	u32 valid_bit;
++	u32 enabled_bit;
++	u32 clock_query_irq;
++	u32 setup_ready_irq;
++	bool clock_on;
++	bool notified;
++	bool disabled;
++	struct mutex mutex;
++	struct notifier_block panic_notifier;
++};
++
++/**
++ * ipa_smp2p_notify() - use SMP2P to tell modem about IPA clock state
++ * @smp2p:	SMP2P information
++ *
++ * This is called either when the modem has requested it (by triggering
++ * the modem clock query IPA interrupt) or whenever the AP is shutting down
++ * (via a panic notifier).  It sets the two SMP2P state bits--one saying
++ * whether the IPA clock is running, and the other indicating the first bit
++ * is valid.
++ */
++static void ipa_smp2p_notify(struct ipa_smp2p *smp2p)
 +{
-+	u32 offset = IPA_REG_ENDP_INIT_CTRL_N_OFFSET(endpoint->endpoint_id);
-+	struct ipa *ipa = endpoint->ipa;
++	u32 value;
 +	u32 mask;
-+	u32 val;
 +
-+	/* assert(ipa->version == IPA_VERSION_3_5_1 */
-+	mask = endpoint->toward_ipa ? ENDP_DELAY_FMASK : ENDP_SUSPEND_FMASK;
-+
-+	val = ioread32(ipa->reg_virt + offset);
-+	if (suspend_delay == !!(val & mask))
-+		return -EALREADY;	/* Already set to desired state */
-+
-+	val ^= mask;
-+	iowrite32(val, ipa->reg_virt + offset);
-+
-+	return 0;
-+}
-+
-+/* Enable or disable delay or suspend mode on all modem endpoints */
-+void ipa_endpoint_modem_pause_all(struct ipa *ipa, bool enable)
-+{
-+	bool support_suspend;
-+	u32 endpoint_id;
-+
-+	/* DELAY mode doesn't work right on IPA v4.2 */
-+	if (ipa->version == IPA_VERSION_4_2)
++	if (smp2p->notified)
 +		return;
 +
-+	/* Only IPA v3.5.1 supports SUSPEND mode on RX endpoints */
-+	support_suspend = ipa->version == IPA_VERSION_3_5_1;
++	smp2p->clock_on = ipa_clock_get_additional(smp2p->ipa);
 +
-+	for (endpoint_id = 0; endpoint_id < IPA_ENDPOINT_MAX; endpoint_id++) {
-+		struct ipa_endpoint *endpoint = &ipa->endpoint[endpoint_id];
++	/* Signal whether the clock is enabled */
++	mask = BIT(smp2p->enabled_bit);
++	value = smp2p->clock_on ? mask : 0;
++	qcom_smem_state_update_bits(smp2p->enabled_state, mask, value);
 +
-+		if (endpoint->ee_id != GSI_EE_MODEM)
-+			continue;
++	/* Now indicate that the enabled flag is valid */
++	mask = BIT(smp2p->valid_bit);
++	value = mask;
++	qcom_smem_state_update_bits(smp2p->valid_state, mask, value);
 +
-+		/* Set TX delay mode, or for IPA v3.5.1 RX suspend mode */
-+		if (endpoint->toward_ipa || support_suspend)
-+			(void)ipa_endpoint_init_ctrl(endpoint, enable);
-+	}
++	smp2p->notified = true;
 +}
 +
-+/* Reset all modem endpoints to use the default exception endpoint */
-+int ipa_endpoint_modem_exception_reset_all(struct ipa *ipa)
++/* Threaded IRQ handler for modem "ipa-clock-query" SMP2P interrupt */
++static irqreturn_t ipa_smp2p_modem_clk_query_isr(int irq, void *dev_id)
 +{
-+	u32 initialized = ipa->initialized;
-+	struct gsi_trans *trans;
-+	u32 count;
++	struct ipa_smp2p *smp2p = dev_id;
 +
-+	/* We need one command per modem TX endpoint.  We can get an upper
-+	 * bound on that by assuming all initialized endpoints are modem->IPA.
-+	 * That won't happen, and we could be more precise, but this is fine
-+	 * for now.  We need to end the transactio with a "tag process."
-+	 */
-+	count = hweight32(initialized) + ipa_cmd_tag_process_count();
-+	trans = ipa_cmd_trans_alloc(ipa, count);
-+	if (!trans) {
-+		dev_err(&ipa->pdev->dev,
-+			"no transaction to reset modem exception endpoints\n");
-+		return -EBUSY;
-+	}
++	ipa_smp2p_notify(smp2p);
 +
-+	while (initialized) {
-+		u32 endpoint_id = __ffs(initialized);
-+		struct ipa_endpoint *endpoint;
-+		u32 offset;
-+
-+		initialized ^= BIT(endpoint_id);
-+
-+		/* We only reset modem TX endpoints */
-+		endpoint = &ipa->endpoint[endpoint_id];
-+		if (!(endpoint->ee_id == GSI_EE_MODEM && endpoint->toward_ipa))
-+			continue;
-+
-+		offset = IPA_REG_ENDP_STATUS_N_OFFSET(endpoint_id);
-+
-+		/* Value written is 0, and all bits are updated.  That
-+		 * means status is disabled on the endpoint, and as a
-+		 * result all other fields in the register are ignored.
-+		 */
-+		ipa_cmd_register_write_add(trans, offset, 0, ~0, false);
-+	}
-+
-+	ipa_cmd_tag_process_add(trans);
-+
-+	/* XXX This should have a 1 second timeout */
-+	gsi_trans_commit_wait(trans);
-+
-+	return 0;
++	return IRQ_HANDLED;
 +}
 +
-+static void ipa_endpoint_init_cfg(struct ipa_endpoint *endpoint)
++static int ipa_smp2p_panic_notifier(struct notifier_block *nb,
++				    unsigned long action, void *data)
 +{
-+	u32 offset = IPA_REG_ENDP_INIT_CFG_N_OFFSET(endpoint->endpoint_id);
-+	u32 val = 0;
++	struct ipa_smp2p *smp2p;
 +
-+	/* FRAG_OFFLOAD_EN is 0 */
-+	if (endpoint->data->checksum) {
-+		if (endpoint->toward_ipa) {
-+			u32 checksum_offset;
++	smp2p = container_of(nb, struct ipa_smp2p, panic_notifier);
 +
-+			val |= u32_encode_bits(IPA_CS_OFFLOAD_UL,
-+					       CS_OFFLOAD_EN_FMASK);
-+			/* Checksum header offset is in 4-byte units */
-+			checksum_offset = sizeof(struct rmnet_map_header);
-+			checksum_offset /= sizeof(u32);
-+			val |= u32_encode_bits(checksum_offset,
-+					       CS_METADATA_HDR_OFFSET_FMASK);
-+		} else {
-+			val |= u32_encode_bits(IPA_CS_OFFLOAD_DL,
-+					       CS_OFFLOAD_EN_FMASK);
-+		}
-+	} else {
-+		val |= u32_encode_bits(IPA_CS_OFFLOAD_NONE,
-+				       CS_OFFLOAD_EN_FMASK);
-+	}
-+	/* CS_GEN_QMB_MASTER_SEL is 0 */
++	ipa_smp2p_notify(smp2p);
 +
-+	iowrite32(val, endpoint->ipa->reg_virt + offset);
++	if (smp2p->clock_on)
++		ipa_uc_panic_notifier(smp2p->ipa);
++
++	return NOTIFY_DONE;
 +}
 +
-+static void ipa_endpoint_init_hdr(struct ipa_endpoint *endpoint)
++static int ipa_smp2p_panic_notifier_register(struct ipa_smp2p *smp2p)
 +{
-+	u32 offset = IPA_REG_ENDP_INIT_HDR_N_OFFSET(endpoint->endpoint_id);
-+	u32 val = 0;
++	/* IPA panic handler needs to run before modem shuts down */
++	smp2p->panic_notifier.notifier_call = ipa_smp2p_panic_notifier;
++	smp2p->panic_notifier.priority = INT_MAX;	/* Do it early */
 +
-+	if (endpoint->data->qmap) {
-+		size_t header_size = sizeof(struct rmnet_map_header);
++	return atomic_notifier_chain_register(&panic_notifier_list,
++					      &smp2p->panic_notifier);
++}
 +
-+		if (endpoint->toward_ipa && endpoint->data->checksum)
-+			header_size += sizeof(struct rmnet_map_ul_csum_header);
++static void ipa_smp2p_panic_notifier_unregister(struct ipa_smp2p *smp2p)
++{
++	atomic_notifier_chain_unregister(&panic_notifier_list,
++					 &smp2p->panic_notifier);
++}
 +
-+		val |= u32_encode_bits(header_size, HDR_LEN_FMASK);
-+		/* metadata is the 4 byte rmnet_map header itself */
-+		val |= HDR_OFST_METADATA_VALID_FMASK;
-+		val |= u32_encode_bits(0, HDR_OFST_METADATA_FMASK);
-+		/* HDR_ADDITIONAL_CONST_LEN is 0; (IPA->AP only) */
-+		if (!endpoint->toward_ipa) {
-+			u32 size_offset = offsetof(struct rmnet_map_header,
-+						   pkt_len);
++/* Threaded IRQ handler for modem "ipa-setup-ready" SMP2P interrupt */
++static irqreturn_t ipa_smp2p_modem_setup_ready_isr(int irq, void *dev_id)
++{
++	struct ipa_smp2p *smp2p = dev_id;
 +
-+			val |= HDR_OFST_PKT_SIZE_VALID_FMASK;
-+			val |= u32_encode_bits(size_offset,
-+					       HDR_OFST_PKT_SIZE_FMASK);
-+		}
-+		/* HDR_A5_MUX is 0 */
-+		/* HDR_LEN_INC_DEAGG_HDR is 0 */
-+		/* HDR_METADATA_REG_VALID is 0; (AP->IPA only) */
++	mutex_lock(&smp2p->mutex);
++
++	if (!smp2p->disabled) {
++		int ret;
++
++		ret = ipa_setup(smp2p->ipa);
++		if (ret)
++			dev_err(&smp2p->ipa->pdev->dev,
++				"error %d from ipa_setup()\n", ret);
++		smp2p->disabled = true;
 +	}
 +
-+	iowrite32(val, endpoint->ipa->reg_virt + offset);
++	mutex_unlock(&smp2p->mutex);
++
++	return IRQ_HANDLED;
 +}
 +
-+static void ipa_endpoint_init_hdr_ext(struct ipa_endpoint *endpoint)
++/* Initialize SMP2P interrupts */
++static int ipa_smp2p_irq_init(struct ipa_smp2p *smp2p, const char *name,
++			      irq_handler_t handler)
 +{
-+	u32 offset = IPA_REG_ENDP_INIT_HDR_EXT_N_OFFSET(endpoint->endpoint_id);
-+	u32 pad_align = endpoint->data->rx.pad_align;
-+	u32 val = 0;
-+
-+	val |= HDR_ENDIANNESS_FMASK;		/* big endian */
-+	val |= HDR_TOTAL_LEN_OR_PAD_VALID_FMASK;
-+	/* HDR_TOTAL_LEN_OR_PAD is 0 (pad, not total_len) */
-+	/* HDR_PAYLOAD_LEN_INC_PADDING is 0 */
-+	/* HDR_TOTAL_LEN_OR_PAD_OFFSET is 0 */
-+	if (!endpoint->toward_ipa)
-+		val |= u32_encode_bits(pad_align, HDR_PAD_TO_ALIGNMENT_FMASK);
-+
-+	iowrite32(val, endpoint->ipa->reg_virt + offset);
-+}
-+
-+/**
-+ * Generate a metadata mask value that will select only the mux_id
-+ * field in an rmnet_map header structure.  The mux_id is at offset
-+ * 1 byte from the beginning of the structure, but the metadata
-+ * value is treated as a 4-byte unit.  So this mask must be computed
-+ * with endianness in mind.  Note that ipa_endpoint_init_hdr_metadata_mask()
-+ * will convert this value to the proper byte order.
-+ *
-+ * Marked __always_inline because this is really computing a
-+ * constant value.
-+ */
-+static __always_inline __be32 ipa_rmnet_mux_id_metadata_mask(void)
-+{
-+	size_t mux_id_offset = offsetof(struct rmnet_map_header, mux_id);
-+	u32 mux_id_mask = 0;
-+	u8 *bytes;
-+
-+	bytes = (u8 *)&mux_id_mask;
-+	bytes[mux_id_offset] = 0xff;	/* mux_id is 1 byte */
-+
-+	return cpu_to_be32(mux_id_mask);
-+}
-+
-+static void ipa_endpoint_init_hdr_metadata_mask(struct ipa_endpoint *endpoint)
-+{
-+	u32 endpoint_id = endpoint->endpoint_id;
-+	u32 val = 0;
-+	u32 offset;
-+
-+	offset = IPA_REG_ENDP_INIT_HDR_METADATA_MASK_N_OFFSET(endpoint_id);
-+
-+	if (!endpoint->toward_ipa && endpoint->data->qmap)
-+		val = ipa_rmnet_mux_id_metadata_mask();
-+
-+	iowrite32(val, endpoint->ipa->reg_virt + offset);
-+}
-+
-+static void ipa_endpoint_init_mode(struct ipa_endpoint *endpoint)
-+{
-+	u32 offset = IPA_REG_ENDP_INIT_MODE_N_OFFSET(endpoint->endpoint_id);
-+	u32 val;
-+
-+	if (endpoint->toward_ipa && endpoint->data->dma_mode) {
-+		enum ipa_endpoint_name name = endpoint->data->dma_endpoint;
-+		u32 dma_endpoint_id;
-+
-+		dma_endpoint_id = endpoint->ipa->name_map[name]->endpoint_id;
-+
-+		val = u32_encode_bits(IPA_DMA, MODE_FMASK);
-+		val |= u32_encode_bits(dma_endpoint_id, DEST_PIPE_INDEX_FMASK);
-+	} else {
-+		val = u32_encode_bits(IPA_BASIC, MODE_FMASK);
-+	}
-+	/* Other bitfields unspecified (and 0) */
-+
-+	iowrite32(val, endpoint->ipa->reg_virt + offset);
-+}
-+
-+/* Compute the aggregation size value to use for a given buffer size */
-+static u32 ipa_aggr_size_kb(u32 rx_buffer_size)
-+{
-+	/* We don't use "hard byte limit" aggregation, so we define the
-+	 * aggregation limit such that our buffer has enough space *after*
-+	 * that limit to receive a full MTU of data, plus overhead.
-+	 */
-+	rx_buffer_size -= IPA_MTU + IPA_RX_BUFFER_OVERHEAD;
-+
-+	return rx_buffer_size / SZ_1K;
-+}
-+
-+static void ipa_endpoint_init_aggr(struct ipa_endpoint *endpoint)
-+{
-+	u32 offset = IPA_REG_ENDP_INIT_AGGR_N_OFFSET(endpoint->endpoint_id);
-+	u32 val = 0;
-+
-+	if (endpoint->data->aggregation) {
-+		if (!endpoint->toward_ipa) {
-+			u32 aggr_size = ipa_aggr_size_kb(IPA_RX_BUFFER_SIZE);
-+			u32 limit;
-+
-+			val |= u32_encode_bits(IPA_ENABLE_AGGR, AGGR_EN_FMASK);
-+			val |= u32_encode_bits(IPA_GENERIC, AGGR_TYPE_FMASK);
-+			val |= u32_encode_bits(aggr_size,
-+					       AGGR_BYTE_LIMIT_FMASK);
-+			limit = IPA_AGGR_TIME_LIMIT_DEFAULT;
-+			val |= u32_encode_bits(limit / IPA_AGGR_GRANULARITY,
-+					       AGGR_TIME_LIMIT_FMASK);
-+			val |= u32_encode_bits(0, AGGR_PKT_LIMIT_FMASK);
-+			if (endpoint->data->rx.aggr_close_eof)
-+				val |= AGGR_SW_EOF_ACTIVE_FMASK;
-+			/* AGGR_HARD_BYTE_LIMIT_ENABLE is 0 */
-+		} else {
-+			val |= u32_encode_bits(IPA_ENABLE_DEAGGR,
-+					       AGGR_EN_FMASK);
-+			val |= u32_encode_bits(IPA_QCMAP, AGGR_TYPE_FMASK);
-+			/* other fields ignored */
-+		}
-+		/* AGGR_FORCE_CLOSE is 0 */
-+	} else {
-+		val |= u32_encode_bits(IPA_BYPASS_AGGR, AGGR_EN_FMASK);
-+		/* other fields ignored */
-+	}
-+
-+	iowrite32(val, endpoint->ipa->reg_virt + offset);
-+}
-+
-+/* A return value of 0 indicates an error */
-+static u32 ipa_reg_init_hol_block_timer_val(struct ipa *ipa, u32 microseconds)
-+{
-+	u32 scale;
-+	u32 base;
-+	u32 val;
-+
-+	if (!microseconds)
-+		return 0;	/* invalid delay */
-+
-+	/* Timer is represented in units of clock ticks. */
-+	if (ipa->version < IPA_VERSION_4_2)
-+		return microseconds;	/* XXX Needs to be computed */
-+
-+	/* IPA v4.2 represents the tick count as base * scale */
-+	scale = 1;			/* XXX Needs to be computed */
-+	if (scale > field_max(SCALE_FMASK))
-+		return 0;		/* scale too big */
-+
-+	base = DIV_ROUND_CLOSEST(microseconds, scale);
-+	if (base > field_max(BASE_VALUE_FMASK))
-+		return 0;		/* microseconds too big */
-+
-+	val = u32_encode_bits(scale, SCALE_FMASK);
-+	val |= u32_encode_bits(base, BASE_VALUE_FMASK);
-+
-+	return val;
-+}
-+
-+static int ipa_endpoint_init_hol_block_timer(struct ipa_endpoint *endpoint,
-+					     u32 microseconds)
-+{
-+	u32 endpoint_id = endpoint->endpoint_id;
-+	struct ipa *ipa = endpoint->ipa;
-+	u32 offset;
-+	u32 val;
-+
-+	/* XXX We'll fix this when the register definition is clear */
-+	if (microseconds) {
-+		struct device *dev = &ipa->pdev->dev;
-+
-+		dev_err(dev, "endpoint %u non-zero HOLB period (ignoring)\n",
-+			endpoint_id);
-+		microseconds = 0;
-+	}
-+
-+	if (microseconds) {
-+		val = ipa_reg_init_hol_block_timer_val(ipa, microseconds);
-+		if (!val)
-+			return -EINVAL;
-+	} else {
-+		val = 0;	/* timeout is immediate */
-+	}
-+	offset = IPA_REG_ENDP_INIT_HOL_BLOCK_TIMER_N_OFFSET(endpoint_id);
-+	iowrite32(val, ipa->reg_virt + offset);
-+
-+	return 0;
-+}
-+
-+static void
-+ipa_endpoint_init_hol_block_enable(struct ipa_endpoint *endpoint, bool enable)
-+{
-+	u32 endpoint_id = endpoint->endpoint_id;
-+	u32 offset;
-+	u32 val;
-+
-+	val = u32_encode_bits(enable ? 1 : 0, HOL_BLOCK_EN_FMASK);
-+	offset = IPA_REG_ENDP_INIT_HOL_BLOCK_EN_N_OFFSET(endpoint_id);
-+	iowrite32(val, endpoint->ipa->reg_virt + offset);
-+}
-+
-+void ipa_endpoint_modem_hol_block_clear_all(struct ipa *ipa)
-+{
-+	u32 i;
-+
-+	for (i = 0; i < IPA_ENDPOINT_MAX; i++) {
-+		struct ipa_endpoint *endpoint = &ipa->endpoint[i];
-+
-+		if (endpoint->ee_id != GSI_EE_MODEM)
-+			continue;
-+
-+		(void)ipa_endpoint_init_hol_block_timer(endpoint, 0);
-+		ipa_endpoint_init_hol_block_enable(endpoint, true);
-+	}
-+}
-+
-+static void ipa_endpoint_init_deaggr(struct ipa_endpoint *endpoint)
-+{
-+	u32 offset = IPA_REG_ENDP_INIT_DEAGGR_N_OFFSET(endpoint->endpoint_id);
-+	u32 val = 0;
-+
-+	/* DEAGGR_HDR_LEN is 0 */
-+	/* PACKET_OFFSET_VALID is 0 */
-+	/* PACKET_OFFSET_LOCATION is ignored (not valid) */
-+	/* MAX_PACKET_LEN is 0 (not enforced) */
-+
-+	iowrite32(val, endpoint->ipa->reg_virt + offset);
-+}
-+
-+static void ipa_endpoint_init_seq(struct ipa_endpoint *endpoint)
-+{
-+	u32 offset = IPA_REG_ENDP_INIT_SEQ_N_OFFSET(endpoint->endpoint_id);
-+	u32 seq_type = endpoint->seq_type;
-+	u32 val = 0;
-+
-+	val |= u32_encode_bits(seq_type & 0xf, HPS_SEQ_TYPE_FMASK);
-+	val |= u32_encode_bits((seq_type >> 4) & 0xf, DPS_SEQ_TYPE_FMASK);
-+	/* HPS_REP_SEQ_TYPE is 0 */
-+	/* DPS_REP_SEQ_TYPE is 0 */
-+
-+	iowrite32(val, endpoint->ipa->reg_virt + offset);
-+}
-+
-+/**
-+ * ipa_endpoint_skb_tx() - Transmit a socket buffer
-+ * @endpoint:	Endpoint pointer
-+ * @skb:	Socket buffer to send
-+ *
-+ * Returns:	0 if successful, or a negative error code
-+ */
-+int ipa_endpoint_skb_tx(struct ipa_endpoint *endpoint, struct sk_buff *skb)
-+{
-+	struct gsi_trans *trans;
-+	u32 nr_frags;
++	struct device *dev = &smp2p->ipa->pdev->dev;
++	unsigned int irq;
 +	int ret;
 +
-+	/* Make sure source endpoint's TLV FIFO has enough entries to
-+	 * hold the linear portion of the skb and all its fragments.
-+	 * If not, see if we can linearize it before giving up.
-+	 */
-+	nr_frags = skb_shinfo(skb)->nr_frags;
-+	if (1 + nr_frags > endpoint->trans_tre_max) {
-+		if (skb_linearize(skb))
-+			return -E2BIG;
-+		nr_frags = 0;
++	ret = platform_get_irq_byname(smp2p->ipa->pdev, name);
++	if (ret <= 0) {
++		dev_err(dev, "DT error %d getting \"%s\" IRQ property\n",
++			ret, name);
++		return ret ? : -EINVAL;
 +	}
++	irq = ret;
 +
-+	trans = ipa_endpoint_trans_alloc(endpoint, 1 + nr_frags);
-+	if (!trans)
-+		return -EBUSY;
-+
-+	ret = gsi_trans_skb_add(trans, skb);
-+	if (ret)
-+		goto err_trans_free;
-+	trans->data = skb;	/* transaction owns skb now */
-+
-+	gsi_trans_commit(trans, !netdev_xmit_more());
-+
-+	return 0;
-+
-+err_trans_free:
-+	gsi_trans_free(trans);
-+
-+	return -ENOMEM;
-+}
-+
-+static void ipa_endpoint_status(struct ipa_endpoint *endpoint)
-+{
-+	u32 endpoint_id = endpoint->endpoint_id;
-+	struct ipa *ipa = endpoint->ipa;
-+	u32 val = 0;
-+	u32 offset;
-+
-+	offset = IPA_REG_ENDP_STATUS_N_OFFSET(endpoint_id);
-+
-+	if (endpoint->data->status_enable) {
-+		val |= STATUS_EN_FMASK;
-+		if (endpoint->toward_ipa) {
-+			enum ipa_endpoint_name name;
-+			u32 status_endpoint_id;
-+
-+			name = endpoint->data->tx.status_endpoint;
-+			status_endpoint_id = ipa->name_map[name]->endpoint_id;
-+
-+			val |= u32_encode_bits(status_endpoint_id,
-+					       STATUS_ENDP_FMASK);
-+		}
-+		/* STATUS_LOCATION is 0 (status element precedes packet) */
-+		/* The next field is present for IPA v4.0 and above */
-+		/* STATUS_PKT_SUPPRESS_FMASK is 0 */
-+	}
-+
-+	iowrite32(val, ipa->reg_virt + offset);
-+}
-+
-+static int ipa_endpoint_replenish_one(struct ipa_endpoint *endpoint)
-+{
-+	struct gsi_trans *trans;
-+	bool doorbell = false;
-+	struct page *page;
-+	u32 offset;
-+	u32 len;
-+	int ret;
-+
-+	page = dev_alloc_pages(IPA_RX_BUFFER_ORDER);
-+	if (!page)
-+		return -ENOMEM;
-+
-+	trans = ipa_endpoint_trans_alloc(endpoint, 1);
-+	if (!trans)
-+		goto err_free_pages;
-+
-+	/* Offset the buffer to make space for skb headroom */
-+	offset = NET_SKB_PAD;
-+	len = IPA_RX_BUFFER_SIZE - offset;
-+
-+	ret = gsi_trans_page_add(trans, page, len, offset);
-+	if (ret)
-+		goto err_trans_free;
-+	trans->data = page;	/* transaction owns page now */
-+
-+	if (++endpoint->replenish_ready == IPA_REPLENISH_BATCH) {
-+		doorbell = true;
-+		endpoint->replenish_ready = 0;
-+	}
-+
-+	gsi_trans_commit(trans, doorbell);
-+
-+	return 0;
-+
-+err_trans_free:
-+	gsi_trans_free(trans);
-+err_free_pages:
-+	__free_pages(page, IPA_RX_BUFFER_ORDER);
-+
-+	return -ENOMEM;
-+}
-+
-+/**
-+ * ipa_endpoint_replenish() - Replenish the Rx packets cache.
-+ *
-+ * Allocate RX packet wrapper structures with maximal socket buffers
-+ * for an endpoint.  These are supplied to the hardware, which fills
-+ * them with incoming data.
-+ */
-+static void ipa_endpoint_replenish(struct ipa_endpoint *endpoint, u32 count)
-+{
-+	struct gsi *gsi;
-+	u32 backlog;
-+
-+	if (!endpoint->replenish_enabled) {
-+		if (count)
-+			atomic_add(count, &endpoint->replenish_saved);
-+		return;
-+	}
-+
-+
-+	while (atomic_dec_not_zero(&endpoint->replenish_backlog))
-+		if (ipa_endpoint_replenish_one(endpoint))
-+			goto try_again_later;
-+	if (count)
-+		atomic_add(count, &endpoint->replenish_backlog);
-+
-+	return;
-+
-+try_again_later:
-+	/* The last one didn't succeed, so fix the backlog */
-+	backlog = atomic_inc_return(&endpoint->replenish_backlog);
-+
-+	if (count)
-+		atomic_add(count, &endpoint->replenish_backlog);
-+
-+	/* Whenever a receive buffer transaction completes we'll try to
-+	 * replenish again.  It's unlikely, but if we fail to supply even
-+	 * one buffer, nothing will trigger another replenish attempt.
-+	 * Receive buffer transactions use one TRE, so schedule work to
-+	 * try replenishing again if our backlog is *all* available TREs.
-+	 */
-+	gsi = &endpoint->ipa->gsi;
-+	if (backlog == gsi_channel_tre_max(gsi, endpoint->channel_id))
-+		schedule_delayed_work(&endpoint->replenish_work,
-+				      msecs_to_jiffies(1));
-+}
-+
-+static void ipa_endpoint_replenish_enable(struct ipa_endpoint *endpoint)
-+{
-+	struct gsi *gsi = &endpoint->ipa->gsi;
-+	u32 max_backlog;
-+	u32 saved;
-+
-+	endpoint->replenish_enabled = true;
-+	while ((saved = atomic_xchg(&endpoint->replenish_saved, 0)))
-+		atomic_add(saved, &endpoint->replenish_backlog);
-+
-+	/* Start replenishing if hardware currently has no buffers */
-+	max_backlog = gsi_channel_tre_max(gsi, endpoint->channel_id);
-+	if (atomic_read(&endpoint->replenish_backlog) == max_backlog)
-+		ipa_endpoint_replenish(endpoint, 0);
-+}
-+
-+static void ipa_endpoint_replenish_disable(struct ipa_endpoint *endpoint)
-+{
-+	u32 backlog;
-+
-+	endpoint->replenish_enabled = false;
-+	while ((backlog = atomic_xchg(&endpoint->replenish_backlog, 0)))
-+		atomic_add(backlog, &endpoint->replenish_saved);
-+}
-+
-+static void ipa_endpoint_replenish_work(struct work_struct *work)
-+{
-+	struct delayed_work *dwork = to_delayed_work(work);
-+	struct ipa_endpoint *endpoint;
-+
-+	endpoint = container_of(dwork, struct ipa_endpoint, replenish_work);
-+
-+	ipa_endpoint_replenish(endpoint, 0);
-+}
-+
-+static void ipa_endpoint_skb_copy(struct ipa_endpoint *endpoint,
-+				  void *data, u32 len, u32 extra)
-+{
-+	struct sk_buff *skb;
-+
-+	skb = __dev_alloc_skb(len, GFP_ATOMIC);
-+	if (skb) {
-+		skb_put(skb, len);
-+		memcpy(skb->data, data, len);
-+		skb->truesize += extra;
-+	}
-+
-+	/* Now receive it, or drop it if there's no netdev */
-+	if (endpoint->netdev)
-+		ipa_modem_skb_rx(endpoint->netdev, skb);
-+	else if (skb)
-+		dev_kfree_skb_any(skb);
-+}
-+
-+static bool ipa_endpoint_skb_build(struct ipa_endpoint *endpoint,
-+				   struct page *page, u32 len)
-+{
-+	struct sk_buff *skb;
-+
-+	/* Nothing to do if there's no netdev */
-+	if (!endpoint->netdev)
-+		return false;
-+
-+	/* assert(len <= SKB_WITH_OVERHEAD(IPA_RX_BUFFER_SIZE-NET_SKB_PAD)); */
-+	skb = build_skb(page_address(page), IPA_RX_BUFFER_SIZE);
-+	if (skb) {
-+		/* Reserve the headroom and account for the data */
-+		skb_reserve(skb, NET_SKB_PAD);
-+		skb_put(skb, len);
-+	}
-+
-+	/* Receive the buffer (or record drop if unable to build it) */
-+	ipa_modem_skb_rx(endpoint->netdev, skb);
-+
-+	return skb != NULL;
-+}
-+
-+/* The format of a packet status element is the same for several status
-+ * types (opcodes).  The NEW_FRAG_RULE, LOG, DCMP (decompression) types
-+ * aren't currently supported
-+ */
-+static bool ipa_status_format_packet(enum ipa_status_opcode opcode)
-+{
-+	switch (opcode) {
-+	case IPA_STATUS_OPCODE_PACKET:
-+	case IPA_STATUS_OPCODE_DROPPED_PACKET:
-+	case IPA_STATUS_OPCODE_SUSPENDED_PACKET:
-+	case IPA_STATUS_OPCODE_PACKET_2ND_PASS:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool ipa_endpoint_status_skip(struct ipa_endpoint *endpoint,
-+				     const struct ipa_status *status)
-+{
-+	u32 endpoint_id;
-+
-+	if (!ipa_status_format_packet(status->opcode))
-+		return true;
-+	if (!status->pkt_len)
-+		return true;
-+	endpoint_id = u32_get_bits(status->endp_dst_idx,
-+				   IPA_STATUS_DST_IDX_FMASK);
-+	if (endpoint_id != endpoint->endpoint_id)
-+		return true;
-+
-+	return false;	/* Don't skip this packet, process it */
-+}
-+
-+/* Return whether the status indicates the packet should be dropped */
-+static bool ipa_status_drop_packet(const struct ipa_status *status)
-+{
-+	u32 val;
-+
-+	/* Deaggregation exceptions we drop; others we consume */
-+	if (status->exception)
-+		return status->exception == IPA_STATUS_EXCEPTION_DEAGGR;
-+
-+	/* Drop the packet if it fails to match a routing rule; otherwise no */
-+	val = le32_get_bits(status->flags1, IPA_STATUS_FLAGS1_RT_RULE_ID_FMASK);
-+
-+	return val == field_max(IPA_STATUS_FLAGS1_RT_RULE_ID_FMASK);
-+}
-+
-+static void ipa_endpoint_status_parse(struct ipa_endpoint *endpoint,
-+				      struct page *page, u32 total_len)
-+{
-+	void *data = page_address(page) + NET_SKB_PAD;
-+	u32 unused = IPA_RX_BUFFER_SIZE - total_len;
-+	u32 resid = total_len;
-+
-+	while (resid) {
-+		const struct ipa_status *status = data;
-+		u32 align;
-+		u32 len;
-+
-+		if (resid < sizeof(*status)) {
-+			dev_err(&endpoint->ipa->pdev->dev,
-+				"short message (%u bytes < %zu byte status)\n",
-+				resid, sizeof(*status));
-+			break;
-+		}
-+
-+		/* Skip over status packets that lack packet data */
-+		if (ipa_endpoint_status_skip(endpoint, status)) {
-+			data += sizeof(*status);
-+			resid -= sizeof(*status);
-+			continue;
-+		}
-+
-+		/* Compute the amount of buffer space consumed by the
-+		 * packet, including the status element.  If the hardware
-+		 * is configured to pad packet data to an aligned boundary,
-+		 * account for that.  And if checksum offload is is enabled
-+		 * a trailer containing computed checksum information will
-+		 * be appended.
-+		 */
-+		align = endpoint->data->rx.pad_align ? : 1;
-+		len = le16_to_cpu(status->pkt_len);
-+		len = sizeof(*status) + ALIGN(len, align);
-+		if (endpoint->data->checksum)
-+			len += sizeof(struct rmnet_map_dl_csum_trailer);
-+
-+		/* Charge the new packet with a proportional fraction of
-+		 * the unused space in the original receive buffer.
-+		 * XXX Charge a proportion of the *whole* receive buffer?
-+		 */
-+		if (!ipa_status_drop_packet(status)) {
-+			u32 extra = unused * len / total_len;
-+			void *data2 = data + sizeof(*status);
-+			u32 len2 = le16_to_cpu(status->pkt_len);
-+
-+			/* Client receives only packet data (no status) */
-+			ipa_endpoint_skb_copy(endpoint, data2, len2, extra);
-+		}
-+
-+		/* Consume status and the full packet it describes */
-+		data += len;
-+		resid -= len;
-+	}
-+}
-+
-+/* Complete a TX transaction, command or from ipa_endpoint_skb_tx() */
-+static void ipa_endpoint_tx_complete(struct ipa_endpoint *endpoint,
-+				     struct gsi_trans *trans)
-+{
-+}
-+
-+/* Complete transaction initiated in ipa_endpoint_replenish_one() */
-+static void ipa_endpoint_rx_complete(struct ipa_endpoint *endpoint,
-+				     struct gsi_trans *trans)
-+{
-+	struct page *page;
-+
-+	ipa_endpoint_replenish(endpoint, 1);
-+
-+	if (trans->cancelled)
-+		return;
-+
-+	/* Parse or build a socket buffer using the actual received length */
-+	page = trans->data;
-+	if (endpoint->data->status_enable)
-+		ipa_endpoint_status_parse(endpoint, page, trans->len);
-+	else if (ipa_endpoint_skb_build(endpoint, page, trans->len))
-+		trans->data = NULL;	/* Pages have been consumed */
-+}
-+
-+void ipa_endpoint_trans_complete(struct ipa_endpoint *endpoint,
-+				 struct gsi_trans *trans)
-+{
-+	if (endpoint->toward_ipa)
-+		ipa_endpoint_tx_complete(endpoint, trans);
-+	else
-+		ipa_endpoint_rx_complete(endpoint, trans);
-+}
-+
-+void ipa_endpoint_trans_release(struct ipa_endpoint *endpoint,
-+				struct gsi_trans *trans)
-+{
-+	if (endpoint->toward_ipa) {
-+		struct ipa *ipa = endpoint->ipa;
-+
-+		/* Nothing to do for command transactions */
-+		if (endpoint != ipa->name_map[IPA_ENDPOINT_AP_COMMAND_TX]) {
-+			struct sk_buff *skb = trans->data;
-+
-+			if (skb)
-+				dev_kfree_skb_any(skb);
-+		}
-+	} else {
-+		struct page *page = trans->data;
-+
-+		if (page)
-+			__free_pages(page, IPA_RX_BUFFER_ORDER);
-+	}
-+}
-+
-+void ipa_endpoint_default_route_set(struct ipa *ipa, u32 endpoint_id)
-+{
-+	u32 val;
-+
-+	/* ROUTE_DIS is 0 */
-+	val = u32_encode_bits(endpoint_id, ROUTE_DEF_PIPE_FMASK);
-+	val |= ROUTE_DEF_HDR_TABLE_FMASK;
-+	val |= u32_encode_bits(0, ROUTE_DEF_HDR_OFST_FMASK);
-+	val |= u32_encode_bits(endpoint_id, ROUTE_FRAG_DEF_PIPE_FMASK);
-+	val |= ROUTE_DEF_RETAIN_HDR_FMASK;
-+
-+	iowrite32(val, ipa->reg_virt + IPA_REG_ROUTE_OFFSET);
-+}
-+
-+void ipa_endpoint_default_route_clear(struct ipa *ipa)
-+{
-+	ipa_endpoint_default_route_set(ipa, 0);
-+}
-+
-+static bool ipa_endpoint_aggr_active(struct ipa_endpoint *endpoint)
-+{
-+	u32 mask = BIT(endpoint->endpoint_id);
-+	struct ipa *ipa = endpoint->ipa;
-+	u32 offset;
-+	u32 val;
-+
-+	/* assert(mask & ipa->available); */
-+	offset = ipa_reg_state_aggr_active_offset(ipa->version);
-+	val = ioread32(ipa->reg_virt + offset);
-+
-+	return !!(val & mask);
-+}
-+
-+static void ipa_endpoint_force_close(struct ipa_endpoint *endpoint)
-+{
-+	u32 mask = BIT(endpoint->endpoint_id);
-+	struct ipa *ipa = endpoint->ipa;
-+
-+	/* assert(mask & ipa->available); */
-+	iowrite32(mask, ipa->reg_virt + IPA_REG_AGGR_FORCE_CLOSE_OFFSET);
-+}
-+
-+/**
-+ * ipa_endpoint_reset_rx_aggr() - Reset RX endpoint with aggregation active
-+ * @endpoint:	Endpoint to be reset
-+ *
-+ * If aggregation is active on an RX endpoint when a reset is performed
-+ * on its underlying GSI channel, a special sequence of actions must be
-+ * taken to ensure the IPA pipeline is properly cleared.
-+ *
-+ * @Return:	0 if successful, or a negative error code
-+ */
-+static int ipa_endpoint_reset_rx_aggr(struct ipa_endpoint *endpoint)
-+{
-+	struct device *dev = &endpoint->ipa->pdev->dev;
-+	struct ipa *ipa = endpoint->ipa;
-+	bool endpoint_suspended = false;
-+	struct gsi *gsi = &ipa->gsi;
-+	dma_addr_t addr;
-+	bool db_enable;
-+	u32 retries;
-+	u32 len = 1;
-+	void *virt;
-+	int ret;
-+
-+	virt = kzalloc(len, GFP_KERNEL);
-+	if (!virt)
-+		return -ENOMEM;
-+
-+	addr = dma_map_single(dev, virt, len, DMA_FROM_DEVICE);
-+	if (dma_mapping_error(dev, addr)) {
-+		ret = -ENOMEM;
-+		goto out_kfree;
-+	}
-+
-+	/* Force close aggregation before issuing the reset */
-+	ipa_endpoint_force_close(endpoint);
-+
-+	/* Reset and reconfigure the channel with the doorbell engine
-+	 * disabled.  Then poll until we know aggregation is no longer
-+	 * active.  We'll re-enable the doorbell (if appropriate) when
-+	 * we reset again below.
-+	 */
-+	gsi_channel_reset(gsi, endpoint->channel_id, false);
-+
-+	/* Make sure the channel isn't suspended */
-+	if (endpoint->ipa->version == IPA_VERSION_3_5_1)
-+		if (!ipa_endpoint_init_ctrl(endpoint, false))
-+			endpoint_suspended = true;
-+
-+	/* Start channel and do a 1 byte read */
-+	ret = gsi_channel_start(gsi, endpoint->channel_id);
-+	if (ret)
-+		goto out_suspend_again;
-+
-+	ret = gsi_trans_read_byte(gsi, endpoint->channel_id, addr);
-+	if (ret)
-+		goto err_endpoint_stop;
-+
-+	/* Wait for aggregation to be closed on the channel */
-+	retries = IPA_ENDPOINT_RESET_AGGR_RETRY_MAX;
-+	do {
-+		if (!ipa_endpoint_aggr_active(endpoint))
-+			break;
-+		msleep(1);
-+	} while (retries--);
-+
-+	/* Check one last time */
-+	if (ipa_endpoint_aggr_active(endpoint))
-+		dev_err(dev, "endpoint %u still active during reset\n",
-+			endpoint->endpoint_id);
-+
-+	gsi_trans_read_byte_done(gsi, endpoint->channel_id);
-+
-+	ret = ipa_endpoint_stop(endpoint);
-+	if (ret)
-+		goto out_suspend_again;
-+
-+	/* Finally, reset and reconfigure the channel again (re-enabling the
-+	 * the doorbell engine if appropriate).  Sleep for 1 millisecond to
-+	 * complete the channel reset sequence.  Finish by suspending the
-+	 * channel again (if necessary).
-+	 */
-+	db_enable = ipa->version == IPA_VERSION_3_5_1;
-+	gsi_channel_reset(gsi, endpoint->channel_id, db_enable);
-+
-+	msleep(1);
-+
-+	goto out_suspend_again;
-+
-+err_endpoint_stop:
-+	ipa_endpoint_stop(endpoint);
-+out_suspend_again:
-+	if (endpoint_suspended)
-+		(void)ipa_endpoint_init_ctrl(endpoint, true);
-+	dma_unmap_single(dev, addr, len, DMA_FROM_DEVICE);
-+out_kfree:
-+	kfree(virt);
-+
-+	return ret;
-+}
-+
-+static void ipa_endpoint_reset(struct ipa_endpoint *endpoint)
-+{
-+	u32 channel_id = endpoint->channel_id;
-+	struct ipa *ipa = endpoint->ipa;
-+	bool db_enable;
-+	bool special;
-+	int ret = 0;
-+
-+	/* On IPA v3.5.1, if an RX endpoint is reset while aggregation
-+	 * is active, we need to handle things specially to recover.
-+	 * All other cases just need to reset the underlying GSI channel.
-+	 *
-+	 * IPA v3.5.1 enables the doorbell engine.  Newer versions do not.
-+	 */
-+	db_enable = ipa->version == IPA_VERSION_3_5_1;
-+	special = !endpoint->toward_ipa && endpoint->data->aggregation;
-+	if (special && ipa_endpoint_aggr_active(endpoint))
-+		ret = ipa_endpoint_reset_rx_aggr(endpoint);
-+	else
-+		gsi_channel_reset(&ipa->gsi, channel_id, db_enable);
-+
-+	if (ret)
-+		dev_err(&ipa->pdev->dev,
-+			"error %d resetting channel %u for endpoint %u\n",
-+			ret, endpoint->channel_id, endpoint->endpoint_id);
-+}
-+
-+static int ipa_endpoint_stop_rx_dma(struct ipa *ipa)
-+{
-+	u16 size = IPA_ENDPOINT_STOP_RX_SIZE;
-+	struct gsi_trans *trans;
-+	dma_addr_t addr;
-+	int ret;
-+
-+	trans = ipa_cmd_trans_alloc(ipa, 1);
-+	if (!trans) {
-+		dev_err(&ipa->pdev->dev,
-+			"no transaction for RX endpoint STOP workaround\n");
-+		return -EBUSY;
-+	}
-+
-+	/* Read into the highest part of the zero memory area */
-+	addr = ipa->zero_addr + ipa->zero_size - size;
-+
-+	ipa_cmd_dma_task_32b_addr_add(trans, size, addr, false);
-+
-+	ret = gsi_trans_commit_wait_timeout(trans, ENDPOINT_STOP_DMA_TIMEOUT);
-+	if (ret)
-+		gsi_trans_free(trans);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ipa_endpoint_stop() - Stops a GSI channel in IPA
-+ * @client:	Client whose endpoint should be stopped
-+ *
-+ * This function implements the sequence to stop a GSI channel
-+ * in IPA. This function returns when the channel is is STOP state.
-+ *
-+ * Return value: 0 on success, negative otherwise
-+ */
-+int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
-+{
-+	u32 retries = endpoint->toward_ipa ? 0 : IPA_ENDPOINT_STOP_RX_RETRIES;
-+	int ret;
-+
-+	do {
-+		struct ipa *ipa = endpoint->ipa;
-+		struct gsi *gsi = &ipa->gsi;
-+
-+		ret = gsi_channel_stop(gsi, endpoint->channel_id);
-+		if (ret != -EAGAIN)
-+			break;
-+
-+		if (endpoint->toward_ipa)
-+			continue;
-+
-+		/* For IPA v3.5.1, send a DMA read task and check again */
-+		if (ipa->version == IPA_VERSION_3_5_1) {
-+			ret = ipa_endpoint_stop_rx_dma(ipa);
-+			if (ret)
-+				break;
-+		}
-+
-+		msleep(1);
-+	} while (retries--);
-+
-+	return retries ? ret : -EIO;
-+}
-+
-+static void ipa_endpoint_program(struct ipa_endpoint *endpoint)
-+{
-+	struct device *dev = &endpoint->ipa->pdev->dev;
-+	int ret;
-+
-+	if (endpoint->toward_ipa) {
-+		bool delay_mode = endpoint->data->tx.delay;
-+
-+		ret = ipa_endpoint_init_ctrl(endpoint, delay_mode);
-+		/* Endpoint is expected to not be in delay mode */
-+		if (!ret != delay_mode) {
-+			dev_warn(dev,
-+				"TX endpoint %u was %sin delay mode\n",
-+				endpoint->endpoint_id,
-+				delay_mode ? "already " : "");
-+		}
-+		ipa_endpoint_init_hdr_ext(endpoint);
-+		ipa_endpoint_init_aggr(endpoint);
-+		ipa_endpoint_init_deaggr(endpoint);
-+		ipa_endpoint_init_seq(endpoint);
-+	} else {
-+		if (endpoint->ipa->version == IPA_VERSION_3_5_1) {
-+			if (!ipa_endpoint_init_ctrl(endpoint, false))
-+				dev_warn(dev,
-+					"RX endpoint %u was suspended\n",
-+					endpoint->endpoint_id);
-+		}
-+		ipa_endpoint_init_hdr_ext(endpoint);
-+		ipa_endpoint_init_aggr(endpoint);
-+	}
-+	ipa_endpoint_init_cfg(endpoint);
-+	ipa_endpoint_init_hdr(endpoint);
-+	ipa_endpoint_init_hdr_metadata_mask(endpoint);
-+	ipa_endpoint_init_mode(endpoint);
-+	ipa_endpoint_status(endpoint);
-+}
-+
-+int ipa_endpoint_enable_one(struct ipa_endpoint *endpoint)
-+{
-+	struct ipa *ipa = endpoint->ipa;
-+	struct gsi *gsi = &ipa->gsi;
-+	int ret;
-+
-+	ret = gsi_channel_start(gsi, endpoint->channel_id);
++	ret = request_threaded_irq(irq, NULL, handler, 0, name, smp2p);
 +	if (ret) {
-+		dev_err(&ipa->pdev->dev,
-+			"error %d starting %cX channel %u for endpoint %u\n",
-+			ret, endpoint->toward_ipa ? 'T' : 'R',
-+			endpoint->channel_id, endpoint->endpoint_id);
++		dev_err(dev, "error %d requesting \"%s\" IRQ\n", ret, name);
 +		return ret;
 +	}
 +
-+	if (!endpoint->toward_ipa) {
-+		ipa_interrupt_suspend_enable(ipa->interrupt,
-+					     endpoint->endpoint_id);
-+		ipa_endpoint_replenish_enable(endpoint);
-+	}
++	return irq;
++}
 +
-+	ipa->enabled |= BIT(endpoint->endpoint_id);
++static void ipa_smp2p_irq_exit(struct ipa_smp2p *smp2p, u32 irq)
++{
++	free_irq(irq, smp2p);
++}
++
++/* Drop the clock reference if it was taken in ipa_smp2p_notify() */
++static void ipa_smp2p_clock_release(struct ipa *ipa)
++{
++	if (!ipa->smp2p->clock_on)
++		return;
++
++	ipa_clock_put(ipa);
++	ipa->smp2p->clock_on = false;
++}
++
++/* Initialize the IPA SMP2P subsystem */
++int ipa_smp2p_init(struct ipa *ipa, bool modem_init)
++{
++	struct qcom_smem_state *enabled_state;
++	struct device *dev = &ipa->pdev->dev;
++	struct qcom_smem_state *valid_state;
++	struct ipa_smp2p *smp2p;
++	u32 enabled_bit;
++	u32 valid_bit;
++	int ret;
++
++	valid_state = qcom_smem_state_get(dev, "ipa-clock-enabled-valid",
++					  &valid_bit);
++	if (IS_ERR(valid_state))
++		return PTR_ERR(valid_state);
++	if (valid_bit >= 32)		/* BITS_PER_U32 */
++		return -EINVAL;
++
++	enabled_state = qcom_smem_state_get(dev, "ipa-clock-enabled",
++					    &enabled_bit);
++	if (IS_ERR(enabled_state))
++		return PTR_ERR(enabled_state);
++	if (enabled_bit >= 32)		/* BITS_PER_U32 */
++		return -EINVAL;
++
++	smp2p = kzalloc(sizeof(*smp2p), GFP_KERNEL);
++	if (!smp2p)
++		return -ENOMEM;
++
++	smp2p->ipa = ipa;
++
++	/* These fields are needed by the clock query interrupt
++	 * handler, so initialize them now.
++	 */
++	mutex_init(&smp2p->mutex);
++	smp2p->valid_state = valid_state;
++	smp2p->valid_bit = valid_bit;
++	smp2p->enabled_state = enabled_state;
++	smp2p->enabled_bit = enabled_bit;
++
++	/* We have enough information saved to handle notifications */
++	ipa->smp2p = smp2p;
++
++	ret = ipa_smp2p_irq_init(smp2p, "ipa-clock-query",
++				 ipa_smp2p_modem_clk_query_isr);
++	if (ret < 0)
++		goto err_null_smp2p;
++	smp2p->clock_query_irq = ret;
++
++	ret = ipa_smp2p_panic_notifier_register(smp2p);
++	if (ret)
++		goto err_irq_exit;
++
++	if (modem_init) {
++		/* Result will be non-zero (negative for error) */
++		ret = ipa_smp2p_irq_init(smp2p, "ipa-setup-ready",
++					 ipa_smp2p_modem_setup_ready_isr);
++		if (ret < 0)
++			goto err_notifier_unregister;
++		smp2p->setup_ready_irq = ret;
++	}
 +
 +	return 0;
-+}
 +
-+void ipa_endpoint_disable_one(struct ipa_endpoint *endpoint)
-+{
-+	u32 mask = BIT(endpoint->endpoint_id);
-+	struct ipa *ipa = endpoint->ipa;
-+	int ret;
-+
-+	if (!(endpoint->ipa->enabled & mask))
-+		return;
-+
-+	endpoint->ipa->enabled ^= mask;
-+
-+	if (!endpoint->toward_ipa) {
-+		ipa_endpoint_replenish_disable(endpoint);
-+		ipa_interrupt_suspend_disable(ipa->interrupt,
-+					      endpoint->endpoint_id);
-+	}
-+
-+	/* Note that if stop fails, the channel's state is not well-defined */
-+	ret = ipa_endpoint_stop(endpoint);
-+	if (ret)
-+		dev_err(&ipa->pdev->dev,
-+			"error %d attempting to stop endpoint %u\n", ret,
-+			endpoint->endpoint_id);
-+}
-+
-+/**
-+ * ipa_endpoint_suspend_aggr() - Emulate suspend interrupt
-+ * @endpoint_id:	Endpoint on which to emulate a suspend
-+ *
-+ *  Emulate suspend IPA interrupt to unsuspend an endpoint suspended
-+ *  with an open aggregation frame.  This is to work around a hardware
-+ *  issue in IPA version 3.5.1 where the suspend interrupt will not be
-+ *  generated when it should be.
-+ */
-+static void ipa_endpoint_suspend_aggr(struct ipa_endpoint *endpoint)
-+{
-+	struct ipa *ipa = endpoint->ipa;
-+
-+	/* assert(ipa->version == IPA_VERSION_3_5_1); */
-+
-+	if (!endpoint->data->aggregation)
-+		return;
-+
-+	/* Nothing to do if the endpoint doesn't have aggregation open */
-+	if (!ipa_endpoint_aggr_active(endpoint))
-+		return;
-+
-+	/* Force close aggregation */
-+	ipa_endpoint_force_close(endpoint);
-+
-+	ipa_interrupt_simulate_suspend(ipa->interrupt);
-+}
-+
-+void ipa_endpoint_suspend_one(struct ipa_endpoint *endpoint)
-+{
-+	struct device *dev = &endpoint->ipa->pdev->dev;
-+	struct gsi *gsi = &endpoint->ipa->gsi;
-+	bool stop_channel;
-+	int ret;
-+
-+	if (!(endpoint->ipa->enabled & BIT(endpoint->endpoint_id)))
-+		return;
-+
-+	if (!endpoint->toward_ipa)
-+		ipa_endpoint_replenish_disable(endpoint);
-+
-+	/* IPA v3.5.1 doesn't use channel stop for suspend */
-+	stop_channel = endpoint->ipa->version != IPA_VERSION_3_5_1;
-+	if (!endpoint->toward_ipa && !stop_channel) {
-+		/* Due to a hardware bug, a client suspended with an open
-+		 * aggregation frame will not generate a SUSPEND IPA
-+		 * interrupt.  We work around this by force-closing the
-+		 * aggregation frame, then simulating the arrival of such
-+		 * an interrupt.
-+		 */
-+		WARN_ON(ipa_endpoint_init_ctrl(endpoint, true));
-+		ipa_endpoint_suspend_aggr(endpoint);
-+	}
-+
-+	ret = gsi_channel_suspend(gsi, endpoint->channel_id, stop_channel);
-+	if (ret)
-+		dev_err(dev, "error %d suspending channel %u\n", ret,
-+			endpoint->channel_id);
-+}
-+
-+void ipa_endpoint_resume_one(struct ipa_endpoint *endpoint)
-+{
-+	struct device *dev = &endpoint->ipa->pdev->dev;
-+	struct gsi *gsi = &endpoint->ipa->gsi;
-+	bool start_channel;
-+	int ret;
-+
-+	if (!(endpoint->ipa->enabled & BIT(endpoint->endpoint_id)))
-+		return;
-+
-+	/* IPA v3.5.1 doesn't use channel start for resume */
-+	start_channel = endpoint->ipa->version != IPA_VERSION_3_5_1;
-+	if (!endpoint->toward_ipa && !start_channel)
-+		WARN_ON(ipa_endpoint_init_ctrl(endpoint, false));
-+
-+	ret = gsi_channel_resume(gsi, endpoint->channel_id, start_channel);
-+	if (ret)
-+		dev_err(dev, "error %d resuming channel %u\n", ret,
-+			endpoint->channel_id);
-+	else if (!endpoint->toward_ipa)
-+		ipa_endpoint_replenish_enable(endpoint);
-+}
-+
-+void ipa_endpoint_suspend(struct ipa *ipa)
-+{
-+	if (ipa->modem_netdev)
-+		ipa_modem_suspend(ipa->modem_netdev);
-+
-+	ipa_endpoint_suspend_one(ipa->name_map[IPA_ENDPOINT_AP_LAN_RX]);
-+	ipa_endpoint_suspend_one(ipa->name_map[IPA_ENDPOINT_AP_COMMAND_TX]);
-+}
-+
-+void ipa_endpoint_resume(struct ipa *ipa)
-+{
-+	ipa_endpoint_resume_one(ipa->name_map[IPA_ENDPOINT_AP_COMMAND_TX]);
-+	ipa_endpoint_resume_one(ipa->name_map[IPA_ENDPOINT_AP_LAN_RX]);
-+
-+	if (ipa->modem_netdev)
-+		ipa_modem_resume(ipa->modem_netdev);
-+}
-+
-+static void ipa_endpoint_setup_one(struct ipa_endpoint *endpoint)
-+{
-+	struct gsi *gsi = &endpoint->ipa->gsi;
-+	u32 channel_id = endpoint->channel_id;
-+
-+	/* Only AP endpoints get set up */
-+	if (endpoint->ee_id != GSI_EE_AP)
-+		return;
-+
-+	endpoint->trans_tre_max = gsi_channel_trans_tre_max(gsi, channel_id);
-+	if (!endpoint->toward_ipa) {
-+		/* RX transactions require a single TRE, so the maximum
-+		 * backlog is the same as the maximum outstanding TREs.
-+		 */
-+		endpoint->replenish_enabled = false;
-+		atomic_set(&endpoint->replenish_saved,
-+			   gsi_channel_tre_max(gsi, endpoint->channel_id));
-+		atomic_set(&endpoint->replenish_backlog, 0);
-+		INIT_DELAYED_WORK(&endpoint->replenish_work,
-+				  ipa_endpoint_replenish_work);
-+	}
-+
-+	ipa_endpoint_program(endpoint);
-+
-+	endpoint->ipa->set_up |= BIT(endpoint->endpoint_id);
-+}
-+
-+static void ipa_endpoint_teardown_one(struct ipa_endpoint *endpoint)
-+{
-+	endpoint->ipa->set_up &= ~BIT(endpoint->endpoint_id);
-+
-+	if (!endpoint->toward_ipa)
-+		cancel_delayed_work_sync(&endpoint->replenish_work);
-+
-+	ipa_endpoint_reset(endpoint);
-+}
-+
-+void ipa_endpoint_setup(struct ipa *ipa)
-+{
-+	u32 initialized = ipa->initialized;
-+
-+	ipa->set_up = 0;
-+	while (initialized) {
-+		u32 endpoint_id = __ffs(initialized);
-+
-+		initialized ^= BIT(endpoint_id);
-+
-+		ipa_endpoint_setup_one(&ipa->endpoint[endpoint_id]);
-+	}
-+}
-+
-+void ipa_endpoint_teardown(struct ipa *ipa)
-+{
-+	u32 set_up = ipa->set_up;
-+
-+	while (set_up) {
-+		u32 endpoint_id = __fls(set_up);
-+
-+		set_up ^= BIT(endpoint_id);
-+
-+		ipa_endpoint_teardown_one(&ipa->endpoint[endpoint_id]);
-+	}
-+	ipa->set_up = 0;
-+}
-+
-+int ipa_endpoint_config(struct ipa *ipa)
-+{
-+	struct device *dev = &ipa->pdev->dev;
-+	u32 initialized;
-+	u32 rx_base;
-+	u32 rx_mask;
-+	u32 tx_mask;
-+	int ret = 0;
-+	u32 max;
-+	u32 val;
-+
-+	/* Find out about the endpoints supplied by the hardware, and ensure
-+	 * the highest one doesn't exceed the number we support.
-+	 */
-+	val = ioread32(ipa->reg_virt + IPA_REG_FLAVOR_0_OFFSET);
-+
-+	/* Our RX is an IPA producer */
-+	rx_base = u32_get_bits(val, BAM_PROD_LOWEST_FMASK);
-+	max = rx_base + u32_get_bits(val, BAM_MAX_PROD_PIPES_FMASK);
-+	if (max > IPA_ENDPOINT_MAX) {
-+		dev_err(dev, "too many endpoints (%u > %u)\n",
-+			max, IPA_ENDPOINT_MAX);
-+		return -EINVAL;
-+	}
-+	rx_mask = GENMASK(max - 1, rx_base);
-+
-+	/* Our TX is an IPA consumer */
-+	max = u32_get_bits(val, BAM_MAX_CONS_PIPES_FMASK);
-+	tx_mask = GENMASK(max - 1, 0);
-+
-+	ipa->available = rx_mask | tx_mask;
-+
-+	/* Check for initialized endpoints not supported by the hardware */
-+	if (ipa->initialized & ~ipa->available) {
-+		dev_err(dev, "unavailable endpoint id(s) 0x%08x\n",
-+			ipa->initialized & ~ipa->available);
-+		ret = -EINVAL;		/* Report other errors too */
-+	}
-+
-+	initialized = ipa->initialized;
-+	while (initialized) {
-+		u32 endpoint_id = __ffs(initialized);
-+		struct ipa_endpoint *endpoint;
-+
-+		initialized ^= BIT(endpoint_id);
-+
-+		/* Make sure it's pointing in the right direction */
-+		endpoint = &ipa->endpoint[endpoint_id];
-+		if ((endpoint_id < rx_base) != !!endpoint->toward_ipa) {
-+			dev_err(dev, "endpoint id %u wrong direction\n",
-+				endpoint_id);
-+			ret = -EINVAL;
-+		}
-+	}
++err_notifier_unregister:
++	ipa_smp2p_panic_notifier_unregister(smp2p);
++err_irq_exit:
++	ipa_smp2p_irq_exit(smp2p, smp2p->clock_query_irq);
++err_null_smp2p:
++	ipa->smp2p = NULL;
++	mutex_destroy(&smp2p->mutex);
++	kfree(smp2p);
 +
 +	return ret;
 +}
 +
-+void ipa_endpoint_deconfig(struct ipa *ipa)
++void ipa_smp2p_exit(struct ipa *ipa)
 +{
-+	ipa->available = 0;	/* Nothing more to do */
++	struct ipa_smp2p *smp2p = ipa->smp2p;
++
++	if (smp2p->setup_ready_irq)
++		ipa_smp2p_irq_exit(smp2p, smp2p->setup_ready_irq);
++	ipa_smp2p_panic_notifier_unregister(smp2p);
++	ipa_smp2p_irq_exit(smp2p, smp2p->clock_query_irq);
++	/* We won't get notified any more; drop clock reference (if any) */
++	ipa_smp2p_clock_release(ipa);
++	ipa->smp2p = NULL;
++	mutex_destroy(&smp2p->mutex);
++	kfree(smp2p);
 +}
 +
-+static void ipa_endpoint_init_one(struct ipa *ipa, enum ipa_endpoint_name name,
-+				  const struct ipa_gsi_endpoint_data *data)
++void ipa_smp2p_disable(struct ipa *ipa)
 +{
-+	struct ipa_endpoint *endpoint;
++	struct ipa_smp2p *smp2p = ipa->smp2p;
 +
-+	endpoint = &ipa->endpoint[data->endpoint_id];
++	if (!smp2p->setup_ready_irq)
++		return;
 +
-+	if (data->ee_id == GSI_EE_AP)
-+		ipa->channel_map[data->channel_id] = endpoint;
-+	ipa->name_map[name] = endpoint;
++	mutex_lock(&smp2p->mutex);
 +
-+	endpoint->ipa = ipa;
-+	endpoint->ee_id = data->ee_id;
-+	endpoint->seq_type = data->endpoint.seq_type;
-+	endpoint->channel_id = data->channel_id;
-+	endpoint->endpoint_id = data->endpoint_id;
-+	endpoint->toward_ipa = data->toward_ipa;
-+	endpoint->data = &data->endpoint.config;
++	smp2p->disabled = true;
 +
-+	ipa->initialized |= BIT(endpoint->endpoint_id);
++	mutex_unlock(&smp2p->mutex);
 +}
 +
-+void ipa_endpoint_exit_one(struct ipa_endpoint *endpoint)
++/* Reset state tracking whether we have notified the modem */
++void ipa_smp2p_notify_reset(struct ipa *ipa)
 +{
-+	endpoint->ipa->initialized &= ~BIT(endpoint->endpoint_id);
++	struct ipa_smp2p *smp2p = ipa->smp2p;
++	u32 mask;
 +
-+	memset(endpoint, 0, sizeof(*endpoint));
++	if (!smp2p->notified)
++		return;
++
++	ipa_smp2p_clock_release(ipa);
++
++	/* Reset the clock enabled valid flag */
++	mask = BIT(smp2p->valid_bit);
++	qcom_smem_state_update_bits(smp2p->valid_state, mask, 0);
++
++	/* Mark the clock disabled for good measure... */
++	mask = BIT(smp2p->enabled_bit);
++	qcom_smem_state_update_bits(smp2p->enabled_state, mask, 0);
++
++	smp2p->notified = false;
 +}
-+
-+void ipa_endpoint_exit(struct ipa *ipa)
-+{
-+	u32 initialized = ipa->initialized;
-+
-+	while (initialized) {
-+		u32 endpoint_id = __fls(initialized);
-+
-+		initialized ^= BIT(endpoint_id);
-+
-+		ipa_endpoint_exit_one(&ipa->endpoint[endpoint_id]);
-+	}
-+	memset(ipa->name_map, 0, sizeof(ipa->name_map));
-+	memset(ipa->channel_map, 0, sizeof(ipa->channel_map));
-+}
-+
-+/* Returns a bitmask of endpoints that support filtering, or 0 on error */
-+u32 ipa_endpoint_init(struct ipa *ipa, u32 count,
-+		      const struct ipa_gsi_endpoint_data *data)
-+{
-+	enum ipa_endpoint_name name;
-+	u32 filter_map;
-+
-+	if (!ipa_endpoint_data_valid(ipa, count, data))
-+		return 0;	/* Error */
-+
-+	ipa->initialized = 0;
-+
-+	filter_map = 0;
-+	for (name = 0; name < count; name++, data++) {
-+		if (ipa_gsi_endpoint_data_empty(data))
-+			continue;	/* Skip over empty slots */
-+
-+		ipa_endpoint_init_one(ipa, name, data);
-+
-+		if (data->endpoint.filter_support)
-+			filter_map |= BIT(data->endpoint_id);
-+	}
-+
-+	if (!ipa_filter_map_valid(ipa, filter_map))
-+		goto err_endpoint_exit;
-+
-+	return filter_map;	/* Non-zero bitmask */
-+
-+err_endpoint_exit:
-+	ipa_endpoint_exit(ipa);
-+
-+	return 0;	/* Error */
-+}
-diff --git a/drivers/net/ipa/ipa_endpoint.h b/drivers/net/ipa/ipa_endpoint.h
+diff --git a/drivers/net/ipa/ipa_smp2p.h b/drivers/net/ipa/ipa_smp2p.h
 new file mode 100644
-index 000000000000..4b336a1f759d
+index 000000000000..1f65cdc9d406
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_endpoint.h
-@@ -0,0 +1,110 @@
++++ b/drivers/net/ipa/ipa_smp2p.h
+@@ -0,0 +1,48 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
 +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
 + * Copyright (C) 2019-2020 Linaro Ltd.
 + */
-+#ifndef _IPA_ENDPOINT_H_
-+#define _IPA_ENDPOINT_H_
++#ifndef _IPA_SMP2P_H_
++#define _IPA_SMP2P_H_
 +
 +#include <linux/types.h>
-+#include <linux/workqueue.h>
-+#include <linux/if_ether.h>
-+
-+#include "gsi.h"
-+#include "ipa_reg.h"
-+
-+struct net_device;
-+struct sk_buff;
 +
 +struct ipa;
-+struct ipa_gsi_endpoint_data;
-+
-+/* Non-zero granularity of counter used to implement aggregation timeout */
-+#define IPA_AGGR_GRANULARITY		500	/* microseconds */
-+
-+#define IPA_MTU			ETH_DATA_LEN
-+
-+enum ipa_endpoint_name {
-+	IPA_ENDPOINT_AP_MODEM_TX	= 0,
-+	IPA_ENDPOINT_MODEM_LAN_TX,
-+	IPA_ENDPOINT_MODEM_COMMAND_TX,
-+	IPA_ENDPOINT_AP_COMMAND_TX,
-+	IPA_ENDPOINT_MODEM_AP_TX,
-+	IPA_ENDPOINT_AP_LAN_RX,
-+	IPA_ENDPOINT_AP_MODEM_RX,
-+	IPA_ENDPOINT_MODEM_AP_RX,
-+	IPA_ENDPOINT_MODEM_LAN_RX,
-+	IPA_ENDPOINT_COUNT,	/* Number of names (not an index) */
-+};
-+
-+#define IPA_ENDPOINT_MAX		32	/* Max supported by driver */
 +
 +/**
-+ * struct ipa_endpoint - IPA endpoint information
-+ * @client:	Client associated with the endpoint
-+ * @channel_id:	EP's GSI channel
-+ * @evt_ring_id: EP's GSI channel event ring
++ * ipa_smp2p_init() - Initialize the IPA SMP2P subsystem
++ * @ipa:	IPA pointer
++ * @modem_init:	Whether the modem is responsible for GSI initialization
++ *
++ * @Return:	0 if successful, or a negative error code
++ *
 + */
-+struct ipa_endpoint {
-+	struct ipa *ipa;
-+	enum ipa_seq_type seq_type;
-+	enum gsi_ee_id ee_id;
-+	u32 channel_id;
-+	u32 endpoint_id;
-+	bool toward_ipa;
-+	const struct ipa_endpoint_config_data *data;
++int ipa_smp2p_init(struct ipa *ipa, bool modem_init);
 +
-+	u32 trans_tre_max;	/* maximum descriptors per transaction */
-+	u32 evt_ring_id;
++/**
++ * ipa_smp2p_exit() - Inverse of ipa_smp2p_init()
++ * @ipa:	IPA pointer
++ */
++void ipa_smp2p_exit(struct ipa *ipa);
 +
-+	/* Net device this endpoint is associated with, if any */
-+	struct net_device *netdev;
++/**
++ * ipa_smp2p_disable() - Prevent "ipa-setup-ready" interrupt handling
++ * @IPA:	IPA pointer
++ *
++ * Prevent handling of the "setup ready" interrupt from the modem.
++ * This is used before initiating shutdown of the driver.
++ */
++void ipa_smp2p_disable(struct ipa *ipa);
 +
-+	/* Receive buffer replenishing for RX endpoints */
-+	bool replenish_enabled;
-+	u32 replenish_ready;
-+	atomic_t replenish_saved;
-+	atomic_t replenish_backlog;
-+	struct delayed_work replenish_work;		/* global wq */
-+};
++/**
++ * ipa_smp2p_notify_reset() - Reset modem notification state
++ * @ipa:	IPA pointer
++ *
++ * If the modem crashes it queries the IPA clock state.  In cleaning
++ * up after such a crash this is used to reset some state maintained
++ * for managing this notification.
++ */
++void ipa_smp2p_notify_reset(struct ipa *ipa);
 +
-+void ipa_endpoint_modem_hol_block_clear_all(struct ipa *ipa);
-+
-+void ipa_endpoint_modem_pause_all(struct ipa *ipa, bool enable);
-+
-+int ipa_endpoint_modem_exception_reset_all(struct ipa *ipa);
-+
-+int ipa_endpoint_skb_tx(struct ipa_endpoint *endpoint, struct sk_buff *skb);
-+
-+int ipa_endpoint_stop(struct ipa_endpoint *endpoint);
-+
-+void ipa_endpoint_exit_one(struct ipa_endpoint *endpoint);
-+
-+int ipa_endpoint_enable_one(struct ipa_endpoint *endpoint);
-+void ipa_endpoint_disable_one(struct ipa_endpoint *endpoint);
-+
-+void ipa_endpoint_suspend_one(struct ipa_endpoint *endpoint);
-+void ipa_endpoint_resume_one(struct ipa_endpoint *endpoint);
-+
-+void ipa_endpoint_suspend(struct ipa *ipa);
-+void ipa_endpoint_resume(struct ipa *ipa);
-+
-+void ipa_endpoint_setup(struct ipa *ipa);
-+void ipa_endpoint_teardown(struct ipa *ipa);
-+
-+int ipa_endpoint_config(struct ipa *ipa);
-+void ipa_endpoint_deconfig(struct ipa *ipa);
-+
-+void ipa_endpoint_default_route_set(struct ipa *ipa, u32 endpoint_id);
-+void ipa_endpoint_default_route_clear(struct ipa *ipa);
-+
-+u32 ipa_endpoint_init(struct ipa *ipa, u32 count,
-+		      const struct ipa_gsi_endpoint_data *data);
-+void ipa_endpoint_exit(struct ipa *ipa);
-+
-+void ipa_endpoint_trans_complete(struct ipa_endpoint *ipa,
-+				 struct gsi_trans *trans);
-+void ipa_endpoint_trans_release(struct ipa_endpoint *ipa,
-+				struct gsi_trans *trans);
-+
-+#endif /* _IPA_ENDPOINT_H_ */
++#endif /* _IPA_SMP2P_H_ */
 -- 
 2.20.1
 
