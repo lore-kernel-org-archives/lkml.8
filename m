@@ -2,121 +2,102 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B47EC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312CDC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EAF52073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1433D2146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgCFPZy (ORCPT
+        id S1727138AbgCFPZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:25:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:35480 "EHLO foss.arm.com"
+        Fri, 6 Mar 2020 10:25:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47178 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgCFPZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:25:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E3B8113E;
-        Fri,  6 Mar 2020 07:25:52 -0800 (PST)
-Received: from e121896.warwick.arm.com (e121896.warwick.arm.com [10.32.36.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D45643F237;
-        Fri,  6 Mar 2020 07:25:48 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     nd@arm.com, Tan Xiaojun <tanxiaojun@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Al Grant <al.grant@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v6 3/3] perf report: Add SPE options to --itrace argument
-Date:   Fri,  6 Mar 2020 15:25:20 +0000
-Message-Id: <20200306152520.28233-4-james.clark@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200306152520.28233-1-james.clark@arm.com>
-References: <20200228160126.GI36089@lakrids.cambridge.arm.com>
- <20200306152520.28233-1-james.clark@arm.com>
+        id S1727067AbgCFPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:25:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8478BAD88;
+        Fri,  6 Mar 2020 15:25:51 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 0DAE8DA728; Fri,  6 Mar 2020 16:25:27 +0100 (CET)
+Date:   Fri, 6 Mar 2020 16:25:27 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Cc:     Qu Wenruo <quwenruo.btrfs@gmx.com>, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        frextrite@gmail.com, linux@roeck-us.net
+Subject: Re: [PATCH] fs: btrfs: block-group.c: Fix suspicious RCU usage
+ warning
+Message-ID: <20200306152527.GH2902@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Qu Wenruo <quwenruo.btrfs@gmx.com>, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        frextrite@gmail.com, linux@roeck-us.net
+References: <20200306065243.11699-1-madhuparnabhowmik10@gmail.com>
+ <dfd2c14c-acda-3862-9f48-a512e16a895c@gmx.com>
+ <20200306140023.GA14186@madhuparna-HP-Notebook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200306140023.GA14186@madhuparna-HP-Notebook>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tan Xiaojun <tanxiaojun@huawei.com>
+On Fri, Mar 06, 2020 at 07:30:24PM +0530, Madhuparna Bhowmik wrote:
+> On Fri, Mar 06, 2020 at 03:16:53PM +0800, Qu Wenruo wrote:
+> > 
+> > 
+> > On 2020/3/6 下午2:52, madhuparnabhowmik10@gmail.com wrote:
+> > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > > 
+> > > The space_info list is rcu protected.
+> > > Hence, it should be traversed with rcu_read_lock held.
+> > > 
+> > > Warning:
+> > > [   29.104591] =============================
+> > > [   29.104756] WARNING: suspicious RCU usage
+> > > [   29.105046] 5.6.0-rc4-next-20200305 #1 Not tainted
+> > > [   29.105231] -----------------------------
+> > > [   29.105401] fs/btrfs/block-group.c:2011 RCU-list traversed in non-reader section!!
+> > > 
+> > > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > > ---
+> > >  fs/btrfs/block-group.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+> > > index 404e050ce8ee..9cabeef66f5b 100644
+> > > --- a/fs/btrfs/block-group.c
+> > > +++ b/fs/btrfs/block-group.c
+> > > @@ -1987,6 +1987,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
+> > 
+> > This function is only triggered at mount time, where no other rcu
+> > operation can happen.
+> >
+> Thanks Qu.
+> 
+> Joel and Paul, what should we do in this case?
+> Should we just pass cond = true or use list_for_each_entry instead?
 
-The previous patch added support in "perf report" for some arm-spe
-events(llc-miss, tlb-miss, branch-miss, remote_access). This patch
-adds their help instructions.
-
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-Tested-by: Qi Liu <liuqi115@hisilicon.com>
-Signed-off-by: James Clark <james.clark@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Tan Xiaojun <tanxiaojun@huawei.com>
-Cc: Al Grant <al.grant@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/itrace.txt | 5 ++++-
- tools/perf/util/auxtrace.h          | 5 ++++-
- 2 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index 82ff7dad40c2..da3e5ccc039e 100644
---- a/tools/perf/Documentation/itrace.txt
-+++ b/tools/perf/Documentation/itrace.txt
-@@ -1,5 +1,5 @@
- 		i	synthesize instructions events
--		b	synthesize branches events
-+		b	synthesize branches events (branch misses on Arm)
- 		c	synthesize branches events (calls only)
- 		r	synthesize branches events (returns only)
- 		x	synthesize transactions events
-@@ -9,6 +9,9 @@
- 			of aux-output (refer to perf record)
- 		e	synthesize error events
- 		d	create a debug log
-+		m	synthesize LLC miss events
-+		t	synthesize TLB miss events
-+		a	synthesize remote access events
- 		g	synthesize a call chain (use with i or x)
- 		l	synthesize last branch entries (use with i or x)
- 		s       skip initial number of events
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 80617b0d044d..52e148eea7f8 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -587,7 +587,7 @@ void auxtrace__free(struct perf_session *session);
- 
- #define ITRACE_HELP \
- "				i:	    		synthesize instructions events\n"		\
--"				b:	    		synthesize branches events\n"		\
-+"				b:	    		synthesize branches events (branch misses on Arm)\n" \
- "				c:	    		synthesize branches events (calls only)\n"	\
- "				r:	    		synthesize branches events (returns only)\n" \
- "				x:	    		synthesize transactions events\n"		\
-@@ -595,6 +595,9 @@ void auxtrace__free(struct perf_session *session);
- "				p:	    		synthesize power events\n"			\
- "				e:	    		synthesize error events\n"			\
- "				d:	    		create a debug log\n"			\
-+"				m:	    		synthesize LLC miss events\n" \
-+"				t:	    		synthesize TLB miss events\n" \
-+"				a:	    		synthesize remote access events\n" \
- "				g[len]:     		synthesize a call chain (use with i or x)\n" \
- "				l[len]:     		synthesize last branch entries (use with i or x)\n" \
- "				sNUMBER:    		skip initial number of events\n"		\
--- 
-2.17.1
-
+I think we can afford to add rcu lock/unlock, even if it's not strictly
+necessary due to the single threaded context where the function is run.
+There are some lightweight operations inside and inc_block_group starts
+with two spin locks so there's nothing we'd be losing with disabled
+preemption from the caller.
