@@ -6,39 +6,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7754C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFE8C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51AE2072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646892072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgCFDFL (ORCPT
+        id S1726702AbgCFDFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 22:05:11 -0500
-Received: from mo-csw1115.securemx.jp ([210.130.202.157]:40990 "EHLO
+        Thu, 5 Mar 2020 22:05:32 -0500
+Received: from mo-csw1116.securemx.jp ([210.130.202.158]:48054 "EHLO
         mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbgCFDFL (ORCPT
+        with ESMTP id S1726300AbgCFDFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 22:05:11 -0500
-Received: by mo-csw.securemx.jp (mx-mo-csw1115) id 02634nJX016875; Fri, 6 Mar 2020 12:04:49 +0900
-X-Iguazu-Qid: 2wGrDj8Mc351USGAVM
-X-Iguazu-QSIG: v=2; s=0; t=1583463889; q=2wGrDj8Mc351USGAVM; m=ndyjnu0DcSyZsE2+a+ZGiFwf2uguWQoJZDmDke3PqmQ=
+        Thu, 5 Mar 2020 22:05:31 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1116) id 02635Hwn016770; Fri, 6 Mar 2020 12:05:17 +0900
+X-Iguazu-Qid: 2wGrZsIRE9x4JsUiaA
+X-Iguazu-QSIG: v=2; s=0; t=1583463916; q=2wGrZsIRE9x4JsUiaA; m=8eRUmWIC3godALj9xZbSEUsjiS77yQSOH4/Jn/h1+FA=
 Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1112) id 02634lX7032172;
-        Fri, 6 Mar 2020 12:04:48 +0900
+        by relay.securemx.jp (mx-mr1113) id 02635FHR001348;
+        Fri, 6 Mar 2020 12:05:15 +0900
 Received: from enc01.localdomain ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id 02634lgr014218;
-        Fri, 6 Mar 2020 12:04:47 +0900 (JST)
+        by imx2.toshiba.co.jp  with ESMTP id 02635FEb014487;
+        Fri, 6 Mar 2020 12:05:15 +0900 (JST)
 Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.localdomain  with ESMTP id 02634lv1021124;
-        Fri, 6 Mar 2020 12:04:47 +0900
+        by enc01.localdomain  with ESMTP id 02635FRa021523;
+        Fri, 6 Mar 2020 12:05:15 +0900
 From:   Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
 To:     miquel.raynal@bootlin.com, vigneshr@ti.com
 Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 Subject: [PATCH v3 2/2] mtd: spinand: toshiba: Support for new Kioxia Serial NAND
-Date:   Fri,  6 Mar 2020 12:04:45 +0900
+Date:   Fri,  6 Mar 2020 12:05:13 +0900
 X-TSB-HOP: ON
-Message-Id: <fcd0899a764689dde17fa8d776d59dde8265b796.1583371913.git.ytc-mb-yfuruyama7@kioxia.com>
+Message-Id:
+ <fcd0899a764689dde17fa8d776d59dde8265b796.1583371913.git.ytc-mb-yfuruyama7@kioxia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1583371913.git.ytc-mb-yfuruyama7@kioxia.com>
 References: <cover.1583371913.git.ytc-mb-yfuruyama7@kioxia.com>
@@ -46,6 +47,7 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200306030513.kCjsZjIuEDLSuFdM6_5iKyQUnXoOoqQI9Jj8dlseltA@z>
 
 Add support for new Kioxia products.
 The new Kioxia products support program load x4 command, and have
