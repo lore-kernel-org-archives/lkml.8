@@ -2,131 +2,210 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8BDC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806C7C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C7320728
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA2220728
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="lC0xm4Dm"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="BhKFJ+4F";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NkCQ81vB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgCFHrp (ORCPT
+        id S1726081AbgCFHtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:47:45 -0500
-Received: from mail-eopbgr150123.outbound.protection.outlook.com ([40.107.15.123]:11845
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725853AbgCFHrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 02:47:45 -0500
+        Fri, 6 Mar 2020 02:49:18 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45560 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725853AbgCFHtS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 02:49:18 -0500
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0267gcqE030124;
+        Thu, 5 Mar 2020 23:48:59 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=lvdb6LBvpZEBqSDLj9BPsrBhfl05CzUPmpkM4YswBj8=;
+ b=BhKFJ+4FvVhEe0vYVJDdw+aKYVQ0T8CSU0a6E6e8dF8nOVI2613Qf0pT5TKoC3gQo8Pf
+ kHrtV5Jk/TRgMovFYu1NmQFsoO3kkNBEW4A6Wb+aueuzY6uGF+vFQ00JdwlH5KaCRLP+
+ pLGqlmPKJ0q5AieTtyM7ckDhKawHpZWNhgc= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yk7x8ahw6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 05 Mar 2020 23:48:59 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 5 Mar 2020 23:48:57 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nNYuxuVMfeKDM3vwBzsVOpL/vG2yyw2ejYPo7OElisFyN+NIwJqHWK2uOLDC16CMA71ec3rF75iyPBGWO15dgWMrpVIdNAMq7wl5B8iPmIG3q+RPxTLOm7TzV3q32JyDSIafeZagVz7INyUiNjoT0Neu0nxCYHJaPKKp4zQtg78bQ6gnaRnFWionMDqPxc3mpIr1569c/ZLUc8OCwT27JG1MRdP+jACjjtS0+Wv4P+uMAXRmt/104ZGQ5ZXt8xNCAokhtAxzca8oU64F51Y1Q+YKQFWEMWlUTJtIN8qPj2AfYBqxAerKQ8mnul38h5gG7r7KIW8mth7ZpaKSf06MMw==
+ b=gQLKgLa0ILmTC60qO13b9x7cY65jYgKhsZkdr3LsuwzFKeYTF5+K+sWcdro9rf44Lc93j7iI0uLcM9D/OIgo28qTAltyFkR1zgb86rYydyUBduz6lDyJC6ezujW4ohcvFMas0RS5HhKutBOo8HT2R5qhjaJDco90nZDjw1WZpFnJZXCPJKbV0O4POwGEEMtT4U459unQoA0MWwQYAz07FRGzNZDquMntxdEGIPRTaz2HCqKVP2AsCe2s2k0gaMa7f7apyiTcp3tr9C77zn09xll0xksvdrSeyUISSMChvUU5liTO/yfZ3JONbfKxwE8Dv02YuXxjfq3zZVBAL2obcg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z4Yl5rfX/rEEpiWrkob2AXszWgFr7e1RgY4kCOKhgiE=;
- b=FW+D+v0Ef7+k4my454vqfPd84/YGfDbmGtPw/m7sLzGww5iMXUykI3Ou0JfcoRGJlTjycFTCOJp3cj87npKXaDO8g1FQFZndRosbm2wX9Slqef19w0LV37p8g1RarCV5U/esUnVfuI+p8s9JoDAfOFO5qwSrgbvNUzHoeIilYal2Y/iaPnzPclagr3XQsp6gVbCh8wp5PKcgOjG0CVC1kdHwNX0oLALNPV8HEk1scZAtsopGUw18T7ZmP/zgSzlw3L1PFPlLoDA7rXyzLCAqjoxhLcuHcHS3JL6cSaeFOCUNSsQTuU2HB7yucMOIjz9Gj2SsRoVMhnVHb5x3sMzqVw==
+ bh=lvdb6LBvpZEBqSDLj9BPsrBhfl05CzUPmpkM4YswBj8=;
+ b=K3AbieLoTHWFkkE7Ir5caK1GhZCELe1RfmxfBzc6q7iWj7abyrWy9pI0bRlMOVDCDFITH83XJncReDskMls44+AZHQnKZfxTuDOrQemUZLaJRJt9Q1EwzwX7t9jYt29WyYs9pQzGeos9PXbEjp9XQXTcJmN4qsYU8ZVAYWSMjcmgdk32gyFo16UClG9EjQJ0Hde/uqLCcmicUBi8AOOTkQIuq787WEI8px1v+S8kSQixnbCUlDH8pl7etPcKDUDqvwU1eArAi4DjHcF0kYluR+P5bBhQ88Pdj309T0PK07SdboV2XnS+y/wMTUpKdrsAE+MqlkWizeGKJzVIuAY2UA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z4Yl5rfX/rEEpiWrkob2AXszWgFr7e1RgY4kCOKhgiE=;
- b=lC0xm4Dm5gT1kLmH3sZUAUuFeRMyjKFTNphBnFZymR5KRpLDspgaScCyOMC8+U928/aI2JKD8Yh7DMEPKd3xFJlxDsaRe0tUyd3E8+xWjr/QZymQioLH+lDFSMi4QsrdO5W0Soa1RQc413qGlKaFhsMXogQgXPaAyz+lNZkZyS4=
-Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com (10.167.127.12) by
- HE1PR0702MB3641.eurprd07.prod.outlook.com (10.167.127.159) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11; Fri, 6 Mar 2020 07:47:41 +0000
-Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com
- ([fe80::2806:c34c:d469:8e87]) by HE1PR0702MB3675.eurprd07.prod.outlook.com
- ([fe80::2806:c34c:d469:8e87%5]) with mapi id 15.20.2793.013; Fri, 6 Mar 2020
- 07:47:41 +0000
-From:   "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-To:     "arnaldo.melo@gmail.com" <arnaldo.melo@gmail.com>
-CC:     "namhyung@kernel.org" <namhyung@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jolsa@redhat.com" <jolsa@redhat.com>
-Subject: Re: [PATCH 1/3] perf top: Fix stdio interface input handling with
- glibc 2.28+
-Thread-Topic: [PATCH 1/3] perf top: Fix stdio interface input handling with
- glibc 2.28+
-Thread-Index: AQHV8slV9F336QP4yEKP4/KBcuwjA6g6FQmAgAEcagA=
-Date:   Fri, 6 Mar 2020 07:47:41 +0000
-Message-ID: <5910059f9334605a2fbe068dae35b816417383a3.camel@nokia.com>
-References: <20200305083714.9381-1-tommi.t.rantala@nokia.com>
-         <20200305083714.9381-2-tommi.t.rantala@nokia.com>
-         <20200305144943.GA7895@kernel.org>
-In-Reply-To: <20200305144943.GA7895@kernel.org>
-Accept-Language: fi-FI, en-US
+ bh=lvdb6LBvpZEBqSDLj9BPsrBhfl05CzUPmpkM4YswBj8=;
+ b=NkCQ81vBNSmkd7lGmDW8wMULJCYvIwD/ltZpy8IFE61Io6oZPOoUjEUODNH9alUQTovNobmTQXIXqqGPgG8NmazFvPLNpzjPII5u61bs35kXADwjBRHK+kGq8ES9tcbrNHP1le45j/+DE47z7gdHaXX+Pcb7ehHVfE5PX5a237A=
+Received: from MW3PR15MB3882.namprd15.prod.outlook.com (2603:10b6:303:49::11)
+ by MW3PR15MB4012.namprd15.prod.outlook.com (2603:10b6:303:47::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14; Fri, 6 Mar
+ 2020 07:48:57 +0000
+Received: from MW3PR15MB3882.namprd15.prod.outlook.com
+ ([fe80::c570:6c46:cc47:5ca5]) by MW3PR15MB3882.namprd15.prod.outlook.com
+ ([fe80::c570:6c46:cc47:5ca5%5]) with mapi id 15.20.2772.019; Fri, 6 Mar 2020
+ 07:48:57 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2] perf/core: install cgroup events to correct cpuctx
+Thread-Topic: [PATCH v2] perf/core: install cgroup events to correct cpuctx
+Thread-Index: AQHV0V1Eb2FOWrPLeESAdNuK47ZqO6f5iwUAgEHpoAA=
+Date:   Fri, 6 Mar 2020 07:48:56 +0000
+Message-ID: <83AF3F97-7F98-4D52-A230-F04A0AB67284@fb.com>
+References: <20200122195027.2112449-1-songliubraving@fb.com>
+ <20200124091552.GB14914@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200124091552.GB14914@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tommi.t.rantala@nokia.com; 
-x-originating-ip: [131.228.2.19]
+x-mailer: Apple Mail (2.3608.60.0.2.5)
+x-originating-ip: [2620:10d:c090:400::5:f46a]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c97b8304-2ae6-4859-dde0-08d7c1a2a66d
-x-ms-traffictypediagnostic: HE1PR0702MB3641:
-x-microsoft-antispam-prvs: <HE1PR0702MB3641CF861F4505E00105C3B7B4E30@HE1PR0702MB3641.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
+x-ms-office365-filtering-correlation-id: 4c6c5933-4d63-43bc-6d82-08d7c1a2d356
+x-ms-traffictypediagnostic: MW3PR15MB4012:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW3PR15MB40121B745D47773CB843B2E3B3E30@MW3PR15MB4012.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
 x-forefront-prvs: 0334223192
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(39860400002)(376002)(346002)(136003)(199004)(189003)(64756008)(86362001)(6506007)(26005)(76116006)(186003)(66476007)(5660300002)(4326008)(54906003)(2616005)(2906002)(66556008)(66946007)(71200400001)(6916009)(6512007)(66446008)(6486002)(81156014)(81166006)(8936002)(36756003)(316002)(478600001)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR0702MB3641;H:HE1PR0702MB3675.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nokia.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(346002)(136003)(396003)(39860400002)(199004)(189003)(478600001)(86362001)(33656002)(316002)(8676002)(81166006)(81156014)(54906003)(186003)(2906002)(8936002)(36756003)(6506007)(71200400001)(5660300002)(53546011)(6916009)(4326008)(6486002)(66946007)(76116006)(66556008)(66446008)(64756008)(2616005)(66476007)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:MW3PR15MB4012;H:MW3PR15MB3882.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sZsTtbDn5kR7VHc3X590pKTT4uL/tTw1lJn8634jYDZtrxBQD6HcpOtitM/hltKLDDEH+/EMbTUVV4J5WM0v97qEZODUEXPJ6yJ6oI9hMZEC8tpDEuMEYSebIUNBR2kueNcLBeAI2a8NBoe96883YZ5D5MM5qo+kocIzo4KMXgkIWfYrdOQNAgSF5FSsGJ/wPQmn5NpCwZ4OgpfBkSuLLvk3+0ORqwrDGQwSBdKKaBX1Qxyc6qqsuD/o9CJ+vQP1/LidoCx7TKbHX8uYbprhBo4Q1oROfk7JKk6IFsiOS+dV3N5sXdUJpLC+WS6LlujYLw6jhPp7RZwbLhiZYFF3XwnX8R6FzeBZFQPyzM8im7Haiy+O8Xq8RHrCYkyHLncOs3uYiL/1e9WLuzmqBkicbtysu4IKBYdKv1p/X+DxPdEs0E2Qz+Q7pxl4sTxgWvRa
-x-ms-exchange-antispam-messagedata: HjmKx0xUw19sSAFuof+ZShcNcnXN2VS7E5Aww1JBTOZoqau2Xd3I8dfQUrw65k3l+5vhzG5ehvaGY1slLF9OF4tdIdXilFEQQibk2w5EWTq+xRmspjqe100proD6Kg9BpRVPZY4loOzVXeGbQtijjA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C56374B4CA665E4488197AC36759710D@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: 5Z/YsNVaHAuePIIcTD9asxBVbz5sFnL3QztJiIiURwydMj5+1BJ8qQhB/UU6Wyo0DT00nWcIevfPra/nokfq6AXX3ZgNw1pOH1hHf/XR4JFfem8aYRYXS+m3Ph00jeHuPVthwXvpJT1ouEvEv/rLNvYTVdp4ZBYHRHALD4oAajr0qpWZvYT96ReS816wrca4hqrr+xa4CKDZq1Y9AJwC+l/dOu/R7U3DFFF0HWspz60BnTovBh9uGmf4bQUmg7TiOSvvpve00buzSamvokQSK+9VvP6IvuhDsoGpZU1ECbOR9R7auHaaRH9c2GvjwVt7fsrWDgTYaidaYvJEHLObOw2NlHF4SOmmS5TY4lzn3QmaWL+XiTsrBzGVOvHeJbiWjBWJ41H4kuOimCrrEaDpaBJpbaI1V2aV+zgT6Zx4vLEEVzG/IWjiTxCjE+jEPQiy
+x-ms-exchange-antispam-messagedata: JhyQjrjs6FpBwfrh4yGJag06yZRV0OWuIEqLuKg3AnBKbZ1YXrOBH2uAYTmeCKAKLET/CYtnf/jPZPKBOWSdfQq7RFtwxF5Z2qWwUmGFQdS73anuU9L20ZT1GbNxyLFgWG4EyizG0Pf5nIfIYm6ftrwjiyeQJd++skRkBzjs8AUkhS9Pikfh9CR/yaCW31+U
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <821F7309E2BCE4459356DD6A37E012A5@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c97b8304-2ae6-4859-dde0-08d7c1a2a66d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2020 07:47:41.5926
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c6c5933-4d63-43bc-6d82-08d7c1a2d356
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2020 07:48:56.9140
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: REz3J5FA5oho3RI4X//02dIBwIXQWO0v39+swMUuUH/JYuDRbX/4S2WLCDLXBUcVeQKo95u8AoyNyoEXY5aC7nIVPPmvK4wEpWFIeB7eLWc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0702MB3641
+X-MS-Exchange-CrossTenant-userprincipalname: aQbKWaWoFLYwgdykRbPt5bgfQFarfnCY1u9WpCUIg4GnQtP4e40gzwYZwFYS/WFcmVDca1Z1+C8nEZi6pAWtfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB4012
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-06_01:2020-03-05,2020-03-06 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ spamscore=0 phishscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060054
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAzLTA1IGF0IDExOjQ5IC0wMzAwLCBBcm5hbGRvIENhcnZhbGhvIGRlIE1l
-bG8gd3JvdGU6DQo+IFRoYW5rcyBmb3IgZml4aW5nIHRoaXMsIEkgaGFkIHN0dW1ibGVkIG9uIGl0
-IGF0IHNvbWUgcG9pbnQsIGJ1dCBzaW5jZQ0KPiBJIG1vc3RseSB1c2UgdGhlIFRVSSBpbnRlcmZh
-Y2UsIGl0IGZlbGwgdGhydSB0aGUgY3JhY2tzLg0KPiANCj4gRG8geW91IHByZWZlciBpdCBvdmVy
-IHRoZSBUVUkgb25lPw0KDQpUaGUgc3RkaW8gaW50ZXJmYWNlIGlzIGltcG9ydGFudCBmb3IgdXMs
-IGFzIHdlJ3JlIGJ1aWxkaW5nIHBlcmYgd2l0aG91dCBzLQ0KbGFuZy4gVG8gcmVkdWNlIGRlcGVu
-ZGVuY2llcyBJIGFzc3VtZS4uLiBCdXQgdGhlIFRVSSBpbnRlcmZhY2UgaXMNCmNlcnRhaW5seSBu
-aWNlLCBzbyBtYXliZSB3ZSBzaG91bGQganVzdCBpbmNsdWRlIHMtbGFuZyB0byBnZXQgaXQuDQoN
-Ci1Ub21taQ0KDQo+IFRoYW5rcywgdGVzdGVkIGFuZCBhcHBsaWVkLg0KPiANCj4gLSBBcm5hbGRv
-DQo+ICANCj4gPiBTaWduZWQtb2ZmLWJ5OiBUb21taSBSYW50YWxhIDx0b21taS50LnJhbnRhbGFA
-bm9raWEuY29tPg0KPiA+IC0tLQ0KPiA+ICB0b29scy9wZXJmL2J1aWx0aW4tdG9wLmMgfCA0ICsr
-Ky0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0K
-PiA+IA0KPiA+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL2J1aWx0aW4tdG9wLmMgYi90b29scy9w
-ZXJmL2J1aWx0aW4tdG9wLmMNCj4gPiBpbmRleCBmNmRkMWE2M2YxNTllLi5kMjUzOWI3OTNmOWQ0
-IDEwMDY0NA0KPiA+IC0tLSBhL3Rvb2xzL3BlcmYvYnVpbHRpbi10b3AuYw0KPiA+ICsrKyBiL3Rv
-b2xzL3BlcmYvYnVpbHRpbi10b3AuYw0KPiA+IEBAIC02ODQsNyArNjg0LDkgQEAgc3RhdGljIHZv
-aWQgKmRpc3BsYXlfdGhyZWFkKHZvaWQgKmFyZykNCj4gPiAgCWRlbGF5X21zZWNzID0gdG9wLT5k
-ZWxheV9zZWNzICogTVNFQ19QRVJfU0VDOw0KPiA+ICAJc2V0X3Rlcm1fcXVpZXRfaW5wdXQoJnNh
-dmUpOw0KPiA+ICAJLyogdHJhc2ggcmV0dXJuKi8NCj4gPiAtCWdldGMoc3RkaW4pOw0KPiA+ICsJ
-Y2xlYXJlcnIoc3RkaW4pOw0KPiA+ICsJaWYgKHBvbGwoJnN0ZGluX3BvbGwsIDEsIDApID4gMCkN
-Cj4gPiArCQlnZXRjKHN0ZGluKTsNCj4gPiAgDQo+ID4gIAl3aGlsZSAoIWRvbmUpIHsNCj4gPiAg
-CQlwZXJmX3RvcF9fcHJpbnRfc3ltX3RhYmxlKHRvcCk7DQo+ID4gLS0gDQo+ID4gMi4yMS4xDQo+
-ID4gDQoNCg==
+
+
+> On Jan 24, 2020, at 1:15 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> On Wed, Jan 22, 2020 at 11:50:27AM -0800, Song Liu wrote:
+>> cgroup events are always installed in the cpuctx. However, when it is no=
+t
+>> installed via IPI, list_update_cgroup_event() adds it to cpuctx of curre=
+nt
+>> CPU, which triggers the following with CONFIG_DEBUG_LIST:
+>>=20
+>=20
+>> [   31.777570] list_add double add: new=3Dffff888ff7cf0db0, prev=3Dffff8=
+88ff7ce82f0, next=3Dffff888ff7cf0db0.
+>=20
+>> To reproduce this, we can simply run:
+>>  perf stat -e cs -a &
+>>  perf stat -e cs -G anycgroup
+>>=20
+>> Fix this by installing it to cpuctx that contains event->ctx, and the
+>> proper cgrp_cpuctx_list.
+>>=20
+>> Fixes: db0503e4f675 ("perf/core: Optimize perf_install_in_event()")
+>> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Cc: Andi Kleen <andi@firstfloor.org>
+>> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+>> Cc: Jiri Olsa <jolsa@redhat.com>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Signed-off-by: Song Liu <songliubraving@fb.com>
+>=20
+> Thanks!
+
+I just realized this won't fully fix the problem, because later in=20
+list_update_cgroup_event() we use "current":
+
+	struct perf_cgroup *cgrp =3D perf_cgroup_from_task(current, ctx);
+
+I don't have a good idea to fix this cleanly. How about we just use IPI=20
+to install cgroup events (like v1):
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a1f8bde19b56..36e8fe27e2a1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2682,14 +2682,18 @@ perf_install_in_context(struct perf_event_context *=
+ctx,
+	smp_store_release(&event->ctx, ctx);
+
+	/*
+-	 * perf_event_attr::disabled events will not run and can be initialized
+-	 * without IPI. Except when this is the first event for the context, in
+-	 * that case we need the magic of the IPI to set ctx->is_active.
++	 * perf_event_attr::disabled events will not run and can be
++	 * initialized without IPI. Except:
++	 *   1. when this is the first event for the context, in that case
++	 *      we need the magic of the IPI to set ctx->is_active;
++	 *   2. cgroup event in OFF state, because it is installed in the
++	 *      cpuctx.
+	 *
+	 * The IOC_ENABLE that is sure to follow the creation of a disabled
+	 * event will issue the IPI and reprogram the hardware.
+	 */
+-	if (__perf_effective_state(event) =3D=3D PERF_EVENT_STATE_OFF && ctx->nr_=
+events) {
++	if (__perf_effective_state(event) =3D=3D PERF_EVENT_STATE_OFF &&
++	    !is_cgroup_event(event) && ctx->nr_events) {
+		raw_spin_lock_irq(&ctx->lock);
+		if (ctx->task =3D=3D TASK_TOMBSTONE) {
+			raw_spin_unlock_irq(&ctx->lock);
+
+Thanks,
+Song
+
+
+
