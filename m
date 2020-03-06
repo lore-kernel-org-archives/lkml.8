@@ -2,142 +2,130 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5295C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89456C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE552073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qcw37GPD"
+	by mail.kernel.org (Postfix) with ESMTP id 60DC620848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCFLv3 (ORCPT
+        id S1726769AbgCFLwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:51:29 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:48516 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgCFLv2 (ORCPT
+        Fri, 6 Mar 2020 06:52:00 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:52526 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726054AbgCFLwA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:51:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ASyBuuTofRbVwPI7PA6nCkMbt1FOFFYZDyxdw70e1XQ=; b=Qcw37GPDXfZ5Izoe6gO4qMlqAv
-        dO22ZmKpMQRD3YdRENFo8YXVd5jg1DbLZfdNoL5VF2PsRireMkDvKh0NxvI9GQqZ9oMnAtxMIeN/K
-        hO8WHKpi+gDbNH+20Ph0i8HPs5JlLT6BXfFtD95vl8w+IE0CPVm46wd7tBhDCb1EsESaxB24qijyn
-        rMC/E7HWz14GUPr12IO28lA8p2BZ+6faN8YeA2muPVZB7KG9HB0xz9KkkyQ+IhhVhPQHHd0HUpYoh
-        lArzUdchklX41lToO8PAZl+bimUIBfhusdVRVI1Z0whRq9c7CiHGV95LlO0I1BccFRYnNMLmImkhL
-        Hzy6QPHw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jABV7-0005NX-7p; Fri, 06 Mar 2020 11:50:45 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 95AC8980DE9; Fri,  6 Mar 2020 12:50:42 +0100 (CET)
-Date:   Fri, 6 Mar 2020 12:50:42 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org
-Cc:     mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: Re: [PATCH v4 11/27] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200306115042.GG3348@worktop.programming.kicks-ass.net>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.673793889@infradead.org>
+        Fri, 6 Mar 2020 06:52:00 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026BpBAI008068;
+        Fri, 6 Mar 2020 06:51:56 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52jvx8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Mar 2020 06:51:56 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 026Bptjf044770
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 6 Mar 2020 06:51:55 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 6 Mar 2020 06:51:54 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 6 Mar 2020 06:51:54 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 6 Mar 2020 06:51:54 -0500
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 026Bpnp7026743;
+        Fri, 6 Mar 2020 06:51:50 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-fpga@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <nios2-dev@lists.rocketboards.org>
+CC:     <ley.foon.tan@intel.com>, <robh+dt@kernel.org>, <mdf@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 1/2] arch: nios2: rename 'altr,gpio-bank-width' -> 'altr,ngpio'
+Date:   Fri, 6 Mar 2020 13:54:49 +0200
+Message-ID: <20200306115450.3352-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221134215.673793889@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-06_03:2020-03-06,2020-03-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=482 mlxscore=0 lowpriorityscore=0 clxscore=1011 adultscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 02:34:27PM +0100, Peter Zijlstra wrote:
-> To facilitate tracers that need RCU, add some helpers to wrap the
-> magic required.
-> 
-> The problem is that we can call into tracers (trace events and
-> function tracing) while RCU isn't watching and this can happen from
-> any context, including NMI.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  include/linux/rcupdate.h |   29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -175,6 +175,35 @@ do { \
->  #error "Unknown RCU implementation specified to kernel configuration"
->  #endif
->  
-> +/**
-> + * trace_rcu_enter - Force RCU to be active, for code that needs RCU readers
-> + *
-> + * Very similar to RCU_NONIDLE() above.
-> + *
-> + * Tracing can happen while RCU isn't active yet, for instance in the idle loop
-> + * between rcu_idle_enter() and rcu_idle_exit(), or early in exception entry.
-> + * RCU will happily ignore any read-side critical sections in this case.
-> + *
-> + * This function ensures that RCU is aware hereafter and the code can readily
-> + * rely on RCU read-side critical sections working as expected.
-> + *
-> + * This function is NMI safe -- provided in_nmi() is correct and will nest up-to
-> + * INT_MAX/2 times.
-> + */
-> +static inline int trace_rcu_enter(void)
-> +{
-> +	int state = !rcu_is_watching();
-> +	if (state)
-> +		rcu_irq_enter_irqsave();
-> +	return state;
-> +}
-> +
-> +static inline void trace_rcu_exit(int state)
-> +{
-> +	if (state)
-> +		rcu_irq_exit_irqsave();
-> +}
-> +
->  /*
->   * The init_rcu_head_on_stack() and destroy_rcu_head_on_stack() calls
->   * are needed for dynamic initialization and destruction of rcu_head
+There is no more 'altr,gpio-bank-width' in the 'altr,pio-1.0' driver.
+There is a 'altr,ngpio' which is  what the property wants to configure.
 
-Massmi; afaict we also need the below. That is, when you stick an
-optimized kprobe in a region RCU is not watching, nothing will make RCU
-go.
+This change updates all occurrences of 'altr,gpio-bank-width' to
+'altr,ngpio'.
 
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 9ad5e6b346f8..fa14918613da 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -370,6 +370,7 @@ static bool kprobes_allow_optimization;
-  */
- void opt_pre_handler(struct kprobe *p, struct pt_regs *regs)
- {
-+	int rcu_flags = trace_rcu_enter();
- 	struct kprobe *kp;
+ Documentation/devicetree/bindings/fpga/fpga-region.txt | 4 ++--
+ arch/nios2/boot/dts/10m50_devboard.dts                 | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
- 	list_for_each_entry_rcu(kp, &p->list, list) {
-@@ -379,6 +380,7 @@ void opt_pre_handler(struct kprobe *p, struct pt_regs *regs)
- 		}
- 		reset_kprobe_instance();
- 	}
-+	trace_rcu_exit(rcu_flags);
- }
- NOKPROBE_SYMBOL(opt_pre_handler);
-
+diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+index 90c44694a30b..b0dacb6a3390 100644
+--- a/Documentation/devicetree/bindings/fpga/fpga-region.txt
++++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+@@ -263,7 +263,7 @@ Overlay contains:
+ 			gpio@10040 {
+ 				compatible = "altr,pio-1.0";
+ 				reg = <0x10040 0x20>;
+-				altr,gpio-bank-width = <4>;
++				altr,ngpio = <4>;
+ 				#gpio-cells = <2>;
+ 				clocks = <2>;
+ 				gpio-controller;
+@@ -468,7 +468,7 @@ programming is the FPGA based bridge of fpga_region1.
+ 				compatible = "altr,pio-1.0";
+ 				reg = <0x10040 0x20>;
+ 				clocks = <0x2>;
+-				altr,gpio-bank-width = <0x4>;
++				altr,ngpio = <0x4>;
+ 				resetvalue = <0x0>;
+ 				#gpio-cells = <0x2>;
+ 				gpio-controller;
+diff --git a/arch/nios2/boot/dts/10m50_devboard.dts b/arch/nios2/boot/dts/10m50_devboard.dts
+index 5e4ab032c1e8..739ad96a6cc1 100644
+--- a/arch/nios2/boot/dts/10m50_devboard.dts
++++ b/arch/nios2/boot/dts/10m50_devboard.dts
+@@ -179,7 +179,7 @@
+ 		led_pio: gpio@180014d0 {
+ 			compatible = "altr,pio-1.0";
+ 			reg = <0x180014d0 0x00000010>;
+-			altr,gpio-bank-width = <4>;
++			altr,ngpio = <4>;
+ 			resetvalue = <15>;
+ 			#gpio-cells = <2>;
+ 			gpio-controller;
+@@ -190,7 +190,7 @@
+ 			reg = <0x180014c0 0x00000010>;
+ 			interrupt-parent = <&cpu>;
+ 			interrupts = <6>;
+-			altr,gpio-bank-width = <3>;
++			altr,ngpio = <3>;
+ 			altr,interrupt-type = <2>;
+ 			edge_type = <1>;
+ 			level_trigger = <0>;
+-- 
+2.20.1
 
