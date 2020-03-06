@@ -2,146 +2,184 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4398AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E94C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1761220848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:44:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583513086;
-	bh=uM6BBzCXa6HAUuOEGiA8P2jf81J77c6GVb5q3IeM3R4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=tNkZYn4IytSHnDtK6BbBelhcMNwr065CiapO0KVsAbY4uzSNfd0lqPSDzVwYr4OKx
-	 nF2+0uZv9GTZsgC6EdulciV0+wWbnaX8uTZxhIrD1eDMH25a06EvbaVblnlpLp5Auz
-	 xh9GvyENOclUScs1pam4OErlr6jBEfW0qkJ10xAo=
+	by mail.kernel.org (Postfix) with ESMTP id 52A402072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:45:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gssi.it header.i=@gssi.it header.b="BJDdwnnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgCFQop (ORCPT
+        id S1726682AbgCFQpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:44:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbgCFQoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:44:44 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39A3A2072A;
-        Fri,  6 Mar 2020 16:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583513083;
-        bh=uM6BBzCXa6HAUuOEGiA8P2jf81J77c6GVb5q3IeM3R4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=suKLdZ7u99Tu+TZXXLBW/DTPMhhpoblbweU/aMPVupcPWtgSo/+q6IAK70+gMPfRL
-         ah5o8KFpGEyp2Ul18AA3nzRoMfgJYb3P5A7YF5u3e5JqpvT3J9JTC8iW7bZG8EUK/I
-         jZckRz4TQB2vJtmbOVkawf2lRhrHScoF9i7hpsxg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0E85935226BF; Fri,  6 Mar 2020 08:44:43 -0800 (PST)
-Date:   Fri, 6 Mar 2020 08:44:43 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        io-uring <io-uring@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>, tony.luck@intel.com,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: KASAN: use-after-free Read in percpu_ref_switch_to_atomic_rcu
-Message-ID: <20200306164443.GU2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <00000000000067c6df059df7f9f5@google.com>
- <CACT4Y+ZVLs7O84qixsvFqk_Nur1WOaCU81RiCwDf3wOqvHB-ag@mail.gmail.com>
- <3f805e51-1db7-3e57-c9a3-15a20699ea54@kernel.dk>
- <CAG48ez3DUAraFL1+agBX=1JVxzh_e2GR=UpX5JUaoyi+1gQ=6w@mail.gmail.com>
- <075e7fbe-aeec-cb7d-9338-8eb4e1576293@kernel.dk>
- <CAG48ez07bD4sr5hpDhUKe2g5ETk0iYb6PCWqyofPuJbXz1z+hw@mail.gmail.com>
+        Fri, 6 Mar 2020 11:45:31 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52962 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFQpa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:45:30 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p9so3201162wmc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 08:45:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gssi.it; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=f1jAW4H0IkyKSlaWbqUdo9Y0iTzcaoXCOSrb76HWcpQ=;
+        b=BJDdwnnYch4uEI3annx6gE5gXjIKB2h3hwun3QMq+KmyoRKQnNVr4g17Tm1+EVYLWq
+         LqCbzsyBcfGUAVFns1KZYBUituYiC7liaV56CvjkmkNvnqM9Hk/Y0bZKzyS2ab0zDHOf
+         QuipMUnVO9T2ih77VBp9jgZFzhkraGo1fIq9Exx9CEA7qkNaUbLE6YPDz7UFD5fo+5Gk
+         s80+5yIpfR6kjoZVYP0w1VhKMgG/Mx+JOZanzOqVQRrNmkCkdis5oPBU6BxBCBoOY8hG
+         1z60Ycdr+hutG/1PoLWTg1HTPNLBO2P/E5lTuKh4o+9nbwwsS+kYCZa0py5xLYhJtvUr
+         K6yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=f1jAW4H0IkyKSlaWbqUdo9Y0iTzcaoXCOSrb76HWcpQ=;
+        b=nHwvy2DvS77hXmoZYGpRzEhC8YcVgWG8rBbzzZj0zfcZhz0yp0q/y8o5lHOCydAcj8
+         fhYbXWdyGU6yK9Qe8bfLcBHLkfLhEkyQZ01z1gUuAozHqDmzWA6j9NujKXv0LpVXNGtH
+         rZ6JRqb1XuhI5Uduh0nJoIhM4eEMFWpeuxSFgD0RpF1M3FseaymFMEhgLmQ5RIDVwYyK
+         3tgD4T51CO1RRi7lCT2FlDV3ABU6Dg9gf/3Lq9G2A6mHt6MGjUov7iUtpfg75b/+O8q/
+         L55pQd6XCq7PMOfQHPJMZ+8VJlxsNFETesYzo125LrKl8gjrmFPEVRSSVF2RHlqf2Rrj
+         dqUg==
+X-Gm-Message-State: ANhLgQ1uvZ4te1FxwFlkCo0hV0zFUn1/Tz/BdYrFhqQI8jXPt4X6/4TA
+        q/wZR/S6tvFs3epKX0gtZffFoA==
+X-Google-Smtp-Source: ADFU+vvwgXTS/gGW17pEFyLijL3F59giKG9Rig9EHIsVd2K3b7BxzgGLv34Rt3qkFPlCnjz43GNffQ==
+X-Received: by 2002:a1c:9d43:: with SMTP id g64mr4727921wme.62.1583513128994;
+        Fri, 06 Mar 2020 08:45:28 -0800 (PST)
+Received: from [192.168.1.125] (dynamic-adsl-78-14-145-244.clienti.tiscali.it. [78.14.145.244])
+        by smtp.gmail.com with ESMTPSA id t18sm41756wml.17.2020.03.06.08.45.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Mar 2020 08:45:28 -0800 (PST)
+Subject: Re: [net-next 1/2] Perform IPv4 FIB lookup in a predefined FIB table
+To:     David Ahern <dsahern@gmail.com>,
+        Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dav.lebrun@gmail.com,
+        andrea.mayer@uniroma2.it, paolo.lungaroni@cnit.it,
+        hiroki.shirokura@linecorp.com
+References: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
+ <20200213010932.11817-2-carmine.scarpitta@uniroma2.it>
+ <7302c1f7-b6d1-90b7-5df1-3e5e0ba98f53@gmail.com>
+ <20200219005007.23d724b7f717ef89ad3d75e5@uniroma2.it>
+ <cd18410f-7065-ebea-74c5-4c016a3f1436@gmail.com>
+ <20200219034924.272d991505ee68d95566ff8d@uniroma2.it>
+ <a39867b0-c40f-e588-6cf9-1524581bb145@gmail.com>
+From:   Ahmed Abdelsalam <ahmed.abdelsalam@gssi.it>
+Message-ID: <4ed5aff3-43e8-0138-1848-22a3a1176e46@gssi.it>
+Date:   Fri, 6 Mar 2020 17:45:26 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez07bD4sr5hpDhUKe2g5ETk0iYb6PCWqyofPuJbXz1z+hw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <a39867b0-c40f-e588-6cf9-1524581bb145@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:36:20PM +0100, Jann Horn wrote:
-> On Fri, Mar 6, 2020 at 4:34 PM Jens Axboe <axboe@kernel.dk> wrote:
-> > On 3/6/20 7:57 AM, Jann Horn wrote:
-> > > +paulmck
-> > >
-> > > On Wed, Mar 4, 2020 at 3:40 PM Jens Axboe <axboe@kernel.dk> wrote:
-> > >> On 3/4/20 12:59 AM, Dmitry Vyukov wrote:
-> > >>> On Fri, Feb 7, 2020 at 9:14 AM syzbot
-> > >>> <syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com> wrote:
-> > >>>>
-> > >>>> Hello,
-> > >>>>
-> > >>>> syzbot found the following crash on:
-> > >>>>
-> > >>>> HEAD commit:    4c7d00cc Merge tag 'pwm/for-5.6-rc1' of git://git.kernel.o..
-> > >>>> git tree:       upstream
-> > >>>> console output: https://syzkaller.appspot.com/x/log.txt?x=12fec785e00000
-> > >>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=e162021ddededa72
-> > >>>> dashboard link: https://syzkaller.appspot.com/bug?extid=e017e49c39ab484ac87a
-> > >>>> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > >>>>
-> > >>>> Unfortunately, I don't have any reproducer for this crash yet.
-> > >>>>
-> > >>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > >>>> Reported-by: syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com
-> > >>>
-> > >>> +io_uring maintainers
-> > >>>
-> > >>> Here is a repro:
-> > >>> https://gist.githubusercontent.com/dvyukov/6b340beab6483a036f4186e7378882ce/raw/cd1922185516453c201df8eded1d4b006a6d6a3a/gistfile1.txt
-> > >>
-> > >> I've queued up a fix for this:
-> > >>
-> > >> https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.6&id=9875fe3dc4b8cff1f1b440fb925054a5124403c3
-> > >
-> > > I believe that this fix relies on call_rcu() having FIFO ordering; but
-> > > <https://www.kernel.org/doc/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html#Callback%20Registry>
-> > > says:
-> > >
-> > > | call_rcu() normally acts only on CPU-local state[...] It simply
-> > > enqueues the rcu_head structure on a per-CPU list,
+Hi David,
 
-Indeed.  For but one example, if there was a CPU-to-CPU migration between
-the two call_rcu() invocations, it would not be at all surprising for
-the two callbacks to execute out of order.
+Thanks for the pointers for the VRF with MPLS.
 
-> > > Is this fix really correct?
-> >
-> > That's a good point, there's a potentially stronger guarantee we need
-> > here that isn't "nobody is inside an RCU critical section", but rather
-> > that we're depending on a previous call_rcu() to have happened. Hence I
-> > think you are right - it'll shrink the window drastically, since the
-> > previous callback is already queued up, but it's not a full close.
-> >
-> > Hmm...
+We have been looking at this for the last weeks also watched your videos 
+on the VRF and l3mdev implementation at the different netdev conferences.
+
+However, in the SRv6 we don’t really need a VRF device. The SRv6 
+functions (the already supported ones as well as the End.DT4 submitted 
+here) resides in the IPv6 FIB table.
+
+The way it works is as follows:
+1) create a table for the tenant
+$ echo 100 tenant1 >> /etc/iproute2/rt_tables
+
+You instantiate an SRv6 End.DT4 function at the Egress PE to decapsulate 
+the SRv6 encapsulation and lookup the inner packet in the tenant1 table. 
+The example iproute2 command to do so is as below.
+
+$ ip -6 route add A::B encap seg6local action End.DT4 table tenant1 dev 
+enp0s8
+
+This installs an IPv6 FIB entry as shown below.
+$ ip -6 r
+a::b  encap seg6local action End.DT4 table 100 dev enp0s8 metric 1024 
+pref medium
+
+Then the BGP routing daemon at the Egress PE is used to advertise this 
+VPN service. The BGP sub-TLV to support SRv6 IPv4 L3VPN is defined in [2].
+
+The SRv6 BGP extensions to support IPv4/IPv6 L3VPN are now merged in in 
+FRRouting/frr [3][4][5][6].
+
+There is also a pull request for the CLI to configure SRv6-locator on 
+zebra [7].
+
+The BGP daemon at the Ingress PE receives the BGP update and installs an 
+a FIB entry that this bound to SRv6 encapsulation.
+
+$ ip r
+30.0.0.0/24  encap seg6 mode encap segs 1 [ a::b ] dev enp0s9
+
+Traffic destined to that tenant will get encapsulated at the ingress 
+node and forwarded to the egress node on the IPv6 fabric.
+
+The encapsulation is in the form of outer IPv6 header that has the 
+destination address equal to the VPN service A::B instantiated at the 
+Egress PE.
+
+When the packet arrives at the Egress PE, the destination address 
+matches the FIB entry associated with the End.DT4 function which does 
+the decapsulation and the lookup inside the tenant table associated with 
+it (tenant1).
+
+Everything I explained is in the Linux kernel since a while. End.DT4 was 
+missing and this the reason we submitted this patch.
+
+In this multi-tenant DC fabric we leverage the IPv6 forwarding. No need 
+for MPLS dataplane in the fabric.
+
+We can submit a v2 of patch addressing your comments on the "tbl_known" 
+flag.
+
+Thanks,
+Ahmed
+
+[1] https://segment-routing.org/index.php/Implementation/AdvancedConf
+[2] https://tools.ietf.org/html/draft-ietf-bess-srv6-services-02
+[3] 
+https://github.com/FRRouting/frr/commit/7f1ace03c78ca57c7f8b5df5796c66fddb47e5fe
+[4] 
+https://github.com/FRRouting/frr/commit/e496b4203055c50806dc7193b9762304261c4bbd
+[5] 
+https://github.com/FRRouting/frr/commit/63d02478b557011b8606668f1e3c2edbf263794d
+[6] 
+https://github.com/FRRouting/frr/commit/c6ca155d73585b1ca383facd74e9973c281f1f93
+[7] https://github.com/FRRouting/frr/pull/5865
+
+
+On 19/02/2020 05:29, David Ahern wrote:
+> On 2/18/20 7:49 PM, Carmine Scarpitta wrote:
+>> Hi David,
+>> Thanks for the reply.
+>>
+>> The problem is not related to the table lookup. Calling fib_table_lookup and then rt_dst_alloc from seg6_local.c is good.
+>>
 > 
-> You could potentially hack up the semantics you want by doing a
-> call_rcu() whose callback does another call_rcu(), or something like
-> that - but I'd like to hear paulmck's opinion on this first.
-
-That would work!
-
-Or, alternatively, do an rcu_barrier() between the two calls to
-call_rcu(), assuming that the use case can tolerate rcu_barrier()
-overhead and latency.
-
-							Thanx, Paul
+> you did not answer my question. Why do all of the existing policy
+> options (mark, L3 domains, uid) to direct the lookup to the table of
+> interest not work for this use case?
+> 
+> What you want is not unique. There are many ways to make it happen.
+> Bleeding policy details to route.c and adding a flag that is always
+> present and checked even when not needed (e.g.,
+> CONFIG_IP_MULTIPLE_TABLES is disabled) is not the right way to do it.
+> 
