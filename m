@@ -2,39 +2,47 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C61EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4CAC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A79E2072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914FB2072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgCFFxu (ORCPT
+        id S1726069AbgCFGG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 00:53:50 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59792 "EHLO mx2.suse.de"
+        Fri, 6 Mar 2020 01:06:59 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37424 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgCFFxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 00:53:50 -0500
+        id S1725923AbgCFGG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 01:06:59 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B34E1AE6F;
-        Fri,  6 Mar 2020 05:53:48 +0000 (UTC)
-Date:   Fri, 06 Mar 2020 06:53:48 +0100
-Message-ID: <s5hy2sedo5v.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id BF005B066;
+        Fri,  6 Mar 2020 06:06:56 +0000 (UTC)
+Date:   Fri, 06 Mar 2020 07:06:55 +0100
+Message-ID: <s5hv9nidnk0.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     Chris <gladiac@gmail.com>
-Cc:     perex@perex.cz, tiwai@suse.com, kailang@realtek.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Master
-In-Reply-To: <CAE3uWP3Shf+vEwV-wUDUmzizSOCS5cSvND+-=rZijefgkmp2tQ@mail.gmail.com>
-References: <20200303153619.24720-1-gladiac@gmail.com>
-        <20200303153619.24720-2-gladiac@gmail.com>
-        <s5h7dzyg8gq.wl-tiwai@suse.de>
-        <CAE3uWP3Shf+vEwV-wUDUmzizSOCS5cSvND+-=rZijefgkmp2tQ@mail.gmail.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        David Miller <davem@davemloft.net>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH v4 10/10] sound: bt87x: use pci_status_get_and_clear_errors
+In-Reply-To: <6362e866-9ce3-31f5-3357-9f086eedf11e@gmail.com>
+References: <adeb9e6e-9be6-317f-3fc0-a4e6e6af5f81@gmail.com>
+        <6362e866-9ce3-31f5-3357-9f086eedf11e@gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -45,15 +53,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 05 Mar 2020 16:14:10 +0100,
-Chris wrote:
+On Sat, 29 Feb 2020 23:29:07 +0100,
+Heiner Kallweit wrote:
 > 
-> Hello, I am really sorry for the mess-up. It is the exact same patch. I just
-> re-sent it because v1 did not show up in the alsa-devel mailinglist because i
-> did not do the registration beforehand. Please ignore v2.
-> Thanks a lot, Chris
+> Use new helper pci_status_get_and_clear_errors() to simplify the code.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 
-OK, thanks for confirmation.
+Acked-by: Takashi Iwai <tiwai@suse.de>
 
+
+thanks,
 
 Takashi
+
+> ---
+>  sound/pci/bt87x.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/sound/pci/bt87x.c b/sound/pci/bt87x.c
+> index 8c48864c8..656750466 100644
+> --- a/sound/pci/bt87x.c
+> +++ b/sound/pci/bt87x.c
+> @@ -271,13 +271,8 @@ static void snd_bt87x_free_risc(struct snd_bt87x *chip)
+>  
+>  static void snd_bt87x_pci_error(struct snd_bt87x *chip, unsigned int status)
+>  {
+> -	u16 pci_status;
+> +	int pci_status = pci_status_get_and_clear_errors(chip->pci);
+>  
+> -	pci_read_config_word(chip->pci, PCI_STATUS, &pci_status);
+> -	pci_status &= PCI_STATUS_PARITY | PCI_STATUS_SIG_TARGET_ABORT |
+> -		PCI_STATUS_REC_TARGET_ABORT | PCI_STATUS_REC_MASTER_ABORT |
+> -		PCI_STATUS_SIG_SYSTEM_ERROR | PCI_STATUS_DETECTED_PARITY;
+> -	pci_write_config_word(chip->pci, PCI_STATUS, pci_status);
+>  	if (pci_status != PCI_STATUS_DETECTED_PARITY)
+>  		dev_err(chip->card->dev,
+>  			"Aieee - PCI error! status %#08x, PCI status %#04x\n",
+> -- 
+> 2.25.1
+> 
+> 
