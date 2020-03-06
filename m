@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81BDC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9B3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89EED20848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B632072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCFRor (ORCPT
+        id S1727179AbgCFRov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:44:47 -0500
+        Fri, 6 Mar 2020 12:44:51 -0500
 Received: from mx2.suse.de ([195.135.220.15]:60562 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbgCFRoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:44:32 -0500
+        id S1726533AbgCFRo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 12:44:29 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9759FAE95;
-        Fri,  6 Mar 2020 17:44:30 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id E4D87AC66;
+        Fri,  6 Mar 2020 17:44:27 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org
 Cc:     phil@raspberrypi.com, linux-mmc@vger.kernel.org,
@@ -31,9 +31,9 @@ Cc:     phil@raspberrypi.com, linux-mmc@vger.kernel.org,
         linux-rpi-kernel@lists.infradead.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v2 08/11] mmc: sdhci: Unexport sdhci_set_power_noreg()
-Date:   Fri,  6 Mar 2020 18:44:10 +0100
-Message-Id: <20200306174413.20634-9-nsaenzjulienne@suse.de>
+Subject: [PATCH v2 05/11] mmc: sdhci: pxav3: Use sdhci_set_power_and_voltage()
+Date:   Fri,  6 Mar 2020 18:44:07 +0100
+Message-Id: <20200306174413.20634-6-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200306174413.20634-1-nsaenzjulienne@suse.de>
 References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
@@ -44,51 +44,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no users left and, ideally, this isn't a function that should
-be called outside of core sdhci code.
+The sdhci core provides a helper function with the same functionality as
+this controller's set_power() callback. Use it instead.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/mmc/host/sdhci.c | 5 ++---
- drivers/mmc/host/sdhci.h | 2 --
- 2 files changed, 2 insertions(+), 5 deletions(-)
+ drivers/mmc/host/sdhci-pxav3.c | 20 +-------------------
+ 1 file changed, 1 insertion(+), 19 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 6ed11f9554e8..37f0107fc276 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1926,8 +1926,8 @@ static void sdhci_set_power_reg(struct sdhci_host *host, unsigned char mode,
- 		sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
+diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+index e55037ceda73..75fe90b88f9b 100644
+--- a/drivers/mmc/host/sdhci-pxav3.c
++++ b/drivers/mmc/host/sdhci-pxav3.c
+@@ -297,27 +297,9 @@ static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+ 		__func__, uhs, ctrl_2);
  }
  
--void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
--			   unsigned short vdd)
-+static void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
-+				  unsigned short vdd)
- {
- 	u8 pwr = 0;
- 
-@@ -1998,7 +1998,6 @@ void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
- 			mdelay(10);
- 	}
- }
--EXPORT_SYMBOL_GPL(sdhci_set_power_noreg);
- 
- void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
- 		     unsigned short vdd)
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 1be7c18264cd..9bb84b0f87d5 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -775,8 +775,6 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
- void sdhci_set_power_and_bus_voltage(struct sdhci_host *host,
- 				     unsigned char mode,
- 				     unsigned short vdd);
--void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
--			   unsigned short vdd);
- void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
- void sdhci_set_bus_width(struct sdhci_host *host, int width);
- void sdhci_reset(struct sdhci_host *host, u8 mask);
+-static void pxav3_set_power(struct sdhci_host *host, unsigned char mode,
+-			    unsigned short vdd)
+-{
+-	struct mmc_host *mmc = host->mmc;
+-	u8 pwr = host->pwr;
+-
+-	sdhci_set_power_noreg(host, mode, vdd);
+-
+-	if (host->pwr == pwr)
+-		return;
+-
+-	if (host->pwr == 0)
+-		vdd = 0;
+-
+-	if (!IS_ERR(mmc->supply.vmmc))
+-		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
+-}
+-
+ static const struct sdhci_ops pxav3_sdhci_ops = {
+ 	.set_clock = sdhci_set_clock,
+-	.set_power = pxav3_set_power,
++	.set_power = sdhci_set_power_and_bus_voltage,
+ 	.platform_send_init_74_clocks = pxav3_gen_init_74_clocks,
+ 	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
+ 	.set_bus_width = sdhci_set_bus_width,
 -- 
 2.25.1
 
