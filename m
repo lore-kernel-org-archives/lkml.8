@@ -2,105 +2,109 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DE4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AC7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A81206D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBD6206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:40:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgCFWhi (ORCPT
+        id S1726891AbgCFWke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 17:37:38 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54588 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCFWhi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 17:37:38 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jALb4-0005Ng-LY; Fri, 06 Mar 2020 23:37:34 +0100
-Date:   Fri, 6 Mar 2020 23:37:34 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [ANNOUNCE] v5.4.24-rt15
-Message-ID: <20200306223734.65nlltijm3cxbejz@linutronix.de>
+        Fri, 6 Mar 2020 17:40:34 -0500
+Received: from mga03.intel.com ([134.134.136.65]:31326 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbgCFWke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 17:40:34 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 14:40:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
+   d="scan'208";a="234943569"
+Received: from shenkel-mobl.ger.corp.intel.com (HELO localhost) ([10.252.23.162])
+  by orsmga008.jf.intel.com with ESMTP; 06 Mar 2020 14:40:27 -0800
+Date:   Sat, 7 Mar 2020 00:40:26 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Sumit Garg <sumit.garg@linaro.org>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] MAINTAINERS: adjust to trusted keys subsystem creation
+Message-ID: <20200306224026.GA4095@linux.intel.com>
+References: <20200305203013.6189-1-lukas.bulwahn@gmail.com>
+ <20200306193127.GJ7472@linux.intel.com>
+ <alpine.DEB.2.21.2003062148050.2990@felia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2003062148050.2990@felia>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear RT folks!
+On Fri, Mar 06, 2020 at 09:50:44PM +0100, Lukas Bulwahn wrote:
+> 
+> 
+> On Fri, 6 Mar 2020, Jarkko Sakkinen wrote:
+> 
+> > On Thu, Mar 05, 2020 at 09:30:13PM +0100, Lukas Bulwahn wrote:
+> > > Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys subsystem")
+> > > renamed trusted.h to trusted_tpm.h in include/keys/, and moved trusted.c
+> > > to trusted-keys/trusted_tpm1.c in security/keys/.
+> > > 
+> > > Since then, ./scripts/get_maintainer.pl --self-test complains:
+> > > 
+> > >   warning: no file matches F: security/keys/trusted.c
+> > >   warning: no file matches F: include/keys/trusted.h
+> > > 
+> > > Rectify the KEYS-TRUSTED entry in MAINTAINERS now and ensure that all
+> > > files in security/keys/trusted-keys/ are identified as part of
+> > > KEYS-TRUSTED.
+> > > 
+> > > Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
+> > > Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
+> > > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> > > ---
+> > 
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > 
+> > > Changes to v1:
+> > >   - use a global pattern for matching the whole security/keys/trusted-keys/
+> > >     directory.
+> > > Changes to v2:
+> > >   - name the correct directory in the commit message
+> > > 
+> > > Sumit, please ack.
+> > > Jarkko, please pick this patch v3.
+> > 
+> > Please tell me why you emphasize the moment when a patch that does not
+> > fix a critical bug is picked?
+> > 
+> > Do you have systems that break because the MAINTAINERS file is not
+> > updated?
+> > 
+> > It will end up in v5.7 PR for sure but saying things like that is same
+> > as saying that there would be some catastrophically urgent need to still
+> > squeeze the patch into v5.6. Unless you actually have something critical
+> > in your hand, please stop doing that.
+> > 
+> 
+> Got it. I did not intend to emphasize any urgency; I will not continue 
+> to do that for patches of this clean-up type.
 
-I'm pleased to announce the v5.4.24-rt15 patch set. 
+Anyway, thank you and I've applied your patch and will include it to my
+v5.7 PR.
 
-Changes since v5.4.24-rt14:
-
-  - A warning in kmalloc() has been added. On RT with
-    CONFIG_DEBUG_ATOMIC_SLEEP enabled it triggers on memory allocations
-    in atomic context.
-
-Known issues
-     - It has been pointed out that due to changes to the printk code the
-       internal buffer representation changed. This is only an issue if tools
-       like `crash' are used to extract the printk buffer from a kernel memory
-       image.
-
-The delta patch against v5.4.24-rt14 is appended below and can be found here:
- 
-     https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/incr/patch-5.4.24-rt14-rt15.patch.xz
-
-You can get this release via the git tree at:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.4.24-rt15
-
-The RT patch against v5.4.24 can be found here:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/older/patch-5.4.24-rt15.patch.xz
-
-The split quilt queue is available at:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/older/patches-5.4.24-rt15.tar.xz
-
-Sebastian
-
-diff --git a/localversion-rt b/localversion-rt
-index 08b3e75841adc..18777ec0c27d4 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt14
-+-rt15
-diff --git a/mm/slub.c b/mm/slub.c
-index 2cff48d13e3a7..7b2773c45e1ff 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2742,6 +2742,9 @@ static __always_inline void *slab_alloc_node(struct kmem_cache *s,
- 	struct page *page;
- 	unsigned long tid;
- 
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT) && IS_ENABLED(CONFIG_DEBUG_ATOMIC_SLEEP))
-+		WARN_ON_ONCE(!preemptible() && system_state >= SYSTEM_SCHEDULING);
-+
- 	s = slab_pre_alloc_hook(s, gfpflags);
- 	if (!s)
- 		return NULL;
-@@ -3202,6 +3205,9 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
- 	LIST_HEAD(to_free);
- 	int i;
- 
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT) && IS_ENABLED(CONFIG_DEBUG_ATOMIC_SLEEP))
-+		WARN_ON_ONCE(!preemptible() && system_state >= SYSTEM_SCHEDULING);
-+
- 	/* memcg and kmem_cache debug support */
- 	s = slab_pre_alloc_hook(s, flags);
- 	if (unlikely(!s))
+/Jarkko
