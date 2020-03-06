@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4433C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11E5C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A905A2072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B2772084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgCFRof (ORCPT
+        id S1727075AbgCFRoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:44:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60562 "EHLO mx2.suse.de"
+        Fri, 6 Mar 2020 12:44:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60580 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726879AbgCFRod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:44:33 -0500
+        id S1727052AbgCFRoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 12:44:34 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8906AACC2;
-        Fri,  6 Mar 2020 17:44:32 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 8D8E5AEC5;
+        Fri,  6 Mar 2020 17:44:33 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
@@ -31,9 +31,9 @@ Cc:     phil@raspberrypi.com, linux-mmc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
         stefan.wahren@i2se.com, bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 10/11] ARM: dts: bcm2711: Update expgpio's GPIO labels
-Date:   Fri,  6 Mar 2020 18:44:12 +0100
-Message-Id: <20200306174413.20634-11-nsaenzjulienne@suse.de>
+Subject: [PATCH v2 11/11] ARM: dts: bcm2711: Add vmmc regulator in emmc2
+Date:   Fri,  6 Mar 2020 18:44:13 +0100
+Message-Id: <20200306174413.20634-12-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200306174413.20634-1-nsaenzjulienne@suse.de>
 References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
@@ -44,26 +44,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 6th line of the GPIO expander is used to power the board's SD card.
+The SD card power can be controlled trough a pin routed into the board's
+external GPIO expander. Turn that into a regulator and provide it to
+emmc2.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index 1d4b589fe233..b0ea8233b636 100644
+index b0ea8233b636..a2da058396fe 100644
 --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
 +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -68,7 +68,7 @@ expgpio: gpio {
- 				  "GLOBAL_RESET",
- 				  "VDD_SD_IO_SEL",
- 				  "CAM_GPIO",
--				  "",
-+				  "SD_PWR_ON",
- 				  "";
+@@ -55,6 +55,16 @@ sd_io_1v8_reg: sd_io_1v8_reg {
+ 			  3300000 0x0>;
  		status = "okay";
  	};
++
++	sd_vcc_reg: sd_vcc_reg {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc-sd";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		enable-active-high;
++		gpio = <&expgpio 6 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ &firmware {
+@@ -173,6 +183,7 @@ brcmf: wifi@1 {
+ /* EMMC2 is used to drive the SD card */
+ &emmc2 {
+ 	vqmmc-supply = <&sd_io_1v8_reg>;
++	vmmc-supply = <&sd_vcc_reg>;
+ 	broken-cd;
+ 	status = "okay";
+ };
 -- 
 2.25.1
 
