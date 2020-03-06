@@ -2,106 +2,172 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8E0C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3EEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98AF208CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583510645;
-	bh=I0whQjzL0+2udVNnbjdJeGuRoNAzb4lqvRsZ+FI8stA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=1Vg6Wh7xFxDQydiqVVqNSixoyfwAQZxo1U7YgOInEuWcZSOB4htq/U8UFyyimdI1M
-	 0Wut394Na/VxSb7DWQQdOX0tosLhMx3tTth+k+Vh/ce5vdVCGiAIqDF6/9AsYmJUcs
-	 9jbY28JTrSpb9wit6q2tof3U+SXu+FvgQmgLBjAA=
+	by mail.kernel.org (Postfix) with ESMTP id 18762208CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:04:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="WtwakTcI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgCFQEE (ORCPT
+        id S1727185AbgCFQEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:04:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbgCFQEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:04:04 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E04208CD;
-        Fri,  6 Mar 2020 16:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583510644;
-        bh=I0whQjzL0+2udVNnbjdJeGuRoNAzb4lqvRsZ+FI8stA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=0K0lV7/g8ctwofucAFwTgvooHXQH7hYM8LIZVLqWgsG73QwpfEgC5KvgSQN/8qk4S
-         wfJ16/yxLWZ7wA67l1sJYOL8W66LOiujzLqppPsl//DXhAR+9JsLcAuYLcvBofGUoo
-         N/70GrvL3PPJbMC5VAPLql0Y3hfsq3TxKmYN5EGs=
-Date:   Fri, 6 Mar 2020 10:04:01 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-Message-ID: <20200306160401.GA165033@google.com>
+        Fri, 6 Mar 2020 11:04:30 -0500
+Received: from mail.efficios.com ([167.114.26.124]:44462 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgCFQEa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:04:30 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id C1CAA256FB7;
+        Fri,  6 Mar 2020 11:04:28 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id dxrs-FQVPtJQ; Fri,  6 Mar 2020 11:04:28 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 595EC256DF7;
+        Fri,  6 Mar 2020 11:04:28 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 595EC256DF7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583510668;
+        bh=6j5JaL7Ua/h0tRIOesi8OT8YjRo+RrU/0uZVVdHVaUc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=WtwakTcInK9Ow6gYVMTNvKU9/piqdY3nhzkNHs1hUwILaWj7bES3pHrnTDvxDYQPA
+         nt+z6IPj7xtrrQkQsPYFSwNmsx5PtiIpEMbCuXYutme4/CRamTY3xZ/FH5F+JL3YTF
+         ywOwPNgw4KgJ+opE/39MgZ2RLinIUrZKjTEmHfLFDJBUrUj6XxqAH9LSQLTdHxvmiX
+         /B0SCzLgKWUpACIEbU7Jh8Fsf8BK/cBubt34IayVmWwBWaQLVKW32OgNuwwltpiXFH
+         l7sCK0Xq4h2sNFe9qCW0O9HD4BDn+AC+XiHEKB6shS4ZAYSy0+r6ZWUwzfGd7KkdMW
+         2PaejpLRwFf/Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id TvwxhIRj8G-2; Fri,  6 Mar 2020 11:04:28 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 4587D257286;
+        Fri,  6 Mar 2020 11:04:28 -0500 (EST)
+Date:   Fri, 6 Mar 2020 11:04:28 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        dan carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Message-ID: <1896740806.20220.1583510668164.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com>
+References: <20200221133416.777099322@infradead.org> <20200221134216.051596115@infradead.org> <20200306104335.GF3348@worktop.programming.kicks-ass.net> <20200306113135.GA8787@worktop.programming.kicks-ass.net> <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com>
+Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for
+ _rcuidle tracepoints (again)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e4a1632-9425-9fb6-fd1a-d7cee4e9b684@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: tracing: Remove regular RCU context for _rcuidle tracepoints (again)
+Thread-Index: EGOI/yncDm66QywVpmO/bDrskNz8Mw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 09:45:46PM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> On 3/3/2020 6:36 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > 
-> > As per PCI firmware specification r3.2 System Firmware Intermediary
-> > (SFI) _OSC and DPC Updates ECR
-> > (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
-> > Event Handling Implementation Note", page 10, Error Disconnect Recover
-> > (EDR) support allows OS to handle error recovery and clearing Error
-> > Registers even in FF mode. So create new API pci_aer_raw_clear_status()
-> > which allows clearing AER registers without FF mode checks.
-> > 
-> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > ---
-> >   drivers/pci/pci.h      |  2 ++
-> >   drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
-> >   2 files changed, 20 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index e57e78b619f8..c239e6dd2542 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_group;
-> >   void pci_aer_clear_fatal_status(struct pci_dev *dev);
-> >   void pci_aer_clear_device_status(struct pci_dev *dev);
-> >   int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
-> > +int pci_aer_raw_clear_status(struct pci_dev *dev);
-> >   #else
-> >   static inline void pci_no_aer(void) { }
-> >   static inline void pci_aer_init(struct pci_dev *d) { }
-> > @@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
-> >   {
-> >   	return -EINVAL;
-> >   }
-> > +int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
+----- On Mar 6, 2020, at 10:51 AM, Alexei Starovoitov alexei.starovoitov@gmail.com wrote:
 
-> It's missing static specifier. It needs to be fixed. I can fix it in
-> next version.  Bjorn, if there is no need for next version, can you
-> please make this change?
+> On Fri, Mar 6, 2020 at 3:31 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>>
+>> On Fri, Mar 06, 2020 at 11:43:35AM +0100, Peter Zijlstra wrote:
+>> > On Fri, Feb 21, 2020 at 02:34:32PM +0100, Peter Zijlstra wrote:
+>> > > Effectively revert commit 865e63b04e9b2 ("tracing: Add back in
+>> > > rcu_irq_enter/exit_irqson() for rcuidle tracepoints") now that we've
+>> > > taught perf how to deal with not having an RCU context provided.
+>> > >
+>> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> > > Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>> > > ---
+>> > >  include/linux/tracepoint.h |    8 ++------
+>> > >  1 file changed, 2 insertions(+), 6 deletions(-)
+>> > >
+>> > > --- a/include/linux/tracepoint.h
+>> > > +++ b/include/linux/tracepoint.h
+>> > > @@ -179,10 +179,8 @@ static inline struct tracepoint *tracepo
+>> > >              * For rcuidle callers, use srcu since sched-rcu        \
+>> > >              * doesn't work from the idle path.                     \
+>> > >              */                                                     \
+>> > > -           if (rcuidle) {                                          \
+>> > > +           if (rcuidle)                                            \
+>> > >                     __idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+>> > > -                   rcu_irq_enter_irqsave();                        \
+>> > > -           }                                                       \
+>> > >                                                                     \
+>> > >             it_func_ptr = rcu_dereference_raw((tp)->funcs);         \
+>> > >                                                                     \
+>> > > @@ -194,10 +192,8 @@ static inline struct tracepoint *tracepo
+>> > >                     } while ((++it_func_ptr)->func);                \
+>> > >             }                                                       \
+>> > >                                                                     \
+>> > > -           if (rcuidle) {                                          \
+>> > > -                   rcu_irq_exit_irqsave();                         \
+>> > > +           if (rcuidle)                                            \
+>> > >                     srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+>> > > -           }                                                       \
+>> > >                                                                     \
+>> > >             preempt_enable_notrace();                               \
+>> > >     } while (0)
+>> >
+>> > So what happens when BPF registers for these tracepoints? BPF very much
+>> > wants RCU on AFAIU.
+>>
+>> I suspect we needs something like this...
+>>
+>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+>> index a2f15222f205..67a39dbce0ce 100644
+>> --- a/kernel/trace/bpf_trace.c
+>> +++ b/kernel/trace/bpf_trace.c
+>> @@ -1475,11 +1475,13 @@ void bpf_put_raw_tracepoint(struct bpf_raw_event_map
+>> *btp)
+>>  static __always_inline
+>>  void __bpf_trace_run(struct bpf_prog *prog, u64 *args)
+>>  {
+>> +       int rcu_flags = trace_rcu_enter();
+>>         rcu_read_lock();
+>>         preempt_disable();
+>>         (void) BPF_PROG_RUN(prog, args);
+>>         preempt_enable();
+>>         rcu_read_unlock();
+>> +       trace_rcu_exit(rcu_flags);
+> 
+> One big NACK.
+> I will not slowdown 99% of cases because of one dumb user.
+> Absolutely no way.
 
-pci_aer_raw_clear_status() is defined in aer.c and called from aer.c
-and edr.c, so I do not think it can be static.  Am I missing
-something?
+If we care about not adding those extra branches on the fast-path, there is
+an alternative way to do things: BPF could provide two distinct probe callbacks,
+one meant for rcuidle tracepoints (which would have the trace_rcu_enter/exit), and
+the other for the for 99% of the other callsites which have RCU watching.
 
-I have a review/edr branch that I hope becomes what will be applied.
+I would recommend performing benchmarks justifying the choice of one approach over
+the other though.
 
-Bjorn
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
