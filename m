@@ -2,93 +2,127 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AF4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA6BC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2072072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:53:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Io8IWba5"
+	by mail.kernel.org (Postfix) with ESMTP id 1F64C2072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgCFNxy (ORCPT
+        id S1726879AbgCFNyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:53:54 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:59214 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgCFNxy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:53:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=TvqxgncBv+tYz2iLtFMaeCImn2/6WxUyTqpfABjn9is=; b=Io8IWba5uLU8SqCXUJ77L2t1ia
-        ZduZH4h0JWEmp2q4yD4xGCJ2RZdk4HUvHaDvH7QjjBw5H1zE8VE9yxta9iNFsPYLCZc8YuSwjpVlr
-        rHXrPv3AZatPAvR6rOZdFlJjId0KJ+tyqZUTXskoLVHRRlXf+bcO7zD+vPT2QcJSFbX9Nj5DFxfsa
-        AM/Z6M6wzy8IuSi/nlVYZDZK0VTZnuzxvn7osMG5FUcDeA3/s3GEdhPx+muHEC0fsZw6eUyH/RF4L
-        HMPRD6E0QHTFOFJKaZDGIuHS2/rqs8NTB1Y+0DrKkX6YfoGjpRhZgvEiZIfft3/NJsInJ5wpCRvxM
-        m3ldK9+A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jADPl-0007sV-9x; Fri, 06 Mar 2020 13:53:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9D1F83035D4;
-        Fri,  6 Mar 2020 14:53:17 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8046C20286A0B; Fri,  6 Mar 2020 14:53:17 +0100 (CET)
-Date:   Fri, 6 Mar 2020 14:53:17 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Luwei Kang <luwei.kang@intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
-        thomas.lendacky@amd.com, fenghua.yu@intel.com,
-        kan.liang@linux.intel.com, like.xu@linux.intel.com
-Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a
- dedicated counter for guest PEBS
-Message-ID: <20200306135317.GD12561@hirez.programming.kicks-ass.net>
-References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
- <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
+        Fri, 6 Mar 2020 08:54:49 -0500
+Received: from mga17.intel.com ([192.55.52.151]:41481 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbgCFNys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:54:48 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 05:54:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
+   d="scan'208";a="287977630"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Mar 2020 05:54:43 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jADR7-007NGR-NA; Fri, 06 Mar 2020 15:54:45 +0200
+Date:   Fri, 6 Mar 2020 15:54:45 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] i2c: designeware: Add Baikal-T1 SoC DW I2C specifics
+ support
+Message-ID: <20200306135445.GE1748204@smile.fi.intel.com>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 01:56:55AM +0800, Luwei Kang wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The PEBS event created by host needs to be assigned specific counters
-> requested by the guest, which means the guest and host counter indexes
-> have to be the same or fail to create. This is needed because PEBS leaks
-> counter indexes into the guest. Otherwise, the guest driver will be
-> confused by the counter indexes in the status field of the PEBS record.
-> 
-> A guest_dedicated_idx field is added to indicate the counter index
-> specifically requested by KVM. The dedicated event constraints would
-> constrain the counter in the host to the same numbered counter in guest.
-> 
-> A intel_ctrl_guest_dedicated_mask field is added to indicate the enabled
-> counters for guest PEBS events. The IA32_PEBS_ENABLE MSR will be switched
-> during the VMX transitions if intel_ctrl_guest_owned is set.
-> 
+First of all, I got only 3 out of 6 patches. Are you sure you properly prepared
+the series?
 
-> +	/* the guest specified counter index of KVM owned event, e.g PEBS */
-> +	int				guest_dedicated_idx;
+On Fri, Mar 06, 2020 at 04:19:49PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <fancer.lancer@gmail.com>
 
-We've always objected to guest 'owned' counters, they destroy scheduling
-freedom. Why are you expecting that to be any different this time?
+Same comment as per DMA series, try next time to link the cover letter to the
+series correctly.
+
+> There are three DW I2C controllers embedded into the Baikal-T1 SoC. Two
+> of them are normal with standard DW I2C IP-core configurations and registers
+> accessible over normal MMIO space - so they are acceptable by the available
+> DW I2C driver with no modification.
+
+> But there is a third, which is a bit
+> different. Its registers are indirectly accessed be means of "command/data
+> in/data out" registers tuple. In order to have it also supported by the DW
+> I2C driver, we must modify the code a bit. This is a main purpose of this
+> patchset.
+> 
+> First of all traditionally we replaced the legacy plain text-based dt-binding
+> file with yaml-based one. Then we found and fixed a bug in the DW I2C FIFO size
+> detection algorithm which tried to do it too early before dw_readl/dw_writel
+> methods could be used.
+
+So far so good (looks like, I think colleagues of mine and myself will review
+individual patches later on).
+
+> Finally we introduced a platform-specific flag
+> ACCESS_INDIRECT, which would enable the indirect access to the DW I2C registers
+> implemented for one of the Baikal-T1 SoC DW I2C controllers. See the commit
+> message of the corresponding patch for details.
+
+This is quite questionable. In Intel SoCs we have indirect I²C controllers to
+access (inside PMIC, for example). The approach used to do that is usually to
+have an IPC mechanism and specific bus controller driver. See i2c-cht-wc.c for
+instance.
+
+I'm not sure if it makes a lot of duplication and if actually switching I²C
+DesignWare driver to regmap API will solve it. At least that is the second
+approach I would consider.
+
+But I'll wait others to comment on this. We have to settle the solution before
+going further.
+
+> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> commit 98d54f81e36b ("Linux 5.6-rc4").
+
+`git format-patch --base ...` should do the job.
+
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+
+Same comment as per UART patch. Who is the Alexey in relation to the work done?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
