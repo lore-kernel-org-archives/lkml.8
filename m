@@ -2,285 +2,250 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415BDC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071F0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 184CC20728
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F2E207FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:28:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="agg/LyxR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RtQmgpIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgCFIXF (ORCPT
+        id S1726129AbgCFI14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 03:23:05 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10456 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725934AbgCFIXE (ORCPT
+        Fri, 6 Mar 2020 03:27:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27870 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726010AbgCFI14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 03:23:04 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0268JXJp011415;
-        Fri, 6 Mar 2020 09:22:37 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : from : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=vTDWnwvCoOz4QiLEmXQSrPQXtR3HRTg+87YDSnBz9WI=;
- b=agg/LyxR/G+ckCEJBpTv5VjR717mJ2lp8ki8jhXkHsU6n94y8SY3u4DgKC4N8KlYMVV2
- +VKk3ESuxU1QeEnuwWXaOZHK1A7Pacnjq7SokIMOk7cVahpC+qQGhD114cWvUTNKjMsg
- WzlxLV07Jcu9bMJQU8mNj8zOZLXAn7oKbI8Bc0kWr5YzolTgtKkuX2BMtt0g2XFQwNYM
- HL/97bb2/i4KmdBQo2xNzEorK7i6L1BKbAUDilQa5AKo869DqECQQ2057Jsr7Bg0KzUz
- Nsv+S4QIh7jScRqr5AGlqM4JnFdcwUa3vkRCqoymHCJXSNMXfCXJnQfpnJ1j6olMLGcg PA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yfdyde7ay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 09:22:37 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C646310002A;
-        Fri,  6 Mar 2020 09:22:31 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AEFBF21FE9B;
-        Fri,  6 Mar 2020 09:22:31 +0100 (CET)
-Received: from [10.48.0.71] (10.75.127.47) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Mar
- 2020 09:22:30 +0100
-Subject: Re: [PATCH] iio: adc: stm32-adc: fix runtime autosuspend delay when
- slow polling
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <ulf.hansson@linaro.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <olivier.moysan@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-pm@vger.kernel.org>, <khilman@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>
-References: <1579854369-7972-1-git-send-email-fabrice.gasnier@st.com>
- <20200202153354.3dae5863@archlinux>
- <d30cb29b-d15c-a9fe-8c95-7ce59ce15062@st.com>
-Message-ID: <563e72b2-9bef-f00d-429c-db77d7689cc8@st.com>
-Date:   Fri, 6 Mar 2020 09:22:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 6 Mar 2020 03:27:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583483273;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/eV4Jl7MJmgIx3ljM9FkIlfcB2xroWb7S6wokZGiX2Y=;
+        b=RtQmgpIT4O34vTs4F8rXJ1yehgYBifEls6fB1kjJ4XFJR2T3nzmrtJWuIPkco5rfZFfTf/
+        VVM0MzSJsoUxv+xrgWOCk/ocNFSNH2+pZVhji03Se1MW/R33I9UHC2pRdFo0Q89ZUp3JQc
+        pX4Ek4pjKGZnYcYZxJNiP/wmkCdHbNU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-268-X64cMdXvOC6m2zykpw2cSA-1; Fri, 06 Mar 2020 03:27:51 -0500
+X-MC-Unique: X64cMdXvOC6m2zykpw2cSA-1
+Received: by mail-wr1-f69.google.com with SMTP id t14so682127wrs.12
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 00:27:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/eV4Jl7MJmgIx3ljM9FkIlfcB2xroWb7S6wokZGiX2Y=;
+        b=ocU+DARvVrQQML0bJWgF0COKF2CQkgXK95VSklpdYg1pWmp5e5IwQ9zo5Sk2Xysgno
+         XQGWXJg8OUCTLbfvhBBdiZqqaI7gARxMtZGiw0jFlwXRAr8QY7fd4RgHDI9Vz4s+YdUf
+         tNHGl5QQGYjB/o4yWcD3do/58FTRVbDpzV3oLVfNH+ibZeZkfZNF2z2aBM/4tX2VgpOv
+         hH0KYIewd2dPlGVeCjdNm07jhoR5lDn+IM7J9UEdThpLyRxegviFJWJm/KbmOs6ICb9k
+         ppUWdBhtYVIkZG2hBR9AXLF/xjoaHX0zsMnxP8E5x0wuPgZMSA3hTXPlX3l8l528hib9
+         6xlQ==
+X-Gm-Message-State: ANhLgQ2Ce+Zk9dQiQ2YfqsYX7CciD5PFm7CLlT8hE8h+e6XuiiDPAIyK
+        D5hQgZH6gZrW89jqoo/xmZlDFy5S0kt+R8Pf0PrYjWWPkYakY3jzeSrvOUlD4lGsMxqXh5vzHSt
+        b1IZyHTrk8ivVJGD9Bj6c5ol4
+X-Received: by 2002:adf:fec4:: with SMTP id q4mr2801906wrs.368.1583483270195;
+        Fri, 06 Mar 2020 00:27:50 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vtAhMdeOb8wAM7/MRIbkEb0R1rnEdu2FH7kQs6Tjpdc2loRGjArDjlgm7WprYogupVpA7csrg==
+X-Received: by 2002:adf:fec4:: with SMTP id q4mr2801878wrs.368.1583483269849;
+        Fri, 06 Mar 2020 00:27:49 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b99a:4374:773d:f32e? ([2001:b07:6468:f312:b99a:4374:773d:f32e])
+        by smtp.gmail.com with ESMTPSA id n3sm19656093wrv.91.2020.03.06.00.27.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Mar 2020 00:27:49 -0800 (PST)
+Subject: Re: [PATCH v2 00/66] KVM: x86: Introduce KVM cpu caps
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <cd8eae75-b85b-59a9-24ea-c8bde7bd7cee@redhat.com>
+Date:   Fri, 6 Mar 2020 09:27:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <d30cb29b-d15c-a9fe-8c95-7ce59ce15062@st.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-06_02:2020-03-05,2020-03-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 3:02 PM, Fabrice Gasnier wrote:
-> On 2/2/20 4:33 PM, Jonathan Cameron wrote:
->> On Fri, 24 Jan 2020 09:26:09 +0100
->> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
->>
->>> When the ADC is runtime suspended and starting a conversion, the stm32-adc
->>> driver calls pm_runtime_get_sync() that gets cascaded to the parent
->>> (e.g. runtime resume of stm32-adc-core driver). This also kicks the
->>> autosuspend delay (e.g. 2s) of the parent.
->>> Once the ADC is active, calling pm_runtime_get_sync() again (upon a new
->>> capture) won't kick the autosuspend delay for the parent (stm32-adc-core
->>> driver) as already active.
->>>
->>> Currently, this makes the stm32-adc-core driver go in suspend state
->>> every 2s when doing slow polling. As an example, doing a capture, e.g.
->>> cat in_voltageY_raw at a 0.2s rate, the auto suspend delay for the parent
->>> isn't refreshed. Once it expires, the parent immediately falls into
->>> runtime suspended state, in between two captures, as soon as the child
->>> driver falls into runtime suspend state:
->>> - e.g. after 2s, + child calls pm_runtime_put_autosuspend() + 100ms
->>>   autosuspend delay of the child.
->>> - stm32-adc-core switches off regulators, clocks and so on.
->>> - They get switched on back again 100ms later in this example (at 2.2s).
->>>
->>> So, add an explicit call to pm_runtime_mark_last_busy() for the parent
->>> driver (stm32-adc-core), synchronously with the child driver (stm32-adc),
->>> to avoid this.
->>>
->>> Fixes: 9bdbb1139ca1 ("iio: adc: stm32-adc: add power management support")
->>>
->>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->>
->> Hi Fabrice,
->>
->> Whilst this will clearly work, it seems like a somewhat adhoc solution.
->> Power management specialists (cc'd):  Is this what we should be doing, or
->> have Fabrice and I both missed something that we should be doing here?
+On 03/03/20 00:56, Sean Christopherson wrote:
+> Introduce what is effectively a KVM-specific copy of the x86_capabilities
+> array in boot_cpu_data, kvm_cpu_caps.  kvm_cpu_caps is initialized by
+> copying boot_cpu_data.x86_capabilities before ->hardware_setup().  It is
+> then updated by KVM's CPUID logic (both common x86 and VMX/SVM specific)
+> to adjust the caps to reflect the CPU that KVM will expose to the guest.
 > 
-> Hi all, PM specialists,
+> Quick synopsis:
+>   1. Refactor the KVM_GET_SUPPORTED_CPUID stack to consolidate code,
+>      remove crustiness, and set the stage for introducing kvm_cpu_caps.
 > 
-> As per my understanding, pm_runtime_mark_last_busy() doesn't cascade to
-> the parent device:
+>   2. Introduce cpuid_entry_*() accessors/mutators to automatically
+>      handle retrieving the correct reg from a CPUID entry, and to audit
+>      that the entry matches the reserve CPUID lookup entry.  The
+>      cpuid_entry_*() helpers make moving the code from common x86 to
+>      vendor code much less risky.
 > 
-> - in pm_runtime.h:
-> static inline void pm_runtime_mark_last_busy(struct device *dev)
-> {
-> 	WRITE_ONCE(dev->power.last_busy, ktime_get_mono_fast_ns());
-> }
-
-Hi all, PM specialists,
-
-Gentle reminder on this topic.
-There maybe several solutions to address this. Not sure what would be
-an acceptable / preferred fix ?
-
-Just to summarize:
----
-A - Current post: I'm wondering if this is suitable to call
-    pm_runtime_mark_last_busy() every time, for the parent device from
-    child driver ?
-
----
-B - Is it suitable to update the PM runtime, so it's recursive, to
-    refresh "last_busy" for the parent(s) ? e.g. something like:
-
- static inline void pm_runtime_mark_last_busy(struct device *dev)
- {
-        WRITE_ONCE(dev->power.last_busy, ktime_get_mono_fast_ns());
-+       if (dev->parent)
-+               pm_runtime_mark_last_busy(dev->parent);
- }
-
----
-C - I find few drivers that rely on the rmp_idle() callback in the
-    parent to call pm_runtime_mark_last_busy(), like:
-  -> dwc3_runtime_idle()
-  -> gb_bundle_idle()
-
-  -> that may lead in the stm32-adc-core driver to add:
-
-+static int stm32_adc_core_runtime_idle(struct device *dev)
-+{
-+       pm_runtime_mark_last_busy(dev);
-+
-+       return 0;
-+}
-
- static const struct dev_pm_ops stm32_adc_core_pm_ops = {
-        SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-                                pm_runtime_force_resume)
-        SET_RUNTIME_PM_OPS(stm32_adc_core_runtime_suspend,
-                           stm32_adc_core_runtime_resume,
--                          NULL)
-+                          stm32_adc_core_runtime_idle)
- };
-
-
-I've test all these solutions. Would you have some recommendations ?
-
-Please advise,
-Best regards,
-Fabrice
-
+>   3. Move CPUID adjustments to vendor code in preparation for kvm_cpu_caps,
+>      which will be initialized at load time before the kvm_x86_ops hooks
+>      are ready to be used, i.e. before ->hardware_setup().
 > 
-> STM32 ADC driver uses a model with an autosupsend delay for
-> - a parent driver to handle common resources, registers etc.
-> - child drivers for each ADC.
+>   4. Introduce kvm_cpu_caps and move all the CPUID code over to kvm_cpu_caps.
 > 
-> So the question is on how to fix the behavior I described:
-> 1: Child  activity with "short" autosuspend_delay
-> 2: Parent activity with "longer" autosuspend_delay
->      _     _     _     _     _       _     _     _
-> 1: _| |___| |___| |___| |___| |_..._| |___| |___| |_...
+>   5. Use kvm_cpu_cap_has() to kill off a bunch of ->*_supported() hooks.
 > 
->     v v   v v   v v   v v   v v ... v v   v v   v v
->     | |                                     |   |
->     | +- pm_runtime_mark_last_busy()        |   |
->     | +- pm_runtime_put_autosuspend()       v   |
->     |                                       |   |
->     +--- pm_runtime_get_sync()              |   v
->     |                                       |   |
->     +---> expires after autosuspend_delay   |   |
->     |                                       |   |
->     v                                       v   v
->      _______________________________________     ___...
-> 2: _|                           ...         |___|
+>   6. Additional cleanup in tangentially related areas to kill off even more
+>      ->*_supported() hooks, including ->set_supported_cpuid().
 > 
-> Glitches on parent dev near autosuspend_delay ^
+> Tested by verifying the output of KVM_GET_SUPPORTED_CPUID is identical
+> before and after on every patch on a Haswell and Coffee Lake, and for the
+> "before vs. after" output on Ice Lake.
 > 
-> - does the child driver needs to "kick" parent driver with
-> pm_runtime_mark_last_busy(), as proposed in current patch ?
+> Verified correctness when hiding features via Qemu (running this version
+> of KVM in L1), e.g. that UMIP is correctly emulated for L2 when it's
+> hidden from L1, on relevant patches.
 > 
-> - or is it something that should be done by PM runtime core routines ?
-> e.g. make pm_runtime_mark_last_busy() recursive or something else ?
+> Boot tested and ran kvm-unit-tests at key points, e.g. large page
+> handling.
 > 
-> Please advise
-> Best regards,
-> Fabrice
+> All AMD patches are build-tested only.
+
+I put the complete series on the cpu-caps branch of kvm.git.
+
+Thanks,
+
+Paolo
+
+> v2:
+>   - Opportunistically remove bare "unsigned" usgae. [Vitaly]
+>   - Remove CPUID auditing (Vitaly and Paolo suggested making it
+>     unconditional, then I realized it would trigger false positives).
+>   - Fix a bug in the series that broke SVM features enumeration.
+>   - Only advertise SVM features when nested SVM is enabled. [Paolo]
+>   - Fully remove support for stateful CPUID.0x2. [Vitaly, Paolo]
+>   - Call out in patch 01's changelog that it technically breaks the
+>     ABI, but that no known VMM is affected. [Vitaly, Paolo]
+>   - Use @function instead of hardcoding "2" for thes stateful code (which
+>     eventually gets tossed anyways). [Vitaly]
+>   - Move 0x8000000A into common code and kill ->set_supported_cpuid().
+>     [Vitaly]
+>   - Call out the subtle emulation handling in ->set_supported_cpuid(),
+>     which also gets tossed :-).  [Vitaly]
+>   - Fix the BUILG_BUG_ON() in patch 38. [Vitaly]
+>   - Use !! to explicitly cast a u32 to a bool. [Vitaly, Paolo]
+>   - Sort kvm_cpu_cap_mask() calls by leaf number, ascending. [Vitaly]
+>   - Collect reviews. [Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly,
+>     Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly,
+>     Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly,
+>     Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly,
+>     Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly,
+>     Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly,
+>     Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Vitaly,
+>     Vitaly, Vitaly, Vitaly, Vitaly, Vitaly, Xiaoyao, Xiaoyao, Xiaoyao]
 > 
->>
->> Thanks,
->>
->> Jonathan
->>
->>> ---
->>>  drivers/iio/adc/stm32-adc.c | 6 ++++++
->>>  1 file changed, 6 insertions(+)
->>>
->>> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
->>> index 3b291d7..670157e 100644
->>> --- a/drivers/iio/adc/stm32-adc.c
->>> +++ b/drivers/iio/adc/stm32-adc.c
->>> @@ -1157,6 +1157,7 @@ static int stm32_adc_single_conv(struct iio_dev *indio_dev,
->>>  
->>>  	stm32_adc_conv_irq_disable(adc);
->>>  
->>> +	pm_runtime_mark_last_busy(dev->parent);
->>>  	pm_runtime_mark_last_busy(dev);
->>>  	pm_runtime_put_autosuspend(dev);
->>>  
->>> @@ -1278,6 +1279,7 @@ static int stm32_adc_update_scan_mode(struct iio_dev *indio_dev,
->>>  	adc->num_conv = bitmap_weight(scan_mask, indio_dev->masklength);
->>>  
->>>  	ret = stm32_adc_conf_scan_seq(indio_dev, scan_mask);
->>> +	pm_runtime_mark_last_busy(dev->parent);
->>>  	pm_runtime_mark_last_busy(dev);
->>>  	pm_runtime_put_autosuspend(dev);
->>>  
->>> @@ -1329,6 +1331,7 @@ static int stm32_adc_debugfs_reg_access(struct iio_dev *indio_dev,
->>>  	else
->>>  		*readval = stm32_adc_readl(adc, reg);
->>>  
->>> +	pm_runtime_mark_last_busy(dev->parent);
->>>  	pm_runtime_mark_last_busy(dev);
->>>  	pm_runtime_put_autosuspend(dev);
->>>  
->>> @@ -1451,6 +1454,7 @@ static int __stm32_adc_buffer_postenable(struct iio_dev *indio_dev)
->>>  err_clr_trig:
->>>  	stm32_adc_set_trig(indio_dev, NULL);
->>>  err_pm_put:
->>> +	pm_runtime_mark_last_busy(dev->parent);
->>>  	pm_runtime_mark_last_busy(dev);
->>>  	pm_runtime_put_autosuspend(dev);
->>>  
->>> @@ -1487,6 +1491,7 @@ static void __stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
->>>  	if (stm32_adc_set_trig(indio_dev, NULL))
->>>  		dev_err(&indio_dev->dev, "Can't clear trigger\n");
->>>  
->>> +	pm_runtime_mark_last_busy(dev->parent);
->>>  	pm_runtime_mark_last_busy(dev);
->>>  	pm_runtime_put_autosuspend(dev);
->>>  }
->>> @@ -1874,6 +1879,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
->>>  		goto err_hw_stop;
->>>  	}
->>>  
->>> +	pm_runtime_mark_last_busy(dev->parent);
->>>  	pm_runtime_mark_last_busy(dev);
->>>  	pm_runtime_put_autosuspend(dev);
->>>  
->>
+> Sean Christopherson (66):
+>   KVM: x86: Return -E2BIG when KVM_GET_SUPPORTED_CPUID hits max entries
+>   KVM: x86: Refactor loop around do_cpuid_func() to separate helper
+>   KVM: x86: Simplify handling of Centaur CPUID leafs
+>   KVM: x86: Clean up error handling in kvm_dev_ioctl_get_cpuid()
+>   KVM: x86: Check userapce CPUID array size after validating sub-leaf
+>   KVM: x86: Move CPUID 0xD.1 handling out of the index>0 loop
+>   KVM: x86: Check for CPUID 0xD.N support before validating array size
+>   KVM: x86: Warn on zero-size save state for valid CPUID 0xD.N sub-leaf
+>   KVM: x86: Refactor CPUID 0xD.N sub-leaf entry creation
+>   KVM: x86: Clean up CPUID 0x7 sub-leaf loop
+>   KVM: x86: Drop the explicit @index from do_cpuid_7_mask()
+>   KVM: x86: Drop redundant boot cpu checks on SSBD feature bits
+>   KVM: x86: Consolidate CPUID array max num entries checking
+>   KVM: x86: Hoist loop counter and terminator to top of
+>     __do_cpuid_func()
+>   KVM: x86: Refactor CPUID 0x4 and 0x8000001d handling
+>   KVM: x86: Encapsulate CPUID entries and metadata in struct
+>   KVM: x86: Drop redundant array size check
+>   KVM: x86: Use common loop iterator when handling CPUID 0xD.N
+>   KVM: VMX: Add helpers to query Intel PT mode
+>   KVM: x86: Calculate the supported xcr0 mask at load time
+>   KVM: x86: Use supported_xcr0 to detect MPX support
+>   KVM: x86: Make kvm_mpx_supported() an inline function
+>   KVM: x86: Clear output regs for CPUID 0x14 if PT isn't exposed to
+>     guest
+>   KVM: x86: Drop explicit @func param from ->set_supported_cpuid()
+>   KVM: x86: Use u32 for holding CPUID register value in helpers
+>   KVM: x86: Replace bare "unsigned" with "unsigned int" in cpuid helpers
+>   KVM: x86: Introduce cpuid_entry_{get,has}() accessors
+>   KVM: x86: Introduce cpuid_entry_{change,set,clear}() mutators
+>   KVM: x86: Refactor cpuid_mask() to auto-retrieve the register
+>   KVM: x86: Handle MPX CPUID adjustment in VMX code
+>   KVM: x86: Handle INVPCID CPUID adjustment in VMX code
+>   KVM: x86: Handle UMIP emulation CPUID adjustment in VMX code
+>   KVM: x86: Handle PKU CPUID adjustment in VMX code
+>   KVM: x86: Handle RDTSCP CPUID adjustment in VMX code
+>   KVM: x86: Handle Intel PT CPUID adjustment in VMX code
+>   KVM: x86: Handle GBPAGE CPUID adjustment for EPT in VMX code
+>   KVM: x86: Refactor handling of XSAVES CPUID adjustment
+>   KVM: x86: Introduce kvm_cpu_caps to replace runtime CPUID masking
+>   KVM: SVM: Convert feature updates from CPUID to KVM cpu caps
+>   KVM: VMX: Convert feature updates from CPUID to KVM cpu caps
+>   KVM: x86: Move XSAVES CPUID adjust to VMX's KVM cpu cap update
+>   KVM: x86: Add a helper to check kernel support when setting cpu cap
+>   KVM: x86: Use KVM cpu caps to mark CR4.LA57 as not-reserved
+>   KVM: x86: Use KVM cpu caps to track UMIP emulation
+>   KVM: x86: Fold CPUID 0x7 masking back into __do_cpuid_func()
+>   KVM: x86: Remove the unnecessary loop on CPUID 0x7 sub-leafs
+>   KVM: x86: Squash CPUID 0x2.0 insanity for modern CPUs
+>   KVM: x86: Remove stateful CPUID handling
+>   KVM: x86: Do host CPUID at load time to mask KVM cpu caps
+>   KVM: x86: Override host CPUID results with kvm_cpu_caps
+>   KVM: x86: Set emulated/transmuted feature bits via kvm_cpu_caps
+>   KVM: x86: Use kvm_cpu_caps to detect Intel PT support
+>   KVM: x86: Do kvm_cpuid_array capacity checks in terminal functions
+>   KVM: x86: Use KVM cpu caps to detect MSR_TSC_AUX virt support
+>   KVM: VMX: Directly use VMX capabilities helper to detect RDTSCP
+>     support
+>   KVM: x86: Check for Intel PT MSR virtualization using KVM cpu caps
+>   KVM: VMX: Directly query Intel PT mode when refreshing PMUs
+>   KVM: SVM: Refactor logging of NPT enabled/disabled
+>   KVM: x86/mmu: Merge kvm_{enable,disable}_tdp() into a common function
+>   KVM: x86/mmu: Configure max page level during hardware setup
+>   KVM: x86: Don't propagate MMU lpage support to memslot.disallow_lpage
+>   KVM: Drop largepages_enabled and its accessor/mutator
+>   KVM: x86: Move VMX's host_efer to common x86 code
+>   KVM: nSVM: Expose SVM features to L1 iff nested is enabled
+>   KVM: nSVM: Advertise and enable NRIPS for L1 iff nrips is enabled
+>   KVM: x86: Move nSVM CPUID 0x8000000A handing into common x86 code
+> 
+>  Documentation/virt/kvm/api.rst  |  22 +-
+>  arch/x86/include/asm/kvm_host.h |  15 +-
+>  arch/x86/kvm/cpuid.c            | 874 +++++++++++++++-----------------
+>  arch/x86/kvm/cpuid.h            | 134 ++++-
+>  arch/x86/kvm/mmu/mmu.c          |  29 +-
+>  arch/x86/kvm/svm.c              | 130 ++---
+>  arch/x86/kvm/vmx/capabilities.h |  25 +-
+>  arch/x86/kvm/vmx/nested.c       |   2 +-
+>  arch/x86/kvm/vmx/pmu_intel.c    |   2 +-
+>  arch/x86/kvm/vmx/vmx.c          | 121 +++--
+>  arch/x86/kvm/vmx/vmx.h          |   5 +-
+>  arch/x86/kvm/x86.c              |  48 +-
+>  arch/x86/kvm/x86.h              |  10 +-
+>  include/linux/kvm_host.h        |   2 -
+>  virt/kvm/kvm_main.c             |  13 -
+>  15 files changed, 695 insertions(+), 737 deletions(-)
+> 
+
