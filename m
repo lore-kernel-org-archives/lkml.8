@@ -2,277 +2,184 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55FEC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD15C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90571206E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6773B206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:17:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgmOLgpH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZNSH4bAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgCFWQi (ORCPT
+        id S1726811AbgCFWRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 17:16:38 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34164 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgCFWQi (ORCPT
+        Fri, 6 Mar 2020 17:17:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29484 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726259AbgCFWRl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 17:16:38 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z15so4133020wrl.1;
-        Fri, 06 Mar 2020 14:16:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uOvy7qFzP2o/QfsQqd9FQH6elo20IssQkb6btx1/LZI=;
-        b=PgmOLgpHd//uqECmKFYAD9ljB1lvLgSnihAI1gmHND6MHOXT7BhkZl3b2bqnUcGHEt
-         hxJKcB/i/EcKTUw7w6HORLnI828m0NNqvxKu77lUCLn1f+nRqtISqrLBP9leDXJbOzW/
-         pxGA9xYX6GOF5WS3kpSOnT8NNVT7FBZg4Yt0IhxDc9aSyNiy17S9TiZ0SXD/vcDyLJe0
-         xJmvd1cAp2mFWEklxC/RtWmTTa6XaIXPEsXVFs8FqClUn77xI874i7XiQhdfh0JX9PdZ
-         hh60OB3PfCXp1WwVtNqS6oT0OdMrylNNMdrbDHtho7v6+lemH0z0hk3DiFbuerepKX0x
-         C7yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uOvy7qFzP2o/QfsQqd9FQH6elo20IssQkb6btx1/LZI=;
-        b=t6EYHTZMYpr3bnxKAb02Gkhllc00E65Ja+emvAHn2kydY3OQZERSZLF09nmyScnx/W
-         3yUpfaftg6wkqf5tY+rtirYBDba69cipQ+KxOrwhLMrJolCa9dE0JZ1T242uf6+iOuy6
-         6rriKxjHFPNLDubYpiviwjz/acHcAgBjwm2A1cQVZW7DX4l5LVUCH/AKQIz6sWJvVNG8
-         YTNNIfZSn9uiHAXgbXWWEU/ylNrOIubGIWMXSUNFtJcndL1C1RbvuZZdnSGG5D90Iv+F
-         iwrZ6BXPDrIg8EJ1O/AXH/I2GaKqj6yTT1tGJX5ZLZtEyZ/tCPCZcqmpthgTyMMObYlS
-         XYMA==
-X-Gm-Message-State: ANhLgQ14KNSg/KSB/TPEYL2SDIAuiRHz67+UuOoXJoi3kqRMDwuIloM+
-        qkCKrWmqoTfYoEGI5hB0Afyv3/PX
-X-Google-Smtp-Source: ADFU+vvZ6lCgwvbC8a0wJ/X1+n+BpidLMBSrXPAuIEv5HBF+/Ap/wTMk8+Lz39t/49KT8fDNOckslQ==
-X-Received: by 2002:adf:ec52:: with SMTP id w18mr5860600wrn.26.1583532995771;
-        Fri, 06 Mar 2020 14:16:35 -0800 (PST)
-Received: from localhost.localdomain ([109.126.130.242])
-        by smtp.gmail.com with ESMTPSA id r19sm14592901wmh.26.2020.03.06.14.16.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 14:16:35 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] io-wq: remove duplicated cancel code
-Date:   Sat,  7 Mar 2020 01:15:39 +0300
-Message-Id: <883f200570ee22c8081469bd571bec5fb27da4c5.1583531319.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 6 Mar 2020 17:17:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583533059;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PhLjWZmMblh8piGopc216qqrZDQpLjpYk5IINjE+qLM=;
+        b=ZNSH4bAOWEnz3E7+/IAQMobxDmV5Le5yDsz3WKuClzbLpHZwGMrVcHdJDj+jHDK5SUH8O2
+        /Z8pobKgxQ7lIniKmCqfUckSXq/UECWAqQl1BiucBe+l7snFz+exPSQOOycQVQZCwWtBo+
+        FNd7Gs4oEC2QCR/a90qNNXn7EAbGWyk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-sFjXm69vOXGmT09efohuUQ-1; Fri, 06 Mar 2020 17:17:37 -0500
+X-MC-Unique: sFjXm69vOXGmT09efohuUQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC9F41005509;
+        Fri,  6 Mar 2020 22:17:35 +0000 (UTC)
+Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 00CD95C1B5;
+        Fri,  6 Mar 2020 22:17:34 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 15:17:34 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dev@dpdk.org" <dev@dpdk.org>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        "thomas@monjalon.net" <thomas@monjalon.net>,
+        "bluca@debian.org" <bluca@debian.org>,
+        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
+        "Richardson, Bruce" <bruce.richardson@intel.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>
+Subject: Re: [PATCH v2 5/7] vfio/pci: Add sriov_configure support
+Message-ID: <20200306151734.741d1d58@x1.home>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7C07A0@SHSMSX104.ccr.corp.intel.com>
+References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+        <158213846731.17090.37693075723046377.stgit@gimli.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D79A943@SHSMSX104.ccr.corp.intel.com>
+        <20200305112230.0dd77712@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7C07A0@SHSMSX104.ccr.corp.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deduplicate cancellation parts, as many of them looks the same, as do
-e.g.
-- io_wqe_cancel_cb_work() and io_wqe_cancel_work()
-- io_wq_worker_cancel() and io_work_cancel()
+On Fri, 6 Mar 2020 07:57:19 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io-wq.c | 136 ++++++++++-------------------------------------------
- 1 file changed, 24 insertions(+), 112 deletions(-)
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Friday, March 6, 2020 2:23 AM
+> > 
+> > On Tue, 25 Feb 2020 03:08:00 +0000
+> > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> >   
+> > > > From: Alex Williamson
+> > > > Sent: Thursday, February 20, 2020 2:54 AM
+> > > >
+> > > > With the VF Token interface we can now expect that a vfio userspace
+> > > > driver must be in collaboration with the PF driver, an unwitting
+> > > > userspace driver will not be able to get past the GET_DEVICE_FD step
+> > > > in accessing the device.  We can now move on to actually allowing
+> > > > SR-IOV to be enabled by vfio-pci on the PF.  Support for this is not
+> > > > enabled by default in this commit, but it does provide a module option
+> > > > for this to be enabled (enable_sriov=1).  Enabling VFs is rather
+> > > > straightforward, except we don't want to risk that a VF might get
+> > > > autoprobed and bound to other drivers, so a bus notifier is used to
+> > > > "capture" VFs to vfio-pci using the driver_override support.  We
+> > > > assume any later action to bind the device to other drivers is
+> > > > condoned by the system admin and allow it with a log warning.
+> > > >
+> > > > vfio-pci will disable SR-IOV on a PF before releasing the device,
+> > > > allowing a VF driver to be assured other drivers cannot take over the
+> > > > PF and that any other userspace driver must know the shared VF token.
+> > > > This support also does not provide a mechanism for the PF userspace
+> > > > driver itself to manipulate SR-IOV through the vfio API.  With this
+> > > > patch SR-IOV can only be enabled via the host sysfs interface and the
+> > > > PF driver user cannot create or remove VFs.  
+> > >
+> > > I'm not sure how many devices can be properly configured simply
+> > > with pci_enable_sriov. It is not unusual to require PF driver prepare
+> > > something before turning PCI SR-IOV capability. If you look kernel
+> > > PF drivers, there are only two using generic pci_sriov_configure_
+> > > simple (simple wrapper like pci_enable_sriov), while most others
+> > > implementing their own callback. However vfio itself has no idea
+> > > thus I'm not sure how an user knows whether using this option can
+> > > actually meet his purpose. I may miss something here, possibly
+> > > using DPDK as an example will make it clearer.  
+> > 
+> > There is still the entire vfio userspace driver interface.  Imagine for
+> > example that QEMU emulates the SR-IOV capability and makes a call out
+> > to libvirt (or maybe runs with privs for the PF SR-IOV sysfs attribs)
+> > when the guest enables SR-IOV.  Can't we assume that any PF specific
+> > support can still be performed in the userspace/guest driver, leaving
+> > us with a very simple and generic sriov_configure callback in vfio-pci?  
+> 
+> Makes sense. One concern, though, is how an user could be warned
+> if he inadvertently uses sysfs to enable SR-IOV on a vfio device whose
+> userspace driver is incapable of handling it. Note any VFIO device, 
+> if SR-IOV capable, will allow user to do so once the module option is 
+> turned on and the callback is registered. I felt such uncertainty can be 
+> contained by toggling SR-IOV through a vfio api, but from your description 
+> obviously it is what you want to avoid. Is it due to the sequence reason,
+> e.g. that SR-IOV must be enabled before userspace PF driver sets the 
+> token? 
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index eda36f997dea..0e7c6277afcb 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -855,14 +855,13 @@ void io_wq_cancel_all(struct io_wq *wq)
- }
- 
- struct io_cb_cancel_data {
--	struct io_wqe *wqe;
--	work_cancel_fn *cancel;
--	void *caller_data;
-+	work_cancel_fn *fn;
-+	void *data;
- };
- 
--static bool io_work_cancel(struct io_worker *worker, void *cancel_data)
-+static bool io_wq_worker_cancel(struct io_worker *worker, void *data)
- {
--	struct io_cb_cancel_data *data = cancel_data;
-+	struct io_cb_cancel_data *match = data;
- 	unsigned long flags;
- 	bool ret = false;
- 
-@@ -873,83 +872,7 @@ static bool io_work_cancel(struct io_worker *worker, void *cancel_data)
- 	spin_lock_irqsave(&worker->lock, flags);
- 	if (worker->cur_work &&
- 	    !(worker->cur_work->flags & IO_WQ_WORK_NO_CANCEL) &&
--	    data->cancel(worker->cur_work, data->caller_data)) {
--		send_sig(SIGINT, worker->task, 1);
--		ret = true;
--	}
--	spin_unlock_irqrestore(&worker->lock, flags);
--
--	return ret;
--}
--
--static enum io_wq_cancel io_wqe_cancel_cb_work(struct io_wqe *wqe,
--					       work_cancel_fn *cancel,
--					       void *cancel_data)
--{
--	struct io_cb_cancel_data data = {
--		.wqe = wqe,
--		.cancel = cancel,
--		.caller_data = cancel_data,
--	};
--	struct io_wq_work_node *node, *prev;
--	struct io_wq_work *work;
--	unsigned long flags;
--	bool found = false;
--
--	spin_lock_irqsave(&wqe->lock, flags);
--	wq_list_for_each(node, prev, &wqe->work_list) {
--		work = container_of(node, struct io_wq_work, list);
--
--		if (cancel(work, cancel_data)) {
--			wq_node_del(&wqe->work_list, node, prev);
--			found = true;
--			break;
--		}
--	}
--	spin_unlock_irqrestore(&wqe->lock, flags);
--
--	if (found) {
--		io_run_cancel(work, wqe);
--		return IO_WQ_CANCEL_OK;
--	}
--
--	rcu_read_lock();
--	found = io_wq_for_each_worker(wqe, io_work_cancel, &data);
--	rcu_read_unlock();
--	return found ? IO_WQ_CANCEL_RUNNING : IO_WQ_CANCEL_NOTFOUND;
--}
--
--enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
--				  void *data)
--{
--	enum io_wq_cancel ret = IO_WQ_CANCEL_NOTFOUND;
--	int node;
--
--	for_each_node(node) {
--		struct io_wqe *wqe = wq->wqes[node];
--
--		ret = io_wqe_cancel_cb_work(wqe, cancel, data);
--		if (ret != IO_WQ_CANCEL_NOTFOUND)
--			break;
--	}
--
--	return ret;
--}
--
--struct work_match {
--	bool (*fn)(struct io_wq_work *, void *data);
--	void *data;
--};
--
--static bool io_wq_worker_cancel(struct io_worker *worker, void *data)
--{
--	struct work_match *match = data;
--	unsigned long flags;
--	bool ret = false;
--
--	spin_lock_irqsave(&worker->lock, flags);
--	if (match->fn(worker->cur_work, match->data) &&
--	    !(worker->cur_work->flags & IO_WQ_WORK_NO_CANCEL)) {
-+	    match->fn(worker->cur_work, match->data)) {
- 		send_sig(SIGINT, worker->task, 1);
- 		ret = true;
- 	}
-@@ -959,7 +882,7 @@ static bool io_wq_worker_cancel(struct io_worker *worker, void *data)
- }
- 
- static enum io_wq_cancel io_wqe_cancel_work(struct io_wqe *wqe,
--					    struct work_match *match)
-+					    struct io_cb_cancel_data *match)
- {
- 	struct io_wq_work_node *node, *prev;
- 	struct io_wq_work *work;
-@@ -1000,22 +923,16 @@ static enum io_wq_cancel io_wqe_cancel_work(struct io_wqe *wqe,
- 	return found ? IO_WQ_CANCEL_RUNNING : IO_WQ_CANCEL_NOTFOUND;
- }
- 
--static bool io_wq_work_match(struct io_wq_work *work, void *data)
--{
--	return work == data;
--}
--
--enum io_wq_cancel io_wq_cancel_work(struct io_wq *wq, struct io_wq_work *cwork)
-+enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
-+				  void *data)
- {
--	struct work_match match = {
--		.fn	= io_wq_work_match,
--		.data	= cwork
-+	struct io_cb_cancel_data match = {
-+		.fn	= cancel,
-+		.data	= data,
- 	};
- 	enum io_wq_cancel ret = IO_WQ_CANCEL_NOTFOUND;
- 	int node;
- 
--	cwork->flags |= IO_WQ_WORK_CANCEL;
--
- 	for_each_node(node) {
- 		struct io_wqe *wqe = wq->wqes[node];
- 
-@@ -1027,33 +944,28 @@ enum io_wq_cancel io_wq_cancel_work(struct io_wq *wq, struct io_wq_work *cwork)
- 	return ret;
- }
- 
-+static bool io_wq_io_cb_cancel_data(struct io_wq_work *work, void *data)
-+{
-+	return work == data;
-+}
-+
-+enum io_wq_cancel io_wq_cancel_work(struct io_wq *wq, struct io_wq_work *cwork)
-+{
-+	return io_wq_cancel_cb(wq, io_wq_io_cb_cancel_data, (void *)cwork);
-+}
-+
- static bool io_wq_pid_match(struct io_wq_work *work, void *data)
- {
- 	pid_t pid = (pid_t) (unsigned long) data;
- 
--	if (work)
--		return work->task_pid == pid;
--	return false;
-+	return work->task_pid == pid;
- }
- 
- enum io_wq_cancel io_wq_cancel_pid(struct io_wq *wq, pid_t pid)
- {
--	struct work_match match = {
--		.fn	= io_wq_pid_match,
--		.data	= (void *) (unsigned long) pid
--	};
--	enum io_wq_cancel ret = IO_WQ_CANCEL_NOTFOUND;
--	int node;
--
--	for_each_node(node) {
--		struct io_wqe *wqe = wq->wqes[node];
-+	void *data = (void *) (unsigned long) pid;
- 
--		ret = io_wqe_cancel_work(wqe, &match);
--		if (ret != IO_WQ_CANCEL_NOTFOUND)
--			break;
--	}
--
--	return ret;
-+	return io_wq_cancel_cb(wq, io_wq_pid_match, data);
- }
- 
- struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
--- 
-2.24.0
+As in my other reply, enabling SR-IOV via a vfio API suggests that
+we're not only granting the user owning the PF device access to the
+device itself, but also the ability to create and remove subordinate
+devices on the host.  That implies an extended degree of trust in the
+user beyond the PF device itself and raises questions about whether a
+user who is allowed to create VF devices should automatically be
+granted access to those VF devices, what the mechanism would be for
+that, and how we might re-assign those devices to other users,
+potentially including host kernel usage.  What I'm proposing here
+doesn't preclude some future extension in that direction, but instead
+tries to simplify a first step towards enabling SR-IOV by leaving the
+SR-IOV enablement and VF assignment in the realm of a privileged system
+entity.
+
+So, what I think you're suggesting here is that we should restrict
+vfio_pci_sriov_configure() to reject enabling SR-IOV until a user
+driver has configured a VF token.  That requires both that the
+userspace driver has initialized to this point before SR-IOV can be
+enabled and that we would be forced to define a termination point for
+the user set VF token.  Logically, this would need to be when the
+userspace driver exits or closes the PF device, which implies that we
+need to disable SR-IOV on the PF at this point, or we're left in an
+inconsistent state where VFs are enabled but cannot be disabled because
+we don't have a valid VF token.  Now we're back to nearly a state where
+the user has control of not creating devices on the host, but removing
+them by closing the device, which will necessarily require that any VF
+driver release the device, whether userspace or kernel.
+
+I'm not sure what we're gaining by doing this though.  I agree that
+there will be users that enable SR-IOV on a PF and then try to, for
+example, assign the PF and all the VFs to a VM.  The VFs will fail due
+to lacking VF token support, unless they've patch QEMU with my test
+code, but depending on the PF driver in the guest, it may, or more
+likely won't work.  But don't you think the VFs and probably PF not
+working is a sufficient clue that the configuration is invalid?  OTOH,
+from what I've heard of the device in the ID table of the pci-pf-stub
+driver, they might very well be able to work with both PF and VFs in
+QEMU using only my test code to set the VF token.
+
+Therefore, I'm afraid what you're asking for here is to impose a usage
+restriction as a sanity test, when we don't really know what might be
+sane for this particular piece of hardware or use case.  There are
+infinite ways that a vfio based userspace driver can fail to configure
+their hardware and make it work correctly, many of them are device
+specific.  Isn't this just one of those cases?  Thanks,
+
+Alex
 
