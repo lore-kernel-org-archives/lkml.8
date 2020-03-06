@@ -2,98 +2,104 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56788C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FB5C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4C52073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5892B208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbgCFHvf (ORCPT
+        id S1726097AbgCFHww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:51:35 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38863 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgCFHve (ORCPT
+        Fri, 6 Mar 2020 02:52:52 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39286 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgCFHwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 02:51:34 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jA7lZ-0001YG-Vh; Fri, 06 Mar 2020 08:51:29 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jA7lZ-0004WQ-EO; Fri, 06 Mar 2020 08:51:29 +0100
-Date:   Fri, 6 Mar 2020 08:51:29 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] regulator: pwm: Don't warn on probe deferral
-Message-ID: <20200306075129.mzs22yjitkmgrthh@pengutronix.de>
-References: <20200224144048.6587-1-jonathanh@nvidia.com>
- <20200224165859.GJ6215@sirena.org.uk>
- <20200226161757.idpzbs3jmayt7ya6@pengutronix.de>
- <20200226163905.GH4136@sirena.org.uk>
+        Fri, 6 Mar 2020 02:52:51 -0500
+Received: by mail-oi1-f196.google.com with SMTP id r16so1670058oie.6
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 23:52:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1T5Kg4BfST0zSVIMUeTS56E1O4MCeoBW6kALqxA1HK8=;
+        b=tvmakSgvxiMbrkn6QlnJqxIx5nG6DTOJsviAJrfB0w/YYeRzwoBl6xfWGB6JJb8OF2
+         /wNHxn9KHthOJ2BXXg/BTiOzdH+QvV2HYKdZPLUpihj/uKZ3KfizVzbtInVHaKik92IQ
+         GZ7WHxwaoibf4ET3gHosGKcacNryD9syDFzuek0eJPOlASSyJsuR+S1XFyVqhGn+yz/o
+         eRh085kf4dZfBt7d7WMxHmguXvTLn8Szjv2MWTDn45FzsEDVVqsAFPpaOhZmnR5X96qR
+         a0b8U6xVoq9KNDSXWRfIKU2paW5MLRTzJQahW3KuQ63budgRF51O5ATqVocz1rRtNaiB
+         XE8g==
+X-Gm-Message-State: ANhLgQ3ZrEJL3KkZntefsb5HZTKYkeog4myhCqPsF6WLtQRR4brCc73T
+        qN1pcmPJG6ub+fPlXiMObwU8wEQk1lnNh/kwJSQ=
+X-Google-Smtp-Source: ADFU+vu659YQtLePZ07p37HFyrM/DDcWDOkphwBjlnwGymbix5RIPqdXWxxmtWWFPO72Eq4yJb7aF/R5hKHncFkBwpA=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr1640463oia.148.1583481171255;
+ Thu, 05 Mar 2020 23:52:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200226163905.GH4136@sirena.org.uk>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org> <158338818292.25448.7161196505598269976.stgit@devnote2>
+In-Reply-To: <158338818292.25448.7161196505598269976.stgit@devnote2>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 6 Mar 2020 08:52:40 +0100
+Message-ID: <CAMuHMdXSNwPwxOTDxK09LKTyOwL=LqTH6+HZRd=RY4P5VHg5Ew@mail.gmail.com>
+Subject: Re: [BUGFIX PATCH] tools: Let O= makes handle a relative path with -C option
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 04:39:05PM +0000, Mark Brown wrote:
-> On Wed, Feb 26, 2020 at 05:17:57PM +0100, Uwe Kleine-König wrote:
-> > On Mon, Feb 24, 2020 at 04:58:59PM +0000, Mark Brown wrote:
-> 
-> > > This then means that there's no way for users to determine why the
-> > > driver has failed to instantiate which can be frustrating.  It'd be
-> > > better to at least have some dev_dbg() output when deferring so that
-> > > there's something for people to go on without having to instrument the
-> > > code.
-> 
-> > Not printing an error message is quite usual however. I think a generic
-> 
-> Usual yet also frustraing.
-> 
-> > approach that for example makes the list of devices that should be
-> > retried to probe on the next opportunity inspectable would be nice.
-> 
-> That's not really the issue, the bigger issue is trying to figure out
-> why things are stuck - what exactly caused things to fail to
-> instantiate.
+CC +kbuild, -stable
 
-I wonder if we should do something like:
-
-	ret = some_call(some, args);
-	if (ret) {
-		if (emit_errmsg_for_err(ret))
-			dev_err(dev, "some_call failed: %pE\n", ERR_PTR(ret));
-		return ret;
-	}
-
-and have emit_errmsg_for_err return true if ret != -EPROBE_DEFER or some
-kernel parameter is given.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+On Thu, Mar 5, 2020 at 7:03 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> When I compiled tools/bootconfig from top directory with
+> -C option, the O= option didn't work correctly if I passed
+> a relative path.
+>
+>   $ make O=./builddir/ -C tools/bootconfig/
+>   make: Entering directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
+>   ../scripts/Makefile.include:4: *** O=./builddir/ does not exist.  Stop.
+>   make: Leaving directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
+>
+> The O= directory existence check failed because the check
+> script ran in the build target directory instead of the
+> directory where I ran the make command.
+>
+> To fix that, once change directory to $(PWD) and check O=
+> directory, since the PWD is set to where the make command
+> runs.
+>
+> Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  tools/scripts/Makefile.include |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+> index ded7a950dc40..6d2f3a1b2249 100644
+> --- a/tools/scripts/Makefile.include
+> +++ b/tools/scripts/Makefile.include
+> @@ -1,8 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  ifneq ($(O),)
+>  ifeq ($(origin O), command line)
+> -       dummy := $(if $(shell test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
+> -       ABSOLUTE_O := $(shell cd $(O) ; pwd)
+> +       dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
+> +       ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
+>         OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
+>         COMMAND_O := O=$(ABSOLUTE_O)
+>  ifeq ($(objtree),)
+>
