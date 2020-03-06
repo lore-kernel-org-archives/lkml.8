@@ -2,53 +2,59 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFEBC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CFEC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A173217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D64217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbgCFHlq (ORCPT
+        id S1726026AbgCFHnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:41:46 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52289 "EHLO
+        Fri, 6 Mar 2020 02:43:01 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55591 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgCFHlq (ORCPT
+        with ESMTP id S1725853AbgCFHnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 02:41:46 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jA7c6-0000Vx-G3; Fri, 06 Mar 2020 08:41:42 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jA7c4-0004F5-4R; Fri, 06 Mar 2020 08:41:40 +0100
-Date:   Fri, 6 Mar 2020 08:41:40 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 1/1] pwm: mediatek: add longer period support
-Message-ID: <20200306074140.6oyxk6cn7m4qg25f@pengutronix.de>
-References: <1583230755-25986-1-git-send-email-sam.shih@mediatek.com>
- <1583230755-25986-2-git-send-email-sam.shih@mediatek.com>
+        Fri, 6 Mar 2020 02:43:01 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1jA7dC-0000a2-UJ; Fri, 06 Mar 2020 08:42:50 +0100
+Subject: Re: [PATCH] ARM: mach-imx6q: add ksz9131rn_phy_fixup
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200305134928.19775-1-philippe.schenker@toradex.com>
+ <20200305143805.dk7fndblnqjnwxu6@pengutronix.de>
+ <20200305165145.GA25183@lunn.ch>
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+Message-ID: <7191ffe6-642a-477c-ec37-e37dc9be4bf8@pengutronix.de>
+Date:   Fri, 6 Mar 2020 08:42:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1583230755-25986-2-git-send-email-sam.shih@mediatek.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
+In-Reply-To: <20200305165145.GA25183@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,104 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 06:19:15PM +0800, Sam Shih wrote:
-> The pwm clock source could be divided by 1625 with PWM_CON
-> BIT(3) setting in mediatek hardware.
+Hello Andrew,
+
+On 3/5/20 5:51 PM, Andrew Lunn wrote:
+> On Thu, Mar 05, 2020 at 03:38:05PM +0100, Oleksij Rempel wrote:
+>> Hi Philippe,
+>>
+>> On Thu, Mar 05, 2020 at 02:49:28PM +0100, Philippe Schenker wrote:
+>>> The MAC of the i.MX6 SoC is compliant with RGMII v1.3. The KSZ9131 PHY
+>>> is like KSZ9031 adhering to RGMII v2.0 specification. This means the
+>>> MAC should provide a delay to the TXC line. Because the i.MX6 MAC does
+>>> not provide this delay this has to be done in the PHY.
+>>>
+>>> This patch adds by default ~1.6ns delay to the TXC line. This should
+>>> be good for all boards that have the RGMII signals routed with the
+>>> same length.
+>>>
+>>> The KSZ9131 has relatively high tolerances on skew registers from
+>>> MMD 2.4 to MMD 2.8. Therefore the new DLL-based delay of 2ns is used
+>>> and then as little as possibly subtracted from that so we get more
+>>> accurate delay. This is actually needed because the i.MX6 SoC has
+>>> an asynchron skew on TXC from -100ps to 900ps, to get all RGMII
+>>> values within spec.
+>>
+>> This configuration has nothing to do in mach-imx/* It belongs to the
+>> board devicetree. Please see DT binding documentation for needed
+>> properties:
+>> Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
 > 
-> This patch add support for longer pwm period configuration,
-> which allowing blinking LEDs via pwm interface.
+> It probably does not even need that. Just
 > 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> ---
->  drivers/pwm/pwm-mediatek.c | 34 ++++++++++++++++++++++++++++++----
->  1 file changed, 30 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index b94e0d09c300..c64ecff6c550 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -121,8 +121,11 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  			       int duty_ns, int period_ns)
->  {
->  	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
-> -	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
-> -	    reg_thres = PWMTHRES;
-> +	/* The source clock is divided by 2^clkdiv or iff the clksel bit
-> +	 * is set by (2^clkdiv*1625)
-> +	 */
+> phy-mode = <rgmii-txid>
 
-Please put the /* on it's own line. See
-https://www.kernel.org/doc/html/latest/process/coding-style.html#commenting
+Looks to me like this isn't supported by the Micrel PHY driver or am
+I missing something?
 
-> +	u32 clkdiv = 0, clksel = 0, cnt_period, cnt_duty,
-> +	    reg_width = PWMDWIDTH, reg_thres = PWMTHRES;
->  	u64 resolution;
->  	int ret;
->  
-> @@ -133,12 +136,30 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  
->  	/* Using resolution in picosecond gets accuracy higher */
->  	resolution = (u64)NSEC_PER_SEC * 1000;
-> +	/* Calculate resolution based on current clock frequency */
->  	do_div(resolution, clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
-> -
-> +	/* Using resolution to calculate cnt_period which represents
-> +	 * the effective range of the PWM period counter
-> +	 */
->  	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
-
-The existing code is rather bad. A better approach to calulate
-cnt_period (with a single division and higher accuracy):
-
-	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * clk_get_rate(..), NSEC_PER_SEC);
-
-
->  	while (cnt_period > 8191) {
-> +		/* Using clkdiv to reduce clock frequency and calculate
-> +		 * new resolution based on new clock speed
-> +		 */
->  		resolution *= 2;
->  		clkdiv++;
-> +		if (clkdiv > PWM_CLK_DIV_MAX && !clksel) {
-> +			/* Using clksel to divide the pwm source clock by
-> +			 * an additional 1625, and recalculate new clkdiv
-> +			 * and resolution
-> +			 */
-> +			clksel = 1;
-> +			clkdiv = 0;
-> +			resolution = (u64)NSEC_PER_SEC * 1000 * 1625;
-> +			do_div(resolution,
-> +				clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
-> +		}
-> +		/* Calculate cnt_period based on resolution */
->  		cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000,
->  						   resolution);
->  	}
-> @@ -158,8 +179,13 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  		reg_thres = PWM45THRES_FIXUP;
->  	}
->  
-> +	/* Calculate cnt_duty based on resolution */
->  	cnt_duty = DIV_ROUND_CLOSEST_ULL((u64)duty_ns * 1000, resolution);
-
-Using resolution as divisor is bad here, too, so the way to calculate
-cnt_duty should be changed accordingly.
-
-I think if the driver is simplified first, maybe even getting rid of the
-while loop, your change will get considerably easier, too.
-
-> -	pwm_mediatek_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
-> +	if (clksel)
-> +		pwm_mediatek_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | BIT(3) |
-> +				    clkdiv);
-> +	else
-> +		pwm_mediatek_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
->  	pwm_mediatek_writel(pc, pwm->hwpwm, reg_width, cnt_period);
->  	pwm_mediatek_writel(pc, pwm->hwpwm, reg_thres, cnt_duty);
-
-Best regards
-Uwe
+Cheers
+Ahmad
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
