@@ -2,204 +2,127 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF84C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6A3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83BD8206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685EC20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g/DXRsUp"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="GzwVJ3Qw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCFWWk (ORCPT
+        id S1726798AbgCFWYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 17:22:40 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40676 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgCFWWj (ORCPT
+        Fri, 6 Mar 2020 17:24:21 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40769 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbgCFWYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 17:22:39 -0500
-Received: by mail-pf1-f193.google.com with SMTP id l184so1774154pfl.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 14:22:37 -0800 (PST)
+        Fri, 6 Mar 2020 17:24:20 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y1so1432855plp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 14:24:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=u5iQagkAL956X3yAdHAN3Ifbi9AEjrmYTtohHs4VyfI=;
-        b=g/DXRsUpnPVv6Ya8NHenBrLz2IUQ4G4Sat8Og//O03Wd8aU2aHn9mt6lfgnz6ERSCX
-         hSnkjMcl7Zy2wOyT7dwIF93oQcdUVfCdTTvw+QVhDPmlBGTHdK2sxUAkkXAR6gCIbzT7
-         xJc0W7dMjIRoLtxn8UaK2/igdNrqyiCMIMZPOQcykdDAVW5xTMiCB1mKY7Ui4gJl4cAA
-         L/M32dbJ022bCltBq8p/2urg0SYTI2cVKeT/Bl6Ojz5Dut9wD1mDM6jqUkEu2st5oc2U
-         YAIjFSuh9D3nFe4NLL/Jcaodr+36L3zxBcsGJavDzgKPMCE2I0YDT3ytV19vdtTAL9Br
-         FS5Q==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:cc:from:to:message-id;
+        bh=jDwLJul+FxK3t2qLTY7GdkPDL4w6d80LdqnOuzgJII8=;
+        b=GzwVJ3QwWk6jDijkAg9dfgQ5NVgUV5BfFWnUZq7G5tSxnrWZkonuq1/W8NjHjVdtow
+         VmW0xQj/Q7/TcRKQPBUjO++peUT56wsmSbGNHccbVAdpSMYc+Zuhs5PDytQvIJZBpKed
+         Ir0Vy/WulN7tXq4BhGTiONmAVRlsxiexXMBqE4hmVATLFm128n8wWsGHrGcsBQa6LYq4
+         NOuZZdcwLKIU4PHCEEseJzhg78QGq7Hy5ES/S+aGejh5q24urRYTzZgt0oXyh/uLev6U
+         DRuxDrC4gXYTlZkZ5iF6rRxBAstakKM+SHYB/BJWibs0hCdElnHCk+Ln4pNPUUEwUiRJ
+         9+rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=u5iQagkAL956X3yAdHAN3Ifbi9AEjrmYTtohHs4VyfI=;
-        b=OsrmeapB9mK1tCgzvybZLU4Zs4EeD9jd9TFV/zlXoDC6aTYqDq8zZZ3NHbfwnn7jwl
-         1ocwwMbXw1sMj7g2MwAxjGfV0kBcn6gZGsX6s0OZC4GBQmnRA4z+sLA0fMNSSWmI7skV
-         Bhq1yjvLNHlrSljsFsqJOL3LPgMzuyjuFVAYPxVMLLn8lIxikJZ6hVUVIaHlXBEAISBG
-         8SzmZsRQybuWCOzzZZMcUpkD13SzQgj7LSDEm9i2Ao/GHKptk2eQFAJETvsEts/E8XnZ
-         R/iQ8rHRoc9Gs/mdyRzxg/Vz/wDYUb7Mp9333hsRiA1X3RsQmOfX8wo3U+YKQ/VTpP8h
-         uyug==
-X-Gm-Message-State: ANhLgQ3GlH91I5S5+WRGeQuMAZsceRIN0uDqqweRlVOPujOSsf9L2ggb
-        y/oDZ1fL+pG8GLnJDsfQVjwrGQ==
-X-Google-Smtp-Source: ADFU+vv+K2fDyFW749TFSttaWCLjv+bSISZN1YZ8ATK0SwDRzX9iEudV9PVKTAUzPDXtahm6UTPFuQ==
-X-Received: by 2002:a05:6a00:2d4:: with SMTP id b20mr5935555pft.143.1583533356476;
-        Fri, 06 Mar 2020 14:22:36 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id fa19sm10310152pjb.47.2020.03.06.14.22.35
+        h=x-gm-message-state:date:subject:cc:from:to:message-id;
+        bh=jDwLJul+FxK3t2qLTY7GdkPDL4w6d80LdqnOuzgJII8=;
+        b=XwyeBulAhFA26P2xPrRWnfnSAVC+TaWEJ4xEtVrtnpWc6r48qG+NfloCnCHZmyip6b
+         +wyKCfBz751nISEyKufV4+rf9ZVNPzzTOS4mTcIco28ryGmcDDvdByYCVD9IwYjStH7M
+         5BLG0S90SaPTBs5I4yBuvTAhOFQerMIJQIF2NbHs5JrcRACVPHizy5h0po+t5duPmGNz
+         YPu/hoLnqwtXalgU+PfKiOUr3WEEmORXws1WfiePBl2zS0tUzIaRAgPGMJsNBpnTjLk8
+         yK/fbPlzQK7CxqQUCbtqqM6v8ImJELf3VaKszmylMyPoGbtUAk0Rg3x4wVYTzmfqYNjY
+         axgA==
+X-Gm-Message-State: ANhLgQ0SFyA+acurGHyRfECXoFmEXnbUNTO2WUjEzC2VyGArZfa99i0n
+        50/wSLJ4MancRuVGvVo7breibA==
+X-Google-Smtp-Source: ADFU+vv4h8olV0/VzG3gFtML4+rByo3lb53ykwWa7qHI14CRNJVGFqdTVJSjzqUP6zbDieizYGd1Mw==
+X-Received: by 2002:a17:90b:370b:: with SMTP id mg11mr5848539pjb.122.1583533458108;
+        Fri, 06 Mar 2020 14:24:18 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
+        by smtp.gmail.com with ESMTPSA id x190sm37519605pfb.96.2020.03.06.14.24.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 14:22:35 -0800 (PST)
-Date:   Fri, 6 Mar 2020 14:22:35 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     Yang Shi <shy828301@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jeremy Cline <jcline@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: [patch 2/2] mm, thp: track fallbacks due to failed memcg charges
- separately
-In-Reply-To: <alpine.DEB.2.21.2003061421240.7412@chino.kir.corp.google.com>
-Message-ID: <alpine.DEB.2.21.2003061422070.7412@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.2003061421240.7412@chino.kir.corp.google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 06 Mar 2020 14:24:17 -0800 (PST)
+Date:   Fri, 06 Mar 2020 14:24:17 -0800 (PST)
+X-Google-Original-Date: Fri, 06 Mar 2020 14:23:50 PST (-0800)
+Subject: [GIT PULL] RISC-V Fixes for 5.6-rc5
+CC:         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-ceb3e2ad-8656-4228-b1c3-b90731c84c5f@palmerdabbelt-glaptop1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The thp_fault_fallback and thp_file_fallback vmstats are incremented if
-either the hugepage allocation fails through the page allocator or the
-hugepage charge fails through mem cgroup.
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
 
-This patch leaves this field untouched but adds two new fields,
-thp_{fault,file}_fallback_charge, which is incremented only when the mem
-cgroup charge fails.
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
 
-This distinguishes between attempted hugepage allocations that fail due to
-fragmentation (or low memory conditions) and those that fail due to mem
-cgroup limits.  That can be used to determine the impact of fragmentation
-on the system by excluding faults that failed due to memcg usage.
+are available in the Git repository at:
 
-Signed-off-by: David Rientjes <rientjes@google.com>
----
- Documentation/admin-guide/mm/transhuge.rst | 10 ++++++++++
- include/linux/vm_event_item.h              |  3 +++
- mm/huge_memory.c                           |  2 ++
- mm/shmem.c                                 |  4 +++-
- mm/vmstat.c                                |  2 ++
- 5 files changed, 20 insertions(+), 1 deletion(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.6-rc5
 
-diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
---- a/Documentation/admin-guide/mm/transhuge.rst
-+++ b/Documentation/admin-guide/mm/transhuge.rst
-@@ -310,6 +310,11 @@ thp_fault_fallback
- 	is incremented if a page fault fails to allocate
- 	a huge page and instead falls back to using small pages.
- 
-+thp_fault_fallback_charge
-+	is incremented if a page fault fails to charge a huge page and
-+	instead falls back to using small pages even though the
-+	allocation was successful.
-+
- thp_collapse_alloc_failed
- 	is incremented if khugepaged found a range
- 	of pages that should be collapsed into one huge page but failed
-@@ -323,6 +328,11 @@ thp_file_fallback
- 	is incremented if a file huge page is attempted to be allocated
- 	but fails and instead falls back to using small pages.
- 
-+thp_file_fallback_charge
-+	is incremented if a file huge page cannot be charged and instead
-+	falls back to using small pages even though the allocation was
-+	successful.
-+
- thp_file_mapped
- 	is incremented every time a file huge page is mapped into
- 	user address space.
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -73,10 +73,12 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 		THP_FAULT_ALLOC,
- 		THP_FAULT_FALLBACK,
-+		THP_FAULT_FALLBACK_CHARGE,
- 		THP_COLLAPSE_ALLOC,
- 		THP_COLLAPSE_ALLOC_FAILED,
- 		THP_FILE_ALLOC,
- 		THP_FILE_FALLBACK,
-+		THP_FILE_FALLBACK_CHARGE,
- 		THP_FILE_MAPPED,
- 		THP_SPLIT_PAGE,
- 		THP_SPLIT_PAGE_FAILED,
-@@ -117,6 +119,7 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- #ifndef CONFIG_TRANSPARENT_HUGEPAGE
- #define THP_FILE_ALLOC ({ BUILD_BUG(); 0; })
- #define THP_FILE_FALLBACK ({ BUILD_BUG(); 0; })
-+#define THP_FILE_FALLBACK_CHARGE ({ BUILD_BUG(); 0; })
- #define THP_FILE_MAPPED ({ BUILD_BUG(); 0; })
- #endif
- 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -597,6 +597,7 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
- 	if (mem_cgroup_try_charge_delay(page, vma->vm_mm, gfp, &memcg, true)) {
- 		put_page(page);
- 		count_vm_event(THP_FAULT_FALLBACK);
-+		count_vm_event(THP_FAULT_FALLBACK_CHARGE);
- 		return VM_FAULT_FALLBACK;
- 	}
- 
-@@ -1406,6 +1407,7 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
- 			put_page(page);
- 		ret |= VM_FAULT_FALLBACK;
- 		count_vm_event(THP_FAULT_FALLBACK);
-+		count_vm_event(THP_FAULT_FALLBACK_CHARGE);
- 		goto out;
- 	}
- 
-diff --git a/mm/shmem.c b/mm/shmem.c
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1871,8 +1871,10 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
- 	error = mem_cgroup_try_charge_delay(page, charge_mm, gfp, &memcg,
- 					    PageTransHuge(page));
- 	if (error) {
--		if (PageTransHuge(page))
-+		if (PageTransHuge(page)) {
- 			count_vm_event(THP_FILE_FALLBACK);
-+			count_vm_event(THP_FILE_FALLBACK_CHARGE);
-+		}
- 		goto unacct;
- 	}
- 	error = shmem_add_to_page_cache(page, mapping, hindex,
-diff --git a/mm/vmstat.c b/mm/vmstat.c
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1254,10 +1254,12 @@ const char * const vmstat_text[] = {
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	"thp_fault_alloc",
- 	"thp_fault_fallback",
-+	"thp_fault_fallback_charge",
- 	"thp_collapse_alloc",
- 	"thp_collapse_alloc_failed",
- 	"thp_file_alloc",
- 	"thp_file_fallback",
-+	"thp_file_fallback_charge",
- 	"thp_file_mapped",
- 	"thp_split_page",
- 	"thp_split_page_failed",
+for you to fetch changes up to af33d2433b03d63ed31fcfda842f46676a5e1afc:
+
+  riscv: fix seccomp reject syscall code path (2020-03-05 13:58:15 -0800)
+
+----------------------------------------------------------------
+RISC-V Fixes for 5.6-rc5
+
+This tag contains a handful of fixes that I would like to target for 5.6:
+
+* A pair of fixes to module loading, which we hope solve the last of the issues
+  with module text being loaded too sparsely for our call relocations.
+* A Kconfig fix that disallows selecting memory models not supported by NOMMU.
+* A series of Kconfig updates to ease selecting the drivers necessary to run on
+  QEMU's virt platform.
+* DTS updates for SiFive's HiFive Unleashed.
+* A fix to our seccomp support that avoids mangling restartable syscalls.
+
+----------------------------------------------------------------
+Alexandre Ghiti (1):
+      riscv: Fix range looking for kernel image memblock
+
+Anup Patel (4):
+      RISC-V: Add kconfig option for QEMU virt machine
+      RISC-V: Enable QEMU virt machine support in defconfigs
+      RISC-V: Select SYSCON Reboot and Poweroff for QEMU virt machine
+      RISC-V: Select Goldfish RTC driver for QEMU virt machine
+
+Damien Le Moal (1):
+      riscv: Force flat memory model with no-mmu
+
+Tycho Andersen (1):
+      riscv: fix seccomp reject syscall code path
+
+Vincent Chen (2):
+      riscv: avoid the PIC offset of static percpu data in module beyond 2G limits
+      riscv: Change code model of module to medany to improve data accessing
+
+Yash Shah (1):
+      riscv: dts: Add GPIO reboot method to HiFive Unleashed DTS file
+
+ arch/riscv/Kconfig                                 |  1 +
+ arch/riscv/Kconfig.socs                            | 24 ++++++++++++++++++++++
+ arch/riscv/Makefile                                |  6 ++++--
+ .../riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  5 +++++
+ arch/riscv/configs/defconfig                       | 17 +++------------
+ arch/riscv/configs/rv32_defconfig                  | 18 +++-------------
+ arch/riscv/include/asm/syscall.h                   |  7 -------
+ arch/riscv/kernel/entry.S                          | 11 +++-------
+ arch/riscv/kernel/module.c                         | 16 +++++++++++++++
+ arch/riscv/kernel/ptrace.c                         | 11 +++++-----
+ arch/riscv/mm/init.c                               |  2 +-
+ 11 files changed, 65 insertions(+), 53 deletions(-)
