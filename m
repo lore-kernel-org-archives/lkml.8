@@ -2,75 +2,95 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A17C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E956BC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6080E20716
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37EF207FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:34:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAlOMTuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgCFBeP (ORCPT
+        id S1726860AbgCFBe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 20:34:15 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:58536 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgCFBeO (ORCPT
+        Thu, 5 Mar 2020 20:34:26 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38864 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFBe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 20:34:14 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2218F15543ED0;
-        Thu,  5 Mar 2020 17:34:14 -0800 (PST)
-Date:   Thu, 05 Mar 2020 17:34:13 -0800 (PST)
-Message-Id: <20200305.173413.1141876751815244581.davem@davemloft.net>
-To:     jianglidong@gmail.com
-Cc:     ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
-        john.fastabend@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jianglidong3@jd.com
-Subject: Re: [PATCH] veth: ignore peer tx_dropped when counting local
- rx_dropped
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1583286569-144923-1-git-send-email-jianglidong@gmail.com>
-References: <1583286569-144923-1-git-send-email-jianglidong@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 05 Mar 2020 17:34:14 -0800 (PST)
+        Thu, 5 Mar 2020 20:34:26 -0500
+Received: by mail-pf1-f195.google.com with SMTP id g21so274185pfb.5;
+        Thu, 05 Mar 2020 17:34:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=POKsK2Sr9GyNeTFElca9dR7uYX4ViPPFrczK7S6aa5U=;
+        b=RAlOMTuEDpcSmH4mA48Ys8JRgeW29/dLcFi8XwipfyaZazSxjQXkSQWWaaQgoUoVJb
+         g+nh3sW2uE+G9sI90suZA0XCHohnVA4WmtJ/Z/aJ6ydpDTcef6jhTp0gK05J4LAQtPh8
+         h0LrwQVrykgXh7rK90UoNVDO7EEIiquEAdcZVf9bo/qUXxy9OicyfJ4GcctiD4vm67pq
+         dvDubxICLYXCZeexif1zjZ9UOg6OG20/EXaX6FGHUx1okT3dFX+FnS9+2JiFZ8UQNoSl
+         vrpS7mc3O/9Hxjd+9EUrEkEtbHG+1Q0IivYeN0Ceq0oL+6svYbowHIg0p4h8UACKtLSD
+         3ySQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=POKsK2Sr9GyNeTFElca9dR7uYX4ViPPFrczK7S6aa5U=;
+        b=oBiIYcvTqpGPfqQNeC28TvefNQOxw87NZ8kP6ve00Fk8u8m7fyZ6S0IqC/DRGpR1fM
+         7zkisgc0LcazRgYJpEK+Jjc1jPf6fNnhTvqGowJQEdUR3gHQPQgaRvO7tK3iRs5zaog9
+         uMKeGoA4+F8+NM4UhvryvqK0DVpn3XMXlkY/ELplBkXDpeZr8N5fMcnuyXWhbs9NoQ0u
+         o+5FF+Tx9kXqYksAmavRrf9ZC0j8NBz71Is4eoW6b9sQoyuOavfKNTJjss7lKYt+OkKX
+         Hg6FZ+ENC1xv9tUscz3aDqu0s7h8Q0dQGJ1zcmOeiv/GyKM/jIWZVoJMF2qi6W/SCI5w
+         kHRg==
+X-Gm-Message-State: ANhLgQ3tKLXTBl2AsyNcvLndvdHm4EsmBRDMazd9WmeOcRlFFAYSnyex
+        S5MONt3heVWT7jh8frqJz34=
+X-Google-Smtp-Source: ADFU+vtfHGO7fe8MY0Sf8i1ebOzyUkWQy0VZIylh1JiwuOKOaEfsmdy4VdYfCog6rovza5nlxFHROg==
+X-Received: by 2002:a63:34c8:: with SMTP id b191mr992562pga.220.1583458465328;
+        Thu, 05 Mar 2020 17:34:25 -0800 (PST)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id u12sm27124952pgh.52.2020.03.05.17.34.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Mar 2020 17:34:24 -0800 (PST)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     jlayton@kernel.org
+Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] fs/ceph: return errcode in __get_parent().
+Date:   Fri,  6 Mar 2020 09:34:20 +0800
+Message-Id: <1583458460-31917-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lidong Jiang <jianglidong@gmail.com>
-Date: Wed,  4 Mar 2020 09:49:29 +0800
+return real errcode when it's different from ENOENT.
 
-> From: Jiang Lidong <jianglidong3@jd.com>
-> 
-> When local NET_RX backlog is full due to traffic overrun,
-> peer veth tx_dropped counter increases. At that time, list
-> local veth stats, rx_dropped has double value of peer
-> tx_dropped, even bigger than transmit packets by peer.
-> 
-> In NET_RX softirq process, if any packet drop case happens,
-> it increases dev's rx_dropped counter and returns NET_RX_DROP.
-> 
-> At veth tx side, it records any error returned from peer netif_rx
-> into local dev tx_dropped counter.
-> 
-> In veth get stats process, it puts local dev rx_dropped and
-> peer dev tx_dropped into together as local rx_drpped value.
-> So that it shows double value of real dropped packets number in
-> this case.
-> 
-> This patch ignores peer tx_dropped when counting local rx_dropped,
-> since peer tx_dropped is duplicated to local rx_dropped at most cases.
-> 
-> Signed-off-by: Jiang Lidong <jianglidong3@jd.com>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-This makes sense to me, applied, thank you.
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index b6bfa94..79dc068 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -315,6 +315,11 @@ static struct dentry *__get_parent(struct super_block *sb,
+ 
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
++	}
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
+-- 
+1.8.3.1
+
