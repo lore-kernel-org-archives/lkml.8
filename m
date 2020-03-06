@@ -6,51 +6,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDA9C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3FDC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604B520801
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA7620870
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgCFA1y (ORCPT
+        id S1727264AbgCFA2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 19:27:54 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53273 "EHLO ozlabs.org"
+        Thu, 5 Mar 2020 19:28:03 -0500
+Received: from ozlabs.org ([203.11.71.1]:38271 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgCFA1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 19:27:43 -0500
+        id S1727178AbgCFA1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 19:27:54 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48YT3K1BwNz9sRY; Fri,  6 Mar 2020 11:27:40 +1100 (AEDT)
+        id 48YT3X0KXSz9sPJ; Fri,  6 Mar 2020 11:27:51 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 9e27086292aa880921a0f2b8501e5189d5efcf03
-In-Reply-To: <8ee3bdbbdfdfc64ca7001e90c43b2aee6f333578.1580470482.git.christophe.leroy@c-s.fr>
+X-powerpc-patch-commit: 6453f9ed9d4e4b4cdf201bf34bf460c436bf50ea
+In-Reply-To: <03c97f0f6b3790d164822563be80f2fd4713a955.1581932480.git.christophe.leroy@c-s.fr>
 To:     Christophe Leroy <christophe.leroy@c-s.fr>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] powerpc/32: Warn and return ENOSYS on syscalls from kernel
-Message-Id: <48YT3K1BwNz9sRY@ozlabs.org>
-Date:   Fri,  6 Mar 2020 11:27:40 +1100 (AEDT)
+Subject: Re: [PATCH] powerpc/mm: Don't kmap_atomic() in pte_offset_map() on PPC32
+Message-Id: <48YT3X0KXSz9sPJ@ozlabs.org>
+Date:   Fri,  6 Mar 2020 11:27:51 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-01-31 at 11:34:54 UTC, Christophe Leroy wrote:
-> Since commit b86fb88855ea ("powerpc/32: implement fast entry for
-> syscalls on non BOOKE") and commit 1a4b739bbb4f ("powerpc/32:
-> implement fast entry for syscalls on BOOKE"), syscalls from
-> kernel are unexpected and can have catastrophic consequences
-> as it will destroy the kernel stack.
+On Mon, 2020-02-17 at 09:41:35 UTC, Christophe Leroy wrote:
+> On PPC32, pte_offset_map() does a kmap_atomic() in order to support
+> page tables allocated in high memory, just like ARM and x86/32.
 > 
-> Test MSR_PR on syscall entry. In case syscall is from kernel,
-> emit a warning and return ENOSYS error.
+> But since at least 2008 and commit 8054a3428fbe ("powerpc: Remove dead
+> CONFIG_HIGHPTE"), page tables are never allocated in high memory.
+> 
+> When the page is in low mem, kmap_atomic() just returns the page
+> address but still disable preemption and pagefault. And it is
+> not an inlined function, so we suffer function call for no reason.
+> 
+> Make pte_offset_map() the same as pte_offset_kernel() and make
+> pte_unmap() void, in the same way as PPC64 which doesn't have HIGHMEM.
 > 
 > Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Series applied to powerpc next, thanks.
+Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/9e27086292aa880921a0f2b8501e5189d5efcf03
+https://git.kernel.org/powerpc/c/6453f9ed9d4e4b4cdf201bf34bf460c436bf50ea
 
 cheers
