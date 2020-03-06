@@ -2,147 +2,144 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BCFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11029C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E662073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCD222073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="DUZ5o+me"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jh1/ncOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgCFLMS (ORCPT
+        id S1726382AbgCFLNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:12:18 -0500
-Received: from mail-eopbgr130085.outbound.protection.outlook.com ([40.107.13.85]:8664
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726129AbgCFLMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:12:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YovSpe4EFfOj8RV/1eWsYDGAm6HOUtAL4zS9XlbmOyAfSm+uc0Tc07N9uWGa9KQYwMLzdjvTByj55WE9n5bWSQybeeXvloT42efSmGBOlHrmWmdU6fr5OwnxSV1/ngcsJbB8yfTME+UEn+xlIkUOCfmP5ErvHSmWBzNnGnPvDsDAcLRzi8tH3V1RxgWYoFGNfg/MomR/BuY/uBcxTC7ruSrG8FbCrNz0a5m/F6La+OMYYbIUwSZ9+kw8+jwKsw5PVx6nTfKvpJpUdhijy3n8f8Otpg6xdzPM2JMPHpWkFAJp/pCgHxlF+X3CwopdztVYO3IsW2CEIahaeEH4ckDN8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9hwjz+JxwPUJhmJSAaZkZECaVjiCTFHzNNwzbEVHIo4=;
- b=aXFsVJ5WBwbjoU4Fhzq1aU/x//UCCY1YlWfcFiQVwREnHNqpkdlf0jRfcMFzpJJCiZUuNgB/ovYe2oS49ilBUdDRJahRBE9YVb5YkseuCxCP60wMTg8rZQpiLdrSyfpYB9CGNE1yR+xVh+fkTQ48qiYDHAFcTi9eKJxdrxPdPu3ApafgMNJqTJpWVSAkUntGTiLBGuWWAYIJwLuUa5AuX1GEqWkasGP2BB0wpfiMqOS16ML+IaP1jfTckt5CGkuSRIgVUKII3mM3C5sGDmdP5OXvJA9LNIAZbvMWHnwRY3s0iELjVjNLB3xoVqeFjQ4iv9PX+rjaKWqvkoK+7FvWcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9hwjz+JxwPUJhmJSAaZkZECaVjiCTFHzNNwzbEVHIo4=;
- b=DUZ5o+melXqOOCJJPqk12VQSU370Wvdx8L4riXR91Kz0BimH/kNzh4sYo7fY6/oLkb9dKYAouIfZgCDwUBgmLfAcDbtffLGK7AFD4Z23NtG+c/W3PNxuPRNSJ1N6PmgoayaDLrBE+C1lcppd6kiF75tDiLmz0mzNvWzIfUeAQYI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.palcu@oss.nxp.com; 
-Received: from VI1PR04MB5775.eurprd04.prod.outlook.com (20.178.126.145) by
- VI1PR04MB4048.eurprd04.prod.outlook.com (52.133.14.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.15; Fri, 6 Mar 2020 11:12:14 +0000
-Received: from VI1PR04MB5775.eurprd04.prod.outlook.com
- ([fe80::8542:a5b7:a83:6ff1]) by VI1PR04MB5775.eurprd04.prod.outlook.com
- ([fe80::8542:a5b7:a83:6ff1%3]) with mapi id 15.20.2772.019; Fri, 6 Mar 2020
- 11:12:14 +0000
-Date:   Fri, 6 Mar 2020 13:12:10 +0200
-From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, agx@sigxcpu.org,
-        lukas@mntmn.com, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 2/4] drm/imx: Add initial support for DCSS on iMX8MQ
-Message-ID: <20200306111210.q7fceoahqw3mlxog@fsr-ub1864-141>
-References: <1575625964-27102-1-git-send-email-laurentiu.palcu@nxp.com>
- <1575625964-27102-3-git-send-email-laurentiu.palcu@nxp.com>
- <03b551925d079fcc151239afa735562332cfd557.camel@pengutronix.de>
- <20200306095830.sa5eig67phngr3fa@fsr-ub1864-141>
- <69903c69a95902c0ddc8fb9e7a6762abf28aa034.camel@pengutronix.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69903c69a95902c0ddc8fb9e7a6762abf28aa034.camel@pengutronix.de>
-User-Agent: NeoMutt/20171215
-X-ClientProxiedBy: AM3PR07CA0107.eurprd07.prod.outlook.com
- (2603:10a6:207:7::17) To VI1PR04MB5775.eurprd04.prod.outlook.com
- (2603:10a6:803:e2::17)
+        Fri, 6 Mar 2020 06:13:43 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:45340 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFLNn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 06:13:43 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026B94D3062893;
+        Fri, 6 Mar 2020 11:13:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=C9MeYKmnKqguW2tFL6WIfaBDk1SnY7qC2MQcpLT8wn8=;
+ b=jh1/ncOfk2OUOXdvHgHVVosejdOWsubI21rCKl5T8O9sZeZqwNtdZY8imYj8NVSOcaAO
+ rMN+MQfkIykqM0xlKTrPiKDfNiGE0Q/7HSNxmKeezC9BHt5v+XHcQewSr5cCaEcNcNrI
+ oCtu0wldIaINoF3UxuRaTe10dTnZHZRZkYQlb9oz6XmZ8dpeBjdKB1tSOvhyNoKSipcS
+ h9KE3rkSSoAxzt3jO/p/0CZjmT/Ux/AQmv/bKV3InERBxu+cyke6nivruN2h/o/f2Ec0
+ TGoSD8S9nPmMbd7f4kad5N/WzVL/2AocTz+A8hqDNotZblMqptkL6nBIESOtB8Gdp4wh IQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2yghn3ph3k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 11:13:36 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026BCxUb059155;
+        Fri, 6 Mar 2020 11:13:35 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2yg1s097tg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 11:13:35 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 026BDYeB006976;
+        Fri, 6 Mar 2020 11:13:34 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Mar 2020 03:13:34 -0800
+Subject: Re: [PATCH v3 2/2] xenbus: req->err should be updated before
+ req->state
+To:     Dongli Zhang <dongli.zhang@oracle.com>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     julien@xen.org, jgross@suse.com, sstabellini@kernel.org,
+        joe.jin@oracle.com
+References: <20200303221423.21962-1-dongli.zhang@oracle.com>
+ <20200303221423.21962-2-dongli.zhang@oracle.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <d8e5b63a-a166-590b-e8ac-3a560b2930c8@oracle.com>
+Date:   Fri, 6 Mar 2020 06:13:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141 (89.37.124.34) by AM3PR07CA0107.eurprd07.prod.outlook.com (2603:10a6:207:7::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.9 via Frontend Transport; Fri, 6 Mar 2020 11:12:12 +0000
-X-Originating-IP: [89.37.124.34]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: daab01e8-e2dc-4474-b08a-08d7c1bf391e
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4048:|VI1PR04MB4048:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB40487928479A71FBBCE98D41BEE30@VI1PR04MB4048.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0334223192
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(346002)(376002)(189003)(199004)(6496006)(2906002)(26005)(52116002)(81156014)(8676002)(9686003)(81166006)(186003)(66476007)(66946007)(5660300002)(66556008)(6916009)(86362001)(1076003)(8936002)(55016002)(16526019)(316002)(7416002)(478600001)(4326008)(33716001)(54906003)(44832011)(956004)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4048;H:VI1PR04MB5775.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uHhxRW8OFh/p1Ky+n7oHcm3BuCPsZ/bJfkrhpZz+P1SLrpeJ1y5Uhj+3gUEaq+4lgUA4oaeDN/Ig1POJSXhQA3l5CJyEDnb51eVidNbjeNKVy9Ahb81zAdXXCnSgSCFG/K+ES1CfCiLTBejwWPkWLdLsFYadmBwEgQ760VK4hFMx46rhthgqX2huZiSYAJ5sytdsZiKa+SjqE9E9N12DIJUj2sMvD6I2ya7B4ln2VFZBiQ0jhnmgQQd1rzbDWBlSNpNY1G+FsknJcDdUzh0TWWjsPFm9GGYI6SxNKt3DjfEGzdGddknFHMTR/o7vsSc1ATTqKCSb01U33alK8xlhZvlb1YlGE1vt229vb52OV4Pf47ZBuKp2tC7lQycy3YhS8Vp+fG3z4qzhIFqWjFnelqJ0Uo52QOJNPSPcIJ1RA0rEcLbZbF6tifji7BL1xKMa/Yr4Nt0Dd7RwqzbRMfL5fhHvbV8BgtH2AjkxKCWygCvO3rPm/Vn29q4lJZw4rw3/
-X-MS-Exchange-AntiSpam-MessageData: sqE0XNL5N/ExwJb3T8PEeY9CkkvVa8g2TcrjVhqygFQclbdc9zFStiyy+LdCTYgjoRgP78s4kAVVLLHVc8zRy/0jpX0S3OayDvObJqpmYLodKE3PsF/rQGIHAHrpJGOM3N8ezZqGgppl6OSQ8/7/QA==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: daab01e8-e2dc-4474-b08a-08d7c1bf391e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2020 11:12:14.0039
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 06oszKkFTX0zQhDtWj2RpRMDytfD8Xvfo51YtJL+atzYqqif9JxvgYCk7imWNpd5KS3N5wAEQP5fq7KJEGJZqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4048
+In-Reply-To: <20200303221423.21962-2-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9551 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 adultscore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060080
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9551 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1011 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003060080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp,
 
-On Fri, Mar 06, 2020 at 11:20:51AM +0100, Philipp Zabel wrote:
-> Hi Laurentiu,
-> 
-> On Fri, 2020-03-06 at 11:58 +0200, Laurentiu Palcu wrote:
-> > On Wed, Feb 26, 2020 at 02:19:11PM +0100, Lucas Stach wrote:
-> [...]
-> > > > +/* This function will be called from interrupt context. */
-> > > > +void dcss_scaler_write_sclctrl(struct dcss_scaler *scl)
-> > > > +{
-> > > > +	int chnum;
-> > > > +
-> > > > +	for (chnum = 0; chnum < 3; chnum++) {
-> > > > +		struct dcss_scaler_ch *ch = &scl->ch[chnum];
-> > > > +
-> > > > +		if (ch->scaler_ctrl_chgd) {
-> > > > +			dcss_ctxld_write_irqsafe(scl->ctxld, scl->ctx_id,
-> > > > +						 ch->scaler_ctrl,
-> > > > +						 ch->base_ofs +
-> > > > +						 DCSS_SCALER_CTRL);
-> > > 
-> > > Why is this using the _irqsafe variant without any locking? Won't this
-> > > lead to potential internal state corruption? dcss_ctxld_write is using
-> > > the _irqsave locking variants, so it fine with being called from IRQ
-> > > context.
-> > 
-> > This is only called from __dcss_ctxld_enable() which is already protected
-> > by lock/unlock in dcss_ctxld_kick().
-> 
-> You could add a lockdep_assert_held() line to the top of this function
-> to make it clear this depends on the lock being held.
 
-Thanks for the suggestion. Will add a check.
+On 3/3/20 5:14 PM, Dongli Zhang wrote:
+> This patch adds the barrier to guarantee that req->err is always updated
+> before req->state.
+>
+> Otherwise, read_reply() would not return ERR_PTR(req->err) but
+> req->body, when process_writes()->xb_write() is failed.
+>
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
 
-Thanks,
-laurentiu
+Applied to for-linus-5.6b.
+
+-boris
