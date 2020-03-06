@@ -2,118 +2,138 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2495C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEAEC3F2D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9823A2084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24E2207FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:03:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gIKx0pE3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="pexEd/QD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgCFKAS (ORCPT
+        id S1726212AbgCFKD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:00:18 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54625 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726090AbgCFKAS (ORCPT
+        Fri, 6 Mar 2020 05:03:26 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:29200 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbgCFKD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:00:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583488817;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AVZKZRodnT8m61EYZkSnJRTdxqQpltbB/y6KfgTIT1g=;
-        b=gIKx0pE3ayOl+1aP25PpEwEthcB4DRRm00Ge3I8PzBP96wlK1r5WxeLP5UoX7pc7WyvuuD
-        7IZSBbuMKfR3XVt6NnzvItQhuwVoBqKHlolzOz+i1LRZMB8e4WjcnJokrh6UHgsuLIuxdA
-        AqNYGPeMxs58SHZ15xkmp9UKLTLLSbk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-tC2jjpZ8PDGfgE4KKz_Ljg-1; Fri, 06 Mar 2020 05:00:16 -0500
-X-MC-Unique: tC2jjpZ8PDGfgE4KKz_Ljg-1
-Received: by mail-wm1-f69.google.com with SMTP id m4so682727wmi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:00:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AVZKZRodnT8m61EYZkSnJRTdxqQpltbB/y6KfgTIT1g=;
-        b=YdZ+5SRqPc3M5IzRVllTYOK+vtsOJnbOABP4XVkJs2vb+gqcDndwdVz/OVgmMZa7IL
-         X9JvJkzBhbd4SLqoiVDnhrinBGrP2U3ZzDScgb24EFCwu4JEl4U7fDi5q2muNgFnlpDh
-         t7A8LeyTn+AsduB4SaBVQ27MyWWwKA3wQowdixbJpByaRf9vlwPWzPs5D+1BvOM/BuJI
-         n2+waQv0vHMXJ7Pm9O5AIEphiVoWeoycGtmaR2fnFqsZQxJSAONDZ3YP9K0u+2KamwTs
-         WmfLkMiOctOu/5B+PGXu6VHs1AtS87HKW3RgnnrYsBdtG/XUWV8t+RwIZlD1EYsSLt/j
-         xt3g==
-X-Gm-Message-State: ANhLgQ05xnx3TE3Rt3lM1dTdei7htCktWTKinGCXf5Y83b3TtKUPgnLB
-        +LvllhFhyP4mkRjiNQXARGGKo9KQZTbRGhk0Q7hVTGYV1zcV/D+/6QoM4s+FKyfLsunZO2FHp3L
-        newt6ttBRdkijFwW/R4ngtyoi
-X-Received: by 2002:adf:ee03:: with SMTP id y3mr3344809wrn.5.1583488814290;
-        Fri, 06 Mar 2020 02:00:14 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsV7StFA621WH1U3poGeCCFj5kAbCl4GYqaDAZLKVQ5l065AMt9smou8/Ov0naR1gFtRC+gAw==
-X-Received: by 2002:adf:ee03:: with SMTP id y3mr3344781wrn.5.1583488814004;
-        Fri, 06 Mar 2020 02:00:14 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b99a:4374:773d:f32e? ([2001:b07:6468:f312:b99a:4374:773d:f32e])
-        by smtp.gmail.com with ESMTPSA id i67sm25991960wri.50.2020.03.06.02.00.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2020 02:00:13 -0800 (PST)
-Subject: Re: [PATCH] KVM: VMX: Use wrapper macro
- ~RMODE_GUEST_OWNED_EFLAGS_BITS directly
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linmiaohe <linmiaohe@huawei.com>
-Cc:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-References: <f1b01b4903564f2c8c267a3996e1ac29@huawei.com>
- <1e3f7ff0-0159-98e8-ba21-8806c3a14820@redhat.com>
- <87sgiles16.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <2cde5e91-b357-81f9-9e39-fd5d99bb81fd@redhat.com>
-Date:   Fri, 6 Mar 2020 11:00:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <87sgiles16.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 6 Mar 2020 05:03:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583489002;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=c11MUTAoBFghZBdD4CTF4L9tszjd6tD8y5eT0h8wNtw=;
+        b=pexEd/QDmFEomb3BEReFsAKnGb7wuqs8J9hwWI7IBX4q7PoDt9WJvfVOEPNGmb7FtI
+        FemmlCVO2EBKINp5JNrmr+SiqN6rui61yxFc224jIb7x+1BKKMKbb2UhCqeBJ7vJR8+p
+        i0R8QoKUSqWv0dWjrXFdMWkYORxMWd/gR6nXznhROUxGibTT83xR68zEvcEJHeUWfqgk
+        xNqslJ1wRbBxINuQFGoe/INGSV1xO1XgJzuHmN/Fl7PN49Hl7l6v3kfqXXxAMVVU6v03
+        pZ0TTm9NEXHk+ZZCNxsk//AbInjFBkde1e1v06VA0zkaE8SQS7v2VCOWcPwwuv/Xh0XJ
+        0RFQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaaXAgMzQ=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw26A39XQJ
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 6 Mar 2020 11:03:09 +0100 (CET)
+Subject: Re: linux-next: build warning after merge of the nvmem tree
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200306152827.6fe507bd@canb.auug.org.au>
+Date:   Fri, 6 Mar 2020 11:03:08 +0100
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <00D4DF40-E9A8-41AC-B1DA-4D656B6AC4F4@goldelico.com>
+References: <20200306152827.6fe507bd@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/03/20 10:44, Vitaly Kuznetsov wrote:
->>> Define a macro RMODE_HOST_OWNED_EFLAGS_BITS for (X86_EFLAGS_IOPL |
->>> X86_EFLAGS_VM) as suggested by Vitaly seems a good way to fix this ?
->>> Thanks.
->> No, what if a host-owned flag was zero?  I'd just leave it as is.
->>
-> I'm not saying my suggestion was a good idea but honestly I'm failing to
-> wrap my head around this. The suggested 'RMODE_HOST_OWNED_EFLAGS_BITS'
-> would just be a define for (X86_EFLAGS_IOPL | X86_EFLAGS_VM) so
-> technically the patch would just be nop, no?
+Hi,
 
-It would not be a nop for the reader.
+> Am 06.03.2020 um 05:28 schrieb Stephen Rothwell =
+<sfr@canb.auug.org.au>:
+>=20
+> Hi all,
+>=20
+> After merging the nvmem tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
+>=20
+> In file included from include/linux/clk.h:13,
+>                 from drivers/nvmem/jz4780-efuse.c:25:
+> drivers/nvmem/jz4780-efuse.c: In function 'jz4780_efuse_read':
+> include/linux/kernel.h:842:29: warning: comparison of distinct pointer =
+types lacks a cast
+>  842 |   (!!(sizeof((typeof(x) *)1 =3D=3D (typeof(y) *)1)))
+>      |                             ^~
+> include/linux/kernel.h:856:4: note: in expansion of macro =
+'__typecheck'
+>  856 |   (__typecheck(x, y) && __no_side_effects(x, y))
+>      |    ^~~~~~~~~~~
+> include/linux/kernel.h:866:24: note: in expansion of macro =
+'__safe_cmp'
+>  866 |  __builtin_choose_expr(__safe_cmp(x, y), \
+>      |                        ^~~~~~~~~~
+> include/linux/kernel.h:875:19: note: in expansion of macro =
+'__careful_cmp'
+>  875 | #define min(x, y) __careful_cmp(x, y, <)
+>      |                   ^~~~~~~~~~~~~
+> drivers/nvmem/jz4780-efuse.c:76:24: note: in expansion of macro 'min'
+>   76 |   unsigned int chunk =3D min(bytes, (start + JZ_EFU_READ_SIZE)
+>      |                        ^~~
+>=20
+> Introduced by commit
+>=20
+>  50a09dfd394a ("nvmem: add driver for JZ4780 efuse")
 
-Something called RMODE_{GUEST,HOST}_OWNED_EFLAGS_BITS is a mask.  It
-tells you nothing about whether those bugs are 0 or 1.  It's just by
-chance that all three host-owned EFLAGS bits are 1 while in real mode.
-It wouldn't be the case if, for example, we ran the guest using vm86
-mode extensions (i.e. setting CR4.VME=1).  Then VIF would be host-owned,
-but it wouldn't necessarily be 1.
+The new kbuild robot message is more precise.
 
-Paolo
+drivers/nvmem/jz4780-efuse.c:76:38: sparse: sparse: incompatible types =
+in comparison expression (different type sizes):
+drivers/nvmem/jz4780-efuse.c:76:38: sparse:    unsigned long *
+drivers/nvmem/jz4780-efuse.c:76:38: sparse:    unsigned int *
+
+A look into the code:
+
+/* main entry point */
+static int jz4780_efuse_read(void *context, unsigned int offset,
+			     void *val, size_t bytes)
+{
+	struct jz4780_efuse *efuse =3D context;
+
+	while (bytes > 0) {
+		unsigned int start =3D offset & ~(JZ_EFU_READ_SIZE - 1);
+		unsigned int chunk =3D min(bytes, (start + =
+JZ_EFU_READ_SIZE)
+					 - offset);
+
+The problem seems to be that size_t is not always compatible to
+unsigned int on all machines and compilers. My cross-gcc for MIPS
+did not complain. kbuild robot tried for ARCH=3Dx86_64 and in the
+first warning for GCC_VERSION=3D7.5.0 make.cross ARCH=3Driscv=20
+
+So I think we have to use
+
+		size_t start =3D offset & ~(JZ_EFU_READ_SIZE - 1);
+		size_t chunk =3D min(bytes, (start + JZ_EFU_READ_SIZE)
+					 - offset);
+
+I'l send a patch (after trying on MIPS).
+
+BR and thanks,
+Nikolaus
 
