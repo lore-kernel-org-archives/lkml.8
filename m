@@ -2,186 +2,162 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CF8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0ADCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E06206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3043206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="o9KItpNK"
+	dkim=pass (2048-bit key) header.d=timesys-com.20150623.gappssmtp.com header.i=@timesys-com.20150623.gappssmtp.com header.b="kLCqtObt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCFOS3 (ORCPT
+        id S1726897AbgCFOTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:18:29 -0500
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:53547 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726646AbgCFOS2 (ORCPT
+        Fri, 6 Mar 2020 09:19:12 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:46287 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbgCFOTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:18:28 -0500
-Received: from [IPv6:2001:983:e9a7:1:558f:c736:2117:17d1]
- ([IPv6:2001:983:e9a7:1:558f:c736:2117:17d1])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id ADo1j3HQwEE3qADo2jCfUe; Fri, 06 Mar 2020 15:18:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1583504307; bh=qPs4O9bzHG/Qd9bfS0xN/I51t+b35srezEE15bWS1Lc=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=o9KItpNK7ElHCYhvP4XpZSnJLzYAVKs+FbjsW5own5y/+ul04w7cpxF/Ffo/u8feP
-         991AMi/afxLR/wA2ezGYwcbM/I6qbJ50mBVz2/DQhCcqGxYwPbdEuGSHYXHN2YP7+X
-         3BB3239MxXs503kmspQnLX6mmzhv2vUnf4GwU+rd2I5GKTgZhsT6eke7eQbLwN8svx
-         ePA80k6u1bJ6gNkgeb3bUM7HpMW58OlyaXoqjrG49kUg1vjv+giTsvYnKyY81bO03g
-         9KmeW7M7CoNzYceWdETlhu5Nep3druRvOlxB7bpfGDgrH4HNoQPvrscIxC6/nyE0rd
-         9Z0TdzmsVi0ng==
-Subject: Re: [PATCHv4 00/11] Implement V4L2_BUF_FLAG_NO_CACHE_* flags
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <04241ce5-dc41-9ea8-a058-5c0d8f9ba5a4@xs4all.nl>
-Date:   Fri, 6 Mar 2020 15:18:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 6 Mar 2020 09:19:12 -0500
+Received: by mail-vs1-f67.google.com with SMTP id s9so786838vsi.13
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 06:19:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=timesys-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ue2+GwbAPb84xyTjVZigWk3TSNspoTjpeZtjLHwtUDw=;
+        b=kLCqtObta9BeGJh62CMUO94J6gqwExyrRmFNmMapac/A0byC0oAbnP6qYgH5Rgi6hp
+         OBjS3LSWmOdiJE4IkC7FyzMSgK2tiHqwzaZS25QCD8W4ykFaMiDouTT2feE64iTOVUMt
+         jzQZcAcSNe5nflmPlD/KCiW7C2wHIoUj2p+FYt6Mu/jowVcIA4bkPPZspD88Uu35Q3io
+         TfK/Qhe8Cc2QTkFHhlR0C86CudQFnb+h1pesi5QkFmCbJI5uTcKV/zYtJzOJMA+X9ybq
+         1U/EPMZ09snFNtU3MEeMpYzGL4p2fC+LgtaE7UvKve543AfnGtAF/tUHdIIryri1pQLv
+         YTMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ue2+GwbAPb84xyTjVZigWk3TSNspoTjpeZtjLHwtUDw=;
+        b=eWyjquQBbeSejXq6HQAcMpf6yr/FiXExfXjrYj6HoCSMtoHoXNJt1Qw4TMrgHch2Y8
+         gbed3ezd1FOgIsiUtpb2uDFvByi16XLNjm4z3TlVNkKeV3GsDj098zel8cdjHkDYETAF
+         OpKKydkiM3rzLlw2Bcwv7dWbEcGmYU5FdoSPPJJdJ7OK+HmRJmGNMOTb8ueBjomsI0nC
+         imyK7r8m3NqpZ9QBxu/7VgNxCwW/fLc6lSCJ4k20S2BtWD1tT+cPGUIazgWE8oGlHEMK
+         jIYhhL0bNxGQiupqaYsF+8jfz1e3/D2FYmLCAKZv0ZgQ9Yn7RHSy1g9sTFPqH9Ky5ZQt
+         alqw==
+X-Gm-Message-State: ANhLgQ3NQWxHzitMjSk8oO+bysANP4+IJw+wJsJPqvNVFB2c4sTdxld0
+        qnutQ79lbY8f0FIdjPRJSc3sMIeI/dUfPfD762lmuQ==
+X-Google-Smtp-Source: ADFU+vvC1TodqjsSeoIjJ1HIWOBW8NAESW1icga2msXRV5KjGlswYzQCE3pwVXXKVRA8M9W0cupPQz2xYP/PM14si54=
+X-Received: by 2002:a67:f296:: with SMTP id m22mr2143928vsk.237.1583504350791;
+ Fri, 06 Mar 2020 06:19:10 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200302041213.27662-1-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfMIPh+1kpdpwLIvBuo+qM47k+a3e5gGBZyENFJLLhyTkloSYNKkVjJiV3UfOsSnmMkuNr/TowBS0A/UhPzf3wC5QWPUlwR6zXbrcfLkSIL2N0lavSdMj
- R7eVuPDnidQOMMXX77SI19Tjd9qqRt+oxePrHJcTlJYKYuZoek1PWMeESgyjozPFSVEn0GqCfIyfh9zIxZ7cSMRnB/OYTIa8prES2gd2VAZ6BBAbH0Vap/Tj
- g55Iz2oXaYdzegv+NX1WHme4dTzFJpOFgmm/Y5ImjwPHk+4v24YBf36kqgXoF4m7ghGJrkjJagJJ31SLUGK5Rn+4v1tupMWW19WzNMXJy3WN0cVK92+MZxci
- ms3OYlNJ1nZ/8b6Aa6xayNrlel4WVaGkfGjyxkO38F0nHR8GG6TiW8W6DfE5/rZCVKgOi6KzVGWM5P88GK4v3HzT9lroZz8MWTg3vwu0iAFWw6gBlhNSff5B
- cUkP5CZUYc9bDozW9PJtT6PEK8lXHd3KeiVWRAZyg/Z9wpTS17JbdGk7vIwSiUvKavNx94pM5Q6rfZ2eW4qgzzzjhcTNmJ0gcZbXdCSObyyjTz28lc+4jwvx
- AfC6ROOIuWltlSiAS25+Erl0+adJSiUVV1pe7pbdXKBIig==
+References: <20200305183951.2647785-1-angelo.dureghello@timesys.com> <20200305184517.GA2141048@kroah.com>
+In-Reply-To: <20200305184517.GA2141048@kroah.com>
+From:   Angelo Dureghello <angelo.dureghello@timesys.com>
+Date:   Fri, 6 Mar 2020 15:21:23 +0100
+Message-ID: <CALJHbkBcv_On-QtoQ-9kecE7f+M_UP350DXTDfNax3eVcZne7w@mail.gmail.com>
+Subject: Re: [PATCH] w1: ds2430: non functional fixes
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, Evgeniy Polyakov <zbr@ioremap.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/03/2020 05:12, Sergey Senozhatsky wrote:
-> Hello,
-> 
-> 	v4 of the series. Typos and grammar fixes.
-> 
-> Previous series:
-> v3 link: https://lore.kernel.org/lkml/20200226111529.180197-1-senozhatsky@chromium.org
-> v2 link: https://lore.kernel.org/lkml/20200204025641.218376-1-senozhatsky@chromium.org/
-> v1 link: https://lore.kernel.org/lkml/20191217032034.54897-1-senozhatsky@chromium.org/
-> 
-> Series Intro
-> ========================================================================
-> 
->         This is a reworked version of the vb2 cache hints
-> (V4L2_BUF_FLAG_NO_CACHE_INVALIDATE / V4L2_BUF_FLAG_NO_CACHE_CLEAN)
-> support patch series which previsouly was developed by Sakari and
-> Laurent [0].
-> 
-> The patch set attempts to preserve the existing behvaiour - cache
-> sync is performed in ->prepare() and ->finish() (unless the buffer
-> is DMA exported). User space can request “default behavior” override
-> with cache management hints, which are handled on a per-buffer basis
-> and should be supplied with v4l2_buffer ->flags during buffer
-> preparation. There are two possible hints:
-> 
-> - V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
->         No cache sync on ->finish()
-> 
-> - V4L2_BUF_FLAG_NO_CACHE_CLEAN
->         No cache sync on ->prepare()
-> 
-> In order to keep things on the safe side, we also require driver
-> to explicitly state which of its queues (if any) support user space
-> cache management hints (such queues should have ->allow_cache_hints
-> bit set).
-> 
-> The patch set also (to some extent) simplifies allocators' ->prepare()
-> and ->finish() callbacks. Namely, we move cache management decision
-> making to the upper - core - layer. For example, if, previously, we
-> would have something like this
-> 
->         vb2_buffer_done()
->           vb2_dc_finish()
->             if (buf->db_attach)
->                return;
-> 
-> where each allocators' ->finish() callback would either bail
-> out (DMA exported buffer, for instance) or sync, now that "bail
-> out or sync" decision is made before we call into the allocator.
-> 
-> Along with cache management hints, user space is also able to
-> adjust queue's memory consistency attributes. Memory consistency
-> attribute (dma_attrs) is per-queue, yet it plays its role on the
-> allocator level, when we allocate buffers’ private memory (planes).
-> For the time being, only one consistency attribute is supported:
-> DMA_ATTR_NON_CONSISTENT.
+Hi all,
 
-As mentioned in my v4 review I found a serious bug when testing with
-v4l2-compliance. That meant that this series was not tested properly,
-which is a requirement for something that touches the core framework.
+sorry, no intention to be rude, i replied previously to greg
+(email-bot message) only,
+without including all, just a mistake.
 
-I've posted an RFC patch with my v4l-utils changes (assumes you've run
-'make sync-with-kernel' first), but that's just very basic testing. You
-can use it as your starting point.
-
-It needs to be expanded to test the various combinations of flags and
-capabilities. I don't think there is a reliable way of actually testing
-the cache hint functionality, so that can be skipped, but the compliance
-test should at least test the basic behavior depending on whether or not
-the cache hints capability is set.
-
-I also would like to see a patch adding cache hint support to an existing
-driver (more than one if possible) and the compliance output when tested
-against that driver.
-
-You should also test with the test-media script in contrib/test: run as
-'sudo test-media mc' to test with all the virtual drivers. If it all passes,
-then that's a good indication that there are at least no regressions.
-
-Sorry, but this bug scared me a little, it suggests that not much testing
-has been done.
+Was just about asking what to do to fix the issue reported by the bot.
 
 Regards,
+Angelo
 
-	Hans
+On Thu, Mar 5, 2020 at 7:45 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Mar 05, 2020 at 07:39:51PM +0100, Angelo Dureghello wrote:
+> > Mainly discovered a typo in the eeprom size that may lead to
+> > misunderstandings.
+> >
+> > Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
+> > ---
+> >  drivers/w1/slaves/w1_ds2430.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/w1/slaves/w1_ds2430.c b/drivers/w1/slaves/w1_ds2430.c
+> > index 6fb0563fb2ae..67d168ddfb60 100644
+> > --- a/drivers/w1/slaves/w1_ds2430.c
+> > +++ b/drivers/w1/slaves/w1_ds2430.c
+> > @@ -1,7 +1,7 @@
+> >  // SPDX-License-Identifier: GPL-2.0-only
+> >  /*
+> >   * w1_ds2430.c - w1 family 14 (DS2430) driver
+> > - **
+> > + *
+> >   * Copyright (c) 2019 Angelo Dureghello <angelo.dureghello@timesys.com>
+> >   *
+> >   * Cloned and modified from ds2431
+> > @@ -290,6 +290,6 @@ static struct w1_family w1_family_14 = {
+> >  module_w1_family(w1_family_14);
+> >
+> >  MODULE_AUTHOR("Angelo Dureghello <angelo.dureghello@timesys.com>");
+> > -MODULE_DESCRIPTION("w1 family 14 driver for DS2430, 256kb EEPROM");
+> > +MODULE_DESCRIPTION("w1 family 14 driver for DS2430, 256b EEPROM");
+> >  MODULE_LICENSE("GPL");
+> >  MODULE_ALIAS("w1-family-" __stringify(W1_EEPROM_DS2430));
+> > --
+> > 2.25.0
+> >
+>
+> Hi,
+>
+> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+> a patch that has triggered this response.  He used to manually respond
+> to these common problems, but in order to save his sanity (he kept
+> writing the same thing over and over, yet to different people), I was
+> created.  Hopefully you will not take offence and will fix the problem
+> in your patch and resubmit it so that it can be accepted into the Linux
+> kernel tree.
+>
+> You are receiving this message because of the following common error(s)
+> as indicated below:
+>
+> - Your patch did many different things all at once, making it difficult
+>   to review.  All Linux kernel patches need to only do one thing at a
+>   time.  If you need to do multiple things (such as clean up all coding
+>   style issues in a file/driver), do it in a sequence of patches, each
+>   one doing only one thing.  This will make it easier to review the
+>   patches to ensure that they are correct, and to help alleviate any
+>   merge issues that larger patches can cause.
+>
+> - You did not specify a description of why the patch is needed, or
+>   possibly, any description at all, in the email body.  Please read the
+>   section entitled "The canonical patch format" in the kernel file,
+>   Documentation/SubmittingPatches for what is needed in order to
+>   properly describe the change.
+>
+> - You did not write a descriptive Subject: for the patch, allowing Greg,
+>   and everyone else, to know what this patch is all about.  Please read
+>   the section entitled "The canonical patch format" in the kernel file,
+>   Documentation/SubmittingPatches for what a proper Subject: line should
+>   look like.
+>
+> If you wish to discuss this problem further, or you have questions about
+> how to resolve this issue, please feel free to respond to this email and
+> Greg will reply once he has dug out from the pending patches received
+> from other developers.
+>
+> thanks,
+>
+> greg k-h's patch email bot
 
-> 
-> [0] https://www.mail-archive.com/linux-media@vger.kernel.org/msg112459.html
-> 
-> Sergey Senozhatsky (11):
->   videobuf2: add cache management members
->   videobuf2: handle V4L2 buffer cache flags
->   videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->   videobuf2: add queue memory consistency parameter
->   videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->   videobuf2: factor out planes prepare/finish functions
->   videobuf2: do not sync caches when we are allowed not to
->   videobuf2: check ->synced flag in prepare() and finish()
->   videobuf2: add begin/end cpu_access callbacks to dma-contig
->   videobuf2: add begin/end cpu_access callbacks to dma-sg
->   videobuf2: don't test db_attach in dma-contig prepare and finish
-> 
->  Documentation/media/uapi/v4l/buffer.rst       |  29 +++++
->  .../media/uapi/v4l/vidioc-create-bufs.rst     |   7 +-
->  .../media/uapi/v4l/vidioc-reqbufs.rst         |  18 ++-
->  .../media/common/videobuf2/videobuf2-core.c   | 110 +++++++++++++-----
->  .../common/videobuf2/videobuf2-dma-contig.c   |  39 ++++++-
->  .../media/common/videobuf2/videobuf2-dma-sg.c |  36 ++++--
->  .../media/common/videobuf2/videobuf2-v4l2.c   |  82 ++++++++++++-
->  drivers/media/dvb-core/dvb_vb2.c              |   2 +-
->  drivers/media/v4l2-core/v4l2-ioctl.c          |   5 +-
->  include/media/videobuf2-core.h                |  28 ++++-
->  include/uapi/linux/videodev2.h                |  11 +-
->  11 files changed, 310 insertions(+), 57 deletions(-)
-> 
 
+
+-- 
+Angelo Dureghello
+Timesys
+e. angelo.dureghello@timesys.com
