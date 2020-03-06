@@ -2,164 +2,199 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DFBC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB0CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53997205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D947E205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="JusjcdkA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sXru4UaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCFXzv (ORCPT
+        id S1726498AbgCFX6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 18:55:51 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53272 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgCFXzu (ORCPT
+        Fri, 6 Mar 2020 18:58:32 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:49528 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgCFX6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 18:55:50 -0500
-Received: by mail-pj1-f67.google.com with SMTP id cx7so1710178pjb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 15:55:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iy66Xc3T8EGl5ApJul/VUh4hjHhsU3+FU6jK2rSraPw=;
-        b=JusjcdkAfTlIEOeg8mV4ChS+MtHqZ9MHCDVAs4ZUlmcQM64RsWbr9y/nwhnpw0jkkG
-         Mdr+VZIL6Vi/oDO+DP0ybCmiArZDwCCGkU2YRJ5kIT0tS6PGXuQTo4GdPAfKnUOznUS/
-         L4rPmPL07WDHK/xjfRB8nxgPfxnCteajWdrfBHhwdneV2UjAoHsFhWKpyAfXTPlBF7yb
-         mj32MyepfyqiLRuhnMaRPuK584dw9JAhVeb8biV6d4xxRCiRJUlcHp9go8uzmO//WhUi
-         f0WMSi2pjAWBBtqFJHZChWogsZUUIf2LLxp8LjaU9QG3x6m7J7VScgupV+ILwFaDKiL2
-         js9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iy66Xc3T8EGl5ApJul/VUh4hjHhsU3+FU6jK2rSraPw=;
-        b=NQpYFNy8JH25250A1JrB+0MobLnqEeH/0Px3EQAPpWWGtX+ijmZbGmixm3D2lloIAV
-         TLtJiF8NKBuodoDgwcIIfuKPPiBflwscHMSJo6CVUiJM0m0tgYigGPrQSPXc1BUFBNRm
-         mLbrRQ3/nA+q7aKPIki8NZWSeQwOeeYQXMFJhk1MPriydjFqocKcr3Rvcp4SkW6TYBLm
-         5e6xnQaq5XEcGlOiHTcSlJiHoJ417RcIV0rTHcOysVvbgt0O3F6lVdxHtwfT/eIJFzIh
-         bFVlfcZ/gO14rCX+TkaEY4lLzpSJlRpn+1oHp7qncpaSESNLp4Wj3ML1kLAq2tBlF1sf
-         Br3A==
-X-Gm-Message-State: ANhLgQ02tNtBjxNYHI0Ms2h5mQfDQNFVX2M8s7aL4hGbrVryENvO4d7K
-        gtnUl9HrEyZ37XaroSTzpv8N9Q==
-X-Google-Smtp-Source: ADFU+vtA0JLUpUrvRB8/URuMofw7zZLIpVDABYK+ucoeQeRBBorcDOV0QycC7SaSPAT1kqla8wgfOw==
-X-Received: by 2002:a17:90a:2ec7:: with SMTP id h7mr6358221pjs.107.1583538949817;
-        Fri, 06 Mar 2020 15:55:49 -0800 (PST)
-Received: from localhost ([2620:15c:211:0:fb21:5c58:d6bc:4bef])
-        by smtp.gmail.com with ESMTPSA id f8sm36597168pfn.2.2020.03.06.15.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 15:55:49 -0800 (PST)
-Date:   Fri, 6 Mar 2020 15:55:48 -0800
-From:   Sandeep Patil <sspatil@android.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v4 2/4] power_supply: Add additional health properties to
- the header
-Message-ID: <20200306235548.GA187098@google.com>
-References: <20200116175039.1317-1-dmurphy@ti.com>
- <20200116175039.1317-3-dmurphy@ti.com>
- <20200117010658.iqs2zpwl6bsomkuo@earth.universe>
+        Fri, 6 Mar 2020 18:58:32 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026NrtNX106963;
+        Fri, 6 Mar 2020 23:57:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=yx3VTnn7E2QuCKeCiAriPGreh6NVZ15AnYTIsY/yWdY=;
+ b=sXru4UaT7XJLoR5LRFAmAgMDm3v9T9XcN0xsJuq9au7/8tMJvap3zyO/eZ12BnCpcy72
+ hVOLHmMw8soZTRfXGarDvfgexDNoRU1a2jlCyXtVLMP6miareJg8zk7+SIXs6eraWaUd
+ JneUo+zDiD+eUc6QF+wRPgkpS/o+I9tXWg7W+EnQ/07Ft3fYr6oL1rDOP2zYauYwjx0Y
+ Uoj0vbGEcFHGD78mxNuIr240W2frvIcgQSjYmF5o3MrzBW2BtZIxm4UO5gnSuaUqhE0x
+ iLmg8OiALu7rggcpeik8sB6LtYZF/hJOBpyUABAUUXrBMMpi4+HE0iuftWqmHzdOim2i ig== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2yghn3std9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 23:57:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026Nuu0Z193078;
+        Fri, 6 Mar 2020 23:57:31 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2yg1peh3b0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 23:57:30 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 026NvQnT003561;
+        Fri, 6 Mar 2020 23:57:26 GMT
+Received: from localhost.localdomain (/10.159.228.115)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Mar 2020 15:57:26 -0800
+Subject: Re: [PATCH v3 2/2] KVM: VMX: untangle VMXON revision_id setting when
+ using eVMCS
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200306130215.150686-1-vkuznets@redhat.com>
+ <20200306130215.150686-3-vkuznets@redhat.com>
+ <908345f1-9bfd-004f-3ba6-0d6dce67d11e@oracle.com>
+ <20200306230747.GA27868@linux.intel.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <ceb19682-4374-313a-cf05-8af6cd8d6c3b@oracle.com>
+Date:   Fri, 6 Mar 2020 15:57:25 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117010658.iqs2zpwl6bsomkuo@earth.universe>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200306230747.GA27868@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003060139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
 
-On Fri, Jan 17, 2020 at 02:06:58AM +0100, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Thu, Jan 16, 2020 at 11:50:37AM -0600, Dan Murphy wrote:
-> > Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
-> > 
-> > Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> > ---
-> 
-> Looks good. But I will not merge it without a user and have comments
-> for the driver.
+On 3/6/20 3:07 PM, Sean Christopherson wrote:
+> On Fri, Mar 06, 2020 at 02:20:13PM -0800, Krish Sadhukhan wrote:
+>>> @@ -2599,7 +2607,7 @@ void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+>>>   int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+>>>   {
+>>> -	loaded_vmcs->vmcs = alloc_vmcs(false);
+>>> +	loaded_vmcs->vmcs = alloc_vmcs(VMCS_REGION);
+>>>   	if (!loaded_vmcs->vmcs)
+>>>   		return -ENOMEM;
+>>> @@ -2652,25 +2660,13 @@ static __init int alloc_vmxon_regions(void)
+>>>   	for_each_possible_cpu(cpu) {
+>>>   		struct vmcs *vmcs;
+>>> -		vmcs = alloc_vmcs_cpu(false, cpu, GFP_KERNEL);
+>>> +		/* The VMXON region is really just a special type of VMCS. */
+>>
+>> Not sure if this is the right way to correlate the two.
+>>
+>> AFAIU, the SDM calls VMXON region as a memory area that holds the VMCS data
+>> structure and it calls VMCS the data structure that is used by software to
+>> switch between VMX root-mode and not-root-mode. So VMXON is a memory area
+>> whereas VMCS is the structure of the data that resides in that memory area.
+>>
+>> So if we follow this interpretation, your enum should rather look like,
+>>
+>> enum vmcs_type {
+>> +    VMCS,
+>> +    EVMCS,
+>> +    SHADOW_VMCS
+> No (to the EVMCS suggestion), because this allocation needs to happen for
+> !eVMCS.  The SDM never explictly calls the VMXON region a VMCS, but it's
+> just being coy.  E.g. VMCLEAR doesn't fail if you point it at random
+> memory, but point it at the VMXON region and it yells.
+>
+> We could call it VMXON_VMCS if that helps.
 
-Android has been looking for these properties for a while now [1].
-It was added[2] when we saw that the manufacturers were implementing these
-properties in the driver. I didn't know the properties were absent upstream
-until yesterday. Somebody pointed out in our ongoing effort to make sure
-all core kernel changes that android depends on are present upstream.
+Are you saying,
 
-I think those values are also propagated in application facing APIs in
-Android (but I am not sure yet, let me know if that's something you want
-to find out).
++ enum vmcs_type {
++     VMXON_REGION,
++     VMXON_VMCS,
++     SHADOW_VMCS_REGION,
++};
 
-I wanted to chime in and present you a 'user' for this if that helps.
+?
 
-Cc: kernel-team@android.com
-
-- ssp
-
-1. https://android.googlesource.com/platform/system/core/+/refs/heads/master/healthd/BatteryMonitor.cpp#162
-2. https://android-review.googlesource.com/c/platform/system/core/+/414481
-
-> 
-> -- Sebastian
-> 
-> >  Documentation/ABI/testing/sysfs-class-power | 2 +-
-> >  drivers/power/supply/power_supply_sysfs.c   | 2 +-
-> >  include/linux/power_supply.h                | 3 +++
-> >  3 files changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> > index bf3b48f022dc..9f3fd01a9373 100644
-> > --- a/Documentation/ABI/testing/sysfs-class-power
-> > +++ b/Documentation/ABI/testing/sysfs-class-power
-> > @@ -190,7 +190,7 @@ Description:
-> >  		Valid values: "Unknown", "Good", "Overheat", "Dead",
-> >  			      "Over voltage", "Unspecified failure", "Cold",
-> >  			      "Watchdog timer expire", "Safety timer expire",
-> > -			      "Over current"
-> > +			      "Over current", "Warm", "Cool", "Hot"
-> >  
-> >  What:		/sys/class/power_supply/<supply_name>/precharge_current
-> >  Date:		June 2017
-> > diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-> > index f37ad4eae60b..d0d549611794 100644
-> > --- a/drivers/power/supply/power_supply_sysfs.c
-> > +++ b/drivers/power/supply/power_supply_sysfs.c
-> > @@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
-> >  static const char * const power_supply_health_text[] = {
-> >  	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
-> >  	"Unspecified failure", "Cold", "Watchdog timer expire",
-> > -	"Safety timer expire", "Over current"
-> > +	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
-> >  };
-> >  
-> >  static const char * const power_supply_technology_text[] = {
-> > diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> > index 28413f737e7d..bd0d3225f245 100644
-> > --- a/include/linux/power_supply.h
-> > +++ b/include/linux/power_supply.h
-> > @@ -61,6 +61,9 @@ enum {
-> >  	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
-> >  	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
-> >  	POWER_SUPPLY_HEALTH_OVERCURRENT,
-> > +	POWER_SUPPLY_HEALTH_WARM,
-> > +	POWER_SUPPLY_HEALTH_COOL,
-> > +	POWER_SUPPLY_HEALTH_HOT,
-> >  };
-> >  
-> >  enum {
-> > -- 
-> > 2.25.0
-> > 
+In that case, "VMXON_REGION" and "VMXON_VMCS" are no different according 
+to your explanation.
 
 
+>   The SDM does call the memory
+> allocation for regular VMCSes a "VMCS region":
+>
+>    A logical processor associates a region in memory with each VMCS. This
+>    region is called the VMCS region.
+>
+> I don't think I've ever heard anyone differentiate that two though, i.e.
+> VMCS is used colloquially to mean both the data structure itself and the
+> memory region containing the data structure.
+>
+>>> +		vmcs = alloc_vmcs_cpu(VMXON_REGION, cpu, GFP_KERNEL);
+>>>   		if (!vmcs) {
+>>>   			free_vmxon_regions();
+>>>   			return -ENOMEM;
+>>>   		}
+>>> -		/*
+>>> -		 * When eVMCS is enabled, alloc_vmcs_cpu() sets
+>>> -		 * vmcs->revision_id to KVM_EVMCS_VERSION instead of
+>>> -		 * revision_id reported by MSR_IA32_VMX_BASIC.
+>>> -		 *
+>>> -		 * However, even though not explicitly documented by
+>>> -		 * TLFS, VMXArea passed as VMXON argument should
+>>> -		 * still be marked with revision_id reported by
+>>> -		 * physical CPU.
+>>> -		 */
+>>> -		if (static_branch_unlikely(&enable_evmcs))
+>>> -			vmcs->hdr.revision_id = vmcs_config.revision_id;
+>>> -
+>>>   		per_cpu(vmxarea, cpu) = vmcs;
+>>>   	}
+>>>   	return 0;
+>>> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+>>> index e64da06c7009..a5eb92638ac2 100644
+>>> --- a/arch/x86/kvm/vmx/vmx.h
+>>> +++ b/arch/x86/kvm/vmx/vmx.h
+>>> @@ -489,16 +489,22 @@ static inline struct pi_desc *vcpu_to_pi_desc(struct kvm_vcpu *vcpu)
+>>>   	return &(to_vmx(vcpu)->pi_desc);
+>>>   }
+>>> -struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags);
+>>> +enum vmcs_type {
+>>> +	VMXON_REGION,
+>>> +	VMCS_REGION,
+>>> +	SHADOW_VMCS_REGION,
+>>> +};
+>>> +
+>>> +struct vmcs *alloc_vmcs_cpu(enum vmcs_type type, int cpu, gfp_t flags);
+>>>   void free_vmcs(struct vmcs *vmcs);
+>>>   int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+>>>   void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+>>>   void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs);
+>>>   void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs);
+>>> -static inline struct vmcs *alloc_vmcs(bool shadow)
+>>> +static inline struct vmcs *alloc_vmcs(enum vmcs_type type)
+>>>   {
+>>> -	return alloc_vmcs_cpu(shadow, raw_smp_processor_id(),
+>>> +	return alloc_vmcs_cpu(type, raw_smp_processor_id(),
+>>>   			      GFP_KERNEL_ACCOUNT);
+>>>   }
