@@ -2,108 +2,124 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D74C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D30C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4D620848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF42206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:12:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgCFOM2 (ORCPT
+        id S1727030AbgCFOM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 6 Mar 2020 09:12:29 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38996 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgCFOM2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Mar 2020 09:12:28 -0500
-Received: from mga17.intel.com ([192.55.52.151]:42912 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbgCFOM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:12:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 06:12:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="320544388"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga001.jf.intel.com with ESMTP; 06 Mar 2020 06:12:25 -0800
-Subject: Re: [PATCH V3 2/2] mmc: sdhci-msm: Deactivate CQE during SDHC reset
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
- <1583503724-13943-1-git-send-email-vbadigan@codeaurora.org>
- <1583503724-13943-3-git-send-email-vbadigan@codeaurora.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <fc195864-0826-03e1-0f17-d105b46af933@intel.com>
-Date:   Fri, 6 Mar 2020 16:11:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 7EB0C28ED15
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>,
+        Andrzej Hajda <a.hajda@samsung.com>, megous@megous.com,
+        anarsoul@gmail.com, Neil Armstrong <narmstrong@baylibre.com>,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        icenowy@aosc.io, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v3 1/4] dt-bindings: Add binding for the Analogix ANX7688 chip
+Date:   Fri,  6 Mar 2020 15:12:13 +0100
+Message-Id: <20200306141217.423914-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <1583503724-13943-3-git-send-email-vbadigan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/03/20 4:08 pm, Veerabhadrarao Badiganti wrote:
-> When SDHC gets reset (E.g. in runtime suspend path), CQE also gets
-> reset and goes to disable state. But s/w state still points it as CQE
-> is in enabled state. Since s/w and h/w states goes out of sync,
-> it results in s/w request timeout for subsequent CQE requests.
-> 
-> To synchronize CQE s/w and h/w state during SDHC reset,
-> explicitly deactivate CQE just before SDHC reset.
-> 
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+The ANX7688 chip is a Type-C Port Controller, HDMI to DP converter and
+USB-C mux between USB 3.0 lanes and the DP output.
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+For our use case a big part of the chip, like power supplies, control
+gpios and the usb-c part is managed by an Embedded Controller, hence,
+this is its simplest form of the binding. We'd prefer introduce these
+properties for someone with a different use case so they can test
+on their hardware.
 
-> ---
-> Changes sicne V2:
-> 	- Use cqhci_deactivate() instead of cqhci_disable().
-> 	- Deactivate CQCHI just before SDHC reset.
-> 
-> Changes since V1:
-> 	- Disable CQE only when SDHC undergoes s/w reset for all.
-> ---
->  drivers/mmc/host/sdhci-msm.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 53b79ee..09ff731 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -1823,6 +1823,13 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
->  }
->  
-> +static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
-> +{
-> +	if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
-> +		cqhci_deactivate(host->mmc);
-> +	sdhci_reset(host, mask);
-> +}
-> +
->  static const struct sdhci_msm_variant_ops mci_var_ops = {
->  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
->  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
-> @@ -1861,7 +1868,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
->  
->  static const struct sdhci_ops sdhci_msm_ops = {
-> -	.reset = sdhci_reset,
-> +	.reset = sdhci_msm_reset,
->  	.set_clock = sdhci_msm_set_clock,
->  	.get_min_clock = sdhci_msm_get_min_clock,
->  	.get_max_clock = sdhci_msm_get_max_clock,
-> 
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+
+Changes in v3:
+- Add binding for ANX7688 multi-function device.
+
+Changes in v2: None
+
+ .../bindings/mfd/analogix,anx7688.yaml        | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+
+diff --git a/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml b/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+new file mode 100644
+index 000000000000..bb95a4e87188
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/analogix,anx7688.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analogix ANX7688 HDMI to USB Type-C Bridge (Port Controller with MUX)
++
++maintainers:
++  - Nicolas Boichat <drinkcat@chromium.org>
++  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++
++description: |
++  ANX7688 converts HDMI 2.0 to DisplayPort 1.3 Ultra-HDi (4096x2160p60)
++  including an intelligent crosspoint switch to support USB Type-C (USB-C).
++  The integrated crosspoint switch supports USB 3.1 data transfer along with
++  the DisplayPort Alternate Mode signaling over USB Type-C. Additionally,
++  an on-chip microcontroller (OCM) is available to manage the signal switching,
++  Channel Configuration (CC) detection, USB Power Delivery (USB-PD), Vendor
++  Defined Message (VDM) protocol support and other functions as defined in the
++  USB TypeC and USB Power Delivery specifications.
++
++  As a result, a multi-function device is exposed as parent of the video
++  bridge, TCPC and MUX blocks.
++
++properties:
++  compatible:
++    const: analogix,anx7688
++
++  reg:
++    maxItems: 1
++    description: I2C address of the device
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        anx7688: anx7688@2c {
++            compatible = "analogix,anx7688";
++            reg = <0x2c>;
++        };
++    };
+-- 
+2.25.1
 
