@@ -2,152 +2,147 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD29C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BCFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3EB2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E662073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:12:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="DUZ5o+me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCFLIl (ORCPT
+        id S1726299AbgCFLMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:08:41 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:1086 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbgCFLIk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:08:40 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026B7AV0008629;
-        Fri, 6 Mar 2020 06:08:38 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2yfnrax09k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 06:08:38 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 026B8b52040800
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 6 Mar 2020 06:08:37 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 6 Mar 2020
- 06:08:36 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 6 Mar 2020 06:08:36 -0500
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 026B8X3D024470;
-        Fri, 6 Mar 2020 06:08:34 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2] iio: light: gp2ap020a00f: fix iio_triggered_buffer_{predisable,postenable} positions
-Date:   Fri, 6 Mar 2020 13:11:37 +0200
-Message-ID: <20200306111137.23572-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200304082653.19374-1-alexandru.ardelean@analog.com>
-References: <20200304082653.19374-1-alexandru.ardelean@analog.com>
+        Fri, 6 Mar 2020 06:12:18 -0500
+Received: from mail-eopbgr130085.outbound.protection.outlook.com ([40.107.13.85]:8664
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726129AbgCFLMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 06:12:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YovSpe4EFfOj8RV/1eWsYDGAm6HOUtAL4zS9XlbmOyAfSm+uc0Tc07N9uWGa9KQYwMLzdjvTByj55WE9n5bWSQybeeXvloT42efSmGBOlHrmWmdU6fr5OwnxSV1/ngcsJbB8yfTME+UEn+xlIkUOCfmP5ErvHSmWBzNnGnPvDsDAcLRzi8tH3V1RxgWYoFGNfg/MomR/BuY/uBcxTC7ruSrG8FbCrNz0a5m/F6La+OMYYbIUwSZ9+kw8+jwKsw5PVx6nTfKvpJpUdhijy3n8f8Otpg6xdzPM2JMPHpWkFAJp/pCgHxlF+X3CwopdztVYO3IsW2CEIahaeEH4ckDN8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9hwjz+JxwPUJhmJSAaZkZECaVjiCTFHzNNwzbEVHIo4=;
+ b=aXFsVJ5WBwbjoU4Fhzq1aU/x//UCCY1YlWfcFiQVwREnHNqpkdlf0jRfcMFzpJJCiZUuNgB/ovYe2oS49ilBUdDRJahRBE9YVb5YkseuCxCP60wMTg8rZQpiLdrSyfpYB9CGNE1yR+xVh+fkTQ48qiYDHAFcTi9eKJxdrxPdPu3ApafgMNJqTJpWVSAkUntGTiLBGuWWAYIJwLuUa5AuX1GEqWkasGP2BB0wpfiMqOS16ML+IaP1jfTckt5CGkuSRIgVUKII3mM3C5sGDmdP5OXvJA9LNIAZbvMWHnwRY3s0iELjVjNLB3xoVqeFjQ4iv9PX+rjaKWqvkoK+7FvWcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9hwjz+JxwPUJhmJSAaZkZECaVjiCTFHzNNwzbEVHIo4=;
+ b=DUZ5o+melXqOOCJJPqk12VQSU370Wvdx8L4riXR91Kz0BimH/kNzh4sYo7fY6/oLkb9dKYAouIfZgCDwUBgmLfAcDbtffLGK7AFD4Z23NtG+c/W3PNxuPRNSJ1N6PmgoayaDLrBE+C1lcppd6kiF75tDiLmz0mzNvWzIfUeAQYI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.palcu@oss.nxp.com; 
+Received: from VI1PR04MB5775.eurprd04.prod.outlook.com (20.178.126.145) by
+ VI1PR04MB4048.eurprd04.prod.outlook.com (52.133.14.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.15; Fri, 6 Mar 2020 11:12:14 +0000
+Received: from VI1PR04MB5775.eurprd04.prod.outlook.com
+ ([fe80::8542:a5b7:a83:6ff1]) by VI1PR04MB5775.eurprd04.prod.outlook.com
+ ([fe80::8542:a5b7:a83:6ff1%3]) with mapi id 15.20.2772.019; Fri, 6 Mar 2020
+ 11:12:14 +0000
+Date:   Fri, 6 Mar 2020 13:12:10 +0200
+From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, agx@sigxcpu.org,
+        lukas@mntmn.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 2/4] drm/imx: Add initial support for DCSS on iMX8MQ
+Message-ID: <20200306111210.q7fceoahqw3mlxog@fsr-ub1864-141>
+References: <1575625964-27102-1-git-send-email-laurentiu.palcu@nxp.com>
+ <1575625964-27102-3-git-send-email-laurentiu.palcu@nxp.com>
+ <03b551925d079fcc151239afa735562332cfd557.camel@pengutronix.de>
+ <20200306095830.sa5eig67phngr3fa@fsr-ub1864-141>
+ <69903c69a95902c0ddc8fb9e7a6762abf28aa034.camel@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69903c69a95902c0ddc8fb9e7a6762abf28aa034.camel@pengutronix.de>
+User-Agent: NeoMutt/20171215
+X-ClientProxiedBy: AM3PR07CA0107.eurprd07.prod.outlook.com
+ (2603:10a6:207:7::17) To VI1PR04MB5775.eurprd04.prod.outlook.com
+ (2603:10a6:803:e2::17)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-06_03:2020-03-06,2020-03-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- malwarescore=0 clxscore=1015 spamscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003060080
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-141 (89.37.124.34) by AM3PR07CA0107.eurprd07.prod.outlook.com (2603:10a6:207:7::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.9 via Frontend Transport; Fri, 6 Mar 2020 11:12:12 +0000
+X-Originating-IP: [89.37.124.34]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: daab01e8-e2dc-4474-b08a-08d7c1bf391e
+X-MS-TrafficTypeDiagnostic: VI1PR04MB4048:|VI1PR04MB4048:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB40487928479A71FBBCE98D41BEE30@VI1PR04MB4048.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0334223192
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(346002)(376002)(189003)(199004)(6496006)(2906002)(26005)(52116002)(81156014)(8676002)(9686003)(81166006)(186003)(66476007)(66946007)(5660300002)(66556008)(6916009)(86362001)(1076003)(8936002)(55016002)(16526019)(316002)(7416002)(478600001)(4326008)(33716001)(54906003)(44832011)(956004)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4048;H:VI1PR04MB5775.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uHhxRW8OFh/p1Ky+n7oHcm3BuCPsZ/bJfkrhpZz+P1SLrpeJ1y5Uhj+3gUEaq+4lgUA4oaeDN/Ig1POJSXhQA3l5CJyEDnb51eVidNbjeNKVy9Ahb81zAdXXCnSgSCFG/K+ES1CfCiLTBejwWPkWLdLsFYadmBwEgQ760VK4hFMx46rhthgqX2huZiSYAJ5sytdsZiKa+SjqE9E9N12DIJUj2sMvD6I2ya7B4ln2VFZBiQ0jhnmgQQd1rzbDWBlSNpNY1G+FsknJcDdUzh0TWWjsPFm9GGYI6SxNKt3DjfEGzdGddknFHMTR/o7vsSc1ATTqKCSb01U33alK8xlhZvlb1YlGE1vt229vb52OV4Pf47ZBuKp2tC7lQycy3YhS8Vp+fG3z4qzhIFqWjFnelqJ0Uo52QOJNPSPcIJ1RA0rEcLbZbF6tifji7BL1xKMa/Yr4Nt0Dd7RwqzbRMfL5fhHvbV8BgtH2AjkxKCWygCvO3rPm/Vn29q4lJZw4rw3/
+X-MS-Exchange-AntiSpam-MessageData: sqE0XNL5N/ExwJb3T8PEeY9CkkvVa8g2TcrjVhqygFQclbdc9zFStiyy+LdCTYgjoRgP78s4kAVVLLHVc8zRy/0jpX0S3OayDvObJqpmYLodKE3PsF/rQGIHAHrpJGOM3N8ezZqGgppl6OSQ8/7/QA==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: daab01e8-e2dc-4474-b08a-08d7c1bf391e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2020 11:12:14.0039
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 06oszKkFTX0zQhDtWj2RpRMDytfD8Xvfo51YtJL+atzYqqif9JxvgYCk7imWNpd5KS3N5wAEQP5fq7KJEGJZqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-the poll functions.
+Hi Philipp,
 
-For the predisable hook, the disable code should occur before detaching
-the poll func, and for the postenable hook, the poll func should be
-attached before the enable code.
+On Fri, Mar 06, 2020 at 11:20:51AM +0100, Philipp Zabel wrote:
+> Hi Laurentiu,
+> 
+> On Fri, 2020-03-06 at 11:58 +0200, Laurentiu Palcu wrote:
+> > On Wed, Feb 26, 2020 at 02:19:11PM +0100, Lucas Stach wrote:
+> [...]
+> > > > +/* This function will be called from interrupt context. */
+> > > > +void dcss_scaler_write_sclctrl(struct dcss_scaler *scl)
+> > > > +{
+> > > > +	int chnum;
+> > > > +
+> > > > +	for (chnum = 0; chnum < 3; chnum++) {
+> > > > +		struct dcss_scaler_ch *ch = &scl->ch[chnum];
+> > > > +
+> > > > +		if (ch->scaler_ctrl_chgd) {
+> > > > +			dcss_ctxld_write_irqsafe(scl->ctxld, scl->ctx_id,
+> > > > +						 ch->scaler_ctrl,
+> > > > +						 ch->base_ofs +
+> > > > +						 DCSS_SCALER_CTRL);
+> > > 
+> > > Why is this using the _irqsafe variant without any locking? Won't this
+> > > lead to potential internal state corruption? dcss_ctxld_write is using
+> > > the _irqsave locking variants, so it fine with being called from IRQ
+> > > context.
+> > 
+> > This is only called from __dcss_ctxld_enable() which is already protected
+> > by lock/unlock in dcss_ctxld_kick().
+> 
+> You could add a lockdep_assert_held() line to the top of this function
+> to make it clear this depends on the lock being held.
 
-This change moves the postenable/predisable hooks into the correct
-positions.
+Thanks for the suggestion. Will add a check.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
-
-Changelog v1 -> v2:
-* Fix omitted compiler warnings: 'warning: unused label 'error_unlock' [-Wunused-label]'
-  Reported-by: kbuild test robot <lkp@intel.com>
-
- drivers/iio/light/gp2ap020a00f.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/iio/light/gp2ap020a00f.c b/drivers/iio/light/gp2ap020a00f.c
-index 4d70c5bf35da..7fbbce0d4bc7 100644
---- a/drivers/iio/light/gp2ap020a00f.c
-+++ b/drivers/iio/light/gp2ap020a00f.c
-@@ -1390,6 +1390,12 @@ static int gp2ap020a00f_buffer_postenable(struct iio_dev *indio_dev)
- 
- 	mutex_lock(&data->lock);
- 
-+	err = iio_triggered_buffer_postenable(indio_dev);
-+	if (err < 0) {
-+		mutex_unlock(&data->lock);
-+		return err;
-+	}
-+
- 	/*
- 	 * Enable triggers according to the scan_mask. Enabling either
- 	 * LIGHT_CLEAR or LIGHT_IR scan mode results in enabling ALS
-@@ -1420,14 +1426,12 @@ static int gp2ap020a00f_buffer_postenable(struct iio_dev *indio_dev)
- 		goto error_unlock;
- 
- 	data->buffer = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);
--	if (!data->buffer) {
-+	if (!data->buffer)
- 		err = -ENOMEM;
--		goto error_unlock;
--	}
--
--	err = iio_triggered_buffer_postenable(indio_dev);
- 
- error_unlock:
-+	if (err < 0)
-+		iio_triggered_buffer_predisable(indio_dev);
- 	mutex_unlock(&data->lock);
- 
- 	return err;
-@@ -1436,14 +1440,10 @@ static int gp2ap020a00f_buffer_postenable(struct iio_dev *indio_dev)
- static int gp2ap020a00f_buffer_predisable(struct iio_dev *indio_dev)
- {
- 	struct gp2ap020a00f_data *data = iio_priv(indio_dev);
--	int i, err;
-+	int i, err = 0;
- 
- 	mutex_lock(&data->lock);
- 
--	err = iio_triggered_buffer_predisable(indio_dev);
--	if (err < 0)
--		goto error_unlock;
--
- 	for_each_set_bit(i, indio_dev->active_scan_mask,
- 		indio_dev->masklength) {
- 		switch (i) {
-@@ -1465,7 +1465,8 @@ static int gp2ap020a00f_buffer_predisable(struct iio_dev *indio_dev)
- 	if (err == 0)
- 		kfree(data->buffer);
- 
--error_unlock:
-+	iio_triggered_buffer_predisable(indio_dev);
-+
- 	mutex_unlock(&data->lock);
- 
- 	return err;
--- 
-2.20.1
-
+Thanks,
+laurentiu
