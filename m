@@ -2,157 +2,125 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431E6C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12116C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18AA720848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98562072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:28:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ShIPKgee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgCFMWA (ORCPT
+        id S1726650AbgCFM2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:22:00 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41282 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgCFMV7 (ORCPT
+        Fri, 6 Mar 2020 07:28:19 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51753 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgCFM2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:21:59 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so2315667oie.8;
-        Fri, 06 Mar 2020 04:21:59 -0800 (PST)
+        Fri, 6 Mar 2020 07:28:18 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a132so2204283wme.1;
+        Fri, 06 Mar 2020 04:28:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Rf+ut+vZ0rkmAH/Rce7x5xKiOiWUHGb8d9Igi14P9Lw=;
+        b=ShIPKgeeGOieT6zOaPe7N1NG1+rDBuRiuiFsuB2sNIxLmjxU9SVQI4d5nMsN1AbIVS
+         Vj77ogg71rIo51YRkAdwbdDOmP+FWH2OvCvPbbjly0b3JNScZFUdVpvifLABRMIdHsRs
+         AgeuXspkx0YFf8DeEY1JgjOBFXWe7GMl40w1X8BDvK2HSZLkny2GA3w3vuyzqUkd+Acl
+         qy8fbSC3OlK/xw2XRYiwMGLBrHkXzEskdV9DOmDB9m8LnoE+rSzCce4SWfMg3xyBhGCM
+         2O5fFRiPd6QYwyZxzPzqx5VRlefFdTggo6oGEdf3kX9uMaNFbEJTuc2VeWshTgWVn4y2
+         dbZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=PP2DishXN/uUrup+d3jTIYgHqkNWvTyxlqHhWL+y70E=;
-        b=RDxB7p25eiNzypjtjZxkzkeU+eYUxLeMzoYdOUWOX/uN4uf2Cza+rIJB1sr3a9fPRT
-         v4AnX4lE+N4pGVxAh51x/lVJ4hEFz8V1FPDyEPFj+OPTEkxBp8gfsoMy0+OgaYpof32g
-         b5UO2ZPYTN3p4Xd2mWhTV5+ptWWwvhqetwzhNkddY/KfmBe/2vQ8DUq8WfldCa4I9p8H
-         bk496dgjimpmVmXo4njzEIzdX9J6/zOmYYgFoWhWwCF+SvadZpAyHBKg8AaJsB7Zgyet
-         KHrlVUQe4iNMRr8zil3/yN5zKO9OtpzsT2N0zucBWgrdPROisGFFwZdN0PUFnepLNZ/o
-         LgfQ==
-X-Gm-Message-State: ANhLgQ2tlP5U1dXKnvORXmg+YWxcNzUCruxj16WgO5oCa89Jz+xa3KXK
-        mxrUoN2uHVcrv8TdOkF+GU3RQldDI+emGxaZ94U=
-X-Google-Smtp-Source: ADFU+vuqW1+bL1GfUIbD/UX0Xdr2QQ2a9Bx5BiX710LT61dVJJ+qMrBgjw1mx9XCfZC1zD0nvLC0ycFbm9N71NQanyw=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr2251724oia.148.1583497318647;
- Fri, 06 Mar 2020 04:21:58 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Rf+ut+vZ0rkmAH/Rce7x5xKiOiWUHGb8d9Igi14P9Lw=;
+        b=X1pPTR/F/Zek1c1eO/Z95iAWMUmeT1HLoCQ+8lfI9MKqZisVW7l1G6AfPs29TDdkof
+         ObXZ1fkaJ6+HwiPbLh6Wyk9D7rcOSmhT4AF5IglnERZVc929ZgjVN5tecfTmtLPqW/Yl
+         oHKp1AfiJ12hYmT2EX4zlkBwPZg8p16fzW2ZeUjyrjrdCOJA2URMNpnBv+u+NsQzkp+8
+         y4juGsJ2qU7ZkpLJNruhG6dcpUTpmZfOVrYJSmGONp7KdDH5vBQv3hTFzN6scXBlEm3E
+         UQYRhFcycvBo2B8X8fJ6z3ERYP27ItGRzo7wN2U5Fguuq8PF8iIpUgopqoycQ7QAIVkE
+         WJuQ==
+X-Gm-Message-State: ANhLgQ1YJLBNnMQz59ABNee1wkQSmyVzItYXQzd+Cy39Oe4nFI4e15es
+        kpUnSgFydPNdC5K/57Ou+xw=
+X-Google-Smtp-Source: ADFU+vundmXwCIOo1hsTfe/Ixwo+XAdsK/Si1RgR3BqBdiUhttzsZkQCvxzoZMNDXR/i7Il3mpTZ7Q==
+X-Received: by 2002:a7b:cc6a:: with SMTP id n10mr3829347wmj.170.1583497696717;
+        Fri, 06 Mar 2020 04:28:16 -0800 (PST)
+Received: from carlo-arch.lan ([2001:b07:6469:6bad:29c8:57ea:bea1:b9b1])
+        by smtp.gmail.com with ESMTPSA id c62sm13763876wmd.7.2020.03.06.04.28.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 04:28:16 -0800 (PST)
+From:   Carlo Nonato <carlo.nonato95@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        Kwon Je Oh <kwonje.oh2@gmail.com>
+Subject: [PATCH BUGFIX] block, bfq: fix overwrite of bfq_group pointer in bfq_find_set_group()
+Date:   Fri,  6 Mar 2020 13:27:31 +0100
+Message-Id: <20200306122731.5945-1-carlo.nonato95@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
- <20200113141556.GI3606@pflmari> <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
- <20200302134011.GA3717@pflmari> <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
- <20200302150706.GB3717@pflmari> <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
- <20200302160906.GC3717@pflmari> <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
- <20200305143628.GB25741@pflmari>
-In-Reply-To: <20200305143628.GB25741@pflmari>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 6 Mar 2020 13:21:47 +0100
-Message-ID: <CAMuHMdW+=qXgGhCowVkGQ7v4=ji8UQ7Db-e91XP7ZBpJcSp34A@mail.gmail.com>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
- adv748x codec (HDMI input) to the R-Car SoC
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Driver Development <devel@driverdev.osuosl.org>,
-        Linux Media <linux-media@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Device Tree <devicetree@vger.kernel.org>,
-        Renesas SoC <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+The bfq_find_set_group() function takes as input a blkcg (which represents
+a cgroup) and retrieves the corresponding bfq_group, then it updates the
+bfq internal group hierarchy (see comments inside the function for why
+this is needed) and finally it returns the bfq_group.
+In the hierarchy update cycle, the pointer holding the correct bfq_group
+that has to be returned is mistakenly used to traverse the hierarchy
+bottom to top, meaning that in each iteration it gets overwritten with the
+parent of the current group. Since the update cycle stops at root's
+children (depth = 2), the overwrite becomes a problem only if the blkcg
+describes a cgroup at a hierarchy level deeper than that (depth > 2). In
+this case the root's child that happens to be also an ancestor of the
+correct bfq_group is returned. The main consequence is that processes
+contained in a cgroup at depth greater than 2 are wrongly placed in the
+group described above by BFQ.
 
-On Thu, Mar 5, 2020 at 3:36 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> Geert Uytterhoeven, Mon, Mar 02, 2020 17:13:30 +0100:
-> > On Mon, Mar 2, 2020 at 5:09 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > > Geert Uytterhoeven, Mon, Mar 02, 2020 16:32:32 +0100:
-> > > >
-> > > > The #clock-cells should be in the main video-receiver node.
-> > > > Probably there is more than one clock output, so #clock-cells may be 1?
-> > >
-> > > AFAICS, the device can provide only this one clock line (audio master clock
-> > > for I2S output)... I shall re-check, just in case.
->
-> And you're right, of course: the audio output formatting module of the ADV748x
-> devices provides a set of clock lines related to the I2S pins: the already
-> discussed master clock, left-right channel clock and the serial clock (bit
-> clock?).
->
-> > > > There is no need for a fixed-clock compatible, nor for clock-frequency
-> > > > and clock-output-names.
-> > > >
-> > > > But most important: this should be documented in the adv748x DT bindings,
-> > > > and implemented in the adv748x driver.
-> > >
-> > > So if the driver is to export that clock for the kernel (like in this case),
-> > > it must implement its support?
-> >
-> > Exactly.  Unless that pin is hardcoded to output a fixed clock, in which case
-> > you can just override the existing audio_clk_c rate.
->
-> Just to try it out (I'll set #clock-cells to 1), I registered a fixed rate
-> clock in the driver, added a clock provider:
->
-> adv748x_probe:
->
->     clk = clk_register_fixed_rate(state->dev,
->                                   "clk-hdmi-i2s-mclk",
->                                   NULL     /* parent_name */,
->                                   0        /* flags */,
->                                   12288000 /* rate */);
->     of_clk_add_provider(state->dev->of_node, of_clk_src_simple_get, clk);
->
-> And removed the audio_clk_c frequency setting. I also replaced the audio_clk_c
-> in the list of input clocks of the R-Car-side sound card with the phandle of
-> the adv7482 main node:
->
-> salvator-common.dtsi:
->
->     &i2c4 {
->         status = "okay";
->
->         adv7482_hdmi_decoder: video-receiver@70 {
->             #clock-cells = <0>; // to be replaced with <1>
->         };
->     };
->
->     &rcar_sound {
->         clocks = ..., <&adv7482_hdmi_decoder>, ...;
->     };
->
-> As everything continues to work as before, I assume that at least the clock
-> dependencies were resolved.
->
-> Is there a way to verify that the added input clock is actually used?
-> IOW, if its frequency is actually has been programmed into the ssi4 (R-Car
-> receiving hardware) registers, and not just a left-over from previuos attempts
-> or plain default setting?
+This commits fixes this problem by using a different bfq_group pointer in
+the update cycle in order to avoid the overwrite of the variable holding
+the original group reference.
 
-Have a look at /sys/kernel/debug/clk/clk_summary
+Reported-by: Kwon Je Oh <kwonje.oh2@gmail.com>
+Signed-off-by: Carlo Nonato <carlo.nonato95@gmail.com>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+---
+ block/bfq-cgroup.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-> As the ADV748x devices seem to provide also the clocks for video outputs, will
-> it make any sense to place the clock definition into the port node?
-> Or should all provided clocks be indexed in the main device node?
-
-Sorry, I don't know.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 09b69a3ed..f0ff6654a 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -610,12 +610,13 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
+ 	 */
+ 	entity = &bfqg->entity;
+ 	for_each_entity(entity) {
+-		bfqg = container_of(entity, struct bfq_group, entity);
+-		if (bfqg != bfqd->root_group) {
+-			parent = bfqg_parent(bfqg);
++		struct bfq_group *curr_bfqg = container_of(entity,
++						struct bfq_group, entity);
++		if (curr_bfqg != bfqd->root_group) {
++			parent = bfqg_parent(curr_bfqg);
+ 			if (!parent)
+ 				parent = bfqd->root_group;
+-			bfq_group_set_parent(bfqg, parent);
++			bfq_group_set_parent(curr_bfqg, parent);
+ 		}
+ 	}
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
