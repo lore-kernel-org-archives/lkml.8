@@ -2,99 +2,95 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40F0C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D252C3F2D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD4520866
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269B020866
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="mihW1Tmq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k6tSlUIE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgCFHVx (ORCPT
+        id S1726155AbgCFHWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:21:53 -0500
-Received: from forward104o.mail.yandex.net ([37.140.190.179]:49002 "EHLO
-        forward104o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725829AbgCFHVw (ORCPT
+        Fri, 6 Mar 2020 02:22:04 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54843 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgCFHWD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 02:21:52 -0500
-X-Greylist: delayed 367 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Mar 2020 02:21:50 EST
-Received: from mxback7g.mail.yandex.net (mxback7g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:168])
-        by forward104o.mail.yandex.net (Yandex) with ESMTP id EB4DB9424EE;
-        Fri,  6 Mar 2020 10:15:41 +0300 (MSK)
-Received: from iva3-dd2bb2ff2b5f.qloud-c.yandex.net (iva3-dd2bb2ff2b5f.qloud-c.yandex.net [2a02:6b8:c0c:7611:0:640:dd2b:b2ff])
-        by mxback7g.mail.yandex.net (mxback/Yandex) with ESMTP id 4QcmWVIbaF-Ffd0Ohkn;
-        Fri, 06 Mar 2020 10:15:41 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1583478941;
-        bh=dFOJ8HxcJHuVEanjCBZpIwYRShDEHi2Qbibs/FbE4bs=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=mihW1Tmq1N5c3RD1C2q1WMfdqBP/6lQmzukxiIy0Ffen0zJ9LTkziBcIUnX+G/suw
-         LC7YUP9goExtyVRjKL0618yWfvJx4sH9hGstU7rsIhiSmU+/ATOMvjUWeCzf8cngEl
-         KOy11Y3bOMg0EL0aJJfr78Bu51osyHK7cugbXvHA=
-Authentication-Results: mxback7g.mail.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by iva3-dd2bb2ff2b5f.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id WFGP46aMDd-FeWi6ntj;
-        Fri, 06 Mar 2020 10:15:40 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Nikita Shubin <NShubin@topcon.com>
-Cc:     Nikita Shubin <NShubin@topcon.com>, stable@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] remoteproc: Fix NULL pointer dereference in rproc_virtio_notify
-Date:   Fri,  6 Mar 2020 10:03:25 +0300
-Message-Id: <20200306070325.15232-1-NShubin@topcon.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200305110218.8799-2-NShubin@topcon.com>
-References: <20200305110218.8799-2-NShubin@topcon.com>
+        Fri, 6 Mar 2020 02:22:03 -0500
+Received: by mail-wm1-f65.google.com with SMTP id i9so1166632wml.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 23:22:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Hu3/aCofoV9GF5k7D+bvdKBtAnHD6TZ4MwlP/bXT5AI=;
+        b=k6tSlUIEH3PmEyNNy1VP/w3c4DSL+QzxcWPGhDEU/w7ARlvJrn6vvWzcSt7HRfBuCV
+         2FjZ1Uqcv3g0DGzuQeK02GlSWQTqigasgjxR3X/O5p/n3FBJHNv8K6sHOsc5lEchz9RL
+         +0n4Tcnq6VQbHD4o+xZR4S0KZSzv/KteySWzVe7UpSlLkfwsHKZcvBg3evKmstU00pew
+         dXp5/Z1lkyC4lei6Th6PBFOdo2QJqhbOIe2Ib3lO6Y1MwXgv7d5cB2OiRKdOcpx28XAH
+         HfclPgnq/le9HebtZDVKGvCgAoTxQB+YzJC123Xw5alfHaR7wqnr0CF3WZKe5xTG2Qoa
+         tyjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Hu3/aCofoV9GF5k7D+bvdKBtAnHD6TZ4MwlP/bXT5AI=;
+        b=GM5O/JRHrb3sgVLnxSNUsSsEz8rOMFgfC93Qahhl9wvX3W1bA93jUKyv/8418+grrz
+         MnKqguNE+F4AbGfRYyKdkaqMYjBXSH9zDCvzYAKPOA2iIJJscH2Fd+1eicgsE9SxOPh3
+         56onbQzDUQnEheCwk4F2hWIrBx/LAay5fJ6uGb2sDmeGyyO4J2jOCuVsw03P0qVdUS2T
+         ToUrJrzLS164pb59asavVZSYS2TmNUPFB/6nP5nHn2LzYPPIn8sPb5zD8bXtFIWbjCBo
+         wBUUdYcKrjEkY0f5vcp8BBEw57PTQ5dG/08YND3Lv4Rck+ECfFa0mMRdulUnn9o7556i
+         rhTw==
+X-Gm-Message-State: ANhLgQ3pXMNB++93rTE8C91mihZ1WtZfZhiPSnSQKMOKGtSJq0nFIC6L
+        v12rz0FnIX15Gh7zAl654eMKCA==
+X-Google-Smtp-Source: ADFU+vudiCEvMit8BShDvyPfomy18ETJ5jFbkxGmnWGipfFDJ3asLxX5ZOYt/x9itLh0RYZ7P3Y4sA==
+X-Received: by 2002:a05:600c:146:: with SMTP id w6mr2364628wmm.75.1583479322692;
+        Thu, 05 Mar 2020 23:22:02 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id o11sm37467629wrn.6.2020.03.05.23.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 23:22:02 -0800 (PST)
+Date:   Fri, 6 Mar 2020 07:22:42 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH v1] mfd: intel-lpss: Add Intel Comet Lake PCH-V PCI IDs
+Message-ID: <20200306072242.GG3332@dell>
+References: <20200113125729.8576-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200113125729.8576-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Undefined rproc_ops .kick method in remoteproc driver will result in
-"Unable to handle kernel NULL pointer dereference" in rproc_virtio_notify, 
-after firmware loading if:
+On Mon, 13 Jan 2020, Andy Shevchenko wrote:
 
- 1) .kick method wasn't defined in driver
- 2) resource_table exists in firmware and has "Virtio device entry" defined
+> Intel Comet Lake PCH-V has the same LPSS than Intel Kaby Lake.
+> Add the new IDs to the list of supported devices.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/mfd/intel-lpss-pci.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
-Let's refuse to register an rproc-induced virtio device if no kick method was
-defined for rproc.
+Applied, thanks.
 
-Signed-off-by: Nikita Shubin <NShubin@topcon.com>
-Fixes: 7a186941626d ("remoteproc: remove the single rpmsg vdev limitation")
-Cc: stable@vger.kernel.org
----
- drivers/remoteproc/remoteproc_virtio.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-index 8c07cb2ca8ba..31a62a0b470e 100644
---- a/drivers/remoteproc/remoteproc_virtio.c
-+++ b/drivers/remoteproc/remoteproc_virtio.c
-@@ -334,6 +334,13 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
- 	struct rproc_mem_entry *mem;
- 	int ret;
- 
-+	if (rproc->ops->kick == NULL) {
-+		ret = -EINVAL;
-+		dev_err(dev, ".kick method not defined for %s",
-+				rproc->name);
-+		goto out;
-+	}
-+
- 	/* Try to find dedicated vdev buffer carveout */
- 	mem = rproc_find_carveout_by_name(rproc, "vdev%dbuffer", rvdev->index);
- 	if (mem) {
 -- 
-2.24.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
