@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E717DC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5383C10F26
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CB420848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3CC2084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgCFOmI (ORCPT
+        id S1727593AbgCFOoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:42:08 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53735 "EHLO
+        Fri, 6 Mar 2020 09:44:02 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53739 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgCFOmI (ORCPT
+        with ESMTP id S1726533AbgCFOmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Mar 2020 09:42:08 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEAu-0006HH-3R; Fri, 06 Mar 2020 15:42:04 +0100
+        id 1jAEAs-0006GG-P5; Fri, 06 Mar 2020 15:42:02 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BBCC91C21D3;
-        Fri,  6 Mar 2020 15:42:03 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:03 -0000
-From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 633BC1C21D5;
+        Fri,  6 Mar 2020 15:42:02 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:02 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] thermal/cpu-cooling, sched/core: Move the
- arch_set_thermal_pressure() API to generic scheduler code
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: perf/core] perf/cgroup: Reorder perf_cgroup_connect()
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ian Rogers <irogers@google.com>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200214075133.181299-2-irogers@google.com>
+References: <20200214075133.181299-2-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <158350572343.28353.7289666129109152780.tip-bot2@tip-bot2>
+Message-ID: <158350572214.28353.13646888224864250072.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,75 +55,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     14533a16c46db70b8a75eda8fa633c25ac446d81
-Gitweb:        https://git.kernel.org/tip/14533a16c46db70b8a75eda8fa633c25ac446d81
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Fri, 06 Mar 2020 14:26:31 +01:00
+Commit-ID:     98add2af89bbfe8241e189b490fd91e5751c7900
+Gitweb:        https://git.kernel.org/tip/98add2af89bbfe8241e189b490fd91e5751c7900
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Thu, 13 Feb 2020 23:51:28 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 14:26:31 +01:00
+CommitterDate: Fri, 06 Mar 2020 11:56:58 +01:00
 
-thermal/cpu-cooling, sched/core: Move the arch_set_thermal_pressure() API to generic scheduler code
+perf/cgroup: Reorder perf_cgroup_connect()
 
-drivers/base/arch_topology.c is only built if CONFIG_GENERIC_ARCH_TOPOLOGY=y,
-resulting in such build failures:
+Move perf_cgroup_connect() after perf_event_alloc(), such that we can
+find/use the PMU's cpu context.
 
-  cpufreq_cooling.c:(.text+0x1e7): undefined reference to `arch_set_thermal_pressure'
-
-Move it to sched/core.c instead, and keep it enabled on x86 despite
-us not having a arch_scale_thermal_pressure() facility there, to
-build-test this thing.
-
-Cc: Thara Gopinath <thara.gopinath@linaro.org>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200214075133.181299-2-irogers@google.com
 ---
- drivers/base/arch_topology.c | 11 -----------
- kernel/sched/core.c          | 11 +++++++++++
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ kernel/events/core.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 68dfa49..6119e11 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -42,17 +42,6 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
- 	per_cpu(cpu_scale, cpu) = capacity;
- }
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index b7eaaba..dceeeb1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10774,12 +10774,6 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	if (!has_branch_stack(event))
+ 		event->attr.branch_sample_type = 0;
  
--DEFINE_PER_CPU(unsigned long, thermal_pressure);
+-	if (cgroup_fd != -1) {
+-		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
+-		if (err)
+-			goto err_ns;
+-	}
 -
--void arch_set_thermal_pressure(struct cpumask *cpus,
--			       unsigned long th_pressure)
--{
--	int cpu;
--
--	for_each_cpu(cpu, cpus)
--		WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
--}
--
- static ssize_t cpu_capacity_show(struct device *dev,
- 				 struct device_attribute *attr,
- 				 char *buf)
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 4d76df3..978bf6f 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3576,6 +3576,17 @@ unsigned long long task_sched_runtime(struct task_struct *p)
- 	return ns;
- }
+ 	pmu = perf_init_event(event);
+ 	if (IS_ERR(pmu)) {
+ 		err = PTR_ERR(pmu);
+@@ -10801,6 +10795,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		goto err_pmu;
+ 	}
  
-+DEFINE_PER_CPU(unsigned long, thermal_pressure);
++	if (cgroup_fd != -1) {
++		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
++		if (err)
++			goto err_pmu;
++	}
 +
-+void arch_set_thermal_pressure(struct cpumask *cpus,
-+			       unsigned long th_pressure)
-+{
-+	int cpu;
-+
-+	for_each_cpu(cpu, cpus)
-+		WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
-+}
-+
- /*
-  * This function gets called by the timer code, with HZ frequency.
-  * We call it with interrupts disabled.
+ 	err = exclusive_event_init(event);
+ 	if (err)
+ 		goto err_pmu;
+@@ -10861,12 +10861,12 @@ err_per_task:
+ 	exclusive_event_destroy(event);
+ 
+ err_pmu:
++	if (is_cgroup_event(event))
++		perf_detach_cgroup(event);
+ 	if (event->destroy)
+ 		event->destroy(event);
+ 	module_put(pmu->module);
+ err_ns:
+-	if (is_cgroup_event(event))
+-		perf_detach_cgroup(event);
+ 	if (event->ns)
+ 		put_pid_ns(event->ns);
+ 	if (event->hw.target)
