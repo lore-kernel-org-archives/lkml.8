@@ -2,105 +2,131 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140B1C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3980C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D32206D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997F62073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:04:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZpBgw02k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgCFTEW (ORCPT
+        id S1726811AbgCFTEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:04:22 -0500
-Received: from mga11.intel.com ([192.55.52.93]:25085 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgCFTEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:04:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 11:04:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="275645693"
-Received: from wbakowsk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.27.142])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 11:04:17 -0800
-Date:   Fri, 6 Mar 2020 21:04:16 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Dr. Greg" <greg@enjellic.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
-Message-ID: <20200306190416.GG7472@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
- <20200306053210.GA16297@wind.enjellic.com>
+        Fri, 6 Mar 2020 14:04:38 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40499 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFTEi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 14:04:38 -0500
+Received: by mail-pl1-f194.google.com with SMTP id y1so1237983plp.7;
+        Fri, 06 Mar 2020 11:04:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1GUkIsUTuSnSSpLKUvBgyNN8CfsNZI8PRzymSo36qJw=;
+        b=ZpBgw02kWa2UAXEvL+BgeVc9+HXgn9FLp7eVNibTuuvMybHkQQ6CEpOVEfKVQH0gr9
+         gGprsnShnLz3FFOKRxtbI4M4k4MmrKEUfI4pMFy5D284JVCmO6tYVBhp8el/BQXT+UzR
+         U0rg3KBUyvb6Km4PPiYfWftWh26o+JKJCOFyzhicXBMI24fNPuHtmy/w0pG2H99RcM9C
+         EwuHQwX+sb0AmGWKZjTLKE7OVYvaaO56lsjt4t68AXGACwG6VWPV8r1SicapVBhwGI9R
+         K5uzKNUA0f1SSlKUkThdkUmPuAplBb0kRfnLjiLFq5G4vbsCMPnsFnpg5eZKdFOcLcLd
+         /KSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1GUkIsUTuSnSSpLKUvBgyNN8CfsNZI8PRzymSo36qJw=;
+        b=RZkqZxzDIgcAckAiNNcdgaeHUbCJ78ZSBl/Sgk6FNdsNnwg//4auKVczoYdQ/aWJWO
+         uFlJFLnt8tFQBePVsbpLVVNcV70D/bxJP3VAqPE8OUa3pFXvtFcHOqLU6Ozi79iUKdjr
+         A5dJHUnf3sH+/0XiC1Ewab/DRlLCC2A4Twnv7O81Ka1zLAwZNUv85qBLKckcrBrkJBAJ
+         5O8erLzlT4ENRV/Fn6FH8t/+AjvNGWu9IEFM8+SOAkdDoLB4s5GotEKXzi3Z8a+pxkMK
+         kqDB/GbylWAjYHRBNXJBeUtASMSNDOqB8f1m8xo5l8ytRCQ+b3Lt4WUdE31N/KuFDfDD
+         Wa3g==
+X-Gm-Message-State: ANhLgQ1awFioirI6WBQj5WbBPsqx2zmvT2hwBJzDY9yxGtEHYYgOIOMo
+        Fj4pKl3bQTYiWm9VxV/OIjD7u306
+X-Google-Smtp-Source: ADFU+vtkAWegW6fo292noeREOHfe6RpcG+x3ccdha0rJSJgq3DHjbKQnuFpEAVbcsajb6NEmT9/oew==
+X-Received: by 2002:a17:902:ab8f:: with SMTP id f15mr4446486plr.280.1583521476963;
+        Fri, 06 Mar 2020 11:04:36 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id l1sm10283831pjb.15.2020.03.06.11.04.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 11:04:36 -0800 (PST)
+Date:   Fri, 6 Mar 2020 11:04:33 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Arthur Demchenkov <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>, ruleh <ruleh@gmx.de>
+Subject: Re: [PATCHv2 4/3] Input: omap4-keypad - scan the keys in two phases
+ to detect lost key-up
+Message-ID: <20200306190433.GG217608@dtor-ws>
+References: <20200228171223.11444-1-tony@atomide.com>
+ <20200228180243.GM37466@atomide.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306053210.GA16297@wind.enjellic.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200228180243.GM37466@atomide.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 11:32:10PM -0600, Dr. Greg wrote:
-> On Wed, Mar 04, 2020 at 01:36:01AM +0200, Jarkko Sakkinen wrote:
+On Fri, Feb 28, 2020 at 10:02:43AM -0800, Tony Lindgren wrote:
+> In addition to handling errata i689 for idle with state, we must also
+> check for lost key up interrupts on fast key presses.
 > 
-> Good evening, I hope the end of the week is going well for everyone.
+> For example rapidly pressing shift-shift-j can sometimes produce a J
+> instead of j. Let's fix the issue by scanning the keyboard in two
+> phases. First we scan for any key up events that we may have missed,
+> and then we scan for key down events.
 > 
-> > Add a selftest for SGX. It is a trivial test where a simple enclave
-> > copies one 64-bit word of memory between two memory locations given
-> > to the enclave as arguments. Use ENCLS[EENTER] to invoke the
-> > enclave.
+> Cc: Arthur Demchenkov <spinal.by@gmail.com>
+> Cc: Merlijn Wajer <merlijn@wizzup.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  drivers/input/keyboard/omap4-keypad.c | 48 ++++++++++++++++++---------
+>  1 file changed, 32 insertions(+), 16 deletions(-)
 > 
-> Just as a clarification, are you testing the new driver against signed
-> production class enclaves in .so format that also include metadata
-> layout directives or is the driver just getting tested against the two
-> page toy enclave that copies a word of memory from one memory location
-> to another?
+> diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
+> --- a/drivers/input/keyboard/omap4-keypad.c
+> +++ b/drivers/input/keyboard/omap4-keypad.c
+> @@ -109,6 +109,34 @@ static void kbd_write_irqreg(struct omap4_keypad *keypad_data,
+>  		     keypad_data->base + keypad_data->irqreg_offset + offset);
+>  }
+>  
+> +static void omap4_keypad_scan_state(struct omap4_keypad *keypad_data,
+> +				    unsigned char *key_state,
+> +				    bool down)
+> +{
+> +	struct input_dev *input_dev = keypad_data->input;
+> +	unsigned int col, row, code, changed;
+> +	bool key_down;
+> +
+> +	for (row = 0; row < keypad_data->rows; row++) {
+> +		changed = key_state[row] ^ keypad_data->key_state[row];
+> +		if (!changed)
+> +			continue;
+> +
+> +		for (col = 0; col < keypad_data->cols; col++) {
+> +			if (changed & (1 << col)) {
 
-That is the kind of role kselftests to smoke stuff. Obviously it will
-be refined over time but to do a "hello world" from scratch as an
-enclave was already quite a big effort.
 
-> Our PSW/runtime is currently failing to initialize production class
-> enclaves secondary to a return value of -4 from the ENCLU[EINIT]
-> instruction, which means the measurement of the loaded enclave has
-> failed to match the value in the signature structure.
-> 
-> The same enclave loads fine with the out of kernel driver.  Our
-> diagnostics tell us we are feeding identical page streams and
-> permissions to the page add ioctl's of both drivers.  The identity
-> modulus signature of the signing key for the enclave is being written
-> to the launch control registers.
-> 
-> We see the same behavior from both our unit test enclaves and the
-> Quoting Enclave from the Intel SGX runtime.
-> 
-> When we ported our runtime loader to the new driver ABI we kept things
-> simple and add only a single page at a time in order to replicate the
-> behavior of the old driver.
-> 
-> Secondly, we were wondering what distribution you are building the
-> self-tests with?  Initial indications are that the selftest signing
-> utility doesn't build properly with OpenSSL 1.1.1.
+Looking at all too this, key state is 64 bit value, so if we make it a
+bitmap and use "for_each_set_bit()" we can simplify this scanning code.
 
-I don't use a distribution. I just build user space with BuildRoot
-when I test a kernel.
+Thanks.
 
-Do you have a build log available to look at?
-
-/Jarkko
+-- 
+Dmitry
