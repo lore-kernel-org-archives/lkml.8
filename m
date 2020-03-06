@@ -2,98 +2,84 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D465EC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A2BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B49992072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382CF2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgCFLaL convert rfc822-to-8bit (ORCPT
+        id S1726300AbgCFLbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:30:11 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44732 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbgCFLaK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:30:10 -0500
-Received: by mail-qk1-f196.google.com with SMTP id f198so1889167qke.11;
-        Fri, 06 Mar 2020 03:30:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Nna0nsguv2U+v9ziNQRL80k09HbQlLvP1j4KtjoAo7M=;
-        b=P7EcwBcK7dx8cF79C9pN3P6os2Z3YL6AU/wh0wx1LLH1l78jY4kiL53d5woVTM5qNl
-         zOzIhESzoLvN1T5kdKAfTD6rEiWYYQmj+xeoVvPw7HKmTpokbVUhNvpt/vCeC++Y0PcH
-         wHOg/i20WypsCUUFgbqe6UFtxftO/ptP3eLWTbAjYWfrB/oSVIeVXeKCRK/Mq3AiPiwG
-         k4Z1KVUXJK31T5j3cxAUY4fkAhBuFMhJ9kQquP2yjt/XYVvIHr687XaoKLW7wJ1X81a6
-         3WHz4RRRyGYR3Cz2V8fxrqB+uhS0usmz1JcTQn6297qOtrPwKhMR0BC3oFg/fOhY8eh/
-         o9wg==
-X-Gm-Message-State: ANhLgQ2znZ8XFgc+mygHmuNsTYQFfSoyz/gjmjdDUHVshFUUVC/DZaxY
-        LOX4AjZ68l09qOI7Cmd7s9HwHNWz9Jum35wfD7Q=
-X-Google-Smtp-Source: ADFU+vsdbMUXZ/9+PsZX4vmn+uiZw3tJKm/S0yTnSyg72ZSBwF9YNhD0HM8bKgqMu40FTOyith2U60eZc5tP18laC8U=
-X-Received: by 2002:a37:6646:: with SMTP id a67mr2383615qkc.457.1583494209166;
- Fri, 06 Mar 2020 03:30:09 -0800 (PST)
+        Fri, 6 Mar 2020 06:31:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:59960 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgCFLbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 06:31:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FED431B;
+        Fri,  6 Mar 2020 03:31:38 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F6683F6C4;
+        Fri,  6 Mar 2020 03:31:37 -0800 (PST)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     kernel@pengutronix.de, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH] drivers: soc: Fix COMPILE_TEST for IMX SCU
+Date:   Fri,  6 Mar 2020 11:31:19 +0000
+Message-Id: <20200306113119.56577-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200306080905.173466-1-syq@debian.org> <87r1y53npd.fsf@mid.deneb.enyo.de>
- <8441f497-61eb-5c14-bf1e-c90a464105a7@vivier.eu> <87mu8t3mlw.fsf@mid.deneb.enyo.de>
- <40da389d-4e74-2644-2e7c-04d988fcc26f@vivier.eu>
-In-Reply-To: <40da389d-4e74-2644-2e7c-04d988fcc26f@vivier.eu>
-From:   YunQiang Su <syq@debian.org>
-Date:   Fri, 6 Mar 2020 19:29:57 +0800
-Message-ID: <CAKcpw6WEO5Rmsv+WFkOMrkH+0jwtFKKy7b2n3U9xgv-xGC0UUQ@mail.gmail.com>
-Subject: Re: [PATCH] binfmt_misc: pass binfmt_misc P flag to the interpreter
-To:     Laurent Vivier <laurent@vivier.eu>
-Cc:     Florian Weimer <fw@deneb.enyo.de>, torvalds@linux-foundation.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        akpm@linux-foundation.org, Al Viro <viro@zeniv.linux.org.uk>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        libc-alpha@sourceware.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Laurent Vivier <laurent@vivier.eu> 于2020年3月6日周五 下午7:13写道：
->
-> Le 06/03/2020 à 09:37, Florian Weimer a écrit :
-> > * Laurent Vivier:
-> >
-> >> Le 06/03/2020 à 09:13, Florian Weimer a écrit :
-> >>> * YunQiang Su:
-> >>>
-> >>>> +  if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-> >>>> +          flags |= AT_FLAGS_PRESERVE_ARGV0;
-> >>>> +  NEW_AUX_ENT(AT_FLAGS, flags);
-> >>>
-> >>> Is it necessary to reuse AT_FLAGS?  I think it's cleaner to define a
-> >>> separate AT_ tag dedicated to binfmt_misc.
-> >>
-> >> Not necessary, but it seemed simpler and cleaner to re-use a flag that
-> >> is marked as unused and with a name matching the new role. It avoids to
-> >> patch other packages (like glibc) to add it as it is already defined.
-> >
-> > You still need to define AT_FLAGS_PRESERVE_ARGV0.  At that point, you
-> > might as well define AT_BINFMT and AT_BINFMT_PRESERVE_ARGV0.
-> >
->
-> Yes, you're right.
->
-> But is there any reason to not reuse AT_FLAGS?
+IMX SCU SoCs support COMPILE_TEST that allows to compile the driver on a
+different platform for development purposes.
+These SoCs depend on a firmware interface that is not built on COMPILE_TEST
+mode. This results in triggering the following errors at compile time (on
+arm64):
 
-AT_* only has 32 slot and now. I was afraid that maybe we shouldn't take one.
-   /* AT_* values 18 through 22 are reserved */
-   27,28,29,30 are not used now.
-Which should we use?
+aarch64-none-linux-gnu-ld:
+drivers/soc/imx/soc-imx-scu.o: in function `imx_scu_soc_probe':
+soc-imx-scu.c:(.text+0x24): undefined reference to `imx_scu_get_handle'
+aarch64-none-linux-gnu-ld:
+soc-imx-scu.c:(.text+0xac): undefined reference to `imx_scu_call_rpc'
+aarch64-none-linux-gnu-ld:
+soc-imx-scu.c:(.text+0xd8): undefined reference to `imx_scu_call_rpc'
+linux/Makefile:1078: recipe for target 'vmlinux' failed
+make[1]: *** [vmlinux] Error 1
+Makefile:180: recipe for target 'sub-make' failed
+make: *** [sub-make] Error 2
 
->
-> Thanks,
-> Laurent
+Enable the relevant compilation units in the Makefile when the config option
+is selected to address the issue.
+
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ drivers/firmware/imx/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/firmware/imx/Makefile b/drivers/firmware/imx/Makefile
+index 08bc9ddfbdfb..5604adae31d9 100644
+--- a/drivers/firmware/imx/Makefile
++++ b/drivers/firmware/imx/Makefile
+@@ -2,3 +2,5 @@
+ obj-$(CONFIG_IMX_DSP)		+= imx-dsp.o
+ obj-$(CONFIG_IMX_SCU)		+= imx-scu.o misc.o imx-scu-irq.o
+ obj-$(CONFIG_IMX_SCU_PD)	+= scu-pd.o
++
++obj-$(CONFIG_COMPILE_TEST)	+= imx-scu.o misc.o imx-scu-irq.o
+-- 
+2.25.1
+
