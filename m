@@ -2,89 +2,134 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC64C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6647C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDE5720709
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF8A206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EffDvnTd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRXsBV3G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgCFUut (ORCPT
+        id S1726798AbgCFUu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:50:49 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:58410 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCFUut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:50:49 -0500
-Received: from cz.tnic (rrcs-67-78-116-194.sw.biz.rr.com [67.78.116.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8A1081EC0D1F;
-        Fri,  6 Mar 2020 21:50:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1583527847;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Mx/rOs4s2Tl9HGkIb+M43qPY+zJcL/Go4Agl3zS+VgE=;
-        b=EffDvnTdXQ1NOA/yjhlV+TAfCX70s0vCg2cHSIlxmCXsm60gyo/zCkXT4lwpP2Mou0GX2t
-        od32MV0i5grv2h98lQGur3fcoPl/NqNBS96w8B9XzNgmDzyYJ23Ong3xh2a2qOTPcXpYXj
-        ATRw8af+1HtIqsV2uWOgn5fYbMyd5ak=
-Date:   Fri, 6 Mar 2020 21:50:39 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
- __fpu__restore_sig()
-Message-ID: <20200306205039.GA5337@cz.tnic>
-References: <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
- <20200228172202.GD25261@zn.tnic>
- <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
- <20200228183131.GE25261@zn.tnic>
- <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com>
- <20200228214742.GF25261@zn.tnic>
- <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
- <20200229143644.GA1129@zn.tnic>
- <6778d141a3cdbbe51cdeb3a8efb9c34e0951f6c6.camel@intel.com>
- <53e795ffbc029de316985476fd61845b7a9e824f.camel@intel.com>
+        Fri, 6 Mar 2020 15:50:57 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41309 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgCFUu5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 15:50:57 -0500
+Received: by mail-ed1-f67.google.com with SMTP id m25so4039403edq.8;
+        Fri, 06 Mar 2020 12:50:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=VdqUnRTWp10pjgFX5EvP6C5xXn2Jmo+eBLSoySWldqs=;
+        b=hRXsBV3GZGSJ2YmU0tyU/P3Ckp0n1Ke0qs57bW80TW6GStW1yVT8bz+MK7Z+c/NrNv
+         lOklGzmD7TG1rPBwMkkY2azr3tphv8GjcbwdI0ccxfmUrMa+2iK89/wAVwnq3MxbPZCg
+         5bPxhQ+SrxATXfH2vX7Ku1JEXPQ3vr5XN+zSY5ZmlRvGoyYQ9GDb/oa76jL/hxctgqsD
+         DKi3TflY1iO7+iPY3/PSmwN2DFs3jox5UCMzAPN7MpH8dFkcmqw32kCKoAwgg12RtjOe
+         w5+jerXZzIBSp64mzI+QG2NyuI/GcV5vM3J4VV3LxpKEXP/jDSy9VttVGmT/NDW7UATc
+         vwOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=VdqUnRTWp10pjgFX5EvP6C5xXn2Jmo+eBLSoySWldqs=;
+        b=UnHUdwUY20dhGw+hoL9PCO66IQih6dtjkSRhWkdlX/rgR+0SBdBWLOQgNWVJ9WLyZY
+         y5Lhz2vF6nzaVLq9lT42zdXwjcTj/HheMvbE0FkEgsX10FwDnoR23rJyEWx2dy3fozmK
+         ZjyaA641pd/xKNILMVc6nFLJT0lQnfWKtXdmOARXA97ojZKIKW1qmkI+oG3ao5BCwzTa
+         gP/CHOEkmUsY+Sy+VdZyASFgPsPnJS83qdBuwINWjopJ0//2FsMg/YiXfcegNt14vqMG
+         YYm8biOTi66Yb/rWyFzsGJQDNFFhdMW8qT/HSsAQC6vHXVhuMm9hzL2sR5SuTDvg576J
+         7bwg==
+X-Gm-Message-State: ANhLgQ3sp/pISbeDsnpUQxNxkvQGaI9eqSQj7DfG764t22RzTND+DJx1
+        Qs24iKXiMEIw+GkAYRz9VIg=
+X-Google-Smtp-Source: ADFU+vt2dJD/PPlFZud7douKhwIZ+dTq7co7j3G37z0Dc1lWVvfrT/Ni4yD+IsB0sjh2s8hGZD3/qg==
+X-Received: by 2002:a05:6402:cac:: with SMTP id cn12mr5044832edb.280.1583527854576;
+        Fri, 06 Mar 2020 12:50:54 -0800 (PST)
+Received: from felia ([2001:16b8:2d12:b200:a423:5ade:d131:da88])
+        by smtp.gmail.com with ESMTPSA id f20sm1471839edm.38.2020.03.06.12.50.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 12:50:53 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Fri, 6 Mar 2020 21:50:44 +0100 (CET)
+X-X-Sender: lukas@felia
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] MAINTAINERS: adjust to trusted keys subsystem
+ creation
+In-Reply-To: <20200306193127.GJ7472@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.2003062148050.2990@felia>
+References: <20200305203013.6189-1-lukas.bulwahn@gmail.com> <20200306193127.GJ7472@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <53e795ffbc029de316985476fd61845b7a9e824f.camel@intel.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 10:18:46AM -0800, Yu-cheng Yu wrote:
-> There is another way to keep this patch...
+
+
+On Fri, 6 Mar 2020, Jarkko Sakkinen wrote:
+
+> On Thu, Mar 05, 2020 at 09:30:13PM +0100, Lukas Bulwahn wrote:
+> > Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys subsystem")
+> > renamed trusted.h to trusted_tpm.h in include/keys/, and moved trusted.c
+> > to trusted-keys/trusted_tpm1.c in security/keys/.
+> > 
+> > Since then, ./scripts/get_maintainer.pl --self-test complains:
+> > 
+> >   warning: no file matches F: security/keys/trusted.c
+> >   warning: no file matches F: include/keys/trusted.h
+> > 
+> > Rectify the KEYS-TRUSTED entry in MAINTAINERS now and ensure that all
+> > files in security/keys/trusted-keys/ are identified as part of
+> > KEYS-TRUSTED.
+> > 
+> > Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
+> > Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
+> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> > ---
 > 
-> if (xfeatures_mask_supervisor()) {
-> 	fpu->state.xsave.xfeatures &= xfeatures_mask_supervisor();
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 
+> > Changes to v1:
+> >   - use a global pattern for matching the whole security/keys/trusted-keys/
+> >     directory.
+> > Changes to v2:
+> >   - name the correct directory in the commit message
+> > 
+> > Sumit, please ack.
+> > Jarkko, please pick this patch v3.
+> 
+> Please tell me why you emphasize the moment when a patch that does not
+> fix a critical bug is picked?
+> 
+> Do you have systems that break because the MAINTAINERS file is not
+> updated?
+> 
+> It will end up in v5.7 PR for sure but saying things like that is same
+> as saying that there would be some catastrophically urgent need to still
+> squeeze the patch into v5.6. Unless you actually have something critical
+> in your hand, please stop doing that.
+> 
 
-Is the subsequent XSAVE in copy_user_to_fpregs_zeroing() going to
-restore the user bits in XSTATE_BV you just cleared?
+Got it. I did not intend to emphasize any urgency; I will not continue 
+to do that for patches of this clean-up type.
 
-Sorry, it looks like it would but the SDM text is abysmal.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Lukas
