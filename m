@@ -6,65 +6,75 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE1DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7498DC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDBE2070A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B622070A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbgCFJ0o (ORCPT
+        id S1726261AbgCFJ2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:26:44 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:44054 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbgCFJ0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:26:44 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 894241A0A78;
-        Fri,  6 Mar 2020 10:26:42 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A44431A0A4A;
-        Fri,  6 Mar 2020 10:26:38 +0100 (CET)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 85C4C402A0;
-        Fri,  6 Mar 2020 17:26:33 +0800 (SGT)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Peter Chen <peter.chen@nxp.com>, Jun Li <jun.li@nxp.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH] usb: host: xhci-plat: add a shutdown
-Date:   Fri,  6 Mar 2020 17:23:28 +0800
-Message-Id: <20200306092328.41253-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 6 Mar 2020 04:28:01 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34148 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726054AbgCFJ2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 04:28:01 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 531A4C252A699F9FD0B1;
+        Fri,  6 Mar 2020 17:27:58 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Mar 2020
+ 17:27:52 +0800
+From:   Cheng Jian <cj.chengjian@huawei.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     <cj.chengjian@huawei.com>, <huawei.libin@huawei.com>,
+        <xiexiuqi@huawei.com>, <bobo.shaobowang@huawei.com>,
+        <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
+        <davem@davemloft.net>, <mhiramat@kernel.org>
+Subject: [PATCH] kretprobe: check re-registration of the same kretprobe earlier
+Date:   Fri, 6 Mar 2020 17:35:06 +0800
+Message-ID: <1583487306-81985-1-git-send-email-cj.chengjian@huawei.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When loading new kernel via kexec, we need to shutdown host controller to
-avoid any un-expected memory accessing during new kernel boot.
+Our system encountered a use-after-free when re-register a
+same kretprobe. it access the hlist node in rp->free_instances
+which has been released already.
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Prevent re-registration has been implemented for kprobe before,
+but it's too late for kretprobe. We must check the re-registration
+before re-initializing the kretprobe, otherwise it will destroy the
+data and struct of the kretprobe registered, it can lead to memory
+leak and use-after-free.
+
+Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
 ---
- drivers/usb/host/xhci-plat.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/kprobes.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index d90cd5e..315b455 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -445,6 +445,7 @@ MODULE_DEVICE_TABLE(acpi, usb_xhci_acpi_match);
- static struct platform_driver usb_xhci_driver = {
- 	.probe	= xhci_plat_probe,
- 	.remove	= xhci_plat_remove,
-+	.shutdown = usb_hcd_platform_shutdown,
- 	.driver	= {
- 		.name = "xhci-hcd",
- 		.pm = &xhci_plat_pm_ops,
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 2625c24..f1fc921 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1946,6 +1946,11 @@ int register_kretprobe(struct kretprobe *rp)
+ 		}
+ 	}
+ 
++	/* Return error if it's being re-registered */
++	ret = check_kprobe_rereg(&rp->kp);
++	if (ret)
++		return ret;
++
+ 	rp->kp.pre_handler = pre_handler_kretprobe;
+ 	rp->kp.post_handler = NULL;
+ 	rp->kp.fault_handler = NULL;
 -- 
 2.7.4
 
