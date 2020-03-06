@@ -2,88 +2,103 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769DBC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54821C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524A620848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE20208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:52:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583502734;
+	bh=2Ggr7Ey5zJuBdq/youVk3U+Ljlt8xJOdfRzMiDhckzg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pnJWlA+b5VtYg/qov53hoWtDc1LOr8hjmrjRTIjRfDWMeB/qv3u473zVwnoxq3IAM
+	 4JS0TZ4W8XSij4LJq58nZLWezjerAdGpfBZaMuzGiLXMEjDrB0zvo/r3dlEFKu5zLD
+	 XqjY/HF2fnL8PmG1m8N6/oJWHwjoGkQorIMW6fwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgCFNvf (ORCPT
+        id S1726874AbgCFNwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:51:35 -0500
-Received: from mga17.intel.com ([192.55.52.151]:41270 "EHLO mga17.intel.com"
+        Fri, 6 Mar 2020 08:52:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgCFNvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:51:35 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 05:51:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
-   d="scan'208";a="441945932"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Mar 2020 05:51:32 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jADO2-007NDs-A3; Fri, 06 Mar 2020 15:51:34 +0200
-Date:   Fri, 6 Mar 2020 15:51:34 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] i2c: designware: Add Baikal-T1 SoC I2C controller
- support
-Message-ID: <20200306135134.GD1748204@smile.fi.intel.com>
-References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132348.71E638030793@mail.baikalelectronics.ru>
+        id S1726090AbgCFNwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:52:12 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21AC32072A;
+        Fri,  6 Mar 2020 13:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583502732;
+        bh=2Ggr7Ey5zJuBdq/youVk3U+Ljlt8xJOdfRzMiDhckzg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CjxoisreNvo+KSMlMPy7akklYK40zx8pZyfkS4kBPLZgCMZ3rEdKRNdvEi9r/IMf/
+         KQ6l99TLg7m7cwz3I8w+IwJypEh///j2m8DPdmwGbE5XcZoEsehcrOf/pVgEbJizTj
+         /tz/daKqTA5jNuYKYGnt6iQbsm21p/uaTQ9NXQgw=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jADOc-00AaaS-CN; Fri, 06 Mar 2020 13:52:10 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306132348.71E638030793@mail.baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 06 Mar 2020 13:52:10 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [patch 6/7] genirq: Provide interrupt injection mechanism
+In-Reply-To: <20200306130623.990928309@linutronix.de>
+References: <20200306130341.199467200@linutronix.de>
+ <20200306130623.990928309@linutronix.de>
+Message-ID: <772fa52c32de3ca3229d2df3a32cc643@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:19:58PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On 2020-03-06 13:03, Thomas Gleixner wrote:
+> Error injection mechanisms need a half ways safe way to inject 
+> interrupts as
+> invoking generic_handle_irq() or the actual device interrupt handler
+> directly from e.g. a debugfs write is not guaranteed to be safe.
 > 
-> A third I2C controller embedded into the Baikal-T1 SoC is also fully
-> based on the DW APB I2C core, but its registers are indirectly
-> accessible via "command/data in/data out" trio. There is no difference
-> other than that. So in order to have that controller supported by the
-> common DW APB I2C driver we only need to introduce a new flag
-> ACCESS_INDIRECT and use the access-registers to reach the I2C controller
-> normal registers space in the dw_readl/dw_writel methods. Currently this
-> flag is only enabled for the controllers with "be,bt1-i2c" compatible
-> string.
+> On x86 generic_handle_irq() is unsafe due to the hardware trainwreck 
+> which
+> is the base of x86 interrupt delivery and affinity management.
+> 
+> Move the irq debugfs injection code into a separate function which can 
+> be
+> used by error injection code as well.
+> 
+> The implementation prevents at least that state is corrupted, but it 
+> cannot
+> close a very tiny race window on x86 which might result in a stale and 
+> not
+> serviced device interrupt under very unlikely circumstances.
+> 
+> This is explicitly for debugging and testing and not for production use 
+> or
+> abuse in random driver code.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-See my response to cover letter.
+Acked-by: Marc Zyngier <maz@kernel.org>
 
->  drivers/i2c/busses/i2c-designware-common.c  | 79 ++++++++++++++++++---
->  drivers/i2c/busses/i2c-designware-core.h    | 14 ++++
->  drivers/i2c/busses/i2c-designware-master.c  |  1 +
->  drivers/i2c/busses/i2c-designware-platdrv.c |  1 +
->  drivers/i2c/busses/i2c-designware-slave.c   |  1 +
-
-This should be split at least to two patches (preparation in the core followed
-by switching users).
-
+         M.
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jazz is not dead. It just smells funny...
