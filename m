@@ -2,133 +2,226 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAC8C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38113C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A9D20848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055F920870
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583458803;
-	bh=4uVbvZs7bGvhYOVrCxKIFITotprXAnPMtZLds6M/fi8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UYi0xpaAHp2geYKUOaMm9urbwXlvBN2DhTnOI/diZojKY6IbS6E7xSrizF//Jv77L
-	 jjd0QxMeQMxWPC4zqznI8jsL0K1tNJaJ/zkMoxokzfaZvT5h7ULCmJ3tcMvBK0pwvl
-	 QRGBLcD/xdFYncs4rt/CwkV55PMB30lyKHHCECv4=
+	s=default; t=1583458830;
+	bh=vAaXrFvvBzKC59uTVSh9ANdsT23g+5eypfwNYZ3kHAo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=rrKOVKhFAMF7gVnFbKOj/GvhCeievTrIjzGJq/4c9bSXK6PNMgCWbyivQlgwYjNpL
+	 LUu7ItweYGRZxVgO+fXVZoVXkJ4Onind9lvSAkWgOmgq0eq8fd1Tg/VWuyWLudDVn6
+	 jDlyW8oU/68nU9GglZ8jWYoa/F4xdwMyVkvfHpCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgCFBkC (ORCPT
+        id S1726769AbgCFBk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 20:40:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39068 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 20:40:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgCFBkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 20:40:01 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1726162AbgCFBk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 20:40:28 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 321382073B;
-        Fri,  6 Mar 2020 01:39:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6208F2073B;
+        Fri,  6 Mar 2020 01:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583458801;
-        bh=4uVbvZs7bGvhYOVrCxKIFITotprXAnPMtZLds6M/fi8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OmvPbAKrVK4fV9T8TnrYRzpZ32q3vszMJxtIB/+mCKR5pT0nwCC4mVZSizjdGMTOP
-         boWX9YaIsxi+KXzeUVHbsntpQ/bPJWv+aekROhOyWA2HMz3WZ3593yvbZb0VZ7lMAS
-         WtvllrvaHCNxOkkSiST4UpxO0NeWR7z+dSSHVqX4=
-Date:   Fri, 6 Mar 2020 10:39:56 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [BUGFIX PATCH] tools: Let O= makes handle a relative path with
- -C option
-Message-Id: <20200306103956.7376399c71428b7a527a4d38@kernel.org>
-In-Reply-To: <5d572db0-c603-aef1-220f-b26f89ba947a@infradead.org>
-References: <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org>
-        <158338818292.25448.7161196505598269976.stgit@devnote2>
-        <5d572db0-c603-aef1-220f-b26f89ba947a@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1583458827;
+        bh=vAaXrFvvBzKC59uTVSh9ANdsT23g+5eypfwNYZ3kHAo=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=yhCBsvj0ROX4kmrkD2N2GOh7aZBfUK7c8brZu0wycjM3bsMV9JOwaq0yWEZEB7dXT
+         G8Yjr2SAcIF/f2taE0xhWc3DZGdATLHEL2lKn8nFTkrqFeFFDrnFaPqetXpVhlCrq+
+         zWQqBt9NwKgJsef9+lYfKQW//d56ml3Y2f84G44U=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 38F203522806; Thu,  5 Mar 2020 17:40:27 -0800 (PST)
+Date:   Thu, 5 Mar 2020 17:40:27 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: Pinning down a blocked task to extract diagnostics
+Message-ID: <20200306014027.GA11942@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200305005049.GA21120@paulmck-ThinkPad-P72>
+ <20200305080755.GS2596@hirez.programming.kicks-ass.net>
+ <20200305081337.GA2619@hirez.programming.kicks-ass.net>
+ <20200305142245.GB2935@paulmck-ThinkPad-P72>
+ <20200305092845.4296c35e@gandalf.local.home>
+ <20200305153638.GC2935@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305153638.GC2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Mar 2020 10:50:43 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
-
-> On 3/4/20 10:03 PM, Masami Hiramatsu wrote:
-> > When I compiled tools/bootconfig from top directory with
-> > -C option, the O= option didn't work correctly if I passed
-> > a relative path.
+On Thu, Mar 05, 2020 at 07:36:38AM -0800, Paul E. McKenney wrote:
+> On Thu, Mar 05, 2020 at 09:28:45AM -0500, Steven Rostedt wrote:
+> > On Thu, 5 Mar 2020 06:22:45 -0800
+> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
 > > 
-> >   $ make O=./builddir/ -C tools/bootconfig/
-> >   make: Entering directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
-> >   ../scripts/Makefile.include:4: *** O=./builddir/ does not exist.  Stop.
-> >   make: Leaving directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
+> > > On Thu, Mar 05, 2020 at 09:13:37AM +0100, Peter Zijlstra wrote:
+
+[ . . . ]
+
+> > > How about if I add something like this, located right by try_to_wake_up()?
+> > > 
+> > > 	bool try_to_keep_sleeping(struct task_struct *t)
+> > > 	{
+> > > 		raw_spin_lock_irq(&t->pi_lock);
+> > > 		switch (t->state) {
+> > > 		case TASK_RUNNING:
+> > > 		case TASK_WAKING:
+> > > 			raw_spin_unlock_irq(&t->pi_lock);
+> > > 			return false;
+> > > 
+> > > 		default:
+> > > 			if (t->on_rq) {
 > > 
-> > The O= directory existence check failed because the check
-> > script ran in the build target directory instead of the
-> > directory where I ran the make command.
+> > Somehow I think there still needs to be a read barrier before the test to
+> > on_rq.
+> 
+> This is nowhere near a fastpath, so if there is uncertainty it gets
+> the smp_rmb().  Or an smp_load_acquire() on t->state.
+> 
+> > > 				raw_spin_unlock_irq(&t->pi_lock);
+> > > 				return false;
+> > > 			}
+> > > 
+> > > 			/* OK to extract consistent diagnostic information. */
+> > > 			return true;
+> > > 		}
+> > > 		/* NOTREACHED */
+> > > 	}
+> > > 
+> > > Then a use might look like this:
+> > > 
+> > > 	if (try_to_keep_sleeping(t))
+> > > 		/* Extract consistent diagnostic information. */
+> > > 		raw_spin_unlock_irq(&t->pi_lock);
 > > 
-> > To fix that, once change directory to $(PWD) and check O=
-> > directory, since the PWD is set to where the make command
-> > runs.
+> > Perhaps we should have a allow_awake(t) to match it?
 > > 
-> > Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> 
-> Hi Masami,
-> 
-> This patch doesn't fix anything AFAICT.
-> Didn't help in my testing.
-> 
-
-Hmm, what happens on your case? Maybe PWD is not set?
-
-Thank you,
-
-
-> Thanks.
-> 
-> > ---
-> >  tools/scripts/Makefile.include |    4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 		allow_awake(t);
 > > 
-> > diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-> > index ded7a950dc40..6d2f3a1b2249 100644
-> > --- a/tools/scripts/Makefile.include
-> > +++ b/tools/scripts/Makefile.include
-> > @@ -1,8 +1,8 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  ifneq ($(O),)
-> >  ifeq ($(origin O), command line)
-> > -	dummy := $(if $(shell test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
-> > -	ABSOLUTE_O := $(shell cd $(O) ; pwd)
-> > +	dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
-> > +	ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
-> >  	OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
-> >  	COMMAND_O := O=$(ABSOLUTE_O)
-> >  ifeq ($(objtree),)
+> > Where we have:
 > > 
+> > static inline allow_awake(struct task_struct *t)
+> > {
+> > 	raw_spin_unlock_irq(&t->pi_lock);
+> > }
 > 
-> 
-> -- 
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Makes sense to me!
 
+So how about like this?
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit e2821ae6c6a6adaabc89ccd9babf4375a78e0626
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Thu Mar 5 16:53:58 2020 -0800
+
+    sched/core: Add functions to prevent sleepers from awakening
+    
+    In some cases, it is necessary to examine a consistent version of a
+    sleeping process's state, in other words, it is necessary to keep
+    that process in sleeping state.  This commit therefore provides a
+    try_to_keep_sleeping() function that acquires ->pi_lock to prevent
+    wakeups from proceeding, returning true if the function is still asleep,
+    and otherwise releasing ->pi_lock and returning false.
+    
+    This commit also provides an allow_awake() function (as suggested by
+    by Steven Rostedt) that reverses the effect of a successful call to
+    try_to_keep_sleeping(), allowing the process to once again be awakened.
+    
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+    [ paulmck: Apply feedback from Peter Zijlstra and Steven Rostedt. ]
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Juri Lelli <juri.lelli@redhat.com>
+    Cc: Vincent Guittot <vincent.guittot@linaro.org>
+    Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+    Cc: Steven Rostedt <rostedt@goodmis.org>
+    Cc: Ben Segall <bsegall@google.com>
+    Cc: Mel Gorman <mgorman@suse.de>
+
+diff --git a/include/linux/wait.h b/include/linux/wait.h
+index 3283c8d..aefea4a 100644
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -1148,4 +1148,7 @@ int autoremove_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, i
+ 		(wait)->flags = 0;						\
+ 	} while (0)
+ 
++bool try_to_keep_sleeping(struct task_struct *p);
++void allow_awake(struct task_struct *p);
++
+ #endif /* _LINUX_WAIT_H */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index fc1dfc0..b665ff7 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2654,6 +2654,48 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ }
+ 
+ /**
++ * try_to_keep_sleeping - Attempt to force task to remain off runqueues
++ * @p: The process to remain asleep.
++ *
++ * Acquires the process's ->pi_lock and checks state.  If the process
++ * is still blocked, returns @true and leave ->pi_lock held, otherwise
++ * releases ->pi_locked and returns @false.
++ */
++bool try_to_keep_sleeping(struct task_struct *p)
++{
++	lockdep_assert_irqs_enabled();
++	raw_spin_lock_irq(&p->pi_lock);
++	switch (p->state) {
++	case TASK_RUNNING:
++	case TASK_WAKING:
++		raw_spin_unlock_irq(&p->pi_lock);
++		return false;
++
++	default:
++		smp_rmb(); /* See comments in try_to_wake_up(). */
++		if (p->on_rq) {
++			raw_spin_unlock_irq(&p->pi_lock);
++			return false;
++		}
++		return true;  /* Process is now stuck in blocked state. */
++	}
++	/* NOTREACHED */
++}
++
++/**
++ * allow_awake - Allow a kept-sleeping process to awaken
++ * @p: Process to be allowed to awaken.
++ *
++ * Given that @p was passed to an earlier call to try_to_keep_sleeping
++ * that returned @true, hence preventing @p from waking up, allow @p
++ * to once again be awakened.
++ */
++void allow_awake(struct task_struct *p)
++{
++	raw_spin_unlock_irq(&p->pi_lock);
++}
++
++/**
+  * wake_up_process - Wake up a specific process
+  * @p: The process to be woken up.
+  *
