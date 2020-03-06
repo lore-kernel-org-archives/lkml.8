@@ -7,41 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F74C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07257C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 553782084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5702084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbgCFOmx (ORCPT
+        id S1727498AbgCFOnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:42:53 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53874 "EHLO
+        Fri, 6 Mar 2020 09:43:01 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53852 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbgCFOm0 (ORCPT
+        with ESMTP id S1727242AbgCFOmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:42:26 -0500
+        Fri, 6 Mar 2020 09:42:23 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEB9-0006Q1-Ex; Fri, 06 Mar 2020 15:42:19 +0100
+        id 1jAEB7-0006Oo-Ft; Fri, 06 Mar 2020 15:42:17 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 68DEB1C21D5;
-        Fri,  6 Mar 2020 15:42:14 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:14 -0000
-From:   "tip-bot2 for Peter Xu" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C94C01C21D6;
+        Fri,  6 Mar 2020 15:42:10 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:10 -0000
+From:   "tip-bot2 for Thara Gopinath" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: smp/core] sched/core: Remove rq.hrtick_csd_pending
-Cc:     Peter Xu <peterx@redhat.com>,
+Subject: [tip: sched/core] drivers/base/arch_topology: Add infrastructure to
+ store and update instantaneous thermal pressure
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191216213125.9536-4-peterx@redhat.com>
-References: <20191216213125.9536-4-peterx@redhat.com>
+In-Reply-To: <20200222005213.3873-4-thara.gopinath@linaro.org>
+References: <20200222005213.3873-4-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158350573414.28353.9184925891014185535.tip-bot2@tip-bot2>
+Message-ID: <158350573056.28353.8289359977043719899.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,75 +56,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the smp/core branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     fd3eafda8f146d4ad8f95f91a8c2b9a5319ff6b2
-Gitweb:        https://git.kernel.org/tip/fd3eafda8f146d4ad8f95f91a8c2b9a5319ff6b2
-Author:        Peter Xu <peterx@redhat.com>
-AuthorDate:    Mon, 16 Dec 2019 16:31:25 -05:00
+Commit-ID:     ad58cc5cc50ca8423cf630778594bd38252a0a58
+Gitweb:        https://git.kernel.org/tip/ad58cc5cc50ca8423cf630778594bd38252a0a58
+Author:        Thara Gopinath <thara.gopinath@linaro.org>
+AuthorDate:    Fri, 21 Feb 2020 19:52:07 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 13:42:28 +01:00
+CommitterDate: Fri, 06 Mar 2020 12:57:18 +01:00
 
-sched/core: Remove rq.hrtick_csd_pending
+drivers/base/arch_topology: Add infrastructure to store and update instantaneous thermal pressure
 
-Now smp_call_function_single_async() provides the protection that
-we'll return with -EBUSY if the csd object is still pending, then we
-don't need the rq.hrtick_csd_pending any more.
+Add architecture specific APIs to update and track thermal pressure on a
+per CPU basis. A per CPU variable thermal_pressure is introduced to keep
+track of instantaneous per CPU thermal pressure. Thermal pressure is the
+delta between maximum capacity and capped capacity due to a thermal event.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
+topology_get_thermal_pressure can be hooked into the scheduler specified
+arch_scale_thermal_pressure to retrieve instantaneous thermal pressure of
+a CPU.
+
+arch_set_thermal_pressure can be used to update the thermal pressure.
+
+Considering topology_get_thermal_pressure reads thermal_pressure and
+arch_set_thermal_pressure writes into thermal_pressure, one can argue for
+some sort of locking mechanism to avoid a stale value.  But considering
+topology_get_thermal_pressure can be called from a system critical path
+like scheduler tick function, a locking mechanism is not ideal. This means
+that it is possible the thermal_pressure value used to calculate average
+thermal pressure for a CPU can be stale for up to 1 tick period.
+
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20191216213125.9536-4-peterx@redhat.com
+Link: https://lkml.kernel.org/r/20200222005213.3873-4-thara.gopinath@linaro.org
 ---
- kernel/sched/core.c  |  9 ++-------
- kernel/sched/sched.h |  1 -
- 2 files changed, 2 insertions(+), 8 deletions(-)
+ drivers/base/arch_topology.c  | 11 +++++++++++
+ include/linux/arch_topology.h | 10 ++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 1a9983d..b70ec38 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -269,7 +269,6 @@ static void __hrtick_start(void *arg)
- 
- 	rq_lock(rq, &rf);
- 	__hrtick_restart(rq);
--	rq->hrtick_csd_pending = 0;
- 	rq_unlock(rq, &rf);
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 6119e11..68dfa49 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -42,6 +42,17 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
+ 	per_cpu(cpu_scale, cpu) = capacity;
  }
  
-@@ -293,12 +292,10 @@ void hrtick_start(struct rq *rq, u64 delay)
- 
- 	hrtimer_set_expires(timer, time);
- 
--	if (rq == this_rq()) {
-+	if (rq == this_rq())
- 		__hrtick_restart(rq);
--	} else if (!rq->hrtick_csd_pending) {
-+	else
- 		smp_call_function_single_async(cpu_of(rq), &rq->hrtick_csd);
--		rq->hrtick_csd_pending = 1;
--	}
++DEFINE_PER_CPU(unsigned long, thermal_pressure);
++
++void arch_set_thermal_pressure(struct cpumask *cpus,
++			       unsigned long th_pressure)
++{
++	int cpu;
++
++	for_each_cpu(cpu, cpus)
++		WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
++}
++
+ static ssize_t cpu_capacity_show(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 char *buf)
+diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+index 3015ecb..88a115e 100644
+--- a/include/linux/arch_topology.h
++++ b/include/linux/arch_topology.h
+@@ -33,6 +33,16 @@ unsigned long topology_get_freq_scale(int cpu)
+ 	return per_cpu(freq_scale, cpu);
  }
  
- #else
-@@ -322,8 +319,6 @@ void hrtick_start(struct rq *rq, u64 delay)
- static void hrtick_rq_init(struct rq *rq)
- {
- #ifdef CONFIG_SMP
--	rq->hrtick_csd_pending = 0;
--
- 	rq->hrtick_csd.flags = 0;
- 	rq->hrtick_csd.func = __hrtick_start;
- 	rq->hrtick_csd.info = rq;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 9ea6478..38e60b8 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -967,7 +967,6 @@ struct rq {
- 
- #ifdef CONFIG_SCHED_HRTICK
- #ifdef CONFIG_SMP
--	int			hrtick_csd_pending;
- 	call_single_data_t	hrtick_csd;
- #endif
- 	struct hrtimer		hrtick_timer;
++DECLARE_PER_CPU(unsigned long, thermal_pressure);
++
++static inline unsigned long topology_get_thermal_pressure(int cpu)
++{
++	return per_cpu(thermal_pressure, cpu);
++}
++
++void arch_set_thermal_pressure(struct cpumask *cpus,
++			       unsigned long th_pressure);
++
+ struct cpu_topology {
+ 	int thread_id;
+ 	int core_id;
