@@ -2,66 +2,82 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE4EC3F2D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0257EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E99A20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9972073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:45:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Onj9kiOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgCFJmN (ORCPT
+        id S1726185AbgCFJo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:42:13 -0500
-Received: from mga12.intel.com ([192.55.52.136]:52520 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbgCFJmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:42:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 01:42:12 -0800
-X-IronPort-AV: E=Sophos;i="5.70,521,1574150400"; 
-   d="scan'208";a="234747642"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 01:42:03 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        =?utf-8?Q?Jo?= =?utf-8?Q?s=C3=A9?= Roberto de Souza 
-        <jose.souza@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mat King <mathewk@google.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        Sean Paul <seanpaul@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
-        Tomoki Maruichi <maruichit@lenovo.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Subject: Re: [PATCH v6 2/3] drm/i915: Lookup and attach ACPI device node for connectors
-In-Reply-To: <CACK8Z6HRB9q1KeborGr7V-0Qp0AApHV6gBTkc6xD5NokH8gr0w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200305012338.219746-1-rajatja@google.com> <20200305012338.219746-3-rajatja@google.com> <87o8tbnnqa.fsf@intel.com> <CACK8Z6HRB9q1KeborGr7V-0Qp0AApHV6gBTkc6xD5NokH8gr0w@mail.gmail.com>
-Date:   Fri, 06 Mar 2020 11:42:00 +0200
-Message-ID: <87tv31om53.fsf@intel.com>
+        Fri, 6 Mar 2020 04:44:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22257 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726034AbgCFJo7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 04:44:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583487898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WbxIdYhTTjgVlUuu7acZggNhYjFYj5XT7w4bg+bKCpo=;
+        b=Onj9kiOE+6sRUX8Pyw9bTJxHkGmbprAHh7OgMhFJLqpmEujvUAz1J4NJPP+9nXH/DU0XrI
+        otuPBdFd2RhVlRsKe1B9xqBIx+6FvjE5CMbhrpn0QFLa2IU4bQvtSK7p3j7cTUFT2k3AXg
+        hzdc1CySqRFEqpu3r/o7QQ7VZhl7Z3U=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-461-n8LusmgWPoyaGjNvTbhvvw-1; Fri, 06 Mar 2020 04:44:56 -0500
+X-MC-Unique: n8LusmgWPoyaGjNvTbhvvw-1
+Received: by mail-wr1-f71.google.com with SMTP id u8so762919wrq.13
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 01:44:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=WbxIdYhTTjgVlUuu7acZggNhYjFYj5XT7w4bg+bKCpo=;
+        b=h+HTJLaKMyKp/eqFNoORARS+JzPrP8I55sXF/o0q3wmAhWSGGx2OawCZ9mnpqCoFHD
+         ijPzeyQanMxxzS36SS/S2P6/npkb9c3/E69P4aAU/lkodUI4meN0TWH0tjJ1ryw5yuYe
+         +phclv0H9auzrG2vrjUe1zfdcBfaZttFGHGPpCB4HqmgPeL5ucxHZbreIg28PcwBgX3o
+         w95oO2t7QsvsTBEXYqsJPpVFAJo3PqrcMAkQ78Kj0IZktJ4PLOjWgusZdM45ogHBcezw
+         ToyEVEqVGuGDBHEDqWL3SD7rNdb59DjCMphPvv4AlOA2MWpSIDdkWDHsy1lT+QMvj1Li
+         OBBg==
+X-Gm-Message-State: ANhLgQ3JqRXw+d80cf6iElF0PM3TOF6hOZNjF6BMlKeTJ5s1O5XpQqK8
+        4zzfG7pgl4gcNnM9cHtlEWGpWjtCo9wIGHK7uTn9NrHWyNsIV81m5CmlmTZDa3ywpgeijPHr1ri
+        99LfAYtDrbrE5xLXcPF79tehx
+X-Received: by 2002:a1c:7919:: with SMTP id l25mr3019502wme.135.1583487895752;
+        Fri, 06 Mar 2020 01:44:55 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvxjBVBTvy10EKYcXioKSADNfuDaKvIrnd4UdrjOTMe11WoR4rkgftir/YuAN37Jpblb9nk5g==
+X-Received: by 2002:a1c:7919:: with SMTP id l25mr3019483wme.135.1583487895545;
+        Fri, 06 Mar 2020 01:44:55 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id p15sm12572147wma.40.2020.03.06.01.44.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 01:44:54 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        linmiaohe <linmiaohe@huawei.com>
+Cc:     "rkrcmar\@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson\@intel.com" <sean.j.christopherson@intel.com>,
+        "jmattson\@google.com" <jmattson@google.com>,
+        "joro\@8bytes.org" <joro@8bytes.org>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "mingo\@redhat.com" <mingo@redhat.com>,
+        "bp\@alien8.de" <bp@alien8.de>, "hpa\@zytor.com" <hpa@zytor.com>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH] KVM: VMX: Use wrapper macro ~RMODE_GUEST_OWNED_EFLAGS_BITS directly
+In-Reply-To: <1e3f7ff0-0159-98e8-ba21-8806c3a14820@redhat.com>
+References: <f1b01b4903564f2c8c267a3996e1ac29@huawei.com> <1e3f7ff0-0159-98e8-ba21-8806c3a14820@redhat.com>
+Date:   Fri, 06 Mar 2020 10:44:53 +0100
+Message-ID: <87sgiles16.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,56 +85,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 05 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
-> On Thu, Mar 5, 2020 at 1:41 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
->>
->> On Wed, 04 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
->> 1) See if we can postpone creating and attaching properties to connector
->> ->late_register hook. (I didn't have the time to look into it yet, at
->> all.)
+Paolo Bonzini <pbonzini@redhat.com> writes:
+
+> On 06/03/20 03:17, linmiaohe wrote:
+>> Define a macro RMODE_HOST_OWNED_EFLAGS_BITS for (X86_EFLAGS_IOPL |
+>> X86_EFLAGS_VM) as suggested by Vitaly seems a good way to fix this ?
+>> Thanks.
 >
-> Apparently not. The drm core doesn't like to add properties in
-> late_register() callback. I just tried it and get this warning:
-
-I kind of had a feeling this would be the case, thanks for checking.
-
->> 2) Provide a way to populate connector->acpi_device_id and
->> connector->acpi_handle on a per-connector basis. At least the device id
->> remains constant for the lifetime of the drm_device
+> No, what if a host-owned flag was zero?  I'd just leave it as is.
 >
-> Are you confirming that the connector->acpi_device_id remains constant
-> for the lifetime of the drm_device, as calculated in
-> intel_acpi_device_id_update()?  Even in the face of external displays
-> (monitors) being connected and disconnected during the lifetime of the
-> system? If so, then I think we can have a solution.
 
-First I thought so. Alas it does not hold for DP MST, where you can have
-connectors added and removed dynamically. I think we could ensure they
-stay the same for all other connectors though. I'm pretty sure this is
-already the case; they get added/removed after all others.
-
-Another thought, from the ACPI perspective, I'm not sure the dynamically
-added/removed DP MST connectors should even have acpi handles. But
-again, tying all this together with ACPI stuff is not something I am an
-expert on.
-
->> (why do we keep
->> updating it at every resume?!) but can we be sure ->acpi_handle does
->> too? (I don't really know my way around ACPI.)
->
-> I don't understand why this was being updated on every resume in that
-> case (this existed even before my patchset). I believe we do not need
-> it. Yes, the ->acpi_handle will not change if the ->acpi_device_id
-> does not change. I believe the way forward should then be to populate
-> connector->acpi_device_id and connector->acpi_handle ONE TIME at the
-> time of connector init (and not update it on every resume). Does this
-> sound ok?
-
-If a DP MST connector gets removed, should the other ACPI display
-indexes after that shift, or remain the same? I really don't know.
-
-BR,
-Jani.
+I'm not saying my suggestion was a good idea but honestly I'm failing to
+wrap my head around this. The suggested 'RMODE_HOST_OWNED_EFLAGS_BITS'
+would just be a define for (X86_EFLAGS_IOPL | X86_EFLAGS_VM) so
+technically the patch would just be nop, no?
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+Vitaly
+
