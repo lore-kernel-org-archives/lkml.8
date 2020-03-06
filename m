@@ -2,143 +2,199 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDDFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45140C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D742072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E922072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OI/ad56N"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lSlD5TNw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCFLk6 (ORCPT
+        id S1726811AbgCFLlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:40:58 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33366 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgCFLk6 (ORCPT
+        Fri, 6 Mar 2020 06:41:21 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:54839 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725827AbgCFLlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:40:58 -0500
-Received: by mail-qk1-f194.google.com with SMTP id p62so1983971qkb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 03:40:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4pk90DW3tifrhVv5weuQmOO8XCqjEpeowZPJvyemYzw=;
-        b=OI/ad56NrGTbNVtPro/NOPV6T8O4BQ3FHoaKgQMEfp7BTnjYlHSDkQ9xNSv6wi6BHZ
-         s5oN1W/ZBCP5EsM2qWuPxNVOhkMB+yBBnsPfWPbwv0kpvHuxNC2PZI9KMAWTrv+Lvt8E
-         vBoqPR2J2G/1EuqVr+2XVfs1m5SapJw2bf3D2EmwIYewER20b90pV+My0B6fqHVvxE2S
-         7SNqw4TdlFgbHFQUjf4iItnB0/uHGcvZHf+/yNC4xkhGzcJBiNaUUl8QqpltXRl1puWJ
-         6sCfiYthfaKnDf+Ufm0uoymDqmQzZy21CE6f+fThoQ/TOGFr1r1avwh4Kgp1mawMuqZT
-         C/fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4pk90DW3tifrhVv5weuQmOO8XCqjEpeowZPJvyemYzw=;
-        b=GJg+4vxZhCaxxlX5eSdyF3nj9kqG3OUsK86lqKCG0v+40PMw2PBBYBJqX4coVyrsJd
-         gxzoyH9ALkAHOU2AgsqvFO14n7t+xQtozX3tb0bwayrEPQcTwntymMOxRpoZBS94B832
-         7MRc4JPIZf+lWkAAxrXtEzC4C5MPlM5e0tTCcu2nwbBTC7IPwwt/tc8kj/PFedmeazW6
-         2xYB1i1gubl0BIeBr8FI0N/HdCWjigtx0FBK18SH4b8u6XokMaPvIIeSWGNd725Ux00j
-         0RKcwgNlYAdeypf4SlWKyqDqD2S+cYZJZdSPbODF5K6JHD2BYM+2Ln86e6p/K2tjYj/U
-         oxYg==
-X-Gm-Message-State: ANhLgQ0aGyOI9+H0xFdrNW+WNQcIUju3Zysz5/MjFY3022rn77FP2XhL
-        F2stcxt1QFlyeQgNKBy2x+Q=
-X-Google-Smtp-Source: ADFU+vtxVHsqTQcTZCkMKjfbpmoSIP085wxEecOefgSlQA8ovx8aaD6kgf24X6hGTL2OnPcoVkHTKw==
-X-Received: by 2002:a37:9c15:: with SMTP id f21mr2492466qke.414.1583494856985;
-        Fri, 06 Mar 2020 03:40:56 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id m1sm9018732qkk.103.2020.03.06.03.40.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 03:40:56 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 82E0B403AD; Fri,  6 Mar 2020 08:40:54 -0300 (-03)
-Date:   Fri, 6 Mar 2020 08:40:54 -0300
-To:     Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Li <liwei391@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 3/3] tools/perf: build fixes for arch_errno_names.sh
-Message-ID: <20200306114054.GB27494@kernel.org>
-References: <20200306071110.130202-1-irogers@google.com>
- <20200306071110.130202-4-irogers@google.com>
+        Fri, 6 Mar 2020 06:41:20 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583494879; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=gIcrcb+AYJXClFtK1B2gbZo5Y/fM6LFQWGlHyk1Ymk0=;
+ b=lSlD5TNw6jGqsq8E5MzDE3aWqoCFZgAvPPCALh8wDIc27lND8EMGIwzoJGcc/AVVeT+Gy+v9
+ vw6bx0heTT1cvZQEngIuo7iiZMCkQVthjPncgpwJa8Y5fOVmuPGh84q8SouDYhHpMKdMza4y
+ X3WnXAODeNbjMELePtN0YDXEwuI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6236dc.7fb7bda90a78-smtp-out-n02;
+ Fri, 06 Mar 2020 11:41:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 25D73C432C2; Fri,  6 Mar 2020 11:41:16 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: harigovi)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B1A7C433F2;
+        Fri,  6 Mar 2020 11:41:15 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306071110.130202-4-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 06 Mar 2020 17:11:15 +0530
+From:   harigovi@codeaurora.org
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>, nganji@codeaurora.org
+Subject: Re: [v1] dt-bindings: msm:disp: update dsi and dpu bindings
+In-Reply-To: <CAD=FV=XXyYTqVV4=e8Kz0tYQ=5TWjZi2QETNL_0BaFqKi5o0Cg@mail.gmail.com>
+References: <1580825737-27189-1-git-send-email-harigovi@codeaurora.org>
+ <CAD=FV=XXyYTqVV4=e8Kz0tYQ=5TWjZi2QETNL_0BaFqKi5o0Cg@mail.gmail.com>
+Message-ID: <f24b45a36d2bd79c9d8053d29abef88d@codeaurora.org>
+X-Sender: harigovi@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 05, 2020 at 11:11:10PM -0800, Ian Rogers escreveu:
-> Allow the CC compiler to accept a CFLAGS environment variable.
-> Make the architecture test directory agree with the code comment.
-> This doesn't change the code generated but makes it easier to integrate
-> running the shell script in build systems like bazel.
-
-Hendrik and Thomas, can you please take a look at this and provide a
-Reviewed-by tag?
-
-Thanks,
-
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/trace/beauty/arch_errno_names.sh | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On 2020-02-04 23:52, Doug Anderson wrote:
+> Hi,
 > 
-> diff --git a/tools/perf/trace/beauty/arch_errno_names.sh b/tools/perf/trace/beauty/arch_errno_names.sh
-> index 22c9fc900c84..9f9ea45cddc4 100755
-> --- a/tools/perf/trace/beauty/arch_errno_names.sh
-> +++ b/tools/perf/trace/beauty/arch_errno_names.sh
-> @@ -57,7 +57,7 @@ process_arch()
->  	local arch="$1"
->  	local asm_errno=$(asm_errno_file "$arch")
->  
-> -	$gcc $include_path -E -dM -x c $asm_errno \
-> +	$gcc $CFLAGS $include_path -E -dM -x c $asm_errno \
->  		|grep -hE '^#define[[:blank:]]+(E[^[:blank:]]+)[[:blank:]]+([[:digit:]]+).*' \
->  		|awk '{ print $2","$3; }' \
->  		|sort -t, -k2 -nu \
-> @@ -91,7 +91,7 @@ EoHEADER
->  # in tools/perf/arch
->  archlist=""
->  for arch in $(find $toolsdir/arch -maxdepth 1 -mindepth 1 -type d -printf "%f\n" | grep -v x86 | sort); do
-> -	test -d arch/$arch && archlist="$archlist $arch"
-> +	test -d $toolsdir/perf/arch/$arch && archlist="$archlist $arch"
->  done
->  
->  for arch in x86 $archlist generic; do
-> -- 
-> 2.25.1.481.gfbce0eb801-goog
+> On Tue, Feb 4, 2020 at 6:15 AM Harigovindan P <harigovi@codeaurora.org> 
+> wrote:
+>> 
+>> Updating bindings of dsi and dpu by adding and removing certain
+>> properties.
+>> 
+>> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+>> ---
+>> 
+>> Changes in v1:
+>>         - Adding "ahb" clock as a required property.
+>>         - Adding "bus", "rot", "lut" as optional properties for sc7180 
+>> device.
+>>         - Removing properties from dsi bindings that are unused.
+>>         - Removing power-domain property since DSI is the child node 
+>> of MDSS
+>>           and it will inherit supply from its parent.
+>> 
+>>  Documentation/devicetree/bindings/display/msm/dpu.txt | 7 +++++++
+>>  Documentation/devicetree/bindings/display/msm/dsi.txt | 5 -----
+>>  2 files changed, 7 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt 
+>> b/Documentation/devicetree/bindings/display/msm/dpu.txt
+>> index 551ae26..dd58472a 100644
+>> --- a/Documentation/devicetree/bindings/display/msm/dpu.txt
+>> +++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
+>> @@ -19,6 +19,7 @@ Required properties:
+>>    The following clocks are required:
+>>    * "iface"
+>>    * "bus"
+>> +  * "ahb"
 > 
+> This is only required for sc7180?  ...or old SoCs should have had it
+> all along too?
+> 
+> 
+>>    * "core"
+>>  - interrupts: interrupt signal from MDSS.
+>>  - interrupt-controller: identifies the node as an interrupt 
+>> controller.
+>> @@ -50,6 +51,8 @@ Required properties:
+>>  - clock-names: device clock names, must be in same order as clocks 
+>> property.
+>>    The following clocks are required.
+>>    * "bus"
+>> +  For the device "qcom,sc7180-dpu":
+>> +  * "bus" - is an optional property due to architecture change.
+> 
+> This is a really odd way to write it for two reasons:
+> * You're breaking up the flow of the list.
+> * This shouldn't be listed as "optional" in sc7180 but unless there is
+> some reason to ever provide it on sc7180.  It should simply be
+> disallowed.
+> 
+> Maybe instead just:
+> 
+>    The following clocks are required.
+> -  * "bus"
+> +  * "bus" (anything other than qcom,sc7180-dpu)
+> 
+> We really need to get this into yaml ASAP but that'd probably be OK to
+> tide us over.
+> 
+> NOTE: when converting to yaml, ideally we'll have a separate file per
+> SoC to avoid crazy spaghetti, see commit 2a8aa18c1131 ("dt-bindings:
+> clk: qcom: Fix self-validation, split, and clean cruft") in clk-next
+> for an example of starting the transition to one yaml per SoC (at
+> least for anything majorly different).
+> 
+> 
+>>    * "iface"
+>>    * "core"
+>>    * "vsync"
+>> @@ -70,6 +73,10 @@ Optional properties:
+>>  - assigned-clocks: list of clock specifiers for clocks needing rate 
+>> assignment
+>>  - assigned-clock-rates: list of clock frequencies sorted in the same 
+>> order as
+>>    the assigned-clocks property.
+>> +- For the device "qcom,sc7180-dpu":
+>> +  clock-names: optional device clocks, needed for accessing LUT 
+>> blocks.
+>> +  * "rot"
+>> +  * "lut"
+>> 
+>>  Example:
+>> 
+>> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt 
+>> b/Documentation/devicetree/bindings/display/msm/dsi.txt
+>> index af95586..61d659a 100644
+>> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+>> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+>> @@ -8,13 +8,10 @@ Required properties:
+>>  - reg-names: The names of register regions. The following regions are 
+>> required:
+>>    * "dsi_ctrl"
+>>  - interrupts: The interrupt signal from the DSI block.
+>> -- power-domains: Should be <&mmcc MDSS_GDSC>.
+> 
+> Is this supposed to be removed from all SoCs using this bindings, or
+> just yours?
+> 
+> I'll also note that you left it in the "Example:" below.
+> 
+> 
+>>  - clocks: Phandles to device clocks.
+>>  - clock-names: the following clocks are required:
+>> -  * "mdp_core"
+>>    * "iface"
+>>    * "bus"
+>> -  * "core_mmss"
+> 
+> As Jeffrey pointed out, you shouldn't be removing these from old SoCs.
+> In "drivers/gpu/drm/msm/dsi/dsi_cfg.c" you can clearly see them used.
+> Maybe it's time for you to do the yaml conversion and handle this
+> correctly per-SoC.
+> 
+> -Doug
 
--- 
 
-- Arnaldo
+Hi,
+
+yaml files have been created and new patchset has been created for that.
+https://patchwork.kernel.org/patch/11423653/
