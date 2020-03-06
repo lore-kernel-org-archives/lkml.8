@@ -2,125 +2,122 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05D3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9502C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B6E20848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1072072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fFTuuzfO"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="HHxTmVII"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgCFQsE (ORCPT
+        id S1726314AbgCFQtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:48:04 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:36539 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFQsE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:48:04 -0500
-Received: by mail-yw1-f68.google.com with SMTP id j71so2801050ywb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 08:48:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lGrpixY/KajztTvkMkDBT1B96BNvHODkOsGOZbkrSZg=;
-        b=fFTuuzfOkYiCnZ22xZtNdK9HT0L4FN3pjpbu7Mt3PCD7eWN8c9uXTj4suVczbwfgy4
-         w0QciTMDNjeTdzLGDagG9s7rsUpGpF/p4waeA24sc8cpZ93QfT+UJYBOfauXZj7m8/CD
-         1rJDFb8dCv5HWMas6PsXUI7WCJ3pnGOOBtUzdAJI7DCkmmmb+bJYaH3o5O7gA+JK9qW7
-         8yS8va3re029AHujFSq0y9gJUVmgEeTRxV/mG4WJnCaBo1ptoankpLZDEm4Rmp4KoDmR
-         HQd9xo2eX5E5EPvHDeY552GSr8KCZFEEAc/wYJLlbAoOwlPXaZ72Jy1ywIh82fjtbjGX
-         wPow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lGrpixY/KajztTvkMkDBT1B96BNvHODkOsGOZbkrSZg=;
-        b=jxRKdE/gZhsPFHYwrm67icVdhNjBiwlbu8d/nb1f32sQMNKhWhMSMx7Ga9+ebioZuo
-         HkyNB9nmPQQQU3BhFxHRKhdjoiJFN+9X65K9e2Ip6cpCbIW728dssn+y+neh50c9HJnw
-         PV5Cr+W1fCvYvF/E089y5H8P7SEeOm9BReiTaBT7+440ytnZVY05gH7mcAlpmIFYPPkn
-         oU5uUSDOF7Vz3OpF/kvs/Nm0cn4qraDeijNebcBLzqU+et8VJM1I3Ek89ZTojGkbYto9
-         ODcgVsS2vYpqaECl0mh6gfoeABPaOIdXr4YjyrsrsIij8nmLvn3+N1Ryx91PzArJCUTy
-         5elQ==
-X-Gm-Message-State: ANhLgQ2vRQ7UxW4Bcmo2lYuFKzslLWIGPwVPsvd90i+FfCPbLrs83Y8h
-        s7JWjoKXrusljHmIiD+S0dqlwkKUgSegBV62kAUmiQ==
-X-Google-Smtp-Source: ADFU+vtO7hopVToGmyqZtDqH5TSGNHXMUiLaDYLuVNZRG1Jjfq/LNjpZ7Z+IgbsUaZxcC0SX4tqHJZrEi3kxL0r0eng=
-X-Received: by 2002:a25:c482:: with SMTP id u124mr4887325ybf.286.1583513282457;
- Fri, 06 Mar 2020 08:48:02 -0800 (PST)
-MIME-Version: 1.0
-References: <20200306071110.130202-1-irogers@google.com> <20200306071110.130202-2-irogers@google.com>
- <20200306093355.GB281906@krava>
-In-Reply-To: <20200306093355.GB281906@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 6 Mar 2020 08:47:51 -0800
-Message-ID: <CAP-5=fUAjMxGDWfev_q6vKhe1M5D1UdXhPK6x5Y9bxUbrJ-tNw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] tools: fix off-by 1 relative directory includes
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Li <liwei391@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 6 Mar 2020 11:49:52 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:2880 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbgCFQtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:49:52 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48YtrX5LCCz9v0DS;
+        Fri,  6 Mar 2020 17:49:48 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=HHxTmVII; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id w4rA5SjLa1tS; Fri,  6 Mar 2020 17:49:48 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48YtrX4C5mz9v0DQ;
+        Fri,  6 Mar 2020 17:49:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1583513388; bh=SIQXyXWwelcqc+qeZ+WYNegGKNceKMdyP7M7NjsPmX0=;
+        h=From:Subject:To:Cc:Date:From;
+        b=HHxTmVIIS3ZAyj0aykHgHgljQdz1abGbuCiRB7jYTQg9VcG7dTFeRVC25esgVtIey
+         Sz+P1LkPl+HERrM5W8DZ0nipllO3XIxcE+WVrSwEEHdfPHZQZC96/iTiOnhGDxSexa
+         3832hum+zdvmuj+lsMkyQb3ygp9lufxLnCTPn2zA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E73528B895;
+        Fri,  6 Mar 2020 17:49:49 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id R84HLGj6qG3t; Fri,  6 Mar 2020 17:49:49 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5562A8B88B;
+        Fri,  6 Mar 2020 17:49:49 +0100 (CET)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 2974965470; Fri,  6 Mar 2020 16:49:49 +0000 (UTC)
+Message-Id: <ef5248fc1f496c6b0dfdb59380f24968f25f75c5.1583513368.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3] powerpc/kasan: Fix shadow memory protection with
+ CONFIG_KASAN_VMALLOC
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri,  6 Mar 2020 16:49:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 1:34 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Thu, Mar 05, 2020 at 11:11:08PM -0800, Ian Rogers wrote:
-> > This is currently working due to extra include paths in the build.
->
-> if you're fixing this, why not remove that extra include path then?
+With CONFIG_KASAN_VMALLOC, new page tables are created at the time
+shadow memory for vmalloc area in unmapped. If some parts of the
+page table still has entries to the zero page shadow memory, the
+entries are wrongly marked RW.
 
-TL;DR it is complicated, but the include paths are all currently
-necessary I believe and doing this way is necessary due to how header
-files may be copied out of the kernel.
+With CONFIG_KASAN_VMALLOC, almost the entire kernel address space
+is managed by KASAN. To make it simple, just create KASAN page tables
+for the entire kernel space at kasan_init(). That doesn't use much
+more space, and that's anyway already done for hash platforms.
 
-The current build uses multiple -Is to ensure the correct version of a
-file is included, for example there are 27 files called bitops.h and
-29 called bitsperlong.h. In
-Google we're using libraries and bazel build files:
-https://docs.bazel.build/versions/master/be/c-cpp.html#cc_library
-and there's no way to say if you depend on this library then you need
-this include path. We've tried to make perf this way but having tied
-ourselves in knots we decided instead to emulate the include path
-behaviour by rewriting includes when we import code using copybara:
-https://github.com/google/copybara
-We are able when doing this to prioritize the include paths we rewrite
-so that a local directory version of a header is preferred over say
-one in tools/lib/perf and perhaps tools/perf. Having full include
-paths isn't really an option upstream as the same header file may be
-copied into a libc project that has a different directory layout.
-As we have absolute include paths at the time of building we need
-relative include paths to be correct. Upstream -Is allow the build to
-find the file but it is a bit of a quirk of the C preprocessor, so
-fixing these off-by 1s feels like value add both for us and upstream.
-For upstream to do anything different I think is going to be a
-significant rewrite of how the Makefile build works and I'm not sure
-what the result would look like.
+Fixes: 3d4247fcc938 ("powerpc/32: Add support of KASAN_VMALLOC")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+v3: Split a too long line
 
-Thanks!
-Ian
+v2: Allocate all tables at init instead of doing it when
+unmapping vmalloc space KASAN pages.
 
-> jirka
->
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/mm/kasan/kasan_init_32.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index 1a29cf469903..cbcad369fcb2 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -120,12 +120,6 @@ static void __init kasan_unmap_early_shadow_vmalloc(void)
+ 	unsigned long k_cur;
+ 	phys_addr_t pa = __pa(kasan_early_shadow_page);
+ 
+-	if (!early_mmu_has_feature(MMU_FTR_HPTE_TABLE)) {
+-		int ret = kasan_init_shadow_page_tables(k_start, k_end);
+-
+-		if (ret)
+-			panic("kasan: kasan_init_shadow_page_tables() failed");
+-	}
+ 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
+ 		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
+ 		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
+@@ -143,7 +137,8 @@ void __init kasan_mmu_init(void)
+ 	int ret;
+ 	struct memblock_region *reg;
+ 
+-	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE)) {
++	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ||
++	    IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
+ 		ret = kasan_init_shadow_page_tables(KASAN_SHADOW_START, KASAN_SHADOW_END);
+ 
+ 		if (ret)
+-- 
+2.25.0
+
