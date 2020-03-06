@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AE3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAE1C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A5A20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB652084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbgCFN2e (ORCPT
+        id S1727347AbgCFN2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:28:34 -0500
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37180 "EHLO
+        Fri, 6 Mar 2020 08:28:42 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37228 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbgCFN2d (ORCPT
+        with ESMTP id S1726167AbgCFN2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:28:33 -0500
+        Fri, 6 Mar 2020 08:28:38 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 89B658030706;
-        Fri,  6 Mar 2020 13:28:31 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 763718030786;
+        Fri,  6 Mar 2020 13:28:36 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jje8UqOvDMf3; Fri,  6 Mar 2020 16:28:30 +0300 (MSK)
+        with ESMTP id WApw7rWc6R4s; Fri,  6 Mar 2020 16:28:35 +0300 (MSK)
 From:   <Sergey.Semin@baikalelectronics.ru>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>
@@ -37,15 +37,15 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 5/7] watchdog: dw_wdt: Support devices with asynch clocks
-Date:   Fri, 6 Mar 2020 16:27:45 +0300
+Subject: [PATCH 7/7] watchdog: dw_wdt: Add DebugFS files
+Date:   Fri, 6 Mar 2020 16:27:47 +0300
 In-Reply-To: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200306132831.89B658030706@mail.baikalelectronics.ru>
+Message-Id: <20200306132836.763718030786@mail.baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -53,15 +53,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-DW Watchdog IP core can be synthesised with asynchronous timer/APB
-clocks support (WDT_ASYNC_CLK_MODE_ENABLE == 1). In this case
-separate clock signals are supposed to be used to feed watchdog timer
-and APB interface of the device. Currently the driver supports
-the synchronous mode only. Since there is no way to determine which
-mode was actually activated for device from its registers, we have to
-rely on the platform device configuration data. If optional "pclk"
-clock source is supplied, we consider the device working in asynchronous
-mode, otherwise the driver falls back to the synchronous configuration.
+For the sake of the easier device-driver debug procedure, we added a
+few DebugFS files with the next content: watchdog timeout, watchdog
+pre-timeout, watchdog ping/kick operation, watchdog start/stop, device
+registers dump. They are available only if kernel is configured with
+DebugFS support.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -69,116 +65,207 @@ Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 ---
- drivers/watchdog/dw_wdt.c | 48 +++++++++++++++++++++++++++++++++++----
- 1 file changed, 43 insertions(+), 5 deletions(-)
+ drivers/watchdog/dw_wdt.c | 150 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 150 insertions(+)
 
 diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index 4a57b7d777dc..eb909c63a1b5 100644
+index 3000120f7e39..9353d83f3e45 100644
 --- a/drivers/watchdog/dw_wdt.c
 +++ b/drivers/watchdog/dw_wdt.c
-@@ -61,6 +61,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
- struct dw_wdt {
- 	void __iomem		*regs;
- 	struct clk		*clk;
-+	struct clk		*pclk;
- 	unsigned long		rate;
- 	unsigned int		max_top;
- 	unsigned int		timeouts[DW_WDT_NUM_TOPS];
-@@ -270,6 +271,7 @@ static int dw_wdt_suspend(struct device *dev)
- 	dw_wdt->control = readl(dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
- 	dw_wdt->timeout = readl(dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+@@ -27,6 +27,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+ #include <linux/watchdog.h>
++#include <linux/debugfs.h>
  
-+	clk_disable_unprepare(dw_wdt->pclk);
- 	clk_disable_unprepare(dw_wdt->clk);
+ #define WDOG_CONTROL_REG_OFFSET		    0x00
+ #define WDOG_CONTROL_REG_WDT_EN_MASK	    0x01
+@@ -38,8 +39,14 @@
+ #define WDOG_COUNTER_RESTART_KICK_VALUE	    0x76
+ #define WDOG_INTERRUPT_STATUS_REG_OFFSET    0x10
+ #define WDOG_INTERRUPT_CLEAR_REG_OFFSET     0x14
++#define WDOG_COMP_PARAMS_5_REG_OFFSET       0xe4
++#define WDOG_COMP_PARAMS_4_REG_OFFSET       0xe8
++#define WDOG_COMP_PARAMS_3_REG_OFFSET       0xec
++#define WDOG_COMP_PARAMS_2_REG_OFFSET       0xf0
+ #define WDOG_COMP_PARAMS_1_REG_OFFSET       0xf4
+ #define WDOG_COMP_PARAMS_1_USE_FIX_TOP      BIT(6)
++#define WDOG_COMP_VERSION_REG_OFFSET        0xf8
++#define WDOG_COMP_TYPE_REG_OFFSET           0xfc
  
- 	return 0;
-@@ -283,6 +285,12 @@ static int dw_wdt_resume(struct device *dev)
- 	if (err)
- 		return err;
- 
-+	err = clk_prepare_enable(dw_wdt->pclk);
-+	if (err) {
-+		clk_disable_unprepare(dw_wdt->clk);
-+		return err;
-+	}
+ /* There are sixteen TOPs (timeout periods) that can be set in the watchdog. */
+ #define DW_WDT_NUM_TOPS		16
+@@ -79,6 +86,10 @@ struct dw_wdt {
+ 	/* Save/restore */
+ 	u32			control;
+ 	u32			timeout;
 +
- 	writel(dw_wdt->timeout, dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
- 	writel(dw_wdt->control, dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
++#ifdef CONFIG_DEBUG_FS
++	struct dentry		*dbgfs_dir;
++#endif
+ };
  
-@@ -344,9 +352,18 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
- 	if (IS_ERR(dw_wdt->regs))
- 		return PTR_ERR(dw_wdt->regs);
+ #define to_dw_wdt(wdd)	container_of(wdd, struct dw_wdt, wdd)
+@@ -430,6 +441,141 @@ static void dw_wdt_init_timeouts(struct dw_wdt *dw_wdt, struct device *dev)
+ 			mult_frac(tops[idx], MSEC_PER_SEC, dw_wdt->rate);
+ }
  
--	dw_wdt->clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(dw_wdt->clk))
--		return PTR_ERR(dw_wdt->clk);
-+	/*
-+	 * Try to request the watchdog dedicated timer clock source. It must
-+	 * be supplied if asynchronous mode is enabled. Otherwise fallback
-+	 * to the common timer/bus clocks configuration, in which the very first
-+	 * found clocks supply both timer and APB signals.
-+	 */
-+	dw_wdt->clk = devm_clk_get(dev, "tclk");
-+	if (IS_ERR(dw_wdt->clk)) {
-+		dw_wdt->clk = devm_clk_get(dev, NULL);
-+		if (IS_ERR(dw_wdt->clk))
-+			return PTR_ERR(dw_wdt->clk);
-+	}
- 
- 	ret = clk_prepare_enable(dw_wdt->clk);
++#ifdef CONFIG_DEBUG_FS
++
++static int dw_wdt_dbgfs_timeout_get(void *priv, u64 *val)
++{
++	struct dw_wdt *dw_wdt = priv;
++
++	*val = dw_wdt_get_timeout(dw_wdt) / MSEC_PER_SEC;
++
++	return 0;
++}
++
++static int dw_wdt_dbgfs_timeout_set(void *priv, u64 val)
++{
++	struct dw_wdt *dw_wdt = priv;
++
++	return dw_wdt_set_timeout(&dw_wdt->wdd, val);
++}
++DEFINE_DEBUGFS_ATTRIBUTE(dw_wdt_dbgfs_timeout_fops,
++	dw_wdt_dbgfs_timeout_get, dw_wdt_dbgfs_timeout_set, "%llu\n");
++
++static int dw_wdt_dbgfs_pretimeout_get(void *priv, u64 *val)
++{
++	struct dw_wdt *dw_wdt = priv;
++
++	*val = dw_wdt->wdd.pretimeout;
++
++	return 0;
++}
++
++static int dw_wdt_dbgfs_pretimeout_set(void *priv, u64 val)
++{
++	struct dw_wdt *dw_wdt = priv;
++
++	return dw_wdt_set_pretimeout(&dw_wdt->wdd, val);
++}
++DEFINE_DEBUGFS_ATTRIBUTE(dw_wdt_dbgfs_pretimeout_fops,
++	dw_wdt_dbgfs_pretimeout_get, dw_wdt_dbgfs_pretimeout_set, "%llu\n");
++
++static int dw_wdt_dbgfs_ping_set(void *priv, u64 val)
++{
++	struct dw_wdt *dw_wdt = priv;
++
++	dw_wdt_ping(&dw_wdt->wdd);
++
++	return 0;
++}
++DEFINE_DEBUGFS_ATTRIBUTE(dw_wdt_dbgfs_ping_fops,
++	NULL, dw_wdt_dbgfs_ping_set, "%llu\n");
++
++static int dw_wdt_dbgfs_en_get(void *priv, u64 *val)
++{
++	struct dw_wdt *dw_wdt = priv;
++
++	*val = !!dw_wdt_is_enabled(dw_wdt);
++
++	return 0;
++}
++
++static int dw_wdt_dbgfs_en_set(void *priv, u64 val)
++{
++	struct dw_wdt *dw_wdt = priv;
++
++	if (val)
++		dw_wdt_start(&dw_wdt->wdd);
++	else
++		dw_wdt_stop(&dw_wdt->wdd);
++
++	return 0;
++}
++DEFINE_DEBUGFS_ATTRIBUTE(dw_wdt_dbgfs_en_fops,
++	dw_wdt_dbgfs_en_get, dw_wdt_dbgfs_en_set, "%llu\n");
++
++#define DW_WDT_DBGFS_REG(_name, _off) \
++{				      \
++	.name = _name,		      \
++	.offset = _off		      \
++}
++
++static const struct debugfs_reg32 dw_wdt_dbgfs_regs[] = {
++	DW_WDT_DBGFS_REG("cr", WDOG_CONTROL_REG_OFFSET),
++	DW_WDT_DBGFS_REG("torr", WDOG_TIMEOUT_RANGE_REG_OFFSET),
++	DW_WDT_DBGFS_REG("ccvr", WDOG_CURRENT_COUNT_REG_OFFSET),
++	DW_WDT_DBGFS_REG("crr", WDOG_COUNTER_RESTART_REG_OFFSET),
++	DW_WDT_DBGFS_REG("stat", WDOG_INTERRUPT_STATUS_REG_OFFSET),
++	DW_WDT_DBGFS_REG("param5", WDOG_COMP_PARAMS_5_REG_OFFSET),
++	DW_WDT_DBGFS_REG("param4", WDOG_COMP_PARAMS_4_REG_OFFSET),
++	DW_WDT_DBGFS_REG("param3", WDOG_COMP_PARAMS_3_REG_OFFSET),
++	DW_WDT_DBGFS_REG("param2", WDOG_COMP_PARAMS_2_REG_OFFSET),
++	DW_WDT_DBGFS_REG("param1", WDOG_COMP_PARAMS_1_REG_OFFSET),
++	DW_WDT_DBGFS_REG("version", WDOG_COMP_VERSION_REG_OFFSET),
++	DW_WDT_DBGFS_REG("type", WDOG_COMP_TYPE_REG_OFFSET)
++};
++
++static void dw_wdt_dbgfs_init(struct dw_wdt *dw_wdt)
++{
++	struct device *dev = dw_wdt->wdd.parent;
++	struct debugfs_regset32 *regset;
++
++	regset = devm_kzalloc(dev, sizeof(*regset), GFP_KERNEL);
++	if (!regset)
++		return;
++
++	regset->regs = dw_wdt_dbgfs_regs;
++	regset->nregs = ARRAY_SIZE(dw_wdt_dbgfs_regs);
++	regset->base = dw_wdt->regs;
++
++	dw_wdt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
++
++	debugfs_create_regset32("registers", 0444, dw_wdt->dbgfs_dir, regset);
++
++	debugfs_create_file_unsafe("timeout", 0600, dw_wdt->dbgfs_dir,
++				   dw_wdt, &dw_wdt_dbgfs_timeout_fops);
++
++	debugfs_create_file_unsafe("pretimeout", 0600, dw_wdt->dbgfs_dir,
++				   dw_wdt, &dw_wdt_dbgfs_pretimeout_fops);
++
++	debugfs_create_file_unsafe("ping", 0200, dw_wdt->dbgfs_dir,
++				   dw_wdt, &dw_wdt_dbgfs_ping_fops);
++
++	debugfs_create_file_unsafe("enable", 0600, dw_wdt->dbgfs_dir,
++				   dw_wdt, &dw_wdt_dbgfs_en_fops);
++}
++
++static void dw_wdt_dbgfs_clear(struct dw_wdt *dw_wdt)
++{
++	debugfs_remove_recursive(dw_wdt->dbgfs_dir);
++}
++
++#else /* !CONFIG_DEBUG_FS */
++
++static void dw_wdt_dbgfs_init(struct dw_wdt *dw_wdt) {}
++static void dw_wdt_dbgfs_clear(struct dw_wdt *dw_wdt) {}
++
++#endif /* !CONFIG_DEBUG_FS */
++
+ static int dw_wdt_drv_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -544,6 +690,8 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
  	if (ret)
-@@ -358,10 +375,27 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
- 		goto out_disable_clk;
- 	}
+ 		goto out_disable_pclk;
  
-+	/*
-+	 * Request APB clocks if device is configured with async clocks mode.
-+	 * In this case both tclk and pclk clocks are supposed to be specified.
-+	 * Alas we can't know for sure whether async mode was really activated,
-+	 * so the pclk reference is left optional. If it it's failed to be
-+	 * found we consider the device configured in synchronous clocks mode.
-+	 */
-+	dw_wdt->pclk = devm_clk_get_optional(dev, "pclk");
-+	if (IS_ERR(dw_wdt->pclk)) {
-+		ret = PTR_ERR(dw_wdt->pclk);
-+		goto out_disable_clk;
-+	}
++	dw_wdt_dbgfs_init(dw_wdt);
 +
-+	ret = clk_prepare_enable(dw_wdt->pclk);
-+	if (ret)
-+		goto out_disable_clk;
-+
- 	dw_wdt->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
- 	if (IS_ERR(dw_wdt->rst)) {
- 		ret = PTR_ERR(dw_wdt->rst);
--		goto out_disable_clk;
-+		goto out_disable_pclk;
- 	}
- 
- 	reset_control_deassert(dw_wdt->rst);
-@@ -399,10 +433,13 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
- 
- 	ret = watchdog_register_device(wdd);
- 	if (ret)
--		goto out_disable_clk;
-+		goto out_disable_pclk;
- 
  	return 0;
  
-+out_disable_pclk:
-+	clk_disable_unprepare(dw_wdt->pclk);
-+
- out_disable_clk:
- 	clk_disable_unprepare(dw_wdt->clk);
- 	return ret;
-@@ -414,6 +451,7 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
+ out_disable_pclk:
+@@ -558,6 +706,8 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
+ {
+ 	struct dw_wdt *dw_wdt = platform_get_drvdata(pdev);
  
++	dw_wdt_dbgfs_clear(dw_wdt);
++
  	watchdog_unregister_device(&dw_wdt->wdd);
  	reset_control_assert(dw_wdt->rst);
-+	clk_disable_unprepare(dw_wdt->pclk);
- 	clk_disable_unprepare(dw_wdt->clk);
- 
- 	return 0;
+ 	clk_disable_unprepare(dw_wdt->pclk);
 -- 
 2.25.1
 
