@@ -2,85 +2,140 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F7EC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ECAC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40733208CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583502415;
-	bh=ofoEWvuz60wMYevmFK5gY3rtPf2eTecFYR0FgcJdPvA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UfICHxkGXPM7V1lzUIoh7hDzZIbOIOP+/JnwaO+jZlxHm5YyVN9KJFQjhbJxM7JPY
-	 qIr4e8vJ8BgeXT3OvPCf2VoMbR6F86DvMsTj9PPzEzi2Z6VaYGdYZ3SZ/q4C2PdikE
-	 Es3yILZ3UaFPgU56Vomr3fshuXaJUv+chzz+F2y0=
+	by mail.kernel.org (Postfix) with ESMTP id 06BEB2146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgCFNqy (ORCPT
+        id S1726676AbgCFNsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:46:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgCFNqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:46:54 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77FCC2084E;
-        Fri,  6 Mar 2020 13:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583502413;
-        bh=ofoEWvuz60wMYevmFK5gY3rtPf2eTecFYR0FgcJdPvA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=J2W7NrrkTWNs3aEPCs3JupR+tZEIA4kk4bn/WYvcq4lgOdmmu8XKeKVIBznD3aCJJ
-         oy+loPZTqu0GdB6ZNXPjVmJs3jwunetuH0Lxk5E498bCl4zqRQLd9QwmxtHHmFyVeV
-         dDm8SMvBRsmejpki6P/E6A3PxzgRM94ZPNIzZqh0=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jADJT-00AaW5-P6; Fri, 06 Mar 2020 13:46:51 +0000
+        Fri, 6 Mar 2020 08:48:32 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37330 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCFNsb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:48:31 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 342F4803087C;
+        Fri,  6 Mar 2020 13:48:29 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 5oI_7TdojgQv; Fri,  6 Mar 2020 16:48:28 +0300 (MSK)
+Date:   Fri, 6 Mar 2020 16:47:20 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
+ peculiarities into account
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200306132912.GA1748204@smile.fi.intel.com>
+ <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 06 Mar 2020 13:46:51 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [patch 5/7] genirq: Sanitize state handling in check_irq_resend()
-In-Reply-To: <20200306130623.882129117@linutronix.de>
-References: <20200306130341.199467200@linutronix.de>
- <20200306130623.882129117@linutronix.de>
-Message-ID: <10cde01e873942d45a9877ea08a77e35@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200306134829.342F4803087C@mail.baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-06 13:03, Thomas Gleixner wrote:
-> The code sets IRQS_REPLAY unconditionally whether the resend happens or
-> not. That doesn't have bad side effects right now, but inconsistent 
-> state
-> is always a latent source of problems.
+On Fri, Mar 06, 2020 at 03:30:35PM +0200, Andy Shevchenko wrote:
+> On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
+> > On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > > From: Serge Semin <fancer.lancer@gmail.com>
+> > > 
+> > > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
+> > > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
+> > > with currently implemented in the kernel DW DMAC driver, but there are some
+> > > peculiarities which must be taken into account in order to have the device
+> > > fully supported.
+> > > 
+> > > First of all traditionally we replaced the legacy plain text-based dt-binding
+> > > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+> > > channels, which alas have different max burst length configuration.
+> > > In particular first two channels may burst up to 128 bits (16 bytes) at a time
+> > > while the rest of them just up to 32 bits. We must make sure that the DMA
+> > > subsystem doesn't set values exceeding these limitations otherwise the
+> > > controller will hang up. In third currently we discovered the problem in using
+> > > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+> > > natively implemented multi-block LLP transfers support and the SPI-transfer
+> > > length exceeds the max lock size. In this case due to asynchronous handling of
+> > > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
+> > > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+> > > the DMAC to asynchronously execute the transfers we'd have to at least warn
+> > > the user of the possible errors.
+> > > 
+> > > Finally there is a bug in the algorithm of the nollp flag detection.
+> > > In particular even if DW DMAC parameters state the multi-block transfers
+> > > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+> > > by the driver true multi-block LLP functionality unusable. This happens cause'
+> > > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+> > > contiguous multi-block transfers will be only supported. We must take the
+> > > flag into account when detecting the LLP support otherwise the driver just
+> > > won't work correctly.
+> > > 
+> > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> > > commit 98d54f81e36b ("Linux 5.6-rc4").
+> > 
+> > Thank you for your series!
+> > 
+> > I'll definitely review it, but it will take time. So, I think due to late
+> > submission this is material at least for v5.8.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+Hello Andy,
+Thanks for the quick response. Looking forward to get the patches
+reviewed and move on with the next patchset I'll send after this. It concerns
+DW APB SSI driver, which uses the changes introduced by this one. So the
+sooner we finished with this patchset the better. Although I understand
+that it may take some time. I've just sent over 12 patchset, which have a lot
+of fixups and new drivers.)
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> One thing that I can tell immediately is the broken email thread in this series.
+> Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
+> so, it will link the mail properly.
+> 
+
+I've got thread=true in my gitconfig file, so each email should have
+the proper reference and in-reply-to to the cover-letter (I see it from
+the log). The problem popped up from a different place. For some reason the
+automatic CC/To list extraction command didn't do the job right, so we ended
+up with lacking of mailing lists in Cc's in this patchset. The command look like
+this:
+
+git send-email --cc-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nom" \
+                   --to-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nol" \
+                   --from "Serge Semin <Sergey.Semin at baikalelectronics.ru>" \
+                   --smtp-server-option="-abaikal" --cover-letter -5
+
+Regards,
+-Sergey
+
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
