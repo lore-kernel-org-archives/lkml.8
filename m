@@ -2,203 +2,284 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B23C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0D4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF31206E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5862F206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fe6wMZH1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsNGbxp3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCFWOi (ORCPT
+        id S1726874AbgCFWOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 17:14:38 -0500
-Received: from gateway21.websitewelcome.com ([192.185.46.113]:25304 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726245AbgCFWOi (ORCPT
+        Fri, 6 Mar 2020 17:14:55 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38908 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCFWOy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 17:14:38 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 71C93400C3400
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Mar 2020 16:14:35 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ALEpjBe3FXVkQALEpjV9x0; Fri, 06 Mar 2020 16:14:35 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nBwlfiUJo4l1eGO3/VAyVjlX3AwTc9M2cRFum/DqUP4=; b=fe6wMZH1EP5Z1nRJw+m77yeD7Y
-        LHTno/j6YfqvsizLS41Ci6tS5mt7f7WZwjCHdoj10jsWv5JkH/rFiKn9/IUbAsDhJ4d89Wcmdw5ZF
-        ii3lzokrhXZgXuXny9XUOcAvzgK5MxSWqpaFLrPJ1yZwItR8q651NhjY32XLDJKeK5swMZoLx+1ho
-        6mFvOG70z8q3O2FUpe1KOOQaX0Simy1E4RWU7JvqgEKSXhAlVG1vcjt0A9vfctAV5Mw0qIKZclvWn
-        zRQj5N1DwAnTND2B16g6sM43703jTsyo05l6qeztEPQRVgT2PIstsaExAaTQgXeSrb9tsljAcUTL5
-        ZZrMEvew==;
-Received: from [201.162.241.123] (port=6921 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jALEm-000Jn7-UR; Fri, 06 Mar 2020 16:14:34 -0600
-Date:   Fri, 6 Mar 2020 16:17:40 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Steve French <sfrench@samba.org>
-Cc:     linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] cifs: cifspdu.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200306221740.GA31410@embeddedor>
+        Fri, 6 Mar 2020 17:14:54 -0500
+Received: by mail-lj1-f193.google.com with SMTP id w1so3824887ljh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 14:14:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g9A8bb6Dd4q1KloLSMciak2cHd7VLsJhpyC5tpVoZ/I=;
+        b=DsNGbxp3EvIRQ1+Cjbx86npj3Tmdldis3gBYdtgBzEthjzfwXJ8cXLU4vnaCPeUUJN
+         amzAcFKVSnzPE6U5TrEDnZ9EQv56URYXoRHqwPOcqtB/GhdAFWQhNsrnHbnM4NRaORHs
+         nK4RU1o5Rn9HJGjekObGoF4MwRGe5LJ2+fRonC+J4kATT3CvGXO8NaLssYZGWfBAExIl
+         P1Gm3eR8utAnnxpSJiGOtLct3fxb0LxuMAL3XKaot4rEFOhg737r394IFhtJzRevnafs
+         vUWHE0sPeAd1IHj7n00pW/Gnb2jGf0DCq+pVNcHgdl+1Km+NBmukuOiHWvKpcVUbxmjo
+         f79A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g9A8bb6Dd4q1KloLSMciak2cHd7VLsJhpyC5tpVoZ/I=;
+        b=Vo7i1UAH2VkKJH9C7Jgz3PBiUsZAisS7wvVZ+MTu762dgUtMhcO6I3nAhLO+n96Jta
+         7kvGVESACzEccDylZR4x36a5s3YJ6RLvQ4JSjMfWoW+9JY82s/FqIbyh0+OHgV8BFm2u
+         q97dARLvntgow7jFtF0wTaZCeltSX9oQ8G7gg752uRcRBTw98NYui1rJ6Vqj2jnq7xlH
+         1DnVSrXPvtr4dChyxWb3Zf/xwErOa9/+yPS2CJXhQs57Fw/EvvkfIauwrcW8w7wMbXxR
+         fj8hJPTKY7+hMexq5K9z0ejnKSh6gHAht0UI1VgJ7Y0vaiENOxgRYEABR8kP/iZY9Ymb
+         nYkA==
+X-Gm-Message-State: ANhLgQ3tB7ydA5MzXo89ykr9xJK8jAFGNC59REQPVdORFwFmDYMAwdQG
+        +e/C5Iz3TcvVmLt0FI3BnRlQM9K8
+X-Google-Smtp-Source: ADFU+vsWl0txMP8AUe8Lh7uDKkjFqEhXxbY5LeC91lXfUKM/0exSdlnse/Kd2mwnamA+BqG4lGA+7A==
+X-Received: by 2002:a2e:b246:: with SMTP id n6mr3295601ljm.70.1583532891947;
+        Fri, 06 Mar 2020 14:14:51 -0800 (PST)
+Received: from localhost.localdomain ([46.159.134.13])
+        by smtp.gmail.com with ESMTPSA id s17sm14333158lfs.6.2020.03.06.14.14.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 14:14:51 -0800 (PST)
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Stefano Brivio <sbrivio@redhat.com>
+Cc:     Yury Norov <yury.norov@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] lib/bitmap: rework bitmap_cut()
+Date:   Fri,  6 Mar 2020 14:14:23 -0800
+Message-Id: <20200306221423.18631-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.241.123
-X-Source-L: No
-X-Exim-ID: 1jALEm-000Jn7-UR
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.241.123]:6921
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+bitmap_cut() refers src after memmove(). If dst and src overlap,
+it may cause buggy behaviour because src may become inconsistent.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+The function complexity is of O(nbits * cut_bits), which can be
+improved to O(nbits).
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+We can also rely on bitmap_shift_right() to do most of the work.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+I don't like interface of bitmap_cut(). The idea of copying of a
+whole bitmap inside the function from src to dst doesn't look
+useful in practice. The function is introduced a few weeks ago and
+was most probably inspired by bitmap_shift_*. Looking at the code,
+it's easy to see that bitmap_shift_* is usually passed with
+dst == src. bitmap_cut() has a single user so far, and it also
+calls it with dst == src.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+This patch removes dst so the whole work is made in-place. It also
+switches the function to bitmap_shift_right() internally in sake of
+performance and simplicity.
 
-This issue was found with the help of Coccinelle.
+I've added a very basic test too.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
 ---
- fs/cifs/cifspdu.h | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ include/linux/bitmap.h         |  7 ++---
+ lib/bitmap.c                   | 51 +++++++++-------------------------
+ lib/test_bitmap.c              | 32 +++++++++++++++++++++
+ net/netfilter/nft_set_pipapo.c |  3 +-
+ 4 files changed, 49 insertions(+), 44 deletions(-)
 
-diff --git a/fs/cifs/cifspdu.h b/fs/cifs/cifspdu.h
-index 8e15887d1f1f..593d826820c3 100644
---- a/fs/cifs/cifspdu.h
-+++ b/fs/cifs/cifspdu.h
-@@ -1021,7 +1021,7 @@ typedef struct smb_com_writex_req {
- 	__le16 ByteCount;
- 	__u8 Pad;		/* BB check for whether padded to DWORD
- 				   boundary and optimum performance here */
--	char Data[0];
-+	char Data[];
- } __attribute__((packed)) WRITEX_REQ;
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index 99058eb81042..ed60b7272437 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -59,7 +59,7 @@
+  *  						Iterate over all set regions
+  *  bitmap_shift_right(dst, src, n, nbits)      *dst = *src >> n
+  *  bitmap_shift_left(dst, src, n, nbits)       *dst = *src << n
+- *  bitmap_cut(dst, src, first, n, nbits)       Cut n bits from first, copy rest
++ *  bitmap_cut(bmap, first, n, nbits)           Cut n bits from first, copy rest
+  *  bitmap_replace(dst, old, new, mask, nbits)  *dst = (*old & ~(*mask)) | (*new & *mask)
+  *  bitmap_remap(dst, src, old, new, nbits)     *dst = map(old, new)(src)
+  *  bitmap_bitremap(oldbit, old, new, nbits)    newbit = map(old, new)(oldbit)
+@@ -140,9 +140,8 @@ extern void __bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+ 				unsigned int shift, unsigned int nbits);
+ extern void __bitmap_shift_left(unsigned long *dst, const unsigned long *src,
+ 				unsigned int shift, unsigned int nbits);
+-extern void bitmap_cut(unsigned long *dst, const unsigned long *src,
+-		       unsigned int first, unsigned int cut,
+-		       unsigned int nbits);
++extern void bitmap_cut(unsigned long *bmap, unsigned int first,
++			unsigned int cut, unsigned int nbits);
+ extern int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
+ 			const unsigned long *bitmap2, unsigned int nbits);
+ extern void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
+diff --git a/lib/bitmap.c b/lib/bitmap.c
+index 89260aa342d6..06e06e0c3096 100644
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -170,67 +170,42 @@ EXPORT_SYMBOL(__bitmap_shift_left);
  
- typedef struct smb_com_write_req {
-@@ -1041,7 +1041,7 @@ typedef struct smb_com_write_req {
- 	__le16 ByteCount;
- 	__u8 Pad;		/* BB check for whether padded to DWORD
- 				   boundary and optimum performance here */
--	char Data[0];
-+	char Data[];
- } __attribute__((packed)) WRITE_REQ;
+ /**
+  * bitmap_cut() - remove bit region from bitmap and right shift remaining bits
+- * @dst: destination bitmap, might overlap with src
+- * @src: source bitmap
++ * @bmap:  bitmap to cut
+  * @first: start bit of region to be removed
+  * @cut: number of bits to remove
+  * @nbits: bitmap size, in bits
+  *
+- * Set the n-th bit of @dst iff the n-th bit of @src is set and
+- * n is less than @first, or the m-th bit of @src is set for any
+- * m such that @first <= n < nbits, and m = n + @cut.
+- *
+  * In pictures, example for a big-endian 32-bit architecture:
+  *
+- * @src:
++ * @bmap:
+  * 31                                   63
+  * |                                    |
+  * 10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101
+  *                 |  |              |                                    |
+  *                16  14             0                                   32
+  *
+- * if @cut is 3, and @first is 14, bits 14-16 in @src are cut and @dst is:
++ * if @cut is 3, and @first is 14, bits 14-16 in @bmap are cut and @dst is:
+  *
+  * 31                                   63
+  * |                                    |
+  * 10110000 00011000 00110010 00010101  00010000 00011000 00101110 01000010
+  *                    |              |                                    |
+  *                    14 (bit 17     0                                   32
+- *                        from @src)
+- *
+- * Note that @dst and @src might overlap partially or entirely.
+- *
+- * This is implemented in the obvious way, with a shift and carry
+- * step for each moved bit. Optimisation is left as an exercise
+- * for the compiler.
++ *                        from @bmap)
+  */
+-void bitmap_cut(unsigned long *dst, const unsigned long *src,
+-		unsigned int first, unsigned int cut, unsigned int nbits)
++void bitmap_cut(unsigned long *bmap, unsigned int first,
++		unsigned int cut, unsigned int nbits)
+ {
+-	unsigned int len = BITS_TO_LONGS(nbits);
+-	unsigned long keep = 0, carry;
+-	int i;
+-
+-	memmove(dst, src, len * sizeof(*dst));
+-
+-	if (first % BITS_PER_LONG) {
+-		keep = src[first / BITS_PER_LONG] &
+-		       (~0UL >> (BITS_PER_LONG - first % BITS_PER_LONG));
+-	}
++	unsigned long tmp;
++	unsigned long *b = bmap + first / BITS_PER_LONG;
  
- typedef struct smb_com_write_rsp {
-@@ -1306,7 +1306,7 @@ typedef struct smb_com_ntransact_req {
- 	/* SetupCount words follow then */
- 	__le16 ByteCount;
- 	__u8 Pad[3];
--	__u8 Parms[0];
-+	__u8 Parms[];
- } __attribute__((packed)) NTRANSACT_REQ;
+-	while (cut--) {
+-		for (i = first / BITS_PER_LONG; i < len; i++) {
+-			if (i < len - 1)
+-				carry = dst[i + 1] & 1UL;
+-			else
+-				carry = 0;
++	if (first % BITS_PER_LONG)
++		tmp = b[0] & BITMAP_LAST_WORD_MASK(first);
  
- typedef struct smb_com_ntransact_rsp {
-@@ -1523,7 +1523,7 @@ struct file_notify_information {
- 	__le32 NextEntryOffset;
- 	__le32 Action;
- 	__le32 FileNameLength;
--	__u8  FileName[0];
-+	__u8  FileName[];
- } __attribute__((packed));
+-			dst[i] = (dst[i] >> 1) | (carry << (BITS_PER_LONG - 1));
+-		}
+-	}
++	bitmap_shift_right(b, b, cut - first, nbits - first);
  
- /* For IO_REPARSE_TAG_SYMLINK */
-@@ -1536,7 +1536,7 @@ struct reparse_symlink_data {
- 	__le16	PrintNameOffset;
- 	__le16	PrintNameLength;
- 	__le32	Flags;
--	char	PathBuffer[0];
-+	char	PathBuffer[];
- } __attribute__((packed));
+-	dst[first / BITS_PER_LONG] &= ~0UL << (first % BITS_PER_LONG);
+-	dst[first / BITS_PER_LONG] |= keep;
++	if (first % BITS_PER_LONG)
++		b[0] = tmp | (b[0] & BITMAP_FIRST_WORD_MASK(first));
+ }
+ EXPORT_SYMBOL(bitmap_cut);
  
- /* Flag above */
-@@ -1553,7 +1553,7 @@ struct reparse_posix_data {
- 	__le16	ReparseDataLength;
- 	__u16	Reserved;
- 	__le64	InodeType; /* LNK, FIFO, CHR etc. */
--	char	PathBuffer[0];
-+	char	PathBuffer[];
- } __attribute__((packed));
+diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+index 6b13150667f5..4b2fef13003d 100644
+--- a/lib/test_bitmap.c
++++ b/lib/test_bitmap.c
+@@ -540,6 +540,37 @@ static void __init test_bitmap_arr32(void)
+ 	}
+ }
  
- struct cifs_quota_data {
-@@ -1762,7 +1762,7 @@ struct set_file_rename {
- 	__le32 overwrite;   /* 1 = overwrite dest */
- 	__u32 root_fid;   /* zero */
- 	__le32 target_name_len;
--	char  target_name[0];  /* Must be unicode */
-+	char  target_name[];  /* Must be unicode */
- } __attribute__((packed));
++struct test_bitmap_cut {
++	unsigned int first;
++	unsigned int last;
++	unsigned int nbits;
++	unsigned long in;
++	unsigned long out;
++};
++
++static struct test_bitmap_cut test_cut[] = {
++	{ 0,  0,  BITS_PER_LONG, 0xdeadbeefUL, 0xdeadbeefUL },
++	{ 0,  8,  BITS_PER_LONG, 0xdeadbeefUL, 0xdeadbeUL },
++	{ 4,  8,  BITS_PER_LONG, 0xdeadbeefUL, 0xdeadbefUL },
++	{ 8,  24, BITS_PER_LONG, 0xdeadbeefUL, 0xdeefUL },
++	{ 16, 32, BITS_PER_LONG, 0xdeadbeefUL, 0xbeefUL },
++};
++
++static void __init test_bitmap_cut(void)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(test_cut); i++) {
++		struct test_bitmap_cut *t = &test_cut[i];
++
++		bitmap_cut(&t->in, t->first, t->last, t->nbits);
++		if (!bitmap_equal(&t->in, &t->out, t->nbits)) {
++			pr_err("bitmap_cut #%d failed:\n%*pb.\nExpected:\n%*pb\n",
++					i, t->nbits, &t->in, t->nbits, &t->out);
++		}
++	}
++}
++
+ static void noinline __init test_mem_optimisations(void)
+ {
+ 	DECLARE_BITMAP(bmap1, 1024);
+@@ -617,6 +648,7 @@ static void __init selftest(void)
+ 	test_copy();
+ 	test_replace();
+ 	test_bitmap_arr32();
++	test_bitmap_cut();
+ 	test_bitmap_parse();
+ 	test_bitmap_parse_user();
+ 	test_bitmap_parselist();
+diff --git a/net/netfilter/nft_set_pipapo.c b/net/netfilter/nft_set_pipapo.c
+index 26395c8188b1..68faaf9a4f66 100644
+--- a/net/netfilter/nft_set_pipapo.c
++++ b/net/netfilter/nft_set_pipapo.c
+@@ -1397,8 +1397,7 @@ static void pipapo_drop(struct nft_pipapo_match *m,
+ 			pos = f->lt + g * NFT_PIPAPO_BUCKETS * f->bsize;
  
- struct smb_com_transaction2_sfi_req {
-@@ -2451,7 +2451,7 @@ struct cifs_posix_acl { /* access conrol list  (ACL) */
- 	__le16	version;
- 	__le16	access_entry_count;  /* access ACL - count of entries */
- 	__le16	default_entry_count; /* default ACL - count of entries */
--	struct cifs_posix_ace ace_array[0];
-+	struct cifs_posix_ace ace_array[];
- 	/* followed by
- 	struct cifs_posix_ace default_ace_arraay[] */
- } __attribute__((packed));  /* level 0x204 */
-@@ -2757,7 +2757,7 @@ typedef struct file_xattr_info {
- 	/* BB do we need another field for flags? BB */
- 	__u32 xattr_name_len;
- 	__u32 xattr_value_len;
--	char  xattr_name[0];
-+	char  xattr_name[];
- 	/* followed by xattr_value[xattr_value_len], no pad */
- } __attribute__((packed)) FILE_XATTR_INFO; /* extended attribute info
- 					      level 0x205 */
+ 			for (b = 0; b < NFT_PIPAPO_BUCKETS; b++) {
+-				bitmap_cut(pos, pos, rulemap[i].to,
+-					   rulemap[i].n,
++				bitmap_cut(pos, rulemap[i].to, rulemap[i].n,
+ 					   f->bsize * BITS_PER_LONG);
+ 
+ 				pos += f->bsize;
 -- 
-2.25.0
+2.20.1
 
