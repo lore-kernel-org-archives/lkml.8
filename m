@@ -2,135 +2,78 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB28C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC8DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6133C2146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29147208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:58:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CVakUe6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCFQ6A convert rfc822-to-8bit (ORCPT
+        id S1726788AbgCFQ6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:58:00 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:22397 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726359AbgCFQ57 (ORCPT
+        Fri, 6 Mar 2020 11:58:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27748 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726237AbgCFQ6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:57:59 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-20-vOmmemdGMmSebKCtFim0sQ-1; Fri, 06 Mar 2020 16:57:55 +0000
-X-MC-Unique: vOmmemdGMmSebKCtFim0sQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 6 Mar 2020 16:57:55 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 6 Mar 2020 16:57:55 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Peter Zijlstra' <peterz@infradead.org>,
-        =?iso-8859-1?Q?Andr=E9_Almeida?= <andrealmeid@collabora.com>
-CC:     Florian Weimer <fweimer@redhat.com>,
-        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
+        Fri, 6 Mar 2020 11:58:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583513926;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=A55OoPDSCAEQMkVT+BI7hPJYiT6IRiTcYHuIWkW2WoE=;
+        b=CVakUe6PzyCQZzKsyTaHnSFILtGI7qkLb7Q+uAC8KwTAcKsAIiRvxXtK4nh/icNWbyOqll
+        z3rTSz418dEpkdwx8XnUu9rZR8VwPMTBkJTGa2rCcXS70Z3Vz5Wh2/6CqOWko46IBIYwe7
+        fsH9itBmraQS3h3lQy9WUNqDjPLNqTk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-r3E-fKK4Or6H92pVcPt3hw-1; Fri, 06 Mar 2020 11:58:44 -0500
+X-MC-Unique: r3E-fKK4Or6H92pVcPt3hw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 19172DB60;
+        Fri,  6 Mar 2020 16:58:43 +0000 (UTC)
+Received: from treble (ovpn-124-190.rdu2.redhat.com [10.10.124.190])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 60DF919C69;
+        Fri,  6 Mar 2020 16:58:41 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 10:58:39 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        "krisman@collabora.com" <krisman@collabora.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "ryao@gentoo.org" <ryao@gentoo.org>,
-        "dvhart@infradead.org" <dvhart@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "z.figura12@gmail.com" <z.figura12@gmail.com>,
-        "steven@valvesoftware.com" <steven@valvesoftware.com>,
-        "steven@liquorix.net" <steven@liquorix.net>,
-        "malteskarupke@web.de" <malteskarupke@web.de>,
-        "carlos@redhat.com" <carlos@redhat.com>,
-        "adhemerval.zanella@linaro.org" <adhemerval.zanella@linaro.org>,
-        "libc-alpha@sourceware.org" <libc-alpha@sourceware.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: RE: 'simple' futex interface [Was: [PATCH v3 1/4] futex: Implement
- mechanism to wait on any of several futexes]
-Thread-Topic: 'simple' futex interface [Was: [PATCH v3 1/4] futex: Implement
- mechanism to wait on any of several futexes]
-Thread-Index: AQHV8x8l7LKRap7vfU2BMMqcavNvO6g7ya9A
-Date:   Fri, 6 Mar 2020 16:57:54 +0000
-Message-ID: <0271e473ddcf463bb030eb4cbecbe888@AcuMS.aculab.com>
-References: <87tv3aflqm.fsf@nanos.tec.linutronix.de>
- <967d5047-2cb6-d6d8-6107-edb99a4c9696@valvesoftware.com>
- <87o8thg031.fsf@nanos.tec.linutronix.de>
- <beb82055-96fa-cb64-a06e-9d7a0946587b@valvesoftware.com>
- <20200303120050.GC2596@hirez.programming.kicks-ass.net>
- <87pndth9ur.fsf@oldenburg2.str.redhat.com>
- <20200303132150.GD2596@hirez.programming.kicks-ass.net>
- <878skhh7og.fsf@oldenburg2.str.redhat.com>
- <20200303150104.GE2596@hirez.programming.kicks-ass.net>
- <52406c54-60b3-dcfe-65d8-4c425459e37b@collabora.com>
- <20200305185136.GB3348@worktop.programming.kicks-ass.net>
-In-Reply-To: <20200305185136.GB3348@worktop.programming.kicks-ass.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/entry/64: Fix unwind hint for rewind_stack_do_exit
+Message-ID: <20200306165839.wh5qqsmtwbfyirwi@treble>
+References: <20200305225443.64426-1-jannh@google.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200305225443.64426-1-jannh@google.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra
-> Sent: 05 March 2020 18:52
-+> On Thu, Mar 05, 2020 at 01:14:17PM -0300, André Almeida wrote:
+On Thu, Mar 05, 2020 at 11:54:43PM +0100, Jann Horn wrote:
+> The leaq instruction in rewind_stack_do_exit moves the stack pointer
+> directly below the pt_regs at the top of the task stack before calling
+> do_exit(). Tell the unwinder to expect pt_regs.
 > 
-> > >   sys_futex_wait(void *uaddr, u64 val, unsigned long flags, ktime_t *timo);
-> > >   struct futex_wait {
-> > > 	  void *uaddr;
-> > > 	  u64 val;
-> > > 	  u64 flags;
-> > >   };
-> > >   sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
-> > > 		  u64 flags, ktime_t *timo);
-> > >   sys_futex_wake(void *uaddr, unsigned int nr, u64 flags);
-> > >   sys_futex_cmp_requeue(void *uaddr1, void *uaddr2, unsigned int nr_wake,
-> > > 		  unsigned int nr_requeue, u64 cmpval, unsigned long flags);
-> > >
-> > > And that makes 7 arguments for cmp_requeue, which can't be. Maybe we if
-> > > combine nr_wake and nr_requeue in one as 2 u16... ?
-> > >
-> > > And then we need to go detector if the platform supports it or not..
-> > >
-> >
-> > Thanks everyone for the feedback around our mechanism. Are the
-> > performance benefits of implementing a syscall to wait on a single futex
-> > significant enough to maintain it instead of just using
-> > `sys_futex_waitv()` with `nr_waiters = 1`? If we join both cases in a
-> > single interface, we may even add a new member for NUMA hint in `struct
-> > futex_wait`.
-> 
-> My consideration was that avoiding the get_user/copy_from_user might
-> become measurable on !PTI systems with SMAP.
-> 
-> But someone would have to build it and measure it before we can be sure
-> of course.
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-An extra copy_from_user is likely to be noticable.
-It certainly makes recvmsg() slower than recv().
-Especially if the hardended usercopy crap gets involved.
+Thanks Jann.  This fits in nicely with my ORC series so I'll add it.
 
-	David
- 
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+-- 
+Josh
 
