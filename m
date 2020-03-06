@@ -2,199 +2,217 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DD8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166EDC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE8B720658
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA91520717
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tLiimlWZ"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="O/6eGHTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgCFRVU (ORCPT
+        id S1726846AbgCFRVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:21:20 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:34018 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgCFRVU (ORCPT
+        Fri, 6 Mar 2020 12:21:34 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45504 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCFRVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:21:20 -0500
-Received: by mail-pj1-f68.google.com with SMTP id gc16so1862398pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 09:21:19 -0800 (PST)
+        Fri, 6 Mar 2020 12:21:34 -0500
+Received: by mail-io1-f66.google.com with SMTP id w9so2797187iob.12
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 09:21:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZCslXV7+BYNwc16oI1VHhg6O3Q9jB+EK4lVW99vpz8A=;
-        b=tLiimlWZypLzW+H9Kkg20KNLErAOSyI8M6Exl4NgiZ8El8PMltlSPN5E95HHHxKgL5
-         okf2t5tC3kDKwAZCojVrWeZTrtZ896CZIyKHeDuIxTxRu6JRzCCUkefu97O0fZ4P8PSB
-         rZya3kschpxwcwfWImQ+GxrlkwyUCAyPmKfn5obLROrFtbFTE786KMG4MIab6eOl4tGO
-         0ZgBGyDoDiQN3xiIeHSKU7xIoTZtpYLtEKVzerkyyIt2TMYuZ5JMaDsNgz4xGoDHzILm
-         bbuGmCsEcmrHozIekbU3aG8yCkr5GAEB7siX4hrSj62WASLbm4X2Laqv6guk/zrRevD9
-         7G7g==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UpJ/sy4Eqlqc62xJ9CGPbulBS93p2b28hl6znlt+s3U=;
+        b=O/6eGHTVYcHkiG251FGLtEObmFqV0XFSf6lwS4Z+IVRMTSHQdIq547eK8C06y3PMoQ
+         4PN9yO+rlr/bvY0hcKXlQhEOltlEH985MxXSFTHKNrW8xwzFt4JEwmGpx6EzRJ8+8Sse
+         G4MQsphafaUpkUhI15XT6cEyAzSF3ccgJRKXUw5ocgwNaBMTCmC7XOGdBesQRBm7dyC1
+         ieItttY+ZC3S/q6/uIEWofTLGnfszPsjfm4ay6VaFklIbiSQF4uHuDpcJtJqSa/D0ov1
+         McWnHnAYObmYXxAPocMHWUt4duL4Kb4rnTAsf3me+RM/q5K5MS/hgSE9Q+j8LnklJSrz
+         5Hug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZCslXV7+BYNwc16oI1VHhg6O3Q9jB+EK4lVW99vpz8A=;
-        b=EnAp5BfF1TaD2HoqRq1aUpkTp9NXkvXnWBaSOgqFv8D+94UNSYJkIJUtWhEMSlA/Ap
-         ZoWwWJyzQHPy4E1r5LFLan1u3n7h5aIO/x8rd9VNgRoxRFYB9m0/xBbfFkhsadgSJtWj
-         7M0Yax+wZqtqcvEzmSwypiE3XqgrMje9fWSQL51NtX7tNjlaw5dxhG93ppmCYM6dBVWm
-         1QS6R8fYEBVMFpL0XGNGLLPRwMXnMgzjvxg4tsxdESgDCG+B1jC2yl7mEiFvpuN1xcsC
-         VKPcIvl4lkGzPR3/1qnA0833uahp8YSclF+qvY2lI8jEt4QufRa4CXeYeyKG+oWMtabU
-         mUcQ==
-X-Gm-Message-State: ANhLgQ2dffapMBAt+Yc8JUHOrcpBe7f5OzS6gj6f2zfp6yJREJQZXtHO
-        SYJ1pg+GJUPZz2V5U6kIyHB5IC1cKyM=
-X-Google-Smtp-Source: ADFU+vvqp7tpD24ATuMs8NWAlMf5JlfX9cjLBq6me/SQRkgMh1asrJUC2dtdLV6SGav3wK81WYUpuQ==
-X-Received: by 2002:a17:902:9a42:: with SMTP id x2mr4227371plv.194.1583515279031;
-        Fri, 06 Mar 2020 09:21:19 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id mp5sm9956189pjb.48.2020.03.06.09.21.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 09:21:18 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Peter Griffin <peter.griffin@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v3] reset: hi6220: Add support for AO reset controller
-Date:   Fri,  6 Mar 2020 17:21:13 +0000
-Message-Id: <20200306172113.50738-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UpJ/sy4Eqlqc62xJ9CGPbulBS93p2b28hl6znlt+s3U=;
+        b=h+H09CyN+ARIMI2J06FbhwnqHB6XXhlJjDzrMgo+gUakuyowVehT9AskTrV/RIa0/K
+         ENkdUkCoRfO6YMq5n8HYl/iuJRlMrjuWJ+5qzzsNY6PCUiBg2TbK0nm9Vo5KrSxNdODu
+         Ae84zqk2ZBhE7bJkz0vyB+aaATCNeTHe5S2kSV8Wshnso7N5Zo1f+COD1yDAn9BsVqNQ
+         wk7zmNZXfAi5SP52ymvn6q61rTQKgKmpNw5b6SBJRp7wq820fhzKfa7KAgQ+mrzPYMvM
+         dbjS6cIIMnPC9FOKODPqREAYAPeNAY3jFKUCI6Dti9r4ykHqdnQb2eiMvs3jp/2PGd7/
+         ZttA==
+X-Gm-Message-State: ANhLgQ0U3HiBktaPokZGPIMeiRRU+8ag2NSLbtg+j0pYSXeYD9Xfvzjz
+        e8SIbMLaNfx0ilL+tLF71rqk1Q==
+X-Google-Smtp-Source: ADFU+vubeWQ/bYcExUcJpxub9/GalDT9lSUcZrh8Uyp0P3zVAJZ0o+k+cKU0ijuUPObvYLcIczD2tg==
+X-Received: by 2002:a02:950d:: with SMTP id y13mr3949524jah.139.1583515293076;
+        Fri, 06 Mar 2020 09:21:33 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id w1sm4012794ilo.30.2020.03.06.09.21.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Mar 2020 09:21:32 -0800 (PST)
+Subject: Re: KASAN: use-after-free Read in percpu_ref_switch_to_atomic_rcu
+To:     paulmck@kernel.org
+Cc:     Jann Horn <jannh@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        io-uring <io-uring@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>, tony.luck@intel.com,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+References: <00000000000067c6df059df7f9f5@google.com>
+ <CACT4Y+ZVLs7O84qixsvFqk_Nur1WOaCU81RiCwDf3wOqvHB-ag@mail.gmail.com>
+ <3f805e51-1db7-3e57-c9a3-15a20699ea54@kernel.dk>
+ <CAG48ez3DUAraFL1+agBX=1JVxzh_e2GR=UpX5JUaoyi+1gQ=6w@mail.gmail.com>
+ <075e7fbe-aeec-cb7d-9338-8eb4e1576293@kernel.dk>
+ <CAG48ez07bD4sr5hpDhUKe2g5ETk0iYb6PCWqyofPuJbXz1z+hw@mail.gmail.com>
+ <20200306164443.GU2935@paulmck-ThinkPad-P72>
+ <11921f78-c6f2-660b-5e33-11599c2f9a4b@kernel.dk>
+ <20200306171911.GA2935@paulmck-ThinkPad-P72>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f94ca345-d888-e95f-e091-ca60f34ae095@kernel.dk>
+Date:   Fri, 6 Mar 2020 10:21:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200306171911.GA2935@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Griffin <peter.griffin@linaro.org>
+On 3/6/20 10:19 AM, Paul E. McKenney wrote:
+> On Fri, Mar 06, 2020 at 10:00:19AM -0700, Jens Axboe wrote:
+>> On 3/6/20 9:44 AM, Paul E. McKenney wrote:
+>>> On Fri, Mar 06, 2020 at 04:36:20PM +0100, Jann Horn wrote:
+>>>> On Fri, Mar 6, 2020 at 4:34 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>>>> On 3/6/20 7:57 AM, Jann Horn wrote:
+>>>>>> +paulmck
+>>>>>>
+>>>>>> On Wed, Mar 4, 2020 at 3:40 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>>>>>> On 3/4/20 12:59 AM, Dmitry Vyukov wrote:
+>>>>>>>> On Fri, Feb 7, 2020 at 9:14 AM syzbot
+>>>>>>>> <syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com> wrote:
+>>>>>>>>>
+>>>>>>>>> Hello,
+>>>>>>>>>
+>>>>>>>>> syzbot found the following crash on:
+>>>>>>>>>
+>>>>>>>>> HEAD commit:    4c7d00cc Merge tag 'pwm/for-5.6-rc1' of git://git.kernel.o..
+>>>>>>>>> git tree:       upstream
+>>>>>>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=12fec785e00000
+>>>>>>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=e162021ddededa72
+>>>>>>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=e017e49c39ab484ac87a
+>>>>>>>>> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+>>>>>>>>>
+>>>>>>>>> Unfortunately, I don't have any reproducer for this crash yet.
+>>>>>>>>>
+>>>>>>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>>>>>>>>> Reported-by: syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com
+>>>>>>>>
+>>>>>>>> +io_uring maintainers
+>>>>>>>>
+>>>>>>>> Here is a repro:
+>>>>>>>> https://gist.githubusercontent.com/dvyukov/6b340beab6483a036f4186e7378882ce/raw/cd1922185516453c201df8eded1d4b006a6d6a3a/gistfile1.txt
+>>>>>>>
+>>>>>>> I've queued up a fix for this:
+>>>>>>>
+>>>>>>> https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.6&id=9875fe3dc4b8cff1f1b440fb925054a5124403c3
+>>>>>>
+>>>>>> I believe that this fix relies on call_rcu() having FIFO ordering; but
+>>>>>> <https://www.kernel.org/doc/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html#Callback%20Registry>
+>>>>>> says:
+>>>>>>
+>>>>>> | call_rcu() normally acts only on CPU-local state[...] It simply
+>>>>>> enqueues the rcu_head structure on a per-CPU list,
+>>>
+>>> Indeed.  For but one example, if there was a CPU-to-CPU migration between
+>>> the two call_rcu() invocations, it would not be at all surprising for
+>>> the two callbacks to execute out of order.
+>>>
+>>>>>> Is this fix really correct?
+>>>>>
+>>>>> That's a good point, there's a potentially stronger guarantee we need
+>>>>> here that isn't "nobody is inside an RCU critical section", but rather
+>>>>> that we're depending on a previous call_rcu() to have happened. Hence I
+>>>>> think you are right - it'll shrink the window drastically, since the
+>>>>> previous callback is already queued up, but it's not a full close.
+>>>>>
+>>>>> Hmm...
+>>>>
+>>>> You could potentially hack up the semantics you want by doing a
+>>>> call_rcu() whose callback does another call_rcu(), or something like
+>>>> that - but I'd like to hear paulmck's opinion on this first.
+>>>
+>>> That would work!
+>>>
+>>> Or, alternatively, do an rcu_barrier() between the two calls to
+>>> call_rcu(), assuming that the use case can tolerate rcu_barrier()
+>>> overhead and latency.
+>>
+>> If the nested call_rcu() works, that seems greatly preferable to needing
+>> the rcu_barrier(), even if that would not be a showstopper for me. The
+>> nested call_rcu() is just a bit odd, but with a comment it should be OK.
+>>
+>> Incremental here I'm going to test, would just fold in of course.
+>>
+>>
+>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>> index f3218fc81943..95ba95b4d8ec 100644
+>> --- a/fs/io_uring.c
+>> +++ b/fs/io_uring.c
+>> @@ -5330,7 +5330,7 @@ static void io_file_ref_kill(struct percpu_ref *ref)
+>>  	complete(&data->done);
+>>  }
+>>  
+>> -static void io_file_ref_exit_and_free(struct rcu_head *rcu)
+>> +static void __io_file_ref_exit_and_free(struct rcu_head *rcu)
+>>  {
+>>  	struct fixed_file_data *data = container_of(rcu, struct fixed_file_data,
+>>  							rcu);
+>> @@ -5338,6 +5338,18 @@ static void io_file_ref_exit_and_free(struct rcu_head *rcu)
+>>  	kfree(data);
+>>  }
+>>  
+>> +static void io_file_ref_exit_and_free(struct rcu_head *rcu)
+>> +{
+>> +	/*
+>> +	 * We need to order our exit+free call again the potentially
+>> +	 * existing call_rcu() for switching to atomic. One way to do that
+>> +	 * is to have this rcu callback queue the final put and free, as we
+>> +	 * could otherwise a pre-existing atomic switch complete _after_
+>> +	 * the free callback we queued.
+>> +	 */
+>> +	call_rcu(rcu, __io_file_ref_exit_and_free);
+>> +}
+>> +
+>>  static int io_sqe_files_unregister(struct io_ring_ctx *ctx)
+>>  {
+>>  	struct fixed_file_data *data = ctx->file_data;
+> 
+> Looks good to me!
 
-This is required to bring Mali450 gpu out of reset.
+Thanks Paul! I talked to Paul in private, but here's the final version
+with updated comment and attributions.
 
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Peter Griffin <peter.griffin@linaro.org>
-Cc: Enrico Weigelt <info@metux.net>
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-[jstultz: Added comment, Fix void return build issue
-Reported-by: kbuild test robot <lkp@intel.com>]
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v2:
-* Updated to v2 of Peter's patch from here:
-    https://lkml.org/lkml/2019/4/19/253
-* Added a comment to explain ordering question brought
-  up on the list.
-v3:
-* Fix build issue Reported-by: kbuild test robot <lkp@intel.com>
----
- drivers/reset/hisilicon/hi6220_reset.c | 69 +++++++++++++++++++++++++-
- 1 file changed, 68 insertions(+), 1 deletion(-)
+https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.6&id=c1e2148f8ecb26863b899d402a823dab8e26efd1
 
-diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
-index 24e6d420b26b..19926506d033 100644
---- a/drivers/reset/hisilicon/hi6220_reset.c
-+++ b/drivers/reset/hisilicon/hi6220_reset.c
-@@ -33,6 +33,7 @@
- enum hi6220_reset_ctrl_type {
- 	PERIPHERAL,
- 	MEDIA,
-+	AO,
- };
- 
- struct hi6220_reset_data {
-@@ -92,6 +93,65 @@ static const struct reset_control_ops hi6220_media_reset_ops = {
- 	.deassert = hi6220_media_deassert,
- };
- 
-+#define AO_SCTRL_SC_PW_CLKEN0     0x800
-+#define AO_SCTRL_SC_PW_CLKDIS0    0x804
-+
-+#define AO_SCTRL_SC_PW_RSTEN0     0x810
-+#define AO_SCTRL_SC_PW_RSTDIS0    0x814
-+
-+#define AO_SCTRL_SC_PW_ISOEN0     0x820
-+#define AO_SCTRL_SC_PW_ISODIS0    0x824
-+#define AO_MAX_INDEX              12
-+
-+static int hi6220_ao_assert(struct reset_controller_dev *rc_dev,
-+			       unsigned long idx)
-+{
-+	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-+	struct regmap *regmap = data->regmap;
-+	int ret;
-+
-+	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTEN0, BIT(idx));
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(regmap, AO_SCTRL_SC_PW_ISOEN0, BIT(idx));
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(regmap, AO_SCTRL_SC_PW_CLKDIS0, BIT(idx));
-+	return ret;
-+}
-+
-+static int hi6220_ao_deassert(struct reset_controller_dev *rc_dev,
-+				 unsigned long idx)
-+{
-+	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-+	struct regmap *regmap = data->regmap;
-+	int ret;
-+
-+	/*
-+	 * It was suggested to disable isolation before enabling
-+	 * the clocks and deasserting reset, to avoid glitches.
-+	 * But this order is preserved to keep it matching the
-+	 * vendor code.
-+	 */
-+	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTDIS0, BIT(idx));
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(regmap, AO_SCTRL_SC_PW_ISODIS0, BIT(idx));
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(regmap, AO_SCTRL_SC_PW_CLKEN0, BIT(idx));
-+	return ret;
-+}
-+
-+static const struct reset_control_ops hi6220_ao_reset_ops = {
-+	.assert = hi6220_ao_assert,
-+	.deassert = hi6220_ao_deassert,
-+};
-+
- static int hi6220_reset_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
-@@ -117,9 +177,12 @@ static int hi6220_reset_probe(struct platform_device *pdev)
- 	if (type == MEDIA) {
- 		data->rc_dev.ops = &hi6220_media_reset_ops;
- 		data->rc_dev.nr_resets = MEDIA_MAX_INDEX;
--	} else {
-+	} else if (type == PERIPHERAL) {
- 		data->rc_dev.ops = &hi6220_peripheral_reset_ops;
- 		data->rc_dev.nr_resets = PERIPH_MAX_INDEX;
-+	} else {
-+		data->rc_dev.ops = &hi6220_ao_reset_ops;
-+		data->rc_dev.nr_resets = AO_MAX_INDEX;
- 	}
- 
- 	return reset_controller_register(&data->rc_dev);
-@@ -134,6 +197,10 @@ static const struct of_device_id hi6220_reset_match[] = {
- 		.compatible = "hisilicon,hi6220-mediactrl",
- 		.data = (void *)MEDIA,
- 	},
-+	{
-+		.compatible = "hisilicon,hi6220-aoctrl",
-+		.data = (void *)AO,
-+	},
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, hi6220_reset_match);
 -- 
-2.17.1
+Jens Axboe
 
