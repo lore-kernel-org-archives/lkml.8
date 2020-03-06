@@ -2,119 +2,145 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39373C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A956CC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF82206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:30:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="AUaxDo09"
+	by mail.kernel.org (Postfix) with ESMTP id 80F2B20709
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCFWaN (ORCPT
+        id S1726894AbgCFWcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 17:30:13 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:48654 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgCFWaM (ORCPT
+        Fri, 6 Mar 2020 17:32:09 -0500
+Received: from out01.mta.xmission.com ([166.70.13.231]:54190 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgCFWcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 17:30:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1583533784; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=et3xssf9jXYhr8qjPkYvKPU7a6v5Pi9/fuLNjUQEHE4=;
-        b=AUaxDo09VnVLjRyEvyn8VAx0fMz/9s7OWG93J1ekiE0IQXLcuv0BGM8uz1ahdwMzNmQiYH
-        fM/TUjOzy7nVUN+d3tgzIPyh9JqCqTL2aga0izptLIAbrdRjzd71FLVfeBVPGADf4aZIIC
-        E68LLyNQhCQJIk+niG25Yp8csQAPZCY=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me,
-        Zhou Yanjie <zhouyanjie@wanyeetech.com>,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 6/6] ASoC: jz4740-i2s: Add support for the JZ4770
-Date:   Fri,  6 Mar 2020 23:29:31 +0100
-Message-Id: <20200306222931.39664-6-paul@crapouillou.net>
-In-Reply-To: <20200306222931.39664-1-paul@crapouillou.net>
-References: <20200306222931.39664-1-paul@crapouillou.net>
+        Fri, 6 Mar 2020 17:32:08 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jALVa-00024g-VC; Fri, 06 Mar 2020 15:31:55 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jALVa-0002B2-6m; Fri, 06 Mar 2020 15:31:54 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <202003021531.C77EF10@keescook>
+        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nlii0b.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87a74xi4kz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87imjicxjw.fsf_-_@x220.int.ebiederm.org>
+        <AM6PR03MB5170375DBF699D4F3DC7A08DE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87k13yawpp.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170E9D0DB405EC051F7731CE4E30@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87sgil87s3.fsf@x220.int.ebiederm.org>
+Date:   Fri, 06 Mar 2020 16:29:39 -0600
+In-Reply-To: <87sgil87s3.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Fri, 06 Mar 2020 15:58:52 -0600")
+Message-ID: <87a74t86cs.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jALVa-0002B2-6m;;;mid=<87a74t86cs.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+eje1q6R54wdjNfMaNYFoLyq/4r+j8hDE=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 2/2] exec: Add a exec_update_mutex to replace cred_guard_mutex
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before the JZ4770, the playback and capture sampling rates had to match.
-The JZ4770 supports independent sampling rates for both.
+ebiederm@xmission.com (Eric W. Biederman) writes:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- sound/soc/jz4740/jz4740-i2s.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+>
+>> On 3/6/20 6:17 AM, Eric W. Biederman wrote:
+>>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+>>> 
+>>>> On 3/5/20 10:16 PM, Eric W. Biederman wrote:
+>>>>>
+>>>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+>>>>> over the userspace accesses as the arguments from userspace are read.
+>>>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+>>>>> threads are killed.  The cred_guard_mutex is held over
+>>>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+>>>>>
+>>
+>> I am all for this patch, and the direction it is heading, Eric.
+>>
+>> I just wanted to add a note that I think it is
+>> possible that exec_mm_release can also invoke put_user(0, tsk->clear_child_tid),
+>> under the new exec_update_mutex, since vm_access increments the
+>> mm->mm_users, under the cred_update_mutex, but releases the mutex,
+>> and the caller can hold the reference for a while and then exec_mmap is not
+>> releasing the last reference.
+>
+> Good catch.  I really appreciate your close look at the details.
+>
+> I am wondering if process_vm_readv and process_vm_writev could be
+> safely changed to use mmgrab and mmdrop, instead of mmget and mmput.
+>
+> That would resolve the potential issue you have pointed out.  I just
+> haven't figured out if it is safe.  The mm code has been seriously
+> refactored since I knew how it all worked.
 
-diff --git a/sound/soc/jz4740/jz4740-i2s.c b/sound/soc/jz4740/jz4740-i2s.c
-index 253f8d8ba273..6f6f8dad0356 100644
---- a/sound/soc/jz4740/jz4740-i2s.c
-+++ b/sound/soc/jz4740/jz4740-i2s.c
-@@ -87,6 +87,7 @@
- enum jz47xx_i2s_version {
- 	JZ_I2S_JZ4740,
- 	JZ_I2S_JZ4760,
-+	JZ_I2S_JZ4770,
- 	JZ_I2S_JZ4780,
- };
- 
-@@ -286,7 +287,7 @@ static int jz4740_i2s_hw_params(struct snd_pcm_substream *substream,
- 		ctrl &= ~JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_MASK;
- 		ctrl |= sample_size << JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_OFFSET;
- 
--		if (i2s->soc_info->version >= JZ_I2S_JZ4780) {
-+		if (i2s->soc_info->version >= JZ_I2S_JZ4770) {
- 			div_reg &= ~I2SDIV_IDV_MASK;
- 			div_reg |= (div - 1) << I2SDIV_IDV_SHIFT;
- 		} else {
-@@ -469,7 +470,7 @@ static const struct i2s_soc_info jz4760_i2s_soc_info = {
- 	.dai = &jz4740_i2s_dai,
- };
- 
--static struct snd_soc_dai_driver jz4780_i2s_dai = {
-+static struct snd_soc_dai_driver jz4770_i2s_dai = {
- 	.probe = jz4740_i2s_dai_probe,
- 	.remove = jz4740_i2s_dai_remove,
- 	.playback = {
-@@ -487,9 +488,14 @@ static struct snd_soc_dai_driver jz4780_i2s_dai = {
- 	.ops = &jz4740_i2s_dai_ops,
- };
- 
-+static const struct i2s_soc_info jz4770_i2s_soc_info = {
-+	.version = JZ_I2S_JZ4770,
-+	.dai = &jz4770_i2s_dai,
-+};
-+
- static const struct i2s_soc_info jz4780_i2s_soc_info = {
- 	.version = JZ_I2S_JZ4780,
--	.dai = &jz4780_i2s_dai,
-+	.dai = &jz4770_i2s_dai,
- };
- 
- static const struct snd_soc_component_driver jz4740_i2s_component = {
-@@ -502,6 +508,7 @@ static const struct snd_soc_component_driver jz4740_i2s_component = {
- static const struct of_device_id jz4740_of_matches[] = {
- 	{ .compatible = "ingenic,jz4740-i2s", .data = &jz4740_i2s_soc_info },
- 	{ .compatible = "ingenic,jz4760-i2s", .data = &jz4760_i2s_soc_info },
-+	{ .compatible = "ingenic,jz4770-i2s", .data = &jz4770_i2s_soc_info },
- 	{ .compatible = "ingenic,jz4780-i2s", .data = &jz4780_i2s_soc_info },
- 	{ /* sentinel */ }
- };
--- 
-2.25.1
+Nope, mmget can not be replaced by mmgrab.
+
+It might be possible to do something creative like store a cred in place
+of the userns on the mm and use that for mm_access permission checks.
+Still we are talking a pretty narrow window, and a case that no one has
+figured out how to trigger yet.  So I will leave that corner case as
+something for future improvements.
+
+Eric
 
