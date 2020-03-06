@@ -2,69 +2,120 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9148AC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D27C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACDF22B48
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583499910;
-	bh=bTNUveasFoVCQ1AMzr1w5nIDGBxs7AwE9HgXGSf+cL4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=1So6uYJ/Kr9p0eWIasxtXt15rdumz/VA6FI5XOVkxkIcGP28O+w3TCqpu7u+Wy3YB
-	 6191/WNZ2hunH2SeRNgav+BqCzzclguBr+5hvqD/v4rz/J5gto93B3ZDB3RV7BrijX
-	 PbHWxyGOCp2bugDpESx1KOHud9Cl6oImGrzsyHD8=
+	by mail.kernel.org (Postfix) with ESMTP id 5A755222C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:06:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgCFNFJ (ORCPT
+        id S1727176AbgCFNGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:05:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbgCFNFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:05:05 -0500
-Subject: Re: [GIT PULL] ACPI documentation fix for v5.6-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583499904;
-        bh=bTNUveasFoVCQ1AMzr1w5nIDGBxs7AwE9HgXGSf+cL4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=uaHr0ddIsZJZ1pPH3YFHdcTYk9kGx66iBirgiLNLaVboMuhUhEvKgiMRBkzz7asnm
-         re2B2YeR7TtjlLPupBgB0dWfLERBNsXl/MsFDeUicRC2aVWsa3AKUqMmGjxcvBpgn1
-         x9mb5SibRwhaDPwqUvQbYmNU8LywXv7x59tSRk4Y=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0g+iTke+8DL28YzCBeDbe=WNQnUhWuO8QjLhAwGy3U0=A@mail.gmail.com>
-References: <CAJZ5v0g+iTke+8DL28YzCBeDbe=WNQnUhWuO8QjLhAwGy3U0=A@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0g+iTke+8DL28YzCBeDbe=WNQnUhWuO8QjLhAwGy3U0=A@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
- acpi-5.6-rc5
-X-PR-Tracked-Commit-Id: 86dfa5bec24952f99f2cfa778975d5a914c3a1d2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fe67d1821fa8cd9856fc5e65d53ef73b450fa7d8
-Message-Id: <158349990453.8760.7414984039450425250.pr-tracker-bot@kernel.org>
-Date:   Fri, 06 Mar 2020 13:05:04 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Fri, 6 Mar 2020 08:06:15 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:36224 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgCFNGO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:06:14 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BB12F8030702;
+        Fri,  6 Mar 2020 13:06:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LXig6Gdn-VKC; Fri,  6 Mar 2020 16:06:12 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] mfd: Add Baikal-T1 SoC Boot Controller driver
+Date:   Fri, 6 Mar 2020 16:05:26 +0300
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200306130612.BB12F8030702@mail.baikalelectronics.ru>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 6 Mar 2020 11:18:40 +0100:
+From: Serge Semin <fancer.lancer@gmail.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-5.6-rc5
+Baikal-T1 Boot Controller is an IP block embedded into the SoC and responsible
+for the chip proper pre-initialization and further booting up from selected
+memory mapped device. From the Linux kernel point of view it's just a multi-
+functional device, which exports three physically mapped ROMs and a single SPI
+controller interface.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fe67d1821fa8cd9856fc5e65d53ef73b450fa7d8
+Baikal-T1 can boot either from an external SPI-flash or from an embedded into
+it firmware. So when the bootup from the SPI-flash is selected the flash memory
+can be accessed either directly via the embedded into the Boot Controller DW
+APB SSI controller registers or via a physically mapped ROM (which is just an
+FSM IP-core interacting with the DW APB SSI controller by itself). Since both
+of these interfaces are using the same SPI interface they can't be utilized
+simultaneously. Instead the Boot Controller provides the access switching
+functionality by means of the control register flag. That's why we need the
+Boot Controller MFD driver provided by this patchset - in order to multiplex the
+access to the DW APB SSI controller and SPI interface from two different
+subsystems.
 
-Thank you!
+After this patchset is integrated into the kernel we'll submit two more
+patchsets with physically mapped ROMs (due to some peculiarities we can't have
+the already available in the kernel mtd-rom drivers) and SPI controller
+(similarly the available in the kernel DW APB SSI driver isn't suitable for
+our version of the SPI controller) drivers will be submitted for integration
+into the mainline Linux kernel.
+
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (2):
+  dt-bindings: mfd: Add Baikal-T1 Boot Controller bindings
+  mfd: Add Baikal-T1 Boot Controller driver
+
+ .../bindings/mfd/be,bt1-boot-ctl.yaml         |  89 +++++
+ drivers/mfd/Kconfig                           |  13 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/bt1-boot-ctl.c                    | 345 ++++++++++++++++++
+ include/linux/mfd/bt1-boot-ctl.h              |  46 +++
+ 5 files changed, 494 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/be,bt1-boot-ctl.yaml
+ create mode 100644 drivers/mfd/bt1-boot-ctl.c
+ create mode 100644 include/linux/mfd/bt1-boot-ctl.h
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.25.1
+
