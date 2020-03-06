@@ -2,96 +2,96 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BA2C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2C9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E01207FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7CB2072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:17:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HX3AwE4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgCFJO6 (ORCPT
+        id S1726070AbgCFJRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:14:58 -0500
-Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:28090 "EHLO
-        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725855AbgCFJO6 (ORCPT
+        Fri, 6 Mar 2020 04:17:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42453 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725927AbgCFJRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:14:58 -0500
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS2.zhaoxin.com
- (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Fri, 6 Mar
- 2020 17:14:54 +0800
-Received: from [10.32.64.44] (10.32.64.44) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Fri, 6 Mar
- 2020 17:14:52 +0800
-Subject: Re: [PATCH] x86/Kconfig: Make X86_UMIP to cover Zhaoxin CPUs too
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <DavidWang@zhaoxin.com>, <CooperYan@zhaoxin.com>,
-        <QiyuanWang@zhaoxin.com>, <HerryYang@zhaoxin.com>
-References: <1583288285-2804-1-git-send-email-TonyWWang-oc@zhaoxin.com>
- <20200304171336.GD21662@linux.intel.com>
- <c3d9ad69-4a49-19de-1680-84f7d5afeb81@zhaoxin.com>
- <20200305155909.GD11500@linux.intel.com>
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-Message-ID: <47df634b-d13b-5a5e-c7a4-e6f674d7fdd0@zhaoxin.com>
-Date:   Fri, 6 Mar 2020 17:14:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 6 Mar 2020 04:17:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583486253;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=JCiUybcIy9EYc3DUqneg1/PUNFvInwnkceZaoY4UhKA=;
+        b=HX3AwE4e7cKoc7vV8GZtFwTkZaZQ5Dssbq4OldXsWC1seMeJ1DbN/1qG+wTiQQVqQ9ldwL
+        taIAT+ALxJHf9r1DQNoAJvgXj/P2UroVPfKTiEilE/Ys6r2Hs47JvnnPVKr73MxI9IQ9U4
+        vtmaNQ+sjkEAJcPFofaimQWmloquchI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-IPnFd5sDPOeISb1VflHBFQ-1; Fri, 06 Mar 2020 04:17:29 -0500
+X-MC-Unique: IPnFd5sDPOeISb1VflHBFQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 890DA107ACC9;
+        Fri,  6 Mar 2020 09:17:28 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.36.118.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A35935C21B;
+        Fri,  6 Mar 2020 09:17:26 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pavel Machek <pavel@denx.de>
+Subject: [PATCH] platform/x86: GPD pocket fan: Fix error message when temp-limits are out of range
+Date:   Fri,  6 Mar 2020 10:17:24 +0100
+Message-Id: <20200306091724.55347-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200305155909.GD11500@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.32.64.44]
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/03/2020 23:59, Sean Christopherson wrote:
-> On Thu, Mar 05, 2020 at 11:40:02AM +0800, Tony W Wang-oc wrote:
->>
->> On 05/03/2020 01:13, Sean Christopherson wrote:
->>> On Wed, Mar 04, 2020 at 10:18:05AM +0800, Tony W Wang-oc wrote:
->>>> New Zhaoxin family 7 CPUs support the UMIP (User-Mode Instruction
->>>> Prevention) feature. So, modify X86_UMIP depends on Zhaoxin CPUs too.
->>>>
->>>> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
->>>> ---
->>>>  arch/x86/Kconfig | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->>>> index 16a4b39..ca4beb8 100644
->>>> --- a/arch/x86/Kconfig
->>>> +++ b/arch/x86/Kconfig
->>>> @@ -1877,7 +1877,7 @@ config X86_SMAP
->>>>  
->>>>  config X86_UMIP
->>>>  	def_bool y
->>>> -	depends on CPU_SUP_INTEL || CPU_SUP_AMD
->>>> +	depends on CPU_SUP_INTEL || CPU_SUP_AMD || CPU_SUP_CENTAUR || CPU_SUP_ZHAOXIN
->>>
->>> The changelog only mentions Zhaoxin, but this also adds Centaur...
->>
->> Sorry for this. Some Centaur family 7 CPUs also support the UMIP
->> feature, so will resend this patch as a patch series.
-> 
-> Oooh, can you point me at architectural documentation for Centaur family 7?
-> I've been trying to track down Centaur documentation for CPUID behavior.
-> .
-> 
+Commit 1f27dbd8265d ("platform/x86: GPD pocket fan: Allow somewhat
+lower/higher temperature limits") changed the module-param sanity check
+to accept temperature limits between 20 and 90 degrees celcius.
 
-Centaur uses CPUID.(EAX=7,ECX=0):ECX[bit 2] indicates UMIP feature, that
-is compatible with Intel's UMIP implementation.
+But the error message printed when the module params are outside this
+range was not updated. This commit updates the error message to match
+the new min and max value for the temp-limits.
 
-Sincerely
-TonyWWang-oc
+Reported-by: Pavel Machek <pavel@denx.de>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/gpd-pocket-fan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86=
+/gpd-pocket-fan.c
+index b471b86c28fe..5b516e4c2bfb 100644
+--- a/drivers/platform/x86/gpd-pocket-fan.c
++++ b/drivers/platform/x86/gpd-pocket-fan.c
+@@ -128,7 +128,7 @@ static int gpd_pocket_fan_probe(struct platform_devic=
+e *pdev)
+=20
+ 	for (i =3D 0; i < ARRAY_SIZE(temp_limits); i++) {
+ 		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
+-			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and=
+ 70000)\n",
++			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 20000 and=
+ 90000)\n",
+ 				temp_limits[i]);
+ 			temp_limits[0] =3D TEMP_LIMIT0_DEFAULT;
+ 			temp_limits[1] =3D TEMP_LIMIT1_DEFAULT;
+--=20
+2.25.1
+
