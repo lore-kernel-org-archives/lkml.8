@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77AFC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3E0C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939962084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6340D2084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgCFOmT (ORCPT
+        id S1727548AbgCFOnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:42:19 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53786 "EHLO
+        Fri, 6 Mar 2020 09:43:22 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53823 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbgCFOmP (ORCPT
+        with ESMTP id S1727186AbgCFOmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:42:15 -0500
+        Fri, 6 Mar 2020 09:42:19 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEB0-0006JX-7b; Fri, 06 Mar 2020 15:42:10 +0100
+        id 1jAEB5-0006O2-Ce; Fri, 06 Mar 2020 15:42:15 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 045ED1C21D6;
-        Fri,  6 Mar 2020 15:42:07 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:06 -0000
-From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1FEE11C21D3;
+        Fri,  6 Mar 2020 15:42:10 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:09 -0000
+From:   "tip-bot2 for Thara Gopinath" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] arm64: defconfig: enable CONFIG_SCHED_SMT
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+Subject: [tip: sched/core] arm/topology: Populate
+ arch_scale_thermal_pressure() for ARM platforms
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200227191433.31994-3-valentin.schneider@arm.com>
-References: <20200227191433.31994-3-valentin.schneider@arm.com>
+In-Reply-To: <20200222005213.3873-6-thara.gopinath@linaro.org>
+References: <20200222005213.3873-6-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158350572670.28353.3510356909714591940.tip-bot2@tip-bot2>
+Message-ID: <158350572977.28353.13198992770282457742.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,96 +58,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     6f693dd5be08237b337f557c510d99addb9eb9ec
-Gitweb:        https://git.kernel.org/tip/6f693dd5be08237b337f557c510d99addb9eb9ec
-Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Thu, 27 Feb 2020 19:14:33 
+Commit-ID:     8eab879c5463d1a16a314790764c4c9d6c74c64c
+Gitweb:        https://git.kernel.org/tip/8eab879c5463d1a16a314790764c4c9d6c74c64c
+Author:        Thara Gopinath <thara.gopinath@linaro.org>
+AuthorDate:    Fri, 21 Feb 2020 19:52:09 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 12:57:23 +01:00
+CommitterDate: Fri, 06 Mar 2020 12:57:19 +01:00
 
-arm64: defconfig: enable CONFIG_SCHED_SMT
+arm/topology: Populate arch_scale_thermal_pressure() for ARM platforms
 
-The (CFS) scheduler has some extra logic catering to systems with SMT, but
-that logic won't be compiled in unless the above config is set.
+Hook up topology_get_thermal_pressure to arch_scale_thermal_pressure thus
+enabling scheduler to retrieve instantaneous thermal pressure of a CPU.
 
-Note that the SMT-centric codepaths are gated by the sched_smt_present
-static key, and the SMT sched_domains will only survive if the platform has
-SMT. As such, the only impact on !SMT platforms should be a slightly
-bigger kernel - no behavioural change.
-
-Distro kernels already enable it, which makes sense since there already are
-things like ThunderX2 out in the wild. Enable it for the defconfig.
-
-Some deltas
-===========
-
-FWIW my ELF symbol table diff looks something like this:
-
-  NAME                                BEFORE    AFTER     DELTA
-  update_sd_lb_stats.constprop.135    0         1864      +1864
-  find_idlest_group.isra.115          0         1808      +1808
-  update_numa_stats.isra.121          0         628       +628
-  select_task_rq_fair                 3236      3732      +496
-  compute_energy.isra.112             0         420       +420
-  score_nearby_nodes.part.120         0         380       +380
-  __update_idle_core                  0         232       +232
-  nohz_balance_exit_idle.part.127     0         216       +216
-  sched_slice.isra.99                 0         172       +172
-  update_load_avg.part.107            0         116       +116
-  wakeup_preempt_entity.isra.101      0         92        +92
-  sched_cpu_activate                  340       396       +56
-  pick_next_task_idle                 8         56        +48
-  sched_cpu_deactivate                252       292       +40
-  show_smt_active                     44        80        +36
-  cpu_smt_mask                        0         28        +28
-  set_next_task_idle                  4         32        +28
-  task_numa_work                      680       692       +12
-  cpu_smt_flags                       0         8         +8
-  enqueue_task_fair                   2608      2612      +4
-  wakeup_preempt_entity.isra.104      92        0         -92
-  update_load_avg                     1028      932       -96
-  task_numa_migrate                   1824      1728      -96
-  sched_slice.isra.102                172       0         -172
-  nohz_balance_exit_idle.part.130     216       0         -216
-  task_numa_find_cpu                  2116      1868      -248
-  score_nearby_nodes.part.123         380       0         -380
-  compute_energy.isra.115             420       0         -420
-  update_numa_stats.isra.124          472       0         -472
-  find_idlest_group.isra.118          1808      0         -1808
-  update_sd_lb_stats.constprop.138    1864      0         -1864
-  ------------------------------------------------------------------
-  DELTA SUM                                               +820
-
-As for the sched_domains, this is on a hikey960:
-
-before:
-  $ cat /proc/sys/kernel/sched_domain/cpu*/domain*/name | sort | uniq
-  DIE
-  MC
-
-after:
-  $ cat /proc/sys/kernel/sched_domain/cpu*/domain*/name | sort | uniq
-  DIE
-  MC
-
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200227191433.31994-3-valentin.schneider@arm.com
+Link: https://lkml.kernel.org/r/20200222005213.3873-6-thara.gopinath@linaro.org
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/include/asm/topology.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 905109f..3e75007 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -62,6 +62,7 @@ CONFIG_ARCH_ZX=y
- CONFIG_ARCH_ZYNQMP=y
- CONFIG_ARM64_VA_BITS_48=y
- CONFIG_SCHED_MC=y
-+CONFIG_SCHED_SMT=y
- CONFIG_NUMA=y
- CONFIG_SECCOMP=y
- CONFIG_KEXEC=y
+diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
+index 8a0fae9..435aba2 100644
+--- a/arch/arm/include/asm/topology.h
++++ b/arch/arm/include/asm/topology.h
+@@ -16,6 +16,9 @@
+ /* Enable topology flag updates */
+ #define arch_update_cpu_topology topology_update_cpu_topology
+ 
++/* Replace task scheduler's default thermal pressure retrieve API */
++#define arch_scale_thermal_pressure topology_get_thermal_pressure
++
+ #else
+ 
+ static inline void init_cpu_topology(void) { }
