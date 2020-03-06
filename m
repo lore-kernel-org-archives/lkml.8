@@ -2,223 +2,147 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDA1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AE1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02AE5206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AAE920658
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgCFXFl (ORCPT
+        id S1726462AbgCFXHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 18:05:41 -0500
-Received: from mga18.intel.com ([134.134.136.126]:40847 "EHLO mga18.intel.com"
+        Fri, 6 Mar 2020 18:07:49 -0500
+Received: from mga11.intel.com ([192.55.52.93]:42162 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726237AbgCFXFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 18:05:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726231AbgCFXHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 18:07:48 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 15:05:40 -0800
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 15:07:48 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="414088971"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 06 Mar 2020 15:05:39 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jAM2E-0002Ex-4z; Sat, 07 Mar 2020 07:05:38 +0800
-Date:   Sat, 07 Mar 2020 07:05:23 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 73c01f50194846de50e0d926b1251daffa06abd2
-Message-ID: <5e62d733.39+VSsZvpkQ4npYB%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="288099074"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Mar 2020 15:07:47 -0800
+Date:   Fri, 6 Mar 2020 15:07:47 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] KVM: VMX: untangle VMXON revision_id setting when
+ using eVMCS
+Message-ID: <20200306230747.GA27868@linux.intel.com>
+References: <20200306130215.150686-1-vkuznets@redhat.com>
+ <20200306130215.150686-3-vkuznets@redhat.com>
+ <908345f1-9bfd-004f-3ba6-0d6dce67d11e@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <908345f1-9bfd-004f-3ba6-0d6dce67d11e@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 73c01f50194846de50e0d926b1251daffa06abd2  Merge branch 'sched/core'
+On Fri, Mar 06, 2020 at 02:20:13PM -0800, Krish Sadhukhan wrote:
+> >@@ -2599,7 +2607,7 @@ void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+> >  int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+> >  {
+> >-	loaded_vmcs->vmcs = alloc_vmcs(false);
+> >+	loaded_vmcs->vmcs = alloc_vmcs(VMCS_REGION);
+> >  	if (!loaded_vmcs->vmcs)
+> >  		return -ENOMEM;
+> >@@ -2652,25 +2660,13 @@ static __init int alloc_vmxon_regions(void)
+> >  	for_each_possible_cpu(cpu) {
+> >  		struct vmcs *vmcs;
+> >-		vmcs = alloc_vmcs_cpu(false, cpu, GFP_KERNEL);
+> >+		/* The VMXON region is really just a special type of VMCS. */
+> 
+> 
+> Not sure if this is the right way to correlate the two.
+> 
+> AFAIU, the SDM calls VMXON region as a memory area that holds the VMCS data
+> structure and it calls VMCS the data structure that is used by software to
+> switch between VMX root-mode and not-root-mode. So VMXON is a memory area
+> whereas VMCS is the structure of the data that resides in that memory area.
+> 
+> So if we follow this interpretation, your enum should rather look like,
+> 
+> enum vmcs_type {
+> +    VMCS,
+> +    EVMCS,
+> +    SHADOW_VMCS
 
-elapsed time: 504m
+No (to the EVMCS suggestion), because this allocation needs to happen for
+!eVMCS.  The SDM never explictly calls the VMXON region a VMCS, but it's
+just being coy.  E.g. VMCLEAR doesn't fail if you point it at random
+memory, but point it at the VMXON region and it yells.
 
-configs tested: 160
-configs skipped: 0
+We could call it VMXON_VMCS if that helps.  The SDM does call the memory
+allocation for regular VMCSes a "VMCS region":
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  A logical processor associates a region in memory with each VMCS. This
+  region is called the VMCS region.
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-alpha                               defconfig
-riscv                    nommu_virt_defconfig
-ia64                                defconfig
-powerpc                             defconfig
-m68k                           sun3_defconfig
-c6x                        evmc6678_defconfig
-m68k                          multi_defconfig
-s390                       zfcpdump_defconfig
-h8300                     edosk2674_defconfig
-ia64                              allnoconfig
-s390                          debug_defconfig
-um                           x86_64_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-c6x                              allyesconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200305
-x86_64               randconfig-a002-20200305
-x86_64               randconfig-a003-20200305
-i386                 randconfig-a001-20200305
-i386                 randconfig-a002-20200305
-i386                 randconfig-a003-20200305
-alpha                randconfig-a001-20200306
-m68k                 randconfig-a001-20200306
-mips                 randconfig-a001-20200306
-nds32                randconfig-a001-20200306
-parisc               randconfig-a001-20200306
-riscv                randconfig-a001-20200306
-alpha                randconfig-a001-20200307
-m68k                 randconfig-a001-20200307
-mips                 randconfig-a001-20200307
-nds32                randconfig-a001-20200307
-parisc               randconfig-a001-20200307
-c6x                  randconfig-a001-20200306
-h8300                randconfig-a001-20200306
-microblaze           randconfig-a001-20200306
-nios2                randconfig-a001-20200306
-sparc64              randconfig-a001-20200306
-csky                 randconfig-a001-20200305
-openrisc             randconfig-a001-20200305
-s390                 randconfig-a001-20200305
-sh                   randconfig-a001-20200305
-xtensa               randconfig-a001-20200305
-csky                 randconfig-a001-20200306
-openrisc             randconfig-a001-20200306
-s390                 randconfig-a001-20200306
-sh                   randconfig-a001-20200306
-xtensa               randconfig-a001-20200306
-x86_64               randconfig-b002-20200305
-x86_64               randconfig-b001-20200305
-i386                 randconfig-b001-20200305
-i386                 randconfig-b003-20200305
-i386                 randconfig-b002-20200305
-x86_64               randconfig-b003-20200305
-x86_64               randconfig-c001-20200306
-x86_64               randconfig-c002-20200306
-x86_64               randconfig-c003-20200306
-i386                 randconfig-c001-20200306
-i386                 randconfig-c002-20200306
-i386                 randconfig-c003-20200306
-x86_64               randconfig-d001-20200306
-x86_64               randconfig-d002-20200306
-x86_64               randconfig-d003-20200306
-i386                 randconfig-d001-20200306
-i386                 randconfig-d002-20200306
-i386                 randconfig-d003-20200306
-x86_64               randconfig-e001-20200305
-x86_64               randconfig-e002-20200305
-x86_64               randconfig-e003-20200305
-i386                 randconfig-e001-20200305
-i386                 randconfig-e002-20200305
-i386                 randconfig-e003-20200305
-x86_64               randconfig-f001-20200306
-x86_64               randconfig-f002-20200306
-x86_64               randconfig-f003-20200306
-i386                 randconfig-f001-20200306
-i386                 randconfig-f002-20200306
-i386                 randconfig-f003-20200306
-x86_64               randconfig-h001-20200306
-x86_64               randconfig-h002-20200306
-x86_64               randconfig-h003-20200306
-i386                 randconfig-h001-20200306
-i386                 randconfig-h002-20200306
-i386                 randconfig-h003-20200306
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-um                                  defconfig
-um                             i386_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+I don't think I've ever heard anyone differentiate that two though, i.e.
+VMCS is used colloquially to mean both the data structure itself and the
+memory region containing the data structure.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> >+		vmcs = alloc_vmcs_cpu(VMXON_REGION, cpu, GFP_KERNEL);
+> >  		if (!vmcs) {
+> >  			free_vmxon_regions();
+> >  			return -ENOMEM;
+> >  		}
+> >-		/*
+> >-		 * When eVMCS is enabled, alloc_vmcs_cpu() sets
+> >-		 * vmcs->revision_id to KVM_EVMCS_VERSION instead of
+> >-		 * revision_id reported by MSR_IA32_VMX_BASIC.
+> >-		 *
+> >-		 * However, even though not explicitly documented by
+> >-		 * TLFS, VMXArea passed as VMXON argument should
+> >-		 * still be marked with revision_id reported by
+> >-		 * physical CPU.
+> >-		 */
+> >-		if (static_branch_unlikely(&enable_evmcs))
+> >-			vmcs->hdr.revision_id = vmcs_config.revision_id;
+> >-
+> >  		per_cpu(vmxarea, cpu) = vmcs;
+> >  	}
+> >  	return 0;
+> >diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> >index e64da06c7009..a5eb92638ac2 100644
+> >--- a/arch/x86/kvm/vmx/vmx.h
+> >+++ b/arch/x86/kvm/vmx/vmx.h
+> >@@ -489,16 +489,22 @@ static inline struct pi_desc *vcpu_to_pi_desc(struct kvm_vcpu *vcpu)
+> >  	return &(to_vmx(vcpu)->pi_desc);
+> >  }
+> >-struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags);
+> >+enum vmcs_type {
+> >+	VMXON_REGION,
+> >+	VMCS_REGION,
+> >+	SHADOW_VMCS_REGION,
+> >+};
+> >+
+> >+struct vmcs *alloc_vmcs_cpu(enum vmcs_type type, int cpu, gfp_t flags);
+> >  void free_vmcs(struct vmcs *vmcs);
+> >  int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+> >  void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+> >  void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs);
+> >  void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs);
+> >-static inline struct vmcs *alloc_vmcs(bool shadow)
+> >+static inline struct vmcs *alloc_vmcs(enum vmcs_type type)
+> >  {
+> >-	return alloc_vmcs_cpu(shadow, raw_smp_processor_id(),
+> >+	return alloc_vmcs_cpu(type, raw_smp_processor_id(),
+> >  			      GFP_KERNEL_ACCOUNT);
+> >  }
