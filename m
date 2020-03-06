@@ -6,65 +6,80 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B827C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507B0C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 005872084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2835E2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgCFFiQ (ORCPT
+        id S1726025AbgCFFkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 00:38:16 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:59710 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCFFiQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 00:38:16 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E07A515ADB685;
-        Thu,  5 Mar 2020 21:38:15 -0800 (PST)
-Date:   Thu, 05 Mar 2020 21:38:15 -0800 (PST)
-Message-Id: <20200305.213815.971340263047646245.davem@davemloft.net>
-To:     mkubecek@suse.cz
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/5] tun: debug messages cleanup
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <cover.1583337972.git.mkubecek@suse.cz>
-References: <cover.1583337972.git.mkubecek@suse.cz>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 05 Mar 2020 21:38:16 -0800 (PST)
+        Fri, 6 Mar 2020 00:40:12 -0500
+Received: from mga09.intel.com ([134.134.136.24]:60255 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbgCFFkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 00:40:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 21:40:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,520,1574150400"; 
+   d="scan'208";a="352663280"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 05 Mar 2020 21:40:07 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 06 Mar 2020 07:40:06 +0200
+Date:   Fri, 6 Mar 2020 07:40:06 +0200
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>
+Subject: Re: [PATCH v6] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20200306054006.GZ2540@lahna.fi.intel.com>
+References: <20200303101052.133631-1-kherbst@redhat.com>
+ <20200304093324.GI2540@lahna.fi.intel.com>
+ <CACO55ts7VGUJoSM_X_huZ0o68+P6SaWgFKbQzkw=-F+Kh5WfcA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55ts7VGUJoSM_X_huZ0o68+P6SaWgFKbQzkw=-F+Kh5WfcA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kubecek <mkubecek@suse.cz>
-Date: Wed,  4 Mar 2020 17:23:54 +0100 (CET)
+On Thu, Mar 05, 2020 at 05:11:57PM +0100, Karol Herbst wrote:
+> On Wed, Mar 4, 2020 at 10:33 AM Mika Westerberg
+> <mika.westerberg@intel.com> wrote:
+> >
+> > Hi,
+> >
+> > On Tue, Mar 03, 2020 at 11:10:52AM +0100, Karol Herbst wrote:
+> > > Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
+> > > states.
+> >
+> > I think it is good to explain bit more here why this fix is needed.
+> >
+> 
+> is something like this fine?
+> 
+> Fixes the infamous 'runpm' bug many users are facing on Laptops with Nvidia
+> Pascal GPUs by skipping PCI power state changes on the GPU.
 
-> While testing ethtool output for "strange" devices, I noticed confusing and
-> obviously incorrect message level information for a tun device and sent
-> a quick fix. The result of the upstream discussion was that tun driver
-> would rather deserve a more complex cleanup of the way it handles debug
-> messages.
-> 
-> The main problem is that all debugging statements and setting of message
-> level are controlled by TUN_DEBUG macro which is only defined if one edits
-> the source and rebuilds the module, otherwise all DBG1() and tun_debug()
-> statements do nothing.
-> 
-> This series drops the TUN_DEBUG switch and replaces custom tun_debug()
-> macro with standard netif_info() so that message level (mask) set and
-> displayed using ethtool works as expected. Some debugging messages are
-> dropped as they only notify about entering a function which can be done
-> easily using ftrace or kprobe.
-> 
-> Patch 1 is a trivial fix for compilation warning with W=1.
+I would open up 'runpm' -> runtime PM.
 
-Series applied, thanks.
+> It's still unknown why this issue exists, but this is a reliable workaround
+> and solves a very annoying issue for user having to choose between a
+> crashing kernel or higher power consumption of their Laptops.
+
+Also I think it would be good to include a short log snippet how this
+manifests and in what kind of scenario it happens.
