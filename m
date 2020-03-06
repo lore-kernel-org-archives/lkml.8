@@ -2,144 +2,137 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11029C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE4DC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD222073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jh1/ncOf"
+	by mail.kernel.org (Postfix) with ESMTP id 96AA72073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCFLNn (ORCPT
+        id S1726579AbgCFLOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:13:43 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:45340 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFLNn (ORCPT
+        Fri, 6 Mar 2020 06:14:00 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:60699 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFLOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:13:43 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026B94D3062893;
-        Fri, 6 Mar 2020 11:13:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=C9MeYKmnKqguW2tFL6WIfaBDk1SnY7qC2MQcpLT8wn8=;
- b=jh1/ncOfk2OUOXdvHgHVVosejdOWsubI21rCKl5T8O9sZeZqwNtdZY8imYj8NVSOcaAO
- rMN+MQfkIykqM0xlKTrPiKDfNiGE0Q/7HSNxmKeezC9BHt5v+XHcQewSr5cCaEcNcNrI
- oCtu0wldIaINoF3UxuRaTe10dTnZHZRZkYQlb9oz6XmZ8dpeBjdKB1tSOvhyNoKSipcS
- h9KE3rkSSoAxzt3jO/p/0CZjmT/Ux/AQmv/bKV3InERBxu+cyke6nivruN2h/o/f2Ec0
- TGoSD8S9nPmMbd7f4kad5N/WzVL/2AocTz+A8hqDNotZblMqptkL6nBIESOtB8Gdp4wh IQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2yghn3ph3k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Mar 2020 11:13:36 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026BCxUb059155;
-        Fri, 6 Mar 2020 11:13:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2yg1s097tg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Mar 2020 11:13:35 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 026BDYeB006976;
-        Fri, 6 Mar 2020 11:13:34 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 06 Mar 2020 03:13:34 -0800
-Subject: Re: [PATCH v3 2/2] xenbus: req->err should be updated before
- req->state
-To:     Dongli Zhang <dongli.zhang@oracle.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     julien@xen.org, jgross@suse.com, sstabellini@kernel.org,
-        joe.jin@oracle.com
-References: <20200303221423.21962-1-dongli.zhang@oracle.com>
- <20200303221423.21962-2-dongli.zhang@oracle.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <d8e5b63a-a166-590b-e8ac-3a560b2930c8@oracle.com>
-Date:   Fri, 6 Mar 2020 06:13:28 -0500
+        Fri, 6 Mar 2020 06:14:00 -0500
+Received: from [192.168.100.1] ([82.252.135.106]) by mrelayeu.kundenserver.de
+ (mreue011 [213.165.67.103]) with ESMTPSA (Nemesis) id
+ 1MbAxU-1jlifD0RGy-00bcww; Fri, 06 Mar 2020 12:13:47 +0100
+Subject: Re: [PATCH] binfmt_misc: pass binfmt_misc P flag to the interpreter
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     YunQiang Su <syq@debian.org>, torvalds@linux-foundation.org,
+        gregkh@linuxfoundation.org, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, James.Bottomley@hansenpartnership.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        libc-alpha@sourceware.org
+References: <20200306080905.173466-1-syq@debian.org>
+ <87r1y53npd.fsf@mid.deneb.enyo.de>
+ <8441f497-61eb-5c14-bf1e-c90a464105a7@vivier.eu>
+ <87mu8t3mlw.fsf@mid.deneb.enyo.de>
+From:   Laurent Vivier <laurent@vivier.eu>
+Autocrypt: addr=laurent@vivier.eu; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <40da389d-4e74-2644-2e7c-04d988fcc26f@vivier.eu>
+Date:   Fri, 6 Mar 2020 12:13:41 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200303221423.21962-2-dongli.zhang@oracle.com>
+In-Reply-To: <87mu8t3mlw.fsf@mid.deneb.enyo.de>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9551 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 adultscore=0 spamscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003060080
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9551 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 clxscore=1011 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003060080
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:nDVU3gbXMhuIHaWA6igwrvEm8+DoLfcyUuAw6APtA6KC4CXvzZc
+ mThvkbG1chNbalJyZBbfQFD6bzb0fnAUfRs2TjSkh4JedOUTSEgnNghcgMgcNOkJuhk8K/D
+ XV4FLlD0T2izOYEIvVi93q8JxjD8KlzIcbgDzaeVira78hSbzV9i53kIn46/jiajZhvfV8/
+ eiPLejg6uHRZpmttJj4zA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EvOmeNnvFrE=:MK7GqCIo1Ebv4pKEb9p1xI
+ lay5dwr9KxVVz6Xl53xfEybnhKSD/asTsPBOP1BBx5vUpOyULIRezBM31DOpzTm8E8t1mKP7E
+ y1AbzSRmdgCv73fzswdhn3XR1K6erIf+sryz6Pmn2jYVq38fo05I9CU16TNdUuHLOc+ygcT2s
+ odtaZFsb97gAbRoVZ0RCqfFvF3FfGAuuMwkJmqIKaUo2iLBsl5/JSZQTbZ/x1IARcaA7BTWF9
+ 4tu5riMi7+s0NZmcqGzF/gqsUqSRsz7/sHdylIh40QkqecmDPzxOZCnrbmXVJgEazJc07vArZ
+ RclAKUi96liaJNxZaQKNIxlrwaRzcJKG6C/WcDt/MhZi+dGikJReYq6lSiPL0UlzO3I96KjKy
+ nWmx4L2KL5Z1i1hBh+x1jss6fZnrsTEsADXm3TPbaZ8XETgHAu/a0tmddz3LIA+omKHP0JR/w
+ m9YSf4cYy6zLsKPhNsysEbD9C2jJZX1t7V9GIqCAnGOHEQwAShg/zj/njVN6zBXlZCrU7SM3/
+ DWi4K+N05r7Da6YIYpgAJWBh+v9mhrCZ/ypHmAZPGSt02ajbtmAp4NfWNKsvV8pnD9u1h4Lm8
+ G+rE+URBQwmzhGuNMY3gnuvf1rlk8CSfuCyvGAkORC1M/hojYxGRYGWqXSlY0qQitRNjc9gUD
+ FjgzPKLVVfN3j6Vi8esHtu/dDIGEaFlYmm4f8vv+Uw92fQHJhDPbM80NTewbjZw+FvOTZHfFM
+ 1SmGNnpBAG79WZbpnVQWZCGKw8fwOglLY68at9D9eo7oHiuE7Qh1fUKjYU3yYaHTxp/4RrRuS
+ vf+4dCz1XAp1EkhPi8R6usvt6o76uTvgeEz5tXOqx5bk4BdJbc1aUrDBm58xKd/vEdXC6JQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le 06/03/2020 à 09:37, Florian Weimer a écrit :
+> * Laurent Vivier:
+> 
+>> Le 06/03/2020 à 09:13, Florian Weimer a écrit :
+>>> * YunQiang Su:
+>>>
+>>>> +	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
+>>>> +		flags |= AT_FLAGS_PRESERVE_ARGV0;
+>>>> +	NEW_AUX_ENT(AT_FLAGS, flags);
+>>>
+>>> Is it necessary to reuse AT_FLAGS?  I think it's cleaner to define a
+>>> separate AT_ tag dedicated to binfmt_misc.
+>>
+>> Not necessary, but it seemed simpler and cleaner to re-use a flag that
+>> is marked as unused and with a name matching the new role. It avoids to
+>> patch other packages (like glibc) to add it as it is already defined.
+> 
+> You still need to define AT_FLAGS_PRESERVE_ARGV0.  At that point, you
+> might as well define AT_BINFMT and AT_BINFMT_PRESERVE_ARGV0.
+> 
 
+Yes, you're right.
 
-On 3/3/20 5:14 PM, Dongli Zhang wrote:
-> This patch adds the barrier to guarantee that req->err is always updated
-> before req->state.
->
-> Otherwise, read_reply() would not return ERR_PTR(req->err) but
-> req->body, when process_writes()->xb_write() is failed.
->
-> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+But is there any reason to not reuse AT_FLAGS?
 
-Applied to for-linus-5.6b.
-
--boris
+Thanks,
+Laurent
