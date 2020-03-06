@@ -2,267 +2,109 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885EEC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D704EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB6C20637
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B408220684
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCFShU (ORCPT
+        id S1726271AbgCFSi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:37:20 -0500
-Received: from mga06.intel.com ([134.134.136.31]:19157 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCFShT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:37:19 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 10:37:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="244686470"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 06 Mar 2020 10:37:18 -0800
-Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
-        by linux.intel.com (Postfix) with ESMTP id D020C580298;
-        Fri,  6 Mar 2020 10:37:17 -0800 (PST)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [patch 6/7] genirq: Provide interrupt injection mechanism
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>
-References: <20200306130341.199467200@linutronix.de>
- <20200306130623.990928309@linutronix.de>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <4729cdaf-8a51-6f22-ea75-4055a59747df@linux.intel.com>
-Date:   Fri, 6 Mar 2020 10:34:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200306130623.990928309@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 6 Mar 2020 13:38:26 -0500
+Received: from baldur.buserror.net ([165.227.176.147]:38498 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgCFSi0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:38:26 -0500
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1jAHn7-0002zj-NU; Fri, 06 Mar 2020 12:33:46 -0600
+Message-ID: <78e666fb78604d98252c436e9e3f6a27cff25a9a.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, Jason Yan <yanaijie@huawei.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Daniel Axtens <dja@axtens.net>
+Date:   Fri, 06 Mar 2020 12:33:44 -0600
+In-Reply-To: <CAADWXX8guqt=Yz-Lo+qU6Ed0t-mG-B=UkqSDaSr3bH+Q2aOn-Q@mail.gmail.com>
+References: <20200304124707.22650-1-yanaijie@huawei.com>
+         <202003041022.26AF0178@keescook>
+         <b5854fd867982527c107138d52a61010079d2321.camel@buserror.net>
+         <CAADWXX8guqt=Yz-Lo+qU6Ed0t-mG-B=UkqSDaSr3bH+Q2aOn-Q@mail.gmail.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: torvalds@linux-foundation.org, keescook@chromium.org, yanaijie@huawei.com, pmladek@suse.com, rostedt@goodmis.org, sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org, tobin@kernel.org, dja@axtens.net
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 2020-03-05 at 12:51 -0600, Linus Torvalds wrote:
+> On Wed, Mar 4, 2020 at 3:16 PM Scott Wood <oss@buserror.net> wrote:
+> > 
+> > The frustration is with the inability to set a flag to say, "I'm debugging
+> > and
+> > don't care about leaks... in fact I'd like as much information as possible
+> > to
+> > leak to me."
+> 
+> Well, I definitely don't want to tie it to "I turned off kaslr in
+> order to help debugging". That just means that now you're debugging a
+> kernel that is fundamentally different from what people are running.
 
-On 3/6/20 5:03 AM, Thomas Gleixner wrote:
-> Error injection mechanisms need a half ways safe way to inject interrupts as
-> invoking generic_handle_irq() or the actual device interrupt handler
-> directly from e.g. a debugfs write is not guaranteed to be safe.
->
-> On x86 generic_handle_irq() is unsafe due to the hardware trainwreck which
-> is the base of x86 interrupt delivery and affinity management.
->
-> Move the irq debugfs injection code into a separate function which can be
-> used by error injection code as well.
->
-> The implementation prevents at least that state is corrupted, but it cannot
-> close a very tiny race window on x86 which might result in a stale and not
-> serviced device interrupt under very unlikely circumstances.
->
-> This is explicitly for debugging and testing and not for production use or
-> abuse in random driver code.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-Tested-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->   include/linux/interrupt.h |    2 +
->   kernel/irq/Kconfig        |    5 ++++
->   kernel/irq/chip.c         |    2 -
->   kernel/irq/debugfs.c      |   34 -----------------------------
->   kernel/irq/internals.h    |    2 -
->   kernel/irq/resend.c       |   53 ++++++++++++++++++++++++++++++++++++++++++++--
->   6 files changed, 61 insertions(+), 37 deletions(-)
->
-> --- a/include/linux/interrupt.h
-> +++ b/include/linux/interrupt.h
-> @@ -248,6 +248,8 @@ extern void enable_percpu_nmi(unsigned i
->   extern int prepare_percpu_nmi(unsigned int irq);
->   extern void teardown_percpu_nmi(unsigned int irq);
->   
-> +extern int irq_inject_interrupt(unsigned int irq);
-> +
->   /* The following three functions are for the core kernel use only. */
->   extern void suspend_device_irqs(void);
->   extern void resume_device_irqs(void);
-> --- a/kernel/irq/Kconfig
-> +++ b/kernel/irq/Kconfig
-> @@ -43,6 +43,10 @@ config GENERIC_IRQ_MIGRATION
->   config AUTO_IRQ_AFFINITY
->          bool
->   
-> +# Interrupt injection mechanism
-> +config GENERIC_IRQ_INJECTION
-> +	bool
-> +
->   # Tasklet based software resend for pending interrupts on enable_irq()
->   config HARDIRQS_SW_RESEND
->          bool
-> @@ -127,6 +131,7 @@ config SPARSE_IRQ
->   config GENERIC_IRQ_DEBUGFS
->   	bool "Expose irq internals in debugfs"
->   	depends on DEBUG_FS
-> +	select GENERIC_IRQ_INJECTION
->   	default n
->   	---help---
->   
-> --- a/kernel/irq/chip.c
-> +++ b/kernel/irq/chip.c
-> @@ -278,7 +278,7 @@ int irq_startup(struct irq_desc *desc, b
->   		}
->   	}
->   	if (resend)
-> -		check_irq_resend(desc);
-> +		check_irq_resend(desc, false);
->   
->   	return ret;
->   }
-> --- a/kernel/irq/debugfs.c
-> +++ b/kernel/irq/debugfs.c
-> @@ -190,39 +190,7 @@ static ssize_t irq_debug_write(struct fi
->   		return -EFAULT;
->   
->   	if (!strncmp(buf, "trigger", size)) {
-> -		unsigned long flags;
-> -		int err;
-> -
-> -		/* Try the HW interface first */
-> -		err = irq_set_irqchip_state(irq_desc_get_irq(desc),
-> -					    IRQCHIP_STATE_PENDING, true);
-> -		if (!err)
-> -			return count;
-> -
-> -		/*
-> -		 * Otherwise, try to inject via the resend interface,
-> -		 * which may or may not succeed.
-> -		 */
-> -		chip_bus_lock(desc);
-> -		raw_spin_lock_irqsave(&desc->lock, flags);
-> -
-> -		/*
-> -		 * Don't allow injection when the interrupt is:
-> -		 *  - Level or NMI type
-> -		 *  - not activated
-> -		 *  - replaying already
-> -		 */
-> -		if (irq_settings_is_level(desc) ||
-> -		    !irqd_is_activated(&desc->irq_data) ||
-> -		    (desc->istate & (IRQS_NMI | IRQS_REPLAY)) {
-> -			err = -EINVAL;
-> -		} else {
-> -			desc->istate |= IRQS_PENDING;
-> -			err = check_irq_resend(desc);
-> -		}
-> -
-> -		raw_spin_unlock_irqrestore(&desc->lock, flags);
-> -		chip_bus_sync_unlock(desc);
-> +		int err = irq_inject_interrupt(irq_desc_get_irq(desc));
->   
->   		return err ? err : count;
->   	}
-> --- a/kernel/irq/internals.h
-> +++ b/kernel/irq/internals.h
-> @@ -108,7 +108,7 @@ irqreturn_t handle_irq_event_percpu(stru
->   irqreturn_t handle_irq_event(struct irq_desc *desc);
->   
->   /* Resending of interrupts :*/
-> -int check_irq_resend(struct irq_desc *desc);
-> +int check_irq_resend(struct irq_desc *desc, bool inject);
->   bool irq_wait_for_poll(struct irq_desc *desc);
->   void __irq_wake_thread(struct irq_desc *desc, struct irqaction *action);
->   
-> --- a/kernel/irq/resend.c
-> +++ b/kernel/irq/resend.c
-> @@ -91,7 +91,7 @@ static int irq_sw_resend(struct irq_desc
->    *
->    * Is called with interrupts disabled and desc->lock held.
->    */
-> -int check_irq_resend(struct irq_desc *desc)
-> +int check_irq_resend(struct irq_desc *desc, bool inject)
->   {
->   	int err = 0;
->   
-> @@ -108,7 +108,7 @@ int check_irq_resend(struct irq_desc *de
->   	if (desc->istate & IRQS_REPLAY)
->   		return -EBUSY;
->   
-> -	if (!(desc->istate & IRQS_PENDING))
-> +	if (!(desc->istate & IRQS_PENDING) && !inject)
->   		return 0;
->   
->   	desc->istate &= ~IRQS_PENDING;
-> @@ -122,3 +122,52 @@ int check_irq_resend(struct irq_desc *de
->   		desc->istate |= IRQS_REPLAY;
->   	return err;
->   }
-> +
-> +#ifdef CONFIG_GENERIC_IRQ_INJECTION
-> +/**
-> + * irq_inject_interrupt - Inject an interrupt for testing/error injection
-> + * @irq:	The interrupt number
-> + *
-> + * This function must only be used for debug and testing purposes!
-> + *
-> + * Especially on x86 this can cause a premature completion of an interrupt
-> + * affinity change causing the interrupt line to become stale. Very
-> + * unlikely, but possible.
-> + *
-> + * The injection can fail for various reasons:
-> + * - Interrupt is not activated
-> + * - Interrupt is NMI type or currently replaying
-> + * - Interrupt is level type
-> + * - Interrupt does not support hardware retrigger and software resend is
-> + *   either not enabled or not possible for the interrupt.
-> + */
-> +int irq_inject_interrupt(unsigned int irq)
-> +{
-> +	struct irq_desc *desc;
-> +	unsigned long flags;
-> +	int err;
-> +
-> +	/* Try the state injection hardware interface first */
-> +	if (!irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true))
-> +		return 0;
-> +
-> +	/* That failed, try via the resend mechanism */
-> +	desc = irq_get_desc_buslock(irq, &flags, 0);
-> +	if (!desc)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Only try to inject when the interrupt is:
-> +	 *  - not NMI type
-> +	 *  - activated
-> +	 */
-> +	if ((desc->istate & IRQS_NMI) || !irqd_is_activated(&desc->irq_data))
-> +		err = -EINVAL;
-> +	else
-> +		err = check_irq_resend(desc, true);
-> +
-> +	irq_put_desc_busunlock(desc, flags);
-> +	return err;
-> +}
-> +EXPORT_SYMBOL_GPL(irq_inject_interrupt);
-> +#endif
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+One shouldn't *test* with something different from what people are running but
+once a problem has been identified I don't see the problem with changing the
+kernel to make diagnosis easier (assuming the problem is reproduceable). 
+Though I suppose one could just locally apply a "no pointer hashing" patch
+when debugging...
+
+> So I'd much rather have people just set a really magic flag, perhaps
+> when kgdb is in use or something.
+> 
+> > In any case, this came up now due to a question about what to use when
+> > printing crash dumps.  PowerPC currently prints stack and return addresses
+> > with %lx (in addition to %pS in the latter case) and someone proposed
+> > converting them to %p and/or removing them altogether.
+> 
+> Please just use '%pS'.
+> 
+> The symbol and offset is what is useful when users send crash-dumps.
+> The hex value is entirely pointless with kaslr - which should
+> basically be the default.
+> 
+> Note that this isn't about security at that point - crash dumps are
+> something that shouldn't happen, but if they do happen, we want the
+> pointers. But the random hex value just isn't _useful_, so it's just
+> making things less legible.
+
+Losing %lx on the return address would be a minor annoyance (harder to verify
+that you're looking at the right stack frame in a dump, more steps to look up
+the line number when modules and kaslr aren't involved, etc), but %pS doesn't
+help with stack addresses themselves -- and yes, digging into the actual stack
+data (via kdump, external debugger, etc.) is sometimes useful.  Maybe
+condition it on it being an actual crash dump and not some other caller of
+show_stack()?
+
+-Scott
+
 
