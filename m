@@ -2,236 +2,95 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8894FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AC1C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5447520848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1123A20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwOW8SBq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4vpLS/A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCFO7m (ORCPT
+        id S1727085AbgCFPAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:59:42 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43434 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbgCFO7l (ORCPT
+        Fri, 6 Mar 2020 10:00:22 -0500
+Received: from mail-pg1-f176.google.com ([209.85.215.176]:33743 "EHLO
+        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbgCFPAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:59:41 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j5so2651941otn.10;
-        Fri, 06 Mar 2020 06:59:41 -0800 (PST)
+        Fri, 6 Mar 2020 10:00:21 -0500
+Received: by mail-pg1-f176.google.com with SMTP id m5so1213756pgg.0;
+        Fri, 06 Mar 2020 07:00:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N4MFDsLoBEVZ7lXFqHKdomdhYgqi05obgDGO0+2myg8=;
-        b=fwOW8SBqGajWytcJrbjWwzxpUPAyD2dxKK1sBguYjoS2GPi6F8ipr41eq2jITyosLW
-         CyZ30F4TKxvUhxxe/+kgMK4bA96k52UxeWGI8sIjkOvE5si8ptjb6O9ZOwpsqMtTEUeO
-         KFKRKbowYOh52rEg2yHCWpAxmZUJyLqgh1Gpann8bOjfDve4QSW46sSaTyXZQv/w3gOb
-         mP5LJxkS+Cliky1xeN17uNx6kEBKP+eD6sdps5fzj84Q4nEEQlNJurrIYbqNYNHPyuUa
-         hMM4qfkBw1fBoccYzUbC0ztuuQrolztmOL0C0bnNxLOpRg/xO9h97SjVn5BGvT9BrQsl
-         1PsQ==
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=MKEmgwlqImsxarOX2o7kC0mazgsEGwxs8c0oeOuM3CM=;
+        b=B4vpLS/AUvQrd88ytL5Wvq2bco/f6qnYtm0MQiielcC4LzZ85jVsab+E14oCofZ3MH
+         7mPxuNbntryzhL2l22hhupQ+fDhrM+mC4s9zRyiULGqYBFnlzMN5St1z5PsyhD4nhFT2
+         /D3k3H71VHU9956jrxPZOLKLUjtFEm5DhaZ7E98ISW+nMERBx3qgl/sfTfq1abrVsNc0
+         UgYHMMlRZwTnUbtMDp/Oyon4ULlUGxCHwtzDblx2hjbcIepA6uYBX0WGMgtBaPRFkPN4
+         QzXp7/iWC7gbI5QoFDOOL13kkzFvQG1cDQu2YQfXyXEWoMkpLWg7XXEgthI/ySGbJ5Bo
+         ma5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N4MFDsLoBEVZ7lXFqHKdomdhYgqi05obgDGO0+2myg8=;
-        b=XMuuFFwAMb6CSQzqxld9nIvwaBZ+Xfzo73IfpAuL8ZZdeT+biFmhihwFbfiFkR/PXd
-         xA7pNIxl+g29GJzgguldYt02AukQE4CnETHCpfnHKZiWEoh0wzbTOyaBwefxGBt2EcW5
-         ZBVTaPD5nfyusRzOOYUVdc5J0vMAdStgeOqtqvXACuJcZUwrtaZo/qspBRBWsLITH7lc
-         zCE5MMkFli2TbPRwvOMwQogCJanOqefWeLFYLb+7LjjBvo6VVU/gADB3QMG3einIYUrJ
-         XHxfTUiO5i8AE1vT0aYVUnQBOgc6WM9YwMkBDay94OT2++olwtMm3sc/4am4e/uZ3V3C
-         Z5qQ==
-X-Gm-Message-State: ANhLgQ3dTEl1OXjyrRO3jHAw/oKUouMR2RaOMFu1aNcsmQM4wFKvNrrg
-        SamRuv6SyvQSovGo01oSDUkL6YrHaN6760XWF84=
-X-Google-Smtp-Source: ADFU+vuMb9UVAfnt8crht3NmBw/le6CslfS/1BTdK76QY27N7aLyOEfmxma7llwFcDjOfgf3BGBTsjon9+5O45acG8o=
-X-Received: by 2002:a9d:6d85:: with SMTP id x5mr2931659otp.176.1583506780856;
- Fri, 06 Mar 2020 06:59:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20200306103246.22213-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200306103246.22213-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAPY8ntCuXgzQTi2=d_sd_t1ucnCgfGM64E3aNR_MuGonnHnifA@mail.gmail.com>
-In-Reply-To: <CAPY8ntCuXgzQTi2=d_sd_t1ucnCgfGM64E3aNR_MuGonnHnifA@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 6 Mar 2020 14:59:13 +0000
-Message-ID: <CA+V-a8tDGO_Td5jfqZ4iwWfc4NVG8CgE2hKKLZGFqyGjjbGQuA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] media: i2c: imx219: Add support for cropped
- 640x480 resolution
-To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=MKEmgwlqImsxarOX2o7kC0mazgsEGwxs8c0oeOuM3CM=;
+        b=JllNqIhpBwTOye6eVOBXj5sqb/xycBnSA1JYO6aBHu2JrNLSKxYnfGiCxiE3+4SMvU
+         Z80ZdwmzC7WvcAqIAF08x99SVKFPSLhjFQqyJn7yMtRxm+QMO92qFpwhR8sSfRTvz+97
+         zx521YB9dUnThyaHiZIcYor12XJkmb4sO6oFZSpoHxPz8TLXVUrHanc56Mp0DwDjJd64
+         0eST7fORPWJWaawsnSeQPLPF0XLDT4jUUv1lpDgPmUpNwP+6DA87lkBONpVOSGe5bON+
+         EkYVkJtPQ1Nz5++r7uUgJdXumWndMNyue6RJ06IaslWXZ/C5Kl0Hs0N+N5YwIeigbRT4
+         P9lg==
+X-Gm-Message-State: ANhLgQ33CvizxrPn/WjwkhbksDEqXmSxH74px73SntvXjTB2wfNlxZ1z
+        OZOTUkpMaD54vxrTBAgfcLM=
+X-Google-Smtp-Source: ADFU+vviqkVpH4QiwaiJdmQ+yhFp9Oxc07sYl5jRDmd+qhfObFfVUpP/+vlqlx9bBes/OmEmcvj1tA==
+X-Received: by 2002:a63:a062:: with SMTP id u34mr3850216pgn.286.1583506820741;
+        Fri, 06 Mar 2020 07:00:20 -0800 (PST)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id y23sm17165459pfb.76.2020.03.06.07.00.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 07:00:19 -0800 (PST)
+Date:   Fri, 06 Mar 2020 07:00:11 -0800
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Lorenz Bauer <lmb@cloudflare.com>, john.fastabend@gmail.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <5e62657bb6fe8_17502acca07205b4b2@john-XPS-13-9370.notmuch>
+In-Reply-To: <20200304101318.5225-3-lmb@cloudflare.com>
+References: <20200304101318.5225-1-lmb@cloudflare.com>
+ <20200304101318.5225-3-lmb@cloudflare.com>
+Subject: RE: [PATCH bpf-next v3 02/12] skmsg: update saved hooks only once
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+Lorenz Bauer wrote:
+> Only update psock->saved_* if psock->sk_proto has not been initialized
+> yet. This allows us to get rid of tcp_bpf_reinit_sk_prot.
+> 
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> ---
 
-Thank you for the review.
+Nice bit of cleanup thanks.
 
-On Fri, Mar 6, 2020 at 2:47 PM Dave Stevenson
-<dave.stevenson@raspberrypi.com> wrote:
->
-> Hi Pabhakar
->
-> Thanks for the update. One very minor nit-pick.
->
-> On Fri, 6 Mar 2020 at 10:33, Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> >
-> > This patch adds mode table entry for capturing cropped 640x480 resolution
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/media/i2c/imx219.c | 72 ++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 70 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> > index f96f3ce9fd85..6a86f500ec48 100644
-> > --- a/drivers/media/i2c/imx219.c
-> > +++ b/drivers/media/i2c/imx219.c
-> > @@ -54,6 +54,7 @@
-> >  #define IMX219_VTS_15FPS               0x0dc6
-> >  #define IMX219_VTS_30FPS_1080P         0x06e3
-> >  #define IMX219_VTS_30FPS_BINNED                0x06e3
-> > +#define IMX219_VTS_30FPS_640x480       0x06e3
->
-> Thanks on updating this - I can confirm the default is now 30fps
-> rather than the 90 I was seeing before.
-> Reducing vertical blanking down to the minimum 4 lines give me
-> 109.3fps and all still working properly :-)
->
-thank you for testing.
-
-> >  #define IMX219_VTS_MAX                 0xffff
-> >
-> >  #define IMX219_VBLANK_MIN              4
-> > @@ -142,8 +143,8 @@ struct imx219_mode {
-> >
-> >  /*
-> >   * Register sets lifted off the i2C interface from the Raspberry Pi firmware
-> > - * driver.
-> > - * 3280x2464 = mode 2, 1920x1080 = mode 1, and 1640x1232 = mode 4.
-> > + * driver for resolutions 3280x2464, 1920x1080 and 1640x1232.
-> > + * 3280x2464 = mode 2, 1920x1080 = mode 1, 1640x1232 = mode 4, 640x480 = mode 1.
->
-> 640x480 has come from mode 1 of the firmware? mode 1 is the 1080p mode.
->
-my bad, my context of mode was cropped/binned.
-
-> Having checked through the register settings they are identical to
-> those used by the Pi firmware for mode 7, see [1]. You could quote
-> that rather than stating that they were derived by yourself.
->
-> One of Sony's concerns when I discussed upstreaming this driver with
-> them was that people might add modes with random register settings. If
-> the image quality was then sub-standard they'd unjustly look bad. They
-> validated and blessed the register sets that we were using in the Pi
-> firmware, so retaining that parentage will make them happy.
->
-> [1] https://github.com/6by9/raspiraw/blob/master/imx219_modes.h#L506
->
-To be honest the driver which was in-house didn't have  any references
-for the register settings,
-I'll instead add the reference to which you pointed and set as mode = 7.
-
-If you are Okay Ill just resend this patch as rest have been acked.
-
-Cheers,
---Prabhakar
-
-> >   */
-> >  static const struct imx219_reg mode_3280x2464_regs[] = {
-> >         {0x0100, 0x00},
-> > @@ -318,6 +319,63 @@ static const struct imx219_reg mode_1640_1232_regs[] = {
-> >         {0x0163, 0x78},
-> >  };
-> >
-> > +static const struct imx219_reg mode_640_480_regs[] = {
-> > +       {0x0100, 0x00},
-> > +       {0x30eb, 0x05},
-> > +       {0x30eb, 0x0c},
-> > +       {0x300a, 0xff},
-> > +       {0x300b, 0xff},
-> > +       {0x30eb, 0x05},
-> > +       {0x30eb, 0x09},
-> > +       {0x0114, 0x01},
-> > +       {0x0128, 0x00},
-> > +       {0x012a, 0x18},
-> > +       {0x012b, 0x00},
-> > +       {0x0162, 0x0d},
-> > +       {0x0163, 0x78},
-> > +       {0x0164, 0x03},
-> > +       {0x0165, 0xe8},
-> > +       {0x0166, 0x08},
-> > +       {0x0167, 0xe7},
-> > +       {0x0168, 0x02},
-> > +       {0x0169, 0xf0},
-> > +       {0x016a, 0x06},
-> > +       {0x016b, 0xaf},
-> > +       {0x016c, 0x02},
-> > +       {0x016d, 0x80},
-> > +       {0x016e, 0x01},
-> > +       {0x016f, 0xe0},
-> > +       {0x0170, 0x01},
-> > +       {0x0171, 0x01},
-> > +       {0x0174, 0x03},
-> > +       {0x0175, 0x03},
-> > +       {0x0301, 0x05},
-> > +       {0x0303, 0x01},
-> > +       {0x0304, 0x03},
-> > +       {0x0305, 0x03},
-> > +       {0x0306, 0x00},
-> > +       {0x0307, 0x39},
-> > +       {0x030b, 0x01},
-> > +       {0x030c, 0x00},
-> > +       {0x030d, 0x72},
-> > +       {0x0624, 0x06},
-> > +       {0x0625, 0x68},
-> > +       {0x0626, 0x04},
-> > +       {0x0627, 0xd0},
-> > +       {0x455e, 0x00},
-> > +       {0x471e, 0x4b},
-> > +       {0x4767, 0x0f},
-> > +       {0x4750, 0x14},
-> > +       {0x4540, 0x00},
-> > +       {0x47b4, 0x14},
-> > +       {0x4713, 0x30},
-> > +       {0x478b, 0x10},
-> > +       {0x478f, 0x10},
-> > +       {0x4793, 0x10},
-> > +       {0x4797, 0x0e},
-> > +       {0x479b, 0x0e},
-> > +};
-> > +
-> >  static const char * const imx219_test_pattern_menu[] = {
-> >         "Disabled",
-> >         "Color Bars",
-> > @@ -424,6 +482,16 @@ static const struct imx219_mode supported_modes[] = {
-> >                         .regs = mode_1640_1232_regs,
-> >                 },
-> >         },
-> > +       {
-> > +               /* 640x480 30fps mode */
-> > +               .width = 640,
-> > +               .height = 480,
-> > +               .vts_def = IMX219_VTS_30FPS_640x480,
-> > +               .reg_list = {
-> > +                       .num_of_regs = ARRAY_SIZE(mode_640_480_regs),
-> > +                       .regs = mode_640_480_regs,
-> > +               },
-> > +       },
-> >  };
-> >
-> >  struct imx219 {
-> > --
-> > 2.20.1
-> >
+Acked-by: John Fastabend <john.fastabend@gmail.com>
