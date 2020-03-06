@@ -2,122 +2,124 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9502C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21DAC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1072072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:49:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="HHxTmVII"
+	by mail.kernel.org (Postfix) with ESMTP id A4805206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgCFQtw (ORCPT
+        id S1726490AbgCFQxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:49:52 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:2880 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCFQtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:49:52 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48YtrX5LCCz9v0DS;
-        Fri,  6 Mar 2020 17:49:48 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=HHxTmVII; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id w4rA5SjLa1tS; Fri,  6 Mar 2020 17:49:48 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48YtrX4C5mz9v0DQ;
-        Fri,  6 Mar 2020 17:49:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1583513388; bh=SIQXyXWwelcqc+qeZ+WYNegGKNceKMdyP7M7NjsPmX0=;
-        h=From:Subject:To:Cc:Date:From;
-        b=HHxTmVIIS3ZAyj0aykHgHgljQdz1abGbuCiRB7jYTQg9VcG7dTFeRVC25esgVtIey
-         Sz+P1LkPl+HERrM5W8DZ0nipllO3XIxcE+WVrSwEEHdfPHZQZC96/iTiOnhGDxSexa
-         3832hum+zdvmuj+lsMkyQb3ygp9lufxLnCTPn2zA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E73528B895;
-        Fri,  6 Mar 2020 17:49:49 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id R84HLGj6qG3t; Fri,  6 Mar 2020 17:49:49 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5562A8B88B;
-        Fri,  6 Mar 2020 17:49:49 +0100 (CET)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id 2974965470; Fri,  6 Mar 2020 16:49:49 +0000 (UTC)
-Message-Id: <ef5248fc1f496c6b0dfdb59380f24968f25f75c5.1583513368.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3] powerpc/kasan: Fix shadow memory protection with
- CONFIG_KASAN_VMALLOC
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri,  6 Mar 2020 16:49:49 +0000 (UTC)
+        Fri, 6 Mar 2020 11:53:01 -0500
+Received: from avon.wwwdotorg.org ([104.237.132.123]:42428 "EHLO
+        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgCFQxB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:53:01 -0500
+Received: from [10.20.204.51] (unknown [216.228.112.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by avon.wwwdotorg.org (Postfix) with ESMTPSA id DD1AD1C01BF;
+        Fri,  6 Mar 2020 09:52:58 -0700 (MST)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.1 at avon.wwwdotorg.org
+Subject: Re: [PATCH v1 3/3] partitions: Introduce NVIDIA Tegra Partition Table
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200224231841.26550-1-digetx@gmail.com>
+ <20200224231841.26550-4-digetx@gmail.com>
+ <44c22925-a14e-96d0-1f93-1979c0c60525@wwwdotorg.org>
+ <CAPDyKFoXnoukjH_2cM=f0DGHBHS6kVUQSYOa_5ffQppC7VOn2A@mail.gmail.com>
+ <824a4d5f-8280-8860-3e80-68188a13aa3d@gmail.com>
+ <CAPDyKFric6pZbJ5-2qkwAFoeJ0c0kcha99zHJ12AUrWO6FQmgg@mail.gmail.com>
+From:   Stephen Warren <swarren@wwwdotorg.org>
+Message-ID: <6fe6d262-c6b0-52d8-0150-4c32a4c36cbd@wwwdotorg.org>
+Date:   Fri, 6 Mar 2020 09:52:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAPDyKFric6pZbJ5-2qkwAFoeJ0c0kcha99zHJ12AUrWO6FQmgg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_KASAN_VMALLOC, new page tables are created at the time
-shadow memory for vmalloc area in unmapped. If some parts of the
-page table still has entries to the zero page shadow memory, the
-entries are wrongly marked RW.
+On 3/6/20 6:37 AM, Ulf Hansson wrote:
+> On Wed, 4 Mar 2020 at 18:09, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> 04.03.2020 19:36, Ulf Hansson пишет:
+>>> On Tue, 25 Feb 2020 at 01:20, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>>>
+>>>> On 2/24/20 4:18 PM, Dmitry Osipenko wrote:
+>>>>> All NVIDIA Tegra devices use a special partition table format for the
+>>>>> internal storage partitioning. Most of Tegra devices have GPT partition
+>>>>> in addition to TegraPT, but some older Android consumer-grade devices do
+>>>>> not or GPT is placed in a wrong sector, and thus, the TegraPT is needed
+>>>>> in order to support these devices properly in the upstream kernel. This
+>>>>> patch adds support for NVIDIA Tegra Partition Table format that is used
+>>>>> at least by all NVIDIA Tegra20 and Tegra30 devices.
+>>>>
+>>>>> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
+>>>>
+>>>>> +static void __init tegra_boot_config_table_init(void)
+>>>>> +{
+>>>>> +     void __iomem *bct_base;
+>>>>> +     u16 pt_addr, pt_size;
+>>>>> +
+>>>>> +     bct_base = IO_ADDRESS(TEGRA_IRAM_BASE) + TEGRA_IRAM_BCT_OFFSET;
+>>>>
+>>>> This shouldn't be hard-coded. IIRC, the boot ROM writes a BIT (Boot
+>>>> Information Table) to a fixed location in IRAM, and there's some value
+>>>> in the BIT that points to where the BCT is in IRAM. In practice, it
+>>>> might work out that the BCT is always at the same place in IRAM, but
+>>>> this certainly isn't guaranteed. I think there's code in U-Boot which
+>>>> extracts the BCT location from the BIT? Yes, see
+>>>> arch/arm/mach-tegra/ap.c:get_odmdata().
+>>>
+>>> So, have you considered using the command line partition option,
+>>> rather than adding yet another partition scheme to the kernel?
+>>>
+>>> In principle, you would let the boot loader scan for the partitions,
+>>> likely from machine specific code in U-boot. Then you append these to
+>>> the kernel command line and let block/partitions/cmdline.c scan for
+>>> it.
+>>
+>> The bootloader is usually locked-down on a consumer Tegra machines (it's
+>> signed / encrypted).
+> 
+> Right, you are you talking about this from a developer point of view,
+> not from an end product user?
+> 
+> I mean, for sure you can upgrade the bootloader on Nvidia products? No, really?
 
-With CONFIG_KASAN_VMALLOC, almost the entire kernel address space
-is managed by KASAN. To make it simple, just create KASAN page tables
-for the entire kernel space at kasan_init(). That doesn't use much
-more space, and that's anyway already done for hash platforms.
+For developer-oriented products like Jetson developer kits, you can 
+upgrade the bootloader, and luckily they haven't used this partition 
+table format for many versions.
 
-Fixes: 3d4247fcc938 ("powerpc/32: Add support of KASAN_VMALLOC")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-v3: Split a too long line
-
-v2: Allocate all tables at init instead of doing it when
-unmapping vmalloc space KASAN pages.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/mm/kasan/kasan_init_32.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 1a29cf469903..cbcad369fcb2 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -120,12 +120,6 @@ static void __init kasan_unmap_early_shadow_vmalloc(void)
- 	unsigned long k_cur;
- 	phys_addr_t pa = __pa(kasan_early_shadow_page);
- 
--	if (!early_mmu_has_feature(MMU_FTR_HPTE_TABLE)) {
--		int ret = kasan_init_shadow_page_tables(k_start, k_end);
--
--		if (ret)
--			panic("kasan: kasan_init_shadow_page_tables() failed");
--	}
- 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
- 		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
- 		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
-@@ -143,7 +137,8 @@ void __init kasan_mmu_init(void)
- 	int ret;
- 	struct memblock_region *reg;
- 
--	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE)) {
-+	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ||
-+	    IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
- 		ret = kasan_init_shadow_page_tables(KASAN_SHADOW_START, KASAN_SHADOW_END);
- 
- 		if (ret)
--- 
-2.25.0
-
+However, commercial Android products typically have secure boot enabled, 
+so you can't replace the bootloader unless you know the secure boot 
+keys, which only the manufacturer knows. Dmitry is working on 
+re-purposing such products.
