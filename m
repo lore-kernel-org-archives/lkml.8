@@ -2,88 +2,158 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5660CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD74C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B61E207FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:37:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583487447;
-	bh=IyUEI189KLN7NzOaIC0uGsky+Dq/9mgX0pL869AYwTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xpe9Zy8p076CDerfQEpW05XfqatrWO8C/OMmBiu6cOwftfK6D8Rsk/fqgc0MpxXzK
-	 rckMsU8GuZBoTLBD3IEKAs2n1KKcvXeEa+NsPIMt8qjtyvbDlSGueFwUwl1y1K2KKN
-	 80PF44FGZfjULy/karPBRe4lgO0tsMBhYi5d3SHw=
+	by mail.kernel.org (Postfix) with ESMTP id F1D672073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:38:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PiGgj5R0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbgCFJhZ (ORCPT
+        id S1726140AbgCFJio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:37:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725923AbgCFJhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:37:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 6 Mar 2020 04:38:44 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27153 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725923AbgCFJin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 04:38:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583487522;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=I99v9Lz9WEACFzOBHGx8xZ3mdresfCD73R6Fnd1GKl8=;
+        b=PiGgj5R0L2gACbaib0mr9MOTCopYI/XcqDljhUbrcfwNWlOOoBD+yYqIlS+773ax5IwaTI
+        qGuRGHZ9VVuRgtIyLv1JZoGHUzzDLWzgZsu0O8gFuOgEUXM9uxkCpDp/5IfbLgItFglMw9
+        VN/9qqMNwP6huWAkEuQJTS5ECw7EgkI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-476-hg8RFOuoNCSEBVIMNva_9Q-1; Fri, 06 Mar 2020 04:38:40 -0500
+X-MC-Unique: hg8RFOuoNCSEBVIMNva_9Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 285B82073D;
-        Fri,  6 Mar 2020 09:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583487443;
-        bh=IyUEI189KLN7NzOaIC0uGsky+Dq/9mgX0pL869AYwTM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KBzdM3smU80fwbieeRIomBESOd0DAz9uNN+Igc9aRMBcF/aZLhWV5tX27iDxdrekL
-         bIAwhkwRSbudL4mBN5282Sl4Q1//0tti6yNvgzVzwSHEg3FKbFuobj7vzH0Wuh7piN
-         zBZFBkRXduhi6m4lDqWCWuM3bQ1dmvPkue2723wI=
-Date:   Fri, 6 Mar 2020 10:37:20 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, cgroups@vger.kernel.org, tj@kernel.org,
-        lizefan@huawei.com, hannes@cmpxchg.org, shakeelb@google.com,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2 1/4] kernfs: kvmalloc xattr value instead of kmalloc
-Message-ID: <20200306093720.GA3630348@kroah.com>
-References: <20200305211632.15369-1-dxu@dxuuu.xyz>
- <20200305211632.15369-2-dxu@dxuuu.xyz>
- <58c6e6dafabea52e5b030d18b83c13e4f43ab8e3.camel@perches.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADDFB1084B02;
+        Fri,  6 Mar 2020 09:38:38 +0000 (UTC)
+Received: from localhost (ovpn-12-25.pek2.redhat.com [10.72.12.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B4FD85C54A;
+        Fri,  6 Mar 2020 09:38:31 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 17:38:29 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Kairui Song <kasong@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Khalid Aziz <khalid@gonehiking.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Randy Wright <rwright@hpe.com>, Dave Young <dyoung@redhat.com>,
+        Myron Stowe <myron.stowe@redhat.com>, jroedel@suse.de
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+Message-ID: <20200306093829.GA27711@MiWiFi-R3L-srv>
+References: <20191225192118.283637-1-kasong@redhat.com>
+ <20200222165631.GA213225@google.com>
+ <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com>
+ <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
+ <CABeXuvonZpwWfcUef4PeihTJkgH2ZC_RCKuLR3rH3Re4hx36Aw@mail.gmail.com>
+ <20200305035329.GD4433@MiWiFi-R3L-srv>
+ <CABeXuvogFGv8-i4jsJYN5ya0hjf35EXLkmPqYWayDUvXaBKidA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <58c6e6dafabea52e5b030d18b83c13e4f43ab8e3.camel@perches.com>
+In-Reply-To: <CABeXuvogFGv8-i4jsJYN5ya0hjf35EXLkmPqYWayDUvXaBKidA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 12:49:51AM -0800, Joe Perches wrote:
-> On Thu, 2020-03-05 at 13:16 -0800, Daniel Xu wrote:
-> > It's not really necessary to have contiguous physical memory for xattr
-> > values. We no longer need to worry about higher order allocations
-> > failing with kvmalloc, especially because the xattr size limit is at
-> > 64K.
+On 03/04/20 at 08:53pm, Deepa Dinamani wrote:
+> On Wed, Mar 4, 2020 at 7:53 PM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > +Joerg to CC.
+> >
+> > On 03/03/20 at 01:01pm, Deepa Dinamani wrote:
+> > > I looked at this some more. Looks like we do not clear irqs when we do
+> > > a kexec reboot. And, the bootup code maintains the same table for the
+> > > kexec-ed kernel. I'm looking at the following code in
+> >
+> > I guess you are talking about kdump reboot here, right? Kexec and kdump
+> > boot take the similar mechanism, but differ a little.
 > 
-> So why use vmalloc memory at all?
+> Right I meant kdump kernel here. And, clearly the is_kdump_kernel() case below.
 > 
-> > diff --git a/fs/xattr.c b/fs/xattr.c
-> ']
-> > @@ -817,7 +817,7 @@ struct simple_xattr *simple_xattr_alloc(const void *value, size_t size)
-> >  	if (len < sizeof(*new_xattr))
-> >  		return NULL;
-> >  
-> > -	new_xattr = kmalloc(len, GFP_KERNEL);
-> > +	new_xattr = kvmalloc(len, GFP_KERNEL);
+> >
+> > > intel_irq_remapping.c:
+> > >
+> > >         if (ir_pre_enabled(iommu)) {
+> > >                 if (!is_kdump_kernel()) {
+> > >                         pr_warn("IRQ remapping was enabled on %s but
+> > > we are not in kdump mode\n",
+> > >                                 iommu->name);
+> > >                         clear_ir_pre_enabled(iommu);
+> > >                         iommu_disable_irq_remapping(iommu);
+> > >                 } else if (iommu_load_old_irte(iommu))
+> >
+> > Here, it's for kdump kernel to copy old ir table from 1st kernel.
 > 
-> Why is this sensible?
+> Correct.
+> 
+> > >                         pr_err("Failed to copy IR table for %s from
+> > > previous kernel\n",
+> > >                                iommu->name);
+> > >                 else
+> > >                         pr_info("Copied IR table for %s from previous kernel\n",
+> > >                                 iommu->name);
+> > >         }
+> > >
+> > > Would cleaning the interrupts(like in the non kdump path above) just
+> > > before shutdown help here? This should clear the interrupts enabled
+> > > for all the devices in the current kernel. So when kdump kernel
+> > > starts, it starts clean. This should probably help block out the
+> > > interrupts from a device that does not have a driver.
+> >
+> > I think stopping those devices out of control from continue sending
+> > interrupts is a good idea. While not sure if only clearing the interrupt
+> > will be enough. Those devices which will be initialized by their driver
+> > will brake, but devices which drivers are not loaded into kdump kernel
+> > may continue acting. Even though interrupts are cleaning at this time,
+> > the on-flight DMA could continue triggerring interrupt since the ir
+> > table and iopage table are rebuilt.
+> 
+> This should be handled by the IOMMU, right? And, hence you are getting
+> UR. This seems like the correct execution flow to me.
 
-See the thread on v1
+Sorry for late reply.
+Yes, this is initializing IOMMU device.
 
-> vmalloc memory is a much more limited resource.
+> 
+> Anyway, you could just test this theory by removing the
+> is_kdump_kernel() check above and see if it solves your problem.
+> Obviously, check the VT-d spec to figure out the exact sequence to
+> turn off the IR.
 
-Large chunks of "len" is much more limited :)
+OK, I will talk to Kairui and get a machine to test it. Thanks for your
+nice idea, if you have a draft patch, we are happy to test it.
 
-thanks,
+> 
+> Note that the device that is causing the problem here is a legit
+> device. We want to have interrupts from devices we don't know about
+> blocked anyway because we can have compromised firmware/ devices that
+> could cause a DoS attack. So blocking the unwanted interrupts seems
+> like the right thing to do here.
 
-greg k-h
+Kairui said it's a device which driver is not loaded in kdump kernel
+because it's not needed by kdump. We try to only load kernel modules
+which are needed, e.g one device is the dump target, its driver has to
+be loaded in. In this case, the device is more like a out of control
+device to kdump kernel.
+
