@@ -2,103 +2,111 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1C2C3F2D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34FBC3F2D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EBF62072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B8B2072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgCFGkR convert rfc822-to-8bit (ORCPT
+        id S1726069AbgCFGl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 01:40:17 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:44405 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgCFGkR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 01:40:17 -0500
-Received: from mail-wm1-f69.google.com ([209.85.128.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <chia-lin.kao@canonical.com>)
-        id 1jA6ec-0007AZ-Qs
-        for linux-kernel@vger.kernel.org; Fri, 06 Mar 2020 06:40:14 +0000
-Received: by mail-wm1-f69.google.com with SMTP id p186so264215wmp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 22:40:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EpKnowuU59lPtoZuyG1qUEH+kEQ22uKgOl7ZuBWQsiA=;
-        b=Ze7N2OJW5nFl9aawkrlCpywu98zCH+Y1coN3Gs7m8l4aWEvpo4P1KbEtxf2/T/KKvk
-         GS+F1+kUjcRciWgvilbjc9yjbBMcCc5B5Vsgz+8zzcmIoW983joA8gfIsumcdyXbfYPl
-         hy7y7Op2cBU3uWtNSi6aoAXFZ+xCy/u2RZDStjgWUHubFb06WeFMqdlsxCOI4CfFH2MK
-         SbH/MvVFEj1vOgdoRQQiXKs4mqnZDAP0YgVnIQdQiXKzWt8rVn0y2BdI5nQblz/w8glj
-         zDFSz/BfqpPV0ZJNcfeadx5Ztljx4xfaLNo459+VFHStNVq7P63sMxIESKdHv9W1VObB
-         vGUw==
-X-Gm-Message-State: ANhLgQ3bJG0y7vchifmCyDIVfYBqyqOXAYB8IujY5rbHfjphB9NHDdQC
-        jdmP9oZjvzZcv1e9bbT5nTSf13XbM6gbPBP/m+9FsScTFPlYPVr7p+5MW43By8So1y++8lejCTI
-        HDxViOiqujjWN/ppA8K2VIop9f05qYI4/wTKdzF5HvuXz5g2q8FwoJp9q/g==
-X-Received: by 2002:a5d:4c52:: with SMTP id n18mr2392147wrt.403.1583476814527;
-        Thu, 05 Mar 2020 22:40:14 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vtW31iSGk+adXSK/Yr7Qi7q8DHETQMzekXTWHtim33Iv76ZWOnxUcuVVs8w7irYklXu27ruDt3hjgo/EiwdBc4=
-X-Received: by 2002:a5d:4c52:: with SMTP id n18mr2392114wrt.403.1583476814289;
- Thu, 05 Mar 2020 22:40:14 -0800 (PST)
+        Fri, 6 Mar 2020 01:41:58 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11597 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725835AbgCFGl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 01:41:58 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 50BDDE1792697A077368;
+        Fri,  6 Mar 2020 14:41:56 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Mar 2020
+ 14:41:47 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
+CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>,
+        <dja@axtens.net>, Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH v4 0/6] implement KASLR for powerpc/fsl_booke/64
+Date:   Fri, 6 Mar 2020 14:40:27 +0800
+Message-ID: <20200306064033.3398-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-References: <20200305064423.16196-1-acelan.kao@canonical.com> <20200306041642.GD217608@dtor-ws>
-In-Reply-To: <20200306041642.GD217608@dtor-ws>
-From:   AceLan Kao <acelan.kao@canonical.com>
-Date:   Fri, 6 Mar 2020 14:40:03 +0800
-Message-ID: <CAFv23Q=W8-hafqBkBeT0HXGBb6kJC=1dHwnGv57=Z3NTOH0-6w@mail.gmail.com>
-Subject: Re: [PATCH] Input: i8042 - Fix the selftest retry logic
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input@vger.kernel.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+This is a try to implement KASLR for Freescale BookE64 which is based on
+my earlier implementation for Freescale BookE32:
+https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718&state=*
 
-We have a Dell desktop with ps2 addon card, after S3, the ps2 keyboard
-lost function and got below errors
-Jan 15 07:10:08 Rh-MT kernel: [  346.575353] i8042: i8042 controller
-selftest timeout
-Jan 15 07:10:08 Rh-MT kernel: [  346.575358] PM: Device i8042 failed
-to resume: error -19
+The implementation for Freescale BookE64 is similar as BookE32. One
+difference is that Freescale BookE64 set up a TLB mapping of 1G during
+booting. Another difference is that ppc64 needs the kernel to be
+64K-aligned. So we can randomize the kernel in this 1G mapping and make
+it 64K-aligned. This can save some code to creat another TLB map at
+early boot. The disadvantage is that we only have about 1G/64K = 16384
+slots to put the kernel in.
 
-Adding this patch, I found the selftest passes at the second retry and
-the keyboard continue working fine.
+    KERNELBASE
 
-Best regards,
-AceLan Kao.
+          64K                     |--> kernel <--|
+           |                      |              |
+        +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+        |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
+        +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+        |                         |                        1G
+        |----->   offset    <-----|
 
-Dmitry Torokhov <dmitry.torokhov@gmail.com> 於 2020年3月6日 週五 下午12:16寫道：
->
-> Hi AceLan,
->
-> On Thu, Mar 05, 2020 at 02:44:23PM +0800, AceLan Kao wrote:
-> > It returns -NODEV at the first selftest timeout, so the retry logic
-> > doesn't work. Move the return outside of the while loop to make it real
-> > retry 5 times before returns -ENODEV.
->
-> The retry logic here was for the controller not returning the expected
-> selftest value, not the controller refusing to communicate at all.
->
-> Could you pease tell me what device requires this change?
->
-> Thanks.
->
-> --
-> Dmitry
+                              kernstart_virt_addr
+
+I'm not sure if the slot numbers is enough or the design has any
+defects. If you have some better ideas, I would be happy to hear that.
+
+Thank you all.
+
+v3->v4:
+  Do not define __kaslr_offset as a fixed symbol. Reference __run_at_load and
+    __kaslr_offset by symbol instead of magic offsets.
+  Use IS_ENABLED(CONFIG_PPC32) instead of #ifdef CONFIG_PPC32.
+  Change kaslr-booke32 to kaslr-booke in index.rst
+  Switch some instructions to 64-bit.
+v2->v3:
+  Fix build error when KASLR is disabled.
+v1->v2:
+  Add __kaslr_offset for the secondary cpu boot up.
+
+Jason Yan (6):
+  powerpc/fsl_booke/kaslr: refactor kaslr_legal_offset() and
+    kaslr_early_init()
+  powerpc/fsl_booke/64: introduce reloc_kernel_entry() helper
+  powerpc/fsl_booke/64: implement KASLR for fsl_booke64
+  powerpc/fsl_booke/64: do not clear the BSS for the second pass
+  powerpc/fsl_booke/64: clear the original kernel if randomized
+  powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst
+    and add 64bit part
+
+ Documentation/powerpc/index.rst               |  2 +-
+ .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 +++++++-
+ arch/powerpc/Kconfig                          |  2 +-
+ arch/powerpc/kernel/exceptions-64e.S          | 23 +++++
+ arch/powerpc/kernel/head_64.S                 | 13 +++
+ arch/powerpc/kernel/setup_64.c                |  3 +
+ arch/powerpc/mm/mmu_decl.h                    | 23 ++---
+ arch/powerpc/mm/nohash/kaslr_booke.c          | 88 +++++++++++++------
+ 8 files changed, 144 insertions(+), 45 deletions(-)
+ rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
+
+-- 
+2.17.2
+
