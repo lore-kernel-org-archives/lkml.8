@@ -2,126 +2,85 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C396C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBADFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA492070A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B157E2070A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:34:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPKEoWOC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ej3J+NgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgCFJcB (ORCPT
+        id S1726261AbgCFJeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:32:01 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46533 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgCFJcB (ORCPT
+        Fri, 6 Mar 2020 04:34:10 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56154 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725855AbgCFJeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:32:01 -0500
-Received: by mail-ed1-f65.google.com with SMTP id y3so1657852edj.13;
-        Fri, 06 Mar 2020 01:31:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=3jEfyLUY00RD8pq5oLNxoDcRcehSkaINBT1VxKYt2l8=;
-        b=lPKEoWOCV3sp8isNJOQnAUWE62dCvb2F67z8xMzkFMFqyyVCyAvWal0uqipTr7dUSS
-         nzjP3aAhQKO13oDhKxSkW1e1xyh3BV0csDGW4u7mVymm72RzStaGFnJzZ7oTH4GODLsL
-         kfm8R954y/LlE6qYhFnNU0OKPhYxTugdn0H3NAKPua4W4aXEuKtjFvLbooivv1Kjx+ZO
-         v3dbJ0TRFZkiQV1/FCSkFUSmngHiIyVgnmFkwiWSBxcHpQHE8F0JzxBxtFwmPN7V1Ef6
-         OEKQwOrVLkQC6yx+KT6z6S30RLQqfwq3bFky0q+RbNvWRE8/WLdK7a6KgFHb79NqCiz/
-         yMvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=3jEfyLUY00RD8pq5oLNxoDcRcehSkaINBT1VxKYt2l8=;
-        b=AaxWdNN88FGDP3E+f4PesCLwmPLrd9ZokwrHWSYxvXX/NNo0nFIKx28YFA39wYZQkV
-         boYJoOcWbqeqwbf85wb2zTaW5mxpNIhu8bW0PZZM1plSUMopDpBQ6iCD9j4Bm4Z/NwB6
-         T2R5WVQ6+QIEkXgkeVeh/lhkzbW2zsS04cKc24APorqxcdyLzbXsw050vfRjn5rmwU4H
-         3xI1j5PqiMRFQU6h0RnmnaLpqoelBPRRqffjSyoNQHstUTossv6iRvGdlUqC2jcgdM8g
-         PyE095hSGooKVWjLH8dZrJermabiB30QNPZuTuMHM7C0NTKhWxzdchu0ZGY3p7B6lcKs
-         xBew==
-X-Gm-Message-State: ANhLgQ3d73up1BRGDxdSMf0BDWO4sgjGsjo9wQ/sJwJA4zH2jVioNqUD
-        cXl0DlGbvEmqS792ltGPBXUG5gQGUBj/BSQQ6lBhdJJaglw=
-X-Google-Smtp-Source: ADFU+vvpjLtXdzv2sheuMlgwOpsojwKjeENh3HdxiaWpR5EB97+0WGuOnUqve9BkSe6KmQS2BuHgdwlj2zKZPzBs2Oo=
-X-Received: by 2002:a50:9b07:: with SMTP id o7mr1518139edi.139.1583487118865;
- Fri, 06 Mar 2020 01:31:58 -0800 (PST)
+        Fri, 6 Mar 2020 04:34:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583487249;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hp5MekiXUMJxVDsg9Aoj/GVY7QOvjRmpbHO4tIEQiUo=;
+        b=Ej3J+NgEq2G05IVFWi0lkO/v/4E7SfEKeJSEXAa4EGiieRztgiNYLS98N73/i5DLW8+Ybl
+        ss9yKMxWo0Kjk7Dx6C+HEgYzH4Nt2RidjcrgGwzwf5L9cJfMKLGoXoray5EmsOMowCWliv
+        xCPXA1+rz5k1+sU56Wtm75sifStj9PY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-456-V2Ql0F42P_S3LfciviOz7w-1; Fri, 06 Mar 2020 04:34:05 -0500
+X-MC-Unique: V2Ql0F42P_S3LfciviOz7w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E81F38017CC;
+        Fri,  6 Mar 2020 09:34:02 +0000 (UTC)
+Received: from krava (ovpn-205-205.brq.redhat.com [10.40.205.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 78C8B60BF1;
+        Fri,  6 Mar 2020 09:33:58 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 10:33:55 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wei Li <liwei391@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/3] tools: fix off-by 1 relative directory includes
+Message-ID: <20200306093355.GB281906@krava>
+References: <20200306071110.130202-1-irogers@google.com>
+ <20200306071110.130202-2-irogers@google.com>
 MIME-Version: 1.0
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-Date:   Fri, 6 Mar 2020 10:31:42 +0100
-Message-ID: <CAH+2xPBuLsVjwStj4hQHDEbogKW+mXd2p66DG9X2F8nW+doyHw@mail.gmail.com>
-Subject: Re: Still a pretty bad time on 5.4.6 with fuse_request_end.
-To:     miklos@szeredi.hu, michael+lkml@stapelberg.ch
-Cc:     fuse-devel@lists.sourceforge.net,
-        Greg KH <gregkh@linuxfoundation.org>, kyle.leet@gmail.com,
-        linux-fsdevel@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Bruno Thomsen <bth@kamstrup.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306071110.130202-2-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Mar 05, 2020 at 11:11:08PM -0800, Ian Rogers wrote:
+> This is currently working due to extra include paths in the build.
 
-First of all, sorry for the incorrect reply as I was not subscribed to
-the mailing list.
+if you're fixing this, why not remove that extra include path then?
 
-A colleague and I have tested Miklos patch[1] on top of Fedora 31
-5.5.7 kernel and it fixes a kernel oops[2] when using rootless
-containers in Podman. Fix has been running for a few days now,
-and the issue was normally reproducible within a few minutes.
+jirka
 
-Tested-by: Bruno Thomsen <bruno.thomsen@gmail.com>
-
-/Bruno
-
-[1] https://lore.kernel.org/linux-fsdevel/CAJfpegvBguKcNZk-p7sAtSuNH_7HfdCyYvo8Wh7X6P=hT=kPrA@mail.gmail.com/
-
-[2] Oops when running podman workload.
-kernel: BUG: kernel NULL pointer dereference, address: 0000000000000001
-kernel: #PF: supervisor instruction fetch in kernel mode
-kernel: #PF: error_code(0x0010) - not-present page
-kernel: PGD 8000000e4cd85067 P4D 8000000e4cd85067 PUD e4cd80067 PMD 0
-kernel: Oops: 0010 [#1] SMP PTI
-kernel: CPU: 27 PID: 3422 Comm: fuse-overlayfs Not tainted
-5.5.5-200.fc31.x86_64 #1
-kernel: Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
-?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31
-04/01/2014
-kernel: RIP: 0010:0x1
-kernel: Code: Bad RIP value.
-kernel: RSP: 0018:ffffaa0d4196fc30 EFLAGS: 00010202
-kernel: RAX: 0000000000000001 RBX: ffff8b5f344c2250 RCX: 0000000000000000
-kernel: RDX: 0000000000000000 RSI: ffffaa0d4932fbb8 RDI: ffff8b65ac586800
-kernel: RBP: ffff8b5f344c2240 R08: ffff8b5f344c22a0 R09: ffffaa0d4196fbd0
-kernel: R10: ffff8b65a5c71888 R11: 0000000000000001 R12: ffff8b65ac586800
-kernel: R13: 0000000000000001 R14: ffff8b65ab535dc0 R15: ffff8b5f344c2240
-kernel: FS:  00007fb4239a7b80(0000) GS:ffff8b65b98c0000(0000)
-knlGS:0000000000000000
-kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-kernel: CR2: ffffffffffffffd7 CR3: 0000000e4cd38004 CR4: 0000000000360ee0
-kernel: DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-kernel: DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-kernel: Call Trace:
-kernel:  ? fuse_request_end+0xbc/0x1f0 [fuse]
-kernel:  ? fuse_dev_do_write+0x25e/0xe70 [fuse]
-kernel:  ? lookup_fast+0xca/0x280
-kernel:  ? fuse_dev_write+0x53/0x90 [fuse]
-kernel:  ? do_iter_readv_writev+0x158/0x1d0
-kernel:  ? do_iter_write+0x7d/0x190
-kernel:  ? vfs_writev+0xa6/0xf0
-kernel:  ? _copy_to_user+0x28/0x30
-kernel:  ? readlink_copy+0x5a/0x80
-kernel:  ? do_writev+0x6b/0x110
-kernel:  ? do_syscall_64+0x5b/0x1c0
-kernel:  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-kernel: Modules linked in: tun ip6t_REJECT nf_reject_ipv6
-ip6t_rpfilter ipt_REJECT nf_reject_ipv4 xt_conntrack ebtable_nat
-ebtable_broute ip6table_nat ip6table_mangle ip6table_raw ip6table_>
-kernel: CR2: 0000000000000001
