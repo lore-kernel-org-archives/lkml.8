@@ -2,83 +2,122 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0D6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0F7C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90AC20717
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583504857;
-	bh=3grT2gueeZjVzW3RFKCo3PiCktA7IBrRkmtlsVj4AqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PvuVyCKWbsnT3d+RQxqgBWhoku2VGrHUCrD8HVMi8xxwPE5NZAwwfUjvh2i18W/LL
-	 lQh7wY8X5DDqMNEB4iezOQ+peHQ1arfKaZoZJ4h4WZWo34knxZOvVd/UouUL545M1R
-	 Ztqs9/hxcPqOBZZ6f+8GlQRHguMZiYe0geUYrpd0=
+	by mail.kernel.org (Postfix) with ESMTP id A38CF20717
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:28:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sH6YQwSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgCFO1g (ORCPT
+        id S1726833AbgCFO2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:27:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgCFO1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:27:36 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D10120717;
-        Fri,  6 Mar 2020 14:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583504856;
-        bh=3grT2gueeZjVzW3RFKCo3PiCktA7IBrRkmtlsVj4AqU=;
+        Fri, 6 Mar 2020 09:28:24 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:44992 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgCFO2Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 09:28:24 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0890724B;
+        Fri,  6 Mar 2020 15:28:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1583504902;
+        bh=ImKyg2Rt+BNTa71Lnrc2XDPX0687KcLwXIdOHli2fTs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=exw25vLgHi62KLBmn/WFZKNXY2lbyONY/qvDb1H5QxSr2axZAF3NCQ3QdlEwQc+MK
-         UF2PhxIJP241uK3o+fGsqIxy9dCjxrXH/kF97QUaIfS+Ev8mIXFpsL9xg/sW+fbtY4
-         y0Tqab4RZJMTJSFSRym9f3REgympRGIuJR8r7viE=
-Date:   Fri, 6 Mar 2020 15:27:33 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: arch/x86/mm/fault.o: warning: objtool: do_page_fault()+0x4fb:
- unreachable instruction
-Message-ID: <20200306142732.GA8590@lenoir>
-References: <202003061843.YVzsDc3A%lkp@intel.com>
+        b=sH6YQwSbCFFwSloh9k9vJldXYfFroGqtlXzpbrnhzIic7eVqO4vgiQNs25bSDXsKM
+         bDk8TMDzOmsB6hfxkVRvndfsygHVoUmUqrUymfiH+2WuP0rNTbBrZ8iB3/N+YG6k8p
+         jDudKFu7Y9L51JdTPBegKDQ5u/ChXcgVneDygxbg=
+Date:   Fri, 6 Mar 2020 16:28:19 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>,
+        David Airlie <airlied@linux.ie>
+Subject: Re: [RFC PATCH] drm: rcar-du: make all sub-symbols depend on
+ DRM_RCAR_DU
+Message-ID: <20200306142819.GG4878@pendragon.ideasonboard.com>
+References: <4b50cc9f-1434-b78a-d56a-fadfd030f002@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202003061843.YVzsDc3A%lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <4b50cc9f-1434-b78a-d56a-fadfd030f002@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 06:48:47PM +0800, kbuild test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   9f65ed5fe41ce08ed1cb1f6a950f9ec694c142ad
-> commit: ee6352b2c47a24234398e06381edd93a8e965976 x86/context-tracking: Remove exception_enter/exit() from do_page_fault()
-> date:   8 weeks ago
-> config: x86_64-randconfig-a002-20200306 (attached as .config)
-> compiler: gcc-4.9 (Debian 4.9.2-10+deb8u1) 4.9.2
-> reproduce:
->         git checkout ee6352b2c47a24234398e06381edd93a8e965976
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
-> >> arch/x86/mm/fault.o: warning: objtool: do_page_fault()+0x4fb: unreachable instruction
+Hi Randy,
 
-I tried several versions of gcc and I can't reproduce the warning. Also looking
-at the code I fail to find an actual unreachable path. Do you still have the vmlinux around?
+On Thu, Mar 05, 2020 at 07:17:49PM -0800, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> DRM_RCAR_CMM depends on DRM_RCAR_DU. Since the following Kconfig
+> symbols do not depend on DRM_RCAR_DU, the menu presentation is
+> broken for these and following non-R-Car Kconfig symbols.
+> 
+> Is it safe/appropriate to make all of these symbols depend on
+> DRM_RCAR_DU?  It make the kconfig menu presentation much cleaner.
 
-Thanks.
+As those drivers are useless without DRM_RCAR_DU, I'm fine with this
+change. It however prevents test-compiling those drivers when
+DRM_RCAR_DU is disabled, but I see little reason to do so anyway, I
+expect compile tests to aim for as large coverage as possible, and they
+should thus enable DRM_RCAR_DU.
 
+Would you like to submit a new version without this question, and
+possibly addressing Geert's concern if you think it's appropriate, or
+should I do so when applying ?
+
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+> Cc: Dave Airlie <airlied@linux.ie>
+> ---
+>  drivers/gpu/drm/rcar-du/Kconfig |    3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> --- linux-next-20200305.orig/drivers/gpu/drm/rcar-du/Kconfig
+> +++ linux-next-20200305/drivers/gpu/drm/rcar-du/Kconfig
+> @@ -24,6 +24,7 @@ config DRM_RCAR_CMM
+>  config DRM_RCAR_DW_HDMI
+>  	tristate "R-Car DU Gen3 HDMI Encoder Support"
+>  	depends on DRM && OF
+> +	depends on DRM_RCAR_DU
+>  	select DRM_DW_HDMI
+>  	help
+>  	  Enable support for R-Car Gen3 internal HDMI encoder.
+> @@ -31,6 +32,7 @@ config DRM_RCAR_DW_HDMI
+>  config DRM_RCAR_LVDS
+>  	tristate "R-Car DU LVDS Encoder Support"
+>  	depends on DRM && DRM_BRIDGE && OF
+> +	depends on DRM_RCAR_DU
+>  	select DRM_PANEL
+>  	select OF_FLATTREE
+>  	select OF_OVERLAY
+> @@ -47,4 +49,5 @@ config DRM_RCAR_VSP
+>  
+>  config DRM_RCAR_WRITEBACK
+>  	bool
+> +	depends on DRM_RCAR_DU
+>  	default y if ARM64
+
+Is this one needed ? The symbol should not be shown in the kconfig menu
+as it has no text.
+
+-- 
+Regards,
+
+Laurent Pinchart
