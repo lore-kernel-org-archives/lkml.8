@@ -2,165 +2,147 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C81C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CACDC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2602073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:44:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="giWXsPFX"
+	by mail.kernel.org (Postfix) with ESMTP id 3E9832073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725941AbgCFFoK (ORCPT
+        id S1725966AbgCFFps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 00:44:10 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:34609 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbgCFFoK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 00:44:10 -0500
-Received: by mail-yw1-f65.google.com with SMTP id o186so1242644ywc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 21:44:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3IwrZUQqiYpQ05+xHGqOPIrMQ1etdqNiNuQYl6eEQ9g=;
-        b=giWXsPFX5woLiGAB3l2jac5/y8o0/8m49T081i55sOFOy47cjegPQdgCs6tVLLOzte
-         P4lhyXl9ns0pyAv6Ww3E0yS+74T72iLhsKRcdK4zRpStqudRtFBL17QDVDTtBRuDC084
-         ipODmbjGnlWoGnljRyuoAsJk8Y0kDAy775IAAeNQZoTRWo5XQbQbLerMeJVeBqn4O6ro
-         CjqUeO5Yrq4bm1HMvf7ji485y4w/zpZvtyFMXMQ2nYoaywyZSXGPwHAwIBbKtTQddr+4
-         5bCujO2+ZW0An7Ifl0Som0RF/uu62D3dq4lEz1Sn8bG92wglLmJAZ8QM2VTIgH/FQV95
-         u7XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3IwrZUQqiYpQ05+xHGqOPIrMQ1etdqNiNuQYl6eEQ9g=;
-        b=Cwgs8x7/C5iOffLXag5TIaApFxM/EKjBV6v9kY/1HlX3jlKAMoVQu/xX0jPSRx6TAz
-         Rw5YUgkT7YFjSjHMy1GVlvj+KXVVC1qy4tu5BLnrihRQvJrM3nHoFA+fS59d3tmWDeAf
-         224t//uhwyf2jEefSr9jMGl+/cbhTK9NW1OdYVwZO4E4TmE6hlDqWb8If2UHDZK8S9h3
-         MEf/dEAk2cMk/UMSE90rl+ct3JXJwCWZSoVpnrqTY9B9a4QfZ+PqJEvnHnesR8uPy7Qe
-         ezZyo3Z8oAQXYH5oKC9ofgkqGkXt+w9wMMyCO9o3MfBNwAZgg+7jKZpLos3bdx0pArgb
-         +6KQ==
-X-Gm-Message-State: ANhLgQ3sRx10EKirLqE26OGiVFb0hbTkP9a5Ov0mnkkZ6GCRtcEOntBJ
-        mmjQQHtY1Il6upwsBe7Wc0zf1EtOafujCrQw+pA=
-X-Google-Smtp-Source: ADFU+vuZE0WLRV4tvglz4GLNzhX9eTqHGAMs5qnxho7fo2tWIzDuNWtzaI++klugU76CQiYD6PIKktR8w/+P9KNmDjI=
-X-Received: by 2002:a25:614b:: with SMTP id v72mr2002674ybb.154.1583473448978;
- Thu, 05 Mar 2020 21:44:08 -0800 (PST)
+        Fri, 6 Mar 2020 00:45:48 -0500
+Received: from mga11.intel.com ([192.55.52.93]:31837 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbgCFFpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 00:45:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 21:45:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,520,1574150400"; 
+   d="scan'208";a="241074142"
+Received: from skuppusw-mobl5.amr.corp.intel.com (HELO [10.252.200.198]) ([10.252.200.198])
+  by orsmga003.jf.intel.com with ESMTP; 05 Mar 2020 21:45:46 -0800
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <29fb514a0d86e9bcc75cec4ea8474cd4db33adbf.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <9e4a1632-9425-9fb6-fd1a-d7cee4e9b684@linux.intel.com>
+Date:   Thu, 5 Mar 2020 21:45:46 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200226220213.27423-1-atish.patra@wdc.com> <20200226220213.27423-2-atish.patra@wdc.com>
-In-Reply-To: <20200226220213.27423-2-atish.patra@wdc.com>
-From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Fri, 6 Mar 2020 13:43:57 +0800
-Message-ID: <CAEUhbmWLNi+vAFjjHLNKQ-PfMUusEEorVN7S8sK0yZhEAUk3Fg@mail.gmail.com>
-Subject: Re: [PATCH v10 01/12] RISC-V: Mark existing SBI as 0.1 SBI.
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Zong Li <zong.li@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Gary Guo <gary@garyguo.net>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marc Zyngier <maz@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Borislav Petkov <bp@suse.de>, Mao Han <han_mao@c-sky.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Hu <nickhu@andestech.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Anup Patel <anup@brainfault.org>,
-        Steven Price <steven.price@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <29fb514a0d86e9bcc75cec4ea8474cd4db33adbf.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 6:02 AM Atish Patra <atish.patra@wdc.com> wrote:
->
-> As per the new SBI specification, current SBI implementation version
-> is defined as 0.1 and will be removed/replaced in future. Each of the
-> function call in 0.1 is defined as a separate extension which makes
-> easier to replace them one at a time.
->
-> Rename existing implementation to reflect that. This patch is just
-> a preparatory patch for SBI v0.2 and doesn't introduce any functional
-> changes.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Reviewed-by: Anup Patel <anup@brainfault.org>
-> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+
+
+On 3/3/2020 6:36 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> As per PCI firmware specification r3.2 System Firmware Intermediary
+> (SFI) _OSC and DPC Updates ECR
+> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+> Event Handling Implementation Note", page 10, Error Disconnect Recover
+> (EDR) support allows OS to handle error recovery and clearing Error
+> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+> which allows clearing AER registers without FF mode checks.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->  arch/riscv/include/asm/sbi.h | 44 ++++++++++++++++++++----------------
->  1 file changed, 24 insertions(+), 20 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index 2570c1e683d3..3db30e739c8f 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -1,6 +1,7 @@
->  /* SPDX-License-Identifier: GPL-2.0-only */
->  /*
->   * Copyright (C) 2015 Regents of the University of California
-> + * Copyright (c) 2020 Western Digital Corporation or its affiliates.
->   */
->
->  #ifndef _ASM_RISCV_SBI_H
-> @@ -9,17 +10,17 @@
->  #include <linux/types.h>
->
->  #ifdef CONFIG_RISCV_SBI
-> -#define SBI_SET_TIMER 0
-> -#define SBI_CONSOLE_PUTCHAR 1
-> -#define SBI_CONSOLE_GETCHAR 2
-> -#define SBI_CLEAR_IPI 3
-> -#define SBI_SEND_IPI 4
-> -#define SBI_REMOTE_FENCE_I 5
-> -#define SBI_REMOTE_SFENCE_VMA 6
-> -#define SBI_REMOTE_SFENCE_VMA_ASID 7
-> -#define SBI_SHUTDOWN 8
-> +#define SBI_EXT_0_1_SET_TIMER 0x0
-> +#define SBI_EXT_0_1_CONSOLE_PUTCHAR 0x1
-> +#define SBI_EXT_0_1_CONSOLE_GETCHAR 0x2
-> +#define SBI_EXT_0_1_CLEAR_IPI 0x3
-> +#define SBI_EXT_0_1_SEND_IPI 0x4
-> +#define SBI_EXT_0_1_REMOTE_FENCE_I 0x5
-> +#define SBI_EXT_0_1_REMOTE_SFENCE_VMA 0x6
-> +#define SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID 0x7
-> +#define SBI_EXT_0_1_SHUTDOWN 0x8
->
-> -#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({             \
-> +#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({             \
+>   drivers/pci/pci.h      |  2 ++
+>   drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
+>   2 files changed, 20 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index e57e78b619f8..c239e6dd2542 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_group;
+>   void pci_aer_clear_fatal_status(struct pci_dev *dev);
+>   void pci_aer_clear_device_status(struct pci_dev *dev);
+>   int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
+> +int pci_aer_raw_clear_status(struct pci_dev *dev);
+>   #else
+>   static inline void pci_no_aer(void) { }
+>   static inline void pci_aer_init(struct pci_dev *d) { }
+> @@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+>   {
+>   	return -EINVAL;
+>   }
+> +int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
+Its missing static specifier. It needs to be fixed. I can fix it in next 
+version.
+Bjorn, if there is no need for next version, can you please make this 
+change ?
+>   #endif
+>   
+>   #ifdef CONFIG_ACPI
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index c0540c3761dc..41afefa562b7 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -420,7 +420,16 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+>   		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
+>   }
+>   
+> -int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+> +/**
+> + * pci_aer_raw_clear_status - Clear AER error registers.
+> + * @dev: the PCI device
+> + *
+> + * NOTE: Allows clearing error registers in both FF and
+> + * non FF modes.
+> + *
+> + * Returns 0 on success, or negative on failure.
+> + */
+> +int pci_aer_raw_clear_status(struct pci_dev *dev)
+>   {
+>   	int pos;
+>   	u32 status;
+> @@ -433,9 +442,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+>   	if (!pos)
+>   		return -EIO;
+>   
+> -	if (pcie_aer_get_firmware_first(dev))
+> -		return -EIO;
+> -
+>   	port_type = pci_pcie_type(dev);
+>   	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+>   		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
+> @@ -451,6 +457,14 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+>   	return 0;
+>   }
+>   
+> +int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+> +{
+> +	if (pcie_aer_get_firmware_first(dev))
+> +		return -EIO;
+> +
+> +	return pci_aer_raw_clear_status(dev);
+> +}
+> +
+>   void pci_save_aer_state(struct pci_dev *dev)
+>   {
+>   	struct pci_cap_saved_state *save_state;
+> 
 
-nits: this line should not be changed
-
->         register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);   \
->         register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);   \
->         register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);   \
-> @@ -43,48 +44,50 @@
->
-
-[snip]
-
-Regards,
-Bin
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
