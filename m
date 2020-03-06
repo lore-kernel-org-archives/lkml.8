@@ -2,150 +2,149 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7443C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4A1C3F2D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E292072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FD42072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:55:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfZXnAg7"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="f2tyXami"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgCFPvd (ORCPT
+        id S1726307AbgCFPzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:51:33 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33655 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgCFPvd (ORCPT
+        Fri, 6 Mar 2020 10:55:20 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1880 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725935AbgCFPzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:51:33 -0500
-Received: by mail-lf1-f66.google.com with SMTP id c20so2327149lfb.0;
-        Fri, 06 Mar 2020 07:51:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8vpKlxC6kfx/8ZEoHOV/lRWNX/tTNmbczPd46/3sqEc=;
-        b=XfZXnAg7SpiORK5atXAtoAXdiyl4DfgFaVoB3ydY3ygwtW/387vVOoRgbZxbZKfKwM
-         8oaCjXWru31WY0xBI/QcCXiTAAHefK6flvHQjYNLRgwiesTKIGV5X1DoOcoH5wZoef/L
-         u2+e8YzvBan6Ow4VBp2EnkcyF4f+G/mZkJVcJLPO4eZdgUMEQbDlSnkRw/zuFO1FdSNs
-         U5X1JOpCD341/wcHPOXwpLOK2eWeTcAaXOmqMk73kr9mSq8dmMQq3iJOO41r0ReUWzMS
-         rsS76vv67abvaAZ+0rsAOJVsfKpCuqLJ4aLC3gJMagKwEdxkTQE1+dpJrWX7OKk5EOwQ
-         0lTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8vpKlxC6kfx/8ZEoHOV/lRWNX/tTNmbczPd46/3sqEc=;
-        b=IaJb2G0S42j+TacYRP++EZMoXUjIFIsIUtVnRU5XhV7PnumRAG3yxeLKoLJzDCBGqH
-         vTdQn+NtFeMX67X0GK65wufAITBVEAG5TYQUbfvwIUQxV+a26exPsXuyLp0RrZ9IOE+d
-         Z9Yvu5AbYbcIa4D+xNh9HWylSIStVYQXdTW0DUKl3MiRzoa76AuBRpHA3DuhKSJdFuxT
-         Uz3Xz/MWOsmMBcf/T6Kjjn9tAi0XMXrsOop08S2VGa49XItB6JIBU4nifak1iNJfIkou
-         7kE4jpXLrjSSk1gpzeXbkieNrZnXlDAbNCl6xEcgf2ZC+S/Lnx5lpDfKLqrQ1XLswPkk
-         sg4A==
-X-Gm-Message-State: ANhLgQ38uf5wZaj2+DerzQjKU+mwmAm3qnuVRLyCjVwUS6tViXfT01rq
-        IKbHjh3SEkw07i9w3ZKTeD6rZKJK04ac8CjQGqM=
-X-Google-Smtp-Source: ADFU+vtn69XZXX/kFdXPbs7zor1IlvqpO+zLZqcQapmofU9e5T2kEJcKuCgrhX4rG3PpRoGnbpNhkP8BA+n03ocZc5A=
-X-Received: by 2002:ac2:4647:: with SMTP id s7mr2314121lfo.73.1583509890293;
- Fri, 06 Mar 2020 07:51:30 -0800 (PST)
+        Fri, 6 Mar 2020 10:55:20 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026FsGah030759;
+        Fri, 6 Mar 2020 16:54:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=8+YFUYs96OeEzRQg1qbRyqAhuHAgY/sTMrlNmK3AxsI=;
+ b=f2tyXami/1p6FmsCHOVees/qhHxaYS4rhcgqOyY7Ozm3RVuTVzafSKpqQMgFisDshQqz
+ MmIvYDy6PB//YsqyU3JSLDpCIzEQ4QgZKWnQAUimGG9Vq+EeNP2Edy9DtJ06KcDF/zYL
+ ekAbQJi5mqbj1JA3uDWvrVjby5li7mkpRCRmB04T+W+2f1y+nvzP8VVjhVItQVqHOmI4
+ wZ05pH9HqAQn26U5GEEtDvhmBgEFwdzEtJ/V+eUubnp6ezufaWcboNOqZDQ568yllIxY
+ UjS6sGgXgvsUG3JM9zzMnZ1NMHmMt8ZohwPB5UD+ANFs70vggTaV+YiF+/Czt1cHhTGm PQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yfem1g9ht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Mar 2020 16:54:53 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7F20810003A;
+        Fri,  6 Mar 2020 16:54:45 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4C9522BE23F;
+        Fri,  6 Mar 2020 16:54:45 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 6 Mar 2020 16:54:44
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <alexandre.torgue@st.com>,
+        <fabrice.gasnier@st.com>, <benjamin.gaignard@st.com>,
+        <olivier.moysan@st.com>
+CC:     <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] iio: adc: stm32-adc: fix sleep in atomic context
+Date:   Fri, 6 Mar 2020 16:53:35 +0100
+Message-ID: <20200306155335.6019-1-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200221133416.777099322@infradead.org> <20200221134216.051596115@infradead.org>
- <20200306104335.GF3348@worktop.programming.kicks-ass.net> <20200306113135.GA8787@worktop.programming.kicks-ass.net>
-In-Reply-To: <20200306113135.GA8787@worktop.programming.kicks-ass.net>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Fri, 6 Mar 2020 07:51:18 -0800
-Message-ID: <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com>
-Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for _rcuidle
- tracepoints (again)
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        jiangshanlai@gmail.com, Andy Lutomirski <luto@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-06_05:2020-03-06,2020-03-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 3:31 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Mar 06, 2020 at 11:43:35AM +0100, Peter Zijlstra wrote:
-> > On Fri, Feb 21, 2020 at 02:34:32PM +0100, Peter Zijlstra wrote:
-> > > Effectively revert commit 865e63b04e9b2 ("tracing: Add back in
-> > > rcu_irq_enter/exit_irqson() for rcuidle tracepoints") now that we've
-> > > taught perf how to deal with not having an RCU context provided.
-> > >
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > > ---
-> > >  include/linux/tracepoint.h |    8 ++------
-> > >  1 file changed, 2 insertions(+), 6 deletions(-)
-> > >
-> > > --- a/include/linux/tracepoint.h
-> > > +++ b/include/linux/tracepoint.h
-> > > @@ -179,10 +179,8 @@ static inline struct tracepoint *tracepo
-> > >              * For rcuidle callers, use srcu since sched-rcu        \
-> > >              * doesn't work from the idle path.                     \
-> > >              */                                                     \
-> > > -           if (rcuidle) {                                          \
-> > > +           if (rcuidle)                                            \
-> > >                     __idx = srcu_read_lock_notrace(&tracepoint_srcu);\
-> > > -                   rcu_irq_enter_irqsave();                        \
-> > > -           }                                                       \
-> > >                                                                     \
-> > >             it_func_ptr = rcu_dereference_raw((tp)->funcs);         \
-> > >                                                                     \
-> > > @@ -194,10 +192,8 @@ static inline struct tracepoint *tracepo
-> > >                     } while ((++it_func_ptr)->func);                \
-> > >             }                                                       \
-> > >                                                                     \
-> > > -           if (rcuidle) {                                          \
-> > > -                   rcu_irq_exit_irqsave();                         \
-> > > +           if (rcuidle)                                            \
-> > >                     srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
-> > > -           }                                                       \
-> > >                                                                     \
-> > >             preempt_enable_notrace();                               \
-> > >     } while (0)
-> >
-> > So what happens when BPF registers for these tracepoints? BPF very much
-> > wants RCU on AFAIU.
->
-> I suspect we needs something like this...
->
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index a2f15222f205..67a39dbce0ce 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1475,11 +1475,13 @@ void bpf_put_raw_tracepoint(struct bpf_raw_event_map *btp)
->  static __always_inline
->  void __bpf_trace_run(struct bpf_prog *prog, u64 *args)
->  {
-> +       int rcu_flags = trace_rcu_enter();
->         rcu_read_lock();
->         preempt_disable();
->         (void) BPF_PROG_RUN(prog, args);
->         preempt_enable();
->         rcu_read_unlock();
-> +       trace_rcu_exit(rcu_flags);
+This commit fixes the following error:
+"BUG: sleeping function called from invalid context at kernel/irq/chip.c"
 
-One big NACK.
-I will not slowdown 99% of cases because of one dumb user.
-Absolutely no way.
+In DMA mode suppress the trigger irq handler, and make the buffer
+transfers directly in DMA callback, instead.
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+This solution has been already discussed in the thread
+https://lkml.org/lkml/2019/3/30/171, and applied in STM32 DFSDM driver:
+e19ac9d9a978 ("iio: adc: stm32-dfsdm: fix sleep in atomic context")
+---
+ drivers/iio/adc/stm32-adc.c | 31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index 80c3f963527b..ae622ee6d08c 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -1418,8 +1418,30 @@ static unsigned int stm32_adc_dma_residue(struct stm32_adc *adc)
+ static void stm32_adc_dma_buffer_done(void *data)
+ {
+ 	struct iio_dev *indio_dev = data;
++	struct stm32_adc *adc = iio_priv(indio_dev);
++	int residue = stm32_adc_dma_residue(adc);
++
++	/*
++	 * In DMA mode the trigger services of IIO are not used
++	 * (e.g. no call to iio_trigger_poll).
++	 * Calling irq handler associated to the hardware trigger is not
++	 * relevant as the conversions have already been done. Data
++	 * transfers are performed directly in DMA callback instead.
++	 * This implementation avoids to call trigger irq handler that
++	 * may sleep, in an atomic context (DMA irq handler context).
++	 */
++	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
+ 
+-	iio_trigger_poll_chained(indio_dev->trig);
++	while (residue >= indio_dev->scan_bytes) {
++		u16 *buffer = (u16 *)&adc->rx_buf[adc->bufi];
++
++		iio_push_to_buffers(indio_dev, buffer);
++
++		residue -= indio_dev->scan_bytes;
++		adc->bufi += indio_dev->scan_bytes;
++		if (adc->bufi >= adc->rx_buf_sz)
++			adc->bufi = 0;
++	}
+ }
+ 
+ static int stm32_adc_dma_start(struct iio_dev *indio_dev)
+@@ -1845,6 +1867,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ {
+ 	struct iio_dev *indio_dev;
+ 	struct device *dev = &pdev->dev;
++	irqreturn_t (*handler)(int irq, void *p) = NULL;
+ 	struct stm32_adc *adc;
+ 	int ret;
+ 
+@@ -1911,9 +1934,11 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	if (!adc->dma_chan)
++		handler = &stm32_adc_trigger_handler;
++
+ 	ret = iio_triggered_buffer_setup(indio_dev,
+-					 &iio_pollfunc_store_time,
+-					 &stm32_adc_trigger_handler,
++					 &iio_pollfunc_store_time, handler,
+ 					 &stm32_adc_buffer_setup_ops);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "buffer setup failed\n");
+-- 
+2.17.1
+
