@@ -2,158 +2,109 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD74C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A27C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D672073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E211F2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PiGgj5R0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8A3yV5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgCFJio (ORCPT
+        id S1726359AbgCFJjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:38:44 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27153 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725923AbgCFJin (ORCPT
+        Fri, 6 Mar 2020 04:39:15 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34632 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbgCFJjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:38:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583487522;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=I99v9Lz9WEACFzOBHGx8xZ3mdresfCD73R6Fnd1GKl8=;
-        b=PiGgj5R0L2gACbaib0mr9MOTCopYI/XcqDljhUbrcfwNWlOOoBD+yYqIlS+773ax5IwaTI
-        qGuRGHZ9VVuRgtIyLv1JZoGHUzzDLWzgZsu0O8gFuOgEUXM9uxkCpDp/5IfbLgItFglMw9
-        VN/9qqMNwP6huWAkEuQJTS5ECw7EgkI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-hg8RFOuoNCSEBVIMNva_9Q-1; Fri, 06 Mar 2020 04:38:40 -0500
-X-MC-Unique: hg8RFOuoNCSEBVIMNva_9Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADDFB1084B02;
-        Fri,  6 Mar 2020 09:38:38 +0000 (UTC)
-Received: from localhost (ovpn-12-25.pek2.redhat.com [10.72.12.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B4FD85C54A;
-        Fri,  6 Mar 2020 09:38:31 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 17:38:29 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     Kairui Song <kasong@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Randy Wright <rwright@hpe.com>, Dave Young <dyoung@redhat.com>,
-        Myron Stowe <myron.stowe@redhat.com>, jroedel@suse.de
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200306093829.GA27711@MiWiFi-R3L-srv>
-References: <20191225192118.283637-1-kasong@redhat.com>
- <20200222165631.GA213225@google.com>
- <CACPcB9dv1YPhRmyWvtdt2U4g=XXU7dK4bV4HB1dvCVMTpPFdzA@mail.gmail.com>
- <CABeXuvqm1iUGt1GWC9eujuoaACdPiZ2X=3LjKJ5JXKZcXD_z_g@mail.gmail.com>
- <CABeXuvonZpwWfcUef4PeihTJkgH2ZC_RCKuLR3rH3Re4hx36Aw@mail.gmail.com>
- <20200305035329.GD4433@MiWiFi-R3L-srv>
- <CABeXuvogFGv8-i4jsJYN5ya0hjf35EXLkmPqYWayDUvXaBKidA@mail.gmail.com>
+        Fri, 6 Mar 2020 04:39:14 -0500
+Received: by mail-pg1-f193.google.com with SMTP id t3so838035pgn.1;
+        Fri, 06 Mar 2020 01:39:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=b2TSqr/uhMKtbA+zXLI8hLCbfOoEw3UBdPm36dQPxYc=;
+        b=b8A3yV5bxw8y5Pknd7drXx0KJ3W5zCt08RO0s1S3BMI5upnjnTCOF49ap6p1ZeKnMr
+         IEhgJUOWCwKObVejxhGsextEhhXer4iI6imyJdRxR/s2Mo+bPX6RwcaFzCaHfCCxXE1L
+         rtxAZa/6u8nMkBvVYktzZoKrtLwlDKgzTHQXkYnUBH6bxaizTuyhxT++N1as5OmjupkV
+         q5SYgc8JIyatj8N2Wb0H2Ygt0c89vAdVLK8moZIcftbMXiIecTRNscnYQfLgDOXSpz43
+         uz22r8ZUn/A2Eja8XCNM32DA8c9B/rsuPxxb3P7MGURl7Q5u2Y70kySMD+nBjh2GSh14
+         1acg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=b2TSqr/uhMKtbA+zXLI8hLCbfOoEw3UBdPm36dQPxYc=;
+        b=P5LdT57dRCqYE+3zYGwdSJ7Dn05cAUfB1C1Qm0wTWyfY8HOhxtB+b4CN9pDraZ6cuk
+         l9DYYpm4mNcdgU1mVZG69INR+ybO2HR5vvxzHo+/EKxZcTNl+sJ7BPZYwDf8w4lWIAHf
+         a21wZTiulsbXhh5VR7O5JUfHy6b8O3JOQf9qJnsGFMbruVmW7K+AiYzR4vZWHQA6Zp8P
+         lmLTjeUzxrNuTLZMT5F81xl0Wry0iPzRG5oSEE4zd3A9vFYfAdzLNO9r+ebjpdNSc/AY
+         1Zi5VFXDKeyJ7NN4OPiyraZKE5qryPG+XMbihv8rvgig1giiX+vkPTmTMLp4PrmH9Q1g
+         8Zdw==
+X-Gm-Message-State: ANhLgQ1Iu2OCMfEldaowuf00sa++JYQjcwtpQ32XZEWL6/D5SfTHqXbv
+        Ab78rcpzDDV4GihXLosBryjI17J+0q0lKYc7eXI=
+X-Google-Smtp-Source: ADFU+vt+uLkjAGLU+ffvw9ORBLIBQnPWsOsGBtbYUBLTWOqjf9fxItcQWcwQo6mwklTeFlhJh6rECMl2/wlEpOtLO70=
+X-Received: by 2002:a62:f20c:: with SMTP id m12mr2943831pfh.64.1583487552331;
+ Fri, 06 Mar 2020 01:39:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABeXuvogFGv8-i4jsJYN5ya0hjf35EXLkmPqYWayDUvXaBKidA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200305214747.20908-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20200305214747.20908-1-j.neuschaefer@gmx.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 6 Mar 2020 11:39:04 +0200
+Message-ID: <CAHp75VdsP5+CGFa+rJ4goEPP1mtmCwPQSkZJ0W78CkbigJ0tQw@mail.gmail.com>
+Subject: Re: [PATCH] docs: Move Intel Many Integrated Core documentation (mic)
+ under misc-devices
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     Linux Documentation List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/20 at 08:53pm, Deepa Dinamani wrote:
-> On Wed, Mar 4, 2020 at 7:53 PM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > +Joerg to CC.
-> >
-> > On 03/03/20 at 01:01pm, Deepa Dinamani wrote:
-> > > I looked at this some more. Looks like we do not clear irqs when we do
-> > > a kexec reboot. And, the bootup code maintains the same table for the
-> > > kexec-ed kernel. I'm looking at the following code in
-> >
-> > I guess you are talking about kdump reboot here, right? Kexec and kdump
-> > boot take the similar mechanism, but differ a little.
-> 
-> Right I meant kdump kernel here. And, clearly the is_kdump_kernel() case below.
-> 
-> >
-> > > intel_irq_remapping.c:
-> > >
-> > >         if (ir_pre_enabled(iommu)) {
-> > >                 if (!is_kdump_kernel()) {
-> > >                         pr_warn("IRQ remapping was enabled on %s but
-> > > we are not in kdump mode\n",
-> > >                                 iommu->name);
-> > >                         clear_ir_pre_enabled(iommu);
-> > >                         iommu_disable_irq_remapping(iommu);
-> > >                 } else if (iommu_load_old_irte(iommu))
-> >
-> > Here, it's for kdump kernel to copy old ir table from 1st kernel.
-> 
-> Correct.
-> 
-> > >                         pr_err("Failed to copy IR table for %s from
-> > > previous kernel\n",
-> > >                                iommu->name);
-> > >                 else
-> > >                         pr_info("Copied IR table for %s from previous kernel\n",
-> > >                                 iommu->name);
-> > >         }
-> > >
-> > > Would cleaning the interrupts(like in the non kdump path above) just
-> > > before shutdown help here? This should clear the interrupts enabled
-> > > for all the devices in the current kernel. So when kdump kernel
-> > > starts, it starts clean. This should probably help block out the
-> > > interrupts from a device that does not have a driver.
-> >
-> > I think stopping those devices out of control from continue sending
-> > interrupts is a good idea. While not sure if only clearing the interrupt
-> > will be enough. Those devices which will be initialized by their driver
-> > will brake, but devices which drivers are not loaded into kdump kernel
-> > may continue acting. Even though interrupts are cleaning at this time,
-> > the on-flight DMA could continue triggerring interrupt since the ir
-> > table and iopage table are rebuilt.
-> 
-> This should be handled by the IOMMU, right? And, hence you are getting
-> UR. This seems like the correct execution flow to me.
+On Thu, Mar 5, 2020 at 11:51 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
+>
+> It doesn't need to be a top-level chapter.
 
-Sorry for late reply.
-Yes, this is initializing IOMMU device.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5b229788d425..cb2f714b3191 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8578,7 +8578,7 @@ F:        include/uapi/linux/scif_ioctl.h
+>  F:     drivers/misc/mic/
+>  F:     drivers/dma/mic_x100_dma.c
+>  F:     drivers/dma/mic_x100_dma.h
+> -F:     Documentation/mic/
+> +F:     Documentation/misc-devices/mic/
+>
+>  INTEL PMC CORE DRIVER
+>  M:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 
-> 
-> Anyway, you could just test this theory by removing the
-> is_kdump_kernel() check above and see if it solves your problem.
-> Obviously, check the VT-d spec to figure out the exact sequence to
-> turn off the IR.
+Had you had a chance to run parse-maintainers.pl and see if the change
+is in order?
+I think the order is broken and perhaps fixing it at the same time
+would be nice.
 
-OK, I will talk to Kairui and get a machine to test it. Thanks for your
-nice idea, if you have a draft patch, we are happy to test it.
-
-> 
-> Note that the device that is causing the problem here is a legit
-> device. We want to have interrupts from devices we don't know about
-> blocked anyway because we can have compromised firmware/ devices that
-> could cause a DoS attack. So blocking the unwanted interrupts seems
-> like the right thing to do here.
-
-Kairui said it's a device which driver is not loaded in kdump kernel
-because it's not needed by kdump. We try to only load kernel modules
-which are needed, e.g one device is the dump target, its driver has to
-be loaded in. In this case, the device is more like a out of control
-device to kdump kernel.
-
+--=20
+With Best Regards,
+Andy Shevchenko
