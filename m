@@ -2,112 +2,103 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EA3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D370FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C830E2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7ECF2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:45:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=inango-systems.com header.i=@inango-systems.com header.b="anA5w44s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hOuhdcya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgCFInP (ORCPT
+        id S1726091AbgCFIpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 03:43:15 -0500
-Received: from mail.inango-systems.com ([178.238.230.57]:48846 "EHLO
-        mail.inango-sw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgCFInP (ORCPT
+        Fri, 6 Mar 2020 03:45:31 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48279 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725901AbgCFIpb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 03:43:15 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.inango-sw.com (Postfix) with ESMTP id DCD5910808D1;
-        Fri,  6 Mar 2020 10:43:12 +0200 (IST)
-Received: from mail.inango-sw.com ([127.0.0.1])
-        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id uqHrDe7cnF2u; Fri,  6 Mar 2020 10:43:12 +0200 (IST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.inango-sw.com (Postfix) with ESMTP id 2721310808D7;
-        Fri,  6 Mar 2020 10:43:12 +0200 (IST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com 2721310808D7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
-        s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1583484192;
-        bh=YxTbu9kQnvjv5MbGULCxcOml7fOIMlApQuM/jcMVt1s=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=anA5w44sgin0xHU3Gy1VamxJC+hql6/9VLZkgk8OpALSgA3OPd4U4HqaBzpTs6G8v
-         dp42ByDlpayqdpEy8HU5eFclbZWAWIJPu2AMm9M6nL1NiQlRSxuQ0VPBLSv2tKEHse
-         hVowh+2MNBhr5vjddFleqdjemexqA1/KYpl9rauOrDAJQYqg2hnx2wWyP/N4qwjIqx
-         wciEU79HVPMn1TIa+syHCcKrxDU+I9ZFPJp50NSh8oWeXdKPKLi7ZImYAUklCi4B1b
-         tTu571FKpMy7jwzSWjBiIbE+i+lEOooEVyMqLvwKBcpzFUW5uBbsPDrpYqqr2VuR2E
-         eI+YNRfcV7fjA==
-X-Virus-Scanned: amavisd-new at inango-sw.com
-Received: from mail.inango-sw.com ([127.0.0.1])
-        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id NTHAflgbJcax; Fri,  6 Mar 2020 10:43:12 +0200 (IST)
-Received: from mail.inango-sw.com (mail.inango-sw.com [172.17.220.3])
-        by mail.inango-sw.com (Postfix) with ESMTP id 04C0E10807C8;
-        Fri,  6 Mar 2020 10:43:12 +0200 (IST)
-Date:   Fri, 6 Mar 2020 10:43:11 +0200 (IST)
-From:   Nikolai Merinov <n.merinov@inango-systems.com>
-To:     hch <hch@infradead.org>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>, Jens Axboe <axboe@kernel.dk>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <711479725.2305.1583484191776.JavaMail.zimbra@inango-systems.com>
-In-Reply-To: <20200224170813.GA27403@infradead.org>
-References: <20181124162123.21300-1-n.merinov@inango-systems.com> <20191224092119.4581-1-n.merinov@inango-systems.com> <20200108133926.GC4455@infradead.org> <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com> <20200218185336.GA14242@infradead.org> <797777312.1324734.1582544319435.JavaMail.zimbra@inango-systems.com> <20200224170813.GA27403@infradead.org>
-Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID
- partition entry
+        Fri, 6 Mar 2020 03:45:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583484330;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NPUakhz1PfHoxZ0tbry8WaZvrV2+jq26d8FjwX0/vCU=;
+        b=hOuhdcya0RP0iVK/XbtKQWGD+ASCrgXMyI9jgeZkVfZFesigLss3llYffiJ13Qnt31x1Vz
+        TM5dMPuz4CLsJ6UnE4jZh74bOMc/HoSYG1DBweyLSseuBwXFKmvwBS4TEcAbiS8ArK9Is6
+        iYa3OMScAQxhu2gpqcq703NwAY5PDjU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-v0Un592VP8qi3rra8iHkVQ-1; Fri, 06 Mar 2020 03:45:28 -0500
+X-MC-Unique: v0Un592VP8qi3rra8iHkVQ-1
+Received: by mail-wm1-f71.google.com with SMTP id e26so358012wmk.8
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 00:45:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NPUakhz1PfHoxZ0tbry8WaZvrV2+jq26d8FjwX0/vCU=;
+        b=P/JvK17hWpMt7JCWSpngTKXIp601p6GxvSDtDl2AzdnvpjetC3LYbc/rZ80Pbed4mw
+         J8I1d5jNLZVM10M57Gm5sLbl1C477OOFy7FqQl68v330WP8+O7NHrpXYuvppYw1s7+iR
+         ioch4IKYZmZ9U2A+PKZTjQuFOX1XKKnSJnZmrxzWQURNLqX5aiTv9WueIuoJWxufzQRj
+         a3cb+BEC5T1Z90EPUctF0SfX9qUWC1pF15IcJ3UKTiyPy54Ivofe1+IUgoisvVgCuj8e
+         +zWDkdIF6lJCTe8jlskFOJSZ0kg7j6kuDiD8mnxoLtLflV60oKSMy5hPUyXnQglZFEYQ
+         60iA==
+X-Gm-Message-State: ANhLgQ0JP7EP6pL7bAPIL0fYrZ+ewJfYrjlrI8DT9Rzo6EmeZMC4xIDd
+        +d7udy4mQLNUd9Kelz9SGpKmTrM5dDbbSsbd4799MmVEef5Tw6sI2wODThBRmCykzXN14D0CR1y
+        ZMzQoeG3IPt84MaSh5c2vPvcL
+X-Received: by 2002:adf:e38d:: with SMTP id e13mr2772218wrm.133.1583484327445;
+        Fri, 06 Mar 2020 00:45:27 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vuEMSmKXG0u6JbRxYLI8iuXjVLL2YaBM1kPo7etwUgNWuHn/SkYRbwru3mR9qW3MKYGvyvujA==
+X-Received: by 2002:adf:e38d:: with SMTP id e13mr2772202wrm.133.1583484327233;
+        Fri, 06 Mar 2020 00:45:27 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b99a:4374:773d:f32e? ([2001:b07:6468:f312:b99a:4374:773d:f32e])
+        by smtp.gmail.com with ESMTPSA id v7sm41493907wrm.49.2020.03.06.00.45.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Mar 2020 00:45:26 -0800 (PST)
+Subject: Re: [PATCH v2 0/7] KVM: x86: CPUID emulation and tracing fixes
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pu Wen <puwen@hygon.cn>
+References: <20200305013437.8578-1-sean.j.christopherson@intel.com>
+ <6071310f-dd4b-6a6d-5578-7b6f72a9b1be@redhat.com>
+ <20200305171204.GI11500@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <7d17c0c1-cdf0-f8cc-0cc4-4b9dda0b514d@redhat.com>
+Date:   Fri, 6 Mar 2020 09:45:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200305171204.GI11500@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.220.3]
-X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - GC80 (Linux)/8.8.15_GA_3890)
-Thread-Topic: partitions/efi: Fix partition name parsing in GUID partition entry
-Thread-Index: YUv+o3doV5Qr5r5T5kLUarb2avqorw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On 05/03/20 18:12, Sean Christopherson wrote:
+>>> In theory, everything up to the refactoring is non-controversial, i.e. we
+>>> can bikeshed the refactoring without delaying the bug fixes.
+>> Even the refactoring itself is much less controversial.  I queued
+>> everything, there's always time to unqueue.
+> Looks like the build-time assertions don't play nice with older versions of
+> gcc :-(
 
-Should I perform any other steps in order to get this change in the master?
+Yes, I was quite surprised that they worked.  I suppose you could write
+a macro that checks against 'G', 'e', 'n', 'u', 'i', 'n', 'e', 'I', 'n',
+'t', 'e', 'l'...
 
-Regards,
-Nikolai
+Paolo
 
------ Original Message -----
-> From: "hch" <hch@infradead.org>
-> To: "n merinov" <n.merinov@inango-systems.com>
-> Cc: "hch" <hch@infradead.org>, "Davidlohr Bueso" <dave@stgolabs.net>, "Jens Axboe" <axboe@kernel.dk>, "Ard Biesheuvel"
-> <ardb@kernel.org>, "linux-efi" <linux-efi@vger.kernel.org>, "linux-block" <linux-block@vger.kernel.org>, "linux-kernel"
-> <linux-kernel@vger.kernel.org>
-> Sent: Monday, February 24, 2020 10:08:13 PM
-> Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID partition entry
-
-> On Mon, Feb 24, 2020 at 01:38:39PM +0200, Nikolai Merinov wrote:
->> Hi Christoph,
->> 
->> > I'd rather use plain __le16 and le16_to_cpu here. Also the be
->> > variants seems to be entirely unused.
->> 
->> Looks like I misunderstood your comment from
->> https://patchwork.kernel.org/patch/11309223/:
->> 
->> > Please add a an efi_char_from_cpu or similarly named helper
->> > to encapsulate this logic.
->> 
->> The "le16_to_cpu(ptes[i].partition_name[label_count])" call is the
->> full implementation of the "efi_char_from_cpu" logic. Do you want
->> to encapsulate "utf16_le_to_7bit_string" logic entirely like in
->> the attached version?
-> 
-> I think I though of just the inner loop, but your new version looks even
-> better, so:
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
