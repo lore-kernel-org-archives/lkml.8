@@ -2,45 +2,46 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F22C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06936C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88E42070E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA4A52070E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="L0TdQB4y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="RBnW30Ml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgCFVGo (ORCPT
+        id S1727049AbgCFVGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 16:06:44 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:14564 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgCFVGk (ORCPT
+        Fri, 6 Mar 2020 16:06:49 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:27957 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgCFVGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 16:06:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583528798;
+        Fri, 6 Mar 2020 16:06:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583528804;
         s=strato-dkim-0002; d=goldelico.com;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=RYyZHfcW0YbAe2JPXL0qNVQFiP9UrPP2fw064FG2p+g=;
-        b=L0TdQB4yQ87ezY/vdwzLp+Vjci8iz1b2lP3PMBj8twTDONdVIOrMn2tk1TOUG06h94
-        RcGPc/Tj3jluNO5fPx3Ifm5MXww/ILPWq/xUbgIxYalW3/K2VN0pkRmeNSr1++6/e0lg
-        Kx1y438tHBtJFMAnFJPHioNV+JhmucKTO1k7goV7eLUOlmzevlWL8xsI/Oft6aGm4fRO
-        FPLPY0eqzgYQ04oaJnfIQBDFd1YICO+15cYoC2P7BLGhwULnAgCyhTXwZwzE/F72TKHa
-        LdUzeMRaQQALZx7U1Gqg4rDHsO21R00EhX+4SnAQ1xXYCa4Mlf/fKj72y1ujh07cnt4n
-        BnZw==
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=F7Q7dzKizkE8VkIH23/riTwDlFWCGM9XLFl0TNbD9Eo=;
+        b=RBnW30MlH3BjQMJr3KIkb4lO1Tc65LC+T057CFV5C699oafjHP76y7AW2CJQUsXlw2
+        wHqCWvtbORnOlRejjz1g640y1AosRG58nB4hm8LyYWAJoddZoGF4UTvtqRLMsdRtr1C6
+        1waInOFh675KJ1sXENtjPirPaMdlSpR+rULztUsTwIXhd8FP7w4lCHSr7vlvgwUU9ACU
+        gp6trJFC/fCJ6WZpGhxqMJOh/IE9Jfvq7Xgr3/oZjrLelgo2fDqBt3NOnEY9MndFrBJx
+        IvoKddgeY9WTdFZHHXRrXjymranSXcnlrFLS7VqzI1OA6OvyB6QaXdUmN/f+7EaZNfMh
+        fTuw==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6GQjzrz4="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw26L6ZaJb
+        with ESMTPSA id y0a02cw26L6baJe
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Fri, 6 Mar 2020 22:06:35 +0100 (CET)
+        Fri, 6 Mar 2020 22:06:37 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -52,12 +53,13 @@ To:     Paul Cercueil <paul@crapouillou.net>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        Paul Boddie <paul@boddie.org.uk>
-Subject: [PATCH v7 0/3] MIPS: Fixes and improvements for CI20 board (JZ4780)
-Date:   Fri,  6 Mar 2020 22:06:30 +0100
-Message-Id: <cover.1583528793.git.hns@goldelico.com>
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+Subject: [PATCH v7 3/3] MIPS: CI20: defconfig: multiple improvements
+Date:   Fri,  6 Mar 2020 22:06:33 +0100
+Message-Id: <c287fc50dbbd531bd87e629cb52ec58cba497347.1583528793.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1583528793.git.hns@goldelico.com>
+References: <cover.1583528793.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,67 +67,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* renamed DT node for IR receiver from ir-receiver to ir (suggested by Paul Cercueil <paul@crapouillou.net>)
+a) configure for supporting modules
 
-PATCH V6 2020-03-06 18:29:34:
-* reordered patches and send Fixes as separate ones (requested by Thomas Bogendoerfer <tsbogend@alpha.franken.de>)
-* fixed Checkpatch issue with comments in PMU patch (suggested by Thomas Bogendoerfer <tsbogend@alpha.franken.de>)
+Not all drivers need to be compiled into the kernel.
+Support building and loading of kernel modules.
 
-PATCH V5 2020-02-29 20:45:52:
-* add #include irq.h not in PMU patch but in RTC patch
-* added Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+b) compile leds-gpio driver into the kernel and configure for LED triggers
 
-PATCH V4 2020-02-28 19:02:57:
-* use KEY_F13 for SW1 button to avoid conflict with Enter of an USB keyboard (suggested by Paul Cercueil <paul@crapouillou.net>)
-* tidy up all new #includes to be at beginning of file and alphabetically sorted (suggested by Paul Cercueil <paul@crapouillou.net>)
-* add new #include to DTS only when needed (suggested by Paul Cercueil <paul@crapouillou.net>)
+DTS has been augmented to add some gpio-leds. We need the leds-gpio driver
+and enable the triggers.
 
-PATCH V3 2020-02-16 21:21:07:
-* dropped "drm: ingenic-drm: add MODULE_DEVICE_TABLE" because it will be resubmitted
-  with a HDMI driver solution
-* added Cc: stable@vger.kernel.org where appropriate (suggested by Paul Cercueil <paul@crapouillou.net>)
-* squashed all other DTS and CONFIG changes into single patches (suggested by Paul Cercueil <paul@crapouillou.net>)
+c) configure CONFIG_REGULATOR_ACT8865 for PMU
 
-PATCH V2 2020-02-14 17:10:33:
-* dropped "net: davicom: dm9000: allow to pass MAC address through mac_addr module parameter"
-  from this series because it goes through the netdev tree
-  (suggested by Andrew Lunn <andrew@lunn.ch>)
-* added a "fixes:" for "MIPS: DTS: CI20: fix PMU definitions for ACT8600"
-  and "MIPS: DTS: CI20: fix interrupt for pcf8563 RTC"
-  (suggested by Andreas Kemnade <andreas@kemnade.info>)
-* "i2c: jz4780: silence log flood on txabrt" dropped because it is
-  replaced by a new version in v5.6 by Wolfram Sang <wsa@the-dreams.de>
+The PMU on the CI20 board is an ACT8600 using the ACT8865 driver.
+Since it is not compiled, the PMU and the CI20 board is running in
+power-on reset state of the PMU.
 
-PATCH V1 2020-02-11 22:41:43:
-This patch set provides several improvements for the CI20 board:
+d) compile gpio-ir driver
 
-* suppress warnings from i2c if device is not responding
-* make ingenic-drm found through DT
-* allow davicom dm9000 ethernet controller to use MAC address provided by U-Boot
-* fix #include in jz4780.dtsi
-* configure for loadable kernel modules
-* add DTS for IR sensor and SW1 button
-* configure so that LEDs, IR sensor, SW1 button have drivers
-* fix DTS for ACT8600 PMU and configure driver
-* fix interrupt of nxp,pcf8563
+The CI20 board has a gpio based IR receiver.
 
-There is another patch set in our queue to add HDMI support on top of this work.
+e) configure for CONFIG_KEYBOARD_GPIO=m
 
-Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+The SW1 button is hooked up to send input events.
+
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+---
+ arch/mips/configs/ci20_defconfig | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-
-Alex Smith (1):
-  MIPS: DTS: CI20: add DT node for IR sensor
-
-H. Nikolaus Schaller (2):
-  MIPS: DTS: CI20: multiple DTS improvements
-  MIPS: CI20: defconfig: multiple improvements
-
- arch/mips/boot/dts/ingenic/ci20.dts | 19 +++++++++++++++++++
- arch/mips/configs/ci20_defconfig    | 21 +++++++++++++++++++++
- 2 files changed, 40 insertions(+)
-
+diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
+index be41df2a81fb..0db0088bbc1c 100644
+--- a/arch/mips/configs/ci20_defconfig
++++ b/arch/mips/configs/ci20_defconfig
+@@ -1,4 +1,5 @@
+ # CONFIG_LOCALVERSION_AUTO is not set
++CONFIG_MODULES=y
+ CONFIG_KERNEL_XZ=y
+ CONFIG_SYSVIPC=y
+ CONFIG_POSIX_MQUEUE=y
+@@ -88,12 +89,14 @@ CONFIG_I2C_JZ4780=y
+ CONFIG_SPI=y
+ CONFIG_SPI_GPIO=y
+ CONFIG_GPIO_SYSFS=y
++CONFIG_KEYBOARD_GPIO=m
+ # CONFIG_HWMON is not set
+ CONFIG_WATCHDOG=y
+ CONFIG_JZ4740_WDT=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_DEBUG=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_REGULATOR_ACT8865=y
+ # CONFIG_VGA_CONSOLE is not set
+ # CONFIG_HID is not set
+ # CONFIG_USB_SUPPORT is not set
+@@ -166,3 +169,21 @@ CONFIG_STACKTRACE=y
+ # CONFIG_FTRACE is not set
+ CONFIG_CMDLINE_BOOL=y
+ CONFIG_CMDLINE="earlycon console=ttyS4,115200 clk_ignore_unused"
++CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_TRIGGERS=y
++CONFIG_LEDS_TRIGGER_MTD=y
++CONFIG_LEDS_TRIGGER_TIMER=y
++CONFIG_LEDS_TRIGGER_ONESHOT=y
++CONFIG_LEDS_TRIGGER_ONESHOT=y
++CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_LEDS_TRIGGER_BACKLIGHT=m
++CONFIG_LEDS_TRIGGER_CPU=y
++CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
++CONFIG_LEDS_TRIGGER_TRANSIENT=y
++CONFIG_LEDS_TRIGGER_CAMERA=m
++CONFIG_LIRC=y
++CONFIG_MEDIA_SUPPORT=m
++CONFIG_RC_DEVICES=y
++CONFIG_IR_GPIO_CIR=m
++CONFIG_IR_GPIO_TX=m
 -- 
 2.23.0
 
