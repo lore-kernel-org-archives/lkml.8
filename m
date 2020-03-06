@@ -2,153 +2,123 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7EAC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2671C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD882073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="td1xiA8v"
+	by mail.kernel.org (Postfix) with ESMTP id C581D2084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCFPZo (ORCPT
+        id S1727000AbgCFPZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:25:44 -0500
-Received: from mail-pg1-f172.google.com ([209.85.215.172]:44578 "EHLO
-        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgCFPZn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:25:43 -0500
-Received: by mail-pg1-f172.google.com with SMTP id n24so1215549pgk.11;
-        Fri, 06 Mar 2020 07:25:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=U0f7F5SJ5+QRDlAY1wTE5bYTykTqGGdr3VIDJvfMX9U=;
-        b=td1xiA8vNOG/zx1dA/9Svjes7a/vUU/L+C1MrQ9paZNHbMmIIvzK1CIUffxUlR/N9m
-         vuMRkdgTtceI34WKAhyQZThOH+j+GpOuGjSEav3MctVCUkHWiUG9Vx4xGNE+C0C/9IRb
-         bjgFi/EnuLcnhuVAhOZqP/3mzS8h/JPgM1r5bAxkuIJJpt5OrZWHUMFQwhuwMictEsnR
-         D1lrKqjdBm8PuCu0KsrZf+t4/rw/2fXSfI077UtQXy2i3m0kxngHOEs5bqXkvuy/uHD5
-         A1WfuMCosqPUMkNRcY64tfLmO3vTkwzNa3KI6A7G8UvHXv7tpd6Y9FR7vOFVgrSV+BDD
-         u2qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=U0f7F5SJ5+QRDlAY1wTE5bYTykTqGGdr3VIDJvfMX9U=;
-        b=SYBxsXW4+OskEd1ab4gwux/83pPCEa8rRHDttz0lXwxgUYnnFRCjDgYg0akvr9STRU
-         xEVRWRegxS7a1/eCNMg2ATeB9wvWB18waK2kSeOu0GfbYchLYCyTb0FZuylfzNhqP/Tw
-         qixgrtI5QKSurIVeYJOJf+LaYFoBCBlpcxM2YzMnpjvOnAT91AzUHQtrcYsDZvh1KIci
-         skj8/FlCj6KrIpSNMWnVwFZz7wjLx0KFZFA2eZP/g39IAgYbIUnbz5FgVhNOfbx4rsU5
-         oDAzLEz78vB+laVGUQbwl9pdVIY0giPoUkhTSZV7BIfAOWJPc+N4Htji5Gzu41fxoeNU
-         2RgA==
-X-Gm-Message-State: ANhLgQ3FM2WvDGnDfPJDdZnOYx9MMfCAcVdgDQLNNhwABG7VdIQOhipo
-        HULrhddpANfwC+GLQlpoo/s=
-X-Google-Smtp-Source: ADFU+vvFswTWSOFzoCgpKWpMnxUox1t9/PId67LHlatzi8Z2lX+XDaSQ7Z/XqGooyrLO0Zbwo0Iq1Q==
-X-Received: by 2002:a63:1459:: with SMTP id 25mr3941888pgu.427.1583508341870;
-        Fri, 06 Mar 2020 07:25:41 -0800 (PST)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id q187sm35905013pfq.185.2020.03.06.07.25.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 07:25:40 -0800 (PST)
-Date:   Fri, 06 Mar 2020 07:25:32 -0800
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>, john.fastabend@gmail.com,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Message-ID: <5e626b6c364eb_17502acca07205b427@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200304101318.5225-4-lmb@cloudflare.com>
-References: <20200304101318.5225-1-lmb@cloudflare.com>
- <20200304101318.5225-4-lmb@cloudflare.com>
-Subject: RE: [PATCH bpf-next v3 03/12] bpf: tcp: move assertions into
- tcp_bpf_get_proto
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Fri, 6 Mar 2020 10:25:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:35436 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbgCFPZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:25:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B39030E;
+        Fri,  6 Mar 2020 07:25:45 -0800 (PST)
+Received: from e121896.warwick.arm.com (e121896.warwick.arm.com [10.32.36.26])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4D4F93F237;
+        Fri,  6 Mar 2020 07:25:42 -0800 (PST)
+From:   James Clark <james.clark@arm.com>
+To:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     nd@arm.com, Tan Xiaojun <tanxiaojun@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Al Grant <al.grant@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH v6 1/3] perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
+Date:   Fri,  6 Mar 2020 15:25:18 +0000
+Message-Id: <20200306152520.28233-2-james.clark@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200306152520.28233-1-james.clark@arm.com>
+References: <20200228160126.GI36089@lakrids.cambridge.arm.com>
+ <20200306152520.28233-1-james.clark@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lorenz Bauer wrote:
-> We need to ensure that sk->sk_prot uses certain callbacks, so that
-> code that directly calls e.g. tcp_sendmsg in certain corner cases
-> works. To avoid spurious asserts, we must to do this only if
-> sk_psock_update_proto has not yet been called. The same invariants
-> apply for tcp_bpf_check_v6_needs_rebuild, so move the call as well.
-> 
-> Doing so allows us to merge tcp_bpf_init and tcp_bpf_reinit.
-> 
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+From: Tan Xiaojun <tanxiaojun@huawei.com>
 
-Small nit if you update it just carry the acks through.
+Create a new arm-spe-decoder directory for subsequent extensions and
+move arm-spe-pkt-decoder.h/c to this directory. No code changes.
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+Tested-by: Qi Liu <liuqi115@hisilicon.com>
+Signed-off-by: James Clark <james.clark@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Tan Xiaojun <tanxiaojun@huawei.com>
+Cc: Al Grant <al.grant@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/Build                                       | 2 +-
+ tools/perf/util/arm-spe-decoder/Build                       | 1 +
+ tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c | 0
+ tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h | 0
+ tools/perf/util/arm-spe.c                                   | 2 +-
+ 5 files changed, 3 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/util/arm-spe-decoder/Build
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (100%)
+
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 07da6c790b63..0184510083c2 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -104,7 +104,7 @@ perf-$(CONFIG_AUXTRACE) += intel-pt-decoder/
+ perf-$(CONFIG_AUXTRACE) += intel-pt.o
+ perf-$(CONFIG_AUXTRACE) += intel-bts.o
+ perf-$(CONFIG_AUXTRACE) += arm-spe.o
+-perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o
++perf-$(CONFIG_AUXTRACE) += arm-spe-decoder/
+ perf-$(CONFIG_AUXTRACE) += s390-cpumsf.o
  
->  	skb_verdict = READ_ONCE(progs->skb_verdict);
-> @@ -191,18 +191,14 @@ static int sock_map_link(struct bpf_map *map, struct sk_psock_progs *progs,
->  			ret = -ENOMEM;
->  			goto out_progs;
->  		}
-> -		sk_psock_is_new = true;
->  	}
->  
->  	if (msg_parser)
->  		psock_set_prog(&psock->progs.msg_parser, msg_parser);
-> -	if (sk_psock_is_new) {
-> -		ret = tcp_bpf_init(sk);
-> -		if (ret < 0)
-> -			goto out_drop;
-> -	} else {
-> -		tcp_bpf_reinit(sk);
-> -	}
-> +
-> +	ret = tcp_bpf_init(sk);
-> +	if (ret < 0)
-> +		goto out_drop;
->  
->  	write_lock_bh(&sk->sk_callback_lock);
->  	if (skb_progs && !psock->parser.enabled) {
-> @@ -239,12 +235,9 @@ static int sock_map_link_no_progs(struct bpf_map *map, struct sock *sk)
->  	if (IS_ERR(psock))
->  		return PTR_ERR(psock);
->  
-> -	if (psock) {
-> -		tcp_bpf_reinit(sk);
-> -		return 0;
-> -	}
-> +	if (!psock)
-> +		psock = sk_psock_init(sk, map->numa_node);
->  
-> -	psock = sk_psock_init(sk, map->numa_node);
->  	if (!psock)
->  		return -ENOMEM;
+ ifdef CONFIG_LIBOPENCSD
+diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-spe-decoder/Build
+new file mode 100644
+index 000000000000..16efbc245028
+--- /dev/null
++++ b/tools/perf/util/arm-spe-decoder/Build
+@@ -0,0 +1 @@
++perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o
+diff --git a/tools/perf/util/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+similarity index 100%
+rename from tools/perf/util/arm-spe-pkt-decoder.c
+rename to tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+diff --git a/tools/perf/util/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+similarity index 100%
+rename from tools/perf/util/arm-spe-pkt-decoder.h
+rename to tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 53be12b23ff4..f3382a38d48e 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -23,7 +23,7 @@
+ #include "debug.h"
+ #include "auxtrace.h"
+ #include "arm-spe.h"
+-#include "arm-spe-pkt-decoder.h"
++#include "arm-spe-decoder/arm-spe-pkt-decoder.h"
+ 
+ struct arm_spe {
+ 	struct auxtrace			auxtrace;
+-- 
+2.17.1
 
-also small nit this reads,
-
- if (!psock)
-    psock = ...
- if (!psock)
-    return -ENOMEM
-
-how about,
-
- if (!psock) {
-   psock = ...
-   if (!psock) return -ENOMEM;
- }
