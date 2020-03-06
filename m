@@ -2,150 +2,90 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B10FC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7925AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F3B20848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583469672;
-	bh=jMaNzWwGNyJXrXRBCiJpddGoeLBF0dNI2ZOpUjqJRJQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jWVts5QtWfM5gCkfQ7RxsI9XJwMoealoSBNiN4Og/keZIK/YH0EMgAmF/K++d5jbN
-	 G62MNRE+JfqbIWRQiBP6wLx10QUdE6QLeDjeHq0gtHA/hWAPdxHzFy5x5biQ0QX/Pk
-	 Z5Ox1h5wruZyZjCt+lJqozyzDmd1x37tX8CI5/mY=
+	by mail.kernel.org (Postfix) with ESMTP id 5AF022072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgCFElL (ORCPT
+        id S1726702AbgCFEmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 23:41:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbgCFElL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 23:41:11 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05C832072D;
-        Fri,  6 Mar 2020 04:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583469670;
-        bh=jMaNzWwGNyJXrXRBCiJpddGoeLBF0dNI2ZOpUjqJRJQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mGdiXoYeYvFstIQEK7caAUrHjH8h4/xKtNznaLuGjgXgOFKJjYQw11NyqgTvnY4/M
-         sU4aRm7gnUt4at7lCieJSD8xlulHfvn+rD51LaJwEQWd5XjtV4rrtX+TQA7R24EV2o
-         Gz7apFZYMLJ5s7t0ZDiIIkveSU4NKvblbLuQXVFM=
-Date:   Thu, 5 Mar 2020 20:41:09 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memcg: optimize memory.numa_stat like memory.stat
-Message-Id: <20200305204109.be23f5053e2368d3b8ccaa06@linux-foundation.org>
-In-Reply-To: <20200304022058.248270-1-shakeelb@google.com>
-References: <20200304022058.248270-1-shakeelb@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Mar 2020 23:42:11 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:44164 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726251AbgCFEmK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 23:42:10 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0TrnYBhg_1583469723;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TrnYBhg_1583469723)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 06 Mar 2020 12:42:04 +0800
+Subject: Re: [failures] mm-vmscan-remove-unnecessary-lruvec-adding.patch
+ removed from -mm tree
+To:     Hugh Dickins <hughd@google.com>, Qian Cai <cai@lca.pw>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, aarcange@redhat.com,
+        daniel.m.jordan@oracle.com, hannes@cmpxchg.org,
+        khlebnikov@yandex-team.ru, kirill@shutemov.name,
+        kravetz@us.ibm.com, mhocko@kernel.org, mm-commits@vger.kernel.org,
+        tj@kernel.org, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
+        linux-mm@kvack.org
+References: <20200306025041.rERhvnYmB%akpm@linux-foundation.org>
+ <211632B1-2D6F-4BFA-A5A0-3030339D3D2A@lca.pw>
+ <20200306033850.GO29971@bombadil.infradead.org>
+ <97EE83E1-FEC9-48B6-98E8-07FB3FECB961@lca.pw>
+ <alpine.LSU.2.11.2003052008510.3016@eggly.anvils>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <9eb3efe1-f203-c3b1-679d-5e158fd8639f@linux.alibaba.com>
+Date:   Fri, 6 Mar 2020 12:42:03 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <alpine.LSU.2.11.2003052008510.3016@eggly.anvils>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  3 Mar 2020 18:20:58 -0800 Shakeel Butt <shakeelb@google.com> wrote:
 
-> Currently reading memory.numa_stat traverses the underlying memcg tree
-> multiple times to accumulate the stats to present the hierarchical view
-> of the memcg tree. However the kernel already maintains the hierarchical
-> view of the stats and use it in memory.stat. Just use the same mechanism
-> in memory.numa_stat as well.
-> 
-> I ran a simple benchmark which reads root_mem_cgroup's memory.numa_stat
-> file in the presense of 10000 memcgs. The results are:
-> 
-> Without the patch:
-> $ time cat /dev/cgroup/memory/memory.numa_stat > /dev/null
-> 
-> real    0m0.700s
-> user    0m0.001s
-> sys     0m0.697s
-> 
-> With the patch:
-> $ time cat /dev/cgroup/memory/memory.numa_stat > /dev/null
-> 
-> real    0m0.001s
-> user    0m0.001s
-> sys     0m0.000s
+
+在 2020/3/6 下午12:17, Hugh Dickins 写道:
+> On Thu, 5 Mar 2020, Qian Cai wrote:
+>>> On Mar 5, 2020, at 10:38 PM, Matthew Wilcox <willy@infradead.org> wrote:
+>>>
+>>> On Thu, Mar 05, 2020 at 10:32:18PM -0500, Qian Cai wrote:
+>>>>> On Mar 5, 2020, at 9:50 PM, akpm@linux-foundation.org wrote:
+>>>>> The patch titled
+>>>>>    Subject: mm/vmscan: remove unnecessary lruvec adding
+>>>>> has been removed from the -mm tree.  Its filename was
+>>>>>    mm-vmscan-remove-unnecessary-lruvec-adding.patch
+>>>>>
+>>>>> This patch was dropped because it had testing failures
+>>>> Andrew, do you have more information about this failure? I hit a bug
+>>>> here under memory pressure and am wondering if this is related
+>>>> which might save me some time digging…
+> Very likely related.
 > 
 
-Can't you do better than that ;)
+Hi all,
 
->
-> +	page_state = tree ? lruvec_page_state : lruvec_page_state_local;
-> ...
->
-> +	page_state = tree ? memcg_page_state : memcg_page_state_local;
->
+Apologize for the trouble!
+And Many thanks for you all for the report!
+Obviously, I missed memory stress testing which I should do. Apologize again!
 
-All four of these functions are inlined.  Taking their address in this
-fashion will force the compiler to generate out-of-line copies.
+Qian Cai,
+Which test case are you using? Could you share the reproduce steps for me?
 
-If we do it the uglier-and-maybe-a-bit-slower way:
+Hugh,
+Many thanks for help! I will seek some memory stress case and waiting for your case.
 
---- a/mm/memcontrol.c~memcg-optimize-memorynuma_stat-like-memorystat-fix
-+++ a/mm/memcontrol.c
-@@ -3658,17 +3658,16 @@ static unsigned long mem_cgroup_node_nr_
- 	struct lruvec *lruvec = mem_cgroup_lruvec(memcg, NODE_DATA(nid));
- 	unsigned long nr = 0;
- 	enum lru_list lru;
--	unsigned long (*page_state)(struct lruvec *lruvec,
--				    enum node_stat_item idx);
- 
- 	VM_BUG_ON((unsigned)nid >= nr_node_ids);
- 
--	page_state = tree ? lruvec_page_state : lruvec_page_state_local;
--
- 	for_each_lru(lru) {
- 		if (!(BIT(lru) & lru_mask))
- 			continue;
--		nr += page_state(lruvec, NR_LRU_BASE + lru);
-+		if (tree)
-+			nr += lruvec_page_state(lruvec, NR_LRU_BASE + lru);
-+		else
-+			nr += lruvec_page_state_local(lruvec, NR_LRU_BASE + lru);
- 	}
- 	return nr;
- }
-@@ -3679,14 +3678,14 @@ static unsigned long mem_cgroup_nr_lru_p
- {
- 	unsigned long nr = 0;
- 	enum lru_list lru;
--	unsigned long (*page_state)(struct mem_cgroup *memcg, int idx);
--
--	page_state = tree ? memcg_page_state : memcg_page_state_local;
- 
- 	for_each_lru(lru) {
- 		if (!(BIT(lru) & lru_mask))
- 			continue;
--		nr += page_state(memcg, NR_LRU_BASE + lru);
-+		if (tree)
-+			nr += memcg_page_state(memcg, NR_LRU_BASE + lru);
-+		else
-+			nr += memcg_page_state_local(memcg, NR_LRU_BASE + lru);
- 	}
- 	return nr;
- }
 
-Then we get:
-
-                     text    data     bss     dec     hex filename
-now:               106705   35641    1024  143370   2300a mm/memcontrol.o
-shakeel:           107111   35657    1024  143792   231b0 mm/memcontrol.o
-shakeel+the-above: 106805   35657    1024  143486   2307e mm/memcontrol.o
-
-Which do we prefer?  The 100-byte patch or the 406-byte patch?
+Thank you all!
+Alex
