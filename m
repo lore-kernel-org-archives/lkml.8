@@ -2,249 +2,118 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4918C10F26
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1BFC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C62E24655
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521472072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:09:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="gDWywhmb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCFNJF (ORCPT
+        id S1727167AbgCFNJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:09:05 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53319 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgCFNIo (ORCPT
+        Fri, 6 Mar 2020 08:09:25 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46158 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgCFNJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:08:44 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jACiW-0003fz-2V; Fri, 06 Mar 2020 14:08:40 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 5AF1E1040A0;
-        Fri,  6 Mar 2020 14:08:39 +0100 (CET)
-Message-Id: <20200306130623.990928309@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 06 Mar 2020 14:03:47 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [patch 6/7] genirq: Provide interrupt injection mechanism
-References: <20200306130341.199467200@linutronix.de>
+        Fri, 6 Mar 2020 08:09:24 -0500
+Received: by mail-pf1-f195.google.com with SMTP id o24so1084852pfp.13
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 05:09:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=QwvL99c3sTAWScS17ZDj22BvXW0QqQWIhRt4cYTFYXI=;
+        b=gDWywhmbdzL/1mNf8BQtKOQQExNz+wqF3qt0L2eaCPZbG2Lj6B7bL8WZg+7u0K5wes
+         7pVDP7QvRuKySmNNFafef4bDzshFV/CT33oXdQ+tiARnCAzwniqXtfPzWNYFvlYn8K9m
+         KMzZFJKAxHpogMkKBks+kigB6njnZ3FSc9GT4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=QwvL99c3sTAWScS17ZDj22BvXW0QqQWIhRt4cYTFYXI=;
+        b=RKNYbHtigw28E+k6yv5KqqKX+0+7OqqfEECyVTiboeHCeIGMPFjOqqpKhITBFwEymR
+         PUeqcYfc2Luy59xXUlO4+85otn6DGvppW3EHVOhYOjfkGdlU1GcLZNjK2rQ8oH4jqEu3
+         v5aNHL/rlCj/5G5qH5wg+km2VncMptuGn5q2UJ3jLj3CMLJfv/HBGSaMK15sA4A5CAZa
+         aGJcUgDNrZ70C8d+iuGQmXXdv+H0xW5odCT6ViZGUEHvuFE+gX64sIahQNOapr/hjIys
+         cOHtfZz69VERqTBkYOSNjF8BbUTV4F5X+xLNnYrvPi5KENwCqZvZxNkLlW58rmKcjxP3
+         unLg==
+X-Gm-Message-State: ANhLgQ07uVR9iiJLuOoqaQR15yUtTla+tw58yZIErR/sqqjLnV5gHdV9
+        uyJjnBEVNQ6UsU9b6ZxlJjnCdQ==
+X-Google-Smtp-Source: ADFU+vv7MeaUlbRH0dd28x9kTKqYJIqOlQ7piuYzJGALMuTyWBBErd/77e69xbBepw42k+51RfRhkg==
+X-Received: by 2002:a63:a351:: with SMTP id v17mr3195903pgn.319.1583500163031;
+        Fri, 06 Mar 2020 05:09:23 -0800 (PST)
+Received: from localhost (2001-44b8-111e-5c00-b120-f113-a8cb-35fd.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:b120:f113:a8cb:35fd])
+        by smtp.gmail.com with ESMTPSA id k5sm9354724pju.29.2020.03.06.05.09.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 05:09:21 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
+        aneesh.kumar@linux.ibm.com, bsingharora@gmail.com
+Cc:     Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v7 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
+In-Reply-To: <abcc9f7d-995d-e06e-ef04-1dbd144a38e0@c-s.fr>
+References: <20200213004752.11019-1-dja@axtens.net> <20200213004752.11019-5-dja@axtens.net> <abcc9f7d-995d-e06e-ef04-1dbd144a38e0@c-s.fr>
+Date:   Sat, 07 Mar 2020 00:09:17 +1100
+Message-ID: <87wo7xpr42.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Error injection mechanisms need a half ways safe way to inject interrupts as
-invoking generic_handle_irq() or the actual device interrupt handler
-directly from e.g. a debugfs write is not guaranteed to be safe.
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
-On x86 generic_handle_irq() is unsafe due to the hardware trainwreck which
-is the base of x86 interrupt delivery and affinity management.
+> Le 13/02/2020 =C3=A0 01:47, Daniel Axtens a =C3=A9crit=C2=A0:
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index 497b7d0b2d7e..f1c54c08a88e 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -169,7 +169,9 @@ config PPC
+>>   	select HAVE_ARCH_HUGE_VMAP		if PPC_BOOK3S_64 && PPC_RADIX_MMU
+>>   	select HAVE_ARCH_JUMP_LABEL
+>>   	select HAVE_ARCH_KASAN			if PPC32
+>> +	select HAVE_ARCH_KASAN			if PPC_BOOK3S_64 && PPC_RADIX_MMU
+>
+> That's probably detail, but as it is necessary to deeply define the HW=20
+> when selecting that (I mean giving the exact amount of memory and with=20
+> restrictions like having a wholeblock memory), should it also depend of=20
+> EXPERT ?
 
-Move the irq debugfs injection code into a separate function which can be
-used by error injection code as well.
+If it weren't a debug feature I would definitely agree with you, but I
+think being a debug feature it's not so necessary. Also anything with
+more memory than the config option specifies will still boot - it's just
+less memory that won't boot. I've set the default to 1024MB: I know
+that's a lot of memory for an embedded system but I think for anything
+with the Radix MMU it's an OK default.
 
-The implementation prevents at least that state is corrupted, but it cannot
-close a very tiny race window on x86 which might result in a stale and not
-serviced device interrupt under very unlikely circumstances.
+I'm sure if mpe disagrees he can add EXPERT when he's merging :)
 
-This is explicitly for debugging and testing and not for production use or
-abuse in random driver code.
+> Maybe we could have
+>
+> -  	select HAVE_ARCH_KASAN_VMALLOC		if PPC32
+> +	select HAVE_ARCH_KASAN_VMALLOC		if HAVE_ARCH_KASAN
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- include/linux/interrupt.h |    2 +
- kernel/irq/Kconfig        |    5 ++++
- kernel/irq/chip.c         |    2 -
- kernel/irq/debugfs.c      |   34 -----------------------------
- kernel/irq/internals.h    |    2 -
- kernel/irq/resend.c       |   53 ++++++++++++++++++++++++++++++++++++++++++++--
- 6 files changed, 61 insertions(+), 37 deletions(-)
+That's a good idea. Done.
 
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -248,6 +248,8 @@ extern void enable_percpu_nmi(unsigned i
- extern int prepare_percpu_nmi(unsigned int irq);
- extern void teardown_percpu_nmi(unsigned int irq);
- 
-+extern int irq_inject_interrupt(unsigned int irq);
-+
- /* The following three functions are for the core kernel use only. */
- extern void suspend_device_irqs(void);
- extern void resume_device_irqs(void);
---- a/kernel/irq/Kconfig
-+++ b/kernel/irq/Kconfig
-@@ -43,6 +43,10 @@ config GENERIC_IRQ_MIGRATION
- config AUTO_IRQ_AFFINITY
-        bool
- 
-+# Interrupt injection mechanism
-+config GENERIC_IRQ_INJECTION
-+	bool
-+
- # Tasklet based software resend for pending interrupts on enable_irq()
- config HARDIRQS_SW_RESEND
-        bool
-@@ -127,6 +131,7 @@ config SPARSE_IRQ
- config GENERIC_IRQ_DEBUGFS
- 	bool "Expose irq internals in debugfs"
- 	depends on DEBUG_FS
-+	select GENERIC_IRQ_INJECTION
- 	default n
- 	---help---
- 
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -278,7 +278,7 @@ int irq_startup(struct irq_desc *desc, b
- 		}
- 	}
- 	if (resend)
--		check_irq_resend(desc);
-+		check_irq_resend(desc, false);
- 
- 	return ret;
- }
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -190,39 +190,7 @@ static ssize_t irq_debug_write(struct fi
- 		return -EFAULT;
- 
- 	if (!strncmp(buf, "trigger", size)) {
--		unsigned long flags;
--		int err;
--
--		/* Try the HW interface first */
--		err = irq_set_irqchip_state(irq_desc_get_irq(desc),
--					    IRQCHIP_STATE_PENDING, true);
--		if (!err)
--			return count;
--
--		/*
--		 * Otherwise, try to inject via the resend interface,
--		 * which may or may not succeed.
--		 */
--		chip_bus_lock(desc);
--		raw_spin_lock_irqsave(&desc->lock, flags);
--
--		/*
--		 * Don't allow injection when the interrupt is:
--		 *  - Level or NMI type
--		 *  - not activated
--		 *  - replaying already
--		 */
--		if (irq_settings_is_level(desc) ||
--		    !irqd_is_activated(&desc->irq_data) ||
--		    (desc->istate & (IRQS_NMI | IRQS_REPLAY)) {
--			err = -EINVAL;
--		} else {
--			desc->istate |= IRQS_PENDING;
--			err = check_irq_resend(desc);
--		}
--
--		raw_spin_unlock_irqrestore(&desc->lock, flags);
--		chip_bus_sync_unlock(desc);
-+		int err = irq_inject_interrupt(irq_desc_get_irq(desc));
- 
- 		return err ? err : count;
- 	}
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -108,7 +108,7 @@ irqreturn_t handle_irq_event_percpu(stru
- irqreturn_t handle_irq_event(struct irq_desc *desc);
- 
- /* Resending of interrupts :*/
--int check_irq_resend(struct irq_desc *desc);
-+int check_irq_resend(struct irq_desc *desc, bool inject);
- bool irq_wait_for_poll(struct irq_desc *desc);
- void __irq_wake_thread(struct irq_desc *desc, struct irqaction *action);
- 
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -91,7 +91,7 @@ static int irq_sw_resend(struct irq_desc
-  *
-  * Is called with interrupts disabled and desc->lock held.
-  */
--int check_irq_resend(struct irq_desc *desc)
-+int check_irq_resend(struct irq_desc *desc, bool inject)
- {
- 	int err = 0;
- 
-@@ -108,7 +108,7 @@ int check_irq_resend(struct irq_desc *de
- 	if (desc->istate & IRQS_REPLAY)
- 		return -EBUSY;
- 
--	if (!(desc->istate & IRQS_PENDING))
-+	if (!(desc->istate & IRQS_PENDING) && !inject)
- 		return 0;
- 
- 	desc->istate &= ~IRQS_PENDING;
-@@ -122,3 +122,52 @@ int check_irq_resend(struct irq_desc *de
- 		desc->istate |= IRQS_REPLAY;
- 	return err;
- }
-+
-+#ifdef CONFIG_GENERIC_IRQ_INJECTION
-+/**
-+ * irq_inject_interrupt - Inject an interrupt for testing/error injection
-+ * @irq:	The interrupt number
-+ *
-+ * This function must only be used for debug and testing purposes!
-+ *
-+ * Especially on x86 this can cause a premature completion of an interrupt
-+ * affinity change causing the interrupt line to become stale. Very
-+ * unlikely, but possible.
-+ *
-+ * The injection can fail for various reasons:
-+ * - Interrupt is not activated
-+ * - Interrupt is NMI type or currently replaying
-+ * - Interrupt is level type
-+ * - Interrupt does not support hardware retrigger and software resend is
-+ *   either not enabled or not possible for the interrupt.
-+ */
-+int irq_inject_interrupt(unsigned int irq)
-+{
-+	struct irq_desc *desc;
-+	unsigned long flags;
-+	int err;
-+
-+	/* Try the state injection hardware interface first */
-+	if (!irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true))
-+		return 0;
-+
-+	/* That failed, try via the resend mechanism */
-+	desc = irq_get_desc_buslock(irq, &flags, 0);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	/*
-+	 * Only try to inject when the interrupt is:
-+	 *  - not NMI type
-+	 *  - activated
-+	 */
-+	if ((desc->istate & IRQS_NMI) || !irqd_is_activated(&desc->irq_data))
-+		err = -EINVAL;
-+	else
-+		err = check_irq_resend(desc, true);
-+
-+	irq_put_desc_busunlock(desc, flags);
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(irq_inject_interrupt);
-+#endif
+Thanks for the review!
 
+Regards,
+Daniel
+
+>
+>>   	select HAVE_ARCH_KGDB
+>>   	select HAVE_ARCH_MMAP_RND_BITS
+>>   	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
+>
+>
+> Christophe
