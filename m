@@ -5,70 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0D4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0384C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5862F206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B617F206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsNGbxp3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSDUuU/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCFWOz (ORCPT
+        id S1726910AbgCFWQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 17:14:55 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38908 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgCFWOy (ORCPT
+        Fri, 6 Mar 2020 17:16:19 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35523 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbgCFWQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 17:14:54 -0500
-Received: by mail-lj1-f193.google.com with SMTP id w1so3824887ljh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 14:14:52 -0800 (PST)
+        Fri, 6 Mar 2020 17:16:19 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m3so3978679wmi.0;
+        Fri, 06 Mar 2020 14:16:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=g9A8bb6Dd4q1KloLSMciak2cHd7VLsJhpyC5tpVoZ/I=;
-        b=DsNGbxp3EvIRQ1+Cjbx86npj3Tmdldis3gBYdtgBzEthjzfwXJ8cXLU4vnaCPeUUJN
-         amzAcFKVSnzPE6U5TrEDnZ9EQv56URYXoRHqwPOcqtB/GhdAFWQhNsrnHbnM4NRaORHs
-         nK4RU1o5Rn9HJGjekObGoF4MwRGe5LJ2+fRonC+J4kATT3CvGXO8NaLssYZGWfBAExIl
-         P1Gm3eR8utAnnxpSJiGOtLct3fxb0LxuMAL3XKaot4rEFOhg737r394IFhtJzRevnafs
-         vUWHE0sPeAd1IHj7n00pW/Gnb2jGf0DCq+pVNcHgdl+1Km+NBmukuOiHWvKpcVUbxmjo
-         f79A==
+        bh=/j1T882kpdTB+xU9Pa7Mjqyda6ZI9wU/9+N6UU71UIA=;
+        b=uSDUuU/P6iCMlQKs+oWn+03baStJwUexZeV0BAmAZo0lMI0eozSOhf6o/ZO9rjrJSZ
+         2jqejJz8gFQoJOVZjcZE2Gem13AwnewQ3t4Qkhw15zz0eWta3ESGvXnk7HU3hwjgP4M0
+         P1Kg2XVJCIJpPwR8ZR0F3q534uKCa2z3vhTsFMe2PEQX2QXeyQ3G9kZljKooLcllSFIL
+         O9T7w2SPbiTgJFZkvDhQnmTn+/c8xIGyDGleLV5jk8+pQTkESd/UxK6xWUK4CmVRUpMJ
+         WyiyAgluj7kUKlisVu5AyZZFwVAxQMLY7ZTJvHjvVH++wOKEpGuraRhesp3bXpzjJeZl
+         h0Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=g9A8bb6Dd4q1KloLSMciak2cHd7VLsJhpyC5tpVoZ/I=;
-        b=Vo7i1UAH2VkKJH9C7Jgz3PBiUsZAisS7wvVZ+MTu762dgUtMhcO6I3nAhLO+n96Jta
-         7kvGVESACzEccDylZR4x36a5s3YJ6RLvQ4JSjMfWoW+9JY82s/FqIbyh0+OHgV8BFm2u
-         q97dARLvntgow7jFtF0wTaZCeltSX9oQ8G7gg752uRcRBTw98NYui1rJ6Vqj2jnq7xlH
-         1DnVSrXPvtr4dChyxWb3Zf/xwErOa9/+yPS2CJXhQs57Fw/EvvkfIauwrcW8w7wMbXxR
-         fj8hJPTKY7+hMexq5K9z0ejnKSh6gHAht0UI1VgJ7Y0vaiENOxgRYEABR8kP/iZY9Ymb
-         nYkA==
-X-Gm-Message-State: ANhLgQ3tB7ydA5MzXo89ykr9xJK8jAFGNC59REQPVdORFwFmDYMAwdQG
-        +e/C5Iz3TcvVmLt0FI3BnRlQM9K8
-X-Google-Smtp-Source: ADFU+vsWl0txMP8AUe8Lh7uDKkjFqEhXxbY5LeC91lXfUKM/0exSdlnse/Kd2mwnamA+BqG4lGA+7A==
-X-Received: by 2002:a2e:b246:: with SMTP id n6mr3295601ljm.70.1583532891947;
-        Fri, 06 Mar 2020 14:14:51 -0800 (PST)
-Received: from localhost.localdomain ([46.159.134.13])
-        by smtp.gmail.com with ESMTPSA id s17sm14333158lfs.6.2020.03.06.14.14.50
+        bh=/j1T882kpdTB+xU9Pa7Mjqyda6ZI9wU/9+N6UU71UIA=;
+        b=lARdoLeWJQ/PcPyYz/ibYz8h8r0aPY03jSPz7jn/rrBBPaO4VvvWrlIOh7+y7Lx9pY
+         j6clW0a9bMhCUH3T2nu9E9chVlhNonDT+3uasOgfuHXCtHMHw9RcJ/duVqr0j4Hns21h
+         j0U13nSfzn9FqAAkJJ0ky1fR39lCwNzWUBgQHW7fA7WG2fI3fc/f1SNp9HIq7le4mu1D
+         ZOo+RL/rysBiddxSz13Eh4Kkv399f3x+j/EPFF8+SEDB+W9rt5DySRFYitc/f5c7JAUY
+         u5viCnTzujsoE/+X4DMio5iJ1KAyzTwe1eHY3gyHHdLwplDLNE2wJci8eG/oyyma+fFU
+         oMnw==
+X-Gm-Message-State: ANhLgQ0m9NPg8Grc3KefEyPb4KGj1hbnAOlmhCc2NepcReZLiyxhhtPe
+        sFP0dsYA6NDZ95isKRSW4UyDqcmU
+X-Google-Smtp-Source: ADFU+vsZMBvdEhNjOHFkyfx/FCSXMfBltUFRIQIAlO4kfizh/XRAKylY221r6UbcNbXc8P3tI4Xb+w==
+X-Received: by 2002:a7b:c76a:: with SMTP id x10mr6028129wmk.49.1583532977341;
+        Fri, 06 Mar 2020 14:16:17 -0800 (PST)
+Received: from localhost.localdomain ([109.126.130.242])
+        by smtp.gmail.com with ESMTPSA id g7sm50350384wrq.21.2020.03.06.14.16.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 14:14:51 -0800 (PST)
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Stefano Brivio <sbrivio@redhat.com>
-Cc:     Yury Norov <yury.norov@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Fri, 06 Mar 2020 14:16:16 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] lib/bitmap: rework bitmap_cut()
-Date:   Fri,  6 Mar 2020 14:14:23 -0800
-Message-Id: <20200306221423.18631-1-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.20.1
+Subject: [PATCH 1/1] io_uring: fix lockup with timeouts
+Date:   Sat,  7 Mar 2020 01:15:22 +0300
+Message-Id: <54e141c75da11f55f607d53c54943b9fee5bbd70.1583532280.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,210 +71,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bitmap_cut() refers src after memmove(). If dst and src overlap,
-it may cause buggy behaviour because src may become inconsistent.
+There is a recipe to deadlock the kernel: submit a timeout sqe with a
+linked_timeout (e.g.  test_single_link_timeout_ception() from liburing),
+and SIGKILL the process.
 
-The function complexity is of O(nbits * cut_bits), which can be
-improved to O(nbits).
+Then, io_kill_timeouts() takes @ctx->completion_lock, but the timeout
+isn't flagged with REQ_F_COMP_LOCKED, and will try to double grab it
+during io_put_free() to cancel the linked timeout. Probably, the same
+can happen with another io_kill_timeout() call site, that is
+io_commit_cqring().
 
-We can also rely on bitmap_shift_right() to do most of the work.
-
-I don't like interface of bitmap_cut(). The idea of copying of a
-whole bitmap inside the function from src to dst doesn't look
-useful in practice. The function is introduced a few weeks ago and
-was most probably inspired by bitmap_shift_*. Looking at the code,
-it's easy to see that bitmap_shift_* is usually passed with
-dst == src. bitmap_cut() has a single user so far, and it also
-calls it with dst == src.
-
-This patch removes dst so the whole work is made in-place. It also
-switches the function to bitmap_shift_right() internally in sake of
-performance and simplicity.
-
-I've added a very basic test too.
-
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- include/linux/bitmap.h         |  7 ++---
- lib/bitmap.c                   | 51 +++++++++-------------------------
- lib/test_bitmap.c              | 32 +++++++++++++++++++++
- net/netfilter/nft_set_pipapo.c |  3 +-
- 4 files changed, 49 insertions(+), 44 deletions(-)
+ fs/io_uring.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index 99058eb81042..ed60b7272437 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -59,7 +59,7 @@
-  *  						Iterate over all set regions
-  *  bitmap_shift_right(dst, src, n, nbits)      *dst = *src >> n
-  *  bitmap_shift_left(dst, src, n, nbits)       *dst = *src << n
-- *  bitmap_cut(dst, src, first, n, nbits)       Cut n bits from first, copy rest
-+ *  bitmap_cut(bmap, first, n, nbits)           Cut n bits from first, copy rest
-  *  bitmap_replace(dst, old, new, mask, nbits)  *dst = (*old & ~(*mask)) | (*new & *mask)
-  *  bitmap_remap(dst, src, old, new, nbits)     *dst = map(old, new)(src)
-  *  bitmap_bitremap(oldbit, old, new, nbits)    newbit = map(old, new)(oldbit)
-@@ -140,9 +140,8 @@ extern void __bitmap_shift_right(unsigned long *dst, const unsigned long *src,
- 				unsigned int shift, unsigned int nbits);
- extern void __bitmap_shift_left(unsigned long *dst, const unsigned long *src,
- 				unsigned int shift, unsigned int nbits);
--extern void bitmap_cut(unsigned long *dst, const unsigned long *src,
--		       unsigned int first, unsigned int cut,
--		       unsigned int nbits);
-+extern void bitmap_cut(unsigned long *bmap, unsigned int first,
-+			unsigned int cut, unsigned int nbits);
- extern int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
- 			const unsigned long *bitmap2, unsigned int nbits);
- extern void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
-diff --git a/lib/bitmap.c b/lib/bitmap.c
-index 89260aa342d6..06e06e0c3096 100644
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -170,67 +170,42 @@ EXPORT_SYMBOL(__bitmap_shift_left);
- 
- /**
-  * bitmap_cut() - remove bit region from bitmap and right shift remaining bits
-- * @dst: destination bitmap, might overlap with src
-- * @src: source bitmap
-+ * @bmap:  bitmap to cut
-  * @first: start bit of region to be removed
-  * @cut: number of bits to remove
-  * @nbits: bitmap size, in bits
-  *
-- * Set the n-th bit of @dst iff the n-th bit of @src is set and
-- * n is less than @first, or the m-th bit of @src is set for any
-- * m such that @first <= n < nbits, and m = n + @cut.
-- *
-  * In pictures, example for a big-endian 32-bit architecture:
-  *
-- * @src:
-+ * @bmap:
-  * 31                                   63
-  * |                                    |
-  * 10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101
-  *                 |  |              |                                    |
-  *                16  14             0                                   32
-  *
-- * if @cut is 3, and @first is 14, bits 14-16 in @src are cut and @dst is:
-+ * if @cut is 3, and @first is 14, bits 14-16 in @bmap are cut and @dst is:
-  *
-  * 31                                   63
-  * |                                    |
-  * 10110000 00011000 00110010 00010101  00010000 00011000 00101110 01000010
-  *                    |              |                                    |
-  *                    14 (bit 17     0                                   32
-- *                        from @src)
-- *
-- * Note that @dst and @src might overlap partially or entirely.
-- *
-- * This is implemented in the obvious way, with a shift and carry
-- * step for each moved bit. Optimisation is left as an exercise
-- * for the compiler.
-+ *                        from @bmap)
-  */
--void bitmap_cut(unsigned long *dst, const unsigned long *src,
--		unsigned int first, unsigned int cut, unsigned int nbits)
-+void bitmap_cut(unsigned long *bmap, unsigned int first,
-+		unsigned int cut, unsigned int nbits)
- {
--	unsigned int len = BITS_TO_LONGS(nbits);
--	unsigned long keep = 0, carry;
--	int i;
--
--	memmove(dst, src, len * sizeof(*dst));
--
--	if (first % BITS_PER_LONG) {
--		keep = src[first / BITS_PER_LONG] &
--		       (~0UL >> (BITS_PER_LONG - first % BITS_PER_LONG));
--	}
-+	unsigned long tmp;
-+	unsigned long *b = bmap + first / BITS_PER_LONG;
- 
--	while (cut--) {
--		for (i = first / BITS_PER_LONG; i < len; i++) {
--			if (i < len - 1)
--				carry = dst[i + 1] & 1UL;
--			else
--				carry = 0;
-+	if (first % BITS_PER_LONG)
-+		tmp = b[0] & BITMAP_LAST_WORD_MASK(first);
- 
--			dst[i] = (dst[i] >> 1) | (carry << (BITS_PER_LONG - 1));
--		}
--	}
-+	bitmap_shift_right(b, b, cut - first, nbits - first);
- 
--	dst[first / BITS_PER_LONG] &= ~0UL << (first % BITS_PER_LONG);
--	dst[first / BITS_PER_LONG] |= keep;
-+	if (first % BITS_PER_LONG)
-+		b[0] = tmp | (b[0] & BITMAP_FIRST_WORD_MASK(first));
- }
- EXPORT_SYMBOL(bitmap_cut);
- 
-diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-index 6b13150667f5..4b2fef13003d 100644
---- a/lib/test_bitmap.c
-+++ b/lib/test_bitmap.c
-@@ -540,6 +540,37 @@ static void __init test_bitmap_arr32(void)
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 104f76aace29..94eca92d1354 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1089,6 +1089,7 @@ static void io_kill_timeout(struct io_kiocb *req)
+ 	if (ret != -1) {
+ 		atomic_inc(&req->ctx->cq_timeouts);
+ 		list_del_init(&req->list);
++		req->flags |= REQ_F_COMP_LOCKED;
+ 		io_cqring_fill_event(req, 0);
+ 		io_put_req(req);
  	}
- }
- 
-+struct test_bitmap_cut {
-+	unsigned int first;
-+	unsigned int last;
-+	unsigned int nbits;
-+	unsigned long in;
-+	unsigned long out;
-+};
-+
-+static struct test_bitmap_cut test_cut[] = {
-+	{ 0,  0,  BITS_PER_LONG, 0xdeadbeefUL, 0xdeadbeefUL },
-+	{ 0,  8,  BITS_PER_LONG, 0xdeadbeefUL, 0xdeadbeUL },
-+	{ 4,  8,  BITS_PER_LONG, 0xdeadbeefUL, 0xdeadbefUL },
-+	{ 8,  24, BITS_PER_LONG, 0xdeadbeefUL, 0xdeefUL },
-+	{ 16, 32, BITS_PER_LONG, 0xdeadbeefUL, 0xbeefUL },
-+};
-+
-+static void __init test_bitmap_cut(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(test_cut); i++) {
-+		struct test_bitmap_cut *t = &test_cut[i];
-+
-+		bitmap_cut(&t->in, t->first, t->last, t->nbits);
-+		if (!bitmap_equal(&t->in, &t->out, t->nbits)) {
-+			pr_err("bitmap_cut #%d failed:\n%*pb.\nExpected:\n%*pb\n",
-+					i, t->nbits, &t->in, t->nbits, &t->out);
-+		}
-+	}
-+}
-+
- static void noinline __init test_mem_optimisations(void)
- {
- 	DECLARE_BITMAP(bmap1, 1024);
-@@ -617,6 +648,7 @@ static void __init selftest(void)
- 	test_copy();
- 	test_replace();
- 	test_bitmap_arr32();
-+	test_bitmap_cut();
- 	test_bitmap_parse();
- 	test_bitmap_parse_user();
- 	test_bitmap_parselist();
-diff --git a/net/netfilter/nft_set_pipapo.c b/net/netfilter/nft_set_pipapo.c
-index 26395c8188b1..68faaf9a4f66 100644
---- a/net/netfilter/nft_set_pipapo.c
-+++ b/net/netfilter/nft_set_pipapo.c
-@@ -1397,8 +1397,7 @@ static void pipapo_drop(struct nft_pipapo_match *m,
- 			pos = f->lt + g * NFT_PIPAPO_BUCKETS * f->bsize;
- 
- 			for (b = 0; b < NFT_PIPAPO_BUCKETS; b++) {
--				bitmap_cut(pos, pos, rulemap[i].to,
--					   rulemap[i].n,
-+				bitmap_cut(pos, rulemap[i].to, rulemap[i].n,
- 					   f->bsize * BITS_PER_LONG);
- 
- 				pos += f->bsize;
 -- 
-2.20.1
+2.24.0
 
