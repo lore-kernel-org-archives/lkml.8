@@ -2,96 +2,128 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E8DC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7C8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE23E206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583504003;
-	bh=8HMSv45RmcowcvUV+/JVwCs/5SkwykqDSsq0zxlngI4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zvqkgyicel7BUodjcEw0R5/etxqyYWcdRh2UJQBs9JkRG5tn1Jotbp3GGCR8KRjvH
-	 UIW7eil9JCMhEzAtO/QMed7JX5vQqwVsYQg8qh7HCrQJCiKPAiO/cwkArF2Hiz53kA
-	 OS4gldXiSThNXUsOCgL85w5X0GZcsbnAasd5QnxY=
+	by mail.kernel.org (Postfix) with ESMTP id C2EDC206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:14:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PfFVnvAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgCFONX (ORCPT
+        id S1726998AbgCFOOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:13:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCFONW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:13:22 -0500
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 6 Mar 2020 09:14:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55484 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726646AbgCFOOP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 09:14:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583504054;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ulkGxmQ4QBuvsLJy/qkLxzxs0/QgSDhnIHzENOowzf4=;
+        b=PfFVnvAfiUjfy00jd9QitkP/co9TBtaqRtN8NE4ciUlZKRUnQfi2W5Y3KGpUTJq0C1iqN4
+        Nyi6N9DxUMQ6Vt5VFe+4oPNPfJ2peFdf77NYYGwe+ijH+LHRSxdRcDr4lqltv7rzJD8C0k
+        U9Zxkir/aE7PAK2uO324rQ63FM2nfjQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-c9WlLz5hN0Kn-duc3WTfMQ-1; Fri, 06 Mar 2020 09:14:10 -0500
+X-MC-Unique: c9WlLz5hN0Kn-duc3WTfMQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7646206CC;
-        Fri,  6 Mar 2020 14:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583504001;
-        bh=8HMSv45RmcowcvUV+/JVwCs/5SkwykqDSsq0zxlngI4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kwDxgZlOXDyDbl3r6rSK08+Sd8k5f1bwGh0lcEG94uqfILJBo3jo/PxP9wbPgyaCP
-         NLB9f8j7t4VXm6EFEEZ/lxmd9wKxWoqUFcJjYga6NBEsm38Ive2pM8k+5BfuWtqO+e
-         maiHZptvwMIIrk8aVL4xXnB5i4SADPrfQ3o5caMs=
-Received: by mail-qt1-f179.google.com with SMTP id e20so1786453qto.5;
-        Fri, 06 Mar 2020 06:13:21 -0800 (PST)
-X-Gm-Message-State: ANhLgQ1+c3GpTrdLjKiDk1xk+B/fl/rs0CjXaPTk8HHGDVriOPPLvILP
-        n1zR7mYpqHUbEGc+CJ3EcsQmoYGe0wQHkauqcA==
-X-Google-Smtp-Source: ADFU+vtV93a6Fp58Tncd6cIdfe2+CpsQ5PI8x6hov3jHYzgAVFu8JmXylmr7k0+5bR+Gvm/UG+tSzfOnnksdk3kV1RI=
-X-Received: by 2002:aed:3461:: with SMTP id w88mr3133057qtd.143.1583504000926;
- Fri, 06 Mar 2020 06:13:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-2-drinkcat@chromium.org> <20200225171613.GA7063@bogus>
- <CANMq1KAVX4o5yC7c_88Wq_O=F+MaSN_V4uNcs1nzS3wBS6A5AA@mail.gmail.com> <1583462055.4947.6.camel@mtksdaap41>
-In-Reply-To: <1583462055.4947.6.camel@mtksdaap41>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 6 Mar 2020 08:13:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLoUnxfrJh0WCs0jgro1KHAjWaYMsaKkKfAKA2KJ252_g@mail.gmail.com>
-Message-ID: <CAL_JsqLoUnxfrJh0WCs0jgro1KHAjWaYMsaKkKfAKA2KJ252_g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
-To:     Nick Fan <nick.fan@mediatek.com>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DF4C800D54;
+        Fri,  6 Mar 2020 14:14:09 +0000 (UTC)
+Received: from krava (ovpn-205-205.brq.redhat.com [10.40.205.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D3B1B5DA2C;
+        Fri,  6 Mar 2020 14:14:06 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 15:14:04 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 07/10] perf record: Support synthesizing cgroup events
+Message-ID: <20200306141404.GC290743@krava>
+References: <20200224043749.69466-1-namhyung@kernel.org>
+ <20200224043749.69466-8-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224043749.69466-8-namhyung@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 8:34 PM Nick Fan <nick.fan@mediatek.com> wrote:
->
-> Sorry for my late reply.
-> I have checked internally.
-> The MT8183_POWER_DOMAIN_MFG_2D is just a legacy name, not really 2D
-> domain.
->
-> If the naming too confusing, we can change this name to
-> MT8183_POWER_DOMAIN_MFG_CORE2 for consistency.
+On Mon, Feb 24, 2020 at 01:37:46PM +0900, Namhyung Kim wrote:
 
-Can you clarify what's in each domain? Are there actually 3 shader
-cores (IIRC, that should be discoverable)?
+SNIP
 
-Rob
+> +	d = opendir(path);
+> +	if (d == NULL) {
+> +		pr_debug("failed to open directory: %s\n", path);
+> +		return -1;
+> +	}
+> +
+> +	while ((dent = readdir(d)) != NULL) {
+> +		if (dent->d_type != DT_DIR)
+> +			continue;
+> +		if (!strcmp(dent->d_name, ".") ||
+> +		    !strcmp(dent->d_name, ".."))
+> +			continue;
+> +
+> +		/* any sane path should be less than PATH_MAX */
+> +		if (strlen(path) + strlen(dent->d_name) + 1 >= PATH_MAX)
+> +			continue;
+> +
+> +		if (path[pos - 1] != '/')
+> +			strcat(path, "/");
+> +		strcat(path, dent->d_name);
+> +
+> +		ret = perf_event__walk_cgroup_tree(tool, event, path,
+> +						   mount_len, process, machine);
+> +		if (ret < 0)
+> +			break;
+> +
+> +		path[pos] = '\0';
+> +	}
+> +
+> +	closedir(d);
+> +	return ret;
+> +}
+> +
+> +int perf_event__synthesize_cgroups(struct perf_tool *tool,
+> +				   perf_event__handler_t process,
+> +				   struct machine *machine)
+> +{
+> +	union perf_event event;
+> +	char cgrp_root[PATH_MAX];
+> +	size_t mount_len;  /* length of mount point in the path */
+> +
+> +	if (cgroupfs__mountpoint(cgrp_root, PATH_MAX, "perf_event") < 0) {
+> +		pr_debug("cannot find cgroup mount point\n");
+> +		return -1;
+> +	}
+> +
+> +	mount_len = strlen(cgrp_root);
+> +	/* make sure the path starts with a slash (after mount point) */
+> +	strcat(cgrp_root, "/");
+
+the code above checks on this and seems to add '/' if needed,
+is this strcat necessary?
+
+jirka
+
