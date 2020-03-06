@@ -2,143 +2,166 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B90BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A549EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119CD20409
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7944520409
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:02:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFSZa7/Q"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="n3yfRISi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgCFPC2 (ORCPT
+        id S1727167AbgCFPC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:02:28 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35450 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgCFPC1 (ORCPT
+        Fri, 6 Mar 2020 10:02:57 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:41905 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgCFPC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:02:27 -0500
-Received: by mail-ot1-f65.google.com with SMTP id v10so2706631otp.2;
-        Fri, 06 Mar 2020 07:02:27 -0800 (PST)
+        Fri, 6 Mar 2020 10:02:57 -0500
+Received: by mail-qv1-f67.google.com with SMTP id s15so1041232qvn.8
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 07:02:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BD+60dokgEOUG8j2bYzkDk6D/5UHZy/4MYWY7LmG4bw=;
-        b=eFSZa7/QV0w8UCbTiQEIr1obPkQBsyaq56GSwV9OB1pN5etNNCyEm4XeRjMI14m6Vx
-         4Ehd56Cj0i7QJDDMopnpuOfdr36F+9DZ6ndBx7UViEggRWqrxma0wRjZleGPChExUXfb
-         ozrcWG2aSw9KfKY5/86erdy1han4u9Bv/t8LfbQwQpNCOTDNtL7uWff11ShgcM1w+r11
-         TQ50pc3ZcMfLh3ctE3/DZ2FKnVVc6yQK0xXq5q2gWOVavblPnosOd5lZOgcplnvWW3O1
-         J8GfM3dflqjXu6hv03q4CNWQi6q14K9QSq7PTnrn0ocCg3eUEW981c/df1PqPN8f/wBK
-         Z2rA==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JZwOxDEE6FTlabp1Erp1Tw5Doyf6ABG7BAUGaMzAXBE=;
+        b=n3yfRISiL7NMWNlXjtM+56EXcJApssI1b+rz0/YnhKXR9fp6xJQExtQrvKwmje9c7+
+         zxQJdzbo2rcRpaCjNr5UYpYkwd8FRe/Gnib9Y27v53voEcY0Dgc/Qim2IgTzG62RFxvA
+         hqiWH5v7W/HpKS7ODeOG7x+xepP9SVuj30XyhvZ3mOS91+jiw/5RyYV1Z31yHq00M3O7
+         iHyb+1tm2UmUCrkCZwdE8/D0zEFnZJrTMcZ84yzlJLSDdsyZueUcmOtMtwHP3JpX28kj
+         gGrv+N5lQLBO6TpOmdpz6Sbfp7lS8m6+8PcivYJPEMfvID1NFbQc5DOVyAG7G81kGoR5
+         qhNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BD+60dokgEOUG8j2bYzkDk6D/5UHZy/4MYWY7LmG4bw=;
-        b=Knf9yWR2N6Zu2zAwlbYJ8a6WERyaAGPyWI+NIhMC2wcuDvgB15J60PeNOb6LfBC+2m
-         0Bb5mdj78Fak5S7nbe0rjk/liCVHGqL09+ES5pHnFWU4oI+2Sy8OiK5gl2a+FK8m2+Bm
-         lmVyX5VbGBe3OOzXspz0Z1mMLIQoH+akY2Dr7zPr9TL7fMwDv+NEvD64J4Q6YiVXC3Gt
-         +SIssjnIuQ8XoZ6aRbbDQ9WoMQke+jlsg5dBO8WhkiiVrHSoH1pyapR9DW3gi4Q77g+n
-         48oIjwKWuK+2h4ScHHjWoMO+DoMF/pT3unOdkhnOjvn3SLK4/Y4PAKaN7/sijv8T3aKP
-         nzfg==
-X-Gm-Message-State: ANhLgQ1gkzMkqm33B9hB5dQwf+DpejWvtJH/7K74ZsvUuEahCOnFLVOO
-        bcoe5RRZD76duOMZl8v5azhfnWLFc2XE2D5NYAg=
-X-Google-Smtp-Source: ADFU+vuyheZ5bTYaLVxlIFPIWUI4wuVMkWlhVds1soVsrxGBy2ve8KSs/7dd6xWIpqFYFkBxZ/fFprmkEU2G04xmH78=
-X-Received: by 2002:a9d:6d85:: with SMTP id x5mr2946522otp.176.1583506945793;
- Fri, 06 Mar 2020 07:02:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20200306103246.22213-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200306103246.22213-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAPY8ntD38sM0SXvOEyr2gRCM7WeAY4CjAKcrVfd6MCHB+Ejv0A@mail.gmail.com>
-In-Reply-To: <CAPY8ntD38sM0SXvOEyr2gRCM7WeAY4CjAKcrVfd6MCHB+Ejv0A@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 6 Mar 2020 15:01:57 +0000
-Message-ID: <CA+V-a8s-7FYJdLnG5y4i6SvcpJR16iXd35GfFPgesdkO9Z7Ong@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] media: i2c: imx219: Fix power sequence
-To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JZwOxDEE6FTlabp1Erp1Tw5Doyf6ABG7BAUGaMzAXBE=;
+        b=ZyeZ1+ZeC5YPXDRnNAXAC4eTzicHz+g7aIqfzYlRBIp0ft9EdNu33jZnduDhOaLVws
+         KkC9yC2j485xmOluSxS7Fszkfw1zyFSwUcEP32HLpTsSmDVegDsY+t2aL6NGHIBKGaiN
+         ruB1imXL0Cyq06HJONzOU09cEA3nqq69A6IcWfxTSDDps+puvtmlVS9tG3OLkcW2E40V
+         llbHy4uxVgqAMcGSJ1KbKTbZ53XsVIswTMG3Y9jv/pEMgiP6EpMDSK93au43QTsaGvOB
+         9drt5x7ZiwrHowu8Wa1ETv1hBgqlI3wZwJ4f4Wzl3bi3hiBKmeBRu3YkJVF+KZZKdQ41
+         iArQ==
+X-Gm-Message-State: ANhLgQ2BjUbJ5MBuzFwL3uHn2DWgJ9wceX5ci9pquPMEtLTsJyBGoFoW
+        JtBjQLIeK8zJ0KFWumgJXrTt7g==
+X-Google-Smtp-Source: ADFU+vtv/a+oV26fQHbhc8g7zTvQfdaDOkdGTbfwTgmj0AHRuzSl0XeAkTmOf/oiqW99G3TPIlEoOQ==
+X-Received: by 2002:a0c:bf05:: with SMTP id m5mr3287276qvi.26.1583506976090;
+        Fri, 06 Mar 2020 07:02:56 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 62sm14856664qkk.84.2020.03.06.07.02.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Mar 2020 07:02:55 -0800 (PST)
+Message-ID: <1583506974.7365.160.camel@lca.pw>
+Subject: Re: [PATCH] tick/sched: fix data races at tick_do_timer_cpu
+From:   Qian Cai <cai@lca.pw>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     fweisbec@gmail.com, mingo@kernel.org, elver@google.com,
+        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Date:   Fri, 06 Mar 2020 10:02:54 -0500
+In-Reply-To: <1C65422C-FFA4-4651-893B-300FAF9C49DE@lca.pw>
+References: <87tv34laqq.fsf@nanos.tec.linutronix.de>
+         <1C65422C-FFA4-4651-893B-300FAF9C49DE@lca.pw>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+On Wed, 2020-03-04 at 06:20 -0500, Qian Cai wrote:
+> > On Mar 4, 2020, at 4:39 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > 
+> > They are reported, but are they actually a real problem?
+> > 
+> > This completely lacks analysis why these 8 places need the
+> > READ/WRITE_ONCE() treatment at all and if so why the other 14 places
+> > accessing tick_do_timer_cpu are safe without it.
+> > 
+> > I definitely appreciate the work done with KCSAN, but just making the
+> > tool shut up does not cut it.
+> 
+> Looks at tick_sched_do_timer(), for example,
+> 
+> if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)) {
+> #ifdef CONFIG_NO_HZ_FULL
+> 		WARN_ON(tick_nohz_full_running);
+> #endif
+> 		tick_do_timer_cpu = cpu;
+> 	}
+> #endif
+> 
+> /* Check, if the jiffies need an update */
+> if (tick_do_timer_cpu == cpu)
+> 	tick_do_update_jiffies64(now);
+> 
+> Could we rule out all compilers and archs will not optimize it if !CONFIG_NO_HZ_FULL to,
+> 
+> if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE) || tick_do_timer_cpu == cpu)
+>          tick_do_update_jiffies64(now);
+> 
+> So it could save a branch or/and realized that tick_do_timer_cpu is not used later in this cpu, so it could discard the store?
+> 
+> I am not all that familiar with all other 14 places if it is possible to happen concurrently as well, so I took a pragmatic approach that for now only deal with the places that KCSAN confirmed, and then look forward for an incremental approach if there are more places needs treatments later once confirmed.
 
-On Fri, Mar 6, 2020 at 1:01 PM Dave Stevenson
-<dave.stevenson@raspberrypi.com> wrote:
->
-> Hi Prabhakar.
->
-> Thanks for the update.
->
-> On Fri, 6 Mar 2020 at 10:32, Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> >
-> > When supporting Rpi Camera v2 Module on the RZ/G2E, found the driver had
-> > some issues with rcar mipi-csi driver. The sensor never entered into LP-11
-> > state.
-> >
-> > The powerup sequence in the datasheet[1] shows the sensor entering into
-> > LP-11 in streaming mode, so to fix this issue transitions are performed
-> > from "streaming -> standby" in the probe() after power up.
-> >
-> > With this commit the sensor is able to enter LP-11 mode during power up,
-> > as expected by some CSI-2 controllers.
-> >
-> > [1] https://publiclab.org/system/images/photos/000/023/294/original/
-> > RASPBERRY_PI_CAMERA_V2_DATASHEET_IMX219PQH5_7.0.0_Datasheet_XXX.PDF
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Acked-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
->
-Thank you for the Ack.
+If you don't think that will be happening and dislike using READ/WRITE_ONCE()
+for documentation purpose, we could annotate those using the data_race() macro.
+Is that more acceptable?
 
-Cheers,
---Prabhakar
-
->
-> > ---
-> >  drivers/media/i2c/imx219.c | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> >
-> > diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> > index f1effb5a5f66..16010ca1781a 100644
-> > --- a/drivers/media/i2c/imx219.c
-> > +++ b/drivers/media/i2c/imx219.c
-> > @@ -1224,6 +1224,23 @@ static int imx219_probe(struct i2c_client *client)
-> >         /* Set default mode to max resolution */
-> >         imx219->mode = &supported_modes[0];
-> >
-> > +       /* sensor doesn't enter LP-11 state upon power up until and unless
-> > +        * streaming is started, so upon power up switch the modes to:
-> > +        * streaming -> standby
-> > +        */
-> > +       ret = imx219_write_reg(imx219, IMX219_REG_MODE_SELECT,
-> > +                              IMX219_REG_VALUE_08BIT, IMX219_MODE_STREAMING);
-> > +       if (ret < 0)
-> > +               goto error_power_off;
-> > +       usleep_range(100, 110);
-> > +
-> > +       /* put sensor back to standby mode */
-> > +       ret = imx219_write_reg(imx219, IMX219_REG_MODE_SELECT,
-> > +                              IMX219_REG_VALUE_08BIT, IMX219_MODE_STANDBY);
-> > +       if (ret < 0)
-> > +               goto error_power_off;
-> > +       usleep_range(100, 110);
-> > +
-> >         ret = imx219_init_controls(imx219);
-> >         if (ret)
-> >                 goto error_power_off;
-> > --
-> > 2.20.1
-> >
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index a792d21cac64..08ce4088da87 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -129,7 +129,7 @@ static void tick_sched_do_timer(struct tick_sched *ts,
+ktime_t now)
+ 	 * If nohz_full is enabled, this should not happen because the
+ 	 * tick_do_timer_cpu never relinquishes.
+ 	 */
+-	if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)) {
++	if (unlikely(data_race(tick_do_timer_cpu == TICK_DO_TIMER_NONE))) {
+ #ifdef CONFIG_NO_HZ_FULL
+ 		WARN_ON(tick_nohz_full_running);
+ #endif
+@@ -138,7 +138,7 @@ static void tick_sched_do_timer(struct tick_sched *ts,
+ktime_t now)
+ #endif
+ 
+ 	/* Check, if the jiffies need an update */
+-	if (tick_do_timer_cpu == cpu)
++	if (data_race(tick_do_timer_cpu == cpu))
+ 		tick_do_update_jiffies64(now);
+ 
+ 	if (ts->inidle)
+@@ -737,8 +737,9 @@ static ktime_t tick_nohz_next_event(struct tick_sched *ts,
+int cpu)
+ 	 * Otherwise we can sleep as long as we want.
+ 	 */
+ 	delta = timekeeping_max_deferment();
+-	if (cpu != tick_do_timer_cpu &&
+-	    (tick_do_timer_cpu != TICK_DO_TIMER_NONE || !ts->do_timer_last))
++	if (data_race(cpu != tick_do_timer_cpu) &&
++	    (data_race(tick_do_timer_cpu != TICK_DO_TIMER_NONE) ||
++	    !ts->do_timer_last))
+ 		delta = KTIME_MAX;
+ 
+ 	/* Calculate the next expiry time */
+@@ -771,10 +772,10 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int
+cpu)
+ 	 * do_timer() never invoked. Keep track of the fact that it
+ 	 * was the one which had the do_timer() duty last.
+ 	 */
+-	if (cpu == tick_do_timer_cpu) {
++	if (data_race(cpu == tick_do_timer_cpu)) {
+ 		tick_do_timer_cpu = TICK_DO_TIMER_NONE;
+ 		ts->do_timer_last = 1;
+-	} else if (tick_do_timer_cpu != TICK_DO_TIMER_NONE) {
++	} else if (data_race(tick_do_timer_cpu != TICK_DO_TIMER_NONE)) {
+ 		ts->do_timer_last = 0;
+ 	}
+ 
