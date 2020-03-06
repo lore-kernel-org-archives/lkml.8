@@ -2,159 +2,186 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE9EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AB9C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86B72084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56EA2072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCFDjl (ORCPT
+        id S1726440AbgCFDnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 22:39:41 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56806 "EHLO huawei.com"
+        Thu, 5 Mar 2020 22:43:42 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11179 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726251AbgCFDjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 22:39:41 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C3DCE4FA299D9F0EFFE6;
-        Fri,  6 Mar 2020 11:39:38 +0800 (CST)
-Received: from [127.0.0.1] (10.67.103.87) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Mar 2020
- 11:39:29 +0800
-Subject: Re: [PATCH net-next 1/9] net: hns3: fix some mixed type assignment
-To:     Huazhong Tan <tanhuazhong@huawei.com>, <davem@davemloft.net>
-CC:     <salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <kuba@kernel.org>
-References: <1583463438-60953-1-git-send-email-tanhuazhong@huawei.com>
- <1583463438-60953-2-git-send-email-tanhuazhong@huawei.com>
-From:   "shenjian (K)" <shenjian15@huawei.com>
-Message-ID: <03bf7b86-6674-163a-5df2-1840966de960@huawei.com>
-Date:   Fri, 6 Mar 2020 11:39:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        id S1726251AbgCFDnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 22:43:42 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7A5B81D8692CED9F8EA4;
+        Fri,  6 Mar 2020 11:43:40 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 6 Mar 2020 11:43:33 +0800
+From:   Tian Tao <tiantao6@hisilicon.com>
+To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <tzimmermann@suse.de>, <kraxel@redhat.com>,
+        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
+        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linuxarm@huawei.com>
+Subject: [PATCH 3/4] drm/hisilicon: Add the load and unload for hibmc_driver
+Date:   Fri, 6 Mar 2020 11:43:03 +0800
+Message-ID: <1583466184-7060-6-git-send-email-tiantao6@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
+References: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <1583463438-60953-2-git-send-email-tanhuazhong@huawei.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.103.87]
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+using the load and unload function provided by drm framework instead of
+doing the same work in the hibmc_pci_probe and do some code cleanup.
 
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
+---
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 62 +++++++++----------------
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h |  2 +
+ 2 files changed, 24 insertions(+), 40 deletions(-)
 
-ÔÚ 2020/3/6 10:57, Huazhong Tan Ð´µÀ:
-> From: Guojia Liao <liaoguojia@huawei.com>
->
-> This patch cleans up some incorrect type in assignment reported by sparse
-> and compiler.
-> The warning as below:
-> - warning : restricted __le16 degrades to integer
-> - warning : cast from restricted __le32
-> - warning : cast from restricted __be32
-> - warning : cast from restricted __be16
-> and "mixed operation".
->
-> Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
-> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-should add fixes id.
-> ---
->   .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 23 ++++++++++++----------
->   .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |  3 ++-
->   2 files changed, 15 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-> index 6295cf9..5b4045c 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-> @@ -87,7 +87,7 @@ static int hclge_dbg_get_dfx_bd_num(struct hclge_dev *hdev, int offset)
->   
->   	entries_per_desc = ARRAY_SIZE(desc[0].data);
->   	index = offset % entries_per_desc;
-> -	return (int)desc[offset / entries_per_desc].data[index];
-> +	return le32_to_cpu(desc[offset / entries_per_desc].data[index]);
->   }
->   
->   static int hclge_dbg_cmd_send(struct hclge_dev *hdev,
-> @@ -583,7 +583,7 @@ static void hclge_dbg_dump_tm_map(struct hclge_dev *hdev,
->   	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
->   	if (ret)
->   		goto err_tm_map_cmd_send;
-> -	qset_id = nq_to_qs_map->qset_id & 0x3FF;
-> +	qset_id = le16_to_cpu(nq_to_qs_map->qset_id) & 0x3FF;
->   
->   	cmd = HCLGE_OPC_TM_QS_TO_PRI_LINK;
->   	map = (struct hclge_qs_to_pri_link_cmd *)desc.data;
-> @@ -623,7 +623,8 @@ static void hclge_dbg_dump_tm_map(struct hclge_dev *hdev,
->   		if (ret)
->   			goto err_tm_map_cmd_send;
->   
-> -		qset_maping[group_id] = bp_to_qs_map_cmd->qs_bit_map;
-> +		qset_maping[group_id] =
-> +			le32_to_cpu(bp_to_qs_map_cmd->qs_bit_map);
->   	}
->   
->   	dev_info(&hdev->pdev->dev, "index | tm bp qset maping:\n");
-> @@ -826,6 +827,7 @@ static void hclge_dbg_dump_mng_table(struct hclge_dev *hdev)
->   	struct hclge_mac_ethertype_idx_rd_cmd *req0;
->   	char printf_buf[HCLGE_DBG_BUF_LEN];
->   	struct hclge_desc desc;
-> +	u32 msg_egress_port;
->   	int ret, i;
->   
->   	dev_info(&hdev->pdev->dev, "mng tab:\n");
-> @@ -867,20 +869,21 @@ static void hclge_dbg_dump_mng_table(struct hclge_dev *hdev)
->   			 HCLGE_DBG_BUF_LEN - strlen(printf_buf),
->   			 "%x   |%04x |%x   |%04x|%x   |%02x   |%02x   |",
->   			 !!(req0->flags & HCLGE_DBG_MNG_MAC_MASK_B),
-> -			 req0->ethter_type,
-> +			 le16_to_cpu(req0->ethter_type),
->   			 !!(req0->flags & HCLGE_DBG_MNG_ETHER_MASK_B),
-> -			 req0->vlan_tag & HCLGE_DBG_MNG_VLAN_TAG,
-> +			 le16_to_cpu(req0->vlan_tag) & HCLGE_DBG_MNG_VLAN_TAG,
->   			 !!(req0->flags & HCLGE_DBG_MNG_VLAN_MASK_B),
->   			 req0->i_port_bitmap, req0->i_port_direction);
->   
-> +		msg_egress_port = le16_to_cpu(req0->egress_port);
->   		snprintf(printf_buf + strlen(printf_buf),
->   			 HCLGE_DBG_BUF_LEN - strlen(printf_buf),
->   			 "%d     |%d    |%02d   |%04d|%x\n",
-> -			 !!(req0->egress_port & HCLGE_DBG_MNG_E_TYPE_B),
-> -			 req0->egress_port & HCLGE_DBG_MNG_PF_ID,
-> -			 (req0->egress_port >> 3) & HCLGE_DBG_MNG_VF_ID,
-> -			 req0->egress_queue,
-> -			 !!(req0->egress_port & HCLGE_DBG_MNG_DROP_B));
-> +			 !!(msg_egress_port & HCLGE_DBG_MNG_E_TYPE_B),
-> +			 msg_egress_port & HCLGE_DBG_MNG_PF_ID,
-> +			 (msg_egress_port >> 3) & HCLGE_DBG_MNG_VF_ID,
-> +			 le16_to_cpu(req0->egress_queue),
-> +			 !!(msg_egress_port & HCLGE_DBG_MNG_DROP_B));
-
-msg_egress_port is unsigned, but print format is "%d" ?
->   
->   		dev_info(&hdev->pdev->dev, "%s", printf_buf);
->   	}
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-> index 89d3523..e64027c 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-> @@ -10252,8 +10252,9 @@ static int hclge_dfx_reg_fetch_data(struct hclge_desc *desc_src, int bd_num,
->   static int hclge_get_dfx_reg_len(struct hclge_dev *hdev, int *len)
->   {
->   	u32 dfx_reg_type_num = ARRAY_SIZE(hclge_dfx_bd_offset_list);
-> -	int data_len_per_desc, data_len, bd_num, i;
-> +	int data_len_per_desc, bd_num, i;
->   	int bd_num_list[BD_LIST_MAX_NUM];
-> +	u32 data_len;
->   	int ret;
->   
->   	ret = hclge_get_dfx_reg_bd_num(hdev, bd_num_list, dfx_reg_type_num);
-
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+index 79a180a..51f1c70 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+@@ -23,7 +23,7 @@
+ #include <drm/drm_print.h>
+ #include <drm/drm_probe_helper.h>
+ #include <drm/drm_vblank.h>
+-
++#include <drm/drm_pci.h>
+ #include "hibmc_drm_drv.h"
+ #include "hibmc_drm_regs.h"
+ 
+@@ -49,6 +49,8 @@ static irqreturn_t hibmc_drm_interrupt(int irq, void *arg)
+ 
+ static struct drm_driver hibmc_driver = {
+ 	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
++	.load			= hibmc_load,
++	.unload			= hibmc_unload,
+ 	.fops			= &hibmc_fops,
+ 	.name			= "hibmc",
+ 	.date			= "20160828",
+@@ -232,6 +234,21 @@ static int hibmc_hw_map(struct hibmc_drm_private *priv)
+ 	return 0;
+ }
+ 
++static void hibmc_hw_unmap(struct hibmc_drm_private *priv)
++{
++	struct drm_device *dev = priv->dev;
++
++	if (priv->mmio) {
++		devm_iounmap(dev->dev, priv->mmio);
++		priv->mmio = NULL;
++	}
++
++	if (priv->fb_map) {
++		devm_iounmap(dev->dev, priv->fb_map);
++		priv->fb_map = NULL;
++	}
++}
++
+ static int hibmc_hw_init(struct hibmc_drm_private *priv)
+ {
+ 	int ret;
+@@ -245,7 +262,7 @@ static int hibmc_hw_init(struct hibmc_drm_private *priv)
+ 	return 0;
+ }
+ 
+-static int hibmc_unload(struct drm_device *dev)
++void hibmc_unload(struct drm_device *dev)
+ {
+ 	struct hibmc_drm_private *priv = dev->dev_private;
+ 
+@@ -258,11 +275,12 @@ static int hibmc_unload(struct drm_device *dev)
+ 
+ 	hibmc_kms_fini(priv);
+ 	hibmc_mm_fini(priv);
++	hibmc_hw_unmap(priv);
+ 	dev->dev_private = NULL;
+ 	return 0;
+ }
+ 
+-static int hibmc_load(struct drm_device *dev)
++int hibmc_load(struct drm_device *dev, unsigned long flags)
+ {
+ 	struct hibmc_drm_private *priv;
+ 	int ret;
+@@ -332,43 +350,7 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
+ 	if (ret)
+ 		return ret;
+ 
+-	dev = drm_dev_alloc(&hibmc_driver, &pdev->dev);
+-	if (IS_ERR(dev)) {
+-		DRM_ERROR("failed to allocate drm_device\n");
+-		return PTR_ERR(dev);
+-	}
+-
+-	dev->pdev = pdev;
+-	pci_set_drvdata(pdev, dev);
+-
+-	ret = pci_enable_device(pdev);
+-	if (ret) {
+-		DRM_ERROR("failed to enable pci device: %d\n", ret);
+-		goto err_free;
+-	}
+-
+-	ret = hibmc_load(dev);
+-	if (ret) {
+-		DRM_ERROR("failed to load hibmc: %d\n", ret);
+-		goto err_disable;
+-	}
+-
+-	ret = drm_dev_register(dev, 0);
+-	if (ret) {
+-		DRM_ERROR("failed to register drv for userspace access: %d\n",
+-			  ret);
+-		goto err_unload;
+-	}
+-	return 0;
+-
+-err_unload:
+-	hibmc_unload(dev);
+-err_disable:
+-	pci_disable_device(pdev);
+-err_free:
+-	drm_dev_put(dev);
+-
+-	return ret;
++	return drm_get_pci_dev(pdev, ent, &hibmc_driver);
+ }
+ 
+ static void hibmc_pci_remove(struct pci_dev *pdev)
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+index 50a0c1f..4e89cd7 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+@@ -37,6 +37,8 @@ void hibmc_set_power_mode(struct hibmc_drm_private *priv,
+ void hibmc_set_current_gate(struct hibmc_drm_private *priv,
+ 			    unsigned int gate);
+ 
++int hibmc_load(struct drm_device *dev, unsigned long flags);
++void hibmc_unload(struct drm_device *dev);
+ int hibmc_de_init(struct hibmc_drm_private *priv);
+ int hibmc_vdac_init(struct hibmc_drm_private *priv);
+ 
+-- 
+2.7.4
 
