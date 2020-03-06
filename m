@@ -2,124 +2,88 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C86C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5660CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643532084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B61E207FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583487447;
+	bh=IyUEI189KLN7NzOaIC0uGsky+Dq/9mgX0pL869AYwTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xpe9Zy8p076CDerfQEpW05XfqatrWO8C/OMmBiu6cOwftfK6D8Rsk/fqgc0MpxXzK
+	 rckMsU8GuZBoTLBD3IEKAs2n1KKcvXeEa+NsPIMt8qjtyvbDlSGueFwUwl1y1K2KKN
+	 80PF44FGZfjULy/karPBRe4lgO0tsMBhYi5d3SHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCFJfr (ORCPT
+        id S1726190AbgCFJhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:35:47 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:54521 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726047AbgCFJfq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:35:46 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Trp4UVu_1583487338;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Trp4UVu_1583487338)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 06 Mar 2020 17:35:39 +0800
-Subject: Re: [RFC PATCH] sched: fix the nonsense shares when load of cfs_rq is
- too, small
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ben Segall <bsegall@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
-References: <44fa1cee-08db-e4ab-e5ab-08d6fbd421d7@linux.alibaba.com>
- <20200303195245.GF2596@hirez.programming.kicks-ass.net>
- <xm26o8tc3qkv.fsf@bsegall-linux.svl.corp.google.com>
- <1180c6cd-ff61-2c9f-d689-ffe58f8c5a68@linux.alibaba.com>
- <CAKfTPtCaPz2KBmagzpEurh5S9aNFzUomHGh1pDWBx6L_29w5hw@mail.gmail.com>
- <12f79b83-491c-4b4b-0581-d23bdcec7c0c@linux.alibaba.com>
- <CAKfTPtD+He8UULUavz0csUeUV3TBdjShV9kUPQY6rpLswUAm4g@mail.gmail.com>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Message-ID: <746d2b82-fb39-1412-0dc3-c5ff10b578ec@linux.alibaba.com>
-Date:   Fri, 6 Mar 2020 17:34:53 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.2
+        Fri, 6 Mar 2020 04:37:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725923AbgCFJhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 04:37:25 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 285B82073D;
+        Fri,  6 Mar 2020 09:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583487443;
+        bh=IyUEI189KLN7NzOaIC0uGsky+Dq/9mgX0pL869AYwTM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KBzdM3smU80fwbieeRIomBESOd0DAz9uNN+Igc9aRMBcF/aZLhWV5tX27iDxdrekL
+         bIAwhkwRSbudL4mBN5282Sl4Q1//0tti6yNvgzVzwSHEg3FKbFuobj7vzH0Wuh7piN
+         zBZFBkRXduhi6m4lDqWCWuM3bQ1dmvPkue2723wI=
+Date:   Fri, 6 Mar 2020 10:37:20 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, cgroups@vger.kernel.org, tj@kernel.org,
+        lizefan@huawei.com, hannes@cmpxchg.org, shakeelb@google.com,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v2 1/4] kernfs: kvmalloc xattr value instead of kmalloc
+Message-ID: <20200306093720.GA3630348@kroah.com>
+References: <20200305211632.15369-1-dxu@dxuuu.xyz>
+ <20200305211632.15369-2-dxu@dxuuu.xyz>
+ <58c6e6dafabea52e5b030d18b83c13e4f43ab8e3.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtD+He8UULUavz0csUeUV3TBdjShV9kUPQY6rpLswUAm4g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <58c6e6dafabea52e5b030d18b83c13e4f43ab8e3.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/6 下午4:04, Vincent Guittot wrote:
-> On Fri, 6 Mar 2020 at 05:23, 王贇 <yun.wang@linux.alibaba.com> wrote:
->>
->>
->>
->> On 2020/3/5 下午3:53, Vincent Guittot wrote:
->>> On Thu, 5 Mar 2020 at 02:14, 王贇 <yun.wang@linux.alibaba.com> wrote:
->> [snip]
->>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>>> index fcc968669aea..6d7a9d72d742 100644
->>>>> --- a/kernel/sched/fair.c
->>>>> +++ b/kernel/sched/fair.c
->>>>> @@ -3179,9 +3179,9 @@ static long calc_group_shares(struct cfs_rq *cfs_rq)
->>>>>         long tg_weight, tg_shares, load, shares;
->>>>>         struct task_group *tg = cfs_rq->tg;
->>>>>
->>>>> -       tg_shares = READ_ONCE(tg->shares);
->>>>> +       tg_shares = scale_load_down(READ_ONCE(tg->shares));
->>>>>
->>>>> -       load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
->>>>> +       load = max(cfs_rq->load.weight, scale_load(cfs_rq->avg.load_avg));
->>>>>
->>>>>         tg_weight = atomic_long_read(&tg->load_avg);
->>>>
->>>> Get the point, but IMHO fix scale_load_down() sounds better, to
->>>> cover all the similar cases, let's first try that way see if it's
->>>> working :-)
->>>
->>> The problem with this solution is that the avg.load_avg of gse or
->>> cfs_rq might stay to 0 because it uses
->>> scale_load_down(se/cfs_rq->load.weight)
->>
->> Will cfs_rq->load.weight be zero too without scale down?
+On Fri, Mar 06, 2020 at 12:49:51AM -0800, Joe Perches wrote:
+> On Thu, 2020-03-05 at 13:16 -0800, Daniel Xu wrote:
+> > It's not really necessary to have contiguous physical memory for xattr
+> > values. We no longer need to worry about higher order allocations
+> > failing with kvmalloc, especially because the xattr size limit is at
+> > 64K.
 > 
-> cfs_rq->load.weight will never be 0, it's min is 2
+> So why use vmalloc memory at all?
 > 
->>
->> If cfs_rq->load.weight got at least something, the load will not be
->> zero after pick the max, correct?
+> > diff --git a/fs/xattr.c b/fs/xattr.c
+> ']
+> > @@ -817,7 +817,7 @@ struct simple_xattr *simple_xattr_alloc(const void *value, size_t size)
+> >  	if (len < sizeof(*new_xattr))
+> >  		return NULL;
+> >  
+> > -	new_xattr = kmalloc(len, GFP_KERNEL);
+> > +	new_xattr = kvmalloc(len, GFP_KERNEL);
 > 
-> But the cfs_rq->avg.load_avg will never be other than 0 what ever
-> there are heavy or light tasks in the group
+> Why is this sensible?
 
-Aha, get the point now :-)
+See the thread on v1
 
-BTW, would you like to give a review on
-  [PATCH] sched: avoid scale real weight down to zero
-please?
+> vmalloc memory is a much more limited resource.
 
-Regards,
-Michael Wang
+Large chunks of "len" is much more limited :)
 
+thanks,
 
-> 
->>
->> Regards,
->> Michael Wang
->>
->>>
->>>>
->>>> Regards,
->>>> Michael Wang
->>>>
->>>>>
->>>>>
->>>>>
+greg k-h
