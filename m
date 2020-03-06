@@ -2,95 +2,103 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93AFC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89321C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 983512072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589C62072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pmq4K6KD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L8bfEK9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgCFKlf (ORCPT
+        id S1726171AbgCFKoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:41:35 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43087 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgCFKlf (ORCPT
+        Fri, 6 Mar 2020 05:44:30 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:43358 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgCFKoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:41:35 -0500
-Received: by mail-qt1-f195.google.com with SMTP id v22so1330196qtp.10;
-        Fri, 06 Mar 2020 02:41:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=al7age2oTXgYTympMQW4jKiNWfRyppUJjWuKVFSzTq4=;
-        b=Pmq4K6KDvmWg+QImisnIgA7B7RmumCDCRG1Xkl53KFpEcY+WMWtEh6qtXRWE89kD8/
-         ablkdKssUXeOAw8KzuISRSoznT0nsDNPDsLJbAd+B89tQXU4CPT0nu/wacgsNiy3Akd/
-         wObt8muPZYIaPjFpZlh6ILWyiB2ueb07kRcxCTQSFuM7vXzlu0p8RWFbfPFE4j1RwgXO
-         vTDpN0GhxFl39+h/8HFJr1sgpjk+8bdS1aYTI7a4icPjgzjWmOU/E05T7+h0FuPPr0+F
-         fAQD1xEnyBoMLWMAoZBI3XK4nkWE4axsjGsEJ7KsUjYuE1C2+HZiG9qq407qRGkn1qyf
-         xPnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=al7age2oTXgYTympMQW4jKiNWfRyppUJjWuKVFSzTq4=;
-        b=GaPVML/K50+BqtaCFuvD2fsHYOODgvAGYNmfICzaQxrTNUYc6vWZnHeCxzhraQYQV8
-         9yWNX9gwd09+VRa1SRE6mebTOylLi7jAGVmVjzUCLvMPclD7SfC2jWJ/SqG4KAZf1t0s
-         BTK0+xQHdOxVDMFMRo0bxC4rvBmybwZO/W2CqhZm81Q+dDyl6otAHZIg0usFpth+BIGb
-         fBzWl0u80yF9Oiet01BmF5Hc37UFcTKE+f2pf8qIM4nsx7oAAn7qbVYVvDx6Z5UJ83sO
-         73m9woy7xdiTG/atyZfHJdwsE6W7dODOqa5Cw0ahlJlXuVfmaXz8sb+Zzsgb9P3nZGuR
-         iQRQ==
-X-Gm-Message-State: ANhLgQ0s51YXsVEK+3ZYNxV6yHm8SoCKGMvcMI7kH23EATBt7UalJD30
-        Qnb7SscaYHV84sBnQxfe2Mo=
-X-Google-Smtp-Source: ADFU+vuSKVKDhCno4+Mq0uvE1KVuExpu4oA+/WFezYFdXs9rfgVJNmqSirh5K9SNW5BgkOeQFHON2A==
-X-Received: by 2002:ac8:4659:: with SMTP id f25mr2248175qto.273.1583491293109;
-        Fri, 06 Mar 2020 02:41:33 -0800 (PST)
-Received: from L-E5450.nxp.com ([177.221.114.206])
-        by smtp.gmail.com with ESMTPSA id u5sm17096932qkf.32.2020.03.06.02.41.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 02:41:32 -0800 (PST)
-From:   Alifer Moraes <alifer.wsdm@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        marco.franchi@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alifer Moraes <alifer.wsdm@gmail.com>
-Subject: [PATCH] arm64: dts: imx8mq-phanbell: Fix Ethernet PHY post-reset duration
-Date:   Fri,  6 Mar 2020 07:42:19 -0300
-Message-Id: <20200306104219.6434-1-alifer.wsdm@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 6 Mar 2020 05:44:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GIbo4YZ93wGuhbTOVPQyLk7lgLSRN+bj2GNsqZE+sDA=; b=L8bfEK9CyNcdY+WYewTkCDB4bB
+        LKb+5qNXgAZexm3AVkxQjcbMdtXd+yFmfb+ui1sWE7rgiqvMokmdGWc1Cy1hetPrEd0tRI/ZCEMm1
+        T6/3R5AS0E8ZXWFxU1q+WHbIVIPLzJyCvp9k3mu0KYN0JKrcH9FlDNR9ebpmaFrKFy7y5Gy+qcYoh
+        VlE0ih/8Es10TWs+GQt/ocNVmdVpkdiOw2OUXAUT7oAywwYwQayxisVIWZXvPwd1YCBN4yVbqJeyv
+        LVHuD6fK3kntxAlk3OzOUIkRRoUDqqHY4j9F94xnln/VcDDjVoZ4qagekd+hbNw2qIgoZsypiLKZw
+        k1CslHqA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jAASA-000438-VY; Fri, 06 Mar 2020 10:43:39 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B134C980DE9; Fri,  6 Mar 2020 11:43:35 +0100 (CET)
+Date:   Fri, 6 Mar 2020 11:43:35 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org
+Cc:     mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for
+ _rcuidle tracepoints (again)
+Message-ID: <20200306104335.GF3348@worktop.programming.kicks-ass.net>
+References: <20200221133416.777099322@infradead.org>
+ <20200221134216.051596115@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221134216.051596115@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX8MQ Phanbell board uses Realtek RTL8211FD as Ethernet PHY.
-Its datasheet states that the proper post reset duration should be at least 50 ms.
+On Fri, Feb 21, 2020 at 02:34:32PM +0100, Peter Zijlstra wrote:
+> Effectively revert commit 865e63b04e9b2 ("tracing: Add back in
+> rcu_irq_enter/exit_irqson() for rcuidle tracepoints") now that we've
+> taught perf how to deal with not having an RCU context provided.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  include/linux/tracepoint.h |    8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -179,10 +179,8 @@ static inline struct tracepoint *tracepo
+>  		 * For rcuidle callers, use srcu since sched-rcu	\
+>  		 * doesn't work from the idle path.			\
+>  		 */							\
+> -		if (rcuidle) {						\
+> +		if (rcuidle)						\
+>  			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+> -			rcu_irq_enter_irqsave();			\
+> -		}							\
+>  									\
+>  		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
+>  									\
+> @@ -194,10 +192,8 @@ static inline struct tracepoint *tracepo
+>  			} while ((++it_func_ptr)->func);		\
+>  		}							\
+>  									\
+> -		if (rcuidle) {						\
+> -			rcu_irq_exit_irqsave();				\
+> +		if (rcuidle)						\
+>  			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+> -		}							\
+>  									\
+>  		preempt_enable_notrace();				\
+>  	} while (0)
 
-Fixes: f34d4bfab354 ("arm64: dts: imx8mq-phanbell: Add support for ethernet")
-Signed-off-by: Alifer Moraes <alifer.wsdm@gmail.com>
----
- arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-index 16ed13c44a47..06e248b95ada 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -207,7 +207,7 @@
- 	phy-mode = "rgmii-id";
- 	phy-reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
- 	phy-reset-duration = <10>;
--	phy-reset-post-delay = <30>;
-+	phy-reset-post-delay = <50>;
- 	phy-handle = <&ethphy0>;
- 	fsl,magic-packet;
- 	status = "okay";
--- 
-2.17.1
-
+So what happens when BPF registers for these tracepoints? BPF very much
+wants RCU on AFAIU.
