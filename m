@@ -2,180 +2,205 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732A8C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F912C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9C12073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D2D220848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:07:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CqMIIU6O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgCFMFb (ORCPT
+        id S1726490AbgCFMHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:05:31 -0500
-Received: from mga12.intel.com ([192.55.52.136]:62982 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgCFMFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:05:30 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 04:05:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
-   d="scan'208";a="352729401"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 06 Mar 2020 04:05:26 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 06 Mar 2020 14:05:25 +0200
-Date:   Fri, 6 Mar 2020 14:05:25 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        hdegoede@redhat.com,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: BUG: kernel NULL pointer dereference, address: 00 -
- ida_free+0x76/0x140
-Message-ID: <20200306120525.GC68079@kuha.fi.intel.com>
-References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
- <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
- <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
- <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
- <20200305223350.GA2852@mara.localdomain>
+        Fri, 6 Mar 2020 07:07:18 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37733 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgCFMHS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 07:07:18 -0500
+Received: by mail-lf1-f68.google.com with SMTP id j11so1724602lfg.4
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 04:07:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4KPUPSTkugtYA0PbEeoVta4pOw/ai16ArIKK838lBEU=;
+        b=CqMIIU6OgUcYfP+nO15DqV4Gn+28U4l0XKINHu7YR8cz06yd1dTfyQOySiqK8perVe
+         q9cBlZ2hKQbb6Y6/ajVOTatYAlb8vOP2A+OXF4OW7VofwPUW8se8+6H3YntUcm9i03X0
+         dhmQuNmiKWxKSbFtmu3Dise3GGTlB0YOpqwp7veoFIANAJ/YXBAnSy0VfnbTKvbDT1un
+         de/8n7Nsne1PBues3q5A7DLVutU3rmafGrzSpvI7sWUzRtt1FntXj7ANmZRArJrX4P6N
+         v3sBy6cEI8TxFNCkLrLgmFRuuUUbivLim/IAEzmhkO9x3QDAIpTgcMcIbIzsGSY+zlbK
+         L3Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4KPUPSTkugtYA0PbEeoVta4pOw/ai16ArIKK838lBEU=;
+        b=oHuE0nyiE3FsBrCAk8rrPvvWGYn8S+VwBIIWyGB69I11L63c2ddKZbWP/IQLP/1IAs
+         HsPk6+0ejP8uo3ZyNv1kHq8zUlkZ8u/0+XeLmBHGcqIK4uef9+oAmQ4kVJbvp4Gj7k7k
+         957SktwsPqM84aMy/5qZgXO2pbE9fZYu+Jvjq8gFQHyqe0RDb4bDPluLizcVUwMK5Gv2
+         EaJi9sLy8Ng0PwoOjVSEjloUADRHMjElYT4Xlk+Bf1X2QNYAkY6ptW6CM6vgmZ40EA9N
+         BuvCW5/fR4Xpsg05/pSivi58jAIXvW/zOzZpSjNOiJ6wcf/QENnQft7gHUWMUUT2M4c3
+         W63w==
+X-Gm-Message-State: ANhLgQ3TIiIilIkEXtztIhdiOzSEGQENBUTj46nbLjcycg263nFlrSGa
+        ehFF9nYZA3kU1rcp0TyuwJATLIa6jV4j4RVvapgAsA==
+X-Google-Smtp-Source: ADFU+vvQ1aR+zpKusZ09dVvP7kf4bC66fgMS07Kbjp8L2S6t2eYS+496jT2rtl2R7T0gZJhh4p4P35QHGaUh8yls+jk=
+X-Received: by 2002:a19:c215:: with SMTP id l21mr1732735lfc.95.1583496435711;
+ Fri, 06 Mar 2020 04:07:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305223350.GA2852@mara.localdomain>
+References: <20200305172921.22743-1-vincent.guittot@linaro.org>
+ <e31aa232-bc7e-a7b9-5b6a-a1131ac88164@arm.com> <CAKfTPtAqg+CGNBHF53dXp4BcmtucgW4k4skQ1x1jxuyo0PDaMg@mail.gmail.com>
+In-Reply-To: <CAKfTPtAqg+CGNBHF53dXp4BcmtucgW4k4skQ1x1jxuyo0PDaMg@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 6 Mar 2020 13:07:04 +0100
+Message-ID: <CAKfTPtB8YrVd=DjPXCs589wCJWT_Jo_dyLQ4WMdEKPTAt5GRvw@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: fix enqueue_task_fair warning
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "# v4 . 16+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 12:33:50AM +0200, Sakari Ailus wrote:
-> Hi Brendan,
-> 
-> On Thu, Mar 05, 2020 at 11:51:20AM -0800, Brendan Higgins wrote:
-> > On Thu, Mar 5, 2020 at 11:40 AM Brendan Higgins
-> > <brendanhiggins@google.com> wrote:
+On Fri, 6 Mar 2020 at 10:12, Vincent Guittot <vincent.guittot@linaro.org> wrote:
+>
+> On Thu, 5 Mar 2020 at 20:07, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> >
+> > On 05/03/2020 18:29, Vincent Guittot wrote:
+> > > When a cfs rq is throttled, the latter and its child are removed from the
+> > > leaf list but their nr_running is not changed which includes staying higher
+> > > than 1. When a task is enqueued in this throttled branch, the cfs rqs must
+> > > be added back in order to ensure correct ordering in the list but this can
+> > > only happens if nr_running == 1.
+> > > When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
+> > > when enqueuing an entity to make sure that the complete branch will be
+> > > added.
 > > >
-> > > On Thu, Mar 5, 2020 at 11:18 AM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > >
-> > > > +Cc: Sakari
-> > > >
-> > > > On Thu, Mar 5, 2020 at 6:00 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > > > >
-> > > > > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
-> > > > > i386, arm and arm64. The steps to reproduce is running kselftests lib
-> > > > > printf.sh test case.
-> > > > > Which is doing modprobe operations.
-> > > > >
-> > > > > BTW, there are few RCU warnings from the boot log.
-> > > > > Please refer below link for more details.
-> > > > >
-> > > > > Steps reproduce by using kselftests,
-> > > > >
-> > > > >           - lsmod || true
-> > > > >           - cd /opt/kselftests/default-in-kernel/lib/
-> > > > >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
-> > > > >           - ./printf.sh || true
-> > > > >           - ./bitmap.sh || true
-> > > > >           - ./prime_numbers.sh || true
-> > > > >           - ./strscpy.sh || true
-> > > > >
-> > > > > x86_64 kernel BUG dump.
-> > > > > + ./printf.sh
+> > > Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> > > Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> > > Cc: stable@vger.kernel.org #v5.1+
+> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > ---
+> > >  kernel/sched/fair.c | 11 +++++++++--
+> > >  1 file changed, 9 insertions(+), 2 deletions(-)
 > > >
-> > > Oops, I am wondering if I broke this with my change "Revert "software
-> > > node: Simplify software_node_release() function"":
+> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > index fcc968669aea..bdc5bb72ab31 100644
+> > > --- a/kernel/sched/fair.c
+> > > +++ b/kernel/sched/fair.c
+> > > @@ -4117,6 +4117,7 @@ static inline void check_schedstat_required(void)
+> > >  #endif
+> > >  }
 > > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
+> > > +static inline bool cfs_bandwidth_used(void);
 > > >
-> > > I am still investigating, will update later.
-> > 
-> > Okay, yeah, I am pretty sure I caused the breakage. I got an email
-> > from kernel test robot a couple days ago that I didn't see:
-> > 
-> > https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/N3ZN5XH7HK24JVEJ5WSQD2SK6YCDRILR/
-> > 
-> > It shows the same breakage after applying this change.
-> > 
-> > I am still investigating how my change broke it, nevertheless.
-> 
-> As nodes in the tree are being removed, the code before the patch that
-> "simplified" the software_node_release() function accessed the node's parent
-> in its release function.
-> 
-> And if CONFIG_DEBUG_KOBJECT_RELEASE is defined, the release functions are no
-> longer necessarily called in order, leading to referencing released memory.
-> Oops!
-> 
-> So Heikki's patch actually fixed a bug. :-)
+> > >  /*
+> > >   * MIGRATION
+> > > @@ -4195,10 +4196,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+> > >               __enqueue_entity(cfs_rq, se);
+> > >       se->on_rq = 1;
+> > >
+> > > -     if (cfs_rq->nr_running == 1) {
+> > > +     /*
+> > > +      * When bandwidth control is enabled, cfs might have been removed because of
+> > > +      * a parent been throttled but cfs->nr_running > 1. Try to add it
+> > > +      * unconditionnally.
+> > > +      */
+> > > +     if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
+> > >               list_add_leaf_cfs_rq(cfs_rq);
+> > > +
+> > > +     if (cfs_rq->nr_running == 1)
+> > >               check_enqueue_throttle(cfs_rq);
+> > > -     }
+> > >  }
+> > >
+> > >  static void __clear_buddies_last(struct sched_entity *se)
+> >
+> > I experimented with an rt-app based setup on Arm64 Juno (6 CPUs):
+> >
+> > cgroupv1 hierarchy A/B/C, all CFS bw controlled (30,000/100,000)
+> >
+> > I create A/B/C outside rt-app so I can have rt-app runs with an already
+> > existing taskgroup hierarchy. There is a 4 secs gap between consecutive
+> > rt-app runs.
+> >
+> > The rt-app files contains 6 periodic CFS tasks (25,000/100,000) running
+> > in /A/B/C, /A/B, /A (3 rt-app task phases).
+> >
+> > I get w/ the patch (and the debug patch applied to unthrottle_cfs_rq()):
+> >
+> > root@juno:~#
+> > [  409.236925] CPU1 path=/A/B on_list=1 nr_running=1 throttled=1
+> > [  409.242682] CPU1 path=/A on_list=0 nr_running=0 throttled=1
+> > [  409.248260] CPU1 path=/ on_list=1 nr_running=0 throttled=0
+> > [  409.253748] ------------[ cut here ]------------
+> > [  409.258365] rq->tmp_alone_branch != &rq->leaf_cfs_rq_list
+> > [  409.258382] WARNING: CPU: 1 PID: 0 at kernel/sched/fair.c:380
+> > unthrottle_cfs_rq+0x21c/0x2a8
+> > ...
+> > [  409.275196] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc3-dirty #62
+> > [  409.281990] Hardware name: ARM Juno development board (r0) (DT)
+> > ...
+> > [  409.384644] Call trace:
+> > [  409.387089]  unthrottle_cfs_rq+0x21c/0x2a8
+> > [  409.391188]  distribute_cfs_runtime+0xf4/0x198
+> > [  409.395634]  sched_cfs_period_timer+0x134/0x240
+> > [  409.400168]  __hrtimer_run_queues+0x10c/0x3c0
+> > [  409.404527]  hrtimer_interrupt+0xd4/0x250
+> > [  409.408539]  tick_handle_oneshot_broadcast+0x17c/0x208
+> > [  409.413683]  sp804_timer_interrupt+0x30/0x40
+> >
+> > If I add the following snippet the issue goes away:
 
-Well, I think it just hid the problem. It looks like the core
-(lib/kobject.c) allows the parent kobject to be released before the
-last child kobject is released. To be honest, that does not sound
-right to me...
+If it's fine for you, I'm going to add this in a new version of the patch
 
-I think we can workaround this problem by taking reference to the
-parent when the child is added, and then releasing it when the child
-is released, and in that way be guaranteed that the parent will not
-disappear before the child is fully released, but that still does not
-feel right. It feels more like the core is not doing it's job to me.
-The parent just should not be released before its children.
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index e9fd5379bb7e..5e03be046aba 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -4627,11 +4627,17 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+> >                         break;
+> >         }
+> >
+> > -       assert_list_leaf_cfs_rq(rq);
+> > -
+> >         if (!se)
+> >                 add_nr_running(rq, task_delta);
+> >
 
-Either I'm wrong about that, and we still should take the reference on
-the parent, or we revert my patch like Brendan proposed and then fix
-the core with something like this (warning, I did not even try to
-compile that):
+will add similar comment  as for enqueue_task_fair
 
-diff --git a/lib/kobject.c b/lib/kobject.c
-index 83198cb37d8d..ec5774992337 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -680,6 +680,12 @@ static void kobject_cleanup(struct kobject *kobj)
-                kobject_uevent(kobj, KOBJ_REMOVE);
-        }
++ /*
++ * The cfs_rq_throttled() breaks in the above iteration can result in
++ * incomplete leaf list maintenance, resulting in triggering the assertion
++ * below.
++ */
 
-+       if (t && t->release) {
-+               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-+                        kobject_name(kobj), kobj);
-+               t->release(kobj);
-+       }
-+
-        /* remove from sysfs if the caller did not do it */
-        if (kobj->state_in_sysfs) {
-                pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-@@ -687,12 +693,6 @@ static void kobject_cleanup(struct kobject *kobj)
-                kobject_del(kobj);
-        }
-
--       if (t && t->release) {
--               pr_debug("kobject: '%s' (%p): calling ktype release\n",
--                        kobject_name(kobj), kobj);
--               t->release(kobj);
--       }
--
-        /* free name if we allocated it */
-        if (name) {
-                pr_debug("kobject: '%s': free name\n", name);
-
-
-thanks,
-
--- 
-heikki
+> > +       for_each_sched_entity(se) {
+> > +               cfs_rq = cfs_rq_of(se);
+> > +
+> > +               list_add_leaf_cfs_rq(cfs_rq);
+> > +       }
+>
+> Yes make sense.
+>
+> > +
+> > +       assert_list_leaf_cfs_rq(rq);
+> > +
+> >         /* Determine whether we need to wake up potentially idle CPU: */
+> >         if (rq->curr == rq->idle && rq->cfs.nr_running)
+> >                 resched_curr(rq);
