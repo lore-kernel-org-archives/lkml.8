@@ -2,166 +2,164 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3258C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A536AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B302073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583508397;
-	bh=LFduZrR2FMzRvYOKUqz/lBRfe1bOxAcCftgD5xvPBfE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=di+H7IVXpVc1su2WQQh2mEmBy4Z4ACCaLUZStmuVYwBnK3hk6K6dXz3R11q5DLSzB
-	 3/bwWpE6RJh7hmPBF4Zpj2zlGn69aYSOKk0/r9vcUHtyFPNrPt3/+Y8mtmLJnQCa9c
-	 voLOGdAArQMQIgt8MIWnjGEJilpxNPaMGhv5hlFk=
+	by mail.kernel.org (Postfix) with ESMTP id 7BF322073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:26:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EtBwOWCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgCFP0g (ORCPT
+        id S1727191AbgCFP0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:26:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgCFP0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:26:36 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B58C2073B;
-        Fri,  6 Mar 2020 15:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583508395;
-        bh=LFduZrR2FMzRvYOKUqz/lBRfe1bOxAcCftgD5xvPBfE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ybYruN+ZZ0Jnykl84atF4mXSe5iljcxrWE+iwALuX/yJ35ONLn/n8GGXR9lbC12l2
-         xonT5x9qilyJrX8utYs181P/dX5jtd2+vLj0W72/8LZacVf4cGUwo9EVqtv3Y/CjlP
-         XrkXzK62P5y99BsTzR5KvnqsIkvIIL75umGhhYVg=
-Date:   Fri, 6 Mar 2020 16:26:33 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Alex Belits <abelits@marvell.com>
-Cc:     "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Prasun Kapoor <pkapoor@marvell.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-mm@vger.kernel.org" <linux-mm@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH 03/12] task_isolation: userspace hard isolation from
- kernel
-Message-ID: <20200306152632.GB8590@lenoir>
-References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
- <36d84b8dd168a38e6a56549dedc15dd6ebf8c09e.camel@marvell.com>
+        Fri, 6 Mar 2020 10:26:41 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33530 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgCFP0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:26:40 -0500
+Received: by mail-wr1-f66.google.com with SMTP id x7so2858889wrr.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 07:26:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ONRnUi9jCMqmOjWyWhiAOr6JoGLpum+q//SeY+50q00=;
+        b=EtBwOWCB8Ya/o0z2Yco05wvblUtQI2zyqVRqZpCasqMRRE4gDV0h7u2++BIVbdj+Mn
+         DKBCtp5W397rvpQ8Qdy3ZioawfGcJRWi3SdTdgY2QXHLdR0YnPv1imeM/i+MO6jYw/n3
+         dlrIbUH43oAWu0uNMi4LgUn7ncSRN9eCtnWeMivh+k63vtvd+XveKjqU+46wxfATiQGq
+         CDb/fdJSdcLW7DGOTToq4sILmAbrOA76IzusUbKITanbGVXJOr7dWUQMupaAU/6gcwHV
+         uqF8/hC9iNSZ+WYW3i1fx4UFgu6XzEUtVcUKYLx2JYumzdteBFq8tPUPlt3PpFPFn8+E
+         fZFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ONRnUi9jCMqmOjWyWhiAOr6JoGLpum+q//SeY+50q00=;
+        b=E2LWRoi+sfw9//q1BhPepYJpd++b+r9MK0YhcJ4E18CkIMrT8NcgFZ8BzGNq7GHasb
+         WG+wY9uv8a/jqxd6qK/vRyxIYROlG8zpX2RC3Nac0E21mbp570qaDU7EceQlghdQZSR/
+         1HvTDJotizrUXv/clXS/G4hKwegCPDkhlUWqk5gdHjFjaoAd5xf/VTTqtWNzqKR/upLn
+         EODDeXrioNyyHyfWfQgBH1ua1PNcXdTn6Fr0YHGQysSPSD5quU89U5igWTXbprf2LSIa
+         /awiDB0WyfdL8z2DX19G67wZkvPUIIRPtqw0FMyCqToHl7bTXXZrnxNbMEVKKVGP4N/S
+         2O+Q==
+X-Gm-Message-State: ANhLgQ1ps2+3UP28LQ+FHFu+2lqwkLEQyavMAO1dZm5OQ2tTmTgudaCJ
+        EcXiFi8OPSRlxTUabJ8rg0jdGg==
+X-Google-Smtp-Source: ADFU+vvm+PP7qjGjgcl5L4VdutX0/oiHXqeGOVQ/NtI7UQPw+oZlGMEa5zIUH/oKXKZzohqiAUPqSg==
+X-Received: by 2002:a5d:424c:: with SMTP id s12mr4488258wrr.244.1583508398849;
+        Fri, 06 Mar 2020 07:26:38 -0800 (PST)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id i14sm1902968wmb.25.2020.03.06.07.26.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 07:26:38 -0800 (PST)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     broonie@kernel.org
+Cc:     alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] ASoC: wcd9335: fix address map representation
+Date:   Fri,  6 Mar 2020 15:26:33 +0000
+Message-Id: <20200306152633.25836-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <36d84b8dd168a38e6a56549dedc15dd6ebf8c09e.camel@marvell.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:07:12PM +0000, Alex Belits wrote:
-> +
-> +/*
-> + * Print message prefixed with the description of the current (or
-> + * last) isolated task on a given CPU. Intended for isolation breaking
-> + * messages that include target task for the user's convenience.
-> + *
-> + * Messages produced with this function may have obsolete task
-> + * information if isolated tasks managed to exit, start and enter
-> + * isolation multiple times, or multiple tasks tried to enter
-> + * isolation on the same CPU at once. For those unusual cases it would
-> + * contain a valid description of the cause for isolation breaking and
-> + * target CPU number, just not the correct description of which task
-> + * ended up losing isolation.
-> + */
-> +int task_isolation_message(int cpu, int level, bool supp, const char *fmt, ...)
-> +{
-> +	struct isol_task_desc *desc;
-> +	struct task_struct *task;
-> +	va_list args;
-> +	char buf_prefix[TASK_COMM_LEN + 20 + 3 * 20];
-> +	char buf[200];
-> +	int curr_cpu, ind_counter, ind_counter_old, ind;
-> +
-> +	curr_cpu = get_cpu();
-> +	desc = &per_cpu(isol_task_descs, cpu);
-> +	ind_counter = atomic_read(&desc->curr_index);
-> +
-> +	if (curr_cpu == cpu) {
-> +		/*
-> +		 * Message is for the current CPU so current
-> +		 * task_struct should be used instead of cached
-> +		 * information.
-> +		 *
-> +		 * Like in other diagnostic messages, if issued from
-> +		 * interrupt context, current will be the interrupted
-> +		 * task. Unlike other diagnostic messages, this is
-> +		 * always relevant because the message is about
-> +		 * interrupting a task.
-> +		 */
-> +		ind = ind_counter & 1;
-> +		if (supp && desc->warned[ind]) {
-> +			/*
-> +			 * If supp is true, skip the message if the
-> +			 * same task was mentioned in the message
-> +			 * originated on remote CPU, and it did not
-> +			 * re-enter isolated state since then (warned
-> +			 * is true). Only local messages following
-> +			 * remote messages, likely about the same
-> +			 * isolation breaking event, are skipped to
-> +			 * avoid duplication. If remote cause is
-> +			 * immediately followed by a local one before
-> +			 * isolation is broken, local cause is skipped
-> +			 * from messages.
-> +			 */
-> +			put_cpu();
-> +			return 0;
-> +		}
-> +		task = current;
-> +		snprintf(buf_prefix, sizeof(buf_prefix),
-> +			 "isolation %s/%d/%d (cpu %d)",
-> +			 task->comm, task->tgid, task->pid, cpu);
-> +		put_cpu();
-> +	} else {
-> +		/*
-> +		 * Message is for remote CPU, use cached information.
-> +		 */
-> +		put_cpu();
-> +		/*
-> +		 * Make sure, index remained unchanged while data was
-> +		 * copied. If it changed, data that was copied may be
-> +		 * inconsistent because two updates in a sequence could
-> +		 * overwrite the data while it was being read.
-> +		 */
-> +		do {
-> +			/* Make sure we are reading up to date values */
-> +			smp_mb();
-> +			ind = ind_counter & 1;
-> +			snprintf(buf_prefix, sizeof(buf_prefix),
-> +				 "isolation %s/%d/%d (cpu %d)",
-> +				 desc->comm[ind], desc->tgid[ind],
-> +				 desc->pid[ind], cpu);
-> +			desc->warned[ind] = true;
-> +			ind_counter_old = ind_counter;
-> +			/* Record the warned flag, then re-read descriptor */
-> +			smp_mb();
-> +			ind_counter = atomic_read(&desc->curr_index);
-> +			/*
-> +			 * If the counter changed, something was updated, so
-> +			 * repeat everything to get the current data
-> +			 */
-> +		} while (ind_counter != ind_counter_old);
-> +	}
+slimbus addresses are 16 bit wide, masking page numbers
+to wcd register at offset of 12 will limit the number for pages.
+So it becomes impossible to write to page 0x10 registers.
+Remove masking 0x800 (slimbus address range) from register address
+and making use of window parameters in regmap config should fix it
+and also will represent the registers exactly inline with Datasheet.
 
-So the need to log the fact we are sending an event to a remote CPU that *may be*
-running an isolated task makes things very complicated and even racy.
+Remove this unnessary masking and make the registers be inline
+with datasheet.
 
-How bad would it be to only log those interruptions once they land on the target?
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ sound/soc/codecs/wcd9335.c | 18 +++++++++---------
+ sound/soc/codecs/wcd9335.h |  7 ++++---
+ 2 files changed, 13 insertions(+), 12 deletions(-)
 
-Thanks.
+diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
+index f11ffa28683b..700cc1212770 100644
+--- a/sound/soc/codecs/wcd9335.c
++++ b/sound/soc/codecs/wcd9335.c
+@@ -4926,11 +4926,11 @@ static const struct regmap_range_cfg wcd9335_ranges[] = {
+ 		.name = "WCD9335",
+ 		.range_min =  0x0,
+ 		.range_max =  WCD9335_MAX_REGISTER,
+-		.selector_reg = WCD9335_REG(0x0, 0),
++		.selector_reg = WCD9335_SEL_REGISTER,
+ 		.selector_mask = 0xff,
+ 		.selector_shift = 0,
+-		.window_start = 0x0,
+-		.window_len = 0x1000,
++		.window_start = 0x800,
++		.window_len = 0x100,
+ 	},
+ };
+ 
+@@ -4968,12 +4968,12 @@ static const struct regmap_range_cfg wcd9335_ifc_ranges[] = {
+ 	{
+ 		.name = "WCD9335-IFC-DEV",
+ 		.range_min =  0x0,
+-		.range_max = WCD9335_REG(0, 0x7ff),
+-		.selector_reg = WCD9335_REG(0, 0x0),
+-		.selector_mask = 0xff,
++		.range_max = WCD9335_MAX_REGISTER,
++		.selector_reg = WCD9335_SEL_REGISTER,
++		.selector_mask = 0xfff,
+ 		.selector_shift = 0,
+-		.window_start = 0x0,
+-		.window_len = 0x1000,
++		.window_start = 0x800,
++		.window_len = 0x400,
+ 	},
+ };
+ 
+@@ -4981,7 +4981,7 @@ static struct regmap_config wcd9335_ifc_regmap_config = {
+ 	.reg_bits = 16,
+ 	.val_bits = 8,
+ 	.can_multi_write = true,
+-	.max_register = WCD9335_REG(0, 0x7FF),
++	.max_register = WCD9335_MAX_REGISTER,
+ 	.ranges = wcd9335_ifc_ranges,
+ 	.num_ranges = ARRAY_SIZE(wcd9335_ifc_ranges),
+ };
+diff --git a/sound/soc/codecs/wcd9335.h b/sound/soc/codecs/wcd9335.h
+index 4d9be2496c30..72060824c743 100644
+--- a/sound/soc/codecs/wcd9335.h
++++ b/sound/soc/codecs/wcd9335.h
+@@ -8,9 +8,9 @@
+  * in slimbus mode the reg base starts from 0x800
+  * in i2s/i2c mode the reg base is 0x0
+  */
+-#define WCD9335_REG(pg, r)	((pg << 12) | (r) | 0x800)
++#define WCD9335_REG(pg, r)	((pg << 8) | (r))
+ #define WCD9335_REG_OFFSET(r)	(r & 0xFF)
+-#define WCD9335_PAGE_OFFSET(r)	((r >> 12) & 0xFF)
++#define WCD9335_PAGE_OFFSET(r)	((r >> 8) & 0xFF)
+ 
+ /* Page-0 Registers */
+ #define WCD9335_PAGE0_PAGE_REGISTER		WCD9335_REG(0x00, 0x000)
+@@ -600,7 +600,8 @@
+ #define WCD9335_CDC_CLK_RST_CTRL_FS_CNT_ENABLE	BIT(0)
+ #define WCD9335_CDC_CLK_RST_CTRL_FS_CNT_DISABLE	0
+ #define WCD9335_CDC_TOP_TOP_CFG1	WCD9335_REG(0x0d, 0x082)
+-#define WCD9335_MAX_REGISTER	WCD9335_REG(0x80, 0x0FF)
++#define WCD9335_MAX_REGISTER	0xffff
++#define WCD9335_SEL_REGISTER	0x800
+ 
+ /* SLIMBUS Slave Registers */
+ #define WCD9335_SLIM_PGD_PORT_INT_EN0	WCD9335_REG(0, 0x30)
+-- 
+2.21.0
+
