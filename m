@@ -2,115 +2,101 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F87DC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E02C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DB320866
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583498087;
-	bh=50FsvEWhVLCsXiT3fYUpxYQIEwnyRkjX2gQrIJs9pYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nsCJMF6jK7yp9H3qQPt94vOhfwHtzAwZLK6bp04oZ70L/JR7U2hvuzkrcH2/t0hL1
-	 oUV6pHOUO4WOrheDlnoqynelKfoNseRebXf83gpNAwQU65m3tfCeMpr3EuabxTuc6M
-	 TqWpC8Tbb+uVUWwcW3oFyZ7JUGL1qsSSbwWltPkA=
+	by mail.kernel.org (Postfix) with ESMTP id 4D5FA2072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCFMeq (ORCPT
+        id S1726702AbgCFMfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:34:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49816 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 07:35:19 -0500
+Received: from mga03.intel.com ([134.134.136.65]:53296 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgCFMep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:34:45 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D3D22072A;
-        Fri,  6 Mar 2020 12:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583498085;
-        bh=50FsvEWhVLCsXiT3fYUpxYQIEwnyRkjX2gQrIJs9pYk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MqS88dhL/XPiRJyhwQhpkh7U1ms/rZrTIJRsbADkPAKs9VTrlUcomFIxcDhFhjiaX
-         dnkB3CKGI+o0dgziPDIdgCiwUNXxIXGkAHBXBtpCO7DrjMUEHrYprqhrzYGFfDOdL3
-         W3CkeTz40TJ5zLMZ7CdvG6sL6igocRd5BtK/jyfQ=
-Date:   Fri, 6 Mar 2020 13:34:40 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.cz>, Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Rob Herring <robh@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] mfd: motmdm: Add Motorola TS 27.010 serdev modem
- driver for droid4
-Message-ID: <20200306123440.GA3691382@kroah.com>
-References: <20200220195943.15314-1-tony@atomide.com>
- <20200220195943.15314-3-tony@atomide.com>
- <20200226115548.GO3494@dell>
- <20200226144308.GM37466@atomide.com>
+        id S1726182AbgCFMfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 07:35:19 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 04:35:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
+   d="scan'208";a="275524609"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 04:35:14 -0800
+Subject: Re: [PATCH 01/10] mmc: sdhci: Add quirk SDHCI_QUIRK2_SET_BUS_VOLTAGE
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
+Cc:     ulf.hansson@linaro.org, f.fainelli@gmail.com, phil@raspberrypi.org,
+        linux-kernel@vger.kernel.org
+References: <20200306103857.23962-1-nsaenzjulienne@suse.de>
+ <20200306103857.23962-2-nsaenzjulienne@suse.de>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <55ef25ae-5c73-7778-dfda-976809cf9fe6@intel.com>
+Date:   Fri, 6 Mar 2020 14:34:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226144308.GM37466@atomide.com>
+In-Reply-To: <20200306103857.23962-2-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 06:43:08AM -0800, Tony Lindgren wrote:
-> * Lee Jones <lee.jones@linaro.org> [200226 11:56]:
-> > On Thu, 20 Feb 2020, Tony Lindgren wrote:
-> > 
-> > > Many Motorola phones are controlling the modem using a custom variant
-> > > of TS 27.010 serial line discipline. Devices on these modems have a
-> > > dedicated TS 27.010 channel for features like audio mixer, GNSS, voice
-> > > modem, SIM card reader and so on.
-> > > 
-> > > This driver allows using various devices on the modem. In order to do
-> > > that, we need to take care of the following three things:
-> > > 
-> > > 1. Provide /dev/motmdm* character devices for apps to use for talking
-> > >    to the various devices on the modem
-> > > 
-> > > 2. Handle Motorola custom protocol over TS 27.010 to make the channels
-> > >    usable for userspace
-> > > 
-> > > 3. Coordinate PM runtime with the USB PHY because of shared GPIO pins
-> > >    with the USB PHY
-> ...
-> > > ---
-> > >  drivers/mfd/Kconfig        |    9 +
-> > >  drivers/mfd/Makefile       |    1 +
-> > >  drivers/mfd/motorola-mdm.c | 1200 ++++++++++++++++++++++++++++++++++++
-> > 
-> > I'm not even going to start reviewing this as I can see, without even
-> > looking at the code, that this has too much functionality (stuff that
-> > does stuff) contained.
-> > 
-> > Please move as much functionality out into the subsystems as
-> > possible.  Ideally, MFDs should be responsible for obtaining and
-> > registering shared resources and registering child devices.  Anything
-> > else should be shifted out to an appropriate subsystem.
-> > 
-> > MFD is not Misc.
+On 6/03/20 12:38 pm, Nicolas Saenz Julienne wrote:
+> Adds quirk for controllers whose bus power select register has to be set
+> even when powering SD cards from a regulator.
 > 
-> OK good point. So this is a serdev consumer driver that eventually will
-> also provide serdev style access to few device drivers too for the
-> device within the modem after decoding the Motorola specific protocol.
-> No special need for this driver to be under drivers/mfd though.
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  drivers/mmc/host/sdhci.c | 5 +++++
+>  drivers/mmc/host/sdhci.h | 2 ++
+>  2 files changed, 7 insertions(+)
 > 
-> How about we add drivers/tty/serdev/protocol or similar directory for
-> drivers like this?
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index c59566363a42..c7fd87447457 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1920,6 +1920,11 @@ static void sdhci_set_power_reg(struct sdhci_host *host, unsigned char mode,
+>  
+>  	mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
+>  
+> +	if (host->quirks2 & SDHCI_QUIRK2_SET_BUS_VOLTAGE) {
 
-Sure, that seems sane.
+We don't really want to replace callbacks by quirks.
+
+Replace sdhci_milbeaut_set_power() etc by a common fn in sdhci.c if you want.
+
+> +		sdhci_set_power_noreg(host, mode, vdd);
+> +		return;
+> +	}
+> +
+>  	if (mode != MMC_POWER_OFF)
+>  		sdhci_writeb(host, SDHCI_POWER_ON, SDHCI_POWER_CONTROL);
+>  	else
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index cac2d97782e6..9531a4e5b148 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -484,6 +484,8 @@ struct sdhci_host {
+>   * block count.
+>   */
+>  #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
+> +/* Set bus voltage even when powering from an external regulator */
+> +#define SDHCI_QUIRK2_SET_BUS_VOLTAGE			(1<<19)
+>  
+>  	int irq;		/* Device IRQ */
+>  	void __iomem *ioaddr;	/* Mapped address */
+> 
 
