@@ -2,116 +2,106 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E8BC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8E0C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5E22187F
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98AF208CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:04:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583510645;
+	bh=I0whQjzL0+2udVNnbjdJeGuRoNAzb4lqvRsZ+FI8stA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=1Vg6Wh7xFxDQydiqVVqNSixoyfwAQZxo1U7YgOInEuWcZSOB4htq/U8UFyyimdI1M
+	 0Wut394Na/VxSb7DWQQdOX0tosLhMx3tTth+k+Vh/ce5vdVCGiAIqDF6/9AsYmJUcs
+	 9jbY28JTrSpb9wit6q2tof3U+SXu+FvgQmgLBjAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgCFQDy (ORCPT
+        id S1727125AbgCFQEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:03:54 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40886 "EHLO mx2.suse.de"
+        Fri, 6 Mar 2020 11:04:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgCFQDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:03:54 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CF114B1F3;
-        Fri,  6 Mar 2020 16:03:51 +0000 (UTC)
-Subject: Re: [PATCH v7 6/7] mm/madvise: employ mmget_still_valid for write
- lock
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-7-minchan@kernel.org>
- <d21c85b2-2493-e538-5419-79cf049a469e@suse.cz>
- <20200306130303.kztv64f52qknxb6k@butterfly.localdomain>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <86fc8d7b-ad6b-1691-b022-025d01e9e8e3@suse.cz>
-Date:   Fri, 6 Mar 2020 17:03:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726788AbgCFQEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:04:04 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3E04208CD;
+        Fri,  6 Mar 2020 16:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583510644;
+        bh=I0whQjzL0+2udVNnbjdJeGuRoNAzb4lqvRsZ+FI8stA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=0K0lV7/g8ctwofucAFwTgvooHXQH7hYM8LIZVLqWgsG73QwpfEgC5KvgSQN/8qk4S
+         wfJ16/yxLWZ7wA67l1sJYOL8W66LOiujzLqppPsl//DXhAR+9JsLcAuYLcvBofGUoo
+         N/70GrvL3PPJbMC5VAPLql0Y3hfsq3TxKmYN5EGs=
+Date:   Fri, 6 Mar 2020 10:04:01 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200306160401.GA165033@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200306130303.kztv64f52qknxb6k@butterfly.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9e4a1632-9425-9fb6-fd1a-d7cee4e9b684@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 2:03 PM, Oleksandr Natalenko wrote:
-> Hello.
-> 
-> On Fri, Mar 06, 2020 at 01:52:07PM +0100, Vlastimil Babka wrote:
->> > diff --git a/mm/madvise.c b/mm/madvise.c
->> > index e794367f681e..e77c6c1fad34 100644
->> > --- a/mm/madvise.c
->> > +++ b/mm/madvise.c
->> > @@ -1118,6 +1118,8 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
->> >  	if (write) {
->> >  		if (down_write_killable(&mm->mmap_sem))
->> >  			return -EINTR;
->> > +		if (current->mm != mm && !mmget_still_valid(mm))
->> > +			goto skip_mm;
->> 
->> This will return 0, is that correct? Shoudln't there be a similar error e.g. as
->> when finding the task by pid fails (-ESRCH ?), because IIUC the task here is
->> going away and dumping the core?
-> 
-> Yeah.
-> 
-> Something like this then:
-> 
-> ===
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 48d1da08c160..7ed2f4d13924 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -1122,6 +1122,10 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
->  	if (write) {
->  		if (down_write_killable(&mm->mmap_sem))
->  			return -EINTR;
-> +		if (current->mm != mm && !mmget_still_valid(mm)) {
-> +			error = -ESRCH;
-> +			goto skip_mm;
-> +		}
->  	} else {
->  		down_read(&mm->mmap_sem);
->  	}
-> @@ -1173,6 +1177,7 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
->  	}
->  out:
->  	blk_finish_plug(&plug);
-> +skip_mm:
->  	if (write)
->  		up_write(&mm->mmap_sem);
->  	else
-> 
-> ===
-> 
-> ?
+On Thu, Mar 05, 2020 at 09:45:46PM -0800, Kuppuswamy, Sathyanarayanan wrote:
+> On 3/3/2020 6:36 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > 
+> > As per PCI firmware specification r3.2 System Firmware Intermediary
+> > (SFI) _OSC and DPC Updates ECR
+> > (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+> > Event Handling Implementation Note", page 10, Error Disconnect Recover
+> > (EDR) support allows OS to handle error recovery and clearing Error
+> > Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+> > which allows clearing AER registers without FF mode checks.
+> > 
+> > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > ---
+> >   drivers/pci/pci.h      |  2 ++
+> >   drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
+> >   2 files changed, 20 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index e57e78b619f8..c239e6dd2542 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_group;
+> >   void pci_aer_clear_fatal_status(struct pci_dev *dev);
+> >   void pci_aer_clear_device_status(struct pci_dev *dev);
+> >   int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
+> > +int pci_aer_raw_clear_status(struct pci_dev *dev);
+> >   #else
+> >   static inline void pci_no_aer(void) { }
+> >   static inline void pci_aer_init(struct pci_dev *d) { }
+> > @@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+> >   {
+> >   	return -EINVAL;
+> >   }
+> > +int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
 
-Yep, thanks.
+> It's missing static specifier. It needs to be fixed. I can fix it in
+> next version.  Bjorn, if there is no need for next version, can you
+> please make this change?
+
+pci_aer_raw_clear_status() is defined in aer.c and called from aer.c
+and edr.c, so I do not think it can be static.  Am I missing
+something?
+
+I have a review/edr branch that I hope becomes what will be applied.
+
+Bjorn
