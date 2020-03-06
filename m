@@ -2,249 +2,148 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3913C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EFCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8883620848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAC420848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:00:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="jDKn31pe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhFOhSck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgCFN6q (ORCPT
+        id S1726833AbgCFOAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:58:46 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:54809 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726498AbgCFN6o (ORCPT
+        Fri, 6 Mar 2020 09:00:34 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33075 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbgCFOAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:58:44 -0500
-Received: from [IPv6:2001:983:e9a7:1:558f:c736:2117:17d1]
- ([IPv6:2001:983:e9a7:1:558f:c736:2117:17d1])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id ADUvj3BSUEE3qADUwjCbcf; Fri, 06 Mar 2020 14:58:42 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1583503122; bh=/l1z0MZMuaT6cFe4nw/quJ6V+Dx8A4O69/YlYuOr5KA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=jDKn31pe142vncIoQGlDqqUFdYT/+VqV1lXXStxUXQ/oJ6B7TLQLhrhMiJfMDrEy5
-         tAZSDivtFU2mgGaSRDRair+bnp6nECCTE0Z/xijD33cOf/ydXYaadJxurG4iPwDsE0
-         VT9JOGTbZ8LVn6QYIv9fz8qCwppa8oJs12e7HHJCvTaMoICraGSkGP9exyB89LuGP4
-         cTTwTC+Aog01URYBRI0Kh2kZSPq2qYTkdlXpjZ2r/EHDFmNagkvUOlhGTtmAAYXv7A
-         9TioxU7n85c3CMhOdrJLov7zX2/aLMOE8M2QPsq+kAXxjPfF9s1CzzhigRSZFITl/D
-         evTeZNaUpMu/g==
-Subject: Re: [PATCHv4 03/11] videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT
- flag
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-4-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <40b1cc23-5e28-837b-49d5-e32d9dd3edee@xs4all.nl>
-Date:   Fri, 6 Mar 2020 14:58:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 6 Mar 2020 09:00:34 -0500
+Received: by mail-pl1-f193.google.com with SMTP id ay11so913427plb.0;
+        Fri, 06 Mar 2020 06:00:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=efYr67/bTkt21SGtVdNVaerWisMPAYyt0fWiDVwgGjk=;
+        b=ZhFOhSckcSX8pV1bWCS4o4akz+nRynoamY/zQbaiHWh4a4IFicLY2Jk2OA1ffM/i96
+         eKSC7h1EHCAaBCWypKBn5baMCTGxLnvA0ZoRF5qH3MVCUygz0pvYc4ujRChBBC2winPL
+         saqJr4tzjm/7nPA7h/3U6NFw+J6EpK7EEKiQqDwhlRq68FbeHpxlOvw/xT1YlLaN4TPv
+         P4F4KzqovD9pMu1zybSbESrlfUsJ7i1jt2NP7+iRv8sLn0VesWDFwofj1m1tPw2Us7SQ
+         NVJE1uLk/ZZM8/7mH2Gdz/DybhRTFl0UmO/yWNOtoz0NGRC0QMsV0di74laEg8OwmWBw
+         2/5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=efYr67/bTkt21SGtVdNVaerWisMPAYyt0fWiDVwgGjk=;
+        b=H5S1hDzZ1NZxCal+L06G1r/j2bBcoTG4rQ5eUuiFY4UaifIFQ7BM4yLzwZ0/R9Lxgj
+         zhl5CARQh+DEddu2ljGufjy/EXgZLsC6NOqExRt3xniKIY6Y5NUpZEvbK8u1fPORsQEv
+         RI02yD+D0ZNveOqILP/L35/3yg20uqTnGaxkwjfZ0s2VnWoMowLW5onVtfFQ9Z3oEw1r
+         hFLWrQvnPhb3DzROG0S3aVRHtCBB8dfxVaovAgUAQ1tyxr32ZBf7Q6K98CyS10kRICJf
+         8pWAlBM65JR84C2mHnthSBoQqYMtwkKbMXCGn6UWIOU+A3PCueFOhtZyCCZ575j0ctJ9
+         gDww==
+X-Gm-Message-State: ANhLgQ0P9M2+awHF/FDPmkEdRJDmJHOzNnwGNd+93tsPix3PT84B5ID6
+        SBAYjdHfE3spmSiKaIZfXw==
+X-Google-Smtp-Source: ADFU+vtNUgRRJn2bRpQQmczbG/BE5no1t/hK7c/TWORsRGmvhtlbbtZao22ZUYqyVEVeSlNkEM5WOw==
+X-Received: by 2002:a17:90a:3701:: with SMTP id u1mr3681744pjb.25.1583503233154;
+        Fri, 06 Mar 2020 06:00:33 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([218.248.46.83])
+        by smtp.gmail.com with ESMTPSA id g11sm7631037pfo.184.2020.03.06.06.00.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 06 Mar 2020 06:00:31 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Fri, 6 Mar 2020 19:30:24 +0530
+To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc:     madhuparnabhowmik10@gmail.com, clm@fb.com, josef@toxicpanda.com,
+        dsterba@suse.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        frextrite@gmail.com, linux@roeck-us.net
+Subject: Re: [PATCH] fs: btrfs: block-group.c: Fix suspicious RCU usage
+ warning
+Message-ID: <20200306140023.GA14186@madhuparna-HP-Notebook>
+References: <20200306065243.11699-1-madhuparnabhowmik10@gmail.com>
+ <dfd2c14c-acda-3862-9f48-a512e16a895c@gmx.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302041213.27662-4-senozhatsky@chromium.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCaIgYU1vGUKCdlws5uiUl02UwuDCmgRsqPG4T/Hoay9fHAKqexx8loe8fZKYATat3k2dxKk1gkDSHpwwpGGs5xDtURLOTqpRXiBezqAD3twhCBuKjXN
- R41liAVhlFdxXgvGdPIPY7uRFXbKO/dHAu2mBiSOiXQY06ZkzhbEghF+iuklFMFkgPwVcBurGzYI58pDd9Dloz+S5dQDchK0hZ2R0/4+XrhhHSKK6bvamAt5
- 0/4I02JnA1FWBnwy2Ne4ywCCBpQazOPh6UjUTLEOVrA5S3UHA+wZBYI4aGrIFsU+wfPdbJVJatgZOZQ9s7T8gHvFFiGSNNTmIl7f9oMcaA0OMd+I3M9yrjBf
- yt86IS5NMT37KPkOjv+OmiV1MzCnZXM3qQ3/qmIbhNB3dfzTFtuDIh8Hod7uYJnkLsDka2ncMcxuStOTPizVR58o79jbIHIBByt+neP2OLtqPoI1WarTKH5A
- 1PTlBJ9Reh99aCwsvvA4VimP3+V8KMUH5iMr/2jlEV2X225KCoVLiInwnpLK8qhIgC6KvR64fY42wZHsT+ouqr21OndG+zUdrSGU7WvGjXUMM9dnRvB8n/gB
- oAnNOfcyGWrhYtp3uulS4C50avzPYnaoLiPiO/+UfN4OtQ==
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dfd2c14c-acda-3862-9f48-a512e16a895c@gmx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/03/2020 05:12, Sergey Senozhatsky wrote:
-> By setting or clearing V4L2_FLAG_MEMORY_NON_CONSISTENT flag
-> user-space should be able to set or clear queue's NON_CONSISTENT
-> ->dma_attrs. Queue's ->dma_attrs are passed to the underlying
-> allocator in __vb2_buf_mem_alloc(), so thus user-space is able
-> to request vb2 buffer's memory to be either consistent (coherent)
-> or non-consistent.
+On Fri, Mar 06, 2020 at 03:16:53PM +0800, Qu Wenruo wrote:
 > 
-> The patch set also adds a corresponding capability flag:
-> fill_buf_caps() reports V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS when
-> queue supports user-space cache management hints.
-
-When building the docs I got a bunch of reference errors. This patch fixes those:
-
------------------------------------------------
-diff --git b/Documentation/media/uapi/v4l/buffer.rst a/Documentation/media/uapi/v4l/buffer.rst
-index 8084e3f2a58d..82bad4dbec16 100644
---- b/Documentation/media/uapi/v4l/buffer.rst
-+++ a/Documentation/media/uapi/v4l/buffer.rst
-@@ -695,7 +695,7 @@ Memory Consistency Flags
-     :stub-columns: 0
-     :widths:       3 1 4
-
--    * .. _`V4L2_FLAG_MEMORY_NON_CONSISTENT`:
-+    * .. _`V4L2-FLAG-MEMORY-NON-CONSISTENT`:
-
-       - ``V4L2_FLAG_MEMORY_NON_CONSISTENT``
-       - 0x00000001
-@@ -709,7 +709,9 @@ Memory Consistency Flags
- 	consistency is needed. If this flag is set V4L2 will attempt to
- 	allocate the buffer in non-consistent memory. The flag takes effect
- 	only if the buffer is used for :ref:`memory mapping <mmap>` I/O and the
--	queue reports the :ref:`V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS` capability.
-+	queue reports the
-+	:ref:`V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS <V4L2-BUF-CAP-SUPPORTS-CACHE-HINTS>`
-+	capability.
-
- .. c:type:: v4l2_memory
-
-diff --git b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-index faf0df4f9bb6..1c0299424fbc 100644
---- b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-+++ a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-@@ -133,6 +133,7 @@ aborting or finishing any DMA in progress, an implicit
- .. _V4L2-BUF-CAP-SUPPORTS-REQUESTS:
- .. _V4L2-BUF-CAP-SUPPORTS-ORPHANED-BUFS:
- .. _V4L2-BUF-CAP-SUPPORTS-M2M-HOLD-CAPTURE-BUF:
-+.. _V4L2-BUF-CAP-SUPPORTS-CACHE-HINTS:
-
- .. cssclass:: longtable
-
-@@ -166,9 +167,10 @@ aborting or finishing any DMA in progress, an implicit
-     * - ``V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS``
-       - 0x00000040
-       - Set when the queue/buffer supports memory consistency and cache
--        management hints. See :ref:`V4L2_FLAG_MEMORY_NON_CONSISTENT`,
--        :ref:`V4L2_BUF_FLAG_NO_CACHE_INVALIDATE` and
--        :ref:`V4L2_BUF_FLAG_NO_CACHE_CLEAN`.
-+        management hints. See
-+	:ref:`V4L2_FLAG_MEMORY_NON_CONSISTENT <V4L2-FLAG-MEMORY-NON-CONSISTENT>`,
-+        :ref:`V4L2_BUF_FLAG_NO_CACHE_INVALIDATE <V4L2-BUF-FLAG-NO-CACHE-INVALIDATE>` and
-+        :ref:`V4L2_BUF_FLAG_NO_CACHE_CLEAN <V4L2-BUF-FLAG-NO-CACHE-CLEAN>`.
-
-
- Return Value
------------------------------------------------
-
-Please fold that in this patch.
-
-Regards,
-
-	Hans
-
 > 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  Documentation/media/uapi/v4l/buffer.rst       | 29 +++++++++++++++++++
->  .../media/uapi/v4l/vidioc-reqbufs.rst         |  7 +++++
->  .../media/common/videobuf2/videobuf2-v4l2.c   |  2 ++
->  include/uapi/linux/videodev2.h                |  3 ++
->  4 files changed, 41 insertions(+)
+> On 2020/3/6 下午2:52, madhuparnabhowmik10@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > The space_info list is rcu protected.
+> > Hence, it should be traversed with rcu_read_lock held.
+> > 
+> > Warning:
+> > [   29.104591] =============================
+> > [   29.104756] WARNING: suspicious RCU usage
+> > [   29.105046] 5.6.0-rc4-next-20200305 #1 Not tainted
+> > [   29.105231] -----------------------------
+> > [   29.105401] fs/btrfs/block-group.c:2011 RCU-list traversed in non-reader section!!
+> > 
+> > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > ---
+> >  fs/btrfs/block-group.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+> > index 404e050ce8ee..9cabeef66f5b 100644
+> > --- a/fs/btrfs/block-group.c
+> > +++ b/fs/btrfs/block-group.c
+> > @@ -1987,6 +1987,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
 > 
-> diff --git a/Documentation/media/uapi/v4l/buffer.rst b/Documentation/media/uapi/v4l/buffer.rst
-> index 3112300c2fa0..8084e3f2a58d 100644
-> --- a/Documentation/media/uapi/v4l/buffer.rst
-> +++ b/Documentation/media/uapi/v4l/buffer.rst
-> @@ -681,6 +681,35 @@ Buffer Flags
->  
->      \normalsize
->  
-> +.. _memory-flags:
-> +
-> +Memory Consistency Flags
-> +========================
-> +
-> +.. tabularcolumns:: |p{7.0cm}|p{2.2cm}|p{8.3cm}|
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       3 1 4
-> +
-> +    * .. _`V4L2_FLAG_MEMORY_NON_CONSISTENT`:
-> +
-> +      - ``V4L2_FLAG_MEMORY_NON_CONSISTENT``
-> +      - 0x00000001
-> +      - A buffer is allocated either in consistent (it will be automatically
-> +	coherent between the CPU and the bus) or non-consistent memory. The
-> +	latter can provide performance gains, for instance the CPU cache
-> +	sync/flush operations can be avoided if the buffer is accessed by the
-> +	corresponding device only and the CPU does not read/write to/from that
-> +	buffer. However, this requires extra care from the driver -- it must
-> +	guarantee memory consistency by issuing a cache flush/sync when
-> +	consistency is needed. If this flag is set V4L2 will attempt to
-> +	allocate the buffer in non-consistent memory. The flag takes effect
-> +	only if the buffer is used for :ref:`memory mapping <mmap>` I/O and the
-> +	queue reports the :ref:`V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS` capability.
->  
->  .. c:type:: v4l2_memory
->  
-> diff --git a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-> index d0c643db477a..21ecacc72487 100644
-> --- a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-> +++ b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-> @@ -156,6 +156,13 @@ aborting or finishing any DMA in progress, an implicit
->        - Only valid for stateless decoders. If set, then userspace can set the
->          ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag to hold off on returning the
->  	capture buffer until the OUTPUT timestamp changes.
-> +    * - ``V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS``
-> +      - 0x00000040
-> +      - Set when the queue/buffer supports memory consistency and cache
-> +        management hints. See :ref:`V4L2_FLAG_MEMORY_NON_CONSISTENT`,
-> +        :ref:`V4L2_BUF_FLAG_NO_CACHE_INVALIDATE` and
-> +        :ref:`V4L2_BUF_FLAG_NO_CACHE_CLEAN`.
-> +
->  
->  Return Value
->  ============
-> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> index 2a604bd7793a..c847bcea6e95 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> @@ -711,6 +711,8 @@ static void fill_buf_caps(struct vb2_queue *q, u32 *caps)
->  		*caps |= V4L2_BUF_CAP_SUPPORTS_DMABUF;
->  	if (q->subsystem_flags & VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF)
->  		*caps |= V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF;
-> +	if (q->allow_cache_hints && (q->io_modes & VB2_MMAP))
-> +		*caps |= V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS;
->  #ifdef CONFIG_MEDIA_CONTROLLER_REQUEST_API
->  	if (q->supports_requests)
->  		*caps |= V4L2_BUF_CAP_SUPPORTS_REQUESTS;
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 5f9357dcb060..e92c29864730 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -189,6 +189,8 @@ enum v4l2_memory {
->  	V4L2_MEMORY_DMABUF           = 4,
->  };
->  
-> +#define V4L2_FLAG_MEMORY_NON_CONSISTENT		(1 << 0)
-> +
->  /* see also http://vektor.theorem.ca/graphics/ycbcr/ */
->  enum v4l2_colorspace {
->  	/*
-> @@ -946,6 +948,7 @@ struct v4l2_requestbuffers {
->  #define V4L2_BUF_CAP_SUPPORTS_REQUESTS			(1 << 3)
->  #define V4L2_BUF_CAP_SUPPORTS_ORPHANED_BUFS		(1 << 4)
->  #define V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF	(1 << 5)
-> +#define V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS		(1 << 6)
->  
->  /**
->   * struct v4l2_plane - plane info for multi-planar buffers
+> This function is only triggered at mount time, where no other rcu
+> operation can happen.
+>
+Thanks Qu.
+
+Joel and Paul, what should we do in this case?
+Should we just pass cond = true or use list_for_each_entry instead?
+
+Thank you,
+Madhuparna
+
+> Thanks,
+> Qu
+> >  		btrfs_release_path(path);
+> >  	}
+> >  
+> > +	rcu_read_lock();
+> >  	list_for_each_entry_rcu(space_info, &info->space_info, list) {
+> >  		if (!(btrfs_get_alloc_profile(info, space_info->flags) &
+> >  		      (BTRFS_BLOCK_GROUP_RAID10 |
+> > @@ -2007,7 +2008,8 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
+> >  				list)
+> >  			inc_block_group_ro(cache, 1);
+> >  	}
+> > -
+> > +	rcu_read_unlock();
+> > +		
+> >  	btrfs_init_global_block_rsv(info);
+> >  	ret = check_chunk_block_group_mappings(info);
+> >  error:
+> > 
 > 
+
+
 
