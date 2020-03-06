@@ -2,55 +2,77 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A33DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD38C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1ED92072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01552072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgCFIPl (ORCPT
+        id S1726182AbgCFIRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 03:15:41 -0500
-Received: from albireo.enyo.de ([37.24.231.21]:54478 "EHLO albireo.enyo.de"
+        Fri, 6 Mar 2020 03:17:24 -0500
+Received: from sauhun.de ([88.99.104.3]:55604 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgCFIPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 03:15:40 -0500
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jA88n-0008VD-Dn; Fri, 06 Mar 2020 08:15:29 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jA87C-0001li-5M; Fri, 06 Mar 2020 09:13:50 +0100
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     YunQiang Su <syq@debian.org>
-Cc:     torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
-        akpm@linux-foundation.org, viro@zeniv.linux.org.uk,
-        James.Bottomley@hansenpartnership.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        libc-alpha@sourceware.org, Laurent Vivier <laurent@vivier.eu>
-Subject: Re: [PATCH] binfmt_misc: pass binfmt_misc P flag to the interpreter
-References: <20200306080905.173466-1-syq@debian.org>
-Date:   Fri, 06 Mar 2020 09:13:50 +0100
-In-Reply-To: <20200306080905.173466-1-syq@debian.org> (YunQiang Su's message
-        of "Fri, 6 Mar 2020 16:09:05 +0800")
-Message-ID: <87r1y53npd.fsf@mid.deneb.enyo.de>
+        id S1725869AbgCFIRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 03:17:24 -0500
+Received: from localhost (p54B33158.dip0.t-ipconnect.de [84.179.49.88])
+        by pokefinder.org (Postfix) with ESMTPSA id 9261E2C1F2C;
+        Fri,  6 Mar 2020 09:17:21 +0100 (CET)
+Date:   Fri, 6 Mar 2020 09:17:21 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Dennis Zhou <dennis@kernel.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-doc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] include/bitmap.h: updates to docs
+Message-ID: <20200306081721.GB1117@ninjato>
+References: <20200304140920.6109-1-wsa+renesas@sang-engineering.com>
+ <20200305212950.GA79796@dennisz-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s2ZSL+KKDSLx8OML"
+Content-Disposition: inline
+In-Reply-To: <20200305212950.GA79796@dennisz-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* YunQiang Su:
 
-> +	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-> +		flags |= AT_FLAGS_PRESERVE_ARGV0;
-> +	NEW_AUX_ENT(AT_FLAGS, flags);
+--s2ZSL+KKDSLx8OML
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Is it necessary to reuse AT_FLAGS?  I think it's cleaner to define a
-separate AT_ tag dedicated to binfmt_misc.
+
+> I've applied this to percpu for-5.7.
+
+Great, thank you!
+
+
+--s2ZSL+KKDSLx8OML
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5iBxEACgkQFA3kzBSg
+KbYMUA//QUJMQqe5qyTC66ZUl/CpVFUB4WVd2ZlV48s0UZcGCduSgYNfrjA17NO5
+rDQg5HXb0+sIeNWZECaDQ1hMQG12gt4h0QFKKugB4wqTc4yp1xn3O4BdIO/OlKNL
+V6JnoiHhDZv8RO4Yf++nL57fwwrJAk7Gtp9PZjoSoWY4ar3VOJ0yeK1Er6b9H7i6
+pkCfKxFnO/mGkoEV7+o3TQVYeP4ADqlFToFhOnGnaF+SpLEWMB9J83s9fuHvlKTE
+gWiDYlDS1Br7FNVmFGtvfKieWvcfMOXUwWFO67Aw+6df/1Gi7NC4zluJQ9dGtYFS
+lTbgFI33fXdrePqVrG2QT5m0Yp8762uH67vYFvAcqkIw55qeXxzcTdTNIwuSlglR
+HFpxvTYDc09fWeru4C2wB8gdLx3R4QG6yvUoG5/7+QlSSMBOx1sgEan7Jco/fHoN
+LvuRQYJQk7tCGjxXNpMvjXJZlAi7z8qb18UFUVvg+FY4dcW1UGUmRf7ozhOO6Y9z
+LZtOpoJgiPj+KmegiwisLhzsc5lRLKIlWUe4iE+8HbAb69pDGqqm4RtaBDBn9Sdx
+6pNVPvvRIR1WK/p7dR3rYCSlaH1Jrd3GM7kZQea289yT8iBzAHJtmol/vuleIFJB
+mn53+nlQ8ny6T7+WnmPjMDkZzqDxZBryt3AkAtGJgymQge2P/1A=
+=eh2X
+-----END PGP SIGNATURE-----
+
+--s2ZSL+KKDSLx8OML--
