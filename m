@@ -2,87 +2,146 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E6CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32020C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC5F82073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FCC2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:42:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hK2++YzU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DgCvO6dN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgCFIky (ORCPT
+        id S1726185AbgCFImQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 03:40:54 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:35330 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgCFIky (ORCPT
+        Fri, 6 Mar 2020 03:42:16 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34388 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgCFImP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 03:40:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=b5AjsHscbwI1owfnFTdyAB+4fcyVggSrpzwiFpHNLpY=; b=hK2++YzUYjAqhxwL2oc1TcxkSP
-        r1MUE2g2XnsXl6+37tytskVF2/PKJxKpH14gA9ZKNkkIXh6OGxz0Xyzs7scoqHBgGC57YNPWB0u0n
-        0spRt410wprUOuEOfCquce+EF/lXkpSg3mzX463wwacwrVCsTMS8n5BE0wvCMEu4S3+wg+WHhRfDf
-        8X8IHsJQ+xSUA8H891q+EcE9fSlR07Gesh4F1tpOHpBnHYe6dQEmG1q0LhcFuww4UekORHrYrRKbJ
-        sc+0Hzv+zN6CmT7QfsZqUXqmOhLwcIJFICr9Er+aGfc4SarSfRnn5qGMtnfC7vaZs9fRzzB+xSAoC
-        62gAhiYg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jA8XC-0001dQ-GA; Fri, 06 Mar 2020 08:40:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B2BE23013A4;
-        Fri,  6 Mar 2020 09:40:39 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9734D20139C6B; Fri,  6 Mar 2020 09:40:39 +0100 (CET)
-Date:   Fri, 6 Mar 2020 09:40:39 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Paul Turner <pjt@google.com>
-Cc:     Xi Wang <xii@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Don <joshdon@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] sched: watchdog: Touch kernel watchdog in sched code
-Message-ID: <20200306084039.GC12561@hirez.programming.kicks-ass.net>
-References: <20200304213941.112303-1-xii@google.com>
- <20200305075742.GR2596@hirez.programming.kicks-ass.net>
- <CAPM31RJdNtxmOi2eeRYFyvRKG9nofhqZfPgZGA5U7u8uZ2WXwA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPM31RJdNtxmOi2eeRYFyvRKG9nofhqZfPgZGA5U7u8uZ2WXwA@mail.gmail.com>
+        Fri, 6 Mar 2020 03:42:15 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z15so1323169wrl.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 00:42:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=PULHRHRv1NcS1DTXiOzReliOO1hrod8ode7xlT9JULk=;
+        b=DgCvO6dN5zDCdrCXcq6dW8mRLManLpOzQ33A1BJTV5eiTptZ+cue1zNOPD+ZTklD8v
+         19UcQfG+6+Hbrvw/hDDRyGUoJWa0B7PD7JbFHNXUVUaghiSoBfjnMeXswcTr/ctKZ4NR
+         10C3et6PgvUWtnqYI7XDpaEXBVFEGCTa3bjIKRFbG0r2uIcw1VOqVFj/ihYuTdMuMexK
+         jSFIPDjxnXxvxKwQyIeze1mRgJfenWu8CKE6OVQ3wjJhiogQaJm2vDuPk1mvCSmdptVV
+         xjgqizhsYhwdL/uZ/YpW3ll15n9X2hXSM0Aicvp76WMjw6DBGTCqIFU+OQDSjMGGmTlv
+         hHfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PULHRHRv1NcS1DTXiOzReliOO1hrod8ode7xlT9JULk=;
+        b=ZkrooxCzYnjL4zrBS5Vw84P2xQktSUKZ+12f8UoEm7sL303n0+ysOWjAyxJwa1XQkR
+         ps7JARXn2CuvCPTfRpqcnjNGOFVq2Ibd/+I3Nt29NqAmcHOjxQRvRt9K8JS3bacU3dkg
+         kbiNuSR5GSFc6OA1ES684r4x5O0VRgv52ZDa06o4A5iRxRU4uH9G5Hj0/zJq/ObENdRr
+         j+hOh2sVbEvQtgCKh1Q/pUqqIfqk/R/jLJthx7BfaxhtPeGymsGLv17BQlWx3BpgJrgr
+         yra5dYtnNb5YwAVtb+ATplEMSe4U/M+4JJr2Hjd97vqdNo7hunxcbxQYl/x9hjUrPyaf
+         V7Wg==
+X-Gm-Message-State: ANhLgQ14jahGbrwS2izsDUDjXHltyzy+Pd3y6Imgwl+0SCAO7LXBxMUv
+        hqeCTgJTR4414g1EkkHzNqpnbg==
+X-Google-Smtp-Source: ADFU+vtoZe1frf3LfiepiX+74lgZwKyIIOjjXZp6B6LocAqzor2pXHkd1GWHQiFJ8ozL54v3Ckr14A==
+X-Received: by 2002:adf:ea42:: with SMTP id j2mr2751372wrn.377.1583484132106;
+        Fri, 06 Mar 2020 00:42:12 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:d5d0:80d7:4f6f:54be])
+        by smtp.gmail.com with ESMTPSA id a9sm1221948wrv.59.2020.03.06.00.42.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 00:42:11 -0800 (PST)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     pauld@redhat.com, parth@linux.ibm.com, valentin.schneider@arm.com,
+        hdanton@sina.com, zhout@vivaldi.net,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH v3] sched/fair : fix reordering of enqueue/dequeue_task_fair
+Date:   Fri,  6 Mar 2020 09:42:08 +0100
+Message-Id: <20200306084208.12583-1-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 02:11:49PM -0800, Paul Turner wrote:
-> The goal is to improve jitter since we're constantly periodically
-> preempting other classes to run the watchdog.   Even on a single CPU
-> this is measurable as jitter in the us range.  But, what increases the
-> motivation is this disruption has been recently magnified by CPU
-> "gifts" which require evicting the whole core when one of the siblings
-> schedules one of these watchdog threads.
-> 
-> The majority outcome being asserted here is that we could actually
-> exercise pick_next_task if required -- there are other potential
-> things this will catch, but they are much more braindead generally
-> speaking (e.g. a bug in pick_next_task itself).
+Even when a cgroup is throttled, the group se of a child cgroup can still
+be enqueued and its gse->on_rq stays true. When a task is enqueued on such
+child, we still have to update the load_avg and increase
+h_nr_running of the throttled cfs. Nevertheless, the 1st
+for_each_sched_entity loop is skipped because of gse->on_rq == true and the
+2nd loop because the cfs is throttled whereas we have to update both
+load_avg with the old h_nr_running and increase h_nr_running in such case.
 
-I still utterly hate what the patch does though; there is no way I'll
-have watchdog code hook in the scheduler like this. That's just asking
-for trouble.
+The same sequence can happen during dequeue when se moves to parent before
+breaking in the 1st loop.
 
-Why isn't it sufficient to sample the existing context switch counters
-from the watchdog? And why can't we fix that?
+Note that the update of load_avg will effectively happen only once in order
+to sync up to the throttled time. Next call for updating load_avg will stop
+early because the clock stays unchanged.
+
+Fixes: 6d4d22468dae ("sched/fair: Reorder enqueue/dequeue_task_fair path")
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+
+Changes since v2:
+- added similar changes into dequeue_task_fair as reported by Ben
+
+ kernel/sched/fair.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index fcc968669aea..ea2748a132a2 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5431,16 +5431,16 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+ 
+-		/* end evaluation on encountering a throttled cfs_rq */
+-		if (cfs_rq_throttled(cfs_rq))
+-			goto enqueue_throttle;
+-
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		se_update_runnable(se);
+ 		update_cfs_group(se);
+ 
+ 		cfs_rq->h_nr_running++;
+ 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
++
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto enqueue_throttle;
+ 	}
+ 
+ enqueue_throttle:
+@@ -5529,16 +5529,17 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+ 
+-		/* end evaluation on encountering a throttled cfs_rq */
+-		if (cfs_rq_throttled(cfs_rq))
+-			goto dequeue_throttle;
+-
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		se_update_runnable(se);
+ 		update_cfs_group(se);
+ 
+ 		cfs_rq->h_nr_running--;
+ 		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
++
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto dequeue_throttle;
++
+ 	}
+ 
+ dequeue_throttle:
+-- 
+2.17.1
+
