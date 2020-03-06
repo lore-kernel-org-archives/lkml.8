@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D9EC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02476C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E352084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1952084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgCFMs3 (ORCPT
+        id S1726954AbgCFMsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:48:29 -0500
-Received: from mail.baikalelectronics.com ([87.245.175.226]:35418 "EHLO
+        Fri, 6 Mar 2020 07:48:33 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:35444 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbgCFMs2 (ORCPT
+        with ESMTP id S1726875AbgCFMsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:48:28 -0500
+        Fri, 6 Mar 2020 07:48:31 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id EB7E5803078F;
-        Fri,  6 Mar 2020 12:48:25 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C9967803087C;
+        Fri,  6 Mar 2020 12:48:28 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ChNF0Mz-FxUp; Fri,  6 Mar 2020 15:48:25 +0300 (MSK)
+        with ESMTP id Zze5RxXqtuRY; Fri,  6 Mar 2020 15:48:28 +0300 (MSK)
 From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Paul Burton <paulburton@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
-        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 02/22] dt-bindings: Add MIPS CPC controller as a trivial devices
-Date:   Fri, 6 Mar 2020 15:46:45 +0300
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 03/22] dt-bindings: Add MIPS CDMM controller as a trivial device
+Date:   Fri, 6 Mar 2020 15:46:46 +0300
 In-Reply-To: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200306124825.EB7E5803078F@mail.baikalelectronics.ru>
+Message-Id: <20200306124828.C9967803087C@mail.baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -54,10 +53,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-It's a Cluster Power Controller embedded into the MIPS IP cores.
-Currently the corresponding dts node is supposed to have a compatible
-and regs properties. There is no need in the text-based mti,mips-cpc
-bindings file from now. So it can be removed.
+It's a Common Device Memory Map controller embedded into the MIPS IP
+cores. The corresponding dts node is supposed to have a compatible
+and regs properties. So add the device to the trivial-devices bindings
+file.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -65,38 +64,22 @@ Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 ---
- Documentation/devicetree/bindings/power/mti,mips-cpc.txt | 8 --------
- Documentation/devicetree/bindings/trivial-devices.yaml   | 2 ++
- 2 files changed, 2 insertions(+), 8 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+ Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-deleted file mode 100644
-index c6b82511ae8a..000000000000
---- a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-+++ /dev/null
-@@ -1,8 +0,0 @@
--Binding for MIPS Cluster Power Controller (CPC).
--
--This binding allows a system to specify where the CPC registers are
--located.
--
--Required properties:
--compatible : Should be "mti,mips-cpc".
--regs: Should describe the address & size of the CPC register region.
 diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index ce0149b4b6ed..b6b6f3181fd8 100644
+index b6b6f3181fd8..370b8c6631fc 100644
 --- a/Documentation/devicetree/bindings/trivial-devices.yaml
 +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
 @@ -304,6 +304,8 @@ properties:
            - miramems,da280
              # MiraMEMS DA311 3-axis 12-bit digital accelerometer
            - miramems,da311
-+            # MIPS Cluster Power Controller (CPC)
-+          - mti,mips-cpc
++            # MIPS Common Device Memory Map block (CDMM)
++          - mti,mips-cdmm
+             # MIPS Cluster Power Controller (CPC)
+           - mti,mips-cpc
              # Temperature sensor with integrated fan control
-           - national,lm63
-             # I2C TEMP SENSOR
 -- 
 2.25.1
 
