@@ -2,133 +2,152 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC22C10F27
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C61C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE9F206D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1EEB206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MZ6sQDj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCFWBM (ORCPT
+        id S1726300AbgCFWGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 17:01:12 -0500
-Received: from out02.mta.xmission.com ([166.70.13.232]:41264 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgCFWBL (ORCPT
+        Fri, 6 Mar 2020 17:06:35 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:42754 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFWGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 17:01:11 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jAL1o-0007O8-UN; Fri, 06 Mar 2020 15:01:09 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jAL1o-0005iy-3n; Fri, 06 Mar 2020 15:01:08 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <202003021531.C77EF10@keescook>
-        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
-        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87imjicxjw.fsf_-_@x220.int.ebiederm.org>
-        <AM6PR03MB5170375DBF699D4F3DC7A08DE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87k13yawpp.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170E9D0DB405EC051F7731CE4E30@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Fri, 06 Mar 2020 15:58:52 -0600
-In-Reply-To: <AM6PR03MB5170E9D0DB405EC051F7731CE4E30@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        (Bernd Edlinger's message of "Fri, 6 Mar 2020 19:16:08 +0000")
-Message-ID: <87sgil87s3.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 6 Mar 2020 17:06:34 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026M3CCn179774;
+        Fri, 6 Mar 2020 22:05:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=6LEFkemgC1LatVschRzZXAT0GyTqh7Ckc5fAeBrPSWI=;
+ b=MZ6sQDj/GRe0f5Tbu7m6ZjrtzcZNxYIQdxCxOUSSRnEgK6e+jdQFK3JLw0rzC3rBlS4o
+ kjYZZk2Srh7HNVoipBUMBhw5Q9idjUWh78/amQnwRiPIVGqbipcZTMYj/fWVxOG6WNHA
+ EwF+W9Ed5YhmxqRLeSPBQCdYIM7Xn16tkaxrXFLiZMU6ra/T6BbhZvNTeZ68Q35yBJ70
+ h4oKTggEUmKFkF0rDNW0ZmPIIj2+L/xoR3Z51dszAMff2+N9SRQbiqIN3jQ7n/Qgg3sI
+ le092c4bDR3tQSTNJjEdDiX32fK68g9How/hB2iB4HDgT2r3gXJl77bP9v+29m5QhHJT mQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yghn3sh9r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 22:05:33 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026M3Fn9023539;
+        Fri, 6 Mar 2020 22:05:33 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2yg1h6n7uf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 22:05:33 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 026M5W8f012825;
+        Fri, 6 Mar 2020 22:05:32 GMT
+Received: from localhost.localdomain (/10.159.228.115)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Mar 2020 14:05:31 -0800
+Subject: Re: [PATCH v3 1/2] KVM: VMX: rename 'kvm_area' to 'vmxon_region'
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200306130215.150686-1-vkuznets@redhat.com>
+ <20200306130215.150686-2-vkuznets@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <ad7785c5-34e0-a4e9-689c-f4626dc37314@oracle.com>
+Date:   Fri, 6 Mar 2020 14:05:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jAL1o-0005iy-3n;;;mid=<87sgil87s3.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/nQIAja4Tte/KbD9xIUFWHY/xDf5wuGBw=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 2/2] exec: Add a exec_update_mutex to replace cred_guard_mutex
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <20200306130215.150686-2-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=2 malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003060128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
 
-> On 3/6/20 6:17 AM, Eric W. Biederman wrote:
->> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
->> 
->>> On 3/5/20 10:16 PM, Eric W. Biederman wrote:
->>>>
->>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
->>>> over the userspace accesses as the arguments from userspace are read.
->>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
->>>> threads are killed.  The cred_guard_mutex is held over
->>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
->>>>
+On 3/6/20 5:02 AM, Vitaly Kuznetsov wrote:
+> The name 'kvm_area' is misleading (as we have way too many areas which are
+> KVM related), what alloc_kvm_area()/free_kvm_area() functions really do is
+> allocate/free VMXON region for all CPUs. Rename accordingly.
 >
-> I am all for this patch, and the direction it is heading, Eric.
+> No functional change intended.
 >
-> I just wanted to add a note that I think it is
-> possible that exec_mm_release can also invoke put_user(0, tsk->clear_child_tid),
-> under the new exec_update_mutex, since vm_access increments the
-> mm->mm_users, under the cred_update_mutex, but releases the mutex,
-> and the caller can hold the reference for a while and then exec_mmap is not
-> releasing the last reference.
-
-Good catch.  I really appreciate your close look at the details.
-
-I am wondering if process_vm_readv and process_vm_writev could be
-safely changed to use mmgrab and mmdrop, instead of mmget and mmput.
-
-That would resolve the potential issue you have pointed out.  I just
-haven't figured out if it is safe.  The mm code has been seriously
-refactored since I knew how it all worked.
-
-Eric
+> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>   arch/x86/kvm/vmx/vmx.c | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 40b1e6138cd5..dab19e4e5f2b 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2635,7 +2635,7 @@ int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+>   	return -ENOMEM;
+>   }
+>   
+> -static void free_kvm_area(void)
+> +static void free_vmxon_regions(void)
+>   {
+>   	int cpu;
+>   
+> @@ -2645,7 +2645,7 @@ static void free_kvm_area(void)
+>   	}
+>   }
+>   
+> -static __init int alloc_kvm_area(void)
+> +static __init int alloc_vmxon_regions(void)
+>   {
+>   	int cpu;
+>   
+> @@ -2654,7 +2654,7 @@ static __init int alloc_kvm_area(void)
+>   
+>   		vmcs = alloc_vmcs_cpu(false, cpu, GFP_KERNEL);
+>   		if (!vmcs) {
+> -			free_kvm_area();
+> +			free_vmxon_regions();
+>   			return -ENOMEM;
+>   		}
+>   
+> @@ -7815,7 +7815,7 @@ static __init int hardware_setup(void)
+>   			return r;
+>   	}
+>   
+> -	r = alloc_kvm_area();
+> +	r = alloc_vmxon_regions();
+>   	if (r)
+>   		nested_vmx_hardware_unsetup();
+>   	return r;
+> @@ -7826,7 +7826,7 @@ static __exit void hardware_unsetup(void)
+>   	if (nested)
+>   		nested_vmx_hardware_unsetup();
+>   
+> -	free_kvm_area();
+> +	free_vmxon_regions();
+>   }
+>   
+>   static bool vmx_check_apicv_inhibit_reasons(ulong bit)
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
