@@ -2,106 +2,69 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80328C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EB1C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 529552084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:50:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Mt+J531O"
+	by mail.kernel.org (Postfix) with ESMTP id 1E7402073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583466800;
+	bh=KKTJfJcowOazNl2xl3LXrcZtQr/47qBRQ1iPwaAIkK0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2kIGYl8FYcKitpa8jcvxBeQHTFopmC4dmgXZwgOWuxuG2yL+DwoUeWEaSsNt5F22a
+	 xEmGNRcHnEWISkFUotqQX+NDAwCxRGNtDQONiyPug/dlP+mXx1pmJwVCAzh4BG1CpV
+	 Ou2YP4LlNeKwmnPcUiS4th4fLypDjU6frrloSWRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgCFDun (ORCPT
+        id S1726382AbgCFDxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 22:50:43 -0500
-Received: from mail-qv1-f52.google.com ([209.85.219.52]:37777 "EHLO
-        mail-qv1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFDun (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 22:50:43 -0500
-Received: by mail-qv1-f52.google.com with SMTP id c19so365353qvv.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 19:50:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=bi/pjlomuumQO3Vkx3bu0cA+GyAfdfjkfPRzU1zFnyg=;
-        b=Mt+J531OlZM/f8whuVep4YwzzJX2LMgSB/SsgN7o/CZfkM9QpaABXbtlIo4zW/Y+Uj
-         ZkZTkiPMTnIdrS7Acw4V72MXVStijgNhvmHrbIj2N3boKnKkLhIzUeweL94buBy71vMp
-         DBYm6Mfr7TclMhIIdYRFbrcgnlAaJRE+TxtPnblBReHv3hLdw/NrEpKQEJQZ1TLX04Yr
-         nV12L1JMUt+76bZMHyMQSycMGAdMQ36w/UtUmjylGh3Ij7Y7Zj59yuGrPI81BWbGhG3w
-         o9GlRUCgwh+W9fVxbIwXCPBXQcG+f+dSFsTeuXrDul0ZaOLo0AS9Fax647F/4B9uwowV
-         b42g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=bi/pjlomuumQO3Vkx3bu0cA+GyAfdfjkfPRzU1zFnyg=;
-        b=DhskUUL7GBr+tViWkg0OxLqloPYTKiBAXjkKTg5izdgNfYCZxL+ovPcxLfGhHrcOkW
-         AoRZ9FF3gZE3EjIA8v1rCAl5OFbSN1cFAti4jAg54IdDE9N76lYLmADM5NmpVkHDzP2q
-         ZOxzlNMKwDD2VGFRHm4dPFgxew1tF1zgp2OX2tzAcQ21lkcBnimF/wu3lG+7kJ8L8c9U
-         0vpgq3puTVxgXgoiG4MI6A4wXYGCJGQ5Fr2j0rLynZt6ynrJAWVvJxVStGrekkFR+r3y
-         w6Fq157i2pr1wCZyLsHNU75iFFVVp3M4F13AtmOFGgaCGOFTyyyo6QZ8kWxs688rHny2
-         hcbA==
-X-Gm-Message-State: ANhLgQ2AeCqTKa1cJ2LzWnTKMdRjfAoLN1A0PBhTZnR+1EM9e5eD1Voh
-        1z2JFM5P0QKybdDfsSupeVIhrA==
-X-Google-Smtp-Source: ADFU+vug+tCCJMYqjWN3RP7xCY7Eg0QWUrWTmX9ltIf+FJD8IlpSy+3OW23ZXWfmow7e9PCzJh4yqg==
-X-Received: by 2002:a05:6214:928:: with SMTP id dk8mr1262985qvb.170.1583466640383;
-        Thu, 05 Mar 2020 19:50:40 -0800 (PST)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id n4sm3670991qkk.88.2020.03.05.19.50.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Mar 2020 19:50:39 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [failures] mm-vmscan-remove-unnecessary-lruvec-adding.patch
- removed from -mm tree
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200306033850.GO29971@bombadil.infradead.org>
-Date:   Thu, 5 Mar 2020 22:50:38 -0500
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, aarcange@redhat.com,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        daniel.m.jordan@oracle.com, hannes@cmpxchg.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, kirill@shutemov.name,
-        kravetz@us.ibm.com, mhocko@kernel.org, mm-commits@vger.kernel.org,
-        tj@kernel.org, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <97EE83E1-FEC9-48B6-98E8-07FB3FECB961@lca.pw>
-References: <20200306025041.rERhvnYmB%akpm@linux-foundation.org>
- <211632B1-2D6F-4BFA-A5A0-3030339D3D2A@lca.pw>
- <20200306033850.GO29971@bombadil.infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Thu, 5 Mar 2020 22:53:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726243AbgCFDxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 22:53:18 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1208120866;
+        Fri,  6 Mar 2020 03:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583466798;
+        bh=KKTJfJcowOazNl2xl3LXrcZtQr/47qBRQ1iPwaAIkK0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=td0xkd0GEvGTfA582DFADSd26gOmYe7etXg84oNGyQi8TmtboVz1PEFqIagH0nfif
+         6pTwYTgpSyMkRPSZqv1C/IAdyBUDhUPkAwoRjPdur8eBbvRaCm30t5eMIzSiRAPKR3
+         fb6LPu4Ua5uaLL0NtiVZbd/7adw1nCA3I9/9rZuY=
+Date:   Thu, 5 Mar 2020 19:53:17 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [y2038] 412c53a680: will-it-scale.per_process_ops 11.7%
+ improvement
+Message-Id: <20200305195317.771bd8fd1f308172d26a51fe@linux-foundation.org>
+In-Reply-To: <20200305062138.GI5972@shao2-debian>
+References: <20200305062138.GI5972@shao2-debian>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 5 Mar 2020 14:21:38 +0800 kernel test robot <rong.a.chen@intel.com> wrote:
 
+> FYI, we noticed a 11.7% improvement of will-it-scale.per_process_ops due to commit:
+> 
+> 
+> commit: 412c53a680a97cb1ae2c0ab60230e193bee86387 ("y2038: remove unused time32 interfaces")
 
-> On Mar 5, 2020, at 10:38 PM, Matthew Wilcox <willy@infradead.org> =
-wrote:
->=20
-> On Thu, Mar 05, 2020 at 10:32:18PM -0500, Qian Cai wrote:
->>> On Mar 5, 2020, at 9:50 PM, akpm@linux-foundation.org wrote:
->>> The patch titled
->>>    Subject: mm/vmscan: remove unnecessary lruvec adding
->>> has been removed from the -mm tree.  Its filename was
->>>    mm-vmscan-remove-unnecessary-lruvec-adding.patch
->>>=20
->>> This patch was dropped because it had testing failures
->>=20
->> Andrew, do you have more information about this failure? I hit a bug
->> here under memory pressure and am wondering if this is related
->> which might save me some time digging=E2=80=A6
->=20
-> See Hugh's message from a few minutes ago:
->=20
-> Subject: Re: [PATCH v9 00/21] per lruvec lru_lock for memcg
-
-I don=E2=80=99t see it on lore.kernel or anywhere. Private email?=
+That patch merely removed unused code!
