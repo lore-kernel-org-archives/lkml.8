@@ -2,138 +2,145 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEAEC3F2D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23978C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24E2207FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10742070A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:06:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="pexEd/QD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fbq6E4aa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgCFKD0 (ORCPT
+        id S1726240AbgCFKG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:03:26 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:29200 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgCFKD0 (ORCPT
+        Fri, 6 Mar 2020 05:06:57 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29371 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726026AbgCFKG5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:03:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583489002;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=c11MUTAoBFghZBdD4CTF4L9tszjd6tD8y5eT0h8wNtw=;
-        b=pexEd/QDmFEomb3BEReFsAKnGb7wuqs8J9hwWI7IBX4q7PoDt9WJvfVOEPNGmb7FtI
-        FemmlCVO2EBKINp5JNrmr+SiqN6rui61yxFc224jIb7x+1BKKMKbb2UhCqeBJ7vJR8+p
-        i0R8QoKUSqWv0dWjrXFdMWkYORxMWd/gR6nXznhROUxGibTT83xR68zEvcEJHeUWfqgk
-        xNqslJ1wRbBxINuQFGoe/INGSV1xO1XgJzuHmN/Fl7PN49Hl7l6v3kfqXXxAMVVU6v03
-        pZ0TTm9NEXHk+ZZCNxsk//AbInjFBkde1e1v06VA0zkaE8SQS7v2VCOWcPwwuv/Xh0XJ
-        0RFQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaaXAgMzQ=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw26A39XQJ
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 6 Mar 2020 11:03:09 +0100 (CET)
-Subject: Re: linux-next: build warning after merge of the nvmem tree
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200306152827.6fe507bd@canb.auug.org.au>
-Date:   Fri, 6 Mar 2020 11:03:08 +0100
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Paul Cercueil <paul@crapouillou.net>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <00D4DF40-E9A8-41AC-B1DA-4D656B6AC4F4@goldelico.com>
-References: <20200306152827.6fe507bd@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 6 Mar 2020 05:06:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583489215;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CNDhmKPPyjU/I8ZjQqjbJHAaz9m6Pife/JBLkiK4lO0=;
+        b=Fbq6E4aayTeqC7ax+TfWPFZsVBHiViY7afgvbA8Ynj4Whh9AsPmqmEIkzTvrmq6nGV6TCF
+        HlwX4pjGvfVRqaJvBmsuXdOWsrpdAyvXQZg9+q6tkRwweXnBXJfrAOlYwVTmq2tyw60Css
+        frJ1p70NGJpEaJCkOYZ1LwqKlKxYkZI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-260-FUtuVDmlO923cxEjUIiV-Q-1; Fri, 06 Mar 2020 05:06:54 -0500
+X-MC-Unique: FUtuVDmlO923cxEjUIiV-Q-1
+Received: by mail-wr1-f70.google.com with SMTP id 72so790176wrc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:06:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=CNDhmKPPyjU/I8ZjQqjbJHAaz9m6Pife/JBLkiK4lO0=;
+        b=IKRFm1Q8P8gekoRXAw8906klVYaANFBgqQAFXWM31pn4ghRcKnOny9O1GayjMB8kgy
+         FFhfClF4N2WtJByBRwUL3R8A7oFjfCFuPg2EsuoUlbRCnUQ5O+4wMbX2rfrf4Jz23O8O
+         vyLlaTaf3o2Z6fWjZmDQ1ZfbTeyR37lUWsb+9L+bSWmFmsOsE0eHggsRpMB6Emkz8UuD
+         fp1j2fWxwXqqXuet6d4963in2KAAsO+kYtGTYxoJfQlWXXm2g9xrx0oc5CodmCACc1r2
+         SL17T9MVZsYAHyM2Zm9syt92YydrzaNPt8ITDxbUZVJyO/JLe9Ymh38jI0XfDagqf+5E
+         ATew==
+X-Gm-Message-State: ANhLgQ11v4f7tABeen2NObwbgLQiSKXCBdOitenuhZEALBgPEYKRzYrT
+        rd0YNH5hNV7zifD+AjQcAIO3mfBtYirAifvLsBfMsMti7YBWR/wUdQpUmZIPtUcFuA0yqajZnDA
+        dS1wvC0dkiUUyxdSYVoBEuRDP
+X-Received: by 2002:a05:600c:2f01:: with SMTP id r1mr3145204wmn.31.1583489213314;
+        Fri, 06 Mar 2020 02:06:53 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsCpKnLythwz5ylIW58CeFo2DLM+USTBNualw4sqyWdiqnoAs2Lj09ZRAWLj+zXfMhkGZXnnA==
+X-Received: by 2002:a05:600c:2f01:: with SMTP id r1mr3145181wmn.31.1583489213031;
+        Fri, 06 Mar 2020 02:06:53 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id s2sm10338017wmj.15.2020.03.06.02.06.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 02:06:52 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] KVM: VMX: untangle VMXON revision_id setting when using eVMCS
+In-Reply-To: <20200305201000.GQ11500@linux.intel.com>
+References: <20200305183725.28872-1-vkuznets@redhat.com> <20200305183725.28872-3-vkuznets@redhat.com> <20200305201000.GQ11500@linux.intel.com>
+Date:   Fri, 06 Mar 2020 11:06:51 +0100
+Message-ID: <87pndper0k.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-> Am 06.03.2020 um 05:28 schrieb Stephen Rothwell =
-<sfr@canb.auug.org.au>:
->=20
-> Hi all,
->=20
-> After merging the nvmem tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
->=20
-> In file included from include/linux/clk.h:13,
->                 from drivers/nvmem/jz4780-efuse.c:25:
-> drivers/nvmem/jz4780-efuse.c: In function 'jz4780_efuse_read':
-> include/linux/kernel.h:842:29: warning: comparison of distinct pointer =
-types lacks a cast
->  842 |   (!!(sizeof((typeof(x) *)1 =3D=3D (typeof(y) *)1)))
->      |                             ^~
-> include/linux/kernel.h:856:4: note: in expansion of macro =
-'__typecheck'
->  856 |   (__typecheck(x, y) && __no_side_effects(x, y))
->      |    ^~~~~~~~~~~
-> include/linux/kernel.h:866:24: note: in expansion of macro =
-'__safe_cmp'
->  866 |  __builtin_choose_expr(__safe_cmp(x, y), \
->      |                        ^~~~~~~~~~
-> include/linux/kernel.h:875:19: note: in expansion of macro =
-'__careful_cmp'
->  875 | #define min(x, y) __careful_cmp(x, y, <)
->      |                   ^~~~~~~~~~~~~
-> drivers/nvmem/jz4780-efuse.c:76:24: note: in expansion of macro 'min'
->   76 |   unsigned int chunk =3D min(bytes, (start + JZ_EFU_READ_SIZE)
->      |                        ^~~
->=20
-> Introduced by commit
->=20
->  50a09dfd394a ("nvmem: add driver for JZ4780 efuse")
+> On Thu, Mar 05, 2020 at 07:37:25PM +0100, Vitaly Kuznetsov wrote:
+>> As stated in alloc_vmxon_regions(), VMXON region needs to be tagged with
+>> revision id from MSR_IA32_VMX_BASIC even in case of eVMCS. The logic to
+>> do so is not very straightforward: first, we set
+>> hdr.revision_id = KVM_EVMCS_VERSION in alloc_vmcs_cpu() just to reset it
+>> back to vmcs_config.revision_id in alloc_vmxon_regions(). Simplify this by
+>> introducing 'enum vmcs_type' parameter to alloc_vmcs_cpu().
+>> 
+>> No functional change intended.
+>> 
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>
+> ...
+>
+>> +	 * However, even though not explicitly documented by TLFS, VMXArea
+>> +	 * passed as VMXON argument should still be marked with revision_id
+>> +	 * reported by physical CPU.
+>
+> LOL, nice.
+>
+>
+>> +	 */
+>> +	if (type != VMXON_REGION && static_branch_unlikely(&enable_evmcs))
+>>  		vmcs->hdr.revision_id = KVM_EVMCS_VERSION;
+>>  	else
+>>  		vmcs->hdr.revision_id = vmcs_config.revision_id;
+>>  
+>> -	if (shadow)
+>> +	if (type == SHADOW_VMCS_REGION)
+>>  		vmcs->hdr.shadow_vmcs = 1;
+>>  	return vmcs;
+>>  }
+>
+>> -struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags);
+>> +enum vmcs_type {
+>> +	VMXON_REGION,
+>> +	VMCS_REGION,
+>> +	SHADOW_VMCS_REGION,
+>> +};
+>> +
+>> +struct vmcs *alloc_vmcs_cpu(enum vmcs_type type, int cpu, gfp_t flags);
+>>  void free_vmcs(struct vmcs *vmcs);
+>>  int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+>>  void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+>> @@ -498,8 +504,8 @@ void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs);
+>>  
+>>  static inline struct vmcs *alloc_vmcs(bool shadow)
+>
+> I think it'd be cleaner overall to take "enum vmcs_type" in alloc_vmcs().
+> Then the ternary operator goes away and the callers (all two of 'em) are
+> self-documenting.
 
-The new kbuild robot message is more precise.
+Ya, it didn't seem to be needed with my initial suggestion to rename
+alloc_vmcs_cpu() to alloc_vmx_area_cpu() because in case we think of
+VMXON region as something different from VMCS we have only two options:
+normal VMCS or shadow VMCS and bool flag works perfectly. 
 
-drivers/nvmem/jz4780-efuse.c:76:38: sparse: sparse: incompatible types =
-in comparison expression (different type sizes):
-drivers/nvmem/jz4780-efuse.c:76:38: sparse:    unsigned long *
-drivers/nvmem/jz4780-efuse.c:76:38: sparse:    unsigned int *
+v3 is on the way, stay tuned!
 
-A look into the code:
-
-/* main entry point */
-static int jz4780_efuse_read(void *context, unsigned int offset,
-			     void *val, size_t bytes)
-{
-	struct jz4780_efuse *efuse =3D context;
-
-	while (bytes > 0) {
-		unsigned int start =3D offset & ~(JZ_EFU_READ_SIZE - 1);
-		unsigned int chunk =3D min(bytes, (start + =
-JZ_EFU_READ_SIZE)
-					 - offset);
-
-The problem seems to be that size_t is not always compatible to
-unsigned int on all machines and compilers. My cross-gcc for MIPS
-did not complain. kbuild robot tried for ARCH=3Dx86_64 and in the
-first warning for GCC_VERSION=3D7.5.0 make.cross ARCH=3Driscv=20
-
-So I think we have to use
-
-		size_t start =3D offset & ~(JZ_EFU_READ_SIZE - 1);
-		size_t chunk =3D min(bytes, (start + JZ_EFU_READ_SIZE)
-					 - offset);
-
-I'l send a patch (after trying on MIPS).
-
-BR and thanks,
-Nikolaus
+-- 
+Vitaly
 
