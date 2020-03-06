@@ -2,104 +2,103 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FE4C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA96C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8072072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80ED52072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:32:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SB5vQ4kW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgCFFci (ORCPT
+        id S1726029AbgCFFc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 00:32:38 -0500
-Received: from wind.enjellic.com ([76.10.64.91]:59354 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgCFFci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 00:32:38 -0500
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 0265WBpF016522;
-        Thu, 5 Mar 2020 23:32:11 -0600
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 0265WAUZ016521;
-        Thu, 5 Mar 2020 23:32:10 -0600
-Date:   Thu, 5 Mar 2020 23:32:10 -0600
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
-Message-ID: <20200306053210.GA16297@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 05 Mar 2020 23:32:12 -0600 (CST)
+        Fri, 6 Mar 2020 00:32:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40825 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725873AbgCFFc4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 00:32:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583472774;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2Dg5l40fFklgiXW3Pi2JeGrXIz1t8W6lNvDgLqT7nN8=;
+        b=SB5vQ4kWMcIfpkT9Nn0oXRqInC/tiI8mcC71YHZWuCM5YHDd0O/u7lezP+6JofVX+0JbJB
+        kZYtXQ7vpaSHSqx7QS+3+eKrD6XOCni5DzVrCs9HIej2X8CNMnbI1CNxEU3AqhUIgVS8Co
+        SS8HcIR5I5tvntG9GTgXiup6PC9Aqeg=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-386-4efOdl5kMQqWKF88EemGuQ-1; Fri, 06 Mar 2020 00:32:53 -0500
+X-MC-Unique: 4efOdl5kMQqWKF88EemGuQ-1
+Received: by mail-wm1-f70.google.com with SMTP id e26so221168wmk.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 21:32:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2Dg5l40fFklgiXW3Pi2JeGrXIz1t8W6lNvDgLqT7nN8=;
+        b=KAuPr2EZloesi+7n9QxXA+26Y18e0LP429f3U1nM9p4zWMJGdmZfyjWYhstxEkJ7v9
+         29a9wcwv4TQ6aLghkBZYxixlNAjLJk1atrHvW1BA1G7EZwOP01AIDX+kgPpm8KPKyMiK
+         CF+EPPfOUvtLvM8JSZ+r8HZwK0p4TbqrDDUCoM1/1dfjg8uM77f2Q4Ez6U70d9ozc+sa
+         XPJmHEA5qhfF5X8f2lhrpxU7mVNrdCQmFfDtrrZQ/VIEyusTKCUdq7gRfXaVrgfOBMYe
+         AazjD/t80a0sk7Gi3ROmt4ud4nRtTWhBZ/rvwLAYX8S4lLSgcgtPOlK9vPX3lI33H6wR
+         qRig==
+X-Gm-Message-State: ANhLgQ3c1lGew62T7pv0g6JQrPhlCSLhf56hzLjdozPD+w/qON+co//W
+        B44RR6/2Ci4xPJd11vawD7A7gzUPK1b5yShMeSsQLE/zw9FpFc9mGExIMA4i2nanHQdkUTXAxPN
+        ON/ZNEqIidXpzcehyxzsrPCCa
+X-Received: by 2002:a5d:4902:: with SMTP id x2mr2045481wrq.301.1583472772190;
+        Thu, 05 Mar 2020 21:32:52 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsk/wfYFESgN2vEQJ3IVYE/ThGeS0U1JqD+oUUhMbb4iHplVb00stFd0EPUaYUZcTYTgaTK1Q==
+X-Received: by 2002:a5d:4902:: with SMTP id x2mr2045463wrq.301.1583472771981;
+        Thu, 05 Mar 2020 21:32:51 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
+        by smtp.gmail.com with ESMTPSA id b13sm12635205wme.2.2020.03.05.21.32.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 21:32:51 -0800 (PST)
+Subject: Re: [PATCH] KVM: VMX: Use wrapper macro
+ ~RMODE_GUEST_OWNED_EFLAGS_BITS directly
+To:     linmiaohe <linmiaohe@huawei.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>
+Cc:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+References: <f1b01b4903564f2c8c267a3996e1ac29@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <1e3f7ff0-0159-98e8-ba21-8806c3a14820@redhat.com>
+Date:   Fri, 6 Mar 2020 06:32:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <f1b01b4903564f2c8c267a3996e1ac29@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 01:36:01AM +0200, Jarkko Sakkinen wrote:
+On 06/03/20 03:17, linmiaohe wrote:
+> Define a macro RMODE_HOST_OWNED_EFLAGS_BITS for (X86_EFLAGS_IOPL |
+> X86_EFLAGS_VM) as suggested by Vitaly seems a good way to fix this ?
+> Thanks.
 
-Good evening, I hope the end of the week is going well for everyone.
+No, what if a host-owned flag was zero?  I'd just leave it as is.
 
-> Add a selftest for SGX. It is a trivial test where a simple enclave
-> copies one 64-bit word of memory between two memory locations given
-> to the enclave as arguments. Use ENCLS[EENTER] to invoke the
-> enclave.
+Paolo
 
-Just as a clarification, are you testing the new driver against signed
-production class enclaves in .so format that also include metadata
-layout directives or is the driver just getting tested against the two
-page toy enclave that copies a word of memory from one memory location
-to another?
-
-Our PSW/runtime is currently failing to initialize production class
-enclaves secondary to a return value of -4 from the ENCLU[EINIT]
-instruction, which means the measurement of the loaded enclave has
-failed to match the value in the signature structure.
-
-The same enclave loads fine with the out of kernel driver.  Our
-diagnostics tell us we are feeding identical page streams and
-permissions to the page add ioctl's of both drivers.  The identity
-modulus signature of the signing key for the enclave is being written
-to the launch control registers.
-
-We see the same behavior from both our unit test enclaves and the
-Quoting Enclave from the Intel SGX runtime.
-
-When we ported our runtime loader to the new driver ABI we kept things
-simple and add only a single page at a time in order to replicate the
-behavior of the old driver.
-
-Secondly, we were wondering what distribution you are building the
-self-tests with?  Initial indications are that the selftest signing
-utility doesn't build properly with OpenSSL 1.1.1.
-
-Have a good day.
-
-Dr. Greg
-
-As always,
-Dr. Greg Wettstein, Ph.D, Worker
-IDfusion, LLC               SGX secured infrastructure and
-4206 N. 19th Ave.           autonomously self-defensive platforms.
-Fargo, ND  58102
-PH: 701-281-1686            EMAIL: greg@idfusion.net
-------------------------------------------------------------------------------
-"Don't worry about people stealing your ideas.  If your ideas are any
- good, you'll have to ram them down people's throats."
-                                -- Howard Aiken
