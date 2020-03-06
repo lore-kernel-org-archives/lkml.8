@@ -2,91 +2,109 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28584C3F2D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0173FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9FAF21D7E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583499335;
-	bh=FmCdFdk2V7prBX0NrmUPWjmsaN5MxL6GKpLAY5HtaZo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jB3iOGVbPDEZsPakehu02EtsgER2YFGG0sNzGl/N/Q0cSNmi4sPjkF5eAbZR5ENci
-	 6GjWoHc++F2PTgZRO7NvI8ZXPMFrEfJKNEzim511mQ9Ku/mH3zllsNXP/lZUUoV/Lh
-	 +PrRVLjMVn37xQdV8g7krv6p8ByXFxw9PnkhVjKM=
+	by mail.kernel.org (Postfix) with ESMTP id D689521D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgCFMze (ORCPT
+        id S1726781AbgCFM4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:55:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbgCFMzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:55:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4DDE21D56;
-        Fri,  6 Mar 2020 12:55:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583499333;
-        bh=FmCdFdk2V7prBX0NrmUPWjmsaN5MxL6GKpLAY5HtaZo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yVs7toEV5u1l4nLoBtRPTGXT5IYT5Npy+TjDB4q3uIsfcvcTtpZAe2ILpbZwlwlXR
-         wP2NxHG9xOEOYfDps+57wzPf/YXmJgew91r2CSppuL2iJw/ZNpUd1lYwHPWHYCYuLR
-         78ECp/RhjiH0y3Lqe/XzfnCsNGHUMhF+jJn20bWo=
-Date:   Fri, 6 Mar 2020 13:55:31 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Jiri Slaby <jslaby@suse.com>, Joe Perches <joe@perches.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCHv3 2/2] serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE
-Message-ID: <20200306125531.GA3754466@kroah.com>
-References: <20200302175135.269397-1-dima@arista.com>
- <20200302175135.269397-3-dima@arista.com>
+        Fri, 6 Mar 2020 07:56:25 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:35814 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgCFM4Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 07:56:25 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 839ED80307C4;
+        Fri,  6 Mar 2020 12:56:22 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Yp3G-rPdHNLp; Fri,  6 Mar 2020 15:56:21 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/4] clocksource: Fix MIPS GIC and DW APB Timer for Baikal-T1 SoC support
+Date:   Fri, 6 Mar 2020 15:56:00 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302175135.269397-3-dima@arista.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 05:51:35PM +0000, Dmitry Safonov wrote:
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 69def4a9df00..38a8f3c99579 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -431,6 +431,14 @@ config MAGIC_SYSRQ_SERIAL
->  	  This option allows you to decide whether you want to enable the
->  	  magic SysRq key.
->  
-> +config MAGIC_SYSRQ_SERIAL_SEQUENCE
-> +	string "Char sequence that enables magic SysRq over serial"
-> +	depends on MAGIC_SYSRQ_SERIAL
-> +	default ""
-> +	help
-> +	  Specifies a sequence of characters that can follow BREAK to enable
-> +	  SysRq on a serial console.
+From: Serge Semin <fancer.lancer@gmail.com>
 
+Aside from MIPS-specific r4k timer Baikal-T1 chip also provides a functionality
+of two another timers: embedded into the MIPS GIC timer and three external DW
+timers available over APB bus. But we can't use them before the corresponding
+drivers are properly fixed. First of all DW APB Timer shouldn't be bound to a
+single CPU, since as being accessible over APB they are external with respect
+to all possible CPUs. Secondly there might be more than just two DW APB Timers
+in the system (Baikal-T1 has three of them), so permit the driver to use one of
+them as a clocksource and the rest - for clockevents. Thirdly it's possible to
+use MIPS GIC timer as a clocksource so register it in the corresponding
+subsystem (the patch has been found in the Paul Burton MIPS repo so I left the
+original Signed-off-by attribute). Finally in the same way as r4k timer the
+MIPS GIC timer should be used with care when CPUFREQ config is enabled since in
+case of CM2 the timer counting depends on the CPU reference clock frequency
+while the clocksource subsystem currently doesn't support the timers with
+non-stable clock.
 
-Can you send a follow-on patch that adds some more text here.  Something
-like :
-	If you do not know what to do, just select an empty string and
-	the option will not be enabled.
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
 
-or something like that to make it more obvious what almost everyone will
-want to do here.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paul.burton@imgtec.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
 
-thanks,
+Paul Burton (1):
+  clocksource: mips-gic-timer: Register as sched_clock
 
-greg k-h
+Serge Semin (3):
+  clocksource: dw_apb_timer: Set clockevent any-possible-CPU mask
+  clocksource: dw_apb_timer_of: Fix missing clockevent timers
+  clocksource: mips-gic-timer: Set limitations on
+    clocksource/sched-clocks usage
+
+ drivers/clocksource/dw_apb_timer.c    | 18 +++++++---------
+ drivers/clocksource/dw_apb_timer_of.c |  9 +++-----
+ drivers/clocksource/mips-gic-timer.c  | 30 ++++++++++++++++++++++-----
+ include/linux/dw_apb_timer.h          |  2 +-
+ 4 files changed, 36 insertions(+), 23 deletions(-)
+
+-- 
+2.25.1
+
