@@ -2,91 +2,100 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3180C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF000C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A26207FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:18:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583489933;
-	bh=OOG5NB9RJxSZ10jow0eNiz9o93fP8bI14824u/TpXyo=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=yHQhIy4VrKI4NBy2u6k7cQPnwEOlnx+oY4vjYDwduClTLEan75PPTChpuw68KmiOm
-	 VQDnRPZLYrIEPhnzJPvSPlXkBrCG9H6oY74fDakXPMeBamSpZO0lmdRp2hruqr/7am
-	 hhmuHT+IiqmAYEtMI4/RsV/6XlAPAPemdUj4UHa0=
+	by mail.kernel.org (Postfix) with ESMTP id 81D1D2070A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:19:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p9wLAfZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgCFKSw (ORCPT
+        id S1726498AbgCFKTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:18:52 -0500
-Received: from mail-oi1-f174.google.com ([209.85.167.174]:36737 "EHLO
-        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgCFKSw (ORCPT
+        Fri, 6 Mar 2020 05:19:10 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44061 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgCFKTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:18:52 -0500
-Received: by mail-oi1-f174.google.com with SMTP id t24so2046284oij.3;
-        Fri, 06 Mar 2020 02:18:52 -0800 (PST)
+        Fri, 6 Mar 2020 05:19:10 -0500
+Received: by mail-ot1-f66.google.com with SMTP id v22so1870031otq.11;
+        Fri, 06 Mar 2020 02:19:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IoHyFheQbLvWaqu8JmtXrevLVQ2eNF1/ry5EBSUAxhI=;
+        b=p9wLAfZ0san/NF6WFjAtmFuQ94dW+jXKMoUSjddo2ccb+2JWERyMVU3orURu6BMrLd
+         MV/YtCL21b7jaf9NhIrWkoH3FqdM0tSaJ4W9JNmBNYOIo1tev64UoSz7D/SLiE7+69PF
+         VplsjRc4fy4/0BE2lpf4mkytKpEHzAdEh2Ho0a7b6MucZsG4UDeflqYGjUiscFz0H/T/
+         63nGI1j+jrdvNPkdGJBUXRyf6hiELfw4aBF3B7CQTNATbaa0q8kvj7lF+dcdteIt8lYD
+         hWXpWvgquW9//nh5OydbcL3GJ+hzS1LN81drgOIQXSVf4h3y2badceTkjB6uTqNMuORR
+         o/cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=pBGDyn9+QX+LdnDHx3BkVjv8dhcNCQI8pss/MoHaa/8=;
-        b=RxpnsL3eLOsU8pROKuILry3sfMN7ySOaImnNzFH3ofmhJ8C7/cDr1rF5jCIGAH4oOs
-         ygE1qOKw8qftYRz3GAqgC5MDeYzmw7ZVI1Xop3C56abiQr5X/8jrPplUEdu/B59hY8jg
-         AAPcj6TQkSfDJC6IYW7UiJUUL2dn/KqnVg8bP95cLc4lShqYruwwWHh5B9fV7RycVdYz
-         ixO3G9CN0g7r3KjHmwnNooOlV1IIqZMRON4lsomjuenvXvvoy77DMll/l+sy6ICnPo4O
-         4ucOLvaIYvw5PaoZA8Zf2fcobelq05jdGPfftlc1Qv4rWhWakLbOkddw0lUmBpHUV22x
-         Aztg==
-X-Gm-Message-State: ANhLgQ0rEMyeSysOp4EtTRJ5QQ7v9osWht/1AUPk2s0yh48IF6NxRAGh
-        YZB5iLI4jvJAd/VdkUlpvvjYVoy7iJpcpDeozP66+404
-X-Google-Smtp-Source: ADFU+vu8kbz8bz/u5Ksox53bjHQ3vaFiM1M89FiCv76TOI1OnsZrNghbKnlig5x6pZuN6ZUKY7NxThFJYncOW0BYOEo=
-X-Received: by 2002:aca:ebcf:: with SMTP id j198mr1933251oih.115.1583489931843;
- Fri, 06 Mar 2020 02:18:51 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IoHyFheQbLvWaqu8JmtXrevLVQ2eNF1/ry5EBSUAxhI=;
+        b=WFeyu/LH+dpMQAiKapV/Us48QH1EA6Z5VU0OvTCUI54nsMvDCl+88kc/TXRdMzAUso
+         W3bXdLYgYxbBN4yK8aTJUYoJkR7h4STWxmY231JI7iAJw4ksYkUkT7yFQOjxXOjWwDHE
+         VrjG9CktT/BwE/x3k9yasxI6AzZgVSeZSHBmnu2hO6pageSk49Lxm1JINTPAc0p3C0e3
+         hYQcY1Ft5SmOoJ4gk02j3khu4Yzgwv47Ik5tAOjerOoGhfp06NGMcL5GBhceGC9qTWcK
+         5N3cykoZSCW5g5InePFuCsyW9jF8G6wjlK4ydoBORs/VQsDi6bAP1tmkXb7O70xyOukF
+         KCSw==
+X-Gm-Message-State: ANhLgQ0mcWlB/w9vNaswxTX7mCAXv5+D3rItplG0tI7hKx3ZMJw4Zgxc
+        Z24dl5P8LIgF8kwrbtVjWVRfOtobQl6d/sy4Eiw=
+X-Google-Smtp-Source: ADFU+vt6mnTdWQ6RxyyFMqAxyTQC5gXDaaqEFjYr7pojs7qjmb5v1nf4DcANsuCgTC26YvQ/S5viKLF5TlIRf+PUEGk=
+X-Received: by 2002:a9d:6d85:: with SMTP id x5mr1917571otp.176.1583489949499;
+ Fri, 06 Mar 2020 02:19:09 -0800 (PST)
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 6 Mar 2020 11:18:40 +0100
-Message-ID: <CAJZ5v0g+iTke+8DL28YzCBeDbe=WNQnUhWuO8QjLhAwGy3U0=A@mail.gmail.com>
-Subject: [GIT PULL] ACPI documentation fix for v5.6-rc5
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200228164126.17517-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200305114314.GP5379@paasikivi.fi.intel.com>
+In-Reply-To: <20200305114314.GP5379@paasikivi.fi.intel.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 6 Mar 2020 10:18:43 +0000
+Message-ID: <CA+V-a8tGEYT7sOqzLRu8cx3u1DySt4mOz0UujU57SZSGqXB=Pw@mail.gmail.com>
+Subject: Re: [PATCH] media: i2c: ov5645: Add virtual_channel module parameter
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jacopo Mondi <jacopo@jmondi.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Sakari,
 
-Please pull from the tag
+On Thu, Mar 5, 2020 at 11:43 AM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On Fri, Feb 28, 2020 at 04:41:26PM +0000, Lad Prabhakar wrote:
+> > OV5645 can operate in virtual channel 0-3 in CSI2 interfaces, this patch
+> > adds support for module parameter virtual_channel to select the required
+> > channel. By default OV5645 operates in virtual channel 0.
+>
+> What's your use case for different virtual channels?
+>
+Just ability to switch to different virtual channel, based on ov5640
+driver. The rcar-csi2
+has capability to capture  from multiple channels so that we can
+capture simultaneously
+from two sensors.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-5.6-rc5
+Cheers,
+--Prabhakar
 
-with top-most commit 86dfa5bec24952f99f2cfa778975d5a914c3a1d2
-
- Merge branch 'acpi-doc'
-
-on top of commit 98d54f81e36ba3bf92172791eba5ca5bd813989b
-
- Linux 5.6-rc4
-
-to receive an ACPI documentation fix for 5.6-rc5.
-
-This fixes Sphinx format warinings in an ACPI fan document added
-recently (Randy Dunlap).
-
-Thanks!
-
-
----------------
-
-Randy Dunlap (1):
-      Documentation/admin-guide/acpi: fix fan_performance_states.rst warnings
-
----------------
-
- Documentation/admin-guide/acpi/fan_performance_states.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> --
+> Regards,
+>
+> Sakari Ailus
