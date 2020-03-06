@@ -2,68 +2,145 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BADC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B710C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6AF20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583528115;
-	bh=oArAAZa/9ojyftkYg3guTCBnbYyIN2n6dYOF6OupPBg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=oSLwv9IHvclDX9o2fHr5virntqPL+oJONkzegxTf4HvChQwia4Ci9QgkDi8y4lgr2
-	 K8zpGlgYX65N3vC6eNrT1oOIXDkdTC25Litj8yYjwG8EjPXGxKl3sJovDZ6lfKG5lY
-	 H/rnDuktxau+j3sX1M4nOuJTJyVMUYWKAqvWk6tk=
+	by mail.kernel.org (Postfix) with ESMTP id 5C09320709
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:55:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kj36zf9h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgCFUzL (ORCPT
+        id S1727000AbgCFUz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:55:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgCFUzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:55:09 -0500
-Subject: Re: [GIT PULL] spi fixes for v5.6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583528109;
-        bh=oArAAZa/9ojyftkYg3guTCBnbYyIN2n6dYOF6OupPBg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=LOOQO8StcPboBIbdFoMhgBQR5hA9287CIbJYI5aJ4KRnR2OlxuvdOjzfniawbej+L
-         GQbYrnnTbVRpB26emDDCCzuSGbulPllRZx186DAOTfxBZxEnD0G/r5VRU3/WW5Q4ib
-         ZvRzARtsxtnqqdGeqzA6n0/PulKRls4TDdZej5eA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200306174101.GE4114@sirena.org.uk>
-References: <20200306174101.GE4114@sirena.org.uk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200306174101.GE4114@sirena.org.uk>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
- tags/spi-fix-v5.6-rc4
-X-PR-Tracked-Commit-Id: f9981d4f50b475d7dbb70f3022b87a3c8bba9fd6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ae24a21bbd96a7a4a3e82890285255d7e86540f0
-Message-Id: <158352810930.1815.5403175202221783247.pr-tracker-bot@kernel.org>
-Date:   Fri, 06 Mar 2020 20:55:09 +0000
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+        Fri, 6 Mar 2020 15:55:26 -0500
+Received: from mail.efficios.com ([167.114.26.124]:42020 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFUzZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 15:55:25 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id AA34A2690C5;
+        Fri,  6 Mar 2020 15:55:24 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id gEnsaX2owVTb; Fri,  6 Mar 2020 15:55:24 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 36502269214;
+        Fri,  6 Mar 2020 15:55:24 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 36502269214
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583528124;
+        bh=nX7EnnV+jSctgcR9sDVdbgvtem6AIOc0p1CI0k+DUNE=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=kj36zf9htuTEQt1L3szwMd8vVQ+Ypy+N15CL9GeUykc6RcWINym08BLMu1V0l8oIm
+         aAY7f7v3wAjBsnp4zF+wcLTRhITNCkw/bkyo87Fu3w81M/k66wwe9R7i7etUNLn0p7
+         N83VzTGM3ZJnG/nB9nMW4WmK603KOoB1lodruNOPr2O3jm7zQngkz6pfGBxvz0V50O
+         rPy4jjzP7rqQyaCsFdaLQMXZ+oBCpCEI4swmA5WzI7edaK12OW5tcubuPnvK0nAOGS
+         PJGT4ZD7Zatd1LFFYWHD1DbRUGdlExRgFSddVsfGh0c82KS2Hg+Ji4Pq9y9hp/83DW
+         y7QfYrOA5HvpA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id tBQnlFexS270; Fri,  6 Mar 2020 15:55:24 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 25D18268DEE;
+        Fri,  6 Mar 2020 15:55:24 -0500 (EST)
+Date:   Fri, 6 Mar 2020 15:55:24 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        dan carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Message-ID: <65796626.20397.1583528124078.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200306154556.6a829484@gandalf.local.home>
+References: <20200221133416.777099322@infradead.org> <20200306104335.GF3348@worktop.programming.kicks-ass.net> <20200306113135.GA8787@worktop.programming.kicks-ass.net> <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com> <1896740806.20220.1583510668164.JavaMail.zimbra@efficios.com> <20200306125500.6aa75c0d@gandalf.local.home> <609624365.20355.1583526166349.JavaMail.zimbra@efficios.com> <20200306154556.6a829484@gandalf.local.home>
+Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for
+ _rcuidle tracepoints (again)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: tracing: Remove regular RCU context for _rcuidle tracepoints (again)
+Thread-Index: O+2BxyZ+gYfOWDMsabZK0oJx9bG+6Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 6 Mar 2020 17:41:01 +0000:
+----- On Mar 6, 2020, at 3:45 PM, rostedt rostedt@goodmis.org wrote:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v5.6-rc4
+> On Fri, 6 Mar 2020 15:22:46 -0500 (EST)
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> 
+>> I agree with the overall approach. Just a bit of nitpicking on the API:
+>> 
+>> I understand that the "prio" argument is a separate argument because it can take
+>> many values. However, "rcu" is just a boolean, so I wonder if we should not
+>> rather
+>> introduce a "int flags" with a bitmask enum, e.g.
+> 
+> I thought about this approach, but thought it was a bit overkill. As the
+> kernel doesn't have an internal API, I figured we can switch this over to
+> flags when we get another flag to add. Unless you can think of one in the
+> near future.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ae24a21bbd96a7a4a3e82890285255d7e86540f0
+The additional feature I have in mind for near future would be to register
+a probe which can take a page fault to a "sleepable" tracepoint. This would
+require preemption to be enabled and use of SRCU.
 
-Thank you!
+We can always change things when we get there.
+
+Thanks,
+
+Mathieu
+
+> 
+>> 
+>> int tracepoint_probe_register_prio_flags(struct tracepoint *tp, void *probe,
+>>                                          void *data, int prio, int flags)
+>> 
+>> where flags would be populated through OR between labels of this enum:
+>> 
+>> enum tracepoint_flags {
+>>   TRACEPOINT_FLAG_RCU = (1U << 0),
+>> };
+>> 
+>> We can then be future-proof for additional flags without ending up calling e.g.
+>> 
+>> tracepoint_probe_register_featurea_featureb_featurec(tp, probe, data, 0, 1, 0,
+>> 1)
+> 
+> No, as soon as there is another boolean to add, the rcu version would be
+> switched to flags. I even thought about making the rcu and prio into one,
+> and change prio to be a SHRT_MAX max, and have the other 16 bits be for
+> flags.
+> 
+> -- Steve
+> 
+> 
+>> 
+> > which seems rather error-prone and less readable than a set of flags.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
