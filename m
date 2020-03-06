@@ -2,125 +2,196 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91865C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA369C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B3220637
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40A220637
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCFSjp (ORCPT
+        id S1726635AbgCFSkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:39:45 -0500
-Received: from smtprelay0235.hostedemail.com ([216.40.44.235]:51492 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726083AbgCFSjp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:39:45 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id B38C5837F24A;
-        Fri,  6 Mar 2020 18:39:43 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: iron74_8edbf580f4f45
-X-Filterd-Recvd-Size: 4410
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  6 Mar 2020 18:39:41 +0000 (UTC)
-Message-ID: <442b7ace85a414c6a01040368f05d6d219f86536.camel@perches.com>
-Subject: Re: [PATCH] sched/cputime: silence a -Wunused-function warning
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>, Qian Cai <cai@lca.pw>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, juri.lelli@redhat.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        dietmar.eggemann@arm.com, Steven Rostedt <rostedt@goodmis.org>,
-        bsegall@google.com, mgorman@suse.de,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Date:   Fri, 06 Mar 2020 10:38:06 -0800
-In-Reply-To: <a7503afc9d561ae9c7116b97c7a960d7ad5cbff9.camel@perches.com>
-References: <1583509304-28508-1-git-send-email-cai@lca.pw>
-         <CAKwvOd=V44ksbiffN5UYw-oVfTK_wdeP59ipWANkOUS_zavxew@mail.gmail.com>
-         <a7503afc9d561ae9c7116b97c7a960d7ad5cbff9.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 6 Mar 2020 13:40:18 -0500
+Received: from mga04.intel.com ([192.55.52.120]:27043 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbgCFSkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:40:18 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 10:40:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
+   d="scan'208";a="264542722"
+Received: from wbakowsk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.27.142])
+  by fmsmga004.fm.intel.com with ESMTP; 06 Mar 2020 10:40:13 -0800
+Date:   Fri, 6 Mar 2020 20:40:13 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH] KEYS: Don't write out to userspace while holding key
+ semaphore
+Message-ID: <20200306184013.GC7472@linux.intel.com>
+References: <20200305210640.15315-1-longman@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305210640.15315-1-longman@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-06 at 09:25 -0800, Joe Perches wrote:
-> On Fri, 2020-03-06 at 09:13 -0800, Nick Desaulniers wrote:
-> > On Fri, Mar 6, 2020 at 7:42 AM Qian Cai <cai@lca.pw> wrote:
-> > > account_other_time() is only used when CONFIG_IRQ_TIME_ACCOUNTING=y (in
-> > > irqtime_account_process_tick()) or CONFIG_VIRT_CPU_ACCOUNTING_GEN=y (in
-> > > get_vtime_delta()). When both are off, it will generate a compilation
-> > > warning from Clang,
-> > > 
-> > > kernel/sched/cputime.c:255:19: warning: unused function
-> > > 'account_other_time' [-Wunused-function]
-> > > static inline u64 account_other_time(u64 max)
-> > > 
-> > > Rather than wrapping around this function with a macro expression,
-> > > 
-> > >  if defined(CONFIG_IRQ_TIME_ACCOUNTING) || \
-> > >     defined(CONFIG_VIRT_CPU_ACCOUNTING_GEN)
-> > > 
-> > > just use __maybe_unused for this small function which seems like a good
-> > > trade-off.
-> > 
-> > Generally, I'm not a fan of __maybe_unused.  It is a tool in the
-> > toolbox for solving this issue, but it's my least favorite.  Should
-> > the call sites be eliminated, this may mask an unused and entirely
-> > dead function from being removed.  Preprocessor guards based on config
-> > give more context into *why* a particular function may be unused.
-> > 
-> > So let's take a look at the call sites of account_other_time().  Looks
-> > like irqtime_account_process_tick() (guarded by
-> > CONFIG_IRQ_TIME_ACCOUNTING) and get_vtime_delta() (guarded by
-> > CONFIG_VIRT_CPU_ACCOUNTING_GEN).  If it were one config guard, then I
-> > would prefer to move the definition to be within the same guard, just
-> > before the function definition that calls it, but we have a more
-> > complicated case here.
-> > 
-> > The next thing I'd check to see is if there's a dependency between
-> > configs.  In this case, both CONFIG_IRQ_TIME_ACCOUNTING and
-> > CONFIG_VIRT_CPU_ACCOUNTING_GEN are defined in init/Kconfig.  In this
-> > case there's also no dependency between configs, so specifying one
-> > doesn't imply the other; so guarding on one of the two configs is also
-> > not an option.
-> > 
-> > So, as much as I'm not a fan of __maybe_unused, it is indeed the
-> > simplest option.  Though, I'd still prefer the ifdef you describe
-> > instead, maybe the maintainers can provide guidance/preference?
+On Thu, Mar 05, 2020 at 04:06:40PM -0500, Waiman Long wrote:
+> A lockdep circular locking dependency report was seen when running a
+> keyutils test:
 > 
-> Another option might be to move static inline functions
-> where possible to an #include file (like sched.h) but the
-> same possible dead function issue would still exist.
+> [12537.027242] ======================================================
+> [12537.059309] WARNING: possible circular locking dependency detected
+> [12537.088148] 4.18.0-147.7.1.el8_1.x86_64+debug #1 Tainted: G OE    --------- -  -
+> [12537.125253] ------------------------------------------------------
+> [12537.153189] keyctl/25598 is trying to acquire lock:
+> [12537.175087] 000000007c39f96c (&mm->mmap_sem){++++}, at: __might_fault+0xc4/0x1b0
+> [12537.208365]
+> [12537.208365] but task is already holding lock:
+> [12537.234507] 000000003de5b58d (&type->lock_class){++++}, at: keyctl_read_key+0x15a/0x220
+> [12537.270476]
+> [12537.270476] which lock already depends on the new lock.
+> [12537.270476]
+> [12537.307209]
+> [12537.307209] the existing dependency chain (in reverse order) is:
+> [12537.340754]
+> [12537.340754] -> #3 (&type->lock_class){++++}:
+> [12537.367434]        down_write+0x4d/0x110
+> [12537.385202]        __key_link_begin+0x87/0x280
+> [12537.405232]        request_key_and_link+0x483/0xf70
+> [12537.427221]        request_key+0x3c/0x80
+> [12537.444839]        dns_query+0x1db/0x5a5 [dns_resolver]
+> [12537.468445]        dns_resolve_server_name_to_ip+0x1e1/0x4d0 [cifs]
+> [12537.496731]        cifs_reconnect+0xe04/0x2500 [cifs]
+> [12537.519418]        cifs_readv_from_socket+0x461/0x690 [cifs]
+> [12537.546263]        cifs_read_from_socket+0xa0/0xe0 [cifs]
+> [12537.573551]        cifs_demultiplex_thread+0x311/0x2db0 [cifs]
+> [12537.601045]        kthread+0x30c/0x3d0
+> [12537.617906]        ret_from_fork+0x3a/0x50
+> [12537.636225]
+> [12537.636225] -> #2 (root_key_user.cons_lock){+.+.}:
+> [12537.664525]        __mutex_lock+0x105/0x11f0
+> [12537.683734]        request_key_and_link+0x35a/0xf70
+> [12537.705640]        request_key+0x3c/0x80
+> [12537.723304]        dns_query+0x1db/0x5a5 [dns_resolver]
+> [12537.746773]        dns_resolve_server_name_to_ip+0x1e1/0x4d0 [cifs]
+> [12537.775607]        cifs_reconnect+0xe04/0x2500 [cifs]
+> [12537.798322]        cifs_readv_from_socket+0x461/0x690 [cifs]
+> [12537.823369]        cifs_read_from_socket+0xa0/0xe0 [cifs]
+> [12537.847262]        cifs_demultiplex_thread+0x311/0x2db0 [cifs]
+> [12537.873477]        kthread+0x30c/0x3d0
+> [12537.890281]        ret_from_fork+0x3a/0x50
+> [12537.908649]
+> [12537.908649] -> #1 (&tcp_ses->srv_mutex){+.+.}:
+> [12537.935225]        __mutex_lock+0x105/0x11f0
+> [12537.954450]        cifs_call_async+0x102/0x7f0 [cifs]
+> [12537.977250]        smb2_async_readv+0x6c3/0xc90 [cifs]
+> [12538.000659]        cifs_readpages+0x120a/0x1e50 [cifs]
+> [12538.023920]        read_pages+0xf5/0x560
+> [12538.041583]        __do_page_cache_readahead+0x41d/0x4b0
+> [12538.067047]        ondemand_readahead+0x44c/0xc10
+> [12538.092069]        filemap_fault+0xec1/0x1830
+> [12538.111637]        __do_fault+0x82/0x260
+> [12538.129216]        do_fault+0x419/0xfb0
+> [12538.146390]        __handle_mm_fault+0x862/0xdf0
+> [12538.167408]        handle_mm_fault+0x154/0x550
+> [12538.187401]        __do_page_fault+0x42f/0xa60
+> [12538.207395]        do_page_fault+0x38/0x5e0
+> [12538.225777]        page_fault+0x1e/0x30
+> [12538.243010]
+> [12538.243010] -> #0 (&mm->mmap_sem){++++}:
+> [12538.267875]        lock_acquire+0x14c/0x420
+> [12538.286848]        __might_fault+0x119/0x1b0
+> [12538.306006]        keyring_read_iterator+0x7e/0x170
+> [12538.327936]        assoc_array_subtree_iterate+0x97/0x280
+> [12538.352154]        keyring_read+0xe9/0x110
+> [12538.370558]        keyctl_read_key+0x1b9/0x220
+> [12538.391470]        do_syscall_64+0xa5/0x4b0
+> [12538.410511]        entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+> [12538.435535]
+> [12538.435535] other info that might help us debug this:
+> [12538.435535]
+> [12538.472829] Chain exists of:
+> [12538.472829]   &mm->mmap_sem --> root_key_user.cons_lock --> &type->lock_class
+> [12538.472829]
+> [12538.524820]  Possible unsafe locking scenario:
+> [12538.524820]
+> [12538.551431]        CPU0                    CPU1
+> [12538.572654]        ----                    ----
+> [12538.595865]   lock(&type->lock_class);
+> [12538.613737]                                lock(root_key_user.cons_lock);
+> [12538.644234]                                lock(&type->lock_class);
+> [12538.672410]   lock(&mm->mmap_sem);
+> [12538.687758]
+> [12538.687758]  *** DEADLOCK ***
+> [12538.687758]
+> [12538.714455] 1 lock held by keyctl/25598:
+> [12538.732097]  #0: 000000003de5b58d (&type->lock_class){++++}, at: keyctl_read_key+0x15a/0x220
+> [12538.770573]
+> [12538.770573] stack backtrace:
+> [12538.790136] CPU: 2 PID: 25598 Comm: keyctl Kdump: loaded Tainted: G
+> [12538.844855] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 12/27/2015
+> [12538.881963] Call Trace:
+> [12538.892897]  dump_stack+0x9a/0xf0
+> [12538.907908]  print_circular_bug.isra.25.cold.50+0x1bc/0x279
+> [12538.932891]  ? save_trace+0xd6/0x250
+> [12538.948979]  check_prev_add.constprop.32+0xc36/0x14f0
+> [12538.971643]  ? keyring_compare_object+0x104/0x190
+> [12538.992738]  ? check_usage+0x550/0x550
+> [12539.009845]  ? sched_clock+0x5/0x10
+> [12539.025484]  ? sched_clock_cpu+0x18/0x1e0
+> [12539.043555]  __lock_acquire+0x1f12/0x38d0
+> [12539.061551]  ? trace_hardirqs_on+0x10/0x10
+> [12539.080554]  lock_acquire+0x14c/0x420
+> [12539.100330]  ? __might_fault+0xc4/0x1b0
+> [12539.119079]  __might_fault+0x119/0x1b0
+> [12539.135869]  ? __might_fault+0xc4/0x1b0
+> [12539.153234]  keyring_read_iterator+0x7e/0x170
+> [12539.172787]  ? keyring_read+0x110/0x110
+> [12539.190059]  assoc_array_subtree_iterate+0x97/0x280
+> [12539.211526]  keyring_read+0xe9/0x110
+> [12539.227561]  ? keyring_gc_check_iterator+0xc0/0xc0
+> [12539.249076]  keyctl_read_key+0x1b9/0x220
+> [12539.266660]  do_syscall_64+0xa5/0x4b0
+> [12539.283091]  entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+> 
+> One way to prevent this deadlock scenario from happening is to not
+> allow writing to userspace while holding the key semaphore. Instead,
+> an internal buffer is allocated for getting the keys out from the
+> read method first before copying them out to userspace without holding
+> the lock.
+> 
+> That requires taking out the __user modifier from the read methods as
+> well as additional changes to not use any userspace write helpers.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Turns out there are hundreds of unused static inline
-functions in kernel .h files.
+Hi, quickly checked this (it is Friday night in Finland) and did not
+see anything obvious that'd be wrong. I'll give a more detailed look
+next week.
 
-A trivial script to find some of them (with likely
-false positives as some might actually be used via ##
-token pasting mechanisms).
+Thank you.
 
-(and there's almost certainly a better way to do this
- too as it takes a _very_ long time to run)
-
-$ grep-2.5.4 -rP --include=*.h '^[ \t]*static\s+inline\s+(?:\w+\s+){1,3}\w+[ \t]*\(' * | \
-  grep -P -oh '\w+\s*\(' | \
-  sort | uniq -c | sort -n | grep -P '^\s+1\b' | \
-  sed -r -e 's/^\s+1\s+//' -e 's/\(//' | \
-  while read line ; do \
-    echo -n "$line: " ; git grep -w $line | wc -l ; \
-  done | \
-  grep ": 1$"
-
-
+/Jarkko
