@@ -2,177 +2,101 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1546C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4857EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53DC207FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4942073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:32:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mo1nW1S/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tAeCoptp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgCFKbF (ORCPT
+        id S1726359AbgCFKcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:31:05 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35544 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726010AbgCFKbF (ORCPT
+        Fri, 6 Mar 2020 05:32:53 -0500
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:36781 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgCFKcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:31:05 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026AMMK6009083;
-        Fri, 6 Mar 2020 11:29:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=jaKUReuiylgb9hhjNohlRTAfMbgrJdojfG27pLy57kE=;
- b=mo1nW1S/4AoWu86mbCtTKxU15MAtFimYeDyj2zE6LD+m9BHymXUWmupm45Fjkpx8uWZM
- 8OoDAYyexLGvvM6UWkuNDpeHKqP2MtMKe4cIoGDXKGS4wqp5iyG32g/4TGYvR8g3PPti
- BMbR1wokeKhb2dwDyhGn99P9P7XxUgRJO1Q9Wj0tHapEYqEh8gDUdusWmq0LdxEIxHdt
- QY4xffw6wOhli7X4SWnr3pUavkb/eI6VBdX1lY/ZlI5xJxs7fgs/tOqXrK/nbfeTS4Gt
- YX3YQHhgG6xfD+btUddghBpir/8KqxXRuPxLydfRaXB2Y6/HvQVGteTHKLtjehfZzAnM ng== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yffqqeknx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 11:29:45 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BC30F10003A;
-        Fri,  6 Mar 2020 11:29:41 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AB8032A76CB;
-        Fri,  6 Mar 2020 11:29:41 +0100 (CET)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 6 Mar 2020 11:29:41
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <emil.l.velikov@gmail.com>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] drm: bufs: Clean up documentation
-Date:   Fri, 6 Mar 2020 11:29:36 +0100
-Message-ID: <20200306102937.4932-3-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200306102937.4932-1-benjamin.gaignard@st.com>
-References: <20200306102937.4932-1-benjamin.gaignard@st.com>
+        Fri, 6 Mar 2020 05:32:52 -0500
+Received: by mail-wr1-f43.google.com with SMTP id s17so813812wrs.3;
+        Fri, 06 Mar 2020 02:32:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HLuYMSQllcx18fRUsdk3+JbI4I3Xuy/vr8tfNu+t2rs=;
+        b=tAeCoptp4HxU26Cz/0DB1IZNml3WtjtOfFFKe+GKs/GhnRdeXQQFcfgifmsjzKBoFX
+         2AzQtYxKQQMPrtEt9H4ZEmK/gDB4IAFT4uDwFZotTurIRmMuDAygtgigT6FOwf2LaTcW
+         177GGMoUSAXYufyq/H3KvsyxS7k+n/QVeK/ASFU9RXKLU8E01yIvkw/aA2cbDktCxMDw
+         8ZlAjZinB5czMG36Kj6FwJEFhoU1UWC91iVXpU3mh97JzHEOtOUlQjzPrbwyvjIsEZ00
+         uI03k/tSGp2jljMl3QEODzmnUliynn5+hx0TB/xhnqcQIdvcMT6Vkux2sIRFo1lQ/1ob
+         Kw1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HLuYMSQllcx18fRUsdk3+JbI4I3Xuy/vr8tfNu+t2rs=;
+        b=Jwx5Qi6IsBqAT449eC87BBFr9asAL0Ewn+Stg1TUfelwPz/vcHdn8q020ZJhj74572
+         m+fAmjZJBqkoIwKm3SC7JYxjR3q7oLjfXM9WioV+e+ckE4zomblCQg3IqWrWQI3c90+d
+         IAMdx43/1VbxewVx7ytbyh9kg6TBCzMFEViKS2J32L6xvOsrFG1L3N7KXV+9CSKEMl3V
+         UyEfVXPxIbe4KK2qbM+U2VU2yA0LHm1mmCUvlC1/MaPnTw3r/uFLqCXR52ci3/V6BI74
+         Pa16J5C2Y+wm4HvGa6qnqhsqvhFgI10rv3QRZY36OKN2QNKlBlUNFClulKu0+beIlKxl
+         a7Kw==
+X-Gm-Message-State: ANhLgQ2NHuu0ZTmmDhqJGchFloFvSoxgrSxA5eT08Q6DoGAgTroC9xMC
+        sT3aLBE5ieond97O8WaFq40=
+X-Google-Smtp-Source: ADFU+vvznj2gIRY0guDy9bXHXIMZxnkgN3x8Wmdt6oCJdb7QynBOG8kfzrfqb6n2+RFir37KXEJymQ==
+X-Received: by 2002:adf:a4c4:: with SMTP id h4mr3369283wrb.112.1583490770458;
+        Fri, 06 Mar 2020 02:32:50 -0800 (PST)
+Received: from prasmi.home ([2a00:23c8:2510:d000:7009:9d38:36e8:7030])
+        by smtp.gmail.com with ESMTPSA id t1sm1251111wrq.36.2020.03.06.02.32.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 02:32:49 -0800 (PST)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/3] media: i2c: imx219: Feature enhancements
+Date:   Fri,  6 Mar 2020 10:32:43 +0000
+Message-Id: <20200306103246.22213-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-06_03:2020-03-05,2020-03-06 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix kernel doc comments to avoid warnings when compiling with W=1.
+This patch series does the following:
+1: Makes sure the sensor is LP11 state on power up
+2: Adds support for RAW8
+3: Adds support for 640x480 resolution
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- drivers/gpu/drm/drm_bufs.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+@Dave - I have tested setting RAW8/RAW10 formats using media-ctl
+application, but was only able to test streaming for RAW8 (640x480)
+format due to my hardware limitations.
 
-diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
-index 19297e58b232..dcabf5698333 100644
---- a/drivers/gpu/drm/drm_bufs.c
-+++ b/drivers/gpu/drm/drm_bufs.c
-@@ -134,7 +134,7 @@ static int drm_map_handle(struct drm_device *dev, struct drm_hash_item *hash,
- 					 shift, add);
- }
- 
--/**
-+/*
-  * Core function to create a range of memory available for mapping by a
-  * non-root process.
-  *
-@@ -398,7 +398,7 @@ struct drm_local_map *drm_legacy_findmap(struct drm_device *dev,
- }
- EXPORT_SYMBOL(drm_legacy_findmap);
- 
--/**
-+/*
-  * Ioctl to specify a range of memory that is available for mapping by a
-  * non-root process.
-  *
-@@ -499,7 +499,7 @@ int drm_legacy_getmap_ioctl(struct drm_device *dev, void *data,
- 	return 0;
- }
- 
--/**
-+/*
-  * Remove a map private from list and deallocate resources if the mapping
-  * isn't in use.
-  *
-@@ -659,7 +659,7 @@ int drm_legacy_rmmap_ioctl(struct drm_device *dev, void *data,
- 	return ret;
- }
- 
--/**
-+/*
-  * Cleanup after an error on one of the addbufs() functions.
-  *
-  * \param dev DRM device.
-@@ -694,7 +694,7 @@ static void drm_cleanup_buf_error(struct drm_device *dev,
- }
- 
- #if IS_ENABLED(CONFIG_AGP)
--/**
-+/*
-  * Add AGP buffers for DMA transfers.
-  *
-  * \param dev struct drm_device to which the buffers are to be added.
-@@ -1230,7 +1230,7 @@ static int drm_legacy_addbufs_sg(struct drm_device *dev,
- 	return 0;
- }
- 
--/**
-+/*
-  * Add buffers for DMA transfers (ioctl).
-  *
-  * \param inode device inode.
-@@ -1271,7 +1271,7 @@ int drm_legacy_addbufs(struct drm_device *dev, void *data,
- 	return ret;
- }
- 
--/**
-+/*
-  * Get information about the buffer mappings.
-  *
-  * This was originally mean for debugging purposes, or by a sophisticated
-@@ -1362,7 +1362,7 @@ int drm_legacy_infobufs(struct drm_device *dev, void *data,
- 	return __drm_legacy_infobufs(dev, data, &request->count, copy_one_buf);
- }
- 
--/**
-+/*
-  * Specifies a low and high water mark for buffer allocation
-  *
-  * \param inode device inode.
-@@ -1411,7 +1411,7 @@ int drm_legacy_markbufs(struct drm_device *dev, void *data,
- 	return 0;
- }
- 
--/**
-+/*
-  * Unreserve the buffers in list, previously reserved using drmDMA.
-  *
-  * \param inode device inode.
-@@ -1463,7 +1463,7 @@ int drm_legacy_freebufs(struct drm_device *dev, void *data,
- 	return 0;
- }
- 
--/**
-+/*
-  * Maps all of the DMA buffers into client-virtual space (ioctl).
-  *
-  * \param inode device inode.
+Changes for v2:
+1: Dropped setting the format in probe to coax the sensor to enter LP11
+   state.
+2: Fixed switching between RAW8/RAW10 modes.
+3: Fixed fps setting for 640x480 and switched to auto mode.
+
+Lad Prabhakar (3):
+  media: i2c: imx219: Fix power sequence
+  media: i2c: imx219: Add support for RAW8 bit bayer format
+  media: i2c: imx219: Add support for cropped 640x480 resolution
+
+ drivers/media/i2c/imx219.c | 250 +++++++++++++++++++++++++++++++------
+ 1 file changed, 214 insertions(+), 36 deletions(-)
+
 -- 
-2.15.0
+2.20.1
 
