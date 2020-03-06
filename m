@@ -2,130 +2,76 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2DCC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79763C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16522067C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583519585;
-	bh=Cpm9TXTvjT1g0oElyjHz3sa+QmJOcFbax1X2Tq0nxeY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Bp5jeA543ceUn5ADL+koMJf1op7udt603VhAs339m+CIEVwzIN3tm0DewCXVj3NOR
-	 7peSBcHpq13J7nbm2LeUj2RjRBY6KqHdB8c0MzcyCqgXg12bVXY6jNHZ64JO0vWI1C
-	 Nl8NjKvIKU1rlM0ZvVMs5E2OiJ9upi0vZCgMSLEQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5248E2067C
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgCFSdE (ORCPT
+        id S1726674AbgCFSdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:33:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52892 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 13:33:10 -0500
+Received: from mga06.intel.com ([134.134.136.31]:18865 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbgCFSdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:33:03 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EDA320675;
-        Fri,  6 Mar 2020 18:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583519583;
-        bh=Cpm9TXTvjT1g0oElyjHz3sa+QmJOcFbax1X2Tq0nxeY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kLrddGxm0GSHJQtkTdc+gVzJxLWUMdKN8q/NEsrLIIfJNclzn4r+TptaNxeTeVeES
-         k+MJZ6nXnueouUUbsL3eknAYW8HPhyVy2NkNZft0TtdZ4RIVcgIa5LaqkimUfGS8/g
-         CM3xLnH3O5UyTUfF7JpBSdaMrYv5asuPtm+AuMlw=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [BUGFIX PATCH v2] tools: Let O= makes handle a relative path with -C option
-Date:   Sat,  7 Mar 2020 03:32:58 +0900
-Message-Id: <158351957799.3363.15269768530697526765.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-User-Agent: StGit/0.17.1-dirty
+        id S1726167AbgCFSdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:33:09 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 10:33:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
+   d="scan'208";a="442031421"
+Received: from wbakowsk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.27.142])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Mar 2020 10:33:06 -0800
+Date:   Fri, 6 Mar 2020 20:33:05 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
+        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
+        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca
+Subject: Re: [PATCH v6 3/3] tpm: ibmvtpm: Add support for TPM2
+Message-ID: <20200306183305.GA7472@linux.intel.com>
+References: <20200304132243.179402-1-stefanb@linux.vnet.ibm.com>
+ <20200304132243.179402-4-stefanb@linux.vnet.ibm.com>
+ <a54d6cffe536d568a9fde46f1f32616e89a42d30.camel@linux.intel.com>
+ <8dcd22c1-b05f-d619-58c5-fd2248c75b9e@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8dcd22c1-b05f-d619-58c5-fd2248c75b9e@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I compiled tools/perf from top directory with the -C option,
-the O= option didn't work correctly if I passed a relative path.
+On Thu, Mar 05, 2020 at 08:58:15AM -0500, Stefan Berger wrote:
+> On 3/5/20 6:21 AM, Jarkko Sakkinen wrote:
+> > On Wed, 2020-03-04 at 08:22 -0500, Stefan Berger wrote:
+> > > From: Stefan Berger <stefanb@linux.ibm.com>
+> > > 
+> > > Support TPM2 in the IBM vTPM driver. The hypervisor tells us what
+> > > version of TPM is connected through the vio_device_id.
+> > > 
+> > > In case a TPM2 device is found, we set the TPM_CHIP_FLAG_TPM2 flag
+> > > and get the command codes attributes table. The driver does
+> > > not need the timeouts and durations, though.
+> > > 
+> > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> > There is huge bunch of people in the cc-list and these patches
+> > have total zero tested-by's. Why is that?
+> 
+> 
+> I cc'ed them because of their involvement in other layers. That's all I can
+> say.
 
-  $ make O=BUILD -C tools/perf/
-  make: Entering directory '/home/mhiramat/ksrc/linux/tools/perf'
-    BUILD:   Doing 'make -j8' parallel build
-  ../scripts/Makefile.include:4: *** O=/home/mhiramat/ksrc/linux/tools/perf/BUILD does not exist.  Stop.
-  make: *** [Makefile:70: all] Error 2
-  make: Leaving directory '/home/mhiramat/ksrc/linux/tools/perf'
+OK, so there is no one who can test this?
 
-The O= directory existence check failed because the check
-script ran in the build target directory instead of the
-directory where I ran the make command.
-
-To fix that, once change directory to $(PWD) and check O=
-directory, since the PWD is set to where the make command
-runs.
-
-Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
-
----
- Changes in V2:
- - Fix tools/perf/Makefile because it has own O= pre-process.
- - Use tools/perf for example.
- - Add explicit Cc: stable@vger.kernel.org tag.
----
- tools/perf/Makefile            |    2 +-
- tools/scripts/Makefile.include |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/Makefile b/tools/perf/Makefile
-index 7902a5681fc8..b8fc7d972be9 100644
---- a/tools/perf/Makefile
-+++ b/tools/perf/Makefile
-@@ -35,7 +35,7 @@ endif
- # Only pass canonical directory names as the output directory:
- #
- ifneq ($(O),)
--  FULL_O := $(shell readlink -f $(O) || echo $(O))
-+  FULL_O := $(shell cd $(PWD); readlink -f $(O) || echo $(O))
- endif
- 
- #
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index ded7a950dc40..6d2f3a1b2249 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- ifneq ($(O),)
- ifeq ($(origin O), command line)
--	dummy := $(if $(shell test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
--	ABSOLUTE_O := $(shell cd $(O) ; pwd)
-+	dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
-+	ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
- 	OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
- 	COMMAND_O := O=$(ABSOLUTE_O)
- ifeq ($(objtree),)
-
+/Jarkko
