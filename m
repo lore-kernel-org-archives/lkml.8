@@ -2,146 +2,142 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0EEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253BCC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3123D20658
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F145D20658
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:27:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mHyBFc5l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hdvEo/xE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgCFQ0t (ORCPT
+        id S1726798AbgCFQ16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:26:49 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43974 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbgCFQ0s (ORCPT
+        Fri, 6 Mar 2020 11:27:58 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32462 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726140AbgCFQ15 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:26:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=A9pSgfSLi1laEkqgIFId1rnUulI3bKFwKPVOSv+6Om8=; b=mHyBFc5lzgO9lG71GYBIaMBNRo
-        pjVoUO3/stVMH2wH7RY+WRcZGYhU1CseeoXjCBvuUjmIBWCeDvJuUclWx/ZXHkzFHZOmL8zpDtz6M
-        i7maTUQKiUSbaoovi5meYGZEcIJgHX653YE/zb6pl0au2+/8tdJK3XOdYceIsKR1QLQmgsfb1riAk
-        Zp3gmV7ecPb4vXpbTTQCLZxwtsEstEkFtrkTv6H6swUcA27Mez8JjVosmUnjlrZ9A0y7W13NcFfFc
-        AkpWCeEmxDQQhRePLDHR7HU9MXH4mmT3Bz9uZANs7hfxFk1fhmHnTIsFTKxKeXyuaKifspZajyC2+
-        XZIDsRew==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jAFoC-0004gA-P1; Fri, 06 Mar 2020 16:26:45 +0000
-Subject: Re: [BUGFIX PATCH] tools: Let O= makes handle a relative path with -C
- option
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-References: <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org>
- <158338818292.25448.7161196505598269976.stgit@devnote2>
- <CAMuHMdXSNwPwxOTDxK09LKTyOwL=LqTH6+HZRd=RY4P5VHg5Ew@mail.gmail.com>
- <20200307000712.62c32a04c794b9a12e2342bb@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <69916e54-f555-191b-a9b1-8e7bc1043002@infradead.org>
-Date:   Fri, 6 Mar 2020 08:26:43 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 6 Mar 2020 11:27:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583512076;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6kqh0g+8DkB9jTIgFcJTQym/+RkRpyGwJz3Ff5AmMcU=;
+        b=hdvEo/xEBQq7hMStSxlDNLVAhLfsTguPMQLY5lnVDyaYiZTYRzthIkSJKWLVeH4+fpp9q2
+        CVa2b7Gl+US0jDCdSkKvEy+o5yFYVUCOeuzOb4YnYm5AW/3kIPmx8Y/LNzkIANoE2xCD3d
+        yck+LcEZpnJgDeXKKrPTosEwoIYRfdo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-407-re09S1kfOLaP6IBVkerikQ-1; Fri, 06 Mar 2020 11:27:54 -0500
+X-MC-Unique: re09S1kfOLaP6IBVkerikQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A9CB6800D6C;
+        Fri,  6 Mar 2020 16:27:52 +0000 (UTC)
+Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DBB519C69;
+        Fri,  6 Mar 2020 16:27:47 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 09:27:46 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>
+Subject: Re: [PATCH v3 2/7] vfio: introduce vfio_dma_rw to read/write a
+ range of IOVAs
+Message-ID: <20200306092746.088a01a3@x1.home>
+In-Reply-To: <20200306012148.GB1530@joy-OptiPlex-7040>
+References: <20200224084350.31574-1-yan.y.zhao@intel.com>
+        <20200224084715.31753-1-yan.y.zhao@intel.com>
+        <20200306012148.GB1530@joy-OptiPlex-7040>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20200307000712.62c32a04c794b9a12e2342bb@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 7:07 AM, Masami Hiramatsu wrote:
-> Thanks Geert,
-> 
-> So Randy, what you will get if you add "echo $(PWD)" instead of "cd $(PWD)" ?
-> Is that still empty or shows the tools/bootconfig directory?
-> 
-> Thanks,
+On Thu, 5 Mar 2020 20:21:48 -0500
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-OK, in these lines:
-+       dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
-+       ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
+> On Mon, Feb 24, 2020 at 04:47:15PM +0800, Zhao, Yan Y wrote:
+> > vfio_dma_rw will read/write a range of user space memory pointed to by
+> > IOVA into/from a kernel buffer without enforcing pinning the user space
+> > memory.
+> > 
+> > TODO: mark the IOVAs to user space memory dirty if they are written in
+> > vfio_dma_rw().
+> > 
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  drivers/vfio/vfio.c             | 49 +++++++++++++++++++++
+> >  drivers/vfio/vfio_iommu_type1.c | 77 +++++++++++++++++++++++++++++++++
+> >  include/linux/vfio.h            |  5 +++
+> >  3 files changed, 131 insertions(+)
+> > 
+> > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> > index 914bdf4b9d73..902867627cbf 100644
+> > --- a/drivers/vfio/vfio.c
+> > +++ b/drivers/vfio/vfio.c
+> > @@ -1998,6 +1998,55 @@ int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn, int npage)
+> >  }
+> >  EXPORT_SYMBOL(vfio_unpin_pages);
+> >  
+> > +
+> > +/*
+> > + * This interface allows the CPUs to perform some sort of virtual DMA on
+> > + * behalf of the device.
+> > + *
+> > + * CPUs read/write a range of IOVAs pointing to user space memory into/from
+> > + * a kernel buffer.
+> > + *
+> > + * As the read/write of user space memory is conducted via the CPUs and is
+> > + * not a real device DMA, it is not necessary to pin the user space memory.
+> > + *
+> > + * The caller needs to call vfio_group_get_external_user() or
+> > + * vfio_group_get_external_user_from_dev() prior to calling this interface,
+> > + * so as to prevent the VFIO group from disposal in the middle of the call.
+> > + * But it can keep the reference to the VFIO group for several calls into
+> > + * this interface.
+> > + * After finishing using of the VFIO group, the caller needs to release the
+> > + * VFIO group by calling vfio_group_put_external_user().
+> > + *
+> > + * @group [in]: vfio group of a device
+> > + * @iova [in] : base IOVA of a user space buffer
+> > + * @data [in] : pointer to kernel buffer
+> > + * @len [in]  : kernel buffer length
+> > + * @write     : indicate read or write
+> > + * Return error code on failure or 0 on success.
+> > + */
+> > +int vfio_dma_rw(struct vfio_group *group, dma_addr_t iova,
+> > +		void *data, size_t len, bool write)  
+> hi Alex
+> May I rename this interface to vfio_dma_rw_from_group() that takes
+> VFIO group as arg and add another interface vfio_dma_rw(struct device *dev...) ?
+> That might be easier for a driver to use the second one if it does not care about
+> performance much.
 
-I changed both "cd $(PWD)" to "echo $(PWD)" and did
-$ make O=BUILD -C tools/bootconfig/
+Perhaps vfio_group_dma_rw() and vfio_dev_dma_rw()?  I'd be reluctant to
+add the latter, if a caller doesn't care about performance then they
+won't mind making a couple calls to get and release the group reference.
+Thanks,
 
-and this is the build log:
+Alex
 
-make: Entering directory '/home/rdunlap/lnx/next/linux-next-20200306/tools/bootconfig'
-cc ../../lib/bootconfig.c main.c -Wall -g -I./include -o bootconfig
-make: Leaving directory '/home/rdunlap/lnx/next/linux-next-20200306/tools/bootconfig'
-
-
-Does that help?
-
-Thanks.
-
-> On Fri, 6 Mar 2020 08:52:40 +0100
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> 
->> CC +kbuild, -stable
->>
->> On Thu, Mar 5, 2020 at 7:03 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->>> When I compiled tools/bootconfig from top directory with
->>> -C option, the O= option didn't work correctly if I passed
->>> a relative path.
->>>
->>>   $ make O=./builddir/ -C tools/bootconfig/
->>>   make: Entering directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
->>>   ../scripts/Makefile.include:4: *** O=./builddir/ does not exist.  Stop.
->>>   make: Leaving directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
->>>
->>> The O= directory existence check failed because the check
->>> script ran in the build target directory instead of the
->>> directory where I ran the make command.
->>>
->>> To fix that, once change directory to $(PWD) and check O=
->>> directory, since the PWD is set to where the make command
->>> runs.
->>>
->>> Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
->>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
->>> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
->>> ---
->>>  tools/scripts/Makefile.include |    4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
->>> index ded7a950dc40..6d2f3a1b2249 100644
->>> --- a/tools/scripts/Makefile.include
->>> +++ b/tools/scripts/Makefile.include
->>> @@ -1,8 +1,8 @@
->>>  # SPDX-License-Identifier: GPL-2.0
->>>  ifneq ($(O),)
->>>  ifeq ($(origin O), command line)
->>> -       dummy := $(if $(shell test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
->>> -       ABSOLUTE_O := $(shell cd $(O) ; pwd)
->>> +       dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
->>> +       ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
->>>         OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
->>>         COMMAND_O := O=$(ABSOLUTE_O)
->>>  ifeq ($(objtree),)
->>>
-> 
-> 
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
