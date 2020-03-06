@@ -2,201 +2,185 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B132AC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E490C10F26
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B70E2070A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5171A2070A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:14:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="AAfF9D4s"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="miVpeDA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgCFKNf (ORCPT
+        id S1726635AbgCFKOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:13:35 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51846 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgCFKNf (ORCPT
+        Fri, 6 Mar 2020 05:14:24 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46711 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726359AbgCFKOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:13:35 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a132so1727311wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:13:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/vDIlGX0meuTJ9u7QAn+s4nQf3ELnqI9FgEEknuOygI=;
-        b=AAfF9D4sZdaDyHWigxkTcwEDeh5nBGLUDWGgd5LZtuAzONxa2cPUAHBORz22PRi9lz
-         Pl3EcbK0XCqqaO2WaOwCIqPFhQ07s9kLBSdp/V4UP4Xu6nzdPF7txuYTxYXhFyPwwxDJ
-         8ay6PSuPsESmDluAoK+L41ohhu0BOEi+SKVh0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=/vDIlGX0meuTJ9u7QAn+s4nQf3ELnqI9FgEEknuOygI=;
-        b=HZgIJJaHu22+n+NBrIKihlleanaTm4Zn5jmCszVEJhw3p2NpU+Xdsl4C3UxyMJJJ2/
-         0YEabz9w38BRUrgPE+nrkVyywdEvsgyzvukOhNoSryTFxkRyKgnArF3rws4Wubui8b11
-         AQonQw/fDVYZMhGQztwPC85XS4KAIMVxzrl2hiXlqFJDXWF80DIYDMbmGFXRDTPbY2Ue
-         zyu04zMbdXjwm4yQiRe8dFWcMlAtO986PAROFh38P97vt4aFKSlfOUkLvhoOf46gzC8q
-         /bRlZP0hlK76szw+nJlrrdFdwhvWWhK/aFOw75M4gmt9+YS5GoKqsVT+o5FGHUDOsfvG
-         B+PQ==
-X-Gm-Message-State: ANhLgQ3QBvNH3aivM8pyaYvKInWC8A2Vc6EKo57Cx9b6pZuTpEfq9cxI
-        fQevwZPyACQFmPGB2yVfzVMRBg==
-X-Google-Smtp-Source: ADFU+vt7yOW1im8q9ywyGWVPyTSOpVuRYwEPRoCyv4+cUol7N1/VZo0VFbhdrlnn8cytwSvI5VFNdA==
-X-Received: by 2002:a1c:3281:: with SMTP id y123mr3334559wmy.104.1583489611295;
-        Fri, 06 Mar 2020 02:13:31 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 19sm14643940wma.3.2020.03.06.02.13.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 02:13:30 -0800 (PST)
-Date:   Fri, 6 Mar 2020 11:13:28 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Pekka Paalanen <ppaalanen@gmail.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Brian Starkey <brian.starkey@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-amlogic@lists.infradead.org, nd <nd@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/4] drm/fourcc: Add modifier definitions for describing
- Amlogic Video Framebuffer Compression
-Message-ID: <20200306101328.GR2363188@phenom.ffwll.local>
-Mail-Followup-To: Pekka Paalanen <ppaalanen@gmail.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-amlogic@lists.infradead.org, nd <nd@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20200221090845.7397-1-narmstrong@baylibre.com>
- <20200221090845.7397-2-narmstrong@baylibre.com>
- <20200303121029.5532669d@eldfell.localdomain>
- <20200303105325.bn4sob6yrdf5mwrh@DESKTOP-E1NTVVP.localdomain>
- <CAKMK7uFgQGrnEkXyac15Wz8Opg43RTa=5cX0nN5=E_omb8oY8Q@mail.gmail.com>
- <20200303152541.68ab6f3d@eldfell.localdomain>
- <20200303173332.1c6daa09@eldfell.localdomain>
+        Fri, 6 Mar 2020 05:14:24 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583489663; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=NtyrUOr8s94oXdyYaHt5f294dq+E37d+2TocPvyH+fA=; b=miVpeDA7PY0To4lgqvY8/Sk2nonCnnt9czcQ3M4817qF7ev4w5RQWhU/gZuP+oyzkcCes3nj
+ ZrJOS5us1FLMiey5zJCHGAiOvE8TuoTquXIuqhdLnvGpsTEe6v72s85QGHbguYJVMdJ9eV+z
+ mgjNI2hloGkRuwOFx90xypYsByE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e62227d.7f5ac5ecd570-smtp-out-n02;
+ Fri, 06 Mar 2020 10:14:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 616F3C4478C; Fri,  6 Mar 2020 10:14:21 +0000 (UTC)
+Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 247A7C433D2;
+        Fri,  6 Mar 2020 10:14:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 247A7C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+Subject: Re: [PATCH V2] mmc: sdhci-msm: Disable CQE during SDHC reset
+To:     Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>
+References: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
+ <1583322863-21790-1-git-send-email-vbadigan@codeaurora.org>
+ <da449444-1878-e387-6ebf-4ddb282a9b71@intel.com>
+ <1430237a-9dc5-f046-1dfe-1d5c09c16ead@codeaurora.org>
+ <3a1783c2-e8bb-f5af-4d3e-f4a45b487f0e@intel.com>
+ <0e737f52-767f-05d4-829b-4f76c084062c@codeaurora.org>
+ <460b7cbe-71f5-4bea-673f-2075ee5c5d6a@intel.com>
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Message-ID: <cd306623-37a7-318e-8545-4b6a9c3765f4@codeaurora.org>
+Date:   Fri, 6 Mar 2020 15:44:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303173332.1c6daa09@eldfell.localdomain>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <460b7cbe-71f5-4bea-673f-2075ee5c5d6a@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 05:33:32PM +0200, Pekka Paalanen wrote:
-> On Tue, 3 Mar 2020 15:25:41 +0200
-> Pekka Paalanen <ppaalanen@gmail.com> wrote:
-> 
-> > On Tue, 3 Mar 2020 12:37:16 +0100
-> > Daniel Vetter <daniel@ffwll.ch> wrote:
-> > 
-> > > On Tue, Mar 3, 2020 at 11:53 AM Brian Starkey <brian.starkey@arm.com> wrote:  
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Tue, Mar 03, 2020 at 12:10:29PM +0200, Pekka Paalanen wrote:    
-> > > > > On Fri, 21 Feb 2020 10:08:42 +0100
-> > > > > Neil Armstrong <narmstrong@baylibre.com> wrote:
-> > > > >    
-> ...
-> > > > > > +/*
-> > > > > > + * Amlogic Video Framebuffer Compression modifiers
-> > > > > > + *
-> > > > > > + * Amlogic uses a proprietary lossless image compression protocol and format
-> > > > > > + * for their hardware video codec accelerators, either video decoders or
-> > > > > > + * video input encoders.
-> > > > > > + *
-> > > > > > + * It considerably reduces memory bandwidth while writing and reading
-> > > > > > + * frames in memory.
-> > > > > > + * Implementation details may be platform and SoC specific, and shared
-> > > > > > + * between the producer and the decoder on the same platform.    
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > after a lengthy IRC discussion on #dri-devel, this "may be platform and
-> > > > > SoC specific" is a problem.
-> > > > >
-> > > > > It can be an issue in two ways:
-> > > > >
-> > > > > - If something in the data acts like a sub-modifier, then advertising
-> > > > >   support for one modifier does not really tell if the data layout is
-> > > > >   supported or not.
-> > > > >
-> > > > > - If you need to know the platform and/or SoC to be able to interpret
-> > > > >   the data, it means the modifier is ill-defined and cannot be used in
-> > > > >   inter-machine communication (e.g. Pipewire).
-> > > > >    
-> > > >
-> > > > Playing devil's advocate, the comment sounds similar to
-> > > > I915_FORMAT_MOD_{X,Y}_TILED:
-> > > >
-> > > >  * This format is highly platforms specific and not useful for cross-driver
-> > > >  * sharing. It exists since on a given platform it does uniquely identify the
-> > > >  * layout in a simple way for i915-specific userspace.    
-> > > 
-> > > Yeah which we regret now. We need to now roll out a new set of
-> > > modifiers for at least some of the differences in these on the
-> > > modern-ish chips (the old crap is pretty much lost cause anyway).
-> > > 
-> > > This was kinda a nasty hack to smooth things over since we have epic
-> > > amounts of userspace, but it's really not a great idea (and no one
-> > > else really has epic amounts of existing userspace that uses tiling
-> > > flags everywhere, this is all new code).
-> > > -Daniel
-> > >   
-> > > > Isn't the statement that this for sharing between producer and decoder
-> > > > _on the same platform_ a similar clause with the same effect?
-> > > >
-> > > > What advantage is there to exposing the gory details? For Arm AFBC
-> > > > it's necessary because IP on the SoC can be (likely to be) from
-> > > > different vendors with different capabilities.
-> > > >
-> > > > If this is only for talking between Amlogic IP on the same SoC, and
-> > > > those devices support all the same "flavours", I don't see what is
-> > > > gained by making userspace care about internals.    
-> > > 
-> > > The trouble is if you mix&match IP cores, and one of them supports
-> > > flavours A, B, C and the other C, D, E. But all you have is a single
-> > > magic modifier for "whatever the flavour is that soc prefers". So
-> > > someone gets to stuff this in DT.
-> > > 
-> > > Also eventually, maybe, perhaps ARM does grow up into the
-> > > client/server space with add-on pcie graphics, and at least for client
-> > > you very often end up with integrated + add-in pcie gpu. At that point
-> > > you really can't have magic per-soc modifiers anymore.  
-> > 
-> > Hi,
-> > 
-> > I also heard that Pipewire will copy buffers and modifiers verbatim
-> > from one machine to another when streaming across network, assuming
-> > that the same modifier means the same thing on all machines.[Citation needed]
-> > 
-> > If that is something that must not be done with DRM modifiers, then
-> > please contact them and document that.
-> 
-> Sorry, it's waypipe, not pipewire:
-> https://gitlab.freedesktop.org/mstoeckl/waypipe/
 
-I do think this is very much something we want to make possible. They
-might pick a silly modifier (compression modifiers only compress bw, by
-necessity the lossless ones have to increase storage space so kinda dumb
-thing to push over the network if you don't add .xz or whatever on top).
+On 3/5/2020 2:29 PM, Adrian Hunter wrote:
+> On 4/03/20 6:50 pm, Veerabhadrarao Badiganti wrote:
+>> On 3/4/2020 7:40 PM, Adrian Hunter wrote:
+>>> On 4/03/20 3:10 pm, Veerabhadrarao Badiganti wrote:
+>>>> Hi Adrian
+>>>>
+>>>> On 3/4/2020 5:58 PM, Adrian Hunter wrote:
+>>>>> On 4/03/20 1:54 pm, Veerabhadrarao Badiganti wrote:
+>>>>>> When SDHC gets reset (E.g. in suspend path), CQE also gets reset
+>>>>>> and goes to disable state. But s/w state still points it as CQE
+>>>>>> is in enabled state. Since s/w and h/w states goes out of sync,
+>>>>>> it results in s/w request timeout for subsequent CQE requests.
+>>>>>>
+>>>>>> To synchronize CQE s/w and h/w state during SDHC reset,
+>>>>>> explicitly disable CQE after reset.
+>>>>> Shouldn't you be calling cqhci_suspend() / cqhci_resume() in the suspend
+>>>>> and
+>>>>> resume paths?
+>>>> This issue is seen during mmc runtime suspend.  I can add it
+>>>> sdhci_msm_runtime_suspend
+>>>>
+>>>> but sdhci_msm runtime delay is aggressive, its 50ms. It may get invoked very
+>>>> frequently.
+>>>>
+>>>> So Im of the opinion that disabling CQE very often from platform runtime
+>>>> suspend is overkill.
+>>> It doesn't look like sdhci-msm calls any sdhci.c pm ops, so how does SDHC
+>>> get reset?
+>> With MMC_CAP_AGGRESSIVE_PM flag enabled, it getting called from
+>> mmc_runtime_suspend()
+>>
+>> Below is the call stack()
+>>
+>>     sdhci_reset
+>>    sdhci_do_reset
+>>    sdhci_init
+>>    sdhci_set_ios
+>>    mmc_set_initial_state
+>>    mmc_power_off
+>>   _mmc_suspend
+>>    mmc_runtime_suspend
+>>
+> OK, cqhci_suspend does the right thing, but it is not an
+> appropriate function for this.  I suggest introducing
+> cqhci_deactivate() as below.
+>
+> From: Adrian Hunter <adrian.hunter@intel.com>
+> Date: Thu, 5 Mar 2020 10:42:09 +0200
+> Subject: [PATCH] mmc: cqhci: Add cqhci_deactivate()
+>
+> Host controllers can reset CQHCI either directly or as a consequence of
+> host controller reset. Add cqhci_deactivate() which puts the CQHCI
+> driver into a state that is consistent with that.
+>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>   drivers/mmc/host/cqhci.c | 6 +++---
+>   drivers/mmc/host/cqhci.h | 5 ++++-
+>   2 files changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+> index e2ea2c4b6b94..d8d024a1682b 100644
+> --- a/drivers/mmc/host/cqhci.c
+> +++ b/drivers/mmc/host/cqhci.c
+> @@ -298,16 +298,16 @@ static void __cqhci_disable(struct cqhci_host *cq_host)
+>   	cq_host->activated = false;
+>   }
+>   
+> -int cqhci_suspend(struct mmc_host *mmc)
+> +int cqhci_deactivate(struct mmc_host *mmc)
+>   {
+>   	struct cqhci_host *cq_host = mmc->cqe_private;
+>   
+> -	if (cq_host->enabled)
+> +	if (cq_host->enabled && cq_host->activated)
+>   		__cqhci_disable(cq_host);
+>   
+>   	return 0;
+>   }
+> -EXPORT_SYMBOL(cqhci_suspend);
+> +EXPORT_SYMBOL(cqhci_deactivate);
+>   
+>   int cqhci_resume(struct mmc_host *mmc)
+>   {
+> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
+> index def76e9b5cac..8648846a0213 100644
+> --- a/drivers/mmc/host/cqhci.h
+> +++ b/drivers/mmc/host/cqhci.h
+> @@ -230,7 +230,10 @@ irqreturn_t cqhci_irq(struct mmc_host *mmc, u32 intmask, int cmd_error,
+>   		      int data_error);
+>   int cqhci_init(struct cqhci_host *cq_host, struct mmc_host *mmc, bool dma64);
+>   struct cqhci_host *cqhci_pltfm_init(struct platform_device *pdev);
+> -int cqhci_suspend(struct mmc_host *mmc);
+> +static inline int cqhci_suspend(struct mmc_host *mmc)
+> +{
+> +	return cqhci_deactivate(mmc);
+> +}
+>   int cqhci_resume(struct mmc_host *mmc);
+>   
+>   #endif
 
-I'm also hoping that intel's modifiers are definitely the one and only
-that we ever screwed up, and we should be getting those fixed in the near
-future too.
+Thanks Adrian for the suggestion. Will post this change and my updated fix.
 
-So maybe what we should do instead is add a comment to the modifier docs
-that this stuff _is_ supposed to be transferrable over networks and work.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Thanks
+
+Veera
