@@ -2,60 +2,60 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD6FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E3CC3F2E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7202073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71EA52073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:30:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C5AVNXNs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xO0RpVWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgCFE2j (ORCPT
+        id S1727538AbgCFEaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 23:28:39 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:37188 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgCFE2h (ORCPT
+        Thu, 5 Mar 2020 23:30:20 -0500
+Received: from mail-yw1-f42.google.com ([209.85.161.42]:38191 "EHLO
+        mail-yw1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbgCFE2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 23:28:37 -0500
-Received: by mail-yw1-f66.google.com with SMTP id g206so1101296ywb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 20:28:36 -0800 (PST)
+        Thu, 5 Mar 2020 23:28:45 -0500
+Received: by mail-yw1-f42.google.com with SMTP id 10so1095791ywv.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 20:28:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SBOHwsMv/HnuybNyOaAqPfh53GkcJWptiQX+bb5jgmg=;
-        b=C5AVNXNsDOIOYpkPwqGWLvSXZgrCG0N5pXWaKuNf+jfB/I+X0A4EhiYftdov4lZ8Nq
-         HwRocRXutIMpWGgdjpvXXL9H83ppclw7tcposUTB0onY8uFALG4YLJdKNsmjrPjoZK/S
-         ZRefxB7zE1AbFSCv17r7UKqYz4OlkRBWBDxWXjMM/BimTJgp5KcZ0qb4D6qmyxU5jEiG
-         p2gipPOXQpUu7vyWsnAWSn44sj6L8GkAE94H2gA5MWvSvJCZZskHt/ODHCtCkuYZXR2q
-         at8n4afogG9hKPNflA3fiMFfViiCSMc4gW7/Rzrq2qM+PeIGTG2hc6va7c4fax/uOG+1
-         KqbA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=N0JA1jVQWs/bwF31BbpAQ6qu/wg1v384KBX/XRnY+Z4=;
+        b=xO0RpVWtch6tIXp3X6iCWCWU+KbOHqGlc2C4iBb8rokhRw9xHbsTerdPQe0CKgmRfQ
+         /4dCe8IU0qEbE7WDPFwjErFVHt6swQdFlbO6xqHqn/3ZeoKCl1b50A0fm3ENGtFIt/zq
+         6zgBeyHiSTBjD2S0r/r1aipcqqOL9q9PjxDjEhz+kCfXNPVMV9FkFuZdhTcWkxeNKCaE
+         n4n4LBtKFsSwFDL0kUOePwMK6jJmGzwp2tpSJ8pNIc5o4iXBpfJ65vnGiB0nYd0O1SoS
+         APgIzfRBtwEFovc+LIodRE8pLwL1gr1rSx5aDG43/I54QqDTf0iC+1FVHFoOE63yO4g8
+         CpLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SBOHwsMv/HnuybNyOaAqPfh53GkcJWptiQX+bb5jgmg=;
-        b=WWph5fQKgfuA5bBHHVggYdAA22/tMPVX4PY8oHzqk5mD1lsi3azfiUBZqM8MZY4tDI
-         qtA3jACaUQLOKpIEDUnASVUrjBZEO9CGRXtDU/eF9K3j7Bn0uYmUi7y95ACBPSifjoZN
-         oVDilw9iTzJUHgMnSbmF3ihFTng9kdfGpxT7bN5w6qk91VaEnNUPXLhm4g2QCBEyt+1L
-         uqT5y1bkfTM/NvHdqrfEphUN0dr1UQmXqdya6HGEy+tfN7kPVGdffhYrKvUCeViUCUTQ
-         RV7/AJwtsz0n++zgHqQSuVfzHUWyc7Q4VTw9X65yaSV/EBYyLxqZbaEsrX61zm5o76oi
-         NLeg==
-X-Gm-Message-State: ANhLgQ11zbjWGsv/m6nqjp7rvj7ICLRIh4z/MGLZMhTvbuI6OjznN16g
-        WGIc0r8vuMRuFJ9iRbVc830Rvw==
-X-Google-Smtp-Source: ADFU+vu/+zbicS6mGfwIeKlASfFOshwP8HTQ4OoR5foKUaSrc8WIFtwNUclVpvWWScqtEnujz8ey3Q==
-X-Received: by 2002:a25:3496:: with SMTP id b144mr1793102yba.356.1583468916167;
-        Thu, 05 Mar 2020 20:28:36 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=N0JA1jVQWs/bwF31BbpAQ6qu/wg1v384KBX/XRnY+Z4=;
+        b=Nf7svQzmndua4TKNhhgeRqNindglBYEGWy8B59ettP0DYX2FhcbGNoQgqoP5ZPdYYK
+         8RxDYOIIiFzNhV9dUMGIfZBp8gvpijosat9TSah8W6KAIJhssyPb4jbR+d2Nstl3LCaF
+         yD9cviZh2L2sKkrwWsTjeqeAwyQofkOuLrvnK4aAk7EuEIlHNEH1D+miDuB8Pckg6rki
+         E3JJvbb+gGM6CS8kliPmH+xhrAWEYRXw24vc47ptW63QArLOKFMWrvloZYYgjq6cZ7WY
+         os+RfimquTqX7KEOROTI23XE1qk7NI1VUh6riTXWon78zkzIRQDiO81h5fbU4JfVzu8Y
+         BPGQ==
+X-Gm-Message-State: ANhLgQ34u5YTNwxlTCNlbFBB0IY0MbhdPrgwoPWW9lZZK2CHXFPapsZs
+        EJfXSy8iA3iqCqQv2y0DBeVrEw==
+X-Google-Smtp-Source: ADFU+vsyyNdTm79BfplES1w/946vYOYy9cJTj9ucKbY1+cIieyzI83eheQxf5acQUJlwf1koQqhydw==
+X-Received: by 2002:a0d:fc42:: with SMTP id m63mr2185804ywf.48.1583468924240;
+        Thu, 05 Mar 2020 20:28:44 -0800 (PST)
 Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id x2sm12581836ywa.32.2020.03.05.20.28.34
+        by smtp.gmail.com with ESMTPSA id x2sm12581836ywa.32.2020.03.05.20.28.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 20:28:35 -0800 (PST)
+        Thu, 05 Mar 2020 20:28:43 -0800 (PST)
 From:   Alex Elder <elder@linaro.org>
 To:     David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -75,10 +75,12 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/17] net: introduce Qualcomm IPA driver (UPDATED)
-Date:   Thu,  5 Mar 2020 22:28:14 -0600
-Message-Id: <20200306042831.17827-1-elder@linaro.org>
+Subject: [PATCH v2 04/17] soc: qcom: ipa: configuration data
+Date:   Thu,  5 Mar 2020 22:28:18 -0600
+Message-Id: <20200306042831.17827-5-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200306042831.17827-1-elder@linaro.org>
+References: <20200306042831.17827-1-elder@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,256 +88,956 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series presents the driver for the Qualcomm IP Accelerator (IPA).
+This patch defines configuration data that is used to specify some
+of the details of IPA hardware supported by the driver.  It is built
+as Device Tree match data, discovered at boot time.  The driver
+supports the Qualcomm SDM845 SoC.  Data for the Qualcomm SC7180 is
+also defined here, but it is not yet completely supported.
 
-This is version 2 of this updated series.  It includes the following
-small changes since the previous version:
-  - Now based on net-next instead of v5.6-rc
-  - Config option now named CONFIG_QCOM_IPA
-  - Some minor cleanup in the GSI code
-  - Small change to replenish logic
-  - No longer depends on remoteproc bug fixes
-What follows is the basically same explanation as was posted previously.
-
-					-Alex
-
-I have posted earlier versions of this code previously, but it has
-undergone quite a bit of development since the last time, so rather
-than calling it "version 3" I'm just treating it as a new series
-(indicating it's been updated in this message).  The fast/data path
-is the same as before.  But the driver now (nearly) supports a
-second platform, its transaction handling has been generalized
-and improved, and modem activities are now handled in a more
-unified way.
-
-This series is available (based on net-next in branch "ipa_updated-v2"
-in this git repository:
-  https://git.linaro.org/people/alex.elder/linux.git
-
-The branch depends on other one other small patch that I sent out
-for review earlier.
-  https://lore.kernel.org/lkml/20200306042302.17602-1-elder@linaro.org/
-
-
-I want to address some of the discussion that arose last time.
-
-First, there was the WWAN discussion.  Here's the history:
-  - This was last posted nine months ago.
-  - Reviewers at that time favored developing a new WWAN subsystem that
-    would be used for managing devices like this.  And the suggestion
-    was to not accept this driver until that could be developed.
-  - Along the way, Apple acquired much of Intel's modem business.
-    And as a result, the generic framework became less pressing.
-  - I did participate in the WWAN subsystem design however, and
-    although it went dormant for a while it's been resurrected:
-      https://lore.kernel.org/netdev/20200225100053.16385-1-johannes@sipsolutions.net/
-  - Unfortunately the proposed WWAN design was not an easy fit
-    with Qualcomm's integrated modem interfaces.  Given that
-    rmnet is a supported link type for in the upstream "iproute2"
-    package (more on this below), I have opted not to integrate
-    with any WWAN subsystem.
-
-So in summary, this driver does not integrate with a generic WWAN
-framework.  And I'd like it to be accepted upstream despite that.
-
-
-Next, Arnd Bergmann had some concerns about flow control.  (Note:
-some of my discussions with Arnd about this were offline.) The
-overall architecture here also involves the "rmnet" driver:
-  drivers/net/ethernet/qualcomm/rmnet
-
-The rmnet driver presents a network device for use.  It connects
-with another network device presented, by the IPA driver.  The
-rmnet driver wraps (and unwraps) packets transferred to (and from)
-the IPA driver with QMAP headers.
-
-   ---------------
-   | rmnet_data0 |    <-- "real" netdev
-   ---------------
-          ||       }- QMAP spoken here
-   --------------
-   | rmnet_ipa0 |     <-- also netdev, transporting QMAP packets
-   --------------
-          ||
-   --------------
-  ( IPA hardware )
-   --------------
-
-Arnd's concern was that the rmnet_data0 network device does not
-have the benefit of information about the state of the underlying
-IPA hardware in order to be effective in controlling TX flow.
-The feared result is over-buffering of TX packets (bufferbloat).
-I began working on some simple experiments to see whether (or how
-much) his concern was warranted.  But it turned out that completing
-these experiments was much more work than had been hoped.
-
-The rmnet driver is present in the upstream kernel.  There is also
-support for the rmnet link type in the upstream "ip" user space
-command in the "iproute2" package.  Changing the layering of rmnet
-over IPA likely involves deprecating the rmnet driver and its
-support in "iproute2".  I would really rather not go down that
-path.
-
-There is precedent for this sort of layering of network devices
-(L2TP, VLAN).  And any architecture like this would suffer the
-issues Arnd mentioned; the problem is not limited to rmnet and IPA.
-I do think this is a problem worth solving, but the prudent thing
-to do might be to try to solve it more generally.
-
-So to summarize on this issue, this driver does not attempt to
-change the way the rmnet and IPA drivers work together.  And even
-though I think Arnd's concerns warrant more investigation, I'd like
-this driver to to be accepted upstream without any change to this
-architecture.
-
-
-Finally, a more technical description for the series, and some
-acknowledgements to some people who contributed to it.
-
-The IPA is a component present in some Qualcomm SoCs that allows
-network functions such as aggregation, filtering, routing, and NAT
-to be performed without active involvement of the main application
-processor (AP).
-
-In this initial patch series these advanced features are not
-implemented.  The IPA driver simply provides a network interface
-that makes the modem's LTE network available in Linux.  This initial
-series supports only the Qualcomm SDM845 SoC.  The Qualcomm SC7180
-SoC is partially supported, and support for other platforms will
-follow.
-
-This code is derived from a driver developed by Qualcomm.  A version
-of the original source can be seen here:
-  https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree
-in the "drivers/platform/msm/ipa" directory.  Many were involved in
-developing this, but the following individuals deserve explicit
-acknowledgement for their substantial contributions:
-
-    Abhishek Choubey
-    Ady Abraham
-    Chaitanya Pratapa
-    David Arinzon
-    Ghanim Fodi
-    Gidon Studinski
-    Ravi Gummadidala
-    Shihuan Liu
-    Skylar Chang
-
-					-Alex
-
-Alex Elder (17):
-  remoteproc: add IPA notification to q6v5 driver
-  dt-bindings: soc: qcom: add IPA bindings
-  soc: qcom: ipa: main code
-  soc: qcom: ipa: configuration data
-  soc: qcom: ipa: clocking, interrupts, and memory
-  soc: qcom: ipa: GSI headers
-  soc: qcom: ipa: the generic software interface
-  soc: qcom: ipa: IPA interface to GSI
-  soc: qcom: ipa: GSI transactions
-  soc: qcom: ipa: IPA endpoints
-  soc: qcom: ipa: filter and routing tables
-  soc: qcom: ipa: immediate commands
-  soc: qcom: ipa: modem and microcontroller
-  soc: qcom: ipa: AP/modem communications
-  soc: qcom: ipa: support build of IPA code
-  MAINTAINERS: add entry for the Qualcomm IPA driver
-  arm64: dts: sdm845: add IPA information
-
- .../devicetree/bindings/net/qcom,ipa.yaml     |  192 ++
- MAINTAINERS                                   |    6 +
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |   51 +
- drivers/net/Kconfig                           |    2 +
- drivers/net/Makefile                          |    1 +
- drivers/net/ipa/Kconfig                       |   19 +
- drivers/net/ipa/Makefile                      |   12 +
- drivers/net/ipa/gsi.c                         | 2055 +++++++++++++++++
- drivers/net/ipa/gsi.h                         |  257 +++
- drivers/net/ipa/gsi_private.h                 |  118 +
- drivers/net/ipa/gsi_reg.h                     |  417 ++++
- drivers/net/ipa/gsi_trans.c                   |  786 +++++++
- drivers/net/ipa/gsi_trans.h                   |  226 ++
- drivers/net/ipa/ipa.h                         |  148 ++
- drivers/net/ipa/ipa_clock.c                   |  313 +++
- drivers/net/ipa/ipa_clock.h                   |   53 +
- drivers/net/ipa/ipa_cmd.c                     |  680 ++++++
- drivers/net/ipa/ipa_cmd.h                     |  195 ++
- drivers/net/ipa/ipa_data-sc7180.c             |  307 +++
- drivers/net/ipa/ipa_data-sdm845.c             |  329 +++
- drivers/net/ipa/ipa_data.h                    |  280 +++
- drivers/net/ipa/ipa_endpoint.c                | 1707 ++++++++++++++
- drivers/net/ipa/ipa_endpoint.h                |  110 +
- drivers/net/ipa/ipa_gsi.c                     |   54 +
- drivers/net/ipa/ipa_gsi.h                     |   60 +
- drivers/net/ipa/ipa_interrupt.c               |  253 ++
- drivers/net/ipa/ipa_interrupt.h               |  117 +
- drivers/net/ipa/ipa_main.c                    |  954 ++++++++
- drivers/net/ipa/ipa_mem.c                     |  314 +++
- drivers/net/ipa/ipa_mem.h                     |   90 +
- drivers/net/ipa/ipa_modem.c                   |  383 +++
- drivers/net/ipa/ipa_modem.h                   |   31 +
- drivers/net/ipa/ipa_qmi.c                     |  538 +++++
- drivers/net/ipa/ipa_qmi.h                     |   41 +
- drivers/net/ipa/ipa_qmi_msg.c                 |  663 ++++++
- drivers/net/ipa/ipa_qmi_msg.h                 |  252 ++
- drivers/net/ipa/ipa_reg.c                     |   38 +
- drivers/net/ipa/ipa_reg.h                     |  476 ++++
- drivers/net/ipa/ipa_smp2p.c                   |  335 +++
- drivers/net/ipa/ipa_smp2p.h                   |   48 +
- drivers/net/ipa/ipa_table.c                   |  700 ++++++
- drivers/net/ipa/ipa_table.h                   |  103 +
- drivers/net/ipa/ipa_uc.c                      |  211 ++
- drivers/net/ipa/ipa_uc.h                      |   32 +
- drivers/net/ipa/ipa_version.h                 |   23 +
- drivers/remoteproc/Kconfig                    |    6 +
- drivers/remoteproc/Makefile                   |    1 +
- drivers/remoteproc/qcom_q6v5_ipa_notify.c     |   85 +
- drivers/remoteproc/qcom_q6v5_mss.c            |   38 +
- .../linux/remoteproc/qcom_q6v5_ipa_notify.h   |   82 +
- 50 files changed, 14192 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.yaml
- create mode 100644 drivers/net/ipa/Kconfig
- create mode 100644 drivers/net/ipa/Makefile
- create mode 100644 drivers/net/ipa/gsi.c
- create mode 100644 drivers/net/ipa/gsi.h
- create mode 100644 drivers/net/ipa/gsi_private.h
- create mode 100644 drivers/net/ipa/gsi_reg.h
- create mode 100644 drivers/net/ipa/gsi_trans.c
- create mode 100644 drivers/net/ipa/gsi_trans.h
- create mode 100644 drivers/net/ipa/ipa.h
- create mode 100644 drivers/net/ipa/ipa_clock.c
- create mode 100644 drivers/net/ipa/ipa_clock.h
- create mode 100644 drivers/net/ipa/ipa_cmd.c
- create mode 100644 drivers/net/ipa/ipa_cmd.h
+Signed-off-by: Alex Elder <elder@linaro.org>
+---
+ drivers/net/ipa/ipa_data-sc7180.c | 307 ++++++++++++++++++++++++++++
+ drivers/net/ipa/ipa_data-sdm845.c | 329 ++++++++++++++++++++++++++++++
+ drivers/net/ipa/ipa_data.h        | 280 +++++++++++++++++++++++++
+ 3 files changed, 916 insertions(+)
  create mode 100644 drivers/net/ipa/ipa_data-sc7180.c
  create mode 100644 drivers/net/ipa/ipa_data-sdm845.c
  create mode 100644 drivers/net/ipa/ipa_data.h
- create mode 100644 drivers/net/ipa/ipa_endpoint.c
- create mode 100644 drivers/net/ipa/ipa_endpoint.h
- create mode 100644 drivers/net/ipa/ipa_gsi.c
- create mode 100644 drivers/net/ipa/ipa_gsi.h
- create mode 100644 drivers/net/ipa/ipa_interrupt.c
- create mode 100644 drivers/net/ipa/ipa_interrupt.h
- create mode 100644 drivers/net/ipa/ipa_main.c
- create mode 100644 drivers/net/ipa/ipa_mem.c
- create mode 100644 drivers/net/ipa/ipa_mem.h
- create mode 100644 drivers/net/ipa/ipa_modem.c
- create mode 100644 drivers/net/ipa/ipa_modem.h
- create mode 100644 drivers/net/ipa/ipa_qmi.c
- create mode 100644 drivers/net/ipa/ipa_qmi.h
- create mode 100644 drivers/net/ipa/ipa_qmi_msg.c
- create mode 100644 drivers/net/ipa/ipa_qmi_msg.h
- create mode 100644 drivers/net/ipa/ipa_reg.c
- create mode 100644 drivers/net/ipa/ipa_reg.h
- create mode 100644 drivers/net/ipa/ipa_smp2p.c
- create mode 100644 drivers/net/ipa/ipa_smp2p.h
- create mode 100644 drivers/net/ipa/ipa_table.c
- create mode 100644 drivers/net/ipa/ipa_table.h
- create mode 100644 drivers/net/ipa/ipa_uc.c
- create mode 100644 drivers/net/ipa/ipa_uc.h
- create mode 100644 drivers/net/ipa/ipa_version.h
- create mode 100644 drivers/remoteproc/qcom_q6v5_ipa_notify.c
- create mode 100644 include/linux/remoteproc/qcom_q6v5_ipa_notify.h
 
+diff --git a/drivers/net/ipa/ipa_data-sc7180.c b/drivers/net/ipa/ipa_data-sc7180.c
+new file mode 100644
+index 000000000000..042b5fc3c135
+--- /dev/null
++++ b/drivers/net/ipa/ipa_data-sc7180.c
+@@ -0,0 +1,307 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Copyright (C) 2019-2020 Linaro Ltd. */
++
++#include <linux/log2.h>
++
++#include "gsi.h"
++#include "ipa_data.h"
++#include "ipa_endpoint.h"
++#include "ipa_mem.h"
++
++/* Endpoint configuration for the SC7180 SoC. */
++static const struct ipa_gsi_endpoint_data ipa_gsi_endpoint_data[] = {
++	[IPA_ENDPOINT_AP_COMMAND_TX] = {
++		.ee_id		= GSI_EE_AP,
++		.channel_id	= 1,
++		.endpoint_id	= 6,
++		.toward_ipa	= true,
++		.channel = {
++			.tre_count	= 256,
++			.event_count	= 256,
++			.tlv_count	= 20,
++		},
++		.endpoint = {
++			.seq_type	= IPA_SEQ_DMA_ONLY,
++			.config = {
++				.dma_mode	= true,
++				.dma_endpoint	= IPA_ENDPOINT_AP_LAN_RX,
++			},
++		},
++	},
++	[IPA_ENDPOINT_AP_LAN_RX] = {
++		.ee_id		= GSI_EE_AP,
++		.channel_id	= 2,
++		.endpoint_id	= 8,
++		.toward_ipa	= false,
++		.channel = {
++			.tre_count	= 256,
++			.event_count	= 256,
++			.tlv_count	= 6,
++		},
++		.endpoint = {
++			.seq_type	= IPA_SEQ_INVALID,
++			.config = {
++				.aggregation	= true,
++				.status_enable	= true,
++				.rx = {
++					.pad_align	= ilog2(sizeof(u32)),
++				},
++			},
++		},
++	},
++	[IPA_ENDPOINT_AP_MODEM_TX] = {
++		.ee_id		= GSI_EE_AP,
++		.channel_id	= 0,
++		.endpoint_id	= 1,
++		.toward_ipa	= true,
++		.channel = {
++			.tre_count	= 512,
++			.event_count	= 512,
++			.tlv_count	= 8,
++		},
++		.endpoint = {
++			.filter_support	= true,
++			.seq_type	=
++				IPA_SEQ_PKT_PROCESS_NO_DEC_NO_UCP_DMAP,
++			.config = {
++				.checksum	= true,
++				.qmap		= true,
++				.status_enable	= true,
++				.tx = {
++					.status_endpoint =
++						IPA_ENDPOINT_MODEM_AP_RX,
++				},
++			},
++		},
++	},
++	[IPA_ENDPOINT_AP_MODEM_RX] = {
++		.ee_id		= GSI_EE_AP,
++		.channel_id	= 3,
++		.endpoint_id	= 9,
++		.toward_ipa	= false,
++		.channel = {
++			.tre_count	= 256,
++			.event_count	= 256,
++			.tlv_count	= 6,
++		},
++		.endpoint = {
++			.seq_type	= IPA_SEQ_INVALID,
++			.config = {
++				.checksum	= true,
++				.qmap		= true,
++				.aggregation	= true,
++				.rx = {
++					.aggr_close_eof	= true,
++				},
++			},
++		},
++	},
++	[IPA_ENDPOINT_MODEM_COMMAND_TX] = {
++		.ee_id		= GSI_EE_MODEM,
++		.channel_id	= 1,
++		.endpoint_id	= 5,
++		.toward_ipa	= true,
++	},
++	[IPA_ENDPOINT_MODEM_LAN_RX] = {
++		.ee_id		= GSI_EE_MODEM,
++		.channel_id	= 3,
++		.endpoint_id	= 13,
++		.toward_ipa	= false,
++	},
++	[IPA_ENDPOINT_MODEM_AP_TX] = {
++		.ee_id		= GSI_EE_MODEM,
++		.channel_id	= 0,
++		.endpoint_id	= 4,
++		.toward_ipa	= true,
++		.endpoint = {
++			.filter_support	= true,
++		},
++	},
++	[IPA_ENDPOINT_MODEM_AP_RX] = {
++		.ee_id		= GSI_EE_MODEM,
++		.channel_id	= 2,
++		.endpoint_id	= 10,
++		.toward_ipa	= false,
++	},
++};
++
++/* For the SC7180, resource groups are allocated this way:
++ *   group 0:	UL_DL
++ */
++static const struct ipa_resource_src ipa_resource_src[] = {
++	{
++		.type = IPA_RESOURCE_TYPE_SRC_PKT_CONTEXTS,
++		.limits[0] = {
++			.min = 3,
++			.max = 63,
++		},
++	},
++	{
++		.type = IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_LISTS,
++		.limits[0] = {
++			.min = 3,
++			.max = 3,
++		},
++	},
++	{
++		.type = IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_BUFF,
++		.limits[0] = {
++			.min = 10,
++			.max = 10,
++		},
++	},
++	{
++		.type = IPA_RESOURCE_TYPE_SRC_HPS_DMARS,
++		.limits[0] = {
++			.min = 1,
++			.max = 1,
++		},
++	},
++	{
++		.type = IPA_RESOURCE_TYPE_SRC_ACK_ENTRIES,
++		.limits[0] = {
++			.min = 5,
++			.max = 5,
++		},
++	},
++};
++
++static const struct ipa_resource_dst ipa_resource_dst[] = {
++	{
++		.type = IPA_RESOURCE_TYPE_DST_DATA_SECTORS,
++		.limits[0] = {
++			.min = 3,
++			.max = 3,
++		},
++	},
++	{
++		.type = IPA_RESOURCE_TYPE_DST_DPS_DMARS,
++		.limits[0] = {
++			.min = 1,
++			.max = 63,
++		},
++	},
++};
++
++/* Resource configuration for the SC7180 SoC. */
++static const struct ipa_resource_data ipa_resource_data = {
++	.resource_src_count	= ARRAY_SIZE(ipa_resource_src),
++	.resource_src		= ipa_resource_src,
++	.resource_dst_count	= ARRAY_SIZE(ipa_resource_dst),
++	.resource_dst		= ipa_resource_dst,
++};
++
++/* IPA-resident memory region configuration for the SC7180 SoC. */
++static const struct ipa_mem ipa_mem_data[] = {
++	[IPA_MEM_UC_SHARED] = {
++		.offset		= 0x0000,
++		.size		= 0x0080,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_UC_INFO] = {
++		.offset		= 0x0080,
++		.size		= 0x0200,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V4_FILTER_HASHED] = {
++		.offset		= 0x0288,
++		.size		= 0,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V4_FILTER] = {
++		.offset		= 0x0290,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V6_FILTER_HASHED] = {
++		.offset		= 0x0310,
++		.size		= 0,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V6_FILTER] = {
++		.offset		= 0x0318,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V4_ROUTE_HASHED] = {
++		.offset		= 0x0398,
++		.size		= 0,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V4_ROUTE] = {
++		.offset		= 0x03a0,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V6_ROUTE_HASHED] = {
++		.offset		= 0x0420,
++		.size		= 0,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V6_ROUTE] = {
++		.offset		= 0x0428,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_MODEM_HEADER] = {
++		.offset		= 0x04a8,
++		.size		= 0x0140,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_AP_HEADER] = {
++		.offset		= 0x05e8,
++		.size		= 0x0000,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_MODEM_PROC_CTX] = {
++		.offset		= 0x05f0,
++		.size		= 0x0200,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_AP_PROC_CTX] = {
++		.offset		= 0x07f0,
++		.size		= 0x0200,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_PDN_CONFIG] = {
++		.offset		= 0x09f8,
++		.size		= 0x0050,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_STATS_QUOTA] = {
++		.offset		= 0x0a50,
++		.size		= 0x0060,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_STATS_TETHERING] = {
++		.offset		= 0x0ab0,
++		.size		= 0x0140,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_STATS_DROP] = {
++		.offset		= 0x0bf0,
++		.size		= 0,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_MODEM] = {
++		.offset		= 0x0bf0,
++		.size		= 0x140c,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_UC_EVENT_RING] = {
++		.offset		= 0x2000,
++		.size		= 0,
++		.canary_count	= 1,
++	},
++};
++
++/* Configuration data for the SC7180 SoC. */
++const struct ipa_data ipa_data_sc7180 = {
++	.version	= IPA_VERSION_4_2,
++	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
++	.endpoint_data	= ipa_gsi_endpoint_data,
++	.resource_data	= &ipa_resource_data,
++	.mem_count	= ARRAY_SIZE(ipa_mem_data),
++	.mem_data	= ipa_mem_data,
++};
+diff --git a/drivers/net/ipa/ipa_data-sdm845.c b/drivers/net/ipa/ipa_data-sdm845.c
+new file mode 100644
+index 000000000000..0d9c36e1e806
+--- /dev/null
++++ b/drivers/net/ipa/ipa_data-sdm845.c
+@@ -0,0 +1,329 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2019-2020 Linaro Ltd.
++ */
++
++#include <linux/log2.h>
++
++#include "gsi.h"
++#include "ipa_data.h"
++#include "ipa_endpoint.h"
++#include "ipa_mem.h"
++
++/* Endpoint configuration for the SDM845 SoC. */
++static const struct ipa_gsi_endpoint_data ipa_gsi_endpoint_data[] = {
++	[IPA_ENDPOINT_AP_COMMAND_TX] = {
++		.ee_id		= GSI_EE_AP,
++		.channel_id	= 4,
++		.endpoint_id	= 5,
++		.toward_ipa	= true,
++		.channel = {
++			.tre_count	= 512,
++			.event_count	= 256,
++			.tlv_count	= 20,
++		},
++		.endpoint = {
++			.seq_type	= IPA_SEQ_DMA_ONLY,
++			.config = {
++				.dma_mode	= true,
++				.dma_endpoint	= IPA_ENDPOINT_AP_LAN_RX,
++			},
++		},
++	},
++	[IPA_ENDPOINT_AP_LAN_RX] = {
++		.ee_id		= GSI_EE_AP,
++		.channel_id	= 5,
++		.endpoint_id	= 9,
++		.toward_ipa	= false,
++		.channel = {
++			.tre_count	= 256,
++			.event_count	= 256,
++			.tlv_count	= 8,
++		},
++		.endpoint = {
++			.seq_type	= IPA_SEQ_INVALID,
++			.config = {
++				.checksum	= true,
++				.aggregation	= true,
++				.status_enable	= true,
++				.rx = {
++					.pad_align	= ilog2(sizeof(u32)),
++				},
++			},
++		},
++	},
++	[IPA_ENDPOINT_AP_MODEM_TX] = {
++		.ee_id		= GSI_EE_AP,
++		.channel_id	= 3,
++		.endpoint_id	= 2,
++		.toward_ipa	= true,
++		.channel = {
++			.tre_count	= 512,
++			.event_count	= 512,
++			.tlv_count	= 16,
++		},
++		.endpoint = {
++			.filter_support	= true,
++			.seq_type	=
++				IPA_SEQ_2ND_PKT_PROCESS_PASS_NO_DEC_UCP,
++			.config = {
++				.checksum	= true,
++				.qmap		= true,
++				.status_enable	= true,
++				.tx = {
++					.status_endpoint =
++						IPA_ENDPOINT_MODEM_AP_RX,
++					.delay	= true,
++				},
++			},
++		},
++	},
++	[IPA_ENDPOINT_AP_MODEM_RX] = {
++		.ee_id		= GSI_EE_AP,
++		.channel_id	= 6,
++		.endpoint_id	= 10,
++		.toward_ipa	= false,
++		.channel = {
++			.tre_count	= 256,
++			.event_count	= 256,
++			.tlv_count	= 8,
++		},
++		.endpoint = {
++			.seq_type	= IPA_SEQ_INVALID,
++			.config = {
++				.checksum	= true,
++				.qmap		= true,
++				.aggregation	= true,
++				.rx = {
++					.aggr_close_eof	= true,
++				},
++			},
++		},
++	},
++	[IPA_ENDPOINT_MODEM_COMMAND_TX] = {
++		.ee_id		= GSI_EE_MODEM,
++		.channel_id	= 1,
++		.endpoint_id	= 4,
++		.toward_ipa	= true,
++	},
++	[IPA_ENDPOINT_MODEM_LAN_TX] = {
++		.ee_id		= GSI_EE_MODEM,
++		.channel_id	= 0,
++		.endpoint_id	= 3,
++		.toward_ipa	= true,
++		.endpoint = {
++			.filter_support	= true,
++		},
++	},
++	[IPA_ENDPOINT_MODEM_LAN_RX] = {
++		.ee_id		= GSI_EE_MODEM,
++		.channel_id	= 3,
++		.endpoint_id	= 13,
++		.toward_ipa	= false,
++	},
++	[IPA_ENDPOINT_MODEM_AP_TX] = {
++		.ee_id		= GSI_EE_MODEM,
++		.channel_id	= 4,
++		.endpoint_id	= 6,
++		.toward_ipa	= true,
++		.endpoint = {
++			.filter_support	= true,
++		},
++	},
++	[IPA_ENDPOINT_MODEM_AP_RX] = {
++		.ee_id		= GSI_EE_MODEM,
++		.channel_id	= 2,
++		.endpoint_id	= 12,
++		.toward_ipa	= false,
++	},
++};
++
++/* For the SDM845, resource groups are allocated this way:
++ *   group 0:	LWA_DL
++ *   group 1:	UL_DL
++ */
++static const struct ipa_resource_src ipa_resource_src[] = {
++	{
++		.type = IPA_RESOURCE_TYPE_SRC_PKT_CONTEXTS,
++		.limits[0] = {
++			.min = 1,
++			.max = 63,
++		},
++		.limits[1] = {
++			.min = 1,
++			.max = 63,
++		},
++	},
++	{
++		.type = IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_LISTS,
++		.limits[0] = {
++			.min = 10,
++			.max = 10,
++		},
++		.limits[1] = {
++			.min = 10,
++			.max = 10,
++		},
++	},
++	{
++		.type = IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_BUFF,
++		.limits[0] = {
++			.min = 12,
++			.max = 12,
++		},
++		.limits[1] = {
++			.min = 14,
++			.max = 14,
++		},
++	},
++	{
++		.type = IPA_RESOURCE_TYPE_SRC_HPS_DMARS,
++		.limits[0] = {
++			.min = 0,
++			.max = 63,
++		},
++		.limits[1] = {
++			.min = 0,
++			.max = 63,
++		},
++	},
++	{
++		.type = IPA_RESOURCE_TYPE_SRC_ACK_ENTRIES,
++		.limits[0] = {
++			.min = 14,
++			.max = 14,
++		},
++		.limits[1] = {
++			.min = 20,
++			.max = 20,
++		},
++	},
++};
++
++static const struct ipa_resource_dst ipa_resource_dst[] = {
++	{
++		.type = IPA_RESOURCE_TYPE_DST_DATA_SECTORS,
++		.limits[0] = {
++			.min = 4,
++			.max = 4,
++		},
++		.limits[1] = {
++			.min = 4,
++			.max = 4,
++		},
++	},
++	{
++		.type = IPA_RESOURCE_TYPE_DST_DPS_DMARS,
++		.limits[0] = {
++			.min = 2,
++			.max = 63,
++		},
++		.limits[1] = {
++			.min = 1,
++			.max = 63,
++		},
++	},
++};
++
++/* Resource configuration for the SDM845 SoC. */
++static const struct ipa_resource_data ipa_resource_data = {
++	.resource_src_count	= ARRAY_SIZE(ipa_resource_src),
++	.resource_src		= ipa_resource_src,
++	.resource_dst_count	= ARRAY_SIZE(ipa_resource_dst),
++	.resource_dst		= ipa_resource_dst,
++};
++
++/* IPA-resident memory region configuration for the SDM845 SoC. */
++static const struct ipa_mem ipa_mem_data[] = {
++	[IPA_MEM_UC_SHARED] = {
++		.offset		= 0x0000,
++		.size		= 0x0080,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_UC_INFO] = {
++		.offset		= 0x0080,
++		.size		= 0x0200,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_V4_FILTER_HASHED] = {
++		.offset		= 0x0288,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V4_FILTER] = {
++		.offset		= 0x0308,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V6_FILTER_HASHED] = {
++		.offset		= 0x0388,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V6_FILTER] = {
++		.offset		= 0x0408,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V4_ROUTE_HASHED] = {
++		.offset		= 0x0488,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V4_ROUTE] = {
++		.offset		= 0x0508,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V6_ROUTE_HASHED] = {
++		.offset		= 0x0588,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_V6_ROUTE] = {
++		.offset		= 0x0608,
++		.size		= 0x0078,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_MODEM_HEADER] = {
++		.offset		= 0x0688,
++		.size		= 0x0140,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_AP_HEADER] = {
++		.offset		= 0x07c8,
++		.size		= 0x0000,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_MODEM_PROC_CTX] = {
++		.offset		= 0x07d0,
++		.size		= 0x0200,
++		.canary_count	= 2,
++	},
++	[IPA_MEM_AP_PROC_CTX] = {
++		.offset		= 0x09d0,
++		.size		= 0x0200,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_MODEM] = {
++		.offset		= 0x0bd8,
++		.size		= 0x1024,
++		.canary_count	= 0,
++	},
++	[IPA_MEM_UC_EVENT_RING] = {
++		.offset		= 0x1c00,
++		.size		= 0x0400,
++		.canary_count	= 1,
++	},
++};
++
++/* Configuration data for the SDM845 SoC. */
++const struct ipa_data ipa_data_sdm845 = {
++	.version	= IPA_VERSION_3_5_1,
++	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
++	.endpoint_data	= ipa_gsi_endpoint_data,
++	.resource_data	= &ipa_resource_data,
++	.mem_count	= ARRAY_SIZE(ipa_mem_data),
++	.mem_data	= ipa_mem_data,
++};
+diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
+new file mode 100644
+index 000000000000..7110de2de817
+--- /dev/null
++++ b/drivers/net/ipa/ipa_data.h
+@@ -0,0 +1,280 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2019-2020 Linaro Ltd.
++ */
++#ifndef _IPA_DATA_H_
++#define _IPA_DATA_H_
++
++#include <linux/types.h>
++
++#include "ipa_version.h"
++#include "ipa_endpoint.h"
++#include "ipa_mem.h"
++
++/**
++ * DOC: IPA/GSI Configuration Data
++ *
++ * Boot-time configuration data is used to define the configuration of the
++ * IPA and GSI resources to use for a given platform.  This data is supplied
++ * via the Device Tree match table, associated with a particular compatible
++ * string.  The data defines information about resources, endpoints, and
++ * channels.
++ *
++ * Resources are data structures used internally by the IPA hardware.  The
++ * configuration data defines the number (or limits of the number) of various
++ * types of these resources.
++ *
++ * Endpoint configuration data defines properties of both IPA endpoints and
++ * GSI channels.  A channel is a GSI construct, and represents a single
++ * communication path between the IPA and a particular execution environment
++ * (EE), such as the AP or Modem.  Each EE has a set of channels associated
++ * with it, and each channel has an ID unique for that EE.  For the most part
++ * the only GSI channels of concern to this driver belong to the AP
++ *
++ * An endpoint is an IPA construct representing a single channel anywhere
++ * in the system.  An IPA endpoint ID maps directly to an (EE, channel_id)
++ * pair.  Generally, this driver is concerned with only endpoints associated
++ * with the AP, however this will change when support for routing (etc.) is
++ * added.  IPA endpoint and GSI channel configuration data are defined
++ * together, establishing the endpoint_id->(EE, channel_id) mapping.
++ *
++ * Endpoint configuration data consists of three parts:  properties that
++ * are common to IPA and GSI (EE ID, channel ID, endpoint ID, and direction);
++ * properties associated with the GSI channel; and properties associated with
++ * the IPA endpoint.
++ */
++
++/* The maximum value returned by ipa_resource_group_count() */
++#define IPA_RESOURCE_GROUP_COUNT	4
++
++/** enum ipa_resource_type_src - source resource types */
++/**
++ * struct gsi_channel_data - GSI channel configuration data
++ * @tre_count:		number of TREs in the channel ring
++ * @event_count:	number of slots in the associated event ring
++ * @tlv_count:		number of entries in channel's TLV FIFO
++ *
++ * A GSI channel is a unidirectional means of transferring data to or
++ * from (and through) the IPA.  A GSI channel has a ring buffer made
++ * up of "transfer elements" (TREs) that specify individual data transfers
++ * or IPA immediate commands.  TREs are filled by the AP, and control
++ * is passed to IPA hardware by writing the last written element
++ * into a doorbell register.
++ *
++ * When data transfer commands have completed the GSI generates an
++ * event (a structure of data) and optionally signals the AP with
++ * an interrupt.  Event structures are implemented by another ring
++ * buffer, directed toward the AP from the IPA.
++ *
++ * The input to a GSI channel is a FIFO of type/length/value (TLV)
++ * elements, and the size of this FIFO limits the number of TREs
++ * that can be included in a single transaction.
++ */
++struct gsi_channel_data {
++	u16 tre_count;
++	u16 event_count;
++	u8 tlv_count;
++};
++
++/**
++ * struct ipa_endpoint_tx_data - configuration data for TX endpoints
++ * @status_endpoint:	endpoint to which status elements are sent
++ * @delay:		whether endpoint starts in delay mode
++ *
++ * Delay mode prevents a TX endpoint from transmitting anything, even if
++ * commands have been presented to the hardware.  Once the endpoint exits
++ * delay mode, queued transfer commands are sent.
++ *
++ * The @status_endpoint is only valid if the endpoint's @status_enable
++ * flag is set.
++ */
++struct ipa_endpoint_tx_data {
++	enum ipa_endpoint_name status_endpoint;
++	bool delay;
++};
++
++/**
++ * struct ipa_endpoint_rx_data - configuration data for RX endpoints
++ * @pad_align:	power-of-2 boundary to which packet payload is aligned
++ * @aggr_close_eof: whether aggregation closes on end-of-frame
++ *
++ * With each packet it transfers, the IPA hardware can perform certain
++ * transformations of its packet data.  One of these is adding pad bytes
++ * to the end of the packet data so the result ends on a power-of-2 boundary.
++ *
++ * It is also able to aggregate multiple packets into a single receive buffer.
++ * Aggregation is "open" while a buffer is being filled, and "closes" when
++ * certain criteria are met.  One of those criteria is the sender indicating
++ * a "frame" consisting of several transfers has ended.
++ */
++struct ipa_endpoint_rx_data {
++	u32 pad_align;
++	bool aggr_close_eof;
++};
++
++/**
++ * struct ipa_endpoint_config_data - IPA endpoint hardware configuration
++ * @checksum:		whether checksum offload is enabled
++ * @qmap:		whether endpoint uses QMAP protocol
++ * @aggregation:	whether endpoint supports aggregation
++ * @status_enable:	whether endpoint uses status elements
++ * @dma_mode:		whether endpoint operates in DMA mode
++ * @dma_endpoint:	peer endpoint, if operating in DMA mode
++ * @tx:			TX-specific endpoint information (see above)
++ * @rx:			RX-specific endpoint information (see above)
++ */
++struct ipa_endpoint_config_data {
++	bool checksum;
++	bool qmap;
++	bool aggregation;
++	bool status_enable;
++	bool dma_mode;
++	enum ipa_endpoint_name dma_endpoint;
++	union {
++		struct ipa_endpoint_tx_data tx;
++		struct ipa_endpoint_rx_data rx;
++	};
++};
++
++/**
++ * struct ipa_endpoint_data - IPA endpoint configuration data
++ * @filter_support:	whether endpoint supports filtering
++ * @seq_type:		hardware sequencer type used for endpoint
++ * @config:		hardware configuration (see above)
++ *
++ * Not all endpoints support the IPA filtering capability.  A filter table
++ * defines the filters to apply for those endpoints that support it.  The
++ * AP is responsible for initializing this table, and it must include entries
++ * for non-AP endpoints.  For this reason we define *all* endpoints used
++ * in the system, and indicate whether they support filtering.
++ *
++ * The remaining endpoint configuration data applies only to AP endpoints.
++ * The IPA hardware is implemented by sequencers, and the AP must program
++ * the type(s) of these sequencers at initialization time.  The remaining
++ * endpoint configuration data is defined above.
++ */
++struct ipa_endpoint_data {
++	bool filter_support;
++	/* The next two are specified only for AP endpoints */
++	enum ipa_seq_type seq_type;
++	struct ipa_endpoint_config_data config;
++};
++
++/**
++ * struct ipa_gsi_endpoint_data - GSI channel/IPA endpoint data
++ * ee:		GSI execution environment ID
++ * channel_id:	GSI channel ID
++ * endpoint_id:	IPA endpoint ID
++ * toward_ipa:	direction of data transfer
++ * gsi:		GSI channel configuration data (see above)
++ * ipa:		IPA endpoint configuration data (see above)
++ */
++struct ipa_gsi_endpoint_data {
++	u8 ee_id;		/* enum gsi_ee_id */
++	u8 channel_id;
++	u8 endpoint_id;
++	bool toward_ipa;
++
++	struct gsi_channel_data channel;
++	struct ipa_endpoint_data endpoint;
++};
++
++/** enum ipa_resource_type_src - source resource types */
++enum ipa_resource_type_src {
++	IPA_RESOURCE_TYPE_SRC_PKT_CONTEXTS,
++	IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_LISTS,
++	IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_BUFF,
++	IPA_RESOURCE_TYPE_SRC_HPS_DMARS,
++	IPA_RESOURCE_TYPE_SRC_ACK_ENTRIES,
++};
++
++/** enum ipa_resource_type_dst - destination resource types */
++enum ipa_resource_type_dst {
++	IPA_RESOURCE_TYPE_DST_DATA_SECTORS,
++	IPA_RESOURCE_TYPE_DST_DPS_DMARS,
++};
++
++/**
++ * struct ipa_resource_limits - minimum and maximum resource counts
++ * @min:	minimum number of resources of a given type
++ * @max:	maximum number of resources of a given type
++ */
++struct ipa_resource_limits {
++	u32 min;
++	u32 max;
++};
++
++/**
++ * struct ipa_resource_src - source endpoint group resource usage
++ * @type:	source group resource type
++ * @limits:	array of limits to use for each resource group
++ */
++struct ipa_resource_src {
++	enum ipa_resource_type_src type;
++	struct ipa_resource_limits limits[IPA_RESOURCE_GROUP_COUNT];
++};
++
++/**
++ * struct ipa_resource_dst - destination endpoint group resource usage
++ * @type:	destination group resource type
++ * @limits:	array of limits to use for each resource group
++ */
++struct ipa_resource_dst {
++	enum ipa_resource_type_dst type;
++	struct ipa_resource_limits limits[IPA_RESOURCE_GROUP_COUNT];
++};
++
++/**
++ * struct ipa_resource_data - IPA resource configuration data
++ * @resource_src_count:	number of entries in the resource_src array
++ * @resource_src:	source endpoint group resources
++ * @resource_dst_count:	number of entries in the resource_dst array
++ * @resource_dst:	destination endpoint group resources
++ *
++ * In order to manage quality of service between endpoints, certain resources
++ * required for operation are allocated to groups of endpoints.  Generally
++ * this information is invisible to the AP, but the AP is responsible for
++ * programming it at initialization time, so we specify it here.
++ */
++struct ipa_resource_data {
++	u32 resource_src_count;
++	const struct ipa_resource_src *resource_src;
++	u32 resource_dst_count;
++	const struct ipa_resource_dst *resource_dst;
++};
++
++/**
++ * struct ipa_mem - IPA-local memory region description
++ * @offset:		offset in IPA memory space to base of the region
++ * @size:		size in bytes base of the region
++ * @canary_count:	number of 32-bit "canary" values that precede region
++ */
++struct ipa_mem_data {
++	u32 offset;
++	u16 size;
++	u16 canary_count;
++};
++
++/**
++ * struct ipa_data - combined IPA/GSI configuration data
++ * @version:		IPA hardware version
++ * @endpoint_count:	number of entries in endpoint_data array
++ * @endpoint_data:	IPA endpoint/GSI channel data
++ * @resource_data:	IPA resource configuration data
++ * @mem_count:		number of entries in mem_data array
++ * @mem_data:		IPA-local shared memory region data
++ */
++struct ipa_data {
++	enum ipa_version version;
++	u32 endpoint_count;	/* # entries in endpoint_data[] */
++	const struct ipa_gsi_endpoint_data *endpoint_data;
++	const struct ipa_resource_data *resource_data;
++	u32 mem_count;		/* # entries in mem_data[] */
++	const struct ipa_mem *mem_data;
++};
++
++extern const struct ipa_data ipa_data_sdm845;
++extern const struct ipa_data ipa_data_sc7180;
++
++#endif /* _IPA_DATA_H_ */
 -- 
 2.20.1
+
