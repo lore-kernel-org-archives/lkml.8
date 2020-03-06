@@ -2,152 +2,200 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDFEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88F2C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D07207FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE1F207FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="dtRSM8fw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e/jJLIWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgCFJqu (ORCPT
+        id S1726185AbgCFJuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:46:50 -0500
-Received: from mail-eopbgr40111.outbound.protection.outlook.com ([40.107.4.111]:51078
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726034AbgCFJqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:46:49 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MnvPHQawvoKpPfFLdx6UO8tcu1B7k8wkKbwp5LfFJ6pzCrTBkJBFRfTrvJON2Q+K86abXubf/UhOhpE0t84hgsJP5HnDqtatZMh913KGAob0Fmoc0sFkkMOPYhHiBvz+h/39MNi19gOnc3nVUlkzUPCkMgw8FrDkaHXk21oBvQ8ipS2876OyZ21HTIVjLs6AggCKJZQcUN4B6IU0e4CMbdOkZwo+RcVtxG6CaMT8xMgonHixAx21uayHFGnT2rUTtmq61d2HzmLzojvz73+5w+Yh0RBzCFZbSxDsCiP9Z7Pq5hikHZ1sLkB19wfTVnP2Vvcx7AQiSvxvEWbkFi4Ruw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2rScmlI4XLMvsemQZCdFFeyxskqmFoeXVwn/W+wdJPY=;
- b=PjFoKreK3m7uVCZ9D5eai9ccLiEoU9T1n6r52qtCEtmEfbwKigs7q2nIAm34HgqXqpCaeaSIa5x8ptcak1yGSnW+93epAVIi0679G0ND6ffsMZ/TSBwRrNBpAGmexGknsaK0xoqyoRyoTU5MigvPU/tp7vR0uGTI1yA5B0g3AMIPJaRhV2z1GZzj5LEOJUavXo9zx22Jj/LJzYortnheD/v0/vu/0FjK1Pgw38vOO0byUxGkFoX2ZkiVki0WOd7eMy64mGPmbd0Mcc/gtoor1imNXttDoVQ3Wg51pmemBpcGioELDH1WCbqUjNxKD5pEAZbF0SoD4+UoEc80DXV8SA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2rScmlI4XLMvsemQZCdFFeyxskqmFoeXVwn/W+wdJPY=;
- b=dtRSM8fwFjdTYsU7ADEzd9L1JR3FGRV7aXWCG34I42Y1HLrQvq0zX2heDR1t3hoGLp0TK+99W3b+URKkuEyvFpilR/nURKZrTanLLqrR7JgkQYCDOY8A0VHcVx9VUr8SgmS28NEbPDoJYBqVMN7SueYCWlW4cPzoxYVLJ7sAkiM=
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (20.179.1.217) by
- AM6PR05MB6102.eurprd05.prod.outlook.com (20.179.3.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.19; Fri, 6 Mar 2020 09:46:45 +0000
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::dee:ffa2:1d09:30e]) by AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::dee:ffa2:1d09:30e%4]) with mapi id 15.20.2772.019; Fri, 6 Mar 2020
- 09:46:45 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
-        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>
-Subject: Re: [PATCH] ARM: mach-imx6q: add ksz9131rn_phy_fixup
-Thread-Topic: [PATCH] ARM: mach-imx6q: add ksz9131rn_phy_fixup
-Thread-Index: AQHV8vTsfP1BktnxKEy+q0EhrXMNZqg6EXKAgAAlWYCAAPjzgIAAIqIA
-Date:   Fri, 6 Mar 2020 09:46:45 +0000
-Message-ID: <4e48d56f184ed56d15d2ae6706fdb29e4c849132.camel@toradex.com>
-References: <20200305134928.19775-1-philippe.schenker@toradex.com>
-         <20200305143805.dk7fndblnqjnwxu6@pengutronix.de>
-         <20200305165145.GA25183@lunn.ch>
-         <7191ffe6-642a-477c-ec37-e37dc9be4bf8@pengutronix.de>
-In-Reply-To: <7191ffe6-642a-477c-ec37-e37dc9be4bf8@pengutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-originating-ip: [31.10.206.124]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4e8547b2-3274-4ff8-d117-08d7c1b34866
-x-ms-traffictypediagnostic: AM6PR05MB6102:
-x-microsoft-antispam-prvs: <AM6PR05MB6102DC9C9F3EC5172D52D598F4E30@AM6PR05MB6102.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0334223192
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(396003)(39850400004)(136003)(366004)(189003)(199004)(76116006)(44832011)(6512007)(4326008)(110136005)(2616005)(54906003)(71200400001)(66446008)(36756003)(91956017)(64756008)(66556008)(86362001)(316002)(66946007)(66476007)(81156014)(81166006)(8676002)(5660300002)(26005)(7416002)(186003)(6486002)(478600001)(2906002)(53546011)(8936002)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB6102;H:AM6PR05MB6120.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OLiLrTzjFXNd9HcY8W11u+V4bk0J9+VSvGvPfIUjy1iwzzEOsRAAbv9oOyEnHqw6WSacenvXYDjqXI/AYwWBLjco11PdmrtiZPVuZeudCx+YEgfBJjNGoxvzelrlVV7jHerpN5D2sQ+kLG2GnV40V9LlROWBDc8GCsaVleDOl8zs84hCJKJJGDqRe0Og0qV1nH19iS6abP2FmaxOUr6LX9jSAnZ1uydDP+Hjjjp42O3DpkFG/h5JgeLCjU2GtcJEOc+xzNaxZVPtGZE6oOG0/bihDb/2V9PdrDoTTUohv1RrdD0AL96mIzfqEYK52n+UWZhjH0S9omWufz5b8xS202ZUr4MZr7RrJWZikXsfhyJfn2OZ92J+lRvBZxQLfPRBgxNECgjUmc5fISFdbkuSDmn87fDFHiYQ0qVwTKv//0x2lXuWs3e5mdtVIISm7uD3
-x-ms-exchange-antispam-messagedata: 4Z+pr5U7LjrJZoKwpQj1+ZV7Ow1sSxB678Gh3wD83hwVlePCejCRie62NbrShkdOtg3OLdmHzQJq9bKUL/rVjTAWD46yYMAWvfUQa9ykw6wsIq0pO7Bo/DDlXICF4v4R+GyR5IZNKOmeGYyrYy6Gxw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <06986D4805B93044B50C2EA22F62AB35@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 6 Mar 2020 04:50:16 -0500
+Received: from mail-lj1-f174.google.com ([209.85.208.174]:36180 "EHLO
+        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgCFJuQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 04:50:16 -0500
+Received: by mail-lj1-f174.google.com with SMTP id 195so1553141ljf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 01:50:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=X4iWU+PNricn3LX28QiGaI9dpcW9GvtHEa2KhI4bUoc=;
+        b=e/jJLIWOxUzjtvT67fBqtctitIU2GvqC5LTjaUSB//nbrIiaFLdml9UaIvBCkI2FiG
+         rJlpl3Nrz2ApxcfSozKaZYwWb7yLrm6G6HBSbjBlHBOw1+yg7t2OVw4ANTobZbK1bqaS
+         kKgZnnKN8oBNeBrZPi+gSrQXOVRF4FnQJH72eFI8U81olwEuy2tETUekwjB1gyXTeGTf
+         BBEMrDEh7uISM2/tikVcPlacCcNdeYFqMaNp3PuwMUPGVz5/+TKoAd4vPL6ciYA2jmWC
+         1pJ1AHIpfb8FkP7QB4LOJLDdJDCl7j5wTHRRm+BXzsK7dPhPsn9Qmt5KMwE+zpYR/JCl
+         1fDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=X4iWU+PNricn3LX28QiGaI9dpcW9GvtHEa2KhI4bUoc=;
+        b=HjzjppkUCykCMybM0iKn76FD+sdsrghrs1NmDjz9EasWvKEWfKQkSFdsr0qyJocL9p
+         rW8SIozc99TyaTMurAm1akgm0a90WukxXc1L6/3Wzc2eDuw+HwLulZMmGRHuzA9Pr6af
+         A6AGS8sdWV2c84m1Uw0XIHiGS8uoOQuIk7ubIbu3a3S8zOLfKk0/ZnxHKje/Syd29mtH
+         nO0I6V2w4ZeSrTlhz1cEeEbbnJ2xdDvDC/0UpdwBPXv5wQRySjLfevUDE+r1e7ms/OUq
+         RjCt7nLAJim3dDALyBDL3MBZ1eTe8McHQtfa5Q7r/FIvjysNBrUr93KpJhxvi6u94ouJ
+         QEiQ==
+X-Gm-Message-State: ANhLgQ0UYNk4ZXoUIpM8wOINMu8gmQQg1gBQoattf0rYuuHg97Qz9qwM
+        SQpMqPLIqLMP+93pO1moc0Mk3yRccbxofWC1xspE8k2Qb253FA==
+X-Google-Smtp-Source: ADFU+vthm617g5gQGf1l/4mANn7cZuYjsdsTZfheUeowTV5O5sBST+PDwFr+p2qijdOTlxvbnFWJ5brrpBpaTFH5uD0=
+X-Received: by 2002:a05:651c:414:: with SMTP id 20mr1443556lja.165.1583488211243;
+ Fri, 06 Mar 2020 01:50:11 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e8547b2-3274-4ff8-d117-08d7c1b34866
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2020 09:46:45.2829
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Oqwb/ZYa33gEpRA8FTnN13WZtvPp4qlhYV5/+KyulWvmQE/GlZr3XlDVVvaL1G50/TAj6uwBwa/lgnV48Rv1/lqvYpoy7GcZsMGAqB+gnCo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6102
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 6 Mar 2020 15:19:59 +0530
+Message-ID: <CA+G9fYsHgBmYBsR1XA5zoa4B4YJ4f+tEpy+dBReT8J=OE4X=cA@mail.gmail.com>
+Subject: WARNING: suspicious RCU usage 5.6.0-rc4-next-20200305 -
+ kprobes.c:2240 RCU-list traversed in non-reader section
+To:     open list <linux-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
+        rostedt@goodmis.org, Ingo Molnar <mingo@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAzLTA2IGF0IDA4OjQyICswMTAwLCBBaG1hZCBGYXRvdW0gd3JvdGU6DQo+
-IEhlbGxvIEFuZHJldywNCj4gDQo+IE9uIDMvNS8yMCA1OjUxIFBNLCBBbmRyZXcgTHVubiB3cm90
-ZToNCj4gPiBPbiBUaHUsIE1hciAwNSwgMjAyMCBhdCAwMzozODowNVBNICswMTAwLCBPbGVrc2lq
-IFJlbXBlbCB3cm90ZToNCj4gPiA+IEhpIFBoaWxpcHBlLA0KPiA+ID4gDQo+ID4gPiBPbiBUaHUs
-IE1hciAwNSwgMjAyMCBhdCAwMjo0OToyOFBNICswMTAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
-ZToNCj4gPiA+ID4gVGhlIE1BQyBvZiB0aGUgaS5NWDYgU29DIGlzIGNvbXBsaWFudCB3aXRoIFJH
-TUlJIHYxLjMuIFRoZQ0KPiA+ID4gPiBLU1o5MTMxIFBIWQ0KPiA+ID4gPiBpcyBsaWtlIEtTWjkw
-MzEgYWRoZXJpbmcgdG8gUkdNSUkgdjIuMCBzcGVjaWZpY2F0aW9uLiBUaGlzIG1lYW5zDQo+ID4g
-PiA+IHRoZQ0KPiA+ID4gPiBNQUMgc2hvdWxkIHByb3ZpZGUgYSBkZWxheSB0byB0aGUgVFhDIGxp
-bmUuIEJlY2F1c2UgdGhlIGkuTVg2DQo+ID4gPiA+IE1BQyBkb2VzDQo+ID4gPiA+IG5vdCBwcm92
-aWRlIHRoaXMgZGVsYXkgdGhpcyBoYXMgdG8gYmUgZG9uZSBpbiB0aGUgUEhZLg0KPiA+ID4gPiAN
-Cj4gPiA+ID4gVGhpcyBwYXRjaCBhZGRzIGJ5IGRlZmF1bHQgfjEuNm5zIGRlbGF5IHRvIHRoZSBU
-WEMgbGluZS4gVGhpcw0KPiA+ID4gPiBzaG91bGQNCj4gPiA+ID4gYmUgZ29vZCBmb3IgYWxsIGJv
-YXJkcyB0aGF0IGhhdmUgdGhlIFJHTUlJIHNpZ25hbHMgcm91dGVkIHdpdGgNCj4gPiA+ID4gdGhl
-DQo+ID4gPiA+IHNhbWUgbGVuZ3RoLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhlIEtTWjkxMzEgaGFz
-IHJlbGF0aXZlbHkgaGlnaCB0b2xlcmFuY2VzIG9uIHNrZXcgcmVnaXN0ZXJzDQo+ID4gPiA+IGZy
-b20NCj4gPiA+ID4gTU1EIDIuNCB0byBNTUQgMi44LiBUaGVyZWZvcmUgdGhlIG5ldyBETEwtYmFz
-ZWQgZGVsYXkgb2YgMm5zIGlzDQo+ID4gPiA+IHVzZWQNCj4gPiA+ID4gYW5kIHRoZW4gYXMgbGl0
-dGxlIGFzIHBvc3NpYmx5IHN1YnRyYWN0ZWQgZnJvbSB0aGF0IHNvIHdlIGdldA0KPiA+ID4gPiBt
-b3JlDQo+ID4gPiA+IGFjY3VyYXRlIGRlbGF5LiBUaGlzIGlzIGFjdHVhbGx5IG5lZWRlZCBiZWNh
-dXNlIHRoZSBpLk1YNiBTb0MNCj4gPiA+ID4gaGFzDQo+ID4gPiA+IGFuIGFzeW5jaHJvbiBza2V3
-IG9uIFRYQyBmcm9tIC0xMDBwcyB0byA5MDBwcywgdG8gZ2V0IGFsbCBSR01JSQ0KPiA+ID4gPiB2
-YWx1ZXMgd2l0aGluIHNwZWMuDQo+ID4gPiANCj4gPiA+IFRoaXMgY29uZmlndXJhdGlvbiBoYXMg
-bm90aGluZyB0byBkbyBpbiBtYWNoLWlteC8qIEl0IGJlbG9uZ3MgdG8NCj4gPiA+IHRoZQ0KPiA+
-ID4gYm9hcmQgZGV2aWNldHJlZS4gUGxlYXNlIHNlZSBEVCBiaW5kaW5nIGRvY3VtZW50YXRpb24g
-Zm9yIG5lZWRlZA0KPiA+ID4gcHJvcGVydGllczoNCj4gPiA+IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9uZXQvbWljcmVsLWtzejkweDEudHh0DQo+ID4gDQo+ID4gSXQgcHJvYmFi
-bHkgZG9lcyBub3QgZXZlbiBuZWVkIHRoYXQuIEp1c3QNCj4gPiANCj4gPiBwaHktbW9kZSA9IDxy
-Z21paS10eGlkPg0KPiANCj4gTG9va3MgdG8gbWUgbGlrZSB0aGlzIGlzbid0IHN1cHBvcnRlZCBi
-eSB0aGUgTWljcmVsIFBIWSBkcml2ZXIgb3IgYW0NCj4gSSBtaXNzaW5nIHNvbWV0aGluZz8NCj4g
-DQo+IENoZWVycw0KPiBBaG1hZA0KPiANCkhpIEFuZHJldyBhbmQgQWhtYWQsIHRoYW5rcyBmb3Ig
-eW91ciBjb21tZW50cy4gSSB0b3RhbGx5IGZvcmdvdCBhYm91dA0KdGhvc2UgbW9yZSBzcGVjaWZp
-YyBwaHktbW9kZXMuIEJ1dCBqdXN0IGJlY2F1c2Ugbm9uZSBvZiBvdXIgZHJpdmVyDQpzdXBwb3J0
-cyB0aGF0LiBFaXRoZXIgdGhlIGkuTVg2IGZlYy1kcml2ZXIgYXMgd2VsbCBhcyB0aGUgbWljcmVs
-LmMgUEhZDQpkcml2ZXIgc3VwcG9ydHMgdGhpcyB0YWdzLg0KDQpXaGF0IGRvIHlvdSBndXlzIHN1
-Z2dlc3QgdGhlbiBob3cgSSBzaG91bGQgaW1wbGVtZW50IHRoYXQgc2tldyBzdHVmZj8NCg0KVGhl
-IHByb2JsZW0gaXMgdGhhdCBpLk1YNiBoYXMgYW4gYXN5bmNocm9uaWMgc2tldyBvZiAtMTAwIHRv
-IDkwMHBzIG9ubHkNCmVuYWJsaW5nIHRoZSBQSFktZGVsYXkgb24gVFhDIGFuZCBSWEMgaXMgbm90
-IGluIGFsbCBjYXNlcyB3aXRoaW4gdGhlDQpSR01JSSB0aW1pbmcgc3BlY3MuIFRoYXQncyB3aHkg
-SSBpbXBsZW1lbnRlZCB0aGlzICd3ZWlyZCcgbnVtYmVycy4NCg0KUGhpbGlwcGUNCg==
+Regression on Linux next 5.6.0-rc4-next-20200305
+the "WARNING: suspicious RCU usage" on x86_64, i386, arm and arm64 boot log.
+
+Steps to reproduce,
+Boot linux next tag version 20200305 and on boot you notice below RCU warning.
+
+x86_boot log,
+--------------------
+[    0.000000] Linux version 5.6.0-rc4-next-20200305 (oe-user@oe-host)
+(gcc version 7.3.0 (GCC)) #1 SMP Thu Mar 5 07:09:13 UTC 2020
+[    0.000000] Command line: root=/dev/nfs rw
+nfsroot=10.66.16.116:/var/lib/lava/dispatcher/tmp/1269574/extract-nfsrootfs-nqxjbzn7,tcp,hard,intr
+ip=dhcp console=ttyS0,115200n8 lava_mac=00:90:05:af:00:7d
+<trim>
+[    2.960824] =============================
+[    2.964838] WARNING: suspicious RCU usage
+[    2.968860] 5.6.0-rc4-next-20200305 #1 Not tainted
+[    2.973659] -----------------------------
+[    2.977670] /usr/src/kernel/drivers/iommu/dmar.c:366 RCU-list
+traversed in non-reader section!!
+[    2.986366]
+[    2.986366] other info that might help us debug this:
+[    2.986366]
+[    2.994372]
+[    2.994372] rcu_scheduler_active = 2, debug_locks = 1
+[    3.000899] 1 lock held by swapper/0/1:
+[    3.004736]  #0: ffffffffb6330aa8 (dmar_global_lock){+.+.}, at:
+intel_iommu_init+0x14f/0x1610
+[    3.013275]
+[    3.013275] stack backtrace:
+[    3.017635] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
+5.6.0-rc4-next-20200305 #1
+[    3.018630] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[    3.018630] Call Trace:
+[    3.018630]  dump_stack+0x7a/0xa5
+[    3.018630]  lockdep_rcu_suspicious+0xc5/0x100
+[    3.018630]  dmar_find_dmaru+0x7f/0x90
+[    3.018630]  dmar_parse_one_drhd+0x21/0x550
+[    3.018630]  dmar_walk_remapping_entries+0xa6/0x1d0
+[    3.018630]  ? e820__memblock_setup+0x8c/0x8c
+[    3.018630]  ? rdinit_setup+0x30/0x30
+[    3.018630]  dmar_table_init+0xc8/0x157
+[    3.018630]  ? dmar_free_dev_scope+0xe0/0xe0
+[    3.018630]  ? intel_iommu_setup+0x21b/0x21b
+[    3.018630]  ? __intel_map_single+0x210/0x210
+[    3.018630]  ? dmar_find_dmaru+0x90/0x90
+[    3.018630]  ? amd_iommu_apply_ivrs_quirks+0x17/0x17
+[    3.018630]  intel_iommu_init+0x154/0x1610
+[    3.018630]  ? lockdep_hardirqs_on+0xf6/0x190
+[    3.018630]  ? kfree+0x184/0x2e0
+[    3.018630]  ? trace_hardirqs_on+0x4c/0x100
+[    3.018630]  ? unpack_to_rootfs+0x296/0x2c0
+[    3.018630]  ? rdinit_setup+0x30/0x30
+[    3.018630]  ? e820__memblock_setup+0x8c/0x8c
+[    3.018630]  ? rdinit_setup+0x30/0x30
+[    3.018630]  pci_iommu_init+0x1a/0x44
+[    3.018630]  ? pci_iommu_init+0x1a/0x44
+[    3.018630]  do_one_initcall+0x61/0x2f0
+[    3.018630]  ? rdinit_setup+0x30/0x30
+[    3.018630]  ? rcu_read_lock_sched_held+0x4f/0x80
+[    3.018630]  kernel_init_freeable+0x219/0x279
+[    3.018630]  ? rest_init+0x250/0x250
+[    3.018630]  kernel_init+0xe/0x110
+[    3.018630]  ret_from_fork+0x3a/0x50
+<trim>
+[   13.765411] =============================
+[   13.765412] WARNING: suspicious RCU usage
+[   13.765413] 5.6.0-rc4-next-20200305 #1 Not tainted
+[   13.765414] -----------------------------
+[   13.765415] /usr/src/kernel/kernel/kprobes.c:2240 RCU-list
+traversed in non-reader section!!
+[   13.765416]
+[   13.765416] other info that might help us debug this:
+[   13.765416]
+[   13.765417]
+[   13.765417] rcu_scheduler_active = 2, debug_locks = 1
+[   13.765418] 2 locks held by systemd-modules/164:
+[   13.765418]  #0: ffffffffb62834e8
+((module_notify_list).rwsem){++++}, at:
+blocking_notifier_call_chain+0x2f/0x70
+[   13.765423]  #1: ffffffffb628abe0 (kprobe_mutex){+.+.}, at:
+kprobes_module_callback+0x41/0x250
+[   13.765427]
+[   13.765427] stack backtrace:
+[   13.765429] CPU: 3 PID: 164 Comm: systemd-modules Not tainted
+5.6.0-rc4-next-20200305 #1
+[   13.765430] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[   13.765431] Call Trace:
+[   13.765434]  dump_stack+0x7a/0xa5
+[   13.765437]  lockdep_rcu_suspicious+0xc5/0x100
+[   13.765442]  kprobes_module_callback+0x1b7/0x250
+[   13.765445]  notifier_call_chain+0x4c/0x70
+[   13.765449]  blocking_notifier_call_chain+0x49/0x70
+[   13.765453]  do_init_module+0xa4/0x226
+[   13.765456]  load_module+0x24e6/0x2ac0
+[   13.765472]  __do_sys_finit_module+0xfc/0x120
+[   13.884088]  ? __do_sys_finit_module+0xfc/0x120
+[   13.888629]  __x64_sys_finit_module+0x1a/0x20
+[   13.892980]  do_syscall_64+0x55/0x200
+[   13.896638]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   13.901689] RIP: 0033:0x7fe279551f59
+[   13.905259] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00
+00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
+08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 0f ff 2b 00 f7 d8 64 89
+01 48
+[   13.923998] RSP: 002b:00007ffd2560f0e8 EFLAGS: 00000206 ORIG_RAX:
+0000000000000139
+[   13.931564] RAX: ffffffffffffffda RBX: 000055d618061400 RCX: 00007fe279551f59
+[   13.938694] RDX: 0000000000000000 RSI: 00007fe2798266a3 RDI: 0000000000000005
+[   13.945819] RBP: 00007fe2798266a3 R08: 0000000000000000 R09: 0000000000000000
+[   13.952942] R10: 0000000000000005 R11: 0000000000000206 R12: 0000000000000000
+[   13.960066] R13: 0000000000020000 R14: 000055d617dab004 R15: 00007ffd2560f220
+
+Full boot log link,
+https://lkft.validation.linaro.org/scheduler/job/1269574#L1095
+
+metadata:
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git branch: master
+  git describe: next-20200305
+  make_kernelversion: 5.6.0-rc4
+  kernel-config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/719/config
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
