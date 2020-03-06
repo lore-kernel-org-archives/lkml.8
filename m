@@ -2,196 +2,164 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA396C3F2D6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DFBC10DCE
 	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83514206E2
+	by mail.kernel.org (Postfix) with ESMTP id 53997205C9
 	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="a5aN65hc"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="JusjcdkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgCFX4E (ORCPT
+        id S1726682AbgCFXzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 18:56:04 -0500
-Received: from mail-co1nam11on2065.outbound.protection.outlook.com ([40.107.220.65]:6157
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726397AbgCFX4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 18:56:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HKYFgqMt6V/+aO+TennyHjGdhe2mS/J5Id45TSscA05a6LtD94dPbeuBdpqpZl9vMYsWnUYUmQCuTrSYIxDli8lDgQVQrd6QmMQ4AJFmjYfU2cNUVzDZGVjk65MvATXWV8se7z0+70dr3J1O9hUUAwfLkGEafrmn/0osMo1s9tQxntxIR3k0kQYlPBObOQY1PIrMHaEQ/zjciS4FSkewRy3YnG6UKa8wYLye7MN07Gw66QOrKiRXXPzT0SiJLscTUIjntteLg3LKMusloV2Z12b6JyOkn4Htsh4MMfW3z2WOwiMKI3710OrqxYDXL5jtmGsB4mco1ksNJtTT0ZyMsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OQW6/te7yKqNqsJenJZqetPDlfW1IPRmRJPzWV7ciRI=;
- b=AznNSZws+gS3A0ISzUqoJgkX26pUERi90x7z9hBbilCVmpE61I6ocsTZXDgkglKqxbMeiYYYKHyw9HPmB+LVtybI1Kyi3AuKQnxbpJLqipXdqzmmAyfy7f3jWdr/2n3Ng6z88xw9REL2ozeyKAwBSP+UKUPrz8ZleaX1jGuEUms2H1EEDMGQtzJXyTeGRptrNSJxxxBZWh+g484r3HIZNnZfJxj77Voy1yWyA9yq2Jc9NOx+XVuT+YvRDqw5hLP8pI8EiXwNeLqrF4dBh5Nmy+JJg7pbEed5WEwTdfamRmspFvfBFuQq8Ui/Ue61mVCw/ofsA07N4knno+VSpe1WRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
+        Fri, 6 Mar 2020 18:55:51 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:53272 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbgCFXzu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 18:55:50 -0500
+Received: by mail-pj1-f67.google.com with SMTP id cx7so1710178pjb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 15:55:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OQW6/te7yKqNqsJenJZqetPDlfW1IPRmRJPzWV7ciRI=;
- b=a5aN65hco6bcoacg2z4JQh18sTKOurR35/U9W0wA/APmHRyubC4HVRE3YhNhM/dPChN6YL+pxL0I9TE7DOV0vGIdKBSgttnMhQHbi+ViH7ZJDRNFY+FMmdvXvIudykvjYZgM7cL7s4iPvECenS1RWRjMOp/PFf0NQEXqRcJmfrc=
-Received: from MN2PR01CA0031.prod.exchangelabs.com (2603:10b6:208:10c::44) by
- MN2PR02MB6413.namprd02.prod.outlook.com (2603:10b6:208:1b6::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Fri, 6 Mar
- 2020 23:56:01 +0000
-Received: from BL2NAM02FT036.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:10c:cafe::77) by MN2PR01CA0031.outlook.office365.com
- (2603:10b6:208:10c::44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17 via Frontend
- Transport; Fri, 6 Mar 2020 23:56:01 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT036.mail.protection.outlook.com (10.152.77.154) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2793.11
- via Frontend Transport; Fri, 6 Mar 2020 23:56:01 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <jolly.shah@xilinx.com>)
-        id 1jAMoy-0003gm-MG; Fri, 06 Mar 2020 15:56:00 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <jolly.shah@xilinx.com>)
-        id 1jAMot-0004i4-In; Fri, 06 Mar 2020 15:55:55 -0800
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 026NtkYS004488;
-        Fri, 6 Mar 2020 15:55:46 -0800
-Received: from [172.19.0.52]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <jollys@xilinx.com>)
-        id 1jAMok-0004hI-LN; Fri, 06 Mar 2020 15:55:46 -0800
-Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
-To:     "'Greg KH'" <gregkh@linuxfoundation.org>,
-        Jolly Shah <jolly.shah@xilinx.com>
-Cc:     Rajan Vaja <RAJANV@xilinx.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200124060339.GB2906795@kroah.com>
- <2D4B924A-D10C-4A90-A8E6-507BF6C30654@xilinx.com>
- <20200128062814.GA2097606@kroah.com>
- <4EF659A1-2844-46B9-9ED6-5A6A20401D9D@xilinx.com>
- <20200131061038.GA2180358@kroah.com>
- <BYAPR02MB40559D6B62C4532C0EAD0281B7070@BYAPR02MB4055.namprd02.prod.outlook.com>
- <20200131093646.GA2271937@kroah.com>
- <3ef20e9d-052f-665c-7fc8-69a1f8bc9bd2@xilinx.com>
- <20200214171005.GB4034785@kroah.com>
- <c2914eae-bf95-ad51-79a4-07f199f37e27@xilinx.com>
- <20200215005235.GA32359@kroah.com>
-From:   Jolly Shah <jolly.shah@xilinx.com>
-Message-ID: <23a785fd-3874-b71a-c0f5-d117a9058abf@xilinx.com>
-Date:   Fri, 6 Mar 2020 15:55:46 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        d=android.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iy66Xc3T8EGl5ApJul/VUh4hjHhsU3+FU6jK2rSraPw=;
+        b=JusjcdkAfTlIEOeg8mV4ChS+MtHqZ9MHCDVAs4ZUlmcQM64RsWbr9y/nwhnpw0jkkG
+         Mdr+VZIL6Vi/oDO+DP0ybCmiArZDwCCGkU2YRJ5kIT0tS6PGXuQTo4GdPAfKnUOznUS/
+         L4rPmPL07WDHK/xjfRB8nxgPfxnCteajWdrfBHhwdneV2UjAoHsFhWKpyAfXTPlBF7yb
+         mj32MyepfyqiLRuhnMaRPuK584dw9JAhVeb8biV6d4xxRCiRJUlcHp9go8uzmO//WhUi
+         f0WMSi2pjAWBBtqFJHZChWogsZUUIf2LLxp8LjaU9QG3x6m7J7VScgupV+ILwFaDKiL2
+         js9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iy66Xc3T8EGl5ApJul/VUh4hjHhsU3+FU6jK2rSraPw=;
+        b=NQpYFNy8JH25250A1JrB+0MobLnqEeH/0Px3EQAPpWWGtX+ijmZbGmixm3D2lloIAV
+         TLtJiF8NKBuodoDgwcIIfuKPPiBflwscHMSJo6CVUiJM0m0tgYigGPrQSPXc1BUFBNRm
+         mLbrRQ3/nA+q7aKPIki8NZWSeQwOeeYQXMFJhk1MPriydjFqocKcr3Rvcp4SkW6TYBLm
+         5e6xnQaq5XEcGlOiHTcSlJiHoJ417RcIV0rTHcOysVvbgt0O3F6lVdxHtwfT/eIJFzIh
+         bFVlfcZ/gO14rCX+TkaEY4lLzpSJlRpn+1oHp7qncpaSESNLp4Wj3ML1kLAq2tBlF1sf
+         Br3A==
+X-Gm-Message-State: ANhLgQ02tNtBjxNYHI0Ms2h5mQfDQNFVX2M8s7aL4hGbrVryENvO4d7K
+        gtnUl9HrEyZ37XaroSTzpv8N9Q==
+X-Google-Smtp-Source: ADFU+vtA0JLUpUrvRB8/URuMofw7zZLIpVDABYK+ucoeQeRBBorcDOV0QycC7SaSPAT1kqla8wgfOw==
+X-Received: by 2002:a17:90a:2ec7:: with SMTP id h7mr6358221pjs.107.1583538949817;
+        Fri, 06 Mar 2020 15:55:49 -0800 (PST)
+Received: from localhost ([2620:15c:211:0:fb21:5c58:d6bc:4bef])
+        by smtp.gmail.com with ESMTPSA id f8sm36597168pfn.2.2020.03.06.15.55.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 15:55:49 -0800 (PST)
+Date:   Fri, 6 Mar 2020 15:55:48 -0800
+From:   Sandeep Patil <sspatil@android.com>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v4 2/4] power_supply: Add additional health properties to
+ the header
+Message-ID: <20200306235548.GA187098@google.com>
+References: <20200116175039.1317-1-dmurphy@ti.com>
+ <20200116175039.1317-3-dmurphy@ti.com>
+ <20200117010658.iqs2zpwl6bsomkuo@earth.universe>
 MIME-Version: 1.0
-In-Reply-To: <20200215005235.GA32359@kroah.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(376002)(39860400002)(199004)(189003)(186003)(26005)(426003)(2616005)(2906002)(336012)(44832011)(316002)(8936002)(36756003)(110136005)(54906003)(478600001)(81166006)(356004)(81156014)(7416002)(31696002)(4326008)(70586007)(5660300002)(31686004)(9786002)(70206006)(53546011)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6413;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 856af57d-6139-42b2-cf5e-08d7c229ec9a
-X-MS-TrafficTypeDiagnostic: MN2PR02MB6413:
-X-Microsoft-Antispam-PRVS: <MN2PR02MB641311F76B63931B3711CF78B8E30@MN2PR02MB6413.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 0334223192
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: M9SXiN86G5eQ7lJwHrv83wxolBNYnWRmodGtNmR+uDXCJqri7/TaKgJcottV7HUsmk/Kx5KaN0sbaYF/2lD80fTCl9E+V+ar4ozmJ4IaINLbxq7jjkWlx3GF7Fj4B2dKDhgkptW1cXf3bTtjSRegQh2iYLT9A400CXGUWZJSkJfw9+vKMeIcltZ1LD2Pg49mHJ57GjEMOxwzpY5Z6HkHDbKYDS0u0fIqRhCZzsRhSusLQThHqgVzUhvhhvv15DinxAtlSdwiRHQwWDn9tkAIJCWXU9uawn+xLOahyDFr+7Ns8QBocNLmFWt/aGb8SOCt/LYFJkOeUe8Ay3itw+zAbztU3pOtzuaWnFmtKzcTrTjMN44/l0V9ZwXZPppyu8w7WpsSSvACIhCJ7JdmyEIQyfYLUeF50oPODNSZ0Zzul2tyrnKck3pu9reO7UmZYYwp
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2020 23:56:01.2438
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 856af57d-6139-42b2-cf5e-08d7c229ec9a
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6413
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117010658.iqs2zpwl6bsomkuo@earth.universe>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi Sebastian,
 
- > ------Original Message------
- > From: 'Greg Kh' <gregkh@linuxfoundation.org>
- > Sent:  Friday, February 14, 2020 4:52PM
- > To: Jolly Shah <jolly.shah@xilinx.com>
- > Cc: Rajan Vaja <RAJANV@xilinx.com>, Ard.biesheuvel@linaro.org 
-<ard.biesheuvel@linaro.org>, Mingo@kernel.org <mingo@kernel.org>, 
-Matt@codeblueprint.co.uk <matt@codeblueprint.co.uk>, 
-Sudeep.holla@arm.com <sudeep.holla@arm.com>, Hkallweit1@gmail.com 
-<hkallweit1@gmail.com>, Keescook@chromium.org <keescook@chromium.org>, 
-Dmitry.torokhov@gmail.com <dmitry.torokhov@gmail.com>, Michal Simek 
-<michals@xilinx.com>, Linux-arm-kernel@lists.infradead.org 
-<linux-arm-kernel@lists.infradead.org>, Linux-kernel@vger.kernel.org 
-<linux-kernel@vger.kernel.org>
- > Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add sysfs interface
- >
-> On Fri, Feb 14, 2020 at 04:37:16PM -0800, Jolly Shah wrote:
->>> Just make the direct call to the firmware driver, no need to muck around
->>> with tables of function pointers.  In fact, with the spectre changes,
->>> you just made things slower than needed, and you can get back a bunch of
->>> throughput by removing that whole middle layer.
->>>
->>
->> arm,scpi is doing the same way and we thought this approach will be more
->> acceptable than direct function calls but happy to change as suggested.
+On Fri, Jan 17, 2020 at 02:06:58AM +0100, Sebastian Reichel wrote:
+> Hi,
 > 
-> Just because one random tiny thing does it the wrong way does not mean
-> to focus on that design pattern and ignore the thousands of other
-> apis/interfaces in the kernel that do not do it that way :)
+> On Thu, Jan 16, 2020 at 11:50:37AM -0600, Dan Murphy wrote:
+> > Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+> > 
+> > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > ---
 > 
->>> So go do that first please, before adding any new stuff.
->>>
->>> Now for the ioctl, yeah, that's not a "normal" pattern either.  But
->>> right now you only have 2 "different" ioctls that you call.  So why not
->>> just turn those 2 into real function calls as well that then makes the
->>> "ioctl" call to the hardware?  That makes things a lot more obvious on
->>> the kernel driver side exactly what is going on.
->>>
->>
->> Sure as i understand firmware driver will provide real function calls to be
->> used by user drivers and underneath it will call ioctl for desired
->> operation. Please correct if I misunderstood.
-> 
-> You do not misunderstand.
+> Looks good. But I will not merge it without a user and have comments
+> for the driver.
 
-Submitted v3 with required changes. Please review.
+Android has been looking for these properties for a while now [1].
+It was added[2] when we saw that the manufacturers were implementing these
+properties in the driver. I didn't know the properties were absent upstream
+until yesterday. Somebody pointed out in our ongoing effort to make sure
+all core kernel changes that android depends on are present upstream.
 
-Thanks,
-Jolly Shah
+I think those values are also propagated in application facing APIs in
+Android (but I am not sure yet, let me know if that's something you want
+to find out).
+
+I wanted to chime in and present you a 'user' for this if that helps.
+
+Cc: kernel-team@android.com
+
+- ssp
+
+1. https://android.googlesource.com/platform/system/core/+/refs/heads/master/healthd/BatteryMonitor.cpp#162
+2. https://android-review.googlesource.com/c/platform/system/core/+/414481
 
 > 
-> thanks,
+> -- Sebastian
 > 
-> greg k-h
-> 
+> >  Documentation/ABI/testing/sysfs-class-power | 2 +-
+> >  drivers/power/supply/power_supply_sysfs.c   | 2 +-
+> >  include/linux/power_supply.h                | 3 +++
+> >  3 files changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+> > index bf3b48f022dc..9f3fd01a9373 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-power
+> > +++ b/Documentation/ABI/testing/sysfs-class-power
+> > @@ -190,7 +190,7 @@ Description:
+> >  		Valid values: "Unknown", "Good", "Overheat", "Dead",
+> >  			      "Over voltage", "Unspecified failure", "Cold",
+> >  			      "Watchdog timer expire", "Safety timer expire",
+> > -			      "Over current"
+> > +			      "Over current", "Warm", "Cool", "Hot"
+> >  
+> >  What:		/sys/class/power_supply/<supply_name>/precharge_current
+> >  Date:		June 2017
+> > diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+> > index f37ad4eae60b..d0d549611794 100644
+> > --- a/drivers/power/supply/power_supply_sysfs.c
+> > +++ b/drivers/power/supply/power_supply_sysfs.c
+> > @@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
+> >  static const char * const power_supply_health_text[] = {
+> >  	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
+> >  	"Unspecified failure", "Cold", "Watchdog timer expire",
+> > -	"Safety timer expire", "Over current"
+> > +	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
+> >  };
+> >  
+> >  static const char * const power_supply_technology_text[] = {
+> > diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> > index 28413f737e7d..bd0d3225f245 100644
+> > --- a/include/linux/power_supply.h
+> > +++ b/include/linux/power_supply.h
+> > @@ -61,6 +61,9 @@ enum {
+> >  	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
+> >  	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
+> >  	POWER_SUPPLY_HEALTH_OVERCURRENT,
+> > +	POWER_SUPPLY_HEALTH_WARM,
+> > +	POWER_SUPPLY_HEALTH_COOL,
+> > +	POWER_SUPPLY_HEALTH_HOT,
+> >  };
+> >  
+> >  enum {
+> > -- 
+> > 2.25.0
+> > 
+
+
