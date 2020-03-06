@@ -2,95 +2,114 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E956BC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F6BC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B37EF207FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:34:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAlOMTuE"
+	by mail.kernel.org (Postfix) with ESMTP id B63E020848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 01:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583458636;
+	bh=p3/7tgqs+hnfYi26LozMKMAYmbPplvz+zQxSII3INFE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=zg8xJAKxVCjrjf5kBr30SY1qYUexowdzmbcrOHOyMnnDwbF/QndCuTWg9PI+Z/S2r
+	 FEP+TYsrW4tyvVE4lgKtlk/IrYoX4N/YagChkPDC+dWaUzyBrWAN14cy7GRVdIE0S4
+	 iQbWsuSK+6dkOzV8zy/dzj2Mh2ba+1wW5ojTq53Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgCFBe0 (ORCPT
+        id S1726485AbgCFBhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 20:34:26 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38864 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFBe0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 20:34:26 -0500
-Received: by mail-pf1-f195.google.com with SMTP id g21so274185pfb.5;
-        Thu, 05 Mar 2020 17:34:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=POKsK2Sr9GyNeTFElca9dR7uYX4ViPPFrczK7S6aa5U=;
-        b=RAlOMTuEDpcSmH4mA48Ys8JRgeW29/dLcFi8XwipfyaZazSxjQXkSQWWaaQgoUoVJb
-         g+nh3sW2uE+G9sI90suZA0XCHohnVA4WmtJ/Z/aJ6ydpDTcef6jhTp0gK05J4LAQtPh8
-         h0LrwQVrykgXh7rK90UoNVDO7EEIiquEAdcZVf9bo/qUXxy9OicyfJ4GcctiD4vm67pq
-         dvDubxICLYXCZeexif1zjZ9UOg6OG20/EXaX6FGHUx1okT3dFX+FnS9+2JiFZ8UQNoSl
-         vrpS7mc3O/9Hxjd+9EUrEkEtbHG+1Q0IivYeN0Ceq0oL+6svYbowHIg0p4h8UACKtLSD
-         3ySQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=POKsK2Sr9GyNeTFElca9dR7uYX4ViPPFrczK7S6aa5U=;
-        b=oBiIYcvTqpGPfqQNeC28TvefNQOxw87NZ8kP6ve00Fk8u8m7fyZ6S0IqC/DRGpR1fM
-         7zkisgc0LcazRgYJpEK+Jjc1jPf6fNnhTvqGowJQEdUR3gHQPQgaRvO7tK3iRs5zaog9
-         uMKeGoA4+F8+NM4UhvryvqK0DVpn3XMXlkY/ELplBkXDpeZr8N5fMcnuyXWhbs9NoQ0u
-         o+5FF+Tx9kXqYksAmavRrf9ZC0j8NBz71Is4eoW6b9sQoyuOavfKNTJjss7lKYt+OkKX
-         Hg6FZ+ENC1xv9tUscz3aDqu0s7h8Q0dQGJ1zcmOeiv/GyKM/jIWZVoJMF2qi6W/SCI5w
-         kHRg==
-X-Gm-Message-State: ANhLgQ3tKLXTBl2AsyNcvLndvdHm4EsmBRDMazd9WmeOcRlFFAYSnyex
-        S5MONt3heVWT7jh8frqJz34=
-X-Google-Smtp-Source: ADFU+vtfHGO7fe8MY0Sf8i1ebOzyUkWQy0VZIylh1JiwuOKOaEfsmdy4VdYfCog6rovza5nlxFHROg==
-X-Received: by 2002:a63:34c8:: with SMTP id b191mr992562pga.220.1583458465328;
-        Thu, 05 Mar 2020 17:34:25 -0800 (PST)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id u12sm27124952pgh.52.2020.03.05.17.34.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Mar 2020 17:34:24 -0800 (PST)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     jlayton@kernel.org
-Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] fs/ceph: return errcode in __get_parent().
-Date:   Fri,  6 Mar 2020 09:34:20 +0800
-Message-Id: <1583458460-31917-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 5 Mar 2020 20:37:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726162AbgCFBhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 20:37:15 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6630C2073B;
+        Fri,  6 Mar 2020 01:37:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583458634;
+        bh=p3/7tgqs+hnfYi26LozMKMAYmbPplvz+zQxSII3INFE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=SlvnlXWm3LTNcmmsq23p6CPJ98OgghdfcXNL7+I2xJmr19gNpPJZz2XPINxLxzAhv
+         8+gtU7msTJGHRzWk0Gdw5BEV+oR7mHHF8mC0egCcmbP8bTe96yfu1ZcxctYsOTWDiZ
+         ztMFhlxhEe/ycSZW2wbhIueP6HJrTbsEhUqZZSzo=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3E2AE3522806; Thu,  5 Mar 2020 17:37:14 -0800 (PST)
+Date:   Thu, 5 Mar 2020 17:37:14 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        urezki@gmail.com
+Subject: Re: [PATCH rcu-dev 1/2] rcuperf: Add ability to increase object
+ allocation size
+Message-ID: <20200306013714.GR2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200306011626.97616-1-joel@joelfernandes.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306011626.97616-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-return real errcode when it's different from ENOENT.
+On Thu, Mar 05, 2020 at 08:16:25PM -0500, Joel Fernandes (Google) wrote:
+> This allows us to increase memory pressure dynamically using a new
+> rcuperf boot command line parameter called 'rcumult'.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- fs/ceph/export.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Looks plausible to me at a very quick first glance.  Uladzislau, thoughts?
 
-diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-index b6bfa94..79dc068 100644
---- a/fs/ceph/export.c
-+++ b/fs/ceph/export.c
-@@ -315,6 +315,11 @@ static struct dentry *__get_parent(struct super_block *sb,
- 
- 	req->r_num_caps = 1;
- 	err = ceph_mdsc_do_request(mdsc, NULL, req);
-+	if (err) {
-+		ceph_mdsc_put_request(req);
-+		return ERR_PTR(err);
-+	}
-+
- 	inode = req->r_target_inode;
- 	if (inode)
- 		ihold(inode);
--- 
-1.8.3.1
+							Thanx, Paul
 
+> ---
+>  kernel/rcu/rcuperf.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+> index a4a8d097d84d9..16dd1e6b7c09f 100644
+> --- a/kernel/rcu/rcuperf.c
+> +++ b/kernel/rcu/rcuperf.c
+> @@ -88,6 +88,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
+>  torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
+>  torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
+>  torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
+> +torture_param(int, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
+>  
+>  static char *perf_type = "rcu";
+>  module_param(perf_type, charp, 0444);
+> @@ -635,7 +636,7 @@ kfree_perf_thread(void *arg)
+>  		}
+>  
+>  		for (i = 0; i < kfree_alloc_num; i++) {
+> -			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
+> +			alloc_ptr = kmalloc(kfree_mult * sizeof(struct kfree_obj), GFP_KERNEL);
+>  			if (!alloc_ptr)
+>  				return -ENOMEM;
+>  
+> @@ -722,6 +723,8 @@ kfree_perf_init(void)
+>  		schedule_timeout_uninterruptible(1);
+>  	}
+>  
+> +	pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
+> +
+>  	kfree_reader_tasks = kcalloc(kfree_nrealthreads, sizeof(kfree_reader_tasks[0]),
+>  			       GFP_KERNEL);
+>  	if (kfree_reader_tasks == NULL) {
+> -- 
+> 2.25.0.265.gbab2e86ba0-goog
+> 
