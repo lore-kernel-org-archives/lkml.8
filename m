@@ -2,113 +2,69 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A73C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE1DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3718620848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:25:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583486755;
-	bh=hvYtDxfTdSO0IQqKG8VvKQf8ALSlcBw1u60NrHZfw3I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yGMpJgVpsFIMLNesNQmJYtxOkTs6bskCdVx33FdfhPmZGoa433bOxuQrlWUfDEfO3
-	 zkJP2ddqD1zygtI3ocPNIbGvDwdCcPapXNPCrNhQ731/lG7HYqY4mSO77mLZbOm9Eq
-	 xusQaSzvyfacRjky8oR6akGgvaqAF46sQ57xWM9E=
+	by mail.kernel.org (Postfix) with ESMTP id 9CDBE2070A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgCFJZx (ORCPT
+        id S1726237AbgCFJ0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:25:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40294 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 04:26:44 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:44054 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbgCFJZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:25:53 -0500
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9874920866
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Mar 2020 09:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583486752;
-        bh=hvYtDxfTdSO0IQqKG8VvKQf8ALSlcBw1u60NrHZfw3I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=c28pCLtRg8NNN6/aBw+kh86LkT3kNDSnBm73GPEyOkjimeyO62dVNbgRjtJqsSMC/
-         8kXd7cKEJ8fJFtMLlMIdnxOozHP91eUqvE9eYB3e8hree15nSD8fVvq6zAA+BmGvSY
-         TLD3wqMwCC4H7OpDu8+V3ktvGu1+Y/BsIguj2CJ4=
-Received: by mail-wm1-f48.google.com with SMTP id x3so3816552wmj.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 01:25:52 -0800 (PST)
-X-Gm-Message-State: ANhLgQ2jxARf3LxuzcvKOCjvP2N3vfWCmr6zBcY5LfZpx22sNtNeJzEj
-        fkJF+XIzjBga/nf0nozAovHMaE8zufuLmTub89aXXg==
-X-Google-Smtp-Source: ADFU+vsiyg11BS62UthU1DW47ddgMms6y8DgTIrlz1HDnwUZjnbKuVKNBjcLEX+qom4x416GqrFQoi0ZM1Q9AF44P2k=
-X-Received: by 2002:a7b:cb93:: with SMTP id m19mr3131678wmi.133.1583486751063;
- Fri, 06 Mar 2020 01:25:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20181124162123.21300-1-n.merinov@inango-systems.com>
- <20191224092119.4581-1-n.merinov@inango-systems.com> <20200108133926.GC4455@infradead.org>
- <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com>
- <20200218185336.GA14242@infradead.org> <797777312.1324734.1582544319435.JavaMail.zimbra@inango-systems.com>
- <20200224170813.GA27403@infradead.org> <711479725.2305.1583484191776.JavaMail.zimbra@inango-systems.com>
-In-Reply-To: <711479725.2305.1583484191776.JavaMail.zimbra@inango-systems.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 6 Mar 2020 10:25:39 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu8ufmONSU8SX=NaAZBAKuD4Coo19z6e2MJ7BegsseJ63A@mail.gmail.com>
-Message-ID: <CAKv+Gu8ufmONSU8SX=NaAZBAKuD4Coo19z6e2MJ7BegsseJ63A@mail.gmail.com>
-Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID
- partition entry
-To:     Nikolai Merinov <n.merinov@inango-systems.com>
-Cc:     hch <hch@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1725951AbgCFJ0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 04:26:44 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 894241A0A78;
+        Fri,  6 Mar 2020 10:26:42 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A44431A0A4A;
+        Fri,  6 Mar 2020 10:26:38 +0100 (CET)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 85C4C402A0;
+        Fri,  6 Mar 2020 17:26:33 +0800 (SGT)
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Peter Chen <peter.chen@nxp.com>, Jun Li <jun.li@nxp.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH] usb: host: xhci-plat: add a shutdown
+Date:   Fri,  6 Mar 2020 17:23:28 +0800
+Message-Id: <20200306092328.41253-1-ran.wang_1@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 at 09:43, Nikolai Merinov
-<n.merinov@inango-systems.com> wrote:
->
-> Hi Christoph,
->
-> Should I perform any other steps in order to get this change in the master?
->
+When loading new kernel via kexec, we need to shutdown host controller to
+avoid any un-expected memory accessing during new kernel boot.
 
-I can take it via the EFI tree with an ack from Dave.
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+---
+ drivers/usb/host/xhci-plat.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index d90cd5e..315b455 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -445,6 +445,7 @@ MODULE_DEVICE_TABLE(acpi, usb_xhci_acpi_match);
+ static struct platform_driver usb_xhci_driver = {
+ 	.probe	= xhci_plat_probe,
+ 	.remove	= xhci_plat_remove,
++	.shutdown = usb_hcd_platform_shutdown,
+ 	.driver	= {
+ 		.name = "xhci-hcd",
+ 		.pm = &xhci_plat_pm_ops,
+-- 
+2.7.4
 
->
-> ----- Original Message -----
-> > From: "hch" <hch@infradead.org>
-> > To: "n merinov" <n.merinov@inango-systems.com>
-> > Cc: "hch" <hch@infradead.org>, "Davidlohr Bueso" <dave@stgolabs.net>, "Jens Axboe" <axboe@kernel.dk>, "Ard Biesheuvel"
-> > <ardb@kernel.org>, "linux-efi" <linux-efi@vger.kernel.org>, "linux-block" <linux-block@vger.kernel.org>, "linux-kernel"
-> > <linux-kernel@vger.kernel.org>
-> > Sent: Monday, February 24, 2020 10:08:13 PM
-> > Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID partition entry
->
-> > On Mon, Feb 24, 2020 at 01:38:39PM +0200, Nikolai Merinov wrote:
-> >> Hi Christoph,
-> >>
-> >> > I'd rather use plain __le16 and le16_to_cpu here. Also the be
-> >> > variants seems to be entirely unused.
-> >>
-> >> Looks like I misunderstood your comment from
-> >> https://patchwork.kernel.org/patch/11309223/:
-> >>
-> >> > Please add a an efi_char_from_cpu or similarly named helper
-> >> > to encapsulate this logic.
-> >>
-> >> The "le16_to_cpu(ptes[i].partition_name[label_count])" call is the
-> >> full implementation of the "efi_char_from_cpu" logic. Do you want
-> >> to encapsulate "utf16_le_to_7bit_string" logic entirely like in
-> >> the attached version?
-> >
-> > I think I though of just the inner loop, but your new version looks even
-> > better, so:
-> >
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
