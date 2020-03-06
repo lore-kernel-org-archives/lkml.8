@@ -2,190 +2,112 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A01BC10F26
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061C8C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6421220717
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34A32072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PDr1cJnC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P88AOonR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgCFO2v (ORCPT
+        id S1726891AbgCFOgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:28:51 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46490 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbgCFO2u (ORCPT
+        Fri, 6 Mar 2020 09:36:37 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:52778 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgCFOgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:28:50 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 026ESjnN099775;
-        Fri, 6 Mar 2020 08:28:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583504925;
-        bh=Db0gvxjEjJlJTJS1yJjHXtnpft56UAncNxZIQb/GHmc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=PDr1cJnCWm0n4O/s7dV6uOWi2nsDzTL7cWnA6ngGGSe3dOeNF87FgBGn/yLdPQ1Ip
-         9wQXPNq6t3HelOI9iVd6/oBx0Tk6BE0SHpRO35Q7Za+rXP+eH5vbizQZZcDkb7Io4n
-         gad2TrFWhSXwwpKYioT16VJyrahRklOKQ20Ku/5M=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 026ESjiH106892
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 6 Mar 2020 08:28:45 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Mar
- 2020 08:28:44 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 6 Mar 2020 08:28:45 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 026ESbUb115246;
-        Fri, 6 Mar 2020 08:28:43 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
-Subject: [PATCH v5 3/3] dmaengine: Create debug directories for DMA devices
-Date:   Fri, 6 Mar 2020 16:28:39 +0200
-Message-ID: <20200306142839.17910-4-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200306142839.17910-1-peter.ujfalusi@ti.com>
-References: <20200306142839.17910-1-peter.ujfalusi@ti.com>
+        Fri, 6 Mar 2020 09:36:37 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026EZt8N119834;
+        Fri, 6 Mar 2020 14:36:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=xa65RcA52aSBC9k32u2gnoNOdze/X6lwyq6dnX69pNM=;
+ b=P88AOonRfnU1JRYDh7zY2PZrjrAjh5Uu0+nLglIKN+BXnnEZi9EmfdHUvgQ9YFFWwoo2
+ MLiLc2/apoBnta6LzJICVwlbvuMxM7ypm/mdTZv6Zlew3UH3kz46sVnOUe9DVKy5TPF+
+ qdWkWD3RJIJ22PrjDWZ/74Zgedg7nASUzF1Ixz9kH8ktMJKDLrPZidks9upo5FTI8p7J
+ byPH9GDFtxLD51TDdVAGUCGAsJ2BFkVLxkCzhZVtGpohaa8DhwKAejFz8Zli4s1YofEu
+ lN28zbQqxe1nhguOwtTEixSpS9p27qqybb0HAhsJZybyow4A1R2XPvDVDTaaRHqC6JOf EQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2ykgys27dy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 14:36:01 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 026EWxgG188705;
+        Fri, 6 Mar 2020 14:36:00 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2yg1s0t5r6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 14:36:00 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 026EZwWS006594;
+        Fri, 6 Mar 2020 14:35:58 GMT
+Received: from kadam (/41.210.146.162)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Mar 2020 06:35:57 -0800
+Date:   Fri, 6 Mar 2020 17:35:52 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>, tony.luck@intel.com,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: KASAN: use-after-free Read in percpu_ref_switch_to_atomic_rcu
+Message-ID: <20200306143552.GC19839@kadam>
+References: <00000000000067c6df059df7f9f5@google.com>
+ <CACT4Y+ZVLs7O84qixsvFqk_Nur1WOaCU81RiCwDf3wOqvHB-ag@mail.gmail.com>
+ <3f805e51-1db7-3e57-c9a3-15a20699ea54@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f805e51-1db7-3e57-c9a3-15a20699ea54@kernel.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9551 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=750
+ suspectscore=2 malwarescore=0 adultscore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060103
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9551 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 lowpriorityscore=0
+ mlxscore=0 mlxlogscore=796 bulkscore=0 impostorscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 spamscore=0 clxscore=1011 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003060103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a placeholder directory for each registered DMA device.
 
-DMA drivers can use the dmaengine_get_debugfs_root() call to get their
-debugfs root and can populate with custom files to aim debugging.
+There a bunch of similar bugs.  It's seems a common anti-pattern.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/dmaengine.c   | 28 +++++++++++++++++++++++++++-
- drivers/dma/dmaengine.h   | 16 ++++++++++++++++
- include/linux/dmaengine.h |  1 +
- 3 files changed, 44 insertions(+), 1 deletion(-)
+block/blk-cgroup.c:85 blkg_free() warn: freeing 'blkg' which has percpu_ref_exit()
+block/blk-core.c:558 blk_alloc_queue_node() warn: freeing 'q' which has percpu_ref_exit()
+drivers/md/md.c:5528 md_free() warn: freeing 'mddev' which has percpu_ref_exit()
+drivers/target/target_core_transport.c:583 transport_free_session() warn: freeing 'se_sess' which has percpu_ref_exit()
+fs/aio.c:592 free_ioctx() warn: freeing 'ctx' which has percpu_ref_exit()
+fs/aio.c:806 ioctx_alloc() warn: freeing 'ctx' which has percpu_ref_exit()
+fs/io_uring.c:6115 io_sqe_files_unregister() warn: freeing 'data' which has percpu_ref_exit()
+fs/io_uring.c:6431 io_sqe_files_register() warn: freeing 'ctx->file_data' which has percpu_ref_exit()
+fs/io_uring.c:7134 io_ring_ctx_free() warn: freeing 'ctx' which has percpu_ref_exit()
+kernel/cgroup/cgroup.c:4948 css_free_rwork_fn() warn: freeing 'css' which has percpu_ref_exit()
+mm/backing-dev.c:615 cgwb_create() warn: freeing 'wb' which has percpu_ref_exit()
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 509abc8e8378..5a442752e07d 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -62,6 +62,22 @@ static long dmaengine_ref_count;
- #ifdef CONFIG_DEBUG_FS
- #include <linux/debugfs.h>
- 
-+static struct dentry *rootdir;
-+
-+static void dmaengine_debug_register(struct dma_device *dma_dev)
-+{
-+	dma_dev->dbg_dev_root = debugfs_create_dir(dev_name(dma_dev->dev),
-+						   rootdir);
-+	if (IS_ERR(dma_dev->dbg_dev_root))
-+		dma_dev->dbg_dev_root = NULL;
-+}
-+
-+static void dmaengine_debug_unregister(struct dma_device *dma_dev)
-+{
-+	debugfs_remove_recursive(dma_dev->dbg_dev_root);
-+	dma_dev->dbg_dev_root = NULL;
-+}
-+
- static void dmaengine_dbg_summary_show(struct seq_file *s,
- 				       struct dma_device *dma_dev)
- {
-@@ -107,7 +123,7 @@ DEFINE_SHOW_ATTRIBUTE(dmaengine_summary);
- 
- static void __init dmaengine_debugfs_init(void)
- {
--	struct dentry *rootdir = debugfs_create_dir("dmaengine", NULL);
-+	rootdir = debugfs_create_dir("dmaengine", NULL);
- 
- 	/* /sys/kernel/debug/dmaengine/summary */
- 	debugfs_create_file("summary", 0444, rootdir, NULL,
-@@ -115,6 +131,12 @@ static void __init dmaengine_debugfs_init(void)
- }
- #else
- static inline void dmaengine_debugfs_init(void) { }
-+static inline int dmaengine_debug_register(struct dma_device *dma_dev)
-+{
-+	return 0;
-+}
-+
-+static inline void dmaengine_debug_unregister(struct dma_device *dma_dev) { }
- #endif	/* DEBUG_FS */
- 
- /* --- sysfs implementation --- */
-@@ -1265,6 +1287,8 @@ int dma_async_device_register(struct dma_device *device)
- 	dma_channel_rebalance();
- 	mutex_unlock(&dma_list_mutex);
- 
-+	dmaengine_debug_register(device);
-+
- 	return 0;
- 
- err_out:
-@@ -1298,6 +1322,8 @@ void dma_async_device_unregister(struct dma_device *device)
- {
- 	struct dma_chan *chan, *n;
- 
-+	dmaengine_debug_unregister(device);
-+
- 	list_for_each_entry_safe(chan, n, &device->channels, device_node)
- 		__dma_async_device_channel_unregister(device, chan);
- 
-diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
-index e8a320c9e57c..1bfbd64b1371 100644
---- a/drivers/dma/dmaengine.h
-+++ b/drivers/dma/dmaengine.h
-@@ -182,4 +182,20 @@ dmaengine_desc_callback_valid(struct dmaengine_desc_callback *cb)
- struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
- struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
- 
-+#ifdef CONFIG_DEBUG_FS
-+#include <linux/debugfs.h>
-+
-+static inline struct dentry *
-+dmaengine_get_debugfs_root(struct dma_device *dma_dev) {
-+	return dma_dev->dbg_dev_root;
-+}
-+#else
-+struct dentry;
-+static inline struct dentry *
-+dmaengine_get_debugfs_root(struct dma_device *dma_dev)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_DEBUG_FS */
-+
- #endif
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 72920b5cf2d7..21065c04c4ac 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -902,6 +902,7 @@ struct dma_device {
- 	/* debugfs support */
- #ifdef CONFIG_DEBUG_FS
- 	void (*dbg_summary_show)(struct seq_file *s, struct dma_device *dev);
-+	struct dentry *dbg_dev_root;
- #endif
- };
- 
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+regards,
+dan carpenter
 
