@@ -2,155 +2,108 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE20CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D74C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D90B206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4D620848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCFOLc (ORCPT
+        id S1726932AbgCFOM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:11:32 -0500
-Received: from mga07.intel.com ([134.134.136.100]:48098 "EHLO mga07.intel.com"
+        Fri, 6 Mar 2020 09:12:28 -0500
+Received: from mga17.intel.com ([192.55.52.151]:42912 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbgCFOLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:11:32 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726314AbgCFOM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 09:12:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 06:11:31 -0800
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 06:12:27 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
-   d="scan'208";a="233342860"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Mar 2020 06:11:27 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jADhI-007NV5-Tm; Fri, 06 Mar 2020 16:11:28 +0200
-Date:   Fri, 6 Mar 2020 16:11:28 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-Message-ID: <20200306141128.GJ1748204@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200306132912.GA1748204@smile.fi.intel.com>
- <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
- <20200306134829.342F4803087C@mail.baikalelectronics.ru>
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="320544388"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga001.jf.intel.com with ESMTP; 06 Mar 2020 06:12:25 -0800
+Subject: Re: [PATCH V3 2/2] mmc: sdhci-msm: Deactivate CQE during SDHC reset
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
+ <1583503724-13943-1-git-send-email-vbadigan@codeaurora.org>
+ <1583503724-13943-3-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <fc195864-0826-03e1-0f17-d105b46af933@intel.com>
+Date:   Fri, 6 Mar 2020 16:11:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306134829.342F4803087C@mail.baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1583503724-13943-3-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:47:20PM +0300, Sergey Semin wrote:
-> On Fri, Mar 06, 2020 at 03:30:35PM +0200, Andy Shevchenko wrote:
-> > On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
-> > > On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > From: Serge Semin <fancer.lancer@gmail.com>
-> > > > 
-> > > > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
-> > > > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
-> > > > with currently implemented in the kernel DW DMAC driver, but there are some
-> > > > peculiarities which must be taken into account in order to have the device
-> > > > fully supported.
-> > > > 
-> > > > First of all traditionally we replaced the legacy plain text-based dt-binding
-> > > > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-> > > > channels, which alas have different max burst length configuration.
-> > > > In particular first two channels may burst up to 128 bits (16 bytes) at a time
-> > > > while the rest of them just up to 32 bits. We must make sure that the DMA
-> > > > subsystem doesn't set values exceeding these limitations otherwise the
-> > > > controller will hang up. In third currently we discovered the problem in using
-> > > > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-> > > > natively implemented multi-block LLP transfers support and the SPI-transfer
-> > > > length exceeds the max lock size. In this case due to asynchronous handling of
-> > > > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
-> > > > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-> > > > the DMAC to asynchronously execute the transfers we'd have to at least warn
-> > > > the user of the possible errors.
-> > > > 
-> > > > Finally there is a bug in the algorithm of the nollp flag detection.
-> > > > In particular even if DW DMAC parameters state the multi-block transfers
-> > > > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-> > > > by the driver true multi-block LLP functionality unusable. This happens cause'
-> > > > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-> > > > contiguous multi-block transfers will be only supported. We must take the
-> > > > flag into account when detecting the LLP support otherwise the driver just
-> > > > won't work correctly.
-> > > > 
-> > > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > > > commit 98d54f81e36b ("Linux 5.6-rc4").
-> > > 
-> > > Thank you for your series!
-> > > 
-> > > I'll definitely review it, but it will take time. So, I think due to late
-> > > submission this is material at least for v5.8.
-> > 
+On 6/03/20 4:08 pm, Veerabhadrarao Badiganti wrote:
+> When SDHC gets reset (E.g. in runtime suspend path), CQE also gets
+> reset and goes to disable state. But s/w state still points it as CQE
+> is in enabled state. Since s/w and h/w states goes out of sync,
+> it results in s/w request timeout for subsequent CQE requests.
 > 
-> Hello Andy,
-> Thanks for the quick response. Looking forward to get the patches
-> reviewed and move on with the next patchset I'll send after this. It concerns
-> DW APB SSI driver, which uses the changes introduced by this one.
-
-> So the
-> sooner we finished with this patchset the better.
-
-Everybody will win, but review will take as long as it take. And for sure it
-will miss v5.7 release cycle. Because too many patch sets sent at once
-followed by schedule, we almost at v5.6-rc5.
-
-> Although I understand
-> that it may take some time. I've just sent over 12 patchset, which have a lot
-> of fixups and new drivers.)
+> To synchronize CQE s/w and h/w state during SDHC reset,
+> explicitly deactivate CQE just before SDHC reset.
 > 
-> > One thing that I can tell immediately is the broken email thread in this series.
-> > Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
-> > so, it will link the mail properly.
-> > 
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+> Changes sicne V2:
+> 	- Use cqhci_deactivate() instead of cqhci_disable().
+> 	- Deactivate CQCHI just before SDHC reset.
 > 
-> I've got thread=true in my gitconfig file, so each email should have
-> the proper reference and in-reply-to to the cover-letter (I see it from
-> the log). The problem popped up from a different place. For some reason the
-> automatic CC/To list extraction command didn't do the job right, so we ended
-> up with lacking of mailing lists in Cc's in this patchset. The command look like
-> this:
+> Changes since V1:
+> 	- Disable CQE only when SDHC undergoes s/w reset for all.
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
-> git send-email --cc-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nom" \
->                    --to-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nol" \
->                    --from "Serge Semin <Sergey.Semin at baikalelectronics.ru>" \
->                    --smtp-server-option="-abaikal" --cover-letter -5
-
-I'm talking about one which makes your Message-Id/Reference headers broken
-between cover letter and the rest of the series. It might be because of missed
-patches in the chain.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 53b79ee..09ff731 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -1823,6 +1823,13 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>  }
+>  
+> +static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +	if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
+> +		cqhci_deactivate(host->mmc);
+> +	sdhci_reset(host, mask);
+> +}
+> +
+>  static const struct sdhci_msm_variant_ops mci_var_ops = {
+>  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+> @@ -1861,7 +1868,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>  MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
+>  
+>  static const struct sdhci_ops sdhci_msm_ops = {
+> -	.reset = sdhci_reset,
+> +	.reset = sdhci_msm_reset,
+>  	.set_clock = sdhci_msm_set_clock,
+>  	.get_min_clock = sdhci_msm_get_min_clock,
+>  	.get_max_clock = sdhci_msm_get_max_clock,
+> 
 
