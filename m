@@ -2,145 +2,175 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC52C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD66C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753EA20801
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:28:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h00UqDtC"
+	by mail.kernel.org (Postfix) with ESMTP id CDFD520705
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbgCFA2G (ORCPT
+        id S1726378AbgCFA3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 19:28:06 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50484 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbgCFA2E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 19:28:04 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0260RrJm080385;
-        Thu, 5 Mar 2020 18:27:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583454473;
-        bh=YJf4KHSPGL0RTl9hoO/JnG8itCOApAjq2pNa0gAdb7I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=h00UqDtCzS/dSUz21lLLqqBWrH68K8stUvTCpi6q6BEMS1wMt366AXWj+CtpMe5RJ
-         Tete8JZXLXAArYsIjDlXpOzOznWKxKLKtZxdEMJbLvpBxvQm9Mrigllig+6Z/zfGJG
-         vhHm6x9kRkMNeZLvg7cPWab/rVy3Knkg+JJrtXgo=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0260RrrZ050253
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 5 Mar 2020 18:27:53 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Mar
- 2020 18:27:53 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Mar 2020 18:27:53 -0600
-Received: from [128.247.81.254] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0260Rr4m081998;
-        Thu, 5 Mar 2020 18:27:53 -0600
-Subject: Re: [PATCH] virtio_ring: Fix mem leak with vring_new_virtqueue()
-To:     Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Tiwei Bie <tiwei.bie@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        <virtualization@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
-References: <20200224212643.30672-1-s-anna@ti.com>
- <b622c831-9adb-b9af-dd4a-21605bc124a8@redhat.com>
- <0ace3a3b-cf2f-7977-5337-f74f530afbe1@ti.com>
- <1ce2bee4-64ed-f630-2695-8e8b9b8e27c1@redhat.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <a4335428-e29e-d567-b18b-3c144020a726@ti.com>
-Date:   Thu, 5 Mar 2020 18:27:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 5 Mar 2020 19:29:55 -0500
+Received: from mga17.intel.com ([192.55.52.151]:52227 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgCFA3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 19:29:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 16:29:55 -0800
+X-IronPort-AV: E=Sophos;i="5.70,520,1574150400"; 
+   d="scan'208";a="234611816"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.168.47]) ([10.249.168.47])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 05 Mar 2020 16:29:51 -0800
+Subject: Re: [PATCH v3 8/8] x86: vmx: virtualize split lock detection
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
+        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200206070412.17400-1-xiaoyao.li@intel.com>
+ <20200206070412.17400-9-xiaoyao.li@intel.com>
+ <20200303193012.GV1439@linux.intel.com>
+ <fb22d13d-60f5-5050-ccc7-4422f5b25739@intel.com>
+ <20200305164926.GH11500@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <d0427e74-9666-d0b0-24ae-fd0e48c91a0a@intel.com>
+Date:   Fri, 6 Mar 2020 08:29:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1ce2bee4-64ed-f630-2695-8e8b9b8e27c1@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200305164926.GH11500@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 9:13 PM, Jason Wang wrote:
-> 
-> On 2020/2/26 上午12:51, Suman Anna wrote:
->> Hi Jason,
+On 3/6/2020 12:49 AM, Sean Christopherson wrote:
+> On Thu, Mar 05, 2020 at 10:16:40PM +0800, Xiaoyao Li wrote:
+>> On 3/4/2020 3:30 AM, Sean Christopherson wrote:
+>>> On Thu, Feb 06, 2020 at 03:04:12PM +0800, Xiaoyao Li wrote:
+>>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>>> @@ -1781,6 +1781,25 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
+>>>>   	}
+>>>>   }
+>>>> +/*
+>>>> + * Note: for guest, feature split lock detection can only be enumerated through
+>>>> + * MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT bit. The FMS enumeration is invalid.
+>>>> + */
+>>>> +static inline bool guest_has_feature_split_lock_detect(struct kvm_vcpu *vcpu)
+>>>> +{
+>>>> +	return vcpu->arch.core_capabilities & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
+>>>> +}
+>>>> +
+>>>> +static inline u64 vmx_msr_test_ctrl_valid_bits(struct kvm_vcpu *vcpu)
+>>>> +{
+>>>> +	u64 valid_bits = 0;
+>>>> +
+>>>> +	if (guest_has_feature_split_lock_detect(vcpu))
+>>>> +		valid_bits |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>>>> +
+>>>> +	return valid_bits;
+>>>> +}
+>>>> +
+>>>>   /*
+>>>>    * Reads an msr value (of 'msr_index') into 'pdata'.
+>>>>    * Returns 0 on success, non-0 otherwise.
+>>>> @@ -1793,6 +1812,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>>>   	u32 index;
+>>>>   	switch (msr_info->index) {
+>>>> +	case MSR_TEST_CTRL:
+>>>> +		if (!msr_info->host_initiated &&
+>>>> +		    !guest_has_feature_split_lock_detect(vcpu))
+>>>> +			return 1;
+>>>> +		msr_info->data = vmx->msr_test_ctrl;
+>>>> +		break;
+>>>>   #ifdef CONFIG_X86_64
+>>>>   	case MSR_FS_BASE:
+>>>>   		msr_info->data = vmcs_readl(GUEST_FS_BASE);
+>>>> @@ -1934,6 +1959,13 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>>>   	u32 index;
+>>>>   	switch (msr_index) {
+>>>> +	case MSR_TEST_CTRL:
+>>>> +		if (!msr_info->host_initiated &&
+>>>
+>>> Host initiated writes need to be validated against
+>>> kvm_get_core_capabilities(), otherwise userspace can enable SLD when it's
+>>> supported in hardware and the kernel, but can't be safely exposed to the
+>>> guest due to SMT being on.
 >>
->> On 2/24/20 11:39 PM, Jason Wang wrote:
->>> On 2020/2/25 上午5:26, Suman Anna wrote:
->>>> The functions vring_new_virtqueue() and __vring_new_virtqueue() are
->>>> used
->>>> with split rings, and any allocations within these functions are
->>>> managed
->>>> outside of the .we_own_ring flag. The commit cbeedb72b97a
->>>> ("virtio_ring:
->>>> allocate desc state for split ring separately") allocates the desc
->>>> state
->>>> within the __vring_new_virtqueue() but frees it only when the
->>>> .we_own_ring
->>>> flag is set. This leads to a memory leak when freeing such allocated
->>>> virtqueues with the vring_del_virtqueue() function.
->>>>
->>>> Fix this by moving the desc_state free code outside the flag and only
->>>> for split rings. Issue was discovered during testing with remoteproc
->>>> and virtio_rpmsg.
->>>>
->>>> Fixes: cbeedb72b97a ("virtio_ring: allocate desc state for split ring
->>>> separately")
->>>> Signed-off-by: Suman Anna<s-anna@ti.com>
->>>> ---
->>>>    drivers/virtio/virtio_ring.c | 4 ++--
->>>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/virtio/virtio_ring.c
->>>> b/drivers/virtio/virtio_ring.c
->>>> index 867c7ebd3f10..58b96baa8d48 100644
->>>> --- a/drivers/virtio/virtio_ring.c
->>>> +++ b/drivers/virtio/virtio_ring.c
->>>> @@ -2203,10 +2203,10 @@ void vring_del_virtqueue(struct virtqueue *_vq)
->>>>                         vq->split.queue_size_in_bytes,
->>>>                         vq->split.vring.desc,
->>>>                         vq->split.queue_dma_addr);
->>>> -
->>>> -            kfree(vq->split.desc_state);
->>>>            }
->>>>        }
->>>> +    if (!vq->packed_ring)
->>>> +        kfree(vq->split.desc_state);
->>> Nitpick, it looks to me it would be more clear if we just free
->>> desc_state unconditionally here (and remove the kfree for packed above).
->> OK, are you sure you want that to be folded into this patch? It looks to
->> me a separate cleanup/consolidation patch, and packed desc_state does
->> not suffer this memleak, and need not be backported into stable kernels.
+>> How about making the whole check like this:
 >>
->> regards
->> Suman
+>> 	if (!msr_info->host_initiated &&
+>> 	    (!guest_has_feature_split_lock_detect(vcpu))
+>> 		return 1;
+>>
+>> 	if (data & ~vmx_msr_test_ctrl_valid_bits(vcpu))
 > 
+> Whoops, the check on kvm_get_core_capabilities() should be done in
+> "case MSR_IA32_CORE_CAPS:", i.e. KVM shouldn't let host userspace advertise
+> split-lock support unless it's allowed by KVM.
 > 
-> Though it's just a small tweak, I'm fine for leaving it for future.
+> Then this code doesn't need to do a check on host_initiated=true.
 > 
-> So
+> Back to the original code, I don't think we need to make the existence of
+> MSR_TEST_CTRL dependent on guest_has_feature_split_lock_detect(), i.e. this
+> check can simply be:
 > 
-> Acked-by: Jason Wang <jasowang@redhat.com>
-> 
+> 	if (!msr_info->host_initiated &&
+> 	    (data & ~vmx_msr_test_ctrl_valid_bits(vcpu)))
+> 		return 1;
 
-Mike,
-Ping on this. I don't see the patch in -next yet. Can we get this into
-the current -rc please?
+If so, it also allow userspace write whatever it wants.
 
-regards
-Suman
+> and vmx_get_msr() doesn't need to check anything, i.e. RDMSR always
+> succeeds.  This is actually aligned with real silicon behavior because
+> MSR_TEST_CTRL exists on older processors, it's just wasn't documented until
+> we decided to throw in SPLIT_LOCK_AC, e.g. the LOCK# suppression bit is
+> marked for deprecation in the SDM, which wouldn't be necessary if it didn't
+> exist :-)
+> 
+>    Intel ISA/Feature                          Year of Removal
+>    TEST_CTRL MSR, bit 31 (MSR address 33H)    2019 onwards
+> 
+>    31 Disable LOCK# assertion for split locked access
+
+Well, bit 31 does exist on many old machines. But KVM never exposes bit 
+33 and even MSR_TEST_CTRL to guest.
+
+Here, do the check on rdmsr is based on your suggestion that if none of 
+its bit is writable (i.e., no bit valid), we should make it non-existing.
+
+> On my Haswell box:
+> 
+>    $ rdmsr 0x33
+>    0
+>    $ wrmsr 0x33 0x20000000
+>    wrmsr: CPU 0 cannot set MSR 0x00000033 to 0x0000000020000000
+>    $ wrmsr 0x33 0x80000000
+>    $ rdmsr 0x33
+>    80000000
+>    $ wrmsr 0x33 0x00000000
+>    $ rdmsr 0x33
+>    0
+> 
+> That way the guest_has_feature_split_lock_detect() helper isn't needed
+> since its only user is vmx_msr_test_ctrl_valid_bits(), i.e. it can be
+> open coded there.
+> 
+>>>> +		    (!guest_has_feature_split_lock_detect(vcpu) ||
+>>>> +		     data & ~vmx_msr_test_ctrl_valid_bits(vcpu)))
+>>>> +			return 1;
+>>>> +		vmx->msr_test_ctrl = data;
+>> m>+		break;
+
