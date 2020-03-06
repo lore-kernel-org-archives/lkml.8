@@ -7,38 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE37C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738C1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3770A2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5452A2187F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgCFOmH (ORCPT
+        id S1727049AbgCFOmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:42:07 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53727 "EHLO
+        Fri, 6 Mar 2020 09:42:11 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53736 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgCFOmH (ORCPT
+        with ESMTP id S1726485AbgCFOmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:42:07 -0500
+        Fri, 6 Mar 2020 09:42:08 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEAt-0006Gs-IV; Fri, 06 Mar 2020 15:42:03 +0100
+        id 1jAEAr-0006FB-Ox; Fri, 06 Mar 2020 15:42:01 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 397C61C21D4;
-        Fri,  6 Mar 2020 15:42:03 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:02 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5EADC1C21D5;
+        Fri,  6 Mar 2020 15:42:01 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:01 -0000
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/core: Unify {pinned,flexible}_sched_in()
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: perf/core] perf/core: Add per perf_cpu_context min_heap storage
+Cc:     Ian Rogers <irogers@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200214075133.181299-5-irogers@google.com>
+References: <20200214075133.181299-5-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <158350572291.28353.3266380896499443707.tip-bot2@tip-bot2>
+Message-ID: <158350572112.28353.5843586926290087112.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,137 +57,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     ab6f824cfdf7363b5e529621cbc72ae6519c78d1
-Gitweb:        https://git.kernel.org/tip/ab6f824cfdf7363b5e529621cbc72ae6519c78d1
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 07 Aug 2019 11:17:00 +02:00
+Commit-ID:     836196beb377e59e54ec9e04f7402076ef7a8bd8
+Gitweb:        https://git.kernel.org/tip/836196beb377e59e54ec9e04f7402076ef7a8bd8
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Thu, 13 Feb 2020 23:51:31 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 11:56:55 +01:00
+CommitterDate: Fri, 06 Mar 2020 11:57:00 +01:00
 
-perf/core: Unify {pinned,flexible}_sched_in()
+perf/core: Add per perf_cpu_context min_heap storage
 
-Less is more; unify the two very nearly identical function.
+The storage required for visit_groups_merge's min heap needs to vary in
+order to support more iterators, such as when multiple nested cgroups'
+events are being visited. This change allows for 2 iterators and doesn't
+support growth.
 
+Based-on-work-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200214075133.181299-5-irogers@google.com
 ---
- kernel/events/core.c | 58 +++++++++++++++----------------------------
- 1 file changed, 21 insertions(+), 37 deletions(-)
+ include/linux/perf_event.h |  7 ++++++-
+ kernel/events/core.c       | 43 +++++++++++++++++++++++++++----------
+ 2 files changed, 39 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3f1f77d..b713080 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1986,6 +1986,12 @@ static int perf_get_aux_event(struct perf_event *event,
- 	return 1;
- }
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 68e21e8..8768a39 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -862,6 +862,13 @@ struct perf_cpu_context {
+ 	int				sched_cb_usage;
  
-+static inline struct list_head *get_event_list(struct perf_event *event)
-+{
-+	struct perf_event_context *ctx = event->ctx;
-+	return event->attr.pinned ? &ctx->pinned_active : &ctx->flexible_active;
-+}
-+
- static void perf_group_detach(struct perf_event *event)
- {
- 	struct perf_event *sibling, *tmp;
-@@ -2028,12 +2034,8 @@ static void perf_group_detach(struct perf_event *event)
- 		if (!RB_EMPTY_NODE(&event->group_node)) {
- 			add_event_to_groups(sibling, event->ctx);
- 
--			if (sibling->state == PERF_EVENT_STATE_ACTIVE) {
--				struct list_head *list = sibling->attr.pinned ?
--					&ctx->pinned_active : &ctx->flexible_active;
--
--				list_add_tail(&sibling->active_list, list);
--			}
-+			if (sibling->state == PERF_EVENT_STATE_ACTIVE)
-+				list_add_tail(&sibling->active_list, get_event_list(sibling));
- 		}
- 
- 		WARN_ON_ONCE(sibling->ctx != event->ctx);
-@@ -2350,6 +2352,8 @@ event_sched_in(struct perf_event *event,
- {
- 	int ret = 0;
- 
-+	WARN_ON_ONCE(event->ctx != ctx);
-+
- 	lockdep_assert_held(&ctx->lock);
- 
- 	if (event->state <= PERF_EVENT_STATE_OFF)
-@@ -3425,10 +3429,12 @@ struct sched_in_data {
- 	int can_add_hw;
+ 	int				online;
++	/*
++	 * Per-CPU storage for iterators used in visit_groups_merge. The default
++	 * storage is of size 2 to hold the CPU and any CPU event iterators.
++	 */
++	int				heap_size;
++	struct perf_event		**heap;
++	struct perf_event		*heap_default[2];
  };
  
--static int pinned_sched_in(struct perf_event *event, void *data)
-+static int merge_sched_in(struct perf_event *event, void *data)
+ struct perf_output_handle {
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index ddfb06c..7529e76 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3423,22 +3423,34 @@ static void __heap_add(struct min_heap *heap, struct perf_event *event)
+ 	}
+ }
+ 
+-static noinline int visit_groups_merge(struct perf_event_groups *groups,
+-				int cpu,
++static noinline int visit_groups_merge(struct perf_cpu_context *cpuctx,
++				struct perf_event_groups *groups, int cpu,
+ 				int (*func)(struct perf_event *, void *),
+ 				void *data)
  {
- 	struct sched_in_data *sid = data;
+ 	/* Space for per CPU and/or any CPU event iterators. */
+ 	struct perf_event *itrs[2];
+-	struct min_heap event_heap = {
+-		.data = itrs,
+-		.nr = 0,
+-		.size = ARRAY_SIZE(itrs),
+-	};
+-	struct perf_event **evt = event_heap.data;
++	struct min_heap event_heap;
++	struct perf_event **evt;
+ 	int ret;
  
-+	WARN_ON_ONCE(event->ctx != sid->ctx);
+-	__heap_add(&event_heap, perf_event_groups_first(groups, -1));
++	if (cpuctx) {
++		event_heap = (struct min_heap){
++			.data = cpuctx->heap,
++			.nr = 0,
++			.size = cpuctx->heap_size,
++		};
++	} else {
++		event_heap = (struct min_heap){
++			.data = itrs,
++			.nr = 0,
++			.size = ARRAY_SIZE(itrs),
++		};
++		/* Events not within a CPU context may be on any CPU. */
++		__heap_add(&event_heap, perf_event_groups_first(groups, -1));
++	}
++	evt = event_heap.data;
 +
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
+ 	__heap_add(&event_heap, perf_event_groups_first(groups, cpu));
  
-@@ -3437,37 +3443,15 @@ static int pinned_sched_in(struct perf_event *event, void *data)
+ 	min_heapify_all(&event_heap, &perf_min_heap);
+@@ -3492,7 +3504,10 @@ ctx_pinned_sched_in(struct perf_event_context *ctx,
+ {
+ 	int can_add_hw = 1;
  
- 	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
- 		if (!group_sched_in(event, sid->cpuctx, sid->ctx))
--			list_add_tail(&event->active_list, &sid->ctx->pinned_active);
-+			list_add_tail(&event->active_list, get_event_list(event));
+-	visit_groups_merge(&ctx->pinned_groups,
++	if (ctx != &cpuctx->ctx)
++		cpuctx = NULL;
++
++	visit_groups_merge(cpuctx, &ctx->pinned_groups,
+ 			   smp_processor_id(),
+ 			   merge_sched_in, &can_add_hw);
+ }
+@@ -3503,7 +3518,10 @@ ctx_flexible_sched_in(struct perf_event_context *ctx,
+ {
+ 	int can_add_hw = 1;
+ 
+-	visit_groups_merge(&ctx->flexible_groups,
++	if (ctx != &cpuctx->ctx)
++		cpuctx = NULL;
++
++	visit_groups_merge(cpuctx, &ctx->flexible_groups,
+ 			   smp_processor_id(),
+ 			   merge_sched_in, &can_add_hw);
+ }
+@@ -10364,6 +10382,9 @@ skip_type:
+ 		cpuctx->online = cpumask_test_cpu(cpu, perf_online_mask);
+ 
+ 		__perf_mux_hrtimer_init(cpuctx, cpu);
++
++		cpuctx->heap_size = ARRAY_SIZE(cpuctx->heap_default);
++		cpuctx->heap = cpuctx->heap_default;
  	}
  
--	/*
--	 * If this pinned group hasn't been scheduled,
--	 * put it in error state.
--	 */
--	if (event->state == PERF_EVENT_STATE_INACTIVE)
--		perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
--
--	return 0;
--}
--
--static int flexible_sched_in(struct perf_event *event, void *data)
--{
--	struct sched_in_data *sid = data;
--
--	if (event->state <= PERF_EVENT_STATE_OFF)
--		return 0;
--
--	if (!event_filter_match(event))
--		return 0;
-+	if (event->state == PERF_EVENT_STATE_INACTIVE) {
-+		if (event->attr.pinned)
-+			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
- 
--	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
--		int ret = group_sched_in(event, sid->cpuctx, sid->ctx);
--		if (ret) {
--			sid->can_add_hw = 0;
--			sid->ctx->rotate_necessary = 1;
--			return 0;
--		}
--		list_add_tail(&event->active_list, &sid->ctx->flexible_active);
-+		sid->can_add_hw = 0;
-+		sid->ctx->rotate_necessary = 1;
- 	}
- 
- 	return 0;
-@@ -3485,7 +3469,7 @@ ctx_pinned_sched_in(struct perf_event_context *ctx,
- 
- 	visit_groups_merge(&ctx->pinned_groups,
- 			   smp_processor_id(),
--			   pinned_sched_in, &sid);
-+			   merge_sched_in, &sid);
- }
- 
- static void
-@@ -3500,7 +3484,7 @@ ctx_flexible_sched_in(struct perf_event_context *ctx,
- 
- 	visit_groups_merge(&ctx->flexible_groups,
- 			   smp_processor_id(),
--			   flexible_sched_in, &sid);
-+			   merge_sched_in, &sid);
- }
- 
- static void
+ got_cpu_context:
