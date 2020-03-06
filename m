@@ -7,29 +7,29 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD09EC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74C8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A57BE206D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94828206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:49:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hmSBVJlW"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SJqHCgGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbgCFXtV (ORCPT
+        id S1727578AbgCFXt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 18:49:21 -0500
-Received: from mail-bn8nam12on2078.outbound.protection.outlook.com ([40.107.237.78]:12335
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        Fri, 6 Mar 2020 18:49:29 -0500
+Received: from mail-mw2nam12on2077.outbound.protection.outlook.com ([40.107.244.77]:34145
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727225AbgCFXsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727247AbgCFXsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Mar 2020 18:48:02 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GrCqjEwl8rsWuGhPikC3SbGxOZbLSKdDam4VxmKemU9OBJbVkYjjPdfOaB3TKwArIPBaNwz7D/q9fh8PGiIgllGuURYrRfeHsewO7ilRxfgy0LbTNMsWdsenfrXDRwNxEhd5KQTo63FC5bL+ikcmJNjG0kPNnYAc2AzZxnL+DSjGxs3cQ108WtqMeHb5SzjJjbMD8C5s8ufGZ5PHPGxZ4OhRoaGHKf2ozaoEPkyXPM8IiByWKRvU7BTTMqnBiuZSE0bXI+fzEsityJt0VrkvYI+V6PXEE6waCDOFHZ1n6VtlciLl2P7PfApU8ecR1AgwjP8Y8RB5PSNdKtFb0I+dyQ==
+ b=JCRIp0GH0BIB+/KmEvBOcEOpEByHUB4pPOPxQq25gOP0HDastXD9AgL7jGbzYwwOY8tP7cX+yLS9phqZ3XDaSnVRYKCfwXswPVUUOlKXUJzXVLfUjdXArSxPGdHFEbk6tsLjvAddlIytWLyO6cU8Lurig8D3tsAUjJXSxLHAP6X7UNq7iuKYw7SnQP/NPHT5iXBOtAVZCJ2e2bVKLIv/O9YCrq2LxO1SUC5T5qTYvKXS9x7UaY3/I28b8Lo0njqwFAfKivF1Q8m195+mQh34zmsgmufh4nWoFLr5AchbZM02FgjHlyvw3BK1GfslgWPO2oWmw7hK9mPaPqnhtAEyQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GuSJkdmvGBpRYlYRfNsJM3AZ/6KMAauY9hBgSSjJpWs=;
- b=VAHSF+iqAQnOxbpdZE5K7Z/6cdbmyhsqqvg7eN/8nOZ3bggbZ5VMlxP/qgNhI9urM11syuU+sngEGT1azjFDT4rnHGhgFmBzDaDsFVRhkVhtIPZULMIl2VM+WTNfahNoTaYyBlRSNm68zx52k90Y1jT9QbnbT7qV39EyD1vGncFlN2uQwSF7HvQKGJqrO/AtLaxI4H6WaZWrBCmVKNgtOLn2+VvWZdtVEJKVLsz+PtDecfBiMxByijIaqS0v5Nh6KnSSY5v72LD7bnB4gMQCeLLYvPRK3TpsD17T+Du29reHx+hV9IKNVFFkvx/OQJCUWuo3BSr0LJBT+wxkjP84KQ==
+ bh=g0dJ8TYLdjOgrq0HqfeN6hjk+mNLBLnegGeUKLDMDrA=;
+ b=ZtQnncQnQAYfq06YEli0uxMkxK59ijxraXn1xzuij1i3O4ws09rFVnA5gQk4JiId3Ebs7d54B89XIRZpXwaPRscJOgKB75MDr1tS5eawZ3ejLSWVby1Eh2OJcuu6w8HVignzATqIpOcJ+spfMO0wozHdjqHUu2Ldz7w4d+OQG2lZIQIDpSI5x3fE+wphL/JMr89bYEPK9G2cANSY6zPXcn7fQsWLUyY4JrIY6rFSaSDwPCuayMd4DlOfj9LZ83LfJMWlrJMP6fByczLU7yS0QB3h0MXcjLsx107JOe3Jgi86oKuHk3x6qDGXD+/dfPXxgerTcJz0hJ7A1ZqQSPLy8g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,15 +37,16 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GuSJkdmvGBpRYlYRfNsJM3AZ/6KMAauY9hBgSSjJpWs=;
- b=hmSBVJlW6D3V3flynU61Mw6P6B3LczshKDY44rkCwReGcHFELmsagBQKXilivZygFd3N98D9++lc3dvEoarVFDWxw7X9kTc4cbZhlZz/x0pgE0SnY72y4twhi2hX6WbTmwu8STS59pZXf1wmbT+U29HDkle3cYC5Kn8gsB2Lfsg=
-Received: from BL0PR0102CA0019.prod.exchangelabs.com (2603:10b6:207:18::32) by
- SN6PR02MB4557.namprd02.prod.outlook.com (2603:10b6:805:b4::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.14; Fri, 6 Mar 2020 23:47:58 +0000
-Received: from BL2NAM02FT015.eop-nam02.prod.protection.outlook.com
- (2603:10b6:207:18:cafe::35) by BL0PR0102CA0019.outlook.office365.com
- (2603:10b6:207:18::32) with Microsoft SMTP Server (version=TLS1_2,
+ bh=g0dJ8TYLdjOgrq0HqfeN6hjk+mNLBLnegGeUKLDMDrA=;
+ b=SJqHCgGMe7HuBldRWO6OHlpLHiD1lmJvYa5BjUNp45AQlGIQz86Lx8X9IeliGskWV/Tx+l4z8EZ4H+BEMPdaiN4SsaNA22M5Cas0NwkpI7uCRj3oQzjftl6ObpwbtI5qv44aCsY+WqI0kiSMaxYLhM4y+3E5SNUVEdprH7xNkhY=
+Received: from SN6PR04CA0081.namprd04.prod.outlook.com (2603:10b6:805:f2::22)
+ by BY5PR02MB6353.namprd02.prod.outlook.com (2603:10b6:a03:1fb::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Fri, 6 Mar
+ 2020 23:47:58 +0000
+Received: from SN1NAM02FT032.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:805:f2:cafe::61) by SN6PR04CA0081.outlook.office365.com
+ (2603:10b6:805:f2::22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend
  Transport; Fri, 6 Mar 2020 23:47:58 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
@@ -56,24 +57,24 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT015.mail.protection.outlook.com (10.152.77.167) with Microsoft SMTP
+ SN1NAM02FT032.mail.protection.outlook.com (10.152.72.126) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2793.11
  via Frontend Transport; Fri, 6 Mar 2020 23:47:57 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jAMhB-0003Q5-CZ; Fri, 06 Mar 2020 15:47:57 -0800
+        id 1jAMhB-0003Q2-3D; Fri, 06 Mar 2020 15:47:57 -0800
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jAMh6-0002g8-94; Fri, 06 Mar 2020 15:47:52 -0800
-Received: from xsj-pvapsmtp01 (xsj-smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 026NllXW001025;
+        id 1jAMh6-0002g8-05; Fri, 06 Mar 2020 15:47:52 -0800
+Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 026Nlk8Y001017;
         Fri, 6 Mar 2020 15:47:47 -0800
 Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <jolly.shah@xilinx.com>)
-        id 1jAMh1-0002eg-3A; Fri, 06 Mar 2020 15:47:47 -0800
+        id 1jAMh0-0002eg-QA; Fri, 06 Mar 2020 15:47:46 -0800
 From:   Jolly Shah <jolly.shah@xilinx.com>
 To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
@@ -81,12 +82,10 @@ To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         dmitry.torokhov@gmail.com, michal.simek@xilinx.com
 Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
-        Jolly Shah <jollys@xilinx.com>,
-        Tejas Patel <tejas.patel@xilinx.com>,
         Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v3 24/24] firmware: xilinx: Add sysfs and API to set boot health status
-Date:   Fri,  6 Mar 2020 15:47:32 -0800
-Message-Id: <1583538452-1992-25-git-send-email-jolly.shah@xilinx.com>
+Subject: [PATCH v3 20/24] firmware: xilinx: Add APIs to read/write GGS/PGGS registers
+Date:   Fri,  6 Mar 2020 15:47:28 -0800
+Message-Id: <1583538452-1992-21-git-send-email-jolly.shah@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583538452-1992-1-git-send-email-jolly.shah@xilinx.com>
 References: <1583538452-1992-1-git-send-email-jolly.shah@xilinx.com>
@@ -95,27 +94,27 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(136003)(39860400002)(189003)(199004)(336012)(107886003)(36756003)(54906003)(7416002)(478600001)(426003)(44832011)(2616005)(2906002)(316002)(5660300002)(8676002)(9786002)(26005)(4326008)(6666004)(356004)(6636002)(7696005)(81166006)(70586007)(81156014)(70206006)(186003)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4557;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(346002)(39860400002)(199004)(189003)(426003)(2906002)(54906003)(26005)(81156014)(81166006)(8676002)(6636002)(7696005)(356004)(44832011)(186003)(336012)(2616005)(9786002)(8936002)(6666004)(107886003)(4326008)(70586007)(70206006)(5660300002)(316002)(36756003)(7416002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR02MB6353;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8e15b597-9ae3-4d21-aca4-08d7c228cc83
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4557:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB455741C8FF1F54B2C0E52739B8E30@SN6PR02MB4557.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 9ec6f9eb-8ee9-4c0e-c22d-08d7c228cc7a
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6353:
+X-Microsoft-Antispam-PRVS: <BY5PR02MB6353A631FE67798CF52CF224B8E30@BY5PR02MB6353.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Oob-TLC-OOBClassifiers: OLM:1091;
 X-Forefront-PRVS: 0334223192
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NuKpZbQyXIL7DRcEMxPzTB4LuUiScC51zYnj6FJWLbpHAPN4tth0P+RHC9HuUJlbq+pwmY8XWV7CIaB0trqjSuKhRv1WhQGGDtsyRYZBVubcY0bDvRqj2gmm/t/bRTKLkCkjRq9XfCVGGlTSeYl0t2KZLviEpG3B4s487u+tc24AJOwf/2m4mALs0CmPIJM9YxEHntfjieF484MpaQcFa8CxDE+JAAPGloeZ6k8/zbRvsnUcw91pGotZSyXV6RyCXYkwTSfcq0cdn9Zxrh56LqNrVHhh2eJj9LENBQK+3OmbgHt2zONA/JNP7UiDIq5HpwxV3aai0RuqG6EG2+RD1FN0UgNBRuweAjWKiViOxVKC/8dwgCMl/DU7hGwoE5+8oUZ1aSHww1zugV6+5BZESfL/aSDxcvOM/TW6f+2q2HJJZhZ3CnDlC7jNo6C2z4ce
+X-Microsoft-Antispam-Message-Info: lEKYSlb6n4GksizgMHxqvonzDDt0KieQjmp/xczYNT7Uc/OHa7SW3aZCHVixtrwZ5Q5F1JqQ4tDZ27xkBCOclyfkJxICbdeLT/I8i4gLFfR+zkSJ39bxiSCD8t3dtTTOUxLd3OrVey8alN1ERcddwiBco0oX3lPYbwrsl/tJE78R902piMOyv3wHDxA8Q5k5aIvgC181OhVMtQLB+YdD1aMyBdEXRHWqgp7tsTF+O1dnS2IPIpqFM9lBYv0pSyUzoJw+3z2BtSC8jY612mn/CZdJMTa8nbkVDmKDxf/1WpFmAm5gr5/58AtSdsRydqpvgFlz+hUEov9kcDmkPZr9REf4cO1Oe5Eh6G6XH4Auxkvv2jWpB053tLmijHb7cb3qIkn5XfMpuaGqGig5MHGq2is95vYAUty073CIRGqV68sAi2ghjoCWUtdSY/WpB02p
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2020 23:47:57.9474
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2020 23:47:57.9810
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e15b597-9ae3-4d21-aca4-08d7c228cc83
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ec6f9eb-8ee9-4c0e-c22d-08d7c228cc7a
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4557
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6353
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -123,161 +122,115 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Add sysfs interface to set boot health status from user space.
-Add API used by this interface to communicate with firmware.
-
-If PMUFW is compiled with CHECK_HEALTHY_BOOT, it will check the
-healthy bit on FPD WDT expiration. If healthy bit is set by a user
-application running in Linux, PMUFW will do APU only restart. If
-healthy bit is not set during FPD WDT expiration, PMUFW will do
-system restart.
+Add APIs to read/write PGGS and GGS registers.
 
 Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
 Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 ---
- .../ABI/stable/sysfs-driver-firmware-zynqmp        | 21 ++++++++
- drivers/firmware/xilinx/zynqmp.c                   | 63 ++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h               |  3 ++
- 3 files changed, 87 insertions(+)
+ drivers/firmware/xilinx/zynqmp.c     | 66 ++++++++++++++++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h |  8 +++++
+ 2 files changed, 74 insertions(+)
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-index b46ec0c..a37b408 100644
---- a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-+++ b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
-@@ -80,3 +80,24 @@ Description:
- 		# echo "subsystem" > /sys/devices/platform/firmware\:zynqmp-firmware/shutdown_scope
- 
- Users:		Xilinx
-+
-+What:		/sys/devices/platform/firmware\:zynqmp-firmware/health_status
-+Date:		March 2020
-+KernelVersion:	5.6
-+Contact:	"Jolly Shah" <jollys@xilinx.com>
-+Description:
-+		This sysfs interface allows to set the health status. If PMUFW
-+		is compiled with CHECK_HEALTHY_BOOT, it will check the healthy
-+		bit on FPD WDT expiration. If healthy bit is set by a user
-+		application running in Linux, PMUFW will do APU only restart. If
-+		healthy bit is not set during FPD WDT expiration, PMUFW will do
-+		system restart.
-+
-+		Usage:
-+		Set healthy bit
-+		# echo 1 > /sys/devices/platform/firmware\:zynqmp-firmware/health_status
-+
-+		Unset healthy bit
-+		# echo 0 > /sys/devices/platform/firmware\:zynqmp-firmware/health_status
-+
-+Users:		Xilinx
 diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 9caf1cf..fc3aa4e 100644
+index 36d5a3e..de99613 100644
 --- a/drivers/firmware/xilinx/zynqmp.c
 +++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -667,6 +667,21 @@ int zynqmp_pm_read_pggs(u32 index, u32 *value)
- EXPORT_SYMBOL_GPL(zynqmp_pm_read_pggs);
+@@ -601,6 +601,72 @@ int zynqmp_pm_set_sd_tapdelay(u32 node_id, u32 type, u32 value)
+ EXPORT_SYMBOL_GPL(zynqmp_pm_set_sd_tapdelay);
  
  /**
-+ * zynqmp_pm_set_boot_health_status() - PM API for setting healthy boot status
-+ * @value	Status value to be written
++ * zynqmp_pm_write_ggs() - PM API for writing global general storage (ggs)
++ * @index	GGS register index
++ * @value	Register value to be written
 + *
-+ * This function sets healthy bit value to indicate boot health status
-+ * to firmware.
++ * This function writes value to GGS register.
 + *
 + * @return      Returns status, either success or error+reason
 + */
-+int zynqmp_pm_set_boot_health_status(u32 value)
++int zynqmp_pm_write_ggs(u32 index, u32 value)
 +{
-+	return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_SET_BOOT_HEALTH_STATUS,
-+				   value, 0, NULL);
++	return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_WRITE_GGS,
++				   index, value, NULL);
 +}
++EXPORT_SYMBOL_GPL(zynqmp_pm_write_ggs);
++
++/**
++ * zynqmp_pm_write_ggs() - PM API for reading global general storage (ggs)
++ * @index	GGS register index
++ * @value	Register value to be written
++ *
++ * This function returns GGS register value.
++ *
++ * @return      Returns status, either success or error+reason
++ */
++int zynqmp_pm_read_ggs(u32 index, u32 *value)
++{
++	return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_READ_GGS,
++				   index, 0, value);
++}
++EXPORT_SYMBOL_GPL(zynqmp_pm_read_ggs);
++
++/**
++ * zynqmp_pm_write_pggs() - PM API for writing persistent global general
++ *			     storage (pggs)
++ * @index	PGGS register index
++ * @value	Register value to be written
++ *
++ * This function writes value to PGGS register.
++ *
++ * @return      Returns status, either success or error+reason
++ */
++int zynqmp_pm_write_pggs(u32 index, u32 value)
++{
++	return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_WRITE_PGGS, index, value,
++				   NULL);
++}
++EXPORT_SYMBOL_GPL(zynqmp_pm_write_pggs);
++
++/**
++ * zynqmp_pm_write_pggs() - PM API for reading persistent global general
++ *			     storage (pggs)
++ * @index	PGGS register index
++ * @value	Register value to be written
++ *
++ * This function returns PGGS register value.
++ *
++ * @return      Returns status, either success or error+reason
++ */
++int zynqmp_pm_read_pggs(u32 index, u32 *value)
++{
++	return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_READ_PGGS, index, 0,
++				   value);
++}
++EXPORT_SYMBOL_GPL(zynqmp_pm_read_pggs);
 +
 +/**
   * zynqmp_pm_reset_assert - Request setting of reset (1 - assert, 0 - release)
   * @reset:		Reset to be configured
   * @assert_flag:	Flag stating should reset be asserted (1) or
-@@ -995,6 +1010,53 @@ static const struct attribute_group shutdown_scope_attribute_group = {
- };
- 
- /**
-+ * health_status_store - Store health_status sysfs attribute
-+ * @device:	Device structure
-+ * @attr:	Device attribute structure
-+ * @buf:	User entered health_status attribute string
-+ * @count:	Buffer size
-+ *
-+ * User-space interface for setting the boot health status.
-+ * Usage: echo <value> > /sys/devices/platform/firmware\:zynqmp-firmware/health_status
-+ *
-+ * Value:
-+ *	1 - Set healthy bit to 1
-+ *	0 - Unset healthy bit
-+ *
-+ * Return:	count argument if request succeeds, the corresponding error
-+ *		code otherwise
-+ */
-+static ssize_t health_status_store(struct device *device,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t count)
-+{
-+	int ret;
-+	unsigned int value;
-+
-+	ret = kstrtouint(buf, 10, &value);
-+	if (ret)
-+		return ret;
-+
-+	ret = zynqmp_pm_set_boot_health_status(value);
-+	if (ret) {
-+		pr_err("unable to set healthy bit value to %u\n", value);
-+		return ret;
-+	}
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_WO(health_status);
-+
-+static struct attribute *zynqmp_health_status_attrs[] = {
-+	&dev_attr_health_status.attr,
-+	NULL,
-+};
-+static const struct attribute_group health_status_attribute_group = {
-+	.attrs = zynqmp_health_status_attrs,
-+};
-+
-+/**
-  * ggs_show - Show global general storage (ggs) sysfs attribute
-  * @device: Device structure
-  * @attr: Device attribute structure
-@@ -1307,6 +1369,7 @@ static const struct attribute_group ggs_attribute_group = {
- const struct attribute_group *firmware_attribute_groups[] = {
- 	&ggs_attribute_group,
- 	&shutdown_scope_attribute_group,
-+	&health_status_attribute_group,
- 	NULL,
- };
- 
 diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 31ed58c..1900349 100644
+index 1734d12..725dccf 100644
 --- a/include/linux/firmware/xlnx-zynqmp.h
 +++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -114,6 +114,8 @@ enum pm_ioctl_id {
- 	IOCTL_READ_GGS,
- 	IOCTL_WRITE_PGGS,
- 	IOCTL_READ_PGGS,
-+	/* Set healthy bit value */
-+	IOCTL_SET_BOOT_HEALTH_STATUS = 17,
+@@ -105,6 +105,10 @@ enum pm_ioctl_id {
+ 	IOCTL_GET_PLL_FRAC_MODE,
+ 	IOCTL_SET_PLL_FRAC_DATA,
+ 	IOCTL_GET_PLL_FRAC_DATA,
++	IOCTL_WRITE_GGS,
++	IOCTL_READ_GGS,
++	IOCTL_WRITE_PGGS,
++	IOCTL_READ_PGGS,
  };
  
  enum pm_query_id {
-@@ -341,6 +343,7 @@ int zynqmp_pm_read_ggs(u32 index, u32 *value);
- int zynqmp_pm_write_pggs(u32 index, u32 value);
- int zynqmp_pm_read_pggs(u32 index, u32 *value);
- int zynqmp_pm_system_shutdown(const u32 type, const u32 subtype);
-+int zynqmp_pm_set_boot_health_status(u32 value);
+@@ -315,6 +319,10 @@ int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
+ 			      const enum zynqmp_pm_request_ack ack);
+ int zynqmp_pm_fpga_load(const u64 address, const u32 size, const u32 flags);
+ int zynqmp_pm_fpga_get_status(u32 *value);
++int zynqmp_pm_write_ggs(u32 index, u32 value);
++int zynqmp_pm_read_ggs(u32 index, u32 *value);
++int zynqmp_pm_write_pggs(u32 index, u32 value);
++int zynqmp_pm_read_pggs(u32 index, u32 *value);
  int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
  			u32 arg2, u32 arg3, u32 *ret_payload);
  
