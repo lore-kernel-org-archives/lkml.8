@@ -2,74 +2,156 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D06C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF52C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39A520637
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7C720674
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCFS6N (ORCPT
+        id S1726300AbgCFS73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:58:13 -0500
-Received: from mga18.intel.com ([134.134.136.126]:23448 "EHLO mga18.intel.com"
+        Fri, 6 Mar 2020 13:59:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbgCFS6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:58:12 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 10:58:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="234890111"
-Received: from wbakowsk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.27.142])
-  by orsmga008.jf.intel.com with ESMTP; 06 Mar 2020 10:58:05 -0800
-Date:   Fri, 6 Mar 2020 20:58:04 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>
-Subject: Re: [PATCH v28 11/22] x86/sgx: Linux Enclave Driver
-Message-ID: <20200306185804.GE7472@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-12-jarkko.sakkinen@linux.intel.com>
- <20200305174015.GJ11500@linux.intel.com>
+        id S1726083AbgCFS73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:59:29 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD94520637;
+        Fri,  6 Mar 2020 18:59:26 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 13:59:25 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        dan carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for
+ _rcuidle tracepoints (again)
+Message-ID: <20200306135925.50c38bec@gandalf.local.home>
+In-Reply-To: <20200306184538.GA92717@google.com>
+References: <20200221133416.777099322@infradead.org>
+        <20200221134216.051596115@infradead.org>
+        <20200306104335.GF3348@worktop.programming.kicks-ass.net>
+        <20200306113135.GA8787@worktop.programming.kicks-ass.net>
+        <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com>
+        <1896740806.20220.1583510668164.JavaMail.zimbra@efficios.com>
+        <20200306125500.6aa75c0d@gandalf.local.home>
+        <20200306184538.GA92717@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305174015.GJ11500@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 09:40:15AM -0800, Sean Christopherson wrote:
-> Would it make sense to add reserved fields to the structs so that new
-> features can be added in a backwards compatible way?  E.g. if we want to
-> allow userspace to control the backing store by passing in a file
-> descriptor ENCLAVE_CREATE.
+On Fri, 6 Mar 2020 13:45:38 -0500
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-It would not really be a huge win even if you did that since old
-software would not be aware of the new fields. Sounds somewhat
-messy to me.
+> On Fri, Mar 06, 2020 at 12:55:00PM -0500, Steven Rostedt wrote:
+> > On Fri, 6 Mar 2020 11:04:28 -0500 (EST)
+> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> >   
+> > > If we care about not adding those extra branches on the fast-path, there is
+> > > an alternative way to do things: BPF could provide two distinct probe callbacks,
+> > > one meant for rcuidle tracepoints (which would have the trace_rcu_enter/exit), and
+> > > the other for the for 99% of the other callsites which have RCU watching.
+> > > 
+> > > I would recommend performing benchmarks justifying the choice of one approach over
+> > > the other though.  
+> > 
+> > I just whipped this up (haven't even tried to compile it), but this should
+> > satisfy everyone. Those that register a callback that needs RCU protection
+> > simply registers with one of the _rcu versions, and all will be done. And
+> > since DO_TRACE is a macro, and rcuidle is a constant, the rcu protection
+> > code will be compiled out for locations that it is not needed.
+> > 
+> > With this, perf doesn't even need to do anything extra but register with
+> > the "_rcu" version.  
+> 
+> Looks nice! Some comments below:
+> 
+> > -- Steve
+> > 
+> > diff --git a/include/linux/tracepoint-defs.h b/include/linux/tracepoint-defs.h
+> > index b29950a19205..582dece30170 100644
+> > --- a/include/linux/tracepoint-defs.h
+> > +++ b/include/linux/tracepoint-defs.h
+> > @@ -25,6 +25,7 @@ struct tracepoint_func {
+> >  	void *func;
+> >  	void *data;
+> >  	int prio;
+> > +	int requires_rcu;
+> >  };
+> >  
+> >  struct tracepoint {
+> > diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> > index 1fb11daa5c53..5f4de82ffa0f 100644
+> > --- a/include/linux/tracepoint.h
+> > +++ b/include/linux/tracepoint.h
+> > @@ -179,25 +179,28 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> >  		 * For rcuidle callers, use srcu since sched-rcu	\
+> >  		 * doesn't work from the idle path.			\
+> >  		 */							\
+> > -		if (rcuidle) {						\
+> > +		if (rcuidle)						\
+> >  			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\  
+> 
+> Small addition:
+> To prevent confusion, we could make more clear that SRCU here is just to
+> protect the tracepoint function table and not the callbacks themselves.
+> 
+> > -			rcu_irq_enter_irqson();				\
+> > -		}							\
+> >  									\
+> >  		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
+> >  									\
+> >  		if (it_func_ptr) {					\
+> >  			do {						\
+> > +				int rcu_flags;				\
+> >  				it_func = (it_func_ptr)->func;		\
+> > +				if (rcuidle &&				\
+> > +				    (it_func_ptr)->requires_rcu)	\
+> > +					rcu_flags = trace_rcu_enter();	\
+> >  				__data = (it_func_ptr)->data;		\
+> >  				((void(*)(proto))(it_func))(args);	\
+> > +				if (rcuidle &&				\
+> > +				    (it_func_ptr)->requires_rcu)	\
+> > +					trace_rcu_exit(rcu_flags);	\  
+> 
+> Nit: If we have incurred the cost of trace_rcu_enter() once, we can call
+> it only once and then call trace_rcu_exit() after the do-while loop. That way
+> we pay the price only once.
+>
 
-Even a new ioctl later on is in my opinion always a better option
-than reserved fields when you add ioctl's.
+I thought about that, but the common case is only one callback attached at
+a time. To make the code complex for the non common case seemed too much
+of an overkill. If we find that it does help, it's best to do that as a
+separate patch because then if something goes wrong we know where it
+happened.
 
-/Jarkko
+Currently, this provides the same overhead as if each callback did it
+themselves like we were proposing (but without the added need to do it for
+all instances of the callback).
+
+-- Steve
