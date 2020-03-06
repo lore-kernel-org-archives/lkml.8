@@ -2,112 +2,104 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323F1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092DFC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E3A2072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583507968;
-	bh=SiVHngnk8DniEViDDaVIXqqcr7WiN0krPEDGjIuUQlY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Hy+5F5cdEk9y/W1L18Ga9Sd/JizHBGM+DAnQTStO88Z0alcvkmE9RM9pbS4pgqadN
-	 QosM5s8m8vBv9duI63pQ1cc2fsFJGHrShRAhijmYqytD9pNJgdIzHI5UMmNfQbqFCm
-	 bsEzi/BPUHMzM354ARAGyOEVM8ncWjv4HmC+6utw=
+	by mail.kernel.org (Postfix) with ESMTP id E03062072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgCFPT1 (ORCPT
+        id S1726956AbgCFPUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:19:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:35354 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCFPT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:19:26 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC64E30E;
-        Fri,  6 Mar 2020 07:19:25 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F7A23F237;
-        Fri,  6 Mar 2020 07:19:25 -0800 (PST)
-Date:   Fri, 06 Mar 2020 15:19:23 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        linux-spi <linux-spi@vger.kernel.org>, linux-spi@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Applied "spi: Remove CONFIG_ prefix from Kconfig select" to the spi tree
-In-Reply-To:  <f8ac6b32a29b9a05b58a7e58ffe8b780642abbf1.camel@perches.com>
-Message-Id:  <applied-f8ac6b32a29b9a05b58a7e58ffe8b780642abbf1.camel@perches.com>
-X-Patchwork-Hint: ignore
+        Fri, 6 Mar 2020 10:20:07 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:48809 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgCFPUG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:20:06 -0500
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N8GIg-1jNUMH03KC-0148iI; Fri, 06 Mar 2020 16:20:05 +0100
+Received: by mail-qk1-f174.google.com with SMTP id m2so2601004qka.7;
+        Fri, 06 Mar 2020 07:20:04 -0800 (PST)
+X-Gm-Message-State: ANhLgQ1ztapImf/TF7izxXZYY+yMZmpsq14Dy/VxnUEeUNbv3hG20jgq
+        ZoUKWuVLw3PwURcK7PaUJT9kXR+XSEfOxgSCpHk=
+X-Google-Smtp-Source: ADFU+vufZPHP+TppGOZW5QjlzXWUqAwno1bdHUSLyQt8BGmVonEBwnWghv2NJiZ/9FOo5rQAcp9UJZT+y9VpV1BQp2w=
+X-Received: by 2002:a37:6285:: with SMTP id w127mr3368332qkb.138.1583508003820;
+ Fri, 06 Mar 2020 07:20:03 -0800 (PST)
+MIME-Version: 1.0
+References: <20200306130731.938808030702@mail.baikalelectronics.ru>
+In-Reply-To: <20200306130731.938808030702@mail.baikalelectronics.ru>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 6 Mar 2020 16:19:47 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0PjNS9+sAiPnDgkmLsnJ6=hR_Vk8oqe493t-Ad_mGa9w@mail.gmail.com>
+Message-ID: <CAK8P3a0PjNS9+sAiPnDgkmLsnJ6=hR_Vk8oqe493t-Ad_mGa9w@mail.gmail.com>
+Subject: Re: [PATCH 0/6] soc: Add Baikal-T1 SoC APB/AXI EHB and L2-cache drivers
+To:     Sergey.Semin@baikalelectronics.ru
+List-Id: <soc.lore.kernel.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:tWjSFtoMxD0+al/G5LcUpGozeIODMqEIzgvKS3RHs77zhysbgWy
+ KkvUQaXgBMBp8aPw9hCDFul0gsWw3y5dh4t4LNj9t1T7jFmJt4Qia1IbNEtww/zcC92CkV7
+ 0uqYkl10cCzHrp8xlRF/9cEiDY1wTpW4zBNjpz22ice21EP7RbOiaCdOCotLyaTrOcK5evG
+ UEkTfdwjviK65oziltvLQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y78nN/XHQXk=:cOmcmHQWnOtHX0ReQZyqIQ
+ oqNesC31b5Sl8tr0/wqkML9XXhe011ALOX3worZU6mUrH3E+fM/krQmEqadqqy1s4XZoScBuv
+ qE1oSkzwtgckqKT7F1PSM1OQkOx5zzJzoKCQKIsN1tuNzYkx5GrltplhhruCGFl4PtDFjkwT8
+ 2xIi/+FEE0RiE5o6QB6VEFtVc1wZcJTj6SoQQNI+hBaOiXmAuXmW3Ei2khOqz/xZ4mT+vkfu9
+ ofRYNXpQ+ywoyHDCcJ0zi8i+Im4E/1qv5vaPdeQOaKEZschidbKqSNmXDQormTNtFdZSzlxkn
+ SjQ44QbuEm8cvO0tCb7mUzynRUWXgLzaMkw/vBz4UrbPjodmCXAWMZkZ9rHI2vf9lILsb5KU+
+ t6d5vbG8k/5Elg2vDlYOUw6qSsEFrw5CUDpdUKPmsS+Jm5g85ZXDWqWTfLC+M4/T7+WvdP9rE
+ FKI3LyRYcixvdTG+SqvSPqlz3myXNnzM/Z5muhfylFUVfOUmda9DG8q+zzBi6vtPDJ55UeZJm
+ BZGvNEmMRZSorM7zgL/Yn+Zw+FnunVdZsFfi3NGzFcbXQGNOr2u/Lwa5oVf2AXrl2P6DQ/Q45
+ DV3T+LtcWuTPv8VztAvNjHw8+AgehyFZ95CFqu7waFdo8MdIaPVDbBoTcnxhjM9tZhqotw527
+ XxUIJ4Az1y6dasASBb3IDQFqjcXl8vHe3/Y7PifPgBWL8un/6vVMjDyJUbgf/hzawvQ0v/jLA
+ SxHLP1lif4ZWtLSQw31HC+UV58WGT3tfVsUya69MFkmR3w2AKI6Ku6j/L5Zo/RPjbuX+akqNA
+ O/ayOYMzoTpkXr/eE6jnKThMLFZR7tk61NW/KHH4Sd/5KRyMCQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Fri, Mar 6, 2020 at 2:07 PM <Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> From: Serge Semin <fancer.lancer@gmail.com>
+>
+> Aside from PCIe/SATA/DDR/I2C/CPU-reboot specific settings the Baikal-T1
+> system controller provides three vendor-specific blocks. In particular
+> there are two Errors Handler Blocks to detect and report an info regarding
+> any problems discovered on the AXI and APB buses. These are the main buses
+> utilized by the SoC devices to interact with each other. In addition there
+> is a way to tune the MIPS P5600 CM2 L2-cache up by setting the Tag/Data/WS
+> L2-to-RAM latencies. All of this functionality is implemented in the
+> APB/AXI EHB and L2-cache control block drivers to be a part of the kernel soc
+> subsystem (as being specific to the Baikal-T1 SoC) and introduced in the
+> framework of this patchset.
+>
+> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> commit 98d54f81e36b ("Linux 5.6-rc4").
 
-   spi: Remove CONFIG_ prefix from Kconfig select
+I have no objection to the drivers, but I wonder if these should be
+in drivers/bus and drivers/memory instead of drivers/soc, which have
+similar drivers already. The driver for the L2 cache is not really a
+memory controller driver, but it may be close enough, and we
+already have a couple of different things in there.
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From e14572c52546c16e159c4c1814984843a119e823 Mon Sep 17 00:00:00 2001
-From: Joe Perches <joe@perches.com>
-Date: Thu, 5 Mar 2020 07:15:53 -0800
-Subject: [PATCH] spi: Remove CONFIG_ prefix from Kconfig select
-
-commit a2ca53b52e00 ("spi: Add HiSilicon v3xx SPI NOR flash
-controller driver") likely inadvertently used a select statement
-with a CONFIG_ prefix, remove the prefix.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Joe Perches <joe@perches.com>
-Acked-by: John Garry <john.garry@huawei.com>
-Link: https://lore.kernel.org/r/f8ac6b32a29b9a05b58a7e58ffe8b780642abbf1.camel@perches.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 887fefe87fd5..9c5dadb238dc 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -292,7 +292,7 @@ config SPI_HISI_SFC_V3XX
- 	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
- 	depends on (ARM64 && ACPI) || COMPILE_TEST
- 	depends on HAS_IOMEM
--	select CONFIG_MTD_SPI_NOR
-+	select MTD_SPI_NOR
- 	help
- 	  This enables support for HiSilicon v3xx SPI-NOR flash controller
- 	  found in hi16xx chipsets.
--- 
-2.20.1
-
+          Arnd
