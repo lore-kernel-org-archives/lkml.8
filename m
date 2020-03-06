@@ -2,118 +2,161 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569B1C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5638BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 338802073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339D12073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgCFNak (ORCPT
+        id S1727218AbgCFNao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:30:40 -0500
-Received: from mga07.intel.com ([134.134.136.100]:45451 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbgCFNak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:30:40 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 05:30:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
-   d="scan'208";a="413884310"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 06 Mar 2020 05:30:34 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jAD3j-007MyC-TM; Fri, 06 Mar 2020 15:30:35 +0200
-Date:   Fri, 6 Mar 2020 15:30:35 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-Message-ID: <20200306133035.GB1748204@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200306132912.GA1748204@smile.fi.intel.com>
+        Fri, 6 Mar 2020 08:30:44 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:59917 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727023AbgCFNan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:30:43 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0TrpcGV2_1583501424;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TrpcGV2_1583501424)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 06 Mar 2020 21:30:25 +0800
+Subject: Re: [failures] mm-vmscan-remove-unnecessary-lruvec-adding.patch
+ removed from -mm tree
+To:     Hugh Dickins <hughd@google.com>, Qian Cai <cai@lca.pw>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, aarcange@redhat.com,
+        daniel.m.jordan@oracle.com, hannes@cmpxchg.org,
+        khlebnikov@yandex-team.ru, kirill@shutemov.name,
+        kravetz@us.ibm.com, mhocko@kernel.org, mm-commits@vger.kernel.org,
+        tj@kernel.org, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
+        linux-mm@kvack.org
+References: <20200306025041.rERhvnYmB%akpm@linux-foundation.org>
+ <211632B1-2D6F-4BFA-A5A0-3030339D3D2A@lca.pw>
+ <20200306033850.GO29971@bombadil.infradead.org>
+ <97EE83E1-FEC9-48B6-98E8-07FB3FECB961@lca.pw>
+ <alpine.LSU.2.11.2003052008510.3016@eggly.anvils>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <cc6a3125-779c-13c0-bec3-dc92deab19f6@linux.alibaba.com>
+Date:   Fri, 6 Mar 2020 21:30:24 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306132912.GA1748204@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <alpine.LSU.2.11.2003052008510.3016@eggly.anvils>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <fancer.lancer@gmail.com>
-> > 
-> > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
-> > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
-> > with currently implemented in the kernel DW DMAC driver, but there are some
-> > peculiarities which must be taken into account in order to have the device
-> > fully supported.
-> > 
-> > First of all traditionally we replaced the legacy plain text-based dt-binding
-> > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-> > channels, which alas have different max burst length configuration.
-> > In particular first two channels may burst up to 128 bits (16 bytes) at a time
-> > while the rest of them just up to 32 bits. We must make sure that the DMA
-> > subsystem doesn't set values exceeding these limitations otherwise the
-> > controller will hang up. In third currently we discovered the problem in using
-> > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-> > natively implemented multi-block LLP transfers support and the SPI-transfer
-> > length exceeds the max lock size. In this case due to asynchronous handling of
-> > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
-> > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-> > the DMAC to asynchronously execute the transfers we'd have to at least warn
-> > the user of the possible errors.
-> > 
-> > Finally there is a bug in the algorithm of the nollp flag detection.
-> > In particular even if DW DMAC parameters state the multi-block transfers
-> > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-> > by the driver true multi-block LLP functionality unusable. This happens cause'
-> > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-> > contiguous multi-block transfers will be only supported. We must take the
-> > flag into account when detecting the LLP support otherwise the driver just
-> > won't work correctly.
-> > 
-> > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > commit 98d54f81e36b ("Linux 5.6-rc4").
+
+
+在 2020/3/6 下午12:17, Hugh Dickins 写道:
+>>>
+>>> Subject: Re: [PATCH v9 00/21] per lruvec lru_lock for memcg
+>>
+>> I don’t see it on lore.kernel or anywhere. Private email?
 > 
-> Thank you for your series!
+> You're right, sorry I didn't notice, lots of ccs but
+> neither lkml nor linux-mm were on that thread from the start:
+
+My fault, I thought people would often give comments on each patch, will care this from now on.
+
 > 
-> I'll definitely review it, but it will take time. So, I think due to late
-> submission this is material at least for v5.8.
+> And now the bad news.
+> 
+> Andrew, please revert those six (or seven as they ended up in mmotm).
+> 5.6-rc4-mm1 without them runs my tmpfs+loop+swapping+memcg+ksm kernel
+> build loads fine (did four hours just now), but 5.6-rc4-mm1 itself
+> crashed just after starting - seconds or minutes I didn't see,
+> but it did not complete an iteration.
+> 
+> I thought maybe those six would be harmless (though I've not looked
+> at them at all); but knew already that the full series is not good yet:
+> I gave it a try over 5.6-rc4 on Monday, and crashed very soon on simpler
+> testing, in different ways from what hits mmotm.
+> 
+> The first thing wrong with the full set was when I tried tmpfs+loop+
+> swapping kernel builds in "mem=700M cgroup_disabled=memory", of course
+> with CONFIG_DEBUG_LIST=y. That soon collapsed in a splurge of OOM kills
+> and list_del corruption messages: __list_del_entry_valid < list_del <
+> __page_cache_release < __put_page < put_page < __try_to_reclaim_swap <
+> free_swap_and_cache < shmem_free_swap < shmem_undo_range.
 
-One thing that I can tell immediately is the broken email thread in this series.
-Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
-so, it will link the mail properly.
+I have been run kernel build with a "mem=700M cgroup_disabled=memory" qemu-kvm
+with a swapfile for 3 hours, Hope I could catch sth while waiting for your 
+kindly reproduce scripts. Thanks Hugh!
 
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+> When I next tried with "mem=1G" and memcg enabled (but not being used),
+> that managed some iterations, no OOM kills, no list_del warnings (was
+> it swapping? perhaps, perhaps not, I was trying to go easy on it just
+> to see if "cgroup_disabled=memory" had been the problem); but when
+> rebooting after that, again list_del corruption messages and crash
+> (I didn't note them down).
+> 
+> So I didn't take much notice of what the mmotm crash backtrace showed
+> (but IIRC shmem and swap were in it).
 
+Is there some place to get mmotm's crash backtrace?
 
+> 
+> Alex, I'm afraid you're focusing too much on performance results,
+> without doing the basic testing needed - I thought we had given you
+> some hints on the challenging areas (swapping, move_charge_at_immigrate,
+> page migration) when we attached a *correctly working* 5.3 version back
+> on 23rd August:
+> 
+> https://lore.kernel.org/linux-mm/alpine.LSU.2.11.1908231736001.16920@eggly.anvils/
+> 
+> (Correctly working, except missing two patches I'd mistakenly dropped
+> as unnecessary in earlier rebases: but our discussions with Johannes
+> later showed to be very necessary, though their races rarely seen.)
+> 
+
+Did you mean the Johannes's question of race on page->memcg in previous email?
+
+"> I don't see what prevents the lruvec from changing under compaction,
+> neither in your patches nor in Hugh's. Maybe I'm missing something?"
+
+https://lkml.org/lkml/2019/11/22/2153
+
+From then on, I have tired 2 solutions to protect page->memcg, 
+first use lock_page_memcg(wrong) and 2nd new solution, taking PageLRU bit as page 
+isoltion precondition which may work for memcg migration, and page 
+migration in compaction etc. Could you like to give some comments on this?
+
+> I have not had the time (and do not expect to have the time) to review
+> your series: maybe it's one or two small fixes away from being complete,
+> or maybe it's still fundamentally flawed, I do not know.  I had naively
+> hoped that you would help with a patchset that worked, rather than
+> cutting it down into something which does not.> 
+
+Sorry, Hugh, I didn't know you have per memcg lru_lock patchset before I sent 
+out my first verion.
+
+> Submitting your series to routine testing is much easier for me than
+> reviewing it: but then, yes, it's a pity that I don't find the time
+> to report the results on intervening versions, which also crashed.
+> 
+> What I have to do now, is set aside time today and tomorrow, to package
+> up the old scripts I use, describe them and their environment, and send
+> them to you (cc akpm in case I fall under a bus): so that you can
+> reproduce the crashes for yourself, and get to work on them.
+> 
+
+Thanks advance for your coming testing scripts, I believe it will help a lot.
+
+BTW, I try my best to orgnize this patches to make it stright, a senior experts
+like you, won't cost much time to go through whole patches. and give some precious
+comment! 
+
+I am looking forward to hear comments from you. :)
+
+Thanks
+Alex
