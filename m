@@ -6,91 +6,78 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F59AC10F26
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83E4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81CFB2084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9684A20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:58:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgCFK6d (ORCPT
+        id S1727206AbgCFK66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:58:33 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:44152 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726646AbgCFK6F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:58:05 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026AulUC004746;
-        Fri, 6 Mar 2020 05:58:04 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2yfnrawycj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 05:58:03 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 026Aw22s035261
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 6 Mar 2020 05:58:02 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 6 Mar 2020
- 05:58:01 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 6 Mar 2020 05:58:01 -0500
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 026Avuwp023157;
-        Fri, 6 Mar 2020 05:57:59 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v8 2/8] include: fpga: adi-axi-common.h: add version helper macros
-Date:   Fri, 6 Mar 2020 13:00:54 +0200
-Message-ID: <20200306110100.22092-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200306110100.22092-1-alexandru.ardelean@analog.com>
-References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
+        Fri, 6 Mar 2020 05:58:58 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60704 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbgCFK66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 05:58:58 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E5273AC50;
+        Fri,  6 Mar 2020 10:58:56 +0000 (UTC)
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: sgio2audio: Remove usage of dropped hw_params/hw_free functions
+Date:   Fri,  6 Mar 2020 11:58:37 +0100
+Message-Id: <20200306105837.31523-1-tsbogend@alpha.franken.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-06_03:2020-03-06,2020-03-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=847 bulkscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- malwarescore=0 clxscore=1015 spamscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003060078
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The format for all ADI AXI IP cores is the same.
-i.e. 'major.minor.patch'.
+Commit ee88f4ebe575 ("ALSA: mips: Use managed buffer allocation") removed
+superfluous hw_params/hw_free callbacks, but forgot to remove them where
+they were used.
 
-This patch adds the helper macros to be re-used in ADI AXI drivers.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Fixes: ee88f4ebe575 ("ALSA: mips: Use managed buffer allocation")
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 ---
- include/linux/fpga/adi-axi-common.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/mips/sgio2audio.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
-index ebd4e07ae3d8..141ac3f251e6 100644
---- a/include/linux/fpga/adi-axi-common.h
-+++ b/include/linux/fpga/adi-axi-common.h
-@@ -16,4 +16,8 @@
- #define ADI_AXI_PCORE_VER(major, minor, patch)	\
- 	(((major) << 16) | ((minor) << 8) | (patch))
- 
-+#define ADI_AXI_PCORE_VER_MAJOR(version)	(((version) >> 16) & 0xff)
-+#define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
-+#define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
-+
- #endif /* ADI_AXI_COMMON_H_ */
+diff --git a/sound/mips/sgio2audio.c b/sound/mips/sgio2audio.c
+index 9f60a5037f8b..5bf1ea150f26 100644
+--- a/sound/mips/sgio2audio.c
++++ b/sound/mips/sgio2audio.c
+@@ -649,8 +649,6 @@ snd_sgio2audio_pcm_pointer(struct snd_pcm_substream *substream)
+ static const struct snd_pcm_ops snd_sgio2audio_playback1_ops = {
+ 	.open =        snd_sgio2audio_playback1_open,
+ 	.close =       snd_sgio2audio_pcm_close,
+-	.hw_params =   snd_sgio2audio_pcm_hw_params,
+-	.hw_free =     snd_sgio2audio_pcm_hw_free,
+ 	.prepare =     snd_sgio2audio_pcm_prepare,
+ 	.trigger =     snd_sgio2audio_pcm_trigger,
+ 	.pointer =     snd_sgio2audio_pcm_pointer,
+@@ -659,8 +657,6 @@ static const struct snd_pcm_ops snd_sgio2audio_playback1_ops = {
+ static const struct snd_pcm_ops snd_sgio2audio_playback2_ops = {
+ 	.open =        snd_sgio2audio_playback2_open,
+ 	.close =       snd_sgio2audio_pcm_close,
+-	.hw_params =   snd_sgio2audio_pcm_hw_params,
+-	.hw_free =     snd_sgio2audio_pcm_hw_free,
+ 	.prepare =     snd_sgio2audio_pcm_prepare,
+ 	.trigger =     snd_sgio2audio_pcm_trigger,
+ 	.pointer =     snd_sgio2audio_pcm_pointer,
+@@ -669,8 +665,6 @@ static const struct snd_pcm_ops snd_sgio2audio_playback2_ops = {
+ static const struct snd_pcm_ops snd_sgio2audio_capture_ops = {
+ 	.open =        snd_sgio2audio_capture_open,
+ 	.close =       snd_sgio2audio_pcm_close,
+-	.hw_params =   snd_sgio2audio_pcm_hw_params,
+-	.hw_free =     snd_sgio2audio_pcm_hw_free,
+ 	.prepare =     snd_sgio2audio_pcm_prepare,
+ 	.trigger =     snd_sgio2audio_pcm_trigger,
+ 	.pointer =     snd_sgio2audio_pcm_pointer,
 -- 
-2.20.1
+2.25.0
 
