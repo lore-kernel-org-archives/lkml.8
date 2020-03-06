@@ -2,73 +2,117 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C702CC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CECC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 701AB2072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583466275;
-	bh=v7Z1JGbpqLPQcQrCE/IcBs7eL2d2FZOkUaA4ZPdqYsc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=I041/TpXbb8pvHnaI4+23dG4gt7CztTqPKdQh6+heoAkyKWFqAqBzAyAUyt19c3dW
-	 Q8/rSVEqCZC1R4c9p3AVZzeQgIPZb6zSny54ja5LxpnwzTuhtEQVp2OQoWWF9Zuput
-	 WDp3ZRQqi41NXiakcLbDiUs4aVRr2BAd610DMGCc=
+	by mail.kernel.org (Postfix) with ESMTP id F2EF721744
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:45:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSoMuNUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgCFDoe (ORCPT
+        id S1726846AbgCFDpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 22:44:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbgCFDoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 22:44:34 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37EE22072D;
-        Fri,  6 Mar 2020 03:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583466272;
-        bh=v7Z1JGbpqLPQcQrCE/IcBs7eL2d2FZOkUaA4ZPdqYsc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wUKxwgm1RtXQ6d0jYoA3jluGb/ZYXzEmXe3bIVAdsQUnwu6yHvYR/k5PZRoAaDmX7
-         4LMwfanHeIfVZ25XCCcz1FPPZSFbb0iKwNdnpE6SwKFU4pENlgZiiIJQQadoelAkhi
-         NT/GLgPeupaNUrL11gBLxnPco6yiRwMuySZx+EMw=
-Date:   Thu, 5 Mar 2020 19:44:31 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Steven Price <steven.price@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH] mm: Correct guards for non_swap_entry()
-Message-Id: <20200305194431.7fe10d760d9921d0eff106c1@linux-foundation.org>
-In-Reply-To: <20200305130550.22693-1-steven.price@arm.com>
-References: <20200305130550.22693-1-steven.price@arm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Mar 2020 22:45:42 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42447 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgCFDpm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 22:45:42 -0500
+Received: by mail-pg1-f195.google.com with SMTP id h8so424127pgs.9;
+        Thu, 05 Mar 2020 19:45:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Q76dSZ3ZtuScz35mg68rmoCwQeQHMDiWbwk4IP4yBWo=;
+        b=PSoMuNUtJKVsYBN5/r8TgSqlSmgkyVrGqlUL8o+xIjRqfVUDa0KHioRwCAwr5fEQP4
+         +5ePUPJ79WTQbhH2IhfDJ8/U9NrWjXOifzrznR8DK68YFNKzKWf0xUkbdPGxVH2SaLl5
+         kX0PQMeRrdLBZ1lzpi8Q+6BKILLKpnOKBIsPpS+JeaS7qNlFStMfYE7fCC8NSNhoHwW9
+         9rcCB0BiJwqP0r07Ejmp8XXu9/px2SimZpuvlPFe3gW9y7lRvKwZpIYVZptj9i9ZboYE
+         upxTaA5P0xj2uzsRqrSHJThAN9Ee5/k64BXlJvIKjPLk0FbcYme4NMU6w7OeRTl5zbm5
+         6qxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Q76dSZ3ZtuScz35mg68rmoCwQeQHMDiWbwk4IP4yBWo=;
+        b=TDa6WXuEn02qzzEznlikErnofDdQkoQ8oGnluP/TWqcQaq94bYHJqWHX3V3PbJ3ZIe
+         TfM5Xc4jeyC+X2Tk3zvPHQKw0OAeEhTKvBW4YFEnHfIrI9jBUizcHEMIyGuKlVwNcTTb
+         J9aRugsOyk01plE+l4fvTjT5o5hTfw2NKTnu5kdG1IcRQDyFxgn6Cg/r/8QNIdRrdkVv
+         lJSE/eJTy2AmEeFOgFmTB/4ab5JQr1CoKtW8plf7UDn8ETQJhRY3ArwXSLK8tDt6F/l+
+         2sR/xW3vp35xtNtMpPe8RHPlHwPhrXiSc09ZZsIDMOx7LOIC+jcpv2BKsu5z+mHwrL9r
+         NGbQ==
+X-Gm-Message-State: ANhLgQ0b6E97AJAT3qnwmknObJBSFXNwSOYKhc0aQbOGeqAwdc/Q6zjY
+        o6dy2/1WWfpu8a7k4oyIQEs=
+X-Google-Smtp-Source: ADFU+vvVHcUGS2VZAJESVaNvw6ITlZxdALRNYqJ48ROToDOE+WoTNm+J+GRKhkurFs1Aot3O/GEkmQ==
+X-Received: by 2002:a63:c550:: with SMTP id g16mr1392916pgd.9.1583466339459;
+        Thu, 05 Mar 2020 19:45:39 -0800 (PST)
+Received: from localhost.localdomain ([154.223.142.197])
+        by smtp.gmail.com with ESMTPSA id d1sm25931353pfc.3.2020.03.05.19.45.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Mar 2020 19:45:38 -0800 (PST)
+From:   Zhouyi Zhou <zhouzhouyi@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        paulmck@linux.ibm.com, paulmck@linux.vnet.ibm.com, neilb@suse.com
+Cc:     Zhouyi Zhou <zhouzhouyi@gmail.com>
+Subject: [PATCH v3] NFS:remove redundant call to nfs_do_access
+Date:   Fri,  6 Mar 2020 03:45:26 +0000
+Message-Id: <1583466326-27867-1-git-send-email-zhouzhouyi@gmail.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  5 Mar 2020 13:05:50 +0000 Steven Price <steven.price@arm.com> wrote:
+In function nfs_permission:
+1. the rcu_read_lock and rcu_read_unlock around nfs_do_access
+is unnecessary because the rcu critical data structure is already
+protected in subsidiary function nfs_access_get_cached_rcu. No other
+data structure needs rcu_read_lock in nfs_do_access.
 
-> If CONFIG_DEVICE_PRIVATE is defined, but neither CONFIG_MEMORY_FAILURE nor
-> CONFIG_MIGRATION, then non_swap_entry() will return 0, meaning that the
-> condition (non_swap_entry(entry) && is_device_private_entry(entry)) in
-> zap_pte_range() will never be true even if the entry is a device private
-> one.
-> 
-> Equally any other code depending on non_swap_entry() will not function
-> as expected.
+2. call nfs_do_access once is enough, because:
+2-1. when mask has MAY_NOT_BLOCK bit
+The second call to nfs_do_access will not happen.
 
-What are the user-visible runtime effects of this change?
+2-2. when mask has no MAY_NOT_BLOCK bit
+The second call to nfs_do_access will happen if res == -ECHILD, which
+means the first nfs_do_access goes out after statement if (!may_block).
+The second call to nfs_do_access will go through this procedure once
+again except continue the work after if (!may_block).
+But above work can be performed by only one call to nfs_do_access
+without mangling the mask flag.
 
-Is a cc:stable needed?
+Tested in x86_64 
+Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
+---
+ fs/nfs/dir.c |    9 +--------
+ 1 files changed, 1 insertions(+), 8 deletions(-)
+
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 193d6fb..37b0c10 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -2732,14 +2732,7 @@ int nfs_permission(struct inode *inode, int mask)
+ 	if (!NFS_PROTO(inode)->access)
+ 		goto out_notsup;
+ 
+-	/* Always try fast lookups first */
+-	rcu_read_lock();
+-	res = nfs_do_access(inode, cred, mask|MAY_NOT_BLOCK);
+-	rcu_read_unlock();
+-	if (res == -ECHILD && !(mask & MAY_NOT_BLOCK)) {
+-		/* Fast lookup failed, try the slow way */
+-		res = nfs_do_access(inode, cred, mask);
+-	}
++	res = nfs_do_access(inode, cred, mask);
+ out:
+ 	if (!res && (mask & MAY_EXEC))
+ 		res = nfs_execute_ok(inode, mask);
+-- 
+1.7.1
+
