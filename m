@@ -2,172 +2,132 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1606C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A639AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECB42072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E12E2072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:41:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbSaDyS3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="c1Z0UpyH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgCFQko (ORCPT
+        id S1726462AbgCFQlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:40:44 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38273 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgCFQko (ORCPT
+        Fri, 6 Mar 2020 11:41:42 -0500
+Received: from gateway32.websitewelcome.com ([192.185.145.182]:39254 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726178AbgCFQlm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:40:44 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t11so3135603wrw.5;
-        Fri, 06 Mar 2020 08:40:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XjHnSwyS0af+P6Jfh8Jzg4HPNo9WQiL8yOX1s0HApbQ=;
-        b=CbSaDyS3tlGIXzJPDGmj9+AIlYyU7Yowmve6GEk50xA6VmLmZxHH5HW67z5v9akxJN
-         nGmqQ1FAjSNx511yM1rus1wIj4/+IgiLa4jFXAq3t+VnZPbcJi2ejnaUkV6b5SKW6kyN
-         hzxB5IKSXIbWozwe8M041xvmZrKHB1s6eVUpG+MsHaDJ0Spfb05SAOeiwB8cKCN/Pn2e
-         fPhbdTuB2mYwsxcsDnol2mJBRBqcYUpJIndkM4bjmdNdbvdjzaAKHs5iHbBERWAoQ6Ed
-         IPbTM3kZsKjUscXO0/PBVdGu+tjOfbi+/lP9+Wz2T8EPTasDaTPRevA4VXyeTR6nXrpn
-         tWDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XjHnSwyS0af+P6Jfh8Jzg4HPNo9WQiL8yOX1s0HApbQ=;
-        b=HEHMBh0UYUlIFvTZojR6CHwOCMsQjOW+cbPCURX6XjucphBnqC8TznvHR9u9vAiZRG
-         +DT/3acVEwKjw7IiIS/DZtKHuU52z8qr2dS1lfADxTBainjTXzJnTn+pZwEdKmlqySrX
-         fqyWOY9+empd3EfgapmgA3tl5Kct0ML55a5VcRv3axKm1U+P18wMVYQ8N5HLwuB7bNv/
-         p8uG+fxfzrRdfnqZPIB0gRePPqL7j5n5RPauGjRsJ6Y8UPyOJaoESaxkR6Kk40E5sTtG
-         0rvADhpMlC7IHbRanrkDgq0avIxpY4vZ0u/e7Uf7/0/4Uso5rS1AMMiX0qGEBCHcanYD
-         1HNA==
-X-Gm-Message-State: ANhLgQ3tlARANZPWXha64Il9qcWpSTGzfJV6ejQHYCYCBJIQFsED7k/J
-        Y8vI4DEpdIrCVoupn8QAm8Y=
-X-Google-Smtp-Source: ADFU+vtU+an94UKd4UPfywLnbr+VHC0wDCwOSaA/3LsprBBI1hOWapF4bBHrYJWtYeuKNmQC60ln8A==
-X-Received: by 2002:adf:8162:: with SMTP id 89mr882490wrm.45.1583512841997;
-        Fri, 06 Mar 2020 08:40:41 -0800 (PST)
-Received: from localhost.localdomain ([2a02:810d:1b40:644:c890:7487:7d:ef6f])
-        by smtp.gmail.com with ESMTPSA id c11sm48946421wrp.51.2020.03.06.08.40.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 08:40:41 -0800 (PST)
-From:   Markus Fuchs <mklntf@gmail.com>
-To:     mklntf@gmail.com
-Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: stmmac: platform: Fix misleading interrupt error msg
-Date:   Fri,  6 Mar 2020 17:38:48 +0100
-Message-Id: <20200306163848.5910-1-mklntf@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 6 Mar 2020 11:41:42 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 45A02A73A4E
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Mar 2020 10:41:41 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id AG2fjuTCQEfyqAG2fjxwLD; Fri, 06 Mar 2020 10:41:41 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YGd4yOt6uoISkY81G59OqxRmykcrtE06U9TVbe/QucQ=; b=c1Z0UpyHFgs/ANLeLX1hAufEn4
+        vLKduJy9pbBG77cCmwNLTBWfzDETINqrHJwsnGmeV6NoSoYtn756/scrbX8FjAbLqpzKpmXj7ftR0
+        4Nz7xpxeEynkSnAd2S8/Ock0nYBWt3QfynaBfkwaxxLak05WHeg1EYsYxzU9kNxOxvTUrR27XaMkV
+        72TZw1kT231uWQhKVAiiK3s0V3YMXLj09kYH5CeAWOdX0WF+evQGnFZhNeO2yvvQvpRrJ6O/P66JP
+        ohl2HdtfLoJJAK1jUfOUOsNEiHYN523zbdc0bFZxTJsi98IDOouCHMwanp2vMp6rM2Cx0H35S0B8k
+        wClzpDaw==;
+Received: from [201.166.190.53] (port=51758 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jAG2c-001q4M-Nb; Fri, 06 Mar 2020 10:41:39 -0600
+Date:   Fri, 6 Mar 2020 10:44:46 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Benjamin LaHaise <bcrl@kvack.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] aio: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200306164446.GA21604@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.190.53
+X-Source-L: No
+X-Exim-ID: 1jAG2c-001q4M-Nb
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.190.53]:51758
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not every stmmac based platform makes use of the eth_wake_irq or eth_lpi
-interrupts. Use the platform_get_irq_byname_optional variant for these
-interrupts, so no error message is displayed, if they can't be found.
-Rather print an information to hint something might be wrong to assist
-debugging on platforms which use these interrupts.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Signed-off-by: Markus Fuchs <mklntf@gmail.com>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
-On my cyclone V socfpga platform I get error messages after updating to
-Linux Kernel 5.4.24
+ fs/aio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Starting kernel ...
-
-Deasserting all peripheral resets
-[    1.206363] socfpga-dwmac ff700000.ethernet: IRQ eth_wake_irq not found
-[    1.213023] socfpga-dwmac ff700000.ethernet: IRQ eth_lpi not found
-
-These interrupts don't matter for my platform and many other stmmac based
-ones, as we can see by grepping for 'macirq'.
-
-socfpga.dtsi:                   interrupt-names = "macirq";
-socfpga.dtsi:                   interrupt-names = "macirq";
-sun7i-a20.dtsi:                 interrupt-names = "macirq";
-spear600.dtsi:                  interrupt-names = "macirq", "eth_wake_irq";
-artpec6.dtsi:                   interrupt-names = "macirq", "eth_lpi";
-rk322x.dtsi:                    interrupt-names = "macirq";
-sun9i-a80.dtsi:                 interrupt-names = "macirq";
-spear1310.dtsi:                 interrupt-names = "macirq";
-spear1310.dtsi:                 interrupt-names = "macirq";
-spear1310.dtsi:                 interrupt-names = "macirq";
-spear1310.dtsi:                 interrupt-names = "macirq";
-stih407-family.dtsi:            interrupt-names = "macirq", "eth_wake_irq";
-stm32f429.dtsi:                 interrupt-names = "macirq";
-sun6i-a31.dtsi:                 interrupt-names = "macirq";
-meson.dtsi:                     interrupt-names = "macirq";
-rk3288.dtsi:                    interrupt-names = "macirq", "eth_wake_irq";
-sun8i-r40.dtsi:                 interrupt-names = "macirq";
-sunxi-h3-h5.dtsi:               interrupt-names = "macirq";
-spear3xx.dtsi:                  interrupt-names = "macirq", "eth_wake_irq";
-lpc18xx.dtsi:                   interrupt-names = "macirq";
-stm32h743.dtsi:                 interrupt-names = "macirq";
-socfpga_arria10.dtsi:           interrupt-names = "macirq";
-socfpga_arria10.dtsi:           interrupt-names = "macirq";
-socfpga_arria10.dtsi:           interrupt-names = "macirq";
-rv1108.dtsi:                    interrupt-names = "macirq", "eth_wake_irq";
-spear13xx.dtsi:                 interrupt-names = "macirq", "eth_wake_irq";
-stm32mp151.dtsi:                interrupt-names = "macirq";
-ox820.dtsi:                     interrupt-names = "macirq", "eth_wake_irq";
-sun8i-a83t.dtsi:                interrupt-names = "macirq";
-
-So, in my opinion, the error messages are missleading. I believe
-the right way to handle this would require more changes though. Some
-kind of configuration information, telling which interrupts are required
-by the platform and than conditionally call platform_get_irq_byname().
-This would print an error message, if something is wrong, on the right
-platforms and nothing at all on the others.
-
-.../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index d10ac54bf385..13fafd905db8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -663,16 +663,22 @@ int stmmac_get_platform_resources(struct platform_device *pdev,
- 	 * In case the wake up interrupt is not passed from the platform
- 	 * so the driver will continue to use the mac irq (ndev->irq)
- 	 */
--	stmmac_res->wol_irq = platform_get_irq_byname(pdev, "eth_wake_irq");
-+	stmmac_res->wol_irq =
-+		platform_get_irq_byname_optional(pdev, "eth_wake_irq");
- 	if (stmmac_res->wol_irq < 0) {
- 		if (stmmac_res->wol_irq == -EPROBE_DEFER)
- 			return -EPROBE_DEFER;
-+		dev_info(&pdev->dev, "IRQ eth_wake_irq not found\n");
- 		stmmac_res->wol_irq = stmmac_res->irq;
- 	}
+diff --git a/fs/aio.c b/fs/aio.c
+index 94f2b9256c0c..13c4be7f00f0 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -68,7 +68,7 @@ struct aio_ring {
+ 	unsigned	header_length;	/* size of aio_ring */
  
--	stmmac_res->lpi_irq = platform_get_irq_byname(pdev, "eth_lpi");
--	if (stmmac_res->lpi_irq == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	stmmac_res->lpi_irq =
-+		platform_get_irq_byname_optional(pdev, "eth_lpi");
-+	if (stmmac_res->lpi_irq < 0) {
-+		if (stmmac_res->lpi_irq == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		dev_info(&pdev->dev, "IRQ eth_lpi not found\n");
-+	}
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	stmmac_res->addr = devm_ioremap_resource(&pdev->dev, res);
+-	struct io_event		io_events[0];
++	struct io_event		io_events[];
+ }; /* 128 bytes + ring size */
+ 
+ /*
 -- 
-2.25.1
+2.25.0
 
