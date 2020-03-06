@@ -2,104 +2,104 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C571C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FE4C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F522072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:29:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MB7Nafcy"
+	by mail.kernel.org (Postfix) with ESMTP id 9B8072072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgCFF3m (ORCPT
+        id S1725985AbgCFFci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 00:29:42 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60975 "EHLO ozlabs.org"
+        Fri, 6 Mar 2020 00:32:38 -0500
+Received: from wind.enjellic.com ([76.10.64.91]:59354 "EHLO wind.enjellic.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgCFF3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 00:29:41 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Ybll3vDpz9sPg;
-        Fri,  6 Mar 2020 16:29:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583472579;
-        bh=t7kO+23O4AQyWMQiGP82lyAOnnJwgWc5WAO5yzIARVM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MB7NafcyEAvifyEqL4xotZBIPNbRnJQmwFUwYa7iYH8hdKnUCjdW9duKcu+KiDAJO
-         c/5FDp7bZHGTuNwv/1AN0KyWusqj/rnzl3GlcsJ3cGZf+ZKRHSAjxIYXxy7rJn3xhs
-         xuZbXEksJaRLU/cZzt213IMcRsP2gS7RNgZ91Pgz4EmSlDy5nCI8/2nqYZAlGJmtli
-         QKkdi9BgYQ5qmHUMrIX0bCrNp6ZtLJlqWPIbcqJK0R5fa20q8MqE+kkW5p//CXK83b
-         HMmEvbflS8HPi1M8ZCRAbFhTnDlcaHE+sLDZu5lhGkL5ZoD71uiNI4QdXXTC0IjwV8
-         5ljuOD1ENnbBQ==
-Date:   Fri, 6 Mar 2020 16:29:37 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: linux-next: manual merge of the akpm tree with the powerpc tree
-Message-ID: <20200306162937.082cd994@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/AxSgnHjYYrwYT+IA1LV6HOX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        id S1725869AbgCFFci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 00:32:38 -0500
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 0265WBpF016522;
+        Thu, 5 Mar 2020 23:32:11 -0600
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 0265WAUZ016521;
+        Thu, 5 Mar 2020 23:32:10 -0600
+Date:   Thu, 5 Mar 2020 23:32:10 -0600
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
+Message-ID: <20200306053210.GA16297@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 05 Mar 2020 23:32:12 -0600 (CST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/AxSgnHjYYrwYT+IA1LV6HOX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 04, 2020 at 01:36:01AM +0200, Jarkko Sakkinen wrote:
 
-Hi all,
+Good evening, I hope the end of the week is going well for everyone.
 
-Today's linux-next merge of the akpm tree got a conflict in:
+> Add a selftest for SGX. It is a trivial test where a simple enclave
+> copies one 64-bit word of memory between two memory locations given
+> to the enclave as arguments. Use ENCLS[EENTER] to invoke the
+> enclave.
 
-  arch/powerpc/mm/pgtable_32.c
+Just as a clarification, are you testing the new driver against signed
+production class enclaves in .so format that also include metadata
+layout directives or is the driver just getting tested against the two
+page toy enclave that copies a word of memory from one memory location
+to another?
 
-between commit:
+Our PSW/runtime is currently failing to initialize production class
+enclaves secondary to a return value of -4 from the ENCLU[EINIT]
+instruction, which means the measurement of the loaded enclave has
+failed to match the value in the signature structure.
 
-  2efc7c085f05 ("powerpc/32: drop get_pteptr()")
+The same enclave loads fine with the out of kernel driver.  Our
+diagnostics tell us we are feeding identical page streams and
+permissions to the page add ioctl's of both drivers.  The identity
+modulus signature of the signing key for the enclave is being written
+to the launch control registers.
 
-from the powerpc tree and patch:
+We see the same behavior from both our unit test enclaves and the
+Quoting Enclave from the Intel SGX runtime.
 
-  "powerpc/32: drop get_pteptr()"
+When we ported our runtime loader to the new driver ABI we kept things
+simple and add only a single page at a time in order to replicate the
+behavior of the old driver.
 
-from the akpm tree.
+Secondly, we were wondering what distribution you are building the
+self-tests with?  Initial indications are that the selftest signing
+utility doesn't build properly with OpenSSL 1.1.1.
 
-I fixed it up (I just dropped the latter version) and can carry the fix
-as necessary. This is now fixed as far as linux-next is concerned, but
-any non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
+Have a good day.
 
---=20
-Cheers,
-Stephen Rothwell
+Dr. Greg
 
---Sig_/AxSgnHjYYrwYT+IA1LV6HOX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5h38EACgkQAVBC80lX
-0GwWVgf/b9cMicIX4DCt/qrkOHGgvNBu+8TbB7gAfYs65qisVKTSU7grIUTkqxKS
-xpUBgKhBUiAtC/JkLkzm2VAaX/WyjEJ04u/9ebeqWZFZVAuvfbqu1sG+CYm22lKo
-g2D1xC+8oWMZ16Xap91ByEUiXQ+pG1zVgTFG9O+WDv9mFrFnl2ONsLGxrleqHD5o
-lIPTwAn5r7PYCmXy/9jSKZE5Ry5FhB+t7mHt6xzd3mJKno2TiqmDIKIBj6EVeS+I
-vjLdv+EVLFTOD4vMz1eXz2qg2+JiGnTMBzW5GjdXHZMIOVSBrykPK6zdagjP0mjf
-yrciqH/VnA9EPN7RiUQ42pGU38yQOw==
-=gutR
------END PGP SIGNATURE-----
-
---Sig_/AxSgnHjYYrwYT+IA1LV6HOX--
+As always,
+Dr. Greg Wettstein, Ph.D, Worker
+IDfusion, LLC               SGX secured infrastructure and
+4206 N. 19th Ave.           autonomously self-defensive platforms.
+Fargo, ND  58102
+PH: 701-281-1686            EMAIL: greg@idfusion.net
+------------------------------------------------------------------------------
+"Don't worry about people stealing your ideas.  If your ideas are any
+ good, you'll have to ram them down people's throats."
+                                -- Howard Aiken
