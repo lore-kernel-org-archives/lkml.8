@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69E9C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9061AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9160B2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1662051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="DYq1VZ10"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="O/w1lI9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725835AbgCFR3o (ORCPT
+        id S1726859AbgCFR3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:29:44 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:25622 "EHLO
+        Fri, 6 Mar 2020 12:29:46 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:27607 "EHLO
         mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbgCFR3o (ORCPT
+        with ESMTP id S1726307AbgCFR3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Mar 2020 12:29:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583515781;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=F7Q7dzKizkE8VkIH23/riTwDlFWCGM9XLFl0TNbD9Eo=;
-        b=DYq1VZ10FQOymgNarr/J4s02+7mP0sHY23mRhrWlvm/tFAMnOb2YOhVh4bBsde+ZZ6
-        sI56AtmCM1IpZEKF8Oz7fDOMDFWl9gaD2QrfBCamCwDipiwHmelvYbuJgcjm2Y+IN/Ba
-        bCXv9DfeFAEI3lt/tAIrIma4Ik+VWBMrxi6XuiBurPNjKUS8rZuVMpyY2MEloRz9Q3B6
-        Yvm2kMbO9TFLRILnwrUj55NtccN3fej23n7iLKaOaglue8imodUR3cNv0+WTzL2msa7m
-        JHygOKSZs4cn2K0vq3mU63ZIogFqFNAYc1VkLNyh762grElSD4Cic35iKId4zyumb/Tj
-        lEBQ==
+        bh=HnNPqD5yo9W35H/FixWc+0XP7wAdWZANIC6iGgREJ7k=;
+        b=O/w1lI9PNX7RvSTvBJ5DZAgRYvFjvluFcNTLKiAmPI+KsJPHg1IMvVGI5S9wGX8gHz
+        GZL4Yb+gY3bOn+PBj8oP2k8h2RFvl/UjRLnKe0rRRLTRkzrkDLIqd6cNtMZvSxq+SCoU
+        J6+oWh2octsXWuZDrnsCY15qJdAI9J4mUMN7WbPS4Zglxy2eszNtu6dMdA0+D2TE2YCF
+        9q2s0+3liB5yfEDU3BoXp0y3TdZaekRBqk6VP+WaCsxm+KfhB7QtcBzZWGEntJa7w1CT
+        ZXj3N3pgjhX2D8zPytJnq9r446BnAHIjKbwCf6Q81Nk3gOQf0/z/nrgdD9plSmhxy7Fq
+        Maaw==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6GQjzrz4="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw26HTYZte
+        with ESMTPSA id y0a02cw26HTYZtc
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
         Fri, 6 Mar 2020 18:29:34 +0100 (CET)
@@ -54,9 +54,9 @@ To:     Paul Cercueil <paul@crapouillou.net>,
         Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
-Subject: [PATCH v6 3/3] MIPS: CI20: defconfig: multiple improvements
-Date:   Fri,  6 Mar 2020 18:29:32 +0100
-Message-Id: <3423a1167a36aac94dc5b38830d319af694c6422.1583515771.git.hns@goldelico.com>
+Subject: [PATCH v6 2/3] MIPS: DTS: CI20: multiple DTS improvements
+Date:   Fri,  6 Mar 2020 18:29:31 +0100
+Message-Id: <9c5ab093f6e94741db1aed591687df08426c3266.1583515771.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1583515771.git.hns@goldelico.com>
 References: <cover.1583515771.git.hns@goldelico.com>
@@ -67,83 +67,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-a) configure for supporting modules
+a) add DT node for SW1 as Enter button
 
-Not all drivers need to be compiled into the kernel.
-Support building and loading of kernel modules.
+The SW1 button can be used as a simple one-button keyboard
+and is connected to PD17.
 
-b) compile leds-gpio driver into the kernel and configure for LED triggers
+Note: SW1 has a second meaning to change the boot sequence
+when pressed while powering on.
 
-DTS has been augmented to add some gpio-leds. We need the leds-gpio driver
-and enable the triggers.
+b) give eth0_power a defined voltage.
 
-c) configure CONFIG_REGULATOR_ACT8865 for PMU
-
-The PMU on the CI20 board is an ACT8600 using the ACT8865 driver.
-Since it is not compiled, the PMU and the CI20 board is running in
-power-on reset state of the PMU.
-
-d) compile gpio-ir driver
-
-The CI20 board has a gpio based IR receiver.
-
-e) configure for CONFIG_KEYBOARD_GPIO=m
-
-The SW1 button is hooked up to send input events.
+This is a 3.3V power switch (DVNET3.3V).
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/configs/ci20_defconfig | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/mips/boot/dts/ingenic/ci20.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index be41df2a81fb..0db0088bbc1c 100644
---- a/arch/mips/configs/ci20_defconfig
-+++ b/arch/mips/configs/ci20_defconfig
-@@ -1,4 +1,5 @@
- # CONFIG_LOCALVERSION_AUTO is not set
-+CONFIG_MODULES=y
- CONFIG_KERNEL_XZ=y
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
-@@ -88,12 +89,14 @@ CONFIG_I2C_JZ4780=y
- CONFIG_SPI=y
- CONFIG_SPI_GPIO=y
- CONFIG_GPIO_SYSFS=y
-+CONFIG_KEYBOARD_GPIO=m
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=y
- CONFIG_JZ4740_WDT=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_DEBUG=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
-+CONFIG_REGULATOR_ACT8865=y
- # CONFIG_VGA_CONSOLE is not set
- # CONFIG_HID is not set
- # CONFIG_USB_SUPPORT is not set
-@@ -166,3 +169,21 @@ CONFIG_STACKTRACE=y
- # CONFIG_FTRACE is not set
- CONFIG_CMDLINE_BOOL=y
- CONFIG_CMDLINE="earlycon console=ttyS4,115200 clk_ignore_unused"
-+CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_TRIGGERS=y
-+CONFIG_LEDS_TRIGGER_MTD=y
-+CONFIG_LEDS_TRIGGER_TIMER=y
-+CONFIG_LEDS_TRIGGER_ONESHOT=y
-+CONFIG_LEDS_TRIGGER_ONESHOT=y
-+CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-+CONFIG_LEDS_TRIGGER_BACKLIGHT=m
-+CONFIG_LEDS_TRIGGER_CPU=y
-+CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
-+CONFIG_LEDS_TRIGGER_TRANSIENT=y
-+CONFIG_LEDS_TRIGGER_CAMERA=m
-+CONFIG_LIRC=y
-+CONFIG_MEDIA_SUPPORT=m
-+CONFIG_RC_DEVICES=y
-+CONFIG_IR_GPIO_CIR=m
-+CONFIG_IR_GPIO_TX=m
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index e6ae08c979ea..a18c7650c489 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -4,6 +4,7 @@
+ #include "jz4780.dtsi"
+ #include <dt-bindings/clock/ingenic,tcu.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/regulator/active-semi,8865-regulator.h>
+ 
+@@ -27,6 +28,17 @@
+ 		       0x30000000 0x30000000>;
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		sw1 {
++			label = "ci20:sw1";
++			linux,code = <KEY_F13>;
++			gpios = <&gpd 17 GPIO_ACTIVE_HIGH>;
++			wakeup-source;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -58,6 +70,8 @@
+ 	eth0_power: fixedregulator@0 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "eth0_power";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
+ 		gpio = <&gpb 25 GPIO_ACTIVE_LOW>;
+ 		enable-active-high;
+ 	};
 -- 
 2.23.0
 
