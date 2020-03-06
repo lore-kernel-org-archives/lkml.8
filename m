@@ -2,202 +2,277 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75F0C3F2D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA14C3F2D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D5420848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950CD2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725934AbgCFGcf (ORCPT
+        id S1726047AbgCFGey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 01:32:35 -0500
-Received: from mga14.intel.com ([192.55.52.115]:13269 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgCFGcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 01:32:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 22:32:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,521,1574150400"; 
-   d="scan'208";a="241085666"
-Received: from skuppusw-mobl5.amr.corp.intel.com (HELO [10.252.200.198]) ([10.252.200.198])
-  by orsmga003.jf.intel.com with ESMTP; 05 Mar 2020 22:32:33 -0800
-Subject: Re: [PATCH v17 11/12] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Olof Johansson <olof@lixom.net>
-References: <20200306034718.GA117283@google.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <5384cf38-4b33-f95b-4bb9-b82f0dc63a1f@linux.intel.com>
-Date:   Thu, 5 Mar 2020 22:32:33 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 6 Mar 2020 01:34:54 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11183 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725873AbgCFGey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 01:34:54 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EB4689A4DFD4F5C27DF2;
+        Fri,  6 Mar 2020 14:34:39 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 6 Mar 2020 14:34:31 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v4] f2fs: introduce F2FS_IOC_RELEASE_COMPRESS_BLOCKS
+Date:   Fri, 6 Mar 2020 14:34:29 +0800
+Message-ID: <20200306063429.21962-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20200306034718.GA117283@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+There are still reserved blocks on compressed inode, this patch
+introduce a new ioctl to help release reserved blocks back to
+filesystem, so that userspace can reuse those freed space.
 
-On 3/5/2020 7:47 PM, Bjorn Helgaas wrote:
-> [+cc Olof for pcie_ports=dpc-native question]
-> 
-> On Tue, Mar 03, 2020 at 06:36:34PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
->> +void pci_acpi_add_edr_notifier(struct pci_dev *pdev)
->> +{
->> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
->> +	acpi_status astatus;
->> +
->> +	if (!adev) {
->> +		pci_dbg(pdev, "No valid ACPI node, so skip EDR init\n");
->> +		return;
->> +	}
->> +
->> +	/*
->> +	 * Per the Downstream Port Containment Related Enhancements ECN to
->> +	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-6, EDR support
->> +	 * can only be enabled if DPC is controlled by firmware.
->> +	 *
->> +	 * TODO: Remove dependency on ACPI FIRMWARE_FIRST bit to
->> +	 * determine ownership of DPC between firmware or OS.
->> +	 * Per the Downstream Port Containment Related Enhancements
->> +	 * ECN to the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
->> +	 * OS can use bit 7 of _OSC control field to negotiate control
->> +	 * over DPC Capability.
->> +	 */
->> +	if (!pcie_aer_get_firmware_first(pdev) || pcie_ports_dpc_native) {
->> +		pci_dbg(pdev, "OS handles AER/DPC, so skip EDR init\n");
->> +		return;
->> +	}
->> +
->> +	astatus = acpi_install_notify_handler(adev->handle, ACPI_SYSTEM_NOTIFY,
->> +					      edr_handle_event, pdev);
-> 
-> I think this is still problematic.  You mentioned Alex's work [1,2].
-> We do need to revisit those patches, but I don't really want to defer
-> *this* question of the EDR notify handler.  Negotiating support of
-> AER/DPC/EDR is already complicated, and I don't want to complicate it
-> even more by merging something we already know is not quite right.
-> 
-> I don't understand your comment that "EDR can only be enabled if DPC
-> is controlled by firmware."  I don't see anything in table 4-6 to that
-> effect.  The only mention of EDR there is to say that the OS can
-> access the DPC capability in the EDR processing window, i.e., after
-> the OS receives the EDR notification and before it clears DPC Trigger
-> Status.
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+v4:
+fix to align parameter @count to cluster size.
+ fs/f2fs/f2fs.h |   6 ++
+ fs/f2fs/file.c | 155 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 160 insertions(+), 1 deletion(-)
 
-Please check the following spec reference (from table 4-6).
-
-     If control of this feature was requested and denied, firmware is
-     responsible for initializing Downstream Port Containment Extended
-     Capability Structures per firmware policy. Further, the OS is
-     permitted to read or write DPC Control and Status registers of a
-     port while processing an Error Disconnect Recover notification from
-     firmware on that port.
-
-It specifies firmware is expected to use EDR notification *only* when 
-the control of DPC is requested and denied ( which means firmware owns 
-the DPC). Although it does not explicitly state that we should install 
-EDR notification handler only if firmware owns DPC, it mentions that EDR 
-notification is only used if firmware owns DPC. So why should we install 
-it if its not going to be used when OS owns DPC.
-
-Also check the following reference from section 2 of EDR ECN. It also 
-clarifies EDR feature is only used when firmware owns DPC.
-
-     PCIe Base Specification suggests that Downstream Port Containment
-     may be controlled either by the Firmware or the Operating System. It
-     also suggests that the Firmware retain ownership of Downstream Port
-     Containment if it also owns AER. When the Firmware owns Downstream
-     Port Containment, *it is expected to use the new “Error Disconnect
-     Recover” notification to alert OSPM of a Downstream Port Containment
-     event*.
-
-
-> 
-> EDR is a general ACPI feature that is not PCI-specific.  For EDR on
-> PCI devices, OS support is advertised via _OSC *Support* (table 4-4),
-> which says:
-> 
->    Error Disconnect Recover Supported
-> 
->    The OS sets this bit to 1 if it supports Error Disconnect Recover
->    notification on PCI Express Host Bridges, Root Ports and Switch
->    Downstream Ports. Otherwise, the OS sets this bit to 0.
-> 
-> I think that means that if we set the "Error Disconnect Recover
-> Supported" _OSC bit (OSC_PCI_EDR_SUPPORT), we must install a handler
-> for EDR notifications.  We set OSC_PCI_EDR_SUPPORT whenever
-> CONFIG_PCIE_EDR=y, so I think we should install the notify handler
-> here unconditionally (since this file is compiled only when
-> CONFIG_PCIE_EDR=y).
-
-Although spec does not provide any restrictions on when to install EDR 
-notification, it provides reference that notification is only used if 
-firmware owns DPC. So when OS owns DPC, there is no need to install them 
-at all.
-
-Although installing them when OS owns DPC should not affect anything, it 
-also opens up a additional way for firmware to mess up things. For 
-example, consider a case when firmware gives OS control of DPC, but 
-still sends EDR notification to OS. Although its unrealistic, I am just 
-giving an example.
-
-> 
-> I don't think we should even test pcie_ports_dpc_native here.  If we
-> told the platform we can handle EDR notifications, we should be
-> prepared to get them, regardless of whether the user booted with
-> "pcie_ports=dpc-native".
-
-As per the command line parameter documentation, setting 
-pcie_ports=dpc-native means, we will be using native PCIe service for 
-DPC. So if DPC is handled by OS, as per my argument mentioned above (EDR 
-is only useful if
-DPC handled by firmware), there is no use in installing EDR notification.
-
-https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/kernel-parameters.txt#L3642
-
-dpc-native - Use native PCIe service for DPC only.
-
-> 
-> It's conceivable that pcie_ports_dpc_native should make us do
-> something different in the notify handler after we *get* a
-> notification, but I doubt we should even worry about that.
-> 
-> IIUC, pcie_ports_dpc_native exists because Linux DPC originally worked
-> even if the OS didn't have control of AER.  eed85ff4c0da7 ("PCI/DPC:
-> Enable DPC only if AER is available") meant that if Linux didn't have
-> control of AER, DPC no longer worked.  "pcie_ports=dpc-native" is
-> basically a way to get that previous behavior of Linux DPC regardless
-> of AER control.
-> 
-> I don't think that issue applies to EDR.  There's no concept of an OS
-> "enabling" or "being granted control of" EDR.  The OS merely
-> advertises that "yes, I'm prepared to handle EDR notifications".
-> AFAICT, the ECR says nothing about EDR support being conditional on OS
-> control of AER or DPC.  The notify *handler* might need to do
-> different things depending on whether we have AER or DPC control, but
-> the handler itself should be registered regardless.
-> 
-> [1] https://lore.kernel.org/linux-pci/20181115231605.24352-1-mr.nuke.me@gmail.com/
-> [2] https://lore.kernel.org/linux-pci/20190326172343.28946-1-mr.nuke.me@gmail.com/
-> 
-
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 123faa1bab1c..09270854cce8 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -427,6 +427,8 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+ #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
+ #define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
+ #define F2FS_IOC_GET_COMPRESS_BLOCKS	_IOR(F2FS_IOCTL_MAGIC, 17, __u64)
++#define F2FS_IOC_RELEASE_COMPRESS_BLOCKS				\
++					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
+ 
+ #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
+ #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
+@@ -3962,6 +3964,10 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
+ {
+ 	int diff = F2FS_I(inode)->i_cluster_size - blocks;
+ 
++	/* don't update i_compr_blocks if saved blocks were released */
++	if (!add && !F2FS_I(inode)->i_compr_blocks)
++		return;
++
+ 	if (add) {
+ 		F2FS_I(inode)->i_compr_blocks += diff;
+ 		stat_add_compr_blocks(inode, diff);
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index fb070816a8a5..12cd9a25bf38 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -557,6 +557,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+ 	bool compressed_cluster = false;
+ 	int cluster_index = 0, valid_blocks = 0;
+ 	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
++	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
+ 
+ 	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+ 		base = get_extra_isize(dn->inode);
+@@ -595,7 +596,9 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+ 			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
+ 
+ 		f2fs_invalidate_blocks(sbi, blkaddr);
+-		nr_free++;
++
++		if (released && blkaddr != COMPRESS_ADDR)
++			nr_free++;
+ 	}
+ 
+ 	if (compressed_cluster)
+@@ -3410,6 +3413,153 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
+ 	return put_user(blocks, (u64 __user *)arg);
+ }
+ 
++static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
++{
++	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
++	unsigned int released_blocks = 0;
++	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
++	block_t blkaddr;
++	int i;
++
++	for (i = 0; i < count; i++) {
++		blkaddr = data_blkaddr(dn->inode, dn->node_page,
++						dn->ofs_in_node + i);
++
++		if (!__is_valid_data_blkaddr(blkaddr))
++			continue;
++		if (unlikely(!f2fs_is_valid_blkaddr(sbi, blkaddr,
++					DATA_GENERIC_ENHANCE)))
++			return -EFSCORRUPTED;
++	}
++
++	while (count) {
++		int compr_blocks = 0;
++
++		for (i = 0; i < cluster_size; i++, dn->ofs_in_node++) {
++			blkaddr = f2fs_data_blkaddr(dn);
++
++			if (i == 0) {
++				if (blkaddr == COMPRESS_ADDR)
++					continue;
++				dn->ofs_in_node += cluster_size;
++				goto next;
++			}
++
++			if (__is_valid_data_blkaddr(blkaddr))
++				compr_blocks++;
++
++			if (blkaddr != NEW_ADDR)
++				continue;
++
++			dn->data_blkaddr = NULL_ADDR;
++			f2fs_set_data_blkaddr(dn);
++		}
++
++		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
++		dec_valid_block_count(sbi, dn->inode,
++					cluster_size - compr_blocks);
++
++		released_blocks += cluster_size - compr_blocks;
++next:
++		count -= cluster_size;
++	}
++
++	return released_blocks;
++}
++
++static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
++{
++	struct inode *inode = file_inode(filp);
++	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
++	pgoff_t page_idx = 0, last_idx;
++	unsigned int released_blocks = 0;
++	int ret;
++
++	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
++		return -EOPNOTSUPP;
++
++	if (!f2fs_compressed_file(inode))
++		return -EINVAL;
++
++	if (f2fs_readonly(sbi->sb))
++		return -EROFS;
++
++	ret = mnt_want_write_file(filp);
++	if (ret)
++		return ret;
++
++	if (!F2FS_I(inode)->i_compr_blocks)
++		goto out;
++
++	f2fs_balance_fs(F2FS_I_SB(inode), true);
++
++	inode_lock(inode);
++
++	if (!IS_IMMUTABLE(inode)) {
++		F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
++		f2fs_set_inode_flags(inode);
++		inode->i_ctime = current_time(inode);
++		f2fs_mark_inode_dirty_sync(inode, true);
++	}
++
++	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
++	down_write(&F2FS_I(inode)->i_mmap_sem);
++
++	last_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
++
++	while (page_idx < last_idx) {
++		struct dnode_of_data dn;
++		pgoff_t end_offset, count;
++
++		set_new_dnode(&dn, inode, NULL, NULL, 0);
++		ret = f2fs_get_dnode_of_data(&dn, page_idx, LOOKUP_NODE);
++		if (ret) {
++			if (ret == -ENOENT) {
++				page_idx = f2fs_get_next_page_offset(&dn,
++								page_idx);
++				ret = 0;
++				continue;
++			}
++			break;
++		}
++
++		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
++		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
++		count = roundup(count, F2FS_I(inode)->i_cluster_size);
++
++		ret = release_compress_blocks(&dn, count);
++
++		f2fs_put_dnode(&dn);
++
++		if (ret < 0)
++			break;
++
++		page_idx += count;
++		released_blocks += ret;
++	}
++
++	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
++	up_write(&F2FS_I(inode)->i_mmap_sem);
++
++	inode_unlock(inode);
++out:
++	mnt_drop_write_file(filp);
++
++	if (ret >= 0) {
++		ret = put_user(released_blocks, (u64 __user *)arg);
++	} else if (released_blocks && F2FS_I(inode)->i_compr_blocks) {
++		set_sbi_flag(sbi, SBI_NEED_FSCK);
++		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
++			"iblocks=%llu, released=%u, compr_blocks=%llu, "
++			"run fsck to fix.",
++			__func__, inode->i_ino, inode->i_blocks,
++			released_blocks,
++			F2FS_I(inode)->i_compr_blocks);
++	}
++
++	return ret;
++}
++
+ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ {
+ 	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+@@ -3490,6 +3640,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		return f2fs_set_volume_name(filp, arg);
+ 	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+ 		return f2fs_get_compress_blocks(filp, arg);
++	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
++		return f2fs_release_compress_blocks(filp, arg);
+ 	default:
+ 		return -ENOTTY;
+ 	}
+@@ -3650,6 +3802,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	case F2FS_IOC_GET_VOLUME_NAME:
+ 	case F2FS_IOC_SET_VOLUME_NAME:
+ 	case F2FS_IOC_GET_COMPRESS_BLOCKS:
++	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+ 		break;
+ 	default:
+ 		return -ENOIOCTLCMD;
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.18.0.rc1
+
