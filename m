@@ -2,86 +2,98 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED3FC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03587C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B704020675
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE12020675
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:09:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgCFTJZ convert rfc822-to-8bit (ORCPT
+        id S1726751AbgCFTJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:09:25 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:35526 "EHLO gloria.sntech.de"
+        Fri, 6 Mar 2020 14:09:56 -0500
+Received: from muru.com ([72.249.23.125]:59252 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCFTJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:09:25 -0500
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jAILK-0002nL-U7; Fri, 06 Mar 2020 20:09:06 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Emmanuel Vadot <manu@freebsd.org>,
-        Alexis Ballier <aballier@gentoo.org>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Nick Xie <nick@khadas.com>, Andy Yan <andy.yan@rock-chips.com>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 2/2] arm64: dts: rockchip: Add initial support for Pinebook Pro
-Date:   Fri, 06 Mar 2020 20:09:05 +0100
-Message-ID: <1783248.GgDFSgCcj8@diego>
-In-Reply-To: <b30fef29-6667-9200-178b-4d0e9fc63c12@manjaro.org>
-References: <20200304213023.689983-2-t.schramm@manjaro.org> <6168222.Wuk326WHQK@phil> <b30fef29-6667-9200-178b-4d0e9fc63c12@manjaro.org>
+        id S1725873AbgCFTJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 14:09:56 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 0546C8027;
+        Fri,  6 Mar 2020 19:10:40 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 11:09:52 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Arthur Demchenkov <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>, ruleh <ruleh@gmx.de>
+Subject: Re: [PATCHv2 4/3] Input: omap4-keypad - scan the keys in two phases
+ to detect lost key-up
+Message-ID: <20200306190952.GM37466@atomide.com>
+References: <20200228171223.11444-1-tony@atomide.com>
+ <20200228180243.GM37466@atomide.com>
+ <20200306190433.GG217608@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306190433.GG217608@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tobias,
-
-Am Freitag, 6. März 2020, 19:58:45 CET schrieb Tobias Schramm:
-> Hi Heiko,
+* Dmitry Torokhov <dmitry.torokhov@gmail.com> [200306 19:05]:
+> On Fri, Feb 28, 2020 at 10:02:43AM -0800, Tony Lindgren wrote:
+> > In addition to handling errata i689 for idle with state, we must also
+> > check for lost key up interrupts on fast key presses.
+> > 
+> > For example rapidly pressing shift-shift-j can sometimes produce a J
+> > instead of j. Let's fix the issue by scanning the keyboard in two
+> > phases. First we scan for any key up events that we may have missed,
+> > and then we scan for key down events.
+> > 
+> > Cc: Arthur Demchenkov <spinal.by@gmail.com>
+> > Cc: Merlijn Wajer <merlijn@wizzup.org>
+> > Cc: Pavel Machek <pavel@ucw.cz>
+> > Cc: Sebastian Reichel <sre@kernel.org>
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > ---
+> >  drivers/input/keyboard/omap4-keypad.c | 48 ++++++++++++++++++---------
+> >  1 file changed, 32 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
+> > --- a/drivers/input/keyboard/omap4-keypad.c
+> > +++ b/drivers/input/keyboard/omap4-keypad.c
+> > @@ -109,6 +109,34 @@ static void kbd_write_irqreg(struct omap4_keypad *keypad_data,
+> >  		     keypad_data->base + keypad_data->irqreg_offset + offset);
+> >  }
+> >  
+> > +static void omap4_keypad_scan_state(struct omap4_keypad *keypad_data,
+> > +				    unsigned char *key_state,
+> > +				    bool down)
+> > +{
+> > +	struct input_dev *input_dev = keypad_data->input;
+> > +	unsigned int col, row, code, changed;
+> > +	bool key_down;
+> > +
+> > +	for (row = 0; row < keypad_data->rows; row++) {
+> > +		changed = key_state[row] ^ keypad_data->key_state[row];
+> > +		if (!changed)
+> > +			continue;
+> > +
+> > +		for (col = 0; col < keypad_data->cols; col++) {
+> > +			if (changed & (1 << col)) {
 > 
-> >> This commit adds initial dt support for the rk3399 based Pinebook Pro.
-> >>
-> >> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
-> >
-> > applied for 5.7
-> >
 > 
-> any chance you can squeeze in another small fix? Somewhere in the
-> process the vmcc and vqmmc supplies of the sdmmc controller were removed
-> in error. Those should be added to the sdmmc controller like this:
-> 
->  &sdmmc {
->         pinctrl-names = "default";
->         pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
->         sd-uhs-sdr104;
-> +       vmmc-supply = <&vcc3v0_sd>;
-> +       vqmmc-supply = <&vcc_sdio>;
->         status = "okay";
->  };
+> Looking at all too this, key state is 64 bit value, so if we make it a
+> bitmap and use "for_each_set_bit()" we can simplify this scanning code.
 
-I've amended the commit with these two properties.
+OK good idea, I'll take a look.
 
-Heiko
+Regards,
 
-
+Tony
