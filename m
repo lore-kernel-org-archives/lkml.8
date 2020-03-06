@@ -2,114 +2,178 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1375AC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FD5C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE830206E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TK+sI/Ld"
+	by mail.kernel.org (Postfix) with ESMTP id CF18A206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:55:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgCFQxE (ORCPT
+        id S1726397AbgCFQzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:53:04 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54230 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgCFQxD (ORCPT
+        Fri, 6 Mar 2020 11:55:13 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:36373 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgCFQzN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:53:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Hc8EBMbziFCPflui+tXZT2dPAWJHoF3kP2tPXgp7AkU=; b=TK+sI/Ld4B82lkfwn/6fJoY4P+
-        gkj8zAwtDF7zS03QcZEyuZaFrQkkqJ8TMExYdioC8sYW7FBqt2Go+0VwlvQagXXs0SPCYIVdBcH1n
-        Yy0Mf4ADrOFSbQPFxYmAtS8oULu3+gOG1IqcrLpRwzhePOC2CWGVGkCHJcXNoyWlun5UpH2NOaXW/
-        YmYx3SsXWWdkoX4jLsxEYIV5twmHnvFYxG7n8ZX/j6UbX6SwRI74i0m58oiezWmfBUTu2xiXmP4gX
-        AHVkS4s8Gq28FyFNtQ9lwpD2pWdu0CdFm1j02F65pvDkjsGCHbG/UiT9Ktekzl1MZAvzqC/QJwLgW
-        tW1dsiSw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jAGDd-0005Ys-2b; Fri, 06 Mar 2020 16:53:01 +0000
-Date:   Fri, 6 Mar 2020 08:53:00 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, Qian Cai <cai@lca.pw>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] lib: disable KCSAN for XArray
-Message-ID: <20200306165300.GC25710@bombadil.infradead.org>
-References: <20200304031551.1326-1-cai@lca.pw>
- <20200304033329.GZ29971@bombadil.infradead.org>
- <20200304040515.GX2935@paulmck-ThinkPad-P72>
- <20200304043356.GC29971@bombadil.infradead.org>
- <20200304141021.GY2935@paulmck-ThinkPad-P72>
- <20200305151831.GM29971@bombadil.infradead.org>
- <20200305213946.GL2935@paulmck-ThinkPad-P72>
- <CANpmjNOtsdxh3YLcF-pUMua9afWfhg5P_2ziRGSMuT8Gi0c5TA@mail.gmail.com>
+        Fri, 6 Mar 2020 11:55:13 -0500
+Received: by mail-io1-f71.google.com with SMTP id 24so1861812ioz.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 08:55:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=HzL7QU7DANWgD4MgzyDPRHVQ+C6++sSLYZjWnM4LCQM=;
+        b=M3G/GA83JjPlfv/88JwRuymsFHbgF9acp5HATJM8UXpL+BCGhMzm4zrEhf3VeFFicZ
+         qA1irXza1sHR5MfwoBBqqaJtFtzPQULbTgjOmHAMApJUvqlhbI4deyuRXBSyIsmzPO2y
+         HXYiP45m7pznMqcVdKU/+2MHpgKGGvPX+VsCDnD0sWEZXnqWfXephEVzG31wslWs3enu
+         cNzcXWkmwNcd8hSd0+NXyHSyrqC7EuTIU6QZym1b4Oy262E1WmWFSdrYrAD1DTp5TKfy
+         ms/oLo4luZg5/gkDopRIGe8Uf59vjZCl2gF34O5emFZwmyVadbj5573nwoTLoHYpThvF
+         TRyA==
+X-Gm-Message-State: ANhLgQ2dcWATWLkT9tWeAP48DkmRjxaLN/20V+yG5rbY9vEYtogq96Xc
+        9ne2C0o6IE+ydzx+jpJSRl7o/ySNsFFlLk7V2JlkMMfmwMRe
+X-Google-Smtp-Source: ADFU+vu2N21lrsqBQER3DinpW2Fq9TmJ/aiLYSgwZ7urGAJXw3IhvnFjnfBbym4gu0f4qnD+7UW0EyD72qbX2aaMERvRvM1MSflQ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNOtsdxh3YLcF-pUMua9afWfhg5P_2ziRGSMuT8Gi0c5TA@mail.gmail.com>
+X-Received: by 2002:a05:6e02:791:: with SMTP id q17mr4211822ils.242.1583513712507;
+ Fri, 06 Mar 2020 08:55:12 -0800 (PST)
+Date:   Fri, 06 Mar 2020 08:55:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000054c0d105a0328487@google.com>
+Subject: INFO: trying to register non-static key in uhid_dev_destroy
+From:   syzbot <syzbot+0c601d7fbb8122d39093@syzkaller.appspotmail.com>
+To:     benjamin.tissoires@redhat.com, dh.herrmann@googlemail.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 02:38:39PM +0100, Marco Elver wrote:
-> On Thu, 5 Mar 2020 at 22:39, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > On Thu, Mar 05, 2020 at 07:18:31AM -0800, Matthew Wilcox wrote:
-> > > I have found three locations where we use the ->marks array:
-> > >
-> > > 1.
-> > >                         unsigned long data = *addr & (~0UL << offset);
-> > >                         if (data)
-> > >                                 return __ffs(data);
-> > >
-> > > 2.
-> > >         return find_next_bit(addr, XA_CHUNK_SIZE, offset);
-> > > 3.
-> > >         return test_bit(offset, node_marks(node, mark));
-> > >
-> > > The modifications -- all done with the spinlock held -- use the non-atomic
-> > > bitops:
-> > >         return __test_and_set_bit(offset, node_marks(node, mark));
-> > >         return __test_and_clear_bit(offset, node_marks(node, mark));
-> > >         bitmap_fill(node_marks(node, mark), XA_CHUNK_SIZE);
-> > > (that last one doesn't really count -- it's done prior to placing the node
-> > > in the tree)
-> > >
-> > > The first read seems straightforward; I can place a READ_ONCE around
-> > > *addr.  The second & third reads are rather less straightforward.
-> > > find_next_bit() and test_bit() are common code and use plain loads today.
-> >
-> > Yes, those last two are a bit annoying, aren't they?  I guess the first
-> > thing would be placing READ_ONCE() inside them, and if that results in
-> > regressions, have an alternative API for concurrent access?
-> 
-> FWIW test_bit() is an "atomic" bitop (per atomic_bitops.txt), and
-> KCSAN treats it as such. On x86 arch_test_bit() is not instrumented,
-> and then in asm-generic/bitops/instrumented-non-atomic.h test_bit() is
-> instrumented with instrument_atomic_read(). So on x86, things should
-> already be fine for test_bit(). Not sure about other architectures.
+Hello,
 
-Hum.  It may well be documented as atomic, but is it?  Here's the
-generic implementation:
+syzbot found the following crash on:
 
-static inline int test_bit(int nr, const volatile unsigned long *addr)
-{
-        return 1UL & (addr[BIT_WORD(nr)] >> (nr & (BITS_PER_LONG-1)));
-}
+HEAD commit:    c99b17ac Add linux-next specific files for 20200225
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1652870de00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6b7ebe4bd0931c45
+dashboard link: https://syzkaller.appspot.com/bug?extid=0c601d7fbb8122d39093
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13abdfa1e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d4670de00000
 
-arch_test_bit is only used by the instrumented variants:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0c601d7fbb8122d39093@syzkaller.appspotmail.com
 
-$ git grep arch_test_bit include
-include/asm-generic/bitops/instrumented-non-atomic.h:   return arch_test_bit(nr, addr);
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 23022 Comm: syz-executor318 Not tainted 5.6.0-rc3-next-20200225-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ assign_lock_key kernel/locking/lockdep.c:881 [inline]
+ register_lock_class+0x179e/0x1850 kernel/locking/lockdep.c:1193
+ __lock_acquire+0xf4/0x6320 kernel/locking/lockdep.c:4072
+ lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4720
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+ __wake_up_common_lock+0xc8/0x150 kernel/sched/wait.c:122
+ __wake_up+0xe/0x10 kernel/sched/wait.c:142
+ uhid_dev_destroy+0x74/0x110 drivers/hid/uhid.c:563
+ uhid_char_release+0x54/0xc0 drivers/hid/uhid.c:642
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0xbcb/0x3030 kernel/exit.c:802
+ do_group_exit+0x135/0x360 kernel/exit.c:900
+ get_signal+0x47c/0x24f0 kernel/signal.c:2734
+ do_signal+0x87/0x1700 arch/x86/kernel/signal.c:813
+ exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:161
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+ do_syscall_64+0x676/0x790 arch/x86/entry/common.c:305
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446ed9
+Code: e8 dc e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff94dd97cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00000000006ddc28 RCX: 0000000000446ed9
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006ddc28
+RBP: 00000000006ddc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006ddc2c
+R13: 00007fff9853c74f R14: 00007ff94dd989c0 R15: 0000000000000000
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 PID: 23022 Comm: syz-executor318 Not tainted 5.6.0-rc3-next-20200225-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__wake_up_common+0xdf/0x610 kernel/sched/wait.c:86
+Code: 05 00 00 4c 8b 43 38 49 83 e8 18 49 8d 78 18 48 39 7d d0 0f 84 64 02 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <80> 3c 01 00 0f 85 0d 05 00 00 49 8b 40 18 89 55 b0 31 db 49 bc 00
+RSP: 0018:ffffc900072df898 EFLAGS: 00010046
+RAX: dffffc0000000000 RBX: ffff8880997493c8 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: 1ffffffff154c73a RDI: 0000000000000000
+RBP: ffffc900072df8f0 R08: ffffffffffffffe8 R09: ffffc900072df940
+R10: fffff52000e5bf0c R11: 0000000000000003 R12: 0000000000000001
+R13: 0000000000000286 R14: 0000000000000000 R15: 0000000000000001
+FS:  00007ff94dd98700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f5d2798b1a0 CR3: 00000000a2813000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __wake_up_common_lock+0xea/0x150 kernel/sched/wait.c:123
+ __wake_up+0xe/0x10 kernel/sched/wait.c:142
+ uhid_dev_destroy+0x74/0x110 drivers/hid/uhid.c:563
+ uhid_char_release+0x54/0xc0 drivers/hid/uhid.c:642
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0xbcb/0x3030 kernel/exit.c:802
+ do_group_exit+0x135/0x360 kernel/exit.c:900
+ get_signal+0x47c/0x24f0 kernel/signal.c:2734
+ do_signal+0x87/0x1700 arch/x86/kernel/signal.c:813
+ exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:161
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+ do_syscall_64+0x676/0x790 arch/x86/entry/common.c:305
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446ed9
+Code: e8 dc e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff94dd97cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00000000006ddc28 RCX: 0000000000446ed9
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006ddc28
+RBP: 00000000006ddc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006ddc2c
+R13: 00007fff9853c74f R14: 00007ff94dd989c0 R15: 0000000000000000
+Modules linked in:
+---[ end trace a0edf4c2b9ab3a41 ]---
+RIP: 0010:__wake_up_common+0xdf/0x610 kernel/sched/wait.c:86
+Code: 05 00 00 4c 8b 43 38 49 83 e8 18 49 8d 78 18 48 39 7d d0 0f 84 64 02 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <80> 3c 01 00 0f 85 0d 05 00 00 49 8b 40 18 89 55 b0 31 db 49 bc 00
+RSP: 0018:ffffc900072df898 EFLAGS: 00010046
+RAX: dffffc0000000000 RBX: ffff8880997493c8 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: 1ffffffff154c73a RDI: 0000000000000000
+RBP: ffffc900072df8f0 R08: ffffffffffffffe8 R09: ffffc900072df940
+R10: fffff52000e5bf0c R11: 0000000000000003 R12: 0000000000000001
+R13: 0000000000000286 R14: 0000000000000000 R15: 0000000000000001
+FS:  00007ff94dd98700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f5d2798b1a0 CR3: 00000000a2813000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-As far as I can tell, the generic version is what's used on x86.  Does
-the 'volatile' qualifier save us here?
 
-find_next_bit() doesn't have the 'volatile' qualifier, so may still be
-a problem?
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
