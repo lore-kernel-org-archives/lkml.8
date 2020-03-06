@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42B8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4359BC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3941208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E82E2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgCFMsl (ORCPT
+        id S1727073AbgCFMss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:48:41 -0500
-Received: from mail.baikalelectronics.com ([87.245.175.226]:35500 "EHLO
+        Fri, 6 Mar 2020 07:48:48 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:35534 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgCFMsk (ORCPT
+        with ESMTP id S1727059AbgCFMss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:48:40 -0500
+        Fri, 6 Mar 2020 07:48:48 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E861A803087C;
-        Fri,  6 Mar 2020 12:48:37 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3F7468030786;
+        Fri,  6 Mar 2020 12:48:45 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9aJ0kHhNm6oi; Fri,  6 Mar 2020 15:48:37 +0300 (MSK)
+        with ESMTP id mqFm_z3Jdh1I; Fri,  6 Mar 2020 15:48:44 +0300 (MSK)
 From:   <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -35,15 +35,15 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 06/22] mips: cm: Add L2 ECC/parity errors reporting
-Date:   Fri, 6 Mar 2020 15:46:49 +0300
+Subject: [PATCH 08/22] mips: Add MIPS Warrior P5600 support
+Date:   Fri, 6 Mar 2020 15:46:51 +0300
 In-Reply-To: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200306124837.E861A803087C@mail.baikalelectronics.ru>
+Message-Id: <20200306124845.3F7468030786@mail.baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -51,12 +51,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-According to the MIPS32 InterAptiv software manual error codes 24 - 26
-of CM2 indicate L2 ECC/parity error with switching to a corresponding
-errors info fields. This patch provides these errors parsing code,
-which handles the read/write uncorrectable and correctable ECC/parity
-errors, and prints instruction causing the fault, RAM array type, cache
-way/dword and syndrome associated with the faulty data.
+This is a MIPS32 Release 5 based IP core with XPA, EVA, dual/quad issue
+exec pipes, MMU with two-levels TLB, UCA, MSA, MDU core level features
+and system level features like up to six P5600 calculation cores, CM2
+with L2 cache, IOCU/IOMMU (though might be unused depending on the
+system-specific IP core configuration), GIC, CPC, virtualisation module,
+eJTAG and PDtrace.
+
+As being MIPS32 Release 5 based core it provides all the features
+available by the CPU_MIPS32_R5 config, while adding a few more like
+UCA attribute support, availability of CPU-freq (by means of L2/CM
+clock ratio setting), EI/VI GIC modes detection at runtime.
+
+In addition to this if P5600 architecture is enabled modern GNU GCC
+provides a specific tuning for P5600 processors with respect to the
+classic MIPS32 Release 5. First of all branch-likely avoidance is
+activated only when the code is compiled with the speed optimization
+(avoidance is always enabled for the pure MIPS32 Release 5
+architecture). Secondly the madd/msub avoidance is enabled since
+madd/msub utilization isn't profitable due to overhead of getting the
+result out of the HI/LO registers. Multiply-accumulate instructions are
+activated and utilized together with the necessary code reorder when
+multiply-add/multiply-subtract statements are met. Finally load/store
+bonding is activated by default. All of these optimizations may make
+the code relatively faster than if just MIP32 release 5 architecture
+was requested.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -64,103 +83,127 @@ Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 ---
- arch/mips/kernel/mips-cm.c | 62 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 60 insertions(+), 2 deletions(-)
+ arch/mips/Kconfig              | 38 +++++++++++++++++++++++++++++-----
+ arch/mips/Makefile             |  1 +
+ arch/mips/include/asm/module.h |  2 ++
+ 3 files changed, 36 insertions(+), 5 deletions(-)
 
-diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index 361bfc91a0e6..f60af512c877 100644
---- a/arch/mips/kernel/mips-cm.c
-+++ b/arch/mips/kernel/mips-cm.c
-@@ -114,6 +114,48 @@ static char *cm2_core[8] = {
- 	"Exclusive/OK", "Exclusive/Data"
- };
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index d427d18b4bd3..fd1366921a80 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1650,6 +1650,28 @@ config CPU_MIPS64_R6
+ 	  family, are based on a MIPS64r6 processor. If you own an older
+ 	  processor, you probably need to select MIPS64r1 or MIPS64r2 instead.
  
-+static char *cm2_l2_type[4] = {
-+	[0x0] = "None",
-+	[0x1] = "Tag RAM single/double ECC error",
-+	[0x2] = "Data RAM single/double ECC error",
-+	[0x3] = "WS RAM uncorrectable dirty parity"
-+};
++config CPU_P5600
++	bool "MIPS Warrior P5600"
++	depends on SYS_HAS_CPU_P5600
++	select CPU_HAS_PREFETCH
++	select CPU_SUPPORTS_32BIT_KERNEL
++	select CPU_SUPPORTS_HIGHMEM
++	select CPU_SUPPORTS_MSA
++	select CPU_SUPPORTS_UNCACHED_ACCELERATED
++	select CPU_SUPPORTS_CPUFREQ
++	select CPU_MIPSR2_IRQ_VI
++	select CPU_MIPSR2_IRQ_EI
++	select HAVE_KVM
++	select MIPS_O32_FP64_SUPPORT
++	help
++	  Choose this option to build a kernel for MIPS Warrior P5600 CPU.
++	  It's based on MIPS32r5 ISA with XPA, EVA, dual/quad issue exec pipes,
++	  MMU with two-levels TLB, UCA, MSA, MDU core level features and system
++	  level features like up to six P5600 calculation cores, CM2 with L2
++	  cache, IOCU/IOMMU (though might be unused depending on the system-
++	  specific IP core configuration), GIC, CPC, virtualisation module,
++	  eJTAG and PDtrace.
 +
-+static char *cm2_l2_instr[32] = {
-+	[0x00] = "L2_NOP",
-+	[0x01] = "L2_ERR_CORR",
-+	[0x02] = "L2_TAG_INV",
-+	[0x03] = "L2_WS_CLEAN",
-+	[0x04] = "L2_RD_MDYFY_WR",
-+	[0x05] = "L2_WS_MRU",
-+	[0x06] = "L2_EVICT_LN2",
-+	[0x07] = "0x07",
-+	[0x08] = "L2_EVICT",
-+	[0x09] = "L2_REFL",
-+	[0x0a] = "L2_RD",
-+	[0x0b] = "L2_WR",
-+	[0x0c] = "L2_EVICT_MRU",
-+	[0x0d] = "L2_SYNC",
-+	[0x0e] = "L2_REFL_ERR",
-+	[0x0f] = "0x0f",
-+	[0x10] = "L2_INDX_WB_INV",
-+	[0x11] = "L2_INDX_LD_TAG",
-+	[0x12] = "L2_INDX_ST_TAG",
-+	[0x13] = "L2_INDX_ST_DATA",
-+	[0x14] = "L2_INDX_ST_ECC",
-+	[0x15] = "0x15",
-+	[0x16] = "0x16",
-+	[0x17] = "0x17",
-+	[0x18] = "L2_FTCH_AND_LCK",
-+	[0x19] = "L2_HIT_INV",
-+	[0x1a] = "L2_HIT_WB_INV",
-+	[0x1b] = "L2_HIT_WB",
-+	[0x1c] = "0x1c",
-+	[0x1d] = "0x1d",
-+	[0x1e] = "0x1e",
-+	[0x1f] = "0x1f"
-+};
-+
- static char *cm2_causes[32] = {
- 	"None", "GC_WR_ERR", "GC_RD_ERR", "COH_WR_ERR",
- 	"COH_RD_ERR", "MMIO_WR_ERR", "MMIO_RD_ERR", "0x07",
-@@ -121,7 +163,7 @@ static char *cm2_causes[32] = {
- 	"0x0c", "0x0d", "0x0e", "0x0f",
- 	"0x10", "INTVN_WR_ERR", "INTVN_RD_ERR", "0x13",
- 	"0x14", "0x15", "0x16", "0x17",
--	"0x18", "0x19", "0x1a", "0x1b",
-+	"L2_RD_UNCORR", "L2_WR_UNCORR", "L2_CORR", "0x1b",
- 	"0x1c", "0x1d", "0x1e", "0x1f"
- };
+ config CPU_R3000
+ 	bool "R3000"
+ 	depends on SYS_HAS_CPU_R3000
+@@ -1826,7 +1848,8 @@ endchoice
+ config CPU_MIPS32_3_5_FEATURES
+ 	bool "MIPS32 Release 3.5 Features"
+ 	depends on SYS_HAS_CPU_MIPS32_R3_5
+-	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_MIPS32_R6
++	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_MIPS32_R6 || \
++		   CPU_P5600
+ 	help
+ 	  Choose this option to build a kernel for release 2 or later of the
+ 	  MIPS32 architecture including features from the 3.5 release such as
+@@ -1846,7 +1869,7 @@ config CPU_MIPS32_3_5_EVA
+ config CPU_MIPS32_R5_FEATURES
+ 	bool "MIPS32 Release 5 Features"
+ 	depends on SYS_HAS_CPU_MIPS32_R5
+-	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5
++	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_P5600
+ 	help
+ 	  Choose this option to build a kernel for release 2 or later of the
+ 	  MIPS32 architecture including features from release 5 such as
+@@ -2001,6 +2024,10 @@ config SYS_HAS_CPU_MIPS64_R6
+ 	bool
+ 	select ARCH_HAS_SYNC_DMA_FOR_CPU if DMA_NONCOHERENT
  
-@@ -360,7 +402,7 @@ void mips_cm_error_report(void)
- 				 "CCA=%lu TR=%s MCmd=%s STag=%lu "
- 				 "SPort=%lu\n", cca_bits, cm2_tr[tr_bits],
- 				 cm2_cmd[cmd_bits], stag_bits, sport_bits);
--		} else {
-+		} else if (cause < 24) {
- 			/* glob state & sresp together */
- 			unsigned long c3_bits = (cm_error >> 18) & 7;
- 			unsigned long c2_bits = (cm_error >> 15) & 7;
-@@ -377,6 +419,22 @@ void mips_cm_error_report(void)
- 				 cm2_core[c1_bits], cm2_core[c0_bits],
- 				 sc_bit ? "True" : "False",
- 				 cm2_cmd[cmd_bits], sport_bits);
-+		} else {
-+			unsigned long muc_bit = (cm_error >> 23) & 1;
-+			unsigned long ins_bits = (cm_error >> 18) & 0x1f;
-+			unsigned long arr_bits = (cm_error >> 16) & 3;
-+			unsigned long dw_bits = (cm_error >> 12) & 15;
-+			unsigned long way_bits = (cm_error >> 9) & 7;
-+			unsigned long mway_bit = (cm_error >> 8) & 1;
-+			unsigned long syn_bits = (cm_error >> 0) & 0xFF;
++config SYS_HAS_CPU_P5600
++	bool
++	select ARCH_HAS_SYNC_DMA_FOR_CPU if DMA_NONCOHERENT
 +
-+			snprintf(buf, sizeof(buf),
-+				 "Type=%s%s Instr=%s DW=%lu Way=%lu "
-+				 "MWay=%s Syndrome=0x%02lx",
-+				 muc_bit ? "Multi-UC " : "",
-+				 cm2_l2_type[arr_bits],
-+				 cm2_l2_instr[ins_bits], dw_bits, way_bits,
-+				 mway_bit ? "True" : "False", syn_bits);
- 		}
- 		pr_err("CM_ERROR=%08llx %s <%s>\n", cm_error,
- 		       cm2_causes[cause], buf);
+ config SYS_HAS_CPU_R3000
+ 	bool
+ 
+@@ -2085,7 +2112,7 @@ endmenu
+ config CPU_MIPS32
+ 	bool
+ 	default y if CPU_MIPS32_R1 || CPU_MIPS32_R2 || CPU_MIPS32_R5 || \
+-		     CPU_MIPS32_R6
++		     CPU_MIPS32_R6 || CPU_P5600
+ 
+ config CPU_MIPS64
+ 	bool
+@@ -2107,7 +2134,7 @@ config CPU_MIPSR2
+ 
+ config CPU_MIPSR5
+ 	bool
+-	default y if CPU_MIPS32_R5
++	default y if CPU_MIPS32_R5 || CPU_P5600
+ 	select CPU_HAS_RIXI
+ 	select CPU_HAS_DIEI if !CPU_DIEI_BROKEN
+ 	select MIPS_SPRAM
+@@ -2718,7 +2745,8 @@ config RELOCATABLE
+ 	bool "Relocatable kernel"
+ 	depends on SYS_SUPPORTS_RELOCATABLE
+ 	depends on CPU_MIPS32_R2 || CPU_MIPS64_R2 || CPU_MIPS32_R5 || \
+-		   CPU_MIPS32_R6 || CPU_MIPS64_R6 || CAVIUM_OCTEON_SOC
++		   CPU_MIPS32_R6 || CPU_MIPS64_R6 || CPU_P5600 || \
++		   CAVIUM_OCTEON_SOC
+ 	help
+ 	  This builds a kernel image that retains relocation information
+ 	  so it can be loaded someplace besides the default 1MB.
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index 9172fb0f630b..264dead560f4 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -176,6 +176,7 @@ cflags-$(CONFIG_CPU_MIPS32_R6)	+= -march=mips32r6 -Wa,--trap -modd-spreg
+ cflags-$(CONFIG_CPU_MIPS64_R1)	+= -march=mips64 -Wa,--trap
+ cflags-$(CONFIG_CPU_MIPS64_R2)	+= -march=mips64r2 -Wa,--trap
+ cflags-$(CONFIG_CPU_MIPS64_R6)	+= -march=mips64r6 -Wa,--trap
++cflags-$(CONFIG_CPU_P5600)	+= -march=p5600 -Wa,--trap -modd-spreg
+ cflags-$(CONFIG_CPU_R5000)	+= -march=r5000 -Wa,--trap
+ cflags-$(CONFIG_CPU_R5500)	+= $(call cc-option,-march=r5500,-march=r5000) \
+ 			-Wa,--trap
+diff --git a/arch/mips/include/asm/module.h b/arch/mips/include/asm/module.h
+index 65067edc52e0..fe4637ddbf49 100644
+--- a/arch/mips/include/asm/module.h
++++ b/arch/mips/include/asm/module.h
+@@ -99,6 +99,8 @@ search_module_dbetables(unsigned long addr)
+ #define MODULE_PROC_FAMILY "MIPS64_R2 "
+ #elif defined CONFIG_CPU_MIPS64_R6
+ #define MODULE_PROC_FAMILY "MIPS64_R6 "
++#elif defined CONFIG_CPU_P5600
++#define MODULE_PROC_FAMILY "P5600 "
+ #elif defined CONFIG_CPU_R3000
+ #define MODULE_PROC_FAMILY "R3000 "
+ #elif defined CONFIG_CPU_TX39XX
 -- 
 2.25.1
 
