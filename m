@@ -2,162 +2,117 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AE5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7689C3F2D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 130A920674
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CFF206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:44:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="OvQjSoWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgCFVoL (ORCPT
+        id S1726702AbgCFVor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 16:44:11 -0500
-Received: from mga18.intel.com ([134.134.136.126]:35287 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbgCFVoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 16:44:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 13:44:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="275701723"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 13:44:09 -0800
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Aaron Lu <aaron.lwe@gmail.com>, Aubrey Li <aubrey.intel@gmail.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
- <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
- <20200225034438.GA617271@ziqianlu-desktop.localdomain>
- <CANaguZD205ccu1V_2W-QuMRrJA9SjJ5ng1do4NCdLy8NDKKrbA@mail.gmail.com>
- <20200227020432.GA628749@ziqianlu-desktop.localdomain>
- <20200227141032.GA30178@pauld.bos.csb>
- <20200228025405.GA634650@ziqianlu-desktop.localdomain>
- <CAERHkrunq=BqB=NmS2b_BfjePX2+nNpbv1EfTWw5rExbvYHyJw@mail.gmail.com>
- <20200306024116.GA16400@ziqianlu-desktop.localdomain>
- <98719a4e-f620-dc8c-f29f-fd63c43e1597@linux.intel.com>
- <20200306183340.GC23145@pauld.bos.csb>
-From:   Tim Chen <tim.c.chen@linux.intel.com>
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
-Message-ID: <9bf44d68-de78-66d5-ea8c-6cc8a30d90c0@linux.intel.com>
-Date:   Fri, 6 Mar 2020 13:44:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 6 Mar 2020 16:44:47 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:41037 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCFVor (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 16:44:47 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 7AB0923E5A;
+        Fri,  6 Mar 2020 22:44:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583531084;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cxD5IohuBmq+S0fo3u31OLf+lK98IHcZz1tmd3ZCcyc=;
+        b=OvQjSoWUVujfGF9j+SNMpJOQd2egfJgzDuCHhrVWGEM1bqzHFynfwQAAxJeVWD3z9WIPNj
+        kYRjiNYDIa8DZ0PELxTdtbXtxzfIas+4/dvmkeNvvjteERU0I8FnlC22FgkDrPMyjaGefQ
+        QrPnz8g32OI+7hCqHzD7B1e/oA2hHOE=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v4 0/4] tty: serial: fsl_lpuart: various fixes and LS1028A support
+Date:   Fri,  6 Mar 2020 22:44:29 +0100
+Message-Id: <20200306214433.23215-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200306183340.GC23145@pauld.bos.csb>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 7AB0923E5A
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_SPAM(0.00)[0.545];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 10:33 AM, Phil Auld wrote:
-> On Fri, Mar 06, 2020 at 10:06:16AM -0800 Tim Chen wrote:
->> On 3/5/20 6:41 PM, Aaron Lu wrote:
->>
->>>>> So this appeared to me like a question of: is it desirable to protect/enhance
->>>>> high weight task performance in the presence of core scheduling?
->>>>
->>>> This sounds to me a policy VS mechanism question. Do you have any idea
->>>> how to spread high weight task among the cores with coresched enabled?
->>>
->>> Yes I would like to get us on the same page of the expected behaviour
->>> before jumping to the implementation details. As for how to achieve
->>> that: I'm thinking about to make core wide load balanced and then high
->>> weight task shall spread on different cores. This isn't just about load
->>> balance, the initial task placement will also need to be considered of
->>> course if the high weight task only runs a small period.
->>>
->>
->> I am wondering why this is not happening:  
->>
->> When the low weight task group has exceeded its cfs allocation during a cfs period, the task group
->> should be throttled.  In that case, the CPU cores that the low
->> weight task group occupies will become idle, and allow load balance from the
->> overloaded CPUs for the high weight task group to migrate over.  
->>
-> 
-> cpu.shares is not quota. I think it will only get throttled if it has and 
-> exceeds quota.  Shares are supposed to be used to help weight contention
-> without providing a hard limit. 
-> 
+These are various fixes for problems I found during development of the
+LS1028A support for the LPUART.
 
-Ah yes.  cpu.quota is not set in Aaron's test case.  
+Changes since v3:
+ - Dropped patches which were already picked up.
+ - Changed the subject of the former patch
+     tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
+   Thanks Rob.
+ - Added errno to error/info messages. Thanks Rob.
+ - Splitted this series and removed the dt-bindings patches as well as
+   the device tree patches. Thanks Leo.
 
-That said, I wonder if the time consumed is getting out of whack with the 
-cpu shares assigned, we can leverage the quota mechanism to throttle
-those cgroup that have overused their shares of cpu.  Most of the stats and machinery
-needed are already in the throttling mechanism.  
+Changes since v2:
+Changed DMA channel request handling. Spotted by Rob Herring. Thanks.
 
-I am hoping that allowing task migration with task group mismatch
-under large load imbalance between CPUs will be good enough.
+Modified patches:
+  tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
 
-Tim
+Changes since v1:
+DMA support fixes.
 
-Tim
+New patches:
+  tty: serial: fsl_lpuart: fix DMA mapping
+  arm64: dts: ls1028a: add "fsl,vf610-edma" compatible
+
+Modified patches:
+  arm64: dts: ls1028a: add missing LPUART nodes
+   - add dma phandles
+
+Michael Walle (4):
+  tty: serial: fsl_lpuart: fix DMA operation when using IOMMU
+  tty: serial: fsl_lpuart: fix DMA mapping
+  tty: serial: fsl_lpuart: add LS1028A support
+  tty: serial: fsl_lpuart: add LS1028A earlycon support
+
+ drivers/tty/serial/fsl_lpuart.c | 210 ++++++++++++++++++++++----------
+ 1 file changed, 149 insertions(+), 61 deletions(-)
+
+-- 
+2.20.1
+
