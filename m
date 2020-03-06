@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309B8C10F27
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4099FC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 130E1222C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248A424655
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbgCFNIs (ORCPT
+        id S1727212AbgCFNIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:08:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53327 "EHLO
+        Fri, 6 Mar 2020 08:08:45 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53321 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbgCFNIq (ORCPT
+        with ESMTP id S1727061AbgCFNIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:08:46 -0500
+        Fri, 6 Mar 2020 08:08:44 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jACiV-0003fm-39; Fri, 06 Mar 2020 14:08:39 +0100
+        id 1jACiV-0003fr-IV; Fri, 06 Mar 2020 14:08:39 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7C7E2104097;
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id E62CA10409D;
         Fri,  6 Mar 2020 14:08:38 +0100 (CET)
-Message-Id: <20200306130623.590923677@linutronix.de>
+Message-Id: <20200306130623.775200917@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 06 Mar 2020 14:03:43 +0100
+Date:   Fri, 06 Mar 2020 14:03:45 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Marc Zyngier <maz@kernel.org>, x86@kernel.org,
@@ -38,7 +38,7 @@ Cc:     Marc Zyngier <maz@kernel.org>, x86@kernel.org,
         Keith Busch <kbusch@kernel.org>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [patch 2/7] genirq: Add protection against unsafe usage of generic_handle_irq()
+Subject: [patch 4/7] genirq: Add return value to check_irq_resend()
 References: <20200306130341.199467200@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -50,113 +50,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In general calling generic_handle_irq() with interrupts disabled from non
-interrupt context is harmless. For some interrupt controllers like the x86
-trainwrecks this is outright dangerous as it might corrupt state if an
-interrupt affinity change is pending.
+In preparation for an interrupt injection interface which can be used
+safely by error injection mechanisms. e.g. PCI-E/ AER, add a return value
+to check_irq_resend() so errors can be propagated to the caller.
 
-Add infrastructure which allows to mark interrupts as unsafe and catch such
-usage in generic_handle_irq().
+Split out the software resend code so the ugly #ifdef in check_irq_resend()
+goes away and the whole thing becomes readable.
 
-Reported-by: sathyanarayanan.kuppuswamy@linux.intel.com
+Fix up the caller in debugfs. The caller in irq_startup() does not care
+about the return value as this is unconditionally invoked for all
+interrupts and the resend is best effort anyway.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/irq.h    |   13 +++++++++++++
- kernel/irq/internals.h |    8 ++++++++
- kernel/irq/irqdesc.c   |    6 ++++++
- kernel/irq/resend.c    |    5 +++--
- 4 files changed, 30 insertions(+), 2 deletions(-)
+ kernel/irq/debugfs.c   |    3 -
+ kernel/irq/internals.h |    2 -
+ kernel/irq/resend.c    |   83 ++++++++++++++++++++++++++++---------------------
+ 3 files changed, 51 insertions(+), 37 deletions(-)
 
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -211,6 +211,8 @@ struct irq_data {
-  * IRQD_CAN_RESERVE		- Can use reservation mode
-  * IRQD_MSI_NOMASK_QUIRK	- Non-maskable MSI quirk for affinity change
-  *				  required
-+ * IRQD_HANDLE_ENFORCE_IRQCTX	- Enforce that handle_irq_*() is only invoked
-+ *				  from actual interrupt context.
-  */
- enum {
- 	IRQD_TRIGGER_MASK		= 0xf,
-@@ -234,6 +236,7 @@ enum {
- 	IRQD_DEFAULT_TRIGGER_SET	= (1 << 25),
- 	IRQD_CAN_RESERVE		= (1 << 26),
- 	IRQD_MSI_NOMASK_QUIRK		= (1 << 27),
-+	IRQD_HANDLE_ENFORCE_IRQCTX	= (1 << 28),
- };
+--- a/kernel/irq/debugfs.c
++++ b/kernel/irq/debugfs.c
+@@ -218,8 +218,7 @@ static ssize_t irq_debug_write(struct fi
+ 			err = -EINVAL;
+ 		} else {
+ 			desc->istate |= IRQS_PENDING;
+-			check_irq_resend(desc);
+-			err = 0;
++			err = check_irq_resend(desc);
+ 		}
  
- #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accessors)
-@@ -303,6 +306,16 @@ static inline bool irqd_is_single_target
- 	return __irqd_to_state(d) & IRQD_SINGLE_TARGET;
- }
- 
-+static inline void irqd_set_handle_enforce_irqctx(struct irq_data *d)
-+{
-+	__irqd_to_state(d) |= IRQD_HANDLE_ENFORCE_IRQCTX;
-+}
-+
-+static inline bool irqd_is_handle_enforce_irqctx(struct irq_data *d)
-+{
-+	return __irqd_to_state(d) & IRQD_HANDLE_ENFORCE_IRQCTX;
-+}
-+
- static inline bool irqd_is_wakeup_set(struct irq_data *d)
- {
- 	return __irqd_to_state(d) & IRQD_WAKEUP_STATE;
+ 		raw_spin_unlock_irqrestore(&desc->lock, flags);
 --- a/kernel/irq/internals.h
 +++ b/kernel/irq/internals.h
-@@ -425,6 +425,10 @@ static inline struct cpumask *irq_desc_g
- {
- 	return desc->pending_mask;
- }
-+static inline bool handle_enforce_irqctx(struct irq_data *data)
-+{
-+	return irqd_is_handle_enforce_irqctx(data);
-+}
- bool irq_fixup_move_pending(struct irq_desc *desc, bool force_clear);
- #else /* CONFIG_GENERIC_PENDING_IRQ */
- static inline bool irq_can_move_pcntxt(struct irq_data *data)
-@@ -451,6 +455,10 @@ static inline bool irq_fixup_move_pendin
- {
- 	return false;
- }
-+static inline bool handle_enforce_irqctx(struct irq_data *data)
-+{
-+	return false;
-+}
- #endif /* !CONFIG_GENERIC_PENDING_IRQ */
+@@ -108,7 +108,7 @@ irqreturn_t handle_irq_event_percpu(stru
+ irqreturn_t handle_irq_event(struct irq_desc *desc);
  
- #if !defined(CONFIG_IRQ_DOMAIN) || !defined(CONFIG_IRQ_DOMAIN_HIERARCHY)
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -638,9 +638,15 @@ void irq_init_desc(unsigned int irq)
- int generic_handle_irq(unsigned int irq)
- {
- 	struct irq_desc *desc = irq_to_desc(irq);
-+	struct irq_data *data;
+ /* Resending of interrupts :*/
+-void check_irq_resend(struct irq_desc *desc);
++int check_irq_resend(struct irq_desc *desc);
+ bool irq_wait_for_poll(struct irq_desc *desc);
+ void __irq_wake_thread(struct irq_desc *desc, struct irqaction *action);
  
- 	if (!desc)
- 		return -EINVAL;
-+
-+	data = irq_desc_get_irq_data(desc);
-+	if (WARN_ON_ONCE(!in_irq() && handle_enforce_irqctx(data)))
-+		return -EPERM;
-+
- 	generic_handle_irq_desc(desc);
- 	return 0;
- }
 --- a/kernel/irq/resend.c
 +++ b/kernel/irq/resend.c
-@@ -72,8 +72,9 @@ void check_irq_resend(struct irq_desc *d
+@@ -47,6 +47,43 @@ static void resend_irqs(unsigned long ar
+ /* Tasklet to handle resend: */
+ static DECLARE_TASKLET(resend_tasklet, resend_irqs, 0);
+ 
++static int irq_sw_resend(struct irq_desc *desc)
++{
++	unsigned int irq = irq_desc_get_irq(desc);
++
++	/*
++	 * Validate whether this interrupt can be safely injected from
++	 * non interrupt context
++	 */
++	if (handle_enforce_irqctx(&desc->irq_data))
++		return -EINVAL;
++
++	/*
++	 * If the interrupt is running in the thread context of the parent
++	 * irq we need to be careful, because we cannot trigger it
++	 * directly.
++	 */
++	if (irq_settings_is_nested_thread(desc)) {
++		/*
++		 * If the parent_irq is valid, we retrigger the parent,
++		 * otherwise we do nothing.
++		 */
++		if (!desc->parent_irq)
++			return -EINVAL;
++		irq = desc->parent_irq;
++	}
++
++	/* Set it pending and activate the softirq: */
++	set_bit(irq, irqs_resend);
++	tasklet_schedule(&resend_tasklet);
++	return 0;
++}
++
++#else
++static int irq_sw_resend(struct irq_desc *desc)
++{
++	return -EINVAL;
++}
+ #endif
+ 
+ /*
+@@ -54,50 +91,28 @@ static DECLARE_TASKLET(resend_tasklet, r
+  *
+  * Is called with interrupts disabled and desc->lock held.
+  */
+-void check_irq_resend(struct irq_desc *desc)
++int check_irq_resend(struct irq_desc *desc)
+ {
+ 	/*
+-	 * We do not resend level type interrupts. Level type
+-	 * interrupts are resent by hardware when they are still
+-	 * active. Clear the pending bit so suspend/resume does not
+-	 * get confused.
++	 * We do not resend level type interrupts. Level type interrupts
++	 * are resent by hardware when they are still active. Clear the
++	 * pending bit so suspend/resume does not get confused.
+ 	 */
+ 	if (irq_settings_is_level(desc)) {
+ 		desc->istate &= ~IRQS_PENDING;
+-		return;
++		return -EINVAL;
+ 	}
++
+ 	if (desc->istate & IRQS_REPLAY)
+-		return;
++		return -EBUSY;
++
+ 	if (desc->istate & IRQS_PENDING) {
  		desc->istate &= ~IRQS_PENDING;
  		desc->istate |= IRQS_REPLAY;
  
--		if (!desc->irq_data.chip->irq_retrigger ||
--		    !desc->irq_data.chip->irq_retrigger(&desc->irq_data)) {
-+		if ((!desc->irq_data.chip->irq_retrigger ||
-+		    !desc->irq_data.chip->irq_retrigger(&desc->irq_data)) &&
-+		    !handle_enforce_irqctx(&desc->irq_data)) {
- #ifdef CONFIG_HARDIRQS_SW_RESEND
- 			unsigned int irq = irq_desc_get_irq(desc);
- 
+-		if ((!desc->irq_data.chip->irq_retrigger ||
+-		    !desc->irq_data.chip->irq_retrigger(&desc->irq_data)) &&
+-		    !handle_enforce_irqctx(&desc->irq_data)) {
+-#ifdef CONFIG_HARDIRQS_SW_RESEND
+-			unsigned int irq = irq_desc_get_irq(desc);
+-
+-			/*
+-			 * If the interrupt is running in the thread
+-			 * context of the parent irq we need to be
+-			 * careful, because we cannot trigger it
+-			 * directly.
+-			 */
+-			if (irq_settings_is_nested_thread(desc)) {
+-				/*
+-				 * If the parent_irq is valid, we
+-				 * retrigger the parent, otherwise we
+-				 * do nothing.
+-				 */
+-				if (!desc->parent_irq)
+-					return;
+-				irq = desc->parent_irq;
+-			}
+-			/* Set it pending and activate the softirq: */
+-			set_bit(irq, irqs_resend);
+-			tasklet_schedule(&resend_tasklet);
+-#endif
+-		}
++		if (!desc->irq_data.chip->irq_retrigger ||
++		    !desc->irq_data.chip->irq_retrigger(&desc->irq_data))
++		    return irq_sw_resend(desc);
+ 	}
++	return 0;
+ }
 
