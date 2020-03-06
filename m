@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57CFC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1CAC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84CB217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEEAB2187F
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgCFHoJ (ORCPT
+        id S1726397AbgCFHoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:44:09 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:51965 "EHLO
+        Fri, 6 Mar 2020 02:44:12 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:60681 "EHLO
         relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbgCFHoI (ORCPT
+        with ESMTP id S1725853AbgCFHoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 02:44:08 -0500
+        Fri, 6 Mar 2020 02:44:11 -0500
 X-Originating-IP: 86.202.105.35
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id B89D2E0002;
-        Fri,  6 Mar 2020 07:44:06 +0000 (UTC)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 8E280E0004;
+        Fri,  6 Mar 2020 07:44:09 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] rtc: mpc5121: convert to devm_rtc_allocate_device
-Date:   Fri,  6 Mar 2020 08:44:01 +0100
-Message-Id: <20200306074404.58909-2-alexandre.belloni@bootlin.com>
+Subject: [PATCH 4/4] rtc: mpc5121: switch to rtc_time64_to_tm/rtc_tm_to_time64
+Date:   Fri,  6 Mar 2020 08:44:03 +0100
+Message-Id: <20200306074404.58909-4-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200306074404.58909-1-alexandre.belloni@bootlin.com>
 References: <20200306074404.58909-1-alexandre.belloni@bootlin.com>
@@ -44,56 +44,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This simplifies the path for the rtc_ops selection.
+Call the 64bit versions of rtc_tm time conversion.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-mpc5121.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/rtc/rtc-mpc5121.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/rtc/rtc-mpc5121.c b/drivers/rtc/rtc-mpc5121.c
-index 9e4454d35352..845212fd1e33 100644
+index 5507f1847f7c..3040844129ce 100644
 --- a/drivers/rtc/rtc-mpc5121.c
 +++ b/drivers/rtc/rtc-mpc5121.c
-@@ -344,6 +344,15 @@ static int mpc5121_rtc_probe(struct platform_device *op)
- 		goto out_dispose2;
- 	}
+@@ -111,7 +111,7 @@ static int mpc5121_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 	 */
+ 	now = in_be32(&regs->actual_time) + in_be32(&regs->target_time);
  
-+	rtc->rtc = devm_rtc_allocate_device(&op->dev);
-+	if (IS_ERR(rtc->rtc)) {
-+		err = PTR_ERR(rtc->rtc);
-+		goto out_dispose2;
-+	}
-+
-+	rtc->rtc->ops = &mpc5200_rtc_ops;
-+	rtc->rtc->uie_unsupported = 1;
-+
- 	if (of_device_is_compatible(op->dev.of_node, "fsl,mpc5121-rtc")) {
- 		u32 ka;
- 		ka = in_be32(&rtc->regs->keep_alive);
-@@ -352,19 +361,12 @@ static int mpc5121_rtc_probe(struct platform_device *op)
- 				"mpc5121-rtc: Battery or oscillator failure!\n");
- 			out_be32(&rtc->regs->keep_alive, ka);
- 		}
--
--		rtc->rtc = devm_rtc_device_register(&op->dev, "mpc5121-rtc",
--						&mpc5121_rtc_ops, THIS_MODULE);
--	} else {
--		rtc->rtc = devm_rtc_device_register(&op->dev, "mpc5200-rtc",
--						&mpc5200_rtc_ops, THIS_MODULE);
-+		rtc->rtc->ops = &mpc5121_rtc_ops;
- 	}
+-	rtc_time_to_tm(now, tm);
++	rtc_time64_to_tm(now, tm);
  
--	if (IS_ERR(rtc->rtc)) {
--		err = PTR_ERR(rtc->rtc);
-+	err = rtc_register_device(rtc->rtc);
-+	if (err)
- 		goto out_dispose2;
--	}
--	rtc->rtc->uie_unsupported = 1;
+ 	/*
+ 	 * update second minute hour registers
+@@ -126,16 +126,14 @@ static int mpc5121_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ {
+ 	struct mpc5121_rtc_data *rtc = dev_get_drvdata(dev);
+ 	struct mpc5121_rtc_regs __iomem *regs = rtc->regs;
+-	int ret;
+ 	unsigned long now;
  
- 	return 0;
+ 	/*
+ 	 * The actual_time register is read only so we write the offset
+ 	 * between it and linux time to the target_time register.
+ 	 */
+-	ret = rtc_tm_to_time(tm, &now);
+-	if (ret == 0)
+-		out_be32(&regs->target_time, now - in_be32(&regs->actual_time));
++	now = rtc_tm_to_time64(tm);
++	out_be32(&regs->target_time, now - in_be32(&regs->actual_time));
  
+ 	/*
+ 	 * update second minute hour registers
 -- 
 2.24.1
 
