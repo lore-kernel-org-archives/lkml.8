@@ -2,74 +2,73 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF04AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB1DC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB78A20880
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9E220848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:14:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Iamtm3+V";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="AIVgLzfR"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="nfP+RdAK";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="bml9E8TN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbgCFPO0 (ORCPT
+        id S1727052AbgCFPN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:14:26 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:16350 "EHLO
+        Fri, 6 Mar 2020 10:13:56 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:35258 "EHLO
         mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726974AbgCFPOA (ORCPT
+        by vger.kernel.org with ESMTP id S1726811AbgCFPN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:14:00 -0500
+        Fri, 6 Mar 2020 10:13:56 -0500
 Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026F6JCU006235;
-        Fri, 6 Mar 2020 07:13:47 -0800
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026F6JCP006235;
+        Fri, 6 Mar 2020 07:13:41 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version; s=pfpt0818;
- bh=bApS63iUcSfIYWU+pdaEJ8aTOAhZt10nEy1htK5Pyz4=;
- b=Iamtm3+V6sJcQOX7N0dApog954jXIFQ7yEqDXMjIvilD25snwkOoPOBJQKLRY/AFr4XA
- JYAE/cGncCdmFduEKhpN67ima/99/1bkey8MPv0wCsLooVINsTLP8xV7/DqSiW1uub8J
- M8NcG1Bk096yEIaSjH5ZEUrQXks/ApZhBhWDxKkaegZPlhyp+rAKYsY+xe4fu9y1z6AN
- bJqXrghqxdlPQIPMlqkliIbQd1Eyc2C8mDmJZJqPlsGgQLN6CUm2lBkkn8dkbn23gYZp
- CWXZAgdTtfesip3uQvhChy79byPw32rtzdt6ns/N6SodtHOlhVT0qjdB9a5IY9WNH8Wc Ww== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2yhn0ydfvh-1
+ subject : date : message-id : content-transfer-encoding : content-type :
+ mime-version; s=pfpt0818; bh=BZKu3akUNDzUDyWQL1R2rh4QMDJVlDNBAoWfm6D5b7E=;
+ b=nfP+RdAKerIkV22uFo7H73GRInprIKlDfiwcVdd1Lnju77DIJh/dHL2UfLyph2xLHt77
+ VLc/3VE/uuE17W+Yqf89/+nuxRVx9NgQ2FhVjjsNOBjOGKreExTwy/lX++kNN1DisYyr
+ cwOWgIVlSGtHmupj8iNuvq6/G9NPKonFzgBbooLUeVw+ncZDDjYbfTKCaWzDocxEMFni
+ eVEVBSWInOG2P5ypyqFVkyqUw/lrcJUzyHg4SPl4s5PIzKGlBN+skawdPgKn/fyY4nf6
+ rhWduQdgPafKgbjVRSpSJk1PWhVio9uboutgafpGI0m+QIXN0uxuz6lNCcxoE+xJl7fL zA== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2yhn0ydfv3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 07:13:47 -0800
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 6 Mar
- 2020 07:13:44 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.48) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Fri, 6 Mar 2020 07:13:44 -0800
+        Fri, 06 Mar 2020 07:13:41 -0800
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 6 Mar
+ 2020 07:13:39 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
+ by SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Fri, 6 Mar 2020 07:13:38 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VS8osrqEYTUZmBsReE1ud6iX3tyq6/t6POTJZiKtsrkUolZ2QPTyWgu9z7vj6/MX/eTJ6UYrrPyrJvBk6Bhr2LRq2vJq+aEvsP6VMp2qSkaZBrGyet0FiE8rhNT3cqSM8iScAvusb3kNedwIae5DwkRHmNq/AdQl3kn5I4nqaA1TaR1cZDz7F/4lZlowemAwk5k4njL63G1QEPKLSh3angig9hVwmYr4SG3aXzTD2spoPYejpSklXosJBYejj2cIKOw3Ig/hQ3ifnSqmcrWjfhc29lSnucR/SuEKfErzwZFQz08ReB/N5NbVE/uuxV0Z97sAfdw8RKTnP5pF7557CQ==
+ b=VL3jtry1jM0sQ67rc0f7HdBqJpRp4AMR+WMteTCf1jZS4RW1KF+HQTHKx/3fnh92cz8ftlrww+oFcDyNVk0mE0ahiVK3+n0pxtzqH7jMEcjwpNI1dOKNP9loVMmSaO91SVyaqfZujN5MaM4J5fZyyvwPuAsHsSP5x+qPjoSNnq6PzpMNagSXpuFCEtS/68Ug2EFGjw0AkUOzzILq1r04L66ijzlWZT7XRvPVJ2CyWaCrLzpzUwFOfV1RoVZI6+nbQgzradtSZAQW5B5mkWrc0loWU6fjKVoE66wGo4y3VPeY+GAYJN+MZmaXyYKLeLzSUOC16ctMG35NCPWq9DTU8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bApS63iUcSfIYWU+pdaEJ8aTOAhZt10nEy1htK5Pyz4=;
- b=A51ODSJLjVf6B6lDdKVxI12EPfacM7sU7j18cBQ6XmY0f8gQoxwOX8ePr5cWFmj2QcN4kgtAtvGe8fIhnFlvz6U0a2zPsqTtqty5pOeBc5cVrryAs11mIkV/8gXAc/g6GTwMNVe1+tvD/FxUW2cg7qSkU3haUmteLw7Js2Ve89A/R8vbmx/oV4Bnz9wTKNSR++p4Dn5vUqoz448fetVtGOWWYKknSDeVW9a8Xfs4btsbIJ2pZ2QcsBDNW2gcSTSTM7r/Ooi/oApMqKf0LZDyk6SwDmMPltnfBhgLTaro9BBE3XaBRQaHGFnjfJGfpBWfCWtoT1Axr+i2n+8wn+hunA==
+ bh=BZKu3akUNDzUDyWQL1R2rh4QMDJVlDNBAoWfm6D5b7E=;
+ b=WqBvoWYauue79qSt25CEvOvnlbjSggm29yzTiiaCQSSpEtTEeNtkX20gNqPlrC1WEnMvzCcfyH30EU3yOrQqZ64VVCcpdB8f4StstI3W7Xaljw6cQzVpageoWuxqvfBnZnx7ajkAusPZ9BiuhU98G4PXsYh2DU+zCTsFijSRL5a35n4HWFTQdhtJjCkqcmZZeJUaZHCW0RX7SlPLhHYFBpiWDMIJSNxlX6jR8fd9FgkrGcoYL48GyHOE80CmU53OdQ97Ru3LyNgx+DImCYkg4iq7BxZOucgAbF3KQDXwPu2/RVYMLT4pNa7oyKWT/EjV6FvTS3Fav9jo8T2b8vO2rQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
  dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bApS63iUcSfIYWU+pdaEJ8aTOAhZt10nEy1htK5Pyz4=;
- b=AIVgLzfRmIg6/5DjemUFc3EsGyHQfs7hF+EmOBWd+6YnUqShqgm9WULbtTKEg7zvOWh/QX2geBTJLr6m799e4oWhXVfVezdQYFISR/4s6qOwOt8s8v3ZedlI6IlXQBbMC+0TLOJDM3mrjvABeGbz5FryGRV8NYI3DTsVVJnau+A=
+ bh=BZKu3akUNDzUDyWQL1R2rh4QMDJVlDNBAoWfm6D5b7E=;
+ b=bml9E8TNGYvJRBypsHfI+DYx2SAjlQZUFWZISDBYPrFwm0nS3+SqSRQT0rExlWQmlcCgkdMjZhUWJIFURoDC5haL72NkhiXInE72KUkV/zryQyYS/16bu1yMQMnCi9h97B6PKf85JoavHdXmuKSP+HZOZR+UgdTa6GSep95FoaQ=
 Received: from MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:165::10)
  by MN2PR18MB2400.namprd18.prod.outlook.com (2603:10b6:208:ab::26) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14; Fri, 6 Mar
- 2020 15:13:44 +0000
+ 2020 15:13:37 +0000
 Received: from MN2PR18MB3408.namprd18.prod.outlook.com
  ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
  ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2793.013; Fri, 6 Mar 2020
- 15:13:44 +0000
+ 15:13:37 +0000
 From:   Robert Richter <rrichter@marvell.com>
 To:     Borislav Petkov <bp@alien8.de>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -78,12 +77,10 @@ CC:     James Morse <james.morse@arm.com>,
         Aristeu Rozanski <aris@redhat.com>,
         Robert Richter <rrichter@marvell.com>,
         <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 03/11] EDAC/ghes: Remove local variable rdr_mask in ghes_edac_dmidecode()
-Date:   Fri,  6 Mar 2020 16:13:10 +0100
-Message-ID: <20200306151318.17422-4-rrichter@marvell.com>
+Subject: [PATCH 00/11] EDAC/ghes: Cleanup, rework and improvement of memory reporting
+Date:   Fri,  6 Mar 2020 16:13:07 +0100
+Message-ID: <20200306151318.17422-1-rrichter@marvell.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200306151318.17422-1-rrichter@marvell.com>
-References: <20200306151318.17422-1-rrichter@marvell.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: HE1PR0102CA0059.eurprd01.prod.exchangelabs.com
@@ -91,30 +88,30 @@ X-ClientProxiedBy: HE1PR0102CA0059.eurprd01.prod.exchangelabs.com
  (2603:10b6:208:165::10)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from rric.localdomain (31.208.96.227) by HE1PR0102CA0059.eurprd01.prod.exchangelabs.com (2603:10a6:7:7d::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Fri, 6 Mar 2020 15:13:42 +0000
+Received: from rric.localdomain (31.208.96.227) by HE1PR0102CA0059.eurprd01.prod.exchangelabs.com (2603:10a6:7:7d::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Fri, 6 Mar 2020 15:13:35 +0000
 X-Mailer: git-send-email 2.20.1
 X-Originating-IP: [31.208.96.227]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 169d4005-b3c5-4fe0-c068-08d7c1e0f5cb
+X-MS-Office365-Filtering-Correlation-Id: 9695bb69-4050-432b-0e45-08d7c1e0f1c8
 X-MS-TrafficTypeDiagnostic: MN2PR18MB2400:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR18MB2400CEC2256CB10792C84B09D9E30@MN2PR18MB2400.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1122;
+X-Microsoft-Antispam-PRVS: <MN2PR18MB2400412D6FBA7181FB59E363D9E30@MN2PR18MB2400.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
 X-Forefront-PRVS: 0334223192
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39850400004)(396003)(366004)(136003)(199004)(189003)(81156014)(81166006)(5660300002)(8676002)(6666004)(54906003)(26005)(956004)(2616005)(4326008)(16526019)(316002)(110136005)(186003)(2906002)(8936002)(86362001)(6512007)(36756003)(478600001)(6486002)(1076003)(66556008)(52116002)(66946007)(66476007)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2400;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39850400004)(396003)(366004)(136003)(199004)(189003)(81156014)(81166006)(5660300002)(8676002)(6666004)(54906003)(26005)(956004)(2616005)(4326008)(16526019)(316002)(110136005)(186003)(2906002)(8936002)(966005)(86362001)(6512007)(36756003)(478600001)(6486002)(1076003)(66556008)(52116002)(66946007)(66476007)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2400;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: marvell.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 39+2AwtqijigaV8D1BZ1mmn5ySx9vnsuWMXPeU1ZVmRs46OZ/aI2W6FDTlEwe2wvnYdC2b8vUtSXK5j28GnZw8igLQkAu5H+Xu6Du+tKUx4KcxrvnhQqih6GlccdZ3x1/wpFsdhvMHRY96ukcCJIZyUhJoyePcjhXvFmtRrKiU6tL+71UKdHG/H15oIN2KMXPVCcTOL7Tdfz6S6rtpe0F47TOSACl4g0OSusmIf9CJGH1lIC62BgWEn7C3pGoJ495b+go/dhs+6e5s/9G/5dSVRC2r7wuBbm736C1yANg5g6Du6n7YHkFDnfx3j2f5xMzwhZbuXHU6PJ1lJ0vzZNCpDKbnBiQsfRmnXbPPmh+hDoN+0XwkhH19AwaxVC+mRSy98Fqp9Itl6SzDIRu43O8y1qLWUDs1rQmmP7qn0T0WTVz8OQsb5guNAp3kwgoWM+
-X-MS-Exchange-AntiSpam-MessageData: PZMiSLfvaFFjjEHt45YH6bAKEV6abottcqFkDXWylI1kW5vPkQaNtRAHo7ixfi56rtmfsUl6QaRgbHdWMmJiVgUfuce277BR2DWIa40CWZpKZ8raMUACe4cuX2dwmw5quX8KIsjeBOv26ds0hGxyYg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 169d4005-b3c5-4fe0-c068-08d7c1e0f5cb
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2020 15:13:44.0658
+X-Microsoft-Antispam-Message-Info: J3H97loLELudjl80CP9aUek5scDG+abDZWquRPmAA219H13w+dbRl1A8VIfL+rtjMRWyXyrA7apfRBs6oLOll2xGc553pCcAWbrjnHPY5i+X3BXjSiNbEiNWEDHE8HfFeiNgx2CEeEzuiaToXggRNuZMO0BxasHKaOTflM/p5CssfWgPHkXOKrY5OUFeMQ55kiFMGoibXw/5sF66XmsEX53evGSjkR9OTdSG78jKoyiVNplZhy01D8rCaLI0kUpBbfGhjcMZW+lQWSwgVZwZSA3ZJ/hYk5vIz0AfOHGGEgv+++2TJ0Z0hk2ULWGKENNQx8wc8hoLjOkSZMdd+V/ZQPp8/aOQlzgdEeyGHmSICqHg1WhtwskZnMhAOIg1dYbh2VnF3stQJh8LUOjvYCOz0wl6msMWM0Q+12QrCZxdi0YBFukA8woI/G0+FxfqPsNMEtXT/6H5/Su17x6WjmyaZ1XQMyofG2krIsmjzi3lEgmgPnXBs2L0UzCf1l9K3cQbB6vrFX2sIMuUqwDhgQ7tqQ==
+X-MS-Exchange-AntiSpam-MessageData: JPNLdwpHosuuyT9keuVtci7e2AOTgJ5BhEc5AN5q+kwCUg7+BEe+Ne025rEDJkCA8lylT/lTRJJuHSGp1DGy1gHK+Hp/Mv+hTIgddNX3EpIqE1KPjNEvDF5Vcc5i8+fG8JftFHhtjIRQdGGrv72xPw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9695bb69-4050-432b-0e45-08d7c1e0f1c8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2020 15:13:37.3807
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fpH0GTC9ZEVaVhKz0yT7dPLCXBkmBkfpvgYgxy37aCJGlgXoXxuifIgh+3ssuIxzxruP6WgBB90uAb+vtb6d1g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: wFKLIUsI382SJ5CzsZGOce1LylXzlWH1svR6StE36dKVPLx32RKkjoEagizMMoUkv/iHTsB1tniclOQd8QDMtw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2400
 X-OriginatorOrg: marvell.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
@@ -124,37 +121,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The local variable rdr_mask serves as a static constant here. It hides
-what the code is doing. Remove it and replace it with the actual logic
-that checks some bits.
+This series contains a significant cleanup and rework of the ghes
+driver and improves the memory reporting as follows:
 
-Signed-off-by: Robert Richter <rrichter@marvell.com>
----
- drivers/edac/ghes_edac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ * fix of DIMM label in error reports (patch #2),
 
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index 07fa3867cba1..fce53893731a 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -123,7 +123,6 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
- 	if (dh->type == DMI_ENTRY_MEM_DEVICE) {
- 		struct memdev_dmi_entry *entry = (struct memdev_dmi_entry *)dh;
- 		struct dimm_info *dimm = edac_get_dimm(mci, dimm_fill->count, 0, 0);
--		u16 rdr_mask = BIT(7) | BIT(13);
- 
- 		if (entry->size == 0xffff) {
- 			pr_info("Can't get DIMM%i size\n",
-@@ -173,7 +172,8 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
- 		default:
- 			if (entry->type_detail & BIT(6))
- 				dimm->mtype = MEM_RMBS;
--			else if ((entry->type_detail & rdr_mask) == rdr_mask)
-+			else if ((entry->type_detail & BIT(7)) &&
-+				 (entry->type_detail & BIT(13)))
- 				dimm->mtype = MEM_RDR;
- 			else if (entry->type_detail & BIT(7))
- 				dimm->mtype = MEM_SDR;
+ * creation of multiple memory controllers to group DIMMs depending on
+   the physical memory array (patches #9-#11). This should reflect the
+   memory topology of a system in sysfs. Esp. multi-node systems show
+   up with one memory controller per node now.
+
+The changes base on the remaining patches that are a general cleanup
+and rework:
+
+ * small change to edac_mc, not really dependent on the rest of the
+   series (patch #1),
+
+ * general cleanup and rework of the ghes driver (patches #3-#8).
+
+The implementation of multiple memory controllers bases on the
+suggestion from James (see patch #11), thank you James for your
+valuable input here. The patches are created newly from scratch and
+obsolete the GHES part of my previous postings a while ago that have
+not been accepted upstream:
+
+ https://lore.kernel.org/patchwork/cover/1093488/
+
+Tested on a Marvell/Cavium ThunderX2 Sabre (dual socket) system.
+
+
+Robert Richter (11):
+  EDAC/mc: Use int type for parameters of edac_mc_alloc()
+  EDAC/ghes: Setup DIMM label from DMI and use it in error reports
+  EDAC/ghes: Remove local variable rdr_mask in ghes_edac_dmidecode()
+  EDAC/ghes: Remove unused members of struct ghes_edac_pvt, rename it to
+    ghes_mci
+  EDAC/ghes: Cleanup struct ghes_edac_dimm_fill, rename it to
+    ghes_dimm_fill
+  EDAC/ghes: Carve out MC device handling into separate functions
+  EDAC/ghes: Have a separate code path for creating the fake MC
+  EDAC/ghes: Carve out code into ghes_edac_register_{one,fake}()
+  EDAC/ghes: Implement DIMM mapping table for SMBIOS handles
+  EDAC/ghes: Create an own device for each mci
+  EDAC/ghes: Create one memory controller per physical memory array
+
+ drivers/edac/edac_mc.c   |   7 +-
+ drivers/edac/edac_mc.h   |   6 +-
+ drivers/edac/ghes_edac.c | 514 +++++++++++++++++++++++++++++----------
+ include/linux/edac.h     |   2 -
+ 4 files changed, 390 insertions(+), 139 deletions(-)
+
 -- 
 2.20.1
 
