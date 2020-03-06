@@ -2,129 +2,220 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2732EC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EB5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F019D20675
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:10:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/Wns6Jp"
+	by mail.kernel.org (Postfix) with ESMTP id 867AA20675
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583521871;
+	bh=I5XbT8QZEW6+CEYOiuZ0DU2H6PyHZynEgjZpEpbsnZ4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VTcg46nvCX+ojNDgk1Fjlx/afQFqT7XxdszgFBX4zsE0yyWCnjSajeRI7UTNdeBjv
+	 xRk8DM3/gyXPAusCKix66TmZBm9W2uXFOheAKddn6nYaVZ7FFc75cnXnwEcHmcF8d4
+	 dzugvLx//LqaJ2YBwaLz4Gj53cSoOW3SxZfsX4OY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgCFTK0 (ORCPT
+        id S1726874AbgCFTLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:10:26 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42869 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCFTKZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:10:25 -0500
-Received: by mail-pl1-f194.google.com with SMTP id u3so1240121plr.9;
-        Fri, 06 Mar 2020 11:10:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oMZcTKmZsDyhLqYK1fx0XvAdxLRsq9ElXtGdsl72qak=;
-        b=N/Wns6Jp3DRxwYjftfFCBD4F8DRHzLrzv/zX67fpdV0IPhcTur0o5eWBI0cLUQt5ih
-         FgjSFoIQOI163O12QArTLE5UzRTgkRW6AWTyjGelcrZ3LAYreaOvqCLntQq5weHT/VjD
-         mQ/YAGVTXd0XQtDpH0XME9a9n9IjzuoqSKz8TdAJOjE6myf3Pjp20hzKmBU0JZdJeOmE
-         3zGdSR6W8fTPvoLD6EobzP9jy5yrpR+4c9zH6y+Fu4bG0zSMYd/MkKxwCuEgOkhkUIm0
-         z0a7gyb9QfLdptOMl1KUDbVlfsS8Q9x9XZkyZj8uuCmZ4wHNZRdNzwUQhemHs7uWrKxJ
-         S5PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oMZcTKmZsDyhLqYK1fx0XvAdxLRsq9ElXtGdsl72qak=;
-        b=UXs+WWugsmdWXFDMBm/vd+GcXYzP/cgCigWTwPJaCvbIhv+pix6oyBIoinKpaDDOco
-         ZvrQAiGEK1/iZN48sJUGHjoeitdo28fEDmYZeiLpEHq1N/NxgDuQz/hrxGuCZ6edmqhk
-         vvHBKkG9b2TnSbuxBAcBC3Wdt854oyO7jRAprgJd5nVBeZtyeyn5+vw7kXxHQnEGa7+I
-         6Dxban8GvTa2QoFML+uyKPE+hs358htBrdSZvx3x/G+/hZvRM1pAmGinwnXFlM6KQDMT
-         rqii6hcfB9L8qcjcOIxTqE8Uf2xC+f78Oc4jDgS9cX3JoBF84Cr80hiky4Rpm2I9kMYL
-         6yMQ==
-X-Gm-Message-State: ANhLgQ25PmYEgwenP3Mdx+PWoE+u/tVPix6Ulm8oPyYKOcxEbNU52oOn
-        Yl7NaEY8vo9E6IJAMiSaUW+bqpfC
-X-Google-Smtp-Source: ADFU+vuQ6S7GEwKDEbiUD7ol+gheaI8Xr37RWwyCubGvEqiXc6TpibvEZms8x8PGu7JY1gPv0fomuA==
-X-Received: by 2002:a17:90a:8d86:: with SMTP id d6mr5115534pjo.119.1583521824264;
-        Fri, 06 Mar 2020 11:10:24 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id u23sm36216467pfm.29.2020.03.06.11.10.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 11:10:23 -0800 (PST)
-Date:   Fri, 6 Mar 2020 11:10:21 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Arthur Demchenkov <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>, ruleh <ruleh@gmx.de>
-Subject: Re: [PATCH 3/3] Input: omap4-keypad - check state again for lost
- key-up interrupts
-Message-ID: <20200306191021.GH217608@dtor-ws>
-References: <20200228171223.11444-1-tony@atomide.com>
- <20200228171223.11444-4-tony@atomide.com>
+        Fri, 6 Mar 2020 14:11:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgCFTLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 14:11:10 -0500
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F29BC20656;
+        Fri,  6 Mar 2020 19:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583521869;
+        bh=I5XbT8QZEW6+CEYOiuZ0DU2H6PyHZynEgjZpEpbsnZ4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sVeVXl5pj9av2XR9MjMwsvB2SUSwWJ7mN6asO6kfYFkmcNrnR/Jc/I0D/E1c6mI1A
+         nKBcTtMmBD3cZR3rlM/wuh+C/B9PauxDpS9efUXLzZCDKSHjwLYdAXC7ANMb7zQ3iA
+         EudlYYRLU2UCpf8F1ntZ2n3IMG0zWADrGgxMuUUw=
+Date:   Fri, 6 Mar 2020 11:11:06 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Po Liu <Po.Liu@nxp.com>
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, vinicius.gomes@intel.com,
+        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
+        alexandru.marginean@nxp.com, xiaoliang.yang_1@nxp.com,
+        roy.zang@nxp.com, mingkai.hu@nxp.com, jerry.huang@nxp.com,
+        leoyang.li@nxp.com, michael.chan@broadcom.com, vishal@chelsio.com,
+        saeedm@mellanox.com, leon@kernel.org, jiri@mellanox.com,
+        idosch@mellanox.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, jhs@mojatatu.com,
+        xiyou.wangcong@gmail.com, john.hurley@netronome.com,
+        simon.horman@netronome.com, pieter.jansenvanvuuren@netronome.com,
+        pablo@netfilter.org, moshe@mellanox.com,
+        ivan.khoronzhuk@linaro.org, m-karicheri2@ti.com,
+        andre.guedes@linux.intel.com, jakub.kicinski@netronome.com
+Subject: Re: [RFC,net-next  2/9] net: qos: introduce a gate control flow
+ action
+Message-ID: <20200306111106.09416f43@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <20200306125608.11717-3-Po.Liu@nxp.com>
+References: <20200306125608.11717-1-Po.Liu@nxp.com>
+        <20200306125608.11717-3-Po.Liu@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228171223.11444-4-tony@atomide.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 09:12:23AM -0800, Tony Lindgren wrote:
-> We only have partial errata i689 implemented with Commit 6c3516fed7b6
-> ("Input: omap-keypad - fix keyboard debounce configuration"). We are
-> still missing the check for lost key-up interrupts as described in the
-> omap4 silicon errata documentation as Errata ID i689 "1.32 Keyboard Key
-> Up Event Can Be Missed":
+On Fri,  6 Mar 2020 20:56:00 +0800 Po Liu wrote:
+> Introduce a ingress frame gate control flow action. tc create a gate
+> action would provide a gate list to control when open/close state. when
+> the gate open state, the flow could pass but not when gate state is
+> close. The driver would repeat the gate list cyclically. User also could
+> assign a time point to start the gate list by the basetime parameter. if
+> the basetime has passed current time, start time would calculate by the
+> cycletime of the gate list.
+> The action gate behavior try to keep according to the IEEE 802.1Qci spec.
+> For the software simulation, require the user input the clock type.
 > 
-> "When a key is released for a time shorter than the debounce time,
->  in-between 2 key press (KP1 and KP2), the keyboard state machine will go
->  to idle mode and will never detect the key release (after KP1, and also
->  after KP2), and thus will never generate a new IRQ indicating the key
->  release."
+> Below is the setting example in user space:
 > 
-> Let's check the keyboard state with delayed_work after each event. And
-> if the problem state is detect, let's clear all events.
+> > tc qdisc add dev eth0 ingress  
 > 
-> Cc: Arthur Demchenkov <spinal.by@gmail.com>
-> Cc: Merlijn Wajer <merlijn@wizzup.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  drivers/input/keyboard/omap4-keypad.c | 56 ++++++++++++++++++++++++---
->  1 file changed, 50 insertions(+), 6 deletions(-)
+> > tc filter add dev eth0 parent ffff: protocol ip \  
+> 	   flower src_ip 192.168.0.20 \
+> 	   action gate index 2 \
+> 	   sched-entry OPEN 200000000 -1 -1 \
+> 	   sched-entry CLOSE 100000000 -1 -1
 > 
-> diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
-> --- a/drivers/input/keyboard/omap4-keypad.c
-> +++ b/drivers/input/keyboard/omap4-keypad.c
-> @@ -71,6 +71,8 @@ struct omap4_keypad {
->  	void __iomem *base;
->  	bool irq_wake_enabled;
->  	unsigned int irq;
-> +	struct delayed_work key_work;
-> +	struct mutex lock;		/* for key scan */
+> > tc chain del dev eth0 ingress chain 0  
+> 
+> "sched-entry" follow the name taprio style. gate state is
+> "OPEN"/"CLOSE". Follow the period nanosecond. Then next -1 is internal
+> priority value means which ingress queue should put. "-1" means
+> wildcard. The last value optional specifies the maximum number of
+> MSDU octets that are permitted to pass the gate during the specified
+> time interval.
+> 
+> NOTE: This software simulator version not separate the admin/operation
+> state machine. Update setting would overwrite stop the previos setting
+> and waiting new cycle start.
+> 
+> Signed-off-by: Po Liu <Po.Liu@nxp.com>
 
-I think having threaded interrupt and delayed work together defeats the
-purpose of having threaded interrupt. If you want to add a delay before
-repeating scan I think you can add it directly in
-omap4_keypad_irq_thread_fn(). Or is there a concern that we will not
-rely quickly enough on additional key presses? It is unclear to me if
-additional key press within the debounce time will result in additional
-interrupt.
+> diff --git a/net/sched/act_gate.c b/net/sched/act_gate.c
+> new file mode 100644
+> index 000000000000..c2c243ca028c
+> --- /dev/null
+> +++ b/net/sched/act_gate.c
+> @@ -0,0 +1,645 @@
+> +// SPDX-License-Identifier: (GPL-2.0+)
 
-Thanks.
+Why the parenthesis?
 
--- 
-Dmitry
+> +static const struct nla_policy entry_policy[TCA_GATE_ENTRY_MAX + 1] = {
+> +	[TCA_GATE_ENTRY_INDEX]		= { .type = NLA_U32 },
+> +	[TCA_GATE_ENTRY_GATE]		= { .type = NLA_FLAG },
+> +	[TCA_GATE_ENTRY_INTERVAL]	= { .type = NLA_U32 },
+> +	[TCA_GATE_ENTRY_IPV]		= { .type = NLA_S32 },
+> +	[TCA_GATE_ENTRY_MAX_OCTETS]	= { .type = NLA_S32 },
+> +};
+> +
+> +static const struct nla_policy gate_policy[TCA_GATE_MAX + 1] = {
+> +	[TCA_GATE_PARMS]		= { .len = sizeof(struct tc_gate) },
+> +	[TCA_GATE_PRIORITY]		= { .type = NLA_S32 },
+> +	[TCA_GATE_ENTRY_LIST]		= { .type = NLA_NESTED },
+> +	[TCA_GATE_BASE_TIME]		= { .type = NLA_U64 },
+> +	[TCA_GATE_CYCLE_TIME]		= { .type = NLA_U64 },
+> +	[TCA_GATE_CYCLE_TIME_EXT]	= { .type = NLA_U64 },
+> +	[TCA_GATE_FLAGS]		= { .type = NLA_U32 },
+> +	[TCA_GATE_CLOCKID]		= { .type = NLA_S32 },
+> +};
+> +
+> +static int fill_gate_entry(struct nlattr **tb, struct tcfg_gate_entry *entry,
+> +			   struct netlink_ext_ack *extack)
+> +{
+> +	u32 interval = 0;
+> +
+> +	if (tb[TCA_GATE_ENTRY_GATE])
+> +		entry->gate_state = 1;
+> +	else
+> +		entry->gate_state = 0;
+
+nla_get_flag()
+
+> +
+> +	if (tb[TCA_GATE_ENTRY_INTERVAL])
+> +		interval = nla_get_u32(tb[TCA_GATE_ENTRY_INTERVAL]);
+> +
+> +	if (interval == 0) {
+> +		NL_SET_ERR_MSG(extack, "Invalid interval for schedule entry");
+> +		return -EINVAL;
+> +	}
+
+> +static int parse_gate_list(struct nlattr *list,
+> +			   struct tcf_gate_params *sched,
+> +			   struct netlink_ext_ack *extack)
+> +{
+> +	struct nlattr *n;
+> +	int err, rem;
+> +	int i = 0;
+> +
+> +	if (!list)
+> +		return -EINVAL;
+> +
+> +	nla_for_each_nested(n, list, rem) {
+> +		struct tcfg_gate_entry *entry;
+> +
+> +		if (nla_type(n) != TCA_GATE_ONE_ENTRY) {
+> +			NL_SET_ERR_MSG(extack, "Attribute isn't type 'entry'");
+> +			continue;
+> +		}
+> +
+> +		entry = kzalloc(sizeof(*entry), GFP_KERNEL);
+> +		if (!entry) {
+> +			NL_SET_ERR_MSG(extack, "Not enough memory for entry");
+> +			return -ENOMEM;
+> +		}
+> +
+> +		err = parse_gate_entry(n, entry, i, extack);
+> +		if (err < 0) {
+> +			kfree(entry);
+
+doesn't this leak previously added entries?
+
+> +			return err;
+> +		}
+> +
+> +		list_add_tail(&entry->list, &sched->entries);
+> +		i++;
+> +	}
+> +
+> +	sched->num_entries = i;
+> +
+> +	return i;
+> +}
+
+
+> +static int parse_gate_entry(struct nlattr *n, struct  tcfg_gate_entry *entry,
+> +			    int index, struct netlink_ext_ack *extack)
+> +{
+> +	struct nlattr *tb[TCA_GATE_ENTRY_MAX + 1] = { };
+> +	int err;
+> +
+> +	err = nla_parse_nested_deprecated(tb, TCA_GATE_ENTRY_MAX, n,
+
+Please don't use the deprecated calls in new code.
+
+> +					  entry_policy, NULL);
+> +	if (err < 0) {
+> +		NL_SET_ERR_MSG(extack, "Could not parse nested entry");
+> +		return -EINVAL;
+> +	}
+> +
+> +	entry->index = index;
+> +
+> +	return fill_gate_entry(tb, entry, extack);
+> +}
