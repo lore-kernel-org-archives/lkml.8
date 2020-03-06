@@ -2,84 +2,129 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A2BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEF9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 382CF2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410D32084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:32:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PBiw1JGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgCFLbj (ORCPT
+        id S1726490AbgCFLcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:31:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:59960 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgCFLbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:31:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FED431B;
-        Fri,  6 Mar 2020 03:31:38 -0800 (PST)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F6683F6C4;
-        Fri,  6 Mar 2020 03:31:37 -0800 (PST)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH] drivers: soc: Fix COMPILE_TEST for IMX SCU
-Date:   Fri,  6 Mar 2020 11:31:19 +0000
-Message-Id: <20200306113119.56577-1-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 6 Mar 2020 06:32:03 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51814 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCFLcC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 06:32:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gVYfVAk3KO+g2j+XGdHVbdJHCQeeRvAXa6ZJkiT2+rs=; b=PBiw1JGlFqdhZJqMKou720MxCa
+        sQwQVatz60It3GeJKZHlbMRrjel7ddDYBzFLNWB75jPZRjQPpmfewC3JNMVkLQDz7/x/p2o/u39N2
+        68ERwHxQqiq8Vr+WkUd0UnlKldcCkBc3x3xxUh9SJ4gql0aP+p8PMqayBk+NCTCDbFtX/vJbYFdi7
+        GlF2HabZJZKldXtmsGC0h007HsbDZi/txNKibEuV+DkKcQDbkklLeMWHah294Osk4PeCzDmfITnxk
+        eQQnm4NCrIDXxgVRGekPEXubuhG17i+7BFIMcoMjTTyfLT41btIImNPBtbdqyfrZlAUluWzv0VoKX
+        8NzBn3TQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jABCc-00009q-9b; Fri, 06 Mar 2020 11:31:38 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 77326980DE9; Fri,  6 Mar 2020 12:31:35 +0100 (CET)
+Date:   Fri, 6 Mar 2020 12:31:35 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org
+Cc:     mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org,
+        alexei.starovoitov@gmail.com
+Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for
+ _rcuidle tracepoints (again)
+Message-ID: <20200306113135.GA8787@worktop.programming.kicks-ass.net>
+References: <20200221133416.777099322@infradead.org>
+ <20200221134216.051596115@infradead.org>
+ <20200306104335.GF3348@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306104335.GF3348@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IMX SCU SoCs support COMPILE_TEST that allows to compile the driver on a
-different platform for development purposes.
-These SoCs depend on a firmware interface that is not built on COMPILE_TEST
-mode. This results in triggering the following errors at compile time (on
-arm64):
+On Fri, Mar 06, 2020 at 11:43:35AM +0100, Peter Zijlstra wrote:
+> On Fri, Feb 21, 2020 at 02:34:32PM +0100, Peter Zijlstra wrote:
+> > Effectively revert commit 865e63b04e9b2 ("tracing: Add back in
+> > rcu_irq_enter/exit_irqson() for rcuidle tracepoints") now that we've
+> > taught perf how to deal with not having an RCU context provided.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---
+> >  include/linux/tracepoint.h |    8 ++------
+> >  1 file changed, 2 insertions(+), 6 deletions(-)
+> > 
+> > --- a/include/linux/tracepoint.h
+> > +++ b/include/linux/tracepoint.h
+> > @@ -179,10 +179,8 @@ static inline struct tracepoint *tracepo
+> >  		 * For rcuidle callers, use srcu since sched-rcu	\
+> >  		 * doesn't work from the idle path.			\
+> >  		 */							\
+> > -		if (rcuidle) {						\
+> > +		if (rcuidle)						\
+> >  			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+> > -			rcu_irq_enter_irqsave();			\
+> > -		}							\
+> >  									\
+> >  		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
+> >  									\
+> > @@ -194,10 +192,8 @@ static inline struct tracepoint *tracepo
+> >  			} while ((++it_func_ptr)->func);		\
+> >  		}							\
+> >  									\
+> > -		if (rcuidle) {						\
+> > -			rcu_irq_exit_irqsave();				\
+> > +		if (rcuidle)						\
+> >  			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+> > -		}							\
+> >  									\
+> >  		preempt_enable_notrace();				\
+> >  	} while (0)
+> 
+> So what happens when BPF registers for these tracepoints? BPF very much
+> wants RCU on AFAIU.
 
-aarch64-none-linux-gnu-ld:
-drivers/soc/imx/soc-imx-scu.o: in function `imx_scu_soc_probe':
-soc-imx-scu.c:(.text+0x24): undefined reference to `imx_scu_get_handle'
-aarch64-none-linux-gnu-ld:
-soc-imx-scu.c:(.text+0xac): undefined reference to `imx_scu_call_rpc'
-aarch64-none-linux-gnu-ld:
-soc-imx-scu.c:(.text+0xd8): undefined reference to `imx_scu_call_rpc'
-linux/Makefile:1078: recipe for target 'vmlinux' failed
-make[1]: *** [vmlinux] Error 1
-Makefile:180: recipe for target 'sub-make' failed
-make: *** [sub-make] Error 2
+I suspect we needs something like this...
 
-Enable the relevant compilation units in the Makefile when the config option
-is selected to address the issue.
-
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- drivers/firmware/imx/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/firmware/imx/Makefile b/drivers/firmware/imx/Makefile
-index 08bc9ddfbdfb..5604adae31d9 100644
---- a/drivers/firmware/imx/Makefile
-+++ b/drivers/firmware/imx/Makefile
-@@ -2,3 +2,5 @@
- obj-$(CONFIG_IMX_DSP)		+= imx-dsp.o
- obj-$(CONFIG_IMX_SCU)		+= imx-scu.o misc.o imx-scu-irq.o
- obj-$(CONFIG_IMX_SCU_PD)	+= scu-pd.o
-+
-+obj-$(CONFIG_COMPILE_TEST)	+= imx-scu.o misc.o imx-scu-irq.o
--- 
-2.25.1
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index a2f15222f205..67a39dbce0ce 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1475,11 +1475,13 @@ void bpf_put_raw_tracepoint(struct bpf_raw_event_map *btp)
+ static __always_inline
+ void __bpf_trace_run(struct bpf_prog *prog, u64 *args)
+ {
++	int rcu_flags = trace_rcu_enter();
+ 	rcu_read_lock();
+ 	preempt_disable();
+ 	(void) BPF_PROG_RUN(prog, args);
+ 	preempt_enable();
+ 	rcu_read_unlock();
++	trace_rcu_exit(rcu_flags);
+ }
+ 
+ #define UNPACK(...)			__VA_ARGS__
 
