@@ -2,137 +2,109 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C9FC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E473C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B56A20675
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55F520637
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgCFSfG (ORCPT
+        id S1726485AbgCFShO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:35:06 -0500
-Received: from mga02.intel.com ([134.134.136.20]:23407 "EHLO mga02.intel.com"
+        Fri, 6 Mar 2020 13:37:14 -0500
+Received: from mga12.intel.com ([192.55.52.136]:28577 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCFSfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:35:05 -0500
+        id S1725873AbgCFShO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:37:14 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 10:35:05 -0800
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 10:37:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="233400615"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Mar 2020 10:35:04 -0800
-Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
-        by linux.intel.com (Postfix) with ESMTP id 24C675802C8;
-        Fri,  6 Mar 2020 10:35:04 -0800 (PST)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [patch 7/7] PCI/AER: Fix the broken interrupt injection
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>
-References: <20200306130341.199467200@linutronix.de>
- <20200306130624.098374457@linutronix.de>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <08c51309-0bd1-9696-4f4b-4f7425762268@linux.intel.com>
-Date:   Fri, 6 Mar 2020 10:32:43 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+   d="scan'208";a="275637536"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 10:37:13 -0800
+Message-ID: <070d9d78981f0aad2baf740233e8dfc32ecd29d7.camel@intel.com>
+Subject: Re: [RFC PATCH v9 05/27] x86/cet/shstk: Add Kconfig option for
+ user-mode Shadow Stack protection
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Date:   Fri, 06 Mar 2020 10:37:13 -0800
+In-Reply-To: <d4dabb84-5636-2657-c45e-795f3f2dcbbc@intel.com>
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+         <20200205181935.3712-6-yu-cheng.yu@intel.com>
+         <d4dabb84-5636-2657-c45e-795f3f2dcbbc@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20200306130624.098374457@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2020-02-26 at 10:05 -0800, Dave Hansen wrote:
+> On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
+> > +# Check assembler Shadow Stack suppot
+> 
+> 				  ^ support
+> 
+> > +ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
+> > +  ifeq ($(call as-instr, saveprevssp, y),)
+> > +      $(error CONFIG_X86_INTEL_SHADOW_STACK_USER not supported by the assembler)
+> > +  endif
+> > +endif
+> 
+> Is this *just* looking for instruction support in the assembler?
+> 
+> We usually just .byte them, like this for pkeys:
+> 
+>         asm volatile(".byte 0x0f,0x01,0xee\n\t"
+>                      : "=a" (pkru), "=d" (edx)
+>                      : "c" (ecx));
+> 
+> That way everybody with old toolchains can still build the kernel (and
+> run/test code with your config option on, btw...).
 
-On 3/6/20 5:03 AM, Thomas Gleixner wrote:
-> The AER error injection mechanism just blindly abuses generic_handle_irq()
-> which is really not meant for consumption by random drivers. The include of
-> linux/irq.h should have been a red flag in the first place. Driver code,
-> unless implementing interrupt chips or low level hypervisor functionality
-> has absolutely no business with that.
->
-> Invoking generic_handle_irq() from non interrupt handling context can have
-> nasty side effects at least on x86 due to the hardware trainwreck which
-> makes interrupt affinity changes a fragile beast. Sathyanarayanan triggered
-> a NULL pointer dereference in the low level APIC code that way. While the
-> particular pointer could be checked this would only paper over the issue
-> because there are other ways to trigger warnings or silently corrupt state.
->
-> Invoke the new irq_inject_interrupt() mechanism, which has the necessary
-> sanity checks in place and injects the interrupt via the irq_retrigger()
-> mechanism, which is at least halfways safe vs. the fragile x86 affinity
-> change mechanics.
->
-> It's safe on x86 as it does not corrupt state, but it still can cause a
-> premature completion of an interrupt affinity change causing the interrupt
-> line to become stale. Very unlikely, but possible.
->
-> For regular operations this is a non issue as AER error injection is meant
-> for debugging and testing and not for usage on production systems. People
-> using this should better know what they are doing.
-It looks good to me.
+We used to do this for CET instructions, but after adding kernel-mode
+instructions and inserting ENDBR's, the code becomes cluttered.  I also
+found an earlier discussion on the ENDBR:
 
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-Tested-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
->
-> Fixes: 390e2db82480 ("PCI/AER: Abstract AER interrupt handling")
-> Reported-by: sathyanarayanan.kuppuswamy@linux.intel.com
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->   drivers/pci/pcie/Kconfig      |    1 +
->   drivers/pci/pcie/aer_inject.c |    6 ++----
->   2 files changed, 3 insertions(+), 4 deletions(-)
->
-> --- a/drivers/pci/pcie/Kconfig
-> +++ b/drivers/pci/pcie/Kconfig
-> @@ -34,6 +34,7 @@ config PCIEAER
->   config PCIEAER_INJECT
->   	tristate "PCI Express error injection support"
->   	depends on PCIEAER
-> +	select GENERIC_IRQ_INJECTION
->   	help
->   	  This enables PCI Express Root Port Advanced Error Reporting
->   	  (AER) software error injector.
-> --- a/drivers/pci/pcie/aer_inject.c
-> +++ b/drivers/pci/pcie/aer_inject.c
-> @@ -16,7 +16,7 @@
->   
->   #include <linux/module.h>
->   #include <linux/init.h>
-> -#include <linux/irq.h>
-> +#include <linux/interrupt.h>
->   #include <linux/miscdevice.h>
->   #include <linux/pci.h>
->   #include <linux/slab.h>
-> @@ -468,9 +468,7 @@ static int aer_inject(struct aer_error_i
->   		}
->   		pci_info(edev->port, "Injecting errors %08x/%08x into device %s\n",
->   			 einj->cor_status, einj->uncor_status, pci_name(dev));
-> -		local_irq_disable();
-> -		generic_handle_irq(edev->irq);
-> -		local_irq_enable();
-> +		ret = irq_inject_interrupt(edev->irq);
->   	} else {
->   		pci_err(rpdev, "AER device not found\n");
->   		ret = -ENODEV;
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+https://lore.kernel.org/lkml/CALCETrVRH8LeYoo7V1VBPqg4WS0Enxtizt=T7dPvgoeWfJrdzA@mail.gmail.com/
+
+It makes sense to let the user know early on that the system cannot support
+CET and cannot build a CET-enabled kernel.
+
+One thing we can do is to disable CET in Kconfig and not in kernel
+build, which I will do in the next version.
+
+Yu-cheng
 
