@@ -2,98 +2,88 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D906C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BC6C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607F7206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:10:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dNPNTB8t"
+	by mail.kernel.org (Postfix) with ESMTP id EFEE020848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCFOKY (ORCPT
+        id S1727070AbgCFOKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:10:24 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20937 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726873AbgCFOKY (ORCPT
+        Fri, 6 Mar 2020 09:10:34 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55845 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgCFOKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:10:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583503822;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TTQGx2tQzO/aOf60DlPPKOJLh+ROpLBlO2kykQtolrk=;
-        b=dNPNTB8t/Cd0lc3TV6GAVKvZb4HJ2V2CFoEXYW6+zeiVsinbgpdKwG/lGs6vtb0cUNwTTg
-        dqpwvDYMpvxDkIFmFt8gIiqkfwpwlyqmgMl+wRBLJGs09idrrEHzoWosvYqLlsmz4a2W04
-        pMeFn5Am9mzkPnlyeWXR7fdxNpeWzAQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-192-YdgSLRdhOlGkPtr8DUpGaA-1; Fri, 06 Mar 2020 09:10:19 -0500
-X-MC-Unique: YdgSLRdhOlGkPtr8DUpGaA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 057728017CC;
-        Fri,  6 Mar 2020 14:10:17 +0000 (UTC)
-Received: from krava (ovpn-205-205.brq.redhat.com [10.40.205.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DB4115D9CD;
-        Fri,  6 Mar 2020 14:10:13 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 15:10:11 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 06/10] perf report: Add 'cgroup' sort key
-Message-ID: <20200306141011.GB290743@krava>
-References: <20200224043749.69466-1-namhyung@kernel.org>
- <20200224043749.69466-7-namhyung@kernel.org>
+        Fri, 6 Mar 2020 09:10:33 -0500
+Received: from b2b-5-147-251-51.unitymedia.biz ([5.147.251.51] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jADgL-0005aS-Uk; Fri, 06 Mar 2020 14:10:30 +0000
+Date:   Fri, 6 Mar 2020 15:10:29 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        metze@samba.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH] Mark AT_* path flags as deprecated and add missing
+ RESOLVE_ flags
+Message-ID: <20200306141029.zon3nt7oxqywbzf6@wittgenstein>
+References: <3774367.1583430213@warthog.procyon.org.uk>
+ <20200306134116.qfa2gj6os4weru7o@yavin>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200224043749.69466-7-namhyung@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200306134116.qfa2gj6os4weru7o@yavin>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 01:37:45PM +0900, Namhyung Kim wrote:
+On Sat, Mar 07, 2020 at 12:41:16AM +1100, Aleksa Sarai wrote:
+> On 2020-03-05, David Howells <dhowells@redhat.com> wrote:
+> > Do we want to do this?  Or should we duplicate the RESOLVE_* flags to AT_*
+> > flags so that existing *at() syscalls can make use of them?
+> > 
+> > David
+> > ---
+> > commit 448731bf3b29f2b1f7c969d7efe1f0673ae13b5e
+> > Author: David Howells <dhowells@redhat.com>
+> > Date:   Thu Mar 5 17:40:02 2020 +0000
+> > 
+> >     Mark AT_* flags as deprecated and add missing RESOLVE_ flags
+> >     
+> >     It has been suggested that new path-using system calls should use RESOLVE_*
+> >     flags instead of AT_* flags, but the RESOLVE_* flag functions are not a
+> >     superset of the AT_* flag functions.  So formalise this by:
+> >     
+> >      (1) In linux/fcntl.h, add a comment noting that the AT_* flags are
+> >          deprecated for new system calls and that RESOLVE_* flags should be
+> >          used instead.
+> 
+> I wouldn't say it that way -- the RESOLVE_* flags should be used by
+> syscalls *where it makes sense to change the path resolution rules*. If
+> it makes more sense for them to have their own flag set, they should
+> arguably make a separate one (like renameat2 did -- though renameat2 can
+> never take AT_EMPTY_PATH because it isn't sufficiently extensible).
 
-SNIP
+Yeah, we should clearly state that they are not a replacement for
+_all_ the AT_* flags. I think it makes sense to think of RESOLVE_* flags
+as a superset of the path-resolution portions of AT_* flags.
 
-> @@ -634,6 +637,39 @@ struct sort_entry sort_cgroup_id = {
->  	.se_width_idx	= HISTC_CGROUP_ID,
->  };
->  
-> +/* --sort cgroup */
-> +
-> +static int64_t
-> +sort__cgroup_cmp(struct hist_entry *left, struct hist_entry *right)
-> +{
-> +	return right->cgroup - left->cgroup;
-> +}
-> +
-> +static int hist_entry__cgroup_snprintf(struct hist_entry *he,
-> +				       char *bf, size_t size,
-> +				       unsigned int width __maybe_unused)
-> +{
-> +	const char *cgrp_name = "N/A";
-> +
-> +	if (he->cgroup) {
-> +		struct cgroup *cgrp = cgroup__find(he->ms.maps->machine->env,
+Maybe in openat2.h:
 
-eveything is connected :)) great that this one works
+/*
+ * Flags available to syscalls wanting to modify how paths are resolved.
+ * RESOLVE_* flags are intended to as a superset of those AT_* flags 
+ * concerned with path resolution. All syscalls modifying their path
+ * resolution behavior are expected to use RESOLVE_* flags.
+ */
 
-jirka
-
+Something like this (Native speaker can probably do this way nicer.)?
