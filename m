@@ -4,36 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0602BC3F2D2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C989C3F2D7
 	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD71E20848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0688120828
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCFC6B (ORCPT
+        id S1727077AbgCFC6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 21:58:01 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38136 "EHLO huawei.com"
+        Thu, 5 Mar 2020 21:58:02 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38316 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726243AbgCFC6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 21:58:00 -0500
+        id S1727026AbgCFC6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 21:58:02 -0500
 Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3C5DB95554F25382267C;
+        by Forcepoint Email with ESMTP id 61F9FBF77BF035097F84;
         Fri,  6 Mar 2020 10:57:58 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 6 Mar 2020 10:57:50 +0800
+ 14.3.439.0; Fri, 6 Mar 2020 10:57:49 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
+        Guojia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 8/9] net: hns3: synchronize some print relating to reset issue
-Date:   Fri, 6 Mar 2020 10:57:17 +0800
-Message-ID: <1583463438-60953-9-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 4/9] net: hns3: delete some reduandant code
+Date:   Fri, 6 Mar 2020 10:57:13 +0800
+Message-ID: <1583463438-60953-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583463438-60953-1-git-send-email-tanhuazhong@huawei.com>
 References: <1583463438-60953-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,73 +47,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch modifies some printing relating to reset issue.
+From: Guojia Liao <liaoguojia@huawei.com>
 
+In hclge_add_mc_addr_common() and hclge_rm_mc_addr_common(),
+variable req had been set as "0" by memset(), so it's unnecessary
+to set .entry_type field as "0" with hnae3_set_bit() again.
+
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c         | 4 ++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index acb796c..c54f262 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2228,7 +2228,7 @@ static void hns3_reset_prepare(struct pci_dev *pdev)
- {
- 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(pdev);
- 
--	dev_info(&pdev->dev, "hns3 flr prepare\n");
-+	dev_info(&pdev->dev, "FLR prepare\n");
- 	if (ae_dev && ae_dev->ops && ae_dev->ops->flr_prepare)
- 		ae_dev->ops->flr_prepare(ae_dev);
- }
-@@ -2237,7 +2237,7 @@ static void hns3_reset_done(struct pci_dev *pdev)
- {
- 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(pdev);
- 
--	dev_info(&pdev->dev, "hns3 flr done\n");
-+	dev_info(&pdev->dev, "FLR done\n");
- 	if (ae_dev && ae_dev->ops && ae_dev->ops->flr_done)
- 		ae_dev->ops->flr_done(ae_dev);
- }
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 69e2008..cdf7f4b 100644
+index e64027c..6da55fb3 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -3442,7 +3442,7 @@ static void hclge_do_reset(struct hclge_dev *hdev)
- 	u32 val;
- 
- 	if (hclge_get_hw_reset_stat(handle)) {
--		dev_info(&pdev->dev, "Hardware reset not finish\n");
-+		dev_info(&pdev->dev, "hardware reset not finish\n");
- 		dev_info(&pdev->dev, "func_rst_reg:0x%x, global_rst_reg:0x%x\n",
- 			 hclge_read_dev(&hdev->hw, HCLGE_FUN_RST_ING),
- 			 hclge_read_dev(&hdev->hw, HCLGE_GLOBAL_RESET_REG));
-@@ -3451,20 +3451,20 @@ static void hclge_do_reset(struct hclge_dev *hdev)
- 
- 	switch (hdev->reset_type) {
- 	case HNAE3_GLOBAL_RESET:
-+		dev_info(&pdev->dev, "global reset requested\n");
- 		val = hclge_read_dev(&hdev->hw, HCLGE_GLOBAL_RESET_REG);
- 		hnae3_set_bit(val, HCLGE_GLOBAL_RESET_BIT, 1);
- 		hclge_write_dev(&hdev->hw, HCLGE_GLOBAL_RESET_REG, val);
--		dev_info(&pdev->dev, "Global Reset requested\n");
- 		break;
- 	case HNAE3_FUNC_RESET:
--		dev_info(&pdev->dev, "PF Reset requested\n");
-+		dev_info(&pdev->dev, "PF reset requested\n");
- 		/* schedule again to check later */
- 		set_bit(HNAE3_FUNC_RESET, &hdev->reset_pending);
- 		hclge_reset_task_schedule(hdev);
- 		break;
- 	default:
- 		dev_warn(&pdev->dev,
--			 "Unsupported reset type: %d\n", hdev->reset_type);
-+			 "unsupported reset type: %d\n", hdev->reset_type);
- 		break;
+@@ -7354,7 +7354,6 @@ int hclge_add_mc_addr_common(struct hclge_vport *vport,
+ 		return -EINVAL;
  	}
- }
+ 	memset(&req, 0, sizeof(req));
+-	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
+ 	hclge_prepare_mac_addr(&req, addr, true);
+ 	status = hclge_lookup_mac_vlan_tbl(vport, &req, desc, true);
+ 	if (status) {
+@@ -7399,7 +7398,6 @@ int hclge_rm_mc_addr_common(struct hclge_vport *vport,
+ 	}
+ 
+ 	memset(&req, 0, sizeof(req));
+-	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
+ 	hclge_prepare_mac_addr(&req, addr, true);
+ 	status = hclge_lookup_mac_vlan_tbl(vport, &req, desc, true);
+ 	if (!status) {
 -- 
 2.7.4
 
