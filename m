@@ -2,243 +2,139 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738F4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61E9C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A49724655
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896D02072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgCFNKA (ORCPT
+        id S1726957AbgCFNKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:10:00 -0500
-Received: from mga09.intel.com ([134.134.136.24]:44091 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgCFNJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:09:59 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 05:09:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
-   d="scan'208";a="413880117"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 06 Mar 2020 05:09:57 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jACjl-000Ce8-3A; Fri, 06 Mar 2020 21:09:57 +0800
-Date:   Fri, 06 Mar 2020 21:09:32 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:irq/core] BUILD SUCCESS
- 30073b2c0bcad41f1b0d01068e07fd81b812c916
-Message-ID: <5e624b8c.8la/rejRlStOM5jc%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 6 Mar 2020 08:10:51 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:36494 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgCFNKv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:10:51 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id ADBE18030797;
+        Fri,  6 Mar 2020 13:10:48 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qFg444i0-JS6; Fri,  6 Mar 2020 16:10:43 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC peculiarities into account
+Date:   Fri, 6 Mar 2020 16:10:29 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  irq/core
-branch HEAD: 30073b2c0bcad41f1b0d01068e07fd81b812c916  irqdomain: Fix function documentation of __irq_domain_alloc_fwnode()
+From: Serge Semin <fancer.lancer@gmail.com>
 
-elapsed time: 4621m
+Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
+peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
+with currently implemented in the kernel DW DMAC driver, but there are some
+peculiarities which must be taken into account in order to have the device
+fully supported.
 
-configs tested: 180
-configs skipped: 0
+First of all traditionally we replaced the legacy plain text-based dt-binding
+file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+channels, which alas have different max burst length configuration.
+In particular first two channels may burst up to 128 bits (16 bytes) at a time
+while the rest of them just up to 32 bits. We must make sure that the DMA
+subsystem doesn't set values exceeding these limitations otherwise the
+controller will hang up. In third currently we discovered the problem in using
+the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+natively implemented multi-block LLP transfers support and the SPI-transfer
+length exceeds the max lock size. In this case due to asynchronous handling of
+Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
+overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+the DMAC to asynchronously execute the transfers we'd have to at least warn
+the user of the possible errors.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Finally there is a bug in the algorithm of the nollp flag detection.
+In particular even if DW DMAC parameters state the multi-block transfers
+support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+by the driver true multi-block LLP functionality unusable. This happens cause'
+if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+contiguous multi-block transfers will be only supported. We must take the
+flag into account when detecting the LLP support otherwise the driver just
+won't work correctly.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-riscv                          rv32_defconfig
-sparc                            allyesconfig
-ia64                                defconfig
-powerpc                             defconfig
-m68k                          multi_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                           sun3_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                      fuloong2e_defconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-i386                 randconfig-a003-20200303
-x86_64               randconfig-a001-20200303
-i386                 randconfig-a001-20200303
-i386                 randconfig-a002-20200303
-x86_64               randconfig-a003-20200303
-x86_64               randconfig-a002-20200303
-x86_64               randconfig-a001-20200306
-x86_64               randconfig-a002-20200306
-x86_64               randconfig-a003-20200306
-i386                 randconfig-a001-20200306
-i386                 randconfig-a002-20200306
-i386                 randconfig-a003-20200306
-alpha                randconfig-a001-20200306
-m68k                 randconfig-a001-20200306
-mips                 randconfig-a001-20200306
-nds32                randconfig-a001-20200306
-parisc               randconfig-a001-20200306
-riscv                randconfig-a001-20200306
-alpha                randconfig-a001-20200305
-m68k                 randconfig-a001-20200305
-mips                 randconfig-a001-20200305
-nds32                randconfig-a001-20200305
-parisc               randconfig-a001-20200305
-riscv                randconfig-a001-20200305
-riscv                randconfig-a001-20200302
-alpha                randconfig-a001-20200302
-m68k                 randconfig-a001-20200302
-mips                 randconfig-a001-20200302
-nds32                randconfig-a001-20200302
-parisc               randconfig-a001-20200302
-c6x                  randconfig-a001-20200303
-h8300                randconfig-a001-20200303
-microblaze           randconfig-a001-20200303
-nios2                randconfig-a001-20200303
-sparc64              randconfig-a001-20200303
-c6x                  randconfig-a001-20200302
-h8300                randconfig-a001-20200302
-microblaze           randconfig-a001-20200302
-nios2                randconfig-a001-20200302
-sparc64              randconfig-a001-20200302
-csky                 randconfig-a001-20200302
-openrisc             randconfig-a001-20200302
-s390                 randconfig-a001-20200302
-sh                   randconfig-a001-20200302
-xtensa               randconfig-a001-20200302
-csky                 randconfig-a001-20200305
-openrisc             randconfig-a001-20200305
-s390                 randconfig-a001-20200305
-sh                   randconfig-a001-20200305
-xtensa               randconfig-a001-20200305
-x86_64               randconfig-b001-20200306
-x86_64               randconfig-b002-20200306
-x86_64               randconfig-b003-20200306
-i386                 randconfig-b001-20200306
-i386                 randconfig-b002-20200306
-i386                 randconfig-b003-20200306
-x86_64               randconfig-c001-20200305
-x86_64               randconfig-c002-20200305
-x86_64               randconfig-c003-20200305
-i386                 randconfig-c001-20200305
-i386                 randconfig-c002-20200305
-i386                 randconfig-c003-20200305
-i386                 randconfig-d001-20200303
-x86_64               randconfig-d003-20200303
-x86_64               randconfig-d001-20200303
-i386                 randconfig-d003-20200303
-i386                 randconfig-d002-20200303
-x86_64               randconfig-d002-20200303
-i386                 randconfig-f003-20200303
-x86_64               randconfig-f001-20200303
-i386                 randconfig-f001-20200303
-i386                 randconfig-f002-20200303
-x86_64               randconfig-f002-20200303
-x86_64               randconfig-f003-20200303
-x86_64               randconfig-f001-20200306
-x86_64               randconfig-f002-20200306
-x86_64               randconfig-f003-20200306
-i386                 randconfig-f001-20200306
-i386                 randconfig-f002-20200306
-i386                 randconfig-f003-20200306
-i386                 randconfig-g003-20200303
-x86_64               randconfig-g003-20200303
-i386                 randconfig-g001-20200303
-x86_64               randconfig-g001-20200303
-x86_64               randconfig-g002-20200303
-i386                 randconfig-g002-20200303
-arc                  randconfig-a001-20200306
-arm                  randconfig-a001-20200306
-arm64                randconfig-a001-20200306
-ia64                 randconfig-a001-20200306
-powerpc              randconfig-a001-20200306
-sparc                randconfig-a001-20200306
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Viresh Kumar <vireshk@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: dmaengine@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (5):
+  dt-bindings: dma: dw: Replace DW DMAC legacy bindings with YAML-based
+    one
+  dt-bindings: dma: dw: Add max burst transaction length property
+    bindings
+  dmaengine: dw: Add LLP and block size config accessors
+  dmaengine: dw: Introduce max burst length hw config
+  dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
+
+ .../bindings/dma/snps,dma-spear1340.yaml      | 180 ++++++++++++++++++
+ .../devicetree/bindings/dma/snps-dma.txt      |  69 -------
+ drivers/dma/dw/core.c                         |  24 ++-
+ drivers/dma/dw/dw.c                           |   1 +
+ drivers/dma/dw/of.c                           |   9 +
+ drivers/dma/dw/regs.h                         |   3 +
+ include/linux/platform_data/dma-dw.h          |  22 +++
+ 7 files changed, 238 insertions(+), 70 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
+
+-- 
+2.25.1
+
