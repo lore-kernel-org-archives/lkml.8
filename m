@@ -2,101 +2,103 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E02C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EA6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5FA2072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD522072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:35:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583498134;
+	bh=aa+BMveTSBAbzOcejRVQ5ZUIMFaMxpKit6i7bJxKxMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f5EZ1LBGs7x3WiVAYRYaMmzyi5aLh+tA0zG2vwE0EmzZRXC0J2vqQ17wJFh54rKkl
+	 g9e/ye3WC0t1OoICok8f0fp9kuKK8K79HANjMkjINr28iCtqU4t1xS2SWNFAPk+47j
+	 LO2HIXomPZCCP6KCZGxNTV6+oLi59OxOTUauAhos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCFMfT (ORCPT
+        id S1726861AbgCFMfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:35:19 -0500
-Received: from mga03.intel.com ([134.134.136.65]:53296 "EHLO mga03.intel.com"
+        Fri, 6 Mar 2020 07:35:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:60654 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbgCFMfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:35:19 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 04:35:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
-   d="scan'208";a="275524609"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 04:35:14 -0800
-Subject: Re: [PATCH 01/10] mmc: sdhci: Add quirk SDHCI_QUIRK2_SET_BUS_VOLTAGE
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
-Cc:     ulf.hansson@linaro.org, f.fainelli@gmail.com, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org
-References: <20200306103857.23962-1-nsaenzjulienne@suse.de>
- <20200306103857.23962-2-nsaenzjulienne@suse.de>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <55ef25ae-5c73-7778-dfda-976809cf9fe6@intel.com>
-Date:   Fri, 6 Mar 2020 14:34:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726182AbgCFMfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 07:35:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF9F931B;
+        Fri,  6 Mar 2020 04:35:32 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53D413F6C4;
+        Fri,  6 Mar 2020 04:35:32 -0800 (PST)
+Date:   Fri, 6 Mar 2020 12:35:30 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] regulator: pwm: Don't warn on probe deferral
+Message-ID: <20200306123530.GA4114@sirena.org.uk>
+References: <20200224144048.6587-1-jonathanh@nvidia.com>
+ <20200224165859.GJ6215@sirena.org.uk>
+ <20200226161757.idpzbs3jmayt7ya6@pengutronix.de>
+ <20200226163905.GH4136@sirena.org.uk>
+ <20200306075129.mzs22yjitkmgrthh@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200306103857.23962-2-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
+Content-Disposition: inline
+In-Reply-To: <20200306075129.mzs22yjitkmgrthh@pengutronix.de>
+X-Cookie: fortune: No such file or directory
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/03/20 12:38 pm, Nicolas Saenz Julienne wrote:
-> Adds quirk for controllers whose bus power select register has to be set
-> even when powering SD cards from a regulator.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  drivers/mmc/host/sdhci.c | 5 +++++
->  drivers/mmc/host/sdhci.h | 2 ++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index c59566363a42..c7fd87447457 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1920,6 +1920,11 @@ static void sdhci_set_power_reg(struct sdhci_host *host, unsigned char mode,
->  
->  	mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
->  
-> +	if (host->quirks2 & SDHCI_QUIRK2_SET_BUS_VOLTAGE) {
 
-We don't really want to replace callbacks by quirks.
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Replace sdhci_milbeaut_set_power() etc by a common fn in sdhci.c if you want.
+On Fri, Mar 06, 2020 at 08:51:29AM +0100, Uwe Kleine-K=F6nig wrote:
 
-> +		sdhci_set_power_noreg(host, mode, vdd);
-> +		return;
-> +	}
-> +
->  	if (mode != MMC_POWER_OFF)
->  		sdhci_writeb(host, SDHCI_POWER_ON, SDHCI_POWER_CONTROL);
->  	else
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index cac2d97782e6..9531a4e5b148 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -484,6 +484,8 @@ struct sdhci_host {
->   * block count.
->   */
->  #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
-> +/* Set bus voltage even when powering from an external regulator */
-> +#define SDHCI_QUIRK2_SET_BUS_VOLTAGE			(1<<19)
->  
->  	int irq;		/* Device IRQ */
->  	void __iomem *ioaddr;	/* Mapped address */
-> 
+> I wonder if we should do something like:
 
+> 	ret =3D some_call(some, args);
+> 	if (ret) {
+> 		if (emit_errmsg_for_err(ret))
+> 			dev_err(dev, "some_call failed: %pE\n", ERR_PTR(ret));
+> 		return ret;
+> 	}
+
+> and have emit_errmsg_for_err return true if ret !=3D -EPROBE_DEFER or some
+> kernel parameter is given.
+
+There was some effort in the past to have a dev_probe_err() or something
+which could have a similar implementation but that didn't end up going
+anywhere I think.  I do prefer the debug level log since it's much
+easier to have the information there without having to ask for it, that
+design would've supported that.
+
+--AqsLC8rIMeq19msA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5iQ5IACgkQJNaLcl1U
+h9BuHwf+PVNL4Sk9lvVXj3uZGPvOjvQ5AISnSi54O7gsRBhc+yGdANxc1ZpuIcxc
+URs2Khp5haI6dPXVVexp1Y0l/fHAi2k93GMep+8uQhosrQUZ7q08qdzrN54g1THK
+Y19+hSRF3KmBdoZPk3oqsTmX2j5Uq+Z6QU/U5WCO/j64WJJcAiR7zu35qEF7dDe2
+0SDzkQUvzz/EOqcPdt460hMXXhVrcKT/iqDD09cJXUjdWteEGbJfHFt845qPbR6o
+LEwoCZInR3P3q8bN2nwtkQa7BQESTjh4s/vNIq4QDYfbzdJ05WAqGZsETzb8/Vwr
+bYfbQDO11C3REAo8rUIj+i5yXdl9bQ==
+=uQ0f
+-----END PGP SIGNATURE-----
+
+--AqsLC8rIMeq19msA--
