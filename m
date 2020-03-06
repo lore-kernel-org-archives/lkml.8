@@ -2,78 +2,134 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA95EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E6FC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B502A20409
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB04F20409
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WAyRSKi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgCFPIl (ORCPT
+        id S1726992AbgCFPJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:08:41 -0500
-Received: from muru.com ([72.249.23.125]:59046 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgCFPIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:08:41 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 9B65B8027;
-        Fri,  6 Mar 2020 15:09:25 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 07:08:37 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, Nishanth Menon <nm@ti.com>,
-        yan-liu@ti.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Nori, Sekhar" <nsekhar@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
-Message-ID: <20200306150837.GB37466@atomide.com>
-References: <20200304090031.30360-1-rogerq@ti.com>
- <9cc75c26-bd8c-03ea-8f8d-7784fffb7a0a@arm.com>
- <eb4e97f2-9afd-41a9-e239-88798c326a86@ti.com>
+        Fri, 6 Mar 2020 10:09:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56390 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgCFPJX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:09:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=fvkhdfY0DQSguKsTCNP38wagzdN34NuCr9M9vU3oTnU=; b=WAyRSKi+qYYrjTgIPjTwZvpyFO
+        znUKSoU3y811UZb05N9lVXvpPZjkL8SaF9J5uI1Fgmk+RVHfd+PXiRBrjbGMmRNxyu5tDn6JFs9r4
+        9F72pLUYEoySzbRlBuHiAivIJERjNl2f7NznmUw/PNLS6ySCHrHdvyP750OxOwTcUNivPXX1JP+Vv
+        tiBqUF+bCksGtIXhR0YgJoCwKsOD1d7ZPFnRr2AgAzYVcG9DOxT2uDIsTVwI3pCq+U/CdkDOxa7N+
+        Lu2jcxlMXY+/Fr4JBBL8KX/RwiNiwhuZXemBPiBsbdlP/Vm+tOhhZmJ0VscEyFjS49lWzwliZJ0fS
+        CDXgXTLg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jAEbJ-0005Oc-Pi; Fri, 06 Mar 2020 15:09:21 +0000
+Subject: Re: [RFC PATCH] drm: rcar-du: make all sub-symbols depend on
+ DRM_RCAR_DU
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>,
+        David Airlie <airlied@linux.ie>
+References: <4b50cc9f-1434-b78a-d56a-fadfd030f002@infradead.org>
+ <20200306142819.GG4878@pendragon.ideasonboard.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <87bcc1d8-d0c6-9c26-c66f-a4e228c64015@infradead.org>
+Date:   Fri, 6 Mar 2020 07:09:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200306142819.GG4878@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <eb4e97f2-9afd-41a9-e239-88798c326a86@ti.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [200305 16:47]:
-> +Nishanth
+On 3/6/20 6:28 AM, Laurent Pinchart wrote:
+> Hi Randy,
 > 
-> Robin,
+> On Thu, Mar 05, 2020 at 07:17:49PM -0800, Randy Dunlap wrote:
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>>
+>> DRM_RCAR_CMM depends on DRM_RCAR_DU. Since the following Kconfig
+>> symbols do not depend on DRM_RCAR_DU, the menu presentation is
+>> broken for these and following non-R-Car Kconfig symbols.
+>>
+>> Is it safe/appropriate to make all of these symbols depend on
+>> DRM_RCAR_DU?  It make the kconfig menu presentation much cleaner.
 > 
-> On 05/03/2020 18:04, Robin Murphy wrote:
-> > On 04/03/2020 9:00 am, Roger Quadros wrote:
-> > > Even though the TRM says that SATA IP has 36 address bits
-> > > wired in the SoC, we see bus errors whenever any address
-> > > greater than 32-bit is given to the controller.
-> > 
-> > Actually, is it really just SATA? I pulled up a couple of DRA7xx TRMs out of curiosity - thanks for having such easy-to-access documentation by the way :) - and they both give me a clear impression that the entire L3_MAIN interconnect is limited to 32-bit addresses and thus pretty much all the DMA masters should only be able to touch the lower 2GB of DRAM. Especially the bit that explicitly says "This is a high address range (Q8 – Q15) that requires an address greater than 32 bits. This space is visible only for the MPU Subsystem."
+> As those drivers are useless without DRM_RCAR_DU, I'm fine with this
+> change. It however prevents test-compiling those drivers when
+> DRM_RCAR_DU is disabled, but I see little reason to do so anyway, I
+> expect compile tests to aim for as large coverage as possible, and they
+> should thus enable DRM_RCAR_DU.
 > 
-> You are right that L3 interconnect can only access first 2GB of DRAM.
-> Which means we should add the bus_dma_limit to the entire L3 bus
-> instead of just SATA?
-
-OK makes sense to me.
-
-> > Is it in fact the case that the SATA driver happens to be the only one to set a >32-bit DMA mask on your system?
+> Would you like to submit a new version without this question, and
+> possibly addressing Geert's concern if you think it's appropriate, or
+> should I do so when applying ?
 > 
-> This looks like the case. Other device drivers might not be overriding
-> dma_mask at all thus using the default 32-bit dma_mask.
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>> Cc: dri-devel@lists.freedesktop.org
+>> Cc: linux-renesas-soc@vger.kernel.org
+>> Cc: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+>> Cc: Dave Airlie <airlied@linux.ie>
+>> ---
+>>  drivers/gpu/drm/rcar-du/Kconfig |    3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> --- linux-next-20200305.orig/drivers/gpu/drm/rcar-du/Kconfig
+>> +++ linux-next-20200305/drivers/gpu/drm/rcar-du/Kconfig
+>> @@ -24,6 +24,7 @@ config DRM_RCAR_CMM
+>>  config DRM_RCAR_DW_HDMI
+>>  	tristate "R-Car DU Gen3 HDMI Encoder Support"
+>>  	depends on DRM && OF
+>> +	depends on DRM_RCAR_DU
+>>  	select DRM_DW_HDMI
+>>  	help
+>>  	  Enable support for R-Car Gen3 internal HDMI encoder.
+>> @@ -31,6 +32,7 @@ config DRM_RCAR_DW_HDMI
+>>  config DRM_RCAR_LVDS
+>>  	tristate "R-Car DU LVDS Encoder Support"
+>>  	depends on DRM && DRM_BRIDGE && OF
+>> +	depends on DRM_RCAR_DU
+>>  	select DRM_PANEL
+>>  	select OF_FLATTREE
+>>  	select OF_OVERLAY
+>> @@ -47,4 +49,5 @@ config DRM_RCAR_VSP
+>>  
+>>  config DRM_RCAR_WRITEBACK
+>>  	bool
+>> +	depends on DRM_RCAR_DU
+>>  	default y if ARM64
+> 
+> Is this one needed ? The symbol should not be shown in the kconfig menu
+> as it has no text.
 
-OK
+Hi Laurent,
+I tried the patch without that line as my first attempt and there was
+still a problem with the menu, so I will resubmit the patch using a block
+as Geert suggested.
 
-Regards,
+thanks.
+-- 
+~Randy
 
-Tony
