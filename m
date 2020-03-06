@@ -2,73 +2,144 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D67C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756FBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70492084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE6A2084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mNKTfrkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgCFLVj (ORCPT
+        id S1726650AbgCFLVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 06:21:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:59858 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgCFLVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:21:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9259731B;
-        Fri,  6 Mar 2020 03:21:38 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 637213F6C4;
-        Fri,  6 Mar 2020 03:21:36 -0800 (PST)
-Date:   Fri, 6 Mar 2020 11:21:34 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, dietmar.eggemann@arm.com,
-        rjw@rjwysocki.net, pkondeti@codeaurora.org,
-        linux-doc@vger.kernel.org, peterz@infradead.org,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 0/7] arm64: ARMv8.4 Activity Monitors support
-Message-ID: <20200306112134.GD2503422@arrakis.emea.arm.com>
-References: <20200305090627.31908-1-ionela.voinescu@arm.com>
+        Fri, 6 Mar 2020 06:21:47 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:59922 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726108AbgCFLVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 06:21:46 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583493706; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Jwxyby0xndROGdVUzKRBbhM6nT8U3ucqzou3WOX2Z9k=; b=mNKTfrkHaCncA7/2Cl0kpL0kcAKMUvMrSH/LlqMPdiO/9pMAB2P60U1JgOIzwJss8yS4nIDR
+ bza5c+aFuv3U6xNi48WgHtlKTFEoYIPjTFi+tT5i6Ay3stQ0DMloN0ychaQcAf5rscOCH06J
+ 4osdku8mElD8X6Hbs8i/CneJjpc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e623247.7f950dba90a0-smtp-out-n01;
+ Fri, 06 Mar 2020 11:21:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 19688C44788; Fri,  6 Mar 2020 11:21:42 +0000 (UTC)
+Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 022CAC433BA;
+        Fri,  6 Mar 2020 11:21:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 022CAC433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v4 0/8] Add QUSB2 PHY support for SC7180
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <1580305919-30946-1-git-send-email-sanm@codeaurora.org>
+ <20200203185649.GK3948@builder> <20200305185132.GT24720@google.com>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <4fe18d8b-7479-7d1c-ccbe-9d9404b60ba6@codeaurora.org>
+Date:   Fri, 6 Mar 2020 16:51:35 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305090627.31908-1-ionela.voinescu@arm.com>
+In-Reply-To: <20200305185132.GT24720@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ionela,
+Hi Matthias,
 
-On Thu, Mar 05, 2020 at 09:06:20AM +0000, Ionela Voinescu wrote:
-> v5 -> v6
->  - v5 can be found at [7]
->  - The current series is based on arm64/master [8].
+Will do it by 3/9.
 
-arm64/master is just some random point in the Linus tree, I didn't
-realise people are using it. I moved it to v5.6-rc3 as that's the base
-for the final arm64 for-next/core.
+Regards
 
->  - [1/7] kernel parameter removed as Catalin recommended
->  - [2/7, 4/7] changelog and documentation changed to remove information
->    about the removed kernel parameter
->  - [2/7, 3/7, 6/7] collected reviewed-by and acked-by from James,
->    Marc and Lukasz.
+Sandeep
 
-The series looks fine. Once Sudeep reviews/acks the arch topology patch,
-I'll queue the patches.
-
-Thanks.
-
+On 3/6/2020 12:21 AM, Matthias Kaehlcke wrote:
+> On Mon, Feb 03, 2020 at 10:56:49AM -0800, Bjorn Andersson wrote:
+>> On Wed 29 Jan 05:51 PST 2020, Sandeep Maheswaram wrote:
+>>
+>> Kishon, afaict this is all reviewed, let me know when you're taking the
+>> phy pieces and I'll pick up the dts changes.
+> The series has a few minor comments. Sandeep, could you respin the
+> series so that it can be landed?
+>
+> Thanks
+>
+> Matthias
+>
+>>> Converting dt binding to yaml.
+>>> Adding compatible for SC7180 in dt bindings.
+>>> Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
+>>>
+>>> Changes in v4:
+>>> *Addressed Rob Herrings comments in dt bindings.
+>>> *Added new structure for all the overriding tuning params.
+>>> *Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy.
+>>> *Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845.
+>>>
+>>> Changes in v3:
+>>> *Using the generic phy cfg table for QUSB2 V2 phy.
+>>> *Added support for overriding tuning parameters in QUSB2 V2 PHY
+>>> from device tree.
+>>>
+>>> Changes in v2:
+>>> Sorted the compatible in driver.
+>>> Converted dt binding to yaml.
+>>> Added compatible in yaml.
+>>>
+>>> Sandeep Maheswaram (8):
+>>>    dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
+>>>    dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
+>>>      SC7180
+>>>    phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
+>>>    dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
+>>>      parameters
+>>>    phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
+>>>      V2 PHY
+>>>    arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
+>>>    arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
+>>>    arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
+>>>      device
+>>>
+>>>   .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 182 +++++++++++++++++++++
+>>>   .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
+>>>   arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
+>>>   arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
+>>>   arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
+>>>   drivers/phy/qualcomm/phy-qcom-qusb2.c              | 143 +++++++++++-----
+>>>   6 files changed, 291 insertions(+), 114 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+>>>   delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+>>>
+>>> -- 
+>>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>>> of Code Aurora Forum, hosted by The Linux Foundation
+>>>
 -- 
-Catalin
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
