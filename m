@@ -2,155 +2,109 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EE1C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149CEC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321AD208CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:04:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="FvVbK0Bl"
+	by mail.kernel.org (Postfix) with ESMTP id DFC8E208CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:04:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583503453;
+	bh=Nq9KmkAUq5F9r3sx/yxBgy6aw7mRvtKy8xoVi/1LUaU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=w+2sARb6wQDzuIBDoRTZhegRXf+bLBtjqMUZZ+FK+5PqpyBF/J1dby/O+V6KrUvXn
+	 XHUNTo77LVzzEhB87MKfbsUHVlah/IaFDZ8/aTsFXVJFTgzQIUcreiSqoK72uCcLhl
+	 qii0JmNsbIM75jmKUWyLxb+GgCY5meN4Ln8xCOEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCFOEJ (ORCPT
+        id S1726998AbgCFOEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:04:09 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:51351 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726650AbgCFOEI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:04:08 -0500
-Received: from [IPv6:2001:983:e9a7:1:558f:c736:2117:17d1]
- ([IPv6:2001:983:e9a7:1:558f:c736:2117:17d1])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id ADa9j3D5JEE3qADaAjCcfO; Fri, 06 Mar 2020 15:04:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1583503446; bh=8XxOCEPoREORb7c2HZFhCn8VIk+8g8Vx9q7Ipbq6HFw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=FvVbK0BlEtTlr/R0qe1IPOmx5y2+1eGzOryBsaMeONisjfDEnowfg8CsvLS9+I9sA
-         rYVBmc/471Yk5tTURRtrnPBz9Y0dQMva2hwHCRf4948cul0cISEZLuu52/xjn9aTrW
-         JLYzyt4WEBsgLEMuLszQ3wVREtNEffedsBrAUcXCT5vY1W9GE5W2VMI+G4xb3HRq+E
-         9bFa7Ir22jMArz5Umg5ZZ6s64YCw/qClxfLZtlqH9NGqZQOergZgnVkjQByNi+ZHyC
-         3oeEV7dBp02TpvAFYS9A03DtIrCqzC7QTnCUx1O70lsURRucl4c/tSAOmzlrx4bMdh
-         N1Hh+A4cOjHgg==
-Subject: Re: [PATCHv4 10/11] videobuf2: add begin/end cpu_access callbacks to
- dma-sg
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-11-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <f99cd8d2-26a2-acd1-a986-aee66cd2ba12@xs4all.nl>
-Date:   Fri, 6 Mar 2020 15:04:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200302041213.27662-11-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfFMSCgA13lZgSAxVSxB39QttbqabtJqi1Btj2KpFHRd7akSgc+5ebRNAGJwWhBvwvkSHc6wEsg1VbBBnY1jIcXPh6QBQIa8FwoDM7YoSQ67UyYSoOqVw
- KmoWWaLlsWMbbbeeK3RV2XIFpZArCb1gbE0ConzX8jJwz2zk0CEzBG5j1YlpLZNXFS8ceb/RidXCFTCHuRdJVkeIxNGxNoA6sTGwNRgZj4gsNm4/iLNBfsS5
- SnMtxh3XyRtmbE6B8Dhm/2KtFuXbwSFxgsVLEJujOFQVJfd0vz7cjTsfVVXC/3Aeej4XSO43AQVYw7dC8e8tgrgf632YLGhKMZsHGciQrXYw4Cn89b9NxqaE
- AKR6RNLyFs/0LBlqbB9tazliftZRYKGOzOtVSoNOC2crpWmb4ZLZ93tjuGBQ+zZsl5hNIBHjEE2TeaU+Vu3RUTKkrG8jOD+8LKIKoZyBEQ7KHpDOmszy303A
- 9BEU6q05KdyCwuPv+CpURSSqx7K5vj4tAU8p6/0YrG/PzocjIfWLYn+jbFTVnFq8oIYUnvo3r7tdSYMbozhuQgnV2V+VkflgmW1v0kEi6Q905aLZsn1g7u51
- wjMQTwYYt9/iM+3BEStzJTrb2fO93zJa8YYwn5TWt4KI0g==
+        Fri, 6 Mar 2020 09:04:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbgCFOEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 09:04:12 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9312F20866;
+        Fri,  6 Mar 2020 14:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583503451;
+        bh=Nq9KmkAUq5F9r3sx/yxBgy6aw7mRvtKy8xoVi/1LUaU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1VmdVldybeLhw8UkDSUvunsqGSnJj3olRcE2BPDvB6NY6YKLfpOZJ3HNCdILvE1OE
+         552ncCbIyD6AoID2TsIZ/lrANy9t+Zcf7UxSG3gJHff3FhlaslGL+tHNTdr/yYGA6v
+         qOFPJUC7HazIsfQ6YlNCnrz6L7+jkSTtHrZD3UZ0=
+Date:   Fri, 6 Mar 2020 23:04:06 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-doc@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v5.1] Documentation: bootconfig: Update boot
+ configuration documentation
+Message-Id: <20200306230406.dd9c7358f00f47ff5760c899@kernel.org>
+In-Reply-To: <58f4d6b3-ce3d-d1a5-aa0f-c31c1bbec091@web.de>
+References: <ef820445-25c5-a312-57d4-25ff3b4d08cf@infradead.org>
+        <158341540688.4236.11231142256496896074.stgit@devnote2>
+        <f3c51b0a-2a55-6523-96e2-4f9ef0635d9f@web.de>
+        <20200306105107.afba066a97db1eb12f290aff@kernel.org>
+        <58f4d6b3-ce3d-d1a5-aa0f-c31c1bbec091@web.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/03/2020 05:12, Sergey Senozhatsky wrote:
-> Provide begin_cpu_access() and end_cpu_access() dma_buf_ops
-> callbacks for cache synchronisation on exported buffers.
+On Fri, 6 Mar 2020 10:34:30 +0100
+Markus Elfring <Markus.Elfring@web.de> wrote:
+
+> > If you think you have "any more" update candidates, feel free to make
+> > an update "patch" and send to us.
 > 
-> V4L2_FLAG_MEMORY_NON_CONSISTENT has no effect on dma-sg buffers.
-> dma-sg allocates memory using the page allocator directly, so
-> there is no memory consistency guarantee.
+> I pointed a few change possibilities out already.
+
+I can not respond to requests only for possibility.
+
+> > That will be the next step.
 > 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  .../media/common/videobuf2/videobuf2-dma-sg.c | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
+> I got the impression that we are in the process of constructing another patch together
+> which will fix known wording weaknesses.
+
+Would you mean the broken EBNF part? Yeah, maybe, but it is another story.
+I decided to drop it this time.
+You can refine it but please use better format instead of such incomplete one.
+
+> By the way:
+> I wonder about the shown version identifier.
+> Will the patch numbering need also further considerations?
+
+No.
+
+> >> …
+> >>> +++ b/Documentation/admin-guide/bootconfig.rst
+> >> …
+> >>> +If you think that kernel/init options become too long to write in boot-loader
+> >>> +configuration file or you want to comment on each option, the boot
+> >>> +configuration may be suitable. …
+> >>
+> >> Would you like to specify any settings in the boot configuration file
+> >> because the provided storage capacity would be too limited by the kernel command line?
+> >
+> > Yes.
 > 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> index 6db60e9d5183..ddc67c9aaedb 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> @@ -120,6 +120,12 @@ static void *vb2_dma_sg_alloc(struct device *dev, unsigned long dma_attrs,
->  	buf->num_pages = size >> PAGE_SHIFT;
->  	buf->dma_sgt = &buf->sg_table;
->  
-> +	/*
-> +	 * NOTE: dma-sg allocates memory using the page allocator directly, so
-> +	 * there is no memory consistency guarantee, hence dma-sg ignores DMA
-> +	 * attributes passed from the upper layer. That means that
-> +	 * V4L2_FLAG_MEMORY_NON_CONSISTENT has no effect on dma-sg buffers.
-> +	 */
->  	buf->pages = kvmalloc_array(buf->num_pages, sizeof(struct page *),
->  				    GFP_KERNEL | __GFP_ZERO);
->  	if (!buf->pages)
-> @@ -470,6 +476,26 @@ static void vb2_dma_sg_dmabuf_ops_release(struct dma_buf *dbuf)
->  	vb2_dma_sg_put(dbuf->priv);
->  }
->  
-> +static int vb2_dma_sg_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
-> +					enum dma_data_direction direction)
+> How will affected places be improved after such an agreement?
 
-I suggest you use this style to avoid checkpatch warnings:
+Would you please make a patch of new sentence?
 
-static int
-vb2_dma_sg_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
-				       enum dma_data_direction direction)
+Thank you,
 
-> +{
-> +	struct vb2_dma_sg_buf *buf = dbuf->priv;
-> +	struct sg_table *sgt = buf->dma_sgt;
-> +
-> +	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
-> +	return 0;
-> +}
-> +
-> +static int vb2_dma_sg_dmabuf_ops_end_cpu_access(struct dma_buf *dbuf,
-> +					enum dma_data_direction direction)
-
-Ditto.
-
-Regards,
-
-	Hans
-
-> +{
-> +	struct vb2_dma_sg_buf *buf = dbuf->priv;
-> +	struct sg_table *sgt = buf->dma_sgt;
-> +
-> +	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
-> +	return 0;
-> +}
-> +
->  static void *vb2_dma_sg_dmabuf_ops_vmap(struct dma_buf *dbuf)
->  {
->  	struct vb2_dma_sg_buf *buf = dbuf->priv;
-> @@ -488,6 +514,8 @@ static const struct dma_buf_ops vb2_dma_sg_dmabuf_ops = {
->  	.detach = vb2_dma_sg_dmabuf_ops_detach,
->  	.map_dma_buf = vb2_dma_sg_dmabuf_ops_map,
->  	.unmap_dma_buf = vb2_dma_sg_dmabuf_ops_unmap,
-> +	.begin_cpu_access = vb2_dma_sg_dmabuf_ops_begin_cpu_access,
-> +	.end_cpu_access = vb2_dma_sg_dmabuf_ops_end_cpu_access,
->  	.vmap = vb2_dma_sg_dmabuf_ops_vmap,
->  	.mmap = vb2_dma_sg_dmabuf_ops_mmap,
->  	.release = vb2_dma_sg_dmabuf_ops_release,
-> 
-
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
