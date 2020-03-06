@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEF1C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5F1C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3230E2084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E07920848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgCFDnp (ORCPT
+        id S1727064AbgCFDns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 22:43:45 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11182 "EHLO huawei.com"
+        Thu, 5 Mar 2020 22:43:48 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11181 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726891AbgCFDno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 22:43:44 -0500
+        id S1726490AbgCFDnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 22:43:43 -0500
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8F573D82C60CE5F3CFE7;
+        by Forcepoint Email with ESMTP id 8A50CF91B8D15A427E9D;
         Fri,  6 Mar 2020 11:43:40 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 6 Mar 2020 11:43:32 +0800
+ 14.3.439.0; Fri, 6 Mar 2020 11:43:33 +0800
 From:   Tian Tao <tiantao6@hisilicon.com>
 To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
         <tzimmermann@suse.de>, <kraxel@redhat.com>,
@@ -32,9 +32,9 @@ To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
         <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <linuxarm@huawei.com>
-Subject: [PATCH] drm/hisilicon: Code cleanup for hibmc_drv_vdac
-Date:   Fri, 6 Mar 2020 11:43:00 +0800
-Message-ID: <1583466184-7060-3-git-send-email-tiantao6@hisilicon.com>
+Subject: [PATCH 2/4] drm/hisilicon: Code cleanup for hibmc_drv_vdac
+Date:   Fri, 6 Mar 2020 11:43:02 +0800
+Message-ID: <1583466184-7060-5-git-send-email-tiantao6@hisilicon.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
 References: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
