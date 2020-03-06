@@ -2,114 +2,166 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F83C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C50C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1652072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:15:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WZbyVHEZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9FC002051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgCFRPG (ORCPT
+        id S1726642AbgCFRQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:15:06 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46928 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgCFRPG (ORCPT
+        Fri, 6 Mar 2020 12:16:51 -0500
+Received: from 2.mo173.mail-out.ovh.net ([178.33.251.49]:42992 "EHLO
+        2.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFRQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:15:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=hSdov4oi/jmTS3gMc77LB7lCDvmj8soE+O2v7sGdzgU=; b=WZbyVHEZAa5iQcFPRnUw+O7SCN
-        1j62sYTJ/mr1vD7eotrt15t3kxZ7rMwE5J4vCxl8EQhpy0da+qVLFSWyerUlnN7wp+e9a/vzSIR0W
-        ETEa6GQn0qy0mU7AOm5f+vio18C0pbnahsrLMcozaSks49HyM+M+KO9Z7Xnd+AMnbc0E8CagFiUA2
-        mU9kfJbTl7r3rnZZsgmDvdDmxy9h/IjfYWonUPc04sIVUr2lzxjNmuPYZYUo0efxYWcY82bbnPaAs
-        0d3uCiIjtXbwVpHC0d++rKIeThZNSHR96ytJ5vjaZ4ztsAoiVFx5vV4xmzrsgIj9kxgo3uwcVW1qP
-        1VVtpp2Q==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jAGYw-0006fe-Ko; Fri, 06 Mar 2020 17:15:02 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>,
-        David Airlie <airlied@linux.ie>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2] drm: rcar-du: make all sub-symbols depend on DRM_RCAR_DU
-Message-ID: <d5ecfccc-c7c8-4157-4d59-22b726fc0084@infradead.org>
-Date:   Fri, 6 Mar 2020 09:15:01 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 6 Mar 2020 12:16:51 -0500
+Received: from player168.ha.ovh.net (unknown [10.108.57.18])
+        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 51AFC134567
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Mar 2020 18:16:48 +0100 (CET)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player168.ha.ovh.net (Postfix) with ESMTPSA id 107B7101F59BD;
+        Fri,  6 Mar 2020 17:16:42 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] Document genhd capability flags
+Date:   Fri,  6 Mar 2020 18:16:21 +0100
+Message-Id: <20200306171621.24134-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 9619688804342385933
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrudduvddguddtvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhduieekrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+The kernel documentation includes a brief section about genhd
+capabilities, but it turns out that the only documented
+capability (GENHD_FL_MEDIA_CHANGE_NOTIFY) isn't used any more.
 
-DRM_RCAR_CMM depends on DRM_RCAR_DU. Since the following Kconfig
-symbols do not depend on DRM_RCAR_DU, the menu presentation is
-broken for these and following non-R-Car Kconfig symbols.
+This patch removes that flag, and documents the rest, based on my
+understanding of the current uses of these flags in the kernel. The
+documentation is kept in the header file, alongside the declarations,
+in the hope that it will be kept up-to-date in future; the kernel
+documentation is changed to include the documentation generated from
+the header file.
 
-Use an if/endif block to make all of these symbols depend on
-DRM_RCAR_DU (and remove the separate "depends on DRM_RCAR_DU").
-This makes the kconfig menu presentation much cleaner.
+Because the ultimate goal is to provide some end-user
+documentation (or end-administrator documentation), the comments are
+perhaps more user-oriented than might be expected.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-renesas-soc@vger.kernel.org
-Cc: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Stephen Kitt <steve@sk2.org>
 ---
-v2: use an if/endif block for the dependencies (thanks, Geert)
+ Documentation/block/capability.rst | 16 +++------
+ include/linux/genhd.h              | 52 ++++++++++++++++++++++++++++--
+ 2 files changed, 53 insertions(+), 15 deletions(-)
 
- drivers/gpu/drm/rcar-du/Kconfig |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+diff --git a/Documentation/block/capability.rst b/Documentation/block/capability.rst
+index 2cf258d64bbe..26b9eccc48eb 100644
+--- a/Documentation/block/capability.rst
++++ b/Documentation/block/capability.rst
+@@ -2,17 +2,9 @@
+ Generic Block Device Capability
+ ===============================
+ 
+-This file documents the sysfs file block/<disk>/capability
++This file documents the sysfs file ``block/<disk>/capability``.
+ 
+-capability is a hex word indicating which capabilities a specific disk
+-supports.  For more information on bits not listed here, see
+-include/linux/genhd.h
++``capability`` is a hex word indicating which capabilities a specific
++disk supports:
+ 
+-GENHD_FL_MEDIA_CHANGE_NOTIFY
+-----------------------------
+-
+-Value: 4
+-
+-When this bit is set, the disk supports Asynchronous Notification
+-of media change events.  These events will be broadcast to user
+-space via kernel uevent.
++.. kernel-doc:: include/linux/genhd.h
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 6fbe58538ad6..d56aa4ccd34f 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -133,13 +133,59 @@ struct hd_struct {
+ 	struct rcu_work rcu_work;
+ };
+ 
++/**
++ * DOC: genhd capability flags
++ *
++ * ``GENHD_FL_REMOVABLE`` (1): indicates that the block device gives
++ * access to removable media.
++ * When set, the device remains present even when media is not
++ * inserted.
++ * Must not be set for devices which are removed entirely when the
++ * media is removed.
++ *
++ * ``GENHD_FL_CD`` (8): the block device is a CD-ROM-style device.
++ * Affects responses to the ``CDROM_GET_CAPABILITY`` ioctl.
++ *
++ * ``GENHD_FL_UP`` (16): indicates that the block device is "up", with
++ * a similar meaning to network interfaces.
++ *
++ * ``GENHD_FL_SUPPRESS_PARTITION_INFO`` (32): don't include partition
++ * information in ``/proc/partitions`` or in the output of
++ * printk_all_partitions().
++ * Used for the null block device and some MMC devices.
++ *
++ * ``GENHD_FL_EXT_DEVT`` (64): the driver supports extended dynamic
++ * ``dev_t``, i.e. it wants extended device numbers
++ * (``BLOCK_EXT_MAJOR``).
++ * This affects the maximum number of partitions.
++ *
++ * ``GENHD_FL_NATIVE_CAPACITY`` (128): based on information in the
++ * partition table, the device's capacity has been extended to its
++ * native capacity; i.e. the device has hidden capacity used by one
++ * of the partitions (this is a flag used so that native capacity is
++ * only ever unlocked once).
++ *
++ * ``GENHD_FL_BLOCK_EVENTS_ON_EXCL_WRITE`` (256): event polling is
++ * blocked whenever a writer holds an exclusive lock.
++ *
++ * ``GENHD_FL_NO_PART_SCAN`` (512): partition scanning is disabled.
++ * Used for loop devices in their default settings and some MMC
++ * devices.
++ *
++ * ``GENHD_FL_HIDDEN`` (1024): the block device is hidden; it doesn't
++ * produce events, doesn't appear in sysfs, and doesn't have an
++ * associated ``bdev``.
++ * Implies ``GENHD_FL_SUPPRESS_PARTITION_INFO`` and
++ * ``GENHD_FL_NO_PART_SCAN``.
++ * Used for multipath devices.
++ */
+ #define GENHD_FL_REMOVABLE			1
+-/* 2 is unused */
+-#define GENHD_FL_MEDIA_CHANGE_NOTIFY		4
++/* 2 is unused (used to be GENHD_FL_DRIVERFS) */
++/* 4 is unused (used to be GENHD_FL_MEDIA_CHANGE_NOTIFY) */
+ #define GENHD_FL_CD				8
+ #define GENHD_FL_UP				16
+ #define GENHD_FL_SUPPRESS_PARTITION_INFO	32
+-#define GENHD_FL_EXT_DEVT			64 /* allow extended devt */
++#define GENHD_FL_EXT_DEVT			64
+ #define GENHD_FL_NATIVE_CAPACITY		128
+ #define GENHD_FL_BLOCK_EVENTS_ON_EXCL_WRITE	256
+ #define GENHD_FL_NO_PART_SCAN			512
 
---- linux-next-20200305.orig/drivers/gpu/drm/rcar-du/Kconfig
-+++ linux-next-20200305/drivers/gpu/drm/rcar-du/Kconfig
-@@ -14,10 +14,11 @@ config DRM_RCAR_DU
- 	  Choose this option if you have an R-Car chipset.
- 	  If M is selected the module will be called rcar-du-drm.
- 
-+if DRM_RCAR_DU
-+
- config DRM_RCAR_CMM
- 	tristate "R-Car DU Color Management Module (CMM) Support"
- 	depends on DRM && OF
--	depends on DRM_RCAR_DU
- 	help
- 	  Enable support for R-Car Color Management Module (CMM).
- 
-@@ -40,7 +41,6 @@ config DRM_RCAR_LVDS
- config DRM_RCAR_VSP
- 	bool "R-Car DU VSP Compositor Support" if ARM
- 	default y if ARM64
--	depends on DRM_RCAR_DU
- 	depends on VIDEO_RENESAS_VSP1=y || (VIDEO_RENESAS_VSP1 && DRM_RCAR_DU=m)
- 	help
- 	  Enable support to expose the R-Car VSP Compositor as KMS planes.
-@@ -48,3 +48,5 @@ config DRM_RCAR_VSP
- config DRM_RCAR_WRITEBACK
- 	bool
- 	default y if ARM64
-+
-+endif # DRM_RCAR_DU
+base-commit: aeb542a1b5c507ea117d21c3e3e012ba16f065ac
+-- 
+2.20.1
 
