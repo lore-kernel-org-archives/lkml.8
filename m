@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5687C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E6DC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97402072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F292072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCFDns (ORCPT
+        id S1726682AbgCFDnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 22:43:48 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11180 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726251AbgCFDnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Mar 2020 22:43:43 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11177 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726243AbgCFDnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 22:43:42 -0500
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8515FA1DDEA6F237EEE7;
+        by Forcepoint Email with ESMTP id 751C6251BD32DA691400;
         Fri,  6 Mar 2020 11:43:40 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 6 Mar 2020 11:43:33 +0800
+ 14.3.439.0; Fri, 6 Mar 2020 11:43:31 +0800
 From:   Tian Tao <tiantao6@hisilicon.com>
 To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
         <tzimmermann@suse.de>, <kraxel@redhat.com>,
@@ -32,9 +32,9 @@ To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
         <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <linuxarm@huawei.com>
-Subject: [PATCH 1/4] drm/hisilicon: Enforce 128-byte stride alignment to fix the hardware limitation
-Date:   Fri, 6 Mar 2020 11:43:01 +0800
-Message-ID: <1583466184-7060-4-git-send-email-tiantao6@hisilicon.com>
+Subject: [PATCH] drm/hisilicon: Add the shutdown for hibmc_pci_driver
+Date:   Fri, 6 Mar 2020 11:42:59 +0800
+Message-ID: <1583466184-7060-2-git-send-email-tiantao6@hisilicon.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
 References: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
@@ -47,82 +47,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-because the hardware limitation,The initial color depth must set to 32bpp
-and must set the FB Offset of the display hardware to 128Byte alignment,
-which is used to solve the display problem at 800x600 and 1440x900
-resolution under 16bpp.
+add the shutdown function to release the resource.
 
 Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
 ---
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c  | 9 +++++----
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 4 ++--
- drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c     | 2 +-
- 3 files changed, 8 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-index 55b46a7..cc70e83 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-@@ -94,6 +94,10 @@ static int hibmc_plane_atomic_check(struct drm_plane *plane,
- 		return -EINVAL;
- 	}
- 
-+	if (state->fb->pitches[0] % 128 != 0) {
-+		DRM_DEBUG_ATOMIC("wrong stride with 128-byte aligned\n");
-+		return -EINVAL;
-+	}
- 	return 0;
- }
- 
-@@ -119,11 +123,8 @@ static void hibmc_plane_atomic_update(struct drm_plane *plane,
- 	writel(gpu_addr, priv->mmio + HIBMC_CRT_FB_ADDRESS);
- 
- 	reg = state->fb->width * (state->fb->format->cpp[0]);
--	/* now line_pad is 16 */
--	reg = PADDING(16, reg);
- 
--	line_l = state->fb->width * state->fb->format->cpp[0];
--	line_l = PADDING(16, line_l);
-+	line_l = state->fb->pitches[0];
- 	writel(HIBMC_FIELD(HIBMC_CRT_FB_WIDTH_WIDTH, reg) |
- 	       HIBMC_FIELD(HIBMC_CRT_FB_WIDTH_OFFS, line_l),
- 	       priv->mmio + HIBMC_CRT_FB_WIDTH);
 diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index 222356a..79a180a 100644
+index 51f1c70..0e58455d 100644
 --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
 +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -94,7 +94,7 @@ static int hibmc_kms_init(struct hibmc_drm_private *priv)
- 	priv->dev->mode_config.max_height = 1200;
- 
- 	priv->dev->mode_config.fb_base = priv->fb_base;
--	priv->dev->mode_config.preferred_depth = 24;
-+	priv->dev->mode_config.preferred_depth = 32;
- 	priv->dev->mode_config.prefer_shadow = 1;
- 
- 	priv->dev->mode_config.funcs = (void *)&hibmc_mode_funcs;
-@@ -307,7 +307,7 @@ static int hibmc_load(struct drm_device *dev)
- 	/* reset all the states of crtc/plane/encoder/connector */
- 	drm_mode_config_reset(dev);
- 
--	ret = drm_fbdev_generic_setup(dev, 16);
-+	ret = drm_fbdev_generic_setup(dev, dev->mode_config.preferred_depth);
- 	if (ret) {
- 		DRM_ERROR("failed to initialize fbdev: %d\n", ret);
- 		goto err;
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-index 99397ac..322bd54 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_ttm.c
-@@ -50,7 +50,7 @@ void hibmc_mm_fini(struct hibmc_drm_private *hibmc)
- int hibmc_dumb_create(struct drm_file *file, struct drm_device *dev,
- 		      struct drm_mode_create_dumb *args)
+@@ -357,9 +357,14 @@ static void hibmc_pci_remove(struct pci_dev *pdev)
  {
--	return drm_gem_vram_fill_create_dumb(file, dev, 0, 16, args);
-+	return drm_gem_vram_fill_create_dumb(file, dev, 0, 128, args);
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
+ 
+-	drm_dev_unregister(dev);
+-	hibmc_unload(dev);
+ 	drm_dev_put(dev);
++	pci_disable_device(pdev);
++
++}
++
++static void hibmc_pci_shutdown(struct pci_dev *pdev)
++{
++	hibmc_pci_remove(pdev);
  }
  
- const struct drm_mode_config_funcs hibmc_mode_funcs = {
+ static struct pci_device_id hibmc_pci_table[] = {
+@@ -372,6 +377,7 @@ static struct pci_driver hibmc_pci_driver = {
+ 	.id_table =	hibmc_pci_table,
+ 	.probe =	hibmc_pci_probe,
+ 	.remove =	hibmc_pci_remove,
++	.shutdown = hibmc_pci_shutdown,
+ 	.driver.pm =    &hibmc_pm_ops,
+ };
+ 
 -- 
 2.7.4
 
