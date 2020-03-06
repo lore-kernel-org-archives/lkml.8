@@ -2,128 +2,101 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D66C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F05C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4D620866
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B651A2084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCFKkF (ORCPT
+        id S1727356AbgCFKkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:40:05 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2513 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726079AbgCFKkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:40:02 -0500
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id CD22D7FCF6C196E470F8;
-        Fri,  6 Mar 2020 10:40:00 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 6 Mar 2020 10:40:00 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 6 Mar 2020
- 10:40:00 +0000
-Subject: Re: About commit "io: change inX() to have their own IO barrier
- overrides"
-To:     Arnd Bergmann <arnd@arndb.de>, Sinan Kaya <okaya@kernel.org>
-CC:     "xuwei (O)" <xuwei5@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
- <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
- <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
- <6115fa56-a471-1e9f-edbb-e643fa4e7e11@kernel.org>
- <7c955142-1fcb-d99e-69e4-1e0d3d9eb8c3@huawei.com>
- <CAK8P3a0f9hnKGd6GJ8qFZSu+J-n4fY23TCGxQkmgJaxbpre50Q@mail.gmail.com>
- <90af535f-00ef-c1e3-ec20-aae2bd2a0d88@kernel.org>
- <CAK8P3a2Grd0JsBNsB19oAxrAFtOdpvjrpGcfeArKe7zD_jrUZw@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ae0a1bf1-948f-7df0-9efb-cd1e94e27d2d@huawei.com>
-Date:   Fri, 6 Mar 2020 10:39:59 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 6 Mar 2020 05:40:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44204 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727059AbgCFKj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 05:39:26 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 12A2AB225;
+        Fri,  6 Mar 2020 10:39:24 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     ulf.hansson@linaro.org, f.fainelli@gmail.com, phil@raspberrypi.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 04/10] mmc: sdhci: at-91: Use quirk instead of custom set_power()
+Date:   Fri,  6 Mar 2020 11:38:49 +0100
+Message-Id: <20200306103857.23962-5-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200306103857.23962-1-nsaenzjulienne@suse.de>
+References: <20200306103857.23962-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2Grd0JsBNsB19oAxrAFtOdpvjrpGcfeArKe7zD_jrUZw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/03/2020 07:54, Arnd Bergmann wrote:
-> On Fri, Mar 6, 2020 at 4:44 AM Sinan Kaya <okaya@kernel.org> wrote:
->>
->> On 3/3/2020 11:40 AM, Arnd Bergmann wrote:
->>>> -          ret = read##bw(PCI_IOBASE + addr);
->>>> +          __io_pbr();
->>>> +          ret = __raw_read##bw(PCI_IOBASE + addr);
->>>> +          __io_pbr();
->>> __io_par();
->>>
->>
->> Why do we need to change read##bw above?
->>
->> read##bw already provides strong ordering guarantees across multiple
->> architectures.
-> 
-> The exact semantics of inl() and readl() are slightly different, so they
-> have distinct sets of barriers in the asm-generic/io.h implementation.
-> 
-> For instance, the arm64 architectures defines in_par() as '__iormb(v)',
-> but defines __io_ar() as a  '__rmb()'. Similarly, riscv defines them
-> as "fence i,ior" and "fence i,r".
-> 
-> You could argue that the definitions are wrong (I have not checked the
-> history of the definitions), but as long as the inb() in asm-generic/io.h
-> uses those, the implementation in lib/logic_pio.c uses the same ones
-> to make the two behave the same way.
-> 
+With the introduction of SDHCI_QUIRK2_SET_BUS_VOLTAGE there is no need
+to use a custom set_power() implementation as the quirk takes care of
+configuring the bus voltage register even when powering trough a
+regulator.
 
-So the change would look like:
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+ drivers/mmc/host/sdhci-of-at91.c | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
 
--- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -229,13 +229,21 @@ unsigned long 
-logic_pio_trans_cpuaddr(resource_size_t addr)
-  }
+diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
+index ab2bd314a390..395fe93b78d3 100644
+--- a/drivers/mmc/host/sdhci-of-at91.c
++++ b/drivers/mmc/host/sdhci-of-at91.c
+@@ -101,22 +101,6 @@ static void sdhci_at91_set_clock(struct sdhci_host *host, unsigned int clock)
+ 	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+ }
+ 
+-/*
+- * In this specific implementation of the SDHCI controller, the power register
+- * needs to have a valid voltage set even when the power supply is managed by
+- * an external regulator.
+- */
+-static void sdhci_at91_set_power(struct sdhci_host *host, unsigned char mode,
+-		     unsigned short vdd)
+-{
+-	if (!IS_ERR(host->mmc->supply.vmmc)) {
+-		struct mmc_host *mmc = host->mmc;
+-
+-		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
+-	}
+-	sdhci_set_power_noreg(host, mode, vdd);
+-}
+-
+ static void sdhci_at91_set_uhs_signaling(struct sdhci_host *host,
+ 					 unsigned int timing)
+ {
+@@ -145,11 +129,11 @@ static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
+ 	.set_bus_width		= sdhci_set_bus_width,
+ 	.reset			= sdhci_at91_reset,
+ 	.set_uhs_signaling	= sdhci_at91_set_uhs_signaling,
+-	.set_power		= sdhci_at91_set_power,
+ };
+ 
+ static const struct sdhci_pltfm_data sdhci_sama5d2_pdata = {
+ 	.ops = &sdhci_at91_sama5d2_ops,
++	.quirks2 = SDHCI_QUIRK2_SET_BUS_VOLTAGE,
+ };
+ 
+ static const struct sdhci_at91_soc_data soc_data_sama5d2 = {
+-- 
+2.25.1
 
-  #if defined(CONFIG_INDIRECT_PIO) && defined(PCI_IOBASE)
-+
-+#define logic_in_to_cpu_b(x) (x)
-+#define logic_in_to_cpu_w(x) __le16_to_cpu(x)
-+#define logic_in_to_cpu_l(x) __le32_to_cpu(x)
-+
-  #define BUILD_LOGIC_IO(bw, type)                                      \
-  type logic_in##bw(unsigned long addr)                                 \
-  {                                                                     \
-         type ret = (type)~0;                                           \
-                                                                        \
-         if (addr < MMIO_UPPER_LIMIT) {                                 \
--               ret = read##bw(PCI_IOBASE + addr);                     \
-+               void __iomem *_addr = PCI_IOBASE + addr;               \
-+               __io_pbr();                                            \
-+               ret = logic_in_to_cpu_##bw(__raw_read##bw(_addr));     \
-+               __io_par(ret);                                         \
-         } else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {\
-                 struct logic_pio_hwaddr *entry = find_io_rang
-
-We could prob combine the le_to_cpu and __raw_read into a single macro.
-
-John
