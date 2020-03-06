@@ -2,112 +2,135 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A04C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C71C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299F1217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2443420728
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:47:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgCFHoq (ORCPT
+        id S1725951AbgCFHrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:44:46 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38919 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgCFHop (ORCPT
+        Fri, 6 Mar 2020 02:47:01 -0500
+Received: from emcscan.emc.com.tw ([192.72.220.5]:36998 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbgCFHrB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 02:44:45 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jA7ez-0000q2-1k; Fri, 06 Mar 2020 08:44:41 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jA7ey-0004Fd-KA; Fri, 06 Mar 2020 08:44:40 +0100
-Date:   Fri, 6 Mar 2020 08:44:40 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [RESEND v6 1/2] pwm: Convert drivers to use 64-bit period and
- duty cycle
-Message-ID: <20200306074440.ykekwwlvnbodxkjc@pengutronix.de>
-References: <cover.1583177501.git.gurus@codeaurora.org>
- <28090aef9900ad483cbfbe77883e5ffcd8745907.1583177501.git.gurus@codeaurora.org>
+        Fri, 6 Mar 2020 02:47:01 -0500
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="34725026"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 06 Mar 2020 15:46:58 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(149861:0:AUTH_RELAY)
+        (envelope-from <johnny.chuang@emc.com.tw>); Fri, 06 Mar 2020 15:47:01 +0800 (CST)
+Received: from 192.168.55.71
+        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2487:0:AUTH_LOGIN)
+        (envelope-from <johnny.chuang@emc.com.tw>); Fri, 06 Mar 2020 15:47:00 +0800 (CST)
+From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
+To:     "'Peter Hutterer'" <peter.hutterer@who-t.net>,
+        "'Johnny Chuang'" <johnny.chuang.emc@gmail.com>
+Cc:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
+        "'Benjamin Tissoires'" <benjamin.tissoires@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        "'Jennifer Tsai'" <jennifer.tsai@emc.com.tw>,
+        "'James Chen'" <james.chen@emc.com.tw>,
+        "'Paul Liang'" <paul.liang@emc.com.tw>,
+        "'Jeff Chuang'" <jeff.chuang@emc.com.tw>
+References: <1582766000-23023-1-git-send-email-johnny.chuang.emc@gmail.com> <20200227223608.GB1087116@jelly>  
+In-Reply-To: 
+Subject: RE: [PATCH] Input: elants_i2c - Report resolution information for touch major
+Date:   Fri, 6 Mar 2020 15:46:55 +0800
+Message-ID: <007301d5f38b$68683080$39389180$@emc.com.tw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <28090aef9900ad483cbfbe77883e5ffcd8745907.1583177501.git.gurus@codeaurora.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQKWH33oxoD7nuWwmg1Q/5rISp31bAHeLyTrpqWIE/CABka78IAAFcSw
+Content-Language: zh-tw
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1hNWQ2ODkyZS01ZjdlLTExZWEtYmE5Yi03YzVjZjg3NDk0NzhcYW1lLXRlc3RcYTVkNjg5MzAtNWY3ZS0xMWVhLWJhOWItN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSIyODk1IiB0PSIxMzIyNzk1NDQxNTEzNTE5MTgiIGg9IlJ2R2I0NDJFVitGN0dna1VRTjJPU3IyYTRqOD0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: true
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> > > -----Original Message-----
+> > > From: Peter Hutterer [mailto:peter.hutterer@who-t.net]
+> > > Sent: Friday, February 28, 2020 6:36 AM
+> > > To: Johnny Chuang
+> > > Cc: Dmitry Torokhov; Benjamin Tissoires;
+> > > linux-kernel@vger.kernel.org; linux-input@vger.kernel.org; Johnny
+> > > Chuang; Jennifer Tsai; James Chen; Paul Liang; Jeff Chuang
+> > > Subject: Re: [PATCH] Input: elants_i2c - Report resolution
+> > > information for touch major
+> > >
+> > > On Thu, Feb 27, 2020 at 09:13:20AM +0800, Johnny Chuang wrote:
+> > > > From: Johnny Chuang <johnny.chuang@emc.com.tw>
+> > > >
+> > > > This patch supports reporting resolution for ABS_MT_TOUCH_MAJOR
+> > event.
+> > > > This information is needed in showing pressure/width radius.
+> > > >
+> > > > Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
+> > > > ---
+> > > >  drivers/input/touchscreen/elants_i2c.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/drivers/input/touchscreen/elants_i2c.c
+> > > b/drivers/input/touchscreen/elants_i2c.c
+> > > > index 4911799..14c577c 100644
+> > > > --- a/drivers/input/touchscreen/elants_i2c.c
+> > > > +++ b/drivers/input/touchscreen/elants_i2c.c
+> > > > @@ -1309,6 +1309,7 @@ static int elants_i2c_probe(struct
+> > > > i2c_client
+> > > *client,
+> > > >  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0,
+0);
+> > > >  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
+> > > >  	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
+> > > > +	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
+> > >
+> > > official resolution for absinfo is "units per mm", so a value of 3
+> > > would mean 3mm, is that correct?
+> >
+> > Correct.
+> > This resolution (1 unit/mm) is for all elan I2C touchscreen devices,
+> > including the touchscreen devices in the future.
+> > This information is from our firmware members.
+> 
+> Hi Peter / Benjamin,
+> Could you help to review and approve this patch?
+> 
 
-On Mon, Mar 02, 2020 at 11:34:22AM -0800, Guru Das Srinagesh wrote:
-> Because period and duty cycle are defined in the PWM framework structs
-> as ints with units of nanoseconds, the maximum time duration that can be
-> set is limited to ~2.147 seconds. Redefining them as u64 values will
-> enable larger time durations to be set.
-> 
-> As a first step, prepare drivers to handle the switch to u64 period and
-> duty_cycle by making the relevant fixes to those drivers that use the
-> period and duty_cycle pwm struct members in division operations, viz.
-> replacing the division operations with 64-bit division macros as
-> appropriate. The actual switch to u64 period and duty_cycle follows as a
-> separate patch.
-> 
-> Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
-> macros:
-> - DIV_ROUND_UP_ULL
-> - DIV_ROUND_CLOSEST_ULL
-> - div_u64
-> 
-> Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
-> DIV64_* macros:
-> - DIV64_U64_ROUND_CLOSEST
-> - div64_u64
-> 
-> The kbuild test robot helped to improve this patch by catching a couple
-> of code sites that had to be adapted.
-> 
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
->  drivers/clk/clk-pwm.c                      | 2 +-
->  drivers/gpu/drm/i915/display/intel_panel.c | 2 +-
->  drivers/hwmon/pwm-fan.c                    | 2 +-
->  drivers/media/rc/ir-rx51.c                 | 3 ++-
->  drivers/pwm/pwm-clps711x.c                 | 2 +-
->  drivers/pwm/pwm-imx-tpm.c                  | 2 +-
->  drivers/pwm/pwm-imx27.c                    | 5 ++---
->  drivers/pwm/pwm-sifive.c                   | 2 +-
->  drivers/pwm/pwm-sti.c                      | 5 +++--
->  drivers/pwm/pwm-stm32-lp.c                 | 2 +-
->  drivers/pwm/pwm-sun4i.c                    | 2 +-
->  drivers/video/backlight/pwm_bl.c           | 3 ++-
+Hi Peter / Benjamin,
+HP project Mordin mass production on 2020/3/10. ODM needs to upgrade new
+image with this patch to verify.
+Because ODM can not get the image link from Google, already delay verify
+schedule.
+Please help to review and approve this patch ASAP. Thank you very much.
 
-I guess we need acks from the affected maintainers. While I think the
-changes are fine I think you won't evade having to expand the audience
-of your patch and (depending on feedback) maybe split this patch up
-further.
+> >
+> > >
+> > > Not that it matters too much, since touch major is already all over
+> > > the place and needs userspace overrides for every device but it'd be
+> > > nice to at least make this useful out of the box on one device class.
+> > >
+> > > Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+> > >
+> > > otherwise
+> > >
+> > > Cheers,
+> > >    Peter
+> > >
+> > > >
+> > > >  	error = input_register_device(ts->input);
+> > > >  	if (error) {
+> > > > --
+> > > > 2.7.4
+> > > >
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
