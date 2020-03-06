@@ -2,149 +2,112 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CA3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93316C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D262B206E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B180206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 09:46:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jnIT+soc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgCFJpy convert rfc822-to-8bit (ORCPT
+        id S1726490AbgCFJqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 04:45:54 -0500
-Received: from mga14.intel.com ([192.55.52.115]:26681 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbgCFJpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 04:45:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 01:45:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,521,1574150400"; 
-   d="scan'208";a="234748382"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga008.jf.intel.com with ESMTP; 06 Mar 2020 01:45:52 -0800
-Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 6 Mar 2020 01:45:43 -0800
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
- FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 6 Mar 2020 01:45:43 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.206]) by
- SHSMSX151.ccr.corp.intel.com ([169.254.3.201]) with mapi id 14.03.0439.000;
- Fri, 6 Mar 2020 17:45:40 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: RE: [PATCH v2 5/7] vfio/pci: Add sriov_configure support
-Thread-Topic: [PATCH v2 5/7] vfio/pci: Add sriov_configure support
-Thread-Index: AQHV51YaoTnickP570etlLGInd5eAKgrQJIwgA6gtQCAAWITYIAAIt7A
-Date:   Fri, 6 Mar 2020 09:45:40 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7C0A43@SHSMSX104.ccr.corp.intel.com>
-References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
-        <158213846731.17090.37693075723046377.stgit@gimli.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D79A943@SHSMSX104.ccr.corp.intel.com>
- <20200305112230.0dd77712@w520.home> 
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjY4MTQ2OWItZDU1Ny00ZGViLTk5ODEtODAzYjcxMDY3OWNhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWEFkM0paSjhCUXhKS0JQdHFpWUw0NGhCOElseFk2c1daa3dnYjdwdUVJMzJJSHlIc3Y4MGxveFhmVDFVR0VVZCJ9
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 6 Mar 2020 04:46:11 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:47092 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgCFJqL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 04:46:11 -0500
+Received: by mail-wr1-f65.google.com with SMTP id n15so1508553wrw.13
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 01:46:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yGNU/jf35HfUN1T3ElSIUZGcBSwx9/JHjFsWgRm1Y2E=;
+        b=jnIT+socjgr9cPbT4XrpWv7ubWcUkBphwCf0eqfxw27pV7C0pajc7+MCzNveg3MqOT
+         Bo+ZH57LY87Po2xLVlHTwqmpGKqM725ZWDPXaCGlHIvOil+KMj/rmE1X/OZT7zxcua4i
+         icq267LAuWY8SCfFSaOg1HSQ1z1VyAJGNKPDg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=yGNU/jf35HfUN1T3ElSIUZGcBSwx9/JHjFsWgRm1Y2E=;
+        b=aQl0NELGGwjETtTDT5kT2INwHEEGiMtYy5nLVu29Fl7DHClz9MQ0csTuIFH3+VgB0q
+         itrq7GA55A33F9Dg4DXyRNW0aCEsZOaBfILK51suKpOU8P9ZlZ05JG/UN+M1xfGsq0c/
+         hF57e2WWxQa6WMsJG3EVgiSMfItnSC02HnOK6TpKLm6meMsJTO0p11VOhZAAZPUkQgSo
+         wj3wNoXn18aKBp29arFNKwhcsXpXPW6QG6pcowTrLzLiWYAdBpKIJtgwWq7Oh8mnQFm7
+         UedxV2E2kXlU6s4CFdUojaNeJREOoDUl8ppJ4e9J3GhgMWEhZQX5h3x7NbFoY6QhQ5tG
+         +ldg==
+X-Gm-Message-State: ANhLgQ31d3AVvgevY0HKw2IvooBSfEtVC87bGABYxRMIwdx/gdthAdQB
+        gVzge5uKEjbdYU1AFCpw3ifvvhcx0mY=
+X-Google-Smtp-Source: ADFU+vuIEN9MLH6slybeE1LymTIs37lzdw0hWqe3qk3qZpxFmaQBX2lUCJZ/2uWCAzAVsjS2Tm6HOA==
+X-Received: by 2002:adf:f611:: with SMTP id t17mr3374329wrp.38.1583487968475;
+        Fri, 06 Mar 2020 01:46:08 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id y3sm13758055wmi.14.2020.03.06.01.46.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 01:46:07 -0800 (PST)
+Date:   Fri, 6 Mar 2020 10:46:05 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Emil Velikov <emil.l.velikov@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] gpu: drm: context: Clean up documentation
+Message-ID: <20200306094605.GQ2363188@phenom.ffwll.local>
+Mail-Followup-To: Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, Dave Airlie <airlied@linux.ie>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <20200131092147.32063-1-benjamin.gaignard@st.com>
+ <CACvgo50=Wt9LFWDjkJa99T8r8A64JWgfqApmir8kX=kSXd1yog@mail.gmail.com>
+ <f8af37a1-ff6b-9a09-7b24-a7e3f9a981c2@st.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8af37a1-ff6b-9a09-7b24-a7e3f9a981c2@st.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Tian, Kevin
-> Sent: Friday, March 6, 2020 3:57 PM
+On Wed, Mar 04, 2020 at 04:42:09PM +0000, Benjamin GAIGNARD wrote:
 > 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Friday, March 6, 2020 2:23 AM
-> >
-> > On Tue, 25 Feb 2020 03:08:00 +0000
-> > "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> >
-> > > > From: Alex Williamson
-> > > > Sent: Thursday, February 20, 2020 2:54 AM
-> > > >
-> > > > With the VF Token interface we can now expect that a vfio userspace
-> > > > driver must be in collaboration with the PF driver, an unwitting
-> > > > userspace driver will not be able to get past the GET_DEVICE_FD step
-> > > > in accessing the device.  We can now move on to actually allowing
-> > > > SR-IOV to be enabled by vfio-pci on the PF.  Support for this is not
-> > > > enabled by default in this commit, but it does provide a module option
-> > > > for this to be enabled (enable_sriov=1).  Enabling VFs is rather
-> > > > straightforward, except we don't want to risk that a VF might get
-> > > > autoprobed and bound to other drivers, so a bus notifier is used to
-> > > > "capture" VFs to vfio-pci using the driver_override support.  We
-> > > > assume any later action to bind the device to other drivers is
-> > > > condoned by the system admin and allow it with a log warning.
-> > > >
-> > > > vfio-pci will disable SR-IOV on a PF before releasing the device,
-> > > > allowing a VF driver to be assured other drivers cannot take over the
-> > > > PF and that any other userspace driver must know the shared VF token.
-> > > > This support also does not provide a mechanism for the PF userspace
-> > > > driver itself to manipulate SR-IOV through the vfio API.  With this
-> > > > patch SR-IOV can only be enabled via the host sysfs interface and the
-> > > > PF driver user cannot create or remove VFs.
-> > >
-> > > I'm not sure how many devices can be properly configured simply
-> > > with pci_enable_sriov. It is not unusual to require PF driver prepare
-> > > something before turning PCI SR-IOV capability. If you look kernel
-> > > PF drivers, there are only two using generic pci_sriov_configure_
-> > > simple (simple wrapper like pci_enable_sriov), while most others
-> > > implementing their own callback. However vfio itself has no idea
-> > > thus I'm not sure how an user knows whether using this option can
-> > > actually meet his purpose. I may miss something here, possibly
-> > > using DPDK as an example will make it clearer.
-> >
-> > There is still the entire vfio userspace driver interface.  Imagine for
-> > example that QEMU emulates the SR-IOV capability and makes a call out
-> > to libvirt (or maybe runs with privs for the PF SR-IOV sysfs attribs)
-> > when the guest enables SR-IOV.  Can't we assume that any PF specific
-> > support can still be performed in the userspace/guest driver, leaving
-> > us with a very simple and generic sriov_configure callback in vfio-pci?
 > 
-> Makes sense. One concern, though, is how an user could be warned
-> if he inadvertently uses sysfs to enable SR-IOV on a vfio device whose
-> userspace driver is incapable of handling it. Note any VFIO device,
-> if SR-IOV capable, will allow user to do so once the module option is
-> turned on and the callback is registered. I felt such uncertainty can be
-> contained by toggling SR-IOV through a vfio api, but from your description
-> obviously it is what you want to avoid. Is it due to the sequence reason,
-> e.g. that SR-IOV must be enabled before userspace PF driver sets the
-> token?
-> 
+> On 3/4/20 5:07 PM, Emil Velikov wrote:
+> > On Mon, 3 Feb 2020 at 08:11, Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
+> >> Fix kernel doc comments to avoid warnings when compiling with W=1.
+> >>
+> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >> ---
+> >>   drivers/gpu/drm/drm_context.c | 145 ++++++++++++++++++------------------------
+> >>   1 file changed, 61 insertions(+), 84 deletions(-)
+> >>
+> > Since we're talking about legacy, aka user mode-setting code, I think
+> > a wiser solution is to simply remove the documentation. It is _not_
+> > something we should encourage people to read, let alone use.
+> >
+> > Nit: prefix should be "drm:"
+> Should I assume it is the same for drm_vm.c and drm_bufs.c ?
 
-reading again I found that you specifically mentioned "the PF driver user 
-cannot create or remove VFs.". However I failed to get the rationale 
-behind. If the VF drivers have built the trust with the PF driver through
-the token, what is the problem of allowing the PF driver to further manage 
-SR-IOV itself? suppose any VF removal will be done in a cooperate way
-to avoid surprise impact to related VF drivers. then possibly a new vfio
-ioctl for setting the VF numbers plus a token from the userspace driver
-could also serve the purpose of this patch series (GET_DEVICE_FD + sysfs)?
-
-Thanks
-Kevin
+Yeah. In other legacy files all I've done is replace the /** with /* and
+that's it. That shuts up kerneldoc validation for good with minimal
+effort. Just not worth it to spend any time and polish on these :-)
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
