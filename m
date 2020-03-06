@@ -6,94 +6,112 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49278C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFCFC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F792084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5399620848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgCFNYS (ORCPT
+        id S1726928AbgCFNZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:24:18 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53381 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgCFNYR (ORCPT
+        Fri, 6 Mar 2020 08:25:09 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:36828 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCFNZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:24:17 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jACxZ-0004ES-Qk; Fri, 06 Mar 2020 14:24:13 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 41AEC104085; Fri,  6 Mar 2020 14:24:13 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Rui Miguel Silva <rmfrfs@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        greybus-dev@lists.linaro.org
-Subject: [PATCH] staging: greybus: Fix the irq API abuse
-Date:   Fri, 06 Mar 2020 14:24:13 +0100
-Message-ID: <87o8t9boqq.fsf@nanos.tec.linutronix.de>
+        Fri, 6 Mar 2020 08:25:08 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8D3B88030795;
+        Fri,  6 Mar 2020 13:25:05 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id nU5HxY9w87qS; Fri,  6 Mar 2020 16:25:04 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/4] gpio: dwapb: Fix reference clocks usage
+Date:   Fri, 6 Mar 2020 16:24:44 +0300
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nothing outside of low level architecture code is supposed to look up
-interrupt descriptors and fiddle with them.
+From: Serge Semin <fancer.lancer@gmail.com>
 
-Replace the open coded abuse by calling generic_handle_irq().
+There is no need in any fixes to have the Baikal-T1 SoC DW GPIO controllers
+supported by the kernel DW APB GPIO driver. It works for them just fine with
+no modifications. But still there is a room for optimizations there.
 
-This still does not explain why and in which context this connection
-magic is injecting interrupts in the first place and why this is correct
-and safe, but at least the API abuse is gone.
+First of all as it tends to be traditional for all Baikal-T1 SoC related
+patchset we replaced the legacy plain text-based dt-binding file with
+yaml-based one. Baikal-T1 DW GPIO port A supports a debounce functionality,
+but in order to use it the corresponding reference clock must be enabled.
+We added support of that clock in the driver and made sure the dt-bindings
+had its declaration. In addition seeing both APB and debounce reference
+clocks are optional, we replaced the standard devm_clk_get() usage with
+the function of optional clocks acquisition.
 
-Fixes: 036aad9d0224 ("greybus: gpio: add interrupt handling support")
-Fixes: 2611ebef8322 ("greybus: gpio: don't call irq-flow handler directly")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- drivers/staging/greybus/gpio.c |   15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
 
---- a/drivers/staging/greybus/gpio.c
-+++ b/drivers/staging/greybus/gpio.c
-@@ -364,8 +364,7 @@ static int gb_gpio_request_handler(struc
- 	struct gb_message *request;
- 	struct gb_gpio_irq_event_request *event;
- 	u8 type = op->type;
--	int irq;
--	struct irq_desc *desc;
-+	int irq, ret;
- 
- 	if (type != GB_GPIO_TYPE_IRQ_EVENT) {
- 		dev_err(dev, "unsupported unsolicited request: %u\n", type);
-@@ -391,17 +390,15 @@ static int gb_gpio_request_handler(struc
- 		dev_err(dev, "failed to find IRQ\n");
- 		return -EINVAL;
- 	}
--	desc = irq_to_desc(irq);
--	if (!desc) {
--		dev_err(dev, "failed to look up irq\n");
--		return -EINVAL;
--	}
- 
- 	local_irq_disable();
--	generic_handle_irq_desc(desc);
-+	ret = generic_handle_irq(irq);
- 	local_irq_enable();
- 
--	return 0;
-+	if (ret)
-+		dev_err(dev, "failed to invoke irq handler\n");
-+
-+	return ret;
- }
- 
- static int gb_gpio_request(struct gpio_chip *chip, unsigned int offset)
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Hoan Tran <hoan@os.amperecomputing.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (4):
+  dt-bindings: gpio: Replace DW APB GPIO legacy bindings with YAML-based
+    one
+  dt-bindings: gpio: Add DW GPIO debounce clocks bindings
+  gpio: dwapb: Use optional-clocks interface for APB ref-clocks
+  gpio: dwapb: Add debounce reference clock support
+
+ .../bindings/gpio/snps,dw-apb-gpio.yaml       | 140 ++++++++++++++++++
+ .../bindings/gpio/snps-dwapb-gpio.txt         |  65 --------
+ drivers/gpio/gpio-dwapb.c                     |  41 +++--
+ 3 files changed, 166 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+
+-- 
+2.25.1
+
