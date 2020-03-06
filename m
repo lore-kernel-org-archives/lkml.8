@@ -2,176 +2,278 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22C9C3F2D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA945C3F2D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99566208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:24:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="s5ZnocZd"
+	by mail.kernel.org (Postfix) with ESMTP id C122A2072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgCFHYR (ORCPT
+        id S1726891AbgCFHYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:24:17 -0500
-Received: from forward100o.mail.yandex.net ([37.140.190.180]:57182 "EHLO
-        forward100o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726579AbgCFHYN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 02:24:13 -0500
-Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
-        by forward100o.mail.yandex.net (Yandex) with ESMTP id 9461A4AC1DA2;
-        Fri,  6 Mar 2020 10:24:09 +0300 (MSK)
-Received: from mxback8q.mail.yandex.net (mxback8q.mail.yandex.net [IPv6:2a02:6b8:c0e:42:0:640:b38f:32ec])
-        by forward101q.mail.yandex.net (Yandex) with ESMTP id 90409CF40005;
-        Fri,  6 Mar 2020 10:24:09 +0300 (MSK)
-Received: from vla4-d1b041059520.qloud-c.yandex.net (vla4-d1b041059520.qloud-c.yandex.net [2a02:6b8:c17:914:0:640:d1b0:4105])
-        by mxback8q.mail.yandex.net (mxback/Yandex) with ESMTP id TVZFOTEbpY-O9beJCee;
-        Fri, 06 Mar 2020 10:24:09 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1583479449;
-        bh=JGRarNLcBOBe/UuaN495deJlXvvD55JTNeBB+Uo2OWQ=;
-        h=In-Reply-To:Subject:To:From:Message-Id:Cc:References:Date;
-        b=s5ZnocZdG8QSUUr9NGHeojrNK6yUyCGW2fZeH9HdqEFTxc19gO1lNfqtIgMuS4VJs
-         lNtiAl8ZhRQ9Zm5PqzjTqPQ2YD/9fFvUlJQkwWye+iZy/i5/Z2v23yLzWEDRBEgJJ/
-         xAMfYx5uBjuMzL5kFbtOJP8wFGcCo9V9PpBlQmYg=
-Authentication-Results: mxback8q.mail.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by vla4-d1b041059520.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id UVtDI3nKfo-O814ddZn;
-        Fri, 06 Mar 2020 10:24:08 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Nikita Shubin <NShubin@topcon.com>
-Cc:     Nikita Shubin <NShubin@topcon.com>, stable@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5] remoteproc: Fix NULL pointer dereference in rproc_virtio_notify
-Date:   Fri,  6 Mar 2020 10:24:53 +0300
-Message-Id: <20200306072452.24743-1-NShubin@topcon.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200306070325.15232-1-NShubin@topcon.com>
-References: <20200306070325.15232-1-NShubin@topcon.com>
+        Fri, 6 Mar 2020 02:24:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37840 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgCFHYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 02:24:43 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 132E0ABF6;
+        Fri,  6 Mar 2020 07:24:38 +0000 (UTC)
+Subject: Re: [PATCH] drm/hisilicon: Add the load and unload for hibmc_driver
+To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
+        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
+        alexander.deucher@amd.com, tglx@linutronix.de,
+        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+        linux-kernel@vger.kernel.org
+Cc:     linuxarm@huawei.com
+References: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <23d99485-59c9-b466-3939-982394aab9bd@suse.de>
+Date:   Fri, 6 Mar 2020 08:24:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="hgM94dktjnwDN88zvKY8CPwH8lBPU3BMx"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Undefined rproc_ops .kick method in remoteproc driver will result in
-"Unable to handle kernel NULL pointer dereference" in rproc_virtio_notify, 
-after firmware loading if:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--hgM94dktjnwDN88zvKY8CPwH8lBPU3BMx
+Content-Type: multipart/mixed; boundary="O6U3plXr6584I0RxYfo7EkxSA0bZDs7n0";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
+ airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
+ alexander.deucher@amd.com, tglx@linutronix.de,
+ dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+ linux-kernel@vger.kernel.org
+Cc: linuxarm@huawei.com
+Message-ID: <23d99485-59c9-b466-3939-982394aab9bd@suse.de>
+Subject: Re: [PATCH] drm/hisilicon: Add the load and unload for hibmc_driver
+References: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
+In-Reply-To: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
 
- 1) .kick method wasn't defined in driver
- 2) resource_table exists in firmware and has "Virtio device entry" defined
+--O6U3plXr6584I0RxYfo7EkxSA0bZDs7n0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Let's refuse to register an rproc-induced virtio device if no kick method was
-defined for rproc.
+Hi
 
-[   13.180049][  T415] 8<--- cut here ---
-[   13.190558][  T415] Unable to handle kernel NULL pointer dereference at virtual address 00000000
-[   13.212544][  T415] pgd = (ptrval)
-[   13.217052][  T415] [00000000] *pgd=00000000
-[   13.224692][  T415] Internal error: Oops: 80000005 [#1] PREEMPT SMP ARM
-[   13.231318][  T415] Modules linked in: rpmsg_char imx_rproc virtio_rpmsg_bus rpmsg_core [last unloaded: imx_rproc]
-[   13.241687][  T415] CPU: 0 PID: 415 Comm: unload-load.sh Not tainted 5.5.2-00002-g707df13bbbdd #6
-[   13.250561][  T415] Hardware name: Freescale i.MX7 Dual (Device Tree)
-[   13.257009][  T415] PC is at 0x0
-[   13.260249][  T415] LR is at rproc_virtio_notify+0x2c/0x54
-[   13.265738][  T415] pc : [<00000000>]    lr : [<8050f6b0>]    psr: 60010113
-[   13.272702][  T415] sp : b8d47c48  ip : 00000001  fp : bc04de00
-[   13.278625][  T415] r10: bc04c000  r9 : 00000cc0  r8 : b8d46000
-[   13.284548][  T415] r7 : 00000000  r6 : b898f200  r5 : 00000000  r4 : b8a29800
-[   13.291773][  T415] r3 : 00000000  r2 : 990a3ad4  r1 : 00000000  r0 : b8a29800
-[   13.299000][  T415] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-[   13.306833][  T415] Control: 10c5387d  Table: b8b4806a  DAC: 00000051
-[   13.313278][  T415] Process unload-load.sh (pid: 415, stack limit = 0x(ptrval))
-[   13.320591][  T415] Stack: (0xb8d47c48 to 0xb8d48000)
-[   13.325651][  T415] 7c40:                   b895b680 00000001 b898f200 803c6430 b895bc80 7f00ae18
-[   13.334531][  T415] 7c60: 00000035 00000000 00000000 b9393200 80b3ed80 00004000 b9393268 bbf5a9a2
-[   13.343410][  T415] 7c80: 00000e00 00000200 00000000 7f00aff0 7f00a014 b895b680 b895b800 990a3ad4
-[   13.352290][  T415] 7ca0: 00000001 b898f210 b898f200 00000000 00000000 7f00e000 00000001 00000000
-[   13.361170][  T415] 7cc0: 00000000 803c62e0 80b2169c 802a0924 b898f210 00000000 00000000 b898f210
-[   13.370049][  T415] 7ce0: 80b9ba44 00000000 80b9ba48 00000000 7f00e000 00000008 80b2169c 80400114
-[   13.378929][  T415] 7d00: 80b2169c 8061fd64 b898f210 7f00e000 80400744 b8d46000 80b21634 80b21634
-[   13.387809][  T415] 7d20: 80b2169c 80400614 80b21634 80400718 7f00e000 00000000 b8d47d7c 80400744
-[   13.396689][  T415] 7d40: b8d46000 80b21634 80b21634 803fe338 b898f254 b80fe76c b8d32e38 990a3ad4
-[   13.405569][  T415] 7d60: fffffff3 b898f210 b8d46000 00000001 b898f254 803ffe7c 80857a90 b898f210
-[   13.414449][  T415] 7d80: 00000001 990a3ad4 b8d46000 b898f210 b898f210 80b17aec b8a29c20 803ff0a4
-[   13.423328][  T415] 7da0: b898f210 00000000 b8d46000 803fb8e0 b898f200 00000000 80b17aec b898f210
-[   13.432209][  T415] 7dc0: b8a29c20 990a3ad4 b895b900 b898f200 8050fb7c 80b17aec b898f210 b8a29c20
-[   13.441088][  T415] 7de0: b8a29800 b895b900 b8a29a04 803c5ec0 b8a29c00 b898f200 b8a29a20 00000007
-[   13.449968][  T415] 7e00: b8a29c20 8050fd78 b8a29800 00000000 b8a29a20 b8a29c04 b8a29820 b8a299d0
-[   13.458848][  T415] 7e20: b895b900 8050e5a4 b8a29800 b8a299d8 b8d46000 b8a299e0 b8a29820 b8a299d0
-[   13.467728][  T415] 7e40: b895b900 8050e008 000041ed 00000000 b8b8c440 b8a299d8 b8a299e0 b8a299d8
-[   13.476608][  T415] 7e60: b8b8c440 990a3ad4 00000000 b8a29820 b8b8c400 00000006 b8a29800 b895b880
-[   13.485487][  T415] 7e80: b8d47f78 00000000 00000000 8050f4b4 00000006 b895b890 b8b8c400 008fbea0
-[   13.494367][  T415] 7ea0: b895b880 8029f530 00000000 00000000 b8d46000 00000006 b8d46000 008fbea0
-[   13.503246][  T415] 7ec0: 8029f434 00000000 b8d46000 00000000 00000000 8021e2e4 0000000a 8061fd0c
-[   13.512125][  T415] 7ee0: 0000000a b8af0c00 0000000a b8af0c40 00000001 b8af0c40 00000000 8061f910
-[   13.521005][  T415] 7f00: 0000000a 80240af4 00000002 b8d46000 00000000 8061fd0c 00000002 80232d7c
-[   13.529884][  T415] 7f20: 00000000 b8d46000 00000000 990a3ad4 00000000 00000006 b8a62d80 008fbea0
-[   13.538764][  T415] 7f40: b8d47f78 00000000 b8d46000 00000000 00000000 802210c0 b88f2900 00000000
-[   13.547644][  T415] 7f60: b8a62d80 b8a62d80 b8d46000 00000006 008fbea0 80221320 00000000 00000000
-[   13.556524][  T415] 7f80: b8af0c00 990a3ad4 0000006c 008fbea0 76f1cda0 00000004 80101204 00000004
-[   13.565403][  T415] 7fa0: 00000000 80101000 0000006c 008fbea0 00000001 008fbea0 00000006 00000000
-[   13.574283][  T415] 7fc0: 0000006c 008fbea0 76f1cda0 00000004 00000006 00000006 00000000 00000000
-[   13.583162][  T415] 7fe0: 00000004 7ebaf7d0 76eb4c0b 76e3f206 600d0030 00000001 00000000 00000000
-[   13.592056][  T415] [<8050f6b0>] (rproc_virtio_notify) from [<803c6430>] (virtqueue_notify+0x1c/0x34)
-[   13.601298][  T415] [<803c6430>] (virtqueue_notify) from [<7f00ae18>] (rpmsg_probe+0x280/0x380 [virtio_rpmsg_bus])
-[   13.611663][  T415] [<7f00ae18>] (rpmsg_probe [virtio_rpmsg_bus]) from [<803c62e0>] (virtio_dev_probe+0x1f8/0x2c4)
-[   13.622022][  T415] [<803c62e0>] (virtio_dev_probe) from [<80400114>] (really_probe+0x200/0x450)
-[   13.630817][  T415] [<80400114>] (really_probe) from [<80400614>] (driver_probe_device+0x16c/0x1ac)
-[   13.639873][  T415] [<80400614>] (driver_probe_device) from [<803fe338>] (bus_for_each_drv+0x84/0xc8)
-[   13.649102][  T415] [<803fe338>] (bus_for_each_drv) from [<803ffe7c>] (__device_attach+0xd4/0x164)
-[   13.658069][  T415] [<803ffe7c>] (__device_attach) from [<803ff0a4>] (bus_probe_device+0x84/0x8c)
-[   13.666950][  T415] [<803ff0a4>] (bus_probe_device) from [<803fb8e0>] (device_add+0x444/0x768)
-[   13.675572][  T415] [<803fb8e0>] (device_add) from [<803c5ec0>] (register_virtio_device+0xa4/0xfc)
-[   13.684541][  T415] [<803c5ec0>] (register_virtio_device) from [<8050fd78>] (rproc_add_virtio_dev+0xcc/0x1b8)
-[   13.694466][  T415] [<8050fd78>] (rproc_add_virtio_dev) from [<8050e5a4>] (rproc_start+0x148/0x200)
-[   13.703521][  T415] [<8050e5a4>] (rproc_start) from [<8050e008>] (rproc_boot+0x384/0x5c0)
-[   13.711708][  T415] [<8050e008>] (rproc_boot) from [<8050f4b4>] (state_store+0x3c/0xc8)
-[   13.719723][  T415] [<8050f4b4>] (state_store) from [<8029f530>] (kernfs_fop_write+0xfc/0x214)
-[   13.728348][  T415] [<8029f530>] (kernfs_fop_write) from [<8021e2e4>] (__vfs_write+0x30/0x1cc)
-[   13.736971][  T415] [<8021e2e4>] (__vfs_write) from [<802210c0>] (vfs_write+0xac/0x17c)
-[   13.744985][  T415] [<802210c0>] (vfs_write) from [<80221320>] (ksys_write+0x64/0xe4)
-[   13.752825][  T415] [<80221320>] (ksys_write) from [<80101000>] (ret_fast_syscall+0x0/0x54)
-[   13.761178][  T415] Exception stack(0xb8d47fa8 to 0xb8d47ff0)
-[   13.766932][  T415] 7fa0:                   0000006c 008fbea0 00000001 008fbea0 00000006 00000000
-[   13.775811][  T415] 7fc0: 0000006c 008fbea0 76f1cda0 00000004 00000006 00000006 00000000 00000000
-[   13.784687][  T415] 7fe0: 00000004 7ebaf7d0 76eb4c0b 76e3f206
-[   13.790442][  T415] Code: bad PC value
-[   13.839214][  T415] ---[ end trace 1fe21ecfc9f28852 ]---
+Am 06.03.20 um 04:42 schrieb Tian Tao:
+> using the load and unload function provided by drm framework instead of=
 
-Signed-off-by: Nikita Shubin <NShubin@topcon.com>
-Fixes: 7a186941626d ("remoteproc: remove the single rpmsg vdev limitation")
-Cc: stable@vger.kernel.org
----
- drivers/remoteproc/remoteproc_virtio.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> doing the same work in the hibmc_pci_probe and do some code cleanup.
+>=20
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
+> ---
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 62 +++++++++--------=
+--------
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h |  2 +
+>  2 files changed, 24 insertions(+), 40 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
+gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> index 79a180a..51f1c70 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> @@ -23,7 +23,7 @@
+>  #include <drm/drm_print.h>
+>  #include <drm/drm_probe_helper.h>
+>  #include <drm/drm_vblank.h>
+> -
+> +#include <drm/drm_pci.h>
+>  #include "hibmc_drm_drv.h"
+>  #include "hibmc_drm_regs.h"
+> =20
+> @@ -49,6 +49,8 @@ static irqreturn_t hibmc_drm_interrupt(int irq, void =
+*arg)
+> =20
+>  static struct drm_driver hibmc_driver =3D {
+>  	.driver_features	=3D DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
+> +	.load			=3D hibmc_load,
+> +	.unload			=3D hibmc_unload,
 
-diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-index 8c07cb2ca8ba..31a62a0b470e 100644
---- a/drivers/remoteproc/remoteproc_virtio.c
-+++ b/drivers/remoteproc/remoteproc_virtio.c
-@@ -334,6 +334,13 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
- 	struct rproc_mem_entry *mem;
- 	int ret;
- 
-+	if (rproc->ops->kick == NULL) {
-+		ret = -EINVAL;
-+		dev_err(dev, ".kick method not defined for %s",
-+				rproc->name);
-+		goto out;
-+	}
-+
- 	/* Try to find dedicated vdev buffer carveout */
- 	mem = rproc_find_carveout_by_name(rproc, "vdev%dbuffer", rvdev->index);
- 	if (mem) {
--- 
-2.24.1
+These callbacks are deprecated and not to be used. During the last weeks
+and months, we've been working on removing them from the other remaining
+drivers. Therefore nak.
 
+Best regards
+Thomas
+
+>  	.fops			=3D &hibmc_fops,
+>  	.name			=3D "hibmc",
+>  	.date			=3D "20160828",
+> @@ -232,6 +234,21 @@ static int hibmc_hw_map(struct hibmc_drm_private *=
+priv)
+>  	return 0;
+>  }
+> =20
+> +static void hibmc_hw_unmap(struct hibmc_drm_private *priv)
+> +{
+> +	struct drm_device *dev =3D priv->dev;
+> +
+> +	if (priv->mmio) {
+> +		devm_iounmap(dev->dev, priv->mmio);
+> +		priv->mmio =3D NULL;
+> +	}
+> +
+> +	if (priv->fb_map) {
+> +		devm_iounmap(dev->dev, priv->fb_map);
+> +		priv->fb_map =3D NULL;
+> +	}
+> +}
+> +
+>  static int hibmc_hw_init(struct hibmc_drm_private *priv)
+>  {
+>  	int ret;
+> @@ -245,7 +262,7 @@ static int hibmc_hw_init(struct hibmc_drm_private *=
+priv)
+>  	return 0;
+>  }
+> =20
+> -static int hibmc_unload(struct drm_device *dev)
+> +void hibmc_unload(struct drm_device *dev)
+>  {
+>  	struct hibmc_drm_private *priv =3D dev->dev_private;
+> =20
+> @@ -258,11 +275,12 @@ static int hibmc_unload(struct drm_device *dev)
+> =20
+>  	hibmc_kms_fini(priv);
+>  	hibmc_mm_fini(priv);
+> +	hibmc_hw_unmap(priv);
+>  	dev->dev_private =3D NULL;
+>  	return 0;
+>  }
+> =20
+> -static int hibmc_load(struct drm_device *dev)
+> +int hibmc_load(struct drm_device *dev, unsigned long flags)
+>  {
+>  	struct hibmc_drm_private *priv;
+>  	int ret;
+> @@ -332,43 +350,7 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
+>  	if (ret)
+>  		return ret;
+> =20
+> -	dev =3D drm_dev_alloc(&hibmc_driver, &pdev->dev);
+> -	if (IS_ERR(dev)) {
+> -		DRM_ERROR("failed to allocate drm_device\n");
+> -		return PTR_ERR(dev);
+> -	}
+> -
+> -	dev->pdev =3D pdev;
+> -	pci_set_drvdata(pdev, dev);
+> -
+> -	ret =3D pci_enable_device(pdev);
+> -	if (ret) {
+> -		DRM_ERROR("failed to enable pci device: %d\n", ret);
+> -		goto err_free;
+> -	}
+> -
+> -	ret =3D hibmc_load(dev);
+> -	if (ret) {
+> -		DRM_ERROR("failed to load hibmc: %d\n", ret);
+> -		goto err_disable;
+> -	}
+> -
+> -	ret =3D drm_dev_register(dev, 0);
+> -	if (ret) {
+> -		DRM_ERROR("failed to register drv for userspace access: %d\n",
+> -			  ret);
+> -		goto err_unload;
+> -	}
+> -	return 0;
+> -
+> -err_unload:
+> -	hibmc_unload(dev);
+> -err_disable:
+> -	pci_disable_device(pdev);
+> -err_free:
+> -	drm_dev_put(dev);
+> -
+> -	return ret;
+> +	return drm_get_pci_dev(pdev, ent, &hibmc_driver);
+>  }
+> =20
+>  static void hibmc_pci_remove(struct pci_dev *pdev)
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/=
+gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+> index 50a0c1f..4e89cd7 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+> @@ -37,6 +37,8 @@ void hibmc_set_power_mode(struct hibmc_drm_private *p=
+riv,
+>  void hibmc_set_current_gate(struct hibmc_drm_private *priv,
+>  			    unsigned int gate);
+> =20
+> +int hibmc_load(struct drm_device *dev, unsigned long flags);
+> +void hibmc_unload(struct drm_device *dev);
+>  int hibmc_de_init(struct hibmc_drm_private *priv);
+>  int hibmc_vdac_init(struct hibmc_drm_private *priv);
+> =20
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--O6U3plXr6584I0RxYfo7EkxSA0bZDs7n0--
+
+--hgM94dktjnwDN88zvKY8CPwH8lBPU3BMx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5h+rUACgkQaA3BHVML
+eiMYiQf9GqZAwiyMfHRje2Jao2QTfgw9zRcQZSH10Ip5eZcKyjtjVkaUonJ8co4m
+dypcv9O7/RpRs6lmt6tMjDDzay9fUBbzF95ft9b5pSIv1ayPRQoYI55I0+T3+1n+
+VYBo1yXMx8Y6MWgGgxH9+cH9qTyo2pcgp7c69dEcp0zoPy4VNCqsK0lgVF7RiPkJ
++4GE8FvMOx+HAFieDgkV7YcqD3Qg0msNWTBGeWx32ef0fOZaVZTV3+/SR2vuU7SB
+6Ip94GmvFnZpfn2WezD+NImfv9AsmoygtzMi/GFGjfrxq5LUwAt7jrADUET3bl4W
+RwCWP8V6yGcjjOA1ITVqju1fOHx9eg==
+=Xobx
+-----END PGP SIGNATURE-----
+
+--hgM94dktjnwDN88zvKY8CPwH8lBPU3BMx--
