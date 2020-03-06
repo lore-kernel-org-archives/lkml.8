@@ -2,194 +2,54 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9A8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C58C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14A720637
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583517717;
-	bh=ybbFg1QjcDRxtSV4KXbGlQb4ePz6un+CVqopO5MgTa0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DxB4zY4mgT3NQm6zSqJwuj52Fbn8yaNwmrcj3XDTDfCJ79f3/YRKy9NETaJhXJncB
-	 s42HloEvP5hDR2+WLAS1vPXnrd/isak0Ug3ne6UEZdBaVy3wLXCpeVgbOaYoIvUz+y
-	 xQr2KjDLLf9+2DVTK3gTbU3ELavwV1YOf9hDTHNc=
+	by mail.kernel.org (Postfix) with ESMTP id B5A9E20637
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgCFSB4 (ORCPT
+        id S1726240AbgCFSDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:01:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45432 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 13:03:33 -0500
+Received: from muru.com ([72.249.23.125]:59164 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgCFSBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:01:55 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE334205C9;
-        Fri,  6 Mar 2020 18:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583517714;
-        bh=ybbFg1QjcDRxtSV4KXbGlQb4ePz6un+CVqopO5MgTa0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cExrDgTKYOyYVREuXEXB7kVirE9FaOVp+TLD1a75UoVzF8B9PkrHJQEW7W+hBENhy
-         x3XpnsfbxHp8jA8NV3MLBExkPLfe7GLtaGgjJx6xTw1bpnQ59+nyp9yY4qKc57d7EV
-         yCdf17LJmYVxztK2nbvtz5H3v8xhH4ALFFYElAWA=
-Date:   Sat, 7 Mar 2020 03:01:49 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     paulmck@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-Id: <20200307030149.1f70bdb019ad5ea896bce5a7@kernel.org>
-In-Reply-To: <20200219114510.6f942b56868a97e06352738c@kernel.org>
-References: <20200213163800.5c51a5f1@gandalf.local.home>
-        <20200213215004.GM2935@paulmck-ThinkPad-P72>
-        <20200213170451.690c4e5c@gandalf.local.home>
-        <20200213223918.GN2935@paulmck-ThinkPad-P72>
-        <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org>
-        <20200215145934.GD2935@paulmck-ThinkPad-P72>
-        <20200217175519.12a694a969c1a8fb2e49905e@kernel.org>
-        <20200217163112.GM2935@paulmck-ThinkPad-P72>
-        <20200218133335.c87d7b2399ee6532bf28b74a@kernel.org>
-        <20200218124609.1a33f868@gandalf.local.home>
-        <20200218201806.GI2935@paulmck-ThinkPad-P72>
-        <20200219114510.6f942b56868a97e06352738c@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1725922AbgCFSDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:03:33 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 5DDA28027;
+        Fri,  6 Mar 2020 18:04:18 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 10:03:29 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v2 1/6] pwm: omap-dmtimer: Drop unused header file
+Message-ID: <20200306180329.GG37466@atomide.com>
+References: <20200228095651.32464-1-lokeshvutla@ti.com>
+ <20200228095651.32464-2-lokeshvutla@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228095651.32464-2-lokeshvutla@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+* Lokesh Vutla <lokeshvutla@ti.com> [200228 09:58]:
+> pwm_omap_dmtimer.h is used only:
+> - to typedef struct omap_dm_timer to pwm_omap_dmtimer
+> - for macro PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE
+> Rest of the file is pretty mush unsed. So reuse omap_dm_timer
+> and OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE in pwm-omap-dmtimer.c
+> and delete the header file.
 
-On Wed, 19 Feb 2020 11:45:10 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> On Tue, 18 Feb 2020 12:18:06 -0800
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > On Tue, Feb 18, 2020 at 12:46:09PM -0500, Steven Rostedt wrote:
-> > > On Tue, 18 Feb 2020 13:33:35 +0900
-> > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > > 
-> > > > On Mon, 17 Feb 2020 08:31:12 -0800
-> > > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > > >   
-> > > > > > BTW, if you consider the x86 specific code is in the generic file,
-> > > > > > we can move NOKPROBE_SYMBOL() in arch/x86/kernel/traps.c.
-> > > > > > (Sorry, I've hit this idea right now)  
-> > > > > 
-> > > > > Might this affect other architectures with NMIs and probe-like things?
-> > > > > If so, it might make sense to leave it where it is.  
-> > > > 
-> > > > Yes, git grep shows that arm64 is using rcu_nmi_enter() in
-> > > > debug_exception_enter().
-> > > > OK, let's keep it, but maybe it is good to update the comment for
-> > > > arm64 too. What about following?
-> > > > 
-> > > > +/*
-> > > > + * All functions in do_int3() on x86, do_debug_exception() on arm64 must be
-> > > > + * marked NOKPROBE before kprobes handler is called.
-> > > > + * ist_enter() on x86 and debug_exception_enter() on arm64 which is called
-> > > > + * before kprobes handle happens to call rcu_nmi_enter() which means
-> > > > + * that rcu_nmi_enter() must be marked NOKRPOBE.
-> > > > + */
-> > > > 
-> > > 
-> > > Ah, why don't we just say...
-> > > 
-> > > /*
-> > >  * All functions called in the breakpoint trap handler (e.g. do_int3()
-> > >  * on x86), must not allow kprobes until the kprobe breakpoint handler
-> > >  * is called, otherwise it can cause an infinite recursion.
-> > >  * On some archs, rcu_nmi_enter() is called in the breakpoint handler
-> > >  * before the kprobe breakpoint handler is called, thus it must be
-> > >  * marked as NOKPROBE.
-> > >  */
-> > > 
-> > > And that way we don't make this an arch specific comment.
-> > 
-> > That looks good to me.  Masami, does this work for you?
-> 
-> Yes, that looks good to me too :)
-
-Oops, I'm guilty!
-Sorry *rcu_nmi_exit()* also must be NOKPROBE, since even if we could catch
-a recursive kprobe call, we can only skip the kprobe handler, but we must
-exit from do_int3() and hit rcu_nmi_exit() again!
-
-[45235.497591] Unrecoverable kprobe detected.
-[45235.501400] Dumping kprobe:
-[45235.502433] Name: (null)
-[45235.502433] Offset: 0
-[45235.502433] Address: rcu_nmi_exit+0x0/0x290
-[45235.504044] ------------[ cut here ]------------
-[45235.504855] kernel BUG at arch/x86/kernel/kprobes/core.c:646!
-[45235.505816] invalid opcode: 0000 [#1] PREEMPT SMP PTI
-[45235.506615] CPU: 7 PID: 143 Comm: sh Not tainted 5.6.0-rc3+ #143
-[45235.507662] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-[45235.509764] RIP: 0010:reenter_kprobe.cold+0x14/0x16
-[45235.510630] Code: 48 8b 75 10 48 c7 c7 f0 70 0e 82 48 8b 56 28 e8 22 91 08 00 0f 0b 48 c7 c7 20 71 0e 82 e8 14 91 08 00 48 89 ef e8 23 ee 0f 00 <0f> 0b 48 89 ee 48 c7 c7 48 71 0e 82 e8 fb 90 08 00 e9 c3 fc ff ff
-[45235.513948] RSP: 0018:ffffc90000347bf8 EFLAGS: 00010046
-[45235.514906] RAX: 0000000000000036 RBX: 0000000000017f20 RCX: 0000000000000000
-[45235.516109] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000001
-[45235.517278] RBP: ffff88807c9820c0 R08: 0000000000000000 R09: 0000000000000001
-[45235.518415] R10: 0000000000000000 R11: ffff88807c9d1f18 R12: ffff88807d9d7f20
-[45235.519609] R13: ffffc90000347c68 R14: ffffffff810e8a60 R15: ffffffff810e8a61
-[45235.520787] FS:  0000000001d9a8c0(0000) GS:ffff88807d9c0000(0000) knlGS:0000000000000000
-[45235.522198] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[45235.523172] CR2: 0000000001da9000 CR3: 000000007a880000 CR4: 00000000000006a0
-[45235.524288] Call Trace:
-[45235.524825]  kprobe_int3_handler+0x74/0x150
-[45235.525627]  do_int3+0x36/0xf0
-[45235.526244]  int3+0x42/0x50
-[45235.526767] RIP: 0010:rcu_nmi_exit+0x1/0x290
-[45235.527551] Code: a2 0d 82 be c2 01 00 00 48 c7 c7 d5 44 0f 82 c6 05 e7 ac 24 01 01 e8 1f ba fd ff eb b8 66 66 2e 0f 1f 84 00 00 00 00 00 90 cc <57> 41 56 41 55 41 54 55 48 c7 c5 40 c2 02 00 53 48 89 eb e8 77 75
-[45235.530898] RSP: 0018:ffffc90000347d40 EFLAGS: 00000046
-[45235.531816] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[45235.533001] RDX: 0000000000000001 RSI: ffffffff8101e1fe RDI: ffffffff8101e1fe
-[45235.534252] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-[45235.535516] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-[45235.536759] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[45235.537945]  ? ist_exit+0xe/0x20
-[45235.538593]  ? ist_exit+0xe/0x20
-[45235.539239]  ? rcu_nmi_exit+0x1/0x290
-[45235.541182]  int3+0x42/0x50
-[45235.541687] RIP: 0010:0xffffffffa000005a
-[45235.542363] Code: 2e 16 13 e1 00 00 00 00 00 00 00 00 89 f8 e9 1f 16 13 e1 00 00 00 00 00 00 00 00 89 f8 e9 20 16 13 e1 00 00 00 00 00 00 00 00 <41> 57 e9 01 8a 0e e1 00 00 00 00 00 00 00 00 41 57 e9 f2 22 26 e1
-[45235.545628] RSP: 0018:ffffc90000347e20 EFLAGS: 00000146
-[45235.546596] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[45235.547989] RDX: 0000000000000001 RSI: ffffffff8101e1fe RDI: ffffffff8101e1fe
-[45235.550183] RBP: 0000000000000000 R08: 0000000000000001 R09: ffff88807d2aa000
-[45235.551591] R10: 0000000000000a4c R11: ffff88807bfec600 R12: 0000000000000000
-[45235.552893] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[45235.554633]  ? ist_exit+0xe/0x20
-[45235.555537]  ? ist_exit+0xe/0x20
-[45235.556565]  ? rcu_nmi_exit+0x1/0x290
-[45235.557909]  ? int3+0x42/0x50
-[45235.559156]  ? 0xffffffffa0000069
-[45235.560547]  ? vfs_read+0x1/0x150
-[45235.561522]  ? ksys_read+0x60/0xe0
-[45235.562458]  ? do_syscall_64+0x4b/0x1e0
-[45235.563404]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[45235.564705] Modules linked in:
-[45235.565556] ---[ end trace 870af8724dba9ac8 ]---
-
-So all functions called from do_int3() must be NOKPROBE.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Tony Lindgren <tony@atomide.com>
