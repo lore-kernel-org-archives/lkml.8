@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B180C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E002C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5F620848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7262F20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbgCFOoG (ORCPT
+        id S1727648AbgCFOoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:44:06 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53731 "EHLO
+        Fri, 6 Mar 2020 09:44:13 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53728 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbgCFOmI (ORCPT
+        with ESMTP id S1726240AbgCFOmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Mar 2020 09:42:08 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEAr-0006FA-EI; Fri, 06 Mar 2020 15:42:01 +0100
+        id 1jAEAs-0006Fg-4b; Fri, 06 Mar 2020 15:42:02 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0A88A1C21D4;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B28CF1C21D3;
         Fri,  6 Mar 2020 15:42:01 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:00 -0000
+Date:   Fri, 06 Mar 2020 14:42:01 -0000
 From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/cgroup: Grow per perf_cpu_context heap storage
+Subject: [tip: perf/core] perf/core: Use min_heap in visit_groups_merge()
 Cc:     Ian Rogers <irogers@google.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200214075133.181299-6-irogers@google.com>
-References: <20200214075133.181299-6-irogers@google.com>
+In-Reply-To: <20200214075133.181299-4-irogers@google.com>
+References: <20200214075133.181299-4-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <158350572076.28353.12179412076735895355.tip-bot2@tip-bot2>
+Message-ID: <158350572146.28353.4698357304879018456.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,96 +57,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     c2283c9368d41063f2077cb58def02217360526d
-Gitweb:        https://git.kernel.org/tip/c2283c9368d41063f2077cb58def02217360526d
+Commit-ID:     6eef8a7116deae0706ba6d897c0d7dd887cd2be2
+Gitweb:        https://git.kernel.org/tip/6eef8a7116deae0706ba6d897c0d7dd887cd2be2
 Author:        Ian Rogers <irogers@google.com>
-AuthorDate:    Thu, 13 Feb 2020 23:51:32 -08:00
+AuthorDate:    Thu, 13 Feb 2020 23:51:30 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 11:57:00 +01:00
+CommitterDate: Fri, 06 Mar 2020 11:56:59 +01:00
 
-perf/cgroup: Grow per perf_cpu_context heap storage
+perf/core: Use min_heap in visit_groups_merge()
 
-Allow the per-CPU min heap storage to have sufficient space for per-cgroup
-iterators.
+visit_groups_merge will pick the next event based on when it was
+inserted in to the context (perf_event group_index). Events may be per CPU
+or for any CPU, but in the future we'd also like to have per cgroup events
+to avoid searching all events for the events to schedule for a cgroup.
+Introduce a min heap for the events that maintains a property that the
+earliest inserted event is always at the 0th element. Initialize the heap
+with per-CPU and any-CPU events for the context.
 
 Based-on-work-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200214075133.181299-6-irogers@google.com
+Link: https://lkml.kernel.org/r/20200214075133.181299-4-irogers@google.com
 ---
- kernel/events/core.c | 47 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 47 insertions(+)
+ kernel/events/core.c | 67 ++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 51 insertions(+), 16 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7529e76..8065949 100644
+index dceeeb1..ddfb06c 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -892,6 +892,47 @@ static inline void perf_cgroup_sched_in(struct task_struct *prev,
- 	rcu_read_unlock();
+@@ -49,6 +49,7 @@
+ #include <linux/sched/mm.h>
+ #include <linux/proc_ns.h>
+ #include <linux/mount.h>
++#include <linux/min_heap.h>
+ 
+ #include "internal.h"
+ 
+@@ -3392,32 +3393,66 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
+ 	ctx_sched_out(&cpuctx->ctx, cpuctx, event_type);
  }
  
-+static int perf_cgroup_ensure_storage(struct perf_event *event,
-+				struct cgroup_subsys_state *css)
-+{
-+	struct perf_cpu_context *cpuctx;
-+	struct perf_event **storage;
-+	int cpu, heap_size, ret = 0;
+-static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+-			      int (*func)(struct perf_event *, void *), void *data)
++static bool perf_less_group_idx(const void *l, const void *r)
+ {
+-	struct perf_event **evt, *evt1, *evt2;
++	const struct perf_event *le = l, *re = r;
 +
-+	/*
-+	 * Allow storage to have sufficent space for an iterator for each
-+	 * possibly nested cgroup plus an iterator for events with no cgroup.
-+	 */
-+	for (heap_size = 1; css; css = css->parent)
-+		heap_size++;
-+
-+	for_each_possible_cpu(cpu) {
-+		cpuctx = per_cpu_ptr(event->pmu->pmu_cpu_context, cpu);
-+		if (heap_size <= cpuctx->heap_size)
-+			continue;
-+
-+		storage = kmalloc_node(heap_size * sizeof(struct perf_event *),
-+				       GFP_KERNEL, cpu_to_node(cpu));
-+		if (!storage) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+
-+		raw_spin_lock_irq(&cpuctx->ctx.lock);
-+		if (cpuctx->heap_size < heap_size) {
-+			swap(cpuctx->heap, storage);
-+			if (storage == cpuctx->heap_default)
-+				storage = NULL;
-+			cpuctx->heap_size = heap_size;
-+		}
-+		raw_spin_unlock_irq(&cpuctx->ctx.lock);
-+
-+		kfree(storage);
-+	}
-+
-+	return ret;
++	return le->group_index < re->group_index;
 +}
 +
- static inline int perf_cgroup_connect(int fd, struct perf_event *event,
- 				      struct perf_event_attr *attr,
- 				      struct perf_event *group_leader)
-@@ -911,6 +952,10 @@ static inline int perf_cgroup_connect(int fd, struct perf_event *event,
- 		goto out;
++static void swap_ptr(void *l, void *r)
++{
++	void **lp = l, **rp = r;
++
++	swap(*lp, *rp);
++}
++
++static const struct min_heap_callbacks perf_min_heap = {
++	.elem_size = sizeof(struct perf_event *),
++	.less = perf_less_group_idx,
++	.swp = swap_ptr,
++};
++
++static void __heap_add(struct min_heap *heap, struct perf_event *event)
++{
++	struct perf_event **itrs = heap->data;
++
++	if (event) {
++		itrs[heap->nr] = event;
++		heap->nr++;
++	}
++}
++
++static noinline int visit_groups_merge(struct perf_event_groups *groups,
++				int cpu,
++				int (*func)(struct perf_event *, void *),
++				void *data)
++{
++	/* Space for per CPU and/or any CPU event iterators. */
++	struct perf_event *itrs[2];
++	struct min_heap event_heap = {
++		.data = itrs,
++		.nr = 0,
++		.size = ARRAY_SIZE(itrs),
++	};
++	struct perf_event **evt = event_heap.data;
+ 	int ret;
+ 
+-	evt1 = perf_event_groups_first(groups, -1);
+-	evt2 = perf_event_groups_first(groups, cpu);
++	__heap_add(&event_heap, perf_event_groups_first(groups, -1));
++	__heap_add(&event_heap, perf_event_groups_first(groups, cpu));
+ 
+-	while (evt1 || evt2) {
+-		if (evt1 && evt2) {
+-			if (evt1->group_index < evt2->group_index)
+-				evt = &evt1;
+-			else
+-				evt = &evt2;
+-		} else if (evt1) {
+-			evt = &evt1;
+-		} else {
+-			evt = &evt2;
+-		}
++	min_heapify_all(&event_heap, &perf_min_heap);
+ 
++	while (event_heap.nr) {
+ 		ret = func(*evt, data);
+ 		if (ret)
+ 			return ret;
+ 
+ 		*evt = perf_event_groups_next(*evt);
++		if (*evt)
++			min_heapify(&event_heap, 0, &perf_min_heap);
++		else
++			min_heap_pop(&event_heap, &perf_min_heap);
  	}
  
-+	ret = perf_cgroup_ensure_storage(event, css);
-+	if (ret)
-+		goto out;
-+
- 	cgrp = container_of(css, struct perf_cgroup, css);
- 	event->cgrp = cgrp;
- 
-@@ -3440,6 +3485,8 @@ static noinline int visit_groups_merge(struct perf_cpu_context *cpuctx,
- 			.nr = 0,
- 			.size = cpuctx->heap_size,
- 		};
-+
-+		lockdep_assert_held(&cpuctx->ctx.lock);
- 	} else {
- 		event_heap = (struct min_heap){
- 			.data = itrs,
+ 	return 0;
