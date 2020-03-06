@@ -2,72 +2,105 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502F1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DE4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8B320705
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A81206D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 22:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgCFWfF (ORCPT
+        id S1726788AbgCFWhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 17:35:05 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:35709 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCFWfE (ORCPT
+        Fri, 6 Mar 2020 17:37:38 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54588 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCFWhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 17:35:04 -0500
-Received: by mail-io1-f71.google.com with SMTP id w16so2481423iot.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 14:35:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=KjWtQPcKIxIvEZPVuieJJ01SWtPnm/mBaTh4nN8Yq4A=;
-        b=tLt9tlMP/lfD2YT/IJGrPjMXcGGo0WObH8hSvi7pLss1fRy6vq0BFdNQKqLdDi+H/O
-         UEHSDVvVSW6w8Qde3uCES6BpqjSIdijyaJ+pbmXYw92/Y4xYV1QTgopD73vTrgUXMgxH
-         H+e0d0KJadKRfBHLZeD4S5LkDNLsjf56nQfQLPujRoChqMpaW9GvYDe8ZVM3VdGueFGi
-         aI2lrmCU5stVs0OYypczTmOV7hZEurUvlMdFhBQmoPbtDhaI7ULbS/jvSmkfFWoJXLm3
-         FM9GQ5X7c6utFb3QjPgBECAufAMKas8zEl4PNWyLxJKZFci2IXj/4GfOvUVhqp+qyLS0
-         jX9w==
-X-Gm-Message-State: ANhLgQ2Ne8tjIJEL6U5V/EzkfJC5/zAgTx0UuEPxq/TKrtJWZMQNah5z
-        kgUXRmb8OzUsqCpNMjRTitSdXAQYPnvMf1WJTTU21iRkvr76
-X-Google-Smtp-Source: ADFU+vs7TshTiXpJBBMMnK/klWxSkYQHop7Wk8LLzdT9LXsKtgaTBMKEykjWuXsgmj46xLIUaiFxMyYWPjhUHv97DMUt54UvAjhF
+        Fri, 6 Mar 2020 17:37:38 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jALb4-0005Ng-LY; Fri, 06 Mar 2020 23:37:34 +0100
+Date:   Fri, 6 Mar 2020 23:37:34 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [ANNOUNCE] v5.4.24-rt15
+Message-ID: <20200306223734.65nlltijm3cxbejz@linutronix.de>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5a06:: with SMTP id o6mr4907893iob.54.1583534102612;
- Fri, 06 Mar 2020 14:35:02 -0800 (PST)
-Date:   Fri, 06 Mar 2020 14:35:02 -0800
-In-Reply-To: <CAOQ4uxirc1WwQOzE4Qq=k2R0ntGNTGYsot1b63DPkwCbUYjyZA@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ad0f2c05a0374382@google.com>
-Subject: Re: WARNING: bad unlock balance in ovl_llseek
-From:   syzbot <syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com>
-To:     amir73il@gmail.com, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
-        miklos@szeredi.hu, mszeredi@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Dear RT folks!
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
+I'm pleased to announce the v5.4.24-rt15 patch set. 
 
-Reported-and-tested-by: syzbot+66a9752fa927f745385e@syzkaller.appspotmail.com
+Changes since v5.4.24-rt14:
 
-Tested on:
+  - A warning in kmalloc() has been added. On RT with
+    CONFIG_DEBUG_ATOMIC_SLEEP enabled it triggers on memory allocations
+    in atomic context.
 
-commit:         13944050 ovl: fix lock in ovl_llseek()
-git tree:       https://github.com/amir73il/linux.git ovl-fixes
-kernel config:  https://syzkaller.appspot.com/x/.config?x=31018567b8f0fc70
-dashboard link: https://syzkaller.appspot.com/bug?extid=66a9752fa927f745385e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Known issues
+     - It has been pointed out that due to changes to the printk code the
+       internal buffer representation changed. This is only an issue if tools
+       like `crash' are used to extract the printk buffer from a kernel memory
+       image.
 
-Note: testing is done by a robot and is best-effort only.
+The delta patch against v5.4.24-rt14 is appended below and can be found here:
+ 
+     https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/incr/patch-5.4.24-rt14-rt15.patch.xz
+
+You can get this release via the git tree at:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.4.24-rt15
+
+The RT patch against v5.4.24 can be found here:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/older/patch-5.4.24-rt15.patch.xz
+
+The split quilt queue is available at:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/older/patches-5.4.24-rt15.tar.xz
+
+Sebastian
+
+diff --git a/localversion-rt b/localversion-rt
+index 08b3e75841adc..18777ec0c27d4 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt14
++-rt15
+diff --git a/mm/slub.c b/mm/slub.c
+index 2cff48d13e3a7..7b2773c45e1ff 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2742,6 +2742,9 @@ static __always_inline void *slab_alloc_node(struct kmem_cache *s,
+ 	struct page *page;
+ 	unsigned long tid;
+ 
++	if (IS_ENABLED(CONFIG_PREEMPT_RT) && IS_ENABLED(CONFIG_DEBUG_ATOMIC_SLEEP))
++		WARN_ON_ONCE(!preemptible() && system_state >= SYSTEM_SCHEDULING);
++
+ 	s = slab_pre_alloc_hook(s, gfpflags);
+ 	if (!s)
+ 		return NULL;
+@@ -3202,6 +3205,9 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
+ 	LIST_HEAD(to_free);
+ 	int i;
+ 
++	if (IS_ENABLED(CONFIG_PREEMPT_RT) && IS_ENABLED(CONFIG_DEBUG_ATOMIC_SLEEP))
++		WARN_ON_ONCE(!preemptible() && system_state >= SYSTEM_SCHEDULING);
++
+ 	/* memcg and kmem_cache debug support */
+ 	s = slab_pre_alloc_hook(s, flags);
+ 	if (unlikely(!s))
