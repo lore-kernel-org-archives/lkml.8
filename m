@@ -7,41 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0F0C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA5DC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF4E2084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420742084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgCFOnL (ORCPT
+        id S1727538AbgCFOnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:43:11 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53845 "EHLO
+        Fri, 6 Mar 2020 09:43:16 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53832 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgCFOmW (ORCPT
+        with ESMTP id S1727201AbgCFOmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:42:22 -0500
+        Fri, 6 Mar 2020 09:42:20 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEAz-0006JQ-Ds; Fri, 06 Mar 2020 15:42:09 +0100
+        id 1jAEB6-0006OA-3G; Fri, 06 Mar 2020 15:42:16 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 91C5D1C21D9;
-        Fri,  6 Mar 2020 15:42:06 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:06 -0000
-From:   "tip-bot2 for Yu Chen" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7A7431C21D4;
+        Fri,  6 Mar 2020 15:42:10 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:10 -0000
+From:   "tip-bot2 for Thara Gopinath" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/deadline: Make two functions static
-Cc:     Yu Chen <chen.yu@easystack.cn>,
+Subject: [tip: sched/core] arm64/topology: Populate
+ arch_scale_thermal_pressure() for arm64 platforms
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200228100329.16927-1-chen.yu@easystack.cn>
-References: <20200228100329.16927-1-chen.yu@easystack.cn>
+In-Reply-To: <20200222005213.3873-5-thara.gopinath@linaro.org>
+References: <20200222005213.3873-5-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158350572628.28353.5626371504382178233.tip-bot2@tip-bot2>
+Message-ID: <158350573019.28353.350404434656839771.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,82 +58,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     ba4f7bc1dee318a0fd9c0e3bd46227aca21ac2f2
-Gitweb:        https://git.kernel.org/tip/ba4f7bc1dee318a0fd9c0e3bd46227aca21ac2f2
-Author:        Yu Chen <chen.yu@easystack.cn>
-AuthorDate:    Fri, 28 Feb 2020 18:03:29 +08:00
+Commit-ID:     ae1677c0bbe23fe30d634ac0d9f5c147ee4adbc1
+Gitweb:        https://git.kernel.org/tip/ae1677c0bbe23fe30d634ac0d9f5c147ee4adbc1
+Author:        Thara Gopinath <thara.gopinath@linaro.org>
+AuthorDate:    Fri, 21 Feb 2020 19:52:08 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 12:57:24 +01:00
+CommitterDate: Fri, 06 Mar 2020 12:57:19 +01:00
 
-sched/deadline: Make two functions static
+arm64/topology: Populate arch_scale_thermal_pressure() for arm64 platforms
 
-Since commit 06a76fe08d4 ("sched/deadline: Move DL related code
-from sched/core.c to sched/deadline.c"), DL related code moved to
-deadline.c.
+Hook up topology_get_thermal_pressure to arch_scale_thermal_pressure thus
+enabling scheduler to retrieve instantaneous thermal pressure of a CPU.
 
-Make the following two functions static since they're only used in
-deadline.c:
-
-	dl_change_utilization()
-	init_dl_rq_bw_ratio()
-
-Signed-off-by: Yu Chen <chen.yu@easystack.cn>
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200228100329.16927-1-chen.yu@easystack.cn
+Link: https://lkml.kernel.org/r/20200222005213.3873-5-thara.gopinath@linaro.org
 ---
- kernel/sched/deadline.c | 6 ++++--
- kernel/sched/sched.h    | 2 --
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/topology.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 43323f8..504d2f5 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -153,7 +153,7 @@ void sub_running_bw(struct sched_dl_entity *dl_se, struct dl_rq *dl_rq)
- 		__sub_running_bw(dl_se->dl_bw, dl_rq);
- }
+diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
+index a4d945d..cbd70d7 100644
+--- a/arch/arm64/include/asm/topology.h
++++ b/arch/arm64/include/asm/topology.h
+@@ -25,6 +25,9 @@ int pcibus_to_node(struct pci_bus *bus);
+ /* Enable topology flag updates */
+ #define arch_update_cpu_topology topology_update_cpu_topology
  
--void dl_change_utilization(struct task_struct *p, u64 new_bw)
-+static void dl_change_utilization(struct task_struct *p, u64 new_bw)
- {
- 	struct rq *rq;
- 
-@@ -334,6 +334,8 @@ static inline int is_leftmost(struct task_struct *p, struct dl_rq *dl_rq)
- 	return dl_rq->root.rb_leftmost == &dl_se->rb_node;
- }
- 
-+static void init_dl_rq_bw_ratio(struct dl_rq *dl_rq);
++/* Replace task scheduler's default thermal pressure retrieve API */
++#define arch_scale_thermal_pressure topology_get_thermal_pressure
 +
- void init_dl_bandwidth(struct dl_bandwidth *dl_b, u64 period, u64 runtime)
- {
- 	raw_spin_lock_init(&dl_b->dl_runtime_lock);
-@@ -2496,7 +2498,7 @@ int sched_dl_global_validate(void)
- 	return ret;
- }
+ #include <asm-generic/topology.h>
  
--void init_dl_rq_bw_ratio(struct dl_rq *dl_rq)
-+static void init_dl_rq_bw_ratio(struct dl_rq *dl_rq)
- {
- 	if (global_rt_runtime() == RUNTIME_INF) {
- 		dl_rq->bw_ratio = 1 << RATIO_SHIFT;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 7f1a85b..9e173fa 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -305,7 +305,6 @@ bool __dl_overflow(struct dl_bw *dl_b, int cpus, u64 old_bw, u64 new_bw)
- 	       dl_b->bw * cpus < dl_b->total_bw - old_bw + new_bw;
- }
- 
--extern void dl_change_utilization(struct task_struct *p, u64 new_bw);
- extern void init_dl_bw(struct dl_bw *dl_b);
- extern int  sched_dl_global_validate(void);
- extern void sched_dl_do_global(void);
-@@ -1905,7 +1904,6 @@ extern struct dl_bandwidth def_dl_bandwidth;
- extern void init_dl_bandwidth(struct dl_bandwidth *dl_b, u64 period, u64 runtime);
- extern void init_dl_task_timer(struct sched_dl_entity *dl_se);
- extern void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se);
--extern void init_dl_rq_bw_ratio(struct dl_rq *dl_rq);
- 
- #define BW_SHIFT		20
- #define BW_UNIT			(1 << BW_SHIFT)
+ #endif /* _ASM_ARM_TOPOLOGY_H */
