@@ -2,476 +2,248 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F546C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FC0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 118D12072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B0D2072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:17:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0Ovs6bu"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DQk8yzQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgCFGHl (ORCPT
+        id S1726083AbgCFGQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 01:07:41 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55515 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbgCFGHk (ORCPT
+        Fri, 6 Mar 2020 01:16:49 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:53321 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgCFGQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 01:07:40 -0500
-Received: by mail-pj1-f66.google.com with SMTP id a18so609823pjs.5;
-        Thu, 05 Mar 2020 22:07:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=2GO3l6zt4gXqs3tMHjTRRov6huxa8uKyp+oU9JBJSnA=;
-        b=P0Ovs6bu6j6RTzOH7Z1WhFrx6AdfmA7Xn8Rurm/5uvSzvcx0h6IXhg6DErkztJhTUL
-         e+ocp5TcxqnQ1n1IkKBnanQN8K3I/D3a3W46lNkck12Qc3mqeepu/DlhHYrw0Y+hpYI8
-         FCI1giAeI4ZqwEQYJJnMjS65/HnlUqCPCeAk4HxLNA6IQSBjwYN9vh1IOTOb4L//FaPM
-         sWTArxppZ6ZfeSEAYuqXG5THJP6bGSeouB6h0Ua9/A+XcqSLvEbQnArypJnf5VmWYbWO
-         VAh6zv9gQ4DKYqnteFiED/iml8FiHvJSA0F7swxScygkD4sDyd3Rf+q79tXrVWcuv0Mv
-         N9OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=2GO3l6zt4gXqs3tMHjTRRov6huxa8uKyp+oU9JBJSnA=;
-        b=OWVPYBMSGmyl1uE3dXneRJBYJ6fnZKzYgYNbfani6RsAyQqh4FtMICevvH0Mzq3Y8B
-         nXbXXXO7DJssRhg3MS19Lt4SnBDkX1HBO3AB9FpGCgCO5IV0p4h/gJrJi0who/r0mhNm
-         OS28ZzmIbrbfxyrwIXkWMAzWo2kj97lFIxl8+4N1eEV1JrjX+hIG+bD8CE+PTftZrwnP
-         akjabX+B296ZarW8NVvP/a8gb57j+PaXgZzfc8gH94d/38ofzntXFT/pIe6ptuzN2Jss
-         KGV/1r1a0pAhHb+xV20YG+0FT0K+YiBrvSc/PlcIjOTU1BoauSu2EaSvVkyh3YHSY7tx
-         IWJQ==
-X-Gm-Message-State: ANhLgQ3wgQM+fYVna9xmP/v+PtakZQmB9i2XnFrDOxpOB2KPGzXBVMX6
-        Et9N5xrIKxHTq4zBZjeCRmtWneN6qXg=
-X-Google-Smtp-Source: ADFU+vs2exC7Zvmbousf8KsrfjtpwiWYX1n1k3ZOs0YsKWpYaecowkN7y9bbgKk6BH9S6WpKDh1RMQ==
-X-Received: by 2002:a17:90a:7784:: with SMTP id v4mr1992702pjk.134.1583474857751;
-        Thu, 05 Mar 2020 22:07:37 -0800 (PST)
-Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id z19sm16890761pfn.121.2020.03.05.22.07.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 05 Mar 2020 22:07:37 -0800 (PST)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-Date:   Fri,  6 Mar 2020 14:07:22 +0800
-Message-Id: <99869475a0cc74d696585ada1fda1abf94aac287.1583464821.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <9bc2631ff3ab60fc607a5215e561aace83c0e8ca.1583464821.git.baolin.wang7@gmail.com>
-References: <9bc2631ff3ab60fc607a5215e561aace83c0e8ca.1583464821.git.baolin.wang7@gmail.com>
-In-Reply-To: <9bc2631ff3ab60fc607a5215e561aace83c0e8ca.1583464821.git.baolin.wang7@gmail.com>
-References: <9bc2631ff3ab60fc607a5215e561aace83c0e8ca.1583464821.git.baolin.wang7@gmail.com>
+        Fri, 6 Mar 2020 01:16:48 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200306061644epoutp03d74338cfc135c02fa44d54fadbfb2167~5on2m4cL_1542915429epoutp03y
+        for <linux-kernel@vger.kernel.org>; Fri,  6 Mar 2020 06:16:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200306061644epoutp03d74338cfc135c02fa44d54fadbfb2167~5on2m4cL_1542915429epoutp03y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1583475404;
+        bh=9C0MGid2PHbQyNe6yA6AUa7YmbxANZzM1sEsysOYPUw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=DQk8yzQHEb8WB3umHV8/+/C7wHQ1MnXYBlfvA62r1HQYImQqn3HsKpuD1CacbVKYe
+         yxfxkZ2PWe+UR2IMtP+y5QElxVbnalR4avkaQ17loGZMhzrAvuuRByuGKP5Zo7P1TK
+         +SuuDHuuRzpOFeIfVvWyAe9iga1GlaS+KjFKX+kU=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200306061644epcas1p4ff2b84e43bb28f348b345319b5139e96~5on2MPTPb1791817918epcas1p4H;
+        Fri,  6 Mar 2020 06:16:44 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 48Ycp305SpzMqYlv; Fri,  6 Mar
+        2020 06:16:43 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4D.C3.48019.ACAE16E5; Fri,  6 Mar 2020 15:16:42 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200306061642epcas1p15dc9ef2887e3d9d8d706541996221ddd~5on02GtdQ2658026580epcas1p1R;
+        Fri,  6 Mar 2020 06:16:42 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200306061642epsmtrp128eaf79b2c2350afe9ddec0106e41004~5on01dM1B1001210012epsmtrp1M;
+        Fri,  6 Mar 2020 06:16:42 +0000 (GMT)
+X-AuditID: b6c32a38-257ff7000001bb93-b8-5e61eacac06d
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CB.B2.06569.ACAE16E5; Fri,  6 Mar 2020 15:16:42 +0900 (KST)
+Received: from [10.253.104.82] (unknown [10.253.104.82]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200306061641epsmtip1cc649414fcb00f8719a06c6354b7b48e~5on0OsV0F2639326393epsmtip1Y;
+        Fri,  6 Mar 2020 06:16:41 +0000 (GMT)
+Subject: Re: [PATCH] mm: mmap: show vm_unmapped_area error log
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     walken@google.com, bp@suse.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com
+From:   Jaewon Kim <jaewon31.kim@samsung.com>
+Message-ID: <5E61EAB6.5080609@samsung.com>
+Date:   Fri, 6 Mar 2020 15:16:22 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+        Thunderbird/38.7.2
+MIME-Version: 1.0
+In-Reply-To: <20200305202443.8de3598558336b1d75afbba7@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKJsWRmVeSWpSXmKPExsWy7bCmge6pV4lxBr+PWFvMWb+GzWJiv6ZF
+        9+aZjBaXd81hs7i35j+rxb9JtQ5sHjtn3WX3WLCp1GPTp0nsHidm/Gbx2Hy62uPzJrkAtqgc
+        m4zUxJTUIoXUvOT8lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE3FRbJRefAF23zBygE5QUyhJz
+        SoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BYYGBXrFibnFpXnpesn5uVaGBgZGpkCVCTkZ
+        mye+YClYolGxbe1E5gbGDQpdjJwcEgImEhvu9zCB2EICOxglTq1WhbA/MUo0/67vYuQCsr8x
+        ShzYcJsRpuHW3G1sEIm9jBJbd+xihXDeMkpM625hA6kSFrCTODb1CCuILSKgK7Hq+S7mLkYO
+        DmaBXIn2Y7kgYTYBbYn3CyaBlfAKaEn8n7WOBcRmEVCRmLtgBTOILSoQIbFj7kdGiBpBiZMz
+        n7CAjOEU8JY4c68IJMwsIC/RvHU2M8gJEgJn2CQmd19lhTjUReLkv6fsELawxKvjW6BsKYmX
+        /W3sEA3NjBJvZ25mhHBaGCXubuqFetNYorfnAtTRmhLrd+lDhBUldv6eywixmU/i3dceVpAS
+        CQFeiY42IYgSNYmWZ1+hbpCR+PvvGZTtIbFj8ylowAFDt+/0CuYJjAqzkPw2C8lDsxA2L2Bk
+        XsUollpQnJueWmxYYIIcwZsYwUlSy2IH455zPocYBTgYlXh4FT4nxAmxJpYVV+YeYpTgYFYS
+        4RU2jY8T4k1JrKxKLcqPLyrNSS0+xGgKDO6JzFKiyfnABJ5XEm9oamRsbGxhYmZuZmqsJM77
+        MFIzTkggPbEkNTs1tSC1CKaPiYNTqoHR+dD233NesoY/v7159XP+ul0s6qvt4tQv8qp+X+24
+        +3DINNftW7+UxE9d1nPgktSykCbb7byz/q9Y8G/3rZL59WdEVSy1blVHrpzHpvs1303U1yK0
+        WvzCg+LZL/3P5olx//34k+N8kPPPJwd1rx64tPNbu4wc+z6P1deO2pWEZh76/1ta5LQVgxJL
+        cUaioRZzUXEiAA1bvw2oAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsWy7bCSnO6pV4lxBgfWqljMWb+GzWJiv6ZF
+        9+aZjBaXd81hs7i35j+rxb9JtQ5sHjtn3WX3WLCp1GPTp0nsHidm/Gbx2Hy62uPzJrkAtigu
+        m5TUnMyy1CJ9uwSujM0TX7AULNGo2LZ2InMD4waFLkZODgkBE4lbc7exgdhCArsZJRbP0IGI
+        y0i8Of+UpYuRA8gWljh8uLiLkQuo5DWjxLOdu5lAaoQF7CSOTT3CCmKLCOhKrHq+ixmi6BOj
+        xLcXa8CGMgvkSrx7Ng3MZhPQlni/YBJYA6+AlsT/WetYQGwWARWJuQtWMIPYogIREqvXXWOG
+        qBGUODnzCdgRnALeEmfuFYGYzALqEuvnCUFMl5do3jqbeQKj4CwkDbMQqmYhqVrAyLyKUTK1
+        oDg3PbfYsMAoL7Vcrzgxt7g0L10vOT93EyM47LW0djCeOBF/iFGAg1GJh1fhc0KcEGtiWXFl
+        7iFGCQ5mJRFeYdP4OCHelMTKqtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2Cy
+        TBycUg2MLJc01ulUbWG6/G/GOxPNZ78jN4ZKlE6U8uO6t+eyf8WJST4lS6z2cAY8KN59ePOT
+        HSpJK/dbRYcnx5zcXxa7ba7BBd+V7vpHLLLaLusmmcTMn7pBfGOtRi3Dk69rZ7VKvzNq3ez9
+        +6a9zSHVffPydW+V3kt2dl5bK5zb/F3+zZEj3cz3Z2jEKLEUZyQaajEXFScCALgSxgZ3AgAA
+X-CMS-MailID: 20200306061642epcas1p15dc9ef2887e3d9d8d706541996221ddd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200304030211epcas1p4da8cb569947aefb3aad1da039aaabce4
+References: <CGME20200304030211epcas1p4da8cb569947aefb3aad1da039aaabce4@epcas1p4.samsung.com>
+        <20200304030206.1706-1-jaewon31.kim@samsung.com>
+        <5E605749.9050509@samsung.com>
+        <20200305202443.8de3598558336b1d75afbba7@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baolin Wang <baolin.wang@unisoc.com>
 
-The Spreadtrum mailbox controller supports 8 channels to communicate
-with MCUs, and it contains 2 different parts: inbox and outbox, which
-are used to send and receive messages by IRQ mode.
+On 2020년 03월 06일 13:24, Andrew Morton wrote:
+> On Thu, 5 Mar 2020 10:35:05 +0900 Jaewon Kim <jaewon31.kim@samsung.com> wrote:
+>
+>> Hello
+>>
+>> sorry for build warning.
+>> I've changed %d to %ld reported by kbuild.
+>> Let me attach full patch again below.
+>> --------------------------------------------------
+>>
+>>
+>> Even on 64 bit kernel, the mmap failure can happen for a 32 bit task.
+>> Virtual memory space shortage of a task on mmap is reported to userspace
+>> as -ENOMEM. It can be confused as physical memory shortage of overall
+>> system.
+>>
+>> The vm_unmapped_area can be called to by some drivers or other kernel
+>> core system like filesystem. It can be hard to know which code layer
+>> returns the -ENOMEM.
+>>
+>> Print error log of vm_unmapped_area with rate limited. Without rate
+>> limited, soft lockup ocurrs on infinite mmap sytem call.
+>>
+>> i.e.)
+>> <3>[  576.024088]  [6:  mmap_infinite:14251] mmap: vm_unmapped_area err:-12 total_vm:0xfee08 flags:0x1 len:0xa00000 low:0x8000 high:0xf3f63000
+>>
+> hm, I suppose that could be useful.  Although the choice of which info
+> to display could be a source of dispute.  Why did you choose this info
+> and omit other things?  Perhaps a stack trace could also be useful?
+I thought info->align_mask, info->align_offset are not important. But I added them too now.
+And I think whole stack trace is not essential. In my opinion, higher layer like userspace mmap or other driver
+calling to vm_unmapped_area also should report the error if they need.
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -2379,10 +2379,19 @@ extern unsigned long unmapped_area_topdown(struct vm_unmapped_area_info *info);
+>>  static inline unsigned long
+>>  vm_unmapped_area(struct vm_unmapped_area_info *info)
+>>  {
+>> +    unsigned long addr;
+>> +
+>>      if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
+>> -        return unmapped_area_topdown(info);
+>> +        addr = unmapped_area_topdown(info);
+>>      else
+>> -        return unmapped_area(info);
+>> +        addr = unmapped_area(info);
+>> +
+>> +    if (IS_ERR_VALUE(addr) && printk_ratelimit()) {
+> Please avoid using printk_ratelimit().  See the comment at the
+> printk_ratelimit() definition site:
+Thank you for your comment. I changed printk_ratelimit to pr_warn_ratelimited.
+To use pr_warn_ratelimited I included <linux/ratelimit.h>
+>
+> /*
+>  * Please don't use printk_ratelimit(), because it shares ratelimiting state
+>  * with all other unrelated printk_ratelimit() callsites.  Instead use
+>  * printk_ratelimited() or plain old __ratelimit().
+>  */
+>
+>> +        pr_err("%s err:%ld total_vm:0x%lx flags:0x%lx len:0x%lx low:0x%lx high:0x%lx\n",
+>> +            __func__, addr, current->mm->total_vm, info->flags,
+>> +            info->length, info->low_limit, info->high_limit);
+>> +    }
+>> +    return addr;
+>>  }
+>
+>
 
-Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+Let me attach changed whole patch below.
+
+-------------------
+
+Subject: [PATCH] mm: mmap: show vm_unmapped_area error log
+
+Even on 64 bit kernel, the mmap failure can happen for a 32 bit task.
+Virtual memory space shortage of a task on mmap is reported to userspace
+as -ENOMEM. It can be confused as physical memory shortage of overall
+system.
+
+The vm_unmapped_area can be called to by some drivers or other kernel
+core system like filesystem. It can be hard to know which code layer
+returns the -ENOMEM.
+
+Print error log of vm_unmapped_area with rate limited. Without rate
+limited, soft lockup ocurrs on infinite mmap sytem call.
+
+i.e.)
+<4>[   68.556470]  [2:  mmap_infinite:12363] mmap: vm_unmapped_area err:-12 total_vm:0xf4c08 flags:0x1 len:0x100000 low:0x8000 high:0xf4583000 mask:0x0 offset:0x0
+
+Fixed type mismatching on previous patch which is reported by kbuild.
+Reported-by: kbuild test robot <lkp@intel.com>
+
+Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
 ---
- drivers/mailbox/Kconfig        |   8 +
- drivers/mailbox/Makefile       |   2 +
- drivers/mailbox/sprd-mailbox.c | 350 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 360 insertions(+)
- create mode 100644 drivers/mailbox/sprd-mailbox.c
+ include/linux/mm.h | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index ab4eb75..a33eaab 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -227,4 +227,12 @@ config ZYNQMP_IPI_MBOX
- 	  message to the IPI buffer and will access the IPI control
- 	  registers to kick the other processor or enquire status.
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 52269e56c514..114055d70752 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -27,6 +27,7 @@
+ #include <linux/memremap.h>
+ #include <linux/overflow.h>
+ #include <linux/sizes.h>
++#include <linux/ratelimit.h>
  
-+config SPRD_MBOX
-+	tristate "Spreadtrum Mailbox"
-+	depends on ARCH_SPRD || COMPILE_TEST
-+	help
-+	  Mailbox driver implementation for the Spreadtrum platform. It is used
-+	  to send message between application processors and MCU. Say Y here if
-+	  you want to build the Spreatrum mailbox controller driver.
-+
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index c22fad6..0f47b6b 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -48,3 +48,5 @@ obj-$(CONFIG_STM32_IPCC) 	+= stm32-ipcc.o
- obj-$(CONFIG_MTK_CMDQ_MBOX)	+= mtk-cmdq-mailbox.o
- 
- obj-$(CONFIG_ZYNQMP_IPI_MBOX)	+= zynqmp-ipi-mailbox.o
-+
-+obj-$(CONFIG_SPRD_MBOX)		+= sprd-mailbox.o
-diff --git a/drivers/mailbox/sprd-mailbox.c b/drivers/mailbox/sprd-mailbox.c
-new file mode 100644
-index 0000000..58e5388
---- /dev/null
-+++ b/drivers/mailbox/sprd-mailbox.c
-@@ -0,0 +1,350 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Spreadtrum mailbox driver
-+ *
-+ * Copyright (c) 2020 Spreadtrum Communications Inc.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+
-+#define SPRD_MBOX_ID		0x0
-+#define SPRD_MBOX_MSG_LOW	0x4
-+#define SPRD_MBOX_MSG_HIGH	0x8
-+#define SPRD_MBOX_TRIGGER	0xc
-+#define SPRD_MBOX_FIFO_RST	0x10
-+#define SPRD_MBOX_FIFO_STS	0x14
-+#define SPRD_MBOX_IRQ_STS	0x18
-+#define SPRD_MBOX_IRQ_MSK	0x1c
-+#define SPRD_MBOX_LOCK		0x20
-+#define SPRD_MBOX_FIFO_DEPTH	0x24
-+
-+/* Bit and mask definiation for inbox's SPRD_MBOX_FIFO_STS register */
-+#define SPRD_INBOX_FIFO_DELIVER_MASK		GENMASK(23, 16)
-+#define SPRD_INBOX_FIFO_OVERLOW_MASK		GENMASK(15, 8)
-+#define SPRD_INBOX_FIFO_DELIVER_SHIFT		16
-+#define SPRD_INBOX_FIFO_BUSY_MASK		GENMASK(7, 0)
-+
-+/* Bit and mask definiation for SPRD_MBOX_IRQ_STS register */
-+#define SPRD_MBOX_IRQ_CLR			BIT(0)
-+
-+/* Bit and mask definiation for outbox's SPRD_MBOX_FIFO_STS register */
-+#define SPRD_OUTBOX_FIFO_FULL			BIT(0)
-+#define SPRD_OUTBOX_FIFO_WR_SHIFT		16
-+#define SPRD_OUTBOX_FIFO_RD_SHIFT		24
-+#define SPRD_OUTBOX_FIFO_POS_MASK		GENMASK(7, 0)
-+
-+/* Bit and mask definiation for inbox's SPRD_MBOX_IRQ_MSK register */
-+#define SPRD_INBOX_FIFO_BLOCK_IRQ		BIT(0)
-+#define SPRD_INBOX_FIFO_OVERFLOW_IRQ		BIT(1)
-+#define SPRD_INBOX_FIFO_DELIVER_IRQ		BIT(2)
-+#define SPRD_INBOX_FIFO_IRQ_MASK		GENMASK(2, 0)
-+
-+/* Bit and mask definiation for outbox's SPRD_MBOX_IRQ_MSK register */
-+#define SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ		BIT(0)
-+#define SPRD_OUTBOX_FIFO_IRQ_MASK		GENMASK(4, 0)
-+
-+#define SPRD_MBOX_CHAN_MAX			8
-+
-+struct sprd_mbox_chan {
-+	u8			id;
-+	struct mbox_chan	*chan;
-+};
-+
-+struct sprd_mbox_priv {
-+	struct mbox_controller	mbox;
-+	struct device		*dev;
-+	void __iomem		*inbox_base;
-+	void __iomem		*outbox_base;
-+	struct clk		*clk;
-+	u32			outbox_fifo_depth;
-+
-+	struct sprd_mbox_chan	mchan[SPRD_MBOX_CHAN_MAX];
-+	struct mbox_chan	chan[SPRD_MBOX_CHAN_MAX];
-+};
-+
-+static struct sprd_mbox_priv *to_sprd_mbox_priv(struct mbox_controller *mbox)
-+{
-+	return container_of(mbox, struct sprd_mbox_priv, mbox);
-+}
-+
-+static u32 sprd_mbox_get_fifo_len(struct sprd_mbox_priv *priv, u32 fifo_sts)
-+{
-+	u32 wr_pos = (fifo_sts >> SPRD_OUTBOX_FIFO_WR_SHIFT) &
-+		SPRD_OUTBOX_FIFO_POS_MASK;
-+	u32 rd_pos = (fifo_sts >> SPRD_OUTBOX_FIFO_RD_SHIFT) &
-+		SPRD_OUTBOX_FIFO_POS_MASK;
-+	u32 fifo_len;
-+
-+	/*
-+	 * If the read pointer is equal with write pointer, which means the fifo
-+	 * is full or empty.
-+	 */
-+	if (wr_pos == rd_pos) {
-+		if (fifo_sts & SPRD_OUTBOX_FIFO_FULL)
-+			fifo_len = priv->outbox_fifo_depth;
-+		else
-+			fifo_len = 0;
-+	} else if (wr_pos > rd_pos) {
-+		fifo_len = wr_pos - rd_pos;
-+	} else {
-+		fifo_len = priv->outbox_fifo_depth - rd_pos + wr_pos;
-+	}
-+
-+	return fifo_len;
-+}
-+
-+static irqreturn_t sprd_mbox_outbox_isr(int irq, void *data)
-+{
-+	struct sprd_mbox_priv *priv = data;
-+	struct sprd_mbox_chan *mchan;
-+	u32 fifo_sts, fifo_len, msg[2];
-+	int i, id;
-+
-+	fifo_sts = readl(priv->outbox_base + SPRD_MBOX_FIFO_STS);
-+
-+	fifo_len = sprd_mbox_get_fifo_len(priv, fifo_sts);
-+	if (!fifo_len) {
-+		dev_warn_ratelimited(priv->dev, "spurious outbox interrupt\n");
-+		return IRQ_NONE;
-+	}
-+
-+	for (i = 0; i < fifo_len; i++) {
-+		msg[0] = readl(priv->outbox_base + SPRD_MBOX_MSG_LOW);
-+		msg[1] = readl(priv->outbox_base + SPRD_MBOX_MSG_HIGH);
-+		id = readl(priv->outbox_base + SPRD_MBOX_ID);
-+
-+		mchan = &priv->mchan[id];
-+		mbox_chan_received_data(mchan->chan, (void *)msg);
-+
-+		/* Trigger to update outbox FIFO pointer */
-+		writel(0x1, priv->outbox_base + SPRD_MBOX_TRIGGER);
-+	}
-+
-+	/* Clear irq status after reading all message. */
-+	writel(SPRD_MBOX_IRQ_CLR, priv->outbox_base + SPRD_MBOX_IRQ_STS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t sprd_mbox_inbox_isr(int irq, void *data)
-+{
-+	struct sprd_mbox_priv *priv = data;
-+	struct sprd_mbox_chan *mchan;
-+	u32 fifo_sts, send_sts, id;
-+
-+	fifo_sts = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS);
-+
-+	/* Get the inbox data delivery status */
-+	send_sts = (fifo_sts & SPRD_INBOX_FIFO_DELIVER_MASK) >>
-+		SPRD_INBOX_FIFO_DELIVER_SHIFT;
-+	if (!send_sts) {
-+		dev_warn_ratelimited(priv->dev, "spurious inbox interrupt\n");
-+		return IRQ_NONE;
-+	}
-+
-+	while (send_sts) {
-+		id = __ffs(send_sts);
-+		send_sts &= (send_sts - 1);
-+
-+		mchan = &priv->mchan[id];
-+		mbox_chan_txdone(mchan->chan, 0);
-+	}
-+
-+	/* Clear FIFO delivery and overflow status */
-+	writel(fifo_sts &
-+	       (SPRD_INBOX_FIFO_DELIVER_MASK | SPRD_INBOX_FIFO_OVERLOW_MASK),
-+	       priv->inbox_base + SPRD_MBOX_FIFO_RST);
-+
-+	/* Clear irq status */
-+	writel(SPRD_MBOX_IRQ_CLR, priv->inbox_base + SPRD_MBOX_IRQ_STS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sprd_mbox_send_data(struct mbox_chan *chan, void *msg)
-+{
-+	struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-+	struct sprd_mbox_chan *mchan = chan->con_priv;
-+	u32 *data = msg, busy;
-+
-+	/*
-+	 * Check if current channel is busy or not, and we can not send data
-+	 * if current channel is busy.
-+	 */
-+	busy = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS) &
-+		SPRD_INBOX_FIFO_BUSY_MASK;
-+	if (busy & BIT(mchan->id)) {
-+		dev_err(priv->dev, "Channel %d is busy\n", mchan->id);
-+		return -EBUSY;
-+	}
-+
-+	/* Write data into inbox FIFO, and only support 8 bytes every time */
-+	writel(data[0], priv->inbox_base + SPRD_MBOX_MSG_LOW);
-+	writel(data[1], priv->inbox_base + SPRD_MBOX_MSG_HIGH);
-+
-+	/* Set target core id */
-+	writel(mchan->id, priv->inbox_base + SPRD_MBOX_ID);
-+
-+	/* Trigger remote request */
-+	writel(0x1, priv->inbox_base + SPRD_MBOX_TRIGGER);
-+
-+	return 0;
-+}
-+
-+static int sprd_mbox_startup(struct mbox_chan *chan)
-+{
-+	struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-+	u32 val;
-+
-+	/* Select outbox FIFO mode and reset the outbox FIFO status */
-+	writel(0x0, priv->outbox_base + SPRD_MBOX_FIFO_RST);
-+
-+	/* Enable inbox FIFO overflow and delivery interrupt */
-+	val = readl(priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-+	val &= ~(SPRD_INBOX_FIFO_OVERFLOW_IRQ | SPRD_INBOX_FIFO_DELIVER_IRQ);
-+	writel(val, priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-+
-+	/* Enable outbox FIFO not empty interrupt */
-+	val = readl(priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-+	val &= ~SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ;
-+	writel(val, priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-+
-+	return 0;
-+}
-+
-+static void sprd_mbox_shutdown(struct mbox_chan *chan)
-+{
-+	struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-+
-+	/* Disable inbox & outbox interrupt */
-+	writel(SPRD_INBOX_FIFO_IRQ_MASK, priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-+	writel(SPRD_OUTBOX_FIFO_IRQ_MASK, priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-+}
-+
-+static const struct mbox_chan_ops sprd_mbox_ops = {
-+	.send_data    = sprd_mbox_send_data,
-+	.startup      = sprd_mbox_startup,
-+	.shutdown     = sprd_mbox_shutdown,
-+};
-+
-+static void sprd_mbox_disable(void *data)
-+{
-+	struct sprd_mbox_priv *priv = data;
-+
-+	clk_disable_unprepare(priv->clk);
-+}
-+
-+static int sprd_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sprd_mbox_priv *priv;
-+	int i, ret, inbox_irq, outbox_irq;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+
-+	/*
-+	 * The Spreadtrum mailbox uses an inbox to send messages to the target
-+	 * core, and uses an outbox to receive messages from other cores.
-+	 *
-+	 * Thus the mailbox controller supplies 2 different register addresses
-+	 * and IRQ numbers for inbox and outbox.
-+	 */
-+	priv->inbox_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->inbox_base))
-+		return PTR_ERR(priv->inbox_base);
-+
-+	priv->outbox_base = devm_platform_ioremap_resource(pdev, 1);
-+	if (IS_ERR(priv->outbox_base))
-+		return PTR_ERR(priv->outbox_base);
-+
-+	priv->clk = devm_clk_get(dev, "enable");
-+	if (IS_ERR(priv->clk)) {
-+		dev_err(dev, "failed to get mailbox clock\n");
-+		return PTR_ERR(priv->clk);
-+	}
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, sprd_mbox_disable, priv);
-+	if (ret) {
-+		dev_err(dev, "failed to add mailbox disable action\n");
-+		return ret;
-+	}
-+
-+	inbox_irq = platform_get_irq(pdev, 0);
-+	if (inbox_irq < 0)
-+		return inbox_irq;
-+
-+	ret = devm_request_irq(dev, inbox_irq, sprd_mbox_inbox_isr,
-+			       IRQF_NO_SUSPEND, dev_name(dev), priv);
-+	if (ret) {
-+		dev_err(dev, "failed to request inbox IRQ: %d\n", ret);
-+		return ret;
-+	}
-+
-+	outbox_irq = platform_get_irq(pdev, 1);
-+	if (outbox_irq < 0)
-+		return outbox_irq;
-+
-+	ret = devm_request_irq(dev, outbox_irq, sprd_mbox_outbox_isr,
-+			       IRQF_NO_SUSPEND, dev_name(dev), priv);
-+	if (ret) {
-+		dev_err(dev, "failed to request outbox IRQ: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Get the default outbox FIFO depth */
-+	priv->outbox_fifo_depth =
-+		readl(priv->outbox_base + SPRD_MBOX_FIFO_DEPTH) + 1;
-+	priv->mbox.dev = dev;
-+	priv->mbox.chans = &priv->chan[0];
-+	priv->mbox.num_chans = SPRD_MBOX_CHAN_MAX;
-+	priv->mbox.ops = &sprd_mbox_ops;
-+	priv->mbox.txdone_irq = true;
-+
-+	for (i = 0; i < SPRD_MBOX_CHAN_MAX; i++) {
-+		priv->chan[i].con_priv = &priv->mchan[i];
-+
-+		priv->mchan[i].chan = &priv->chan[i];
-+		priv->mchan[i].id = i;
-+	}
-+
-+	ret = devm_mbox_controller_register(dev, &priv->mbox);
-+	if (ret) {
-+		dev_err(dev, "failed to register mailbox: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sprd_mbox_of_match[] = {
-+	{ .compatible = "sprd,sc9860-mailbox", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, sprd_mbox_of_match);
-+
-+static struct platform_driver sprd_mbox_driver = {
-+	.driver = {
-+		.name = "sprd-mailbox",
-+		.of_match_table = sprd_mbox_of_match,
-+	},
-+	.probe	= sprd_mbox_probe,
-+};
-+module_platform_driver(sprd_mbox_driver);
-+
-+MODULE_AUTHOR("Baolin Wang <baolin.wang@unisoc.com>");
-+MODULE_DESCRIPTION("Spreadtrum mailbox driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
-
+ struct mempolicy;
+ struct anon_vma;
+@@ -2379,10 +2380,20 @@ extern unsigned long unmapped_area_topdown(struct vm_unmapped_area_info *info);
+ static inline unsigned long
+ vm_unmapped_area(struct vm_unmapped_area_info *info)
+ {
++    unsigned long addr;
++
+     if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
+-        return unmapped_area_topdown(info);
++        addr = unmapped_area_topdown(info);
+     else
+-        return unmapped_area(info);
++        addr = unmapped_area(info);
++
++    if (IS_ERR_VALUE(addr)) {
++        pr_warn_ratelimited("%s err:%ld total_vm:0x%lx flags:0x%lx len:0x%lx low:0x%lx high:0x%lx mask:0x%lx offset:0x%lx\n",
++            __func__, addr, current->mm->total_vm, info->flags,
++            info->length, info->low_limit, info->high_limit,
++            info->align_mask, info->align_offset);
++    }
++    return addr;
+ }
