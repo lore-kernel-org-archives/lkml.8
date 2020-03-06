@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74E0C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988C8C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B099320848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712D22084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583507029;
-	bh=tsLJQo5g76IdhhvV8GDVa0HgUrSzXjBd2wRaU/DOCHI=;
+	s=default; t=1583507034;
+	bh=FY3u+WV0GytbAi8I5Sv52VY+RDCRUhthWj0EhuBZIm4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=oJ5D6PBU4ZyBEdHoufHupXIKJ7Is5AcrAWzNyI8QaaDKdCjCxDrSTvxw17T+zGadn
-	 wyCYwihqmEHvwlG53ckaOcMLE2vLfWFT7IhaILONiX1Q/dVyG0HsqEeXq0mTNVGru5
-	 5aWYyCA384COo5df6aThc9MXtuX2WjvE6HfROurk=
+	b=QVuakoSb4+kBQV++Xf9GPG+0CZHzaaTl8DdtGo+EKYcFTLRpZRNiOVg2no7g/7uWy
+	 DeJxSnaFAj1+pndHw2wGkvrm3I3IzA0CMl5KXL+HVqmWXDb8m1AheqD75qyTgNsOPX
+	 8ISjPeJ0QGq/56PQYsEPQTHMZxX6jgO8yIuA9o1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbgCFPDs (ORCPT
+        id S1727196AbgCFPDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:03:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:35202 "EHLO foss.arm.com"
+        Fri, 6 Mar 2020 10:03:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:35212 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgCFPDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:03:48 -0500
+        id S1726171AbgCFPDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:03:52 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE34030E;
-        Fri,  6 Mar 2020 07:03:47 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49A1E30E;
+        Fri,  6 Mar 2020 07:03:52 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62EEB3F237;
-        Fri,  6 Mar 2020 07:03:47 -0800 (PST)
-Date:   Fri, 06 Mar 2020 15:03:45 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C21B63F237;
+        Fri,  6 Mar 2020 07:03:51 -0800 (PST)
+Date:   Fri, 06 Mar 2020 15:03:50 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
         lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: Applied "ASoC: wcd934x: remove unused headers" to the asoc tree
-In-Reply-To:  <20200306132806.19684-3-srinivas.kandagatla@linaro.org>
-Message-Id:  <applied-20200306132806.19684-3-srinivas.kandagatla@linaro.org>
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: wcd934x: fix High Accuracy Buck enable" to the asoc tree
+In-Reply-To:  <20200306132806.19684-2-srinivas.kandagatla@linaro.org>
+Message-Id:  <applied-20200306132806.19684-2-srinivas.kandagatla@linaro.org>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,7 +50,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: wcd934x: remove unused headers
+   ASoC: wcd934x: fix High Accuracy Buck enable
 
 has been applied to the asoc tree at
 
@@ -76,45 +75,49 @@ to this mail.
 Thanks,
 Mark
 
-From e0e247d593f78f4ac5647a9ef2c6db8f918ecbdc Mon Sep 17 00:00:00 2001
+From 820766c1e16651b46bfb771afae8d789da1986cf Mon Sep 17 00:00:00 2001
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Date: Fri, 6 Mar 2020 13:28:06 +0000
-Subject: [PATCH] ASoC: wcd934x: remove unused headers
+Date: Fri, 6 Mar 2020 13:28:05 +0000
+Subject: [PATCH] ASoC: wcd934x: fix High Accuracy Buck enable
 
-Looks like there are some unused headers, remove them.
-Seems to be missed while moving to mfd.
+High Accuracy buck is not applicable when we use RCO Band Gap source,
+so move it back to correct place.
 
-Reported-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200306132806.19684-3-srinivas.kandagatla@linaro.org
+Link: https://lore.kernel.org/r/20200306132806.19684-2-srinivas.kandagatla@linaro.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/wcd934x.c | 4 ----
- 1 file changed, 4 deletions(-)
+ sound/soc/codecs/wcd934x.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
-index 83d643a07775..5269857e2746 100644
+index aefaadfba8a1..83d643a07775 100644
 --- a/sound/soc/codecs/wcd934x.c
 +++ b/sound/soc/codecs/wcd934x.c
-@@ -3,7 +3,6 @@
+@@ -1202,11 +1202,6 @@ static int wcd934x_set_sido_input_src(struct wcd934x_codec *wcd, int sido_src)
+ 		regmap_update_bits(wcd->regmap, WCD934X_ANA_RCO,
+ 				   WCD934X_ANA_RCO_BG_EN_MASK, 0);
+ 		usleep_range(100, 110);
+-	} else if (sido_src == SIDO_SOURCE_RCO_BG) {
+-		regmap_update_bits(wcd->regmap, WCD934X_ANA_RCO,
+-				   WCD934X_ANA_RCO_BG_EN_MASK,
+-				   WCD934X_ANA_RCO_BG_ENABLE);
+-		usleep_range(100, 110);
+ 		regmap_update_bits(wcd->regmap, WCD934X_ANA_BUCK_CTL,
+ 				   WCD934X_ANA_BUCK_PRE_EN1_MASK,
+ 				   WCD934X_ANA_BUCK_PRE_EN1_ENABLE);
+@@ -1219,6 +1214,11 @@ static int wcd934x_set_sido_input_src(struct wcd934x_codec *wcd, int sido_src)
+ 				   WCD934X_ANA_BUCK_HI_ACCU_EN_MASK,
+ 				   WCD934X_ANA_BUCK_HI_ACCU_ENABLE);
+ 		usleep_range(100, 110);
++	} else if (sido_src == SIDO_SOURCE_RCO_BG) {
++		regmap_update_bits(wcd->regmap, WCD934X_ANA_RCO,
++				   WCD934X_ANA_RCO_BG_EN_MASK,
++				   WCD934X_ANA_RCO_BG_ENABLE);
++		usleep_range(100, 110);
+ 	}
+ 	wcd->sido_input_src = sido_src;
  
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
--#include <linux/gpio.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mfd/wcd934x/registers.h>
-@@ -11,10 +10,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of_clk.h>
--#include <linux/of_device.h>
--#include <linux/of_gpio.h>
- #include <linux/of.h>
--#include <linux/of_irq.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
 -- 
 2.20.1
 
