@@ -2,93 +2,118 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A506C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0734BC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 339B020674
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:59:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FLovj0sE"
+	by mail.kernel.org (Postfix) with ESMTP id DD9B220684
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCFS7o (ORCPT
+        id S1726751AbgCFTAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:59:44 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5155 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726083AbgCFS7o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:59:44 -0500
-X-UUID: 94c557faed8844b3a9c8f8c465c5f476-20200307
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=MdqWKHfBwguVDBEPuH6JAevmmLUjB/lFGpuvwjDr5go=;
-        b=FLovj0sE4sOfEVhAxLM8e3f55Dr8gaydmIrNIE/1qYDEavK6lywzwbZMjsKserLP8I0AbQ0+u4QGxBvtLU4G/tZ4+RLCbbFd3cptHXZm87iNTgyZRV58TYgfwQD8+Ne7uDCCl15iBWrBF99HbOffsRzLm0mgN9K9qFJZzL+YTx4=;
-X-UUID: 94c557faed8844b3a9c8f8c465c5f476-20200307
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1790914881; Sat, 07 Mar 2020 02:59:35 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 7 Mar 2020 03:00:48 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by mtkcas08.mediatek.inc
- (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 7 Mar
- 2020 03:00:01 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 7 Mar 2020 03:00:01 +0800
-Message-ID: <1583521173.8911.9.camel@mtksdccf07>
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Date:   Sat, 7 Mar 2020 02:59:33 +0800
-In-Reply-To: <20200305203356.307c0a18@canb.auug.org.au>
-References: <20200305163743.7128c251@canb.auug.org.au>
-         <1583398476.17146.6.camel@mtksdccf07>
-         <20200305203356.307c0a18@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 6 Mar 2020 14:00:11 -0500
+Received: from mga12.intel.com ([192.55.52.136]:30586 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbgCFTAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 14:00:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 11:00:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
+   d="scan'208";a="275644114"
+Received: from wbakowsk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.27.142])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 11:00:04 -0800
+Date:   Fri, 6 Mar 2020 21:00:03 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jethro Beekman <jethro@fortanix.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>
+Subject: Re: [PATCH v28 11/22] x86/sgx: Linux Enclave Driver
+Message-ID: <20200306190003.GF7472@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-12-jarkko.sakkinen@linux.intel.com>
+ <20200305174015.GJ11500@linux.intel.com>
+ <e445c2f8-fddd-5740-0e26-a03e023918bf@fortanix.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e445c2f8-fddd-5740-0e26-a03e023918bf@fortanix.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAzLTA1IGF0IDIwOjMzICsxMTAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
-Og0KPiBIaSBXYWx0ZXIsDQo+IA0KPiBPbiBUaHUsIDUgTWFyIDIwMjAgMTY6NTQ6MzYgKzA4MDAg
-V2FsdGVyIFd1IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IEkn
-bSBzb3JyeSBmb3IgdGhlIGJ1aWxkIHdhcm5pbmcsIGl0IGRvZXNuJ3QgZ2VuZXJhdGUgaW4gb3Vy
-IGxvY2FsDQo+ID4gZW52aXJvbm1lbnQoYXJtNjQveDg2XzY0KS4gV291bGQgeW91IHRlbGwgbWUg
-d2hhdCB0b29sY2hhaW5zIGNhbg0KPiA+IHJlcHJvZHVjZSBpdD8NCj4gDQo+IEkgYW0gdXNpbmcg
-YSBQb3dlclBDIExFIGhvc3RlZCB4ODZfNjQgZ2NjIHY5LjIuMSAoRGViaWFuIGNyb3NzIGNvbXBp
-bGVyKS4NCj4gDQo+ICQgL3Vzci9iaW4veDg2XzY0LWxpbnV4LWdudS1nY2MgLS12ZXJzaW9uDQo+
-IHg4Nl82NC1saW51eC1nbnUtZ2NjIChEZWJpYW4gOS4yLjEtMjEpIDkuMi4xIDIwMTkxMTMwDQo+
-IA0KSGkgU3RlcGhlbiwNCg0KVGhhbmtzIGZvciB5b3VyIGluZm9ybWF0aW9uLCBJdCBkb2Vzbid0
-IGdlbmVyYXRlIHdhcm5pbmcgbWVzc2FnZSBpbg0KZ2NjLTguMy4wKERlYmlhbiA4LjMuMC02KSBh
-ZnRlciBhcHBseSBiZWxvdyBwYXRjaC4NCg0KDQotLS0gYS9saWIvdGVzdF9rYXNhbi5jDQorKysg
-Yi9saWIvdGVzdF9rYXNhbi5jDQpAQCAtMjg2LDE3ICsyODYsMTkgQEAgc3RhdGljIG5vaW5saW5l
-IHZvaWQgX19pbml0DQprbWFsbG9jX29vYl9pbl9tZW1zZXQodm9pZCkNCiBzdGF0aWMgbm9pbmxp
-bmUgdm9pZCBfX2luaXQga21hbGxvY19tZW1tb3ZlX2ludmFsaWRfc2l6ZSh2b2lkKQ0KIHsNCiAg
-ICAgICAgY2hhciAqcHRyOw0KLSAgICAgICBzaXplX3Qgc2l6ZSA9IDY0Ow0KKyAgICAgICBzaXpl
-X3Qgc2l6ZTEgPSA2NDsNCisgICAgICAgc2l6ZV90IHNpemUyID0gNjI7DQoNCiAgICAgICAgcHJf
-aW5mbygiaW52YWxpZCBzaXplIGluIG1lbW1vdmVcbiIpOw0KLSAgICAgICBwdHIgPSBrbWFsbG9j
-KHNpemUsIEdGUF9LRVJORUwpOw0KKyAgICAgICBwdHIgPSBrbWFsbG9jKHNpemUxLCBHRlBfS0VS
-TkVMKTsNCiAgICAgICAgaWYgKCFwdHIpIHsNCiAgICAgICAgICAgICAgICBwcl9lcnIoIkFsbG9j
-YXRpb24gZmFpbGVkXG4iKTsNCiAgICAgICAgICAgICAgICByZXR1cm47DQogICAgICAgIH0NCg0K
-LSAgICAgICBtZW1zZXQoKGNoYXIgKilwdHIsIDAsIDY0KTsNCi0gICAgICAgbWVtbW92ZSgoY2hh
-ciAqKXB0ciwgKGNoYXIgKilwdHIgKyA0LCAtMik7DQorICAgICAgIG1lbXNldCgoY2hhciAqKXB0
-ciwgMCwgc2l6ZTEpOw0KKyAgICAgICAvKiB0aGUgc2l6ZSBvZiBtZW1tb3ZlKCkgaXMgbmVnYXRp
-dmUgbnVtYmVycyAqLw0KKyAgICAgICBtZW1tb3ZlKChjaGFyICopcHRyLCAoY2hhciAqKXB0ciAr
-IDQsIHNpemUyIC0gc2l6ZTEpOw0KICAgICAgICBrZnJlZShwdHIpOw0KIH0NCg0K
+On Thu, Mar 05, 2020 at 07:24:11PM +0100, Jethro Beekman wrote:
+> On 2020-03-05 18:40, Sean Christopherson wrote:
+> > On Wed, Mar 04, 2020 at 01:35:58AM +0200, Jarkko Sakkinen wrote:
+> >> diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
+> >> new file mode 100644
+> >> index 000000000000..5edb08ab8fd0
+> >> --- /dev/null
+> >> +++ b/arch/x86/include/uapi/asm/sgx.h
+> >> @@ -0,0 +1,66 @@
+> >> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) WITH Linux-syscall-note */
+> >> +/*
+> >> + * Copyright(c) 2016-19 Intel Corporation.
+> >> + */
+> >> +#ifndef _UAPI_ASM_X86_SGX_H
+> >> +#define _UAPI_ASM_X86_SGX_H
+> >> +
+> >> +#include <linux/types.h>
+> >> +#include <linux/ioctl.h>
+> >> +
+> >> +/**
+> >> + * enum sgx_epage_flags - page control flags
+> >> + * %SGX_PAGE_MEASURE:	Measure the page contents with a sequence of
+> >> + *			ENCLS[EEXTEND] operations.
+> >> + */
+> >> +enum sgx_page_flags {
+> >> +	SGX_PAGE_MEASURE	= 0x01,
+> >> +};
+> >> +
+> >> +#define SGX_MAGIC 0xA4
+> >> +
+> >> +#define SGX_IOC_ENCLAVE_CREATE \
+> >> +	_IOW(SGX_MAGIC, 0x00, struct sgx_enclave_create)
+> >> +#define SGX_IOC_ENCLAVE_ADD_PAGES \
+> >> +	_IOWR(SGX_MAGIC, 0x01, struct sgx_enclave_add_pages)
+> >> +#define SGX_IOC_ENCLAVE_INIT \
+> >> +	_IOW(SGX_MAGIC, 0x02, struct sgx_enclave_init)
+> >> +
+> >> +/**
+> >> + * struct sgx_enclave_create - parameter structure for the
+> >> + *                             %SGX_IOC_ENCLAVE_CREATE ioctl
+> >> + * @src:	address for the SECS page data
+> >> + */
+> >> +struct sgx_enclave_create  {
+> >> +	__u64	src;
+> > 
+> > Would it make sense to add reserved fields to the structs so that new
+> > features can be added in a backwards compatible way?  E.g. if we want to
+> > allow userspace to control the backing store by passing in a file
+> > descriptor ENCLAVE_CREATE.
+> 
+> Reserving space for future fields is not necessary because the size of
+> the struct is encoded in the ioctl number. The kernel can use this to
+> differentiate between different call versions from userspace.
 
+Sure but I still would never change the signature once a ioctl is added.
+
+/Jarkko
