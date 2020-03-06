@@ -2,82 +2,89 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF802C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC64C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABF3206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE5720709
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:50:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EffDvnTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgCFUtg (ORCPT
+        id S1726300AbgCFUut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:49:36 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39162 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgCFUtg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:49:36 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jAJuQ-006UQ3-Bf; Fri, 06 Mar 2020 20:49:26 +0000
-Date:   Fri, 6 Mar 2020 20:49:26 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200306204926.GE23230@ZenIV.linux.org.uk>
-References: <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <20200306162549.GA28467@miu.piliscsaba.redhat.com>
- <20200306194322.GY23230@ZenIV.linux.org.uk>
- <20200306195823.GZ23230@ZenIV.linux.org.uk>
- <20200306200522.GA23230@ZenIV.linux.org.uk>
- <20200306203705.GB23230@ZenIV.linux.org.uk>
- <20200306203844.GC23230@ZenIV.linux.org.uk>
- <20200306204523.GD23230@ZenIV.linux.org.uk>
+        Fri, 6 Mar 2020 15:50:49 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:58410 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbgCFUut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 15:50:49 -0500
+Received: from cz.tnic (rrcs-67-78-116-194.sw.biz.rr.com [67.78.116.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8A1081EC0D1F;
+        Fri,  6 Mar 2020 21:50:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1583527847;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Mx/rOs4s2Tl9HGkIb+M43qPY+zJcL/Go4Agl3zS+VgE=;
+        b=EffDvnTdXQ1NOA/yjhlV+TAfCX70s0vCg2cHSIlxmCXsm60gyo/zCkXT4lwpP2Mou0GX2t
+        od32MV0i5grv2h98lQGur3fcoPl/NqNBS96w8B9XzNgmDzyYJ23Ong3xh2a2qOTPcXpYXj
+        ATRw8af+1HtIqsV2uWOgn5fYbMyd5ak=
+Date:   Fri, 6 Mar 2020 21:50:39 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
+ __fpu__restore_sig()
+Message-ID: <20200306205039.GA5337@cz.tnic>
+References: <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
+ <20200228172202.GD25261@zn.tnic>
+ <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
+ <20200228183131.GE25261@zn.tnic>
+ <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com>
+ <20200228214742.GF25261@zn.tnic>
+ <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
+ <20200229143644.GA1129@zn.tnic>
+ <6778d141a3cdbbe51cdeb3a8efb9c34e0951f6c6.camel@intel.com>
+ <53e795ffbc029de316985476fd61845b7a9e824f.camel@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200306204523.GD23230@ZenIV.linux.org.uk>
+In-Reply-To: <53e795ffbc029de316985476fd61845b7a9e824f.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 08:45:23PM +0000, Al Viro wrote:
-> On Fri, Mar 06, 2020 at 08:38:44PM +0000, Al Viro wrote:
-> > On Fri, Mar 06, 2020 at 08:37:05PM +0000, Al Viro wrote:
-> > 
-> > > You are misreading mntput_no_expire(), BTW - your get_mount() can
-> > > bloody well race with umount(2), hitting the moment when we are done
-> > > figuring out whether it's busy but hadn't cleaned ->mnt_ns (let alone
-> > > set MNT_DOOMED) yet.  If somebody calls umount(2) on a filesystem that
-> > > is not mounted anywhere else, they are not supposed to see the sucker
-> > > return 0 until the filesystem is shut down.  You break that.
-> > 
-> > While we are at it, d_alloc_parallel() requires i_rwsem on parent held
-> > at least shared.
+On Wed, Mar 04, 2020 at 10:18:46AM -0800, Yu-cheng Yu wrote:
+> There is another way to keep this patch...
 > 
-> Egads...  Let me see if I got it right - you are providing procfs symlinks
-> to objects on the internal mount of that thing.  And those objects happen
-> to be directories, so one can get to their parent that way.  Or am I misreading
-> that thing?
+> if (xfeatures_mask_supervisor()) {
+> 	fpu->state.xsave.xfeatures &= xfeatures_mask_supervisor();
 
-IDGI.  You have (in your lookup) kstrtoul, followed by snprintf, followed
-by strcmp and WARN_ON() in case of mismatch?  Is there any point in having
-stat(2) on "00" spew into syslog?  Confused...
+Is the subsequent XSAVE in copy_user_to_fpregs_zeroing() going to
+restore the user bits in XSTATE_BV you just cleared?
+
+Sorry, it looks like it would but the SDM text is abysmal.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
