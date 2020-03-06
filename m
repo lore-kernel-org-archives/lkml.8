@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5723C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ED3C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B36208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D494F21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgCFOmZ (ORCPT
+        id S1727350AbgCFOm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:42:25 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53816 "EHLO
+        Fri, 6 Mar 2020 09:42:29 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53844 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgCFOmU (ORCPT
+        with ESMTP id S1727222AbgCFOmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:42:20 -0500
+        Fri, 6 Mar 2020 09:42:22 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEB4-0006N2-DA; Fri, 06 Mar 2020 15:42:14 +0100
+        id 1jAEB6-0006Kw-Sz; Fri, 06 Mar 2020 15:42:17 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A3B001C21DE;
-        Fri,  6 Mar 2020 15:42:09 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:09 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D075A1C21DD;
+        Fri,  6 Mar 2020 15:42:08 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:08 -0000
 From:   "tip-bot2 for Thara Gopinath" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Enable periodic update of average
- thermal pressure
+Subject: [tip: sched/core] thermal/cpu-cooling: Update thermal pressure in
+ case of a maximum frequency capping
 Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200222005213.3873-7-thara.gopinath@linaro.org>
-References: <20200222005213.3873-7-thara.gopinath@linaro.org>
+In-Reply-To: <20200222005213.3873-9-thara.gopinath@linaro.org>
+References: <20200222005213.3873-9-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158350572934.28353.12524884079406049060.tip-bot2@tip-bot2>
+Message-ID: <158350572857.28353.7469807947344049697.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,81 +58,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     b4eccf5f8e1dcade112d97be86ad455a94501a0f
-Gitweb:        https://git.kernel.org/tip/b4eccf5f8e1dcade112d97be86ad455a94501a0f
+Commit-ID:     f12e4f66ab6a31f17da386b682e5fec87ae46537
+Gitweb:        https://git.kernel.org/tip/f12e4f66ab6a31f17da386b682e5fec87ae46537
 Author:        Thara Gopinath <thara.gopinath@linaro.org>
-AuthorDate:    Fri, 21 Feb 2020 19:52:10 -05:00
+AuthorDate:    Fri, 21 Feb 2020 19:52:12 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 12:57:20 +01:00
+CommitterDate: Fri, 06 Mar 2020 12:57:21 +01:00
 
-sched/fair: Enable periodic update of average thermal pressure
+thermal/cpu-cooling: Update thermal pressure in case of a maximum frequency capping
 
-Introduce support in scheduler periodic tick and other CFS bookkeeping
-APIs to trigger the process of computing average thermal pressure for a
-CPU. Also consider avg_thermal.load_avg in others_have_blocked which
-allows for decay of pelt signals.
+Thermal governors can request for a CPU's maximum supported frequency to
+be capped in case of an overheat event. This in turn means that the
+maximum capacity available for tasks to run on the particular CPU is
+reduced. Delta between the original maximum capacity and capped maximum
+capacity is known as thermal pressure. Enable cpufreq cooling device to
+update the thermal pressure in event of a capped maximum frequency.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200222005213.3873-7-thara.gopinath@linaro.org
+Link: https://lkml.kernel.org/r/20200222005213.3873-9-thara.gopinath@linaro.org
 ---
- kernel/sched/core.c | 3 +++
- kernel/sched/fair.c | 7 +++++++
- 2 files changed, 10 insertions(+)
+ drivers/thermal/cpufreq_cooling.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8e6f380..3e620fe 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3586,6 +3586,7 @@ void scheduler_tick(void)
- 	struct rq *rq = cpu_rq(cpu);
- 	struct task_struct *curr = rq->curr;
- 	struct rq_flags rf;
-+	unsigned long thermal_pressure;
- 
- 	arch_scale_freq_tick();
- 	sched_clock_tick();
-@@ -3593,6 +3594,8 @@ void scheduler_tick(void)
- 	rq_lock(rq, &rf);
- 
- 	update_rq_clock(rq);
-+	thermal_pressure = arch_scale_thermal_pressure(cpu_of(rq));
-+	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
- 	curr->sched_class->task_tick(rq, curr, 0);
- 	calc_global_load_tick(rq);
- 	psi_task_tick(rq);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 4b5d5e5..11f8488 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7719,6 +7719,9 @@ static inline bool others_have_blocked(struct rq *rq)
- 	if (READ_ONCE(rq->avg_dl.util_avg))
- 		return true;
- 
-+	if (thermal_load_avg(rq))
-+		return true;
-+
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
- 	if (READ_ONCE(rq->avg_irq.util_avg))
- 		return true;
-@@ -7744,6 +7747,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
+diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+index fe83d7a..4ae8c85 100644
+--- a/drivers/thermal/cpufreq_cooling.c
++++ b/drivers/thermal/cpufreq_cooling.c
+@@ -431,6 +431,10 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+ 				 unsigned long state)
  {
- 	const struct sched_class *curr_class;
- 	u64 now = rq_clock_pelt(rq);
-+	unsigned long thermal_pressure;
- 	bool decayed;
+ 	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
++	struct cpumask *cpus;
++	unsigned int frequency;
++	unsigned long max_capacity, capacity;
++	int ret;
  
- 	/*
-@@ -7752,8 +7756,11 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
- 	 */
- 	curr_class = rq->curr->sched_class;
+ 	/* Request state should be less than max_level */
+ 	if (WARN_ON(state > cpufreq_cdev->max_level))
+@@ -442,8 +446,19 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
  
-+	thermal_pressure = arch_scale_thermal_pressure(cpu_of(rq));
+ 	cpufreq_cdev->cpufreq_state = state;
+ 
+-	return freq_qos_update_request(&cpufreq_cdev->qos_req,
+-				get_state_freq(cpufreq_cdev, state));
++	frequency = get_state_freq(cpufreq_cdev, state);
 +
- 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
- 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
-+		  update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure) |
- 		  update_irq_load_avg(rq, 0);
++	ret = freq_qos_update_request(&cpufreq_cdev->qos_req, frequency);
++
++	if (ret > 0) {
++		cpus = cpufreq_cdev->policy->cpus;
++		max_capacity = arch_scale_cpu_capacity(cpumask_first(cpus));
++		capacity = frequency * max_capacity;
++		capacity /= cpufreq_cdev->policy->cpuinfo.max_freq;
++		arch_set_thermal_pressure(cpus, max_capacity - capacity);
++	}
++
++	return ret;
+ }
  
- 	if (others_have_blocked(rq))
+ /* Bind cpufreq callbacks to thermal cooling device ops */
