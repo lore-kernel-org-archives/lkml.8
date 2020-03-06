@@ -2,119 +2,186 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103A0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F31C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D373F206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:05:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="zHeO+NAS"
+	by mail.kernel.org (Postfix) with ESMTP id 8DFD0206D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgCFVFm (ORCPT
+        id S1726811AbgCFVFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 16:05:42 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39940 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCFVFm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 16:05:42 -0500
-Received: by mail-ot1-f66.google.com with SMTP id x19so3849279otp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 13:05:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a1kF/OZzMQLactEcP2uvKaRdr9m2gxg0zsQwgDcUpS8=;
-        b=zHeO+NASipBgaWDXKZxHQ9T6Qk7JyQTufn1LqoKL9eCvWxA6ERYUyq5brfvaGK2Q2T
-         O/1XtzLEJ1OB063KrHNDlljqirAy6dSyKF1iCoBOl1Vku6umli7wybNDN4liHG6HiEkL
-         iJQBdSeZVh2iwysFc31yvgGzAfDguHevXnkROYvBITGUqkec3Q6DiV6vn3qAjCSwkC6V
-         7yLNzobtVea45nRJ6F+O3pxCAX7i2s3r6qp0ctkisp7YTbLrPNxHKjQpvGQULi0khAfv
-         gHd+Vg6XcX50oieboKdVEQSwY9XXXxKOGwnkGWC6OtC68at4+VqDSlJ0yEpTWQIPL97W
-         CziA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a1kF/OZzMQLactEcP2uvKaRdr9m2gxg0zsQwgDcUpS8=;
-        b=YNvfWsHFKRv/sPRpB9jUoOpye54vxmRev0UIgv/EfatxniqPY0ny0U6Lnu72AF20ec
-         mS7CpUZQt/TUIhZIOEzVJykrVk1i63n3qXtckGUoVDHI/lmlctH+M012dxx2GvaQrg/n
-         b7nGSX113RQkWJx2YTiAr4Xn3JC0Xfge4+fTMED2V85VJPR/qiwngWMVqssJKxeDDD6T
-         rg9fMqYtKeaFMetxBgeY9m82pm3u4CajkD4D46gRKjf4N/4u/3nFepHohJeW8s+JJOqJ
-         GvnumsjC+pNh79LzzTbRAWOmLPdmEW6QgEDd6hLKz7weKiicw41QA0FxQw2s84+kMHmm
-         SyhQ==
-X-Gm-Message-State: ANhLgQ19mHfZ6LvqIDgK6hzGA4mFxEv7pM55gwLWMYDInnke6QgiAk5a
-        hym4mj6IBq3ZYl7FI+9E/+mSUOJkwCdXgZffdpBpFA==
-X-Google-Smtp-Source: ADFU+vu3caJkxN5foYyF0GPM62BSitG6fiBBhbRTadus2AVityefuk0oEkE1SzZK3vy+IUU4Bmf/G7dorCK3e8I7x8s=
-X-Received: by 2002:a05:6830:1313:: with SMTP id p19mr763057otq.126.1583528741694;
- Fri, 06 Mar 2020 13:05:41 -0800 (PST)
+        Fri, 6 Mar 2020 16:05:46 -0500
+Received: from mga07.intel.com ([134.134.136.100]:11923 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgCFVFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 16:05:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 13:05:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
+   d="scan'208";a="275688904"
+Received: from jrbond-mobl.amr.corp.intel.com (HELO [10.254.11.58]) ([10.254.11.58])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 13:05:43 -0800
+Subject: Re: [PATCH 1/8] soundwire: bus_type: add master_device/driver support
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+References: <20200227223206.5020-1-pierre-louis.bossart@linux.intel.com>
+ <20200227223206.5020-2-pierre-louis.bossart@linux.intel.com>
+ <20200303054136.GP4148@vkoul-mobl>
+ <8a04eda6-cbcf-582f-c229-5d6e4557344b@linux.intel.com>
+ <20200304095312.GT4148@vkoul-mobl>
+ <05dbe43c-abf8-9d5a-d808-35bf4defe4ba@linux.intel.com>
+ <20200305063646.GW4148@vkoul-mobl>
+ <eb30ac49-788f-b856-6fcf-84ae580eb3c8@linux.intel.com>
+ <20200306050115.GC4148@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <4fabb135-6fbb-106f-44fd-8155ea716c00@linux.intel.com>
+Date:   Fri, 6 Mar 2020 09:40:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
- <x49a74tnt6n.fsf@segfault.boston.devel.redhat.com>
-In-Reply-To: <x49a74tnt6n.fsf@segfault.boston.devel.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 6 Mar 2020 13:05:30 -0800
-Message-ID: <CAPcyv4jCWtPf0XEHfw6GGGE80k0_wKpoaruopRFJwKcsHk18gw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Manual definition of Soft Reserved memory devices
-To:     Jeff Moyer <jmoyer@redhat.com>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joao Martins <joao.m.martins@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200306050115.GC4148@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 12:07 PM Jeff Moyer <jmoyer@redhat.com> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> writes:
->
-> > Given the current dearth of systems that supply an ACPI HMAT table, and
-> > the utility of being able to manually define device-dax "hmem" instances
-> > via the efi_fake_mem= option, relax the requirements for creating these
-> > devices. Specifically, add an option (numa=nohmat) to optionally disable
-> > consideration of the HMAT and update efi_fake_mem= to behave like
-> > memmap=nn!ss in terms of delimiting device boundaries.
->
-> So, am I correct in deducing that your primary motivation is testing
-> without hardware/firmware support?
 
-My primary motivation is making the dax_kmem facility useful to
-shipping platforms that have performance differentiated memory, but
-may not have EFI-defined soft-reservations / HMAT (or
-non-EFI-ACPI-platform equivalent). I'm anticipating HMAT enabled
-platforms where the platform firmware policy for what is
-soft-reserved, or not, is not the policy the system owner would pick.
-I'd also highlight Joao's work [1] (see the TODO section) as an
-indication of the demand for custom carving memory resources and
-applying the device-dax memory management interface.
 
-> This looks like a bit of a hack to
-> me, and I think maybe it would be better to just emulate the HMAT using
-> qemu.  I don't have a strong objection, though.
+>>> Why do you need a extra driver for this. Do you have another set of
+>>> device object and driver for DSP code? But you do manage that, right?
+>>> I am proposing to simplify the device model here and have only one
+>>> device (SOF PCI) and driver (SOF PCI driver), which is created by actual
+>>> bus (PCI here) as you have in rest of the driver like HDA, DSP etc.
+>>>
+>>> I have already recommended is to make the int-sdw a module which is
+>>> invoked by SOF PCI driver code (thereby all code uses SOF PCI device and
+>>> SOF PCI driver) directly. The DSP in my time for skl was a separate
+>>> module but used the parent objects.
+>>>
+>>> The SOF sdw init (the place where sdw routines are invoked after DSP
+>>> load) can call sdw_probe and startup. Based on DSP sequencing you can
+>>> call these functions directly without waiting for extra device to be
+>>> probed etc.
+>>>
+>>> I feel your flows will be greatly simplified as a result of this.
+>>
+>> Not at all, no. This is not a simplification but an extremely invasive
+>> proposal.
+>>
+>> The parent-child relationship is extremely useful for power management, and
+>> guarantees that the PCI device remains on while one or more of the masters
+>> are used, and conversely can suspend when all links are idle. I currently
+>> don't need to do anything, it's all taken care of by the framework.
+>>
+>> If I have to do all the power management at the PCI device level, then I
+>> will need to keep track of which links are currently active. All these links
+>> are used independently, so it's racy as hell to keep track of the usage when
+>> the pm framework already does so quite elegantly. You really want to use the
+>> pm_runtime_get/put refcount for each master device, not manage them from the
+>> PCI level.
+> 
+> Not at all, you still can call pm_runtime_get/put() calls in sdw module
+> for PCI device. That doesn't change at all.
+> 
+> Only change is for suspend/resume you have callbacks from PCI driver
+> rather than pm core.
+There are two other related issues that you didn't mention.
 
-Yeah, qemu emulation does not help when you, the system owner, have a
-different use case than what the bare-metal platform-firmware
-envisioned for "specific-purpose memory".
+the ASoC layer does require a driver with a 'name' for the components 
+registered with the master device. So if you don't have a driver for the 
+master device, the DAIs will be associated with the PCI device.
 
-[1]: https://lore.kernel.org/lkml/20200110190313.17144-1-joao.m.martins@oracle.com/
+But the ASoC core does make pm_runtime calls on its own,
+
+soc_pcm_open(struct snd_pcm_substream *substream)
+{
+...
+	for_each_rtd_components(rtd, i, component)
+		pm_runtime_get_sync(component->dev);
+
+and if the device that's associated with the DAI is the PCI device, then 
+that will not result in the relevant master IP being activated, only the 
+PCI device refcount will be increased - meaning there is no hook that 
+would tell the PCI layer to turn on a specific link.
+
+What you are recommending would be an all-or-nothing solution with all 
+links on or all links off, which beats the purpose of having independent 
+link-level power management.
+
+Given these limitations, I am not willing to change directions on power 
+management. We have a tried-and-tested solution, backed by months of 
+validation, and you are sending down an unproven path with your suggestion.
+
+So what are the options?
+
+a) stay with the current approach and platform devices. Greg's vetoed 
+this so we can move to the next one.
+
+b) use a solution similar to what we suggested back in October, and very 
+similar to the GreyBus host device, which creates a master device but 
+did not require a full-blown master_driver, it only uses the name and 
+pm_ops fields of the raw driver structure, which is all we really need.
+
+the basic usage from the PCI layer was
+
+struct driver {
+    .name = "my-driver",
+    .pm_ops = &my_ops,
+} my_driver;
+
+md = sdw_master_device_add(&my_driver, parent, fw_node, link_id)
+
+and all the rest is platform-specific/optional.
+
+sdw_intel_master_device_init(md);
+      allocations and call to sdw_bus_master_add()
+sdw_intel_master_device_startup(md);
+      hardware enablement
+sdw_intel_master_device_wake_process(md).
+      deal with wake information coming from PCI layer.
+
+We liked this solution since it was as simple as can be, but you 
+rejected it on the grounds that the probe/init should be handled "by the 
+core" to quote your own words, but looking back it may be the best 
+solution for all. There is no additional overhead, and it deals with 
+both the ALSA name requirement and lets us us power management. If you 
+don't have power management at the link level you don't have to use the 
+pm_ops.
+
+c) use the proposal in this patch with a more elaborate driver handling. 
+Yes it requires a full-blown driver with callbacks but it addresses your 
+prior feedback that the core handles the probe/remove operations.
+
+All these solutions are proven to work. Pick one.
+
+If you want to suggest another, then please provide a pseudo API and 
+address the non-negotiable requirement of independent link-level power 
+management.
+
+Thanks
+-Pierre
+
+
+
+
+
+
+
+
