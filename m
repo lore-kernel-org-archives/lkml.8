@@ -2,99 +2,174 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5284AC3F2D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E570C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23CD720709
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7CA206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B3cs7k1/"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="sVQp0SNz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgCFUlg (ORCPT
+        id S1726245AbgCFUoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:41:36 -0500
-Received: from mail-pj1-f48.google.com ([209.85.216.48]:40559 "EHLO
-        mail-pj1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgCFUlf (ORCPT
+        Fri, 6 Mar 2020 15:44:46 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37163 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgCFUoq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:41:35 -0500
-Received: by mail-pj1-f48.google.com with SMTP id gv19so1575878pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 12:41:35 -0800 (PST)
+        Fri, 6 Mar 2020 15:44:46 -0500
+Received: by mail-qt1-f193.google.com with SMTP id l20so1096522qtp.4
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 12:44:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=yKGKapuUKILEkemnrbPssWUGiqebVX3yxGAYmrDS0Sg=;
-        b=B3cs7k1/pc/ZT6R0YkOqeR/COPust1J58A0q4JvjPIJmnA5mqdan1WT3Oi+jBKHIZj
-         F5Mwj0aJKIc30RjRue2vWDtOFkFsGuoRcTyGv5/NcKRndUsykBSqfjCDdzhUWQUpW6c2
-         RwGw2xSl+y0hVTPcJ11srTPOSOOmoJpWvLgEk9gkpz+m4VwSpI/FGW3eEIQPWyJdhUGR
-         vBwn/KLTBojdpHoTufUudUxq6zr0bLih2tquszsygTjbcA91HPkJ10WH4tYrDTcM5Dzw
-         vtAzWaWenEZcU3NrBiYCNeE+Hkrdo2Egh1Zfx7L/41inETAYdEXr3TCWRlCyfihyRpai
-         qTsQ==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VIytyDCq7f0kiHtZyAPYuhAfxkdQ6oPpVlPc91ezlzw=;
+        b=sVQp0SNzavyEmQgQgPO7gOzbjdxNHOBGOKLb2+i6xH5nTB6ZP6ociRcsHZFKZahWzv
+         lVQMhT0TucKZE0jr1svRTaAecWqS9Lak/5QCDTaDSkOc6vq9y74In5QZ3C0vju5Y/YSJ
+         seKiYzybOes0y2OWOOVvb45ZEYoBXTTL7/NQZvUeV5Umj/iFPmYuELjQmpwwRG/RbM00
+         WMRsRryr0bUnfhZtTUXyLUc60zizY1/bRX7olknPmplQ8VZG+HU7CqTLWPWwICtR5QAk
+         sPbgocfLtbClg6uijm1uY7WawL446OXTMUcERTf+StMaVG507VDTlm1AAJaTPJabMPKz
+         9fdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=yKGKapuUKILEkemnrbPssWUGiqebVX3yxGAYmrDS0Sg=;
-        b=JaWJ17PCUvYtdiA51/jfELnjPNYCaPd2fJ3SZjcsxES7ILu/zVNmlXlPDpGUSjO0eR
-         t3nCcOOwesgRdaKQmNMNEYbU2Q0/ixHK6uXHwe/7UW1rXNs/mgTHjWBH0LkGvl+ugJHj
-         6oDai2ivKFyoVRnJSowWx3Nr8VLKvyx8kcRIy0TKGrtPl29btIYd0Svp7mZ836+vloGr
-         Fv8Cu+djFmAdBe9Ww6Kg4yc7E1Lfbj3eK/OW30ycWt+XwTeqhMDVrPZ8pmFgvfiNjlW3
-         FFWFCTpqzwu70I3rmDJ0rqgIfQoGA3BM3khMvxmPK3oZhnVypzAgJ/YaXcaMsmsO0HTc
-         BmeQ==
-X-Gm-Message-State: ANhLgQ356kuDFKFPIHdr0YrAsZnQso72nqzcOu4ATFrzq7cunFbcmrkG
-        BtAFCD/jA48hxOW6L+8C014DSg==
-X-Google-Smtp-Source: ADFU+vuBtlgASi4ldRcAREIzD+j0WNer4alYi/qGIzeiUCbMBirI9Tn1xqYZVv+jcSitQSUy/qcOig==
-X-Received: by 2002:a17:90a:608:: with SMTP id j8mr5243607pjj.85.1583527294240;
-        Fri, 06 Mar 2020 12:41:34 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id m9sm3252334pga.92.2020.03.06.12.41.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 12:41:33 -0800 (PST)
-Date:   Fri, 6 Mar 2020 12:41:32 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     "Huang, Ying" <ying.huang@intel.com>
-cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH -V2] mm: Add PageLayzyFree() helper functions for
- MADV_FREE
-In-Reply-To: <87y2sf1ki1.fsf@yhuang-dev.intel.com>
-Message-ID: <alpine.DEB.2.21.2003061240480.181741@chino.kir.corp.google.com>
-References: <20200304081732.563536-1-ying.huang@intel.com> <d7dcb472-76fa-9d8b-513a-793a7ab8580d@redhat.com> <87y2sf1ki1.fsf@yhuang-dev.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VIytyDCq7f0kiHtZyAPYuhAfxkdQ6oPpVlPc91ezlzw=;
+        b=BpYpk2HjL1T0CClR6YBPhS2FrsWmUJCILxN7v+kq4I8sJHCSRQNNH1VoSZxM/rGqYw
+         Wd4o65v+4HlblJPFwSe2w3ROuQkYUssyOm1KfO0iFVycz5V6MoNLox8kI48qrOhD0xwV
+         4lCyiSq6PRIULE2Qhbq3TaqafqQqTgE4Tw4iepoPcDcy3mMeOKCRr0S2KjNVFZtVrt6T
+         8vqbLzgj2TDtXo5gozQdkMDo2q3RZ1xtASKBLU8DqB7R42EB15e65dl3SbOBbWpVRa3Q
+         AhQVVXdV4YJlH+oNzgXhEK0Bv2G7XTN9rKCiboAU8LqTTWsk75SEpyzMZ/1Uec2+wzw/
+         tIPQ==
+X-Gm-Message-State: ANhLgQ1mj21HQYyvj1GcWRq7MBeAV62f+2oMheXkx1PB3CreCbCFNyA1
+        HmC9Kf8GLusdTKm7gYjoHUGFvA==
+X-Google-Smtp-Source: ADFU+vtc3atgWoG361itKB4xApBMGrMUExpxNIdab4Ow4UUWS5fC6T+QADXDozQS4OkwoR392p5sKA==
+X-Received: by 2002:ac8:43c1:: with SMTP id w1mr4780630qtn.381.1583527484932;
+        Fri, 06 Mar 2020 12:44:44 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id g15sm14611541qtq.71.2020.03.06.12.44.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Mar 2020 12:44:44 -0800 (PST)
+Message-ID: <1583527481.7365.165.camel@lca.pw>
+Subject: Re: [PATCH V15] mm/debug: Add tests validating architecture page
+ table helpers
+From:   Qian Cai <cai@lca.pw>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Date:   Fri, 06 Mar 2020 15:44:41 -0500
+In-Reply-To: <1583452659-11801-1-git-send-email-anshuman.khandual@arm.com>
+References: <1583452659-11801-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Mar 2020, Huang, Ying wrote:
-
-> > In general, I don't think this patch really improves the situation ...
-> > it's only a handful of places where this change slightly makes the code
-> > easier to understand. And there, only slightly ... I'd prefer better
-> > comments instead (e.g., in PageAnon()), documenting what it means for a
-> > anon page to either have PageSwapBacked() set or not.
+On Fri, 2020-03-06 at 05:27 +0530, Anshuman Khandual wrote:
+> This adds tests which will validate architecture page table helpers and
+> other accessors in their compliance with expected generic MM semantics.
+> This will help various architectures in validating changes to existing
+> page table helpers or addition of new ones.
 > 
-> Personally, I still prefer the better named functions than the comments
-> here and there.  But I can understand that people may have different
-> flavor.
+> This test covers basic page table entry transformations including but not
+> limited to old, young, dirty, clean, write, write protect etc at various
+> level along with populating intermediate entries with next page table page
+> and validating them.
 > 
+> Test page table pages are allocated from system memory with required size
+> and alignments. The mapped pfns at page table levels are derived from a
+> real pfn representing a valid kernel text symbol. This test gets called
+> inside kernel_init() right after async_synchronize_full().
+> 
+> This test gets built and run when CONFIG_DEBUG_VM_PGTABLE is selected. Any
+> architecture, which is willing to subscribe this test will need to select
+> ARCH_HAS_DEBUG_VM_PGTABLE. For now this is limited to arc, arm64, x86, s390
+> and ppc32 platforms where the test is known to build and run successfully.
+> Going forward, other architectures too can subscribe the test after fixing
+> any build or runtime problems with their page table helpers. Meanwhile for
+> better platform coverage, the test can also be enabled with CONFIG_EXPERT
+> even without ARCH_HAS_DEBUG_VM_PGTABLE.
+> 
+> Folks interested in making sure that a given platform's page table helpers
+> conform to expected generic MM semantics should enable the above config
+> which will just trigger this test during boot. Any non conformity here will
+> be reported as an warning which would need to be fixed. This test will help
+> catch any changes to the agreed upon semantics expected from generic MM and
+> enable platforms to accommodate it thereafter.
 
-Maybe add a comment to page-flags.h referring to what PageSwapBacked 
-indicates when PageAnon is true?
+OK, I get this working on powerpc hash MMU as well, so this?
+
+diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+index 64d0f9b15c49..c527d05c0459 100644
+--- a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
++++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+@@ -22,8 +22,7 @@
+     |       nios2: | TODO |
+     |    openrisc: | TODO |
+     |      parisc: | TODO |
+-    |  powerpc/32: |  ok  |
+-    |  powerpc/64: | TODO |
++    |     powerpc: |  ok  |
+     |       riscv: | TODO |
+     |        s390: |  ok  |
+     |          sh: | TODO |
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 2e7eee523ba1..176930f40e07 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -116,7 +116,7 @@ config PPC
+ 	#
+ 	select ARCH_32BIT_OFF_T if PPC32
+ 	select ARCH_HAS_DEBUG_VIRTUAL
+-	select ARCH_HAS_DEBUG_VM_PGTABLE if PPC32
++	select ARCH_HAS_DEBUG_VM_PGTABLE
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_FORTIFY_SOURCE
+diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+index 96a91bda3a85..98990a515268 100644
+--- a/mm/debug_vm_pgtable.c
++++ b/mm/debug_vm_pgtable.c
+@@ -256,7 +256,8 @@ static void __init pte_clear_tests(struct mm_struct *mm,
+pte_t *ptep,
+ 	pte_t pte = READ_ONCE(*ptep);
+ 
+ 	pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
+-	WRITE_ONCE(*ptep, pte);
++	set_pte_at(mm, vaddr, ptep, pte);
++	barrier();
+ 	pte_clear(mm, vaddr, ptep);
+ 	pte = READ_ONCE(*ptep);
+ 	WARN_ON(!pte_none(pte));
