@@ -2,65 +2,96 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112AFC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A0EC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E390020726
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825EB2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgCFAeo (ORCPT
+        id S1726359AbgCFAmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 19:34:44 -0500
-Received: from mga17.intel.com ([192.55.52.151]:52582 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgCFAeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 19:34:44 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 16:34:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,520,1574150400"; 
-   d="scan'208";a="387670859"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by orsmga004.jf.intel.com with ESMTP; 05 Mar 2020 16:34:41 -0800
-Date:   Fri, 6 Mar 2020 08:38:08 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jmattson@google.com,
-        sean.j.christopherson@intel.com, yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v9 1/7] KVM: CPUID: Fix IA32_XSS support in CPUID(0xd,i)
- enumeration
-Message-ID: <20200306003808.GA29236@local-michael-cet-test.sh.intel.com>
-References: <20191227021133.11993-1-weijiang.yang@intel.com>
- <20191227021133.11993-2-weijiang.yang@intel.com>
- <bd75450f-a929-f60b-e973-205e4f5a9743@redhat.com>
+        Thu, 5 Mar 2020 19:42:46 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:51786 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbgCFAmq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 19:42:46 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jA14I-0000gb-53; Fri, 06 Mar 2020 01:42:22 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 5E6A3104085; Fri,  6 Mar 2020 01:42:21 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+In-Reply-To: <20200213163800.5c51a5f1@gandalf.local.home>
+References: <20200212210139.382424693@infradead.org> <20200212210749.971717428@infradead.org> <20200212232005.GC115917@google.com> <20200213082716.GI14897@hirez.programming.kicks-ass.net> <20200213135138.GB2935@paulmck-ThinkPad-P72> <20200213164031.GH14914@hirez.programming.kicks-ass.net> <20200213185612.GG2935@paulmck-ThinkPad-P72> <20200213204444.GA94647@google.com> <20200213205442.GK2935@paulmck-ThinkPad-P72> <20200213211930.GG170680@google.com> <20200213163800.5c51a5f1@gandalf.local.home>
+Date:   Fri, 06 Mar 2020 01:42:21 +0100
+Message-ID: <87y2seb9g2.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bd75450f-a929-f60b-e973-205e4f5a9743@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 03:51:17PM +0100, Paolo Bonzini wrote:
-> On 27/12/19 03:11, Yang Weijiang wrote:
-> > +	u64 (*supported_xss)(void);
-> 
-> I don't think the new callback is needed.  Anyway I'm rewriting this
-> patch on top of the new CPUID feature and will post it shortly.
-> 
-> Paolo
-Yes, it's not necessary. I've removed this in the internal
-version, a global variable like that in Sean's patch can serve
-the functions.
-You may go ahead with the new patch, thanks for review!
+Steven Rostedt <rostedt@goodmis.org> writes:
+> rcu_nmi_enter() was marked NOKPROBE or other reasons. See commit
 
+Very well said: OR other reasons. I assume you meant 'for' but ...
+
+> c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
+> kprobe_int3_handler()")
+>
+> The issue was that we must not allow anything in do_int3() call kprobe
+> code before kprobe_int3_handler() is called. Because ist_enter() (in
+> do_int3()) calls rcu_nmi_enter() it had to be marked NOKPROBE. It had
+> nothing to do with it being RCU nor NMI, but because it was simply
+> called in do_int3().
+>
+> Thus, there's no reason to make rcu_nmi_exit() NOKPROBE. But a commont
+> to why rcu_nmi_enter() would probably be useful, like below:
+
+... this is really wrong.
+
+While the int3 issue was the reason why it was marked NOKPROBE, fact is
+that aside of int3 problem (which is probably true for any other
+architecture using breakpoints for patching) any probe _before_ RCU is
+watching and _after_ RCU stopped watching is broken. Same applies for
+BPF and tracepoints which call into BPF or other nonsense.
+
+Can we please stop claiming that instrumentation can touch anything it
+wants and just admit that anything outside RCU covered regions is
+off-limits for instrumentation? Same applies for entry code and critical
+exceptions/traps.
+
+There is a reason why the tracer can't trace itself and there are very
+valid reasons to limit the instrumentation ability in other places.
+
+It's nice to be able to see into 'everything' but for 99.9999% of the
+cases the coverage of these things is absolutely irrelevant.
+
+Yes I know, "Correctness first" is this old school thing for grumpy old
+greybeards who are still stuck in the 90's. "Features first" is the new
+mantra. I deal with that every day by mopping up the mess it creates.
+
+Thanks,
+
+        tglx
