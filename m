@@ -2,114 +2,95 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92E6C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A580C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA0C20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583508891;
-	bh=d4u5+JerVMcA5/COi4zSliWCaFEKrXgk9+SBMnBLOzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lkJPC+tqBJa0X88kRoPamDz7hFR971iQ+Gy+zXpBWECojt/SW/pwMzD+2bw3WlYFe
-	 wt2qL6qs1I4h9MskLAU4ot5yQUp7TVgt+lbQQ6ulYfqM4lWR5cZ6e/lcshkZtgXXvd
-	 bEX1F6hDOgGUtZreMd2AY9yzk/1tGzgmUwsIlEas=
+	by mail.kernel.org (Postfix) with ESMTP id 2732220866
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgCFPeu (ORCPT
+        id S1727089AbgCFPfG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:34:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbgCFPeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:34:50 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C8EA2073B;
-        Fri,  6 Mar 2020 15:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583508889;
-        bh=d4u5+JerVMcA5/COi4zSliWCaFEKrXgk9+SBMnBLOzU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IigMY9bFHGZeibgxLgeU2OPAMia5rClAiOn3x5x6boyTanCM82uTx2yrE3obO+nbQ
-         rfjA6187zluExniJ9VUis53RpRrF0D4JO4vg9j/WzEz8oGFhSOg+Iy8mQLQ5gW18Pi
-         keEH+ReP/mShGvtx7I0R7UVgxzbmtAkEbMCJx/SI=
-Date:   Fri, 6 Mar 2020 16:34:47 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Alex Belits <abelits@marvell.com>
-Cc:     "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Prasun Kapoor <pkapoor@marvell.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-mm@vger.kernel.org" <linux-mm@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH 11/12] task_isolation: kick_all_cpus_sync: don't kick
- isolated cpus
-Message-ID: <20200306153446.GC8590@lenoir>
-References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
- <dfa5e0e9f34e6ff0ef048c81bc70496354f31300.camel@marvell.com>
+        Fri, 6 Mar 2020 10:35:06 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:53933 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgCFPfF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:35:05 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 026FYmGL010252, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 026FYmGL010252
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 6 Mar 2020 23:34:48 +0800
+Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 6 Mar 2020 23:34:48 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 6 Mar 2020 23:34:47 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Fri, 6 Mar 2020 23:34:47 +0800
+From:   Hau <hau@realtek.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        "Kernel development list" <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Jason Yen <jason.yen@canonical.com>
+Subject: RE: SFP+ support for 8168fp/8117
+Thread-Topic: SFP+ support for 8168fp/8117
+Thread-Index: AQHVwTo87C9FPgb4q0K7N9j/9Mzg+6fW+ByAgAAXwwCAAE15gIAAfZ0AgECGEQCAAkeigIAECCeAgAQrRCCADDcng4AJ2WCQ//9+CYCAAbubwIAB78dQ
+Date:   Fri, 6 Mar 2020 15:34:47 +0000
+Message-ID: <1252a766545b48aeafdff9702566565c@realtek.com>
+References: <DC28A43E-4F1A-40B6-84B0-3E79215527C9@canonical.com>
+ <c148fefc-fd56-26a8-9f9b-fbefbaf25050@gmail.com>
+ <02F7CBDE-B877-481C-A5AF-2F4CBF830A2C@canonical.com>
+ <80E9C881-91C8-4F29-B9CE-652F9EE0B018@canonical.com>
+ <995bddbc4f9d48cbb3a289a7e9799f15@realtek.com>
+ <12EA7285-06D7-44D3-B033-4F52A06123CC@canonical.com>
+ <cae39cfbb5174c8884328887cdfb5a89@realtek.com>
+ <9AAC75D4-B04F-49CD-BBB9-11AE3382E4D8@canonical.com>
+ <5A21808E-C9DA-44BF-952B-4A5077B52E9B@canonical.com>
+ <e10eef58d8fc4b67ac2a73784bf86381@realtek.com>
+ <20200304152849.GE3553@lunn.ch> 
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.157]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dfa5e0e9f34e6ff0ef048c81bc70496354f31300.camel@marvell.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:15:24PM +0000, Alex Belits wrote:
-> From: Yuri Norov <ynorov@marvell.com>
 > 
-> Make sure that kick_all_cpus_sync() does not call CPUs that are running
-> isolated tasks.
-> 
-> Signed-off-by: Alex Belits <abelits@marvell.com>
-> ---
->  kernel/smp.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/smp.c b/kernel/smp.c
-> index 3a8bcbdd4ce6..d9b4b2fedfed 100644
-> --- a/kernel/smp.c
-> +++ b/kernel/smp.c
-> @@ -731,9 +731,21 @@ static void do_nothing(void *unused)
->   */
->  void kick_all_cpus_sync(void)
->  {
-> +	struct cpumask mask;
-> +
->  	/* Make sure the change is visible before we kick the cpus */
->  	smp_mb();
-> -	smp_call_function(do_nothing, NULL, 1);
-> +
-> +	preempt_disable();
-> +#ifdef CONFIG_TASK_ISOLATION
-> +	cpumask_clear(&mask);
-> +	task_isolation_cpumask(&mask);
-> +	cpumask_complement(&mask, &mask);
-> +#else
-> +	cpumask_setall(&mask);
-> +#endif
-> +	smp_call_function_many(&mask, do_nothing, NULL, 1);
-> +	preempt_enable();
->  }
+> > > Hi Kai-Heng,
+> > >
+> > > For adding SFP+ support for rtl8168fp, 1.Some power saving features
+> > > must be disabled, like APDLS/EEE/EEEPLUS...
+> > > 2.PHY capability must be set to auto-negation.
+> > >
+> > > I am kind of busy this week. I will try to add support for this chip
+> > > into
+> > upstream next week.
+> >
+> > Is it possible to access the I2C bus? The GPIO lines from the SFP
+> > socket like LOS, TX Disable?
+> >
 
-That looks very dangerous, the callers of kick_all_cpus_sync() want to
-sync all CPUs for a reason. You will rather need to fix the callers.
+This chip can get fiber info through I2C. It also can detect LOS or control TX Disable via GPIO.
 
-Thanks.
-
->  EXPORT_SYMBOL_GPL(kick_all_cpus_sync);
->  
-> -- 
-> 2.20.1
-> 
+Thanks,
+Hau
+------Please consider the environment before printing this e-mail.
