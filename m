@@ -2,316 +2,101 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E79C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3822BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A5C206D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583537452;
-	bh=2boPppKm9tEaGRyaVGEIp6Pn1LkRn2TKkFLuZuO51l0=;
-	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
-	b=yFd0Dr/ZgLnJlB/3at7B8HBei+LuN6qVuWy4BzGASRkL3nw6ZNS8yTBRu9p2WZRMQ
-	 6+kOGQAVru5nazfhTFWGJbxY9DlBf4NEE9n7CU5Bb1XQ00quAVhJvlnbeKj4vbUE+c
-	 /9adSqD0p1DldwczOY0NeJ1WGlhL/Dnn/1AklIrI=
+	by mail.kernel.org (Postfix) with ESMTP id 00B07206D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:46:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TWVCdFyg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgCFXam (ORCPT
+        id S1726498AbgCFXqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 18:30:42 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44476 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgCFXam (ORCPT
+        Fri, 6 Mar 2020 18:46:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42910 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726231AbgCFXqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 18:30:42 -0500
-Received: by mail-io1-f66.google.com with SMTP id u17so3720829iog.11
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 15:30:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=DTh8zw+7j+IDCFtLjR+Et0mOTyR2UPoWt2JTjcAukIc=;
-        b=cDisKuyTo87nw3pJqQk9hvVbdkNYFxtXQdHLEk4uq736TijN5izQv0HQkRuDAn3z3b
-         hGeOiG1bn9l/A2uFoByc2kUW6bUdm7eomnpbgcUeWD9+kCi7ROT6y/43HteTx3XOw0IU
-         Jo5ZZUXwnufbn6tsk3dgdI0PGvS3XNF7c7Ptc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DTh8zw+7j+IDCFtLjR+Et0mOTyR2UPoWt2JTjcAukIc=;
-        b=YoPmbmicqFObX1uR182KQFxr6qQKIuhG0SpJWAWhpFItE8uUjXTLa+9c5mZ431hJLm
-         rOsX/md+3FgJq3OA5RBXMak2QVp0WMZyH5T6XrHURdO0YfKrYY3Her3gGPhZTpSLxRTP
-         lXtcVTRS3vCR3DSYVHbBzKYlo98/YsccTtweBEFKcE1GPHA5R1j/oyvmB0k7jbjGuVkv
-         RrT+cLO/vxAPZVIEQcP1IB0NMTumCC5q0P3hEiOtPKGVhY2pSP1WtEha38ZKadPz5urf
-         LL5mLerMAcBtNbZ/zMfhLCk/iQja1HCF4dnJQAp1hbn7MDdTwFIFL7oLP4vHPYU4XzeZ
-         7yzg==
-X-Gm-Message-State: ANhLgQ2ubyXPGqp3UUE5rHa09eUK+q63pY0RrZekqAqcvkOzXVCaTiES
-        +iDNcdR/5ut4uFWzbLNIifhnw66Ua9A=
-X-Google-Smtp-Source: ADFU+vucaJCUAOUde7BMNayW6hKwEG38t9bs/LUK8plFPP+72ZPjXXZ1hR47RpnTyg0n1SFaFDeMOA==
-X-Received: by 2002:a6b:c742:: with SMTP id x63mr4991083iof.162.1583537439669;
-        Fri, 06 Mar 2020 15:30:39 -0800 (PST)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id s2sm8304999iod.12.2020.03.06.15.30.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2020 15:30:39 -0800 (PST)
-Subject: Re: kselftest selftest issues and clarifications
-To:     "Bird, Tim" <Tim.Bird@sony.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
-References: <MWHPR13MB0895B92C9B4807D94E1E6B04FDE30@MWHPR13MB0895.namprd13.prod.outlook.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <f1f991a6-6e05-6ba3-b5c1-174b93029a99@linuxfoundation.org>
-Date:   Fri, 6 Mar 2020 16:30:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 6 Mar 2020 18:46:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583538392;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Po/iBBoWJfPjGLJrHZfnvvlLhPKKA60+1bls5u7diKE=;
+        b=TWVCdFygv0ZZQbnUtnOHKU4DodSuQFBJc+NTEnfLQL48Cam4F3sS0ngYhmO5mPQfcdzYXR
+        gjwgc+X3atKpn0q97ln2gvRvRJMmSdQF1gWorgSKKhqXupeizgf5ncKfXpRq1kK+Z8yQG9
+        bnFPtZK0eQYRYte7PCfFSMHMG1V4W0I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-494-qzJu6ej_P8uoHKNYBQA6nQ-1; Fri, 06 Mar 2020 18:46:31 -0500
+X-MC-Unique: qzJu6ej_P8uoHKNYBQA6nQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8AC59800D4E;
+        Fri,  6 Mar 2020 23:46:29 +0000 (UTC)
+Received: from Ruby.bss.redhat.com (dhcp-10-20-1-196.bss.redhat.com [10.20.1.196])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 851397389A;
+        Fri,  6 Mar 2020 23:46:27 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Mikita Lipski <mikita.lipski@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sean Paul <seanpaul@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        "David Airlie" <airlied@linux.ie>,
+        "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        "Thomas Zimmermann" <tzimmermann@suse.de>,
+        "Maxime Ripard" <mripard@kernel.org>,
+        "Lyude Paul" <lyude@redhat.com>
+Subject: [PATCH v2 0/4] drm/dp_mst: Fix bandwidth checking regressions from DSC patches
+Date:   Fri,  6 Mar 2020 18:46:18 -0500
+Message-Id: <20200306234623.547525-1-lyude@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <MWHPR13MB0895B92C9B4807D94E1E6B04FDE30@MWHPR13MB0895.namprd13.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 12:49 PM, Bird, Tim wrote:
-> 
->> -----Original Message-----
->> From: Shuah Khan
->>
->> On 2/28/20 10:50 AM, Bird, Tim wrote:
->>>
->>>
->>>> -----Original Message-----
->>>> From:  Shuah Khan
->>>>
->>>> Integrating Kselftest into Kernel CI rings depends on Kselftest build
->>>> and install framework to support Kernel CI use-cases. I am kicking off
->>>> an effort to support Kselftest runs in Kernel CI rings. Running these
->>>> tests in Kernel CI rings will help quality of kernel releases, both
->>>> stable and mainline.
->>>>
->>>> What is required for full support?
->>>>
->>>> 1. Cross-compilation & relocatable build support
->>>> 2. Generates objects in objdir/kselftest without cluttering main objdir
->>>> 3. Leave source directory clean
->>>> 4. Installs correctly in objdir/kselftest/kselftest_install and adds
->>>>       itself to run_kselftest.sh script generated during install.
->>>>
->>>> Note that install step is necessary for all files to be installed for
->>>> run time support.
->>>>
->>>> I looked into the current status and identified problems. The work is
->>>> minimal to add full support. Out of 80+ tests, 7 fail to cross-build
->>>> and 1 fails to install correctly.
->>>>
->>>> List is below:
->>>>
->>>> Tests fails to build: bpf, capabilities, kvm, memfd, mqueue, timens, vm
->>>> Tests fail to install: android (partial failure)
->>>> Leaves source directory dirty: bpf, seccomp
->>>>
->>>> I have patches ready for the following issues:
->>>>
->>>> Kselftest objects (test dirs) clutter top level object directory.
->>>> seccomp_bpf generates objects in the source directory.
->>>>
->>>> I created a topic branch to collect all the patches:
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/?h=kernelci
->>>>
->>>> I am going to start working on build problems. If anybody is
->>>> interested in helping me with this effort, don't hesitate to
->>>> contact me. I first priority is fixing build and install and
->>>> then look into tests that leave the source directory dirty.
->>>
->>> I'm interested in this.  I'd like the same cleanups in order to run
->>> kselftest in Fuego, and I can try it with additional toolchains
->>> and boards.  Unfortunately, in terms of running tests, almost all
->>> the boards in my lab are running old kernels.  So the tests results
->>> aren't useful for upstream work.  But I can still test
->>> compilation and install issues, for the kselftest tests themselves.
->>>
->>
->> Testing compilation and install issues is very valuable. This is one
->> area that hasn't been test coverage compared to running tests. So it
->> great if you can help with build/install on linux-next to catch
->> problems in new tests. I am finding that older tests have been stable
->> and as new tests come in, we tend to miss catching these types of
->> problems.
->>
->> Especially cross-builds and installs on arm64 and others.
-> 
-> OK.  I've got 2 different arm64 compilers, with wildly different SDK setups,
-> so hopefully this will be useful.
-> 
->>>>
->>>> Detailed report can be found here:
->>>>
->>>> https://drive.google.com/file/d/11nnWOKIzzOrE4EiucZBn423lzSU_eNNv/view?usp=sharing
->>>
->>> Is there anything you'd like me to look at specifically?  Do you want me to start
->>> at the bottom of the list and work up?  I could look at 'vm' or 'timens'.
->>>
->>
->> Yes you can start with vm and timens.
-> 
-> I wrote a test for Fuego and ran into a few interesting issues.  Also, I have a question
-> about the best place to start, and your preference for reporting results.  Your feedback
-> on any of this would be appreciated:
-> 
-> Here are some issues and questions I ran into:
-> 1) overwriting of CC in lib.mk
-> This line in tools/testing/selftests/lib.mk caused me some grief:
-> CC := $(CROSS_COMPILE)gcc
-> 
+AMD's patch series for adding DSC support to the MST helpers
+unfortunately introduced a few regressions into the kernel that I didn't
+get around to fixing until just now. I would have reverted the changes
+earlier, but seeing as that would have reverted all of amd's DSC support
++ everything that was done on top of that I realllllly wanted to avoid
+doing that.
 
-Odd. It was added to mimic the top-level Makefile. I haven't seen
-problems with this so far. I am using the following:
+Anyway, this should fix everything bandwidth-check related as far as I
+can tell (I found some other regressions unrelated to AMD's DSC patches
+which I'll be sending out patches for shortly). Note that I don't have
+any DSC displays locally yet, so if someone from AMD could sanity check
+this I would appreciate it =E2=99=A5.
 
-gcc-9-aarch64-linux-gnu 9.2.1-9ubuntu2cross1
+Cc: Mikita Lipski <mikita.lipski@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Sean Paul <seanpaul@google.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
 
+Lyude Paul (4):
+  drm/dp_mst: Rename drm_dp_mst_is_dp_mst_end_device() to be less
+    redundant
+  drm/dp_mst: Use full_pbn instead of available_pbn for bandwidth checks
+  drm/dp_mst: Reprobe path resources in CSN handler
+  drm/dp_mst: Rewrite and fix bandwidth limit checks
 
-> One of my toolchains pre-defines CC with a bunch of extra flags, so this didn't work for
-> that tolchain.
-> I'm still debugging this.  I'm not sure why the weird definition of CC works for the rest
-> of the kernel but not with kselftest.  But I may submit some kind of patch to make this
-> CC assignment conditional (that is, only do the assignment if it's not already defined)
-> Let me know what you think.
-> 
-> 2) ability to get list of targets would be nice
-> It would be nice if there were a mechanism to get the list of default targets from
-> kselftest.  I added the following for my own tests, so that I don't have to hard-code
-> my loop over the individual selftests:
-> 
-> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> index 63430e2..9955e71 100644
-> --- a/tools/testing/selftests/Makefile
-> +++ b/tools/testing/selftests/Makefile
-> @@ -246,4 +246,7 @@ clean:
->   		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET clean;\
->   	done;
->   
-> +show_targets:
-> +	@echo $(TARGETS)
-> +
->   .PHONY: khdr all run_tests hotplug run_hotplug clean_hotplug run_pstore_crash install clean
-> 
-> This is pretty simple.  I can submit this as a proper patch, if you're willing to take
-> something like it, and we can discuss details if you'd rather see this done another way.
+ drivers/gpu/drm/drm_dp_mst_topology.c | 185 ++++++++++++++++++--------
+ include/drm/drm_dp_mst_helper.h       |   4 +-
+ 2 files changed, 129 insertions(+), 60 deletions(-)
 
-Looks good to me. Please send the patch.
+--=20
+2.24.1
 
-> 
-> 3) different ways to invoke kselftest
-> There are a number of different ways to invoke kselftest.  I'm currently using the
-> '-C' method for both building and installing.
-> make ARCH=$ARCHITECTURE TARGETS="$target" -C tools/testing/selftests
-> make ARCH=$ARCHITECTURE TARGETS="$target" -C tools/testing/selftests install
-
-Why not use make kselftes-install? I am asking people to move to the
-following if at all possible. Since you are just starting out, please
-use "kselftest-install" target from main Makefile instead.
-
-This is what I am using:
-
-make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc \
-      CROSS_COMPILE=aarch64-linux-gnu- TARGETS=$target
-
-
-> 
-> I think, there there are now targets for kselftest in the top-level Makefile.
-> Do you have a preferred method you'd like me to test?  Or would you like
-> me to run my tests with multiple methods?
-
-See above.
-
-> 
-> And I'm using a KBUILD_OUTPUT environment variable, rather than O=.
-> Let me know if you'd like me to build a matrix of these different build methods.
-> 
-
-This is fine. Please note that relative paths don't work in both of
-these. Something I will tackle once the bugger problems are addressed.
-
-> 4) what tree(s) would you like me to test?
-
-linux-next and Linus's mainline, and stable releases. Hey you asked :)
-linux-next will catch any problems introduced in kselftest commits.
-
-> I think you mentioned that you'd like to see the tests against 'linux-next'.
-> Right now I've been doing tests against the 'torvalds' mainline tree, and
-> the 'linux-kselftest' tree, master branch.  Let me know if there are other
-> branches or trees you like me to test.
-> 
-
-linux-next will catch any problems introduced in kselftest fixes
-and next. This will also catch selftests coming in through all
-other trees. Please note that selftests flow through subsystem trees
-for dependencies linux-next is catch all. If you can test only one,
-please pick linux-next
-
-As a temporary measure you can test linux-kselftest kernelci branch
-where I am staging all the fix to related to Kselftest integration
-into Kernel CI
-
-> 5) where would you like test results?
-> In the short term, I'm testing the compile and install of the tests
-> and working on the ones that fail for me (I'm getting 17 or 18
-> failures, depending on the toolchain I'm using, for some of my boards).
-> However, I'm still debugging my setup, I hope I can drop that down
-> to the same one's you are seeing shortly.
->  > Longer-term I plan to set up a CI loop for these tests for Fuego, and 
-publish some
-> kind of matrix results and reports on my own server (https://birdcloud.org/)
-> I'm generating HTML tables now that work with Fuego's Jenkins
-> configuration, but I could send the data elsewhere if desired.
-> 
-
-This is fine. Please see below on centralizing reports on Kernel CI
-if we can.
-
-> This is still under construction.  Would you like me to publish results also to
-> kcidb, or some other repository?  I might be able to publish my
-> results to Kernelci, but I'll end up with a customized report for kselftest,
-> that will allow drilling down to see output for individual compile or
-> install failures.  I'm not sure how much of that would be supported in
-> the KernelCI interface.  But I recognize you'd probably not like to
-> have to go to multiple places to see results.
-> 
-
-Yup. One place will be great. Maybe we can make Kernel CI as the central
-location as we move forward. Kevin can weigh on on this.
-
-> Also, in terms of periodic results do you want any e-mails
-> sent to the Linux-kselftest list?  I thought I'd hold off for now,
-> and wait for the compile/install fixes to settle down, so that
-> future e-mails would only report regressions or issues with new tests.
-> We can discuss this later, as I don't plan to do this quite
-> yet (and would only do an e-mail after checking with you anyway).
-> 
-
-You can send them to linux-kselftest mailing list like LKFT does.
-Start sending reports and we can refine the reporting as we go along.
-
-Thank you for helping with this. This will help catch problems early and
-help me get Kselftest integrated into Kernel CI quickly.
-
-> 
-> P.S. Also, please let me know who is working on this on the KernelCI
-> side (if it's not Kevin), so I can CC them on future discussions.
-> 
-
-Yes please. I have the same request.
-
-thanks,
--- Shuah
