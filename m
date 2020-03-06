@@ -2,103 +2,158 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54821C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9C7C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE20208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:52:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583502734;
-	bh=2Ggr7Ey5zJuBdq/youVk3U+Ljlt8xJOdfRzMiDhckzg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pnJWlA+b5VtYg/qov53hoWtDc1LOr8hjmrjRTIjRfDWMeB/qv3u473zVwnoxq3IAM
-	 4JS0TZ4W8XSij4LJq58nZLWezjerAdGpfBZaMuzGiLXMEjDrB0zvo/r3dlEFKu5zLD
-	 XqjY/HF2fnL8PmG1m8N6/oJWHwjoGkQorIMW6fwU=
+	by mail.kernel.org (Postfix) with ESMTP id 660B22072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:53:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w1pq0bev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCFNwN (ORCPT
+        id S1726642AbgCFNxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:52:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgCFNwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:52:12 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21AC32072A;
-        Fri,  6 Mar 2020 13:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583502732;
-        bh=2Ggr7Ey5zJuBdq/youVk3U+Ljlt8xJOdfRzMiDhckzg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CjxoisreNvo+KSMlMPy7akklYK40zx8pZyfkS4kBPLZgCMZ3rEdKRNdvEi9r/IMf/
-         KQ6l99TLg7m7cwz3I8w+IwJypEh///j2m8DPdmwGbE5XcZoEsehcrOf/pVgEbJizTj
-         /tz/daKqTA5jNuYKYGnt6iQbsm21p/uaTQ9NXQgw=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jADOc-00AaaS-CN; Fri, 06 Mar 2020 13:52:10 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 06 Mar 2020 13:52:10 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [patch 6/7] genirq: Provide interrupt injection mechanism
-In-Reply-To: <20200306130623.990928309@linutronix.de>
-References: <20200306130341.199467200@linutronix.de>
- <20200306130623.990928309@linutronix.de>
-Message-ID: <772fa52c32de3ca3229d2df3a32cc643@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Fri, 6 Mar 2020 08:53:07 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43116 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgCFNxH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:53:07 -0500
+Received: by mail-wr1-f68.google.com with SMTP id v9so2437154wrf.10
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 05:53:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=HiH2M0/3yuQ9rG6qTjCXMrsrRmxTDtobqQj41AdBpaY=;
+        b=w1pq0bevIwABf32a6S1sqk9llhRXEfhWU5wIyAMyzvKuA71aydmiWR/E6MBhh/V9bx
+         GTGdz1ZZDn/tdpRnZfvMNGaXer8eFF+Wqix1fzIdssTZ+3QTeHfhE0BSYHCF7QGCoVhm
+         iEe1v8YR3y8GmxW9AyUnKbYi3oORaeibV2It+xgiMsbNFZRmASnlwBgRTKjeUW8NwhDf
+         xEyhn4M2w2CRW8JBpCodcnYlPgiP9hO8BiZnVf2VuH1WegdzEZ7Us8ngVKf40QoTmt3f
+         JRkrb12DGh3B5YZtriDKzOk3c0f54beZAOlI6ooN1ZK0MdGQVaQosZNyPMtKrB8bg8vT
+         Xn9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HiH2M0/3yuQ9rG6qTjCXMrsrRmxTDtobqQj41AdBpaY=;
+        b=dhiZdHplJZIuHwBY1F/EdnwhpoVs4P0cfWZFDQS9TqQ27ffQLTJZZYviso5iHun3OL
+         yzPiTM+a+oPpKqV38KR6BFBO5jDi291dA/nf3bwz38kUOFJyHGeCWlocCvby4ZK1yhaF
+         Zg0aAMzVzGVQWnVXYRDVe9zztG0egTmZCr/sq/2XkL39v2V1/nyPyDU+mGZSG6AhtAut
+         kGmAqntwL9UgaLMOKBEPC+OD7IWm4OvPqIIjfrMY+mrMZWT+mwosvOSCXKXFu+d7KRWB
+         wzmc960k2pYPiwq1VRNyZgKj5Vg3ufDt+Vueh6foDrbllVRf+G6pNYQgHYcraSWyOCys
+         AOuA==
+X-Gm-Message-State: ANhLgQ2JB52qwNkYIpZYi9Qg8JqZUWVEYpjcjCtexkAB+9AtO0U8i1TD
+        zziLp8OWXwIFnRHBXmBIjheLvA==
+X-Google-Smtp-Source: ADFU+vskPHbfBYO1Gqp7RRQsustG07yhjUpepm4EJH0p0WzHlPSUjnZCU2aMRz391ZXKfrPKyrunWw==
+X-Received: by 2002:adf:a555:: with SMTP id j21mr4259019wrb.409.1583502785069;
+        Fri, 06 Mar 2020 05:53:05 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:d5d0:80d7:4f6f:54be])
+        by smtp.gmail.com with ESMTPSA id s5sm47546636wru.39.2020.03.06.05.53.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 05:53:03 -0800 (PST)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] sched/fair: fix enqueue_task_fair warning
+Date:   Fri,  6 Mar 2020 14:52:57 +0100
+Message-Id: <20200306135257.25044-1-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-06 13:03, Thomas Gleixner wrote:
-> Error injection mechanisms need a half ways safe way to inject 
-> interrupts as
-> invoking generic_handle_irq() or the actual device interrupt handler
-> directly from e.g. a debugfs write is not guaranteed to be safe.
-> 
-> On x86 generic_handle_irq() is unsafe due to the hardware trainwreck 
-> which
-> is the base of x86 interrupt delivery and affinity management.
-> 
-> Move the irq debugfs injection code into a separate function which can 
-> be
-> used by error injection code as well.
-> 
-> The implementation prevents at least that state is corrupted, but it 
-> cannot
-> close a very tiny race window on x86 which might result in a stale and 
-> not
-> serviced device interrupt under very unlikely circumstances.
-> 
-> This is explicitly for debugging and testing and not for production use 
-> or
-> abuse in random driver code.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+When a cfs rq is throttled, the latter and its child are removed from the
+leaf list but their nr_running is not changed which includes staying higher
+than 1. When a task is enqueued in this throttled branch, the cfs rqs must
+be added back in order to ensure correct ordering in the list but this can
+only happens if nr_running == 1.
+When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
+when enqueuing an entity to make sure that the complete branch will be
+added.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+Similarly unthrottle_cfs_rq() can stop adding cfs in the list when a parent
+is throttled. Iterate the remaining entity to ensure that the complete
+branch will be added in the list.
 
-         M.
+Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: stable@vger.kernel.org #v5.1+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+
+Change since v1:
+- added the iteration at the end of unthrottle_cfs_rq() as Dietmar
+  reported use case which triggered assert_list_leaf_cfs_rq()
+
+ kernel/sched/fair.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index fcc968669aea..ae50a09cbead 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4117,6 +4117,7 @@ static inline void check_schedstat_required(void)
+ #endif
+ }
+ 
++static inline bool cfs_bandwidth_used(void);
+ 
+ /*
+  * MIGRATION
+@@ -4195,10 +4196,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+ 		__enqueue_entity(cfs_rq, se);
+ 	se->on_rq = 1;
+ 
+-	if (cfs_rq->nr_running == 1) {
++	/*
++	 * When bandwidth control is enabled, cfs might have been removed
++	 * because of a parent been throttled but cfs->nr_running > 1. Try to
++	 * add it unconditionnally.
++	 */
++	if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
+ 		list_add_leaf_cfs_rq(cfs_rq);
++
++	if (cfs_rq->nr_running == 1)
+ 		check_enqueue_throttle(cfs_rq);
+-	}
+ }
+ 
+ static void __clear_buddies_last(struct sched_entity *se)
+@@ -4779,11 +4786,22 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+ 			break;
+ 	}
+ 
+-	assert_list_leaf_cfs_rq(rq);
+-
+ 	if (!se)
+ 		add_nr_running(rq, task_delta);
+ 
++	/*
++	 * The cfs_rq_throttled() breaks in the above iteration can result in
++	 * incomplete leaf list maintenance, resulting in triggering the
++	 * assertion below.
++	 */
++	for_each_sched_entity(se) {
++		cfs_rq = cfs_rq_of(se);
++
++		list_add_leaf_cfs_rq(cfs_rq);
++	}
++
++	assert_list_leaf_cfs_rq(rq);
++
+ 	/* Determine whether we need to wake up potentially idle CPU: */
+ 	if (rq->curr == rq->idle && rq->cfs.nr_running)
+ 		resched_curr(rq);
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
