@@ -2,143 +2,228 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF44C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BC5C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7AAA2084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="RnG6d57C"
+	by mail.kernel.org (Postfix) with ESMTP id A07EC2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgCFMqq (ORCPT
+        id S1726300AbgCFMsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:46:46 -0500
-Received: from vps.xff.cz ([195.181.215.36]:54066 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbgCFMqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:46:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1583498804; bh=Hq/SxVhmuqTkQU0lHEM/7do8nN5uoeLcscHI4XCDnT0=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=RnG6d57C8x+pmDej2igLxil8i2jQRp9SxKEUnOY6oU8d5cXRVV6+HSv8EIF5cbt4e
-         ZktQtIXowPU3HA3oh4Jh27qXXPajdsCjIAvtLqsmjwi5Lyvs6Y9W+VZGkO01IzNUJ7
-         wZ2z3bBxJI/KHm6jkD+b9tppcqVThi4Tzd/hpHrs=
-Date:   Fri, 6 Mar 2020 13:46:43 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Enric Balletbo Serra <eballetbo@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>, Torsten Duwe <duwe@suse.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Collabora Kernel ML <kernel@collabora.com>
-Subject: Re: [PATCH v2 2/2] drm/bridge: anx7688: Add anx7688 bridge driver
- support
-Message-ID: <20200306124643.wec6d47loprk4zfi@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Enric Balletbo Serra <eballetbo@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>, Torsten Duwe <duwe@suse.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Collabora Kernel ML <kernel@collabora.com>
-References: <CA+E=qVfGiQseZZVBvmmK6u2Mu=-91ViwLuhNegu96KRZNAHr_w@mail.gmail.com>
- <CAFqH_505eWt9UU7Wj6tCQpQCMZFMfy9e1ETSkiqi7i5Zx6KULQ@mail.gmail.com>
- <CA+E=qVff5_hdPFdaG4Lrg7Uzorea=JbEdPoy+sQd7rUGNTTZ5g@mail.gmail.com>
- <5245a8e4-2320-46bd-04fd-f86ce6b17ce7@collabora.com>
- <CA+E=qVcyRW4LNC5db27d-8x-T_Nk9QAhkBPwu5rwthTc6ewbYA@mail.gmail.com>
- <20200305193505.4km5j7n25ph4b6hn@core.my.home>
- <2a5a4a62-3189-e053-21db-983a4c766d44@collabora.com>
- <5d72a8c6824b31163a303b5ef1526efe05121e5d.camel@aosc.io>
- <20200306120726.t7aitfz5rq3m7m6y@core.my.home>
- <CANMq1KC1R4B66Nr01pADa3RV8NpkPqkM-1pe-1N1nQiMviX1Cg@mail.gmail.com>
+        Fri, 6 Mar 2020 07:48:13 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:35370 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgCFMsN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 07:48:13 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3596F80307C2;
+        Fri,  6 Mar 2020 12:48:07 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id e-Q1VTnmsfw8; Fri,  6 Mar 2020 15:48:05 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paul.burton@imgtec.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, <linux-mips@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 00/22] mips: Prepare MIPS-arch code for Baikal-T1 SoC support
+Date:   Fri, 6 Mar 2020 15:46:43 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANMq1KC1R4B66Nr01pADa3RV8NpkPqkM-1pe-1N1nQiMviX1Cg@mail.gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 08:11:07PM +0800, Nicolas Boichat wrote:
-> On Fri, Mar 6, 2020 at 8:07 PM Ondřej Jirman <megous@megous.com> wrote:
-> 
-> What about the values at 0x2c?
+From: Serge Semin <fancer.lancer@gmail.com>
 
-i2cdump 0 0x28
+This is a first patchset of a series of about 25 ones, which are intended to
+add the full Baikal-T1 SoC [1] support to the Linux kernel. Since they will
+concern various kernel subsystems, I decided to split the whole work up into
+the patchesets in accordance with the subsystems/devices their changes are
+introduced for. Nearly 2/3 of the work is already done and will be sent out
+very soon. While the rest of the changes specifically related to the fast-speed
+interfaces (DW 12G PHY, PCIe, SATA, xGBE, GMAC, USB, DDRC, IC) are still in
+refactoring and preparation for integration into the mainline kernel. Hopefully
+I'll finish them up in the next two-three months, and submit them straight
+away.
 
-     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
-00: aa aa 88 76 ac 00 00 00 00 00 00 00 00 80 05 05    ???v?........???
-10: 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    0...............
-20: 00 00 00 00 00 00 00 00 00 00 00 34 f2 e4 ff 00    ...........4??..
-30: 04 40 00 04 94 11 20 ff ff 03 00 ff ff ff 00 01    ?@.??? ..?.....?
-40: 78 a4 00 09 00 08 05 84 10 60 17 00 00 0a 00 b0    x?.?.????`?..?.?
-50: 00 00 00 0a 00 00 e0 df ff ff 00 00 00 10 71 00    ...?..??.....?q.
-60: 10 10 04 29 2d 21 10 01 09 03 00 03 e8 13 88 00    ???)-!????.????.
-70: 00 19 18 83 06 5a 11 00 ff 00 00 0d 04 38 42 07    .????Z?....??8B?
-80: 00 00 00 00 00 74 1b 19 40 08 75 00 00 00 00 00    .....t??@?u.....
-90: 00 00 00 00 00 00 03 00 ff 30 00 59 01 00 00 00    ......?..0.Y?...
-a0: 00 ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00    ................
-b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-c0: 00 00 00 00 00 00 00 00 0a 10 18 00 00 ff 00 00    ........???.....
-d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-e0: 50 10 08 50 00 02 00 70 00 00 30 10 11 02 1c 01    P??P.?.p..0?????
-f0: 00 11 07 00 94 11 7f 00 00 00 00 00 00 01 0e ff    .??.???......??.
+Getting back to this patchset. As the subject states this is intended to
+prepare the MIPS-arch and generic kernel code for further Baikal-T1 SoC
+platform support integration (note the Baikal-T1 SoC platform code will be
+submitted last after the whole series of patchsets as a closure of the
+submission process). First of all the patchset starts with a set of changes
+to the dt-bindings kernel concerning MIPS CPC and CDMM nodes as being described
+by the trivial device bindings. In addition we updated the vendors prefix
+schema with Baikal Electronics JSC prefix so being further committed device
+drivers would be correctly accepted by the checkpatch-script.
 
-i2cdump 0 0x2c
+Then I found out that dtc-compiler integrated into the kernel doesn't support
+all the possible values of the 'reg'-property used to define the i2c-slave
+devices address. It may have 10-bits and own-slave flags, so the compiler has
+to deal with them. Even though the patch might be better to be integrated into
+the mainline dtc repo I decided to send it to the kernel first.
 
-     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
-00: 29 1f 88 76 00 ac 11 00 11 20 10 10 00 00 00 00    )??v.??.? ??....
-10: 03 00 ff 8f ff 7f 00 00 00 00 0a 00 10 11 0c 00    ?..?.?....?.???.
-20: 00 00 00 00 99 06 c0 00 00 00 00 00 00 00 02 00    ....???.......?.
-30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-70: b4 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ?...............
-80: 01 25 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ?%..............
-90: 0f 0f 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ??..............
-a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+While I was working with the MIPS architecture code, I discovered, that there
+is a bug in the Coherency Manager v2 error causes declaration and the errors
+handler lacked of CM2  L2 ECC/parity errors support. So the fixes are here in
+the patchset.
 
+Baikal-T1 SoC is based on the MIPS P5600 Warrior IP-core, which itself has
+MIPS32 Release 5 architecture. Even though on ISA level it doesn't differ much
+from the MIPS32 Release 2 release, there are still some peculiarities, which
+make it's justified to add the direct MIPS32r5 support into the kernel (see
+the specific patch for details). In addition seeing there is more than one
+real chip based on the MIPS P5600 core on the market, it would be good to have
+the direct P5600 CPU config in the MIPS-arch.
 
-regards,
-	o.
+There were some issues we discovered while were working with MIPS-arch code.
+So the cleanups and fixes are introduced in this patchset. First of all the
+Write-Merge CPU feature hasn't been handled in a generic way. Even if a
+platform defined the writecombine flag as _CACHE_UNCACHED_ACCELERATED, the
+feature might have been disabled in the CP0 register. We either enable it or
+leave it as is in accordance with the knowledge of whether the corresponding
+platform really supports it. Secondly Memory Accessibility Attribute Registers
+(MAAR) haven't been properly initialized when Extended Physical Address (XPA)
+mode was enabled. Thirdly since some of the platforms may have a very strict
+limitations on the IO-memory access instructions. For instance Baikal-T1 SoC
+IO-memory can be accessed by the lw/sw instructions only. In this case
+for early-printk and CPS-debug code we suggest to use the instructions in
+accordance with the UART-registers offset (lb/sb if offset = 0, lh/sh
+if offset = 1 and so on). Fourthly in case if CPUFREQ feature is enabled
+and frequency of the CPU is changed by the reference clock alteration, we
+must make sure that MIPS r4k timer related services are properly updated
+when CPU-frequency changes. It concerns udelay lpj adjustment, MIPS timer
+clockevent frequency update. In addition when CPU reference frequency changes
+it isn't recommended to use the timer as clocksource at all, since currently
+the subsystem isn't tolerant to the unstable clock sources. So in this case
+we suggest to use the r4k timer for clocksourcing only as a last resort.
+Fifthly we discovered a bug in a method of CPUFREQ boost feature enable
+procedure and fixed it in one of the patches within this patchset. And finally
+there are a few fixups/cleanups we suggest to integrate into the MIPS FDC
+and CDMM related code (see the patches for details).
 
-> 
-> Thanks,
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
+
+[1] http://www.baikalelectronics.com/products/168/
+
+P.S. Sorry for the previous emails burst. I forgot to start the series with
+this cover-letter and the corporate smtp broke the transmission in the middle
+anyway. Please don't pay attention to them. Here is the proper emails
+resubmission.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paul.burton@imgtec.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+cc: Tony Lindgren <tony@atomide.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (22):
+  dt-bindings: Permit platform devices in the trivial-devices bindings
+  dt-bindings: Add MIPS CPC controller as a trivial devices
+  dt-bindings: Add MIPS CDMM controller as a trivial device
+  dt-bindings: Add vendor prefix for Baikal Electronics, JSC
+  mips: cm: Fix an invalid error code of INTVN_*_ERR
+  mips: cm: Add L2 ECC/parity errors reporting
+  mips: Add MIPS32 Release 5 support
+  mips: Add MIPS Warrior P5600 support
+  mips: Fix cpu_has_mips64r1/2 activation for MIPS32 CPUs
+  mips: Add CP0 Write Merge config support
+  mips: Add CONFIG/CONFIG6 reg fields macro
+  mips: MAAR: Use more precise address mask
+  mips: MAAR: Add XPA mode support
+  mips: early_printk_8250: Use offset-sized IO-mem accessors
+  mips: Use offset-sized IO-mem accessors in CPS debug printout
+  mips: cdmm: Add mti,mips-cdmm dtb node support
+  bus: cdmm: Add MIPS R5 arch support
+  tty: mips_ejtag_fdc: Mark expected switch fall-through
+  mips: Add udelay lpj numbers adjustment
+  mips: csrc-r4k: Decrease r4k-clocksource rating if CPU_FREQ enabled
+  mips: cevt-r4k: Update the r4k-clockevent frequency in sync with CPU
+  cpufreq: Return zero on success in boost sw setting
+
+ .../bindings/power/mti,mips-cpc.txt           |  8 ---
+ .../devicetree/bindings/trivial-devices.yaml  | 12 ++--
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+ arch/mips/Kconfig                             | 62 ++++++++++++++--
+ arch/mips/Makefile                            |  2 +
+ arch/mips/include/asm/asmmacro.h              | 18 ++---
+ arch/mips/include/asm/compiler.h              |  5 ++
+ arch/mips/include/asm/cpu-features.h          | 34 ++++++---
+ arch/mips/include/asm/cpu-info.h              |  2 +-
+ arch/mips/include/asm/cpu-type.h              |  6 +-
+ arch/mips/include/asm/cpu.h                   | 11 +--
+ arch/mips/include/asm/fpu.h                   |  4 +-
+ arch/mips/include/asm/hazards.h               |  8 ++-
+ arch/mips/include/asm/maar.h                  | 17 ++++-
+ arch/mips/include/asm/mipsregs.h              | 33 ++++++++-
+ arch/mips/include/asm/module.h                |  4 ++
+ arch/mips/include/asm/stackframe.h            |  2 +-
+ arch/mips/include/asm/switch_to.h             |  8 +--
+ arch/mips/kernel/cevt-r4k.c                   | 44 ++++++++++++
+ arch/mips/kernel/cps-vec-ns16550.S            | 18 ++++-
+ arch/mips/kernel/cpu-probe.c                  | 60 ++++++++++++++++
+ arch/mips/kernel/csrc-r4k.c                   |  4 ++
+ arch/mips/kernel/early_printk_8250.c          | 34 ++++++++-
+ arch/mips/kernel/entry.S                      |  6 +-
+ arch/mips/kernel/mips-cm.c                    | 66 +++++++++++++++--
+ arch/mips/kernel/proc.c                       |  2 +
+ arch/mips/kernel/r4k_fpu.S                    | 14 ++--
+ arch/mips/kernel/spram.c                      |  4 +-
+ arch/mips/kernel/time.c                       | 70 +++++++++++++++++++
+ arch/mips/kvm/vz.c                            |  6 +-
+ arch/mips/lib/csum_partial.S                  |  6 +-
+ arch/mips/mm/c-r4k.c                          |  7 +-
+ arch/mips/mm/init.c                           |  8 ++-
+ arch/mips/mm/sc-mips.c                        |  7 +-
+ drivers/bus/Kconfig                           |  2 +-
+ drivers/bus/mips_cdmm.c                       | 15 ++++
+ drivers/cpufreq/cpufreq.c                     |  2 +-
+ drivers/tty/mips_ejtag_fdc.c                  |  1 +
+ 38 files changed, 529 insertions(+), 85 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+
+-- 
+2.25.1
+
