@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D91C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51542C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9711B2084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3485920848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgCFOmk (ORCPT
+        id S1727401AbgCFOmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:42:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53881 "EHLO
+        Fri, 6 Mar 2020 09:42:38 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53877 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727306AbgCFOm2 (ORCPT
+        with ESMTP id S1727300AbgCFOm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Mar 2020 09:42:28 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEBC-0006PX-QI; Fri, 06 Mar 2020 15:42:23 +0100
+        id 1jAEBA-0006Qh-AT; Fri, 06 Mar 2020 15:42:20 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 86CF01C21D9;
-        Fri,  6 Mar 2020 15:42:11 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:11 -0000
-From:   "tip-bot2 for Thara Gopinath" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1AF081C21DE;
+        Fri,  6 Mar 2020 15:42:15 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:14 -0000
+From:   "tip-bot2 for Peter Xu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/pelt: Add support to track thermal pressure
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
+Subject: [tip: smp/core] smp: Allow smp_call_function_single_async() to insert
+ locked csd
+Cc:     Peter Xu <peterx@redhat.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200222005213.3873-2-thara.gopinath@linaro.org>
-References: <20200222005213.3873-2-thara.gopinath@linaro.org>
+In-Reply-To: <20191216213125.9536-2-peterx@redhat.com>
+References: <20191216213125.9536-2-peterx@redhat.com>
 MIME-Version: 1.0
-Message-ID: <158350573124.28353.7802371753363408650.tip-bot2@tip-bot2>
+Message-ID: <158350573482.28353.599979818559142437.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,176 +56,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the smp/core branch of tip:
 
-Commit-ID:     765047932f153265db6ef15be208d6cbfc03dc62
-Gitweb:        https://git.kernel.org/tip/765047932f153265db6ef15be208d6cbfc03dc62
-Author:        Thara Gopinath <thara.gopinath@linaro.org>
-AuthorDate:    Fri, 21 Feb 2020 19:52:05 -05:00
+Commit-ID:     5a18ceca63502546d6c0cab1f3f79cb6900f947a
+Gitweb:        https://git.kernel.org/tip/5a18ceca63502546d6c0cab1f3f79cb6900f947a
+Author:        Peter Xu <peterx@redhat.com>
+AuthorDate:    Mon, 16 Dec 2019 16:31:23 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 12:57:17 +01:00
+CommitterDate: Fri, 06 Mar 2020 13:42:28 +01:00
 
-sched/pelt: Add support to track thermal pressure
+smp: Allow smp_call_function_single_async() to insert locked csd
 
-Extrapolating on the existing framework to track rt/dl utilization using
-pelt signals, add a similar mechanism to track thermal pressure. The
-difference here from rt/dl utilization tracking is that, instead of
-tracking time spent by a CPU running a RT/DL task through util_avg, the
-average thermal pressure is tracked through load_avg. This is because
-thermal pressure signal is weighted time "delta" capacity unlike util_avg
-which is binary. "delta capacity" here means delta between the actual
-capacity of a CPU and the decreased capacity a CPU due to a thermal event.
+Previously we will raise an warning if we want to insert a csd object
+which is with the LOCK flag set, and if it happens we'll also wait for
+the lock to be released.  However, this operation does not match
+perfectly with how the function is named - the name with "_async"
+suffix hints that this function should not block, while we will.
 
-In order to track average thermal pressure, a new sched_avg variable
-avg_thermal is introduced. Function update_thermal_load_avg can be called
-to do the periodic bookkeeping (accumulate, decay and average) of the
-thermal pressure.
+This patch changed this behavior by simply return -EBUSY instead of
+waiting, at the meantime we allow this operation to happen without
+warning the user to change this into a feature when the caller wants
+to "insert a csd object, if it's there, just wait for that one".
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+This is pretty safe because in flush_smp_call_function_queue() for
+async csd objects (where csd->flags&SYNC is zero) we'll first do the
+unlock then we call the csd->func().  So if we see the csd->flags&LOCK
+is true in smp_call_function_single_async(), then it's guaranteed that
+csd->func() will be called after this smp_call_function_single_async()
+returns -EBUSY.
+
+Update the comment of the function too to refect this.
+
+Signed-off-by: Peter Xu <peterx@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200222005213.3873-2-thara.gopinath@linaro.org
+Link: https://lkml.kernel.org/r/20191216213125.9536-2-peterx@redhat.com
 ---
- include/trace/events/sched.h |  4 ++++
- init/Kconfig                 |  4 ++++
- kernel/sched/pelt.c          | 31 +++++++++++++++++++++++++++++++
- kernel/sched/pelt.h          | 31 +++++++++++++++++++++++++++++++
- kernel/sched/sched.h         |  3 +++
- 5 files changed, 73 insertions(+)
+ kernel/smp.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 9c3ebb7..ed168b0 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -618,6 +618,10 @@ DECLARE_TRACE(pelt_dl_tp,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
-+DECLARE_TRACE(pelt_thermal_tp,
-+	TP_PROTO(struct rq *rq),
-+	TP_ARGS(rq));
-+
- DECLARE_TRACE(pelt_irq_tp,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
-diff --git a/init/Kconfig b/init/Kconfig
-index 20a6ac3..275c848 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -451,6 +451,10 @@ config HAVE_SCHED_AVG_IRQ
- 	depends on IRQ_TIME_ACCOUNTING || PARAVIRT_TIME_ACCOUNTING
- 	depends on SMP
- 
-+config SCHED_THERMAL_PRESSURE
-+	bool "Enable periodic averaging of thermal pressure"
-+	depends on SMP
-+
- config BSD_PROCESS_ACCT
- 	bool "BSD Process Accounting"
- 	depends on MULTIUSER
-diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-index c40d57a..b647d04 100644
---- a/kernel/sched/pelt.c
-+++ b/kernel/sched/pelt.c
-@@ -368,6 +368,37 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
- 	return 0;
- }
- 
-+#ifdef CONFIG_SCHED_THERMAL_PRESSURE
-+/*
-+ * thermal:
+diff --git a/kernel/smp.c b/kernel/smp.c
+index d0ada39..97f1d97 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -329,6 +329,11 @@ EXPORT_SYMBOL(smp_call_function_single);
+  * (ie: embedded in an object) and is responsible for synchronizing it
+  * such that the IPIs performed on the @csd are strictly serialized.
+  *
++ * If the function is called with one csd which has not yet been
++ * processed by previous call to smp_call_function_single_async(), the
++ * function will return immediately with -EBUSY showing that the csd
++ * object is still in progress.
 + *
-+ *   load_sum = \Sum se->avg.load_sum but se->avg.load_sum is not tracked
-+ *
-+ *   util_avg and runnable_load_avg are not supported and meaningless.
-+ *
-+ * Unlike rt/dl utilization tracking that track time spent by a cpu
-+ * running a rt/dl task through util_avg, the average thermal pressure is
-+ * tracked through load_avg. This is because thermal pressure signal is
-+ * time weighted "delta" capacity unlike util_avg which is binary.
-+ * "delta capacity" =  actual capacity  -
-+ *			capped capacity a cpu due to a thermal event.
-+ */
-+
-+int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
-+{
-+	if (___update_load_sum(now, &rq->avg_thermal,
-+			       capacity,
-+			       capacity,
-+			       capacity)) {
-+		___update_load_avg(&rq->avg_thermal, 1);
-+		trace_pelt_thermal_tp(rq);
-+		return 1;
+  * NOTE: Be careful, there is unfortunately no current debugging facility to
+  * validate the correctness of this serialization.
+  */
+@@ -338,14 +343,17 @@ int smp_call_function_single_async(int cpu, call_single_data_t *csd)
+ 
+ 	preempt_disable();
+ 
+-	/* We could deadlock if we have to wait here with interrupts disabled! */
+-	if (WARN_ON_ONCE(csd->flags & CSD_FLAG_LOCK))
+-		csd_lock_wait(csd);
++	if (csd->flags & CSD_FLAG_LOCK) {
++		err = -EBUSY;
++		goto out;
 +	}
-+
-+	return 0;
-+}
-+#endif
-+
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
- /*
-  * irq:
-diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
-index afff644..eb034d9 100644
---- a/kernel/sched/pelt.h
-+++ b/kernel/sched/pelt.h
-@@ -7,6 +7,26 @@ int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq);
- int update_rt_rq_load_avg(u64 now, struct rq *rq, int running);
- int update_dl_rq_load_avg(u64 now, struct rq *rq, int running);
  
-+#ifdef CONFIG_SCHED_THERMAL_PRESSURE
-+int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity);
-+
-+static inline u64 thermal_load_avg(struct rq *rq)
-+{
-+	return READ_ONCE(rq->avg_thermal.load_avg);
-+}
-+#else
-+static inline int
-+update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
-+{
-+	return 0;
-+}
-+
-+static inline u64 thermal_load_avg(struct rq *rq)
-+{
-+	return 0;
-+}
-+#endif
-+
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
- int update_irq_load_avg(struct rq *rq, u64 running);
- #else
-@@ -159,6 +179,17 @@ update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
- }
+ 	csd->flags = CSD_FLAG_LOCK;
+ 	smp_wmb();
  
- static inline int
-+update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
-+{
-+	return 0;
-+}
+ 	err = generic_exec_single(cpu, csd, csd->func, csd->info);
 +
-+static inline u64 thermal_load_avg(struct rq *rq)
-+{
-+	return 0;
-+}
-+
-+static inline int
- update_irq_load_avg(struct rq *rq, u64 running)
- {
- 	return 0;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 2a0caf3..6c839f8 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -961,6 +961,9 @@ struct rq {
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
- 	struct sched_avg	avg_irq;
- #endif
-+#ifdef CONFIG_SCHED_THERMAL_PRESSURE
-+	struct sched_avg	avg_thermal;
-+#endif
- 	u64			idle_stamp;
- 	u64			avg_idle;
++out:
+ 	preempt_enable();
  
+ 	return err;
