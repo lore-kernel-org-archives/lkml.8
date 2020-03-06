@@ -2,137 +2,121 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB26C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA7EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC60206D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B5E206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aslenv.com header.i=@aslenv.com header.b="bzbKxeqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCFRvR (ORCPT
+        id S1726185AbgCFRxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:51:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:37088 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgCFRvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:51:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC28230E;
-        Fri,  6 Mar 2020 09:51:16 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BE3F3F6C4;
-        Fri,  6 Mar 2020 09:51:15 -0800 (PST)
-Date:   Fri, 6 Mar 2020 17:51:13 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] sched/rt: Fix pushing unfit tasks to a better CPU
-Message-ID: <20200306175112.vkpeouec2c47yujl@e107158-lin.cambridge.arm.com>
-References: <20200302132721.8353-1-qais.yousef@arm.com>
- <20200302132721.8353-7-qais.yousef@arm.com>
+        Fri, 6 Mar 2020 12:53:03 -0500
+Received: from saturna.islandhosting.com ([144.217.72.42]:46008 "EHLO
+        saturna.islandhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgCFRxC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 12:53:02 -0500
+X-Greylist: delayed 1382 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Mar 2020 12:53:02 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aslenv.com;
+         s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+        Date:Subject:To:From:Sender:Reply-To:Cc:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=7Vaq7NyhziiQ6abkcm0d9o4/7FGijSW7QW1vVly7flU=; b=bzbKxeqIehnCAehvKuW2FVvDcC
+        BIJzibsDpnF8+YAxma0QhGCKna/TQR+NnAn4SqYoVPW8yrIv272ok9cBjPna2oCSDCyvzInodZMJL
+        ZsnMV8fmPzXMiFSml84cznVE04mM+S9xT3ZT3SJ3ov5GTzKRlxybs0gaaRGy4xHf1mAsLL+UkZugL
+        KJXobmb7iug76FWblxrasKZMuhVdRNM5npFX1Mm7eff22WuYcxoUCuOiQtlUoK3XQ4QYgsN3PLhnS
+        R4FxU/4IpoWbX99MICpJmEMdVeWEwds2zSOJa9cNozvNCpPyDqitIr4fVgpUYmcL/7JcadDkNcMGo
+        zDnFBFbw==;
+Received: from [64.251.74.18] (port=47209 helo=PWW72014)
+        by saturna.islandhosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384
+        (Exim 4.93)
+        (envelope-from <pwillis@aslenv.com>)
+        id 1jAGnN-00DjFF-K7
+        for linux-kernel@vger.kernel.org; Fri, 06 Mar 2020 09:29:57 -0800
+From:   "Peter Willis" <pwillis@aslenv.com>
+To:     <linux-kernel@vger.kernel.org>
+Subject: What kernel version does    'irq_set_irq_type'  become available?  
+Date:   Fri, 6 Mar 2020 09:29:57 -0800
+Message-ID: <002301d5f3dc$dc029890$9407c9b0$@aslenv.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200302132721.8353-7-qais.yousef@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdXz3NrsRI7q+O/2TfeZzUIoTsPs5Q==
+Content-Language: en-us
+X-OutGoing-Spam-Status: No, score=-1.0
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - saturna.islandhosting.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - aslenv.com
+X-Get-Message-Sender-Via: saturna.islandhosting.com: authenticated_id: pwillis@aslenv.com
+X-Authenticated-Sender: saturna.islandhosting.com: pwillis@aslenv.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavan
+Hello,
 
-On 03/02/20 13:27, Qais Yousef wrote:
-> If a task was running on unfit CPU we could ignore migrating if the
-> priority level of the new fitting CPU is the *same* as the unfit one.
-> 
-> Add an extra check to select_task_rq_rt() to allow the push in case:
-> 
-> 	* p->prio == new_cpu.highest_priority
-> 	* task_fits(p, new_cpu)
-> 
-> Fixes: 804d402fb6f6 ("sched/rt: Make RT capacity-aware")
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> ---
+Is there a history diagram somewhere that shows where specific features =
+appear in the codebase?
 
-Can you please confirm if you have any objection to this patch? Without it
-I see large delays in the 2 tasks test like I outlined in [1]. It wasn't clear
-from [2] whether you are in agreement now or not.
+Various online documentation for kernel driver development have =
+references to functions that, in some cases, are either deprecated or do =
+not yet exist in older versions of kernel source.
 
-[1] https://lore.kernel.org/lkml/20200217135306.cjc2225wdlwqiicu@e107158-lin.cambridge.arm.com/
-[2] https://lore.kernel.org/lkml/20200227033608.GN28029@codeaurora.org/
+For example, I have written an interrupt service driver for an embedded =
+application running on kernel version 2.6.21.  The original driver is =
+level triggered and requires the driver to:=20
 
-Thanks
+a.) Temporarily disable the interrupt
+b.) Service the interrupt
+c.) Re-enable the interrupt
 
---
-Qais Yousef
+There was some desire for that driver to move to a more standard rising =
+edge trigger.
 
->  kernel/sched/rt.c | 41 ++++++++++++++++++++++++++++-------------
->  1 file changed, 28 insertions(+), 13 deletions(-)
-> 
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index ce230bec6847..8aaa442e4867 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -1474,20 +1474,35 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
->  	if (test || !rt_task_fits_capacity(p, cpu)) {
->  		int target = find_lowest_rq(p);
->  
-> -		/*
-> -		 * Bail out if we were forcing a migration to find a better
-> -		 * fitting CPU but our search failed.
-> -		 */
-> -		if (!test && target != -1 && !rt_task_fits_capacity(p, target))
-> -			goto out_unlock;
-> +		if (target != -1) {
-> +			bool fit_target = rt_task_fits_capacity(p, target);
->  
-> -		/*
-> -		 * Don't bother moving it if the destination CPU is
-> -		 * not running a lower priority task.
-> -		 */
-> -		if (target != -1 &&
-> -		    p->prio < cpu_rq(target)->rt.highest_prio.curr)
-> -			cpu = target;
-> +			/*
-> +			 * Bail out if we were forcing a migration to find a
-> +			 * better fitting CPU but our search failed.
-> +			 */
-> +			if (!test && !fit_target)
-> +				goto out_unlock;
-> +
-> +			/*
-> +			 * Don't bother moving it if the destination CPU is
-> +			 * not running a lower priority task.
-> +			 */
-> +			if (p->prio < cpu_rq(target)->rt.highest_prio.curr) {
-> +
-> +				cpu = target;
-> +
-> +			} else if (p->prio == cpu_rq(target)->rt.highest_prio.curr) {
-> +
-> +				/*
-> +				 * If the priority is the same and the new CPU
-> +				 * is a better fit, then move, otherwise don't
-> +				 * bother here either.
-> +				 */
-> +				if (fit_target)
-> +					cpu = target;
-> +			}
-> +		}
->  	}
->  
->  out_unlock:
-> -- 
-> 2.17.1
-> 
+In that line of thought , the documentation suggests    ' =
+irq_set_irq_type'  with flag     'IRQF_TRIGGER_RISING'.
+
+That function was experimental at one point, and doesn't appear to be =
+available in the 2.6.21 source.
+I did a      'find' -> 'while read' -> 'fgrep'  search to find the =
+function declaration in headers but had no luck under 2.6.21 .
+
+-- My specific questions --
+
+Question 1.)   Is  'irq_set_irq_type'  still experimental ?
+Question 2.)   At what version of the kernel source does the function =
+appear?
+Question 3.)  If the function exists for  2.6.21  What headers are =
+required to allow effective compilation?
+
+
+-- Notes and suggestions regarding kernel function documentation --
+
+Note 1.) Perhaps functions should be documented with indications of what =
+kernel versions they apply to.
+Note 2.) In function documentation, an indication of what headers to =
+include supporting each specific function would be nice.
+
+Thank you for your time and comments,
+
+Peter
+
+
+
+
