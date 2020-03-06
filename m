@@ -2,147 +2,125 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C0CC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052B5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4098720658
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9964120658
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:19:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mm+uJf+5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XXC4UXFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgCFXLw (ORCPT
+        id S1726382AbgCFXTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 18:11:52 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34960 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFXLv (ORCPT
+        Fri, 6 Mar 2020 18:19:39 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39933 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726245AbgCFXTi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 18:11:51 -0500
-Received: by mail-lj1-f196.google.com with SMTP id a12so3937129ljj.2;
-        Fri, 06 Mar 2020 15:11:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gK0NIKisFWdsMrtmzgYZAFdeJlOFf5qgx10lmxvVCTk=;
-        b=mm+uJf+5ympFMJq5u0MTaFeFHYjmBfZeImyavE70t/lDjr1oUEtoWnjUjTC52tUIKo
-         sT2B6YDOr/QwJUwqv5+X0gcLScFHMNGmFM+lqGJ/1Leoa9oeqZ6rHvxIH6q2BQ5T55wx
-         Q85DZ8VKJGuWWrGd3PH1KTlVn9nHz4FU8HQBFVjN1rsr+ezX1fOxlcXvcZvrH4gs7uPT
-         /ccVrZxuVeKsXkk3VRXqAaR7RCuYWBG5I8/JAir3AIUw5GPXEhdw9UAjv1W0Km0rWVrW
-         ZqIjouiLqRzVErbhCj+APOhqnoE/Zt9mSHDPb80/ZgDj0aIGlPKiCy9OFfcbqHf1DjsR
-         XmEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gK0NIKisFWdsMrtmzgYZAFdeJlOFf5qgx10lmxvVCTk=;
-        b=dDSTvd9K5VpYGWqx4BA6d5culwJSa0FW9J5mYPhs+1uOKongJd720Q8aIE75M5RnYh
-         drc6wEgSArnG3n+5yt7lv9/V2t6JzBAJMXwc0O8vCNxgjc93DVuL49dt5/PZx+zTP+JB
-         xO/dXkff38N7i5fLzQWWufXkP6U+thaG8L88PHuD/JqZpc7JaO32lppgHYpumHnFIRcL
-         yoQJlZ6gbfmXZyA+Op4/EqJ4bB02Qtcf8736MnRh1L5KN0IZkDGKCtcuoUE9CY/ZJGbG
-         gZuMfdl4/3sf+s/bqmkk9uwKWsDdF0dlR4P5yJSbBgKvVJIassGKPSVIS0ROoTkpgYln
-         5+Zw==
-X-Gm-Message-State: ANhLgQ2Jwqhz+s4cxFVk9cYlX75zmpmk2kl3PgEKXuJC5DVuyI/n/EUp
-        by6offpk3ltaShBlTn4+uxEogJW4
-X-Google-Smtp-Source: ADFU+vvCrvTob9iFZY6HE4Gqd8Ft7QfjakCUfpIv0st2+oa4Ze6vk/10TpObFCLeWg4GAu2xku65TA==
-X-Received: by 2002:a2e:6a08:: with SMTP id f8mr3412182ljc.76.1583536308523;
-        Fri, 06 Mar 2020 15:11:48 -0800 (PST)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id n26sm16610009lfi.5.2020.03.06.15.11.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2020 15:11:47 -0800 (PST)
-Subject: Re: [PATCH v1 3/3] partitions: Introduce NVIDIA Tegra Partition Table
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200224231841.26550-1-digetx@gmail.com>
- <20200224231841.26550-4-digetx@gmail.com>
- <44c22925-a14e-96d0-1f93-1979c0c60525@wwwdotorg.org>
- <CAPDyKFoXnoukjH_2cM=f0DGHBHS6kVUQSYOa_5ffQppC7VOn2A@mail.gmail.com>
- <824a4d5f-8280-8860-3e80-68188a13aa3d@gmail.com>
- <CAPDyKFric6pZbJ5-2qkwAFoeJ0c0kcha99zHJ12AUrWO6FQmgg@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <6047f07b-c0af-08c8-90d1-79a0d880e0a2@gmail.com>
-Date:   Sat, 7 Mar 2020 02:11:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 6 Mar 2020 18:19:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583536777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AaegcihBLJQJfoRSt4gkmOzXxDMBePppoosaSAJRCnQ=;
+        b=XXC4UXFoCltRpQBJ/xS63l1fxxsGNENnAbYAEXH8Xiyrxx3m1n++/ofx468MYP1xCvwwEY
+        ohEh/PhLdCtvRjeU8HQOLY3zeW5IKervB8LrzFVEMTqbb3X6I7waowsJd007baa8qw+gKZ
+        KJB2xjnIK5em3HPxd+iQyE19FVawqbI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-376-AVQ0icusOou5JCw94mAnoA-1; Fri, 06 Mar 2020 18:19:33 -0500
+X-MC-Unique: AVQ0icusOou5JCw94mAnoA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 710D0DB22;
+        Fri,  6 Mar 2020 23:19:32 +0000 (UTC)
+Received: from elisabeth (ovpn-200-26.brq.redhat.com [10.40.200.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BCCAC5D9CD;
+        Fri,  6 Mar 2020 23:19:24 +0000 (UTC)
+Date:   Sat, 7 Mar 2020 00:18:56 +0100
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lib/bitmap: rework bitmap_cut()
+Message-ID: <20200307001856.5181eda7@elisabeth>
+In-Reply-To: <20200306221423.18631-1-yury.norov@gmail.com>
+References: <20200306221423.18631-1-yury.norov@gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFric6pZbJ5-2qkwAFoeJ0c0kcha99zHJ12AUrWO6FQmgg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.03.2020 16:37, Ulf Hansson пишет:
-...
->>
->> Technically, it should be possible to chain-load some custom secondary
->> bootloader instead of a kernel image, but this is not very practical
->> because now:
->>
->> 1. There is a need to make a custom bootloader and it is quite a lot of
->> work.
->>
->> 2. You'll have to tell everybody that a custom booloader may need to be
->> used in order to get a working eMMC.
-> 
-> Yeah, I get the point. It's not an optimal situation, but I assume
-> it's about informing developers. They can cope with this, no?
+Hi Yuri,
 
-Perhaps no, it's not only about the informing. The need for a custom
-bootloader creates other inconveniences because:
+I haven't reviewed the new implementation yet, just a few comments so
+far:
 
-1. It won't be possible to boot a vanilla upstream kernel using
-Android's "fastboot boot ..." without applying extra patches to kernel
-for the partition table support. Advanced users usually tend to use
-fastboot and it's also very useful for a regular development purposes as
-well.
+On Fri,  6 Mar 2020 14:14:23 -0800
+Yury Norov <yury.norov@gmail.com> wrote:
 
-2. Somebody (a developer / advanced user) will have to create a custom
-bootloader for each device in the first place. This is not what an
-average person will be able to do and there are not that many developers
-who would want to dedicate theirs time to this.
+> bitmap_cut() refers src after memmove(). If dst and src overlap,
+> it may cause buggy behaviour because src may become inconsistent.
 
-3. The entry barrier for upstreaming Android devices support to the
-kernel is already quite enormous. Adding extra hurdles isn't a step into
-the right direction, IMO.
+I don't see how: src is always on the opposite side of the cut compared
+to dst, and bits are copied one by one.
 
->> 3. NVIDIA's bootloader already passes a command line parameter to kernel
->> for locating GPT entry, but this hack is not acceptable for the upstream
->> kernel.
-> 
-> Well, I am just worried that we will end up with one partition format
-> per vendor/product, that wouldn't scale very well.
-> 
-> In any case, from mmc point of view I am less concerned, we can find a
-> way to support the needed bits. I just need to review the series more
-> carefully and provide some comments. :-)
-> 
-> However, before I do that, I would like to hear Jens opinion about
-> adding a new partition format, so I don't waste my time here.
+Also note that I originally designed this function for the single usage
+it has, that is, with src being the same as dst, and this is the only
+way it is used, so this case is rather well tested. Do you have any
+specific case in mind?
 
-Sure, no problems :) Let's wait for the comments from Jens.
+> The function complexity is of O(nbits * cut_bits), which can be
+> improved to O(nbits).
+
+Nice, indeed.
+
+> We can also rely on bitmap_shift_right() to do most of the work.
+
+Also nice.
+
+> I don't like interface of bitmap_cut(). The idea of copying of a
+> whole bitmap inside the function from src to dst doesn't look
+> useful in practice. The function is introduced a few weeks ago and
+> was most probably inspired by bitmap_shift_*. Looking at the code,
+> it's easy to see that bitmap_shift_* is usually passed with
+> dst == src. bitmap_cut() has a single user so far, and it also
+> calls it with dst == src.
+
+I'm not fond of it either, but this wasn't just "inspired" by
+bitmap_shift_*: I wanted to maintain a consistent interface with those,
+and all the other functions of this kind taking separate dst and src.
+
+For the current usage, performance isn't exceedingly relevant. If you
+have another use case in mind where it's relevant, by all means, I
+think it makes sense to change the interface.
+
+Otherwise, I would still have a slight preference towards keeping the
+interface consistent.
+
+By the way, I don't think it's possible to do that keeping the
+memmove(), and at the same time implement the rest of this change,
+because then we might very well hit some unexpected behaviour, using
+bitmap_shift_right() later.
+
+All in all, I don't have a strong preference against this -- but I'm
+not too convinced it makes sense either.
+
+-- 
+Stefano
+
