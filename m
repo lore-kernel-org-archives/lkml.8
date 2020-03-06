@@ -2,150 +2,223 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B250DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF93C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C1C2072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:54:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NYYuWZLs"
+	by mail.kernel.org (Postfix) with ESMTP id 59C362072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgCFRyW (ORCPT
+        id S1726498AbgCFRzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:54:22 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:36839 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgCFRyW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:54:22 -0500
-Received: by mail-yw1-f66.google.com with SMTP id j71so3012456ywb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 09:54:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4k+80Q3nQjCWteUyAhZ6YcboJW9HYZRVDGVL+kSyi/k=;
-        b=NYYuWZLsNuPaoJFvWxV1iHK0POM0eZCAjXZUdaWD1JjioAw57dddmMC4t52NAHvsw4
-         MblsPian0TkfDhRcdwvYMKUMtizW2OXMiTfa3NdZNEnHVQaD7pQioly3gWIa93F5QolV
-         IEHxYHxp98f14S6f9Rfr4mREwJ3VneZSKDhzguw/WjwY2hPd85fsNwMZhvqhbn9jzVGj
-         JJmKWt7irULB+qlRliAPUNRzGitVXRaASU/QCY3KWg/nZ9eUP64bW1nA/YJPzWXFDd8O
-         RI0mehRTXtEyvinjltr2KEYMt4cBF5Csu2rFHqWxcyGOQNIyJGHvt8AIAhM3HOFGFQ5L
-         R8sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4k+80Q3nQjCWteUyAhZ6YcboJW9HYZRVDGVL+kSyi/k=;
-        b=PrkMJjVgotxeZkoWZAr+7m6UXNHJfkx+JbYCjZX75jqEKIjP54HJEbMqBOtMUpsdyF
-         1V2YT5kH4pXbCFaRJLKG4bWQ5O5v8NMrDpiP3r5oYzsr9TqsTr+MX02+ODeQGHd+vdxY
-         d//PhXxe5ueD2zgtu6C2Z1UZilAX4kx16lNpuGJdxxbSyv8eQyH+Jc+0Vct6gKluTeKW
-         8oL6DufJ7RQp76VbAoz2m2NjI9uowKPZudENt/r2d40nfp9CqMO0/QqC1TLy/YO/BIGM
-         xrjT5mzBNG1VOsBF/LnRjfd/DvKv7ns4uPH8soOmWJDfXUWMbSYewD2Ek54VrghA4pgJ
-         eJnA==
-X-Gm-Message-State: ANhLgQ2pYVDtVSsM2altWfK3ARJXrjU8MgbajuVFzq1fsu0IpleBPTfG
-        LTeKUCP5Gyi2SUw1aHJx89fNecrCGamySFBmZCEtlA==
-X-Google-Smtp-Source: ADFU+vveCrlRXxx62/mHZj6Fy+BNRyuQ9buItwmzP03xyrVo60C0Foz2j5JCM6zIPwo+rEzoyKPoCf9EuPADmoiZ16E=
-X-Received: by 2002:a0d:ca8e:: with SMTP id m136mr5082180ywd.349.1583517260882;
- Fri, 06 Mar 2020 09:54:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20200306071110.130202-1-irogers@google.com> <20200306071110.130202-3-irogers@google.com>
- <20200306113855.GA27494@kernel.org>
-In-Reply-To: <20200306113855.GA27494@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 6 Mar 2020 09:54:09 -0800
-Message-ID: <CAP-5=fUaFTR=CKaBiR1QTJ5VqS0xBNW8-YDp_junt6tLkzZdAw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] libperf: avoid redefining _GNU_SOURCE in test
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
+        Fri, 6 Mar 2020 12:55:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbgCFRzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 12:55:05 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 223DF206E2;
+        Fri,  6 Mar 2020 17:55:02 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 12:55:00 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Wei Li <liwei391@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        paulmck <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        dan carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for
+ _rcuidle tracepoints (again)
+Message-ID: <20200306125500.6aa75c0d@gandalf.local.home>
+In-Reply-To: <1896740806.20220.1583510668164.JavaMail.zimbra@efficios.com>
+References: <20200221133416.777099322@infradead.org>
+        <20200221134216.051596115@infradead.org>
+        <20200306104335.GF3348@worktop.programming.kicks-ass.net>
+        <20200306113135.GA8787@worktop.programming.kicks-ass.net>
+        <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com>
+        <1896740806.20220.1583510668164.JavaMail.zimbra@efficios.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 3:38 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Thu, Mar 05, 2020 at 11:11:09PM -0800, Ian Rogers escreveu:
-> > _GNU_SOURCE needs to be globally defined to pick up features like
-> > asprintf. Add a guard against redefinition in this test.
->
-> Humm, so you're completely sure that the Makefiles that drive the build
-> of this file don't set _GNU_SOURCE? I.e. some explanation in the cset
-> log message about that would help in processing the patch,
+On Fri, 6 Mar 2020 11:04:28 -0500 (EST)
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-The convention on _GNU_SOURCE isn't very clear. For our builds we set
-_GNU_SOURCE globally hence needing this patch. This patch won't
-interfere with a Makefile setting. Here is some of the inconsistency:
+> If we care about not adding those extra branches on the fast-path, there is
+> an alternative way to do things: BPF could provide two distinct probe callbacks,
+> one meant for rcuidle tracepoints (which would have the trace_rcu_enter/exit), and
+> the other for the for 99% of the other callsites which have RCU watching.
+> 
+> I would recommend performing benchmarks justifying the choice of one approach over
+> the other though.
 
-tools/perf: sets _GNU_SOURCE:
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/tools/perf/Makefile.config#n309
+I just whipped this up (haven't even tried to compile it), but this should
+satisfy everyone. Those that register a callback that needs RCU protection
+simply registers with one of the _rcu versions, and all will be done. And
+since DO_TRACE is a macro, and rcuidle is a constant, the rcu protection
+code will be compiled out for locations that it is not needed.
 
-tools/lib/perf: doesn't set _GNU_SOURCE <-- I'm inconsistent in
-setting _GNU_SOURCE when building files here
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/tools/lib/perf/Makefile
+With this, perf doesn't even need to do anything extra but register with
+the "_rcu" version.
 
-tools/lib/subcmd: sets _GNU_SOURCE
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/tools/lib/subcmd/Makefile#n43
+-- Steve
 
-Some #defines of _GNU_SOURCE are already guarded to avoid redefinition:
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/tools/lib/bpf/libbpf.c#n13
-
-Some code explicitly undefines _GNU_SOURCE:
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/tools/lib/str_error_r.c#n2
-
-I don't think this patch hurts, I'm not sure it adds value. I think
-there's a wider cleanup necessary here but I'm not sure what that
-would look like.
-
-Thanks,
-Ian
-
-> - Arnaldo
->
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/perf/tests/test-evlist.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-> > index 6d8ebe0c2504..5a5ff104b668 100644
-> > --- a/tools/lib/perf/tests/test-evlist.c
-> > +++ b/tools/lib/perf/tests/test-evlist.c
-> > @@ -1,5 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> > +#ifndef _GNU_SOURCE
-> >  #define _GNU_SOURCE // needed for sched.h to get sched_[gs]etaffinity and CPU_(ZERO,SET)
-> > +#endif
-> >  #include <sched.h>
-> >  #include <stdio.h>
-> >  #include <stdarg.h>
-> > --
-> > 2.25.1.481.gfbce0eb801-goog
-> >
->
-> --
->
-> - Arnaldo
+diff --git a/include/linux/tracepoint-defs.h b/include/linux/tracepoint-defs.h
+index b29950a19205..582dece30170 100644
+--- a/include/linux/tracepoint-defs.h
++++ b/include/linux/tracepoint-defs.h
+@@ -25,6 +25,7 @@ struct tracepoint_func {
+ 	void *func;
+ 	void *data;
+ 	int prio;
++	int requires_rcu;
+ };
+ 
+ struct tracepoint {
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index 1fb11daa5c53..5f4de82ffa0f 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -179,25 +179,28 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 		 * For rcuidle callers, use srcu since sched-rcu	\
+ 		 * doesn't work from the idle path.			\
+ 		 */							\
+-		if (rcuidle) {						\
++		if (rcuidle)						\
+ 			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+-			rcu_irq_enter_irqson();				\
+-		}							\
+ 									\
+ 		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
+ 									\
+ 		if (it_func_ptr) {					\
+ 			do {						\
++				int rcu_flags;				\
+ 				it_func = (it_func_ptr)->func;		\
++				if (rcuidle &&				\
++				    (it_func_ptr)->requires_rcu)	\
++					rcu_flags = trace_rcu_enter();	\
+ 				__data = (it_func_ptr)->data;		\
+ 				((void(*)(proto))(it_func))(args);	\
++				if (rcuidle &&				\
++				    (it_func_ptr)->requires_rcu)	\
++					trace_rcu_exit(rcu_flags);	\
+ 			} while ((++it_func_ptr)->func);		\
+ 		}							\
+ 									\
+-		if (rcuidle) {						\
++		if (rcuidle)						\
+ 			rcu_irq_exit_irqson();				\
+-			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+-		}							\
+ 									\
+ 		preempt_enable_notrace();				\
+ 	} while (0)
+diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+index 73956eaff8a9..1797e20fd471 100644
+--- a/kernel/tracepoint.c
++++ b/kernel/tracepoint.c
+@@ -295,6 +295,7 @@ static int tracepoint_remove_func(struct tracepoint *tp,
+  * @probe: probe handler
+  * @data: tracepoint data
+  * @prio: priority of this function over other registered functions
++ * @rcu: set to non zero if the callback requires RCU protection
+  *
+  * Returns 0 if ok, error value on error.
+  * Note: if @tp is within a module, the caller is responsible for
+@@ -302,8 +303,8 @@ static int tracepoint_remove_func(struct tracepoint *tp,
+  * performed either with a tracepoint module going notifier, or from
+  * within module exit functions.
+  */
+-int tracepoint_probe_register_prio(struct tracepoint *tp, void *probe,
+-				   void *data, int prio)
++int tracepoint_probe_register_prio_rcu(struct tracepoint *tp, void *probe,
++				       void *data, int prio, int rcu)
+ {
+ 	struct tracepoint_func tp_func;
+ 	int ret;
+@@ -312,12 +313,52 @@ int tracepoint_probe_register_prio(struct tracepoint *tp, void *probe,
+ 	tp_func.func = probe;
+ 	tp_func.data = data;
+ 	tp_func.prio = prio;
++	tp_func.requires_rcu = rcu;
+ 	ret = tracepoint_add_func(tp, &tp_func, prio);
+ 	mutex_unlock(&tracepoints_mutex);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(tracepoint_probe_register_prio_rcu);
++
++/**
++ * tracepoint_probe_register_prio -  Connect a probe to a tracepoint with priority
++ * @tp: tracepoint
++ * @probe: probe handler
++ * @data: tracepoint data
++ * @prio: priority of this function over other registered functions
++ *
++ * Returns 0 if ok, error value on error.
++ * Note: if @tp is within a module, the caller is responsible for
++ * unregistering the probe before the module is gone. This can be
++ * performed either with a tracepoint module going notifier, or from
++ * within module exit functions.
++ */
++int tracepoint_probe_register_prio(struct tracepoint *tp, void *probe,
++				   void *data, int prio)
++{
++	return tracepoint_probe_register_prio_rcu(tp, probe, data, prio, 0);
++}
+ EXPORT_SYMBOL_GPL(tracepoint_probe_register_prio);
+ 
++/**
++ * tracepoint_probe_register_rcu -  Connect a probe to a tracepoint
++ * @tp: tracepoint
++ * @probe: probe handler
++ * @data: tracepoint data
++ *
++ * Returns 0 if ok, error value on error.
++ * Note: if @tp is within a module, the caller is responsible for
++ * unregistering the probe before the module is gone. This can be
++ * performed either with a tracepoint module going notifier, or from
++ * within module exit functions.
++ */
++int tracepoint_probe_register_rcu(struct tracepoint *tp, void *probe, void *data)
++{
++	return tracepoint_probe_register_prio_rcu(tp, probe, data,
++						  TRACEPOINT_DEFAULT_PRIO, 1);
++}
++EXPORT_SYMBOL_GPL(tracepoint_probe_register_rcu);
++
+ /**
+  * tracepoint_probe_register -  Connect a probe to a tracepoint
+  * @tp: tracepoint
+@@ -332,7 +373,8 @@ EXPORT_SYMBOL_GPL(tracepoint_probe_register_prio);
+  */
+ int tracepoint_probe_register(struct tracepoint *tp, void *probe, void *data)
+ {
+-	return tracepoint_probe_register_prio(tp, probe, data, TRACEPOINT_DEFAULT_PRIO);
++	return tracepoint_probe_register_prio_rcu(tp, probe, data,
++						  TRACEPOINT_DEFAULT_PRIO, 0);
+ }
+ EXPORT_SYMBOL_GPL(tracepoint_probe_register);
+ 
