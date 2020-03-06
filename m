@@ -2,214 +2,81 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0443C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510E1C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70132084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3AF20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:49:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="h1wRygVr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mu8MYU55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgCFOrh (ORCPT
+        id S1726932AbgCFOtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:47:37 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41868 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgCFOrh (ORCPT
+        Fri, 6 Mar 2020 09:49:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34668 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726300AbgCFOtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:47:37 -0500
-Received: by mail-wr1-f68.google.com with SMTP id v4so2674084wrs.8
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 06:47:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZmRC/N2ckJqEm1pBTImhJ1/ZTJbIyevuERQcpQPPkHg=;
-        b=h1wRygVr/++xKK0PhRWtU9PREVeo2ayHMR63B1Q3qEb0c065ocBuc8HiwdrloplBdw
-         QPzu0ac+FfoqjBdnRwhj6wxLr5uPU0JaSO32MqnZyR/QSBLs4d3+QOJlltmXlWavNrU0
-         dwvlMICfEACqL74IIZE5zasZTh7azljI9aU1XsDufE+fCBrNdXswE4GXvZswIKHuvURx
-         K2V5LokUNEN3SJGOI9bpcqBkM1vTwQY7ZO4FRwY5URMdpaCTHY4ZX7NPAaCwfj8PsSCE
-         6Ex4LFXWDP3pTH+Tem5CDo3DJkVy5sQrPVaQbOx+Ri9stdO137ibNysr9Wi0aDbg8JDp
-         TJlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZmRC/N2ckJqEm1pBTImhJ1/ZTJbIyevuERQcpQPPkHg=;
-        b=h33aHWQo3iCOptdqMw7ZPlGDk9aeqGBWsFlqs7hZzvEEjbbTsURElPnKwDzgDUMSb1
-         j9JF10grRZok6EUmb22sv2OjCelP8zcsYkPE3BRibpj619Wl22rQ7jKEW7kE16GQNpVs
-         UqWJohrju7pX6qZ0YWkiGXcKtufguD8L2lXX1qyzgArgqKKbjbgoID+dRF4+e8FwXYf8
-         YvdH09r7DVrtP84wLIdakIDniLQDsk0SvM70Ewq/+/VbpdJZOY8XLiBT6SfvCayn0wuI
-         bvwqxg2oJuGLYqdec7NcC+B9xz/aqzf9BqZGAU+RbFcGXO8jrRd1NmW7GCJqM7SoNyM6
-         slNg==
-X-Gm-Message-State: ANhLgQ2W+X9JkDFA3m7071aeqGD3o1G713AqiG0P6L81uKFVdnjwpMKF
-        zAfCAJvwgmFDle0t5+wY+zjeMi3UKuTn1NW6cUmpj0nJIa0=
-X-Google-Smtp-Source: ADFU+vuBGr0bbFfHhOsjL97WZnhR9NLT215RcLNRAO7J/UBZTreFv3F8tQaLNzE17XnXgl+kjCWtqu97MKvnZfKD9pM=
-X-Received: by 2002:a5d:638a:: with SMTP id p10mr4342071wru.42.1583506054904;
- Fri, 06 Mar 2020 06:47:34 -0800 (PST)
+        Fri, 6 Mar 2020 09:49:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583506140;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KPKncNxD+H6FSBEIxsKO9EUaXIxD1slAskRHA95lWGQ=;
+        b=Mu8MYU556M07CYCiNkvkhDb2LKFSadEjA5H7Dc5pgM81Xmkn71zw90js2CWDtgZlzgvQS2
+        HMmFku12Kvxk57V/eiCUa/ldDLe51+1wOGG+z7VTDsYFGiclqN649fwrOGMmI8Grgv8ijb
+        Zgf6Jj2bmI551yFTXojzurjCplhkHcs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-QSXU0n8gM-6CEnr1OE_cyg-1; Fri, 06 Mar 2020 09:48:57 -0500
+X-MC-Unique: QSXU0n8gM-6CEnr1OE_cyg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 383AD1034B20;
+        Fri,  6 Mar 2020 14:48:53 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 78B788D57C;
+        Fri,  6 Mar 2020 14:48:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200306140032.tpwfytofaeuazalo@yavin>
+References: <20200306140032.tpwfytofaeuazalo@yavin> <20200302152458.hznqqssixhlpykgr@yavin> <20200302143546.srzk3rnh4o6s76a7@wittgenstein> <20200302115239.pcxvej3szmricxzu@wittgenstein> <96563.1582901612@warthog.procyon.org.uk> <20200228152427.rv3crd7akwdhta2r@wittgenstein> <87h7z7ngd4.fsf@oldenburg2.str.redhat.com> <848282.1583159228@warthog.procyon.org.uk> <888183.1583160603@warthog.procyon.org.uk> <20200302150528.okjdx2mkluicje4w@wittgenstein> <932113.1583167065@warthog.procyon.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     dhowells@redhat.com,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Weimer <fweimer@redhat.com>, linux-api@vger.kernel.org,
+        viro@zeniv.linux.org.uk, metze@samba.org,
+        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
 MIME-Version: 1.0
-References: <20200306103246.22213-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200306103246.22213-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200306103246.22213-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Fri, 6 Mar 2020 14:47:18 +0000
-Message-ID: <CAPY8ntCuXgzQTi2=d_sd_t1ucnCgfGM64E3aNR_MuGonnHnifA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] media: i2c: imx219: Add support for cropped
- 640x480 resolution
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4041048.1583506130.1@warthog.procyon.org.uk>
+Date:   Fri, 06 Mar 2020 14:48:50 +0000
+Message-ID: <4041049.1583506130@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pabhakar
+Aleksa Sarai <cyphar@cyphar.com> wrote:
 
-Thanks for the update. One very minor nit-pick.
+> Right, but open_tree() doesn't need RESOLVE_ flags (nor can you add them
+> without an open_tree2()). Instead you can pass an O_PATH file descriptor
+> with AT_EMPTY_PATH which you could've safely resolved with openat2().
 
-On Fri, 6 Mar 2020 at 10:33, Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->
-> This patch adds mode table entry for capturing cropped 640x480 resolution
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/media/i2c/imx219.c | 72 ++++++++++++++++++++++++++++++++++++--
->  1 file changed, 70 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> index f96f3ce9fd85..6a86f500ec48 100644
-> --- a/drivers/media/i2c/imx219.c
-> +++ b/drivers/media/i2c/imx219.c
-> @@ -54,6 +54,7 @@
->  #define IMX219_VTS_15FPS               0x0dc6
->  #define IMX219_VTS_30FPS_1080P         0x06e3
->  #define IMX219_VTS_30FPS_BINNED                0x06e3
-> +#define IMX219_VTS_30FPS_640x480       0x06e3
+Note that openat2() is not a substitute for open_tree(). See the effect of
+the OPEN_TREE_CLONE flag.
 
-Thanks on updating this - I can confirm the default is now 30fps
-rather than the 90 I was seeing before.
-Reducing vertical blanking down to the minimum 4 lines give me
-109.3fps and all still working properly :-)
+David
 
->  #define IMX219_VTS_MAX                 0xffff
->
->  #define IMX219_VBLANK_MIN              4
-> @@ -142,8 +143,8 @@ struct imx219_mode {
->
->  /*
->   * Register sets lifted off the i2C interface from the Raspberry Pi firmware
-> - * driver.
-> - * 3280x2464 = mode 2, 1920x1080 = mode 1, and 1640x1232 = mode 4.
-> + * driver for resolutions 3280x2464, 1920x1080 and 1640x1232.
-> + * 3280x2464 = mode 2, 1920x1080 = mode 1, 1640x1232 = mode 4, 640x480 = mode 1.
-
-640x480 has come from mode 1 of the firmware? mode 1 is the 1080p mode.
-
-Having checked through the register settings they are identical to
-those used by the Pi firmware for mode 7, see [1]. You could quote
-that rather than stating that they were derived by yourself.
-
-One of Sony's concerns when I discussed upstreaming this driver with
-them was that people might add modes with random register settings. If
-the image quality was then sub-standard they'd unjustly look bad. They
-validated and blessed the register sets that we were using in the Pi
-firmware, so retaining that parentage will make them happy.
-
-[1] https://github.com/6by9/raspiraw/blob/master/imx219_modes.h#L506
-
->   */
->  static const struct imx219_reg mode_3280x2464_regs[] = {
->         {0x0100, 0x00},
-> @@ -318,6 +319,63 @@ static const struct imx219_reg mode_1640_1232_regs[] = {
->         {0x0163, 0x78},
->  };
->
-> +static const struct imx219_reg mode_640_480_regs[] = {
-> +       {0x0100, 0x00},
-> +       {0x30eb, 0x05},
-> +       {0x30eb, 0x0c},
-> +       {0x300a, 0xff},
-> +       {0x300b, 0xff},
-> +       {0x30eb, 0x05},
-> +       {0x30eb, 0x09},
-> +       {0x0114, 0x01},
-> +       {0x0128, 0x00},
-> +       {0x012a, 0x18},
-> +       {0x012b, 0x00},
-> +       {0x0162, 0x0d},
-> +       {0x0163, 0x78},
-> +       {0x0164, 0x03},
-> +       {0x0165, 0xe8},
-> +       {0x0166, 0x08},
-> +       {0x0167, 0xe7},
-> +       {0x0168, 0x02},
-> +       {0x0169, 0xf0},
-> +       {0x016a, 0x06},
-> +       {0x016b, 0xaf},
-> +       {0x016c, 0x02},
-> +       {0x016d, 0x80},
-> +       {0x016e, 0x01},
-> +       {0x016f, 0xe0},
-> +       {0x0170, 0x01},
-> +       {0x0171, 0x01},
-> +       {0x0174, 0x03},
-> +       {0x0175, 0x03},
-> +       {0x0301, 0x05},
-> +       {0x0303, 0x01},
-> +       {0x0304, 0x03},
-> +       {0x0305, 0x03},
-> +       {0x0306, 0x00},
-> +       {0x0307, 0x39},
-> +       {0x030b, 0x01},
-> +       {0x030c, 0x00},
-> +       {0x030d, 0x72},
-> +       {0x0624, 0x06},
-> +       {0x0625, 0x68},
-> +       {0x0626, 0x04},
-> +       {0x0627, 0xd0},
-> +       {0x455e, 0x00},
-> +       {0x471e, 0x4b},
-> +       {0x4767, 0x0f},
-> +       {0x4750, 0x14},
-> +       {0x4540, 0x00},
-> +       {0x47b4, 0x14},
-> +       {0x4713, 0x30},
-> +       {0x478b, 0x10},
-> +       {0x478f, 0x10},
-> +       {0x4793, 0x10},
-> +       {0x4797, 0x0e},
-> +       {0x479b, 0x0e},
-> +};
-> +
->  static const char * const imx219_test_pattern_menu[] = {
->         "Disabled",
->         "Color Bars",
-> @@ -424,6 +482,16 @@ static const struct imx219_mode supported_modes[] = {
->                         .regs = mode_1640_1232_regs,
->                 },
->         },
-> +       {
-> +               /* 640x480 30fps mode */
-> +               .width = 640,
-> +               .height = 480,
-> +               .vts_def = IMX219_VTS_30FPS_640x480,
-> +               .reg_list = {
-> +                       .num_of_regs = ARRAY_SIZE(mode_640_480_regs),
-> +                       .regs = mode_640_480_regs,
-> +               },
-> +       },
->  };
->
->  struct imx219 {
-> --
-> 2.20.1
->
