@@ -6,34 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885AFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF8AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0FD2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B802072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgCFRo1 (ORCPT
+        id S1726898AbgCFRoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:44:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60530 "EHLO mx2.suse.de"
+        Fri, 6 Mar 2020 12:44:30 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60536 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgCFRo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:44:26 -0500
+        id S1726846AbgCFRo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 12:44:28 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DCF25ACC2;
-        Fri,  6 Mar 2020 17:44:24 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 33318AC46;
+        Fri,  6 Mar 2020 17:44:26 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org
+To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     phil@raspberrypi.com, linux-mmc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
         stefan.wahren@i2se.com, bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v2 03/11] mmc: sdhci: milbeaut: Use sdhci_set_power_and_voltage()
-Date:   Fri,  6 Mar 2020 18:44:05 +0100
-Message-Id: <20200306174413.20634-4-nsaenzjulienne@suse.de>
+Subject: [PATCH v2 04/11] mmc: sdhci: at91: Use sdhci_set_power_and_voltage()
+Date:   Fri,  6 Mar 2020 18:44:06 +0100
+Message-Id: <20200306174413.20634-5-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200306174413.20634-1-nsaenzjulienne@suse.de>
 References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
@@ -49,19 +52,24 @@ this controller's set_power() callback. Use it instead.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/mmc/host/sdhci-milbeaut.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ drivers/mmc/host/sdhci-of-at91.c | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-milbeaut.c b/drivers/mmc/host/sdhci-milbeaut.c
-index 92f30a1db435..4e7cc0680f94 100644
---- a/drivers/mmc/host/sdhci-milbeaut.c
-+++ b/drivers/mmc/host/sdhci-milbeaut.c
-@@ -121,17 +121,6 @@ static void sdhci_milbeaut_reset(struct sdhci_host *host, u8 mask)
- 	}
+diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
+index ab2bd314a390..564a606f6729 100644
+--- a/drivers/mmc/host/sdhci-of-at91.c
++++ b/drivers/mmc/host/sdhci-of-at91.c
+@@ -101,22 +101,6 @@ static void sdhci_at91_set_clock(struct sdhci_host *host, unsigned int clock)
+ 	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
  }
  
--static void sdhci_milbeaut_set_power(struct sdhci_host *host,
--			unsigned char mode, unsigned short vdd)
+-/*
+- * In this specific implementation of the SDHCI controller, the power register
+- * needs to have a valid voltage set even when the power supply is managed by
+- * an external regulator.
+- */
+-static void sdhci_at91_set_power(struct sdhci_host *host, unsigned char mode,
+-		     unsigned short vdd)
 -{
 -	if (!IS_ERR(host->mmc->supply.vmmc)) {
 -		struct mmc_host *mmc = host->mmc;
@@ -71,18 +79,18 @@ index 92f30a1db435..4e7cc0680f94 100644
 -	sdhci_set_power_noreg(host, mode, vdd);
 -}
 -
- static const struct sdhci_ops sdhci_milbeaut_ops = {
- 	.voltage_switch = sdhci_milbeaut_soft_voltage_switch,
- 	.get_min_clock = sdhci_milbeaut_get_min_clock,
-@@ -139,7 +128,7 @@ static const struct sdhci_ops sdhci_milbeaut_ops = {
- 	.set_clock = sdhci_set_clock,
- 	.set_bus_width = sdhci_set_bus_width,
- 	.set_uhs_signaling = sdhci_set_uhs_signaling,
--	.set_power = sdhci_milbeaut_set_power,
-+	.set_power = sdhci_set_power_and_bus_voltage,
+ static void sdhci_at91_set_uhs_signaling(struct sdhci_host *host,
+ 					 unsigned int timing)
+ {
+@@ -145,7 +129,7 @@ static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
+ 	.set_bus_width		= sdhci_set_bus_width,
+ 	.reset			= sdhci_at91_reset,
+ 	.set_uhs_signaling	= sdhci_at91_set_uhs_signaling,
+-	.set_power		= sdhci_at91_set_power,
++	.set_power		= sdhci_set_power_and_bus_voltage,
  };
  
- static void sdhci_milbeaut_bridge_reset(struct sdhci_host *host,
+ static const struct sdhci_pltfm_data sdhci_sama5d2_pdata = {
 -- 
 2.25.1
 
