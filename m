@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8F7C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0D0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED59205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F355420665
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgCFSDy (ORCPT
+        id S1726650AbgCFSE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:03:54 -0500
-Received: from muru.com ([72.249.23.125]:59176 "EHLO muru.com"
+        Fri, 6 Mar 2020 13:04:26 -0500
+Received: from muru.com ([72.249.23.125]:59188 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgCFSDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:03:54 -0500
+        id S1725922AbgCFSEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:04:25 -0500
 Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 427828027;
-        Fri,  6 Mar 2020 18:04:39 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 10:03:50 -0800
+        by muru.com (Postfix) with ESMTPS id D821E8027;
+        Fri,  6 Mar 2020 18:05:10 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 10:04:22 -0800
 From:   Tony Lindgren <tony@atomide.com>
 To:     Lokesh Vutla <lokeshvutla@ti.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -31,22 +31,31 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
         linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
         Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2 2/6] pwm: omap-dmtimer: Update description for pwm
- omap dm timer
-Message-ID: <20200306180350.GH37466@atomide.com>
+Subject: Re: [PATCH v2 3/6] pwm: omap-dmtimer: Fix pwm enabling sequence
+Message-ID: <20200306180422.GI37466@atomide.com>
 References: <20200228095651.32464-1-lokeshvutla@ti.com>
- <20200228095651.32464-3-lokeshvutla@ti.com>
+ <20200228095651.32464-4-lokeshvutla@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228095651.32464-3-lokeshvutla@ti.com>
+In-Reply-To: <20200228095651.32464-4-lokeshvutla@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 * Lokesh Vutla <lokeshvutla@ti.com> [200228 09:58]:
-> Update the description with a brief about how pwm is generated
-> using OMAP DM timer. Also add link to the Reference Manual.
+> To configure DM timer in pwm mode the following needs to be set in
+> OMAP_TIMER_CTRL_REG using set_pwm callback:
+> - Set toggle mode on PORTIMERPWM output pin
+> - Set trigger on overflow and match on PORTIMERPWM output pin.
+> - Set auto reload
+> 
+> This is a one time configuration and needs to be set before the start of
+> the dm timer. But the current driver tries to set the same configuration
+> for every period/duty cycle update, which is not needed. So move the pwm
+> setup before enabling timer and do not update it in pwm_omap_dmtimer_config.
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+Still works for me:
+
+Tested-by: Tony Lindgren <tony@atomide.com>
