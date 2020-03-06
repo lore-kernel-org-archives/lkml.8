@@ -2,110 +2,107 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D663C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B5CC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208DC20714
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF7C206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="gdosk36N"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KN9dLTqL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgCFUwD (ORCPT
+        id S1726269AbgCFUyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:52:03 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46659 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgCFUwC (ORCPT
+        Fri, 6 Mar 2020 15:54:22 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:49805 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCFUyW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:52:02 -0500
-Received: by mail-il1-f194.google.com with SMTP id e8so3251139ilc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 12:52:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DvYR/A6sU6MOP83SOcaM6fuuOQnX/X3paiURCZQZ5zg=;
-        b=gdosk36NodqB1hwovjpQiyfVrBcCT18ZZbADF2DKWw0ltWEDy6wxV7OtCiUiXRbhi8
-         wApryLv+o7MA3xTBwKCecpyYXsypPV4llqkjt9QKK3gqFry2pXG6z/9rB5H+p8YONVWw
-         ILjY9/lDsSbwbv0gahQM4JqMzI/cQAi2PGmHw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DvYR/A6sU6MOP83SOcaM6fuuOQnX/X3paiURCZQZ5zg=;
-        b=JQHRlD75WNahskQOqXhqTkw+J/N8to0snhty92GPYZOapdZRH1GounOvBRi8sLLUJg
-         btBXHeCWFmiBodkVzqIuBAG5L/rXAaSEPKYPG+OWdun5ORnrq0jI0pnOjCnR3rI72I+I
-         OEpWXoUnVQUTnLsQAFQrNb+ZgwAmA3QAFXZdjVpKfbydZ+yP+EkCJnAYsUi/Dv6XuZd+
-         e2ei6rPolRYUAq5A3gnj0NB/uZN2b/1fjhUMeNR95qxdWHkXvs6JI08ei5lAuMdJgjKr
-         BNnB2buV6B+2leo4hU3D9wKAdAX5IgmHd1QM8Wc734l5jprJYMzdi5NfVCcjdIFh1J5w
-         98zQ==
-X-Gm-Message-State: ANhLgQ0YmVMTNHDuyf2liEggD3pzJ0twDPpCB8YVvVTUkhPGe8Xba85E
-        7vzho+1EXvb5UypHr5oZZ4pLWdOM3Wy/4oORPPFiRA==
-X-Google-Smtp-Source: ADFU+vsSfmpgcTtLjaqUd8you1EnB+Adlmsw2R1fb2KCJPMGUn5sreIhU68BBr8zp6cSosp0R0u9BiMc39++38j5ic0=
-X-Received: by 2002:a92:8d41:: with SMTP id s62mr4596013ild.63.1583527922077;
- Fri, 06 Mar 2020 12:52:02 -0800 (PST)
+        Fri, 6 Mar 2020 15:54:22 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id A22C223E5A;
+        Fri,  6 Mar 2020 21:54:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583528060;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=VtE01cIb9Gn/hXGSjdQ6xRPyGzVnT85+CchIdODSGAw=;
+        b=KN9dLTqLSM0CMDJogGdougKGwBd3nLcY8y5x3eCrp/1f/EBDzjgjjIVCx70SBE+BemU7X6
+        7GsEO2ayBw6j7BuMA+qEZPLxMIOuKj0IKP5/kLrq/Z5vKYoZjuEJnLHFU1QCZVYWWXSBVS
+        Gjon35N8nTDOM/PKslwr4J83LtQRzgg=
+From:   Michael Walle <michael@walle.cc>
+To:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Peng Ma <peng.ma@nxp.com>, Michael Walle <michael@walle.cc>
+Subject: [PATCH 1/2] dt-bindings: dma: fsl-edma: fix ls1028a-edma compatible
+Date:   Fri,  6 Mar 2020 21:54:02 +0100
+Message-Id: <20200306205403.29881-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <20200306162549.GA28467@miu.piliscsaba.redhat.com> <20200306194322.GY23230@ZenIV.linux.org.uk>
- <20200306195823.GZ23230@ZenIV.linux.org.uk> <20200306200522.GA23230@ZenIV.linux.org.uk>
- <20200306203705.GB23230@ZenIV.linux.org.uk> <20200306203844.GC23230@ZenIV.linux.org.uk>
- <20200306204523.GD23230@ZenIV.linux.org.uk> <20200306204926.GE23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200306204926.GE23230@ZenIV.linux.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Fri, 6 Mar 2020 21:51:50 +0100
-Message-ID: <CAJfpegvK+v9LZ_VinPAgVV+iuxiVSFqYnX3oRXsBJM8keDgzJg@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: A22C223E5A
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_SPAM(0.00)[0.549];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 9:49 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Fri, Mar 06, 2020 at 08:45:23PM +0000, Al Viro wrote:
-> > On Fri, Mar 06, 2020 at 08:38:44PM +0000, Al Viro wrote:
-> > > On Fri, Mar 06, 2020 at 08:37:05PM +0000, Al Viro wrote:
-> > >
-> > > > You are misreading mntput_no_expire(), BTW - your get_mount() can
-> > > > bloody well race with umount(2), hitting the moment when we are done
-> > > > figuring out whether it's busy but hadn't cleaned ->mnt_ns (let alone
-> > > > set MNT_DOOMED) yet.  If somebody calls umount(2) on a filesystem that
-> > > > is not mounted anywhere else, they are not supposed to see the sucker
-> > > > return 0 until the filesystem is shut down.  You break that.
-> > >
-> > > While we are at it, d_alloc_parallel() requires i_rwsem on parent held
-> > > at least shared.
-> >
-> > Egads...  Let me see if I got it right - you are providing procfs symlinks
-> > to objects on the internal mount of that thing.  And those objects happen
-> > to be directories, so one can get to their parent that way.  Or am I misreading
-> > that thing?
->
-> IDGI.  You have (in your lookup) kstrtoul, followed by snprintf, followed
-> by strcmp and WARN_ON() in case of mismatch?  Is there any point in having
-> stat(2) on "00" spew into syslog?  Confused...
+The bootloader will fix up the IOMMU entries only on nodes with the
+compatible "fsl,vf610-edma". Thus make this compatible string mandatory
+for the ls1028a-edma.
 
-The WARN_ON() is for the buffer overrun, not for the strcmp mismatch.
+While at it, fix the "fsl,fsl," typo.
 
-Thanks,
-Miklos
+Signed-off-by: Michael Walle <michael@walle.cc>
+Fixes: d8c1bdb5288d ("dt-bindings: dma: fsl-edma: add new fsl,fsl,ls1028a-edma")
+---
+ Documentation/devicetree/bindings/dma/fsl-edma.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documentation/devicetree/bindings/dma/fsl-edma.txt
+index e77b08ebcd06..ee1754739b4b 100644
+--- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
++++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
+@@ -10,7 +10,8 @@ Required properties:
+ - compatible :
+ 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
+ 	- "fsl,imx7ulp-edma" for eDMA2 used similar to that on i.mx7ulp
+-	- "fsl,fsl,ls1028a-edma" for eDMA used similar to that on Vybrid vf610 SoC
++	- "fsl,ls1028a-edma" followed by "fsl,vf610-edma" for eDMA used on the
++	  LS1028A SoC.
+ - reg : Specifies base physical address(s) and size of the eDMA registers.
+ 	The 1st region is eDMA control register's address and size.
+ 	The 2nd and the 3rd regions are programmable channel multiplexing
+-- 
+2.20.1
+
