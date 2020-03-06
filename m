@@ -2,68 +2,199 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B23C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5FDC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F4D20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A6620848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583501721;
-	bh=gIboAinAdMo9JMZauS/rqqTvcKm62TrUHeVJSqCWbZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PZtYiqktOcXzxl1KeKtT9tYA7ttKCChVydvMBOhg43C1GDapgRXG303nIrTJZrkKS
-	 PzqwTqYUz0nzgFqbYU4babYqmGtLFZysF4SB1rPKx+6cRgZMWKKJ7PLX8WR49Zf3JN
-	 9wVIfO8HQ/JiYV8v7WlEDQqG96YZ29dyVbPoTJzc=
+	s=default; t=1583501800;
+	bh=+rJzOGoCHyxNsgbROnVpMOHHJ4FB/8LYXTHJgeVIFL0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Cz4bwx0gUAyMqnqEOfczmav25oddY9dmOQjkJrDso3v0m//zNStjswLXcsHFMJ9g4
+	 28e07E1jPE4MbF4XnDyXR/lCuk55My4lykIUcR+roIq5c4H4Z5cdbLdg3MG4JWPfKF
+	 rsduudzOBzRY+UXO1zRBtNAr2pNm5ci4e8PL/93s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgCFNfT (ORCPT
+        id S1726702AbgCFNgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:35:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55392 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 08:36:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgCFNfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:35:19 -0500
-Received: from localhost (unknown [122.178.250.113])
+        id S1726300AbgCFNgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:36:38 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EA80206D5;
-        Fri,  6 Mar 2020 13:35:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9844C2072D;
+        Fri,  6 Mar 2020 13:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583501718;
-        bh=gIboAinAdMo9JMZauS/rqqTvcKm62TrUHeVJSqCWbZ0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iLkZvAMftEO2UKFz5G/ueo7JPm5De8uCg8meSV5ozOnZOl4tDHukD9DEKQYeOvHnP
-         YPvP3cOm8EhE4kSyk8yh3Z5tvSFppWokyNT7vb9lTstN9h52ukmcMiC6g3mD00AEpr
-         hZNJpUYX3IFjKKqScDSV4tWC5ff1jzWtzsg/Am1k=
-Date:   Fri, 6 Mar 2020 19:05:14 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     dan.j.williams@intel.com, peng.ma@nxp.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] dmaengine: fsl-dpaa2-qdma: remove set but not used
- variable 'dpaa2_qdma'
-Message-ID: <20200306133514.GH4148@vkoul-mobl>
-References: <20200303131347.28392-1-yuehaibing@huawei.com>
+        s=default; t=1583501797;
+        bh=+rJzOGoCHyxNsgbROnVpMOHHJ4FB/8LYXTHJgeVIFL0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lijuNYfGieomjEpSg+dgif/c9XKU8avRktCqThc9z0aSfsSoVFGvNQAJ3+P+vCDmX
+         i9f4ej8QcMBjBmQM8vCrVlhkbA77BgDfYkckvToIIUlBU5sbxTOH2UkvwLeU+AvzyX
+         +jNJTaRDmUGbusrOOD9TixTzVS7WoPySCb634KT0=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jAD9X-00AaHr-Tz; Fri, 06 Mar 2020 13:36:36 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303131347.28392-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 06 Mar 2020 13:36:35 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [patch 2/7] genirq: Add protection against unsafe usage of
+ generic_handle_irq()
+In-Reply-To: <20200306130623.590923677@linutronix.de>
+References: <20200306130341.199467200@linutronix.de>
+ <20200306130623.590923677@linutronix.de>
+Message-ID: <664b3a85c46aff34ae89548e118c1bd8@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-03-20, 21:13, YueHaibing wrote:
-> drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c: In function dpaa2_qdma_shutdown:
-> drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c:795:28: warning: variable dpaa2_qdma set but not used [-Wunused-but-set-variable]
+On 2020-03-06 13:03, Thomas Gleixner wrote:
+> In general calling generic_handle_irq() with interrupts disabled from 
+> non
+> interrupt context is harmless. For some interrupt controllers like the 
+> x86
+> trainwrecks this is outright dangerous as it might corrupt state if an
+> interrupt affinity change is pending.
 > 
-> commit 3e0ca3c38dc2 ("dmaengine: fsl-dpaa2-qdma: Adding shutdown hook")
-> involved this, remove it.
+> Add infrastructure which allows to mark interrupts as unsafe and catch 
+> such
+> usage in generic_handle_irq().
+> 
+> Reported-by: sathyanarayanan.kuppuswamy@linux.intel.com
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  include/linux/irq.h    |   13 +++++++++++++
+>  kernel/irq/internals.h |    8 ++++++++
+>  kernel/irq/irqdesc.c   |    6 ++++++
+>  kernel/irq/resend.c    |    5 +++--
+>  4 files changed, 30 insertions(+), 2 deletions(-)
+> 
+> --- a/include/linux/irq.h
+> +++ b/include/linux/irq.h
+> @@ -211,6 +211,8 @@ struct irq_data {
+>   * IRQD_CAN_RESERVE		- Can use reservation mode
+>   * IRQD_MSI_NOMASK_QUIRK	- Non-maskable MSI quirk for affinity change
+>   *				  required
+> + * IRQD_HANDLE_ENFORCE_IRQCTX	- Enforce that handle_irq_*() is only 
+> invoked
+> + *				  from actual interrupt context.
+>   */
+>  enum {
+>  	IRQD_TRIGGER_MASK		= 0xf,
+> @@ -234,6 +236,7 @@ enum {
+>  	IRQD_DEFAULT_TRIGGER_SET	= (1 << 25),
+>  	IRQD_CAN_RESERVE		= (1 << 26),
+>  	IRQD_MSI_NOMASK_QUIRK		= (1 << 27),
+> +	IRQD_HANDLE_ENFORCE_IRQCTX	= (1 << 28),
+>  };
+> 
+>  #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, 
+> state_use_accessors)
+> @@ -303,6 +306,16 @@ static inline bool irqd_is_single_target
+>  	return __irqd_to_state(d) & IRQD_SINGLE_TARGET;
+>  }
+> 
+> +static inline void irqd_set_handle_enforce_irqctx(struct irq_data *d)
+> +{
+> +	__irqd_to_state(d) |= IRQD_HANDLE_ENFORCE_IRQCTX;
+> +}
+> +
+> +static inline bool irqd_is_handle_enforce_irqctx(struct irq_data *d)
+> +{
+> +	return __irqd_to_state(d) & IRQD_HANDLE_ENFORCE_IRQCTX;
+> +}
+> +
+>  static inline bool irqd_is_wakeup_set(struct irq_data *d)
+>  {
+>  	return __irqd_to_state(d) & IRQD_WAKEUP_STATE;
+> --- a/kernel/irq/internals.h
+> +++ b/kernel/irq/internals.h
+> @@ -425,6 +425,10 @@ static inline struct cpumask *irq_desc_g
+>  {
+>  	return desc->pending_mask;
+>  }
+> +static inline bool handle_enforce_irqctx(struct irq_data *data)
+> +{
+> +	return irqd_is_handle_enforce_irqctx(data);
+> +}
+>  bool irq_fixup_move_pending(struct irq_desc *desc, bool force_clear);
+>  #else /* CONFIG_GENERIC_PENDING_IRQ */
+>  static inline bool irq_can_move_pcntxt(struct irq_data *data)
+> @@ -451,6 +455,10 @@ static inline bool irq_fixup_move_pendin
+>  {
+>  	return false;
+>  }
+> +static inline bool handle_enforce_irqctx(struct irq_data *data)
+> +{
+> +	return false;
+> +}
+>  #endif /* !CONFIG_GENERIC_PENDING_IRQ */
+> 
+>  #if !defined(CONFIG_IRQ_DOMAIN) || 
+> !defined(CONFIG_IRQ_DOMAIN_HIERARCHY)
+> --- a/kernel/irq/irqdesc.c
+> +++ b/kernel/irq/irqdesc.c
+> @@ -638,9 +638,15 @@ void irq_init_desc(unsigned int irq)
+>  int generic_handle_irq(unsigned int irq)
+>  {
+>  	struct irq_desc *desc = irq_to_desc(irq);
+> +	struct irq_data *data;
+> 
+>  	if (!desc)
+>  		return -EINVAL;
+> +
+> +	data = irq_desc_get_irq_data(desc);
+> +	if (WARN_ON_ONCE(!in_irq() && handle_enforce_irqctx(data)))
+> +		return -EPERM;
 
-Applied, thanks
+It is a bit sad that there are only *two* users in the tree that
+actually check the return value of generic_handle_irq(). Thankfully,
+the WARN_ON should wake people up.
 
+> +
+>  	generic_handle_irq_desc(desc);
+>  	return 0;
+>  }
+> --- a/kernel/irq/resend.c
+> +++ b/kernel/irq/resend.c
+> @@ -72,8 +72,9 @@ void check_irq_resend(struct irq_desc *d
+>  		desc->istate &= ~IRQS_PENDING;
+>  		desc->istate |= IRQS_REPLAY;
+> 
+> -		if (!desc->irq_data.chip->irq_retrigger ||
+> -		    !desc->irq_data.chip->irq_retrigger(&desc->irq_data)) {
+> +		if ((!desc->irq_data.chip->irq_retrigger ||
+> +		    !desc->irq_data.chip->irq_retrigger(&desc->irq_data)) &&
+> +		    !handle_enforce_irqctx(&desc->irq_data)) {
+>  #ifdef CONFIG_HARDIRQS_SW_RESEND
+>  			unsigned int irq = irq_desc_get_irq(desc);
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+         M.
 -- 
-~Vinod
+Jazz is not dead. It just smells funny...
