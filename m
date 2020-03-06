@@ -2,65 +2,87 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DA7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5375AC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9ABF20674
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25FBF20637
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgCFS5A (ORCPT
+        id S1726462AbgCFS5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:57:00 -0500
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:6636 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725873AbgCFS5A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:57:00 -0500
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 06 Mar 2020 10:56:59 -0800
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 06 Mar 2020 10:56:59 -0800
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 671914B0A; Fri,  6 Mar 2020 10:56:59 -0800 (PST)
-Date:   Fri, 6 Mar 2020 10:56:59 -0800
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [RESEND v6 1/2] pwm: Convert drivers to use 64-bit period and
- duty cycle
-Message-ID: <20200306185252.GA2758@codeaurora.org>
-References: <cover.1583177501.git.gurus@codeaurora.org>
- <28090aef9900ad483cbfbe77883e5ffcd8745907.1583177501.git.gurus@codeaurora.org>
- <20200306074440.ykekwwlvnbodxkjc@pengutronix.de>
+        Fri, 6 Mar 2020 13:57:51 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:41996 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbgCFS5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:57:51 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 9ADA13C21A13;
+        Fri,  6 Mar 2020 19:57:49 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tbmb0qDcjibI; Fri,  6 Mar 2020 19:57:47 +0100 (CET)
+Subject: Re: [PATCH v4 2/2] arm64: dts: rockchip: Add initial support for
+ Pinebook Pro
+To:     Heiko Stuebner <heiko@sntech.de>,
+        Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Emmanuel Vadot <manu@freebsd.org>,
+        Alexis Ballier <aballier@gentoo.org>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Nick Xie <nick@khadas.com>, Andy Yan <andy.yan@rock-chips.com>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200304213023.689983-2-t.schramm@manjaro.org>
+ <20200304213023.689983-3-t.schramm@manjaro.org> <6168222.Wuk326WHQK@phil>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Message-ID: <b30fef29-6667-9200-178b-4d0e9fc63c12@manjaro.org>
+Date:   Fri, 6 Mar 2020 19:58:45 +0100
 MIME-Version: 1.0
+In-Reply-To: <6168222.Wuk326WHQK@phil>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200306074440.ykekwwlvnbodxkjc@pengutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 08:44:40AM +0100, Uwe Kleine-König wrote:
-> I guess we need acks from the affected maintainers. While I think the
-> changes are fine I think you won't evade having to expand the audience
-> of your patch and (depending on feedback) maybe split this patch up
-> further.
+Hi Heiko,
 
-Hi Uwe,
+>> This commit adds initial dt support for the rk3399 based Pinebook Pro.
+>>
+>> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+>
+> applied for 5.7
+>
 
-Sure. I'll split up this patch into one per file and add the respective
-maintainers for ease of reviewing.
+any chance you can squeeze in another small fix? Somewhere in the
+process the vmcc and vqmmc supplies of the sdmmc controller were removed
+in error. Those should be added to the sdmmc controller like this:
 
-Thank you.
+ &sdmmc {
+        pinctrl-names = "default";
+        pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
+        sd-uhs-sdr104;
++       vmmc-supply = <&vcc3v0_sd>;
++       vqmmc-supply = <&vcc_sdio>;
+        status = "okay";
+ };
 
-Guru Das.
+Thanks,
+
+Tobias
