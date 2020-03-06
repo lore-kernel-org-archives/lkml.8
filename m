@@ -2,93 +2,135 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63DFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5218C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3092072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9803420866
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgCFNKx (ORCPT
+        id S1726704AbgCFNNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:10:53 -0500
-Received: from mail.baikalelectronics.com ([87.245.175.226]:36520 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgCFNKw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:10:52 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 37EDD8030708;
-        Fri,  6 Mar 2020 13:10:49 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id PnQUZGPfEfnN; Fri,  6 Mar 2020 16:10:48 +0300 (MSK)
-From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/5] dt-bindings: dma: dw: Add max burst transaction length property bindings
-Date:   Fri, 6 Mar 2020 16:10:31 +0300
-In-Reply-To: <20200306131035.10937-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306131035.10937-1-Sergey.Semin@baikalelectronics.ru>
+        Fri, 6 Mar 2020 08:13:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45870 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbgCFNNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:13:54 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7837FAC1E;
+        Fri,  6 Mar 2020 13:13:51 +0000 (UTC)
+Subject: Re: [PATCH v7 7/7] mm/madvise: allow KSM hints for remote API
+To:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        SeongJae Park <sjpark@amazon.de>
+References: <20200302193630.68771-1-minchan@kernel.org>
+ <20200302193630.68771-8-minchan@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <2a66abd8-4103-f11b-06d1-07762667eee6@suse.cz>
+Date:   Fri, 6 Mar 2020 14:13:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200306131049.37EDD8030708@mail.baikalelectronics.ru>
+In-Reply-To: <20200302193630.68771-8-minchan@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On 3/2/20 8:36 PM, Minchan Kim wrote:
+> From: Oleksandr Natalenko <oleksandr@redhat.com>
+> 
+> It all began with the fact that KSM works only on memory that is marked
+> by madvise(). And the only way to get around that is to either:
+> 
+>   * use LD_PRELOAD; or
+>   * patch the kernel with something like UKSM or PKSM.
+> 
+> (i skip ptrace can of worms here intentionally)
+> 
+> To overcome this restriction, lets employ a new remote madvise API. This
+> can be used by some small userspace helper daemon that will do auto-KSM
+> job for us.
+> 
+> I think of two major consumers of remote KSM hints:
+> 
+>   * hosts, that run containers, especially similar ones and especially in
+>     a trusted environment, sharing the same runtime like Node.js;
+> 
+>   * heavy applications, that can be run in multiple instances, not
+>     limited to opensource ones like Firefox, but also those that cannot be
+>     modified since they are binary-only and, maybe, statically linked.
+> 
+> Speaking of statistics, more numbers can be found in the very first
+> submission, that is related to this one [1]. For my current setup with
+> two Firefox instances I get 100 to 200 MiB saved for the second instance
+> depending on the amount of tabs.
+> 
+> 1 FF instance with 15 tabs:
+> 
+>    $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+>    410
+> 
+> 2 FF instances, second one has 12 tabs (all the tabs are different):
+> 
+>    $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+>    592
+> 
+> At the very moment I do not have specific numbers for containerised
+> workload, but those should be comparable in case the containers share
+> similar/same runtime.
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1012142/
+> 
+> Reviewed-by: SeongJae Park <sjpark@amazon.de>
+> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
 
-This array property is used to indicate the maximum burst transaction
-length supported by each DMA channel.
+This will lead to one process calling unmerge_ksm_pages() of another. There's a
+(signal_pending(current)) test there, should it check also the other task,
+analogically to task 3?
+Then break_ksm() is fine as it is, as ksmd also calls it, right?
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
----
- .../devicetree/bindings/dma/snps,dma-spear1340.yaml  | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-index d7f9383ceb8f..308ec6482064 100644
---- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-+++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-@@ -126,6 +126,18 @@ properties:
-           enum: [0, 1]
-           default: 0
- 
-+  snps,max-burst-len:
-+    description: |
-+      Maximum length of burst transactions supported by hardware.
-+      It's an array property with one cell per channel in units of
-+      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH field.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - maxItems: 8
-+        items:
-+          enum: [4, 8, 16, 32, 64, 128, 256]
-+          default: 0
-+
-   snps,dma-protection-control:
-     description: |
-       Bits one-to-one passed to the AHB HPROT[3:1] bus. Each bit setting
--- 
-2.25.1
+> ---
+>  mm/madvise.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index e77c6c1fad34..f4fa962ee74d 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -1005,6 +1005,10 @@ process_madvise_behavior_valid(int behavior)
+>  	switch (behavior) {
+>  	case MADV_COLD:
+>  	case MADV_PAGEOUT:
+> +#ifdef CONFIG_KSM
+> +	case MADV_MERGEABLE:
+> +	case MADV_UNMERGEABLE:
+> +#endif
+>  		return true;
+>  	default:
+>  		return false;
+> 
 
