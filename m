@@ -2,158 +2,133 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BF6C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1297AC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257D420675
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90BB20656
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K0J4Fj87"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qk06El3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgCFTwQ (ORCPT
+        id S1726397AbgCFTxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:52:16 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24577 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726090AbgCFTwP (ORCPT
+        Fri, 6 Mar 2020 14:53:25 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:39034 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFTxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:52:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583524335;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7wshUEfGJ0oCbRrCm+psHycgVdvMv8N6eiO1mp9WFHQ=;
-        b=K0J4Fj875O1K8xDURpjSaDB+NNNWgB35W5dA+RRKec/DZjhiJAeLRvMbc8hHcCqGaXJqrn
-        fvgYKGbNUeGMecJmbGzQQVYAeLg3tN5Mw2QJUnnpvYVOVczo8Kn/lZEqurR8pCNUoCfOg6
-        GnmQwijqUGUa9CvKaPL9l7MddGY/UD0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-ZbozAVvCPia2fE25-rWBtQ-1; Fri, 06 Mar 2020 14:52:13 -0500
-X-MC-Unique: ZbozAVvCPia2fE25-rWBtQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F2F7F800053;
-        Fri,  6 Mar 2020 19:52:11 +0000 (UTC)
-Received: from fuller.cnet (ovpn-116-16.gru2.redhat.com [10.97.116.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6295B10027AB;
-        Fri,  6 Mar 2020 19:52:11 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id 2562842FE410; Fri,  6 Mar 2020 06:56:17 -0300 (-03)
-Date:   Fri, 6 Mar 2020 06:56:17 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH] cpuidle-haltpoll: allow force loading on hosts without
- the REALTIME hint
-Message-ID: <20200306095617.GD32190@fuller.cnet>
-References: <20200221174331.1480468-1-mail@maciej.szmigiero.name>
- <114f7b8d-6f88-222a-d1fa-abcfc0e6a1f2@maciej.szmigiero.name>
+        Fri, 6 Mar 2020 14:53:25 -0500
+Received: by mail-qv1-f66.google.com with SMTP id fc12so1515308qvb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 11:53:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=QaNxcQb7Gg+vxIHDRqfm2dfWV4oEZhj/ZtvsBzj/+Bk=;
+        b=qk06El3JD3uD38dR/+KpHsLyQqx2wruXRJgkstX2ahhw9X3IFGj5nLe2Z+o4giq/pM
+         ldJs5F7oyuhAevtUXI557hIOqP78gga6BNTgb4Smwr0CdmuPgHBd9R/mpRAuAVFgT6Si
+         FO4sdeP9aVDm3bSjSYygt3LXsi7uG2og5cDNg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QaNxcQb7Gg+vxIHDRqfm2dfWV4oEZhj/ZtvsBzj/+Bk=;
+        b=KCmPmstc+KK8Tnct5yIPRZgaLs4FmqSA7kUvRHoD90FS9/ghViW9ao4OJcriHwEbTV
+         QtOJm2e9+2Zo22XDFuRj+MF5oNNakhiwEBGhKK10u2ikB0EG7FzoXDEYixUd8mhm8iAZ
+         ADBj+2rH9uqNhafd5ooq9rw2YUKygbNLWdjBFpCh8Q1z8YJFDtAtGhiZUAVZbA/qSrmK
+         b1uVZjl1m1shH5/aoi6iq0wDVMxmVeZXTcj7l6iZk7BjGcLsdh6IZHHPIL2v1xIGCB9s
+         cWOcnvlG3JB6lxWGtr1qPN7j9NtCqnzUFQboST78ejKExjqQV4d9y8p5om3aSBzZX07k
+         a0GA==
+X-Gm-Message-State: ANhLgQ1A1Eo6aVJp7FrZ1jYsAD06n741BBOoU8covk/i2KMlF22qh+gF
+        /AW8+INQnAX4GiyrH9FfFCsoqQ==
+X-Google-Smtp-Source: ADFU+vtbUmkkv8Fc33D5K6vbh/9sVOZA5kQ0oSPjOpP/B5uhae1bm0YKFhE+l4pQ9zfnhd2Fpzr5Rw==
+X-Received: by 2002:a05:6214:1051:: with SMTP id l17mr4508705qvr.175.1583524404428;
+        Fri, 06 Mar 2020 11:53:24 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id x188sm8961139qka.53.2020.03.06.11.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 11:53:23 -0800 (PST)
+Date:   Fri, 6 Mar 2020 14:53:23 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     dsterba@suse.cz,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Qu Wenruo <quwenruo.btrfs@gmx.com>, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        frextrite@gmail.com, linux@roeck-us.net
+Subject: Re: [PATCH] fs: btrfs: block-group.c: Fix suspicious RCU usage
+ warning
+Message-ID: <20200306195323.GE60713@google.com>
+References: <20200306065243.11699-1-madhuparnabhowmik10@gmail.com>
+ <dfd2c14c-acda-3862-9f48-a512e16a895c@gmx.com>
+ <20200306140023.GA14186@madhuparna-HP-Notebook>
+ <20200306152527.GH2902@twin.jikos.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <114f7b8d-6f88-222a-d1fa-abcfc0e6a1f2@maciej.szmigiero.name>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200306152527.GH2902@twin.jikos.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 09:10:18PM +0100, Maciej S. Szmigiero wrote:
-> (CC'ing also Marcelo as the cpuidle-haltpoll driver author and the KVM ML).
-
-Hi Maciej,
-
-> On 21.02.2020 18:43, Maciej S. Szmigiero wrote:
-> > From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
+On Fri, Mar 06, 2020 at 04:25:27PM +0100, David Sterba wrote:
+> On Fri, Mar 06, 2020 at 07:30:24PM +0530, Madhuparna Bhowmik wrote:
+> > On Fri, Mar 06, 2020 at 03:16:53PM +0800, Qu Wenruo wrote:
+> > > 
+> > > 
+> > > On 2020/3/6 下午2:52, madhuparnabhowmik10@gmail.com wrote:
+> > > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > > > 
+> > > > The space_info list is rcu protected.
+> > > > Hence, it should be traversed with rcu_read_lock held.
+> > > > 
+> > > > Warning:
+> > > > [   29.104591] =============================
+> > > > [   29.104756] WARNING: suspicious RCU usage
+> > > > [   29.105046] 5.6.0-rc4-next-20200305 #1 Not tainted
+> > > > [   29.105231] -----------------------------
+> > > > [   29.105401] fs/btrfs/block-group.c:2011 RCU-list traversed in non-reader section!!
+> > > > 
+> > > > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > > > ---
+> > > >  fs/btrfs/block-group.c | 4 +++-
+> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+> > > > index 404e050ce8ee..9cabeef66f5b 100644
+> > > > --- a/fs/btrfs/block-group.c
+> > > > +++ b/fs/btrfs/block-group.c
+> > > > @@ -1987,6 +1987,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
+> > > 
+> > > This function is only triggered at mount time, where no other rcu
+> > > operation can happen.
+> > >
+> > Thanks Qu.
 > > 
-> > Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
-> > when dedicated physical CPUs are available") the cpuidle-haltpoll driver
-> > could also be used in scenarios when the host does not advertise the
-> > KVM_HINTS_REALTIME hint.
-> > 
-> > While the behavior introduced by the aforementioned commit makes sense as
-> > the default 
+> > Joel and Paul, what should we do in this case?
+> > Should we just pass cond = true or use list_for_each_entry instead?
+> 
+> I think we can afford to add rcu lock/unlock, even if it's not strictly
+> necessary due to the single threaded context where the function is run.
+> There are some lightweight operations inside and inc_block_group starts
+> with two spin locks so there's nothing we'd be losing with disabled
+> preemption from the caller.
 
-It makes sense for the pCPU overcommitted case only.
+I think use list_for_each_entry().
 
-> > there are cases where the old behavior is desired, for example,
-> > when other kernel changes triggered by presence by this hint are unwanted,
-> > for some workloads where the latency benefit from polling overweights the
-> > loss from idle CPU capacity that otherwise would be available, or just when
-> > running under older Qemu versions that lack this hint.
-> > 
-> > Let's provide a typical "force" module parameter that allows restoring the
-> > old behavior.
-> > 
-> > Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
+thanks,
 
-I would rather: 
-
-1) Switch back to the default non-overcommitted case.
-
-or even better (but requires more investment)
-
-2) Make on the flight dynamic configuration (after all pCPU
-overcommitment=true/false is a property that changes during
-the day, depending on system load).
-
-But its up to Paolo to decide, really.
-
-> > ---
-> >  drivers/cpuidle/cpuidle-haltpoll.c | 12 +++++++++++-
-> >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-> > index b0ce9bc78113..07e5b36076bb 100644
-> > --- a/drivers/cpuidle/cpuidle-haltpoll.c
-> > +++ b/drivers/cpuidle/cpuidle-haltpoll.c
-> > @@ -18,6 +18,11 @@
-> >  #include <linux/kvm_para.h>
-> >  #include <linux/cpuidle_haltpoll.h>
-> >  
-> > +static bool force __read_mostly;
-> > +module_param(force, bool, 0444);
-> > +MODULE_PARM_DESC(force,
-> > +		 "Load even if the host does not provide the REALTIME hint");
-> > +
-> >  static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
-> >  static enum cpuhp_state haltpoll_hp_state;
-> >  
-> > @@ -90,6 +95,11 @@ static void haltpoll_uninit(void)
-> >  	haltpoll_cpuidle_devices = NULL;
-> >  }
-> >  
-> > +static bool haltpool_want(void)
-> > +{
-> > +	return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
-> > +}
-> > +
-> >  static int __init haltpoll_init(void)
-> >  {
-> >  	int ret;
-> > @@ -102,7 +112,7 @@ static int __init haltpoll_init(void)
-> >  	cpuidle_poll_state_init(drv);
-> >  
-> >  	if (!kvm_para_available() ||
-> > -		!kvm_para_has_hint(KVM_HINTS_REALTIME))
-> > +	    !haltpool_want())
-> >  		return -ENODEV;
-> >  
-> >  	ret = cpuidle_register_driver(drv);
-> > 
+ - Joel
 
