@@ -2,98 +2,163 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84996C3F2D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD95EC3F2D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC452072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE4C2070A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:06:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgCFHEO (ORCPT
+        id S1726155AbgCFHGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:04:14 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11187 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725853AbgCFHEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 02:04:13 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 62D92CEAAB18E70D95E6;
-        Fri,  6 Mar 2020 15:04:08 +0800 (CST)
-Received: from huawei.com (10.67.133.63) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Mar 2020
- 15:03:59 +0800
-From:   Qiang Su <suqiang4@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <suqiang4@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <leeyou.li@huawei.com>,
-        <nixiaoming@huawei.com>
-Subject: [PATCH] UIO: fix up inapposite whiteplace in uio head file
-Date:   Fri, 6 Mar 2020 15:03:59 +0800
-Message-ID: <20200306070359.71398-1-suqiang4@huawei.com>
-X-Mailer: git-send-email 2.12.3
+        Fri, 6 Mar 2020 02:06:02 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60125 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbgCFHGC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 02:06:02 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jA73L-0005sH-MH; Fri, 06 Mar 2020 08:05:47 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jA73I-00038n-BO; Fri, 06 Mar 2020 08:05:44 +0100
+Date:   Fri, 6 Mar 2020 08:05:44 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Roy Im <roy.im.opensource@diasemi.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH V10 3/3] Input: new da7280 haptic driver
+Message-ID: <20200306070544.7rj5y44e23kiz65e@pengutronix.de>
+References: <cover.1583425388.git.Roy.Im@diasemi.com>
+ <fd7066d21e994de56b331d9320f9671356fac408.1583425388.git.Roy.Im@diasemi.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.133.63]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fd7066d21e994de56b331d9320f9671356fac408.1583425388.git.Roy.Im@diasemi.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Whitespace is used in the inapposite place,
-which makes checkpatch complain.
+Hello Roy,
 
-Signed-off-by: Qiang Su <suqiang4@huawei.com>
----
- include/linux/uio_driver.h | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+On Fri, Mar 06, 2020 at 01:23:08AM +0900, Roy Im wrote:
+> +static int da7280_haptic_set_pwm(struct da7280_haptic *haptics, bool enabled)
+> +{
+> +	struct pwm_state state;
+> +	u64 period_mag_multi;
+> +	int error;
+> +
+> +	if (!haptics->gain) {
+> +		dev_err(haptics->dev,
+> +			"Please set the gain first for the pwm mode\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	pwm_get_state(haptics->pwm_dev, &state);
+> +	state.enabled = enabled;
+> +	if (enabled) {
+> +		period_mag_multi = state.period * haptics->gain;
+> +		period_mag_multi >>= MAX_MAGNITUDE_SHIFT;
+> +
+> +		/* The interpretation of duty cycle depends on the acc_en,
+> +		 * it should be form 50% to 100% for acc_en = 0.
 
-diff --git a/include/linux/uio_driver.h b/include/linux/uio_driver.h
-index 01081c4726c0..461db05819f4 100644
---- a/include/linux/uio_driver.h
-+++ b/include/linux/uio_driver.h
-@@ -24,10 +24,10 @@ struct uio_map;
-  * struct uio_mem - description of a UIO memory region
-  * @name:		name of the memory region for identification
-  * @addr:               address of the device's memory rounded to page
-- * 			size (phys_addr is used since addr can be
-- * 			logical, virtual, or physical & phys_addr_t
-- * 			should always be large enough to handle any of
-- * 			the address types)
-+ *			size (phys_addr is used since addr can be
-+ *			logical, virtual, or physical & phys_addr_t
-+ *			should always be large enough to handle any of
-+ *			the address types)
-  * @offs:               offset of device memory within the page
-  * @size:		size of IO (multiple of page size)
-  * @memtype:		type of memory addr points to
-@@ -67,16 +67,16 @@ struct uio_port {
- #define MAX_UIO_PORT_REGIONS	5
- 
- struct uio_device {
--        struct module           *owner;
-+	struct module           *owner;
- 	struct device		dev;
--        int                     minor;
--        atomic_t                event;
--        struct fasync_struct    *async_queue;
--        wait_queue_head_t       wait;
--        struct uio_info         *info;
-+	int                     minor;
-+	atomic_t                event;
-+	struct fasync_struct    *async_queue;
-+	wait_queue_head_t       wait;
-+	struct uio_info         *info;
- 	struct mutex		info_lock;
--        struct kobject          *map_dir;
--        struct kobject          *portio_dir;
-+	struct kobject          *map_dir;
-+	struct kobject          *portio_dir;
- };
- 
- /**
+At least s/form/from/, but maybe better: it should be between 50% and
+100% ...
+
+> +		 * See datasheet 'PWM mode' section.
+> +		 */
+> +		if (!haptics->acc_en) {
+> +			period_mag_multi += state.period;
+> +			period_mag_multi /= 2;
+> +		}
+> +
+> +		state.duty_cycle  = (unsigned int)period_mag_multi;
+
+This cast is not needed. (Also it seems struct pwm_state::duty_cycle
+becomes u64 soon, after this happens the cast even hurts.)
+
+> [...]
+> +	struct device *dev = &client->dev;
+> +	struct da7280_haptic *haptics;
+> +	struct input_dev *input_dev;
+> +	struct ff_device *ff;
+> +	struct pwm_state state;
+> +	unsigned int period2freq;
+> +	int error;
+> +
+> +	haptics = devm_kzalloc(dev, sizeof(*haptics), GFP_KERNEL);
+> +	if (!haptics)
+> +		return -ENOMEM;
+> +	haptics->dev = dev;
+> +
+> +	if (!client->irq) {
+> +		dev_err(dev, "No IRQ configured\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	da7280_parse_properties(dev, haptics);
+> +
+> +	if (haptics->const_op_mode == DA7280_PWM_MODE) {
+> +		haptics->pwm_dev = devm_pwm_get(dev, NULL);
+> +		if (IS_ERR(haptics->pwm_dev)) {
+> +			dev_err(dev, "failed to get PWM device\n");
+
+Please use %pE to show the actual error and don't print if it is
+EPROBE_DEFER.
+
+> +			return PTR_ERR(haptics->pwm_dev);
+> +		}
+> +
+> +		pwm_init_state(haptics->pwm_dev, &state);
+> +		state.enabled = false;
+
+This usuage is strange (which might be because pwm_init_state() is
+strange). I assume the goal here is to disable the PWM with the right
+polarity set, right? Ah, and initialize .period as this isn't touched
+later on. Hmm, no better idea, I guess we have to leave it as is for
+now.
+
+Can it be that the PWM is already on at probe time and it might be
+usefull to keep it running as is?
+
+> +		error = pwm_apply_state(haptics->pwm_dev, &state);
+> +		if (error) {
+> +			dev_err(dev,
+> +				"failed to apply initial PWM state: %pE\n",
+> +				ERR_PTR(error));
+> +			return error;
+> +		}
+
+Best regards
+Uwe
+
 -- 
-2.12.3
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
