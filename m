@@ -2,132 +2,120 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE098C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EB7C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76D820717
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:24:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fauVLb+m"
+	by mail.kernel.org (Postfix) with ESMTP id 657652072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgCFAYd (ORCPT
+        id S1726897AbgCFAZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 19:24:33 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35175 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbgCFAYd (ORCPT
+        Thu, 5 Mar 2020 19:25:11 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28684 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726128AbgCFAZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 19:24:33 -0500
-Received: by mail-pf1-f193.google.com with SMTP id i19so204837pfa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 16:24:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=xRy9hgdRfr2pI2+j3xM5QiyuXkfsaYppAUVWfvsGN38=;
-        b=fauVLb+mmzDkXqeR0x5V4vpTs+F8Fsi7S5j+semYUBkPjjZqFQrMg2Vy2/IPU9Ntvy
-         6zz/ISIr18Fba0M1h/D4bqPBJ2aEY1w6Bf9pPuDxlUWRu1MaHnSnI63ocRr8O7QRpgOS
-         ULYlBRs04rLMiXN3rfmq91GijGBxNHzll4agw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=xRy9hgdRfr2pI2+j3xM5QiyuXkfsaYppAUVWfvsGN38=;
-        b=Eyk6T4ZFOZMECvfWvQpJ4T/03R4sz51dZbQcosgpXmS1BZtQ1XOM+pwRbGPBAIHI3Z
-         9rpoF5IQ6wY7W23qCDCKBYh5LRhGvGP4rYsVUy6dJIiPZq9+PLZvHKLBx1tHVz+A0zme
-         9kcpkuX0Yw/a8b/zLxgPsHDK3IKMxZe1EOv8L+R6ONqyFx0k6alq4njPCAcc3Can36io
-         A+gfY9mft/LYtSMy1dwkVXJEPTnigaAXGdVKNAX2NhLQDN6zhOBbh63MCEH6ZVSwHQ9H
-         dvJwqezU9dgd9by8mZoZ6yowH3K1CANFuGB13ggSY3JGml0qgP6VJHA9XHMY7ccJmuOU
-         E86g==
-X-Gm-Message-State: ANhLgQ0brR+7xoQHOtJCT+lculy6KKq77fmHN6OWiNMVWuGt+NE57KU2
-        ed9gwyhFoYji+glCrzQ4lMs1EQ==
-X-Google-Smtp-Source: ADFU+vvCgOtnmu5BVGxMSLqbNh9JOZ7MZpYoz/vRPGo0pl2lLbg7DmsarwvLoFafJnbWFmTbFUGL5Q==
-X-Received: by 2002:aa7:87d4:: with SMTP id i20mr972175pfo.22.1583454270564;
-        Thu, 05 Mar 2020 16:24:30 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w2sm25298002pfb.138.2020.03.05.16.24.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 16:24:29 -0800 (PST)
-Date:   Thu, 5 Mar 2020 16:24:28 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Silvio Cesare <silvio.cesare@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] slub: Improve bit diffusion for freelist ptr obfuscation
-Message-ID: <202003051623.AF4F8CB@keescook>
+        Thu, 5 Mar 2020 19:25:11 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0260L7w6074875;
+        Thu, 5 Mar 2020 19:24:43 -0500
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yk33mam54-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Mar 2020 19:24:43 -0500
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0260McpM020995;
+        Fri, 6 Mar 2020 00:24:42 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 2yffk6q8mj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Mar 2020 00:24:42 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0260OfJN53346782
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 6 Mar 2020 00:24:41 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A0F1CAE05F;
+        Fri,  6 Mar 2020 00:24:41 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87334AE05C;
+        Fri,  6 Mar 2020 00:24:39 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.147])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  6 Mar 2020 00:24:39 +0000 (GMT)
+Message-ID: <80aff8226242ca105375ac7562a5a5a06a1c3bdc.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 1/1] powerpc/kernel: Enables memory hot-remove
+ after reboot on pseries guests
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Anderson <andmike@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        bharata.rao@in.ibm.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Thu, 05 Mar 2020 21:24:38 -0300
+In-Reply-To: <20200305233231.174082-1-leonardo@linux.ibm.com>
+References: <20200305233231.174082-1-leonardo@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Mx5LUMAp7F+NvuFrrzMd"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-05_08:2020-03-05,2020-03-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ mlxscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
+ clxscore=1011 malwarescore=0 impostorscore=0 phishscore=0 mlxlogscore=718
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Under CONFIG_SLAB_FREELIST_HARDENED=y, the obfuscation was relatively weak
-in that the ptr and ptr address were usually so close that the first XOR
-would result in an almost entirely 0-byte value[1], leaving most of the
-"secret" number ultimately being stored after the third XOR. A single
-blind memory content exposure of the freelist was generally sufficient
-to learn the secret.
 
-Add a swab() call to mix bits a little more. This is a cheap way
-(1 cycle) to make attacks need more than a single exposure to learn
-the secret (or to know _where_ the exposure is in memory).
+--=-Mx5LUMAp7F+NvuFrrzMd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-kmalloc-32 freelist walk, before:
+On Thu, 2020-03-05 at 20:32 -0300, Leonardo Bras wrote:
+> I will send the matching qemu change as a reply later.
 
-ptr              ptr_addr            stored value      secret
-ffff90c22e019020@ffff90c22e019000 is 86528eb656b3b5bd (86528eb656b3b59d)
-ffff90c22e019040@ffff90c22e019020 is 86528eb656b3b5fd (86528eb656b3b59d)
-ffff90c22e019060@ffff90c22e019040 is 86528eb656b3b5bd (86528eb656b3b59d)
-ffff90c22e019080@ffff90c22e019060 is 86528eb656b3b57d (86528eb656b3b59d)
-ffff90c22e0190a0@ffff90c22e019080 is 86528eb656b3b5bd (86528eb656b3b59d)
-...
+http://patchwork.ozlabs.org/patch/1249931/
 
-after:
+--=-Mx5LUMAp7F+NvuFrrzMd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-ptr              ptr_addr            stored value      secret
-ffff9eed6e019020@ffff9eed6e019000 is 793d1135d52cda42 (86528eb656b3b59d)
-ffff9eed6e019040@ffff9eed6e019020 is 593d1135d52cda22 (86528eb656b3b59d)
-ffff9eed6e019060@ffff9eed6e019040 is 393d1135d52cda02 (86528eb656b3b59d)
-ffff9eed6e019080@ffff9eed6e019060 is 193d1135d52cdae2 (86528eb656b3b59d)
-ffff9eed6e0190a0@ffff9eed6e019080 is f93d1135d52cdac2 (86528eb656b3b59d)
+-----BEGIN PGP SIGNATURE-----
 
-[1] https://blog.infosectcbr.com.au/2020/03/weaknesses-in-linux-kernel-heap.html
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5hmEYACgkQlQYWtz9S
+ttT0nw/9F6t/IWYBeEGdh94vxUcCxA0AL4P8lFGQLUJj4qus90wUD5i0/rINKpCN
+iQfYuutsm6rzUbV7bn0dNyiu3a4Z8Mw7PRaScQBSByYUIm3mcU+ns+yTdvTsMiuw
+jFLguaIkR6qtWJKuiafcTOxGoUcDyqvCqpi4IvwQ0QtzCFAH0ncSqjHRCTEOOTOI
+s1c+Yckh0FxhkfVfMI3ocKYdCWLisksiQQSQg6eAZxhnv2JbDg0oB04oqzsmM/s/
+9wKbAS8pw2kAxnf4aFxWEnJrIjSYSecLMLVaTmatfZ76mwE1nkwQhZEWUHHI/bjL
+EbW0lyJrD4MgjKaYMJ9VDMoH8PzfSAzMPYChj+aHFia07dd3hVFkw4M6DPYUGcM9
+mo+9K4lt6iyap+eFeuaGiE5kjBQJwXlBXi/D0kDYI7w2OC8jDRGRtiiseAybrLMr
+hjb+/Uzntmtiu3NeeeP20ghtgeTDgl33tl5F0C3vqUlBtCZO+tMVJroO9W7kfYms
+Jfo9c5JQ+r4BdXZ0GNvQrMw/oPBqbPbIIfkrKCTXpPwZnpjQCF8jCJTDnd+fNyLa
+WEadSqKFBn8gbkSQbcBHrVcZ+EKtMJ2ygQxBvlcHhhVFlqPX04KjMPU75wE9wD2M
+bRmOsV+YzhDjpgSko2gBMgOo7Q/9oLXACw69SRlGomjY1tHw9q8=
+=r7S1
+-----END PGP SIGNATURE-----
 
-Reported-by: Silvio Cesare <silvio.cesare@gmail.com>
-Fixes: 2482ddec670f ("mm: add SLUB free list pointer obfuscation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- mm/slub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--=-Mx5LUMAp7F+NvuFrrzMd--
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 17dc00e33115..107d9d89cf96 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -259,7 +259,7 @@ static inline void *freelist_ptr(const struct kmem_cache *s, void *ptr,
- 	 * freepointer to be restored incorrectly.
- 	 */
- 	return (void *)((unsigned long)ptr ^ s->random ^
--			(unsigned long)kasan_reset_tag((void *)ptr_addr));
-+			swab((unsigned long)kasan_reset_tag((void *)ptr_addr)));
- #else
- 	return ptr;
- #endif
--- 
-2.20.1
-
-
--- 
-Kees Cook
