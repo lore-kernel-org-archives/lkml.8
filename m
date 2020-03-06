@@ -2,134 +2,110 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6647C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9CCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF8A206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42701206D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRXsBV3G"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="btIso5bB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgCFUu5 (ORCPT
+        id S1726873AbgCFUv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:50:57 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41309 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCFUu5 (ORCPT
+        Fri, 6 Mar 2020 15:51:26 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41666 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbgCFUv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:50:57 -0500
-Received: by mail-ed1-f67.google.com with SMTP id m25so4039403edq.8;
-        Fri, 06 Mar 2020 12:50:55 -0800 (PST)
+        Fri, 6 Mar 2020 15:51:26 -0500
+Received: by mail-io1-f67.google.com with SMTP id m25so3401860ioo.8
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 12:51:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=VdqUnRTWp10pjgFX5EvP6C5xXn2Jmo+eBLSoySWldqs=;
-        b=hRXsBV3GZGSJ2YmU0tyU/P3Ckp0n1Ke0qs57bW80TW6GStW1yVT8bz+MK7Z+c/NrNv
-         lOklGzmD7TG1rPBwMkkY2azr3tphv8GjcbwdI0ccxfmUrMa+2iK89/wAVwnq3MxbPZCg
-         5bPxhQ+SrxATXfH2vX7Ku1JEXPQ3vr5XN+zSY5ZmlRvGoyYQ9GDb/oa76jL/hxctgqsD
-         DKi3TflY1iO7+iPY3/PSmwN2DFs3jox5UCMzAPN7MpH8dFkcmqw32kCKoAwgg12RtjOe
-         w5+jerXZzIBSp64mzI+QG2NyuI/GcV5vM3J4VV3LxpKEXP/jDSy9VttVGmT/NDW7UATc
-         vwOQ==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yGLtF9/BkDRWldf7v6sxW1Van8tpD2gHUBIr/g2ZUWQ=;
+        b=btIso5bBh9Rv1yNfjzkAnbfr2G9RML5beBupa0KwwDUB7Vp6++GaqpK9U+yZZ0xHKM
+         ipSc/GpWSMvtp7BCt1SRYDgKseFvcYE6FRrC7IOt6u6eUm9kpmvEnLIf5X0Pj3+wk74Y
+         jXqabBNwRqfd1bnlPa77rD0hXRB/4wM9p0ed8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=VdqUnRTWp10pjgFX5EvP6C5xXn2Jmo+eBLSoySWldqs=;
-        b=UnHUdwUY20dhGw+hoL9PCO66IQih6dtjkSRhWkdlX/rgR+0SBdBWLOQgNWVJ9WLyZY
-         y5Lhz2vF6nzaVLq9lT42zdXwjcTj/HheMvbE0FkEgsX10FwDnoR23rJyEWx2dy3fozmK
-         ZjyaA641pd/xKNILMVc6nFLJT0lQnfWKtXdmOARXA97ojZKIKW1qmkI+oG3ao5BCwzTa
-         gP/CHOEkmUsY+Sy+VdZyASFgPsPnJS83qdBuwINWjopJ0//2FsMg/YiXfcegNt14vqMG
-         YYm8biOTi66Yb/rWyFzsGJQDNFFhdMW8qT/HSsAQC6vHXVhuMm9hzL2sR5SuTDvg576J
-         7bwg==
-X-Gm-Message-State: ANhLgQ3sp/pISbeDsnpUQxNxkvQGaI9eqSQj7DfG764t22RzTND+DJx1
-        Qs24iKXiMEIw+GkAYRz9VIg=
-X-Google-Smtp-Source: ADFU+vt2dJD/PPlFZud7douKhwIZ+dTq7co7j3G37z0Dc1lWVvfrT/Ni4yD+IsB0sjh2s8hGZD3/qg==
-X-Received: by 2002:a05:6402:cac:: with SMTP id cn12mr5044832edb.280.1583527854576;
-        Fri, 06 Mar 2020 12:50:54 -0800 (PST)
-Received: from felia ([2001:16b8:2d12:b200:a423:5ade:d131:da88])
-        by smtp.gmail.com with ESMTPSA id f20sm1471839edm.38.2020.03.06.12.50.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 12:50:53 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Fri, 6 Mar 2020 21:50:44 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] MAINTAINERS: adjust to trusted keys subsystem
- creation
-In-Reply-To: <20200306193127.GJ7472@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.2003062148050.2990@felia>
-References: <20200305203013.6189-1-lukas.bulwahn@gmail.com> <20200306193127.GJ7472@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yGLtF9/BkDRWldf7v6sxW1Van8tpD2gHUBIr/g2ZUWQ=;
+        b=rlR4rBW78Slpuj7l960KtBR7/Dt7y/mlPNhlp631G/zPxYjfDecKFdIsx6YtnsX54a
+         tpswoa+DcrYPg3krexjT4Yvq/NfMz5bXoNkZDJbrw20uTMhDEhDeOn/ju2SFFKXHEfZz
+         n9bSxUtDED4SecJnYEnP6sIsgGNq8tqO6EBMjQ/16jUyC16cB02C89OEARaAFc4IFiBr
+         uoKMxZmEUGqNMwUTXlVRoq5cZbNuBVucxYPJIlo74hhRqfOiAcE4UoQV2s2FG5KnoRcw
+         sxu+3ADuuVsOB7OUAg6RO402zqRYrVhCjB5OlEH6NPs13eyrMhEnP/PcJpcyF/Z5jks5
+         0tDg==
+X-Gm-Message-State: ANhLgQ3pcTFh7rED5LriRYXgKPAa+Mf19zS9JLlWzNUOyA92EIU4e2Bx
+        dR0z9/rUDG5gZn273XdHnB12kZKLH3/JHeygckwhvA==
+X-Google-Smtp-Source: ADFU+vu/g23Eny9Hui/8pPFHbWtFGWqaVVE0ZerOiGOSF60dyc66F/0qyRGZhlaMt49a1aoSPVziVIZ4YVAEwD0pspQ=
+X-Received: by 2002:a02:70cc:: with SMTP id f195mr4679379jac.78.1583527883788;
+ Fri, 06 Mar 2020 12:51:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <107666.1582907766@warthog.procyon.org.uk> <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <20200306162549.GA28467@miu.piliscsaba.redhat.com> <20200306194322.GY23230@ZenIV.linux.org.uk>
+ <20200306195823.GZ23230@ZenIV.linux.org.uk> <20200306200522.GA23230@ZenIV.linux.org.uk>
+ <20200306203705.GB23230@ZenIV.linux.org.uk> <20200306203844.GC23230@ZenIV.linux.org.uk>
+ <20200306204523.GD23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200306204523.GD23230@ZenIV.linux.org.uk>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Fri, 6 Mar 2020 21:51:12 +0100
+Message-ID: <CAJfpegsRjHHy5JwB8S6-f0+SXRPmfaJJnaKj8nJvwVQzNCqU=A@mail.gmail.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 6, 2020 at 9:45 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Fri, Mar 06, 2020 at 08:38:44PM +0000, Al Viro wrote:
+> > On Fri, Mar 06, 2020 at 08:37:05PM +0000, Al Viro wrote:
+> >
+> > > You are misreading mntput_no_expire(), BTW - your get_mount() can
+> > > bloody well race with umount(2), hitting the moment when we are done
+> > > figuring out whether it's busy but hadn't cleaned ->mnt_ns (let alone
+> > > set MNT_DOOMED) yet.  If somebody calls umount(2) on a filesystem that
+> > > is not mounted anywhere else, they are not supposed to see the sucker
+> > > return 0 until the filesystem is shut down.  You break that.
 
+Ah, good point.
 
-On Fri, 6 Mar 2020, Jarkko Sakkinen wrote:
+> >
+> > While we are at it, d_alloc_parallel() requires i_rwsem on parent held
+> > at least shared.
 
-> On Thu, Mar 05, 2020 at 09:30:13PM +0100, Lukas Bulwahn wrote:
-> > Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys subsystem")
-> > renamed trusted.h to trusted_tpm.h in include/keys/, and moved trusted.c
-> > to trusted-keys/trusted_tpm1.c in security/keys/.
-> > 
-> > Since then, ./scripts/get_maintainer.pl --self-test complains:
-> > 
-> >   warning: no file matches F: security/keys/trusted.c
-> >   warning: no file matches F: include/keys/trusted.h
-> > 
-> > Rectify the KEYS-TRUSTED entry in MAINTAINERS now and ensure that all
-> > files in security/keys/trusted-keys/ are identified as part of
-> > KEYS-TRUSTED.
-> > 
-> > Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-> > Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > ---
-> 
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> 
-> > Changes to v1:
-> >   - use a global pattern for matching the whole security/keys/trusted-keys/
-> >     directory.
-> > Changes to v2:
-> >   - name the correct directory in the commit message
-> > 
-> > Sumit, please ack.
-> > Jarkko, please pick this patch v3.
-> 
-> Please tell me why you emphasize the moment when a patch that does not
-> fix a critical bug is picked?
-> 
-> Do you have systems that break because the MAINTAINERS file is not
-> updated?
-> 
-> It will end up in v5.7 PR for sure but saying things like that is same
-> as saying that there would be some catastrophically urgent need to still
-> squeeze the patch into v5.6. Unless you actually have something critical
-> in your hand, please stop doing that.
-> 
+Okay.
 
-Got it. I did not intend to emphasize any urgency; I will not continue 
-to do that for patches of this clean-up type.
+> Egads...  Let me see if I got it right - you are providing procfs symlinks
+> to objects on the internal mount of that thing.  And those objects happen
+> to be directories, so one can get to their parent that way.  Or am I misreading
+> that thing?
 
-Lukas
+Yes.
+
+Thanks,
+Miklos
