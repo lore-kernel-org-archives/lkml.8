@@ -2,99 +2,130 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5CBC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444D0C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696E820658
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F86520848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WtrH3QX/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmjBEgbQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgCFRXN (ORCPT
+        id S1726738AbgCFRXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:23:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47868 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCFRXN (ORCPT
+        Fri, 6 Mar 2020 12:23:22 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42267 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgCFRXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:23:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=GvTsR9s3jXoUcl9oo/kaM6V16Gt1kBE/IYMf0oeTJtg=; b=WtrH3QX/fwn951ZI666/wSzz90
-        TCBE1I8foHqrEBXgJCaj6n+ctyOYPepIGbbgm/l075STq55HL5NVLgqqSvcN3s6jQWUQ/t8hDHUS+
-        Q2W7IFTL2b9/Ldh3MjBCUISyBtmR9M/6DyeV7bdxFR6Dw3p3LFEOyxk+xr2VmfWpi8NMrZzI5uUog
-        XVmmjBYzISjWQ+GOnf1LP9v9BixccLxrgMghmuyGA6JKfCWNkxn+xG64CTZz76H9CgfiGUH8IpkC/
-        3GFU+0dmaUSZdSm5hYry0X0ddi8/PBQN724+HXifxXwY0ewFNZvKYqhx4W6AzthVxTEZMhCi95FDj
-        iOfJO2Eg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jAGgn-0001RV-EB; Fri, 06 Mar 2020 17:23:09 +0000
-Date:   Fri, 6 Mar 2020 09:23:09 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Document genhd capability flags
-Message-ID: <20200306172309.GD25710@bombadil.infradead.org>
-References: <20200306171621.24134-1-steve@sk2.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306171621.24134-1-steve@sk2.org>
+        Fri, 6 Mar 2020 12:23:21 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l12so3267376oil.9;
+        Fri, 06 Mar 2020 09:23:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=mupmjwiAHLO8iDpFb95apJkaHWQ/TigGpL1KHSH4xms=;
+        b=mmjBEgbQSwlmZBkUWvBEhBbTakC8GIm7keMvXibT0uSILLN4w0088NkuioPZjJN/Kw
+         kESY0EFLWnkPNvV6RA/hPOzBj141OwBct0DPfvpHPYqqCYir1KD1CrD+kINPpEkC+B7s
+         Jd5fwyXz5jyLf9zSkNsizNLFaqee+e86JuAVu094AXn3JXGyiwu8hdCdq+8uINWypNoc
+         9IHls7U3oIaYiNODymX3x3tf6RpkpaSdq4SA+1zFy5vNDXurV6c49v6/x90a4o6/S04E
+         17N3iYPQzS8gzQ7iUiV+Tk4siIRPUOQynx5OR8h4sFxsAxDuIvq3Y+DfXmuibrxPgMBZ
+         5jdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=mupmjwiAHLO8iDpFb95apJkaHWQ/TigGpL1KHSH4xms=;
+        b=DxzXCI7T6DTY/NKsa4kG8XQ4EoDkbqX4yWL2+Tx2tDK9S2PnvYVjXTrxJkdlPbg+F0
+         UTiKeBg6kRWz1oZbg/cjFfr6LREaBJ+JVDi20WyV7EvWZORipUeHLavCZpXHgDrkEEeK
+         Y9ZcizXizmTrb9m4RLpgzS27hyuXNp/7Y31MK5M9tHHYNAS6Upi0oGAfkyHhRqC4NbUX
+         7ecC7YbsQQ/vrpz6TcppRHb9tq50+3IrRlUY9RvLorZLNgE4oAdz0GlAoUlWicCPB3pg
+         dNQ8xo618Ur3RYqUd94oH4RRCOmSAMYUxKjMEafQhN5SiN0Ly8NeRtuqAZ6RX8idWQ0a
+         +vpQ==
+X-Gm-Message-State: ANhLgQ2iRlmhQlvf/+ruFhguy2NA9OeRFzwoqCu3gpA1YNq71WUdigPN
+        zpOxjQPKU5bykhXxT38u/Q==
+X-Google-Smtp-Source: ADFU+vvBg+x2eS3bDKBwRsXWeeqM6GNkqgJ/Cui1n9BXflU+I533ynTTHO4Y/CWBp8XW40MnFsCFsg==
+X-Received: by 2002:aca:4b93:: with SMTP id y141mr3470010oia.18.1583515401152;
+        Fri, 06 Mar 2020 09:23:21 -0800 (PST)
+Received: from serve.minyard.net ([47.184.164.37])
+        by smtp.gmail.com with ESMTPSA id g7sm11638601otk.17.2020.03.06.09.23.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 09:23:20 -0800 (PST)
+Received: from t560.minyard.net (unknown [IPv6:2001:470:b8f6:1b:7891:d81e:d9b4:ab4b])
+        by serve.minyard.net (Postfix) with ESMTPA id 193A6180002;
+        Fri,  6 Mar 2020 17:23:20 +0000 (UTC)
+From:   minyard@acm.org
+To:     linux-kernel@vger.kernel.org
+Cc:     Corey Minyard <cminyard@mvista.com>, stable@vger.kernel.org,
+        Adrian Reber <areber@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCH v2] pid: Fix error return value in some cases
+Date:   Fri,  6 Mar 2020 11:23:14 -0600
+Message-Id: <20200306172314.12232-1-minyard@acm.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 06:16:21PM +0100, Stephen Kitt wrote:
-> The kernel documentation includes a brief section about genhd
-> capabilities, but it turns out that the only documented
-> capability (GENHD_FL_MEDIA_CHANGE_NOTIFY) isn't used any more.
-> 
-> This patch removes that flag, and documents the rest, based on my
-> understanding of the current uses of these flags in the kernel. The
-> documentation is kept in the header file, alongside the declarations,
-> in the hope that it will be kept up-to-date in future; the kernel
-> documentation is changed to include the documentation generated from
-> the header file.
-> 
-> Because the ultimate goal is to provide some end-user
-> documentation (or end-administrator documentation), the comments are
-> perhaps more user-oriented than might be expected.
+From: Corey Minyard <cminyard@mvista.com>
 
-Thank you!  I have some suggestions for further improvement ...
+Recent changes to alloc_pid() allow the pid number to be specified on
+the command line.  If set_tid_size is set, then the code scanning the
+levels will hard-set retval to -EPERM, overriding it's previous -ENOMEM
+value.
 
-> -capability is a hex word indicating which capabilities a specific disk
-> -supports.  For more information on bits not listed here, see
-> -include/linux/genhd.h
-> +``capability`` is a hex word indicating which capabilities a specific
-> +disk supports:
+After the code scanning the levels, there are error returns that do not
+set retval, assuming it is still set to -ENOMEM.
 
-``capability`` is a bitfield, printed in hexadecimal, indicating ...
+So set retval back to -ENOMEM after scanning the levels.
 
-> + * ``GENHD_FL_UP`` (16): indicates that the block device is "up", with
-> + * a similar meaning to network interfaces.
+Fixes: 49cb2fc42ce4 "fork: extend clone3() to support setting a PID"
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Cc: <stable@vger.kernel.org> # 5.5
+Cc: Adrian Reber <areber@redhat.com>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Andrei Vagin <avagin@gmail.com>
+---
 
-Since we're printing it in hex, the value here should be displayed in hex
-to help the end-user.  So ``GENHD_FL_UP`` (0x10), etc.
+Changes from v1:
+  Just set retval to -ENOMEM before the gotos that would use it.
 
->  #define GENHD_FL_REMOVABLE			1
-> -/* 2 is unused */
-> -#define GENHD_FL_MEDIA_CHANGE_NOTIFY		4
-> +/* 2 is unused (used to be GENHD_FL_DRIVERFS) */
-> +/* 4 is unused (used to be GENHD_FL_MEDIA_CHANGE_NOTIFY) */
->  #define GENHD_FL_CD				8
->  #define GENHD_FL_UP				16
->  #define GENHD_FL_SUPPRESS_PARTITION_INFO	32
-> -#define GENHD_FL_EXT_DEVT			64 /* allow extended devt */
-> +#define GENHD_FL_EXT_DEVT			64
->  #define GENHD_FL_NATIVE_CAPACITY		128
->  #define GENHD_FL_BLOCK_EVENTS_ON_EXCL_WRITE	256
->  #define GENHD_FL_NO_PART_SCAN			512
+I do think that the second instance:
 
-Maybe these should also be converted to hex to match?
+        if (!(ns->pid_allocated & PIDNS_ADDING))
+                goto out_unlock;
+
+is returning the wrong error value, but that's probably not a big
+deal, and if it was fixed would probably need to be a separate change.
+
+In the first instance, the error return values are almost all -ENOMEM,
+anyway.
+
+ kernel/pid.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 0f4ecb57214c..19645b25b77c 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -247,6 +247,8 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+ 		tmp = tmp->parent;
+ 	}
+ 
++	retval = -ENOMEM;
++
+ 	if (unlikely(is_child_reaper(pid))) {
+ 		if (pid_ns_prepare_proc(ns))
+ 			goto out_free;
+-- 
+2.17.1
+
