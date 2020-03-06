@@ -2,111 +2,120 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BD3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6FDC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF0220848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GJXKccIX"
+	by mail.kernel.org (Postfix) with ESMTP id E6C3A20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgCFN2Q (ORCPT
+        id S1727236AbgCFN2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:28:16 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39715 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgCFN2O (ORCPT
+        Fri, 6 Mar 2020 08:28:22 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37114 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbgCFN2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:28:14 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j1so2367700wmi.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 05:28:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l0753ioxbAPf/XAPghmG1eWdLr2jDSu4uvwHYqISpUE=;
-        b=GJXKccIXYhtSv6vXeqTHPXu03DjzWWFPmE/k4I1cAtmzKPhXUw6TW9pBcFvqKJON1i
-         EtHMynUyVZ59/pNCPASagVEh7/tZ1h6gdHirsjJLo6H5YXdebW0h8TSYObV67tD1wNAT
-         YZ6DGBeUeRlcqLZn7mQtVllaxuHRZ0imk9IsOFGLMXuh3uZeoOZM5l94FJW30CQY5DT7
-         x+5aO45M+JhORnnqXmoC0foP22mmqTU1FQruGO9jHfwBJpl1sijDARm/0DKR/4EsB6a5
-         jwPNgWncYYtzjUeW3p21xIIaVvl9hEG5NLfqTOXJoJaD18vgRLt8f1fMMVqSiVHjkan2
-         /htg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l0753ioxbAPf/XAPghmG1eWdLr2jDSu4uvwHYqISpUE=;
-        b=kfXYGqk0KvhZ27qtu++LJTYpjgKU+BfV+UB+92JcgoWlrH/YiLVp47dMzwjIisuzAT
-         2uYpzBuaQtJLcq58m0GsPBcfqDKz30VVQCHLdXxOvsHUSMRZRt1bdFQ1KBrI6+rNFISo
-         kbzfxHr8CEqZhAyQhzj48qHBUW8JITTT92TLhzR0BOgpr5beDjUlNLs0If7ywrejw7g+
-         3gJB9ycbiXfn5fCXuziswXwUmS7QDXWeu+V9TbBbxoJvM7LEUvx97PlbSbESCvqKWoPD
-         ensUWnQX6pwJ7I2x7nWh5jh8lVYTGhFiv/aCgfgtzfx8hT5Q85DlB8CXEz9Z/sppajD6
-         4IVw==
-X-Gm-Message-State: ANhLgQ0gkJ7ByiDO8tMOkvl/3iL7lj+XdygO75ME/NJoc9ERdMMX5VwF
-        hg0Lc+a8YL5F0i/oYZDHRIrp+Q==
-X-Google-Smtp-Source: ADFU+vvFAL6t94Px6BzYAVsj2oEIZBnA3NwxwlqG0OuAe/dK6SNKzCDjT5t8fHLRzEcpjjNgS0s8sQ==
-X-Received: by 2002:a1c:df07:: with SMTP id w7mr3933609wmg.7.1583501293500;
-        Fri, 06 Mar 2020 05:28:13 -0800 (PST)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id t1sm53349237wrs.41.2020.03.06.05.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 05:28:12 -0800 (PST)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH 2/2] ASoC: wcd934x: remove unused headers
-Date:   Fri,  6 Mar 2020 13:28:06 +0000
-Message-Id: <20200306132806.19684-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200306132806.19684-1-srinivas.kandagatla@linaro.org>
-References: <20200306132806.19684-1-srinivas.kandagatla@linaro.org>
+        Fri, 6 Mar 2020 08:28:21 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 98D7F80307C2;
+        Fri,  6 Mar 2020 13:28:18 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 00CjeEVMtjHR; Fri,  6 Mar 2020 16:28:18 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/7] dt-bindings: watchdog: dw-wdt: Add watchdog TOPs array property
+Date:   Fri, 6 Mar 2020 16:27:42 +0300
+In-Reply-To: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200306132818.98D7F80307C2@mail.baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like there are some unused headers, remove them.
-Seems to be missed while moving to mfd.
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Reported-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In case if DW Watchdog IP core is built with WDT_USE_FIX_TOP == false,
+a custom timeout periods are used to preset the timer counter. In
+this case that periods should be specified in a new "snps,watchdog-tops"
+property of the DW watchdog dts node.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
 ---
- sound/soc/codecs/wcd934x.c | 4 ----
- 1 file changed, 4 deletions(-)
+ .../bindings/watchdog/snps,dw-wdt.yaml        | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
-index 83d643a07775..5269857e2746 100644
---- a/sound/soc/codecs/wcd934x.c
-+++ b/sound/soc/codecs/wcd934x.c
-@@ -3,7 +3,6 @@
+diff --git a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+index 8b30f9601c38..1b3b71351628 100644
+--- a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
++++ b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+@@ -46,6 +46,21 @@ properties:
+     description: Phandle to the DW Watchdog reset lane.
+     maxItems: 1
  
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
--#include <linux/gpio.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mfd/wcd934x/registers.h>
-@@ -11,10 +10,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of_clk.h>
--#include <linux/of_device.h>
--#include <linux/of_gpio.h>
- #include <linux/of.h>
--#include <linux/of_irq.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
++  snps,watchdog-tops:
++    description: |
++      DW APB Watchdog custom timer intervals - Timeout Period ranges (TOPs).
++      Each TOP is a number loaded into the watchdog counter at the moment of
++      the timer restart. The counter decrementing happens each tick of the
++      reference clock. Therefore the TOPs array is equivalent to an array of
++      the timer expiration intervals supported by the DW APB Watchdog. Note
++      DW APB Watchdog IP-cores might be synthesized with fixed TOP values,
++      in which case this property is unnecessary.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - items:
++          minItems: 16
++          maxItems: 16
++
+ additionalProperties: false
+ 
+ required:
+@@ -63,4 +78,19 @@ examples:
+       clocks = <&per_base_clk>;
+       resets = <&wdt_rst>;
+     };
++
++  - |
++    watchdog1: watchdog@ffd02000 {
++      compatible = "snps,dw-wdt";
++      reg = <0xffd02000 0x1000>;
++      interrupts = <0 171 4>;
++      clocks = <&per_base_clk>;
++      clock-names = "tclk";
++      snps,watchdog-tops = <0x000000FF 0x000001FF 0x000003FF
++                            0x000007FF 0x0000FFFF 0x0001FFFF
++                            0x0003FFFF 0x0007FFFF 0x000FFFFF
++                            0x001FFFFF 0x003FFFFF 0x007FFFFF
++                            0x00FFFFFF 0x01FFFFFF 0x03FFFFFF
++                            0x07FFFFFF>;
++    };
+ ...
 -- 
-2.21.0
+2.25.1
 
