@@ -2,206 +2,149 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FORGED_MSGID_YAHOO,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,WEIRD_QUOTING autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90245C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87293C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4002146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ECB8206E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="fsdYdoQZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E578MAb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgCFRAZ (ORCPT
+        id S1726646AbgCFRCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:00:25 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37505 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgCFRAY (ORCPT
+        Fri, 6 Mar 2020 12:02:42 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41906 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgCFRCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:00:24 -0500
-Received: by mail-io1-f68.google.com with SMTP id k4so2762809ior.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 09:00:22 -0800 (PST)
+        Fri, 6 Mar 2020 12:02:42 -0500
+Received: by mail-ot1-f66.google.com with SMTP id v19so3073589ote.8;
+        Fri, 06 Mar 2020 09:02:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+z8CpGL4hEw9tnI3J6pWUFHBPp9qMxv+lu3HcSPP2RU=;
-        b=fsdYdoQZ5rCWiofSNZCNLZv3gVD3fTVpRI8TqMIuS/vrbpJGX7PTSbikhc/cNJCaVH
-         9tV9/GLCU4Ssb4XUmiIficXRMq/2Tc3YcohqbhIj1ZjS92770mfLq38aVCGn6lVq4iJq
-         jbfwtl4JbLv5AiCufjzfFkIy5pAmSRSg+qzXDPF6ZIuVvoazqhlOaBu8ylbOOBxYI3Wk
-         Q6Y3k4LxRSwMViRPxUcwzaYAF8eUTcqv+XEmgeSr/XAJSFIaqWfD4dK4o0mbkwkXSQkl
-         Gp0HyNiXp06g2o/ueu/xXwDShqdpSgeli9LMC6ws1A8NGalMDyRzqSN65CoyySpfFwdt
-         0bJg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0huqSOOM6TQWT/uaipc+FS4s16ouSaOa4nymxBl//rs=;
+        b=E578MAb7Yr42MvvPNFo3yDbFhNAT2AbVP9J18ov7OwRiwaeS0UWnAdlPX7xu42IjK/
+         55M6bqYkOS6SbkVuoPSZX5YpTLKcRGUDvUw/7zZN3UVyrhTUpMmrUyj8i94atSmzhhpJ
+         LZS7Je07zTvXE46VUBdwzDh1ojHEGF/bC5WDBDx2bvne42OuXymWdMKOLknROBzFnuEs
+         kVmS+VH+7OSgqPcA7L/mffmoSTi6QxV1nOpuD8qsY9QbuFRe3WBsYJFHQyWP0Gxm9Lyw
+         QWN6bf2APE3id1PWNFTsri3m4NlprvDfX2HxBVF12A+vF6mp3FT1oY7bPkk3byvq6Lf4
+         CD4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+z8CpGL4hEw9tnI3J6pWUFHBPp9qMxv+lu3HcSPP2RU=;
-        b=aDHm+ege+mBR6ypSqR+jcXe/JmCsCpyk3uZ4CZSeUOZ9G2MgEKJFjAv+QI90dyEnIk
-         AnN/6CLvC7Q/P8f/91XflL6dckD1M5lmd39D8jKAR/eE5eActlJ/sruBvWVeD82OZNDz
-         bzZ3uEWT2ki2FdeFlLqq2YjCesAKNxRq6n56OKvdEe2WdEazfTO3/6ny1JOJ09Hmrwi0
-         vTpRi+8wxNFFTd1Pk5gGLe0IeMNXcfTXX3lqmhnmapBpUEj6sa3zQNDH5ERHsIYWV9Xh
-         ZntQOPCPdX3IvTU0OPzf52WoxEZzXKXaT3ezhX/uNadbmvYi4JyiVn+RlC3AeaRSqClC
-         eOCA==
-X-Gm-Message-State: ANhLgQ2EkyVdYx1sLkrTUxz+AE5hFzSmVEMyX+YmfUiFquxgT3gHIdzO
-        icSXaKDEWY9RJN9d0E0vSmYstw==
-X-Google-Smtp-Source: ADFU+vsf6953Rv2hazArjhQJ3IYWxGjDkAle2LIA5T+/HuZRwXQOjBNrKyc7WLBke9gRyFVWHHo5Wg==
-X-Received: by 2002:a02:6947:: with SMTP id e68mr3984090jac.137.1583514022264;
-        Fri, 06 Mar 2020 09:00:22 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id q16sm6854366ioh.49.2020.03.06.09.00.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2020 09:00:21 -0800 (PST)
-Subject: Re: KASAN: use-after-free Read in percpu_ref_switch_to_atomic_rcu
-To:     paulmck@kernel.org, Jann Horn <jannh@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        io-uring <io-uring@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>, tony.luck@intel.com,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <00000000000067c6df059df7f9f5@google.com>
- <CACT4Y+ZVLs7O84qixsvFqk_Nur1WOaCU81RiCwDf3wOqvHB-ag@mail.gmail.com>
- <3f805e51-1db7-3e57-c9a3-15a20699ea54@kernel.dk>
- <CAG48ez3DUAraFL1+agBX=1JVxzh_e2GR=UpX5JUaoyi+1gQ=6w@mail.gmail.com>
- <075e7fbe-aeec-cb7d-9338-8eb4e1576293@kernel.dk>
- <CAG48ez07bD4sr5hpDhUKe2g5ETk0iYb6PCWqyofPuJbXz1z+hw@mail.gmail.com>
- <20200306164443.GU2935@paulmck-ThinkPad-P72>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <11921f78-c6f2-660b-5e33-11599c2f9a4b@kernel.dk>
-Date:   Fri, 6 Mar 2020 10:00:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=0huqSOOM6TQWT/uaipc+FS4s16ouSaOa4nymxBl//rs=;
+        b=ELzq5XDmEj4DTbJAHsL1KR5HD7W9W9cpitpVjbxEV3rMrJZBoS3qvlHNfLFJlv6K8f
+         ggs+fv7ypExkH5Q0r3W90N62p1voxWcCidYTbhBqQIkaQuoguEzLPVGfV3M9XJ69IlZ/
+         qUft63CEU4M/B9iFAKA7Jpc2egi6CZ8XqDKpBWhOelj5usK3adj5DjG2pkYGjMkBa3UM
+         OmxDSZEDwBKXzmNiuqvyWOSX7eedmk6+y1G7l34BvSQ2u7ddItw5kzb/YQ1DRo2G5Yw3
+         JnLRmu/DNy15xOu8pCOjSW6Mbng6IHbs7BJMtxGPVfmKLwZPnG1iBz37me500guseT0r
+         apdA==
+X-Gm-Message-State: ANhLgQ2tTlMc9Lak7f/48wPTLK6ywAN8fPu8/yHssM2OFOjDRnBioJDq
+        KT3gC9jaUri/YKXto2cm/lk=
+X-Google-Smtp-Source: ADFU+vsoao5aucvzlM9qEqT53U96NcowhLRZAwGIJeWQMdIOpwMlemrRqJtLU3zoSd8q9SxSQrbZdQ==
+X-Received: by 2002:a9d:6c94:: with SMTP id c20mr3429727otr.285.1583514160968;
+        Fri, 06 Mar 2020 09:02:40 -0800 (PST)
+Received: from andrews-mbp-2.austin.ibm.com ([129.41.86.0])
+        by smtp.gmail.com with ESMTPSA id t9sm11550743otm.76.2020.03.06.09.02.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Mar 2020 09:02:40 -0800 (PST)
+From:   Andrew Geissler <geissonator@gmail.com>
+X-Google-Original-From: Andrew Geissler <geissonator@yahoo.com>
+To:     joel@jms.id.au, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Geissler <geissonator@yahoo.com>, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: aspeed: romulus: Add gpio line names
+Date:   Fri,  6 Mar 2020 11:02:17 -0600
+Message-Id: <20200306170218.79698-1-geissonator@yahoo.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-In-Reply-To: <20200306164443.GU2935@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 9:44 AM, Paul E. McKenney wrote:
-> On Fri, Mar 06, 2020 at 04:36:20PM +0100, Jann Horn wrote:
->> On Fri, Mar 6, 2020 at 4:34 PM Jens Axboe <axboe@kernel.dk> wrote:
->>> On 3/6/20 7:57 AM, Jann Horn wrote:
->>>> +paulmck
->>>>
->>>> On Wed, Mar 4, 2020 at 3:40 PM Jens Axboe <axboe@kernel.dk> wrote:
->>>>> On 3/4/20 12:59 AM, Dmitry Vyukov wrote:
->>>>>> On Fri, Feb 7, 2020 at 9:14 AM syzbot
->>>>>> <syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com> wrote:
->>>>>>>
->>>>>>> Hello,
->>>>>>>
->>>>>>> syzbot found the following crash on:
->>>>>>>
->>>>>>> HEAD commit:    4c7d00cc Merge tag 'pwm/for-5.6-rc1' of git://git.kernel.o..
->>>>>>> git tree:       upstream
->>>>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=12fec785e00000
->>>>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=e162021ddededa72
->>>>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=e017e49c39ab484ac87a
->>>>>>> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->>>>>>>
->>>>>>> Unfortunately, I don't have any reproducer for this crash yet.
->>>>>>>
->>>>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>>>>>> Reported-by: syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com
->>>>>>
->>>>>> +io_uring maintainers
->>>>>>
->>>>>> Here is a repro:
->>>>>> https://gist.githubusercontent.com/dvyukov/6b340beab6483a036f4186e7378882ce/raw/cd1922185516453c201df8eded1d4b006a6d6a3a/gistfile1.txt
->>>>>
->>>>> I've queued up a fix for this:
->>>>>
->>>>> https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.6&id=9875fe3dc4b8cff1f1b440fb925054a5124403c3
->>>>
->>>> I believe that this fix relies on call_rcu() having FIFO ordering; but
->>>> <https://www.kernel.org/doc/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html#Callback%20Registry>
->>>> says:
->>>>
->>>> | call_rcu() normally acts only on CPU-local state[...] It simply
->>>> enqueues the rcu_head structure on a per-CPU list,
-> 
-> Indeed.  For but one example, if there was a CPU-to-CPU migration between
-> the two call_rcu() invocations, it would not be at all surprising for
-> the two callbacks to execute out of order.
-> 
->>>> Is this fix really correct?
->>>
->>> That's a good point, there's a potentially stronger guarantee we need
->>> here that isn't "nobody is inside an RCU critical section", but rather
->>> that we're depending on a previous call_rcu() to have happened. Hence I
->>> think you are right - it'll shrink the window drastically, since the
->>> previous callback is already queued up, but it's not a full close.
->>>
->>> Hmm...
->>
->> You could potentially hack up the semantics you want by doing a
->> call_rcu() whose callback does another call_rcu(), or something like
->> that - but I'd like to hear paulmck's opinion on this first.
-> 
-> That would work!
-> 
-> Or, alternatively, do an rcu_barrier() between the two calls to
-> call_rcu(), assuming that the use case can tolerate rcu_barrier()
-> overhead and latency.
+Name the GPIOs to help userspace work with them. The names describe the
+functionality the lines provide, not the net or ball name. This makes it
+easier to share userspace code across different systems and makes the
+use of the lines more obvious.
 
-If the nested call_rcu() works, that seems greatly preferable to needing
-the rcu_barrier(), even if that would not be a showstopper for me. The
-nested call_rcu() is just a bit odd, but with a comment it should be OK.
+Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts | 35 ++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-Incremental here I'm going to test, would just fold in of course.
-
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index f3218fc81943..95ba95b4d8ec 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -5330,7 +5330,7 @@ static void io_file_ref_kill(struct percpu_ref *ref)
- 	complete(&data->done);
- }
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+index edfa44fe1f75..fd2e014dae75 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+@@ -231,23 +231,52 @@
+ };
  
--static void io_file_ref_exit_and_free(struct rcu_head *rcu)
-+static void __io_file_ref_exit_and_free(struct rcu_head *rcu)
- {
- 	struct fixed_file_data *data = container_of(rcu, struct fixed_file_data,
- 							rcu);
-@@ -5338,6 +5338,18 @@ static void io_file_ref_exit_and_free(struct rcu_head *rcu)
- 	kfree(data);
- }
- 
-+static void io_file_ref_exit_and_free(struct rcu_head *rcu)
-+{
-+	/*
-+	 * We need to order our exit+free call again the potentially
-+	 * existing call_rcu() for switching to atomic. One way to do that
-+	 * is to have this rcu callback queue the final put and free, as we
-+	 * could otherwise a pre-existing atomic switch complete _after_
-+	 * the free callback we queued.
-+	 */
-+	call_rcu(rcu, __io_file_ref_exit_and_free);
-+}
+ &gpio {
++	gpio-line-names =
++	/*A0-A7*/	"","cfam-reset","","","","","fsi-mux","",
++	/*B0-B7*/	"","","","","","","","",
++	/*C0-C7*/	"","","","","","","","",
++	/*D0-D7*/	"fsi-enable","","","nic_func_mode0","nic_func_mode1","","","",
++	/*E0-E7*/	"","","","","","","","",
++	/*F0-F7*/	"","","","","","","","",
++	/*G0-G7*/	"","","","","","","","",
++	/*H0-H7*/	"","","","","","","","",
++	/*I0-I7*/	"","","","power-button","","","","",
++	/*J0-J7*/	"","","checkstop","","","","","",
++	/*K0-K7*/	"","","","","","","","",
++	/*L0-L7*/	"","","","","","","","",
++	/*M0-M7*/	"","","","","","","","",
++	/*N0-N7*/	"","","led-fault","",
++				"led-identify","","","",
++	/*O0-O7*/	"","","","","","","","",
++	/*P0-P7*/	"","","","","","","","",
++	/*Q0-Q7*/	"","","","","","","","id-button",
++	/*R0-R7*/	"","","fsi-trans","","","led-power","","",
++	/*S0-S7*/	"","","","","","","","seq_cont",
++	/*T0-T7*/	"","","","","","","","",
++	/*U0-U7*/	"","","","","","","","",
++	/*V0-V7*/	"","","","","","","","",
++	/*W0-W7*/	"","","","","","","","",
++	/*X0-X7*/	"","","","","","","","",
++	/*Y0-Y7*/	"","","","","","","","",
++	/*Z0-Z7*/	"","","","","","","","",
++	/*AA0-AA7*/	"fsi-clock","","fsi-data","","","","","",
++	/*AB0-AB7*/	"","","","","","","","",
++	/*AC0-AC7*/	"","","","","","","","";
 +
- static int io_sqe_files_unregister(struct io_ring_ctx *ctx)
- {
- 	struct fixed_file_data *data = ctx->file_data;
-
+ 	nic_func_mode0 {
+ 		gpio-hog;
+ 		gpios = <ASPEED_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
+ 		output-low;
+-		line-name = "nic_func_mode0";
+ 	};
+ 	nic_func_mode1 {
+ 		gpio-hog;
+ 		gpios = <ASPEED_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
+ 		output-low;
+-		line-name = "nic_func_mode1";
+ 	};
+ 	seq_cont {
+ 		gpio-hog;
+ 		gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
+ 		output-low;
+-		line-name = "seq_cont";
+ 	};
+ };
+ 
 -- 
-Jens Axboe
+2.21.0 (Apple Git-122)
 
