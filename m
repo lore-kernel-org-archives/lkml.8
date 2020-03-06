@@ -2,267 +2,159 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54988C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC27C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD802051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC2120656
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:36:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="urjBIsmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgCFRcY (ORCPT
+        id S1726300AbgCFRgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:32:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:36820 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCFRcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:32:23 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D5AF30E;
-        Fri,  6 Mar 2020 09:32:23 -0800 (PST)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.195.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62E113F6C4;
-        Fri,  6 Mar 2020 09:32:22 -0800 (PST)
-From:   Steven Price <steven.price@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Steven Price <steven.price@arm.com>
-Subject: [PATCH] arm64: Map page table of linear map readonly
-Date:   Fri,  6 Mar 2020 17:32:17 +0000
-Message-Id: <20200306173217.44372-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 6 Mar 2020 12:36:46 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:38777 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgCFRgq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 12:36:46 -0500
+Received: by mail-pj1-f66.google.com with SMTP id a16so1368333pju.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 09:36:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0th24Aw7poXV2kDwcH+eb4lyzzSHKTu9OdyFQYJbKkY=;
+        b=urjBIsmYRvK1sp8Bv2kbwI4OZeXV5hOijJXEOX5UUfyVmfgn7n76vk1GDm8S56Klct
+         AaTMpGvZ5HE4TwifQAa/d0/6Oz5R5P/W17mv+pPW/uOahjODGheCXtDXwSh+8bTTQklL
+         39OQbbiYsxrC9XR3fSPlFJEm50zA73I0umb0i+QeJ+vPctKceXvOFv/zMlgD9JkvXCcN
+         FaE25ev7o8HC7e+HtWK93b82PcMqTpjHJUAmZuWwu2nhy43aTeN4gi0OOSmap2ksWZIJ
+         ydbMol/irvq4q+i1Bb0nmMUKko59rFUKroUkKOiOtPv1CdWDxvSXX1OpGqQ5EkykeszI
+         WKHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0th24Aw7poXV2kDwcH+eb4lyzzSHKTu9OdyFQYJbKkY=;
+        b=SgV6lO2wTei4SGwv5j19a94us4CMIDnQTLT0VQMLKeQt3qOx5WO/LC6vnw+EIougi2
+         HV574CSlN0fc+JpElXtLDbMfSG6C0oZZPQSzO02nn8bSq39HkfZ6CqfgU6bMTn7vIPbf
+         TvXVQPWh2NSIdxfKkQSpo7vVWdwT5cS8BL6eYb6iAMNMCCJjzsdJD0dGQXPrSIGNpNdR
+         ZbpdPWaJpWfwuKC+qrq+34erX4oqrlp5rJu9bccTEA0K6Rpv0fwzbl29x/XbaJFnaL5V
+         tOUl9DsxpLWYMZf0gd9P0dV7bXoN8+NLDmb5eP+bxwMVj0fSz/AcMGiRXmZ/A3evuVvi
+         Huuw==
+X-Gm-Message-State: ANhLgQ27dh4GmjrGG8A9STEsebb2/8ppAtwKDluOcWFegP24Xk4Z5MTN
+        wYWdjwIXjyc4l/RwW9F6azA9qCs4enrX+bbHVJWadTT4
+X-Google-Smtp-Source: ADFU+vt9a6IY6oRt2STnFrh2CYGkjgjagZGDV8DawLnE5rRIkjzRpQekuW+IE2ZLZ5P/ZYvUs8+Q6nesz6drxHr/5Bs=
+X-Received: by 2002:a17:90a:1f8d:: with SMTP id x13mr4795428pja.27.1583516201411;
+ Fri, 06 Mar 2020 09:36:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <202003060930.DDCCB6659@keescook>
+In-Reply-To: <202003060930.DDCCB6659@keescook>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 6 Mar 2020 09:36:30 -0800
+Message-ID: <CAKwvOdn4q4OWzvhAMHFf441DNrmO00ye_H_MnoegP7jw3YAWqA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/edid: Distribute switch variables for initialization
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's fairly rare that linear mappings need to be updated, so to improve
-security we can map the leaf page table entries as read-only, this makes
-it harder for an attacker to modify the permissions of the linear
-mappings, while the overhead is low because the linear mappings don't
-need to be changed frequently. When they do need to be updated we can
-use fixmaps to create a temporary alternative mapping to do the update.
+On Fri, Mar 6, 2020 at 9:32 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> Variables declared in a switch statement before any case statements
+> cannot be automatically initialized with compiler instrumentation (as
+> they are not part of any execution flow). With GCC's proposed automatic
+> stack variable initialization feature, this triggers a warning (and they
+> don't get initialized). Clang's automatic stack variable initialization
+> (via CONFIG_INIT_STACK_ALL=3Dy) doesn't throw a warning, but it also
+> doesn't initialize such variables[1]. Note that these warnings (or silent
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/arm64/Kconfig              |  9 ++++++++
- arch/arm64/include/asm/fixmap.h | 20 ++++++++++++++++-
- arch/arm64/mm/mmu.c             | 38 +++++++++++++++++++++++++++++++--
- arch/arm64/mm/pageattr.c        | 36 ++++++++++++++++++++++++++++++-
- 4 files changed, 99 insertions(+), 4 deletions(-)
+That's not good, have you filed a bug against Clang yet?  It should at
+least warn when the corresponding stack init flag is set.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 0b30e884e088..00362e9b9934 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1210,6 +1210,15 @@ config RODATA_FULL_DEFAULT_ENABLED
- 	  This requires the linear region to be mapped down to pages,
- 	  which may adversely affect performance in some cases.
- 
-+config LINEAR_PGTABLE_RO
-+	bool "Apply r/o permissions to page tables of linear mapping"
-+	help
-+	  Apply read-only attributes to the page tables that make up the
-+	  the linear mapping. This prevents the linear page tables from being
-+	  inadvertently modified.
-+
-+	  This requires rodata=on (or RODATA_FULL_DEFAULT_ENABLED).
-+
- config ARM64_SW_TTBR0_PAN
- 	bool "Emulate Privileged Access Never using TTBR0_EL1 switching"
- 	help
-diff --git a/arch/arm64/include/asm/fixmap.h b/arch/arm64/include/asm/fixmap.h
-index f987b8a8f325..55bf08151d73 100644
---- a/arch/arm64/include/asm/fixmap.h
-+++ b/arch/arm64/include/asm/fixmap.h
-@@ -67,6 +67,12 @@ enum fixed_addresses {
- 	FIX_ENTRY_TRAMP_TEXT,
- #define TRAMP_VALIAS		(__fix_to_virt(FIX_ENTRY_TRAMP_TEXT))
- #endif /* CONFIG_UNMAP_KERNEL_AT_EL0 */
-+
-+#ifdef CONFIG_LINEAR_PGTABLE_RO
-+	FIX_LINEAR_RO_BEGIN,
-+	FIX_LINEAR_RO_END = FIX_LINEAR_RO_BEGIN + NR_CPUS - 1,
-+#endif
-+
- 	__end_of_permanent_fixed_addresses,
- 
- 	/*
-@@ -77,7 +83,15 @@ enum fixed_addresses {
- #define FIX_BTMAPS_SLOTS	7
- #define TOTAL_FIX_BTMAPS	(NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
- 
-+#ifdef CONFIG_LINEAR_PGTABLE_RO
-+	/*
-+	 * Share the space with the LINEAR_RO area as during early boot, the
-+	 * LINEAR_RO area isn't needed
-+	 */
-+	FIX_BTMAP_END = FIX_LINEAR_RO_BEGIN,
-+#else
- 	FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
-+#endif
- 	FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
- 
- 	/*
-@@ -89,9 +103,13 @@ enum fixed_addresses {
- 	FIX_PUD,
- 	FIX_PGD,
- 
--	__end_of_fixed_addresses
-+	___end_of_fixed_addresses
- };
- 
-+static const enum fixed_addresses __end_of_fixed_addresses =
-+	___end_of_fixed_addresses > __end_of_permanent_fixed_addresses ?
-+	___end_of_fixed_addresses : __end_of_permanent_fixed_addresses;
-+
- #define FIXADDR_SIZE	(__end_of_permanent_fixed_addresses << PAGE_SHIFT)
- #define FIXADDR_START	(FIXADDR_TOP - FIXADDR_SIZE)
- 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 128f70852bf3..9a2379b6179e 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -20,6 +20,7 @@
- #include <linux/fs.h>
- #include <linux/io.h>
- #include <linux/mm.h>
-+#include <linux/pagewalk.h>
- #include <linux/vmalloc.h>
- 
- #include <asm/barrier.h>
-@@ -455,6 +456,34 @@ void __init mark_linear_text_alias_ro(void)
- 			    PAGE_KERNEL_RO);
- }
- 
-+#ifdef CONFIG_LINEAR_PGTABLE_RO
-+static int __init mark_linear_pmd_ro(pmd_t *pmd, unsigned long addr,
-+				     unsigned long next, struct mm_walk *walk)
-+{
-+	phys_addr_t pmd_phys = pte_offset_phys(pmd, 0);
-+
-+	__map_memblock(walk->mm->pgd, pmd_phys, pmd_phys + PAGE_SIZE,
-+		       PAGE_KERNEL_RO, NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
-+
-+	return 0;
-+}
-+
-+static const struct mm_walk_ops mark_linear_pg_ro_ops __initconst = {
-+	.pmd_entry = mark_linear_pmd_ro,
-+};
-+
-+/*
-+ * Remove the write permission from the leaf page tables of the linear map
-+ */
-+void __init mark_linear_pg_ro(void)
-+{
-+	down_read(&init_mm.mmap_sem);
-+	walk_page_range_novma(&init_mm, PAGE_OFFSET, PAGE_END,
-+			      &mark_linear_pg_ro_ops, init_mm.pgd, NULL);
-+	up_read(&init_mm.mmap_sem);
-+}
-+#endif
-+
- static void __init map_mem(pgd_t *pgdp)
- {
- 	phys_addr_t kernel_start = __pa_symbol(_text);
-@@ -502,7 +531,7 @@ static void __init map_mem(pgd_t *pgdp)
- 	 * so we should avoid them here.
- 	 */
- 	__map_memblock(pgdp, kernel_start, kernel_end,
--		       PAGE_KERNEL, NO_CONT_MAPPINGS);
-+		       PAGE_KERNEL, flags | NO_CONT_MAPPINGS);
- 	memblock_clear_nomap(kernel_start, kernel_end - kernel_start);
- 
- #ifdef CONFIG_KEXEC_CORE
-@@ -678,6 +707,11 @@ void __init paging_init(void)
- 	cpu_replace_ttbr1(lm_alias(swapper_pg_dir));
- 	init_mm.pgd = swapper_pg_dir;
- 
-+#ifdef CONFIG_LINEAR_PGTABLE_RO
-+	if (rodata_full)
-+		mark_linear_pg_ro();
-+#endif
-+
- 	memblock_free(__pa_symbol(init_pg_dir),
- 		      __pa_symbol(init_pg_end) - __pa_symbol(init_pg_dir));
- 
-@@ -874,8 +908,8 @@ void __set_fixmap(enum fixed_addresses idx,
- 		set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, flags));
- 	} else {
- 		pte_clear(&init_mm, addr, ptep);
--		flush_tlb_kernel_range(addr, addr+PAGE_SIZE);
- 	}
-+	flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
- }
- 
- void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
-diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-index 250c49008d73..52d34c06656c 100644
---- a/arch/arm64/mm/pageattr.c
-+++ b/arch/arm64/mm/pageattr.c
-@@ -7,6 +7,7 @@
- #include <linux/module.h>
- #include <linux/sched.h>
- #include <linux/vmalloc.h>
-+#include <linux/uaccess.h>
- 
- #include <asm/pgtable.h>
- #include <asm/set_memory.h>
-@@ -19,6 +20,33 @@ struct page_change_data {
- 
- bool rodata_full __ro_after_init = IS_ENABLED(CONFIG_RODATA_FULL_DEFAULT_ENABLED);
- 
-+#ifdef CONFIG_LINEAR_PGTABLE_RO
-+static void set_linear_pte_range(pte_t *ptep, pte_t pte)
-+{
-+	unsigned long flags;
-+	unsigned int idx;
-+	unsigned long addr;
-+
-+	local_irq_save(flags);
-+	preempt_disable();
-+
-+	/* During early boot we use FIX_PTE as we don't need a per-CPU slot */
-+	if (system_state < SYSTEM_SCHEDULING)
-+		idx = FIX_PTE;
-+	else
-+		idx = FIX_LINEAR_RO_BEGIN + smp_processor_id();
-+
-+	addr = virt_to_phys(ptep);
-+	set_fixmap(idx, addr);
-+	ptep = (pte_t *)(__fix_to_virt(idx) + (addr & ~PAGE_MASK));
-+	set_pte(ptep, pte);
-+	clear_fixmap(idx);
-+
-+	preempt_enable();
-+	local_irq_restore(flags);
-+}
-+#endif
-+
- static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
- {
- 	struct page_change_data *cdata = data;
-@@ -27,7 +55,13 @@ static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
- 	pte = clear_pte_bit(pte, cdata->clear_mask);
- 	pte = set_pte_bit(pte, cdata->set_mask);
- 
--	set_pte(ptep, pte);
-+#ifdef CONFIG_LINEAR_PGTABLE_RO
-+	if (addr >= PAGE_OFFSET)
-+		set_linear_pte_range(ptep, pte);
-+	else
-+#endif
-+		set_pte(ptep, pte);
-+
- 	return 0;
- }
- 
--- 
-2.20.1
+> skipping) happen before the dead-store elimination optimization phase,
+> so even when the automatic initializations are later elided in favor of
+> direct initializations, the warnings remain.
+>
+> To avoid these problems, lift such variables up into the next code
+> block.
+>
+> drivers/gpu/drm/drm_edid.c: In function =E2=80=98drm_edid_to_eld=E2=80=99=
+:
+> drivers/gpu/drm/drm_edid.c:4395:9: warning: statement will never be
+> executed [-Wswitch-unreachable]
+>  4395 |     int sad_count;
+>       |         ^~~~~~~~~
+>
+> [1] https://bugs.llvm.org/show_bug.cgi?id=3D44916
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> ---
+> v2: move into function block instead being switch-local (Ville Syrj=C3=A4=
+l=C3=A4)
+> ---
+>  drivers/gpu/drm/drm_edid.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index 805fb004c8eb..46cee78bc175 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -4381,6 +4381,7 @@ static void drm_edid_to_eld(struct drm_connector *c=
+onnector, struct edid *edid)
+>
+>         if (cea_revision(cea) >=3D 3) {
+>                 int i, start, end;
+> +               int sad_count;
+>
+>                 if (cea_db_offsets(cea, &start, &end)) {
+>                         start =3D 0;
+> @@ -4392,8 +4393,6 @@ static void drm_edid_to_eld(struct drm_connector *c=
+onnector, struct edid *edid)
+>                         dbl =3D cea_db_payload_len(db);
+>
+>                         switch (cea_db_tag(db)) {
+> -                               int sad_count;
+> -
+>                         case AUDIO_BLOCK:
+>                                 /* Audio Data Block, contains SADs */
+>                                 sad_count =3D min(dbl / 3, 15 - total_sad=
+_count);
+> --
+> 2.20.1
+>
+>
+> --
+> Kees Cook
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgi=
+d/clang-built-linux/202003060930.DDCCB6659%40keescook.
+
+
+
+--=20
+Thanks,
+~Nick Desaulniers
