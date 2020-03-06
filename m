@@ -2,77 +2,97 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF51EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3F7C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD9752070A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE16A2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgCFKVS (ORCPT
+        id S1726413AbgCFKWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:21:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:59036 "EHLO foss.arm.com"
+        Fri, 6 Mar 2020 05:22:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57850 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbgCFKVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:21:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E166331B;
-        Fri,  6 Mar 2020 02:21:16 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB6893F6C4;
-        Fri,  6 Mar 2020 02:21:13 -0800 (PST)
-Date:   Fri, 6 Mar 2020 10:21:11 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v8 00/11] arm64: Branch Target Identification support
-Message-ID: <20200306102111.GB2503422@arrakis.emea.arm.com>
-References: <20200227174417.23722-1-broonie@kernel.org>
+        id S1726162AbgCFKWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 05:22:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 55E98B1D2;
+        Fri,  6 Mar 2020 10:22:09 +0000 (UTC)
+Subject: Re: [PATCH v7 3/7] mm: check fatal signal pending of target process
+To:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
+References: <20200302193630.68771-1-minchan@kernel.org>
+ <20200302193630.68771-4-minchan@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <2f3a9530-483d-0861-3844-bc12d212dd93@suse.cz>
+Date:   Fri, 6 Mar 2020 11:22:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227174417.23722-1-broonie@kernel.org>
+In-Reply-To: <20200302193630.68771-4-minchan@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 05:44:06PM +0000, Mark Brown wrote:
-> Dave Martin (10):
->   ELF: UAPI and Kconfig additions for ELF program properties
->   ELF: Add ELF program property parsing support
->   arm64: Basic Branch Target Identification support
->   elf: Allow arch to tweak initial mmap prot flags
+On 3/2/20 8:36 PM, Minchan Kim wrote:
+> Bail out to prevent unnecessary CPU overhead if target process has
+> pending fatal signal during (MADV_COLD|MADV_PAGEOUT) operation.
+> 
+> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
 
-Al, are you ok for patches 1, 2 and 4 in this series to be merged via
-the arm64 tree? The full series is here:
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-https://lore.kernel.org/linux-arm-kernel/20200227174417.23722-1-broonie@kernel.org/
+Nit below:
 
-Thanks.
+> ---
+>  mm/madvise.c | 29 +++++++++++++++++++++--------
+>  1 file changed, 21 insertions(+), 8 deletions(-)
+> 
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 349473fc6683..6543f2bfc3d8 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -36,6 +36,7 @@
+>  struct madvise_walk_private {
+>  	struct mmu_gather *tlb;
+>  	bool pageout;
+> +	struct task_struct *target_task;
+>  };
+>  
+>  /*
+> @@ -316,6 +317,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>  	if (fatal_signal_pending(current))
+>  		return -EINTR;
+>  
+> +	if (private->target_task &&
+> +			fatal_signal_pending(private->target_task))
+> +		return -EINTR;
 
--- 
-Catalin
+With madvise(2) private->target_task will be current, thus current will be
+tested twice. Not wrong, but maybe add a "private->target_task != current"
+condition?
