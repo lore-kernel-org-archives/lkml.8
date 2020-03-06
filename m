@@ -2,233 +2,103 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EB3C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D126EC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 521C92072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DB02072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:11:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYMTN0wG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dDcDS/51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgCFIJo (ORCPT
+        id S1726129AbgCFILQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 03:09:44 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33637 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgCFIJn (ORCPT
+        Fri, 6 Mar 2020 03:11:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32583 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726047AbgCFILQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 03:09:43 -0500
-Received: by mail-pl1-f195.google.com with SMTP id ay11so561926plb.0;
-        Fri, 06 Mar 2020 00:09:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7TiOD25ZQuBocGWSYjvqKa3msFH5m2kuVO7nsDjKlwo=;
-        b=NYMTN0wG6q+cq6aqTvrP9llFnl30M4rXTg+zEDw75WgKwGfqHH1odu9d4WDLBoE7TN
-         PwOHuFwovG9TJWp/Hq8kcYY9ZQC3iYdTFjnpb/uc7dQt6+HnCiMG0mHThwgbHJKrPeDc
-         lIT1d+OXgu/TKT7KUckC7Q9CmT/B8I16f5Df49kXmc0uVa6E0p/2rareOGebjILOBdr5
-         Z12Bgs1bBXUibC/ue4p7pSzIEx7aMftiubqw9WQKH0STVLM2caaWgtVt+HTwWLkcdryH
-         5k4H4/5qfWQ9CFLX4N6kPOoOLjyEfJzivdHTu8IbGt35LlPmbZGtrEmxZ3f/Dlg47Wyc
-         GOug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=7TiOD25ZQuBocGWSYjvqKa3msFH5m2kuVO7nsDjKlwo=;
-        b=N7VMgqD+6vKtggsTohNgLlZCzPAj0i/bQB0VepOpiNEBxTYGH+uxtlSf4cG/bqAdQS
-         6ugek2JM5vzS4w8tkLqrEe3rkS6irLTHM2NlE4scuha+F8Pb+F7S210y5NXjWR2w3C0c
-         gm9Fsn+nsJw7w/s4bUKD5xCASpLX2Qk/nacrpigIvR7CtYXKtWTNxympxVVPu7vFiMad
-         7onIcGpe8Y4EVF9yuBU1pFJlhZ18TpizXE6Ul7f5vl9+UH9Gx0z+Jd1qsnGA79lSylUI
-         EACebf31wrNBwTSZWqNEFkPnZrZCmjqJKdJa1/RUgvA+wXhR0GGKp7EMPYvLcrjqNAGW
-         s83g==
-X-Gm-Message-State: ANhLgQ1viSRO+NTiyBybskLFoohcBgoOxHe3znMpgmNYfxqGR1himOf1
-        6ZBkqGANmzp9nurwI1rkCTc=
-X-Google-Smtp-Source: ADFU+vsb++EN7BBbPDSzAC6BTc8MhQ1pUQF5dlP8WpcswbDRkZeKP9dFhHsYJt/c3xvb9l36V0FUlQ==
-X-Received: by 2002:a17:90b:8c9:: with SMTP id ds9mr2422171pjb.11.1583482182196;
-        Fri, 06 Mar 2020 00:09:42 -0800 (PST)
-Received: from xps.vpn2.bfsu.edu.cn ([103.125.232.133])
-        by smtp.gmail.com with ESMTPSA id x65sm22614647pfd.34.2020.03.06.00.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 00:09:41 -0800 (PST)
-From:   YunQiang Su <syq@debian.org>
-To:     torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
-        akpm@linux-foundation.org, viro@zeniv.linux.org.uk,
-        James.Bottomley@hansenpartnership.com
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        libc-alpha@sourceware.org, Laurent Vivier <laurent@vivier.eu>,
-        YunQiang Su <syq@debian.org>
-Subject: [PATCH] binfmt_misc: pass binfmt_misc P flag to the interpreter
-Date:   Fri,  6 Mar 2020 16:09:05 +0800
-Message-Id: <20200306080905.173466-1-syq@debian.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 6 Mar 2020 03:11:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583482274;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=e2g/yNBSp4obAHP9e+z6b2wXSeS6uMWDcMmOHaljK0I=;
+        b=dDcDS/51/XrJv5qybUan4i2u5Inn9qIFEJwCG/9JDM6j9gCfSd98O+TQvtVkHPwwLZIQbN
+        3MYTIFLkE8eZ93PFCNsHUxuYdqA4dIigGgaRzz8pTxtoKk3DI00oMLWrczNgRFoKH84ePA
+        ft7D3wFkbLButw/bDFbpqmqieemSdzM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-488-CbscrROZOwyS3W2sk38UnQ-1; Fri, 06 Mar 2020 03:11:12 -0500
+X-MC-Unique: CbscrROZOwyS3W2sk38UnQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB238189F785;
+        Fri,  6 Mar 2020 08:11:11 +0000 (UTC)
+Received: from shodan.usersys.redhat.com (unknown [10.43.17.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 99C3410027B0;
+        Fri,  6 Mar 2020 08:11:11 +0000 (UTC)
+Received: by shodan.usersys.redhat.com (Postfix, from userid 1000)
+        id 41C491C0117; Fri,  6 Mar 2020 09:11:10 +0100 (CET)
+From:   Artem Savkov <asavkov@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Artem Savkov <asavkov@redhat.com>
+Subject: [PATCH] ftrace: return first found result in lookup_rec()
+Date:   Fri,  6 Mar 2020 09:10:35 +0100
+Message-Id: <20200306081035.21213-1-asavkov@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Vivier <laurent@vivier.eu>
+It appears that ip ranges can overlap so. In that case lookup_rec()
+returns whatever results it got last even if it found nothing in last
+searched page.
 
-It can be useful to the interpreter to know which flags are in use.
+This breaks an obscure livepatch late module patching usecase:
+  - load livepatch
+  - load the patched module
+  - unload livepatch
+  - try to load livepatch again
 
-For instance, knowing if the preserve-argv[0] is in use would
-allow to skip the pathname argument.
+To fix this return from lookup_rec() as soon as it found the record
+containing searched-for ip. This used to be this way prior lookup_rec()
+introduction.
 
-This patch uses an unused auxiliary vector, AT_FLAGS, to add a
-flag to inform interpreter if the preserve-argv[0] is enabled.
-
-Signed-off-by: Laurent Vivier <laurent@vivier.eu>
-Signed-off-by: YunQiang Su <syq@debian.org>
+Fixes: 7e16f581a817 ("ftrace: Separate out functionality from ftrace_loca=
+tion_range()")
+Signed-off-by: Artem Savkov <asavkov@redhat.com>
 ---
+ kernel/trace/ftrace.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Notes:
-    This patch uses AT_FLAGS, which has never been used. We need to make a decision.
-    since it is about the fundmental API of userland.
-
-    This can be tested with QEMU from my branch:
-
-      https://github.com/vivier/qemu/commits/binfmt-argv0
-
-    With something like:
-
-      # cp ..../qemu-ppc /chroot/powerpc/jessie
-
-      # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
-                            --persistent no --preserve-argv0 yes
-      # systemctl restart systemd-binfmt.service
-      # cat /proc/sys/fs/binfmt_misc/qemu-ppc
-      enabled
-      interpreter //qemu-ppc
-      flags: POC
-      offset 0
-      magic 7f454c4601020100000000000000000000020014
-      mask ffffffffffffff00fffffffffffffffffffeffff
-      # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
-      sh
-
-      # qemu-binfmt-conf.sh --qemu-path / --systemd ppc --credential yes \
-                            --persistent no --preserve-argv0 no
-      # systemctl restart systemd-binfmt.service
-      # cat /proc/sys/fs/binfmt_misc/qemu-ppc
-      enabled
-      interpreter //qemu-ppc
-      flags: OC
-      offset 0
-      magic 7f454c4601020100000000000000000000020014
-      mask ffffffffffffff00fffffffffffffffffffeffff
-      # chroot /chroot/powerpc/jessie  sh -c 'echo $0'
-      /bin/sh
-
-    v4: Update to merge with linux-next: 20200305.
-    v3: mix my patch with one from YunQiang Su and my comments on it
-        introduce a new flag in the uabi for the AT_FLAGS
-    v2: only pass special flags (remove Magic and Enabled flags)
----
- fs/binfmt_elf.c              | 6 ++++--
- fs/binfmt_elf_fdpic.c        | 5 ++++-
- fs/binfmt_misc.c             | 4 +++-
- include/linux/binfmts.h      | 4 ++++
- include/uapi/linux/binfmts.h | 4 ++++
- 5 files changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 13f25e241ac4..e9f5d135b847 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -178,7 +178,7 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
- 	const char *k_base_platform = ELF_BASE_PLATFORM;
- 	unsigned char k_rand_bytes[16];
- 	int items;
--	elf_addr_t *elf_info;
-+	elf_addr_t *elf_info, flags = 0;
- 	int ei_index;
- 	const struct cred *cred = current_cred();
- 	struct vm_area_struct *vma;
-@@ -253,7 +253,9 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
- 	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
- 	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
- 	NEW_AUX_ENT(AT_BASE, interp_load_addr);
--	NEW_AUX_ENT(AT_FLAGS, 0);
-+	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-+		flags |= AT_FLAGS_PRESERVE_ARGV0;
-+	NEW_AUX_ENT(AT_FLAGS, flags);
- 	NEW_AUX_ENT(AT_ENTRY, e_entry);
- 	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
- 	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index 240f66663543..abb90d82aa58 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -507,6 +507,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
- 	char __user *u_platform, *u_base_platform, *p;
- 	int loop;
- 	int nr;	/* reset for each csp adjustment */
-+	unsigned long flags = 0;
- 
- #ifdef CONFIG_MMU
- 	/* In some cases (e.g. Hyper-Threading), we want to avoid L1 evictions
-@@ -647,7 +648,9 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
- 	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
- 	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
- 	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
--	NEW_AUX_ENT(AT_FLAGS,	0);
-+	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-+		flags |= AT_FLAGS_PRESERVE_ARGV0;
-+	NEW_AUX_ENT(AT_FLAGS,	flags);
- 	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
- 	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
- 	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
-diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-index cdb45829354d..b9acdd26a654 100644
---- a/fs/binfmt_misc.c
-+++ b/fs/binfmt_misc.c
-@@ -154,7 +154,9 @@ static int load_misc_binary(struct linux_binprm *bprm)
- 	if (bprm->interp_flags & BINPRM_FLAGS_PATH_INACCESSIBLE)
- 		goto ret;
- 
--	if (!(fmt->flags & MISC_FMT_PRESERVE_ARGV0)) {
-+	if (fmt->flags & MISC_FMT_PRESERVE_ARGV0) {
-+		bprm->interp_flags |= BINPRM_FLAGS_PRESERVE_ARGV0;
-+	} else {
- 		retval = remove_arg_zero(bprm);
- 		if (retval)
- 			goto ret;
-diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-index b40fc633f3be..265b80d5fd6f 100644
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -78,6 +78,10 @@ struct linux_binprm {
- #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
- #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
- 
-+/* if preserve the argv0 for the interpreter  */
-+#define BINPRM_FLAGS_PRESERVE_ARGV0_BIT 3
-+#define BINPRM_FLAGS_PRESERVE_ARGV0 (1 << BINPRM_FLAGS_PRESERVE_ARGV0_BIT)
-+
- /* Function parameter for binfmt->coredump */
- struct coredump_params {
- 	const kernel_siginfo_t *siginfo;
-diff --git a/include/uapi/linux/binfmts.h b/include/uapi/linux/binfmts.h
-index 689025d9c185..a70747416130 100644
---- a/include/uapi/linux/binfmts.h
-+++ b/include/uapi/linux/binfmts.h
-@@ -18,4 +18,8 @@ struct pt_regs;
- /* sizeof(linux_binprm->buf) */
- #define BINPRM_BUF_SIZE 256
- 
-+/* if preserve the argv0 for the interpreter  */
-+#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
-+#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
-+
- #endif /* _UAPI_LINUX_BINFMTS_H */
--- 
-2.25.1
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 3f7ee102868a..b0f5ee1fd6e4 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1547,8 +1547,10 @@ static struct dyn_ftrace *lookup_rec(unsigned long=
+ start, unsigned long end)
+ 		rec =3D bsearch(&key, pg->records, pg->index,
+ 			      sizeof(struct dyn_ftrace),
+ 			      ftrace_cmp_recs);
++		if (rec)
++			return rec;
+ 	}
+-	return rec;
++	return NULL;
+ }
+=20
+ /**
+--=20
+2.21.1
 
