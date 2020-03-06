@@ -2,114 +2,91 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCBFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3180C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03DB207FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KdkNycRP"
+	by mail.kernel.org (Postfix) with ESMTP id A0A26207FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:18:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583489933;
+	bh=OOG5NB9RJxSZ10jow0eNiz9o93fP8bI14824u/TpXyo=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=yHQhIy4VrKI4NBy2u6k7cQPnwEOlnx+oY4vjYDwduClTLEan75PPTChpuw68KmiOm
+	 VQDnRPZLYrIEPhnzJPvSPlXkBrCG9H6oY74fDakXPMeBamSpZO0lmdRp2hruqr/7am
+	 hhmuHT+IiqmAYEtMI4/RsV/6XlAPAPemdUj4UHa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgCFKP0 (ORCPT
+        id S1726299AbgCFKSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:15:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55778 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726025AbgCFKP0 (ORCPT
+        Fri, 6 Mar 2020 05:18:52 -0500
+Received: from mail-oi1-f174.google.com ([209.85.167.174]:36737 "EHLO
+        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgCFKSw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:15:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583489725;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R8cCEdC5FaVv+MdnVESNIfOZjXxz+5prIcEo1XcPS0s=;
-        b=KdkNycRPZR2tz20TZRQYUZNZx3hVaU8BpnyI78N1CaEjSZGSdpsDJyzA6LvZQWhBb12oaB
-        G+L5tnhSODDSiaU6Aujjgbl864mCaNsZ2PdTwjd0ssc//QNe0XBshk2cTIUpB0mYgNPbou
-        UqCo3SXtMe3p2cIUYhZQwNzLF70OPM4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-84-ZHj_nNz4PFOe5A5aseBotQ-1; Fri, 06 Mar 2020 05:15:24 -0500
-X-MC-Unique: ZHj_nNz4PFOe5A5aseBotQ-1
-Received: by mail-wr1-f69.google.com with SMTP id q18so800174wrw.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:15:23 -0800 (PST)
+        Fri, 6 Mar 2020 05:18:52 -0500
+Received: by mail-oi1-f174.google.com with SMTP id t24so2046284oij.3;
+        Fri, 06 Mar 2020 02:18:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=R8cCEdC5FaVv+MdnVESNIfOZjXxz+5prIcEo1XcPS0s=;
-        b=uddn7RWDGesQz5ijZCWFBZ2IVKeUSXc9NQxUz1qDgeBjrDjsskCw3RKd2gXyQIlslx
-         gA5W8HUUSklo9QljsR4xgwzHM3g9l/bvviOuEKUkrN9uSKp2ncL/lU4hUwkHZaW0V6tu
-         vatAx5zCmS443QPy4WZzdApskds9oZ00E781My7NBZCTVAWJLq3mLi85MZY49PNJU84U
-         LjAYzHawn3lqEBXl5ApC6Jl1aPeM5K015FNxduK089yDIO8ISGhzAI5z2Ubxt1uHRZdR
-         8XBTL04q8yJwU4Um1uOXhgzoeEoQJIxDJJ+QLohN1Z7w3kYNEmHYTSSyqaOl6ynY+/YY
-         TCbg==
-X-Gm-Message-State: ANhLgQ0hGoO5lWK5O3ydWoQ8OCmZEvdp/jeY2YN5Aa3Q4xGKNVQImp3C
-        J0gA3dZxXaptIR1PS9ZZUuFZC4mRkVPIRYW6fDq8RUKi2ZQb0Q9CADoFSfyKbUOinXwUXumLxUB
-        J6WlOCIfxxVKTEMdzmfRQ6VpK
-X-Received: by 2002:adf:f58c:: with SMTP id f12mr3213691wro.22.1583489722135;
-        Fri, 06 Mar 2020 02:15:22 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vu8zlAWdb1cgYZu04XUt1QbGIL0sJCkz9ENy7Jgx3MKegXXX1wp00ARy8EXOG7ML94pK8W+lw==
-X-Received: by 2002:adf:f58c:: with SMTP id f12mr3213666wro.22.1583489721922;
-        Fri, 06 Mar 2020 02:15:21 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id m11sm1461332wrn.92.2020.03.06.02.15.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 02:15:21 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        linmiaohe <linmiaohe@huawei.com>
-Cc:     "rkrcmar\@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson\@intel.com" <sean.j.christopherson@intel.com>,
-        "jmattson\@google.com" <jmattson@google.com>,
-        "joro\@8bytes.org" <joro@8bytes.org>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "mingo\@redhat.com" <mingo@redhat.com>,
-        "bp\@alien8.de" <bp@alien8.de>, "hpa\@zytor.com" <hpa@zytor.com>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH] KVM: VMX: Use wrapper macro ~RMODE_GUEST_OWNED_EFLAGS_BITS directly
-In-Reply-To: <2cde5e91-b357-81f9-9e39-fd5d99bb81fd@redhat.com>
-References: <f1b01b4903564f2c8c267a3996e1ac29@huawei.com> <1e3f7ff0-0159-98e8-ba21-8806c3a14820@redhat.com> <87sgiles16.fsf@vitty.brq.redhat.com> <2cde5e91-b357-81f9-9e39-fd5d99bb81fd@redhat.com>
-Date:   Fri, 06 Mar 2020 11:15:20 +0100
-Message-ID: <87lfodeqmf.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=pBGDyn9+QX+LdnDHx3BkVjv8dhcNCQI8pss/MoHaa/8=;
+        b=RxpnsL3eLOsU8pROKuILry3sfMN7ySOaImnNzFH3ofmhJ8C7/cDr1rF5jCIGAH4oOs
+         ygE1qOKw8qftYRz3GAqgC5MDeYzmw7ZVI1Xop3C56abiQr5X/8jrPplUEdu/B59hY8jg
+         AAPcj6TQkSfDJC6IYW7UiJUUL2dn/KqnVg8bP95cLc4lShqYruwwWHh5B9fV7RycVdYz
+         ixO3G9CN0g7r3KjHmwnNooOlV1IIqZMRON4lsomjuenvXvvoy77DMll/l+sy6ICnPo4O
+         4ucOLvaIYvw5PaoZA8Zf2fcobelq05jdGPfftlc1Qv4rWhWakLbOkddw0lUmBpHUV22x
+         Aztg==
+X-Gm-Message-State: ANhLgQ0rEMyeSysOp4EtTRJ5QQ7v9osWht/1AUPk2s0yh48IF6NxRAGh
+        YZB5iLI4jvJAd/VdkUlpvvjYVoy7iJpcpDeozP66+404
+X-Google-Smtp-Source: ADFU+vu8kbz8bz/u5Ksox53bjHQ3vaFiM1M89FiCv76TOI1OnsZrNghbKnlig5x6pZuN6ZUKY7NxThFJYncOW0BYOEo=
+X-Received: by 2002:aca:ebcf:: with SMTP id j198mr1933251oih.115.1583489931843;
+ Fri, 06 Mar 2020 02:18:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 6 Mar 2020 11:18:40 +0100
+Message-ID: <CAJZ5v0g+iTke+8DL28YzCBeDbe=WNQnUhWuO8QjLhAwGy3U0=A@mail.gmail.com>
+Subject: [GIT PULL] ACPI documentation fix for v5.6-rc5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+Hi Linus,
 
-> On 06/03/20 10:44, Vitaly Kuznetsov wrote:
->>>> Define a macro RMODE_HOST_OWNED_EFLAGS_BITS for (X86_EFLAGS_IOPL |
->>>> X86_EFLAGS_VM) as suggested by Vitaly seems a good way to fix this ?
->>>> Thanks.
->>> No, what if a host-owned flag was zero?  I'd just leave it as is.
->>>
->> I'm not saying my suggestion was a good idea but honestly I'm failing to
->> wrap my head around this. The suggested 'RMODE_HOST_OWNED_EFLAGS_BITS'
->> would just be a define for (X86_EFLAGS_IOPL | X86_EFLAGS_VM) so
->> technically the patch would just be nop, no?
->
-> It would not be a nop for the reader.
->
-> Something called RMODE_{GUEST,HOST}_OWNED_EFLAGS_BITS is a mask.  It
-> tells you nothing about whether those bugs are 0 or 1.  It's just by
-> chance that all three host-owned EFLAGS bits are 1 while in real mode.
-> It wouldn't be the case if, for example, we ran the guest using vm86
-> mode extensions (i.e. setting CR4.VME=1).  Then VIF would be host-owned,
-> but it wouldn't necessarily be 1.
+Please pull from the tag
 
-Got it, it's the name which is causing the confusion, we're using mask
-as something different. Make sense, let's keep the code as-is then.
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.6-rc5
 
--- 
-Vitaly
+with top-most commit 86dfa5bec24952f99f2cfa778975d5a914c3a1d2
 
+ Merge branch 'acpi-doc'
+
+on top of commit 98d54f81e36ba3bf92172791eba5ca5bd813989b
+
+ Linux 5.6-rc4
+
+to receive an ACPI documentation fix for 5.6-rc5.
+
+This fixes Sphinx format warinings in an ACPI fan document added
+recently (Randy Dunlap).
+
+Thanks!
+
+
+---------------
+
+Randy Dunlap (1):
+      Documentation/admin-guide/acpi: fix fan_performance_states.rst warnings
+
+---------------
+
+ Documentation/admin-guide/acpi/fan_performance_states.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
