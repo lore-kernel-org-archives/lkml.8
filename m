@@ -2,173 +2,209 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21066C10F28
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA52C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31A92072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6202072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:38:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o41Jqr5J"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K9SRri6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgCFNiD (ORCPT
+        id S1726875AbgCFNix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:38:03 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:34396 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgCFNiD (ORCPT
+        Fri, 6 Mar 2020 08:38:53 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40938 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgCFNiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:38:03 -0500
-Received: by mail-vk1-f193.google.com with SMTP id w67so608195vkf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 05:38:01 -0800 (PST)
+        Fri, 6 Mar 2020 08:38:52 -0500
+Received: by mail-ot1-f66.google.com with SMTP id x19so2421216otp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 05:38:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pRT33IXafqSAr33qlx5s+Y+vRzyqKbOBrTN3ps1thPQ=;
-        b=o41Jqr5JyVJfTo5kWfFMhZB6OVZvxSSgEV43vr8hiKBBdUTzzbSHcILHK7E46FqCV1
-         zGC+1sXbOK83HkqScxPrT6ygSj3chMcPk56a4HEO1Hp+bQXUDtH7V2yqvRnGeZW5pe9P
-         jZW98ry2S97rX+M3h+lwfREUocO47zlFRvfuZAsA4yxvw+5elom8/uXei4G2XdQr9NTQ
-         KXEg/Hceo7Z1r5ffwG0Aj+jD3m3pPpd818wWRijHKlVbTZn970ZtZdrv5e9UWWjnH9I5
-         EMuEM90i5rNHhgH7P/cUgCRy/H0vpyq37zemCZXiDEbx1/fl29EQtXHEes0aFeL5V+MZ
-         OW7Q==
+         :cc;
+        bh=PyxnMZoynoTR9N0Al4wp7iVuUJFhka7ySWjpV9x8udE=;
+        b=K9SRri6Pr0y2s+jKSWlqW410XZQXmf9ExF2CP30ftWKDVMYdGEjwH4AJzH2oq/xvnx
+         hnWQgSbGY27mxGXj96gmg0neICIuR28m6JEVf7C6k8qFEVCRWHaE8KZqHaR0WzkzDhb0
+         MpMqcQMV8pxcVzpxkIxJZ3aDR+3o9g0fI8+c7++mqdOjC13B0vpW/dHZVQFCUpV8cFVg
+         DP86kWH8Hnct1mLLd+s25IsSyxAsdZPmE7eiDg9SGwxKgaE5P9OxHl5pHbNZkwBXF+H9
+         inunAQ+vXA2PgR2Z+fNQOgTadmbUhzbicXHEReVNfJwGGBWMEyfvYD5I6nPaFADx/QyF
+         uo4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pRT33IXafqSAr33qlx5s+Y+vRzyqKbOBrTN3ps1thPQ=;
-        b=g4+l+jRhwnSDn5SEoz7gk6rVmcdgCzc4O5NPOFdGOQ1h956goZPId7uD/RipD9OEys
-         tGN9TSUL/LOYTFGh2wfmLfUI5I0nVZAhAQCpkKy9PNsBP/OKnHaFNBh7PL2FwhqzaDf5
-         lzT4QwUIJ+kGbmtD3YzwHEPq5zzD7Dj9u5KJY11wCM20ZZV+wGKH+of/7J8XQrz8hAsT
-         /NtGmUvSrKsMGDqzX9h8ncaBZiFkT0a8emtmV7dYxPwtPZ3Bhf1m74P4j0PS7hpttgDC
-         GS9kDvtJRhx8DeAxZaz5M4I3zbwghDO469GLqC62izwB9T5DukPa8nEl6lQXBFaBC59A
-         dvQw==
-X-Gm-Message-State: ANhLgQ2vQyR9Eb5y/vQ+Jr+1HSH4GfZ74zkP+DrrK2h6skD3yykYLkbo
-        /p3tCEY0mU8yTnEbz57l3YrDKmE9IwFIU2phZS5/8g==
-X-Google-Smtp-Source: ADFU+vtBfU7t/GedoLeNXV1o80D5EdpGUw8N8UHHXFMxpqbi5jvG1O+FqFD5DalVaczgtf9BTkYBUVQZYJtuWD5NAnw=
-X-Received: by 2002:a1f:78c5:: with SMTP id t188mr1669349vkc.43.1583501881058;
- Fri, 06 Mar 2020 05:38:01 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=PyxnMZoynoTR9N0Al4wp7iVuUJFhka7ySWjpV9x8udE=;
+        b=c8fT3dZ+14xBiFYRdoHi3Aca5kDukgW0KTQ9uMpsICXOBlN0k4TzHKqpPm3bB7fHd7
+         N2n6sab9hQqoKNI1CH61OXdkN/2YhnOVYhfa7xbMlxGwsjHgBnFiTShSPyl+jvCP9e0O
+         PT8LbQiFl9V5ZO000hyh7z9TFTvzXovlip9tRPQDw7kQtjJG/AQzkdFjm9MJ8skEuXoD
+         yVbvfNOdU0wgcPXQ8tKpyjpsfoMnYZkWyJ18ly2691o1cm5OMVWR3kzMnlaWW43uGG7D
+         GwWhcOQv17KMZsTj2DrJarv623W0I0tSMiG0XdbsQZ9PUsguoJAOraiRdhHs5TmqC+RL
+         KdNQ==
+X-Gm-Message-State: ANhLgQ1B/wR+SZPelK2TV0wYElQCYI6DkFpZaI5As3vRJOyyW/kX18/b
+        5hNy+0JaOuntVm8oGCB6F7FQ+7JWAliL9E9mL5qw6Q==
+X-Google-Smtp-Source: ADFU+vuQXLtR5pZkV+6/dtalRceSpk/ZnUFpxIjy8+og4RCPkEXkxXagUFR4uF3ESv4afryvBENTbHw7hS3bJBIb2/w=
+X-Received: by 2002:a9d:c65:: with SMTP id 92mr2015106otr.23.1583501931592;
+ Fri, 06 Mar 2020 05:38:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20200224231841.26550-1-digetx@gmail.com> <20200224231841.26550-4-digetx@gmail.com>
- <44c22925-a14e-96d0-1f93-1979c0c60525@wwwdotorg.org> <CAPDyKFoXnoukjH_2cM=f0DGHBHS6kVUQSYOa_5ffQppC7VOn2A@mail.gmail.com>
- <824a4d5f-8280-8860-3e80-68188a13aa3d@gmail.com>
-In-Reply-To: <824a4d5f-8280-8860-3e80-68188a13aa3d@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 6 Mar 2020 14:37:24 +0100
-Message-ID: <CAPDyKFric6pZbJ5-2qkwAFoeJ0c0kcha99zHJ12AUrWO6FQmgg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] partitions: Introduce NVIDIA Tegra Partition Table
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200304031551.1326-1-cai@lca.pw> <20200304033329.GZ29971@bombadil.infradead.org>
+ <20200304040515.GX2935@paulmck-ThinkPad-P72> <20200304043356.GC29971@bombadil.infradead.org>
+ <20200304141021.GY2935@paulmck-ThinkPad-P72> <20200305151831.GM29971@bombadil.infradead.org>
+ <20200305213946.GL2935@paulmck-ThinkPad-P72>
+In-Reply-To: <20200305213946.GL2935@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 6 Mar 2020 14:38:39 +0100
+Message-ID: <CANpmjNOtsdxh3YLcF-pUMua9afWfhg5P_2ziRGSMuT8Gi0c5TA@mail.gmail.com>
+Subject: Re: [PATCH -next] lib: disable KCSAN for XArray
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 18:09, Dmitry Osipenko <digetx@gmail.com> wrote:
+On Thu, 5 Mar 2020 at 22:39, Paul E. McKenney <paulmck@kernel.org> wrote:
 >
-> 04.03.2020 19:36, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Tue, 25 Feb 2020 at 01:20, Stephen Warren <swarren@wwwdotorg.org> wr=
-ote:
-> >>
-> >> On 2/24/20 4:18 PM, Dmitry Osipenko wrote:
-> >>> All NVIDIA Tegra devices use a special partition table format for the
-> >>> internal storage partitioning. Most of Tegra devices have GPT partiti=
-on
-> >>> in addition to TegraPT, but some older Android consumer-grade devices=
- do
-> >>> not or GPT is placed in a wrong sector, and thus, the TegraPT is need=
-ed
-> >>> in order to support these devices properly in the upstream kernel. Th=
-is
-> >>> patch adds support for NVIDIA Tegra Partition Table format that is us=
-ed
-> >>> at least by all NVIDIA Tegra20 and Tegra30 devices.
-> >>
-> >>> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.=
-c
-> >>
-> >>> +static void __init tegra_boot_config_table_init(void)
-> >>> +{
-> >>> +     void __iomem *bct_base;
-> >>> +     u16 pt_addr, pt_size;
-> >>> +
-> >>> +     bct_base =3D IO_ADDRESS(TEGRA_IRAM_BASE) + TEGRA_IRAM_BCT_OFFSE=
-T;
-> >>
-> >> This shouldn't be hard-coded. IIRC, the boot ROM writes a BIT (Boot
-> >> Information Table) to a fixed location in IRAM, and there's some value
-> >> in the BIT that points to where the BCT is in IRAM. In practice, it
-> >> might work out that the BCT is always at the same place in IRAM, but
-> >> this certainly isn't guaranteed. I think there's code in U-Boot which
-> >> extracts the BCT location from the BIT? Yes, see
-> >> arch/arm/mach-tegra/ap.c:get_odmdata().
+> On Thu, Mar 05, 2020 at 07:18:31AM -0800, Matthew Wilcox wrote:
+> > On Wed, Mar 04, 2020 at 06:10:21AM -0800, Paul E. McKenney wrote:
+> > > On Tue, Mar 03, 2020 at 08:33:56PM -0800, Matthew Wilcox wrote:
+> > > > On Tue, Mar 03, 2020 at 08:05:15PM -0800, Paul E. McKenney wrote:
+> > > > > On Tue, Mar 03, 2020 at 07:33:29PM -0800, Matthew Wilcox wrote:
+> > > > > > On Tue, Mar 03, 2020 at 10:15:51PM -0500, Qian Cai wrote:
+> > > > > > > Functions like xas_find_marked(), xas_set_mark(), and xas_clear_mark()
+> > > > > > > could happen concurrently result in data races, but those operate only
+> > > > > > > on a single bit that are pretty much harmless. For example,
+> > > > > >
+> > > > > > Those aren't data races.  The writes are protected by a spinlock and the
+> > > > > > reads by the RCU read lock.  If the tool can't handle RCU protection,
+> > > > > > it's not going to be much use.
+> > > > >
+> > > > > Would KCSAN's ASSERT_EXCLUSIVE_BITS() help here?
+> > > >
+> > > > I'm quite lost in the sea of new macros that have been added to help
+> > > > with KCSAN.  It doesn't help that they're in -next somewhere that I
+> > > > can't find, and not in mainline yet.  Is there documentation somewhere?
+> > >
+> > > Yes, there is documentation.  In -next somewhere.  :-/
 > >
-> > So, have you considered using the command line partition option,
-> > rather than adding yet another partition scheme to the kernel?
+> > Looking at the documentation link that Marco kindly provided, I don't
+> > think ASSERT_EXCLUSIVE_BITS is the correct annotation to make.  The bits
+> > in question are being accessed in parallel, it's just that we're willing
+> > to accept a certain degree of inaccuracy.
 > >
-> > In principle, you would let the boot loader scan for the partitions,
-> > likely from machine specific code in U-boot. Then you append these to
-> > the kernel command line and let block/partitions/cmdline.c scan for
-> > it.
+> > > > struct xa_node {
+> > > >         unsigned char   shift;          /* Bits remaining in each slot */
+> > > >         unsigned char   offset;         /* Slot offset in parent */
+> > > >         unsigned char   count;          /* Total entry count */
+> > > >         unsigned char   nr_values;      /* Value entry count */
+> > > >         struct xa_node __rcu *parent;   /* NULL at top of tree */
+> > > >         struct xarray   *array;         /* The array we belong to */
+> > > >         union {
+> > > >                 struct list_head private_list;  /* For tree user */
+> > > >                 struct rcu_head rcu_head;       /* Used when freeing node */
+> > > >         };
+> > > >         void __rcu      *slots[XA_CHUNK_SIZE];
+> > > >         union {
+> > > >                 unsigned long   tags[XA_MAX_MARKS][XA_MARK_LONGS];
+> > > >                 unsigned long   marks[XA_MAX_MARKS][XA_MARK_LONGS];
+> > > >         };
+> > > > };
+> > > >
+> > > > 'slots' may be modified with the xa_lock
+> > > > held, and simultaneously read by an RCU reader.  Ditto 'tags'/'marks'.
+> > >
+> > > KCSAN expects that accesses to the ->parent field should be marked.
+> > > But if ->parent is always accessed via things like rcu_dereference()
+> > > and rcu_assign_pointer() (guessing based on the __rcu), then KCSAN
+> > > won't complain.
+> > [...]
+> > > The situation with ->slots is the same as that for ->parent.
+> > >
+> > > KCSAN expects accesses to the ->tags[] and ->marks[] arrays to be marked.
+> > > However, the default configuration of KCSAN asks only that the reads
+> > > be marked.  (Within RCU, I instead configure KCSAN so that it asks that
+> > > both be marked, but it is of course your choice within your code.)
+> > >
+> > > > The RCU readers are prepared for what they see to be inconsistent --
+> > > > a fact of life when dealing with RCU!  So in a sense, yes, there is a
+> > > > race there.  But it's a known, accepted race, and that acceptance is
+> > > > indicated by the fact that the RCU lock is held.  Does there need to be
+> > > > more annotation here?  Or is there an un-noticed bug that the tool is
+> > > > legitimately pointing out?
+> > >
+> > > The answer to both questions is "maybe", depending on the code using
+> > > the values read.  Yes, it would be nice if KCSAN could figure out the
+> > > difference, but there are limits to what a tool can do.  And things
+> > > are sometimes no-obvious, for example:
+> >
+> > I require the following properties from this array of bits:
+> >
+> >  - If a bit was set before and after the modification, it must be seen to
+> >    be set.
+> >  - If a bit was clear before and after the modification, it must be seen to
+> >    be clear.
+> >  - If a bit is modified, it may be seen as set or clear.
+> >
+> > I have found three locations where we use the ->marks array:
+> >
+> > 1.
+> >                         unsigned long data = *addr & (~0UL << offset);
+> >                         if (data)
+> >                                 return __ffs(data);
+> >
+> > 2.
+> >         return find_next_bit(addr, XA_CHUNK_SIZE, offset);
+> > 3.
+> >         return test_bit(offset, node_marks(node, mark));
+> >
+> > The modifications -- all done with the spinlock held -- use the non-atomic
+> > bitops:
+> >         return __test_and_set_bit(offset, node_marks(node, mark));
+> >         return __test_and_clear_bit(offset, node_marks(node, mark));
+> >         bitmap_fill(node_marks(node, mark), XA_CHUNK_SIZE);
+> > (that last one doesn't really count -- it's done prior to placing the node
+> > in the tree)
+> >
+> > The first read seems straightforward; I can place a READ_ONCE around
+> > *addr.  The second & third reads are rather less straightforward.
+> > find_next_bit() and test_bit() are common code and use plain loads today.
 >
-> The bootloader is usually locked-down on a consumer Tegra machines (it's
-> signed / encrypted).
+> Yes, those last two are a bit annoying, aren't they?  I guess the first
+> thing would be placing READ_ONCE() inside them, and if that results in
+> regressions, have an alternative API for concurrent access?
 
-Right, you are you talking about this from a developer point of view,
-not from an end product user?
+FWIW test_bit() is an "atomic" bitop (per atomic_bitops.txt), and
+KCSAN treats it as such. On x86 arch_test_bit() is not instrumented,
+and then in asm-generic/bitops/instrumented-non-atomic.h test_bit() is
+instrumented with instrument_atomic_read(). So on x86, things should
+already be fine for test_bit(). Not sure about other architectures.
 
-I mean, for sure you can upgrade the bootloader on Nvidia products? No, rea=
-lly?
+Thanks,
+-- Marco
 
+
+
+> > > Your mileage may vary, of course.  For one thing, your actuarial
+> > > statistics are quite likley significantly more favorable than are mine.
+> > > Not that mine are at all bad, particularly by the standards of a century
+> > > or two ago.  ;-)
+> >
+> > I don't know ... my preferred form of exercise takes me into the
+> > harm's way of cars, so while I've significantly lowered my risk of
+> > dying of cardiovascular disease, I'm much more likely to be killed by
+> > an inattentive human being!  Bring on our robot cars ...
 >
-> Technically, it should be possible to chain-load some custom secondary
-> bootloader instead of a kernel image, but this is not very practical
-> because now:
+> I did my 40 years using that mode of transport.  But my reflexes are
+> no longer up to the task.  So I have no advice for you on that one!
+> Other than to question your trust in robot cars whose code was produced
+> by human developers!  ;-)
 >
-> 1. There is a need to make a custom bootloader and it is quite a lot of
-> work.
->
-> 2. You'll have to tell everybody that a custom booloader may need to be
-> used in order to get a working eMMC.
-
-Yeah, I get the point. It's not an optimal situation, but I assume
-it's about informing developers. They can cope with this, no?
-
->
-> 3. NVIDIA's bootloader already passes a command line parameter to kernel
-> for locating GPT entry, but this hack is not acceptable for the upstream
-> kernel.
-
-Well, I am just worried that we will end up with one partition format
-per vendor/product, that wouldn't scale very well.
-
-In any case, from mmc point of view I am less concerned, we can find a
-way to support the needed bits. I just need to review the series more
-carefully and provide some comments. :-)
-
-However, before I do that, I would like to hear Jens opinion about
-adding a new partition format, so I don't waste my time here.
-
-Kind regards
-Uffe
+>                                                         Thanx, Paul
