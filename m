@@ -2,166 +2,191 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A549EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79882C3F2D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7944520409
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:02:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="n3yfRISi"
+	by mail.kernel.org (Postfix) with ESMTP id 5381720409
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583507019;
+	bh=EZ3C2rlyNUrRxX2zYtuIyyeToL3vAS26vj8u9F3mNuI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=ffyT8GFiZxpXJpxgPEqWBAvoxHgKrWecjUTa4wGOVYZLtkUwPKfrC8KrRQIvmhZ+f
+	 91o0htoiYQwRJWI3Xfs7bhb71V4JXvIn6cpwUi+zclBiMM9+vJLqbCtHUgJF/3mn6+
+	 EZVH8rjUS1nRaSvKMc37+qL4A4Twe5AaCo9AVokw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbgCFPC5 (ORCPT
+        id S1727050AbgCFPDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:02:57 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:41905 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgCFPC5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:02:57 -0500
-Received: by mail-qv1-f67.google.com with SMTP id s15so1041232qvn.8
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 07:02:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JZwOxDEE6FTlabp1Erp1Tw5Doyf6ABG7BAUGaMzAXBE=;
-        b=n3yfRISiL7NMWNlXjtM+56EXcJApssI1b+rz0/YnhKXR9fp6xJQExtQrvKwmje9c7+
-         zxQJdzbo2rcRpaCjNr5UYpYkwd8FRe/Gnib9Y27v53voEcY0Dgc/Qim2IgTzG62RFxvA
-         hqiWH5v7W/HpKS7ODeOG7x+xepP9SVuj30XyhvZ3mOS91+jiw/5RyYV1Z31yHq00M3O7
-         iHyb+1tm2UmUCrkCZwdE8/D0zEFnZJrTMcZ84yzlJLSDdsyZueUcmOtMtwHP3JpX28kj
-         gGrv+N5lQLBO6TpOmdpz6Sbfp7lS8m6+8PcivYJPEMfvID1NFbQc5DOVyAG7G81kGoR5
-         qhNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JZwOxDEE6FTlabp1Erp1Tw5Doyf6ABG7BAUGaMzAXBE=;
-        b=ZyeZ1+ZeC5YPXDRnNAXAC4eTzicHz+g7aIqfzYlRBIp0ft9EdNu33jZnduDhOaLVws
-         KkC9yC2j485xmOluSxS7Fszkfw1zyFSwUcEP32HLpTsSmDVegDsY+t2aL6NGHIBKGaiN
-         ruB1imXL0Cyq06HJONzOU09cEA3nqq69A6IcWfxTSDDps+puvtmlVS9tG3OLkcW2E40V
-         llbHy4uxVgqAMcGSJ1KbKTbZ53XsVIswTMG3Y9jv/pEMgiP6EpMDSK93au43QTsaGvOB
-         9drt5x7ZiwrHowu8Wa1ETv1hBgqlI3wZwJ4f4Wzl3bi3hiBKmeBRu3YkJVF+KZZKdQ41
-         iArQ==
-X-Gm-Message-State: ANhLgQ2BjUbJ5MBuzFwL3uHn2DWgJ9wceX5ci9pquPMEtLTsJyBGoFoW
-        JtBjQLIeK8zJ0KFWumgJXrTt7g==
-X-Google-Smtp-Source: ADFU+vtv/a+oV26fQHbhc8g7zTvQfdaDOkdGTbfwTgmj0AHRuzSl0XeAkTmOf/oiqW99G3TPIlEoOQ==
-X-Received: by 2002:a0c:bf05:: with SMTP id m5mr3287276qvi.26.1583506976090;
-        Fri, 06 Mar 2020 07:02:56 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 62sm14856664qkk.84.2020.03.06.07.02.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Mar 2020 07:02:55 -0800 (PST)
-Message-ID: <1583506974.7365.160.camel@lca.pw>
-Subject: Re: [PATCH] tick/sched: fix data races at tick_do_timer_cpu
-From:   Qian Cai <cai@lca.pw>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     fweisbec@gmail.com, mingo@kernel.org, elver@google.com,
-        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Date:   Fri, 06 Mar 2020 10:02:54 -0500
-In-Reply-To: <1C65422C-FFA4-4651-893B-300FAF9C49DE@lca.pw>
-References: <87tv34laqq.fsf@nanos.tec.linutronix.de>
-         <1C65422C-FFA4-4651-893B-300FAF9C49DE@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 6 Mar 2020 10:03:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:35168 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgCFPDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:03:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 888A731B;
+        Fri,  6 Mar 2020 07:03:35 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0994B3F237;
+        Fri,  6 Mar 2020 07:03:34 -0800 (PST)
+Date:   Fri, 06 Mar 2020 15:03:33 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: simple-card: Add support for codec2codec DAI links" to the asoc tree
+In-Reply-To:  <20200305051143.60691-4-samuel@sholland.org>
+Message-Id:  <applied-20200305051143.60691-4-samuel@sholland.org>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-04 at 06:20 -0500, Qian Cai wrote:
-> > On Mar 4, 2020, at 4:39 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> > 
-> > They are reported, but are they actually a real problem?
-> > 
-> > This completely lacks analysis why these 8 places need the
-> > READ/WRITE_ONCE() treatment at all and if so why the other 14 places
-> > accessing tick_do_timer_cpu are safe without it.
-> > 
-> > I definitely appreciate the work done with KCSAN, but just making the
-> > tool shut up does not cut it.
-> 
-> Looks at tick_sched_do_timer(), for example,
-> 
-> if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)) {
-> #ifdef CONFIG_NO_HZ_FULL
-> 		WARN_ON(tick_nohz_full_running);
-> #endif
-> 		tick_do_timer_cpu = cpu;
-> 	}
-> #endif
-> 
-> /* Check, if the jiffies need an update */
-> if (tick_do_timer_cpu == cpu)
-> 	tick_do_update_jiffies64(now);
-> 
-> Could we rule out all compilers and archs will not optimize it if !CONFIG_NO_HZ_FULL to,
-> 
-> if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE) || tick_do_timer_cpu == cpu)
->          tick_do_update_jiffies64(now);
-> 
-> So it could save a branch or/and realized that tick_do_timer_cpu is not used later in this cpu, so it could discard the store?
-> 
-> I am not all that familiar with all other 14 places if it is possible to happen concurrently as well, so I took a pragmatic approach that for now only deal with the places that KCSAN confirmed, and then look forward for an incremental approach if there are more places needs treatments later once confirmed.
+The patch
 
-If you don't think that will be happening and dislike using READ/WRITE_ONCE()
-for documentation purpose, we could annotate those using the data_race() macro.
-Is that more acceptable?
+   ASoC: simple-card: Add support for codec2codec DAI links
 
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index a792d21cac64..08ce4088da87 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -129,7 +129,7 @@ static void tick_sched_do_timer(struct tick_sched *ts,
-ktime_t now)
- 	 * If nohz_full is enabled, this should not happen because the
- 	 * tick_do_timer_cpu never relinquishes.
- 	 */
--	if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)) {
-+	if (unlikely(data_race(tick_do_timer_cpu == TICK_DO_TIMER_NONE))) {
- #ifdef CONFIG_NO_HZ_FULL
- 		WARN_ON(tick_nohz_full_running);
- #endif
-@@ -138,7 +138,7 @@ static void tick_sched_do_timer(struct tick_sched *ts,
-ktime_t now)
- #endif
- 
- 	/* Check, if the jiffies need an update */
--	if (tick_do_timer_cpu == cpu)
-+	if (data_race(tick_do_timer_cpu == cpu))
- 		tick_do_update_jiffies64(now);
- 
- 	if (ts->inidle)
-@@ -737,8 +737,9 @@ static ktime_t tick_nohz_next_event(struct tick_sched *ts,
-int cpu)
- 	 * Otherwise we can sleep as long as we want.
- 	 */
- 	delta = timekeeping_max_deferment();
--	if (cpu != tick_do_timer_cpu &&
--	    (tick_do_timer_cpu != TICK_DO_TIMER_NONE || !ts->do_timer_last))
-+	if (data_race(cpu != tick_do_timer_cpu) &&
-+	    (data_race(tick_do_timer_cpu != TICK_DO_TIMER_NONE) ||
-+	    !ts->do_timer_last))
- 		delta = KTIME_MAX;
- 
- 	/* Calculate the next expiry time */
-@@ -771,10 +772,10 @@ static void tick_nohz_stop_tick(struct tick_sched *ts, int
-cpu)
- 	 * do_timer() never invoked. Keep track of the fact that it
- 	 * was the one which had the do_timer() duty last.
- 	 */
--	if (cpu == tick_do_timer_cpu) {
-+	if (data_race(cpu == tick_do_timer_cpu)) {
- 		tick_do_timer_cpu = TICK_DO_TIMER_NONE;
- 		ts->do_timer_last = 1;
--	} else if (tick_do_timer_cpu != TICK_DO_TIMER_NONE) {
-+	} else if (data_race(tick_do_timer_cpu != TICK_DO_TIMER_NONE)) {
- 		ts->do_timer_last = 0;
- 	}
- 
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 95cfc0a0aaf575207152dd7601e782702565a6f1 Mon Sep 17 00:00:00 2001
+From: Samuel Holland <samuel@sholland.org>
+Date: Wed, 4 Mar 2020 23:11:43 -0600
+Subject: [PATCH] ASoC: simple-card: Add support for codec2codec DAI links
+
+Following the example in cb2cf0de1174 ("ASoC: soc-core: care Codec <->
+Codec case by non_legacy_dai_naming"), determine if a DAI link contains
+only codec DAIs by examining the non_legacy_dai_naming flag in each
+DAI's component.
+
+For now, we assume there is only one or a small set of valid PCM stream
+parameters, so num_params == 1 is good enough. We also assume that the
+same params are valid for all supported streams. params is set to the
+subset of parameters common among all DAIs, and then the existing code
+automatically chooses the highest quality of the remaining values when
+the link is brought up.
+
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Link: https://lore.kernel.org/r/20200305051143.60691-4-samuel@sholland.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/sound/soc/codec-to-codec.rst |  9 +++-
+ sound/soc/generic/simple-card-utils.c      | 48 ++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/sound/soc/codec-to-codec.rst b/Documentation/sound/soc/codec-to-codec.rst
+index 810109d7500d..4eaa9a0c41fc 100644
+--- a/Documentation/sound/soc/codec-to-codec.rst
++++ b/Documentation/sound/soc/codec-to-codec.rst
+@@ -104,5 +104,10 @@ Make sure to name your corresponding cpu and codec playback and capture
+ dai names ending with "Playback" and "Capture" respectively as dapm core
+ will link and power those dais based on the name.
+ 
+-Note that in current device tree there is no way to mark a dai_link
+-as codec to codec. However, it may change in future.
++A dai_link in a "simple-audio-card" will automatically be detected as
++codec to codec when all DAIs on the link belong to codec components.
++The dai_link will be initialized with the subset of stream parameters
++(channels, format, sample rate) supported by all DAIs on the link. Since
++there is no way to provide these parameters in the device tree, this is
++mostly useful for communication with simple fixed-function codecs, such
++as a Bluetooth controller or cellular modem.
+diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+index 9b794775df53..320e648f7499 100644
+--- a/sound/soc/generic/simple-card-utils.c
++++ b/sound/soc/generic/simple-card-utils.c
+@@ -331,6 +331,50 @@ static int asoc_simple_init_dai(struct snd_soc_dai *dai,
+ 	return 0;
+ }
+ 
++static int asoc_simple_init_dai_link_params(struct snd_soc_pcm_runtime *rtd,
++					    struct simple_dai_props *dai_props)
++{
++	struct snd_soc_dai_link *dai_link = rtd->dai_link;
++	struct snd_soc_component *component;
++	struct snd_soc_pcm_stream *params;
++	struct snd_pcm_hardware hw;
++	int i, ret, stream;
++
++	/* Only codecs should have non_legacy_dai_naming set. */
++	for_each_rtd_components(rtd, i, component) {
++		if (!component->driver->non_legacy_dai_naming)
++			return 0;
++	}
++
++	/* Assumes the capabilities are the same for all supported streams */
++	for (stream = 0; stream < 2; stream++) {
++		ret = snd_soc_runtime_calc_hw(rtd, &hw, stream);
++		if (ret == 0)
++			break;
++	}
++
++	if (ret < 0) {
++		dev_err(rtd->dev, "simple-card: no valid dai_link params\n");
++		return ret;
++	}
++
++	params = devm_kzalloc(rtd->dev, sizeof(*params), GFP_KERNEL);
++	if (!params)
++		return -ENOMEM;
++
++	params->formats = hw.formats;
++	params->rates = hw.rates;
++	params->rate_min = hw.rate_min;
++	params->rate_max = hw.rate_max;
++	params->channels_min = hw.channels_min;
++	params->channels_max = hw.channels_max;
++
++	dai_link->params = params;
++	dai_link->num_params = 1;
++
++	return 0;
++}
++
+ int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
+ {
+ 	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
+@@ -347,6 +391,10 @@ int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = asoc_simple_init_dai_link_params(rtd, dai_props);
++	if (ret < 0)
++		return ret;
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(asoc_simple_dai_init);
+-- 
+2.20.1
+
