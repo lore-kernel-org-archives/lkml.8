@@ -7,43 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660FEC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5723C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2752467E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B36208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbgCFOmX (ORCPT
+        id S1727289AbgCFOmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:42:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53815 "EHLO
+        Fri, 6 Mar 2020 09:42:25 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53816 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbgCFOmT (ORCPT
+        with ESMTP id S1726979AbgCFOmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:42:19 -0500
+        Fri, 6 Mar 2020 09:42:20 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEB3-0006Js-Dk; Fri, 06 Mar 2020 15:42:13 +0100
+        id 1jAEB4-0006N2-DA; Fri, 06 Mar 2020 15:42:14 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A71AD1C21D5;
-        Fri,  6 Mar 2020 15:42:07 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:07 -0000
-From:   "tip-bot2 for Mel Gorman" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A3B001C21DE;
+        Fri,  6 Mar 2020 15:42:09 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:09 -0000
+From:   "tip-bot2 for Thara Gopinath" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/numa: Acquire RCU lock for checking idle
- cores during NUMA balancing
-Cc:     Qian Cai <cai@lca.pw>, "Paul E. McKenney" <paulmck@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
+Subject: [tip: sched/core] sched/fair: Enable periodic update of average
+ thermal pressure
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200227191804.GJ3818@techsingularity.net>
-References: <20200227191804.GJ3818@techsingularity.net>
+In-Reply-To: <20200222005213.3873-7-thara.gopinath@linaro.org>
+References: <20200222005213.3873-7-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158350572742.28353.9668880281521573284.tip-bot2@tip-bot2>
+Message-ID: <158350572934.28353.12524884079406049060.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,76 +58,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     0621df315402dd7bc56f7272fae9778701289825
-Gitweb:        https://git.kernel.org/tip/0621df315402dd7bc56f7272fae9778701289825
-Author:        Mel Gorman <mgorman@techsingularity.net>
-AuthorDate:    Thu, 27 Feb 2020 19:18:04 
+Commit-ID:     b4eccf5f8e1dcade112d97be86ad455a94501a0f
+Gitweb:        https://git.kernel.org/tip/b4eccf5f8e1dcade112d97be86ad455a94501a0f
+Author:        Thara Gopinath <thara.gopinath@linaro.org>
+AuthorDate:    Fri, 21 Feb 2020 19:52:10 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 12:57:22 +01:00
+CommitterDate: Fri, 06 Mar 2020 12:57:20 +01:00
 
-sched/numa: Acquire RCU lock for checking idle cores during NUMA balancing
+sched/fair: Enable periodic update of average thermal pressure
 
-Qian Cai reported the following bug:
+Introduce support in scheduler periodic tick and other CFS bookkeeping
+APIs to trigger the process of computing average thermal pressure for a
+CPU. Also consider avg_thermal.load_avg in others_have_blocked which
+allows for decay of pelt signals.
 
-  The linux-next commit ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a
-  migration target instead of comparing tasks") introduced a boot warning,
-
-  [   86.520534][    T1] WARNING: suspicious RCU usage
-  [   86.520540][    T1] 5.6.0-rc3-next-20200227 #7 Not tainted
-  [   86.520545][    T1] -----------------------------
-  [   86.520551][    T1] kernel/sched/fair.c:5914 suspicious rcu_dereference_check() usage!
-  [   86.520555][    T1]
-  [   86.520555][    T1] other info that might help us debug this:
-  [   86.520555][    T1]
-  [   86.520561][    T1]
-  [   86.520561][    T1] rcu_scheduler_active = 2, debug_locks = 1
-  [   86.520567][    T1] 1 lock held by systemd/1:
-  [   86.520571][    T1]  #0: ffff8887f4b14848 (&mm->mmap_sem#2){++++}, at: do_page_fault+0x1d2/0x998
-  [   86.520594][    T1]
-  [   86.520594][    T1] stack backtrace:
-  [   86.520602][    T1] CPU: 1 PID: 1 Comm: systemd Not tainted 5.6.0-rc3-next-20200227 #7
-
-task_numa_migrate() checks for idle cores when updating NUMA-related statistics.
-This relies on reading a RCU-protected structure in test_idle_cores() via this
-call chain
-
-task_numa_migrate
-  -> update_numa_stats
-    -> numa_idle_core
-      -> test_idle_cores
-
-While the locking could be fine-grained, it is more appropriate to acquire
-the RCU lock for the entire scan of the domain. This patch removes the
-warning triggered at boot time.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Fixes: ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a migration target instead of comparing tasks")
-Link: https://lkml.kernel.org/r/20200227191804.GJ3818@techsingularity.net
+Link: https://lkml.kernel.org/r/20200222005213.3873-7-thara.gopinath@linaro.org
 ---
- kernel/sched/fair.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/sched/core.c | 3 +++
+ kernel/sched/fair.c | 7 +++++++
+ 2 files changed, 10 insertions(+)
 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8e6f380..3e620fe 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3586,6 +3586,7 @@ void scheduler_tick(void)
+ 	struct rq *rq = cpu_rq(cpu);
+ 	struct task_struct *curr = rq->curr;
+ 	struct rq_flags rf;
++	unsigned long thermal_pressure;
+ 
+ 	arch_scale_freq_tick();
+ 	sched_clock_tick();
+@@ -3593,6 +3594,8 @@ void scheduler_tick(void)
+ 	rq_lock(rq, &rf);
+ 
+ 	update_rq_clock(rq);
++	thermal_pressure = arch_scale_thermal_pressure(cpu_of(rq));
++	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
+ 	curr->sched_class->task_tick(rq, curr, 0);
+ 	calc_global_load_tick(rq);
+ 	psi_task_tick(rq);
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index bba9452..3887b73 100644
+index 4b5d5e5..11f8488 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -1608,6 +1608,7 @@ static void update_numa_stats(struct task_numa_env *env,
- 	memset(ns, 0, sizeof(*ns));
- 	ns->idle_cpu = -1;
+@@ -7719,6 +7719,9 @@ static inline bool others_have_blocked(struct rq *rq)
+ 	if (READ_ONCE(rq->avg_dl.util_avg))
+ 		return true;
  
-+	rcu_read_lock();
- 	for_each_cpu(cpu, cpumask_of_node(nid)) {
- 		struct rq *rq = cpu_rq(cpu);
++	if (thermal_load_avg(rq))
++		return true;
++
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+ 	if (READ_ONCE(rq->avg_irq.util_avg))
+ 		return true;
+@@ -7744,6 +7747,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
+ {
+ 	const struct sched_class *curr_class;
+ 	u64 now = rq_clock_pelt(rq);
++	unsigned long thermal_pressure;
+ 	bool decayed;
  
-@@ -1627,6 +1628,7 @@ static void update_numa_stats(struct task_numa_env *env,
- 			idle_core = numa_idle_core(idle_core, cpu);
- 		}
- 	}
-+	rcu_read_unlock();
+ 	/*
+@@ -7752,8 +7756,11 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
+ 	 */
+ 	curr_class = rq->curr->sched_class;
  
- 	ns->weight = cpumask_weight(cpumask_of_node(nid));
++	thermal_pressure = arch_scale_thermal_pressure(cpu_of(rq));
++
+ 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
+ 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
++		  update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure) |
+ 		  update_irq_load_avg(rq, 0);
  
+ 	if (others_have_blocked(rq))
