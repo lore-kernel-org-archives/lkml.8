@@ -2,199 +2,173 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5FDC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21066C10F28
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A6620848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583501800;
-	bh=+rJzOGoCHyxNsgbROnVpMOHHJ4FB/8LYXTHJgeVIFL0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Cz4bwx0gUAyMqnqEOfczmav25oddY9dmOQjkJrDso3v0m//zNStjswLXcsHFMJ9g4
-	 28e07E1jPE4MbF4XnDyXR/lCuk55My4lykIUcR+roIq5c4H4Z5cdbLdg3MG4JWPfKF
-	 rsduudzOBzRY+UXO1zRBtNAr2pNm5ci4e8PL/93s=
+	by mail.kernel.org (Postfix) with ESMTP id E31A92072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:38:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o41Jqr5J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCFNgj (ORCPT
+        id S1726811AbgCFNiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:36:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgCFNgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:36:38 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9844C2072D;
-        Fri,  6 Mar 2020 13:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583501797;
-        bh=+rJzOGoCHyxNsgbROnVpMOHHJ4FB/8LYXTHJgeVIFL0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lijuNYfGieomjEpSg+dgif/c9XKU8avRktCqThc9z0aSfsSoVFGvNQAJ3+P+vCDmX
-         i9f4ej8QcMBjBmQM8vCrVlhkbA77BgDfYkckvToIIUlBU5sbxTOH2UkvwLeU+AvzyX
-         +jNJTaRDmUGbusrOOD9TixTzVS7WoPySCb634KT0=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jAD9X-00AaHr-Tz; Fri, 06 Mar 2020 13:36:36 +0000
+        Fri, 6 Mar 2020 08:38:03 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:34396 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgCFNiD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:38:03 -0500
+Received: by mail-vk1-f193.google.com with SMTP id w67so608195vkf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 05:38:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pRT33IXafqSAr33qlx5s+Y+vRzyqKbOBrTN3ps1thPQ=;
+        b=o41Jqr5JyVJfTo5kWfFMhZB6OVZvxSSgEV43vr8hiKBBdUTzzbSHcILHK7E46FqCV1
+         zGC+1sXbOK83HkqScxPrT6ygSj3chMcPk56a4HEO1Hp+bQXUDtH7V2yqvRnGeZW5pe9P
+         jZW98ry2S97rX+M3h+lwfREUocO47zlFRvfuZAsA4yxvw+5elom8/uXei4G2XdQr9NTQ
+         KXEg/Hceo7Z1r5ffwG0Aj+jD3m3pPpd818wWRijHKlVbTZn970ZtZdrv5e9UWWjnH9I5
+         EMuEM90i5rNHhgH7P/cUgCRy/H0vpyq37zemCZXiDEbx1/fl29EQtXHEes0aFeL5V+MZ
+         OW7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pRT33IXafqSAr33qlx5s+Y+vRzyqKbOBrTN3ps1thPQ=;
+        b=g4+l+jRhwnSDn5SEoz7gk6rVmcdgCzc4O5NPOFdGOQ1h956goZPId7uD/RipD9OEys
+         tGN9TSUL/LOYTFGh2wfmLfUI5I0nVZAhAQCpkKy9PNsBP/OKnHaFNBh7PL2FwhqzaDf5
+         lzT4QwUIJ+kGbmtD3YzwHEPq5zzD7Dj9u5KJY11wCM20ZZV+wGKH+of/7J8XQrz8hAsT
+         /NtGmUvSrKsMGDqzX9h8ncaBZiFkT0a8emtmV7dYxPwtPZ3Bhf1m74P4j0PS7hpttgDC
+         GS9kDvtJRhx8DeAxZaz5M4I3zbwghDO469GLqC62izwB9T5DukPa8nEl6lQXBFaBC59A
+         dvQw==
+X-Gm-Message-State: ANhLgQ2vQyR9Eb5y/vQ+Jr+1HSH4GfZ74zkP+DrrK2h6skD3yykYLkbo
+        /p3tCEY0mU8yTnEbz57l3YrDKmE9IwFIU2phZS5/8g==
+X-Google-Smtp-Source: ADFU+vtBfU7t/GedoLeNXV1o80D5EdpGUw8N8UHHXFMxpqbi5jvG1O+FqFD5DalVaczgtf9BTkYBUVQZYJtuWD5NAnw=
+X-Received: by 2002:a1f:78c5:: with SMTP id t188mr1669349vkc.43.1583501881058;
+ Fri, 06 Mar 2020 05:38:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 06 Mar 2020 13:36:35 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [patch 2/7] genirq: Add protection against unsafe usage of
- generic_handle_irq()
-In-Reply-To: <20200306130623.590923677@linutronix.de>
-References: <20200306130341.199467200@linutronix.de>
- <20200306130623.590923677@linutronix.de>
-Message-ID: <664b3a85c46aff34ae89548e118c1bd8@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200224231841.26550-1-digetx@gmail.com> <20200224231841.26550-4-digetx@gmail.com>
+ <44c22925-a14e-96d0-1f93-1979c0c60525@wwwdotorg.org> <CAPDyKFoXnoukjH_2cM=f0DGHBHS6kVUQSYOa_5ffQppC7VOn2A@mail.gmail.com>
+ <824a4d5f-8280-8860-3e80-68188a13aa3d@gmail.com>
+In-Reply-To: <824a4d5f-8280-8860-3e80-68188a13aa3d@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 6 Mar 2020 14:37:24 +0100
+Message-ID: <CAPDyKFric6pZbJ5-2qkwAFoeJ0c0kcha99zHJ12AUrWO6FQmgg@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] partitions: Introduce NVIDIA Tegra Partition Table
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-06 13:03, Thomas Gleixner wrote:
-> In general calling generic_handle_irq() with interrupts disabled from 
-> non
-> interrupt context is harmless. For some interrupt controllers like the 
-> x86
-> trainwrecks this is outright dangerous as it might corrupt state if an
-> interrupt affinity change is pending.
-> 
-> Add infrastructure which allows to mark interrupts as unsafe and catch 
-> such
-> usage in generic_handle_irq().
-> 
-> Reported-by: sathyanarayanan.kuppuswamy@linux.intel.com
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  include/linux/irq.h    |   13 +++++++++++++
->  kernel/irq/internals.h |    8 ++++++++
->  kernel/irq/irqdesc.c   |    6 ++++++
->  kernel/irq/resend.c    |    5 +++--
->  4 files changed, 30 insertions(+), 2 deletions(-)
-> 
-> --- a/include/linux/irq.h
-> +++ b/include/linux/irq.h
-> @@ -211,6 +211,8 @@ struct irq_data {
->   * IRQD_CAN_RESERVE		- Can use reservation mode
->   * IRQD_MSI_NOMASK_QUIRK	- Non-maskable MSI quirk for affinity change
->   *				  required
-> + * IRQD_HANDLE_ENFORCE_IRQCTX	- Enforce that handle_irq_*() is only 
-> invoked
-> + *				  from actual interrupt context.
->   */
->  enum {
->  	IRQD_TRIGGER_MASK		= 0xf,
-> @@ -234,6 +236,7 @@ enum {
->  	IRQD_DEFAULT_TRIGGER_SET	= (1 << 25),
->  	IRQD_CAN_RESERVE		= (1 << 26),
->  	IRQD_MSI_NOMASK_QUIRK		= (1 << 27),
-> +	IRQD_HANDLE_ENFORCE_IRQCTX	= (1 << 28),
->  };
-> 
->  #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, 
-> state_use_accessors)
-> @@ -303,6 +306,16 @@ static inline bool irqd_is_single_target
->  	return __irqd_to_state(d) & IRQD_SINGLE_TARGET;
->  }
-> 
-> +static inline void irqd_set_handle_enforce_irqctx(struct irq_data *d)
-> +{
-> +	__irqd_to_state(d) |= IRQD_HANDLE_ENFORCE_IRQCTX;
-> +}
-> +
-> +static inline bool irqd_is_handle_enforce_irqctx(struct irq_data *d)
-> +{
-> +	return __irqd_to_state(d) & IRQD_HANDLE_ENFORCE_IRQCTX;
-> +}
-> +
->  static inline bool irqd_is_wakeup_set(struct irq_data *d)
->  {
->  	return __irqd_to_state(d) & IRQD_WAKEUP_STATE;
-> --- a/kernel/irq/internals.h
-> +++ b/kernel/irq/internals.h
-> @@ -425,6 +425,10 @@ static inline struct cpumask *irq_desc_g
->  {
->  	return desc->pending_mask;
->  }
-> +static inline bool handle_enforce_irqctx(struct irq_data *data)
-> +{
-> +	return irqd_is_handle_enforce_irqctx(data);
-> +}
->  bool irq_fixup_move_pending(struct irq_desc *desc, bool force_clear);
->  #else /* CONFIG_GENERIC_PENDING_IRQ */
->  static inline bool irq_can_move_pcntxt(struct irq_data *data)
-> @@ -451,6 +455,10 @@ static inline bool irq_fixup_move_pendin
->  {
->  	return false;
->  }
-> +static inline bool handle_enforce_irqctx(struct irq_data *data)
-> +{
-> +	return false;
-> +}
->  #endif /* !CONFIG_GENERIC_PENDING_IRQ */
-> 
->  #if !defined(CONFIG_IRQ_DOMAIN) || 
-> !defined(CONFIG_IRQ_DOMAIN_HIERARCHY)
-> --- a/kernel/irq/irqdesc.c
-> +++ b/kernel/irq/irqdesc.c
-> @@ -638,9 +638,15 @@ void irq_init_desc(unsigned int irq)
->  int generic_handle_irq(unsigned int irq)
->  {
->  	struct irq_desc *desc = irq_to_desc(irq);
-> +	struct irq_data *data;
-> 
->  	if (!desc)
->  		return -EINVAL;
-> +
-> +	data = irq_desc_get_irq_data(desc);
-> +	if (WARN_ON_ONCE(!in_irq() && handle_enforce_irqctx(data)))
-> +		return -EPERM;
+On Wed, 4 Mar 2020 at 18:09, Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 04.03.2020 19:36, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Tue, 25 Feb 2020 at 01:20, Stephen Warren <swarren@wwwdotorg.org> wr=
+ote:
+> >>
+> >> On 2/24/20 4:18 PM, Dmitry Osipenko wrote:
+> >>> All NVIDIA Tegra devices use a special partition table format for the
+> >>> internal storage partitioning. Most of Tegra devices have GPT partiti=
+on
+> >>> in addition to TegraPT, but some older Android consumer-grade devices=
+ do
+> >>> not or GPT is placed in a wrong sector, and thus, the TegraPT is need=
+ed
+> >>> in order to support these devices properly in the upstream kernel. Th=
+is
+> >>> patch adds support for NVIDIA Tegra Partition Table format that is us=
+ed
+> >>> at least by all NVIDIA Tegra20 and Tegra30 devices.
+> >>
+> >>> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.=
+c
+> >>
+> >>> +static void __init tegra_boot_config_table_init(void)
+> >>> +{
+> >>> +     void __iomem *bct_base;
+> >>> +     u16 pt_addr, pt_size;
+> >>> +
+> >>> +     bct_base =3D IO_ADDRESS(TEGRA_IRAM_BASE) + TEGRA_IRAM_BCT_OFFSE=
+T;
+> >>
+> >> This shouldn't be hard-coded. IIRC, the boot ROM writes a BIT (Boot
+> >> Information Table) to a fixed location in IRAM, and there's some value
+> >> in the BIT that points to where the BCT is in IRAM. In practice, it
+> >> might work out that the BCT is always at the same place in IRAM, but
+> >> this certainly isn't guaranteed. I think there's code in U-Boot which
+> >> extracts the BCT location from the BIT? Yes, see
+> >> arch/arm/mach-tegra/ap.c:get_odmdata().
+> >
+> > So, have you considered using the command line partition option,
+> > rather than adding yet another partition scheme to the kernel?
+> >
+> > In principle, you would let the boot loader scan for the partitions,
+> > likely from machine specific code in U-boot. Then you append these to
+> > the kernel command line and let block/partitions/cmdline.c scan for
+> > it.
+>
+> The bootloader is usually locked-down on a consumer Tegra machines (it's
+> signed / encrypted).
 
-It is a bit sad that there are only *two* users in the tree that
-actually check the return value of generic_handle_irq(). Thankfully,
-the WARN_ON should wake people up.
+Right, you are you talking about this from a developer point of view,
+not from an end product user?
 
-> +
->  	generic_handle_irq_desc(desc);
->  	return 0;
->  }
-> --- a/kernel/irq/resend.c
-> +++ b/kernel/irq/resend.c
-> @@ -72,8 +72,9 @@ void check_irq_resend(struct irq_desc *d
->  		desc->istate &= ~IRQS_PENDING;
->  		desc->istate |= IRQS_REPLAY;
-> 
-> -		if (!desc->irq_data.chip->irq_retrigger ||
-> -		    !desc->irq_data.chip->irq_retrigger(&desc->irq_data)) {
-> +		if ((!desc->irq_data.chip->irq_retrigger ||
-> +		    !desc->irq_data.chip->irq_retrigger(&desc->irq_data)) &&
-> +		    !handle_enforce_irqctx(&desc->irq_data)) {
->  #ifdef CONFIG_HARDIRQS_SW_RESEND
->  			unsigned int irq = irq_desc_get_irq(desc);
+I mean, for sure you can upgrade the bootloader on Nvidia products? No, rea=
+lly?
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+>
+> Technically, it should be possible to chain-load some custom secondary
+> bootloader instead of a kernel image, but this is not very practical
+> because now:
+>
+> 1. There is a need to make a custom bootloader and it is quite a lot of
+> work.
+>
+> 2. You'll have to tell everybody that a custom booloader may need to be
+> used in order to get a working eMMC.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Yeah, I get the point. It's not an optimal situation, but I assume
+it's about informing developers. They can cope with this, no?
+
+>
+> 3. NVIDIA's bootloader already passes a command line parameter to kernel
+> for locating GPT entry, but this hack is not acceptable for the upstream
+> kernel.
+
+Well, I am just worried that we will end up with one partition format
+per vendor/product, that wouldn't scale very well.
+
+In any case, from mmc point of view I am less concerned, we can find a
+way to support the needed bits. I just need to review the series more
+carefully and provide some comments. :-)
+
+However, before I do that, I would like to hear Jens opinion about
+adding a new partition format, so I don't waste my time here.
+
+Kind regards
+Uffe
