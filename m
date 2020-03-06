@@ -2,304 +2,174 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0E2C10F27
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAF6C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC9F206E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893C4206D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Aizl2v+4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CuV5YGiJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgCFXql (ORCPT
+        id S1727000AbgCFXro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 18:46:41 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47763 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726635AbgCFXqk (ORCPT
+        Fri, 6 Mar 2020 18:47:44 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43964 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgCFXro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 18:46:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583538399;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=al/yDzOJoDcjWWSn6wQel46tVaw2Vn6muHcLFQgyG6Y=;
-        b=Aizl2v+4m4eqkCyIUuQH90lhrO8gzHOeqcvM1f51UfwG19pMxhCFlZAhQkr4BGyhtUb9CE
-        vbxCWzDtk+VFvY6lCPaopqxohvyDNP+M+fUwVKzM0j3aMWhVHx8RB6+3jy6/4qxPJs5m6e
-        Rni0WTkK24aBDpCVZZmfuJfGOajNQ+k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-123-RIS4M87mOW2Jpch1YHMblw-1; Fri, 06 Mar 2020 18:46:37 -0500
-X-MC-Unique: RIS4M87mOW2Jpch1YHMblw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7647813F5;
-        Fri,  6 Mar 2020 23:46:35 +0000 (UTC)
-Received: from Ruby.bss.redhat.com (dhcp-10-20-1-196.bss.redhat.com [10.20.1.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E85773873;
-        Fri,  6 Mar 2020 23:46:34 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Mikita Lipski <mikita.lipski@amd.com>,
-        Sean Paul <seanpaul@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] drm/dp_mst: Rewrite and fix bandwidth limit checks
-Date:   Fri,  6 Mar 2020 18:46:22 -0500
-Message-Id: <20200306234623.547525-5-lyude@redhat.com>
-In-Reply-To: <20200306234623.547525-1-lyude@redhat.com>
-References: <20200306234623.547525-1-lyude@redhat.com>
+        Fri, 6 Mar 2020 18:47:44 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 026Nlddr099804;
+        Fri, 6 Mar 2020 17:47:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583538459;
+        bh=ZQXz6SL7X1fiB1jRFJj+IvnVskcIliu4fHSt0jNN+f4=;
+        h=From:To:CC:Subject:Date;
+        b=CuV5YGiJxJD3eVd4CO1WjmtAF8jCRdQSetr8MbFRBNCVwresX+7DEpOu5OQX7DCq9
+         w49b9Qu08BDfZrHZq21+vE38kPQtWqAAyySp9lgYIr2EUDZ+E0OfErWtsmKjeYaA3A
+         y6kD/GKH0c3+akNUzpAko5w8IyCqlpsbe+0rXtcc=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 026NldVQ002732
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 6 Mar 2020 17:47:39 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 6 Mar
+ 2020 17:47:39 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 6 Mar 2020 17:47:39 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 026NlcoV002278;
+        Fri, 6 Mar 2020 17:47:38 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 0/9] net: ethernet: ti: add networking support for k3 am65x/j721e soc
+Date:   Sat, 7 Mar 2020 01:47:25 +0200
+Message-ID: <20200306234734.15014-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sigh, this is mostly my fault for not giving commit cd82d82cbc04
-("drm/dp_mst: Add branch bandwidth validation to MST atomic check")
-enough scrutiny during review. The way we're checking bandwidth
-limitations here is mostly wrong:
+Hi
 
-For starters, drm_dp_mst_atomic_check_bw_limit() determines the
-pbn_limit of a branch by simply scanning each port on the current branch
-device, then uses the last non-zero full_pbn value that it finds. It
-then counts the sum of the PBN used on each branch device for that
-level, and compares against the full_pbn value it found before.
+This v2 series adds basic networking support support TI K3 AM654x/J721E SoC which
+have integrated Gigabit Ethernet MAC (Media Access Controller) into device MCU
+domain and named MCU_CPSW0 (CPSW2G NUSS).
 
-This is wrong because ports can and will have different PBN limitations
-on many hubs, especially since a number of DisplayPort hubs out there
-will be clever and only use the smallest link rate required for each
-downstream sink - potentially giving every port a different full_pbn
-value depending on what link rate it's trained at. This means with our
-current code, which max PBN value we end up with is not well defined.
+Formally TRMs refer CPSW2G NUSS as two-port Gigabit Ethernet Switch subsystem
+with port 0 being the CPPI DMA host port and port 1 being the external Ethernet
+port, but for 1 external port device it's just Port 0 <-> ALE <-> Port 1 and it's
+rather device with HW filtering capabilities then actually switching device.
+It's expected to have similar devices, but with more external ports.
 
-Additionally, we also need to remember when checking bandwidth
-limitations that the top-most device in any MST topology is a branch
-device, not a port. This means that the first level of a topology
-doesn't technically have a full_pbn value that needs to be checked.
-Instead, we should assume that so long as our VCPI allocations fit we're
-within the bandwidth limitations of the primary MSTB.
+The new Host port 0 Communications Port Programming Interface (CPPI5) is
+operating by TI AM654x/J721E NAVSS Unified DMA Peripheral Root Complex (UDMA-P)
+controller [1].
 
-We do however, want to check full_pbn on every port including those of
-the primary MSTB. However, it's important to keep in mind that this
-value represents the minimum link rate /between a port's sink or mstb,
-and the mstb itself/. A quick diagram to explain:
+The CPSW2G contains below modules for which existing code is re-used:
+ - MAC SL: cpsw_sl.c
+ - Address Lookup Engine (ALE): cpsw_ale.c, basically compatible with K2 66AK2E/G
+ - Management Data Input/Output interface (MDIO): davinci_mdio.c, fully 
+   compatible with TI AM3/4/5 devices
 
-                                MSTB #1
-                               /       \
-                              /         \
-                           Port #1    Port #2
-       full_pbn for Port #1 =E2=86=92 |          | =E2=86=90 full_pbn for=
- Port #2
-                           Sink #1    MSTB #2
-                                         |
-                                       etc...
+Basic features supported by CPSW2G NUSS driver:
+ - VLAN support, 802.1Q compliant, Auto add port VLAN for untagged frames on
+   ingress, Auto VLAN removal on egress and auto pad to minimum frame size.
+ - multicast filtering
+ - promisc mode
+ - TX multiq support in Round Robin or Fixed priority modes
+ - RX checksum offload for non-fragmented IPv4/IPv6 TCP/UDP packets
+ - TX checksum offload support for IPv4/IPv6 TCP/UDP packets (J721E only).
 
-Note that in the above diagram, the combined PBN from all VCPI
-allocations on said hub should not exceed the full_pbn value of port #2,
-and the display configuration on sink #1 should not exceed the full_pbn
-value of port #1. However, port #1 and port #2 can otherwise consume as
-much bandwidth as they want so long as their VCPI allocations still fit.
+Features under development:
+ - Support for IEEE 1588 Clock Synchronization. The CPSW2G NUSS includes new
+   version of Common Platform Time Sync (CPTS)
+ - tc-mqprio: priority level Quality Of Service (QOS) support (802.1p)
+ - tc-cbs: Support for Audio/Video Bridging (P802.1Qav/D6.0) HW shapers
+ - tc-taprio: IEEE 802.1Qbv/D2.2 Enhancements for Scheduled Traffic
+ - frame preemption: IEEE P902.3br/D2.0 Interspersing Express Traffic, 802.1Qbu
+ - extended ALE features: classifier/policers, auto-aging
 
-And finally - our current bandwidth checking code also makes the mistake
-of not checking whether something is an end device or not before trying
-to traverse down it.
+This series depends on:
+ [for-next PATCH 0/5] phy: ti: gmii-sel: add support for am654x/j721e soc
+ https://lkml.org/lkml/2020/2/22/100
 
-So, let's fix it by rewriting our bandwidth checking helpers. We split
-the function into one part for handling branches which simply adds up
-the total PBN on each branch and returns it, and one for checking each
-port to ensure we're not going over its PBN limit. Phew.
+Patches 1-5 are intended for netdev, Patches 6-9 are intended for K# Platform
+tree and provided here for testing purposes.
 
-This should fix regressions seen, where we erroneously reject display
-configurations due to thinking they're going over our bandwidth limits
-when they're not.
+Changes:
+ - fixed DT yaml definition
+ - fixed comments from David Miller
 
-Changes since v1:
-* Took an even closer look at how PBN limitations are supposed to be
-  handled, and did some experimenting with Sean Paul. Ended up rewriting
-  these helpers again, but this time they should actually be correct!
+v1: https://lwn.net/Articles/813087/
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to MST =
-atomic check")
-Cc: Mikita Lipski <mikita.lipski@amd.com>
-Cc: Sean Paul <seanpaul@google.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpu/drm/drm_dp_mst_topology.c | 120 ++++++++++++++++++++------
- 1 file changed, 94 insertions(+), 26 deletions(-)
+TRMs:
+ AM654: http://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
+ J721E: http://www.ti.com/lit/ug/spruil1a/spruil1a.pdf
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
-dp_mst_topology.c
-index b81ad444c24f..322f7b2c9c96 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -4841,41 +4841,103 @@ static bool drm_dp_mst_port_downstream_of_branch=
-(struct drm_dp_mst_port *port,
- 	return false;
- }
-=20
--static inline
--int drm_dp_mst_atomic_check_bw_limit(struct drm_dp_mst_branch *branch,
--				     struct drm_dp_mst_topology_state *mst_state)
-+static int
-+drm_dp_mst_atomic_check_port_bw_limit(struct drm_dp_mst_port *port,
-+				      struct drm_dp_mst_topology_state *state);
-+
-+static int
-+drm_dp_mst_atomic_check_mstb_bw_limit(struct drm_dp_mst_branch *mstb,
-+				      struct drm_dp_mst_topology_state *state)
- {
--	struct drm_dp_mst_port *port;
- 	struct drm_dp_vcpi_allocation *vcpi;
--	int pbn_limit =3D 0, pbn_used =3D 0;
-+	struct drm_dp_mst_port *port;
-+	int pbn_used =3D 0, ret;
-+	bool found =3D false;
-=20
--	list_for_each_entry(port, &branch->ports, next) {
--		if (port->mstb)
--			if (drm_dp_mst_atomic_check_bw_limit(port->mstb, mst_state))
--				return -ENOSPC;
-+	/* Check that we have at least one port in our state that's downstream
-+	 * of this branch, otherwise we can skip this branch
-+	 */
-+	list_for_each_entry(vcpi, &state->vcpis, next) {
-+		if (!vcpi->pbn ||
-+		    !drm_dp_mst_port_downstream_of_branch(vcpi->port,
-+							  mstb))
-+			continue;
-=20
--		if (port->full_pbn > 0)
--			pbn_limit =3D port->full_pbn;
-+		found =3D true;
-+		break;
- 	}
--	DRM_DEBUG_ATOMIC("[MST BRANCH:%p] branch has %d PBN available\n",
--			 branch, pbn_limit);
-+	if (!found)
-+		return 0;
-=20
--	list_for_each_entry(vcpi, &mst_state->vcpis, next) {
--		if (!vcpi->pbn)
--			continue;
-+	if (mstb->port_parent)
-+		DRM_DEBUG_ATOMIC("[MSTB:%p] [MST PORT:%p] Checking bandwidth limits on=
- [MSTB:%p]\n",
-+				 mstb->port_parent->parent, mstb->port_parent,
-+				 mstb);
-+	else
-+		DRM_DEBUG_ATOMIC("[MSTB:%p] Checking bandwidth limits\n",
-+				 mstb);
-=20
--		if (drm_dp_mst_port_downstream_of_branch(vcpi->port, branch))
--			pbn_used +=3D vcpi->pbn;
-+	list_for_each_entry(port, &mstb->ports, next) {
-+		ret =3D drm_dp_mst_atomic_check_port_bw_limit(port, state);
-+		if (ret < 0)
-+			return ret;
-+
-+		pbn_used +=3D ret;
- 	}
--	DRM_DEBUG_ATOMIC("[MST BRANCH:%p] branch used %d PBN\n",
--			 branch, pbn_used);
-=20
--	if (pbn_used > pbn_limit) {
--		DRM_DEBUG_ATOMIC("[MST BRANCH:%p] No available bandwidth\n",
--				 branch);
-+	return pbn_used;
-+}
-+
-+static int
-+drm_dp_mst_atomic_check_port_bw_limit(struct drm_dp_mst_port *port,
-+				      struct drm_dp_mst_topology_state *state)
-+{
-+	struct drm_dp_vcpi_allocation *vcpi;
-+	int pbn_used =3D 0;
-+
-+	if (port->pdt =3D=3D DP_PEER_DEVICE_NONE)
-+		return 0;
-+
-+	if (drm_dp_mst_is_end_device(port->pdt, port->mcs)) {
-+		bool found =3D false;
-+
-+		list_for_each_entry(vcpi, &state->vcpis, next) {
-+			if (vcpi->port !=3D port)
-+				continue;
-+			if (!vcpi->pbn)
-+				return 0;
-+
-+			found =3D true;
-+			break;
-+		}
-+		if (!found)
-+			return 0;
-+
-+		/* This should never happen, as it means we tried to
-+		 * set a mode before querying the full_pbn
-+		 */
-+		if (WARN_ON(!port->full_pbn))
-+			return -EINVAL;
-+
-+		pbn_used =3D vcpi->pbn;
-+	} else {
-+		pbn_used =3D drm_dp_mst_atomic_check_mstb_bw_limit(port->mstb,
-+								 state);
-+		if (pbn_used <=3D 0)
-+			return 0;
-+	}
-+
-+	if (pbn_used > port->full_pbn) {
-+		DRM_DEBUG_ATOMIC("[MSTB:%p] [MST PORT:%p] required PBN of %d exceeds p=
-ort limit of %d\n",
-+				 port->parent, port, pbn_used,
-+				 port->full_pbn);
- 		return -ENOSPC;
- 	}
--	return 0;
-+
-+	DRM_DEBUG_ATOMIC("[MSTB:%p] [MST PORT:%p] uses %d out of %d PBN\n",
-+			 port->parent, port, pbn_used, port->full_pbn);
-+
-+	return pbn_used;
- }
-=20
- static inline int
-@@ -5073,9 +5135,15 @@ int drm_dp_mst_atomic_check(struct drm_atomic_stat=
-e *state)
- 		ret =3D drm_dp_mst_atomic_check_vcpi_alloc_limit(mgr, mst_state);
- 		if (ret)
- 			break;
--		ret =3D drm_dp_mst_atomic_check_bw_limit(mgr->mst_primary, mst_state);
--		if (ret)
-+
-+		mutex_lock(&mgr->lock);
-+		ret =3D drm_dp_mst_atomic_check_mstb_bw_limit(mgr->mst_primary,
-+							    mst_state);
-+		mutex_unlock(&mgr->lock);
-+		if (ret < 0)
- 			break;
-+		else
-+			ret =3D 0;
- 	}
-=20
- 	return ret;
---=20
-2.24.1
+Preliminary documentation can be found at:
+ http://software-dl.ti.com/processor-sdk-linux/esd/docs/latest/linux/Foundational_Components/Kernel/Kernel_Drivers/Network/K3_CPSW2g.html
+
+[1] https://lwn.net/Articles/808030/
+
+Grygorii Strashko (9):
+  net: ethernet: ti: ale: fix seeing unreg mcast packets with promisc
+    and allmulti disabled
+  net: ethernet: ti: ale: add support for mac-only mode
+  net: ethernet: ti: ale: am65: add support for default thread cfg
+  dt-binding: ti: am65x: document mcu cpsw nuss
+  net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver
+  arm64: dts: ti: k3-am65-mcu: add cpsw nuss node
+  arm64: dts: k3-am654-base-board: add mcu cpsw nuss pinmux and phy defs
+  arm64: dts: ti: k3-j721e-mcu: add mcu cpsw nuss node
+  arm64: dts: ti: k3-j721e-common-proc-board: add mcu cpsw nuss pinmux
+    and phy defs
+
+ .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |  225 ++
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |   49 +
+ arch/arm64/boot/dts/ti/k3-am65.dtsi           |    1 +
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts |   42 +
+ .../dts/ti/k3-j721e-common-proc-board.dts     |   43 +
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |   49 +
+ arch/arm64/boot/dts/ti/k3-j721e.dtsi          |    1 +
+ drivers/net/ethernet/ti/Kconfig               |   19 +-
+ drivers/net/ethernet/ti/Makefile              |    3 +
+ drivers/net/ethernet/ti/am65-cpsw-ethtool.c   |  763 +++++++
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c      | 1991 +++++++++++++++++
+ drivers/net/ethernet/ti/am65-cpsw-nuss.h      |  143 ++
+ drivers/net/ethernet/ti/cpsw_ale.c            |   38 +
+ drivers/net/ethernet/ti/cpsw_ale.h            |    4 +
+ drivers/net/ethernet/ti/k3-udma-desc-pool.c   |  126 ++
+ drivers/net/ethernet/ti/k3-udma-desc-pool.h   |   30 +
+ 16 files changed, 3525 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+ create mode 100644 drivers/net/ethernet/ti/am65-cpsw-ethtool.c
+ create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.c
+ create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.h
+ create mode 100644 drivers/net/ethernet/ti/k3-udma-desc-pool.c
+ create mode 100644 drivers/net/ethernet/ti/k3-udma-desc-pool.h
+
+-- 
+2.17.1
 
