@@ -2,206 +2,129 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422A0C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDB3C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A962051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:31:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583515888;
-	bh=aa964pJFXvWdSCYbEO8zW+F/QX9kiqYfMbpN2Bb9lAk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=I0HEh2Ju1iY7hzWoyRyr3cp6besVrvGl9j8gDelTW25EA+4N5C8udlGD56MQG7hK6
-	 1FIev2XZ6oPEg4AEz4ndek/9wvIYXwjiQaftYQ2qs4tLX+t56gWcbfJ/CPaRxYK47V
-	 sftXq8VmSMEcj7JbOiaOTEV0QUQBA2/dIXV88mBc=
+	by mail.kernel.org (Postfix) with ESMTP id 676352051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:32:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eJ5c87zi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCFRb1 (ORCPT
+        id S1726769AbgCFRcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:31:27 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:18802 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFRb1 (ORCPT
+        Fri, 6 Mar 2020 12:32:17 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:33678 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFRcQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:31:27 -0500
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 026HV6oi001632;
-        Sat, 7 Mar 2020 02:31:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 026HV6oi001632
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583515867;
-        bh=KT599rkyWLusuHqT7BO2ezdKg1m426AwRnfM8VKsKqk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=udcIZPKDCeg3PuCNRSmVaANnPTiZQpho153UftbhrnoPQgtwa0FZHxUEGFqsZ0etP
-         KZRnhuzvD6+ba6oy8rN3TERnzXsiW8tx97dFIakjznyByAh5EmTXAfJad4XnOso9d3
-         ZQDWcqUJ59J3gGq8agggDZvP47whcSEKodBNXZLQxXHYG4jLDSMSYfPp3St84TICvB
-         GJ5do0rCBCMn/HmH/Bh4STKg7qhwDPhiWE6bwMi6mSpr1viUGcHmeGLQf8YcuuHtPX
-         +C0Iu3Mh9wjZXBmNrfjffEzVhO85jUKT1ZuEAYyyasKhWhukZ8BqGq0kMPJJI+vwy/
-         OS4tif5Db30lQ==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id k188so2018995vsc.8;
-        Fri, 06 Mar 2020 09:31:06 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3BhNus7ROF4xakhkQBVwb0G7J0CW16ErUfbdNwOm/sJ7cvgOSs
-        XbRBzgQe+kt5Ub3lnhUc56gp9s7qkv6BYxMSmzs=
-X-Google-Smtp-Source: ADFU+vuEHyMmRkQKO1zvD+aF7U3nqZofouIuoJgp3M8VE/3bSpiUKcO3DWbqdEJwQZh+nf+XDeAIzboKLo4z5YkFIHY=
-X-Received: by 2002:a67:8c44:: with SMTP id o65mr2819402vsd.181.1583515865221;
- Fri, 06 Mar 2020 09:31:05 -0800 (PST)
+        Fri, 6 Mar 2020 12:32:16 -0500
+Received: by mail-pj1-f65.google.com with SMTP id o21so3671566pjs.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 09:32:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=G1RDgxBiyV6Kk2G6RLMWzGPree6/YVdm0hvb7UeIEqk=;
+        b=eJ5c87ziTXTK+rhDA6QRlgfcRU/IdlKxZshAQM2TCEltwHmpXlDjzbuPMRXbX/7SGS
+         X6IcuBDDareaY/S6mEVT0sTK3myUJL+cptTI+1dD6SVbdEuCtEJVaWp1SEPjhfBDYtPO
+         VnfXAUQrEMFY0Nar8GnvXCEnkpF1wckCT89A4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=G1RDgxBiyV6Kk2G6RLMWzGPree6/YVdm0hvb7UeIEqk=;
+        b=VFazNQynUmNfIqvn5DiYhHl9f1s6sz7jCtwnhRYcHA6AXq3F5rzlxRXAG9A0dgQJaH
+         QP+fMfc2MOzyfLFN4f0Z94gb2s4yP+vS6TjrXEH0HETOhWdl8tDgnM3hiiaGKr2Zjrrh
+         4zE8ehBo+YDfgmuKa9sQ7jmoO+DV1y6MCFL3ekn5pNV0iH5MMs1/qQwKFLGVG7/sefGb
+         jCXjNiVWLWd7yJn8bsHs3bKRyA3oJ4EZKlbAJ+XYpSBFNN4xHiPMvnkkY6vm608BVA2f
+         sV75oHQRgRtGRvyoBoAHXZ2e6WEe9N8Wwewcb50iuvJW7pFvD9GnSMKw628Z3wSoy/zO
+         cO9Q==
+X-Gm-Message-State: ANhLgQ39FEQb2vUgCs/XCm/WqaC1CzwsOeVF9JO+4Riy3f5zrZQ3w7H8
+        cJYCj06w5xOYDX4tJx+6VHWPuQ==
+X-Google-Smtp-Source: ADFU+vu76IOA+FPbi+9Jw1089IGoAuLPRcbDWWPgxaDXV5HF6U2+lYzFPU/z9i6aSOe5cIMfsSEKHg==
+X-Received: by 2002:a17:902:342:: with SMTP id 60mr3878637pld.206.1583515935302;
+        Fri, 06 Mar 2020 09:32:15 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x190sm37154310pfb.96.2020.03.06.09.32.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 09:32:14 -0800 (PST)
+Date:   Fri, 6 Mar 2020 09:32:13 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] drm/edid: Distribute switch variables for initialization
+Message-ID: <202003060930.DDCCB6659@keescook>
 MIME-Version: 1.0
-References: <20200302062340.21453-1-masahiroy@kernel.org> <nycvar.YSQ.7.76.2003021024370.1559@knanqh.ubzr>
-In-Reply-To: <nycvar.YSQ.7.76.2003021024370.1559@knanqh.ubzr>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 7 Mar 2020 02:30:28 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQVsOoNgSCUj1EwHgPKrGrwWduzrtQbrtOWa=2EA+hTfg@mail.gmail.com>
-Message-ID: <CAK7LNAQVsOoNgSCUj1EwHgPKrGrwWduzrtQbrtOWa=2EA+hTfg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kconfig: allow symbols implied by y to become m
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+Variables declared in a switch statement before any case statements
+cannot be automatically initialized with compiler instrumentation (as
+they are not part of any execution flow). With GCC's proposed automatic
+stack variable initialization feature, this triggers a warning (and they
+don't get initialized). Clang's automatic stack variable initialization
+(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+doesn't initialize such variables[1]. Note that these warnings (or silent
+skipping) happen before the dead-store elimination optimization phase,
+so even when the automatic initializations are later elided in favor of
+direct initializations, the warnings remain.
 
-On Tue, Mar 3, 2020 at 12:31 AM Nicolas Pitre <nico@fluxnic.net> wrote:
->
-> On Mon, 2 Mar 2020, Masahiro Yamada wrote:
->
-> > The 'imply' keyword restricts a symbol to y or n, excluding m
-> > when it is implied by y. This is the original behavior since
-> > commit 237e3ad0f195 ("Kconfig: Introduce the "imply" keyword").
-> >
-> > However, the author of the 'imply' keyword, Nicolas Pitre, stated
-> > that the 'imply' keyword should not impose any restrictions. [1]
-> >
-> > I agree, and want to get rid of this tricky behavior.
-> >
-> > [1]: https://lkml.org/lkml/2020/2/19/714
-> >
-> > Suggested-by: Nicolas Pitre <nico@fluxnic.net>
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> Acked-by: Nicolas Pitre <nico@fluxnic.net>
->
-> In addition to the IS_REACHABLE() note, it might be a good idea to
-> suggest adding an "imply" reference to the dependency if the feature
-> provided by BAZ is highli desirable, e.g.:
->
-> config FOO
->         tristate
->         imply BAR
->         imply BAZ
->
+To avoid these problems, lift such variables up into the next code
+block.
 
+drivers/gpu/drm/drm_edid.c: In function ‘drm_edid_to_eld’:
+drivers/gpu/drm/drm_edid.c:4395:9: warning: statement will never be
+executed [-Wswitch-unreachable]
+ 4395 |     int sad_count;
+      |         ^~~~~~~~~
 
-OK, this info is more relevant to the 2nd patch.
+[1] https://bugs.llvm.org/show_bug.cgi?id=44916
 
-I folded this following to 2/2.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2: move into function block instead being switch-local (Ville Syrjälä)
+---
+ drivers/gpu/drm/drm_edid.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/kbuild/kconfig-language.rst
-b/Documentation/kbuild/kconfig-language.rst
-index 68719e78ff85..a1601ec3317b 100644
---- a/Documentation/kbuild/kconfig-language.rst
-+++ b/Documentation/kbuild/kconfig-language.rst
-@@ -194,6 +194,14 @@ applicable everywhere (see syntax).
-                ...
-        }
-
-+  Note: If the feature provided by BAZ is highly desirable for FOO,
-+  FOO should imply not only BAZ, but also its dependency BAR::
-+
-+    config FOO
-+       tristate "foo"
-+       imply BAR
-+       imply BAZ
-+
- - limiting menu display: "visible if" <expr>
-
-   This attribute is only applicable to menu blocks, if the condition is
-
-
-
-
-Both applied.
-
-
-
-> > ---
-> >
-> >  Documentation/kbuild/kconfig-language.rst | 12 +++++++++++-
-> >  scripts/kconfig/symbol.c                  |  5 +----
-> >  2 files changed, 12 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> > index d0111dd26410..d4d988aea679 100644
-> > --- a/Documentation/kbuild/kconfig-language.rst
-> > +++ b/Documentation/kbuild/kconfig-language.rst
-> > @@ -173,7 +173,7 @@ applicable everywhere (see syntax).
-> >       ===             ===             =============   ==============
-> >       n               y               n               N/m/y
-> >       m               y               m               M/y/n
-> > -     y               y               y               Y/n
-> > +     y               y               y               Y/m/n
-> >       y               n               *               N
-> >       ===             ===             =============   ==============
-> >
-> > @@ -181,6 +181,16 @@ applicable everywhere (see syntax).
-> >    ability to hook into a secondary subsystem while allowing the user to
-> >    configure that subsystem out without also having to unset these drivers.
-> >
-> > +  Note: If the combination of FOO=y and BAR=m causes a link error,
-> > +  you can guard the function call with IS_REACHABLE()::
-> > +
-> > +     foo_init()
-> > +     {
-> > +             if (IS_REACHABLE(CONFIG_BAZ))
-> > +                     baz_register(&foo);
-> > +             ...
-> > +     }
-> > +
-> >  - limiting menu display: "visible if" <expr>
-> >
-> >    This attribute is only applicable to menu blocks, if the condition is
-> > diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
-> > index 8d38b700b314..b101ef3c377a 100644
-> > --- a/scripts/kconfig/symbol.c
-> > +++ b/scripts/kconfig/symbol.c
-> > @@ -401,8 +401,7 @@ void sym_calc_value(struct symbol *sym)
-> >                               sym_warn_unmet_dep(sym);
-> >                       newval.tri = EXPR_OR(newval.tri, sym->rev_dep.tri);
-> >               }
-> > -             if (newval.tri == mod &&
-> > -                 (sym_get_type(sym) == S_BOOLEAN || sym->implied.tri == yes))
-> > +             if (newval.tri == mod && sym_get_type(sym) == S_BOOLEAN)
-> >                       newval.tri = yes;
-> >               break;
-> >       case S_STRING:
-> > @@ -484,8 +483,6 @@ bool sym_tristate_within_range(struct symbol *sym, tristate val)
-> >               return false;
-> >       if (sym->visible <= sym->rev_dep.tri)
-> >               return false;
-> > -     if (sym->implied.tri == yes && val == mod)
-> > -             return false;
-> >       if (sym_is_choice_value(sym) && sym->visible == yes)
-> >               return val == yes;
-> >       return val >= sym->rev_dep.tri && val <= sym->visible;
-> > --
-> > 2.17.1
-> >
-> >
-
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index 805fb004c8eb..46cee78bc175 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -4381,6 +4381,7 @@ static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
+ 
+ 	if (cea_revision(cea) >= 3) {
+ 		int i, start, end;
++		int sad_count;
+ 
+ 		if (cea_db_offsets(cea, &start, &end)) {
+ 			start = 0;
+@@ -4392,8 +4393,6 @@ static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
+ 			dbl = cea_db_payload_len(db);
+ 
+ 			switch (cea_db_tag(db)) {
+-				int sad_count;
+-
+ 			case AUDIO_BLOCK:
+ 				/* Audio Data Block, contains SADs */
+ 				sad_count = min(dbl / 3, 15 - total_sad_count);
+-- 
+2.20.1
 
 
 -- 
-Best Regards
-Masahiro Yamada
+Kees Cook
