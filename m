@@ -2,102 +2,91 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845E0C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28584C3F2D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5AB217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FAF21D7E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583499335;
+	bh=FmCdFdk2V7prBX0NrmUPWjmsaN5MxL6GKpLAY5HtaZo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jB3iOGVbPDEZsPakehu02EtsgER2YFGG0sNzGl/N/Q0cSNmi4sPjkF5eAbZR5ENci
+	 6GjWoHc++F2PTgZRO7NvI8ZXPMFrEfJKNEzim511mQ9Ku/mH3zllsNXP/lZUUoV/Lh
+	 +PrRVLjMVn37xQdV8g7krv6p8ByXFxw9PnkhVjKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgCFMwN (ORCPT
+        id S1726674AbgCFMze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:52:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59298 "EHLO mx2.suse.de"
+        Fri, 6 Mar 2020 07:55:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgCFMwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:52:13 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5C2F3B138;
-        Fri,  6 Mar 2020 12:52:10 +0000 (UTC)
-Subject: Re: [PATCH v7 6/7] mm/madvise: employ mmget_still_valid for write
- lock
-To:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-7-minchan@kernel.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <d21c85b2-2493-e538-5419-79cf049a469e@suse.cz>
-Date:   Fri, 6 Mar 2020 13:52:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726251AbgCFMzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 07:55:33 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4DDE21D56;
+        Fri,  6 Mar 2020 12:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583499333;
+        bh=FmCdFdk2V7prBX0NrmUPWjmsaN5MxL6GKpLAY5HtaZo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yVs7toEV5u1l4nLoBtRPTGXT5IYT5Npy+TjDB4q3uIsfcvcTtpZAe2ILpbZwlwlXR
+         wP2NxHG9xOEOYfDps+57wzPf/YXmJgew91r2CSppuL2iJw/ZNpUd1lYwHPWHYCYuLR
+         78ECp/RhjiH0y3Lqe/XzfnCsNGHUMhF+jJn20bWo=
+Date:   Fri, 6 Mar 2020 13:55:31 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Jiri Slaby <jslaby@suse.com>, Joe Perches <joe@perches.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCHv3 2/2] serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE
+Message-ID: <20200306125531.GA3754466@kroah.com>
+References: <20200302175135.269397-1-dima@arista.com>
+ <20200302175135.269397-3-dima@arista.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302193630.68771-7-minchan@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302175135.269397-3-dima@arista.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 8:36 PM, Minchan Kim wrote:
-> From: Oleksandr Natalenko <oleksandr@redhat.com>
-> 
-> Do the very same trick as we already do since 04f5866e41fb. KSM hints
-> will require locking mmap_sem for write since they modify vm_flags, so
-> for remote KSM hinting this additional check is needed.
-> 
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
-> ---
->  mm/madvise.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index e794367f681e..e77c6c1fad34 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -1118,6 +1118,8 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
->  	if (write) {
->  		if (down_write_killable(&mm->mmap_sem))
->  			return -EINTR;
-> +		if (current->mm != mm && !mmget_still_valid(mm))
-> +			goto skip_mm;
+On Mon, Mar 02, 2020 at 05:51:35PM +0000, Dmitry Safonov wrote:
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 69def4a9df00..38a8f3c99579 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -431,6 +431,14 @@ config MAGIC_SYSRQ_SERIAL
+>  	  This option allows you to decide whether you want to enable the
+>  	  magic SysRq key.
+>  
+> +config MAGIC_SYSRQ_SERIAL_SEQUENCE
+> +	string "Char sequence that enables magic SysRq over serial"
+> +	depends on MAGIC_SYSRQ_SERIAL
+> +	default ""
+> +	help
+> +	  Specifies a sequence of characters that can follow BREAK to enable
+> +	  SysRq on a serial console.
 
-This will return 0, is that correct? Shoudln't there be a similar error e.g. as
-when finding the task by pid fails (-ESRCH ?), because IIUC the task here is
-going away and dumping the core?
 
->  	} else {
->  		down_read(&mm->mmap_sem);
->  	}
-> @@ -1169,6 +1171,7 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
->  	}
->  out:
->  	blk_finish_plug(&plug);
-> +skip_mm:
->  	if (write)
->  		up_write(&mm->mmap_sem);
->  	else
-> 
+Can you send a follow-on patch that adds some more text here.  Something
+like :
+	If you do not know what to do, just select an empty string and
+	the option will not be enabled.
 
+or something like that to make it more obvious what almost everyone will
+want to do here.
+
+thanks,
+
+greg k-h
