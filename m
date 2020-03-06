@@ -2,168 +2,85 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A76C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F7EC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A33C2084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sbCykm53"
+	by mail.kernel.org (Postfix) with ESMTP id 40733208CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583502415;
+	bh=ofoEWvuz60wMYevmFK5gY3rtPf2eTecFYR0FgcJdPvA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UfICHxkGXPM7V1lzUIoh7hDzZIbOIOP+/JnwaO+jZlxHm5YyVN9KJFQjhbJxM7JPY
+	 qIr4e8vJ8BgeXT3OvPCf2VoMbR6F86DvMsTj9PPzEzi2Z6VaYGdYZ3SZ/q4C2PdikE
+	 Es3yILZ3UaFPgU56Vomr3fshuXaJUv+chzz+F2y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCFNpw (ORCPT
+        id S1726642AbgCFNqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:45:52 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:44666 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbgCFNpw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:45:52 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 77C6924B;
-        Fri,  6 Mar 2020 14:45:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1583502349;
-        bh=BSy2aXmh/FFModnDKvd7NQ8aM1f7EgIy6d2/sKiaOPg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sbCykm53iHNv0u4G2jCHQy1Zz1GXIc8VCynX3Zr87JX1yenX9lfdacmc5AQ/bTM7N
-         0NJEFjzpQ1UH/MBpv2Ty29ODIxThh1u45WwM6XgEqwsH8XkmHEcP+z2SREy2dGd+lf
-         r+A9/1BgvdFnmrhn69N9hADO9OKEvbM5KSK6kBp4=
-Date:   Fri, 6 Mar 2020 15:45:46 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Alex Riesen <alexander.riesen@cetitec.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Driver Development <devel@driverdev.osuosl.org>,
-        Linux Media <linux-media@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Device Tree <devicetree@vger.kernel.org>,
-        Renesas SoC <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from
- adv748x codec (HDMI input) to the R-Car SoC
-Message-ID: <20200306134546.GE4878@pendragon.ideasonboard.com>
-References: <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
- <20200302134011.GA3717@pflmari>
- <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
- <20200302150706.GB3717@pflmari>
- <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
- <20200302160906.GC3717@pflmari>
- <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
- <20200305143628.GB25741@pflmari>
- <20200306131632.GA4878@pendragon.ideasonboard.com>
- <20200306134154.GD27714@pflmari>
+        Fri, 6 Mar 2020 08:46:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbgCFNqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:46:54 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77FCC2084E;
+        Fri,  6 Mar 2020 13:46:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583502413;
+        bh=ofoEWvuz60wMYevmFK5gY3rtPf2eTecFYR0FgcJdPvA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=J2W7NrrkTWNs3aEPCs3JupR+tZEIA4kk4bn/WYvcq4lgOdmmu8XKeKVIBznD3aCJJ
+         oy+loPZTqu0GdB6ZNXPjVmJs3jwunetuH0Lxk5E498bCl4zqRQLd9QwmxtHHmFyVeV
+         dDm8SMvBRsmejpki6P/E6A3PxzgRM94ZPNIzZqh0=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jADJT-00AaW5-P6; Fri, 06 Mar 2020 13:46:51 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200306134154.GD27714@pflmari>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 06 Mar 2020 13:46:51 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [patch 5/7] genirq: Sanitize state handling in check_irq_resend()
+In-Reply-To: <20200306130623.882129117@linutronix.de>
+References: <20200306130341.199467200@linutronix.de>
+ <20200306130623.882129117@linutronix.de>
+Message-ID: <10cde01e873942d45a9877ea08a77e35@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, kbusch@kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On 2020-03-06 13:03, Thomas Gleixner wrote:
+> The code sets IRQS_REPLAY unconditionally whether the resend happens or
+> not. That doesn't have bad side effects right now, but inconsistent 
+> state
+> is always a latent source of problems.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-(CC'ing Morimoto-san)
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-On Fri, Mar 06, 2020 at 02:41:54PM +0100, Alex Riesen wrote:
-> Laurent Pinchart, Fri, Mar 06, 2020 14:16:32 +0100:
-> > On Thu, Mar 05, 2020 at 03:36:28PM +0100, Alex Riesen wrote:
-> >> Geert Uytterhoeven, Mon, Mar 02, 2020 17:13:30 +0100:
-> >>> On Mon, Mar 2, 2020 at 5:09 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> >>>> Geert Uytterhoeven, Mon, Mar 02, 2020 16:32:32 +0100:
-> >>>>>
-> >>>>> The #clock-cells should be in the main video-receiver node.
-> >>>>> Probably there is more than one clock output, so #clock-cells may be 1?
-> >>>>
-> >>>> AFAICS, the device can provide only this one clock line (audio master clock
-> >>>> for I2S output)... I shall re-check, just in case.
-> >> 
-> >> And you're right, of course: the audio output formatting module of the ADV748x
-> >> devices provides a set of clock lines related to the I2S pins: the already
-> >> discussed master clock, left-right channel clock and the serial clock (bit
-> >> clock?).
-> > 
-> > I don't think we need to model the last two clocks through CCF though,
-> > they're part of the I2S protocol, not clock sources that need to be
-> > explicitly controlled (or queried).
-> 
-> That's good, because I'm right now having hard time finding out how to
-> calculate the frequencies!
-> 
-> >> Just to try it out (I'll set #clock-cells to 1), I registered a fixed rate
-> >> clock in the driver, added a clock provider:
-> >> 
-> >> adv748x_probe:
-> >> 
-> >>     clk = clk_register_fixed_rate(state->dev,
-> >> 				  "clk-hdmi-i2s-mclk",
-> >> 				  NULL     /* parent_name */,
-> >> 				  0        /* flags */,
-> >> 				  12288000 /* rate */);
-> >>     of_clk_add_provider(state->dev->of_node, of_clk_src_simple_get, clk);
-> >> 
-> >> And removed the audio_clk_c frequency setting. I also replaced the audio_clk_c
-> >> in the list of input clocks of the R-Car-side sound card with the phandle of
-> >> the adv7482 main node:
-> >> 
-> >> salvator-common.dtsi:
-> >> 
-> >>     &i2c4 {
-> >> 	status = "okay";
-> >> 
-> >> 	adv7482_hdmi_decoder: video-receiver@70 {
-> >> 	    #clock-cells = <0>; // to be replaced with <1>
-> >> 	};
-> >>     };
-> >> 
-> >>     &rcar_sound {
-> >> 	clocks = ..., <&adv7482_hdmi_decoder>, ...;
-> >>     };
-> >> 
-> >> As everything continues to work as before, I assume that at least the clock
-> >> dependencies were resolved.
-> > 
-> > This looks good to me.
-> 
-> Ok, I settle on this than.
-> 
-> >> Is there a way to verify that the added input clock is actually used?
-> >> IOW, if its frequency is actually has been programmed into the ssi4 (R-Car
-> >> receiving hardware) registers, and not just a left-over from previuos attempts
-> >> or plain default setting?
-> >> 
-> >> As the ADV748x devices seem to provide also the clocks for video outputs, will
-> >> it make any sense to place the clock definition into the port node?
-> >> Or should all provided clocks be indexed in the main device node?
-> > 
-> > Those clocks are part of the CSI-2 protocol and also don't need to be
-> > explicitly controlled. As far as I can tell from a quick check of the
-> > ADV7482 documentation, only the I2S MCLK is a general-purpose clock that
-> > needs to be exposed.
-> 
-> Thanks, that's good to know!
-> 
-> Do you know, by chance, which of the snd_soc* callbacks should be used to
-> implement setting of the MCLK? The one in snd_soc_component_driver or
-> snd_soc_dai_driver->ops (snd_soc_dai_ops)?
-> 
-> Or how the userspace interface looks like? Or, if there is no userspace
-> interface for this, how the MCLK is supposed to be set? Through mclk-fs?
-
-I'm afraid my knowledge of the sound subsystem is limited. Morimoto-san
-is the main developer and maintainer of Renesas sound drivers.
-Morimoto-sensei, would you have an answer to that question ? :-)
-
+         M.
 -- 
-Regards,
-
-Laurent Pinchart
+Jazz is not dead. It just smells funny...
