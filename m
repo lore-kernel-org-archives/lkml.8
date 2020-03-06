@@ -2,278 +2,75 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA945C3F2D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE09C3F2D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C122A2072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1721208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgCFHYn (ORCPT
+        id S1726090AbgCFH2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:24:43 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37840 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgCFHYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 02:24:43 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 132E0ABF6;
-        Fri,  6 Mar 2020 07:24:38 +0000 (UTC)
-Subject: Re: [PATCH] drm/hisilicon: Add the load and unload for hibmc_driver
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+        Fri, 6 Mar 2020 02:28:20 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50015 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbgCFH2U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 02:28:20 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jA7Ov-0007jV-SA; Fri, 06 Mar 2020 08:28:05 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jA7Ov-0003pl-7B; Fri, 06 Mar 2020 08:28:05 +0100
+Date:   Fri, 6 Mar 2020 08:28:05 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     treding@nvidia.com, robh+dt@kernel.org, jonathanh@nvidia.com,
+        bbasu@nvidia.com, ldewangan@nvidia.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-References: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <23d99485-59c9-b466-3939-982394aab9bd@suse.de>
-Date:   Fri, 6 Mar 2020 08:24:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Subject: Re: [PATCH] pwm: tegra: Add support for Tegra194
+Message-ID: <20200306072805.qraegjo7xmebelu5@pengutronix.de>
+References: <1583407653-30059-1-git-send-email-spatra@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="hgM94dktjnwDN88zvKY8CPwH8lBPU3BMx"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1583407653-30059-1-git-send-email-spatra@nvidia.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---hgM94dktjnwDN88zvKY8CPwH8lBPU3BMx
-Content-Type: multipart/mixed; boundary="O6U3plXr6584I0RxYfo7EkxSA0bZDs7n0";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: linuxarm@huawei.com
-Message-ID: <23d99485-59c9-b466-3939-982394aab9bd@suse.de>
-Subject: Re: [PATCH] drm/hisilicon: Add the load and unload for hibmc_driver
-References: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
+On Thu, Mar 05, 2020 at 04:57:33PM +0530, Sandipan Patra wrote:
+> Tegra194 has multiple PWM controllers with each having only one output.
+> 
+> Also the maxmimum frequency is higher than earlier SoCs.
+> 
+> Add support for Tegra194 and specify the number of PWM outputs and
+> maximum supported frequency using device tree match data.
+> 
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
 
---O6U3plXr6584I0RxYfo7EkxSA0bZDs7n0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Looks good to me,
 
-Hi
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Am 06.03.20 um 04:42 schrieb Tian Tao:
-> using the load and unload function provided by drm framework instead of=
+Thanks
+Uwe
 
-> doing the same work in the hibmc_pci_probe and do some code cleanup.
->=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 62 +++++++++--------=
---------
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h |  2 +
->  2 files changed, 24 insertions(+), 40 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> index 79a180a..51f1c70 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> @@ -23,7 +23,7 @@
->  #include <drm/drm_print.h>
->  #include <drm/drm_probe_helper.h>
->  #include <drm/drm_vblank.h>
-> -
-> +#include <drm/drm_pci.h>
->  #include "hibmc_drm_drv.h"
->  #include "hibmc_drm_regs.h"
-> =20
-> @@ -49,6 +49,8 @@ static irqreturn_t hibmc_drm_interrupt(int irq, void =
-*arg)
-> =20
->  static struct drm_driver hibmc_driver =3D {
->  	.driver_features	=3D DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
-> +	.load			=3D hibmc_load,
-> +	.unload			=3D hibmc_unload,
-
-These callbacks are deprecated and not to be used. During the last weeks
-and months, we've been working on removing them from the other remaining
-drivers. Therefore nak.
-
-Best regards
-Thomas
-
->  	.fops			=3D &hibmc_fops,
->  	.name			=3D "hibmc",
->  	.date			=3D "20160828",
-> @@ -232,6 +234,21 @@ static int hibmc_hw_map(struct hibmc_drm_private *=
-priv)
->  	return 0;
->  }
-> =20
-> +static void hibmc_hw_unmap(struct hibmc_drm_private *priv)
-> +{
-> +	struct drm_device *dev =3D priv->dev;
-> +
-> +	if (priv->mmio) {
-> +		devm_iounmap(dev->dev, priv->mmio);
-> +		priv->mmio =3D NULL;
-> +	}
-> +
-> +	if (priv->fb_map) {
-> +		devm_iounmap(dev->dev, priv->fb_map);
-> +		priv->fb_map =3D NULL;
-> +	}
-> +}
-> +
->  static int hibmc_hw_init(struct hibmc_drm_private *priv)
->  {
->  	int ret;
-> @@ -245,7 +262,7 @@ static int hibmc_hw_init(struct hibmc_drm_private *=
-priv)
->  	return 0;
->  }
-> =20
-> -static int hibmc_unload(struct drm_device *dev)
-> +void hibmc_unload(struct drm_device *dev)
->  {
->  	struct hibmc_drm_private *priv =3D dev->dev_private;
-> =20
-> @@ -258,11 +275,12 @@ static int hibmc_unload(struct drm_device *dev)
-> =20
->  	hibmc_kms_fini(priv);
->  	hibmc_mm_fini(priv);
-> +	hibmc_hw_unmap(priv);
->  	dev->dev_private =3D NULL;
->  	return 0;
->  }
-> =20
-> -static int hibmc_load(struct drm_device *dev)
-> +int hibmc_load(struct drm_device *dev, unsigned long flags)
->  {
->  	struct hibmc_drm_private *priv;
->  	int ret;
-> @@ -332,43 +350,7 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
->  	if (ret)
->  		return ret;
-> =20
-> -	dev =3D drm_dev_alloc(&hibmc_driver, &pdev->dev);
-> -	if (IS_ERR(dev)) {
-> -		DRM_ERROR("failed to allocate drm_device\n");
-> -		return PTR_ERR(dev);
-> -	}
-> -
-> -	dev->pdev =3D pdev;
-> -	pci_set_drvdata(pdev, dev);
-> -
-> -	ret =3D pci_enable_device(pdev);
-> -	if (ret) {
-> -		DRM_ERROR("failed to enable pci device: %d\n", ret);
-> -		goto err_free;
-> -	}
-> -
-> -	ret =3D hibmc_load(dev);
-> -	if (ret) {
-> -		DRM_ERROR("failed to load hibmc: %d\n", ret);
-> -		goto err_disable;
-> -	}
-> -
-> -	ret =3D drm_dev_register(dev, 0);
-> -	if (ret) {
-> -		DRM_ERROR("failed to register drv for userspace access: %d\n",
-> -			  ret);
-> -		goto err_unload;
-> -	}
-> -	return 0;
-> -
-> -err_unload:
-> -	hibmc_unload(dev);
-> -err_disable:
-> -	pci_disable_device(pdev);
-> -err_free:
-> -	drm_dev_put(dev);
-> -
-> -	return ret;
-> +	return drm_get_pci_dev(pdev, ent, &hibmc_driver);
->  }
-> =20
->  static void hibmc_pci_remove(struct pci_dev *pdev)
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-> index 50a0c1f..4e89cd7 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-> @@ -37,6 +37,8 @@ void hibmc_set_power_mode(struct hibmc_drm_private *p=
-riv,
->  void hibmc_set_current_gate(struct hibmc_drm_private *priv,
->  			    unsigned int gate);
-> =20
-> +int hibmc_load(struct drm_device *dev, unsigned long flags);
-> +void hibmc_unload(struct drm_device *dev);
->  int hibmc_de_init(struct hibmc_drm_private *priv);
->  int hibmc_vdac_init(struct hibmc_drm_private *priv);
-> =20
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---O6U3plXr6584I0RxYfo7EkxSA0bZDs7n0--
-
---hgM94dktjnwDN88zvKY8CPwH8lBPU3BMx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5h+rUACgkQaA3BHVML
-eiMYiQf9GqZAwiyMfHRje2Jao2QTfgw9zRcQZSH10Ip5eZcKyjtjVkaUonJ8co4m
-dypcv9O7/RpRs6lmt6tMjDDzay9fUBbzF95ft9b5pSIv1ayPRQoYI55I0+T3+1n+
-VYBo1yXMx8Y6MWgGgxH9+cH9qTyo2pcgp7c69dEcp0zoPy4VNCqsK0lgVF7RiPkJ
-+4GE8FvMOx+HAFieDgkV7YcqD3Qg0msNWTBGeWx32ef0fOZaVZTV3+/SR2vuU7SB
-6Ip94GmvFnZpfn2WezD+NImfv9AsmoygtzMi/GFGjfrxq5LUwAt7jrADUET3bl4W
-RwCWP8V6yGcjjOA1ITVqju1fOHx9eg==
-=Xobx
------END PGP SIGNATURE-----
-
---hgM94dktjnwDN88zvKY8CPwH8lBPU3BMx--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
