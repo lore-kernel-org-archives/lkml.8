@@ -2,125 +2,285 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F59C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415BDC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2337120728
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184CC20728
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 08:23:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="agg/LyxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgCFIWE (ORCPT
+        id S1726245AbgCFIXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 03:22:04 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:56543 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgCFIWD (ORCPT
+        Fri, 6 Mar 2020 03:23:05 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10456 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbgCFIXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 03:22:03 -0500
-Received: from [192.168.100.1] ([82.252.135.106]) by mrelayeu.kundenserver.de
- (mreue012 [213.165.67.103]) with ESMTPSA (Nemesis) id
- 1M4skB-1jAxqr1PZn-001x6Y; Fri, 06 Mar 2020 09:21:50 +0100
-Subject: Re: [PATCH] binfmt_misc: pass binfmt_misc P flag to the interpreter
-To:     Florian Weimer <fw@deneb.enyo.de>, YunQiang Su <syq@debian.org>
-Cc:     torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
-        akpm@linux-foundation.org, viro@zeniv.linux.org.uk,
-        James.Bottomley@hansenpartnership.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        libc-alpha@sourceware.org
-References: <20200306080905.173466-1-syq@debian.org>
- <87r1y53npd.fsf@mid.deneb.enyo.de>
-From:   Laurent Vivier <laurent@vivier.eu>
-Autocrypt: addr=laurent@vivier.eu; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8441f497-61eb-5c14-bf1e-c90a464105a7@vivier.eu>
-Date:   Fri, 6 Mar 2020 09:21:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 6 Mar 2020 03:23:04 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0268JXJp011415;
+        Fri, 6 Mar 2020 09:22:37 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : from : to : cc
+ : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=vTDWnwvCoOz4QiLEmXQSrPQXtR3HRTg+87YDSnBz9WI=;
+ b=agg/LyxR/G+ckCEJBpTv5VjR717mJ2lp8ki8jhXkHsU6n94y8SY3u4DgKC4N8KlYMVV2
+ +VKk3ESuxU1QeEnuwWXaOZHK1A7Pacnjq7SokIMOk7cVahpC+qQGhD114cWvUTNKjMsg
+ WzlxLV07Jcu9bMJQU8mNj8zOZLXAn7oKbI8Bc0kWr5YzolTgtKkuX2BMtt0g2XFQwNYM
+ HL/97bb2/i4KmdBQo2xNzEorK7i6L1BKbAUDilQa5AKo869DqECQQ2057Jsr7Bg0KzUz
+ Nsv+S4QIh7jScRqr5AGlqM4JnFdcwUa3vkRCqoymHCJXSNMXfCXJnQfpnJ1j6olMLGcg PA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yfdyde7ay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Mar 2020 09:22:37 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C646310002A;
+        Fri,  6 Mar 2020 09:22:31 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AEFBF21FE9B;
+        Fri,  6 Mar 2020 09:22:31 +0100 (CET)
+Received: from [10.48.0.71] (10.75.127.47) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Mar
+ 2020 09:22:30 +0100
+Subject: Re: [PATCH] iio: adc: stm32-adc: fix runtime autosuspend delay when
+ slow polling
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, <ulf.hansson@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <olivier.moysan@st.com>,
+        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-pm@vger.kernel.org>, <khilman@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>
+References: <1579854369-7972-1-git-send-email-fabrice.gasnier@st.com>
+ <20200202153354.3dae5863@archlinux>
+ <d30cb29b-d15c-a9fe-8c95-7ce59ce15062@st.com>
+Message-ID: <563e72b2-9bef-f00d-429c-db77d7689cc8@st.com>
+Date:   Fri, 6 Mar 2020 09:22:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <87r1y53npd.fsf@mid.deneb.enyo.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d30cb29b-d15c-a9fe-8c95-7ce59ce15062@st.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Q/VP/C7G5/q2fusWYTx9fdXdy9refipmFn9Qp7qBB0TtsSav0up
- EElsf7yuKVoqDSBRN7KW+J5FR4kYSeGWW2FP1RFVz9JmDcC236bsnZGPVUX6S2xXlOkmZ7Z
- E23I/M6yT1uvTs843tzXRou++EwoYfNtaXg44jM8MLT7A8t20SSORM8D53NjVwXjlMMnA52
- lL8AStqqTYXuU2HfJJ9cg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/oeNg09lLzA=:UCJAS6YSkjQgfxltwqDGwI
- FbQ2ylftZyCr1nztHQ0A0srTfDUfqzvgI5tZA9cpnF8kef0gAcSfms/Tm2T8RgK+SUQ2rjMSP
- zwAC4cL5dJo6CHdamEqkJg4tz2nR1xg2dKzirGkHLWv6tgQmMKIaDwqaDsLRxUoVJsMPEsrT/
- 3d3IkV82RDbu42x4KjB6AcukTTxeyZJpe8q4kRyHc0dhjfI2mH5lnV19MwopJYPI1eDC9zBVN
- CWFQ9dT4+S/OoI38WY+ZUiU4n/itepf62fnwedY2tJJ2AETKygWvvymsbUYUbYpeioxUFOBlH
- uEiMg1SVRJQCYQAVFMptQkMofDrv7B6H/aEzVo0wZYaB0Iu7Z5aBEUnqNrvm7IdJbbQwQpvDc
- VL7giPFNgEaCO9nDJyXmMIFnBZvEU57SlNMw03ZX+c0jHxZlLY8QkNNHGJ2m/LzqqfjJkzguw
- XkyHUbdvQ2XKbw77yvEkoVirCZFluQ5e1LoaDe12PA0lwFaXPB863H+OIiOef+tQ8uf6I4I1g
- UVM3dtfAIXkC+cX57x6nClhXKk0JDLI6YSg9Dp0HXPfR3BqApfoUW4/LeFbTcWl9OodPmTdB7
- XEDDakYbBHzlGBdgTcUH++C32uHPIrMIcGqgnGCM/Tj6VfWOgZTMufN+jcXmykIqmwDqYdEPp
- 54G7lYb9tPMfXoalgs8Jwhgz44NqI9EWQHOPK5Xj452Cl1uTyO/YAfydr5edtdK1YH7LeX6h5
- fIZ/tM4g14lNtVZ6Xy9iLuHNgTI1v5P6nRYKYHqA5nSUOOXfrV6DGGJk+cH5RZMV0WfCDunoI
- 3Mt3GfwdCNVDtqr7k7AwDTrV+1jREqGXrZOOZqKgMpDIXZYbG1+XSFV9N0iAcSM9QhI/Plc
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-06_02:2020-03-05,2020-03-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 06/03/2020 à 09:13, Florian Weimer a écrit :
-> * YunQiang Su:
+On 2/12/20 3:02 PM, Fabrice Gasnier wrote:
+> On 2/2/20 4:33 PM, Jonathan Cameron wrote:
+>> On Fri, 24 Jan 2020 09:26:09 +0100
+>> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+>>
+>>> When the ADC is runtime suspended and starting a conversion, the stm32-adc
+>>> driver calls pm_runtime_get_sync() that gets cascaded to the parent
+>>> (e.g. runtime resume of stm32-adc-core driver). This also kicks the
+>>> autosuspend delay (e.g. 2s) of the parent.
+>>> Once the ADC is active, calling pm_runtime_get_sync() again (upon a new
+>>> capture) won't kick the autosuspend delay for the parent (stm32-adc-core
+>>> driver) as already active.
+>>>
+>>> Currently, this makes the stm32-adc-core driver go in suspend state
+>>> every 2s when doing slow polling. As an example, doing a capture, e.g.
+>>> cat in_voltageY_raw at a 0.2s rate, the auto suspend delay for the parent
+>>> isn't refreshed. Once it expires, the parent immediately falls into
+>>> runtime suspended state, in between two captures, as soon as the child
+>>> driver falls into runtime suspend state:
+>>> - e.g. after 2s, + child calls pm_runtime_put_autosuspend() + 100ms
+>>>   autosuspend delay of the child.
+>>> - stm32-adc-core switches off regulators, clocks and so on.
+>>> - They get switched on back again 100ms later in this example (at 2.2s).
+>>>
+>>> So, add an explicit call to pm_runtime_mark_last_busy() for the parent
+>>> driver (stm32-adc-core), synchronously with the child driver (stm32-adc),
+>>> to avoid this.
+>>>
+>>> Fixes: 9bdbb1139ca1 ("iio: adc: stm32-adc: add power management support")
+>>>
+>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>
+>> Hi Fabrice,
+>>
+>> Whilst this will clearly work, it seems like a somewhat adhoc solution.
+>> Power management specialists (cc'd):  Is this what we should be doing, or
+>> have Fabrice and I both missed something that we should be doing here?
 > 
->> +	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
->> +		flags |= AT_FLAGS_PRESERVE_ARGV0;
->> +	NEW_AUX_ENT(AT_FLAGS, flags);
+> Hi all, PM specialists,
 > 
-> Is it necessary to reuse AT_FLAGS?  I think it's cleaner to define a
-> separate AT_ tag dedicated to binfmt_misc.
+> As per my understanding, pm_runtime_mark_last_busy() doesn't cascade to
+> the parent device:
 > 
+> - in pm_runtime.h:
+> static inline void pm_runtime_mark_last_busy(struct device *dev)
+> {
+> 	WRITE_ONCE(dev->power.last_busy, ktime_get_mono_fast_ns());
+> }
 
-Not necessary, but it seemed simpler and cleaner to re-use a flag that
-is marked as unused and with a name matching the new role. It avoids to
-patch other packages (like glibc) to add it as it is already defined.
+Hi all, PM specialists,
 
-Thanks,
-Laurent
+Gentle reminder on this topic.
+There maybe several solutions to address this. Not sure what would be
+an acceptable / preferred fix ?
+
+Just to summarize:
+---
+A - Current post: I'm wondering if this is suitable to call
+    pm_runtime_mark_last_busy() every time, for the parent device from
+    child driver ?
+
+---
+B - Is it suitable to update the PM runtime, so it's recursive, to
+    refresh "last_busy" for the parent(s) ? e.g. something like:
+
+ static inline void pm_runtime_mark_last_busy(struct device *dev)
+ {
+        WRITE_ONCE(dev->power.last_busy, ktime_get_mono_fast_ns());
++       if (dev->parent)
++               pm_runtime_mark_last_busy(dev->parent);
+ }
+
+---
+C - I find few drivers that rely on the rmp_idle() callback in the
+    parent to call pm_runtime_mark_last_busy(), like:
+  -> dwc3_runtime_idle()
+  -> gb_bundle_idle()
+
+  -> that may lead in the stm32-adc-core driver to add:
+
++static int stm32_adc_core_runtime_idle(struct device *dev)
++{
++       pm_runtime_mark_last_busy(dev);
++
++       return 0;
++}
+
+ static const struct dev_pm_ops stm32_adc_core_pm_ops = {
+        SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+                                pm_runtime_force_resume)
+        SET_RUNTIME_PM_OPS(stm32_adc_core_runtime_suspend,
+                           stm32_adc_core_runtime_resume,
+-                          NULL)
++                          stm32_adc_core_runtime_idle)
+ };
+
+
+I've test all these solutions. Would you have some recommendations ?
+
+Please advise,
+Best regards,
+Fabrice
+
+> 
+> STM32 ADC driver uses a model with an autosupsend delay for
+> - a parent driver to handle common resources, registers etc.
+> - child drivers for each ADC.
+> 
+> So the question is on how to fix the behavior I described:
+> 1: Child  activity with "short" autosuspend_delay
+> 2: Parent activity with "longer" autosuspend_delay
+>      _     _     _     _     _       _     _     _
+> 1: _| |___| |___| |___| |___| |_..._| |___| |___| |_...
+> 
+>     v v   v v   v v   v v   v v ... v v   v v   v v
+>     | |                                     |   |
+>     | +- pm_runtime_mark_last_busy()        |   |
+>     | +- pm_runtime_put_autosuspend()       v   |
+>     |                                       |   |
+>     +--- pm_runtime_get_sync()              |   v
+>     |                                       |   |
+>     +---> expires after autosuspend_delay   |   |
+>     |                                       |   |
+>     v                                       v   v
+>      _______________________________________     ___...
+> 2: _|                           ...         |___|
+> 
+> Glitches on parent dev near autosuspend_delay ^
+> 
+> - does the child driver needs to "kick" parent driver with
+> pm_runtime_mark_last_busy(), as proposed in current patch ?
+> 
+> - or is it something that should be done by PM runtime core routines ?
+> e.g. make pm_runtime_mark_last_busy() recursive or something else ?
+> 
+> Please advise
+> Best regards,
+> Fabrice
+> 
+>>
+>> Thanks,
+>>
+>> Jonathan
+>>
+>>> ---
+>>>  drivers/iio/adc/stm32-adc.c | 6 ++++++
+>>>  1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+>>> index 3b291d7..670157e 100644
+>>> --- a/drivers/iio/adc/stm32-adc.c
+>>> +++ b/drivers/iio/adc/stm32-adc.c
+>>> @@ -1157,6 +1157,7 @@ static int stm32_adc_single_conv(struct iio_dev *indio_dev,
+>>>  
+>>>  	stm32_adc_conv_irq_disable(adc);
+>>>  
+>>> +	pm_runtime_mark_last_busy(dev->parent);
+>>>  	pm_runtime_mark_last_busy(dev);
+>>>  	pm_runtime_put_autosuspend(dev);
+>>>  
+>>> @@ -1278,6 +1279,7 @@ static int stm32_adc_update_scan_mode(struct iio_dev *indio_dev,
+>>>  	adc->num_conv = bitmap_weight(scan_mask, indio_dev->masklength);
+>>>  
+>>>  	ret = stm32_adc_conf_scan_seq(indio_dev, scan_mask);
+>>> +	pm_runtime_mark_last_busy(dev->parent);
+>>>  	pm_runtime_mark_last_busy(dev);
+>>>  	pm_runtime_put_autosuspend(dev);
+>>>  
+>>> @@ -1329,6 +1331,7 @@ static int stm32_adc_debugfs_reg_access(struct iio_dev *indio_dev,
+>>>  	else
+>>>  		*readval = stm32_adc_readl(adc, reg);
+>>>  
+>>> +	pm_runtime_mark_last_busy(dev->parent);
+>>>  	pm_runtime_mark_last_busy(dev);
+>>>  	pm_runtime_put_autosuspend(dev);
+>>>  
+>>> @@ -1451,6 +1454,7 @@ static int __stm32_adc_buffer_postenable(struct iio_dev *indio_dev)
+>>>  err_clr_trig:
+>>>  	stm32_adc_set_trig(indio_dev, NULL);
+>>>  err_pm_put:
+>>> +	pm_runtime_mark_last_busy(dev->parent);
+>>>  	pm_runtime_mark_last_busy(dev);
+>>>  	pm_runtime_put_autosuspend(dev);
+>>>  
+>>> @@ -1487,6 +1491,7 @@ static void __stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
+>>>  	if (stm32_adc_set_trig(indio_dev, NULL))
+>>>  		dev_err(&indio_dev->dev, "Can't clear trigger\n");
+>>>  
+>>> +	pm_runtime_mark_last_busy(dev->parent);
+>>>  	pm_runtime_mark_last_busy(dev);
+>>>  	pm_runtime_put_autosuspend(dev);
+>>>  }
+>>> @@ -1874,6 +1879,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>>>  		goto err_hw_stop;
+>>>  	}
+>>>  
+>>> +	pm_runtime_mark_last_busy(dev->parent);
+>>>  	pm_runtime_mark_last_busy(dev);
+>>>  	pm_runtime_put_autosuspend(dev);
+>>>  
+>>
