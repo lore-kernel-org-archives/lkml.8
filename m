@@ -2,139 +2,115 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA543C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAF5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81EFB2072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1Z/Ug6s"
+	by mail.kernel.org (Postfix) with ESMTP id 551E9217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583508082;
+	bh=xSBKyG4v2fBVl3hrmfT6nidsIk7FItZaTu3DdclpsZw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gjZktTzN8TLJ7F41hYeepjCjymxTGvGnqCVs9gN75OtlNDNmK0cDBUhDxizCdL2vp
+	 2C69Z3Gz+9Zj/Wck/rCDo/xPx7KVcp8+qkWvsuB4QKiZ89PiDGJkahTJFgVtFtU0+y
+	 /RJPPtG87oTuF/kj9KRR0U7ECTzfjPEMwoeNmZrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgCFPVN (ORCPT
+        id S1727085AbgCFPVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:21:13 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42442 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCFPVN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:21:13 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so2723909otd.9;
-        Fri, 06 Mar 2020 07:21:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=o1t9Luxf+r0rMs+OmKtEKltB7C3/OdTEjpCMSdTFkZw=;
-        b=H1Z/Ug6siFGjzeRxcp4r9XfRXG9TQOds+XglqTN8tmexLbwQkPy3YIu7Y6yw6XkIql
-         k6AVC051wI+2MFk/blWhJoijNBLWQ2Nl3iH9Ghkyx+VVI0168BEhB4HTYdaEsdGT5cgE
-         X84DHGXdOlQMFAijQ6IidqIaL0iHoKlDo15HHTlq0B6unOJAAZLV5gTwcW0sO3GIjkXt
-         te1sUNkeOVIim33WqSJJkI+GoudPdM/KuY+YITO0uCy5Ac3Gy3g5Aelc2w2kVSiJAJ9/
-         Fon/BRGRZpCK7nCyPyNDB40RDQ2I6eMVC70Ru1JYCrG12E7Waj5Vcrorfw6pKypVzYjP
-         Fj8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=o1t9Luxf+r0rMs+OmKtEKltB7C3/OdTEjpCMSdTFkZw=;
-        b=jtTF0HzVtZDpQk+isttEpMbI7r9c3oJ7vkjxaSB7L+5CHQuyq9NltrNSjYt2YGHB9M
-         Nt1zUTJ6w3XrIowwDPC3Yi1/wQ2HLj9l+q4HaWWwAs6nm6ItmAAkPSOe/D2GsjbB8JMc
-         4yEQGOxjpW2adQJJsxg6iD8gDz5MDX+hc3QPGh/O1kaolArxbeneZtcV0DEzuXHXkCvf
-         W/7qkK1fw3HAhSiYPCIbmXXv41YKfk2GuJyVxTwJ/qclT1DFEB6wVV+yIebpfPoO8nz5
-         iyJcabJo2TDNZ2uDPPbjlzHtyB50oOLR9YXallHQkp/x/ad9KiUnib2G+FYGnrMcZl6A
-         Nk+A==
-X-Gm-Message-State: ANhLgQ1iUKUjHt51iIZvN9HabcV2F0Z9UtZezR2ynTew4Es+X74z+BjJ
-        K0ZFdQ76TmmuDKrHiiAWNQ==
-X-Google-Smtp-Source: ADFU+vubFXnYaJY/462LGLlSD/6SHQ5yVkERr3a9xoPfpKLvHMzkQ+KASmxemOqzXdkWKjKf9PvrJA==
-X-Received: by 2002:a9d:6544:: with SMTP id q4mr2819247otl.269.1583508072222;
-        Fri, 06 Mar 2020 07:21:12 -0800 (PST)
-Received: from serve.minyard.net ([47.184.164.37])
-        by smtp.gmail.com with ESMTPSA id m69sm11459902otc.78.2020.03.06.07.21.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 07:21:11 -0800 (PST)
-Received: from t560.minyard.net (unknown [IPv6:2001:470:b8f6:1b:7891:d81e:d9b4:ab4b])
-        by serve.minyard.net (Postfix) with ESMTPA id 2E94A18004F;
-        Fri,  6 Mar 2020 15:21:11 +0000 (UTC)
-From:   minyard@acm.org
-To:     linux-kernel@vger.kernel.org
-Cc:     Corey Minyard <cminyard@mvista.com>, stable@vger.kernel.org,
-        Adrian Reber <areber@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>
-Subject: [PATCH] pid: Fix error return value in some cases
-Date:   Fri,  6 Mar 2020 09:20:01 -0600
-Message-Id: <20200306152001.30442-1-minyard@acm.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 6 Mar 2020 10:21:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbgCFPVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:21:20 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F1292072A;
+        Fri,  6 Mar 2020 15:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583508080;
+        bh=xSBKyG4v2fBVl3hrmfT6nidsIk7FItZaTu3DdclpsZw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VoL8HU7eRNEpGt2Yv5JYMXvKHexhk9sppF+kvQSs2AW8FeDd0UfqilTwRaJd4rnhF
+         V9qttbvc0ufjySsmBUw8Etr8ip5sQNfqn9g5zsZUabSf0LQ0ImZjIDVIdd0z7jH8IX
+         3H72ExwJbxaWKEg9NqqQNt6/Oih6axVIEGUvoss4=
+Date:   Sat, 7 Mar 2020 00:21:15 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Cheng Jian <cj.chengjian@huawei.com>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>, <huawei.libin@huawei.com>,
+        <xiexiuqi@huawei.com>, <bobo.shaobowang@huawei.com>,
+        <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
+        <davem@davemloft.net>, <mhiramat@kernel.org>
+Subject: Re: [PATCH] kretprobe: check re-registration of the same kretprobe
+ earlier
+Message-Id: <20200307002115.b96be2310cc553a922e1ba31@kernel.org>
+In-Reply-To: <1583487306-81985-1-git-send-email-cj.chengjian@huawei.com>
+References: <1583487306-81985-1-git-send-email-cj.chengjian@huawei.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+Hi Cheng,
 
-Recent changes to alloc_pid() allow the pid number to be specified on
-the command line.  If set_tid_size is set, then the code scanning the
-levels will hard-set retval to -EPERM, overriding it's previous -ENOMEM
-value.
+On Fri, 6 Mar 2020 17:35:06 +0800
+Cheng Jian <cj.chengjian@huawei.com> wrote:
 
-After the code scanning the levels, there are error returns that do not
-set retval, assuming it is still set to -ENOMEM.
+> Our system encountered a use-after-free when re-register a
+> same kretprobe. it access the hlist node in rp->free_instances
+> which has been released already.
+> 
+> Prevent re-registration has been implemented for kprobe before,
+> but it's too late for kretprobe. We must check the re-registration
+> before re-initializing the kretprobe, otherwise it will destroy the
+> data and struct of the kretprobe registered, it can lead to memory
+> leak and use-after-free.
 
-In the first place, pid_ns_prepare_proc() returns its own error, just
-use that.
+I couldn't get how it cause use-after-free, but it causes memory leak.
+Anyway, if we can help to find a wrong usage, it might be good.
 
-In the second place:
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-	if (!(ns->pid_allocated & PIDNS_ADDING))
-		goto out_unlock;
+BTW, I think we should use WARN_ON() for this error, because this
+means the caller is completely buggy.
 
-a return value of -ENOMEM is probably wrong, since that means that the
-namespace is in deletion while this happened.  -EINVAL is probably a
-better choice.
+Thank you,
 
-Fixes: 49cb2fc42ce4 "fork: extend clone3() to support setting a PID"
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Cc: <stable@vger.kernel.org> # 5.5
-Cc: Adrian Reber <areber@redhat.com>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: Andrei Vagin <avagin@gmail.com>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
----
- kernel/pid.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+> ---
+>  kernel/kprobes.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 2625c24..f1fc921 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1946,6 +1946,11 @@ int register_kretprobe(struct kretprobe *rp)
+>  		}
+>  	}
+>  
+> +	/* Return error if it's being re-registered */
+> +	ret = check_kprobe_rereg(&rp->kp);
+> +	if (ret)
+> +		return ret;
+> +
+>  	rp->kp.pre_handler = pre_handler_kretprobe;
+>  	rp->kp.post_handler = NULL;
+>  	rp->kp.fault_handler = NULL;
+> -- 
+> 2.7.4
+> 
 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 0f4ecb57214c..1921f7f4b236 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -248,7 +248,8 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 	}
- 
- 	if (unlikely(is_child_reaper(pid))) {
--		if (pid_ns_prepare_proc(ns))
-+		retval = pid_ns_prepare_proc(ns);
-+		if (retval)
- 			goto out_free;
- 	}
- 
-@@ -261,8 +262,10 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 
- 	upid = pid->numbers + ns->level;
- 	spin_lock_irq(&pidmap_lock);
--	if (!(ns->pid_allocated & PIDNS_ADDING))
-+	if (!(ns->pid_allocated & PIDNS_ADDING)) {
-+		retval = -EINVAL;
- 		goto out_unlock;
-+	}
- 	for ( ; upid >= pid->numbers; --upid) {
- 		/* Make the PID visible to find_pid_ns. */
- 		idr_replace(&upid->ns->idr, pid, upid->nr);
+
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
