@@ -4,48 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAE5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E541C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC7F20848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580EE20717
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbgCFRJv (ORCPT
+        id S1726646AbgCFRMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:09:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58096 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 12:12:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgCFRJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:09:50 -0500
+        id S1726231AbgCFRMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 12:12:48 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCF7020658;
-        Fri,  6 Mar 2020 17:09:46 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 12:09:45 -0500
+        by mail.kernel.org (Postfix) with ESMTPSA id 8379320658;
+        Fri,  6 Mar 2020 17:12:47 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 12:12:46 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     <cl@rock-chips.com>
-Cc:     heiko@sntech.de, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        akpm@linux-foundation.org, tglx@linutronix.de, mpe@ellerman.id.au,
-        surenb@google.com, ben.dooks@codethink.co.uk,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        will@kernel.org, keescook@chromium.org, luto@amacapital.net,
-        wad@chromium.org, mark.rutland@arm.com, geert+renesas@glider.be,
-        george_davis@mentor.com, sudeep.holla@arm.com,
-        linux@armlinux.org.uk, gregkh@linuxfoundation.org, info@metux.net,
-        kstewart@linuxfoundation.org, allison@lohutok.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        huangtao@rock-chips.com
-Subject: Re: [PATCH v3 1/1] kthread: do not preempt current task if it is
- going to call schedule()
-Message-ID: <20200306120945.6a197172@gandalf.local.home>
-In-Reply-To: <20200306070133.18335-2-cl@rock-chips.com>
-References: <20200306070133.18335-1-cl@rock-chips.com>
-        <20200306070133.18335-2-cl@rock-chips.com>
+To:     Artem Savkov <asavkov@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH] ftrace: return first found result in lookup_rec()
+Message-ID: <20200306121246.5dac2573@gandalf.local.home>
+In-Reply-To: <20200306081035.21213-1-asavkov@redhat.com>
+References: <20200306081035.21213-1-asavkov@redhat.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -55,85 +41,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  6 Mar 2020 15:01:33 +0800
-<cl@rock-chips.com> wrote:
+On Fri,  6 Mar 2020 09:10:35 +0100
+Artem Savkov <asavkov@redhat.com> wrote:
 
-> From: Liang Chen <cl@rock-chips.com>
+> It appears that ip ranges can overlap so. In that case lookup_rec()
+> returns whatever results it got last even if it found nothing in last
+> searched page.
 > 
-> when we create a kthread with ktrhead_create_on_cpu(),the child thread
-> entry is ktread.c:ktrhead() which will be preempted by the parent after
-> call complete(done) while schedule() is not called yet,then the parent
-> will call wait_task_inactive(child) but the child is still on the runqueue,
-> so the parent will schedule_hrtimeout() for 1 jiffy,it will waste a lot of
-> time,especially on startup.
+> This breaks an obscure livepatch late module patching usecase:
+>   - load livepatch
+>   - load the patched module
+>   - unload livepatch
+>   - try to load livepatch again
 > 
->   parent                             child
-> ktrhead_create_on_cpu()
->   wait_fo_completion(&done) -----> ktread.c:ktrhead()
->                              |----- complete(done);--wakeup and preempted by parent
->  kthread_bind() <------------|  |-> schedule();--dequeue here
->   wait_task_inactive(child)     |
->    schedule_hrtimeout(1 jiffy) -|
+> To fix this return from lookup_rec() as soon as it found the record
+> containing searched-for ip. This used to be this way prior lookup_rec()
+> introduction.
 > 
-> So we hope the child just wakeup parent but not preempted by parent, and the
-> child is going to call schedule() soon,then the parent will not call
-> schedule_hrtimeout(1 jiffy) as the child is already dequeue.
-> 
-> The same issue for ktrhead_park()&&kthread_parkme().
-> This patch can save 120ms on rk312x startup with CONFIG_HZ=300.
-> 
-> Signed-off-by: Liang Chen <cl@rock-chips.com>
+> Fixes: 7e16f581a817 ("ftrace: Separate out functionality from ftrace_location_range()")
+> Signed-off-by: Artem Savkov <asavkov@redhat.com>
 > ---
->  kernel/kthread.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
+>  kernel/trace/ftrace.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/kernel/kthread.c b/kernel/kthread.c
-> index b262f47046ca..bfbfa481be3a 100644
-> --- a/kernel/kthread.c
-> +++ b/kernel/kthread.c
-> @@ -199,8 +199,15 @@ static void __kthread_parkme(struct kthread *self)
->  		if (!test_bit(KTHREAD_SHOULD_PARK, &self->flags))
->  			break;
->  
-> +		/*
-> +		 * Thread is going to call schedule(), do not preempt it,
-> +		 * or the caller of kthread_park() may spend more time in
-> +		 * wait_task_inactive().
-> +		 */
-> +		preempt_disable();
->  		complete(&self->parked);
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 3f7ee102868a..b0f5ee1fd6e4 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -1547,8 +1547,10 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
+>  		rec = bsearch(&key, pg->records, pg->index,
+>  			      sizeof(struct dyn_ftrace),
+>  			      ftrace_cmp_recs);
 
-I first was concerned that this could break PREEMPT_RT, as complete() calls
-spin_locks() which are turned into sleeping locks when PREEMPT_RT is
-enabled. But looking at the latest PREEMPT_RT patch, it appears that it
-converts the locks in complete() into raw_spin_locks (and using swake).
+how about just adding:
 
-I don't see any other issue with this patch.
+		if (rec)
+			break;
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+as that will do the same thing without adding two returns.
 
 -- Steve
 
-> -		schedule();
-> +		schedule_preempt_disabled();
-> +		preempt_enable();
+> +		if (rec)
+> +			return rec;
 >  	}
->  	__set_current_state(TASK_RUNNING);
+> -	return rec;
+> +	return NULL;
 >  }
-> @@ -245,8 +252,14 @@ static int kthread(void *_create)
->  	/* OK, tell user we're spawned, wait for stop or wakeup */
->  	__set_current_state(TASK_UNINTERRUPTIBLE);
->  	create->result = current;
-> +	/*
-> +	 * Thread is going to call schedule(), do not preempt it,
-> +	 * or the creator may spend more time in wait_task_inactive().
-> +	 */
-> +	preempt_disable();
->  	complete(done);
-> -	schedule();
-> +	schedule_preempt_disabled();
-> +	preempt_enable();
 >  
->  	ret = -EINTR;
->  	if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
+>  /**
 
