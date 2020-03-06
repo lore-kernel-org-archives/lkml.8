@@ -2,72 +2,92 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0484C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A54C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBCF20866
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81472073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583490550;
+	bh=sXy9iXyUrMf9Yr0FIeuC8RJKoSEk+ye9cbDrLmI2Lpw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AVfL+ULP/OOxW7vyv5LoOE+ynvnW8cG0kVOfplkB4vvup06AAVKY0ntzp2DogUsJC
+	 w+Eaw9ygsaGS8pf38cCoL19Gpr7Y0h13R0EhO/NlgNkF1+APAxuCKKHn/bQYfRILbL
+	 0v74TOwuiHZSjtxoSiR0Jxs4MKmS8uix9Hr9QXzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCFK1f (ORCPT
+        id S1726462AbgCFK3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:27:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:59102 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbgCFK1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:27:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 963E031B;
-        Fri,  6 Mar 2020 02:27:34 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FDC73F6C4;
-        Fri,  6 Mar 2020 02:27:31 -0800 (PST)
-Date:   Fri, 6 Mar 2020 10:27:29 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v8 00/11] arm64: Branch Target Identification support
-Message-ID: <20200306102729.GC2503422@arrakis.emea.arm.com>
-References: <20200227174417.23722-1-broonie@kernel.org>
+        Fri, 6 Mar 2020 05:29:09 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37393 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgCFK3J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 05:29:09 -0500
+Received: by mail-wr1-f66.google.com with SMTP id 6so1718038wre.4;
+        Fri, 06 Mar 2020 02:29:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kPmvm5eep4b15mdjBsaFZDnjDCC2+N4EYbDGpSejUoI=;
+        b=eyunxr9X2CcqC055epinyd7TPLTWSX3qdUKqbxUgTJgzC4OmqDHh35TURP5XgCN+8a
+         g2/3HkjOs/EeJhAO3rPEEmD85NtOnL/B4HzUmtEDzGnAx1mDUFRe703nTHZJPgqIV6yV
+         oVcJDCLsBsRYVxTbnERCA7qs608UbJQYsCYDc/4ZyOGkhybszlH8+kZ0LszvlvHSrZ3v
+         J9y+Fbaz9M4/wn6y4Vm3IuI/e6NEme832uD7I0wlOGxyG2uh/Zgvbu2s/ysAau7cVHc9
+         xXp5oefkXl3zH9FKbr2f1K58iBAUurgDsE7NRznk8+DN3buteIeAxFqAgwTbp/8BWZC2
+         WKkw==
+X-Gm-Message-State: ANhLgQ0l300C8RnGmfocfZ4S6aXIbpoCwa+kJsjLZx+PML9BT8YmmxMf
+        ag6kxW93ukSmYfKEEc87dBQBKWph
+X-Google-Smtp-Source: ADFU+vuf9OdMAReh9/+brhM7Nvsa4VH/zzToHxnC+7vV4GfFUX3cG99oYOKa0H9UBCPR0ORcGMisKw==
+X-Received: by 2002:a5d:5224:: with SMTP id i4mr3143044wra.285.1583490547034;
+        Fri, 06 Mar 2020 02:29:07 -0800 (PST)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id i6sm15429541wra.42.2020.03.06.02.29.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 02:29:06 -0800 (PST)
+Date:   Fri, 6 Mar 2020 10:29:04 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
+        Sasha Levin <sashal@kernel.org>, haiyangz@microsoft.com
+Subject: Re: [GIT PULL] Hyper-V commits for 5.6-rc
+Message-ID: <20200306102904.625skxmfbne2zwbp@debian>
+References: <20200305155901.xmstcqwutrb6s7pi@debian>
+ <CAHk-=wisKNsaOOCO8TfigKwmuqX83+KvntYeGq-KbOcSPunQbg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227174417.23722-1-broonie@kernel.org>
+In-Reply-To: <CAHk-=wisKNsaOOCO8TfigKwmuqX83+KvntYeGq-KbOcSPunQbg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 05:44:06PM +0000, Mark Brown wrote:
-> This patch series implements support for ARMv8.5-A Branch Target
-> Identification (BTI), which is a control flow integrity protection
-> feature introduced as part of the ARMv8.5-A extensions.
+On Thu, Mar 05, 2020 at 12:28:48PM -0600, Linus Torvalds wrote:
+> On Thu, Mar 5, 2020 at 9:59 AM Wei Liu <wei.liu@kernel.org> wrote:
+> >
+> > This is mostly a "dry-run" attempt to sort out any wrinkles on my end.
+> > If I have done something stupid, let me know.
+> 
+> Looks fine. I generally like seeing the commits being a bit older than
+> these are - you seem to have applied or rebased them not all that long
+> before sending the pull request. I prefer seeing that they've been in
+> linux-next etc, but for soemthing small like this I guess it doesn't
+> much matter. Next time?
 
-Does this series affect uprobes in any way? I.e. can you probe a landing
-pad?
+Ack.
 
--- 
-Catalin
+Those patches were applied not very long before sending the pull request
+because I thought simple patches should be fine.
+
+In the future I will let patches go in linux-next first.
+
+Wei.
