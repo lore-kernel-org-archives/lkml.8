@@ -2,71 +2,102 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F25C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE38C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65802072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:58:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="sCDHbXy+"
+	by mail.kernel.org (Postfix) with ESMTP id 8B9272084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583510440;
+	bh=nbAHA1WahxgO35nO+HhwXLm7RmPwbLsiDfTj5Z3wtuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VqCsrE2E1oOef1RU3AVm8PsFVP655CDdV0TApLpk8aVs3XPhKYwlg29+AqxNT96Hf
+	 9orp5oles1SoYzH42ozzEM9FXXJMt8/uYyeTaHK5STNMWEBl3P9fQ2AEmmxgwCbm1c
+	 lkZMMhRZ2aY3z9WPHWOqCjOr43bYfx2RftSJPVng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgCFP63 (ORCPT
+        id S1726733AbgCFQAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:58:29 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:49670 "EHLO vps0.lunn.ch"
+        Fri, 6 Mar 2020 11:00:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbgCFP62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:58:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=3LfItnB8/NprnVb5Jvhh1rqtasLaLb6p1u49/JmUdPY=; b=sCDHbXy+WXbbjKvsZyUWKL+hix
-        7Kxl6z7hKVxrreLrIynJcofc12fVId/MJlSKrWFnddGLHSffKmEy0mtjWzi8vLvA31NdtSH/rJ3DO
-        f8M26GGp5BHTX1Gu/s3kOlBVO0zgAgg2AtpFs9dTdqstLa+YjcMpW00G7+BKRN8wX9OU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jAFMm-0005mR-8d; Fri, 06 Mar 2020 16:58:24 +0100
-Date:   Fri, 6 Mar 2020 16:58:24 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Hau <hau@realtek.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Jason Yen <jason.yen@canonical.com>
-Subject: Re: SFP+ support for 8168fp/8117
-Message-ID: <20200306155824.GH25183@lunn.ch>
-References: <02F7CBDE-B877-481C-A5AF-2F4CBF830A2C@canonical.com>
- <80E9C881-91C8-4F29-B9CE-652F9EE0B018@canonical.com>
- <995bddbc4f9d48cbb3a289a7e9799f15@realtek.com>
- <12EA7285-06D7-44D3-B033-4F52A06123CC@canonical.com>
- <cae39cfbb5174c8884328887cdfb5a89@realtek.com>
- <9AAC75D4-B04F-49CD-BBB9-11AE3382E4D8@canonical.com>
- <5A21808E-C9DA-44BF-952B-4A5077B52E9B@canonical.com>
- <e10eef58d8fc4b67ac2a73784bf86381@realtek.com>
- <20200304152849.GE3553@lunn.ch>
- <1252a766545b48aeafdff9702566565c@realtek.com>
+        id S1725935AbgCFQAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:00:39 -0500
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57FD62072A;
+        Fri,  6 Mar 2020 16:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583510438;
+        bh=nbAHA1WahxgO35nO+HhwXLm7RmPwbLsiDfTj5Z3wtuY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RXuEwq58XWL66xOdJk0nkgY5LaZFkURF9dB1PupzeUJDfjLHH0IyC5acMAA7SOLXk
+         GP+iC/MrX8N0QCe3qoaviZNve1eGKSjkzLpNL5K1dB70vv0XeSxZfeVFVF8wNh9kSs
+         2rNH6zagvGemfUaQL+1vPezMgKk3H5vqR1j5QhkI=
+Date:   Fri, 6 Mar 2020 17:00:36 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Alex Belits <abelits@marvell.com>
+Cc:     "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Prasun Kapoor <pkapoor@marvell.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-mm@vger.kernel.org" <linux-mm@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH 03/12] task_isolation: userspace hard isolation from
+ kernel
+Message-ID: <20200306160035.GD8590@lenoir>
+References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
+ <36d84b8dd168a38e6a56549dedc15dd6ebf8c09e.camel@marvell.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1252a766545b48aeafdff9702566565c@realtek.com>
+In-Reply-To: <36d84b8dd168a38e6a56549dedc15dd6ebf8c09e.camel@marvell.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This chip can get fiber info through I2C. It also can detect LOS or control TX Disable via GPIO.
+On Wed, Mar 04, 2020 at 04:07:12PM +0000, Alex Belits wrote:
+> +#ifdef CONFIG_TASK_ISOLATION
+> +int try_stop_full_tick(void)
+> +{
+> +	int cpu = smp_processor_id();
+> +	struct tick_sched *ts = this_cpu_ptr(&tick_cpu_sched);
+> +
+> +	/* For an unstable clock, we should return a permanent error code. */
+> +	if (atomic_read(&tick_dep_mask) & TICK_DEP_MASK_CLOCK_UNSTABLE)
+> +		return -EINVAL;
+> +
+> +	if (!can_stop_full_tick(cpu, ts))
+> +		return -EAGAIN;
 
-O.K. Good
+Note that the stop_tick naming in nohz can be misleading. It means
+we actually leave the periodic mode and we enter in dynamic tick mode.
 
-You should be looking at using phylink to manage the SFP.
+In practice it means that the tick is delayed until the next event, which
+in the worst case may well be in 1 ms and in the best case never. So what
+you probably want to check instead is whether the tick has been entirely
+stopped (ie: we called hrtimer_cancel(&ts->sched_timer)).
 
-    Andrew
+Thanks.
+
+> +
+> +	tick_nohz_stop_sched_tick(ts, cpu);
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
+>  {
+>  	/*
+> -- 
+> 2.20.1
+> 
