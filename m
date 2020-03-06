@@ -2,60 +2,115 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0D0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A59C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F355420665
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC478205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lb3flTd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgCFSE0 (ORCPT
+        id S1726314AbgCFSFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:04:26 -0500
-Received: from muru.com ([72.249.23.125]:59188 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgCFSEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:04:25 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id D821E8027;
-        Fri,  6 Mar 2020 18:05:10 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 10:04:22 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2 3/6] pwm: omap-dmtimer: Fix pwm enabling sequence
-Message-ID: <20200306180422.GI37466@atomide.com>
-References: <20200228095651.32464-1-lokeshvutla@ti.com>
- <20200228095651.32464-4-lokeshvutla@ti.com>
+        Fri, 6 Mar 2020 13:05:40 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51070 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgCFSFk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:05:40 -0500
+Received: by mail-pj1-f65.google.com with SMTP id nm6so1385023pjb.0;
+        Fri, 06 Mar 2020 10:05:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UziHqWjFJ6dviuOOmNK8JN5WhevDMAOA/6piNcbDHIw=;
+        b=Lb3flTd5Jr/nNF03mi0ctFHUNEQfwNZidnVwDcMWUYMNeBQyob1RcSaxATmycXdWiq
+         NvIZCCjV8MBnE2uBIkdkElpwIvVxckoIfgWHqXZ///nG4JAoKfYFLcULVwvi7q3DlSF3
+         aZmQShoY4leujkVLzwncDm3SijQrn/jCqvwsyUH5AOqnPBnb7jO4kid5kbwplo3/7G0H
+         ANzEoxegQmin+yPhvjWfppm9T8/Og5ofksC+pnVmXGwwJoyp1btbCYyIRvAC+yoch9vR
+         ouj8Y+zu+15Yx32RGejeb1B8gSerSP2hS4qIyyDLHQvw9xttqPs5MLiHmIs8SZ3nCzPD
+         5Iaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UziHqWjFJ6dviuOOmNK8JN5WhevDMAOA/6piNcbDHIw=;
+        b=XNDT7eGH6Pta3wyQEPujoOd7bKGvPpvoLb0WJG8cfaMQDYWumn5U+lvNwmE6ZzinNy
+         hgAkUOR8ZGRtDlkiynHLi6V7DV+JfwkYiIynnbzlwWUgycV4JAq3V0W/3ZRE7+5UmPe0
+         FhtV2+6ANIZtM5VVM/H0kfJrFWevX0R2F54hLH3WMDUmEBCyxOotyVUw9rZGzB0lFaFe
+         Zj1uUzxHiHDQVqvHttKi4MWlWNwwK/GOK7vaPZS0MQFiOBWea8EWqvTM0/eQLRkCyiRI
+         NSMY8CtnVZ1QDc0xRn1nA/9K7UK9LojJkiPS0Rkotmd1oMI4pB/LlGP/g7oRjTT6sXgs
+         N5Pg==
+X-Gm-Message-State: ANhLgQ0gQwNUpWabp/gXWKCIEFm7zPyoj+0EOeH1oqZTh8s6/5loyvUG
+        L6av07id56JBBfBNXCfEGtgw0kP8
+X-Google-Smtp-Source: ADFU+vtJAO1fvWLHfB5OBsJTVgb89IS/0sAesFFda6P5CVncXzX7SW/6sOFIG0jfuuKBiDek2UiSYA==
+X-Received: by 2002:a17:90a:a416:: with SMTP id y22mr4833791pjp.114.1583517939060;
+        Fri, 06 Mar 2020 10:05:39 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id u126sm36342127pfu.182.2020.03.06.10.05.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 10:05:38 -0800 (PST)
+Date:   Fri, 6 Mar 2020 10:05:36 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Johnny Chuang <johnny.chuang.emc@gmail.com>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
+        James Chen <james.chen@emc.com.tw>,
+        Paul Liang <paul.liang@emc.com.tw>,
+        Jeff Chuang <jeff.chuang@emc.com.tw>
+Subject: Re: [PATCH] Input: elants_i2c - Report resolution information for
+ touch major
+Message-ID: <20200306180536.GE217608@dtor-ws>
+References: <1582766000-23023-1-git-send-email-johnny.chuang.emc@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228095651.32464-4-lokeshvutla@ti.com>
+In-Reply-To: <1582766000-23023-1-git-send-email-johnny.chuang.emc@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla@ti.com> [200228 09:58]:
-> To configure DM timer in pwm mode the following needs to be set in
-> OMAP_TIMER_CTRL_REG using set_pwm callback:
-> - Set toggle mode on PORTIMERPWM output pin
-> - Set trigger on overflow and match on PORTIMERPWM output pin.
-> - Set auto reload
+On Thu, Feb 27, 2020 at 09:13:20AM +0800, Johnny Chuang wrote:
+> From: Johnny Chuang <johnny.chuang@emc.com.tw>
 > 
-> This is a one time configuration and needs to be set before the start of
-> the dm timer. But the current driver tries to set the same configuration
-> for every period/duty cycle update, which is not needed. So move the pwm
-> setup before enabling timer and do not update it in pwm_omap_dmtimer_config.
+> This patch supports reporting resolution for ABS_MT_TOUCH_MAJOR event.
+> This information is needed in showing pressure/width radius.
+> 
+> Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
 
-Still works for me:
+Applied, thank you.
 
-Tested-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  drivers/input/touchscreen/elants_i2c.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+> index 4911799..14c577c 100644
+> --- a/drivers/input/touchscreen/elants_i2c.c
+> +++ b/drivers/input/touchscreen/elants_i2c.c
+> @@ -1309,6 +1309,7 @@ static int elants_i2c_probe(struct i2c_client *client,
+>  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
+>  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
+>  	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
+> +	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
+>  
+>  	error = input_register_device(ts->input);
+>  	if (error) {
+> -- 
+> 2.7.4
+> 
+
+-- 
+Dmitry
