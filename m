@@ -2,101 +2,103 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D70EC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D73CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6902084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F962084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbgCFOnA (ORCPT
+        id S1727514AbgCFOnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:43:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53859 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbgCFOmX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:42:23 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEB8-0006MJ-Dx; Fri, 06 Mar 2020 15:42:18 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3FD321C21D8;
-        Fri,  6 Mar 2020 15:42:09 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:08 -0000
-From:   "tip-bot2 for Thara Gopinath" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Update cpu_capacity to reflect thermal pressure
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200222005213.3873-8-thara.gopinath@linaro.org>
-References: <20200222005213.3873-8-thara.gopinath@linaro.org>
+        Fri, 6 Mar 2020 09:43:05 -0500
+Received: from mga01.intel.com ([192.55.52.88]:49905 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726650AbgCFOnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 09:43:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 06:42:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
+   d="scan'208";a="234870124"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Mar 2020 06:42:51 -0800
+Received: from [10.251.20.182] (kliang2-mobl.ccr.corp.intel.com [10.251.20.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id E5D7A580298;
+        Fri,  6 Mar 2020 06:42:48 -0800 (PST)
+Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a dedicated
+ counter for guest PEBS
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Luwei Kang <luwei.kang@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
+        thomas.lendacky@amd.com, fenghua.yu@intel.com,
+        like.xu@linux.intel.com
+References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+ <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
+ <20200306135317.GD12561@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
+Date:   Fri, 6 Mar 2020 09:42:47 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Message-ID: <158350572893.28353.7818128953864188600.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200306135317.GD12561@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     467b7d01c469dc6aa492c17d1f1d1952632728f1
-Gitweb:        https://git.kernel.org/tip/467b7d01c469dc6aa492c17d1f1d1952632728f1
-Author:        Thara Gopinath <thara.gopinath@linaro.org>
-AuthorDate:    Fri, 21 Feb 2020 19:52:11 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 12:57:20 +01:00
 
-sched/fair: Update cpu_capacity to reflect thermal pressure
+On 3/6/2020 8:53 AM, Peter Zijlstra wrote:
+> On Fri, Mar 06, 2020 at 01:56:55AM +0800, Luwei Kang wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The PEBS event created by host needs to be assigned specific counters
+>> requested by the guest, which means the guest and host counter indexes
+>> have to be the same or fail to create. This is needed because PEBS leaks
+>> counter indexes into the guest. Otherwise, the guest driver will be
+>> confused by the counter indexes in the status field of the PEBS record.
+>>
+>> A guest_dedicated_idx field is added to indicate the counter index
+>> specifically requested by KVM. The dedicated event constraints would
+>> constrain the counter in the host to the same numbered counter in guest.
+>>
+>> A intel_ctrl_guest_dedicated_mask field is added to indicate the enabled
+>> counters for guest PEBS events. The IA32_PEBS_ENABLE MSR will be switched
+>> during the VMX transitions if intel_ctrl_guest_owned is set.
+>>
+> 
+>> +	/* the guest specified counter index of KVM owned event, e.g PEBS */
+>> +	int				guest_dedicated_idx;
+> 
+> We've always objected to guest 'owned' counters, they destroy scheduling
+> freedom. Why are you expecting that to be any different this time?
+>
 
-cpu_capacity initially reflects the maximum possible capacity of a CPU.
-Thermal pressure on a CPU means this maximum possible capacity is
-unavailable due to thermal events. This patch subtracts the average
-thermal pressure for a CPU from its maximum possible capacity so that
-cpu_capacity reflects the remaining maximum capacity.
+The new proposal tries to 'own' a counter by setting the event 
+constraint. It doesn't stop other events using the counter.
+If there is high priority event which requires the same counter, 
+scheduler can still reject the request from KVM.
+I don't think it destroys the scheduling freedom this time.
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200222005213.3873-8-thara.gopinath@linaro.org
----
- kernel/sched/fair.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks,
+Kan
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 11f8488..aa51286 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7984,8 +7984,15 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
- 	if (unlikely(irq >= max))
- 		return 1;
- 
-+	/*
-+	 * avg_rt.util_avg and avg_dl.util_avg track binary signals
-+	 * (running and not running) with weights 0 and 1024 respectively.
-+	 * avg_thermal.load_avg tracks thermal pressure and the weighted
-+	 * average uses the actual delta max capacity(load).
-+	 */
- 	used = READ_ONCE(rq->avg_rt.util_avg);
- 	used += READ_ONCE(rq->avg_dl.util_avg);
-+	used += thermal_load_avg(rq);
- 
- 	if (unlikely(used >= max))
- 		return 1;
