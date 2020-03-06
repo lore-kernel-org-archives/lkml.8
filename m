@@ -2,104 +2,95 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FB5C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CFBC10F26
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5892B208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6CB20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 07:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xfpoa28l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbgCFHww (ORCPT
+        id S1726155AbgCFHxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 02:52:52 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39286 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgCFHwv (ORCPT
+        Fri, 6 Mar 2020 02:53:10 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35413 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgCFHxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 02:52:51 -0500
-Received: by mail-oi1-f196.google.com with SMTP id r16so1670058oie.6
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 23:52:51 -0800 (PST)
+        Fri, 6 Mar 2020 02:53:09 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m3so1278431wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 23:53:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=M2N76HSdO2AKrxhSY/D4yXqAwmp+7xWxrk33JmiX+pc=;
+        b=xfpoa28lJrSVhMdRpBko/Y5nceCuKhbj5I/+bAxre7oBTCfeMonRyQv6uvUvhbjEP1
+         FhPNqoKb8pOCbMYux6/Qmed72a3e/UCzQzyAMz1ucd3fcEhlo0A+d3XiKJmBuYDJqM6U
+         hUOJRBs6rchDz5xCdOh5hA6J1i1ThU31flFC/o0vxqXEMJbAxYVQOh6wXfCYROnMbXU7
+         tdsmUtgCvfEjQKLiVLGKBkv52u3f6EjtvJ5tvIqpp0vhd7WS4Y2YtihewAgzn9pm9miL
+         rojEEcCC5ScIjugqoLc3wAemTYA64NlO4NJzyupetKy4ix6mxXBEiH1eBKr1bSwZsiwB
+         3e3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1T5Kg4BfST0zSVIMUeTS56E1O4MCeoBW6kALqxA1HK8=;
-        b=tvmakSgvxiMbrkn6QlnJqxIx5nG6DTOJsviAJrfB0w/YYeRzwoBl6xfWGB6JJb8OF2
-         /wNHxn9KHthOJ2BXXg/BTiOzdH+QvV2HYKdZPLUpihj/uKZ3KfizVzbtInVHaKik92IQ
-         GZ7WHxwaoibf4ET3gHosGKcacNryD9syDFzuek0eJPOlASSyJsuR+S1XFyVqhGn+yz/o
-         eRh085kf4dZfBt7d7WMxHmguXvTLn8Szjv2MWTDn45FzsEDVVqsAFPpaOhZmnR5X96qR
-         a0b8U6xVoq9KNDSXWRfIKU2paW5MLRTzJQahW3KuQ63budgRF51O5ATqVocz1rRtNaiB
-         XE8g==
-X-Gm-Message-State: ANhLgQ3ZrEJL3KkZntefsb5HZTKYkeog4myhCqPsF6WLtQRR4brCc73T
-        qN1pcmPJG6ub+fPlXiMObwU8wEQk1lnNh/kwJSQ=
-X-Google-Smtp-Source: ADFU+vu659YQtLePZ07p37HFyrM/DDcWDOkphwBjlnwGymbix5RIPqdXWxxmtWWFPO72Eq4yJb7aF/R5hKHncFkBwpA=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr1640463oia.148.1583481171255;
- Thu, 05 Mar 2020 23:52:51 -0800 (PST)
-MIME-Version: 1.0
-References: <9e7beb31-b41f-9e95-c92b-1829e420af77@infradead.org> <158338818292.25448.7161196505598269976.stgit@devnote2>
-In-Reply-To: <158338818292.25448.7161196505598269976.stgit@devnote2>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 6 Mar 2020 08:52:40 +0100
-Message-ID: <CAMuHMdXSNwPwxOTDxK09LKTyOwL=LqTH6+HZRd=RY4P5VHg5Ew@mail.gmail.com>
-Subject: Re: [BUGFIX PATCH] tools: Let O= makes handle a relative path with -C option
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=M2N76HSdO2AKrxhSY/D4yXqAwmp+7xWxrk33JmiX+pc=;
+        b=GV2fZOqsUEMmqTCTas1sYaXFY7Y1wth3OhBZLmWUNPssjxaBwssH/gxG+BB9V7dNIO
+         DZvxFMIRhLc9zCq6Z0Co+xz//U6u4aExcUo3XxS8fleKHokz3L1WKejwKXCVkkfybRLe
+         rluZ99ULUqlpW0pF7JBy/08L8rHzt9y0pRNJC3mVEKn5yfHbH8gtYCyRlkYoM0Yll7x9
+         jc4zGDqiMTyzW1sX/h4fqN8dHEbSvNV9nl+/VF1UnAMFI4JHyUGglyfkridJQduEEZXH
+         FfXYFD7HAiVy+5V0ZG1RZ78QzUStgs5yhNFF6cdiZXrL6Bj/XiiU2b8tkIjfp0NZQx9T
+         l0JA==
+X-Gm-Message-State: ANhLgQ2qV7AfYU480bVMRQEZl/sv6pkazRxGZPHdtf1OU+SIy61vRVtO
+        r6j/uangvg/bSHk9oGjXrzG+aA==
+X-Google-Smtp-Source: ADFU+vthxeXljgB8Lwz7dXuVcROQRPl46OEPlESn2K/Hne5Kko6Kt92tt8v3fQXREFIZb3sinU+X/w==
+X-Received: by 2002:a1c:a908:: with SMTP id s8mr2602908wme.133.1583481188039;
+        Thu, 05 Mar 2020 23:53:08 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id f17sm27152245wrm.3.2020.03.05.23.53.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 05 Mar 2020 23:53:07 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        rafael.j.wysocki@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH 1/2] PNP: constify driver name
+Date:   Fri,  6 Mar 2020 07:53:00 +0000
+Message-Id: <1583481181-22972-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC +kbuild, -stable
+struct pnp_driver has name set as char* instead of const char* like platform_driver, pci_driver, usb_driver, etc...
+Let's unify a bit by setting name as const char*.
+Furthermore, all users of this structures set name from already const
+data.
 
-On Thu, Mar 5, 2020 at 7:03 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> When I compiled tools/bootconfig from top directory with
-> -C option, the O= option didn't work correctly if I passed
-> a relative path.
->
->   $ make O=./builddir/ -C tools/bootconfig/
->   make: Entering directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
->   ../scripts/Makefile.include:4: *** O=./builddir/ does not exist.  Stop.
->   make: Leaving directory '/home/mhiramat/ksrc/linux/tools/bootconfig'
->
-> The O= directory existence check failed because the check
-> script ran in the build target directory instead of the
-> directory where I ran the make command.
->
-> To fix that, once change directory to $(PWD) and check O=
-> directory, since the PWD is set to where the make command
-> runs.
->
-> Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  tools/scripts/Makefile.include |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-> index ded7a950dc40..6d2f3a1b2249 100644
-> --- a/tools/scripts/Makefile.include
-> +++ b/tools/scripts/Makefile.include
-> @@ -1,8 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
->  ifneq ($(O),)
->  ifeq ($(origin O), command line)
-> -       dummy := $(if $(shell test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
-> -       ABSOLUTE_O := $(shell cd $(O) ; pwd)
-> +       dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
-> +       ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
->         OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
->         COMMAND_O := O=$(ABSOLUTE_O)
->  ifeq ($(objtree),)
->
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ include/linux/pnp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/pnp.h b/include/linux/pnp.h
+index 3b12fd28af78..b18dca67253d 100644
+--- a/include/linux/pnp.h
++++ b/include/linux/pnp.h
+@@ -379,7 +379,7 @@ struct pnp_id {
+ };
+ 
+ struct pnp_driver {
+-	char *name;
++	const char *name;
+ 	const struct pnp_device_id *id_table;
+ 	unsigned int flags;
+ 	int (*probe) (struct pnp_dev *dev, const struct pnp_device_id *dev_id);
+-- 
+2.24.1
+
