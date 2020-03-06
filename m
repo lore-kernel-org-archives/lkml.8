@@ -2,151 +2,178 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ED2C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14051C10F26
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA5F20665
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F5520665
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JxMLeiDA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iORSAA+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgCFUHB (ORCPT
+        id S1726702AbgCFUHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:07:01 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38812 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgCFUHB (ORCPT
+        Fri, 6 Mar 2020 15:07:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44824 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726162AbgCFUHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:07:01 -0500
-Received: by mail-qt1-f195.google.com with SMTP id e20so2666235qto.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 12:07:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=tumBKI9yVzN59CwN6KRd5qTkqT9FDeQLZPxMiIooXfw=;
-        b=JxMLeiDA+QDFWhiA44Xqh7s/DPLKA+ixgXDAN38CcnbQqRTj9aoqHZQhF4oC+DKYp0
-         +xi179fLXwrmfORlNLNLbz1uy4Ob/0XCB2lPDQ7yBPbjY6HU5PUnMwXtDF3qLjn4GPtM
-         zKXIVsuc15A8t5djzRDtasWu1nDg0bX7xFbNJ3AMifly0MU9pjADD9OQRB3i/ATRKxo+
-         ktAuYMdq6liJdwBc9YJUrwtgOpjCldCU03XSb0l+ZtskruLc5XMGQgn8U1oUJi8zZSCY
-         2peLBVdLGR8egcCJ5XikHIRUC57P4ZDF6v5j027yVJDOX1WTHxFqFEu3Ez+Fwx8+kQwE
-         ZK5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=tumBKI9yVzN59CwN6KRd5qTkqT9FDeQLZPxMiIooXfw=;
-        b=gvhLJoigNMOX5WnQwf+WSvvthkg+mVXl75D7dQCH9z+GwL/M6WcZtJWUkhyhF5Wlaa
-         rB5Oz3E1qtA1QY+W57UEBUl6ESTUwjke5AjxehnNoMb8Qmqb/BDL9CEoILu3FefLFPiu
-         II4id2r9+Gnzzi+NspuK3xJm4vzYKWNf3yLJGo7TB8p/24LYvoHoANwH3BFG/Tk1vZhb
-         iRAXYhR1X4Vw5pi1pDzIgtorssYXRMQJWexWpb7RP046ITuYWXTfURXWq+dv9RYYPBvx
-         SSuxauy+UStB7fIs59a8e3oEACHD5YespNHei9h3qofSmkALq+gebOZ74j/hBGKFINLk
-         7Oxw==
-X-Gm-Message-State: ANhLgQ0MW4yvrxXzIbv384wjO9/IEtKk8QKRPM+YS1OHqxlsZ7Zy38u5
-        LNnpYX5rfSUVlNIX+ZRm+N0=
-X-Google-Smtp-Source: ADFU+vvNbi04ZzIcniVGZc8wrcVQFdlk64doUw63GF0PkiF8Mk1KcKWRtp9qZzurT7/RtftgB917fw==
-X-Received: by 2002:aed:2202:: with SMTP id n2mr4782327qtc.4.1583525220501;
-        Fri, 06 Mar 2020 12:07:00 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id r127sm1012846qkf.90.2020.03.06.12.06.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 12:06:59 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 85611403AD; Fri,  6 Mar 2020 17:06:57 -0300 (-03)
-Date:   Fri, 6 Mar 2020 17:06:57 -0300
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, peterz@infradead.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        namhyung@kernel.org, adrian.hunter@intel.com,
-        mathieu.poirier@linaro.org, ravi.bangoria@linux.ibm.com,
-        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
-        pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
-        ak@linux.intel.com
-Subject: Re: [PATCH 00/12] Stitch LBR call stack (Perf Tools)
-Message-ID: <20200306200657.GA13774@kernel.org>
-References: <20200228163011.19358-1-kan.liang@linux.intel.com>
- <20200306093940.GD281906@krava>
- <243484a9-5d64-707e-4abb-dd8813a8755e@linux.intel.com>
+        Fri, 6 Mar 2020 15:07:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583525264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+YIIYWVi7RdgKfAy7yTaNL+3yMfo1EDUARXKVoiNRlk=;
+        b=iORSAA+dvGs8kGAy7INVNjSgZaeQlvWI0LcSQIeTCrDSFzVoNo2lizxJGSc4gpQvEeF4Ii
+        ywln5Q2Gx4dT0F37AfPsTsHjoWhmXSxNLzskAkYcIS4bJg7X8hsY0OJa56/m/6XBEXyf2K
+        ueAbIihO24iciP2EbmdSq2CsakVLOyQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-299-9S-s0OdCNB2jyIvWkNZXNg-1; Fri, 06 Mar 2020 15:07:35 -0500
+X-MC-Unique: 9S-s0OdCNB2jyIvWkNZXNg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB225184C804;
+        Fri,  6 Mar 2020 20:07:32 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AB79A1001B2D;
+        Fri,  6 Mar 2020 20:07:29 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-acpi@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Wei Yang <richardw.yang@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Manual definition of Soft Reserved memory devices
+References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Fri, 06 Mar 2020 15:07:28 -0500
+In-Reply-To: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
+        (Dan Williams's message of "Mon, 02 Mar 2020 14:19:57 -0800")
+Message-ID: <x49a74tnt6n.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <243484a9-5d64-707e-4abb-dd8813a8755e@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Mar 06, 2020 at 02:13:15PM -0500, Liang, Kan escreveu:
-> 
-> 
-> On 3/6/2020 4:39 AM, Jiri Olsa wrote:
-> > On Fri, Feb 28, 2020 at 08:29:59AM -0800, kan.liang@linux.intel.com wrote:
-> > 
-> > SNIP
-> > 
-> > > Kan Liang (12):
-> > >    perf tools: Add hw_idx in struct branch_stack
-> > >    perf tools: Support PERF_SAMPLE_BRANCH_HW_INDEX
-> > >    perf header: Add check for event attr
-> > >    perf pmu: Add support for PMU capabilities
-> > 
-> > hi,
-> > I'm getting compile error:
-> > 
-> > 	util/pmu.c: In function ‘perf_pmu__caps_parse’:
-> > 	util/pmu.c:1620:32: error: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size between 0 and 4095 [-Werror=format-truncation=]
-> > 	 1620 |   snprintf(path, PATH_MAX, "%s/%s", caps_path, name);
-> > 	      |                                ^~
-> > 	In file included from /usr/include/stdio.h:867,
-> > 			 from util/pmu.c:12:
-> > 	/usr/include/bits/stdio2.h:67:10: note: ‘__builtin___snprintf_chk’ output between 2 and 4352 bytes into a destination of size 4096
-> > 	   67 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
-> > 	      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 	   68 |        __bos (__s), __fmt, __va_arg_pack ());
-> > 	      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 	cc1: all warnings being treated as errors
-> > 
-> > 	[jolsa@krava perf]$ gcc --version
-> > 	gcc (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1)
-> 
-> My GCC version is too old. I will send V2 later to fix the error.
+Dan Williams <dan.j.williams@intel.com> writes:
 
-So, Jiri asked me to push my perf/core, which I did, please refresh from
-there,
+> Given the current dearth of systems that supply an ACPI HMAT table, and
+> the utility of being able to manually define device-dax "hmem" instances
+> via the efi_fake_mem= option, relax the requirements for creating these
+> devices. Specifically, add an option (numa=nohmat) to optionally disable
+> consideration of the HMAT and update efi_fake_mem= to behave like
+> memmap=nn!ss in terms of delimiting device boundaries.
 
-Right now it is at:
+So, am I correct in deducing that your primary motivation is testing
+without hardware/firmware support?  This looks like a bit of a hack to
+me, and I think maybe it would be better to just emulate the HMAT using
+qemu.  I don't have a strong objection, though.
 
-[acme@quaco perf]$ git log --oneline -10
-c45c91f6161c (HEAD -> perf/core, seventh/perf/core, acme/perf/core, acme.korg/perf/core) perf evsel: Support PERF_SAMPLE_BRANCH_HW_INDEX
-1fa65c5092da perf tools: Add hw_idx in struct branch_stack
-6339998d22ec tools headers UAPI: Update tools's copy of linux/perf_event.h
-401d61cbd4d4 tools lib traceevent: Remove extra '\n' in print_event_time()
-76ce02651dab libperf: Add counting example
-dabce16bd292 perf annotate: Get rid of annotation->nr_jumps
-357a5d24c471 perf llvm: Add debug hint message about missing kernel-devel package
-1af62ce61cd8 perf stat: Show percore counts in per CPU output
-7982a8985150 tools lib api fs: Move cgroupsfs_find_mountpoint()
-d46eec8e975a Merge remote-tracking branch 'acme/perf/urgent' into perf/core
-[acme@quaco perf]$
+-Jeff
 
-Repository:
+>
+> All review welcome of course, but the E820 changes want an x86
+> maintainer ack, the efi_fake_mem update needs Ard, and Rafael has
+> previously shepherded the HMAT changes. For the changes to
+> kernel/resource.c, where there is no clear maintainer, I just copied the
+> last few people to make thoughtful changes in that area. I am happy to
+> take these through the nvdimm tree along with these prerequisites
+> already in -next:
+>
+> b2ca916ce392 ACPI: NUMA: Up-level "map to online node" functionality
+> 4fcbe96e4d0b mm/numa: Skip NUMA_NO_NODE and online nodes in numa_map_to_online_node()
+> 575e23b6e13c powerpc/papr_scm: Switch to numa_map_to_online_node()
+> 1e5d8e1e47af x86/mm: Introduce CONFIG_NUMA_KEEP_MEMINFO
+> 5d30f92e7631 x86/NUMA: Provide a range-to-target_node lookup facility
+> 7b27a8622f80 libnvdimm/e820: Retrieve and populate correct 'target_node' info
+>
+> Tested with:
+>
+>         numa=nohmat efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
+>
+> ...to create to device-dax instances:
+>
+> 	# daxctl list -RDu
+> 	[
+> 	  {
+> 	    "path":"\/platform\/hmem.1",
+> 	    "id":1,
+> 	    "size":"4.00 GiB (4.29 GB)",
+> 	    "align":2097152,
+> 	    "devices":[
+> 	      {
+> 	        "chardev":"dax1.0",
+> 	        "size":"4.00 GiB (4.29 GB)",
+> 	        "target_node":3,
+> 	        "mode":"devdax"
+> 	      }
+> 	    ]
+> 	  },
+> 	  {
+> 	    "path":"\/platform\/hmem.0",
+> 	    "id":0,
+> 	    "size":"4.00 GiB (4.29 GB)",
+> 	    "align":2097152,
+> 	    "devices":[
+> 	      {
+> 	        "chardev":"dax0.0",
+> 	        "size":"4.00 GiB (4.29 GB)",
+> 	        "target_node":2,
+> 	        "mode":"devdax"
+> 	      }
+> 	    ]
+> 	  }
+> 	]
+>
+> ---
+>
+> Dan Williams (5):
+>       ACPI: NUMA: Add 'nohmat' option
+>       efi/fake_mem: Arrange for a resource entry per efi_fake_mem instance
+>       ACPI: HMAT: Refactor hmat_register_target_device to hmem_register_device
+>       resource: Report parent to walk_iomem_res_desc() callback
+>       ACPI: HMAT: Attach a device for each soft-reserved range
+>
+>
+>  arch/x86/kernel/e820.c              |   16 +++++-
+>  arch/x86/mm/numa.c                  |    4 +
+>  drivers/acpi/numa/hmat.c            |   71 +++-----------------------
+>  drivers/dax/Kconfig                 |    5 ++
+>  drivers/dax/Makefile                |    3 -
+>  drivers/dax/hmem/Makefile           |    6 ++
+>  drivers/dax/hmem/device.c           |   97 +++++++++++++++++++++++++++++++++++
+>  drivers/dax/hmem/hmem.c             |    2 -
+>  drivers/firmware/efi/x86_fake_mem.c |   12 +++-
+>  include/acpi/acpi_numa.h            |    1 
+>  include/linux/dax.h                 |    8 +++
+>  kernel/resource.c                   |    1 
+>  12 files changed, 156 insertions(+), 70 deletions(-)
+>  create mode 100644 drivers/dax/hmem/Makefile
+>  create mode 100644 drivers/dax/hmem/device.c
+>  rename drivers/dax/{hmem.c => hmem/hmem.c} (98%)
+>
+> base-commit: 7b27a8622f802761d5c6abd6c37b22312a35343c
 
-git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-
-Branch:
-
-perf/core
-
-Thanks,
-
-- Arnaldo
