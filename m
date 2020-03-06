@@ -2,109 +2,125 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D704EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91865C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B408220684
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B3220637
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgCFSi0 (ORCPT
+        id S1726359AbgCFSjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:38:26 -0500
-Received: from baldur.buserror.net ([165.227.176.147]:38498 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCFSi0 (ORCPT
+        Fri, 6 Mar 2020 13:39:45 -0500
+Received: from smtprelay0235.hostedemail.com ([216.40.44.235]:51492 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726083AbgCFSjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:38:26 -0500
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1jAHn7-0002zj-NU; Fri, 06 Mar 2020 12:33:46 -0600
-Message-ID: <78e666fb78604d98252c436e9e3f6a27cff25a9a.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, Jason Yan <yanaijie@huawei.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Daniel Axtens <dja@axtens.net>
-Date:   Fri, 06 Mar 2020 12:33:44 -0600
-In-Reply-To: <CAADWXX8guqt=Yz-Lo+qU6Ed0t-mG-B=UkqSDaSr3bH+Q2aOn-Q@mail.gmail.com>
-References: <20200304124707.22650-1-yanaijie@huawei.com>
-         <202003041022.26AF0178@keescook>
-         <b5854fd867982527c107138d52a61010079d2321.camel@buserror.net>
-         <CAADWXX8guqt=Yz-Lo+qU6Ed0t-mG-B=UkqSDaSr3bH+Q2aOn-Q@mail.gmail.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Fri, 6 Mar 2020 13:39:45 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id B38C5837F24A;
+        Fri,  6 Mar 2020 18:39:43 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: iron74_8edbf580f4f45
+X-Filterd-Recvd-Size: 4410
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  6 Mar 2020 18:39:41 +0000 (UTC)
+Message-ID: <442b7ace85a414c6a01040368f05d6d219f86536.camel@perches.com>
+Subject: Re: [PATCH] sched/cputime: silence a -Wunused-function warning
+From:   Joe Perches <joe@perches.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>, Qian Cai <cai@lca.pw>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, juri.lelli@redhat.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        dietmar.eggemann@arm.com, Steven Rostedt <rostedt@goodmis.org>,
+        bsegall@google.com, mgorman@suse.de,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Date:   Fri, 06 Mar 2020 10:38:06 -0800
+In-Reply-To: <a7503afc9d561ae9c7116b97c7a960d7ad5cbff9.camel@perches.com>
+References: <1583509304-28508-1-git-send-email-cai@lca.pw>
+         <CAKwvOd=V44ksbiffN5UYw-oVfTK_wdeP59ipWANkOUS_zavxew@mail.gmail.com>
+         <a7503afc9d561ae9c7116b97c7a960d7ad5cbff9.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: torvalds@linux-foundation.org, keescook@chromium.org, yanaijie@huawei.com, pmladek@suse.com, rostedt@goodmis.org, sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org, tobin@kernel.org, dja@axtens.net
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-03-05 at 12:51 -0600, Linus Torvalds wrote:
-> On Wed, Mar 4, 2020 at 3:16 PM Scott Wood <oss@buserror.net> wrote:
+On Fri, 2020-03-06 at 09:25 -0800, Joe Perches wrote:
+> On Fri, 2020-03-06 at 09:13 -0800, Nick Desaulniers wrote:
+> > On Fri, Mar 6, 2020 at 7:42 AM Qian Cai <cai@lca.pw> wrote:
+> > > account_other_time() is only used when CONFIG_IRQ_TIME_ACCOUNTING=y (in
+> > > irqtime_account_process_tick()) or CONFIG_VIRT_CPU_ACCOUNTING_GEN=y (in
+> > > get_vtime_delta()). When both are off, it will generate a compilation
+> > > warning from Clang,
+> > > 
+> > > kernel/sched/cputime.c:255:19: warning: unused function
+> > > 'account_other_time' [-Wunused-function]
+> > > static inline u64 account_other_time(u64 max)
+> > > 
+> > > Rather than wrapping around this function with a macro expression,
+> > > 
+> > >  if defined(CONFIG_IRQ_TIME_ACCOUNTING) || \
+> > >     defined(CONFIG_VIRT_CPU_ACCOUNTING_GEN)
+> > > 
+> > > just use __maybe_unused for this small function which seems like a good
+> > > trade-off.
 > > 
-> > The frustration is with the inability to set a flag to say, "I'm debugging
-> > and
-> > don't care about leaks... in fact I'd like as much information as possible
-> > to
-> > leak to me."
+> > Generally, I'm not a fan of __maybe_unused.  It is a tool in the
+> > toolbox for solving this issue, but it's my least favorite.  Should
+> > the call sites be eliminated, this may mask an unused and entirely
+> > dead function from being removed.  Preprocessor guards based on config
+> > give more context into *why* a particular function may be unused.
+> > 
+> > So let's take a look at the call sites of account_other_time().  Looks
+> > like irqtime_account_process_tick() (guarded by
+> > CONFIG_IRQ_TIME_ACCOUNTING) and get_vtime_delta() (guarded by
+> > CONFIG_VIRT_CPU_ACCOUNTING_GEN).  If it were one config guard, then I
+> > would prefer to move the definition to be within the same guard, just
+> > before the function definition that calls it, but we have a more
+> > complicated case here.
+> > 
+> > The next thing I'd check to see is if there's a dependency between
+> > configs.  In this case, both CONFIG_IRQ_TIME_ACCOUNTING and
+> > CONFIG_VIRT_CPU_ACCOUNTING_GEN are defined in init/Kconfig.  In this
+> > case there's also no dependency between configs, so specifying one
+> > doesn't imply the other; so guarding on one of the two configs is also
+> > not an option.
+> > 
+> > So, as much as I'm not a fan of __maybe_unused, it is indeed the
+> > simplest option.  Though, I'd still prefer the ifdef you describe
+> > instead, maybe the maintainers can provide guidance/preference?
 > 
-> Well, I definitely don't want to tie it to "I turned off kaslr in
-> order to help debugging". That just means that now you're debugging a
-> kernel that is fundamentally different from what people are running.
+> Another option might be to move static inline functions
+> where possible to an #include file (like sched.h) but the
+> same possible dead function issue would still exist.
 
-One shouldn't *test* with something different from what people are running but
-once a problem has been identified I don't see the problem with changing the
-kernel to make diagnosis easier (assuming the problem is reproduceable). 
-Though I suppose one could just locally apply a "no pointer hashing" patch
-when debugging...
+Turns out there are hundreds of unused static inline
+functions in kernel .h files.
 
-> So I'd much rather have people just set a really magic flag, perhaps
-> when kgdb is in use or something.
-> 
-> > In any case, this came up now due to a question about what to use when
-> > printing crash dumps.  PowerPC currently prints stack and return addresses
-> > with %lx (in addition to %pS in the latter case) and someone proposed
-> > converting them to %p and/or removing them altogether.
-> 
-> Please just use '%pS'.
-> 
-> The symbol and offset is what is useful when users send crash-dumps.
-> The hex value is entirely pointless with kaslr - which should
-> basically be the default.
-> 
-> Note that this isn't about security at that point - crash dumps are
-> something that shouldn't happen, but if they do happen, we want the
-> pointers. But the random hex value just isn't _useful_, so it's just
-> making things less legible.
+A trivial script to find some of them (with likely
+false positives as some might actually be used via ##
+token pasting mechanisms).
 
-Losing %lx on the return address would be a minor annoyance (harder to verify
-that you're looking at the right stack frame in a dump, more steps to look up
-the line number when modules and kaslr aren't involved, etc), but %pS doesn't
-help with stack addresses themselves -- and yes, digging into the actual stack
-data (via kdump, external debugger, etc.) is sometimes useful.  Maybe
-condition it on it being an actual crash dump and not some other caller of
-show_stack()?
+(and there's almost certainly a better way to do this
+ too as it takes a _very_ long time to run)
 
--Scott
+$ grep-2.5.4 -rP --include=*.h '^[ \t]*static\s+inline\s+(?:\w+\s+){1,3}\w+[ \t]*\(' * | \
+  grep -P -oh '\w+\s*\(' | \
+  sort | uniq -c | sort -n | grep -P '^\s+1\b' | \
+  sed -r -e 's/^\s+1\s+//' -e 's/\(//' | \
+  while read line ; do \
+    echo -n "$line: " ; git grep -w $line | wc -l ; \
+  done | \
+  grep ": 1$"
 
 
