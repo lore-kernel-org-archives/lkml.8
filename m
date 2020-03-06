@@ -6,125 +6,97 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E72C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82588C3F2D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689D820848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A562084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgCFMlT (ORCPT
+        id S1726875AbgCFMl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:41:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49620 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbgCFMlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:41:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CB939AF4E;
-        Fri,  6 Mar 2020 12:41:16 +0000 (UTC)
-Message-ID: <444a97c46126bb86ca37da9bf26a840c38176bbe.camel@suse.de>
-Subject: Re: [PATCH 01/10] mmc: sdhci: Add quirk SDHCI_QUIRK2_SET_BUS_VOLTAGE
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
-Cc:     ulf.hansson@linaro.org, f.fainelli@gmail.com, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 06 Mar 2020 13:40:54 +0100
-In-Reply-To: <55ef25ae-5c73-7778-dfda-976809cf9fe6@intel.com>
-References: <20200306103857.23962-1-nsaenzjulienne@suse.de>
-         <20200306103857.23962-2-nsaenzjulienne@suse.de>
-         <55ef25ae-5c73-7778-dfda-976809cf9fe6@intel.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-1lAvgayd9GrTsqnjjrF7"
-User-Agent: Evolution 3.34.4 
+        Fri, 6 Mar 2020 07:41:26 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46451 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbgCFMlZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 07:41:25 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a22so2333545oid.13;
+        Fri, 06 Mar 2020 04:41:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C7/8UfpcQCiN90TR5rRqxibvlhXF5Mt2BA1c7KeP18M=;
+        b=Jvy1Af74iMiqRleNjcT1vAEE4fmVK1Wz6t+x70h4GgyrFDTD1wBWKlPRNp2/Dr24Ys
+         DcVxlQpwZTqlIDXiwZAVjaEKXODo9Z31ZlcjYt5Rp9t377lqPxD4YBVTfSlUkXhfl+mB
+         kFGQ9mparWndpuOfehbj3FOKFkv8OxXayh55mcf7VcH/4Qn3FtLY5223/frbq4M2N+WZ
+         hwmLal7mVPdvh+kDoUXzeo1ip0Ur4/WYugltyY4tGsEzZsZ+5FCrD0NoBMTqN26TjfX2
+         9Vc7pw+oPNr+MkgQ5cuj9LDFcyPGegZTql0vQjEWwZZKgyOkjMoOH/t0fzeXytnt7UA+
+         rQmQ==
+X-Gm-Message-State: ANhLgQ06y5ozGBWv6vr6UJcAyVYzw+fiLI72IZ6YhdOBARfc/RfR0/T2
+        wTqoEYbJTgVCy/Q4MMXq7qTmr8t2DtJWpF+kkWw=
+X-Google-Smtp-Source: ADFU+vvFX93FQt/K5Y/NK1W5n/Rkjy+IGlDMjymnBd+wtV2G0VFU7RzvCgKX4HHOXk86z4FvGXCbRuKcufXWvp0EUZE=
+X-Received: by 2002:aca:ac4c:: with SMTP id v73mr2492413oie.102.1583498483747;
+ Fri, 06 Mar 2020 04:41:23 -0800 (PST)
 MIME-Version: 1.0
+References: <20200305103228.9686-1-zhang.lyra@gmail.com> <20200305103228.9686-2-zhang.lyra@gmail.com>
+In-Reply-To: <20200305103228.9686-2-zhang.lyra@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 6 Mar 2020 13:41:11 +0100
+Message-ID: <CAMuHMdU-gAhupHotQTHAZfopkGF_jQc-VrVxb24caw_BfzWd6g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tty: serial: make SERIAL_SPRD not depend on ARCH_SPRD
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Chunyan,
 
---=-1lAvgayd9GrTsqnjjrF7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Mar 5, 2020 at 11:33 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> Remove the dependency with ARCH_SPRD from sprd serial/console Kconfig-s,
+> since we want them can be built-in when ARCH_SPRD is set as 'm'.
 
-On Fri, 2020-03-06 at 14:34 +0200, Adrian Hunter wrote:
-> On 6/03/20 12:38 pm, Nicolas Saenz Julienne wrote:
-> > Adds quirk for controllers whose bus power select register has to be se=
-t
-> > even when powering SD cards from a regulator.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >  drivers/mmc/host/sdhci.c | 5 +++++
-> >  drivers/mmc/host/sdhci.h | 2 ++
-> >  2 files changed, 7 insertions(+)
-> >=20
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index c59566363a42..c7fd87447457 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -1920,6 +1920,11 @@ static void sdhci_set_power_reg(struct sdhci_hos=
-t
-> > *host, unsigned char mode,
-> > =20
-> >  	mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
-> > =20
-> > +	if (host->quirks2 & SDHCI_QUIRK2_SET_BUS_VOLTAGE) {
->=20
-> We don't really want to replace callbacks by quirks.
->=20
-> Replace sdhci_milbeaut_set_power() etc by a common fn in sdhci.c if you w=
-ant.
+Why would you want a serial driver for a specific platform to be builtin,
+while all other platform support is modular?
 
-Ok, fair enough.
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> ---
+>  drivers/tty/serial/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 52eaac21ff9f..2b9addc0afb5 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -1452,7 +1452,6 @@ config SERIAL_MEN_Z135
+>
+>  config SERIAL_SPRD
+>         tristate "Support for Spreadtrum serial"
+> -       depends on ARCH_SPRD
+>         select SERIAL_CORE
+>         help
+>           This enables the driver for the Spreadtrum's serial.
 
-Regards,
-Nicolas
+Gr{oetje,eeting}s,
 
->=20
-> > +		sdhci_set_power_noreg(host, mode, vdd);
-> > +		return;
-> > +	}
-> > +
-> >  	if (mode !=3D MMC_POWER_OFF)
-> >  		sdhci_writeb(host, SDHCI_POWER_ON, SDHCI_POWER_CONTROL);
-> >  	else
-> > diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> > index cac2d97782e6..9531a4e5b148 100644
-> > --- a/drivers/mmc/host/sdhci.h
-> > +++ b/drivers/mmc/host/sdhci.h
-> > @@ -484,6 +484,8 @@ struct sdhci_host {
-> >   * block count.
-> >   */
-> >  #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
-> > +/* Set bus voltage even when powering from an external regulator */
-> > +#define SDHCI_QUIRK2_SET_BUS_VOLTAGE			(1<<19)
-> > =20
-> >  	int irq;		/* Device IRQ */
-> >  	void __iomem *ioaddr;	/* Mapped address */
-> >=20
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---=-1lAvgayd9GrTsqnjjrF7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5iRNYACgkQlfZmHno8
-x/5h5Af8C26SwoE7s5IkeLA0S3BV9MJtqzvOsBo2x+myRwpvvktRc+f2sVpkjQT/
-lIpr4k4mxiaDiTaxmtYRIgXCtz4Hq9T6kfJXwVcnQeAVu3z9BAYqUVqsWG2uGQra
-j/mdMmNvuvJQsMds327CuCGyg/FTp0rFueCELZrMzTTO60chert7/bE85LZbeErF
-+xmR9+1JvMBTGx818rp3/SA95S9VlPf9z3dRqpKIvmSkSMom23GoGYa1/NFVzyi3
-q36vAQ7D074JsmbG0D3L7W8B1Bo6yvKihw0tnVzsy1MS5w1sIF6YZac3tpnxuFgt
-lSgKWktx6E+gN1k/1uujvRqyJ3MsOw==
-=jDxC
------END PGP SIGNATURE-----
-
---=-1lAvgayd9GrTsqnjjrF7--
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
