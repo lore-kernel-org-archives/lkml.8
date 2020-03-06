@@ -7,43 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30C7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6D4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59172146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A071208CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCFOmR (ORCPT
+        id S1727566AbgCFOnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:42:17 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53748 "EHLO
+        Fri, 6 Mar 2020 09:43:33 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53798 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgCFOmL (ORCPT
+        with ESMTP id S1727097AbgCFOmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:42:11 -0500
+        Fri, 6 Mar 2020 09:42:17 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEAv-0006Hm-5C; Fri, 06 Mar 2020 15:42:05 +0100
+        id 1jAEB2-0006KN-Dl; Fri, 06 Mar 2020 15:42:12 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C4F931C21D5;
-        Fri,  6 Mar 2020 15:42:04 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:04 -0000
-From:   "tip-bot2 for Qais Yousef" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7D4221C21DC;
+        Fri,  6 Mar 2020 15:42:08 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:08 -0000
+From:   "tip-bot2 for Thara Gopinath" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/rt: Optimize cpupri_find() on
- non-heterogenous systems
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>,
+Subject: [tip: sched/core] sched/fair: Enable tuning of decay period
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200302132721.8353-4-qais.yousef@arm.com>
-References: <20200302132721.8353-4-qais.yousef@arm.com>
+In-Reply-To: <20200222005213.3873-10-thara.gopinath@linaro.org>
+References: <20200222005213.3873-10-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158350572453.28353.9922528021955517987.tip-bot2@tip-bot2>
+Message-ID: <158350572817.28353.10208505701731851476.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,134 +57,132 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     a1bd02e1f28b1939cac8c64072a0e578c3cbc345
-Gitweb:        https://git.kernel.org/tip/a1bd02e1f28b1939cac8c64072a0e578c3cbc345
-Author:        Qais Yousef <qais.yousef@arm.com>
-AuthorDate:    Mon, 02 Mar 2020 13:27:18 
+Commit-ID:     05289b90c2e40ae80f5c70431cd0be4cc8a6038d
+Gitweb:        https://git.kernel.org/tip/05289b90c2e40ae80f5c70431cd0be4cc8a6038d
+Author:        Thara Gopinath <thara.gopinath@linaro.org>
+AuthorDate:    Fri, 21 Feb 2020 19:52:13 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 12:57:27 +01:00
+CommitterDate: Fri, 06 Mar 2020 12:57:21 +01:00
 
-sched/rt: Optimize cpupri_find() on non-heterogenous systems
+sched/fair: Enable tuning of decay period
 
-By introducing a new cpupri_find_fitness() function that takes the
-fitness_fn as an argument and only called when asym_system static key is
-enabled.
+Thermal pressure follows pelt signals which means the decay period for
+thermal pressure is the default pelt decay period. Depending on SoC
+characteristics and thermal activity, it might be beneficial to decay
+thermal pressure slower, but still in-tune with the pelt signals.  One way
+to achieve this is to provide a command line parameter to set a decay
+shift parameter to an integer between 0 and 10.
 
-cpupri_find() is now a wrapper function that calls cpupri_find_fitness()
-passing NULL as a fitness_fn, hence disabling the logic that handles
-fitness by default.
-
-LINK: https://lore.kernel.org/lkml/c0772fca-0a4b-c88d-fdf2-5715fcf8447b@arm.com/
-Reported-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Fixes: 804d402fb6f6 ("sched/rt: Make RT capacity-aware")
-Link: https://lkml.kernel.org/r/20200302132721.8353-4-qais.yousef@arm.com
+Link: https://lkml.kernel.org/r/20200222005213.3873-10-thara.gopinath@linaro.org
 ---
- kernel/sched/cpupri.c | 10 ++++++++--
- kernel/sched/cpupri.h |  6 ++++--
- kernel/sched/rt.c     | 23 +++++++++++++++++++----
- 3 files changed, 31 insertions(+), 8 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 16 ++++++++++++++-
+ kernel/sched/core.c                             |  2 +-
+ kernel/sched/fair.c                             | 15 ++++++++++++-
+ kernel/sched/sched.h                            | 18 ++++++++++++++++-
+ 4 files changed, 49 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/cpupri.c b/kernel/sched/cpupri.c
-index 1bcfa19..dd3f16d 100644
---- a/kernel/sched/cpupri.c
-+++ b/kernel/sched/cpupri.c
-@@ -94,8 +94,14 @@ static inline int __cpupri_find(struct cpupri *cp, struct task_struct *p,
- 	return 1;
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index c07815d..dac8245 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4392,6 +4392,22 @@
+ 			incurs a small amount of overhead in the scheduler
+ 			but is useful for debugging and performance tuning.
+ 
++	sched_thermal_decay_shift=
++			[KNL, SMP] Set a decay shift for scheduler thermal
++			pressure signal. Thermal pressure signal follows the
++			default decay period of other scheduler pelt
++			signals(usually 32 ms but configurable). Setting
++			sched_thermal_decay_shift will left shift the decay
++			period for the thermal pressure signal by the shift
++			value.
++			i.e. with the default pelt decay period of 32 ms
++			sched_thermal_decay_shift   thermal pressure decay pr
++				1			64 ms
++				2			128 ms
++			and so on.
++			Format: integer between 0 and 10
++			Default is 0.
++
+ 	skew_tick=	[KNL] Offset the periodic timer tick per cpu to mitigate
+ 			xtime_lock contention on larger systems, and/or RCU lock
+ 			contention on all systems with CONFIG_MAXSMP set.
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3e620fe..4d76df3 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3595,7 +3595,7 @@ void scheduler_tick(void)
+ 
+ 	update_rq_clock(rq);
+ 	thermal_pressure = arch_scale_thermal_pressure(cpu_of(rq));
+-	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
++	update_thermal_load_avg(rq_clock_thermal(rq), rq, thermal_pressure);
+ 	curr->sched_class->task_tick(rq, curr, 0);
+ 	calc_global_load_tick(rq);
+ 	psi_task_tick(rq);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index aa51286..79bb423 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -86,6 +86,19 @@ static unsigned int normalized_sysctl_sched_wakeup_granularity	= 1000000UL;
+ 
+ const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
+ 
++int sched_thermal_decay_shift;
++static int __init setup_sched_thermal_decay_shift(char *str)
++{
++	int _shift = 0;
++
++	if (kstrtoint(str, 0, &_shift))
++		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
++
++	sched_thermal_decay_shift = clamp(_shift, 0, 10);
++	return 1;
++}
++__setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
++
+ #ifdef CONFIG_SMP
+ /*
+  * For asym packing, by default the lower numbered CPU has higher priority.
+@@ -7760,7 +7773,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
+ 
+ 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
+ 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
+-		  update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure) |
++		  update_thermal_load_avg(rq_clock_thermal(rq), rq, thermal_pressure) |
+ 		  update_irq_load_avg(rq, 0);
+ 
+ 	if (others_have_blocked(rq))
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 6c839f8..7f1a85b 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1127,6 +1127,24 @@ static inline u64 rq_clock_task(struct rq *rq)
+ 	return rq->clock_task;
  }
  
-+int cpupri_find(struct cpupri *cp, struct task_struct *p,
-+		struct cpumask *lowest_mask)
++/**
++ * By default the decay is the default pelt decay period.
++ * The decay shift can change the decay period in
++ * multiples of 32.
++ *  Decay shift		Decay period(ms)
++ *	0			32
++ *	1			64
++ *	2			128
++ *	3			256
++ *	4			512
++ */
++extern int sched_thermal_decay_shift;
++
++static inline u64 rq_clock_thermal(struct rq *rq)
 +{
-+	return cpupri_find_fitness(cp, p, lowest_mask, NULL);
++	return rq_clock_task(rq) >> sched_thermal_decay_shift;
 +}
 +
- /**
-- * cpupri_find - find the best (lowest-pri) CPU in the system
-+ * cpupri_find_fitness - find the best (lowest-pri) CPU in the system
-  * @cp: The cpupri context
-  * @p: The task
-  * @lowest_mask: A mask to fill in with selected CPUs (or NULL)
-@@ -111,7 +117,7 @@ static inline int __cpupri_find(struct cpupri *cp, struct task_struct *p,
-  *
-  * Return: (int)bool - CPUs were found
-  */
--int cpupri_find(struct cpupri *cp, struct task_struct *p,
-+int cpupri_find_fitness(struct cpupri *cp, struct task_struct *p,
- 		struct cpumask *lowest_mask,
- 		bool (*fitness_fn)(struct task_struct *p, int cpu))
+ static inline void rq_clock_skip_update(struct rq *rq)
  {
-diff --git a/kernel/sched/cpupri.h b/kernel/sched/cpupri.h
-index 32dd520..efbb492 100644
---- a/kernel/sched/cpupri.h
-+++ b/kernel/sched/cpupri.h
-@@ -19,8 +19,10 @@ struct cpupri {
- 
- #ifdef CONFIG_SMP
- int  cpupri_find(struct cpupri *cp, struct task_struct *p,
--		 struct cpumask *lowest_mask,
--		 bool (*fitness_fn)(struct task_struct *p, int cpu));
-+		 struct cpumask *lowest_mask);
-+int  cpupri_find_fitness(struct cpupri *cp, struct task_struct *p,
-+			 struct cpumask *lowest_mask,
-+			 bool (*fitness_fn)(struct task_struct *p, int cpu));
- void cpupri_set(struct cpupri *cp, int cpu, int pri);
- int  cpupri_init(struct cpupri *cp);
- void cpupri_cleanup(struct cpupri *cp);
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index f0071fa..29a8695 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -1504,7 +1504,7 @@ static void check_preempt_equal_prio(struct rq *rq, struct task_struct *p)
- 	 * let's hope p can move out.
- 	 */
- 	if (rq->curr->nr_cpus_allowed == 1 ||
--	    !cpupri_find(&rq->rd->cpupri, rq->curr, NULL, NULL))
-+	    !cpupri_find(&rq->rd->cpupri, rq->curr, NULL))
- 		return;
- 
- 	/*
-@@ -1512,7 +1512,7 @@ static void check_preempt_equal_prio(struct rq *rq, struct task_struct *p)
- 	 * see if it is pushed or pulled somewhere else.
- 	 */
- 	if (p->nr_cpus_allowed != 1 &&
--	    cpupri_find(&rq->rd->cpupri, p, NULL, NULL))
-+	    cpupri_find(&rq->rd->cpupri, p, NULL))
- 		return;
- 
- 	/*
-@@ -1691,6 +1691,7 @@ static int find_lowest_rq(struct task_struct *task)
- 	struct cpumask *lowest_mask = this_cpu_cpumask_var_ptr(local_cpu_mask);
- 	int this_cpu = smp_processor_id();
- 	int cpu      = task_cpu(task);
-+	int ret;
- 
- 	/* Make sure the mask is initialized first */
- 	if (unlikely(!lowest_mask))
-@@ -1699,8 +1700,22 @@ static int find_lowest_rq(struct task_struct *task)
- 	if (task->nr_cpus_allowed == 1)
- 		return -1; /* No other targets possible */
- 
--	if (!cpupri_find(&task_rq(task)->rd->cpupri, task, lowest_mask,
--			 rt_task_fits_capacity))
-+	/*
-+	 * If we're on asym system ensure we consider the different capacities
-+	 * of the CPUs when searching for the lowest_mask.
-+	 */
-+	if (static_branch_unlikely(&sched_asym_cpucapacity)) {
-+
-+		ret = cpupri_find_fitness(&task_rq(task)->rd->cpupri,
-+					  task, lowest_mask,
-+					  rt_task_fits_capacity);
-+	} else {
-+
-+		ret = cpupri_find(&task_rq(task)->rd->cpupri,
-+				  task, lowest_mask);
-+	}
-+
-+	if (!ret)
- 		return -1; /* No targets found */
- 
- 	/*
+ 	lockdep_assert_held(&rq->lock);
