@@ -2,113 +2,142 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D579DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97576C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC5D2067C
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F1C206D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sjFW+gce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCFSGS (ORCPT
+        id S1726382AbgCFSIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:06:18 -0500
-Received: from mga02.intel.com ([134.134.136.20]:21379 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgCFSGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:06:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 10:06:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="275627704"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 10:06:16 -0800
-To:     Aaron Lu <aaron.lwe@gmail.com>, Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
- <20200212230705.GA25315@sinkpad>
- <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
- <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
- <20200225034438.GA617271@ziqianlu-desktop.localdomain>
- <CANaguZD205ccu1V_2W-QuMRrJA9SjJ5ng1do4NCdLy8NDKKrbA@mail.gmail.com>
- <20200227020432.GA628749@ziqianlu-desktop.localdomain>
- <20200227141032.GA30178@pauld.bos.csb>
- <20200228025405.GA634650@ziqianlu-desktop.localdomain>
- <CAERHkrunq=BqB=NmS2b_BfjePX2+nNpbv1EfTWw5rExbvYHyJw@mail.gmail.com>
- <20200306024116.GA16400@ziqianlu-desktop.localdomain>
-From:   Tim Chen <tim.c.chen@linux.intel.com>
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
-Message-ID: <98719a4e-f620-dc8c-f29f-fd63c43e1597@linux.intel.com>
-Date:   Fri, 6 Mar 2020 10:06:16 -0800
+        Fri, 6 Mar 2020 13:08:11 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36346 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgCFSIL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:08:11 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d9so1439444pgu.3;
+        Fri, 06 Mar 2020 10:08:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uRRhoIexAhvoOgXcqq8b6k7wac3zPyn43UDEJ9y4pGA=;
+        b=sjFW+gcecu4XZ6aJ447DsrKmCqUI0zgVQeNBvdQv/hO5MP7ciuCp1MKx9M1IqRzVE2
+         YrA/7UWDzx8472Y4QSf6uTjO0JIISYSAfiL8CsjPes/g7wXNeksu8vD30r7vuK2jckrX
+         N4jY0L32w8ia8XhsZf+Q4M52YmACcmzSPnGvexWFkPC0yKtmvyK1IzN36j1yIN0kw5X9
+         oOi6z908IIIIN0x7OzF7aCCjfzVJSpRrBsP4yzi/e75f78VUmaPxF6uHuHofiLfWGnEC
+         lgsrTEkHyiPT3sl/5PrEN8+wAn4HwK4NOoGwwAJedHvZxetXEz3XRSHR0S/UFSg3Om2q
+         4rWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=uRRhoIexAhvoOgXcqq8b6k7wac3zPyn43UDEJ9y4pGA=;
+        b=WVc9S6LxcsBN7s9YFp+NpEHpw+OWYjqj0OZSp4dRYTF2GNmzmOJGE5PK2Bl51qPjte
+         rB1uNnMKLenJY46aFuY+NjjZ+cQGYl8yFC1h3vHOpc7uMjR4xi4IFm08NUUu4WiqY0nV
+         dkZgL+DOLwg7gfEpiq3jg2okdvnLg22o2K8jdCy/Qfbn3qokV+JGq3nlwOj9jVuYINfy
+         OgDEs7I6SrNjGMmIBRYTQJbEVxeyK0SyOisICMAWt1K6zwDz0DAtK4UwqNF5HToMbkA8
+         j9nFgAkYh159bq6uYxsNP7WfZS4upptuBNHUXpwHfllUHcyxgS2BAzDHThzrR3IE6A+h
+         gqNQ==
+X-Gm-Message-State: ANhLgQ1JtTbDXqiQbtu8JFPvAQa4+9izogxgFs50VaC14TMKpPjP18G0
+        xgLmwkGrxi8wdaBZ76g2c+Sc4EkO
+X-Google-Smtp-Source: ADFU+vugFTSbG5KIJpgnnDcXPrPNxziAQAk2LyVAOTkN4qjlJnLJk15YosTEENl8Gk4T4ptV61Hwow==
+X-Received: by 2002:a65:644c:: with SMTP id s12mr4404813pgv.165.1583518087733;
+        Fri, 06 Mar 2020 10:08:07 -0800 (PST)
+Received: from [10.67.48.239] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id f4sm982055pfn.116.2020.03.06.10.08.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Mar 2020 10:08:07 -0800 (PST)
+Subject: Re: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
+To:     Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <1583201219-15839-1-git-send-email-peng.fan@nxp.com>
+ <1583201219-15839-3-git-send-email-peng.fan@nxp.com>
+ <20200304103954.GA25004@bogus>
+ <AM0PR04MB4481A6DB7339C22A848DAFC988E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <AM0PR04MB44814B71E92C02956F4BED4588E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200304170319.GB44525@bogus>
+ <AM0PR04MB4481B90D03D1F68573B05BE088E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200305160613.GA53631@bogus>
+ <d9734fd6-f855-296b-3a0b-ffc45ed0e3cb@gmail.com>
+ <AM0PR04MB448167BD133BF57E548F2F0588E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200306123442.GA47929@bogus>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <7e4eee97-3ce7-a421-b08e-54092213dc7c@gmail.com>
+Date:   Fri, 6 Mar 2020 10:08:05 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200306024116.GA16400@ziqianlu-desktop.localdomain>
+In-Reply-To: <20200306123442.GA47929@bogus>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -117,27 +146,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 6:41 PM, Aaron Lu wrote:
+On 3/6/20 6:23 AM, Sudeep Holla wrote:
+> On Fri, Mar 06, 2020 at 08:07:19AM +0000, Peng Fan wrote:
+>>> Subject: Re: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
+>>>
+>>> On 3/5/20 8:06 AM, Sudeep Holla wrote:
+>>>> On Thu, Mar 05, 2020 at 11:25:35AM +0000, Peng Fan wrote:
+>>>>
+>>>> [...]
+>>>>
+>>>>>>
+>>>>>> Yes, this may fix the issue. However I would like to know if we need
+>>>>>> to support multiple channels/shared memory simultaneously. It is
+>>>>>> fair requirement and may need some work which should be fine.
+>>>>>
+>>>>> Do you have any suggestions? Currently I have not worked out an good
+>>>>> solution.
+>>>>>
+>>>>
+>>>> TBH, I haven't given it a much thought. I would like to know if people
+>>>> are happy with just one SMC channel for SCMI or do they need more ?
+>>>> If they need it, we can try to solve it. Otherwise, what you have will
+>>>> suffice IMO.
+>>>
+>>> On our platforms we have one channel/shared memory area/mailbox
+>>> instance for all standard SCMI protocols, and we have a separate
+>>> channel/shared memory area/mailbox driver instance for a proprietary one.
+>>> They happen to have difference throughput requirements, hence the split.
+>>>
+> 
+> OK, when you refer proprietary protocol, do you mean outside the scope of
+> SCMI ? The reason I ask is SCMI allows vendor specific protocols and if
+> you are using other channel for that, it still make sense to add
+> multi-channel support here.
 
->>> So this appeared to me like a question of: is it desirable to protect/enhance
->>> high weight task performance in the presence of core scheduling?
+Sorry this was not clear, I meant a protocol ID which is in the 0x80 -
+0xFF range. We are using one pair of channels (rx and tx) plus shared
+memory area for the standard SCMI protocol numbers, and we have another
+pair of rx/tx channels and shared memory area for this vendor specific
+protocol.
+
+Maybe providing the Device Tree entries would be clearer, so this is
+what it looks like (this is the output from the bootloader generated
+Device Tree):
+
+
+/       brcm_scmi_mailbox@0 {
+                #mbox-cells = <0x1>;
+                compatible = "brcm,brcmstb-mbox";
+                status = "disabled";
+                linux,phandle = <0xe>;
+                phandle = <0xe>;
+        };
+
+        brcm_scmi@0 {
+                compatible = "arm,scmi";
+                mboxes = <0xe 0x0 0xe 0x1>;
+                mbox-names = "tx", "rx";
+                shmem = <0xf>;
+                status = "disabled";
+                #address-cells = <0x1>;
+                #size-cells = <0x0>;
+
+                protocol@13 {
+                        reg = <0x13>;
+                };
+
+                protocol@14 {
+                        reg = <0x14>;
+                        #clock-cells = <0x1>;
+                        linux,phandle = <0x3>;
+                        phandle = <0x3>;
+                };
+
+                protocol@15 {
+                        reg = <0x15>;
+                        #sensor-cells = <0x1>;
+                        #thermal-sensor-cells = <0x1>;
+                        linux,phandle = <0x12>;
+                        phandle = <0x12>;
+                };
+
+                protocol@80 {
+                        reg = <0x80>;
+                };
+        };
+
+        brcm_scmi_mailbox@1 {
+                #mbox-cells = <0x1>;
+                compatible = "brcm,brcmstb-mbox";
+                status = "disabled";
+                linux,phandle = <0x10>;
+                phandle = <0x10>;
+        };
+
+        brcm_scmi@1 {
+                compatible = "arm,scmi";
+                mboxes = <0x10 0x0 0x10 0x1>;
+                mbox-names = "tx", "rx";
+                shmem = <0x11>;
+                status = "disabled";
+                #address-cells = <0x1>;
+                #size-cells = <0x0>;
+
+                protocol@82 {
+                        reg = <0x82>;
+                };
+        };
+
+
+> 
+>>> If I read Peng's submission correctly, it seems to me that the usage model
+>>> described before is still fine.
 >>
->> This sounds to me a policy VS mechanism question. Do you have any idea
->> how to spread high weight task among the cores with coresched enabled?
+>> Thanks.
+>>
+>> Sudeep,
+>>
+>> Then should I repost with the global mutex added?
+>>
 > 
-> Yes I would like to get us on the same page of the expected behaviour
-> before jumping to the implementation details. As for how to achieve
-> that: I'm thinking about to make core wide load balanced and then high
-> weight task shall spread on different cores. This isn't just about load
-> balance, the initial task placement will also need to be considered of
-> course if the high weight task only runs a small period.
+> Sure, you can send the updated. I will think about adding support for more
+> than one channel and send a patch on top of it if I get around it.
+> 
+> Note that I sent PR for v5.7 last earlier this week, so this will be for v5.8
+> 
+> --
+> Regards,
+> Sudeep
 > 
 
-I am wondering why this is not happening:  
 
-When the low weight task group has exceeded its cfs allocation during a cfs period, the task group
-should be throttled.  In that case, the CPU cores that the low
-weight task group occupies will become idle, and allow load balance from the
-overloaded CPUs for the high weight task group to migrate over.  
-
-Tim
+-- 
+Florian
