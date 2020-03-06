@@ -4,35 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE6DC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F62C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA2E2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C90D2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgCFA7U (ORCPT
+        id S1727049AbgCFA7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 19:59:20 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:57363 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFA7U (ORCPT
+        Thu, 5 Mar 2020 19:59:21 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:59973 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgCFA7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 19:59:20 -0500
-X-Originating-IP: 86.202.105.35
+        Thu, 5 Mar 2020 19:59:21 -0500
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 9D81DE0002;
-        Fri,  6 Mar 2020 00:59:18 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 981CD200004;
+        Fri,  6 Mar 2020 00:59:19 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] rtc: starfire: set range
-Date:   Fri,  6 Mar 2020 01:59:09 +0100
-Message-Id: <20200306005910.38939-1-alexandre.belloni@bootlin.com>
+Subject: [PATCH 2/2] rtc: starfire: switch to rtc_time64_to_tm
+Date:   Fri,  6 Mar 2020 01:59:10 +0100
+Message-Id: <20200306005910.38939-2-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200306005910.38939-1-alexandre.belloni@bootlin.com>
+References: <20200306005910.38939-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -40,37 +41,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The starfire RTC is a 32bit seconds counter.
+Call the 64bit version of rtc_tm time conversion.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-starfire.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-starfire.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/rtc/rtc-starfire.c b/drivers/rtc/rtc-starfire.c
-index a7d49329d626..f21f4f961f3a 100644
+index f21f4f961f3a..37a26279e107 100644
 --- a/drivers/rtc/rtc-starfire.c
 +++ b/drivers/rtc/rtc-starfire.c
-@@ -39,14 +39,16 @@ static int __init starfire_rtc_probe(struct platform_device *pdev)
+@@ -27,7 +27,7 @@ static u32 starfire_get_time(void)
+ 
+ static int starfire_read_time(struct device *dev, struct rtc_time *tm)
  {
- 	struct rtc_device *rtc;
- 
--	rtc = devm_rtc_device_register(&pdev->dev, "starfire",
--				&starfire_rtc_ops, THIS_MODULE);
-+	rtc = devm_rtc_allocate_device(&pdev->dev);
- 	if (IS_ERR(rtc))
- 		return PTR_ERR(rtc);
- 
-+	rtc->ops = &starfire_rtc_ops;
-+	rtc->range_max = U32_MAX;
-+
- 	platform_set_drvdata(pdev, rtc);
- 
--	return 0;
-+	return rtc_register_device(rtc);
+-	rtc_time_to_tm(starfire_get_time(), tm);
++	rtc_time64_to_tm(starfire_get_time(), tm);
+ 	return 0;
  }
  
- static struct platform_driver starfire_rtc_driver = {
 -- 
 2.24.1
 
