@@ -2,109 +2,267 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E473C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885EEC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55F520637
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB6C20637
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgCFShO (ORCPT
+        id S1726682AbgCFShU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:37:14 -0500
-Received: from mga12.intel.com ([192.55.52.136]:28577 "EHLO mga12.intel.com"
+        Fri, 6 Mar 2020 13:37:20 -0500
+Received: from mga06.intel.com ([134.134.136.31]:19157 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCFShO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:37:14 -0500
+        id S1725873AbgCFShT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:37:19 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 10:37:14 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 10:37:18 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="275637536"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 10:37:13 -0800
-Message-ID: <070d9d78981f0aad2baf740233e8dfc32ecd29d7.camel@intel.com>
-Subject: Re: [RFC PATCH v9 05/27] x86/cet/shstk: Add Kconfig option for
- user-mode Shadow Stack protection
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Date:   Fri, 06 Mar 2020 10:37:13 -0800
-In-Reply-To: <d4dabb84-5636-2657-c45e-795f3f2dcbbc@intel.com>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
-         <20200205181935.3712-6-yu-cheng.yu@intel.com>
-         <d4dabb84-5636-2657-c45e-795f3f2dcbbc@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+   d="scan'208";a="244686470"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 06 Mar 2020 10:37:18 -0800
+Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
+        by linux.intel.com (Postfix) with ESMTP id D020C580298;
+        Fri,  6 Mar 2020 10:37:17 -0800 (PST)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [patch 6/7] genirq: Provide interrupt injection mechanism
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>
+References: <20200306130341.199467200@linutronix.de>
+ <20200306130623.990928309@linutronix.de>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <4729cdaf-8a51-6f22-ea75-4055a59747df@linux.intel.com>
+Date:   Fri, 6 Mar 2020 10:34:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200306130623.990928309@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 10:05 -0800, Dave Hansen wrote:
-> On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
-> > +# Check assembler Shadow Stack suppot
-> 
-> 				  ^ support
-> 
-> > +ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-> > +  ifeq ($(call as-instr, saveprevssp, y),)
-> > +      $(error CONFIG_X86_INTEL_SHADOW_STACK_USER not supported by the assembler)
-> > +  endif
-> > +endif
-> 
-> Is this *just* looking for instruction support in the assembler?
-> 
-> We usually just .byte them, like this for pkeys:
-> 
->         asm volatile(".byte 0x0f,0x01,0xee\n\t"
->                      : "=a" (pkru), "=d" (edx)
->                      : "c" (ecx));
-> 
-> That way everybody with old toolchains can still build the kernel (and
-> run/test code with your config option on, btw...).
+Hi,
 
-We used to do this for CET instructions, but after adding kernel-mode
-instructions and inserting ENDBR's, the code becomes cluttered.  I also
-found an earlier discussion on the ENDBR:
-
-https://lore.kernel.org/lkml/CALCETrVRH8LeYoo7V1VBPqg4WS0Enxtizt=T7dPvgoeWfJrdzA@mail.gmail.com/
-
-It makes sense to let the user know early on that the system cannot support
-CET and cannot build a CET-enabled kernel.
-
-One thing we can do is to disable CET in Kconfig and not in kernel
-build, which I will do in the next version.
-
-Yu-cheng
+On 3/6/20 5:03 AM, Thomas Gleixner wrote:
+> Error injection mechanisms need a half ways safe way to inject interrupts as
+> invoking generic_handle_irq() or the actual device interrupt handler
+> directly from e.g. a debugfs write is not guaranteed to be safe.
+>
+> On x86 generic_handle_irq() is unsafe due to the hardware trainwreck which
+> is the base of x86 interrupt delivery and affinity management.
+>
+> Move the irq debugfs injection code into a separate function which can be
+> used by error injection code as well.
+>
+> The implementation prevents at least that state is corrupted, but it cannot
+> close a very tiny race window on x86 which might result in a stale and not
+> serviced device interrupt under very unlikely circumstances.
+>
+> This is explicitly for debugging and testing and not for production use or
+> abuse in random driver code.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
+Tested-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>   include/linux/interrupt.h |    2 +
+>   kernel/irq/Kconfig        |    5 ++++
+>   kernel/irq/chip.c         |    2 -
+>   kernel/irq/debugfs.c      |   34 -----------------------------
+>   kernel/irq/internals.h    |    2 -
+>   kernel/irq/resend.c       |   53 ++++++++++++++++++++++++++++++++++++++++++++--
+>   6 files changed, 61 insertions(+), 37 deletions(-)
+>
+> --- a/include/linux/interrupt.h
+> +++ b/include/linux/interrupt.h
+> @@ -248,6 +248,8 @@ extern void enable_percpu_nmi(unsigned i
+>   extern int prepare_percpu_nmi(unsigned int irq);
+>   extern void teardown_percpu_nmi(unsigned int irq);
+>   
+> +extern int irq_inject_interrupt(unsigned int irq);
+> +
+>   /* The following three functions are for the core kernel use only. */
+>   extern void suspend_device_irqs(void);
+>   extern void resume_device_irqs(void);
+> --- a/kernel/irq/Kconfig
+> +++ b/kernel/irq/Kconfig
+> @@ -43,6 +43,10 @@ config GENERIC_IRQ_MIGRATION
+>   config AUTO_IRQ_AFFINITY
+>          bool
+>   
+> +# Interrupt injection mechanism
+> +config GENERIC_IRQ_INJECTION
+> +	bool
+> +
+>   # Tasklet based software resend for pending interrupts on enable_irq()
+>   config HARDIRQS_SW_RESEND
+>          bool
+> @@ -127,6 +131,7 @@ config SPARSE_IRQ
+>   config GENERIC_IRQ_DEBUGFS
+>   	bool "Expose irq internals in debugfs"
+>   	depends on DEBUG_FS
+> +	select GENERIC_IRQ_INJECTION
+>   	default n
+>   	---help---
+>   
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -278,7 +278,7 @@ int irq_startup(struct irq_desc *desc, b
+>   		}
+>   	}
+>   	if (resend)
+> -		check_irq_resend(desc);
+> +		check_irq_resend(desc, false);
+>   
+>   	return ret;
+>   }
+> --- a/kernel/irq/debugfs.c
+> +++ b/kernel/irq/debugfs.c
+> @@ -190,39 +190,7 @@ static ssize_t irq_debug_write(struct fi
+>   		return -EFAULT;
+>   
+>   	if (!strncmp(buf, "trigger", size)) {
+> -		unsigned long flags;
+> -		int err;
+> -
+> -		/* Try the HW interface first */
+> -		err = irq_set_irqchip_state(irq_desc_get_irq(desc),
+> -					    IRQCHIP_STATE_PENDING, true);
+> -		if (!err)
+> -			return count;
+> -
+> -		/*
+> -		 * Otherwise, try to inject via the resend interface,
+> -		 * which may or may not succeed.
+> -		 */
+> -		chip_bus_lock(desc);
+> -		raw_spin_lock_irqsave(&desc->lock, flags);
+> -
+> -		/*
+> -		 * Don't allow injection when the interrupt is:
+> -		 *  - Level or NMI type
+> -		 *  - not activated
+> -		 *  - replaying already
+> -		 */
+> -		if (irq_settings_is_level(desc) ||
+> -		    !irqd_is_activated(&desc->irq_data) ||
+> -		    (desc->istate & (IRQS_NMI | IRQS_REPLAY)) {
+> -			err = -EINVAL;
+> -		} else {
+> -			desc->istate |= IRQS_PENDING;
+> -			err = check_irq_resend(desc);
+> -		}
+> -
+> -		raw_spin_unlock_irqrestore(&desc->lock, flags);
+> -		chip_bus_sync_unlock(desc);
+> +		int err = irq_inject_interrupt(irq_desc_get_irq(desc));
+>   
+>   		return err ? err : count;
+>   	}
+> --- a/kernel/irq/internals.h
+> +++ b/kernel/irq/internals.h
+> @@ -108,7 +108,7 @@ irqreturn_t handle_irq_event_percpu(stru
+>   irqreturn_t handle_irq_event(struct irq_desc *desc);
+>   
+>   /* Resending of interrupts :*/
+> -int check_irq_resend(struct irq_desc *desc);
+> +int check_irq_resend(struct irq_desc *desc, bool inject);
+>   bool irq_wait_for_poll(struct irq_desc *desc);
+>   void __irq_wake_thread(struct irq_desc *desc, struct irqaction *action);
+>   
+> --- a/kernel/irq/resend.c
+> +++ b/kernel/irq/resend.c
+> @@ -91,7 +91,7 @@ static int irq_sw_resend(struct irq_desc
+>    *
+>    * Is called with interrupts disabled and desc->lock held.
+>    */
+> -int check_irq_resend(struct irq_desc *desc)
+> +int check_irq_resend(struct irq_desc *desc, bool inject)
+>   {
+>   	int err = 0;
+>   
+> @@ -108,7 +108,7 @@ int check_irq_resend(struct irq_desc *de
+>   	if (desc->istate & IRQS_REPLAY)
+>   		return -EBUSY;
+>   
+> -	if (!(desc->istate & IRQS_PENDING))
+> +	if (!(desc->istate & IRQS_PENDING) && !inject)
+>   		return 0;
+>   
+>   	desc->istate &= ~IRQS_PENDING;
+> @@ -122,3 +122,52 @@ int check_irq_resend(struct irq_desc *de
+>   		desc->istate |= IRQS_REPLAY;
+>   	return err;
+>   }
+> +
+> +#ifdef CONFIG_GENERIC_IRQ_INJECTION
+> +/**
+> + * irq_inject_interrupt - Inject an interrupt for testing/error injection
+> + * @irq:	The interrupt number
+> + *
+> + * This function must only be used for debug and testing purposes!
+> + *
+> + * Especially on x86 this can cause a premature completion of an interrupt
+> + * affinity change causing the interrupt line to become stale. Very
+> + * unlikely, but possible.
+> + *
+> + * The injection can fail for various reasons:
+> + * - Interrupt is not activated
+> + * - Interrupt is NMI type or currently replaying
+> + * - Interrupt is level type
+> + * - Interrupt does not support hardware retrigger and software resend is
+> + *   either not enabled or not possible for the interrupt.
+> + */
+> +int irq_inject_interrupt(unsigned int irq)
+> +{
+> +	struct irq_desc *desc;
+> +	unsigned long flags;
+> +	int err;
+> +
+> +	/* Try the state injection hardware interface first */
+> +	if (!irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true))
+> +		return 0;
+> +
+> +	/* That failed, try via the resend mechanism */
+> +	desc = irq_get_desc_buslock(irq, &flags, 0);
+> +	if (!desc)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Only try to inject when the interrupt is:
+> +	 *  - not NMI type
+> +	 *  - activated
+> +	 */
+> +	if ((desc->istate & IRQS_NMI) || !irqd_is_activated(&desc->irq_data))
+> +		err = -EINVAL;
+> +	else
+> +		err = check_irq_resend(desc, true);
+> +
+> +	irq_put_desc_busunlock(desc, flags);
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(irq_inject_interrupt);
+> +#endif
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
