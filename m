@@ -2,97 +2,123 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4EAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8E5C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8AB12072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE1A2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 05:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbgCFFe7 (ORCPT
+        id S1726081AbgCFFhU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 00:34:59 -0500
-Received: from mga06.intel.com ([134.134.136.31]:32132 "EHLO mga06.intel.com"
+        Fri, 6 Mar 2020 00:37:20 -0500
+Received: from mga09.intel.com ([134.134.136.24]:59903 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgCFFe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 00:34:59 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1725829AbgCFFhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 00:37:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 21:34:58 -0800
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 21:37:19 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,520,1574150400"; 
-   d="scan'208";a="352662556"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 05 Mar 2020 21:34:56 -0800
-Received: by lahna (sSMTP sendmail emulation); Fri, 06 Mar 2020 07:34:55 +0200
-Date:   Fri, 6 Mar 2020 07:34:55 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] Revert "thunderbolt: Prevent crash if non-active
- NVMem file is read"
-Message-ID: <20200306053455.GY2540@lahna.fi.intel.com>
-References: <PSXP216MB0438FE68DAAFC23CB9AAD5E180E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <PSXP216MB04388C56BECC4CE5EC81EA2680E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20200303103310.GN2540@lahna.fi.intel.com>
- <PSXP216MB04384541A10255DF4E70F4D480E50@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20200304161827.GQ2540@lahna.fi.intel.com>
- <101ca1ac-c3d3-6685-e21b-4c519346b67f@linaro.org>
+   d="scan'208";a="264349775"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Mar 2020 21:37:18 -0800
+Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 5 Mar 2020 21:37:18 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.206]) by
+ SHSMSX106.ccr.corp.intel.com ([169.254.10.86]) with mapi id 14.03.0439.000;
+ Fri, 6 Mar 2020 13:37:16 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     Andi Kleen <ak@linux.intel.com>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "pawan.kumar.gupta@linux.intel.com" 
+        <pawan.kumar.gupta@linux.intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+        "like.xu@linux.intel.com" <like.xu@linux.intel.com>
+Subject: RE: [PATCH v1 00/11] PEBS virtualization enabling via DS
+Thread-Topic: [PATCH v1 00/11] PEBS virtualization enabling via DS
+Thread-Index: AQHV8tSwrTDGup6zbUucqvSF6td/Fqg6FLYAgAD03DA=
+Date:   Fri, 6 Mar 2020 05:37:15 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E17389190B@SHSMSX104.ccr.corp.intel.com>
+References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+ <20200305224852.GE1454533@tassilo.jf.intel.com>
+In-Reply-To: <20200305224852.GE1454533@tassilo.jf.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <101ca1ac-c3d3-6685-e21b-4c519346b67f@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 05:05:47PM +0000, Srinivas Kandagatla wrote:
+> Subject: Re: [PATCH v1 00/11] PEBS virtualization enabling via DS
 > 
+> > Testing:
+> > The guest can use PEBS feature like native. e.g.
 > 
-> On 04/03/2020 16:18, Mika Westerberg wrote:
-> > On Wed, Mar 04, 2020 at 04:07:29PM +0000, Nicholas Johnson wrote:
-> > > On Tue, Mar 03, 2020 at 12:33:10PM +0200, Mika Westerberg wrote:
-> > > > On Mon, Mar 02, 2020 at 03:43:29PM +0000, Nicholas Johnson wrote:
-> > > > > This reverts commit 03cd45d2e219301880cabc357e3cf478a500080f.
-> > > > > 
-> > > > > Since NVMEM subsystem gained support for write-only instances, this
-> > > > > workaround is no longer required, so drop it.
-> > > > > 
-> > > > > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > > > 
-> > > > Assuming this goes through The NVMem tree:
-> > > > 
-> > > > Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > 
-> > > > If that's not the case, please let me know. I can also take them through
-> > > > the Thunderbolt tree.
-> > > I do not know how this would normally work - I have not experienced much
-> > > cross-subsystem work. Perhaps it should be taken through your tree. If
-> > > it goes through your tree and not part of this series, perhaps it does
-> > > not make sense for it to be authored by me, either. It's just a revert;
-> > > it does not take a lot of effort or doing something original.
-> > 
-> > Your authorship is fine.
-> > 
-> > Since this patch depends on the first one, it should go together with
-> > that one either to NVMem tree or Thunderbolt tree. Either is fine by me
-> > but if I take them then I need an ack from Srinivas.
-> > 
-> 
-> I applied 2/3 patch which should show up in next 5.7-rc1 release, with that
-> in place you can revert this patch. Please take this patch via respective
-> tree, it does not make much sense for me to apply this as its not going to
-> break any build.
+> Could you please add example qemu command lines too? That will make it
+> much easier for someone to reproduce.
 
-OK, that works for me as well.
+I introduce a new CPU parameter "pebs" to enable PEBS in KVM guest(disabled in default)  
+e.g. "qemu-system-x86_64 -enable-kvm -M q35 -cpu Icelake-Server,pmu=true,pebs=true ...."
 
-Nicholas, can you send this one again after 5.7-rc1 is is released? I
-can then pick it up to my tree.
+[PATCH v1 0/3] PEBS virtualization enabling via DS in Qemu
+https://lore.kernel.org/qemu-devel/1583490005-27761-1-git-send-email-luwei.kang@intel.com/
+
+Thanks,
+Luwei Kang
+
+> 
+> -Andi
+> >
+> > # perf record -e instructions:ppp ./br_instr a
+> >
+> > perf report on guest:
+> > # Samples: 2K of event 'instructions:ppp', # Event count (approx.):
+> 1473377250
+> > # Overhead  Command   Shared Object      Symbol
+> >   57.74%  br_instr  br_instr           [.] lfsr_cond
+> >   41.40%  br_instr  br_instr           [.] cmp_end
+> >    0.21%  br_instr  [kernel.kallsyms]  [k] __lock_acquire
+> >
+> > perf report on host:
+> > # Samples: 2K of event 'instructions:ppp', # Event count (approx.):
+> 1462721386
+> > # Overhead  Command   Shared Object     Symbol
+> >   57.90%  br_instr  br_instr          [.] lfsr_cond
+> >   41.95%  br_instr  br_instr          [.] cmp_end
+> >    0.05%  br_instr  [kernel.vmlinux]  [k] lock_acquire
