@@ -2,104 +2,105 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53D3C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1BAC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97AD2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:18:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I0bxC8pL"
+	by mail.kernel.org (Postfix) with ESMTP id 7C9F02166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgCFDRw (ORCPT
+        id S1726861AbgCFDSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 22:17:52 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50394 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFDRw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 22:17:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:Cc:From:To:Sender:Reply-To:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=o08bZPm/RS6A9C1jh4GWQzSm+/n79bG6xV2CG+lU8+w=; b=I0bxC8pLrA+EH6gd/iaXIZyDdE
-        VbHS7Ag0gperjDyalKKLEcJ/Pup74p9O36tpqgFzJXHl89k8pDwdxCyOSdsCs88TbDgbeSN917Izv
-        F93CsnajQFN7nQSgjmYitC3B4UloMvN2uzMxiFBjLi01V55cEZoqL0iveUJc4OWz720TINdo3V55P
-        Xj4Bsz8Euok8q49KS5QCJNjouANuuh3nbi2hy+eGoDFJGnPzY3gjzckADF3BA/A2tUddsekEXe1Ar
-        fwt4vV72TEdInyU1CC0TeT790zvZnhhndudq6Nd+nWTPBfip0RschhVSgRdeZIjux01++ZxUiGyj6
-        vRnTnAJQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jA3Uk-0003vv-65; Fri, 06 Mar 2020 03:17:50 +0000
-To:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>,
-        David Airlie <airlied@linux.ie>
-Subject: [RFC PATCH] drm: rcar-du: make all sub-symbols depend on DRM_RCAR_DU
-Message-ID: <4b50cc9f-1434-b78a-d56a-fadfd030f002@infradead.org>
-Date:   Thu, 5 Mar 2020 19:17:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 22:18:08 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43210 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726162AbgCFDSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 22:18:08 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9C69BC1D71A2CBE3C756;
+        Fri,  6 Mar 2020 11:18:04 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 6 Mar 2020
+ 11:17:56 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <shuah@kernel.org>, <tglx@linutronix.de>, <yuehaibing@huawei.com>,
+        <0x7f454c46@gmail.com>, <avagin@gmail.com>, <dima@arista.com>
+CC:     <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] selftests/timens: Remove duplicated include <time.h>
+Date:   Fri, 6 Mar 2020 11:17:05 +0800
+Message-ID: <20200306031705.25008-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Remove duplicated include.
 
-DRM_RCAR_CMM depends on DRM_RCAR_DU. Since the following Kconfig
-symbols do not depend on DRM_RCAR_DU, the menu presentation is
-broken for these and following non-R-Car Kconfig symbols.
-
-Is it safe/appropriate to make all of these symbols depend on
-DRM_RCAR_DU?  It make the kconfig menu presentation much cleaner.
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-renesas-soc@vger.kernel.org
-Cc: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-Cc: Dave Airlie <airlied@linux.ie>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/gpu/drm/rcar-du/Kconfig |    3 +++
- 1 file changed, 3 insertions(+)
+ tools/testing/selftests/timens/exec.c   | 1 -
+ tools/testing/selftests/timens/procfs.c | 1 -
+ tools/testing/selftests/timens/timens.c | 1 -
+ tools/testing/selftests/timens/timer.c  | 1 -
+ 4 files changed, 4 deletions(-)
 
---- linux-next-20200305.orig/drivers/gpu/drm/rcar-du/Kconfig
-+++ linux-next-20200305/drivers/gpu/drm/rcar-du/Kconfig
-@@ -24,6 +24,7 @@ config DRM_RCAR_CMM
- config DRM_RCAR_DW_HDMI
- 	tristate "R-Car DU Gen3 HDMI Encoder Support"
- 	depends on DRM && OF
-+	depends on DRM_RCAR_DU
- 	select DRM_DW_HDMI
- 	help
- 	  Enable support for R-Car Gen3 internal HDMI encoder.
-@@ -31,6 +32,7 @@ config DRM_RCAR_DW_HDMI
- config DRM_RCAR_LVDS
- 	tristate "R-Car DU LVDS Encoder Support"
- 	depends on DRM && DRM_BRIDGE && OF
-+	depends on DRM_RCAR_DU
- 	select DRM_PANEL
- 	select OF_FLATTREE
- 	select OF_OVERLAY
-@@ -47,4 +49,5 @@ config DRM_RCAR_VSP
+diff --git a/tools/testing/selftests/timens/exec.c b/tools/testing/selftests/timens/exec.c
+index 87b47b5..e40dc5b 100644
+--- a/tools/testing/selftests/timens/exec.c
++++ b/tools/testing/selftests/timens/exec.c
+@@ -11,7 +11,6 @@
+ #include <sys/wait.h>
+ #include <time.h>
+ #include <unistd.h>
+-#include <time.h>
+ #include <string.h>
  
- config DRM_RCAR_WRITEBACK
- 	bool
-+	depends on DRM_RCAR_DU
- 	default y if ARM64
+ #include "log.h"
+diff --git a/tools/testing/selftests/timens/procfs.c b/tools/testing/selftests/timens/procfs.c
+index 43d93f4..7f14f0f 100644
+--- a/tools/testing/selftests/timens/procfs.c
++++ b/tools/testing/selftests/timens/procfs.c
+@@ -12,7 +12,6 @@
+ #include <sys/types.h>
+ #include <time.h>
+ #include <unistd.h>
+-#include <time.h>
+ 
+ #include "log.h"
+ #include "timens.h"
+diff --git a/tools/testing/selftests/timens/timens.c b/tools/testing/selftests/timens/timens.c
+index 559d26e..098be7c 100644
+--- a/tools/testing/selftests/timens/timens.c
++++ b/tools/testing/selftests/timens/timens.c
+@@ -10,7 +10,6 @@
+ #include <sys/types.h>
+ #include <time.h>
+ #include <unistd.h>
+-#include <time.h>
+ #include <string.h>
+ 
+ #include "log.h"
+diff --git a/tools/testing/selftests/timens/timer.c b/tools/testing/selftests/timens/timer.c
+index 0cca7aa..96dba11 100644
+--- a/tools/testing/selftests/timens/timer.c
++++ b/tools/testing/selftests/timens/timer.c
+@@ -11,7 +11,6 @@
+ #include <stdio.h>
+ #include <stdint.h>
+ #include <signal.h>
+-#include <time.h>
+ 
+ #include "log.h"
+ #include "timens.h"
+-- 
+2.7.4
+
 
