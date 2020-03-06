@@ -2,212 +2,194 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E39C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9A8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1AA2072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14A720637
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:01:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583517717;
+	bh=ybbFg1QjcDRxtSV4KXbGlQb4ePz6un+CVqopO5MgTa0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DxB4zY4mgT3NQm6zSqJwuj52Fbn8yaNwmrcj3XDTDfCJ79f3/YRKy9NETaJhXJncB
+	 s42HloEvP5hDR2+WLAS1vPXnrd/isak0Ug3ne6UEZdBaVy3wLXCpeVgbOaYoIvUz+y
+	 xQr2KjDLLf9+2DVTK3gTbU3ELavwV1YOf9hDTHNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgCFR7e (ORCPT
+        id S1726397AbgCFSB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:59:34 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39406 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725873AbgCFR7e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:59:34 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026HpPHx097350;
-        Fri, 6 Mar 2020 12:59:19 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ykd4a5tcv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 12:59:19 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 026HrPdC000583;
-        Fri, 6 Mar 2020 17:59:19 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03dal.us.ibm.com with ESMTP id 2yffk8am77-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 17:59:19 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 026HxI5T50987368
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Mar 2020 17:59:18 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3638EAE062;
-        Fri,  6 Mar 2020 17:59:18 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AB834AE05C;
-        Fri,  6 Mar 2020 17:59:16 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.160.48.59])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  6 Mar 2020 17:59:16 +0000 (GMT)
-Subject: Re: [PATCH v3] ima: add a new CONFIG for loading arch-specific
- policies
-To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-efi@vger.kernel.org,
-        linux-s390@vger.kernel.org, zohar@linux.ibm.com,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <1583516360-22016-1-git-send-email-nayna@linux.ibm.com>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <193c432d-f901-82e3-755c-e9fb723a36b7@linux.vnet.ibm.com>
-Date:   Fri, 6 Mar 2020 12:59:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <1583516360-22016-1-git-send-email-nayna@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-06_06:2020-03-06,2020-03-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- mlxscore=0 spamscore=0 clxscore=1011 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003060113
+        Fri, 6 Mar 2020 13:01:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbgCFSBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:01:55 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE334205C9;
+        Fri,  6 Mar 2020 18:01:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583517714;
+        bh=ybbFg1QjcDRxtSV4KXbGlQb4ePz6un+CVqopO5MgTa0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cExrDgTKYOyYVREuXEXB7kVirE9FaOVp+TLD1a75UoVzF8B9PkrHJQEW7W+hBENhy
+         x3XpnsfbxHp8jA8NV3MLBExkPLfe7GLtaGgjJx6xTw1bpnQ59+nyp9yY4qKc57d7EV
+         yCdf17LJmYVxztK2nbvtz5H3v8xhH4ALFFYElAWA=
+Date:   Sat, 7 Mar 2020 03:01:49 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     paulmck@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-Id: <20200307030149.1f70bdb019ad5ea896bce5a7@kernel.org>
+In-Reply-To: <20200219114510.6f942b56868a97e06352738c@kernel.org>
+References: <20200213163800.5c51a5f1@gandalf.local.home>
+        <20200213215004.GM2935@paulmck-ThinkPad-P72>
+        <20200213170451.690c4e5c@gandalf.local.home>
+        <20200213223918.GN2935@paulmck-ThinkPad-P72>
+        <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org>
+        <20200215145934.GD2935@paulmck-ThinkPad-P72>
+        <20200217175519.12a694a969c1a8fb2e49905e@kernel.org>
+        <20200217163112.GM2935@paulmck-ThinkPad-P72>
+        <20200218133335.c87d7b2399ee6532bf28b74a@kernel.org>
+        <20200218124609.1a33f868@gandalf.local.home>
+        <20200218201806.GI2935@paulmck-ThinkPad-P72>
+        <20200219114510.6f942b56868a97e06352738c@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oops,  Please ignore this patch.
+Hi,
 
-By mistake I posted the wrong version. I am sorry for the confusion,  I 
-will resend the right version.
+On Wed, 19 Feb 2020 11:45:10 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Thanks & Regards,
+> On Tue, 18 Feb 2020 12:18:06 -0800
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> 
+> > On Tue, Feb 18, 2020 at 12:46:09PM -0500, Steven Rostedt wrote:
+> > > On Tue, 18 Feb 2020 13:33:35 +0900
+> > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > 
+> > > > On Mon, 17 Feb 2020 08:31:12 -0800
+> > > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > > > >   
+> > > > > > BTW, if you consider the x86 specific code is in the generic file,
+> > > > > > we can move NOKPROBE_SYMBOL() in arch/x86/kernel/traps.c.
+> > > > > > (Sorry, I've hit this idea right now)  
+> > > > > 
+> > > > > Might this affect other architectures with NMIs and probe-like things?
+> > > > > If so, it might make sense to leave it where it is.  
+> > > > 
+> > > > Yes, git grep shows that arm64 is using rcu_nmi_enter() in
+> > > > debug_exception_enter().
+> > > > OK, let's keep it, but maybe it is good to update the comment for
+> > > > arm64 too. What about following?
+> > > > 
+> > > > +/*
+> > > > + * All functions in do_int3() on x86, do_debug_exception() on arm64 must be
+> > > > + * marked NOKPROBE before kprobes handler is called.
+> > > > + * ist_enter() on x86 and debug_exception_enter() on arm64 which is called
+> > > > + * before kprobes handle happens to call rcu_nmi_enter() which means
+> > > > + * that rcu_nmi_enter() must be marked NOKRPOBE.
+> > > > + */
+> > > > 
+> > > 
+> > > Ah, why don't we just say...
+> > > 
+> > > /*
+> > >  * All functions called in the breakpoint trap handler (e.g. do_int3()
+> > >  * on x86), must not allow kprobes until the kprobe breakpoint handler
+> > >  * is called, otherwise it can cause an infinite recursion.
+> > >  * On some archs, rcu_nmi_enter() is called in the breakpoint handler
+> > >  * before the kprobe breakpoint handler is called, thus it must be
+> > >  * marked as NOKPROBE.
+> > >  */
+> > > 
+> > > And that way we don't make this an arch specific comment.
+> > 
+> > That looks good to me.  Masami, does this work for you?
+> 
+> Yes, that looks good to me too :)
 
-      - Nayna
+Oops, I'm guilty!
+Sorry *rcu_nmi_exit()* also must be NOKPROBE, since even if we could catch
+a recursive kprobe call, we can only skip the kprobe handler, but we must
+exit from do_int3() and hit rcu_nmi_exit() again!
 
-On 3/6/20 12:39 PM, Nayna Jain wrote:
-> Every time a new architecture defines the IMA architecture specific
-> functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
-> include file needs to be updated. To avoid this "noise", this patch
-> defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
-> the different architectures to select it.
->
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Philipp Rudo <prudo@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> ---
-> v3:
-> * Updated and tested the patch with improvements suggested by Michael.
-> It now uses "imply" instead of "select". Thanks Michael.
-> * Have missed replacing the CONFIG_IMA in x86 and s390 with new config,
-> that was resulting in redefinition when the IMA_SECURE_AND_OR_TRUSTED_BOOT
-> is not enabled. Thanks to Mimi for recognizing the problem.
->
-> v2:
-> * Fixed the issue identified by Mimi. Thanks Mimi, Ard, Heiko and Michael for
-> discussing the fix.
->
->   arch/powerpc/Kconfig           | 1 +
->   arch/s390/Kconfig              | 1 +
->   arch/s390/kernel/Makefile      | 2 +-
->   arch/x86/Kconfig               | 1 +
->   arch/x86/kernel/Makefile       | 2 +-
->   include/linux/ima.h            | 3 +--
->   security/integrity/ima/Kconfig | 8 ++++++++
->   7 files changed, 14 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 497b7d0b2d7e..a5cfde432983 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -979,6 +979,7 @@ config PPC_SECURE_BOOT
->   	bool
->   	depends on PPC_POWERNV
->   	depends on IMA_ARCH_POLICY
-> +	select IMA_SECURE_AND_OR_TRUSTED_BOOT
->   	help
->   	  Systems with firmware secure boot enabled need to define security
->   	  policies to extend secure boot to the OS. This config allows a user
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index 8abe77536d9d..4a502fbcb800 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -195,6 +195,7 @@ config S390
->   	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
->   	select SWIOTLB
->   	select GENERIC_ALLOCATOR
-> +	select IMA_SECURE_AND_OR_TRUSTED_BOOT if IMA_ARCH_POLICY
->   
->   
->   config SCHED_OMIT_FRAME_POINTER
-> diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
-> index 2b1203cf7be6..578a6fa82ea4 100644
-> --- a/arch/s390/kernel/Makefile
-> +++ b/arch/s390/kernel/Makefile
-> @@ -70,7 +70,7 @@ obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
->   obj-$(CONFIG_KEXEC_FILE)	+= machine_kexec_file.o kexec_image.o
->   obj-$(CONFIG_KEXEC_FILE)	+= kexec_elf.o
->   
-> -obj-$(CONFIG_IMA)		+= ima_arch.o
-> +obj-$(CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT)	+= ima_arch.o
->   
->   obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_cpum_cf_common.o
->   obj-$(CONFIG_PERF_EVENTS)	+= perf_cpum_cf.o perf_cpum_sf.o
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index beea77046f9b..7f5bfaf0cbd2 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -230,6 +230,7 @@ config X86
->   	select VIRT_TO_BUS
->   	select X86_FEATURE_NAMES		if PROC_FS
->   	select PROC_PID_ARCH_STATUS		if PROC_FS
-> +	select IMA_SECURE_AND_OR_TRUSTED_BOOT	if EFI && IMA_ARCH_POLICY
->   
->   config INSTRUCTION_DECODER
->   	def_bool y
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index 9b294c13809a..7f131ceba136 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -155,5 +155,5 @@ ifeq ($(CONFIG_X86_64),y)
->   endif
->   
->   ifdef CONFIG_EFI
-> -obj-$(CONFIG_IMA)			+= ima_arch.o
-> +obj-$(CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT)	+= ima_arch.o
->   endif
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index 1659217e9b60..aefe758f4466 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
->   extern void ima_add_kexec_buffer(struct kimage *image);
->   #endif
->   
-> -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
-> -	|| defined(CONFIG_PPC_SECURE_BOOT)
-> +#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
->   extern bool arch_ima_get_secureboot(void);
->   extern const char * const *arch_get_ima_policy(void);
->   #else
-> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-> index 3f3ee4e2eb0d..2baaf196c6d8 100644
-> --- a/security/integrity/ima/Kconfig
-> +++ b/security/integrity/ima/Kconfig
-> @@ -327,3 +327,11 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
->   	depends on IMA_MEASURE_ASYMMETRIC_KEYS
->   	depends on SYSTEM_TRUSTED_KEYRING
->   	default y
-> +
-> +config IMA_SECURE_AND_OR_TRUSTED_BOOT
-> +	bool
-> +	depends on IMA_ARCH_POLICY
-> +	default n
-> +	help
-> +	   This option is selected by architectures to enable secure and/or
-> +	   trusted boot based on IMA runtime policies.
+[45235.497591] Unrecoverable kprobe detected.
+[45235.501400] Dumping kprobe:
+[45235.502433] Name: (null)
+[45235.502433] Offset: 0
+[45235.502433] Address: rcu_nmi_exit+0x0/0x290
+[45235.504044] ------------[ cut here ]------------
+[45235.504855] kernel BUG at arch/x86/kernel/kprobes/core.c:646!
+[45235.505816] invalid opcode: 0000 [#1] PREEMPT SMP PTI
+[45235.506615] CPU: 7 PID: 143 Comm: sh Not tainted 5.6.0-rc3+ #143
+[45235.507662] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+[45235.509764] RIP: 0010:reenter_kprobe.cold+0x14/0x16
+[45235.510630] Code: 48 8b 75 10 48 c7 c7 f0 70 0e 82 48 8b 56 28 e8 22 91 08 00 0f 0b 48 c7 c7 20 71 0e 82 e8 14 91 08 00 48 89 ef e8 23 ee 0f 00 <0f> 0b 48 89 ee 48 c7 c7 48 71 0e 82 e8 fb 90 08 00 e9 c3 fc ff ff
+[45235.513948] RSP: 0018:ffffc90000347bf8 EFLAGS: 00010046
+[45235.514906] RAX: 0000000000000036 RBX: 0000000000017f20 RCX: 0000000000000000
+[45235.516109] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000001
+[45235.517278] RBP: ffff88807c9820c0 R08: 0000000000000000 R09: 0000000000000001
+[45235.518415] R10: 0000000000000000 R11: ffff88807c9d1f18 R12: ffff88807d9d7f20
+[45235.519609] R13: ffffc90000347c68 R14: ffffffff810e8a60 R15: ffffffff810e8a61
+[45235.520787] FS:  0000000001d9a8c0(0000) GS:ffff88807d9c0000(0000) knlGS:0000000000000000
+[45235.522198] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[45235.523172] CR2: 0000000001da9000 CR3: 000000007a880000 CR4: 00000000000006a0
+[45235.524288] Call Trace:
+[45235.524825]  kprobe_int3_handler+0x74/0x150
+[45235.525627]  do_int3+0x36/0xf0
+[45235.526244]  int3+0x42/0x50
+[45235.526767] RIP: 0010:rcu_nmi_exit+0x1/0x290
+[45235.527551] Code: a2 0d 82 be c2 01 00 00 48 c7 c7 d5 44 0f 82 c6 05 e7 ac 24 01 01 e8 1f ba fd ff eb b8 66 66 2e 0f 1f 84 00 00 00 00 00 90 cc <57> 41 56 41 55 41 54 55 48 c7 c5 40 c2 02 00 53 48 89 eb e8 77 75
+[45235.530898] RSP: 0018:ffffc90000347d40 EFLAGS: 00000046
+[45235.531816] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[45235.533001] RDX: 0000000000000001 RSI: ffffffff8101e1fe RDI: ffffffff8101e1fe
+[45235.534252] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+[45235.535516] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+[45235.536759] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[45235.537945]  ? ist_exit+0xe/0x20
+[45235.538593]  ? ist_exit+0xe/0x20
+[45235.539239]  ? rcu_nmi_exit+0x1/0x290
+[45235.541182]  int3+0x42/0x50
+[45235.541687] RIP: 0010:0xffffffffa000005a
+[45235.542363] Code: 2e 16 13 e1 00 00 00 00 00 00 00 00 89 f8 e9 1f 16 13 e1 00 00 00 00 00 00 00 00 89 f8 e9 20 16 13 e1 00 00 00 00 00 00 00 00 <41> 57 e9 01 8a 0e e1 00 00 00 00 00 00 00 00 41 57 e9 f2 22 26 e1
+[45235.545628] RSP: 0018:ffffc90000347e20 EFLAGS: 00000146
+[45235.546596] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[45235.547989] RDX: 0000000000000001 RSI: ffffffff8101e1fe RDI: ffffffff8101e1fe
+[45235.550183] RBP: 0000000000000000 R08: 0000000000000001 R09: ffff88807d2aa000
+[45235.551591] R10: 0000000000000a4c R11: ffff88807bfec600 R12: 0000000000000000
+[45235.552893] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[45235.554633]  ? ist_exit+0xe/0x20
+[45235.555537]  ? ist_exit+0xe/0x20
+[45235.556565]  ? rcu_nmi_exit+0x1/0x290
+[45235.557909]  ? int3+0x42/0x50
+[45235.559156]  ? 0xffffffffa0000069
+[45235.560547]  ? vfs_read+0x1/0x150
+[45235.561522]  ? ksys_read+0x60/0xe0
+[45235.562458]  ? do_syscall_64+0x4b/0x1e0
+[45235.563404]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[45235.564705] Modules linked in:
+[45235.565556] ---[ end trace 870af8724dba9ac8 ]---
+
+So all functions called from do_int3() must be NOKPROBE.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
