@@ -2,57 +2,127 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CD4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34277C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F6520848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096F32166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583515121;
+	bh=UltXGOsa7bHzrhE8tvZXHxykcnPio34Cv7/Wbz7SWXg=;
+	h=Subject:From:To:Cc:Date:List-ID:From;
+	b=W4En6XNvojcR/4CVsJ1X50nq9Y848ea7Qs0J5A8l6MBvhS7xwcKtyDLt3Yk+b1CtX
+	 PVBClsdXRFzLvnb2sbkaTlCWezI3LuYdI9i9npBqpkybiJvTm8nhA/ppSYRtQU877o
+	 Iii2jcBvsan38A8VSkODNx4IrFioaF/lke+4qhxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgCFRSV (ORCPT
+        id S1727066AbgCFRSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:18:21 -0500
-Received: from muru.com ([72.249.23.125]:59136 "EHLO muru.com"
+        Fri, 6 Mar 2020 12:18:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726894AbgCFRSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:18:20 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id BBA5A8027;
-        Fri,  6 Mar 2020 17:19:05 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 09:18:17 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 6/6] clocksource: timer-ti-dm: Enable autoreload in
- set_pwm
-Message-ID: <20200306171817.GE37466@atomide.com>
-References: <20200305082715.15861-1-lokeshvutla@ti.com>
- <20200305082715.15861-7-lokeshvutla@ti.com>
+        id S1726894AbgCFRSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 12:18:39 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D179E2084E;
+        Fri,  6 Mar 2020 17:18:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583515119;
+        bh=UltXGOsa7bHzrhE8tvZXHxykcnPio34Cv7/Wbz7SWXg=;
+        h=Subject:From:To:Cc:Date:From;
+        b=0A2/qG+m7/cH9ADsqiokgIqsJr7j7Nsx3wHX3wXg3qmF/AEC5M9b9Cc3Ge2ZFu1fo
+         MsY43O0yhUmxm/dcESl+Pj/r8EkZ3xWqyiP6Co73HyXyWRD4rDfveb4/U4I9C6QttP
+         XLFibcVs/6CsVa04j+dfVRLH5em+A3Roughiqk/I=
+Message-ID: <a14229cc7aabebfdffd405018d939d7a0ae1f1cd.camel@kernel.org>
+Subject: [GIT PULL] file locking changes for v5.6
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Fri, 06 Mar 2020 12:18:15 -0500
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-34XoMFCiUFMKGzbgYQmp"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305082715.15861-7-lokeshvutla@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla@ti.com> [200305 08:29]:
-> dm timer ops set_load() api allows to configure the load value and to
-> set the auto reload feature. But auto reload feature is independent of
-> load value and should be part of configuring pwm. This way pwm can be
-> disabled by disabling auto reload feature using set_pwm() so that the
-> current pwm cycle will be completed. Else pwm disabling causes the
-> cycle to be stopped abruptly.
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+--=-34XoMFCiUFMKGzbgYQmp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b=
+:
+
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git tags/file=
+lock-v5.6-1
+
+for you to fetch changes up to 6d390e4b5d48ec03bb87e63cf0a2bff5f4e116da:
+
+  locks: fix a potential use-after-free problem when wakeup a waiter (2020-=
+03-06 11:54:13 -0500)
+
+----------------------------------------------------------------
+Just a couple of late-breaking patches for the file locking code. The
+second patch (from yangerkun) fixes a rather nasty looking potential
+use-after-free that should go to stable.
+
+The other patch could technically wait for 5.7, but it's fairly
+innocuous so I figured we might as well take it.
+
+Thanks,
+Jeff
+----------------------------------------------------------------
+Kees Cook (1):
+      fcntl: Distribute switch variables for initialization
+
+yangerkun (1):
+      locks: fix a potential use-after-free problem when wakeup a waiter
+
+ fs/fcntl.c |  6 ++++--
+ fs/locks.c | 14 --------------
+ 2 files changed, 4 insertions(+), 16 deletions(-)
+
+--=20
+Jeff Layton <jlayton@kernel.org>
+
+--=-34XoMFCiUFMKGzbgYQmp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJHBAABCAAxFiEES8DXskRxsqGE6vXTAA5oQRlWghUFAl5ihdcTHGpsYXl0b25A
+a2VybmVsLm9yZwAKCRAADmhBGVaCFYOMEACsbq0GmEER7l4x9BxClX1TbFIKxBk3
+eUP3QyW6F0QrGSaWQl8uIEf2oo0dLI8lzUazcRVsoAQbdd0mvod0U0rpCwTW2r4P
+2WL1lttQOTfEgTLiWBHp50nAA96AfSKeBvHzWtvrLyQfl7fRmVSGDMwhaDAvd/Gy
+5l9kZOgqqb/G0P4OqZqRUfTDCfGSvDq0RKyPlWdrSVXR6RcvsIsZJNShRMLD80j7
+466Xf7qLGeBOpYyXG+c+/UC44rmaEkeD7AqCzP3KfIpP/SvT5demJPHCo61sc/Fo
+F5cP3uR5N/JjXsK7NlOBfm+vWpNuSDmrgyLuKWX+yX0bRXqAfBurYfK7F9C1LcSv
+258pmm2DoOmRJJhdPzC2UBrpwFlBVncuoSkbQj7ABcoYubYMpAbkWZZRDSKMOaEn
+IAPmRU8Cc41f6EexNQ47YO3x31iLYpEoIBHpN+YUvkdJnmzVGR6ZZewh71aIauX6
+sNSk4hVqEeRIcU22JLcWHs3CnA3/RH8kx8/9HnKiXsK7XnA1P+VevNchwt2evp2E
+rB8Nhz3UcyqvIE+gYQFldoKa2J9szMedBMwoA8zgaFxul3tyknc2bmHewA39C+ic
+zNvK4nNfixNX+eQfHG5tcYlAMDCR9PLA3RUGiCOKxuYHvMbdQ6G9D1u/wVLO9Xd+
+hcnRAiFzzjaXJw==
+=yX6r
+-----END PGP SIGNATURE-----
+
+--=-34XoMFCiUFMKGzbgYQmp--
+
