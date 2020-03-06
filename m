@@ -2,105 +2,140 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502B3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98083C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF8920709
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A590206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583527638;
+	bh=CGUlFpKeC/Aq+Hjpqcsgc5CwpgRqbAKS3+GmNaXWkpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZKPzYyZCNcMSKhHT/LmXKYvIZ+80MhglKBUbBzgos2B8xt9bAR3C4Uj0r0hnO3N4a
+	 x1sYcaWvhnZjnQKuYA4gnKs6diQoSW5yIL4yy2aa0L4p8oOvbe10gED9Ymb4ouhCmE
+	 djtJ72h89FFrjQaX96Khqk23Tut4QNkbHZOa5cjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgCFUqC (ORCPT
+        id S1726269AbgCFUrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:46:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38504 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 15:47:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgCFUqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:46:00 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1725922AbgCFUrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 15:47:17 -0500
+Received: from earth.universe (unknown [185.62.205.105])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2313C206CC;
-        Fri,  6 Mar 2020 20:45:58 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 15:45:56 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        dan carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for
- _rcuidle tracepoints (again)
-Message-ID: <20200306154556.6a829484@gandalf.local.home>
-In-Reply-To: <609624365.20355.1583526166349.JavaMail.zimbra@efficios.com>
-References: <20200221133416.777099322@infradead.org>
-        <20200221134216.051596115@infradead.org>
-        <20200306104335.GF3348@worktop.programming.kicks-ass.net>
-        <20200306113135.GA8787@worktop.programming.kicks-ass.net>
-        <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com>
-        <1896740806.20220.1583510668164.JavaMail.zimbra@efficios.com>
-        <20200306125500.6aa75c0d@gandalf.local.home>
-        <609624365.20355.1583526166349.JavaMail.zimbra@efficios.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FFA2206CC;
+        Fri,  6 Mar 2020 20:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583527635;
+        bh=CGUlFpKeC/Aq+Hjpqcsgc5CwpgRqbAKS3+GmNaXWkpA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a4PHKn1ug9riJMNVQh3J0n20OlbM8gdPvxLheZFxIEwgeXRM4dGJLx5SeTnIaKsEy
+         WEo5tXuUECHqdXN3afFYK+Iq7ZE+/mtIimwi0C/paXx2vqjGll3zre+E0SEAimJZ76
+         5ybXJ2wLmgandLMcCPlEksy74FdzFUxfXaPEL2yM=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 0EB533C0C83; Fri,  6 Mar 2020 21:47:12 +0100 (CET)
+Date:   Fri, 6 Mar 2020 21:47:12 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, saravanak@google.com,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] power: supply: Allow charger manager can be built as
+ a module
+Message-ID: <20200306204712.dgomi52jzyakylky@earth.universe>
+References: <5e098be25c70e07c37e743f84a901f6f756090e0.1583461755.git.baolin.wang7@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gsujtxoazwncud73"
+Content-Disposition: inline
+In-Reply-To: <5e098be25c70e07c37e743f84a901f6f756090e0.1583461755.git.baolin.wang7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 15:22:46 -0500 (EST)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> I agree with the overall approach. Just a bit of nitpicking on the API:
-> 
-> I understand that the "prio" argument is a separate argument because it can take
-> many values. However, "rcu" is just a boolean, so I wonder if we should not rather
-> introduce a "int flags" with a bitmask enum, e.g.
+--gsujtxoazwncud73
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I thought about this approach, but thought it was a bit overkill. As the
-kernel doesn't have an internal API, I figured we can switch this over to
-flags when we get another flag to add. Unless you can think of one in the
-near future.
+Hi,
 
-> 
-> int tracepoint_probe_register_prio_flags(struct tracepoint *tp, void *probe,
->                                          void *data, int prio, int flags)
-> 
-> where flags would be populated through OR between labels of this enum:
-> 
-> enum tracepoint_flags {
->   TRACEPOINT_FLAG_RCU = (1U << 0),
-> };
-> 
-> We can then be future-proof for additional flags without ending up calling e.g.
-> 
-> tracepoint_probe_register_featurea_featureb_featurec(tp, probe, data, 0, 1, 0, 1)
+On Fri, Mar 06, 2020 at 10:34:10AM +0800, Baolin Wang wrote:
+> Allow charger manager can be built as a module like other charger
+> drivers.
+>=20
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> ---
 
-No, as soon as there is another boolean to add, the rcu version would be
-switched to flags. I even thought about making the rcu and prio into one,
-and change prio to be a SHRT_MAX max, and have the other 16 bits be for
-flags.
+Thanks, queued. I do not like this driver, but its the best we have
+at the moment.
 
--- Steve
+-- Sebastian
 
+> Changes from v1:
+>  - Use IS_ENABLED() instead.
+> ---
+>  drivers/power/supply/Kconfig          | 2 +-
+>  include/linux/power/charger-manager.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index 9a5591a..195bc04 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -480,7 +480,7 @@ config CHARGER_GPIO
+>  	  called gpio-charger.
+> =20
+>  config CHARGER_MANAGER
+> -	bool "Battery charger manager for multiple chargers"
+> +	tristate "Battery charger manager for multiple chargers"
+>  	depends on REGULATOR
+>  	select EXTCON
+>  	help
+> diff --git a/include/linux/power/charger-manager.h b/include/linux/power/=
+charger-manager.h
+> index ad19e68..ae94dce 100644
+> --- a/include/linux/power/charger-manager.h
+> +++ b/include/linux/power/charger-manager.h
+> @@ -248,7 +248,7 @@ struct charger_manager {
+>  	u64 charging_end_time;
+>  };
+> =20
+> -#ifdef CONFIG_CHARGER_MANAGER
+> +#if IS_ENABLED(CONFIG_CHARGER_MANAGER)
+>  extern void cm_notify_event(struct power_supply *psy,
+>  				enum cm_event_types type, char *msg);
+>  #else
+> --=20
+> 1.9.1
+>=20
 
-> 
-> which seems rather error-prone and less readable than a set of flags.
+--gsujtxoazwncud73
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5itswACgkQ2O7X88g7
++popsBAAjRAF+IgaH0fiR6Fw3tg3XSc9b4LzYAhiRyTbjBVFouvCA3k583qlngSb
+78cFhEZzbtnWTyGmXQ31Vbs1YWVCQm7vKIWRHabkzYXRnWMvuE+ZPvm5tf03kpZs
+7SsI4tp6+eb5cq0XIYx4taqV1RWzrRiOoSzQdM+vpHldIQJnZEqy2oeNHTuoTPxe
+OeF12rW5G3sw4E8pzUDhv7i/DpyPCC2ox6V5EItWjmlsvDhHVeV8Sb71QSAKSpAe
+r2fcZbt9h9InMMzfSyG/u06HY6WmHzdXHvyxry+nFyVpKgT6bYbZVVHV8SrHVZNt
+EcOW5JSstz4d9G52v9d7+VEFjR60Nad7KnvmH7elhQtRWhBkpSGIseG0SkZVfLnc
+TAfs+cpWBqaj0FveKoB+NAEY/ojhvgUGZCqi7IBxGFofiucTlsWz3qt0BPP0P3Fo
+goWP2J1GuQ8XnuVRFumNW39fAoY9J9m74C687xBRVKp1rof3QOmgCC5SutagkXKs
+wwE3kNSlkv/d4SH/CRxlzYwK175Xk/Bh2NcJRzwYwub0+UsqAVq4FbXgAIhAskk7
+0LfBYMaD17HzOWx0cD7sg9rBvldbF4zREFHtOXqKOb0FN5mRtsl133hCek21qPBT
+/R7I0/ty1C+5KHoqWIva4Qr66OoYU+cwgy4uHmuHIe/sGINndZk=
+=A++/
+-----END PGP SIGNATURE-----
+
+--gsujtxoazwncud73--
