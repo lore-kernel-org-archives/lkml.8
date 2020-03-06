@@ -6,84 +6,151 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BC6C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE20CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEE020848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D90B206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgCFOKe (ORCPT
+        id S1726956AbgCFOLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:10:34 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:55845 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgCFOKd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:10:33 -0500
-Received: from b2b-5-147-251-51.unitymedia.biz ([5.147.251.51] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jADgL-0005aS-Uk; Fri, 06 Mar 2020 14:10:30 +0000
-Date:   Fri, 6 Mar 2020 15:10:29 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     David Howells <dhowells@redhat.com>, linux-api@vger.kernel.org,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        metze@samba.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH] Mark AT_* path flags as deprecated and add missing
- RESOLVE_ flags
-Message-ID: <20200306141029.zon3nt7oxqywbzf6@wittgenstein>
-References: <3774367.1583430213@warthog.procyon.org.uk>
- <20200306134116.qfa2gj6os4weru7o@yavin>
+        Fri, 6 Mar 2020 09:11:32 -0500
+Received: from mga07.intel.com ([134.134.136.100]:48098 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726108AbgCFOLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 09:11:32 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 06:11:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
+   d="scan'208";a="233342860"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Mar 2020 06:11:27 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jADhI-007NV5-Tm; Fri, 06 Mar 2020 16:11:28 +0200
+Date:   Fri, 6 Mar 2020 16:11:28 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
+ peculiarities into account
+Message-ID: <20200306141128.GJ1748204@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200306132912.GA1748204@smile.fi.intel.com>
+ <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
+ <20200306134829.342F4803087C@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306134116.qfa2gj6os4weru7o@yavin>
+In-Reply-To: <20200306134829.342F4803087C@mail.baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 12:41:16AM +1100, Aleksa Sarai wrote:
-> On 2020-03-05, David Howells <dhowells@redhat.com> wrote:
-> > Do we want to do this?  Or should we duplicate the RESOLVE_* flags to AT_*
-> > flags so that existing *at() syscalls can make use of them?
+On Fri, Mar 06, 2020 at 04:47:20PM +0300, Sergey Semin wrote:
+> On Fri, Mar 06, 2020 at 03:30:35PM +0200, Andy Shevchenko wrote:
+> > On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
+> > > On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > > > From: Serge Semin <fancer.lancer@gmail.com>
+> > > > 
+> > > > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
+> > > > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
+> > > > with currently implemented in the kernel DW DMAC driver, but there are some
+> > > > peculiarities which must be taken into account in order to have the device
+> > > > fully supported.
+> > > > 
+> > > > First of all traditionally we replaced the legacy plain text-based dt-binding
+> > > > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+> > > > channels, which alas have different max burst length configuration.
+> > > > In particular first two channels may burst up to 128 bits (16 bytes) at a time
+> > > > while the rest of them just up to 32 bits. We must make sure that the DMA
+> > > > subsystem doesn't set values exceeding these limitations otherwise the
+> > > > controller will hang up. In third currently we discovered the problem in using
+> > > > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+> > > > natively implemented multi-block LLP transfers support and the SPI-transfer
+> > > > length exceeds the max lock size. In this case due to asynchronous handling of
+> > > > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
+> > > > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+> > > > the DMAC to asynchronously execute the transfers we'd have to at least warn
+> > > > the user of the possible errors.
+> > > > 
+> > > > Finally there is a bug in the algorithm of the nollp flag detection.
+> > > > In particular even if DW DMAC parameters state the multi-block transfers
+> > > > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+> > > > by the driver true multi-block LLP functionality unusable. This happens cause'
+> > > > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+> > > > contiguous multi-block transfers will be only supported. We must take the
+> > > > flag into account when detecting the LLP support otherwise the driver just
+> > > > won't work correctly.
+> > > > 
+> > > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> > > > commit 98d54f81e36b ("Linux 5.6-rc4").
+> > > 
+> > > Thank you for your series!
+> > > 
+> > > I'll definitely review it, but it will take time. So, I think due to late
+> > > submission this is material at least for v5.8.
 > > 
-> > David
-> > ---
-> > commit 448731bf3b29f2b1f7c969d7efe1f0673ae13b5e
-> > Author: David Howells <dhowells@redhat.com>
-> > Date:   Thu Mar 5 17:40:02 2020 +0000
-> > 
-> >     Mark AT_* flags as deprecated and add missing RESOLVE_ flags
-> >     
-> >     It has been suggested that new path-using system calls should use RESOLVE_*
-> >     flags instead of AT_* flags, but the RESOLVE_* flag functions are not a
-> >     superset of the AT_* flag functions.  So formalise this by:
-> >     
-> >      (1) In linux/fcntl.h, add a comment noting that the AT_* flags are
-> >          deprecated for new system calls and that RESOLVE_* flags should be
-> >          used instead.
 > 
-> I wouldn't say it that way -- the RESOLVE_* flags should be used by
-> syscalls *where it makes sense to change the path resolution rules*. If
-> it makes more sense for them to have their own flag set, they should
-> arguably make a separate one (like renameat2 did -- though renameat2 can
-> never take AT_EMPTY_PATH because it isn't sufficiently extensible).
+> Hello Andy,
+> Thanks for the quick response. Looking forward to get the patches
+> reviewed and move on with the next patchset I'll send after this. It concerns
+> DW APB SSI driver, which uses the changes introduced by this one.
 
-Yeah, we should clearly state that they are not a replacement for
-_all_ the AT_* flags. I think it makes sense to think of RESOLVE_* flags
-as a superset of the path-resolution portions of AT_* flags.
+> So the
+> sooner we finished with this patchset the better.
 
-Maybe in openat2.h:
+Everybody will win, but review will take as long as it take. And for sure it
+will miss v5.7 release cycle. Because too many patch sets sent at once
+followed by schedule, we almost at v5.6-rc5.
 
-/*
- * Flags available to syscalls wanting to modify how paths are resolved.
- * RESOLVE_* flags are intended to as a superset of those AT_* flags 
- * concerned with path resolution. All syscalls modifying their path
- * resolution behavior are expected to use RESOLVE_* flags.
- */
+> Although I understand
+> that it may take some time. I've just sent over 12 patchset, which have a lot
+> of fixups and new drivers.)
+> 
+> > One thing that I can tell immediately is the broken email thread in this series.
+> > Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
+> > so, it will link the mail properly.
+> > 
+> 
+> I've got thread=true in my gitconfig file, so each email should have
+> the proper reference and in-reply-to to the cover-letter (I see it from
+> the log). The problem popped up from a different place. For some reason the
+> automatic CC/To list extraction command didn't do the job right, so we ended
+> up with lacking of mailing lists in Cc's in this patchset. The command look like
+> this:
+> 
+> git send-email --cc-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nom" \
+>                    --to-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nol" \
+>                    --from "Serge Semin <Sergey.Semin at baikalelectronics.ru>" \
+>                    --smtp-server-option="-abaikal" --cover-letter -5
 
-Something like this (Native speaker can probably do this way nicer.)?
+I'm talking about one which makes your Message-Id/Reference headers broken
+between cover letter and the rest of the series. It might be because of missed
+patches in the chain.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
