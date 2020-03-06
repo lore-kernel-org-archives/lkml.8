@@ -2,149 +2,144 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4A1C3F2D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5565C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FD42072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B595E2072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="f2tyXami"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="EzX8qvfx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgCFPzU (ORCPT
+        id S1726897AbgCFP4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:55:20 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1880 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725935AbgCFPzU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:55:20 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026FsGah030759;
-        Fri, 6 Mar 2020 16:54:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=8+YFUYs96OeEzRQg1qbRyqAhuHAgY/sTMrlNmK3AxsI=;
- b=f2tyXami/1p6FmsCHOVees/qhHxaYS4rhcgqOyY7Ozm3RVuTVzafSKpqQMgFisDshQqz
- MmIvYDy6PB//YsqyU3JSLDpCIzEQ4QgZKWnQAUimGG9Vq+EeNP2Edy9DtJ06KcDF/zYL
- ekAbQJi5mqbj1JA3uDWvrVjby5li7mkpRCRmB04T+W+2f1y+nvzP8VVjhVItQVqHOmI4
- wZ05pH9HqAQn26U5GEEtDvhmBgEFwdzEtJ/V+eUubnp6ezufaWcboNOqZDQ568yllIxY
- UjS6sGgXgvsUG3JM9zzMnZ1NMHmMt8ZohwPB5UD+ANFs70vggTaV+YiF+/Czt1cHhTGm PQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yfem1g9ht-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 16:54:53 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7F20810003A;
-        Fri,  6 Mar 2020 16:54:45 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4C9522BE23F;
-        Fri,  6 Mar 2020 16:54:45 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 6 Mar 2020 16:54:44
- +0100
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <alexandre.torgue@st.com>,
-        <fabrice.gasnier@st.com>, <benjamin.gaignard@st.com>,
-        <olivier.moysan@st.com>
-CC:     <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] iio: adc: stm32-adc: fix sleep in atomic context
-Date:   Fri, 6 Mar 2020 16:53:35 +0100
-Message-ID: <20200306155335.6019-1-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 6 Mar 2020 10:56:19 -0500
+Received: from mail-bn8nam11on2086.outbound.protection.outlook.com ([40.107.236.86]:6111
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726269AbgCFP4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:56:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HghzkYDHRq69pvY+fggdIPMF+HfmflcLXtARau94oSMmcKbv7n8IntbEzcbbG/2ouVIl6eGpYXEdHCjehDJJ+tKAsOEyOz8VXx76XnikrqplE5d2W3Ak1VwvUkWpFJw8s10InqSdG5U/sqFjVj7VoLj/ohz/77H1epKjdfHApsGTzAWoApo20C/XBCWN/v42bEu9jc3LR+K3J/GU0oSGYxnCrJt30WAkCMBMAcEwefNA4Dt7Ifmjg7JE2JdPn+gxjDakQMu523z/xuZrfupoR+RzreIX4NIFF/sLy/WtXF83HzklaOBi87/ZczwopHod2/29TtER0xiHr3neJu6LLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wM+THY1TIN/GvSMIsa+6gMNlAmmUcbdxI05htCNGaDs=;
+ b=Tv/aCA0kRh3rTzVSiD0ZA7Co9LWxEs7czWRjb9z3PAuylmwMKF5dxzX9tSPdpTi9WcnjyU/Dhkk1raHWPKQNZyU5ZErEazcgdJjuepzR6+TfZGAeKwOD/gZOpp0Xi89ujQuZnuJnx8SN/9Glw5BQkv1QkEZXvFeRRCmx/OLRBGCcEMX7VbgwnXyUi2cclLmfObny4Ok2Wyrbyf6aSrpfpypLMj7QZuiFbcH9HGdv1FVlUsHNTU+mPkWTed+LZWJ7OmwQBTx8wMqYOVralonzvA6D7VNnZjWaCwtV6T0uxBmFod/WcymgFCOpBigCBXYY6iwffltWdykNUvgQmlv/iw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wM+THY1TIN/GvSMIsa+6gMNlAmmUcbdxI05htCNGaDs=;
+ b=EzX8qvfx1gK1BtJ0o93okDlhC/8f7Tzua1M+f7aCQnXO380reJWQAXdEAswBl8/23T6ij8IhuvqbWdHcm8MhI0RKd46UUIK184Hw5kTpp1+LQ6oN6sVPhOoplCNjGU580gVtM81DCY0luNIIBPmUR2JjF7VGitLOqhsCOcx6TNI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from BN8PR12MB3154.namprd12.prod.outlook.com (2603:10b6:408:6d::10)
+ by BN8PR12MB3297.namprd12.prod.outlook.com (2603:10b6:408:9f::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Fri, 6 Mar
+ 2020 15:56:14 +0000
+Received: from BN8PR12MB3154.namprd12.prod.outlook.com
+ ([fe80::fdf0:c7aa:3bd7:7d51]) by BN8PR12MB3154.namprd12.prod.outlook.com
+ ([fe80::fdf0:c7aa:3bd7:7d51%4]) with mapi id 15.20.2793.013; Fri, 6 Mar 2020
+ 15:56:14 +0000
+Subject: Re: [PATCH 1/2] crypto/ccp: Cleanup misc_dev on sev_exit()
+To:     John Allen <john.allen@amd.com>, linux-crypto@vger.kernel.org
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        brijesh.singh@amd.com, bp@suse.de, linux-kernel@vger.kernel.org
+References: <20200303135724.14060-1-john.allen@amd.com>
+ <20200303135724.14060-2-john.allen@amd.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <5bda6954-a4f1-117a-30ad-8b9737b835fa@amd.com>
+Date:   Fri, 6 Mar 2020 09:56:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <20200303135724.14060-2-john.allen@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN1PR12CA0081.namprd12.prod.outlook.com
+ (2603:10b6:802:21::16) To BN8PR12MB3154.namprd12.prod.outlook.com
+ (2603:10b6:408:6d::10)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-06_05:2020-03-06,2020-03-06 signatures=0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.30.118] (165.204.77.1) by SN1PR12CA0081.namprd12.prod.outlook.com (2603:10b6:802:21::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Fri, 6 Mar 2020 15:56:13 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 99ad2509-c139-4236-ff9d-08d7c1e6e62a
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3297:|BN8PR12MB3297:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR12MB329744C4653EEC65B15D8757ECE30@BN8PR12MB3297.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 0334223192
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(396003)(39860400002)(136003)(189003)(199004)(2616005)(31696002)(956004)(316002)(86362001)(4326008)(31686004)(16576012)(53546011)(52116002)(2906002)(36756003)(26005)(186003)(478600001)(16526019)(8936002)(81156014)(8676002)(81166006)(66476007)(66556008)(5660300002)(6486002)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR12MB3297;H:BN8PR12MB3154.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: e8zm1uV+t3lFWPCU3BWnkfQ7BWZl30FPJbGRjvDKubgSfACw5cheWGge/JL5JW84lDXQFdLHST6wft2GKjyXj5YriLv/5xppqm33ypbG3/mvwLH79Z1Ak2+ArnTEiGEZcLeXDIGCzvplorPjgVlmeoXpqXKP/ursde7wQjxnJ8cz9/i0isdsKZjMU3hpTgq86XX7CJ95XNVw+S8RzLYA3nJTMhJ73sLmkflULEGth75T2mDcM/K+KF3FmgbDCn/TZH23cCW2XAWunyXDQQboDIbXQYJ7T7XF6vaF8KaYy+PrNsi0archceBV/cyARpq7c3+2sV6ED6BhCHiKufb0E27ubr4/VhnyBP2h+D7YuyXI8BJJfgZ8oFHytd8tEAxb59pIEtrfMHUysZ1beBOJIWYWO9iNE4KjyUP4s0en+6BH0Ljp2jySzQojLIatcfBv
+X-MS-Exchange-AntiSpam-MessageData: twse+rDvlHD59vjHzXP2RG3BoWh4ieLZzkQHGnT+5bX/8a2jay9XTC8e+FpVC8vFh3//B6+NPIM1qwxJwgg8QlDNgJLjUAkrNbSvhnQiKCe6MoS27W2te44gZbFKAxTUeD1XP69+cklzM2F8aE8rkA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99ad2509-c139-4236-ff9d-08d7c1e6e62a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2020 15:56:14.6579
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YP6uCcJB4eWkhqXSwBXFm0TUZWG//NbflzVKneADY3tT7c+3zJl98yomFm1pKs+Cpz9uNorN4d11muJxjL2Wtw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3297
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit fixes the following error:
-"BUG: sleeping function called from invalid context at kernel/irq/chip.c"
+On 3/3/20 7:57 AM, John Allen wrote:
+> Explicitly free and clear misc_dev in sev_exit(). Since devm_kzalloc()
+> associates misc_dev with the first device that gets probed, change from
+> devm_kzalloc() to kzalloc() and explicitly free memory in sev_exit() as
+> the first device probed is not guaranteed to be the last device released.
+> To ensure that the variable gets properly set to NULL, remove the local
+> definition of misc_dev.
+> 
+> Fixes: 200664d5237f ("crypto: ccp: Add Secure Encrypted Virtualization (SEV) command support")
+> Signed-off-by: John Allen <john.allen@amd.com>
 
-In DMA mode suppress the trigger irq handler, and make the buffer
-transfers directly in DMA callback, instead.
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
-This solution has been already discussed in the thread
-https://lkml.org/lkml/2019/3/30/171, and applied in STM32 DFSDM driver:
-e19ac9d9a978 ("iio: adc: stm32-dfsdm: fix sleep in atomic context")
----
- drivers/iio/adc/stm32-adc.c | 31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 80c3f963527b..ae622ee6d08c 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -1418,8 +1418,30 @@ static unsigned int stm32_adc_dma_residue(struct stm32_adc *adc)
- static void stm32_adc_dma_buffer_done(void *data)
- {
- 	struct iio_dev *indio_dev = data;
-+	struct stm32_adc *adc = iio_priv(indio_dev);
-+	int residue = stm32_adc_dma_residue(adc);
-+
-+	/*
-+	 * In DMA mode the trigger services of IIO are not used
-+	 * (e.g. no call to iio_trigger_poll).
-+	 * Calling irq handler associated to the hardware trigger is not
-+	 * relevant as the conversions have already been done. Data
-+	 * transfers are performed directly in DMA callback instead.
-+	 * This implementation avoids to call trigger irq handler that
-+	 * may sleep, in an atomic context (DMA irq handler context).
-+	 */
-+	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
- 
--	iio_trigger_poll_chained(indio_dev->trig);
-+	while (residue >= indio_dev->scan_bytes) {
-+		u16 *buffer = (u16 *)&adc->rx_buf[adc->bufi];
-+
-+		iio_push_to_buffers(indio_dev, buffer);
-+
-+		residue -= indio_dev->scan_bytes;
-+		adc->bufi += indio_dev->scan_bytes;
-+		if (adc->bufi >= adc->rx_buf_sz)
-+			adc->bufi = 0;
-+	}
- }
- 
- static int stm32_adc_dma_start(struct iio_dev *indio_dev)
-@@ -1845,6 +1867,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
- {
- 	struct iio_dev *indio_dev;
- 	struct device *dev = &pdev->dev;
-+	irqreturn_t (*handler)(int irq, void *p) = NULL;
- 	struct stm32_adc *adc;
- 	int ret;
- 
-@@ -1911,9 +1934,11 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	if (!adc->dma_chan)
-+		handler = &stm32_adc_trigger_handler;
-+
- 	ret = iio_triggered_buffer_setup(indio_dev,
--					 &iio_pollfunc_store_time,
--					 &stm32_adc_trigger_handler,
-+					 &iio_pollfunc_store_time, handler,
- 					 &stm32_adc_buffer_setup_ops);
- 	if (ret) {
- 		dev_err(&pdev->dev, "buffer setup failed\n");
--- 
-2.17.1
-
+> ---
+>  drivers/crypto/ccp/sev-dev.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+> index e467860f797d..aa591dae067c 100644
+> --- a/drivers/crypto/ccp/sev-dev.c
+> +++ b/drivers/crypto/ccp/sev-dev.c
+> @@ -896,9 +896,9 @@ EXPORT_SYMBOL_GPL(sev_guest_df_flush);
+>  
+>  static void sev_exit(struct kref *ref)
+>  {
+> -	struct sev_misc_dev *misc_dev = container_of(ref, struct sev_misc_dev, refcount);
+> -
+>  	misc_deregister(&misc_dev->misc);
+> +	kfree(misc_dev);
+> +	misc_dev = NULL;
+>  }
+>  
+>  static int sev_misc_init(struct sev_device *sev)
+> @@ -916,7 +916,7 @@ static int sev_misc_init(struct sev_device *sev)
+>  	if (!misc_dev) {
+>  		struct miscdevice *misc;
+>  
+> -		misc_dev = devm_kzalloc(dev, sizeof(*misc_dev), GFP_KERNEL);
+> +		misc_dev = kzalloc(sizeof(*misc_dev), GFP_KERNEL);
+>  		if (!misc_dev)
+>  			return -ENOMEM;
+>  
+> 
