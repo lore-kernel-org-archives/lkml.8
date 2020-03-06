@@ -2,174 +2,150 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93337C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7443C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666BE2072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583509871;
-	bh=0gPAyKzA3Du6cO7P+Pk28G5fPpL01sEW95ybQ0wcL/Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=JMWJXtis/4ta6lww+hw7JVXm9X+E4EGK6SNEl6+/M0AeucBDpiYGDTJSzXJeN4nT2
-	 ICIQhNVCtJ0k5T/xTFQPCyd20zTXFJEkK6cFr19W/4HcqbqAgttYvidKcU6vSa2T42
-	 UAo01TFj8moq9auU5RwuUpbUOluyByh1xFvHgHtA=
+	by mail.kernel.org (Postfix) with ESMTP id B2E292072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:51:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfZXnAg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgCFPvK (ORCPT
+        id S1727075AbgCFPvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:51:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:35778 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbgCFPvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:51:10 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A28B30E;
-        Fri,  6 Mar 2020 07:51:09 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0C1C3F237;
-        Fri,  6 Mar 2020 07:51:08 -0800 (PST)
-Date:   Fri, 06 Mar 2020 15:51:07 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: wcd9335: fix address map representation" to the asoc tree
-In-Reply-To:  <20200306152633.25836-1-srinivas.kandagatla@linaro.org>
-Message-Id:  <applied-20200306152633.25836-1-srinivas.kandagatla@linaro.org>
-X-Patchwork-Hint: ignore
+        Fri, 6 Mar 2020 10:51:33 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33655 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgCFPvd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:51:33 -0500
+Received: by mail-lf1-f66.google.com with SMTP id c20so2327149lfb.0;
+        Fri, 06 Mar 2020 07:51:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8vpKlxC6kfx/8ZEoHOV/lRWNX/tTNmbczPd46/3sqEc=;
+        b=XfZXnAg7SpiORK5atXAtoAXdiyl4DfgFaVoB3ydY3ygwtW/387vVOoRgbZxbZKfKwM
+         8oaCjXWru31WY0xBI/QcCXiTAAHefK6flvHQjYNLRgwiesTKIGV5X1DoOcoH5wZoef/L
+         u2+e8YzvBan6Ow4VBp2EnkcyF4f+G/mZkJVcJLPO4eZdgUMEQbDlSnkRw/zuFO1FdSNs
+         U5X1JOpCD341/wcHPOXwpLOK2eWeTcAaXOmqMk73kr9mSq8dmMQq3iJOO41r0ReUWzMS
+         rsS76vv67abvaAZ+0rsAOJVsfKpCuqLJ4aLC3gJMagKwEdxkTQE1+dpJrWX7OKk5EOwQ
+         0lTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8vpKlxC6kfx/8ZEoHOV/lRWNX/tTNmbczPd46/3sqEc=;
+        b=IaJb2G0S42j+TacYRP++EZMoXUjIFIsIUtVnRU5XhV7PnumRAG3yxeLKoLJzDCBGqH
+         vTdQn+NtFeMX67X0GK65wufAITBVEAG5TYQUbfvwIUQxV+a26exPsXuyLp0RrZ9IOE+d
+         Z9Yvu5AbYbcIa4D+xNh9HWylSIStVYQXdTW0DUKl3MiRzoa76AuBRpHA3DuhKSJdFuxT
+         Uz3Xz/MWOsmMBcf/T6Kjjn9tAi0XMXrsOop08S2VGa49XItB6JIBU4nifak1iNJfIkou
+         7kE4jpXLrjSSk1gpzeXbkieNrZnXlDAbNCl6xEcgf2ZC+S/Lnx5lpDfKLqrQ1XLswPkk
+         sg4A==
+X-Gm-Message-State: ANhLgQ38uf5wZaj2+DerzQjKU+mwmAm3qnuVRLyCjVwUS6tViXfT01rq
+        IKbHjh3SEkw07i9w3ZKTeD6rZKJK04ac8CjQGqM=
+X-Google-Smtp-Source: ADFU+vtn69XZXX/kFdXPbs7zor1IlvqpO+zLZqcQapmofU9e5T2kEJcKuCgrhX4rG3PpRoGnbpNhkP8BA+n03ocZc5A=
+X-Received: by 2002:ac2:4647:: with SMTP id s7mr2314121lfo.73.1583509890293;
+ Fri, 06 Mar 2020 07:51:30 -0800 (PST)
+MIME-Version: 1.0
+References: <20200221133416.777099322@infradead.org> <20200221134216.051596115@infradead.org>
+ <20200306104335.GF3348@worktop.programming.kicks-ass.net> <20200306113135.GA8787@worktop.programming.kicks-ass.net>
+In-Reply-To: <20200306113135.GA8787@worktop.programming.kicks-ass.net>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 6 Mar 2020 07:51:18 -0800
+Message-ID: <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com>
+Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for _rcuidle
+ tracepoints (again)
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        jiangshanlai@gmail.com, Andy Lutomirski <luto@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Fri, Mar 6, 2020 at 3:31 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Mar 06, 2020 at 11:43:35AM +0100, Peter Zijlstra wrote:
+> > On Fri, Feb 21, 2020 at 02:34:32PM +0100, Peter Zijlstra wrote:
+> > > Effectively revert commit 865e63b04e9b2 ("tracing: Add back in
+> > > rcu_irq_enter/exit_irqson() for rcuidle tracepoints") now that we've
+> > > taught perf how to deal with not having an RCU context provided.
+> > >
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > > ---
+> > >  include/linux/tracepoint.h |    8 ++------
+> > >  1 file changed, 2 insertions(+), 6 deletions(-)
+> > >
+> > > --- a/include/linux/tracepoint.h
+> > > +++ b/include/linux/tracepoint.h
+> > > @@ -179,10 +179,8 @@ static inline struct tracepoint *tracepo
+> > >              * For rcuidle callers, use srcu since sched-rcu        \
+> > >              * doesn't work from the idle path.                     \
+> > >              */                                                     \
+> > > -           if (rcuidle) {                                          \
+> > > +           if (rcuidle)                                            \
+> > >                     __idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+> > > -                   rcu_irq_enter_irqsave();                        \
+> > > -           }                                                       \
+> > >                                                                     \
+> > >             it_func_ptr = rcu_dereference_raw((tp)->funcs);         \
+> > >                                                                     \
+> > > @@ -194,10 +192,8 @@ static inline struct tracepoint *tracepo
+> > >                     } while ((++it_func_ptr)->func);                \
+> > >             }                                                       \
+> > >                                                                     \
+> > > -           if (rcuidle) {                                          \
+> > > -                   rcu_irq_exit_irqsave();                         \
+> > > +           if (rcuidle)                                            \
+> > >                     srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+> > > -           }                                                       \
+> > >                                                                     \
+> > >             preempt_enable_notrace();                               \
+> > >     } while (0)
+> >
+> > So what happens when BPF registers for these tracepoints? BPF very much
+> > wants RCU on AFAIU.
+>
+> I suspect we needs something like this...
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index a2f15222f205..67a39dbce0ce 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1475,11 +1475,13 @@ void bpf_put_raw_tracepoint(struct bpf_raw_event_map *btp)
+>  static __always_inline
+>  void __bpf_trace_run(struct bpf_prog *prog, u64 *args)
+>  {
+> +       int rcu_flags = trace_rcu_enter();
+>         rcu_read_lock();
+>         preempt_disable();
+>         (void) BPF_PROG_RUN(prog, args);
+>         preempt_enable();
+>         rcu_read_unlock();
+> +       trace_rcu_exit(rcu_flags);
 
-   ASoC: wcd9335: fix address map representation
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From d902e7856d2a3b5da7acab90e5faec22e395e57a Mon Sep 17 00:00:00 2001
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Date: Fri, 6 Mar 2020 15:26:33 +0000
-Subject: [PATCH] ASoC: wcd9335: fix address map representation
-
-slimbus addresses are 16 bit wide, masking page numbers
-to wcd register at offset of 12 will limit the number for pages.
-So it becomes impossible to write to page 0x10 registers.
-Remove masking 0x800 (slimbus address range) from register address
-and making use of window parameters in regmap config should fix it
-and also will represent the registers exactly inline with Datasheet.
-
-Remove this unnessary masking and make the registers be inline
-with datasheet.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200306152633.25836-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/wcd9335.c | 18 +++++++++---------
- sound/soc/codecs/wcd9335.h |  7 ++++---
- 2 files changed, 13 insertions(+), 12 deletions(-)
-
-diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
-index f11ffa28683b..700cc1212770 100644
---- a/sound/soc/codecs/wcd9335.c
-+++ b/sound/soc/codecs/wcd9335.c
-@@ -4926,11 +4926,11 @@ static const struct regmap_range_cfg wcd9335_ranges[] = {
- 		.name = "WCD9335",
- 		.range_min =  0x0,
- 		.range_max =  WCD9335_MAX_REGISTER,
--		.selector_reg = WCD9335_REG(0x0, 0),
-+		.selector_reg = WCD9335_SEL_REGISTER,
- 		.selector_mask = 0xff,
- 		.selector_shift = 0,
--		.window_start = 0x0,
--		.window_len = 0x1000,
-+		.window_start = 0x800,
-+		.window_len = 0x100,
- 	},
- };
- 
-@@ -4968,12 +4968,12 @@ static const struct regmap_range_cfg wcd9335_ifc_ranges[] = {
- 	{
- 		.name = "WCD9335-IFC-DEV",
- 		.range_min =  0x0,
--		.range_max = WCD9335_REG(0, 0x7ff),
--		.selector_reg = WCD9335_REG(0, 0x0),
--		.selector_mask = 0xff,
-+		.range_max = WCD9335_MAX_REGISTER,
-+		.selector_reg = WCD9335_SEL_REGISTER,
-+		.selector_mask = 0xfff,
- 		.selector_shift = 0,
--		.window_start = 0x0,
--		.window_len = 0x1000,
-+		.window_start = 0x800,
-+		.window_len = 0x400,
- 	},
- };
- 
-@@ -4981,7 +4981,7 @@ static struct regmap_config wcd9335_ifc_regmap_config = {
- 	.reg_bits = 16,
- 	.val_bits = 8,
- 	.can_multi_write = true,
--	.max_register = WCD9335_REG(0, 0x7FF),
-+	.max_register = WCD9335_MAX_REGISTER,
- 	.ranges = wcd9335_ifc_ranges,
- 	.num_ranges = ARRAY_SIZE(wcd9335_ifc_ranges),
- };
-diff --git a/sound/soc/codecs/wcd9335.h b/sound/soc/codecs/wcd9335.h
-index 4d9be2496c30..72060824c743 100644
---- a/sound/soc/codecs/wcd9335.h
-+++ b/sound/soc/codecs/wcd9335.h
-@@ -8,9 +8,9 @@
-  * in slimbus mode the reg base starts from 0x800
-  * in i2s/i2c mode the reg base is 0x0
-  */
--#define WCD9335_REG(pg, r)	((pg << 12) | (r) | 0x800)
-+#define WCD9335_REG(pg, r)	((pg << 8) | (r))
- #define WCD9335_REG_OFFSET(r)	(r & 0xFF)
--#define WCD9335_PAGE_OFFSET(r)	((r >> 12) & 0xFF)
-+#define WCD9335_PAGE_OFFSET(r)	((r >> 8) & 0xFF)
- 
- /* Page-0 Registers */
- #define WCD9335_PAGE0_PAGE_REGISTER		WCD9335_REG(0x00, 0x000)
-@@ -600,7 +600,8 @@
- #define WCD9335_CDC_CLK_RST_CTRL_FS_CNT_ENABLE	BIT(0)
- #define WCD9335_CDC_CLK_RST_CTRL_FS_CNT_DISABLE	0
- #define WCD9335_CDC_TOP_TOP_CFG1	WCD9335_REG(0x0d, 0x082)
--#define WCD9335_MAX_REGISTER	WCD9335_REG(0x80, 0x0FF)
-+#define WCD9335_MAX_REGISTER	0xffff
-+#define WCD9335_SEL_REGISTER	0x800
- 
- /* SLIMBUS Slave Registers */
- #define WCD9335_SLIM_PGD_PORT_INT_EN0	WCD9335_REG(0, 0x30)
--- 
-2.20.1
-
+One big NACK.
+I will not slowdown 99% of cases because of one dumb user.
+Absolutely no way.
