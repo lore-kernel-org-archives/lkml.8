@@ -2,120 +2,73 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682CBC10F26
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B451C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6FE2064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:33:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxSdDrqz"
+	by mail.kernel.org (Postfix) with ESMTP id 4DFBE20674
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgCFTdP (ORCPT
+        id S1726300AbgCFThk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:33:15 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37024 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgCFTdO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:33:14 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b8so1271710plx.4;
-        Fri, 06 Mar 2020 11:33:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z3KT8EeBZ4kaVLgnDAz4UiYDB1f5ZpcHkzDsT+BdSZk=;
-        b=rxSdDrqzraT4uwdK4VFCE5tw55F0ImCJ4F37HWzATRmaxytGqnISM36ath42eIQYyS
-         rBxO7a6vHaGFt06R6XSFwSP1nK647qwCkhSGR3uLvqqK0Zl6BgHyntKqbDXBoqlJf96k
-         mwsBKxGe3/qFV7x7SqiCwoCNzEaFRucueRUkHjxI/aduFKiKdxl109Pf5SL+vws6BKUK
-         +eMM7neFp8TqrDj96iPZM2jdRCKC3rsRpjxGUVUmlbD2WmHYrE+Ns/PpMw6e2BZbL4rF
-         kDtclqHTx03ggdYNn8/LVa11NjdycrQMnWIfiK/oLXyIG2vM3XUsWAvm3PMHLW5RPo/O
-         WW0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z3KT8EeBZ4kaVLgnDAz4UiYDB1f5ZpcHkzDsT+BdSZk=;
-        b=gCmpp87GTQqwQXl65UfJp9nS9h6YuVB5ivacdhRDBxl1sT5OJJTibJPw3Gq2hbyPvF
-         UVEKg3nealg/mUZ92R7jgOOHuPQy3Jv4pJevwMcRVVgQGFjIaZCz5n/uXVF8FcZG3ATK
-         lrFbL1s9mXH//6zrIwXZRZ3/qQ3qX7ZGddBqyUTDefn+bGaDDDmcAK1BWT37i/iFuC+Y
-         vdWGy5HzjHRY6wDgiw3cavll8qb2Ni7HdYhu6HCF2diO5pJvwWMdc+Nir995GGZq34q4
-         8BaOwhL99gVz0qcMWQ7BPgGKFhOhUBC2fkdxTkSO5usnODjv6akYYxYS3JGdYBexNx7k
-         ekeg==
-X-Gm-Message-State: ANhLgQ0LgpLAN/JIMq4X+5waFi9omsLKILTSrAzuKBEAB0kEqZdChKTd
-        q9F0oxyFrLG/DlYPL8dzYcs=
-X-Google-Smtp-Source: ADFU+vsT3WVYwhpJooawROdOiTWGvCsUv6cL9HuV5P5d1U/LqQqpNY07JVvpUBPh8/8LLWwZnSFs9Q==
-X-Received: by 2002:a17:90a:ef17:: with SMTP id k23mr5138094pjz.139.1583523193162;
-        Fri, 06 Mar 2020 11:33:13 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id a7sm10093043pjo.11.2020.03.06.11.33.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 11:33:12 -0800 (PST)
-Date:   Fri, 6 Mar 2020 11:33:10 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        wim@linux-watchdog.org, linux@roeck-us.net, daniel.baluta@nxp.com,
-        linux@rempel-privat.de, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, m.felsch@pengutronix.de,
-        andriy.shevchenko@linux.intel.com, arnd@arndb.de,
-        enric.balletbo@collabora.com, ronald@innovation.ch,
-        krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 3/5] input: keyboard: add COMPILE_TEST support for
- KEYBOARD_IMX_SC_KEY
-Message-ID: <20200306193310.GI217608@dtor-ws>
-References: <1583509356-8265-1-git-send-email-Anson.Huang@nxp.com>
- <1583509356-8265-3-git-send-email-Anson.Huang@nxp.com>
+        Fri, 6 Mar 2020 14:37:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56004 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgCFThj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 14:37:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E0820AEEF;
+        Fri,  6 Mar 2020 19:37:37 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 860CDDA728; Fri,  6 Mar 2020 20:37:13 +0100 (CET)
+Date:   Fri, 6 Mar 2020 20:37:13 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        frextrite@gmail.com, linux@roeck-us.net
+Subject: Re: [PATCH] fs: btrfs: block-group.c: Fix suspicious RCU usage
+ warning
+Message-ID: <20200306193713.GI2902@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, madhuparnabhowmik10@gmail.com,
+        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        frextrite@gmail.com, linux@roeck-us.net
+References: <20200306065243.11699-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583509356-8265-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200306065243.11699-1-madhuparnabhowmik10@gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 11:42:34PM +0800, Anson Huang wrote:
-> Add COMPILE_TEST support to i.MX SC keyboard driver for better compile
-> testing coverage.
+On Fri, Mar 06, 2020 at 12:22:43PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-Applied, thank you.
-
-> ---
->  drivers/input/keyboard/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The space_info list is rcu protected.
+> Hence, it should be traversed with rcu_read_lock held.
 > 
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 4706ff0..81e26f6 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -467,7 +467,7 @@ config KEYBOARD_IMX
->  
->  config KEYBOARD_IMX_SC_KEY
->  	tristate "IMX SCU Key Driver"
-> -	depends on IMX_SCU
-> +	depends on IMX_SCU || COMPILE_TEST
->  	help
->  	  This is the system controller key driver for NXP i.MX SoCs with
->  	  system controller inside.
-> -- 
-> 2.7.4
+> Warning:
+> [   29.104591] =============================
+> [   29.104756] WARNING: suspicious RCU usage
+> [   29.105046] 5.6.0-rc4-next-20200305 #1 Not tainted
+> [   29.105231] -----------------------------
+> [   29.105401] fs/btrfs/block-group.c:2011 RCU-list traversed in non-reader section!!
 > 
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
--- 
-Dmitry
+I've updated the changelog based on comments from the mail thread and
+applied the patch. Thanks.
