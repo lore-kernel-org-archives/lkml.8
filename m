@@ -6,64 +6,60 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5318C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE49DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F380206D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBFF20709
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583528403;
-	bh=DQxCSRBY0YnfvZFBLyVMkqDoLgd1HJCY15OWxm+cCUo=;
+	s=default; t=1583528408;
+	bh=0bQBUC30ukVWBt3o8n3o6kg3sYFkiEpbVf1bt28fNeM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=nA4NpRIdrCWmPSv20ommDzBu5Gcg3RuY5as6vuoOa5QuojXeR2ufhgSerQkvteczK
-	 p92SaNdE5Zc+37CvjjNINSBw3YAMGAJeHaTTcE6dFclxwu/ILpy4+RA5nWmqtky2lb
-	 YSyPkY4n5f9hyF/9RcnS5WdtKEcS2FY+avE7Ktdk=
+	b=f1ncL41l1p4QGXTgSLBtznwGj4G1Bh42CxP4hTryM9v4leAboXFs5SkVoh7WDI+vl
+	 pOZmPveith9paEOE0BIb56e0euI1wTQAA6qy8QuIO6QsJIR3J+xA3Es/HFRnpUy++I
+	 2PphLlH9xfOYwj0jcLKUYD2x1Gf3QdCubT9K0fqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCFVAC (ORCPT
+        id S1726751AbgCFVAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 16:00:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48494 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 16:00:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbgCFVAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 16:00:02 -0500
-Subject: Re: [GIT PULL] file locking changes for v5.6
+        id S1726185AbgCFVAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 16:00:06 -0500
+Subject: Re: [GIT PULL] Btrfs fix for 5.6-rc5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583528401;
-        bh=DQxCSRBY0YnfvZFBLyVMkqDoLgd1HJCY15OWxm+cCUo=;
+        s=default; t=1583528406;
+        bh=0bQBUC30ukVWBt3o8n3o6kg3sYFkiEpbVf1bt28fNeM=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=MoWrhNmnVOioCuK5NzjoX9rpLZ0KuKzr5mhm7QAYWFfn84gcGknuD6WOidjkVs5pH
-         5GC83ZMs7VAcMoTiWKqg81deKed+D7xZN0v91Kuj8Eq6Ub4GOe3M148tXA6mrVXZSS
-         3NWcDAh/Ah2iE6IzCggI7n3hmjI17bgrzJ6WxTgg=
+        b=gqCk8Wj3UEqkvRNV4EuNKjCGsdrunzQcaw3A9QRwH2jVESYWUkRhtUj0aaKYM1c7s
+         2OJa+kD21NZq6kkbRj81kX4CIl+MCF8jjoxnIjAMC0GCNJoIdr1pmDfCKBEkBAOiuh
+         ELWnVyRTyqbxOZdmjpzn8Chq83SXaRZN+oSdNtYY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <a14229cc7aabebfdffd405018d939d7a0ae1f1cd.camel@kernel.org>
-References: <a14229cc7aabebfdffd405018d939d7a0ae1f1cd.camel@kernel.org>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <a14229cc7aabebfdffd405018d939d7a0ae1f1cd.camel@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git
- tags/filelock-v5.6-1
-X-PR-Tracked-Commit-Id: 6d390e4b5d48ec03bb87e63cf0a2bff5f4e116da
+In-Reply-To: <cover.1583514264.git.dsterba@suse.com>
+References: <cover.1583514264.git.dsterba@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <cover.1583514264.git.dsterba@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.6-rc4-tag
+X-PR-Tracked-Commit-Id: e7a04894c766daa4248cb736efee93550f2d5872
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0b25d458035d0ca6502e678874e2ccb2fa2ddc23
-Message-Id: <158352840153.8472.9432123978920324502.pr-tracker-bot@kernel.org>
-Date:   Fri, 06 Mar 2020 21:00:01 +0000
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
+X-PR-Merge-Commit-Id: 30fe0d07fd7b27d41d9b31a224052cc4e910947a
+Message-Id: <158352840641.8472.10740926899785889939.pr-tracker-bot@kernel.org>
+Date:   Fri, 06 Mar 2020 21:00:06 +0000
+To:     David Sterba <dsterba@suse.com>
+Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 06 Mar 2020 12:18:15 -0500:
+The pull request you sent on Fri,  6 Mar 2020 18:29:47 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git tags/filelock-v5.6-1
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.6-rc4-tag
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0b25d458035d0ca6502e678874e2ccb2fa2ddc23
+https://git.kernel.org/torvalds/c/30fe0d07fd7b27d41d9b31a224052cc4e910947a
 
 Thank you!
 
