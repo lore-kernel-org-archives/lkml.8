@@ -2,126 +2,141 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADAFC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16694C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662852073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E631A20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 06:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgCFG2F (ORCPT
+        id S1726129AbgCFG2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 01:28:05 -0500
-Received: from emcscan.emc.com.tw ([192.72.220.5]:51727 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgCFG2E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 01:28:04 -0500
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="34723354"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 06 Mar 2020 14:28:01 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(60228:0:AUTH_RELAY)
-        (envelope-from <johnny.chuang@emc.com.tw>); Fri, 06 Mar 2020 14:28:04 +0800 (CST)
-Received: from 192.168.55.71
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2482:1:AUTH_LOGIN)
-        (envelope-from <johnny.chuang@emc.com.tw>); Fri, 06 Mar 2020 14:28:03 +0800 (CST)
-From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-To:     "'Peter Hutterer'" <peter.hutterer@who-t.net>,
-        "'Johnny Chuang'" <johnny.chuang.emc@gmail.com>
-Cc:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
-        "'Benjamin Tissoires'" <benjamin.tissoires@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        "'Jennifer Tsai'" <jennifer.tsai@emc.com.tw>,
-        "'James Chen'" <james.chen@emc.com.tw>,
-        "'Paul Liang'" <paul.liang@emc.com.tw>,
-        "'Jeff Chuang'" <jeff.chuang@emc.com.tw>
-References: <1582766000-23023-1-git-send-email-johnny.chuang.emc@gmail.com> <20200227223608.GB1087116@jelly> 
-In-Reply-To: 
-Subject: RE: [PATCH] Input: elants_i2c - Report resolution information for touch major
-Date:   Fri, 6 Mar 2020 14:27:57 +0800
-Message-ID: <005d01d5f380$60a3f920$21ebeb60$@emc.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQKWH33oxoD7nuWwmg1Q/5rISp31bAHeLyTrpqWIE/CABka78A==
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy05ZTEwMmIzNi01ZjczLTExZWEtYmE5Yi03YzVjZjg3NDk0NzhcYW1lLXRlc3RcOWUxMDJiMzgtNWY3My0xMWVhLWJhOWItN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSIyNDc3IiB0PSIxMzIyNzk0OTY3NzY0MjY5NjYiIGg9Imw4cEZoMmd1OS96b2lKY2w3ZzZacmJjUkxFST0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+        Fri, 6 Mar 2020 01:28:08 -0500
+Received: from mga05.intel.com ([192.55.52.43]:11635 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbgCFG2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 01:28:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 22:28:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,521,1574150400"; 
+   d="scan'208";a="352671228"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2020 22:28:03 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     sboyd@kernel.org, mturquette@baylibre.com,
+        linux-clk@vger.kernel.org
+Cc:     robh@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v6 0/2] intel: Add a new driver for a new clock controller IP
+Date:   Fri,  6 Mar 2020 14:27:59 +0800
+Message-Id: <cover.1583475488.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > -----Original Message-----
-> > From: Peter Hutterer [mailto:peter.hutterer@who-t.net]
-> > Sent: Friday, February 28, 2020 6:36 AM
-> > To: Johnny Chuang
-> > Cc: Dmitry Torokhov; Benjamin Tissoires; linux-kernel@vger.kernel.org;
-> > linux-input@vger.kernel.org; Johnny Chuang; Jennifer Tsai; James Chen;
-> > Paul Liang; Jeff Chuang
-> > Subject: Re: [PATCH] Input: elants_i2c - Report resolution information
-> > for touch major
-> >
-> > On Thu, Feb 27, 2020 at 09:13:20AM +0800, Johnny Chuang wrote:
-> > > From: Johnny Chuang <johnny.chuang@emc.com.tw>
-> > >
-> > > This patch supports reporting resolution for ABS_MT_TOUCH_MAJOR
-> event.
-> > > This information is needed in showing pressure/width radius.
-> > >
-> > > Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
-> > > ---
-> > >  drivers/input/touchscreen/elants_i2c.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/input/touchscreen/elants_i2c.c
-> > b/drivers/input/touchscreen/elants_i2c.c
-> > > index 4911799..14c577c 100644
-> > > --- a/drivers/input/touchscreen/elants_i2c.c
-> > > +++ b/drivers/input/touchscreen/elants_i2c.c
-> > > @@ -1309,6 +1309,7 @@ static int elants_i2c_probe(struct i2c_client
-> > *client,
-> > >  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
-> > >  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
-> > >  	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
-> > > +	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
-> >
-> > official resolution for absinfo is "units per mm", so a value of 3
-> > would mean 3mm, is that correct?
-> 
-> Correct.
-> This resolution (1 unit/mm) is for all elan I2C touchscreen devices,
-including
-> the touchscreen devices in the future.
-> This information is from our firmware members.
+Hi,
 
-Hi Peter / Benjamin,
-Could you help to review and approve this patch?
+This series adds clock driver for Clock Generation Unit(CGU) of
+Lightning Mountain(LGM) SoC.
 
-> 
-> >
-> > Not that it matters too much, since touch major is already all over
-> > the place and needs userspace overrides for every device but it'd be
-> > nice to at least make this useful out of the box on one device class.
-> >
-> > Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
-> >
-> > otherwise
-> >
-> > Cheers,
-> >    Peter
-> >
-> > >
-> > >  	error = input_register_device(ts->input);
-> > >  	if (error) {
-> > > --
-> > > 2.7.4
-> > >
+Patch 1 adds bindings document & include file for CGU.
+Patch 2 adds common clock framework based clock driver for CGU.
+
+These patches are baselined upon Linux 5.6-rc1 at below Git link:
+git git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
+
+v6:
+- Resolve Kconfig dependencies issues (Randy Dunlap)
+
+v5:
+- Address review concerns - mainly below mentioned. (Stephen Boyd)
+- Improve commit message, add COMPILE_TEST in KConfig dependency.
+- Remove unused header include files, drop unnecessary casts.
+- Switch to using readl_poll_timeout() instead of implementing timeout routine.
+- Avoid using small functions which are called just once. Inline them or
+  remove them.
+- const static --> static const
+- Fix coding style/convention related review concerns.
+- Use __iomem for all IO addresses variables.
+- Consolidate clk_enable & clk_disable ops into a common clk_enable_disable
+  routine to avoid redundant code.
+- Remove unnecessary dev pointers for clk data structures.
+- Redesign code to use new way of specifying clk_parents i.e. use
+  clk_parent_data.fw_name instead of older parent_name strings.
+- Switch from raw_spin_locks() to normal spin_locks() and realign locking.
+- Drop __initconst, __init, __refdata.
+- Reorder patch series - make dt-binding patch as first patch.
+- Add pointer to include file in dt-bindings document.
+- Remove CLK_IS_CRITICAL flag for clks for which IGNORE_UNUSED flag is enough.
+  Add comments for clks which are marked as CRITICAL.
+- Fix $id path in dt-bindings - drop bindings. (Rob Herring).
+- Add Reviewed-by tag from Rob Herring. Thanks Rob.
+
+v4:
+- Add drivers/clk/x86/Kconfig file which got missed in v3 by mistake.
+
+v3:
+- Address review concerns:
+  Add Kconfig entry in x86 folder instead of modifying clk/Kconfig. (Andy Shevchenko)
+  Fix coding style/convention related concerns. (Andy Shevchenko)
+  Improve description, licensing info, rename node name correctly in dt bindings
+  document & remove CLK_NR_CLKS from dt-bindings header file. (Stephen Boyd)
+  Fix a build warning reported by kbuild test robot & Nathan Chancellor
+- Add few new clocks & rename few existing clocks.
+- Add more ops for ddiv & divider clk_ops.
+- Fix few minor bugs.
+- Use CLK_IS_CRITICAL flag for clocks which shall never be disabled.
+
+v2:
+- Move the driver to x86 folder.
+- Remove syscon usage.
+- Remove regmap based access. Use direct readl()/write() instead. Add spinlocks.
+- Change all enum values to capitals.
+- Rename all data structures & functions from intel_* to lgm_*.
+- Remove multiple header files. Keep only one header file.
+- Make probe fail when any of the clk/pll registration fails.
+- Fix few bugs with clk_init_data assignement.
+- Address review concerns for code quality/style/convention.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (1):
+  dt-bindings: clk: intel: Add bindings document & header file for CGU
+
+rtanwar (1):
+  clk: intel: Add CGU clock driver for a new SoC
+
+ .../devicetree/bindings/clock/intel,cgu-lgm.yaml   |  44 ++
+ drivers/clk/Kconfig                                |   1 +
+ drivers/clk/x86/Kconfig                            |   8 +
+ drivers/clk/x86/Makefile                           |   1 +
+ drivers/clk/x86/clk-cgu-pll.c                      | 156 +++++
+ drivers/clk/x86/clk-cgu.c                          | 636 +++++++++++++++++++++
+ drivers/clk/x86/clk-cgu.h                          | 335 +++++++++++
+ drivers/clk/x86/clk-lgm.c                          | 492 ++++++++++++++++
+ include/dt-bindings/clock/intel,lgm-clk.h          | 165 ++++++
+ 9 files changed, 1838 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
+ create mode 100644 drivers/clk/x86/Kconfig
+ create mode 100644 drivers/clk/x86/clk-cgu-pll.c
+ create mode 100644 drivers/clk/x86/clk-cgu.c
+ create mode 100644 drivers/clk/x86/clk-cgu.h
+ create mode 100644 drivers/clk/x86/clk-lgm.c
+ create mode 100644 include/dt-bindings/clock/intel,lgm-clk.h
+
+-- 
+2.11.0
 
