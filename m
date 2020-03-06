@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375D5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E12C10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A51F206E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E4A206E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:00:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R90gTXiG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YRsSIbpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbgCGAAn (ORCPT
+        id S1727193AbgCGAAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 19:00:43 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37468 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgCGAAa (ORCPT
+        Fri, 6 Mar 2020 19:00:51 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44617 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgCGAAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 19:00:30 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z12so1804165pgl.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 16:00:28 -0800 (PST)
+        Fri, 6 Mar 2020 19:00:24 -0500
+Received: by mail-pg1-f196.google.com with SMTP id n24so1786847pgk.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 16:00:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gZyZntHsdjoBeCJtjOQp+OOLTX7DtTYf5YMcuIO3+bY=;
-        b=R90gTXiG7ER3y25trfX0EcpADXPxxKJhr+jAG6qxSEzfinMu8uRLlrpWR0KH+iYYI2
-         Tlv2KDoK0QDo7IHf31XUEB8Bfuvmv/py4PBwG30rT3SY/RXHEszHudEua9dqmLwMlD7S
-         0I6ZmXEElzg+agnr1ovCXuIkUt1xv6mKUx4H0=
+        bh=Fa535hrpTpxZVWC2jXEsXv4d9XUZa691SL9SgolYs4Y=;
+        b=YRsSIbpMAkMDVgwzUvqYgt5Pw2FWe38K7hVWxuT56wcYfjeSCrGFticDa/8sZo8SrP
+         muEqQOjyKmXZDNM5RUGBdpKKU4Dx8lFk9b59ItnlKq08BTRHOfFL/OKdsXhnD/O7Phtr
+         nZUnQAxr/+hYCGdRZl8k2U7iNsQroUXrOX19w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gZyZntHsdjoBeCJtjOQp+OOLTX7DtTYf5YMcuIO3+bY=;
-        b=i5TrtUCSiQWnU+TdqI8V7DfN3a3ZxlKpcwYDIRYuSpBtNmJ7+XE2gDwJ6sVYLq5LTh
-         ojH85fCnvrOwfqPFHSU4P8KL5ROA8nYq4A43CHY+/NMQOLdrEjuyqDDIMEgwbbNDDx2w
-         yWpMifpZkkdNjPFZXfmt+QUUyCtfSspYzCKHHTZl9SF28eRxODPj82CWBazs3SU4/lHD
-         XZsbBZNqLxgurIFWGySSn4NVJEp690P7DUfbmqBzAhcLSDHtUQVtGskUt5exWCJ63TTA
-         rHKMJUGMkTpg1RqrrsPMFLF3Wx3mUgWopNwMiFytshPhIXXAEk3DmWgJU0vJ982UuD6y
-         UOnQ==
-X-Gm-Message-State: ANhLgQ30cYNwF4ZpLGVEd3CE6o/lxmpm4jgq34xViBs00vo/JUGrxI7D
-        qLChRuWIlnaBYyllLVS7YLOAE1ds4qw=
-X-Google-Smtp-Source: ADFU+vvslJDBpHZyNAxmwmn8XTe/pFo8A1pJmFpIX/3VBPxSC36ub6HVQCqVsJtQPMWEiDp5V8HusQ==
-X-Received: by 2002:a63:f010:: with SMTP id k16mr5502683pgh.328.1583539227860;
-        Fri, 06 Mar 2020 16:00:27 -0800 (PST)
+        bh=Fa535hrpTpxZVWC2jXEsXv4d9XUZa691SL9SgolYs4Y=;
+        b=HGVTcoI4uwBmbsBRJaHm//HUdpxWhA0LmHTXz9iaTT78GLlNNCBZNOvYJo95rN7FuE
+         hcezzNArL3t7NSxY6zxgCEAgihCObs6MUC1nADvqFeKKaz1WOhIH/B6eGuEnkMUoNTTH
+         WgAM0TMokaYLomdnlEPhOHX2tqKc4x3vr6PupGtAAekZV5NbwiRLQTkRdx4NfIq3MRWf
+         QmKBtfDwMyjt2E8frwI0+jZHnzg4D01BxfrhpMvV7LB6pKqIvyFiS52j7k1CbwsPcY1Z
+         88iq2HOZzR2fRRK5XXt5JRc5ZP+SuNG3qr0YtwBTIBt6AQWLy8u9ISa2/8Nq7P2zroOG
+         AdvA==
+X-Gm-Message-State: ANhLgQ0m+prDhideeyx7hjxRSu6KBdaMv8xK7fAfRwoVe5mEazo4vvUU
+        l48IUIGQ6TU+ADdKqfAspaHvuA==
+X-Google-Smtp-Source: ADFU+vuLg3Bqwh0pMdmhbZ2lf/7W/K+nOSsEUZ6rUJLzRWGPCGc0yXBD0jE1vPdLfE2P1yx40LUpLA==
+X-Received: by 2002:a63:c643:: with SMTP id x3mr5167987pgg.299.1583539221779;
+        Fri, 06 Mar 2020 16:00:21 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id 9sm32302246pge.65.2020.03.06.16.00.27
+        by smtp.gmail.com with ESMTPSA id 9sm32302246pge.65.2020.03.06.16.00.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 16:00:27 -0800 (PST)
+        Fri, 06 Mar 2020 16:00:21 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -62,9 +62,9 @@ Cc:     Rajendra Nayak <rnayak@codeaurora.org>, mka@chromium.org,
         Lina Iyer <ilina@codeaurora.org>,
         Douglas Anderson <dianders@chromium.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFT PATCH 6/9] drivers: qcom: rpmh-rsc: Only use "tcs_in_use" for ACTIVE_ONLY
-Date:   Fri,  6 Mar 2020 15:59:48 -0800
-Message-Id: <20200306155707.RFT.6.Icf2213131ea652087f100129359052c83601f8b0@changeid>
+Subject: [RFT PATCH 1/9] drivers: qcom: rpmh-rsc: Clean code reading/writing regs/cmds
+Date:   Fri,  6 Mar 2020 15:59:43 -0800
+Message-Id: <20200306155707.RFT.1.I1b754137e8089e46cf33fc2ea270734ec3847ec4@changeid>
 X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 In-Reply-To: <20200306235951.214678-1-dianders@chromium.org>
 References: <20200306235951.214678-1-dianders@chromium.org>
@@ -75,73 +75,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From trawling through the code (see the "A lot of comments" change) I
-found that "tcs_in_use" was only kept up-to-date for ACTIVE_ONLY TCSs.
-...yet tcs_is_free() was checking the variable called from
-tcs_invalidate() and tcs_invalidate() is only used for non-ACTIVE_ONLY
-TCSs.
+This patch makes two changes, both of which should be no-ops:
 
-Let's change tcs_invalidate() to just check the "RSC_DRV_STATUS"
-register, which was presumably the important part.
+1. Make read_tcs_reg() / read_tcs_cmd() symmetric to write_tcs_reg() /
+   write_tcs_cmd().
 
-It also feels like for ACTIVE_ONLY TCSs that it probably wasn't
-important to check the "RSC_DRV_STATUS".  We'll keep doing it just in
-case but we'll add a warning if it ever actually mattered.
+2. Change the order of operations in the above functions to make it
+   more obvious to me what the math is doing.  Specifically first you
+   want to find the right TCS, then the right register, and then
+   multiply by the command ID if necessary.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- drivers/soc/qcom/rpmh-rsc.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/soc/qcom/rpmh-rsc.c | 31 ++++++++++++++++++-------------
+ 1 file changed, 18 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index 190226151029..c63441182358 100644
+index e278fc11fe5c..5c88b8cd5bf8 100644
 --- a/drivers/soc/qcom/rpmh-rsc.c
 +++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -164,7 +164,7 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
+@@ -61,28 +61,33 @@
+ #define CMD_STATUS_ISSUED		BIT(8)
+ #define CMD_STATUS_COMPL		BIT(16)
+ 
+-static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
++static u32 read_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
+ {
+-	return readl_relaxed(drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
++	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
+ 			     RSC_DRV_CMD_OFFSET * cmd_id);
  }
  
- /**
-- * tcs_is_free() - Return if a TCS is totally free.
-+ * tcs_is_free() - Return if an ACTIVE_ONLY TCS is totally free.
-  * @drv:    The RSC controller.
-  * @tcs_id: The global ID of this TCS.
-  *
-@@ -177,8 +177,23 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
-  */
++static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id)
++{
++	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
++}
++
+ static void write_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id,
+ 			  u32 data)
+ {
+-	writel_relaxed(data, drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
++	writel_relaxed(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
+ 		       RSC_DRV_CMD_OFFSET * cmd_id);
+ }
+ 
+ static void write_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, u32 data)
+ {
+-	writel_relaxed(data, drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id);
++	writel_relaxed(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
+ }
+ 
+ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
+ 			       u32 data)
+ {
+-	writel(data, drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id);
++	writel(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
+ 	for (;;) {
+ 		if (data == readl(drv->tcs_base + reg +
+ 				  RSC_DRV_TCS_OFFSET * tcs_id))
+@@ -94,7 +99,7 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
  static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
  {
--	return !test_bit(tcs_id, drv->tcs_in_use) &&
--	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id);
-+	if (test_bit(tcs_id, drv->tcs_in_use))
-+		return false;
-+
-+	if (read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id) != 0)
-+		return true;
-+
-+	/*
-+	 * If this warning never ever hits then we can change this function
-+	 * to just look at "tcs_in_use" and skip the read of the
-+	 * RSC_DRV_STATUS register.
-+	 *
-+	 * If this warning _does_ hit, we should figure out if this is just
-+	 * the way the hardware works or if there is some bug being pointed
-+	 * out.
-+	 */
-+	WARN(1, "Driver thought TCS was free but HW reported busy\n");
-+	return false;
+ 	return !test_bit(tcs_id, drv->tcs_in_use) &&
+-	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id, 0);
++	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id);
  }
  
- /**
-@@ -204,7 +219,7 @@ static int tcs_invalidate(struct rsc_drv *drv, int type)
+ static struct tcs_group *get_tcs_of_type(struct rsc_drv *drv, int type)
+@@ -212,7 +217,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
+ 	const struct tcs_request *req;
+ 	struct tcs_cmd *cmd;
+ 
+-	irq_status = read_tcs_reg(drv, RSC_DRV_IRQ_STATUS, 0, 0);
++	irq_status = read_tcs_reg(drv, RSC_DRV_IRQ_STATUS, 0);
+ 
+ 	for_each_set_bit(i, &irq_status, BITS_PER_LONG) {
+ 		req = get_req_from_tcs(drv, i);
+@@ -226,7 +231,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
+ 			u32 sts;
+ 
+ 			cmd = &req->cmds[j];
+-			sts = read_tcs_reg(drv, RSC_DRV_CMD_STATUS, i, j);
++			sts = read_tcs_cmd(drv, RSC_DRV_CMD_STATUS, i, j);
+ 			if (!(sts & CMD_STATUS_ISSUED) ||
+ 			   ((req->wait_for_compl || cmd->wait) &&
+ 			   !(sts & CMD_STATUS_COMPL))) {
+@@ -265,7 +270,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
+ 	cmd_msgid |= msg->wait_for_compl ? CMD_MSGID_RESP_REQ : 0;
+ 	cmd_msgid |= CMD_MSGID_WRITE;
+ 
+-	cmd_complete = read_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, 0);
++	cmd_complete = read_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id);
+ 
+ 	for (i = 0, j = cmd_id; i < msg->num_cmds; i++, j++) {
+ 		cmd = &msg->cmds[i];
+@@ -281,7 +286,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
  	}
  
- 	for (m = tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
--		if (!tcs_is_free(drv, m)) {
-+		if (read_tcs_reg(drv, RSC_DRV_STATUS, m) == 0) {
- 			spin_unlock(&tcs->lock);
- 			return -EAGAIN;
- 		}
+ 	write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, cmd_complete);
+-	cmd_enable |= read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
++	cmd_enable |= read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id);
+ 	write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, cmd_enable);
+ }
+ 
+@@ -294,7 +299,7 @@ static void __tcs_trigger(struct rsc_drv *drv, int tcs_id)
+ 	 * While clearing ensure that the AMC mode trigger is cleared
+ 	 * and then the mode enable is cleared.
+ 	 */
+-	enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, 0);
++	enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id);
+ 	enable &= ~TCS_AMC_MODE_TRIGGER;
+ 	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
+ 	enable &= ~TCS_AMC_MODE_ENABLE;
+@@ -319,10 +324,10 @@ static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_group *tcs,
+ 		if (tcs_is_free(drv, tcs_id))
+ 			continue;
+ 
+-		curr_enabled = read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
++		curr_enabled = read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id);
+ 
+ 		for_each_set_bit(j, &curr_enabled, MAX_CMDS_PER_TCS) {
+-			addr = read_tcs_reg(drv, RSC_DRV_CMD_ADDR, tcs_id, j);
++			addr = read_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tcs_id, j);
+ 			for (k = 0; k < msg->num_cmds; k++) {
+ 				if (addr == msg->cmds[k].addr)
+ 					return -EBUSY;
 -- 
 2.25.1.481.gfbce0eb801-goog
 
