@@ -2,156 +2,93 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF52C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A506C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7C720674
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339B020674
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 18:59:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FLovj0sE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgCFS73 (ORCPT
+        id S1726682AbgCFS7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 13:59:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbgCFS73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 13:59:29 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD94520637;
-        Fri,  6 Mar 2020 18:59:26 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 13:59:25 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        dan carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for
- _rcuidle tracepoints (again)
-Message-ID: <20200306135925.50c38bec@gandalf.local.home>
-In-Reply-To: <20200306184538.GA92717@google.com>
-References: <20200221133416.777099322@infradead.org>
-        <20200221134216.051596115@infradead.org>
-        <20200306104335.GF3348@worktop.programming.kicks-ass.net>
-        <20200306113135.GA8787@worktop.programming.kicks-ass.net>
-        <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com>
-        <1896740806.20220.1583510668164.JavaMail.zimbra@efficios.com>
-        <20200306125500.6aa75c0d@gandalf.local.home>
-        <20200306184538.GA92717@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 6 Mar 2020 13:59:44 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:5155 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726083AbgCFS7o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 13:59:44 -0500
+X-UUID: 94c557faed8844b3a9c8f8c465c5f476-20200307
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=MdqWKHfBwguVDBEPuH6JAevmmLUjB/lFGpuvwjDr5go=;
+        b=FLovj0sE4sOfEVhAxLM8e3f55Dr8gaydmIrNIE/1qYDEavK6lywzwbZMjsKserLP8I0AbQ0+u4QGxBvtLU4G/tZ4+RLCbbFd3cptHXZm87iNTgyZRV58TYgfwQD8+Ne7uDCCl15iBWrBF99HbOffsRzLm0mgN9K9qFJZzL+YTx4=;
+X-UUID: 94c557faed8844b3a9c8f8c465c5f476-20200307
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1790914881; Sat, 07 Mar 2020 02:59:35 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 7 Mar 2020 03:00:48 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by mtkcas08.mediatek.inc
+ (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 7 Mar
+ 2020 03:00:01 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 7 Mar 2020 03:00:01 +0800
+Message-ID: <1583521173.8911.9.camel@mtksdccf07>
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dmitry Vyukov <dvyukov@google.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Date:   Sat, 7 Mar 2020 02:59:33 +0800
+In-Reply-To: <20200305203356.307c0a18@canb.auug.org.au>
+References: <20200305163743.7128c251@canb.auug.org.au>
+         <1583398476.17146.6.camel@mtksdccf07>
+         <20200305203356.307c0a18@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 13:45:38 -0500
-Joel Fernandes <joel@joelfernandes.org> wrote:
+T24gVGh1LCAyMDIwLTAzLTA1IGF0IDIwOjMzICsxMTAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
+Og0KPiBIaSBXYWx0ZXIsDQo+IA0KPiBPbiBUaHUsIDUgTWFyIDIwMjAgMTY6NTQ6MzYgKzA4MDAg
+V2FsdGVyIFd1IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IEkn
+bSBzb3JyeSBmb3IgdGhlIGJ1aWxkIHdhcm5pbmcsIGl0IGRvZXNuJ3QgZ2VuZXJhdGUgaW4gb3Vy
+IGxvY2FsDQo+ID4gZW52aXJvbm1lbnQoYXJtNjQveDg2XzY0KS4gV291bGQgeW91IHRlbGwgbWUg
+d2hhdCB0b29sY2hhaW5zIGNhbg0KPiA+IHJlcHJvZHVjZSBpdD8NCj4gDQo+IEkgYW0gdXNpbmcg
+YSBQb3dlclBDIExFIGhvc3RlZCB4ODZfNjQgZ2NjIHY5LjIuMSAoRGViaWFuIGNyb3NzIGNvbXBp
+bGVyKS4NCj4gDQo+ICQgL3Vzci9iaW4veDg2XzY0LWxpbnV4LWdudS1nY2MgLS12ZXJzaW9uDQo+
+IHg4Nl82NC1saW51eC1nbnUtZ2NjIChEZWJpYW4gOS4yLjEtMjEpIDkuMi4xIDIwMTkxMTMwDQo+
+IA0KSGkgU3RlcGhlbiwNCg0KVGhhbmtzIGZvciB5b3VyIGluZm9ybWF0aW9uLCBJdCBkb2Vzbid0
+IGdlbmVyYXRlIHdhcm5pbmcgbWVzc2FnZSBpbg0KZ2NjLTguMy4wKERlYmlhbiA4LjMuMC02KSBh
+ZnRlciBhcHBseSBiZWxvdyBwYXRjaC4NCg0KDQotLS0gYS9saWIvdGVzdF9rYXNhbi5jDQorKysg
+Yi9saWIvdGVzdF9rYXNhbi5jDQpAQCAtMjg2LDE3ICsyODYsMTkgQEAgc3RhdGljIG5vaW5saW5l
+IHZvaWQgX19pbml0DQprbWFsbG9jX29vYl9pbl9tZW1zZXQodm9pZCkNCiBzdGF0aWMgbm9pbmxp
+bmUgdm9pZCBfX2luaXQga21hbGxvY19tZW1tb3ZlX2ludmFsaWRfc2l6ZSh2b2lkKQ0KIHsNCiAg
+ICAgICAgY2hhciAqcHRyOw0KLSAgICAgICBzaXplX3Qgc2l6ZSA9IDY0Ow0KKyAgICAgICBzaXpl
+X3Qgc2l6ZTEgPSA2NDsNCisgICAgICAgc2l6ZV90IHNpemUyID0gNjI7DQoNCiAgICAgICAgcHJf
+aW5mbygiaW52YWxpZCBzaXplIGluIG1lbW1vdmVcbiIpOw0KLSAgICAgICBwdHIgPSBrbWFsbG9j
+KHNpemUsIEdGUF9LRVJORUwpOw0KKyAgICAgICBwdHIgPSBrbWFsbG9jKHNpemUxLCBHRlBfS0VS
+TkVMKTsNCiAgICAgICAgaWYgKCFwdHIpIHsNCiAgICAgICAgICAgICAgICBwcl9lcnIoIkFsbG9j
+YXRpb24gZmFpbGVkXG4iKTsNCiAgICAgICAgICAgICAgICByZXR1cm47DQogICAgICAgIH0NCg0K
+LSAgICAgICBtZW1zZXQoKGNoYXIgKilwdHIsIDAsIDY0KTsNCi0gICAgICAgbWVtbW92ZSgoY2hh
+ciAqKXB0ciwgKGNoYXIgKilwdHIgKyA0LCAtMik7DQorICAgICAgIG1lbXNldCgoY2hhciAqKXB0
+ciwgMCwgc2l6ZTEpOw0KKyAgICAgICAvKiB0aGUgc2l6ZSBvZiBtZW1tb3ZlKCkgaXMgbmVnYXRp
+dmUgbnVtYmVycyAqLw0KKyAgICAgICBtZW1tb3ZlKChjaGFyICopcHRyLCAoY2hhciAqKXB0ciAr
+IDQsIHNpemUyIC0gc2l6ZTEpOw0KICAgICAgICBrZnJlZShwdHIpOw0KIH0NCg0K
 
-> On Fri, Mar 06, 2020 at 12:55:00PM -0500, Steven Rostedt wrote:
-> > On Fri, 6 Mar 2020 11:04:28 -0500 (EST)
-> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> >   
-> > > If we care about not adding those extra branches on the fast-path, there is
-> > > an alternative way to do things: BPF could provide two distinct probe callbacks,
-> > > one meant for rcuidle tracepoints (which would have the trace_rcu_enter/exit), and
-> > > the other for the for 99% of the other callsites which have RCU watching.
-> > > 
-> > > I would recommend performing benchmarks justifying the choice of one approach over
-> > > the other though.  
-> > 
-> > I just whipped this up (haven't even tried to compile it), but this should
-> > satisfy everyone. Those that register a callback that needs RCU protection
-> > simply registers with one of the _rcu versions, and all will be done. And
-> > since DO_TRACE is a macro, and rcuidle is a constant, the rcu protection
-> > code will be compiled out for locations that it is not needed.
-> > 
-> > With this, perf doesn't even need to do anything extra but register with
-> > the "_rcu" version.  
-> 
-> Looks nice! Some comments below:
-> 
-> > -- Steve
-> > 
-> > diff --git a/include/linux/tracepoint-defs.h b/include/linux/tracepoint-defs.h
-> > index b29950a19205..582dece30170 100644
-> > --- a/include/linux/tracepoint-defs.h
-> > +++ b/include/linux/tracepoint-defs.h
-> > @@ -25,6 +25,7 @@ struct tracepoint_func {
-> >  	void *func;
-> >  	void *data;
-> >  	int prio;
-> > +	int requires_rcu;
-> >  };
-> >  
-> >  struct tracepoint {
-> > diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> > index 1fb11daa5c53..5f4de82ffa0f 100644
-> > --- a/include/linux/tracepoint.h
-> > +++ b/include/linux/tracepoint.h
-> > @@ -179,25 +179,28 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-> >  		 * For rcuidle callers, use srcu since sched-rcu	\
-> >  		 * doesn't work from the idle path.			\
-> >  		 */							\
-> > -		if (rcuidle) {						\
-> > +		if (rcuidle)						\
-> >  			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\  
-> 
-> Small addition:
-> To prevent confusion, we could make more clear that SRCU here is just to
-> protect the tracepoint function table and not the callbacks themselves.
-> 
-> > -			rcu_irq_enter_irqson();				\
-> > -		}							\
-> >  									\
-> >  		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
-> >  									\
-> >  		if (it_func_ptr) {					\
-> >  			do {						\
-> > +				int rcu_flags;				\
-> >  				it_func = (it_func_ptr)->func;		\
-> > +				if (rcuidle &&				\
-> > +				    (it_func_ptr)->requires_rcu)	\
-> > +					rcu_flags = trace_rcu_enter();	\
-> >  				__data = (it_func_ptr)->data;		\
-> >  				((void(*)(proto))(it_func))(args);	\
-> > +				if (rcuidle &&				\
-> > +				    (it_func_ptr)->requires_rcu)	\
-> > +					trace_rcu_exit(rcu_flags);	\  
-> 
-> Nit: If we have incurred the cost of trace_rcu_enter() once, we can call
-> it only once and then call trace_rcu_exit() after the do-while loop. That way
-> we pay the price only once.
->
-
-I thought about that, but the common case is only one callback attached at
-a time. To make the code complex for the non common case seemed too much
-of an overkill. If we find that it does help, it's best to do that as a
-separate patch because then if something goes wrong we know where it
-happened.
-
-Currently, this provides the same overhead as if each callback did it
-themselves like we were proposing (but without the added need to do it for
-all instances of the callback).
-
--- Steve
