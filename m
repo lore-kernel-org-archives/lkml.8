@@ -6,75 +6,61 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD114C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0BAC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D4820726
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3102073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgCFCFo (ORCPT
+        id S1726740AbgCFCI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 21:05:44 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2598 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726300AbgCFCFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 21:05:43 -0500
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 1D553813662A715DAA7F;
-        Fri,  6 Mar 2020 10:05:41 +0800 (CST)
-Received: from dggeme702-chm.china.huawei.com (10.1.199.98) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 6 Mar 2020 10:05:40 +0800
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme702-chm.china.huawei.com (10.1.199.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 6 Mar 2020 10:05:40 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1713.004;
- Fri, 6 Mar 2020 10:05:40 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH] KVM: x86: small optimization for is_mtrr_mask calculation
-Thread-Topic: [PATCH] KVM: x86: small optimization for is_mtrr_mask
- calculation
-Thread-Index: AdXzWwIZgYDieYaoSGWM6QNNY//RGA==
-Date:   Fri, 6 Mar 2020 02:05:40 +0000
-Message-ID: <82b7d2d8c75e4c80a7704ae43940392a@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Thu, 5 Mar 2020 21:08:26 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:58762 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbgCFCI0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 21:08:26 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7FCE11581B2D3;
+        Thu,  5 Mar 2020 18:08:25 -0800 (PST)
+Date:   Thu, 05 Mar 2020 18:08:23 -0800 (PST)
+Message-Id: <20200305.180823.1274906337509861200.davem@davemloft.net>
+To:     sfr@canb.auug.org.au
+Cc:     sameo@linux.intel.com, linux-next@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        johannes@sipsolutions.net
+Subject: Re: linux-next: the nfc-next tree seems to be old
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200306104825.068268eb@canb.auug.org.au>
+References: <20200130105538.7b07b150@canb.auug.org.au>
+        <20200306104825.068268eb@canb.auug.org.au>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 05 Mar 2020 18:08:25 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQpQYW9sbyBCb256aW5pIDxwYm9uemluaUByZWRoYXQuY29tPiB3cm90ZToNCj5PbiAwNS8w
-My8yMCAwMzo0OCwgbGlubWlhb2hlIHdyb3RlOg0KPj4gRnJvbTogTWlhb2hlIExpbiA8bGlubWlh
-b2hlQGh1YXdlaS5jb20+DQo+PiANCj4+IFdlIGNhbiBnZXQgaXNfbXRycl9tYXNrIGJ5IGNhbGN1
-bGF0aW5nIChtc3IgLSAweDIwMCkgJSAyIGRpcmVjdGx5Lg0KPj4gIAkJaW5kZXggPSAobXNyIC0g
-MHgyMDApIC8gMjsNCj4+IC0JCWlzX210cnJfbWFzayA9IG1zciAtIDB4MjAwIC0gMiAqIGluZGV4
-Ow0KPj4gKwkJaXNfbXRycl9tYXNrID0gKG1zciAtIDB4MjAwKSAlIDI7DQo+PiAgCQlpZiAoIWlz
-X210cnJfbWFzaykNCj4+ICAJCQkqcGRhdGEgPSB2Y3B1LT5hcmNoLm10cnJfc3RhdGUudmFyX3Jh
-bmdlc1tpbmRleF0uYmFzZTsNCj4+ICAJCWVsc2UNCj4+IA0KPg0KPklmIHlvdSdyZSBnb2luZyB0
-byBkbyB0aGF0LCBtaWdodCBhcyB3ZWxsIHVzZSAiPj4gMSIgZm9yIGluZGV4IGluc3RlYWQgb2Yg
-Ii8gMiIsIGFuZCAibXNyICYgMSIgZm9yIGlzX210cnJfbWFzay4NCj4NCg0KTWFueSB0aGFua3Mg
-Zm9yIHN1Z2dlc3Rpb24uIFdoYXQgZG8geW91IG1lYW4gaXMgbGlrZSB0aGlzID8NCg0KCWluZGV4
-ID0gKG1zciAtIDB4MjAwKSA+PiAxOw0KCWlzX210cnJfbWFzayA9IG1zciAmIDE7DQoNClRoYW5r
-cyBhZ2Fpbi4NCg==
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 6 Mar 2020 10:48:25 +1100
+
+> On Thu, 30 Jan 2020 10:55:38 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>>
+>> Hi Samuel,
+>> 
+>> I noticed that the nfc-next tree has not changed since June 2018 and
+>> has been orphaned in May 2019, so am wondering if the commits in it are
+>> still relevant or should I just remove the tree from linux-next.
+> 
+> Since I have had no response, I will remove it tomorrow.
+
+We've been integrating NFC patches directly into my networking tree for
+a while now, so this is indeed the thing to do.
+
+Thanks.
