@@ -2,126 +2,174 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA22CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C498FC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5E22084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:18:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlOQ0NIq"
+	by mail.kernel.org (Postfix) with ESMTP id 9F8FB2084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgCFQSP (ORCPT
+        id S1726898AbgCFQSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:18:15 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40555 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgCFQSP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:18:15 -0500
-Received: by mail-qk1-f195.google.com with SMTP id m2so2794269qka.7;
-        Fri, 06 Mar 2020 08:18:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wyxwn/uIvwvwuo/CHU7Bo2juetQK83mXPdvKd8qe8K8=;
-        b=GlOQ0NIqwiOm7KiuNnvyD7fTW2tuSulcPgG3SsZbeGr9bylPN9ZDoKIwHHWa8Cnjyt
-         Hm+hbJ+vmOAc/7hnqvl+SrIwLGggNzLO1IbLM6JamAKKoEqcArY5RR7y/G5xK2UdPt09
-         RkpKX0RXkF87e/3QSKgXdGqw7ZOlrtCcSjdGdI9vkJAGCzZxoIDh/Ct71cxCtZvcxQyX
-         cDI6dK+lDS+yn6B5kz+4rNx0x/VzQuAy1PvN9sGEiFlb72ofLgceUCyvqIrI/Yv7FFbo
-         7r2gdVHyq2XRWAcNP1kFuBMYOtwwsLKPwciQCaH5sRKyuuokEv/sU+XtTcc/Gj/+eVaB
-         wkkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wyxwn/uIvwvwuo/CHU7Bo2juetQK83mXPdvKd8qe8K8=;
-        b=Tz1nEZF6D2rL1cLQUMOEVGZJN4cu9+rM9TYeYU3g3VNoNsEV4lGgKtC0JsZ8oSP9e/
-         FMAP7CTv8tnXIJ2jxu0UXoz5P8AXNz68wJscbBLrYCJHjlPzleJuECtLkXCKdfCqMpvY
-         2abHhuDjazKvJP3ONDVswbXWUax2O8SDmlKbb+TDxpkLKC7zYOEp6EracFj0UGMj9Ip2
-         7FMvKSomR5s+7YJawLhUMZd9obn5auLuzhEheASFY4oQMQBgULrsOmUhFxyCgNhtNCfI
-         gCMGsjJP4hiu0KvOBwcI6tYNMl+qg9dLbmm+BX6Ct/e3UFoP5ZThRuKkLqWP5iMAQXCP
-         1m2Q==
-X-Gm-Message-State: ANhLgQ2kG49ZHcOriZnld/YE+BpTrS1HIml2xopSLvT1FBB/n0WuUd27
-        sMrZF0yC7r4rYGLx3UaKf4hOqI6C6TSZpxpHL/E=
-X-Google-Smtp-Source: ADFU+vvKiiWABJ3Vloba0QXY19bkGGVHSjFtCJH0c8cNpcKXPBZWAlxkVBdq4sU2A5urbWQaO3xSUUe5T0M4KjXbKio=
-X-Received: by 2002:ae9:ef06:: with SMTP id d6mr3743182qkg.442.1583511492528;
- Fri, 06 Mar 2020 08:18:12 -0800 (PST)
+        Fri, 6 Mar 2020 11:18:37 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2515 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726167AbgCFQSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:18:37 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id C1FECBAF6EA1B1F603D1;
+        Fri,  6 Mar 2020 16:18:34 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 6 Mar 2020 16:18:34 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 6 Mar 2020
+ 16:18:34 +0000
+Subject: Re: About commit "io: change inX() to have their own IO barrier
+ overrides"
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Sinan Kaya <okaya@kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
+ <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
+ <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
+ <6115fa56-a471-1e9f-edbb-e643fa4e7e11@kernel.org>
+ <7c955142-1fcb-d99e-69e4-1e0d3d9eb8c3@huawei.com>
+ <CAK8P3a0f9hnKGd6GJ8qFZSu+J-n4fY23TCGxQkmgJaxbpre50Q@mail.gmail.com>
+ <90af535f-00ef-c1e3-ec20-aae2bd2a0d88@kernel.org>
+ <CAK8P3a2Grd0JsBNsB19oAxrAFtOdpvjrpGcfeArKe7zD_jrUZw@mail.gmail.com>
+ <ae0a1bf1-948f-7df0-9efb-cd1e94e27d2d@huawei.com>
+ <CAK8P3a2wdCrBP=a8ZypWoC=HyCU3oYYNeCddWM7oT+xM9gTPhw@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <182a37c2-7437-b1bd-8b86-5c9ce2e29f00@huawei.com>
+Date:   Fri, 6 Mar 2020 16:18:33 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20200220151327.4823-1-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20200220151327.4823-1-manivannan.sadhasivam@linaro.org>
-From:   Daniele Palmas <dnlplm@gmail.com>
-Date:   Fri, 6 Mar 2020 17:18:01 +0100
-Message-ID: <CAGRyCJGMxMO-8b3QniJP0XVgTT4zxSd=pm_O=4T5N3f3H3aM2w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Migrate QRTR Nameservice to Kernel
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     David Miller <davem@davemloft.net>, kuba@kernel.org,
-        bjorn.andersson@linaro.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvalo@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAK8P3a2wdCrBP=a8ZypWoC=HyCU3oYYNeCddWM7oT+xM9gTPhw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mani,
+On 06/03/2020 15:16, Arnd Bergmann wrote:
+> On Fri, Mar 6, 2020 at 11:40 AM John Garry <john.garry@huawei.com> wrote:
+>> On 06/03/2020 07:54, Arnd Bergmann wrote:
+>>> On Fri, Mar 6, 2020 at 4:44 AM Sinan Kaya <okaya@kernel.org> wrote:
+>> -- a/lib/logic_pio.c
+>> +++ b/lib/logic_pio.c
+>> @@ -229,13 +229,21 @@ unsigned long
+>> logic_pio_trans_cpuaddr(resource_size_t addr)
+>>    }
+>>
+>>    #if defined(CONFIG_INDIRECT_PIO) && defined(PCI_IOBASE)
+>> +
+>> +#define logic_in_to_cpu_b(x) (x)
+>> +#define logic_in_to_cpu_w(x) __le16_to_cpu(x)
+>> +#define logic_in_to_cpu_l(x) __le32_to_cpu(x)
+>> +
+>>    #define BUILD_LOGIC_IO(bw, type)                                      \
 
-Il giorno gio 20 feb 2020 alle ore 16:15 Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> ha scritto:
->
-> Hello,
->
-> This patchset migrates the Qualcomm IPC Router (QRTR) Nameservice from userspace
-> to kernel under net/qrtr.
->
+Note: The "bw" argument name could be improved to "bwl", since this 
+macro is used for building inl() also.
 
-I saw those and the MHI driver related patches, thanks for doing them.
+>>    type logic_in##bw(unsigned long addr)                                 \
+>>    {                                                                     \
+>>           type ret = (type)~0;                                           \
+>>                                                                          \
+>>           if (addr < MMIO_UPPER_LIMIT) {                                 \
+>> -               ret = read##bw(PCI_IOBASE + addr);                     \
+>> +               void __iomem *_addr = PCI_IOBASE + addr;               \
+>> +               __io_pbr();                                            \
+>> +               ret = logic_in_to_cpu_##bw(__raw_read##bw(_addr));     \
+>> +               __io_par(ret);                                         \
+>>           } else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {\
+>>                   struct logic_pio_hwaddr *entry = find_io_rang
+>>
+>> We could prob combine the le_to_cpu and __raw_read into a single macro.
+> 
+> What is the purpose of splitting out the byteswap rather than leaving the
+> open-coded rather than __le16_to_cpu(__raw_readw(PCI_IOBASE + addr))?
 
-Are you going to submit also the controller and device (uci, netdev)
-drivers for SDX55 modem?
+I'm just copying what is in asm-generic io.h, which uses the 16b and 32b 
+byteswaps in the w and l variants, respectively.
+
+> 
+> If this is needed to work across architectures, how about adding
+> an intermediate __raw_inw() etc in asm-generic/io.h like
+> 
+> #ifndef __raw_inw
+> #define __raw_inw(a) __raw_readw(PCI_IOBASE + addr));
+> #endif
+> 
+> #include <linux/logic_pio.h>
+> 
+> #ifndef inw
+> static inline u16 inw(unsigned long addr)
+> {
+>          u16 val;
+> 
+>          __io_pbr();
+>          val = __le16_to_cpu(__raw_inw(addr));
+>          __io_par(val);
+>          return val;
+> }
+> #endif
+> 
+
+The idea is good, but it would be nice if we just somehow use a common 
+asm-generic io.h definition directly in logic_pio.c, like:
+
+asm-generic io.h:
+
+#ifndef __raw_inw // name?
+#define __raw_inw __raw_inw
+static inline u16 __raw_inw(unsigned long addr)
+{
+	u16 val;
+
+	__io_pbr();
+	val = __le16_to_cpu(__raw_readw(addr));
+	__io_par(val);
+	return val;
+}
+#endif
+
+#include <linux/logic_pio.h>
+
+#ifndef inw
+#define inw __raw_inw
+#endif
+
+logic_pio.c:
+
+  #define BUILD_LOGIC_IO(bw, type)                                      \
+  type logic_in##bw(unsigned long addr)                                 \
+  {                                                                     \
+         type ret = (type)~0;                                           \
+                                                                        \
+         if (addr < MMIO_UPPER_LIMIT) {                                 \
+-               ret = read##bw(PCI_IOBASE + addr);                     \
++               ret = __raw_in##bw(PCI_IOBASE + addr);                 \
+         } else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {\
+                 struct logic_pio_hwaddr *entry = find_io_rang
 
 Thanks,
-Daniele
-
-> The userspace implementation of it can be found here:
-> https://github.com/andersson/qrtr/blob/master/src/ns.c
->
-> This change is required for enabling the WiFi functionality of some Qualcomm
-> WLAN devices using ATH11K without any dependency on a userspace daemon. Since
-> the QRTR NS is not usually packed in most of the distros, users need to clone,
-> build and install it to get the WiFi working. It will become a hassle when the
-> user doesn't have any other source of network connectivity.
->
-> The original userspace code is published under BSD3 license. For migrating it
-> to Linux kernel, I have adapted Dual BSD/GPL license.
->
-> This patchset has been verified on Dragonboard410c and Intel NUC with QCA6390
-> WLAN device.
->
-> Thanks,
-> Mani
->
-> Changes in v2:
->
-> * Sorted the local variables in reverse XMAS tree order
->
-> Manivannan Sadhasivam (2):
->   net: qrtr: Migrate nameservice to kernel from userspace
->   net: qrtr: Fix the local node ID as 1
->
->  net/qrtr/Makefile |   2 +-
->  net/qrtr/ns.c     | 751 ++++++++++++++++++++++++++++++++++++++++++++++
->  net/qrtr/qrtr.c   |  51 +---
->  net/qrtr/qrtr.h   |   4 +
->  4 files changed, 767 insertions(+), 41 deletions(-)
->  create mode 100644 net/qrtr/ns.c
->
-> --
-> 2.17.1
->
+John
