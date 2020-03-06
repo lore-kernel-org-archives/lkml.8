@@ -2,270 +2,157 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAE1C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E421CC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB652084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C798F20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgCFN2m (ORCPT
+        id S1727430AbgCFN3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:28:42 -0500
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37228 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgCFN2i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:28:38 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 763718030786;
-        Fri,  6 Mar 2020 13:28:36 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id WApw7rWc6R4s; Fri,  6 Mar 2020 16:28:35 +0300 (MSK)
-From:   <Sergey.Semin@baikalelectronics.ru>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
+        Fri, 6 Mar 2020 08:29:16 -0500
+Received: from mga01.intel.com ([192.55.52.88]:44493 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbgCFN3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:29:14 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 05:29:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,522,1574150400"; 
+   d="scan'208";a="352739465"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Mar 2020 05:29:10 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jAD2O-007Mv4-0y; Fri, 06 Mar 2020 15:29:12 +0200
+Date:   Fri, 6 Mar 2020 15:29:12 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 7/7] watchdog: dw_wdt: Add DebugFS files
-Date:   Fri, 6 Mar 2020 16:27:47 +0300
-In-Reply-To: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
+ peculiarities into account
+Message-ID: <20200306132912.GA1748204@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200306132836.763718030786@mail.baikalelectronics.ru>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <fancer.lancer@gmail.com>
+> 
+> Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
+> peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
+> with currently implemented in the kernel DW DMAC driver, but there are some
+> peculiarities which must be taken into account in order to have the device
+> fully supported.
+> 
+> First of all traditionally we replaced the legacy plain text-based dt-binding
+> file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+> channels, which alas have different max burst length configuration.
+> In particular first two channels may burst up to 128 bits (16 bytes) at a time
+> while the rest of them just up to 32 bits. We must make sure that the DMA
+> subsystem doesn't set values exceeding these limitations otherwise the
+> controller will hang up. In third currently we discovered the problem in using
+> the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+> natively implemented multi-block LLP transfers support and the SPI-transfer
+> length exceeds the max lock size. In this case due to asynchronous handling of
+> Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
+> overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+> the DMAC to asynchronously execute the transfers we'd have to at least warn
+> the user of the possible errors.
+> 
+> Finally there is a bug in the algorithm of the nollp flag detection.
+> In particular even if DW DMAC parameters state the multi-block transfers
+> support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+> by the driver true multi-block LLP functionality unusable. This happens cause'
+> if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+> contiguous multi-block transfers will be only supported. We must take the
+> flag into account when detecting the LLP support otherwise the driver just
+> won't work correctly.
+> 
+> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> commit 98d54f81e36b ("Linux 5.6-rc4").
 
-For the sake of the easier device-driver debug procedure, we added a
-few DebugFS files with the next content: watchdog timeout, watchdog
-pre-timeout, watchdog ping/kick operation, watchdog start/stop, device
-registers dump. They are available only if kernel is configured with
-DebugFS support.
+Thank you for your series!
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
----
- drivers/watchdog/dw_wdt.c | 150 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 150 insertions(+)
+I'll definitely review it, but it will take time. So, I think due to late
+submission this is material at least for v5.8.
 
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index 3000120f7e39..9353d83f3e45 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -27,6 +27,7 @@
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- #include <linux/watchdog.h>
-+#include <linux/debugfs.h>
- 
- #define WDOG_CONTROL_REG_OFFSET		    0x00
- #define WDOG_CONTROL_REG_WDT_EN_MASK	    0x01
-@@ -38,8 +39,14 @@
- #define WDOG_COUNTER_RESTART_KICK_VALUE	    0x76
- #define WDOG_INTERRUPT_STATUS_REG_OFFSET    0x10
- #define WDOG_INTERRUPT_CLEAR_REG_OFFSET     0x14
-+#define WDOG_COMP_PARAMS_5_REG_OFFSET       0xe4
-+#define WDOG_COMP_PARAMS_4_REG_OFFSET       0xe8
-+#define WDOG_COMP_PARAMS_3_REG_OFFSET       0xec
-+#define WDOG_COMP_PARAMS_2_REG_OFFSET       0xf0
- #define WDOG_COMP_PARAMS_1_REG_OFFSET       0xf4
- #define WDOG_COMP_PARAMS_1_USE_FIX_TOP      BIT(6)
-+#define WDOG_COMP_VERSION_REG_OFFSET        0xf8
-+#define WDOG_COMP_TYPE_REG_OFFSET           0xfc
- 
- /* There are sixteen TOPs (timeout periods) that can be set in the watchdog. */
- #define DW_WDT_NUM_TOPS		16
-@@ -79,6 +86,10 @@ struct dw_wdt {
- 	/* Save/restore */
- 	u32			control;
- 	u32			timeout;
-+
-+#ifdef CONFIG_DEBUG_FS
-+	struct dentry		*dbgfs_dir;
-+#endif
- };
- 
- #define to_dw_wdt(wdd)	container_of(wdd, struct dw_wdt, wdd)
-@@ -430,6 +441,141 @@ static void dw_wdt_init_timeouts(struct dw_wdt *dw_wdt, struct device *dev)
- 			mult_frac(tops[idx], MSEC_PER_SEC, dw_wdt->rate);
- }
- 
-+#ifdef CONFIG_DEBUG_FS
-+
-+static int dw_wdt_dbgfs_timeout_get(void *priv, u64 *val)
-+{
-+	struct dw_wdt *dw_wdt = priv;
-+
-+	*val = dw_wdt_get_timeout(dw_wdt) / MSEC_PER_SEC;
-+
-+	return 0;
-+}
-+
-+static int dw_wdt_dbgfs_timeout_set(void *priv, u64 val)
-+{
-+	struct dw_wdt *dw_wdt = priv;
-+
-+	return dw_wdt_set_timeout(&dw_wdt->wdd, val);
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(dw_wdt_dbgfs_timeout_fops,
-+	dw_wdt_dbgfs_timeout_get, dw_wdt_dbgfs_timeout_set, "%llu\n");
-+
-+static int dw_wdt_dbgfs_pretimeout_get(void *priv, u64 *val)
-+{
-+	struct dw_wdt *dw_wdt = priv;
-+
-+	*val = dw_wdt->wdd.pretimeout;
-+
-+	return 0;
-+}
-+
-+static int dw_wdt_dbgfs_pretimeout_set(void *priv, u64 val)
-+{
-+	struct dw_wdt *dw_wdt = priv;
-+
-+	return dw_wdt_set_pretimeout(&dw_wdt->wdd, val);
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(dw_wdt_dbgfs_pretimeout_fops,
-+	dw_wdt_dbgfs_pretimeout_get, dw_wdt_dbgfs_pretimeout_set, "%llu\n");
-+
-+static int dw_wdt_dbgfs_ping_set(void *priv, u64 val)
-+{
-+	struct dw_wdt *dw_wdt = priv;
-+
-+	dw_wdt_ping(&dw_wdt->wdd);
-+
-+	return 0;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(dw_wdt_dbgfs_ping_fops,
-+	NULL, dw_wdt_dbgfs_ping_set, "%llu\n");
-+
-+static int dw_wdt_dbgfs_en_get(void *priv, u64 *val)
-+{
-+	struct dw_wdt *dw_wdt = priv;
-+
-+	*val = !!dw_wdt_is_enabled(dw_wdt);
-+
-+	return 0;
-+}
-+
-+static int dw_wdt_dbgfs_en_set(void *priv, u64 val)
-+{
-+	struct dw_wdt *dw_wdt = priv;
-+
-+	if (val)
-+		dw_wdt_start(&dw_wdt->wdd);
-+	else
-+		dw_wdt_stop(&dw_wdt->wdd);
-+
-+	return 0;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(dw_wdt_dbgfs_en_fops,
-+	dw_wdt_dbgfs_en_get, dw_wdt_dbgfs_en_set, "%llu\n");
-+
-+#define DW_WDT_DBGFS_REG(_name, _off) \
-+{				      \
-+	.name = _name,		      \
-+	.offset = _off		      \
-+}
-+
-+static const struct debugfs_reg32 dw_wdt_dbgfs_regs[] = {
-+	DW_WDT_DBGFS_REG("cr", WDOG_CONTROL_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("torr", WDOG_TIMEOUT_RANGE_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("ccvr", WDOG_CURRENT_COUNT_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("crr", WDOG_COUNTER_RESTART_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("stat", WDOG_INTERRUPT_STATUS_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("param5", WDOG_COMP_PARAMS_5_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("param4", WDOG_COMP_PARAMS_4_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("param3", WDOG_COMP_PARAMS_3_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("param2", WDOG_COMP_PARAMS_2_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("param1", WDOG_COMP_PARAMS_1_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("version", WDOG_COMP_VERSION_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("type", WDOG_COMP_TYPE_REG_OFFSET)
-+};
-+
-+static void dw_wdt_dbgfs_init(struct dw_wdt *dw_wdt)
-+{
-+	struct device *dev = dw_wdt->wdd.parent;
-+	struct debugfs_regset32 *regset;
-+
-+	regset = devm_kzalloc(dev, sizeof(*regset), GFP_KERNEL);
-+	if (!regset)
-+		return;
-+
-+	regset->regs = dw_wdt_dbgfs_regs;
-+	regset->nregs = ARRAY_SIZE(dw_wdt_dbgfs_regs);
-+	regset->base = dw_wdt->regs;
-+
-+	dw_wdt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
-+
-+	debugfs_create_regset32("registers", 0444, dw_wdt->dbgfs_dir, regset);
-+
-+	debugfs_create_file_unsafe("timeout", 0600, dw_wdt->dbgfs_dir,
-+				   dw_wdt, &dw_wdt_dbgfs_timeout_fops);
-+
-+	debugfs_create_file_unsafe("pretimeout", 0600, dw_wdt->dbgfs_dir,
-+				   dw_wdt, &dw_wdt_dbgfs_pretimeout_fops);
-+
-+	debugfs_create_file_unsafe("ping", 0200, dw_wdt->dbgfs_dir,
-+				   dw_wdt, &dw_wdt_dbgfs_ping_fops);
-+
-+	debugfs_create_file_unsafe("enable", 0600, dw_wdt->dbgfs_dir,
-+				   dw_wdt, &dw_wdt_dbgfs_en_fops);
-+}
-+
-+static void dw_wdt_dbgfs_clear(struct dw_wdt *dw_wdt)
-+{
-+	debugfs_remove_recursive(dw_wdt->dbgfs_dir);
-+}
-+
-+#else /* !CONFIG_DEBUG_FS */
-+
-+static void dw_wdt_dbgfs_init(struct dw_wdt *dw_wdt) {}
-+static void dw_wdt_dbgfs_clear(struct dw_wdt *dw_wdt) {}
-+
-+#endif /* !CONFIG_DEBUG_FS */
-+
- static int dw_wdt_drv_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -544,6 +690,8 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto out_disable_pclk;
- 
-+	dw_wdt_dbgfs_init(dw_wdt);
-+
- 	return 0;
- 
- out_disable_pclk:
-@@ -558,6 +706,8 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
- {
- 	struct dw_wdt *dw_wdt = platform_get_drvdata(pdev);
- 
-+	dw_wdt_dbgfs_clear(dw_wdt);
-+
- 	watchdog_unregister_device(&dw_wdt->wdd);
- 	reset_control_assert(dw_wdt->rst);
- 	clk_disable_unprepare(dw_wdt->pclk);
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Viresh Kumar <vireshk@kernel.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: dmaengine@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (5):
+>   dt-bindings: dma: dw: Replace DW DMAC legacy bindings with YAML-based
+>     one
+>   dt-bindings: dma: dw: Add max burst transaction length property
+>     bindings
+>   dmaengine: dw: Add LLP and block size config accessors
+>   dmaengine: dw: Introduce max burst length hw config
+>   dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
+> 
+>  .../bindings/dma/snps,dma-spear1340.yaml      | 180 ++++++++++++++++++
+>  .../devicetree/bindings/dma/snps-dma.txt      |  69 -------
+>  drivers/dma/dw/core.c                         |  24 ++-
+>  drivers/dma/dw/dw.c                           |   1 +
+>  drivers/dma/dw/of.c                           |   9 +
+>  drivers/dma/dw/regs.h                         |   3 +
+>  include/linux/platform_data/dma-dw.h          |  22 +++
+>  7 files changed, 238 insertions(+), 70 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
+> 
+> -- 
+> 2.25.1
+> 
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
