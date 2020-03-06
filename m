@@ -2,202 +2,316 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B670C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E79C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4653B206D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A5C206D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583536993;
-	bh=dM7rYOWDWemf2uovWwRMSwQuGWW2TTD+8I7lmYvklyI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=e2HHP14Q3o3YvXbqWf9b2QV8t6B2yGnxJ7oKfHD5PvOMvTme/25Mh3jatOv1yMtuY
-	 KvzZ8/AIS7Q/Jim8j/0CsGn4cClSBCHRlItuAFjdJ+kiAWWLmF/nZpmma1tDED9eCp
-	 SKljC9h2E1RDdKL1IH10o6ahNVuIYF9t4lF3W2yc=
+	s=default; t=1583537452;
+	bh=2boPppKm9tEaGRyaVGEIp6Pn1LkRn2TKkFLuZuO51l0=;
+	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
+	b=yFd0Dr/ZgLnJlB/3at7B8HBei+LuN6qVuWy4BzGASRkL3nw6ZNS8yTBRu9p2WZRMQ
+	 6+kOGQAVru5nazfhTFWGJbxY9DlBf4NEE9n7CU5Bb1XQ00quAVhJvlnbeKj4vbUE+c
+	 /9adSqD0p1DldwczOY0NeJ1WGlhL/Dnn/1AklIrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCFXXM (ORCPT
+        id S1726397AbgCFXam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 18:23:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbgCFXXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 18:23:11 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69760206D7;
-        Fri,  6 Mar 2020 23:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583536990;
-        bh=dM7rYOWDWemf2uovWwRMSwQuGWW2TTD+8I7lmYvklyI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=whn538AXyE1vNf+1s6k01GdHeMeSk5tWyWjDkQqWq4I8UjX7lc0PVR1Rf3Vwwp+4S
-         Tixc32A4eC4oeh8LA2v5YyqrT+YU2kOvaO+qBhF2A7C+5sxwmWg3YHyL7Or6zfkZmg
-         T1iVqWdeg8FFtfuyVQw9Zxqw2LFUOtlK/VEnSr2c=
-Date:   Fri, 6 Mar 2020 17:23:08 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v17 11/12] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-Message-ID: <20200306232308.GA254242@google.com>
+        Fri, 6 Mar 2020 18:30:42 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44476 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgCFXam (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 18:30:42 -0500
+Received: by mail-io1-f66.google.com with SMTP id u17so3720829iog.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 15:30:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=DTh8zw+7j+IDCFtLjR+Et0mOTyR2UPoWt2JTjcAukIc=;
+        b=cDisKuyTo87nw3pJqQk9hvVbdkNYFxtXQdHLEk4uq736TijN5izQv0HQkRuDAn3z3b
+         hGeOiG1bn9l/A2uFoByc2kUW6bUdm7eomnpbgcUeWD9+kCi7ROT6y/43HteTx3XOw0IU
+         Jo5ZZUXwnufbn6tsk3dgdI0PGvS3XNF7c7Ptc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DTh8zw+7j+IDCFtLjR+Et0mOTyR2UPoWt2JTjcAukIc=;
+        b=YoPmbmicqFObX1uR182KQFxr6qQKIuhG0SpJWAWhpFItE8uUjXTLa+9c5mZ431hJLm
+         rOsX/md+3FgJq3OA5RBXMak2QVp0WMZyH5T6XrHURdO0YfKrYY3Her3gGPhZTpSLxRTP
+         lXtcVTRS3vCR3DSYVHbBzKYlo98/YsccTtweBEFKcE1GPHA5R1j/oyvmB0k7jbjGuVkv
+         RrT+cLO/vxAPZVIEQcP1IB0NMTumCC5q0P3hEiOtPKGVhY2pSP1WtEha38ZKadPz5urf
+         LL5mLerMAcBtNbZ/zMfhLCk/iQja1HCF4dnJQAp1hbn7MDdTwFIFL7oLP4vHPYU4XzeZ
+         7yzg==
+X-Gm-Message-State: ANhLgQ2ubyXPGqp3UUE5rHa09eUK+q63pY0RrZekqAqcvkOzXVCaTiES
+        +iDNcdR/5ut4uFWzbLNIifhnw66Ua9A=
+X-Google-Smtp-Source: ADFU+vucaJCUAOUde7BMNayW6hKwEG38t9bs/LUK8plFPP+72ZPjXXZ1hR47RpnTyg0n1SFaFDeMOA==
+X-Received: by 2002:a6b:c742:: with SMTP id x63mr4991083iof.162.1583537439669;
+        Fri, 06 Mar 2020 15:30:39 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id s2sm8304999iod.12.2020.03.06.15.30.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Mar 2020 15:30:39 -0800 (PST)
+Subject: Re: kselftest selftest issues and clarifications
+To:     "Bird, Tim" <Tim.Bird@sony.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
+References: <MWHPR13MB0895B92C9B4807D94E1E6B04FDE30@MWHPR13MB0895.namprd13.prod.outlook.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <f1f991a6-6e05-6ba3-b5c1-174b93029a99@linuxfoundation.org>
+Date:   Fri, 6 Mar 2020 16:30:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <90e97009-29ae-f807-406d-59cefe7e6d3f@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <MWHPR13MB0895B92C9B4807D94E1E6B04FDE30@MWHPR13MB0895.namprd13.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 02:42:14PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> On 3/6/20 1:00 PM, Bjorn Helgaas wrote:
-> > On Thu, Mar 05, 2020 at 10:32:33PM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> > > On 3/5/2020 7:47 PM, Bjorn Helgaas wrote:
-> > > > On Tue, Mar 03, 2020 at 06:36:34PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > > +void pci_acpi_add_edr_notifier(struct pci_dev *pdev)
-> > > > > +{
-> > > > > +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> > > > > +	acpi_status astatus;
-> > > > > +
-> > > > > +	if (!adev) {
-> > > > > +		pci_dbg(pdev, "No valid ACPI node, so skip EDR init\n");
-> > > > > +		return;
-> > > > > +	}
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * Per the Downstream Port Containment Related Enhancements ECN to
-> > > > > +	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-6, EDR support
-> > > > > +	 * can only be enabled if DPC is controlled by firmware.
-> > > > > +	 *
-> > > > > +	 * TODO: Remove dependency on ACPI FIRMWARE_FIRST bit to
-> > > > > +	 * determine ownership of DPC between firmware or OS.
-> > > > > +	 * Per the Downstream Port Containment Related Enhancements
-> > > > > +	 * ECN to the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
-> > > > > +	 * OS can use bit 7 of _OSC control field to negotiate control
-> > > > > +	 * over DPC Capability.
-> > > > > +	 */
-> > > > > +	if (!pcie_aer_get_firmware_first(pdev) || pcie_ports_dpc_native) {
-> > > > > +		pci_dbg(pdev, "OS handles AER/DPC, so skip EDR init\n");
-> > > > > +		return;
-> > > > > +	}
-> > > > > +
-> > > > > +	astatus = acpi_install_notify_handler(adev->handle, ACPI_SYSTEM_NOTIFY,
-> > > > > +					      edr_handle_event, pdev);
-> > > > 
-> > > > It does not say anything about "EDR notification only being
-> > > > used if firmware owns DPC."
-> > > > 
-> > > > We should install an EDR notify handler because we told the
-> > > > firmware that we support EDR notifications.  I don't think we
-> > > > should make it any more complicated than that.
->
-> I agree with your above statement. Since we told firmware *we
-> support* EDR notification, we should make that true by installing
-> the notification handler unconditionally.
+On 3/6/20 12:49 PM, Bird, Tim wrote:
 > 
-> But, based on inferences from PCI FW 3.2 ECN-DPC spec, current use
-> case of EDR notification is only to handle error recovery for the
-> case where DPC is owned by firmware and firmware sends EDR event. if
-> you agree with above comment, is it alright if we add the following
-> check in EDR notification handler ?
+>> -----Original Message-----
+>> From: Shuah Khan
+>>
+>> On 2/28/20 10:50 AM, Bird, Tim wrote:
+>>>
+>>>
+>>>> -----Original Message-----
+>>>> From:  Shuah Khan
+>>>>
+>>>> Integrating Kselftest into Kernel CI rings depends on Kselftest build
+>>>> and install framework to support Kernel CI use-cases. I am kicking off
+>>>> an effort to support Kselftest runs in Kernel CI rings. Running these
+>>>> tests in Kernel CI rings will help quality of kernel releases, both
+>>>> stable and mainline.
+>>>>
+>>>> What is required for full support?
+>>>>
+>>>> 1. Cross-compilation & relocatable build support
+>>>> 2. Generates objects in objdir/kselftest without cluttering main objdir
+>>>> 3. Leave source directory clean
+>>>> 4. Installs correctly in objdir/kselftest/kselftest_install and adds
+>>>>       itself to run_kselftest.sh script generated during install.
+>>>>
+>>>> Note that install step is necessary for all files to be installed for
+>>>> run time support.
+>>>>
+>>>> I looked into the current status and identified problems. The work is
+>>>> minimal to add full support. Out of 80+ tests, 7 fail to cross-build
+>>>> and 1 fails to install correctly.
+>>>>
+>>>> List is below:
+>>>>
+>>>> Tests fails to build: bpf, capabilities, kvm, memfd, mqueue, timens, vm
+>>>> Tests fail to install: android (partial failure)
+>>>> Leaves source directory dirty: bpf, seccomp
+>>>>
+>>>> I have patches ready for the following issues:
+>>>>
+>>>> Kselftest objects (test dirs) clutter top level object directory.
+>>>> seccomp_bpf generates objects in the source directory.
+>>>>
+>>>> I created a topic branch to collect all the patches:
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/?h=kernelci
+>>>>
+>>>> I am going to start working on build problems. If anybody is
+>>>> interested in helping me with this effort, don't hesitate to
+>>>> contact me. I first priority is fixing build and install and
+>>>> then look into tests that leave the source directory dirty.
+>>>
+>>> I'm interested in this.  I'd like the same cleanups in order to run
+>>> kselftest in Fuego, and I can try it with additional toolchains
+>>> and boards.  Unfortunately, in terms of running tests, almost all
+>>> the boards in my lab are running old kernels.  So the tests results
+>>> aren't useful for upstream work.  But I can still test
+>>> compilation and install issues, for the kselftest tests themselves.
+>>>
+>>
+>> Testing compilation and install issues is very valuable. This is one
+>> area that hasn't been test coverage compared to running tests. So it
+>> great if you can help with build/install on linux-next to catch
+>> problems in new tests. I am finding that older tests have been stable
+>> and as new tests come in, we tend to miss catching these types of
+>> problems.
+>>
+>> Especially cross-builds and installs on arm64 and others.
 > 
-> Although spec does not restrict it, current tested use case of EDR
-> is to handle notification for firmware DPC case.
+> OK.  I've got 2 different arm64 compilers, with wildly different SDK setups,
+> so hopefully this will be useful.
 > 
-> 218         if (!pcie_aer_get_firmware_first(pdev) || pcie_ports_dpc_native
-> || (host->native_dpc))
-> 219                 return;
-
-No, I do not think we should add a check like this.  There's no basis
-in the spec for doing this.  pcie_aer_get_firmware_first() looks at
-HEST, which isn't mentioned at all in relation to EDR.  Checks like
-this make it really hard to understand the code, and I don't believe
-in making things fail simply because we haven't tested the scenario.
-
-> > > Also check the following reference from section 2 of EDR ECN. It also
-> > > clarifies EDR feature is only used when firmware owns DPC.
-> > > 
-> > >      PCIe Base Specification suggests that Downstream Port Containment
-> > >      may be controlled either by the Firmware or the Operating System. It
-> > >      also suggests that the Firmware retain ownership of Downstream Port
-> > >      Containment if it also owns AER. When the Firmware owns Downstream
-> > >      Port Containment, *it is expected to use the new “Error Disconnect
-> > >      Recover” notification to alert OSPM of a Downstream Port Containment
-> > >      event*.
-> > The text in section 2 will not become part of the spec, so we can't
-> > rely on it to tell us how to implement things.  Even if it did, this
-> > section does not say "OS should only install an EDR notify handler if
-> > firmware owns DPC."  It just means that if firmware owns DPC, the OS
-> > will not learn about DPC events directly via DPC interrupts, so
-> > firmware has to use another mechanism, e.g., EDR, to tell the OS about
-> > them.
-> > 
-> > If an OS requests DPC control, it must support both DPC and EDR
-> > (sec 4.5.2.4).  However, I think an OS may support EDR but not DPC
-> > (although your patches don't support this configuration).
->
-> Any use cases for above configuration ? Current PCI FW 3.2 ECN-DPC
-> spec does not mention any uses cases where EDR can be used outside
-> the scope of DPC ?
+>>>>
+>>>> Detailed report can be found here:
+>>>>
+>>>> https://drive.google.com/file/d/11nnWOKIzzOrE4EiucZBn423lzSU_eNNv/view?usp=sharing
+>>>
+>>> Is there anything you'd like me to look at specifically?  Do you want me to start
+>>> at the bottom of the list and work up?  I could look at 'vm' or 'timens'.
+>>>
+>>
+>> Yes you can start with vm and timens.
 > 
-> If required I can add this support. It should be easy to add it. In
-> non DPC case, EDR notification handler would mostly be empty. Please
-> let me know if you want me add this part of next patch set.
+> I wrote a test for Fuego and ran into a few interesting issues.  Also, I have a question
+> about the best place to start, and your preference for reporting results.  Your feedback
+> on any of this would be appreciated:
+> 
+> Here are some issues and questions I ran into:
+> 1) overwriting of CC in lib.mk
+> This line in tools/testing/selftests/lib.mk caused me some grief:
+> CC := $(CROSS_COMPILE)gcc
+> 
 
-I don't think there's a need to add support for this.  I just
-mentioned it as part of the point that we shouldn't tie EDR to DPC
-unnecessarily.
+Odd. It was added to mimic the top-level Makefile. I haven't seen
+problems with this so far. I am using the following:
 
-> > > Although installing them when OS owns DPC should not affect
-> > > anything, it also opens up a additional way for firmware to mess
-> > > up things. For example, consider a case when firmware gives OS
-> > > control of DPC, but still sends EDR notification to OS. Although
-> > > it's unrealistic, I am just giving an example.
->
-> > Can you outline the problem that occurs in this scenario?  It
-> > seems like the EDR notify handler could still work.  The OS can
-> > access DPC at any time (not just during the EDR window).
->
-> When OS owns DPC and firmware sends a EDR event, it could create
-> race between DPC interrupt handler and EDR event handler. Although
-> from hardware perspective it should not make difference, since both
-> code paths does the same thing.
+gcc-9-aarch64-linux-gnu 9.2.1-9ubuntu2cross1
 
-Yes, that's true.  I think we should wait until there is a problem
-here before doing anything.
 
-> > > > I don't think we should even test pcie_ports_dpc_native here.  If we
-> > > > told the platform we can handle EDR notifications, we should be
-> > > > prepared to get them, regardless of whether the user booted with
-> > > > "pcie_ports=dpc-native".
-> > > As per the command line parameter documentation, setting
-> > > pcie_ports=dpc-native means, we will be using native PCIe service
-> > > for DPC.  So if DPC is handled by OS, as per my argument mentioned
-> > > above (EDR is only useful if DPC handled by firmware), there is no
-> > > use in installing EDR notification.
-> > > 
-> > > https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/kernel-parameters.txt#L3642
-> > > 
-> > > dpc-native - Use native PCIe service for DPC only.
-> > It doesn't hurt anything to install a notify handler that never
-> > receives a notification.  It might be an issue if we tell firmware
-> > we're prepared for notifications but we don't install a handler.
-> Agreed. Shall I send another version with this and "static inline" fix ?
+> One of my toolchains pre-defines CC with a bunch of extra flags, so this didn't work for
+> that tolchain.
+> I'm still debugging this.  I'm not sure why the weird definition of CC works for the rest
+> of the kernel but not with kselftest.  But I may submit some kind of patch to make this
+> CC assignment conditional (that is, only do the assignment if it's not already defined)
+> Let me know what you think.
+> 
+> 2) ability to get list of targets would be nice
+> It would be nice if there were a mechanism to get the list of default targets from
+> kselftest.  I added the following for my own tests, so that I don't have to hard-code
+> my loop over the individual selftests:
+> 
+> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+> index 63430e2..9955e71 100644
+> --- a/tools/testing/selftests/Makefile
+> +++ b/tools/testing/selftests/Makefile
+> @@ -246,4 +246,7 @@ clean:
+>   		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET clean;\
+>   	done;
+>   
+> +show_targets:
+> +	@echo $(TARGETS)
+> +
+>   .PHONY: khdr all run_tests hotplug run_hotplug clean_hotplug run_pstore_crash install clean
+> 
+> This is pretty simple.  I can submit this as a proper patch, if you're willing to take
+> something like it, and we can discuss details if you'd rather see this done another way.
 
-No need.  Just take a look at my review/edr branch.  I intend to tweak
-some commit logs and (maybe) make the "clear status" functions void
-since there are only one or two minor uses of the return values.  But
-it's pretty much what I hope to merge.
+Looks good to me. Please send the patch.
 
-Bjorn
+> 
+> 3) different ways to invoke kselftest
+> There are a number of different ways to invoke kselftest.  I'm currently using the
+> '-C' method for both building and installing.
+> make ARCH=$ARCHITECTURE TARGETS="$target" -C tools/testing/selftests
+> make ARCH=$ARCHITECTURE TARGETS="$target" -C tools/testing/selftests install
+
+Why not use make kselftes-install? I am asking people to move to the
+following if at all possible. Since you are just starting out, please
+use "kselftest-install" target from main Makefile instead.
+
+This is what I am using:
+
+make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc \
+      CROSS_COMPILE=aarch64-linux-gnu- TARGETS=$target
+
+
+> 
+> I think, there there are now targets for kselftest in the top-level Makefile.
+> Do you have a preferred method you'd like me to test?  Or would you like
+> me to run my tests with multiple methods?
+
+See above.
+
+> 
+> And I'm using a KBUILD_OUTPUT environment variable, rather than O=.
+> Let me know if you'd like me to build a matrix of these different build methods.
+> 
+
+This is fine. Please note that relative paths don't work in both of
+these. Something I will tackle once the bugger problems are addressed.
+
+> 4) what tree(s) would you like me to test?
+
+linux-next and Linus's mainline, and stable releases. Hey you asked :)
+linux-next will catch any problems introduced in kselftest commits.
+
+> I think you mentioned that you'd like to see the tests against 'linux-next'.
+> Right now I've been doing tests against the 'torvalds' mainline tree, and
+> the 'linux-kselftest' tree, master branch.  Let me know if there are other
+> branches or trees you like me to test.
+> 
+
+linux-next will catch any problems introduced in kselftest fixes
+and next. This will also catch selftests coming in through all
+other trees. Please note that selftests flow through subsystem trees
+for dependencies linux-next is catch all. If you can test only one,
+please pick linux-next
+
+As a temporary measure you can test linux-kselftest kernelci branch
+where I am staging all the fix to related to Kselftest integration
+into Kernel CI
+
+> 5) where would you like test results?
+> In the short term, I'm testing the compile and install of the tests
+> and working on the ones that fail for me (I'm getting 17 or 18
+> failures, depending on the toolchain I'm using, for some of my boards).
+> However, I'm still debugging my setup, I hope I can drop that down
+> to the same one's you are seeing shortly.
+>  > Longer-term I plan to set up a CI loop for these tests for Fuego, and 
+publish some
+> kind of matrix results and reports on my own server (https://birdcloud.org/)
+> I'm generating HTML tables now that work with Fuego's Jenkins
+> configuration, but I could send the data elsewhere if desired.
+> 
+
+This is fine. Please see below on centralizing reports on Kernel CI
+if we can.
+
+> This is still under construction.  Would you like me to publish results also to
+> kcidb, or some other repository?  I might be able to publish my
+> results to Kernelci, but I'll end up with a customized report for kselftest,
+> that will allow drilling down to see output for individual compile or
+> install failures.  I'm not sure how much of that would be supported in
+> the KernelCI interface.  But I recognize you'd probably not like to
+> have to go to multiple places to see results.
+> 
+
+Yup. One place will be great. Maybe we can make Kernel CI as the central
+location as we move forward. Kevin can weigh on on this.
+
+> Also, in terms of periodic results do you want any e-mails
+> sent to the Linux-kselftest list?  I thought I'd hold off for now,
+> and wait for the compile/install fixes to settle down, so that
+> future e-mails would only report regressions or issues with new tests.
+> We can discuss this later, as I don't plan to do this quite
+> yet (and would only do an e-mail after checking with you anyway).
+> 
+
+You can send them to linux-kselftest mailing list like LKFT does.
+Start sending reports and we can refine the reporting as we go along.
+
+Thank you for helping with this. This will help catch problems early and
+help me get Kselftest integrated into Kernel CI quickly.
+
+> 
+> P.S. Also, please let me know who is working on this on the KernelCI
+> side (if it's not Kevin), so I can CC them on future discussions.
+> 
+
+Yes please. I have the same request.
+
+thanks,
+-- Shuah
