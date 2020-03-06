@@ -2,217 +2,172 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166EDC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42516C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA91520717
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B2E20709
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="O/6eGHTV"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ebfyopt9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgCFRVe (ORCPT
+        id S1726973AbgCFRVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:21:34 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45504 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCFRVe (ORCPT
+        Fri, 6 Mar 2020 12:21:45 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38771 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgCFRVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:21:34 -0500
-Received: by mail-io1-f66.google.com with SMTP id w9so2797187iob.12
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 09:21:33 -0800 (PST)
+        Fri, 6 Mar 2020 12:21:44 -0500
+Received: by mail-qt1-f193.google.com with SMTP id e20so2263097qto.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 09:21:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UpJ/sy4Eqlqc62xJ9CGPbulBS93p2b28hl6znlt+s3U=;
-        b=O/6eGHTVYcHkiG251FGLtEObmFqV0XFSf6lwS4Z+IVRMTSHQdIq547eK8C06y3PMoQ
-         4PN9yO+rlr/bvY0hcKXlQhEOltlEH985MxXSFTHKNrW8xwzFt4JEwmGpx6EzRJ8+8Sse
-         G4MQsphafaUpkUhI15XT6cEyAzSF3ccgJRKXUw5ocgwNaBMTCmC7XOGdBesQRBm7dyC1
-         ieItttY+ZC3S/q6/uIEWofTLGnfszPsjfm4ay6VaFklIbiSQF4uHuDpcJtJqSa/D0ov1
-         McWnHnAYObmYXxAPocMHWUt4duL4Kb4rnTAsf3me+RM/q5K5MS/hgSE9Q+j8LnklJSrz
-         5Hug==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RPHN/DBmdoWcZAErc3vvXF6J22CCdEuHhdpp8tNFXjw=;
+        b=ebfyopt9aJpnPROyIMSooR+UXJkpa9Y5iJBuY8TqgsasZmBgDf34cesTs62aiMtV4Z
+         jm9EMjxtMCw7Khbwha7nj104xonREUsaB5pb+2qMskNmJTLMl5pC1qdG81bhCm6ro48V
+         JTrV10ir2Gl1zwn70Klj8lo8howuw5UlOaRb4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UpJ/sy4Eqlqc62xJ9CGPbulBS93p2b28hl6znlt+s3U=;
-        b=h+H09CyN+ARIMI2J06FbhwnqHB6XXhlJjDzrMgo+gUakuyowVehT9AskTrV/RIa0/K
-         ENkdUkCoRfO6YMq5n8HYl/iuJRlMrjuWJ+5qzzsNY6PCUiBg2TbK0nm9Vo5KrSxNdODu
-         Ae84zqk2ZBhE7bJkz0vyB+aaATCNeTHe5S2kSV8Wshnso7N5Zo1f+COD1yDAn9BsVqNQ
-         wk7zmNZXfAi5SP52ymvn6q61rTQKgKmpNw5b6SBJRp7wq820fhzKfa7KAgQ+mrzPYMvM
-         dbjS6cIIMnPC9FOKODPqREAYAPeNAY3jFKUCI6Dti9r4ykHqdnQb2eiMvs3jp/2PGd7/
-         ZttA==
-X-Gm-Message-State: ANhLgQ0U3HiBktaPokZGPIMeiRRU+8ag2NSLbtg+j0pYSXeYD9Xfvzjz
-        e8SIbMLaNfx0ilL+tLF71rqk1Q==
-X-Google-Smtp-Source: ADFU+vubeWQ/bYcExUcJpxub9/GalDT9lSUcZrh8Uyp0P3zVAJZ0o+k+cKU0ijuUPObvYLcIczD2tg==
-X-Received: by 2002:a02:950d:: with SMTP id y13mr3949524jah.139.1583515293076;
-        Fri, 06 Mar 2020 09:21:33 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id w1sm4012794ilo.30.2020.03.06.09.21.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2020 09:21:32 -0800 (PST)
-Subject: Re: KASAN: use-after-free Read in percpu_ref_switch_to_atomic_rcu
-To:     paulmck@kernel.org
-Cc:     Jann Horn <jannh@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        io-uring <io-uring@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RPHN/DBmdoWcZAErc3vvXF6J22CCdEuHhdpp8tNFXjw=;
+        b=Ss9YPpJ9KJPgACw3d6INj34j9rS0Rhqdbn/TKU4H6dt0vTOEpUnpJLrAgxVndYAhX+
+         IpsIJ9R/vWWgHNPkB452MiRVrqRMrWfud1bi+164iRlJ1Jd75S6T1OWFAPcS1Ui/v6dF
+         uQl7x66Q+qWpxRi81uSB+gU7FcF46RPyoTBrfnk4FngE0GLFDiWzHXh+qivOd+6lVgXE
+         ura0hvXJmJC8lkk6i4JChwz6jHarhN/kvl9vQ+gbFmTnrX8nEJTzW61Y+cjXz4qi1G/m
+         pncu9lJYtvCVfifDRBHAgqT9nbjGc9Ga+qHGCU0Ly4p8fnpTbv7uf9d566h9qI0aQkhw
+         jNJA==
+X-Gm-Message-State: ANhLgQ3o3MuFOVwFJJM4tuTlWrB1rmBCOaqPteVJLAFwi0RIWLFbFTpS
+        fBSyyPMekbeAGNB0SSV9wRpYpQ==
+X-Google-Smtp-Source: ADFU+vun+md9w//z+yQqm5h2WbliutEM1HC5b8I8CDxYXGyg0zfZ57BL+ZdOVZgy8jl6iL8oQc54Mw==
+X-Received: by 2002:ac8:40ca:: with SMTP id f10mr3994116qtm.377.1583515301642;
+        Fri, 06 Mar 2020 09:21:41 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id r4sm4834419qkm.98.2020.03.06.09.21.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 09:21:41 -0800 (PST)
+Date:   Fri, 6 Mar 2020 12:21:40 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>, tony.luck@intel.com,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <00000000000067c6df059df7f9f5@google.com>
- <CACT4Y+ZVLs7O84qixsvFqk_Nur1WOaCU81RiCwDf3wOqvHB-ag@mail.gmail.com>
- <3f805e51-1db7-3e57-c9a3-15a20699ea54@kernel.dk>
- <CAG48ez3DUAraFL1+agBX=1JVxzh_e2GR=UpX5JUaoyi+1gQ=6w@mail.gmail.com>
- <075e7fbe-aeec-cb7d-9338-8eb4e1576293@kernel.dk>
- <CAG48ez07bD4sr5hpDhUKe2g5ETk0iYb6PCWqyofPuJbXz1z+hw@mail.gmail.com>
- <20200306164443.GU2935@paulmck-ThinkPad-P72>
- <11921f78-c6f2-660b-5e33-11599c2f9a4b@kernel.dk>
- <20200306171911.GA2935@paulmck-ThinkPad-P72>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f94ca345-d888-e95f-e091-ca60f34ae095@kernel.dk>
-Date:   Fri, 6 Mar 2020 10:21:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        linux-arch <linux-arch@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        jiangshanlai@gmail.com, Andy Lutomirski <luto@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v4 16/27] tracing: Remove regular RCU context for
+ _rcuidle tracepoints (again)
+Message-ID: <20200306172140.GA237112@google.com>
+References: <20200221133416.777099322@infradead.org>
+ <20200221134216.051596115@infradead.org>
+ <20200306104335.GF3348@worktop.programming.kicks-ass.net>
+ <20200306113135.GA8787@worktop.programming.kicks-ass.net>
+ <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200306171911.GA2935@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQKp=UKg8HAuMOFknhmXtfm_LVu_ynTNJuedHqKdA6zh1g@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 10:19 AM, Paul E. McKenney wrote:
-> On Fri, Mar 06, 2020 at 10:00:19AM -0700, Jens Axboe wrote:
->> On 3/6/20 9:44 AM, Paul E. McKenney wrote:
->>> On Fri, Mar 06, 2020 at 04:36:20PM +0100, Jann Horn wrote:
->>>> On Fri, Mar 6, 2020 at 4:34 PM Jens Axboe <axboe@kernel.dk> wrote:
->>>>> On 3/6/20 7:57 AM, Jann Horn wrote:
->>>>>> +paulmck
->>>>>>
->>>>>> On Wed, Mar 4, 2020 at 3:40 PM Jens Axboe <axboe@kernel.dk> wrote:
->>>>>>> On 3/4/20 12:59 AM, Dmitry Vyukov wrote:
->>>>>>>> On Fri, Feb 7, 2020 at 9:14 AM syzbot
->>>>>>>> <syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com> wrote:
->>>>>>>>>
->>>>>>>>> Hello,
->>>>>>>>>
->>>>>>>>> syzbot found the following crash on:
->>>>>>>>>
->>>>>>>>> HEAD commit:    4c7d00cc Merge tag 'pwm/for-5.6-rc1' of git://git.kernel.o..
->>>>>>>>> git tree:       upstream
->>>>>>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=12fec785e00000
->>>>>>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=e162021ddededa72
->>>>>>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=e017e49c39ab484ac87a
->>>>>>>>> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->>>>>>>>>
->>>>>>>>> Unfortunately, I don't have any reproducer for this crash yet.
->>>>>>>>>
->>>>>>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>>>>>>>> Reported-by: syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com
->>>>>>>>
->>>>>>>> +io_uring maintainers
->>>>>>>>
->>>>>>>> Here is a repro:
->>>>>>>> https://gist.githubusercontent.com/dvyukov/6b340beab6483a036f4186e7378882ce/raw/cd1922185516453c201df8eded1d4b006a6d6a3a/gistfile1.txt
->>>>>>>
->>>>>>> I've queued up a fix for this:
->>>>>>>
->>>>>>> https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.6&id=9875fe3dc4b8cff1f1b440fb925054a5124403c3
->>>>>>
->>>>>> I believe that this fix relies on call_rcu() having FIFO ordering; but
->>>>>> <https://www.kernel.org/doc/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html#Callback%20Registry>
->>>>>> says:
->>>>>>
->>>>>> | call_rcu() normally acts only on CPU-local state[...] It simply
->>>>>> enqueues the rcu_head structure on a per-CPU list,
->>>
->>> Indeed.  For but one example, if there was a CPU-to-CPU migration between
->>> the two call_rcu() invocations, it would not be at all surprising for
->>> the two callbacks to execute out of order.
->>>
->>>>>> Is this fix really correct?
->>>>>
->>>>> That's a good point, there's a potentially stronger guarantee we need
->>>>> here that isn't "nobody is inside an RCU critical section", but rather
->>>>> that we're depending on a previous call_rcu() to have happened. Hence I
->>>>> think you are right - it'll shrink the window drastically, since the
->>>>> previous callback is already queued up, but it's not a full close.
->>>>>
->>>>> Hmm...
->>>>
->>>> You could potentially hack up the semantics you want by doing a
->>>> call_rcu() whose callback does another call_rcu(), or something like
->>>> that - but I'd like to hear paulmck's opinion on this first.
->>>
->>> That would work!
->>>
->>> Or, alternatively, do an rcu_barrier() between the two calls to
->>> call_rcu(), assuming that the use case can tolerate rcu_barrier()
->>> overhead and latency.
->>
->> If the nested call_rcu() works, that seems greatly preferable to needing
->> the rcu_barrier(), even if that would not be a showstopper for me. The
->> nested call_rcu() is just a bit odd, but with a comment it should be OK.
->>
->> Incremental here I'm going to test, would just fold in of course.
->>
->>
->> diff --git a/fs/io_uring.c b/fs/io_uring.c
->> index f3218fc81943..95ba95b4d8ec 100644
->> --- a/fs/io_uring.c
->> +++ b/fs/io_uring.c
->> @@ -5330,7 +5330,7 @@ static void io_file_ref_kill(struct percpu_ref *ref)
->>  	complete(&data->done);
->>  }
->>  
->> -static void io_file_ref_exit_and_free(struct rcu_head *rcu)
->> +static void __io_file_ref_exit_and_free(struct rcu_head *rcu)
->>  {
->>  	struct fixed_file_data *data = container_of(rcu, struct fixed_file_data,
->>  							rcu);
->> @@ -5338,6 +5338,18 @@ static void io_file_ref_exit_and_free(struct rcu_head *rcu)
->>  	kfree(data);
->>  }
->>  
->> +static void io_file_ref_exit_and_free(struct rcu_head *rcu)
->> +{
->> +	/*
->> +	 * We need to order our exit+free call again the potentially
->> +	 * existing call_rcu() for switching to atomic. One way to do that
->> +	 * is to have this rcu callback queue the final put and free, as we
->> +	 * could otherwise a pre-existing atomic switch complete _after_
->> +	 * the free callback we queued.
->> +	 */
->> +	call_rcu(rcu, __io_file_ref_exit_and_free);
->> +}
->> +
->>  static int io_sqe_files_unregister(struct io_ring_ctx *ctx)
->>  {
->>  	struct fixed_file_data *data = ctx->file_data;
+On Fri, Mar 06, 2020 at 07:51:18AM -0800, Alexei Starovoitov wrote:
+> On Fri, Mar 6, 2020 at 3:31 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Fri, Mar 06, 2020 at 11:43:35AM +0100, Peter Zijlstra wrote:
+> > > On Fri, Feb 21, 2020 at 02:34:32PM +0100, Peter Zijlstra wrote:
+> > > > Effectively revert commit 865e63b04e9b2 ("tracing: Add back in
+> > > > rcu_irq_enter/exit_irqson() for rcuidle tracepoints") now that we've
+> > > > taught perf how to deal with not having an RCU context provided.
+> > > >
+> > > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > > Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > > > ---
+> > > >  include/linux/tracepoint.h |    8 ++------
+> > > >  1 file changed, 2 insertions(+), 6 deletions(-)
+> > > >
+> > > > --- a/include/linux/tracepoint.h
+> > > > +++ b/include/linux/tracepoint.h
+> > > > @@ -179,10 +179,8 @@ static inline struct tracepoint *tracepo
+> > > >              * For rcuidle callers, use srcu since sched-rcu        \
+> > > >              * doesn't work from the idle path.                     \
+> > > >              */                                                     \
+> > > > -           if (rcuidle) {                                          \
+> > > > +           if (rcuidle)                                            \
+> > > >                     __idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+> > > > -                   rcu_irq_enter_irqsave();                        \
+> > > > -           }                                                       \
+> > > >                                                                     \
+> > > >             it_func_ptr = rcu_dereference_raw((tp)->funcs);         \
+> > > >                                                                     \
+> > > > @@ -194,10 +192,8 @@ static inline struct tracepoint *tracepo
+> > > >                     } while ((++it_func_ptr)->func);                \
+> > > >             }                                                       \
+> > > >                                                                     \
+> > > > -           if (rcuidle) {                                          \
+> > > > -                   rcu_irq_exit_irqsave();                         \
+> > > > +           if (rcuidle)                                            \
+> > > >                     srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+> > > > -           }                                                       \
+> > > >                                                                     \
+> > > >             preempt_enable_notrace();                               \
+> > > >     } while (0)
+> > >
+> > > So what happens when BPF registers for these tracepoints? BPF very much
+> > > wants RCU on AFAIU.
+> >
+> > I suspect we needs something like this...
+> >
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index a2f15222f205..67a39dbce0ce 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -1475,11 +1475,13 @@ void bpf_put_raw_tracepoint(struct bpf_raw_event_map *btp)
+> >  static __always_inline
+> >  void __bpf_trace_run(struct bpf_prog *prog, u64 *args)
+> >  {
+> > +       int rcu_flags = trace_rcu_enter();
+> >         rcu_read_lock();
+> >         preempt_disable();
+> >         (void) BPF_PROG_RUN(prog, args);
+> >         preempt_enable();
+> >         rcu_read_unlock();
+> > +       trace_rcu_exit(rcu_flags);
 > 
-> Looks good to me!
+> One big NACK.
+> I will not slowdown 99% of cases because of one dumb user.
+> Absolutely no way.
 
-Thanks Paul! I talked to Paul in private, but here's the final version
-with updated comment and attributions.
+For the 99% usecases, they incur an additional atomic_read and a branch, with
+the above.  Is that the concern? Just want to make sure we are talking about
+same thing.
 
-https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.6&id=c1e2148f8ecb26863b899d402a823dab8e26efd1
+Speaking of slowdowns, you don't really need that rcu_read_lock/unlock()
+pair in __bpf_trace_run() AFAICS. The rcu_read_unlock() can run into the
+rcu_read_unlock_special() slowpath and if not, at least has branches.  Most
+importantly, RCU is consolidated which means preempt_disable() implies
+rcu_read_lock().
 
--- 
-Jens Axboe
+thanks,
+
+ - Joel
 
