@@ -2,65 +2,100 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0BAC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739E6C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD3102073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465732073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:10:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dVhLHqko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgCFCI0 (ORCPT
+        id S1726811AbgCFCJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 21:08:26 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:58762 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgCFCI0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 21:08:26 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7FCE11581B2D3;
-        Thu,  5 Mar 2020 18:08:25 -0800 (PST)
-Date:   Thu, 05 Mar 2020 18:08:23 -0800 (PST)
-Message-Id: <20200305.180823.1274906337509861200.davem@davemloft.net>
-To:     sfr@canb.auug.org.au
-Cc:     sameo@linux.intel.com, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        johannes@sipsolutions.net
-Subject: Re: linux-next: the nfc-next tree seems to be old
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200306104825.068268eb@canb.auug.org.au>
-References: <20200130105538.7b07b150@canb.auug.org.au>
-        <20200306104825.068268eb@canb.auug.org.au>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 05 Mar 2020 18:08:25 -0800 (PST)
+        Thu, 5 Mar 2020 21:09:59 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:47713 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbgCFCJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 21:09:58 -0500
+Received: from [IPv6:2601:646:8600:3281:d841:929b:f37:3a31] ([IPv6:2601:646:8600:3281:d841:929b:f37:3a31])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 02629Jmv816866
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 5 Mar 2020 18:09:20 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 02629Jmv816866
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020022001; t=1583460561;
+        bh=u42XpQkEklwk2jgju0E0ou84vbvPEJiWthnbO8cPS3A=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=dVhLHqkoS7wQ5iiiNvkSuJ7TeTy9eTtrM72qtwVXXmBWXvq6x/puyEvZ3QWgVOXJi
+         H7CLZxQ0/bxM+BNhQqi+KAFnYuny7P7VlRi41ATfnDjvRgF/OSOMGT1wckQ4LKFs0O
+         eQkPF/mSRKwk2d6aFiJt9FzzB28orhc0XG9UhxQy7okGS1hjo8G9LzeDq1uCWzhHEu
+         Xa80YmRLKkhpa5d0myzE/8LYZ9ujCJ4E3uKB3JJhf98eqX9Qj7mUGy8DLFmPHwfxVH
+         w1XDQIKVqD6XsghK7mkdIyrR9arhNGky2KqnQbarq1yEJHzrv7BZrUw12L1NRwZRdg
+         KmSX8YiSAzz4A==
+Date:   Thu, 05 Mar 2020 18:09:10 -0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <82b7d2d8c75e4c80a7704ae43940392a@huawei.com>
+References: <82b7d2d8c75e4c80a7704ae43940392a@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] KVM: x86: small optimization for is_mtrr_mask calculation
+To:     linmiaohe <linmiaohe@huawei.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>
+From:   hpa@zytor.com
+Message-ID: <9209A69A-899B-47A9-8483-E3E5F545D2C4@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 6 Mar 2020 10:48:25 +1100
-
-> On Thu, 30 Jan 2020 10:55:38 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On March 5, 2020 6:05:40 PM PST, linmiaohe <linmiaohe@huawei=2Ecom> wrote:
+>Hi,
+>Paolo Bonzini <pbonzini@redhat=2Ecom> wrote:
+>>On 05/03/20 03:48, linmiaohe wrote:
+>>> From: Miaohe Lin <linmiaohe@huawei=2Ecom>
+>>>=20
+>>> We can get is_mtrr_mask by calculating (msr - 0x200) % 2 directly=2E
+>>>  		index =3D (msr - 0x200) / 2;
+>>> -		is_mtrr_mask =3D msr - 0x200 - 2 * index;
+>>> +		is_mtrr_mask =3D (msr - 0x200) % 2;
+>>>  		if (!is_mtrr_mask)
+>>>  			*pdata =3D vcpu->arch=2Emtrr_state=2Evar_ranges[index]=2Ebase;
+>>>  		else
+>>>=20
 >>
->> Hi Samuel,
->> 
->> I noticed that the nfc-next tree has not changed since June 2018 and
->> has been orphaned in May 2019, so am wondering if the commits in it are
->> still relevant or should I just remove the tree from linux-next.
-> 
-> Since I have had no response, I will remove it tomorrow.
+>>If you're going to do that, might as well use ">> 1" for index instead
+>of "/ 2", and "msr & 1" for is_mtrr_mask=2E
+>>
+>
+>Many thanks for suggestion=2E What do you mean is like this ?
+>
+>	index =3D (msr - 0x200) >> 1;
+>	is_mtrr_mask =3D msr & 1;
+>
+>Thanks again=2E
 
-We've been integrating NFC patches directly into my networking tree for
-a while now, so this is indeed the thing to do.
+You realize that the compiler will probably produce exactly the same code,=
+ right? As such, it is about making the code easy for the human reader=2E
 
-Thanks.
+Even if it didn't, this code is as far from performance critical as one ca=
+n possibly get=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
