@@ -2,163 +2,104 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92462C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53D3C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEC320801
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97AD2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:18:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lIAaYs3p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I0bxC8pL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgCFDRu (ORCPT
+        id S1726650AbgCFDRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 22:17:50 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42189 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgCFDRt (ORCPT
+        Thu, 5 Mar 2020 22:17:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50394 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbgCFDRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 22:17:49 -0500
-Received: by mail-pf1-f196.google.com with SMTP id f5so378567pfk.9;
-        Thu, 05 Mar 2020 19:17:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:cc:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=xo9nEuabIYuceOGMah6qpuhpoEbv6aajq9SnDkIO+FY=;
-        b=lIAaYs3ppSoS7o6sb1sdW+16vZiCgmKikSc0IrvBzVWAR66mo53oCgw4bzQtkjbbzj
-         ff4xOi3P27NaP3YX2LrovyPDy2O53xWnHTrkWqalpw3tzXRTRlrWe2NuWv/7ahPTZ3GL
-         uyFUUvwp91hMlufa6+D+TLGjlXEqbgRbBj+AXL7RgSh/NRtS1u60iIrpMf/tYmExwrJR
-         L0Bu8S3ZCZQIgdLjGj8OcMXFxP/4Z1BippZTtzIT6eynbr5bogPnjwnXY7H8VtAAfTr1
-         0LZHYHRNZya09MqtFWJ8PmhwZSkeJ0pEq+UQMQo1lFmQorwCGrZDttgDv8yuR4BaYUGG
-         GLSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:cc:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=xo9nEuabIYuceOGMah6qpuhpoEbv6aajq9SnDkIO+FY=;
-        b=eG1nqo498OPq15nLO4NY1gz2hH2e7khRgbClIU0dESk6CE6eViDrJrx76Yge+C0+gi
-         CEqjTkwD1ZCIlulvmEROSx/oJDEBdRwzQ3HbNgKS3i8IdQ42/6wVzluq23NDjelGQzwR
-         Y0pSuGdwGcV+D7uTbSsjuWI8f2Rc63ofyzyq9r69otpAuBRkTDyhtSZ+ODrup8BatPcz
-         Tm6SKOTT1YNo7DRP+5y3q5eFsNLSv20ukogL03/v1EhWfZBFAtjGiEN1Ynb4PQfYTeSE
-         4YCmPt7tZBSIcVGGYWGJNrknSixiu4XFkv2OQLDLf6cZ0+bCCZi6wJwWqyVbg3kvrFfC
-         oUcg==
-X-Gm-Message-State: ANhLgQ1MtsNiuCL6BiC8GPRLBZSV5ugzxEJ5od+7bvTYeMHrG5e8ghwy
-        nm3d1O2slVKFrFyQtQqzByO4ESYm
-X-Google-Smtp-Source: ADFU+vuOcXk1o7tFatRTS6tMsZHY9SSotaqSr8FeL1agRRtULwceOFWLw5AwaxTpcwddwfdCM2aLqQ==
-X-Received: by 2002:a63:574c:: with SMTP id h12mr1302060pgm.424.1583464666675;
-        Thu, 05 Mar 2020 19:17:46 -0800 (PST)
-Received: from [127.0.0.1] ([203.205.141.39])
-        by smtp.gmail.com with ESMTPSA id s23sm7412112pjp.28.2020.03.05.19.17.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 19:17:46 -0800 (PST)
-Subject: Re: [PATCH] ext4: mark extents index blocks as dirty to avoid
- information leakage
-From:   brookxu <brookxu.cn@gmail.com>
-To:     tytso@mit.edu, adilger.kernel@dilger.ca,
-        linux-kernel@vger.kernel.org
-References: <e988a1db-3105-07a0-6399-38af80656af1@gmail.com>
-Cc:     linux-ext4@vger.kernel.org
-Message-ID: <ccfb3a62-f0dd-4bca-0c78-54f78d418815@gmail.com>
-Date:   Fri, 6 Mar 2020 11:17:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101
+        Thu, 5 Mar 2020 22:17:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:Cc:From:To:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=o08bZPm/RS6A9C1jh4GWQzSm+/n79bG6xV2CG+lU8+w=; b=I0bxC8pLrA+EH6gd/iaXIZyDdE
+        VbHS7Ag0gperjDyalKKLEcJ/Pup74p9O36tpqgFzJXHl89k8pDwdxCyOSdsCs88TbDgbeSN917Izv
+        F93CsnajQFN7nQSgjmYitC3B4UloMvN2uzMxiFBjLi01V55cEZoqL0iveUJc4OWz720TINdo3V55P
+        Xj4Bsz8Euok8q49KS5QCJNjouANuuh3nbi2hy+eGoDFJGnPzY3gjzckADF3BA/A2tUddsekEXe1Ar
+        fwt4vV72TEdInyU1CC0TeT790zvZnhhndudq6Nd+nWTPBfip0RschhVSgRdeZIjux01++ZxUiGyj6
+        vRnTnAJQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jA3Uk-0003vv-65; Fri, 06 Mar 2020 03:17:50 +0000
+To:     dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>,
+        David Airlie <airlied@linux.ie>
+Subject: [RFC PATCH] drm: rcar-du: make all sub-symbols depend on DRM_RCAR_DU
+Message-ID: <4b50cc9f-1434-b78a-d56a-fadfd030f002@infradead.org>
+Date:   Thu, 5 Mar 2020 19:17:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <e988a1db-3105-07a0-6399-38af80656af1@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PING
+From: Randy Dunlap <rdunlap@infradead.org>
 
-brookxu wrote on 2020/3/3 16:51:
-> From: Chunguang Xu <brookxu@tencent.com>
->
-> In the scene of deleting a file, the physical block information in the
-> extent will be cleared to 0, the buffer_head contains these extents is
-> marked as dirty, and then managed by jbd2, which will clear the
-> buffer_head's dirty flag by clear_buffer_dirty. However, when the entire
-> extent block is deleted, it is revoked from the jbd2, but  the extents
-> block is not redirtied.
->
-> Not quite reasonable here, for the following concerns:
->
-> 1. This has the risk of information leakage and leads to an interesting
-> phenomenon that deleting the entire file is no more secure than truncate
-> to 1 byte, because the whole extents physical block clear to zero in cache
-> will never written back as the page is not redirtied.
->
-> 2. For large files, the number of index block is usually very small.
-> Ignoring index pages not get much more benefit in IO performance. But if
-> we remark the page as dirty, the page is then written back by the system
-> writeback mechanism asynchronously with little performance impact. As a
-> result, the risk of information leakage can be avoided. At least not wrose
-> than truncate file length to 1 byte
->
-> Therefore, when the index block is released, we need to remark its page
-> as dirty, so that the index block on the disk will be updated and the
-> data is more security.
->
-> Signed-off-by: Chunguang Xu <brookxu@tencent.com>
-> ---
->  fs/ext4/ext4.h      | 1 +
->  fs/ext4/ext4_jbd2.c | 8 ++++++++
->  fs/ext4/extents.c   | 3 ++-
->  3 files changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 61b37a0..f9a4d97 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -644,6 +644,7 @@ enum {
->  #define EXT4_FREE_BLOCKS_NOFREE_FIRST_CLUSTER    0x0010
->  #define EXT4_FREE_BLOCKS_NOFREE_LAST_CLUSTER    0x0020
->  #define EXT4_FREE_BLOCKS_RERESERVE_CLUSTER      0x0040
-> +#define EXT4_FREE_BLOCKS_METADATA_INDEX        0x0080
->  
->  /*
->   * ioctl commands
-> diff --git a/fs/ext4/ext4_jbd2.c b/fs/ext4/ext4_jbd2.c
-> index 1f53d64..7974c62 100644
-> --- a/fs/ext4/ext4_jbd2.c
-> +++ b/fs/ext4/ext4_jbd2.c
-> @@ -275,7 +275,15 @@ int __ext4_forget(const char *where, unsigned int line, handle_t *handle,
->          ext4_set_errno(inode->i_sb, -err);
->          __ext4_abort(inode->i_sb, where, line,
->                 "error %d when attempting revoke", err);
-> +    } else  {
-> +        /*
-> +         * we dirtied index block to ensure that related changes to
-> +         * the index block will be stored to disk.
-> +         */
-> +        if (is_metadata & EXT4_FREE_BLOCKS_METADATA_INDEX)
-> +            mark_buffer_dirty(bh);
->      }
-> +
->      BUFFER_TRACE(bh, "exit");
->      return err;
->  }
-> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-> index 954013d..2ee0df0 100644
-> --- a/fs/ext4/extents.c
-> +++ b/fs/ext4/extents.c
-> @@ -2431,7 +2431,8 @@ static int ext4_ext_rm_idx(handle_t *handle, struct inode *inode,
->      trace_ext4_ext_rm_idx(inode, leaf);
->  
->      ext4_free_blocks(handle, inode, NULL, leaf, 1,
-> -             EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET);
-> +             EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET |
-> +             EXT4_FREE_BLOCKS_METADATA_INDEX);
->  
->      while (--depth >= 0) {
->          if (path->p_idx != EXT_FIRST_INDEX(path->p_hdr))
+DRM_RCAR_CMM depends on DRM_RCAR_DU. Since the following Kconfig
+symbols do not depend on DRM_RCAR_DU, the menu presentation is
+broken for these and following non-R-Car Kconfig symbols.
+
+Is it safe/appropriate to make all of these symbols depend on
+DRM_RCAR_DU?  It make the kconfig menu presentation much cleaner.
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+Cc: Dave Airlie <airlied@linux.ie>
+---
+ drivers/gpu/drm/rcar-du/Kconfig |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- linux-next-20200305.orig/drivers/gpu/drm/rcar-du/Kconfig
++++ linux-next-20200305/drivers/gpu/drm/rcar-du/Kconfig
+@@ -24,6 +24,7 @@ config DRM_RCAR_CMM
+ config DRM_RCAR_DW_HDMI
+ 	tristate "R-Car DU Gen3 HDMI Encoder Support"
+ 	depends on DRM && OF
++	depends on DRM_RCAR_DU
+ 	select DRM_DW_HDMI
+ 	help
+ 	  Enable support for R-Car Gen3 internal HDMI encoder.
+@@ -31,6 +32,7 @@ config DRM_RCAR_DW_HDMI
+ config DRM_RCAR_LVDS
+ 	tristate "R-Car DU LVDS Encoder Support"
+ 	depends on DRM && DRM_BRIDGE && OF
++	depends on DRM_RCAR_DU
+ 	select DRM_PANEL
+ 	select OF_FLATTREE
+ 	select OF_OVERLAY
+@@ -47,4 +49,5 @@ config DRM_RCAR_VSP
+ 
+ config DRM_RCAR_WRITEBACK
+ 	bool
++	depends on DRM_RCAR_DU
+ 	default y if ARM64
+
