@@ -2,90 +2,87 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54981C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6431C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D762072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Umff9i94"
+	by mail.kernel.org (Postfix) with ESMTP id B0E0B20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583496824;
+	bh=qrjGOZLa4Lp6Zr15HcoiifExkEM//CEZFS/Eyg7eolE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=xd3sz6XalgDHzDtG+2fs+3k0vSGvpinLJ1m50CBj1NuJHdKIeRdJVMlFydHvahhPM
+	 +QRlxY3sm7yWeTvxoBmAX+PtdsfDJhATYPsMNbhM2eK8FObL4zrZytd3UcATNApolR
+	 FhTFNxjKSMawZtFIvCbvRgWFzCjfzM20ISE+TXqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgCFMME (ORCPT
+        id S1726905AbgCFMNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:12:04 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35910 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgCFMMD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:12:03 -0500
-Received: by mail-ot1-f67.google.com with SMTP id j14so2196768otq.3;
-        Fri, 06 Mar 2020 04:12:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=vfLp1FhQDcublXc84R+92QUDEJl2WMGGtAZn34jMq4Q=;
-        b=Umff9i94gjlNa3oYklRMofweiY+dV/E8kXGbg6ij+kZNKnriIOm9Mg8nerGTVCuByK
-         L98n45rb74dm4yA1RDfLWUZUiOVjfmjnkF/nq6jG9xvrO7nCeRUm037h+Uk5c37NzJIy
-         Gi2suUTsbyQOyxOLLMHhrWJYASRExg1hB7FZBTytFPP0LpaqcQfUs3tQBDVn3V3w/WMq
-         bvqw4Hv4ESe5gQlSysum8kaNc/8afqwabLinP4i2sguUocwgxAyxzlFfqBHJ6BcEkinT
-         QqCwAlirRDey42AL2RmqiqpmLTrsLNKDuch/g7qQG6eVki2uEuBreZgVjaJyUd+rXxeh
-         rjrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=vfLp1FhQDcublXc84R+92QUDEJl2WMGGtAZn34jMq4Q=;
-        b=RdlnUmzeo83v8rnSJs4yhIc97LdR42qs42fEprn/fJ0TAD317sM6i2o33R4cGdcTN9
-         RBK8fojayJW06CPQLIBEb4ZtWY7oBssIXW1OnAoUR3uKfBm55u6JzdrVORQwW5uiqAoX
-         VrC9CUgW5xUMNceoCgJjfj93SYIO+eBGoXW4i0apByuag7FTZ+FYtqV2TO78MXtWg38B
-         jv+N8dh6SSmibuGIHf0vxZraa0FU3OpuAhhIgkSgkbXXXj0r8TM/fj4KpJYocctquV+U
-         wLHNS1Kv/btgvrch3/na7/5XUfIIVuwZf0mxhYccYN/I/XRvFacXLj0ENcJ4OdZLK1JM
-         q9Pw==
-X-Gm-Message-State: ANhLgQ3oSa/evLNB3rVSMh8kHcgBJ5hYFbDVBBxJ9KfIBrc6TeqhxvIk
-        neD+DhNKTqvFL05qP1QWW++3ecGkamuR37ypAy0=
-X-Google-Smtp-Source: ADFU+vtEMErh4XfQao2++X0CvMCxBO+mnPh/GXclb6CrqLF+1TpseUcAmJcDjafdyMMnSFhXEhRrBR3PdRVv3UTKgVU=
-X-Received: by 2002:a05:6830:1606:: with SMTP id g6mr2308928otr.120.1583496723068;
- Fri, 06 Mar 2020 04:12:03 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a8a:95:0:0:0:0:0 with HTTP; Fri, 6 Mar 2020 04:12:02 -0800 (PST)
-In-Reply-To: <20200305161228.GU23230@ZenIV.linux.org.uk>
-References: <CGME20200302062613epcas1p2969203b10bc3b7c41e0d4ffe9a08a3e9@epcas1p2.samsung.com>
- <20200302062145.1719-1-namjae.jeon@samsung.com> <20200305155324.GA5660@lst.de>
- <20200305161228.GU23230@ZenIV.linux.org.uk>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Fri, 6 Mar 2020 21:12:02 +0900
-Message-ID: <CAKYAXd85h_SoTS4y9_cc1Yzo4001dFC1a_xGtL6s+whNzfsQPg@mail.gmail.com>
-Subject: Re: [PATCH v14 00/14] add the latest exfat driver
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu,
-        sj1557.seo@samsung.com, pali.rohar@gmail.com, arnd@arndb.de,
-        torvalds@linux-foundation.org
+        Fri, 6 Mar 2020 07:13:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgCFMNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 07:13:43 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B82D2072D;
+        Fri,  6 Mar 2020 12:13:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583496823;
+        bh=qrjGOZLa4Lp6Zr15HcoiifExkEM//CEZFS/Eyg7eolE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Wwv10ATU0KcOHrfRY1pSKnH/t9BjEtwdk4f1JMQQtjcEgRN2M30AC5L+FF1dvdXcN
+         Ol18A62LgESFeW9iUyQuEnqK0ABevGygQrS+UINMKguF+etrW/ctxPZXuCDz+7FhDq
+         HbmGpAEIfxZUOpIUuz+QoctO1X0ILQXDRjxaoiic=
+Message-ID: <f7318d47df2074a7a00ea3a8580bc973a8c0b206.camel@kernel.org>
+Subject: Re: [PATCH] fs/ceph: return errcode in __get_parent().
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 06 Mar 2020 07:13:41 -0500
+In-Reply-To: <1583458460-31917-1-git-send-email-hqjagain@gmail.com>
+References: <1583458460-31917-1-git-send-email-hqjagain@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-03-06 1:12 GMT+09:00, Al Viro <viro@zeniv.linux.org.uk>:
-> On Thu, Mar 05, 2020 at 04:53:24PM +0100, Christoph Hellwig wrote:
->> Al,
->>
->> are you going to pick this up, or should Namjae go through the pains
->> of setting up his own git tree to feed to Linus?
->
-> I'm putting together #for-next right now, that'll go there.
-Great, thank you!
+On Fri, 2020-03-06 at 09:34 +0800, Qiujun Huang wrote:
+> return real errcode when it's different from ENOENT.
+> 
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> ---
+>  fs/ceph/export.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+> index b6bfa94..79dc068 100644
+> --- a/fs/ceph/export.c
+> +++ b/fs/ceph/export.c
+> @@ -315,6 +315,11 @@ static struct dentry *__get_parent(struct super_block *sb,
+>  
+>  	req->r_num_caps = 1;
+>  	err = ceph_mdsc_do_request(mdsc, NULL, req);
+> +	if (err) {
+> +		ceph_mdsc_put_request(req);
+> +		return ERR_PTR(err);
+> +	}
+> +
+>  	inode = req->r_target_inode;
+>  	if (inode)
+>  		ihold(inode);
 
->
-> Al, cursing devpts, audit, ima, fsnotify and a lot of other unsavory things
-> right now...
->
+Looks good! Merged into the ceph-client/testing branch and should make
+5.7. Thanks for the patch!
+-- 
+Jeff Layton <jlayton@kernel.org>
+
