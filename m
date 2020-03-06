@@ -2,85 +2,119 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FD4C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5450C10F26
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60DA206D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6CE920675
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgCFTEn (ORCPT
+        id S1726271AbgCFTIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:04:43 -0500
-Received: from muru.com ([72.249.23.125]:59234 "EHLO muru.com"
+        Fri, 6 Mar 2020 14:08:00 -0500
+Received: from mga03.intel.com ([134.134.136.65]:16862 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbgCFTEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:04:42 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 6DCAF8027;
-        Fri,  6 Mar 2020 19:05:27 +0000 (UTC)
-Date:   Fri, 6 Mar 2020 11:04:38 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Arthur Demchenkov <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 1/2] Input: omap4-keypad - Configure interrupt as level
-Message-ID: <20200306190438.GL37466@atomide.com>
-References: <20200227020407.17276-1-tony@atomide.com>
- <20200306185805.GF217608@dtor-ws>
+        id S1726090AbgCFTIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 14:08:00 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 11:07:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
+   d="scan'208";a="275647208"
+Received: from wbakowsk-mobl.ger.corp.intel.com (HELO localhost) ([10.252.27.142])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 11:07:54 -0800
+Date:   Fri, 6 Mar 2020 21:07:53 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Dr. Greg" <greg@enjellic.com>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
+Message-ID: <20200306190753.GH7472@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
+ <CAOASepN1JrD6OEzZycbqOr6_ZVACK=EctEOoQ8oSAEeigMr1Eg@mail.gmail.com>
+ <04362c0cf66bf66e8f7c25a531830b9f294d2d09.camel@linux.intel.com>
+ <20200306154222.GA20820@wind.enjellic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306185805.GF217608@dtor-ws>
+In-Reply-To: <20200306154222.GA20820@wind.enjellic.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Dmitry Torokhov <dmitry.torokhov@gmail.com> [200306 18:58]:
-> Hi Tony,
+On Fri, Mar 06, 2020 at 09:42:22AM -0600, Dr. Greg wrote:
+> On Thu, Mar 05, 2020 at 01:33:28PM +0200, Jarkko Sakkinen wrote:
 > 
-> On Wed, Feb 26, 2020 at 06:04:06PM -0800, Tony Lindgren wrote:
-> > The interrupt should be level high for SoC internal devices.
-> > Otherwise interrupts may not be seen after a wake-up event.
-> > 
-> > Cc: Arthur Demchenkov <spinal.by@gmail.com>
-> > Cc: Merlijn Wajer <merlijn@wizzup.org>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Sebastian Reichel <sre@kernel.org>
-> > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > ---
-> >  drivers/input/keyboard/omap4-keypad.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
-> > --- a/drivers/input/keyboard/omap4-keypad.c
-> > +++ b/drivers/input/keyboard/omap4-keypad.c
-> > @@ -344,7 +344,8 @@ static int omap4_keypad_probe(struct platform_device *pdev)
-> >  	}
-> >  
-> >  	error = request_threaded_irq(keypad_data->irq, omap4_keypad_irq_handler,
-> > -				     omap4_keypad_irq_thread_fn, IRQF_ONESHOT,
-> > +				     omap4_keypad_irq_thread_fn,
-> > +				     IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> Good morning, I hope the end of the week is going well for everyone.
 > 
-> Can't we rely on DT/platform to configure this properly?
+> > On Wed, 2020-03-04 at 14:27 -0500, Nathaniel McCallum wrote:
+> > >         # Header
+> > >         .fill   1, 8, 0                 # XSTATE_BV
+> > >         .fill   1, 8, 1 << 63           # XCOMP_BV (compaction mode)
+> > >         .fill   6, 8, 0
+> > > 
+> > > Also, since people are likely to copy this code for their own
+> > > enclaves, it would be helpful to document which flags are set in FCW
+> > > and MXCSR.
+> 
+> > It was meant as a test program but I'd guess what you say is true
+> > because it also might be the only alternative user space to Intel's
+> > :-) And a great starting point if you want to do things from
+> > scratch.
+> >
+> > Because I meant it as a smoke test program for SGX, not everything
+> > is too well documented but given the multipurpose use for that code
+> > I'll make the improvements that you are suggesting.
+> 
+> At the risk of what will certainly be a fair amount of criticism, I
+> will take on the moniker of being the pernicious voice of reality, if
+> not intellectual honesty, in all of this.  No market or security
+> relevant enclaves are going to get built by developers starting from
+> scratch or copying this code, useful and informative as it might be,
+> into their enclaves.
+> 
+> That isn't to say that it isn't good to have some example code but
+> Nate's point in a previous e-mail is well taken, it shouldn't have
+> known security vulnerabilities in it.  Given the current realities of
+> speculative execution attacks, there are a ton of subtle issues
+> surrounding entry and exit into enclaves, which by definition is the
+> primary attack surface for a trusted execution environment.
+> 
+> For the sake of those reading along at home, relevant enclave
+> development needs, at an absolute minimum, the following:
+> 
+> 1.) A lot of trusted runtime initialization and scaffolding code.
+> 2.) An embedded C/C++ library.
+> 3.) A compiler intrinsics implementation.
+> 
+> That gets you, maybe, something that you can start thinking about,
+> 'hello world', with, but nothing useful with respect to what anyone
+> would want to do with an enclave.
 
-Oops yeah you're right, and we already have that set with
-IRQ_TYPE_LEVEL_HIGH in dts.
+Actually many people have applaused to have a small scoped, even if not
+perfect, test program to look at how SGX works. One that is only
+dependent on glibc. None of the selftests are meant to be production
+peaces of code. You are getting wrong the role of the selftest in the
+first place.
 
-Sorry I was again diffing against the old v3.0.8 vendor kernel
-trying to figure out what they were doing for the lost keys
-and spotted this change :)
-
-So this patch can be just ignored.
-
-Regards,
-
-Tony
+/Jarkko
