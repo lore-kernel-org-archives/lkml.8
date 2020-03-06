@@ -2,66 +2,69 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2824EC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556A6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00AEC20848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CBE20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:34:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="rEoA/mjy"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="aYql5mJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbgCFNeA (ORCPT
+        id S1727624AbgCFNeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:34:00 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44690 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgCFNdz (ORCPT
+        Fri, 6 Mar 2020 08:34:04 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34491 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgCFNeA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:33:55 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y26so1119392pfn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 05:33:54 -0800 (PST)
+        Fri, 6 Mar 2020 08:34:00 -0500
+Received: by mail-pj1-f66.google.com with SMTP id gc16so1697053pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 05:33:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=axtens.net; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gUiajEtqHykUipUDAxZZ8PHMye5BZieG1YJoiSofP8Y=;
-        b=rEoA/mjylyn+XjZnbo+FAoZbkFtWsFbkdSAQ87jZimTL1ViuqtsI33f3HZK6q697az
-         mfbqVVBYgm53l4l6EQheDkVMFMs5BXNELeZBYPanIK1Ndezd/vzOmFfitvCSNaMDlove
-         v4zOTwlD21ftcc6NyuLL/kbWFhIQ/PZtj9iQI=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0eDFn39gIg7xtZfHp4ELa6UyXk2yfoJL9wFZ1T547PE=;
+        b=aYql5mJg1qRvx0bdlSjJFiwjRBuVs1u8rwmZZ7Q8JCVNZDL+n/NkK1fARNuaFEMsgY
+         q/bd1JT1jsrBNjOJ2HJuxMOcWiayN/4e90JEiceXjYEcT3d+emIzU04xR1mGn4g6oMwP
+         HSqUziPwA1O6Kuow6PQlz8yjd2E/f/5vXwzgA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gUiajEtqHykUipUDAxZZ8PHMye5BZieG1YJoiSofP8Y=;
-        b=LHPG3EsMuix88q1bIpUUzwnmF2NEVmRrtT7A/0lI/MFGuIElizopDjtOSNVuGaw5w+
-         H2qsufvJ7nX1HkjacQSMgWAuZBKr92KrRnZmxsPRL9dibyxQuFqURNF8uTMKbtfGosF4
-         XFmd4SoH97E6gN4qqVX5MbtGMfVLyZRmZIFEW1Kr13Mm7iGXZr+x3i7htqiAXfV044g3
-         zZMhWdSwsBHqxiigykbe4lSsPuOI5Gme+WMRdkdsNXkjMd3iHZaCFFmq0Yoo9MWq43Ke
-         w9lYjJAWTe6fPwL0kQPI5qV6y/YOYcM/dGDHZE6+MC5c0LpgLkm2vTXB2D+Z8aRi+klK
-         PHRw==
-X-Gm-Message-State: ANhLgQ2s227DXmh6bc6n6C07ATVY8ASx+8cRl8591yPtKaeDpz2nQx66
-        KAsodtc3+geR7J18VLjHip1EWANqd3Q=
-X-Google-Smtp-Source: ADFU+vvO5wzGbikRf/3JIgJ1Nd5LTOFUYoD4F69O2BvMxCf9Cq3AzzEd/joqlTHvvgzbTOzmPlJzpg==
-X-Received: by 2002:a63:d845:: with SMTP id k5mr3272785pgj.183.1583501633687;
-        Fri, 06 Mar 2020 05:33:53 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0eDFn39gIg7xtZfHp4ELa6UyXk2yfoJL9wFZ1T547PE=;
+        b=k7FahKRGPJXamg6VZWpeplW3MYeTO8jxYrwp48YD32FNW8tD2h29Ize5lKOJzydUIN
+         DrPd9TDCh8dJLB7pzfQBLlzi3r6CPHCKZX5ly5IpzHO75IAWQdAMpWq6+qLXdz/k6gfa
+         RlNqdAQKUd2QcWAggQN0rLt8lUNr6MVea5PBECAAtZVGJUVRfT0xJKJ88rjH4bmCVRIs
+         80vzFHfE+TaCabtCvx03JOSSaWJehpwLpJQT83TluDvkw/NrHEVdc2VOhmeDBRCRFfGA
+         LMQPKRPkPTVjYplVWjgGwUVlJ5FVLflriNlU576dXZ1sGLxWyST9XFymE6bztlSG6TqR
+         TRJw==
+X-Gm-Message-State: ANhLgQ3ufwuw3h98WuqRn9GSl4Fh+8i57QbgP2YXDyETOxKgY0ArpaRy
+        2RVWMqb4peh9yz6cHAsW+ClRlDL+zEA=
+X-Google-Smtp-Source: ADFU+vvi0UAi+HOQ78Clgq1UT/1FHCf/yoV7HNTK5ed7zTP9KnUForpSdg0/lPSVVMnzgZSBdGeY4A==
+X-Received: by 2002:a17:902:222:: with SMTP id 31mr3128704plc.108.1583501638997;
+        Fri, 06 Mar 2020 05:33:58 -0800 (PST)
 Received: from localhost (2001-44b8-111e-5c00-b120-f113-a8cb-35fd.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:b120:f113:a8cb:35fd])
-        by smtp.gmail.com with ESMTPSA id w195sm33586804pfd.65.2020.03.06.05.33.51
+        by smtp.gmail.com with ESMTPSA id o71sm9880171pjo.35.2020.03.06.05.33.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 05:33:52 -0800 (PST)
+        Fri, 06 Mar 2020 05:33:57 -0800 (PST)
 From:   Daniel Axtens <dja@axtens.net>
 To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
         christophe.leroy@c-s.fr, aneesh.kumar@linux.ibm.com,
         bsingharora@gmail.com
 Cc:     Daniel Axtens <dja@axtens.net>
-Subject: [PATCH v8 0/4] KASAN for powerpc64 radix
-Date:   Sat,  7 Mar 2020 00:33:36 +1100
-Message-Id: <20200306133340.9181-1-dja@axtens.net>
+Subject: [PATCH v8 1/4] kasan: define and use MAX_PTRS_PER_* for early shadow tables
+Date:   Sat,  7 Mar 2020 00:33:37 +1100
+Message-Id: <20200306133340.9181-2-dja@axtens.net>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200306133340.9181-1-dja@axtens.net>
+References: <20200306133340.9181-1-dja@axtens.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,64 +72,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building on the work of Christophe, Aneesh and Balbir, I've ported
-KASAN to 64-bit Book3S kernels running on the Radix MMU.
+powerpc has a variable number of PTRS_PER_*, set at runtime based
+on the MMU that the kernel is booted under.
 
-This provides full inline instrumentation on radix, but does require
-that you be able to specify the amount of physically contiguous memory
-on the system at compile time. More details in patch 4.
+This means the PTRS_PER_* are no longer constants, and therefore
+breaks the build.
 
-One quirk that I've noticed is that detection of invalid accesses to
-module globals are currently broken - everything is permitted. I'm
-sure this used to work, but it doesn't atm and this is why: gcc puts
-the ASAN init code in a section called '.init_array'. Powerpc64 module
-loading code goes through and _renames_ any section beginning with
-'.init' to begin with '_init' in order to avoid some complexities
-around our 24-bit indirect jumps. This means it renames '.init_array'
-to '_init_array', and the generic module loading code then fails to
-recognise the section as a constructor and thus doesn't run it. This
-hack dates back to 2003 and so I'm not going to try to unpick it in
-this series. (I suspect this may have previously worked if the code
-ended up in .ctors rather than .init_array but I don't keep my old
-binaries around so I have no real way of checking.)
+Define default MAX_PTRS_PER_*s in the same style as MAX_PTRS_PER_P4D.
+As KASAN is the only user at the moment, just define them in the kasan
+header, and have them default to PTRS_PER_* unless overridden in arch
+code.
 
-v8: Rejig patch 4 commit message, thanks Mikey.
-    Various tweaks to patch 4: fix some potential hangs, clean up
-    some code, fix a trivial bug, and also have another crack at
-    correct stack-walking based on what other arches do. Some very
-    minor tweaks, and a review from Christophe.
+Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Suggested-by: Balbir Singh <bsingharora@gmail.com>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Balbir Singh <bsingharora@gmail.com>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+---
+ include/linux/kasan.h | 18 +++++++++++++++---
+ mm/kasan/init.c       |  6 +++---
+ 2 files changed, 18 insertions(+), 6 deletions(-)
 
-v7: Tweaks from Christophe, fix issues detected by snowpatch.
+diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+index 5cde9e7c2664..b3a4500633f5 100644
+--- a/include/linux/kasan.h
++++ b/include/linux/kasan.h
+@@ -14,10 +14,22 @@ struct task_struct;
+ #include <asm/kasan.h>
+ #include <asm/pgtable.h>
+ 
++#ifndef MAX_PTRS_PER_PTE
++#define MAX_PTRS_PER_PTE PTRS_PER_PTE
++#endif
++
++#ifndef MAX_PTRS_PER_PMD
++#define MAX_PTRS_PER_PMD PTRS_PER_PMD
++#endif
++
++#ifndef MAX_PTRS_PER_PUD
++#define MAX_PTRS_PER_PUD PTRS_PER_PUD
++#endif
++
+ extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
+-extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
+-extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
+-extern pud_t kasan_early_shadow_pud[PTRS_PER_PUD];
++extern pte_t kasan_early_shadow_pte[MAX_PTRS_PER_PTE];
++extern pmd_t kasan_early_shadow_pmd[MAX_PTRS_PER_PMD];
++extern pud_t kasan_early_shadow_pud[MAX_PTRS_PER_PUD];
+ extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
+ 
+ int kasan_populate_early_shadow(const void *shadow_start,
+diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+index ce45c491ebcd..8b54a96d3b3e 100644
+--- a/mm/kasan/init.c
++++ b/mm/kasan/init.c
+@@ -46,7 +46,7 @@ static inline bool kasan_p4d_table(pgd_t pgd)
+ }
+ #endif
+ #if CONFIG_PGTABLE_LEVELS > 3
+-pud_t kasan_early_shadow_pud[PTRS_PER_PUD] __page_aligned_bss;
++pud_t kasan_early_shadow_pud[MAX_PTRS_PER_PUD] __page_aligned_bss;
+ static inline bool kasan_pud_table(p4d_t p4d)
+ {
+ 	return p4d_page(p4d) == virt_to_page(lm_alias(kasan_early_shadow_pud));
+@@ -58,7 +58,7 @@ static inline bool kasan_pud_table(p4d_t p4d)
+ }
+ #endif
+ #if CONFIG_PGTABLE_LEVELS > 2
+-pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD] __page_aligned_bss;
++pmd_t kasan_early_shadow_pmd[MAX_PTRS_PER_PMD] __page_aligned_bss;
+ static inline bool kasan_pmd_table(pud_t pud)
+ {
+ 	return pud_page(pud) == virt_to_page(lm_alias(kasan_early_shadow_pmd));
+@@ -69,7 +69,7 @@ static inline bool kasan_pmd_table(pud_t pud)
+ 	return false;
+ }
+ #endif
+-pte_t kasan_early_shadow_pte[PTRS_PER_PTE] __page_aligned_bss;
++pte_t kasan_early_shadow_pte[MAX_PTRS_PER_PTE] __page_aligned_bss;
+ 
+ static inline bool kasan_pte_table(pmd_t pmd)
+ {
+-- 
+2.20.1
 
-v6: Rebase on the latest changes in powerpc/merge. Minor tweaks
-      to the documentation. Small tweaks to the header to work
-      with the kasan_late_init() function that Christophe added
-      for 32-bit kasan-vmalloc support.
-    No functional change.
-
-v5: ptdump support. More cleanups, tweaks and fixes, thanks
-    Christophe. Details in patch 4.
-
-    I have seen another stack walk splat, but I don't think it's
-    related to the patch set, I think there's a bug somewhere else,
-    probably in stack frame manipulation in the kernel or (more
-    unlikely) in the compiler.
-
-v4: More cleanups, split renaming out, clarify bits and bobs.
-    Drop the stack walk disablement, that isn't needed. No other
-    functional change.
-
-v3: Reduce the overly ambitious scope of the MAX_PTRS change.
-    Document more things, including around why some of the
-    restrictions apply.
-    Clean up the code more, thanks Christophe.
-
-v2: The big change is the introduction of tree-wide(ish)
-    MAX_PTRS_PER_{PTE,PMD,PUD} macros in preference to the previous
-    approach, which was for the arch to override the page table array
-    definitions with their own. (And I squashed the annoying
-    intermittent crash!)
-
-    Apart from that there's just a lot of cleanup. Christophe, I've
-    addressed most of what you asked for and I will reply to your v1
-    emails to clarify what remains unchanged.
