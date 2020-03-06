@@ -2,120 +2,129 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EAAC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40D9C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6028207FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:14:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583489697;
-	bh=JrMs07MY2g+UKb5EDRgE23qQsFrvwRFqTNqqEh89w9I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=z78ZtcVQ74Sz2B+FgC+PaRmvtF9geMJkji2rQpNuPj58bEYISXnNvecwxeBwa2qr9
-	 /d4KWZuNed7QdZ4XW4VUTqq2V27Z+OCDQTc+V4J+GK3wjiRh/aNGnziUDeXohAStvI
-	 V0xIUCoou9LsvU9HuC6UcadNr9Wt0PyRazXSapMk=
+	by mail.kernel.org (Postfix) with ESMTP id B42B9208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgCFKO4 (ORCPT
+        id S1726860AbgCFKPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:14:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50826 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 05:15:17 -0500
+Received: from mga18.intel.com ([134.134.136.126]:50480 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726359AbgCFKOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:14:55 -0500
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD8A9208C3
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Mar 2020 10:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583489695;
-        bh=JrMs07MY2g+UKb5EDRgE23qQsFrvwRFqTNqqEh89w9I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lSMfLZUTVY1802PpPFgv/mrHFXEMdr9bTh5ARukXUmNoOMNpSrVrzLwl48tTycssb
-         smNV3y2Uxtb4dqGRDGtUlT45KCkP7kBaeqEAdRVVEVUX32DJv+Etgpq6sT7MvJYMra
-         t3TQlgWX94UvmNkC2YtkNZ0gwR0XZEN151/r3QYc=
-Received: by mail-wm1-f43.google.com with SMTP id e26so1721079wme.5
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:14:54 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0KD9+jb1TnJudPBY1VPdpp1XUG+VuzKG9WyEJwyE12wE4/VCm0
-        3wFzGgcaNdRbuIoZt9CZBGKrcbRf8y/nTHxNuN91bA==
-X-Google-Smtp-Source: ADFU+vsFANSACzYGytLz08mb68pZbS2PCm3O8i7TdajdJ592AHhe7xTjYxrFq3+qMx59PCDEw8uloFEVf2JUd1CVHok=
-X-Received: by 2002:a1c:9d43:: with SMTP id g64mr3184759wme.62.1583489692927;
- Fri, 06 Mar 2020 02:14:52 -0800 (PST)
+        id S1726025AbgCFKPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 05:15:17 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 02:15:16 -0800
+X-IronPort-AV: E=Sophos;i="5.70,521,1574150400"; 
+   d="scan'208";a="234756101"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 02:15:07 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        =?utf-8?Q?Jo?= =?utf-8?Q?s=C3=A9?= Roberto de Souza 
+        <jose.souza@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        intel-gfx@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mat King <mathewk@google.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
+        Sean Paul <seanpaul@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Nitin Joshi1 <njoshi1@lenovo.com>,
+        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
+        Tomoki Maruichi <maruichit@lenovo.com>,
+        Guenter Roeck <groeck@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Subject: Re: [PATCH v6 3/3] drm/i915: Add support for integrated privacy screens
+In-Reply-To: <CACK8Z6ERZpZaSXsxrk_yGrRAtrgwytb5TEpyt1sX+V40U7m0sQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200305012338.219746-1-rajatja@google.com> <20200305012338.219746-4-rajatja@google.com> <87k13znmrc.fsf@intel.com> <CACK8Z6ERZpZaSXsxrk_yGrRAtrgwytb5TEpyt1sX+V40U7m0sQ@mail.gmail.com>
+Date:   Fri, 06 Mar 2020 12:15:04 +0200
+Message-ID: <87pndpoklz.fsf@intel.com>
 MIME-Version: 1.0
-References: <20181124162123.21300-1-n.merinov@inango-systems.com>
- <20191224092119.4581-1-n.merinov@inango-systems.com> <20200108133926.GC4455@infradead.org>
- <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com>
- <20200218185336.GA14242@infradead.org> <797777312.1324734.1582544319435.JavaMail.zimbra@inango-systems.com>
- <20200224170813.GA27403@infradead.org> <711479725.2305.1583484191776.JavaMail.zimbra@inango-systems.com>
- <CAKv+Gu8ufmONSU8SX=NaAZBAKuD4Coo19z6e2MJ7BegsseJ63A@mail.gmail.com>
-In-Reply-To: <CAKv+Gu8ufmONSU8SX=NaAZBAKuD4Coo19z6e2MJ7BegsseJ63A@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 6 Mar 2020 11:14:41 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_22KX4q7SJxEQ_tUcWDXHrFOdFj2jmXxFR_04KawQXnA@mail.gmail.com>
-Message-ID: <CAKv+Gu_22KX4q7SJxEQ_tUcWDXHrFOdFj2jmXxFR_04KawQXnA@mail.gmail.com>
-Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID
- partition entry
-To:     Nikolai Merinov <n.merinov@inango-systems.com>
-Cc:     hch <hch@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 at 10:25, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Fri, 6 Mar 2020 at 09:43, Nikolai Merinov
-> <n.merinov@inango-systems.com> wrote:
-> >
-> > Hi Christoph,
-> >
-> > Should I perform any other steps in order to get this change in the master?
-> >
->
-> I can take it via the EFI tree with an ack from Dave.
->
+On Thu, 05 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
+> OK, will do. In order to do that I may need to introduce driver level
+> hooks that i915 driver can populate and drm core can call (or may be
+> some functions to add privacy screen property that drm core exports
+> and i915 driver will call).
 
-... or actually, I'm sure Dave is fine with it, so I'll just queue it
-in efi/next directly (with Christoph's ack)
+The latter. Look at drm_connector_attach_*() functions in
+drm_connector.c. i915 (or any other driver) can create and attach the
+property as needed. drm_atomic_connector_{get,set}_property in
+drm_atomic_uapi.c need to handle the properties, but *only* to get/set
+the value in drm_connector_state, nothing more. How that value is
+actually used is up to the drivers, but the userspace interface will be
+the same instead of being driver specific.
 
->
-> >
-> > ----- Original Message -----
-> > > From: "hch" <hch@infradead.org>
-> > > To: "n merinov" <n.merinov@inango-systems.com>
-> > > Cc: "hch" <hch@infradead.org>, "Davidlohr Bueso" <dave@stgolabs.net>, "Jens Axboe" <axboe@kernel.dk>, "Ard Biesheuvel"
-> > > <ardb@kernel.org>, "linux-efi" <linux-efi@vger.kernel.org>, "linux-block" <linux-block@vger.kernel.org>, "linux-kernel"
-> > > <linux-kernel@vger.kernel.org>
-> > > Sent: Monday, February 24, 2020 10:08:13 PM
-> > > Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID partition entry
-> >
-> > > On Mon, Feb 24, 2020 at 01:38:39PM +0200, Nikolai Merinov wrote:
-> > >> Hi Christoph,
-> > >>
-> > >> > I'd rather use plain __le16 and le16_to_cpu here. Also the be
-> > >> > variants seems to be entirely unused.
-> > >>
-> > >> Looks like I misunderstood your comment from
-> > >> https://patchwork.kernel.org/patch/11309223/:
-> > >>
-> > >> > Please add a an efi_char_from_cpu or similarly named helper
-> > >> > to encapsulate this logic.
-> > >>
-> > >> The "le16_to_cpu(ptes[i].partition_name[label_count])" call is the
-> > >> full implementation of the "efi_char_from_cpu" logic. Do you want
-> > >> to encapsulate "utf16_le_to_7bit_string" logic entirely like in
-> > >> the attached version?
-> > >
-> > > I think I though of just the inner loop, but your new version looks even
-> > > better, so:
-> > >
-> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+>> > @@ -93,15 +97,18 @@ int intel_digital_connector_atomic_set_property(struct drm_connector *connector,
+>> >       struct drm_i915_private *dev_priv = to_i915(dev);
+>> >       struct intel_digital_connector_state *intel_conn_state =
+>> >               to_intel_digital_connector_state(state);
+>> > +     struct intel_connector *intel_connector = to_intel_connector(connector);
+>> >
+>> >       if (property == dev_priv->force_audio_property) {
+>> >               intel_conn_state->force_audio = val;
+>> >               return 0;
+>> > -     }
+>> > -
+>> > -     if (property == dev_priv->broadcast_rgb_property) {
+>> > +     } else if (property == dev_priv->broadcast_rgb_property) {
+>> >               intel_conn_state->broadcast_rgb = val;
+>> >               return 0;
+>> > +     } else if (property == intel_connector->privacy_screen_property) {
+>> > +             intel_privacy_screen_set_val(intel_connector, val);
+>>
+>> I think this part should only change the connector state. The driver
+>> would then do the magic at commit stage according to the property value.
+
+Also, this would be the part that's done in drm core level.
+
+> Can you please point me to some code reference as to where in code
+> does the "commit stage" apply the changes?
+
+Look at, say, drm_connector_attach_scaling_mode_property(). In the
+getter/setter code it'll just read/change state->scaling_mode. You can
+use the value in encoder ->enable, ->disable, and ->update_pipe
+hooks. Enable should enable the privacy screen if desired, disable
+should probably unconditionally disable the privacy screen while
+disabling the display, and update should just change the state according
+to the value. Update is called if there isn't a full modeset. (Scaling
+mode is a bit more indirect than that, affecting other things in the
+encoder ->compute_config hook, leading to similar effects.)
+
+Ville, anything I missed?
+
+BR,
+Jani.
+
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
