@@ -2,167 +2,258 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB58C10F26
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA4DC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B9420705
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 412B6206D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:22:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fQGCtrfh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgCFVVF (ORCPT
+        id S1726314AbgCFVW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 16:21:05 -0500
-Received: from out01.mta.xmission.com ([166.70.13.231]:51586 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCFVVD (ORCPT
+        Fri, 6 Mar 2020 16:22:29 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54429 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726194AbgCFVW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 16:21:03 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jAKOf-0001bO-Qo; Fri, 06 Mar 2020 14:20:41 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jAKOe-0007Ua-SE; Fri, 06 Mar 2020 14:20:41 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <202003021531.C77EF10@keescook>
-        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
-        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87imjicxjw.fsf_-_@x220.int.ebiederm.org>
-        <AM6PR03MB5170375DBF699D4F3DC7A08DE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87k13yawpp.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170FC44E102D4F8C1B2E854E4E30@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Fri, 06 Mar 2020 15:18:20 -0600
-In-Reply-To: <AM6PR03MB5170FC44E102D4F8C1B2E854E4E30@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        (Bernd Edlinger's message of "Fri, 6 Mar 2020 11:46:01 +0000")
-Message-ID: <877dzx9o83.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 6 Mar 2020 16:22:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583529747;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9C8zNDia4xA9aMPRQB8U/bUKEi1VeFjgjTx3pCkBjXg=;
+        b=fQGCtrfhBLVkHOaXfns4VXfAxELVIoMY+iY0g3ay+lJMLrhdOaXjNPfoM5Vah4pMs7YjxG
+        6E9j7xlHhgFeiVUaRT2BTXDZQ2lt6eLIDwxwUMFm3X5qgvVdef/g2aa0Lkp9TtfOQOPQ5h
+        h+tF5+sZSF86aH0uyaqDtijfHqC386E=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-oHP5jdDsO5CifbG_MeVPNg-1; Fri, 06 Mar 2020 16:22:23 -0500
+X-MC-Unique: oHP5jdDsO5CifbG_MeVPNg-1
+Received: by mail-qt1-f200.google.com with SMTP id j35so2272557qte.19
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 13:22:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=9C8zNDia4xA9aMPRQB8U/bUKEi1VeFjgjTx3pCkBjXg=;
+        b=jDFvlQkrgqNHUyagj45eoAvEWzdewMDlGemubRf5JyuJx6ejJEuLDwCD43NcQe0jcv
+         nDhI1XBGrajkSLanbH4YDKSB1BC1s708srmJn1DEhsJ1kRdlFav/C37+zVsOYKmJLKWK
+         5E6+UgXYWecUrDJP6f1hKFOVyg7ASSIoy/l+1/3ac0wlPn9ceKYDu6nvMMjTl04aBW8o
+         IwbLQ5CFO1ohTkIdlIqFCfbt/Ep5I6AzC70u1Ij1ZCip57xqoke8RIW7NqUF6rZJydcu
+         MeawioVDPprvHI8WA+fLH1/0Qs34d6PBMakX2qabZhi3iJ3ey3msa5OC0xvpgw0vVbr3
+         oFRA==
+X-Gm-Message-State: ANhLgQ34ll0+ZtINkcfs+EJxhnRmIwWaN159oB77ETaGGIzn1MFInjKj
+        351kCW/L/n6yftBDYHvvFk9zUK8psv4b10WsPVpXIJCOzNj/z66s2BtA/SMlHzNgdYOsTNI6L8R
+        ft8YIAnz0K2aInAgstCI6ZvSY
+X-Received: by 2002:a05:6214:11e6:: with SMTP id e6mr4948470qvu.68.1583529743098;
+        Fri, 06 Mar 2020 13:22:23 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vux6ciun4jfPY5Fa86Bi/Lwf3b2QeqaTRrhbE9qQ2nW32qe44DzI3gid9H4BD37hC6B21aalw==
+X-Received: by 2002:a05:6214:11e6:: with SMTP id e6mr4948462qvu.68.1583529742849;
+        Fri, 06 Mar 2020 13:22:22 -0800 (PST)
+Received: from dhcp-10-20-1-196.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id z8sm213593qta.85.2020.03.06.13.22.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 13:22:21 -0800 (PST)
+Message-ID: <eec59ee986aa161458fcaf2de29e5a702ad1fdb0.camel@redhat.com>
+Subject: Re: [PATCH 2/3] drm/dp_mst: Don't show connectors as connected
+ before probing available PBN
+From:   Lyude Paul <lyude@redhat.com>
+To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, Sean Paul <seanpaul@google.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>
+Date:   Fri, 06 Mar 2020 16:22:20 -0500
+In-Reply-To: <082a7ac697ade8145afe45001fdf9541d5304748.camel@redhat.com>
+References: <20200304223614.312023-1-lyude@redhat.com>
+         <20200304223614.312023-3-lyude@redhat.com>
+         <20200305131119.GJ13686@intel.com>
+         <73f52c392431cd21a80a118dd2fd1986e2c535df.camel@redhat.com>
+         <20200305182942.GP13686@intel.com>
+         <082a7ac697ade8145afe45001fdf9541d5304748.camel@redhat.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jAKOe-0007Ua-SE;;;mid=<877dzx9o83.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/H7zIdc5Xdrawq/Ho8JIA/FNvc5wTe1Zg=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 2/2] exec: Add a exec_update_mutex to replace cred_guard_mutex
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+final correction: I probably could actually get rid of this patch and do this
+a bit more nicely by just making sure that we reprobe path resources for
+connectors while under drm_dp_mst_topology_mgr->base.lock on CSNs, instead of
+punting it off to the link address work like we seem to be doing. So, going to
+try doing that instead.
 
-> Am 06.03.20 um 06:17 schrieb Eric W. Biederman:
->> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
->> 
->>> On 3/5/20 10:16 PM, Eric W. Biederman wrote:
->>>>
->>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
->>>> over the userspace accesses as the arguments from userspace are read.
->>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
->>>> threads are killed.  The cred_guard_mutex is held over
->>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
->>>>
->>>> Any of those can result in deadlock, as the cred_guard_mutex is held
->>>> over a possible indefinite userspace waits for userspace.
->>>>
->>>> Add exec_update_mutex that is only held over exec updating process
->>>> with the new contents of exec, so that code that needs not to be
->>>> confused by exec changing the mm and the cred in ways that can not
->>>> happen during ordinary execution of a process can take.
->>>>
->>>> The plan is to switch the users of cred_guard_mutex to
->>>> exed_udpate_mutex one by one.  This lets us move forward while still
->>>> being careful and not introducing any regressions.
->>>>
->>>> Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
->>>> Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
->>>> Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
->>>> Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
->>>> Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
->>>> Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
->>>> Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
->>>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->>>> ---
->>>>  fs/exec.c                    | 4 ++++
->>>>  include/linux/sched/signal.h | 9 ++++++++-
->>>>  kernel/fork.c                | 1 +
->>>>  3 files changed, 13 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/fs/exec.c b/fs/exec.c
->>>> index c243f9660d46..ad7b518f906d 100644
->>>> --- a/fs/exec.c
->>>> +++ b/fs/exec.c
->>>> @@ -1182,6 +1182,7 @@ static int de_thread(struct linux_binprm *bprm, struct task_struct *tsk)
->>>>  		release_task(leader);
->>>>  	}
->>>>  
->>>> +	mutex_lock(&current->signal->exec_update_mutex);
->
-> And by the way, could you make this mutex_lock_killable?
+On Fri, 2020-03-06 at 15:03 -0500, Lyude Paul wrote:
+> On Thu, 2020-03-05 at 20:29 +0200, Ville Syrjälä wrote:
+> > On Thu, Mar 05, 2020 at 01:13:36PM -0500, Lyude Paul wrote:
+> > > On Thu, 2020-03-05 at 15:11 +0200, Ville Syrjälä wrote:
+> > > > On Wed, Mar 04, 2020 at 05:36:12PM -0500, Lyude Paul wrote:
+> > > > > It's next to impossible for us to do connector probing on topologies
+> > > > > without occasionally racing with userspace, since creating a
+> > > > > connector
+> > > > > itself causes a hotplug event which we have to send before probing
+> > > > > the
+> > > > > available PBN of a connector. Even if we didn't have this hotplug
+> > > > > event
+> > > > > sent, there's still always a chance that userspace started probing
+> > > > > connectors before we finished probing the topology.
+> > > > > 
+> > > > > This can be a problem when validating a new MST state since the
+> > > > > connector will be shown as connected briefly, but without any
+> > > > > available
+> > > > > PBN - causing any atomic state which would enable said connector to
+> > > > > fail
+> > > > > with -ENOSPC. So, let's simply workaround this by telling userspace
+> > > > > new
+> > > > > MST connectors are disconnected until we've finished probing their
+> > > > > PBN.
+> > > > > Since we always send a hotplug event at the end of the link address
+> > > > > probing process, userspace will still know to reprobe the connector
+> > > > > when
+> > > > > we're ready.
+> > > > > 
+> > > > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > > > Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to
+> > > > > MST
+> > > > > atomic check")
+> > > > > Cc: Mikita Lipski <mikita.lipski@amd.com>
+> > > > > Cc: Alex Deucher <alexander.deucher@amd.com>
+> > > > > Cc: Sean Paul <seanpaul@google.com>
+> > > > > Cc: Hans de Goede <hdegoede@redhat.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/drm_dp_mst_topology.c | 13 +++++++++++++
+> > > > >  1 file changed, 13 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > index 207eef08d12c..7b0ff0cff954 100644
+> > > > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > @@ -4033,6 +4033,19 @@ drm_dp_mst_detect_port(struct drm_connector
+> > > > > *connector,
+> > > > >  			ret = connector_status_connected;
+> > > > >  		break;
+> > > > >  	}
+> > > > > +
+> > > > > +	/* We don't want to tell userspace the port is actually
+> > > > > plugged into
+> > > > > +	 * anything until we've finished probing it's available_pbn,
+> > > > > otherwise
+> > > > 
+> > > > "its"
+> > > > 
+> > > > Why is the connector even registered before we've finished the probe?
+> > > > 
+> > > Oops, I'm not sure how I did this by accident but the explanation I gave
+> > > in
+> > > the commit message was uh, completely wrong. I must have forgotten that
+> > > I
+> > > made
+> > > sure we didn't expose connectors before probing their PBN back when I
+> > > started
+> > > my MST cleanup....
+> > > 
+> > > So: despite what I said before it's not actually when new connectors are
+> > > created, it's when downstream hotplugs happen which means that the
+> > > conenctor's
+> > > always going to be there before we probe the available_pbn.
+> > 
+> > Not sure I understand. You're saying this is going to change for already
+> > existing connectors when something else gets plugged in, and either we
+> > zero it out during the probe or it always was zero to begin with for
+> > whatever reason?
+> 
+> ok-me and Sean Paul did some playing around with available_pbn and full_pbn
+> (I'll get into this one in a moment), and I also played around with a couple
+> of different hubs and have a much better understanding of how this should
+> work
+> now.
+> 
+> So: first off tl;dr available_pbn is absolutely not what we want in
+> basically
+> any scenario, we actually want to use the full_pbn field that we get when
+> sending ENUM_PATH_RESOURCES. Second, full_pbn represents the _smallest_
+> bandwidth limitation encountered in the path between the root MSTB and each
+> connected sink. Remember that there's technically a DisplayPort link trained
+> between each branch device going down the topology, so that bandwidth
+> limitation basically equates to "what is the lowest trained link rate that
+> exists down the path to this port?". This also means that full_pbn will
+> potentially change every time a new connector is plugged in, as some hubs
+> will be clever and optimize the link rate they decide to use. Likewise,
+> since there's not going to be anything trained on a disconnected port (e.g.
+> ddps=0) there's no point in keeping full_pbn around for disconnected ports,
+> since otherwise we might let userspace see a connected port with a stale
+> full_pbn value.
+> 
+> So-IMHO the behavior of not letting connectors show as connected until we
+> also
+> have their full_pbn probed should definitely be the right solution here.
+> Especially if we want to eventually start pruning modes based on full_pbn at
+> some point in the future.
+> 
+> > > I did just notice
+> > > though that we send a hotplug on connection status notifications even
+> > > before
+> > > we've finished the PBN probe, so I might be able to improve on that as
+> > > well.
+> > > We still definitely want to report the connector as disconnected before
+> > > we
+> > > have the available PBN though, in case another probe was already going
+> > > before
+> > > we got the connection status notification.
+> > > 
+> > > I'll make sure to fixup the explanation in the commit message on the
+> > > next
+> > > respin
+> > > 
+> > > > > +	 * userspace will see racy atomic check failures
+> > > > > +	 *
+> > > > > +	 * Since we always send a hotplug at the end of probing
+> > > > > topology
+> > > > > +	 * state, we can just let userspace reprobe this connector
+> > > > > later.
+> > > > > +	 */
+> > > > > +	if (ret == connector_status_connected && !port-
+> > > > > >available_pbn) 
+> > > > > {
+> > > > > +		DRM_DEBUG_KMS("[CONNECTOR:%d:%s] not ready yet (PBN
+> > > > > not
+> > > > > probed)\n",
+> > > > > +			      connector->base.id, connector->name);
+> > > > > +		ret = connector_status_disconnected;
+> > > > > +	}
+> > > > >  out:
+> > > > >  	drm_dp_mst_topology_put_port(port);
+> > > > >  	return ret;
+> > > > > -- 
+> > > > > 2.24.1
+> > > > > 
+> > > > > _______________________________________________
+> > > > > dri-devel mailing list
+> > > > > dri-devel@lists.freedesktop.org
+> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > -- 
+> > > Cheers,
+> > > 	Lyude Paul (she/her)
+> > > 	Associate Software Engineer at Red Hat
+-- 
+Cheers,
+	Lyude Paul (she/her)
+	Associate Software Engineer at Red Hat
 
-For some reason when I first read this suggestion I thought making this
-mutex_lock_killable would cause me to rework the logic of when I
-set unrecoverable and when I unlock the mutex.  I blame a tired brain.
-If a process has received a fatal signal none of that matters.
-
-So yes I will do that just to make things robust in case we miss
-something that would still make it possible to deadlock in with the new
-mutex.
-
-I am a little worried that the new mutex might still cover a little too
-much.  But past a certain point I we are not being able to make this
-code perfect in the first change.  The best we can do is to be careful
-and avoid regressions.  Whatever slips through we can fix when we spot
-the problem.
-
-Eric
