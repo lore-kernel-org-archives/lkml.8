@@ -2,158 +2,93 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9C7C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AF4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 660B22072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2072072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 13:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w1pq0bev"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Io8IWba5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgCFNxH (ORCPT
+        id S1726875AbgCFNxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 08:53:07 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43116 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgCFNxH (ORCPT
+        Fri, 6 Mar 2020 08:53:54 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:59214 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgCFNxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 08:53:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id v9so2437154wrf.10
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 05:53:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=HiH2M0/3yuQ9rG6qTjCXMrsrRmxTDtobqQj41AdBpaY=;
-        b=w1pq0bevIwABf32a6S1sqk9llhRXEfhWU5wIyAMyzvKuA71aydmiWR/E6MBhh/V9bx
-         GTGdz1ZZDn/tdpRnZfvMNGaXer8eFF+Wqix1fzIdssTZ+3QTeHfhE0BSYHCF7QGCoVhm
-         iEe1v8YR3y8GmxW9AyUnKbYi3oORaeibV2It+xgiMsbNFZRmASnlwBgRTKjeUW8NwhDf
-         xEyhn4M2w2CRW8JBpCodcnYlPgiP9hO8BiZnVf2VuH1WegdzEZ7Us8ngVKf40QoTmt3f
-         JRkrb12DGh3B5YZtriDKzOk3c0f54beZAOlI6ooN1ZK0MdGQVaQosZNyPMtKrB8bg8vT
-         Xn9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HiH2M0/3yuQ9rG6qTjCXMrsrRmxTDtobqQj41AdBpaY=;
-        b=dhiZdHplJZIuHwBY1F/EdnwhpoVs4P0cfWZFDQS9TqQ27ffQLTJZZYviso5iHun3OL
-         yzPiTM+a+oPpKqV38KR6BFBO5jDi291dA/nf3bwz38kUOFJyHGeCWlocCvby4ZK1yhaF
-         Zg0aAMzVzGVQWnVXYRDVe9zztG0egTmZCr/sq/2XkL39v2V1/nyPyDU+mGZSG6AhtAut
-         kGmAqntwL9UgaLMOKBEPC+OD7IWm4OvPqIIjfrMY+mrMZWT+mwosvOSCXKXFu+d7KRWB
-         wzmc960k2pYPiwq1VRNyZgKj5Vg3ufDt+Vueh6foDrbllVRf+G6pNYQgHYcraSWyOCys
-         AOuA==
-X-Gm-Message-State: ANhLgQ2JB52qwNkYIpZYi9Qg8JqZUWVEYpjcjCtexkAB+9AtO0U8i1TD
-        zziLp8OWXwIFnRHBXmBIjheLvA==
-X-Google-Smtp-Source: ADFU+vskPHbfBYO1Gqp7RRQsustG07yhjUpepm4EJH0p0WzHlPSUjnZCU2aMRz391ZXKfrPKyrunWw==
-X-Received: by 2002:adf:a555:: with SMTP id j21mr4259019wrb.409.1583502785069;
-        Fri, 06 Mar 2020 05:53:05 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:d5d0:80d7:4f6f:54be])
-        by smtp.gmail.com with ESMTPSA id s5sm47546636wru.39.2020.03.06.05.53.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 05:53:03 -0800 (PST)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        stable@vger.kernel.org
-Subject: [PATCH v2] sched/fair: fix enqueue_task_fair warning
-Date:   Fri,  6 Mar 2020 14:52:57 +0100
-Message-Id: <20200306135257.25044-1-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 6 Mar 2020 08:53:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TvqxgncBv+tYz2iLtFMaeCImn2/6WxUyTqpfABjn9is=; b=Io8IWba5uLU8SqCXUJ77L2t1ia
+        ZduZH4h0JWEmp2q4yD4xGCJ2RZdk4HUvHaDvH7QjjBw5H1zE8VE9yxta9iNFsPYLCZc8YuSwjpVlr
+        rHXrPv3AZatPAvR6rOZdFlJjId0KJ+tyqZUTXskoLVHRRlXf+bcO7zD+vPT2QcJSFbX9Nj5DFxfsa
+        AM/Z6M6wzy8IuSi/nlVYZDZK0VTZnuzxvn7osMG5FUcDeA3/s3GEdhPx+muHEC0fsZw6eUyH/RF4L
+        HMPRD6E0QHTFOFJKaZDGIuHS2/rqs8NTB1Y+0DrKkX6YfoGjpRhZgvEiZIfft3/NJsInJ5wpCRvxM
+        m3ldK9+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jADPl-0007sV-9x; Fri, 06 Mar 2020 13:53:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9D1F83035D4;
+        Fri,  6 Mar 2020 14:53:17 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8046C20286A0B; Fri,  6 Mar 2020 14:53:17 +0100 (CET)
+Date:   Fri, 6 Mar 2020 14:53:17 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Luwei Kang <luwei.kang@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
+        thomas.lendacky@amd.com, fenghua.yu@intel.com,
+        kan.liang@linux.intel.com, like.xu@linux.intel.com
+Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a
+ dedicated counter for guest PEBS
+Message-ID: <20200306135317.GD12561@hirez.programming.kicks-ass.net>
+References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+ <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a cfs rq is throttled, the latter and its child are removed from the
-leaf list but their nr_running is not changed which includes staying higher
-than 1. When a task is enqueued in this throttled branch, the cfs rqs must
-be added back in order to ensure correct ordering in the list but this can
-only happens if nr_running == 1.
-When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
-when enqueuing an entity to make sure that the complete branch will be
-added.
+On Fri, Mar 06, 2020 at 01:56:55AM +0800, Luwei Kang wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The PEBS event created by host needs to be assigned specific counters
+> requested by the guest, which means the guest and host counter indexes
+> have to be the same or fail to create. This is needed because PEBS leaks
+> counter indexes into the guest. Otherwise, the guest driver will be
+> confused by the counter indexes in the status field of the PEBS record.
+> 
+> A guest_dedicated_idx field is added to indicate the counter index
+> specifically requested by KVM. The dedicated event constraints would
+> constrain the counter in the host to the same numbered counter in guest.
+> 
+> A intel_ctrl_guest_dedicated_mask field is added to indicate the enabled
+> counters for guest PEBS events. The IA32_PEBS_ENABLE MSR will be switched
+> during the VMX transitions if intel_ctrl_guest_owned is set.
+> 
 
-Similarly unthrottle_cfs_rq() can stop adding cfs in the list when a parent
-is throttled. Iterate the remaining entity to ensure that the complete
-branch will be added in the list.
+> +	/* the guest specified counter index of KVM owned event, e.g PEBS */
+> +	int				guest_dedicated_idx;
 
-Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: stable@vger.kernel.org #v5.1+
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
-
-Change since v1:
-- added the iteration at the end of unthrottle_cfs_rq() as Dietmar
-  reported use case which triggered assert_list_leaf_cfs_rq()
-
- kernel/sched/fair.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index fcc968669aea..ae50a09cbead 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4117,6 +4117,7 @@ static inline void check_schedstat_required(void)
- #endif
- }
- 
-+static inline bool cfs_bandwidth_used(void);
- 
- /*
-  * MIGRATION
-@@ -4195,10 +4196,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- 		__enqueue_entity(cfs_rq, se);
- 	se->on_rq = 1;
- 
--	if (cfs_rq->nr_running == 1) {
-+	/*
-+	 * When bandwidth control is enabled, cfs might have been removed
-+	 * because of a parent been throttled but cfs->nr_running > 1. Try to
-+	 * add it unconditionnally.
-+	 */
-+	if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
- 		list_add_leaf_cfs_rq(cfs_rq);
-+
-+	if (cfs_rq->nr_running == 1)
- 		check_enqueue_throttle(cfs_rq);
--	}
- }
- 
- static void __clear_buddies_last(struct sched_entity *se)
-@@ -4779,11 +4786,22 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 			break;
- 	}
- 
--	assert_list_leaf_cfs_rq(rq);
--
- 	if (!se)
- 		add_nr_running(rq, task_delta);
- 
-+	/*
-+	 * The cfs_rq_throttled() breaks in the above iteration can result in
-+	 * incomplete leaf list maintenance, resulting in triggering the
-+	 * assertion below.
-+	 */
-+	for_each_sched_entity(se) {
-+		cfs_rq = cfs_rq_of(se);
-+
-+		list_add_leaf_cfs_rq(cfs_rq);
-+	}
-+
-+	assert_list_leaf_cfs_rq(rq);
-+
- 	/* Determine whether we need to wake up potentially idle CPU: */
- 	if (rq->curr == rq->idle && rq->cfs.nr_running)
- 		resched_curr(rq);
--- 
-2.17.1
-
+We've always objected to guest 'owned' counters, they destroy scheduling
+freedom. Why are you expecting that to be any different this time?
