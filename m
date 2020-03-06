@@ -2,204 +2,148 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9592BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651FBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F465206E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332B420658
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="l620lAHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgCFQaY (ORCPT
+        id S1726956AbgCFQal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:30:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40092 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgCFQaX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:30:23 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 098DD29681D
-Subject: Re: [PATCH v11 3/5] soc: mediatek: Move mt8173 MMSYS to platform
- driver
-To:     Stephen Boyd <sboyd@kernel.org>, airlied@linux.ie,
-        ck.hu@mediatek.com, laurent.pinchart@ideasonboard.com,
-        mark.rutland@arm.com, mturquette@baylibre.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        ulrich.hecht+renesas@gmail.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>, rdunlap@infradead.org,
-        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20200302110128.2664251-1-enric.balletbo@collabora.com>
- <20200302110128.2664251-4-enric.balletbo@collabora.com>
- <158344207340.7173.8369925839829696256@swboyd.mtv.corp.google.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <8bfc4350-6e92-e657-18f2-3624a2558521@collabora.com>
-Date:   Fri, 6 Mar 2020 17:30:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <158344207340.7173.8369925839829696256@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 6 Mar 2020 11:30:41 -0500
+Received: from mail-eopbgr00113.outbound.protection.outlook.com ([40.107.0.113]:37038
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726245AbgCFQak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:30:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k5aIJNa4jgmTybSxfJ8kN2MJzrQieaUmRpOUzH6uwsx8KJPuAuf3Zat4sKcQtr5iSwresrohf7pROYVM/YZrc1DAY9hST6Rx6q1YnhuxEcwwSfaYDCxtpPP0Zub/DHtbV25xH6p04tMy08Y5ErmOPISgj60z4mgxmZoDlzBfOhXoZvrYcMAvRxgka9ja31oMHA1NSislqItr8W+jumDujsYPlCAG17JvLoqQR3IInQ9axp1cntpRBv7Vv6exfDqmzSdK5fVk4ikzHAfvaUdzZuqmIG69tkIDVJwBpY3BSZCPFvNKOfCkj2zaqcTq8myqm8gpGAdhQPcGoAzuprs4GQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AB0RhFgI4t4x5kuSBsFBZgGBO6WuEBL5DdqmhjNotfQ=;
+ b=RItKnctkUgLo/y/5dixw4rUTJ/vheqVemp1RrbXH8QIu2XltUnlahbgMq7evYk//q5lp5vON3Br8Um36jReV1XFPoOl8NpWNkyZoZpJpQEC0en1BeY5geac7wkXckWqKVaElPg916YZFNcj/1uEB8nc7tX4XaHeZu9PDNd86BK9L/0bItssg9lQ0eJuzNlkUy+SRF3amxLkalObgrEvV4q+o9ReNnOQ32zDEGzm58MaaG0XfAbegWjABzHiRzh3iS2W/4kO4OCA9Wi1S7+HpmJgLVLBk3pfBPwMg3iArwYalPf1HuDsU1zfJX8XG6tGw5aaVqBiYRIS+ChoNfTvM8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AB0RhFgI4t4x5kuSBsFBZgGBO6WuEBL5DdqmhjNotfQ=;
+ b=l620lAHQ7CFoBBHzVGfupUml+OTi9pOh/e1WIdLcKOna4gVNolCFDF+fpsKszquGTZUPJjmkKCGhWc5/mxUiZWgwABC7flYxn8hp6pJFXA+lFsiLoVhNHH45HPXzPT6BtNnLqtTQ/BWC1U6sGfG7mV6bBwTrwCOMFsB9/KMpJiw=
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (20.179.1.217) by
+ AM6PR05MB4389.eurprd05.prod.outlook.com (52.135.160.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.14; Fri, 6 Mar 2020 16:30:37 +0000
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::dee:ffa2:1d09:30e]) by AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::dee:ffa2:1d09:30e%4]) with mapi id 15.20.2772.019; Fri, 6 Mar 2020
+ 16:30:37 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
+        "andrew@lunn.ch" <andrew@lunn.ch>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] ARM: mach-imx6q: add ksz9131rn_phy_fixup
+Thread-Topic: [PATCH] ARM: mach-imx6q: add ksz9131rn_phy_fixup
+Thread-Index: AQHV8vTsfP1BktnxKEy+q0EhrXMNZqg6EXKAgAAlWYCAAPjzgIAAY3kAgAAwAAA=
+Date:   Fri, 6 Mar 2020 16:30:37 +0000
+Message-ID: <a1a966cb14641dc33647750cfa2f7fa1fde6e47b.camel@toradex.com>
+References: <20200305134928.19775-1-philippe.schenker@toradex.com>
+         <20200305143805.dk7fndblnqjnwxu6@pengutronix.de>
+         <20200305165145.GA25183@lunn.ch>
+         <7191ffe6-642a-477c-ec37-e37dc9be4bf8@pengutronix.de>
+         <20200306133848.GB18310@lunn.ch>
+In-Reply-To: <20200306133848.GB18310@lunn.ch>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-originating-ip: [31.10.206.124]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 57cbdc44-8243-4125-b123-08d7c1ebb3be
+x-ms-traffictypediagnostic: AM6PR05MB4389:
+x-microsoft-antispam-prvs: <AM6PR05MB43898C3E5F2CA245166903C8F4E30@AM6PR05MB4389.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0334223192
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39850400004)(136003)(366004)(346002)(376002)(189003)(199004)(5660300002)(110136005)(8936002)(81156014)(54906003)(8676002)(81166006)(6486002)(71200400001)(6512007)(316002)(7416002)(186003)(2906002)(44832011)(2616005)(26005)(478600001)(66946007)(6506007)(4326008)(86362001)(91956017)(76116006)(64756008)(36756003)(66446008)(66476007)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB4389;H:AM6PR05MB6120.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PlX9aTnTei6MNEI7x3bley79UgrEB7BAUG8evtr1rE5nk2XPK30bN83yEKqYDElhADO5TMTD25cANnQHob5T1WwJL8ybZwI/b8I9Hldkkssxc6AAZ3+S2zpFCjDk9Fiy5TZO90hqf03gjoA1NzCs7rPmMPi4rz0ZKx3f3jHSS38yk0lgIFrvjaM/aLypqg21snIvTUb944HoOr1bRZW4thJ8bWFF+ZmmBD3YA4iGj97smZ37eCcuXzj+dHxYM5rw/u83g5iORGTHtdd65LI9pLZ2blyYYkg4/BVQzR7hrB4WRScCyS4YbR75L2q8uav53tBaAWVrtm1Zj6p2X0XHiPMEMtaP4ho99zpGNNlQd66i3+ePYFIP1doZAaxIKvNRj/LOEkgmqsInn4Mnrl625KBiJETgawCTV1ofyuIn3K2HAS/EYGLwmZeDmNeSzWCp
+x-ms-exchange-antispam-messagedata: qHEHz4klFu9MFA7FLO54mEsQBa1ikqubC9utS59GaP80XhqeRyJDNILmR+rqQd+fUeGSsq8NU4urpY0RUy4/na0QHLJ6M8qrx4I8u3JLT6ftJxNH5Cox1/behs9Hc/YweH3tYVr0ugOkiaNBCTFRiA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <66F9D872AB9D754CA9139BB4119C9A24@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57cbdc44-8243-4125-b123-08d7c1ebb3be
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2020 16:30:37.2119
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IHh+lwP4ivRIezr3BqAnBxvyrfDYcCyVXts7ARmi2i6rEBUCMoW+dr6OcwtsMIYyjvyCAaB5DA9+mgqVLyy7odvaJBeUkW4HesCgrj5mqng=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4389
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
-
-On 5/3/20 22:01, Stephen Boyd wrote:
-> Quoting Enric Balletbo i Serra (2020-03-02 03:01:26)
->> From: Matthias Brugger <mbrugger@suse.com>
->>
->> There is no strong reason for this to use CLK_OF_DECLARE instead of
->> being a platform driver.
-> 
-> Cool.
-> 
->> Plus, this driver provides clocks but also
->> a shared register space for the mediatek-drm and the mediatek-mdp
->> driver. So move to drivers/soc/mediatek as a platform driver.
->>
->> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> Reviewed-by: CK Hu <ck.hu@mediatek.com>
->> ---
->>
->> Changes in v11: None
->> Changes in v10:
->> - Renamed to be generic mtk-mmsys
->> - Add driver data support to be able to support diferent SoCs
->>
->> Changes in v9:
->> - Move mmsys to drivers/soc/mediatek (CK)
->>
->> Changes in v8:
->> - Be a builtin_platform_driver like other mediatek mmsys drivers.
->>
->> Changes in v7:
->> - Free clk_data->clks as well
->> - Get rid of private data structure
->>
->>  drivers/clk/mediatek/clk-mt8173.c | 104 --------------------
->>  drivers/soc/mediatek/Kconfig      |   7 ++
->>  drivers/soc/mediatek/Makefile     |   1 +
->>  drivers/soc/mediatek/mtk-mmsys.c  | 154 ++++++++++++++++++++++++++++++
-> 
-> Can you generate with -M so that we can see what has actually changed?
-> 
-
-Sure, sorry about that.
-
->>  4 files changed, 162 insertions(+), 104 deletions(-)
->>  create mode 100644 drivers/soc/mediatek/mtk-mmsys.c
->>
->> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
->> index 2114b563478c..7a156944d50e 100644
->> --- a/drivers/soc/mediatek/Kconfig
->> +++ b/drivers/soc/mediatek/Kconfig
->> @@ -44,4 +44,11 @@ config MTK_SCPSYS
->>           Say yes here to add support for the MediaTek SCPSYS power domain
->>           driver.
->>  
->> +config MTK_MMSYS
->> +       bool "MediaTek MMSYS Support"
->> +       depends on COMMON_CLK_MT8173
-> 
-> Does it need some default so that defconfig updates don't break things?
-> 
-
-Right.
-
->> +       help
->> +         Say yes here to add support for the MediaTek Multimedia
->> +         Subsystem (MMSYS).
->> +
->>  endmenu
->> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
->> index b01733074ad6..01f9f873634a 100644
->> --- a/drivers/soc/mediatek/Makefile
->> +++ b/drivers/soc/mediatek/Makefile
->> @@ -3,3 +3,4 @@ obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq-helper.o
->>  obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
->>  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
->>  obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
->> +obj-$(CONFIG_MTK_MMSYS) += mtk-mmsys.o
->> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
->> new file mode 100644
->> index 000000000000..473cdf732fb5
->> --- /dev/null
->> +++ b/drivers/soc/mediatek/mtk-mmsys.c
->> @@ -0,0 +1,154 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2014 MediaTek Inc.
->> + * Author: James Liao <jamesjj.liao@mediatek.com>
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +
->> +#include "../../clk/mediatek/clk-gate.h"
->> +#include "../../clk/mediatek/clk-mtk.h"
-> 
-> Why not use include/linux/clk/?
-> 
-
-I can move these files to include, this will impact a lot more of drivers but,
-yes, I think is the right way.
-
-> But I also don't understand why the clk driver is moved outside of
-> drivers/clk/ into drivers/soc/. Commit text saying that it has shared
-> registers doesn't mean it can't still keep the clk driver part in the
-> drivers/clk/ area.
-> 
-
-Actually moving this to the soc directory has been requested by CK (mediatek) as
-a change in v8. You can see the discussion in [1]
-
-Thanks,
- Enric
-
-[1] https://patchwork.kernel.org/cover/11394709/
-
->> +
->> +#include <dt-bindings/clock/mt8173-clk.h>
->> +
->> +static const struct mtk_gate_regs mm0_cg_regs = {
->> +       .set_ofs = 0x0104,
->> +       .clr_ofs = 0x0108,
->> +       .sta_ofs = 0x0100,
->> +};
->> +
->> +static const struct mtk_gate_regs mm1_cg_regs = {
->> +       .set_ofs = 0x0114,
->> +       .clr_ofs = 0x0118,
->> +       .sta_ofs = 0x0110,
->> +};
+T24gRnJpLCAyMDIwLTAzLTA2IGF0IDE0OjM4ICswMTAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+PiA+IEl0IHByb2JhYmx5IGRvZXMgbm90IGV2ZW4gbmVlZCB0aGF0LiBKdXN0DQo+ID4gPiANCj4g
+PiA+IHBoeS1tb2RlID0gPHJnbWlpLXR4aWQ+DQo+ID4gDQo+ID4gTG9va3MgdG8gbWUgbGlrZSB0
+aGlzIGlzbid0IHN1cHBvcnRlZCBieSB0aGUgTWljcmVsIFBIWSBkcml2ZXIgb3IgYW0NCj4gPiBJ
+IG1pc3Npbmcgc29tZXRoaW5nPw0KPiANCj4gQWgsIHlvdSBhcmUgY29ycmVjdC4gSXQganVzdCBo
+YXM6DQo+IA0KPiAgICAgICAgIGlmIChvZl9ub2RlKSB7DQo+ICAgICAgICAgICAgICAgICBrc3o5
+MDIxX2xvYWRfdmFsdWVzX2Zyb21fb2YocGh5ZGV2LCBvZl9ub2RlLA0KPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBNSUlfS1NaUEhZX0NMS19DT05UUk9MX1BBRF9TS0VXLA0K
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAidHhlbi1za2V3LXBzIiwgInR4
+Yy1za2V3LXBzIiwNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInJ4ZHYt
+c2tldy1wcyIsICJyeGMtc2tldy1wcyIpOw0KPiAgICAgICAgICAgICAgICAga3N6OTAyMV9sb2Fk
+X3ZhbHVlc19mcm9tX29mKHBoeWRldiwgb2Zfbm9kZSwNCj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgTUlJX0tTWlBIWV9SWF9EQVRBX1BBRF9TS0VXLA0KPiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAicnhkMC1za2V3LXBzIiwgInJ4ZDEtc2tldy1wcyIs
+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJyeGQyLXNrZXctcHMiLCAi
+cnhkMy1za2V3LXBzIik7DQo+ICAgICAgICAgICAgICAgICBrc3o5MDIxX2xvYWRfdmFsdWVzX2Zy
+b21fb2YocGh5ZGV2LCBvZl9ub2RlLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBNSUlfS1NaUEhZX1RYX0RBVEFfUEFEX1NLRVcsDQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICJ0eGQwLXNrZXctcHMiLCAidHhkMS1za2V3LXBzIiwNCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInR4ZDItc2tldy1wcyIsICJ0eGQzLXNrZXct
+cHMiKTsNCj4gICAgICAgICB9DQo+IA0KPiBhbmQgbm8gc3VwcG9ydCBmb3IgcGh5ZGV2LT5pbnRl
+cmZhY2UuDQo+IA0KPiBBdCBtaW5pbXVtLCB5b3Ugc2hvdWxkIHVzZSB0aGVzZSBEVCBwcm9wZXJ0
+aWVzLCBub3QgYSBwbGF0Zm9ybSBmaXh1cC4NCg0KQXMgSSBzYWlkLCBJIHN0aWxsIHRoaW5rIGl0
+IGlzIGEgZ29vZCBpZGVhIHRvIGhhdmUgc2ltaWxhciBzb2x1dGlvbnMgYXQNCnRoZSBzYW1lIHBs
+YWNlLCBlc3BlY2lhbGx5IGZvciBhIHN1Y2Nlc3NvciBQSFkuDQoNCkkgYWxzbyBzZWUgdGhlIGRv
+d25zaWRlcyBzbyBJJ2xsIGdvIHdpdGggeW91ciBwcm9wb3NlZCBzb2x1dGlvbi4NCg0KVGhhbmtz
+IGV2ZXJ5b25lIGZvciB0aGUgZGlzY3Vzc2lvbiENCg0KUGhpbGlwcGUNCj4gDQo+IElmIHlvdSB3
+YW50IHRvLCB5b3UgY2FuIGFkZCBzdXBwb3J0IGZvciByZ21paS1pZCwgZXRjLiBUaGVyZSBhcmUg
+Zml2ZQ0KPiBtb2RlcyB5b3UgbmVlZCB0byBzdXBwb3J0Og0KPiANCj4gICAgICAgICBQSFlfSU5U
+RVJGQUNFX01PREVfTkEsDQo+ICAgICAgICAgUEhZX0lOVEVSRkFDRV9NT0RFX1JHTUlJLA0KPiAg
+ICAgICAgIFBIWV9JTlRFUkZBQ0VfTU9ERV9SR01JSV9JRCwNCj4gICAgICAgICBQSFlfSU5URVJG
+QUNFX01PREVfUkdNSUlfUlhJRCwNCj4gICAgICAgICBQSFlfSU5URVJGQUNFX01PREVfUkdNSUlf
+VFhJRCwNCj4gDQo+IE5BIG1lYW5zICJkb24ndCB0b3VjaCIuIExlYXZlIHRoZSBSR01JSSBkZWxh
+eXMgYWxvbmUsIGFzIGNvbmZpZ3VyZWQgYnkNCj4gaGFyZHdhcmUgZGVmYXVsdCwgc3RyYXBwaW5n
+LCBib290bG9hZGVyLCBldGMuDQo+IA0KPiAJIEFuZHJldw0K
