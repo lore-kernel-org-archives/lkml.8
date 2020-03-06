@@ -2,167 +2,107 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D747C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27F7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9CD206D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924EB206D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:56:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6dZB2LI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFOGn8Zi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgCFV4R (ORCPT
+        id S1726533AbgCFV4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 16:56:17 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34221 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCFV4Q (ORCPT
+        Fri, 6 Mar 2020 16:56:48 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:37264 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCFV4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 16:56:16 -0500
-Received: by mail-lf1-f66.google.com with SMTP id w27so3120728lfc.1;
-        Fri, 06 Mar 2020 13:56:13 -0800 (PST)
+        Fri, 6 Mar 2020 16:56:48 -0500
+Received: by mail-qv1-f68.google.com with SMTP id w16so1257213qvn.4;
+        Fri, 06 Mar 2020 13:56:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bHMaQl8LS+kUipNNyOSSMitpE/YaBqFWVsAjUSuCc2c=;
-        b=T6dZB2LI8Slsj0freZ731/RtEkdC6/kteNUVd9ADzIXfHsT2dD3kdH/PM+QX7JSrVR
-         krPy0dsJLFfriBt7G60gPfLzXj96UZ0aq4Yb/8ZtDHLXcmDabgD93eBbMKhzRIBPYGsd
-         juWUwZ6xsfFxPsk82UglwDyUL0ZiYP6gbYowohPr2FK0P4oCtsOoLDOCz2grv/ihc5Pg
-         BlTEcPxcFuUcSS0K2mVn7p0I2a8o1lA6Q6tNwLG6ieulrC7tr2afGDMB6sKYPOe3rViF
-         NZuNK+QWhM4MOQR70hYL0gfVgjQ8sSjmbh+oq3ITKiJi4NlQceBWj2jnplesQ4ZRI8yt
-         EzRg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/qftFsm6HdBxEnInarXAUBlShoM/f/zFOOpC3dVn39Q=;
+        b=XFOGn8ZiNF9gDWhSp9WK2ABpn7tbfuwE+MEbJ38wPJfGPteh2WI9Nbo7auXKRoz9W/
+         ll8Oj9n3WPdWph1BW3yFypeH0HQ0yO6dcgxn6lag+3ksyFT6NG7ErbMuPz9WveG1p21U
+         FScT2IqnxtUNseZcJ7BdQLKOY0eSZ6ewt6+pahm3W6uY+La/lMwQiIGRC6k2j5XJNAjf
+         yh0xoWcC0nM1Fpz4S2XtRqL+MgX/hnnA6VEb84iIJos1xv2Aw6bgfm+vvgXsxxxepgMM
+         FgTuPyOdkH8uwkrAQfEPq8jwS+TIASDwOiI0xxpF3SeVL2cGoZmqih6O96P0LY/HJQYM
+         Y+fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bHMaQl8LS+kUipNNyOSSMitpE/YaBqFWVsAjUSuCc2c=;
-        b=g7V6ncQPYGs2yUHVivvsaJJEvX8j6s97tufKyaATKBoLq3O9LxpOlawILDU1oHN+WX
-         iQH3VTVSts1hR/yOSFZpHC45FMidMJ/qASGUc7Pd9x+n9mdSnITYnhVv38tw9CaVeQ3U
-         514w3cKzeMuhfOUVHA6MatbZ0h9Tk9g4bxvK4uPBIfn47lW7RTRKbepZsDMuUb298ces
-         L+QpQU0EcBVWzM4UKkLMaiA83WrgAMRgxRApEgJpt/ZMHHr+xN3QQOeLsuW98CeU5/Vr
-         AjzgFoDf5OCxyOYUgibr4e3ZhT5GCQJsNr1e+hh2jrhHqOTqnRFteCa0nwIdQK0WtOr7
-         2vlw==
-X-Gm-Message-State: ANhLgQ3NruvJXGhqw09liRdvQZyU/gd39JsDl5L1o5xFw7EGW7bF81Jd
-        szcpKGANUndbWaMly25J/fYH2495
-X-Google-Smtp-Source: ADFU+vv7d4IqEihasRGNv5gsfrXFjPRK9cQYmZJp/Mp9rhNhRA/3PG+yZW+BOYLPlBlj4yNmllgsfQ==
-X-Received: by 2002:a19:ca15:: with SMTP id a21mr3099252lfg.67.1583531772370;
-        Fri, 06 Mar 2020 13:56:12 -0800 (PST)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id d12sm1409006lfi.86.2020.03.06.13.56.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2020 13:56:11 -0800 (PST)
-Subject: Re: [PATCH v1 3/3] partitions: Introduce NVIDIA Tegra Partition Table
-To:     Stephen Warren <swarren@wwwdotorg.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200224231841.26550-1-digetx@gmail.com>
- <20200224231841.26550-4-digetx@gmail.com>
- <44c22925-a14e-96d0-1f93-1979c0c60525@wwwdotorg.org>
- <CAPDyKFoXnoukjH_2cM=f0DGHBHS6kVUQSYOa_5ffQppC7VOn2A@mail.gmail.com>
- <824a4d5f-8280-8860-3e80-68188a13aa3d@gmail.com>
- <CAPDyKFric6pZbJ5-2qkwAFoeJ0c0kcha99zHJ12AUrWO6FQmgg@mail.gmail.com>
- <6fe6d262-c6b0-52d8-0150-4c32a4c36cbd@wwwdotorg.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <82974dbe-9e6c-95fd-dd4d-b1cedc33f8ea@gmail.com>
-Date:   Sat, 7 Mar 2020 00:56:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/qftFsm6HdBxEnInarXAUBlShoM/f/zFOOpC3dVn39Q=;
+        b=dpO7pYA7ru6N8WIBUUJHktKBliRGuZQ9gaQgqd1m07Nz9lQAnQSten+3obp1RKhAh/
+         7etPfM1OSFLZh3LIs1ixs024zXn8M7IYSg2L3VsstdTm6v1aRyLIhR2zD/HHBC9m+Gqd
+         7XPKC6xSPgxRTovtPwjJBNU0flzcWgq9p73s0yGNLfzd6mPrn1bi6u8K+xfhSymo+rKm
+         DzO2NxmZUKUuITjWPfHGuyhjODXwRWAW76nL9OwordCob0Czv15rgsvEfDUgri/p1/r8
+         nE4uKrca32LuEJX9fgOBCHTzzx9yGvHk41+L+uESZxA4LCZVEdTmVfIwP6/4fwW5J4Wl
+         OqMA==
+X-Gm-Message-State: ANhLgQ0aXRXqRfHXG3YKe5ZMctrfacImz+ysPGHUCPeSsdqINpeN/zVb
+        I7xV6btU+Z/eD1voChERKQs=
+X-Google-Smtp-Source: ADFU+vtRK326WTe5Rhk3W22+QYv88e1MOwq2ZpdmEeSYJOVDfResegYf9iXjkcVNjsBgk3jk2G5qJw==
+X-Received: by 2002:a05:6214:5c1:: with SMTP id t1mr4834011qvz.39.1583531805669;
+        Fri, 06 Mar 2020 13:56:45 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id o129sm2793045qke.109.2020.03.06.13.56.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 13:56:44 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9DB9040009; Fri,  6 Mar 2020 18:56:42 -0300 (-03)
+Date:   Fri, 6 Mar 2020 18:56:42 -0300
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Nick Desaulniers <nick.desaulniers@gmail.com>,
+        Tommi Rantala <tommi.t.rantala@nokia.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf/urgent fixes
+Message-ID: <20200306215642.GA15931@kernel.org>
+References: <20200306191144.12762-1-acme@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6fe6d262-c6b0-52d8-0150-4c32a4c36cbd@wwwdotorg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306191144.12762-1-acme@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.03.2020 19:52, Stephen Warren пишет:
-> On 3/6/20 6:37 AM, Ulf Hansson wrote:
->> On Wed, 4 Mar 2020 at 18:09, Dmitry Osipenko <digetx@gmail.com> wrote:
->>>
->>> 04.03.2020 19:36, Ulf Hansson пишет:
->>>> On Tue, 25 Feb 2020 at 01:20, Stephen Warren <swarren@wwwdotorg.org>
->>>> wrote:
->>>>>
->>>>> On 2/24/20 4:18 PM, Dmitry Osipenko wrote:
->>>>>> All NVIDIA Tegra devices use a special partition table format for the
->>>>>> internal storage partitioning. Most of Tegra devices have GPT
->>>>>> partition
->>>>>> in addition to TegraPT, but some older Android consumer-grade
->>>>>> devices do
->>>>>> not or GPT is placed in a wrong sector, and thus, the TegraPT is
->>>>>> needed
->>>>>> in order to support these devices properly in the upstream kernel.
->>>>>> This
->>>>>> patch adds support for NVIDIA Tegra Partition Table format that is
->>>>>> used
->>>>>> at least by all NVIDIA Tegra20 and Tegra30 devices.
->>>>>
->>>>>> diff --git a/arch/arm/mach-tegra/tegra.c
->>>>>> b/arch/arm/mach-tegra/tegra.c
->>>>>
->>>>>> +static void __init tegra_boot_config_table_init(void)
->>>>>> +{
->>>>>> +     void __iomem *bct_base;
->>>>>> +     u16 pt_addr, pt_size;
->>>>>> +
->>>>>> +     bct_base = IO_ADDRESS(TEGRA_IRAM_BASE) + TEGRA_IRAM_BCT_OFFSET;
->>>>>
->>>>> This shouldn't be hard-coded. IIRC, the boot ROM writes a BIT (Boot
->>>>> Information Table) to a fixed location in IRAM, and there's some value
->>>>> in the BIT that points to where the BCT is in IRAM. In practice, it
->>>>> might work out that the BCT is always at the same place in IRAM, but
->>>>> this certainly isn't guaranteed. I think there's code in U-Boot which
->>>>> extracts the BCT location from the BIT? Yes, see
->>>>> arch/arm/mach-tegra/ap.c:get_odmdata().
->>>>
->>>> So, have you considered using the command line partition option,
->>>> rather than adding yet another partition scheme to the kernel?
->>>>
->>>> In principle, you would let the boot loader scan for the partitions,
->>>> likely from machine specific code in U-boot. Then you append these to
->>>> the kernel command line and let block/partitions/cmdline.c scan for
->>>> it.
->>>
->>> The bootloader is usually locked-down on a consumer Tegra machines (it's
->>> signed / encrypted).
->>
->> Right, you are you talking about this from a developer point of view,
->> not from an end product user?
->>
->> I mean, for sure you can upgrade the bootloader on Nvidia products?
->> No, really?
+Em Fri, Mar 06, 2020 at 04:11:33PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Hi Ingo/Thomas,
 > 
-> For developer-oriented products like Jetson developer kits, you can
-> upgrade the bootloader, and luckily they haven't used this partition
-> table format for many versions.
+> 	Please consider pulling,
 > 
-> However, commercial Android products typically have secure boot enabled,
-> so you can't replace the bootloader unless you know the secure boot
-> keys, which only the manufacturer knows. Dmitry is working on
-> re-purposing such products.
+> Best regards,
 
-Thank you very much for the good clarification :)
+OOps, messed up and sent more messages than needed, the branch should be
+ok tho:
+
+[acme@quaco perf]$ git log --oneline acme/perf/urgent tip/perf/urgent..perf-urgent-for-mingo-5.6-20200306
+441b62acd9c8 (tag: perf-urgent-for-mingo-5.6-20200306, five/perf/urgent, acme/perf/urgent, acme.korg/perf/urgent) tools: Fix off-by 1 relative directory includes
+3f5777fbaf04 perf jevents: Fix leak of mapfile memory
+7b919a53102d perf bench: Clear struct sigaction before sigaction() syscall
+f649bd9dd5d5 perf bench futex-wake: Restore thread count default to online CPU count
+29b4f5f18857 perf top: Fix stdio interface input handling with glibc 2.28+
+cfd3bc752a3f perf diff: Fix undefined string comparision spotted by clang's -Wstring-compare
+[acme@quaco perf]$
+
+Sorry about that,
+
+- Arnaldo
