@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCA2C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AAFC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E323B21775
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676DB2084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgCFOmb (ORCPT
+        id S1727389AbgCFOmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:42:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53876 "EHLO
+        Fri, 6 Mar 2020 09:42:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53882 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727291AbgCFOm0 (ORCPT
+        with ESMTP id S1727308AbgCFOm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:42:26 -0500
+        Fri, 6 Mar 2020 09:42:28 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEAz-0006Hg-QI; Fri, 06 Mar 2020 15:42:09 +0100
+        id 1jAEBC-0006Q3-JR; Fri, 06 Mar 2020 15:42:22 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 70FE91C21D3;
-        Fri,  6 Mar 2020 15:42:04 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:04 -0000
-From:   "tip-bot2 for Qais Yousef" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BD5771C21DC;
+        Fri,  6 Mar 2020 15:42:14 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:14 -0000
+From:   "tip-bot2 for Peter Xu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/rt: Allow pulling unfitting task
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Qais Yousef <qais.yousef@arm.com>,
+Subject: [tip: smp/core] MIPS: smp: Remove tick_broadcast_count
+Cc:     Peter Xu <peterx@redhat.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200302132721.8353-5-qais.yousef@arm.com>
-References: <20200302132721.8353-5-qais.yousef@arm.com>
+In-Reply-To: <20191216213125.9536-3-peterx@redhat.com>
+References: <20191216213125.9536-3-peterx@redhat.com>
 MIME-Version: 1.0
-Message-ID: <158350572419.28353.10129133387433061878.tip-bot2@tip-bot2>
+Message-ID: <158350573449.28353.9285827555774109054.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,47 +55,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the smp/core branch of tip:
 
-Commit-ID:     98ca645f824301bde72e0a51cdc8bdbbea6774a5
-Gitweb:        https://git.kernel.org/tip/98ca645f824301bde72e0a51cdc8bdbbea6774a5
-Author:        Qais Yousef <qais.yousef@arm.com>
-AuthorDate:    Mon, 02 Mar 2020 13:27:19 
+Commit-ID:     e188f0a50f637391f440b9bf0a1066db71a20889
+Gitweb:        https://git.kernel.org/tip/e188f0a50f637391f440b9bf0a1066db71a20889
+Author:        Peter Xu <peterx@redhat.com>
+AuthorDate:    Mon, 16 Dec 2019 16:31:24 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 12:57:28 +01:00
+CommitterDate: Fri, 06 Mar 2020 13:42:28 +01:00
 
-sched/rt: Allow pulling unfitting task
+MIPS: smp: Remove tick_broadcast_count
 
-When implemented RT Capacity Awareness; the logic was done such that if
-a task was running on a fitting CPU, then it was sticky and we would try
-our best to keep it there.
+Now smp_call_function_single_async() provides the protection that
+we'll return with -EBUSY if the csd object is still pending, then we
+don't need the tick_broadcast_count counter any more.
 
-But as Steve suggested, to adhere to the strict priority rules of RT
-class; allow pulling an RT task to unfitting CPU to ensure it gets a
-chance to run ASAP.
-
-LINK: https://lore.kernel.org/lkml/20200203111451.0d1da58f@oasis.local.home/
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Fixes: 804d402fb6f6 ("sched/rt: Make RT capacity-aware")
-Link: https://lkml.kernel.org/r/20200302132721.8353-5-qais.yousef@arm.com
+Link: https://lkml.kernel.org/r/20191216213125.9536-3-peterx@redhat.com
 ---
- kernel/sched/rt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/mips/kernel/smp.c |  9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 29a8695..bcb1436 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -1656,8 +1656,7 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
- static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
- {
- 	if (!task_running(rq, p) &&
--	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
--	    rt_task_fits_capacity(p, cpu))
-+	    cpumask_test_cpu(cpu, p->cpus_ptr))
- 		return 1;
+diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
+index f510c00..0def624 100644
+--- a/arch/mips/kernel/smp.c
++++ b/arch/mips/kernel/smp.c
+@@ -696,29 +696,22 @@ EXPORT_SYMBOL(flush_tlb_one);
  
- 	return 0;
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+ 
+-static DEFINE_PER_CPU(atomic_t, tick_broadcast_count);
+ static DEFINE_PER_CPU(call_single_data_t, tick_broadcast_csd);
+ 
+ void tick_broadcast(const struct cpumask *mask)
+ {
+-	atomic_t *count;
+ 	call_single_data_t *csd;
+ 	int cpu;
+ 
+ 	for_each_cpu(cpu, mask) {
+-		count = &per_cpu(tick_broadcast_count, cpu);
+ 		csd = &per_cpu(tick_broadcast_csd, cpu);
+-
+-		if (atomic_inc_return(count) == 1)
+-			smp_call_function_single_async(cpu, csd);
++		smp_call_function_single_async(cpu, csd);
+ 	}
+ }
+ 
+ static void tick_broadcast_callee(void *info)
+ {
+-	int cpu = smp_processor_id();
+ 	tick_receive_broadcast();
+-	atomic_set(&per_cpu(tick_broadcast_count, cpu), 0);
+ }
+ 
+ static int __init tick_broadcast_init(void)
