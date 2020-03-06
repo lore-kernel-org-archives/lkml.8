@@ -2,110 +2,199 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A140C10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A662BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6B72146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763242072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:24:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0SCpXGz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LY7UJ70l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCFQUC (ORCPT
+        id S1726368AbgCFQY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:20:02 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37375 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgCFQUB (ORCPT
+        Fri, 6 Mar 2020 11:24:57 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56459 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726140AbgCFQY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:20:01 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p14so1342146pfn.4;
-        Fri, 06 Mar 2020 08:20:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=HT85QxwdFTCLPqBgxQh69fgGjpwmL/OKcBc+DMSRtbY=;
-        b=U0SCpXGzRVAUN/CEpW1P2vaOBisrt31nPw63g11ueKaCltoVoyX5Wr7SuUysDk7M7R
-         pBjGeqAQSdG35me8VFTutvq/n4HG9wXCpjEoB8YnBTmHO5bbgnF13WhemvM1q2982NS9
-         /dkSjQecKSQdimDWgO9V6x6zg/ueJvzJ1veDWZonPveO3KjkwCVjm2S5b7jVooAkVosa
-         V+m5PsLLH/IuC1UJnM995wVZ7D47chcGqT4X08QYt4N2HzrGz8N19zyGqVTnungYB4yQ
-         ZdtF8HoY6vOEupmbSBi6NMD27J6AAjeWpKiwswq+83OmiSFDrax/wlQaE2489y+hqPKy
-         vb4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=HT85QxwdFTCLPqBgxQh69fgGjpwmL/OKcBc+DMSRtbY=;
-        b=eGJLZPXLXJZ41mBjffcrOq6SMaKRsfRNj8XeKFAv7ToYVDy3jwec1YxNlv7TYBFHu2
-         j8/pst8uAxkLsR3hwujxJO3UPnAhtzoIdVBZiL43vPvmzNB8dYabSIT1Zn0bL0Fqlss1
-         gWfNxeMaN3I+KjaUn0e1rUMVVwXnehCbbgsUQL2hzpTTzGnBa4mc59GMO4EMxXAri/GX
-         eRGakwtkOpotKyjw9ssWDjC7vNTaTZQSbBFlx+j95uD8XrcfBCfx8EZ0z0Z9nkjknR0d
-         jlXKK+9Y8K1rtXdIWXqCRcMjW8Q5vIyMhRZeoOKfmuUz34UvPfq7oX5tKCeBqC8By0Ut
-         CrBQ==
-X-Gm-Message-State: ANhLgQ1h9+fT7XcFCwxaJOesA8GLBqeOxg1B7sgthBc3wRFjldpQNON6
-        qIpstSbkEJcHjyYqbPjc7ypa4zMz
-X-Google-Smtp-Source: ADFU+vt/x/gDdrv8nW5YW6NkMcQXxfUC6YKNJVxfnaZBTijdPleSG0DWGOoyEKmWOZaaV6eb0f99xA==
-X-Received: by 2002:a63:9d04:: with SMTP id i4mr4055404pgd.294.1583511600857;
-        Fri, 06 Mar 2020 08:20:00 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r3sm30036021pfq.126.2020.03.06.08.19.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 06 Mar 2020 08:20:00 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hwmon fixes for v5.6-rc5
-Date:   Fri,  6 Mar 2020 08:19:58 -0800
-Message-Id: <20200306161958.31030-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Fri, 6 Mar 2020 11:24:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583511894;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7YQYjXtX5SKdhVMtcrZUxIhpmnZ5HnjhJ3UoT3fYhZg=;
+        b=LY7UJ70lXFR42091GCPhoJBwtcfG8X/VXX5VULhWbLbwkRZ4sU85yf5AEMTixF+1hjAWok
+        UuM13h2573RmYqzgPttiw3ab0fO41J/DXnic61CxSfD2F9K50AH/swj/gMJR8if7XPp0xQ
+        Al3mNBdzFNGJGEWLYQYh7pzpmJBe/iQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-mnL3Hbc1OhqwozznM0zX_A-1; Fri, 06 Mar 2020 11:24:52 -0500
+X-MC-Unique: mnL3Hbc1OhqwozznM0zX_A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9D1EDBF1;
+        Fri,  6 Mar 2020 16:24:50 +0000 (UTC)
+Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CDA8660C63;
+        Fri,  6 Mar 2020 16:24:46 +0000 (UTC)
+Date:   Fri, 6 Mar 2020 09:24:45 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dev@dpdk.org" <dev@dpdk.org>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        "thomas@monjalon.net" <thomas@monjalon.net>,
+        "bluca@debian.org" <bluca@debian.org>,
+        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
+        "Richardson, Bruce" <bruce.richardson@intel.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>
+Subject: Re: [PATCH v2 0/7] vfio/pci: SR-IOV support
+Message-ID: <20200306092445.1bd4611c@x1.home>
+In-Reply-To: <3e8db1d0-8afc-f1e9-e857-aead4717fa11@redhat.com>
+References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
+        <a6c04bac-0a37-f4c0-876e-e5cf2a8a6c3f@redhat.com>
+        <20200305101406.02703e2a@w520.home>
+        <3e8db1d0-8afc-f1e9-e857-aead4717fa11@redhat.com>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, 6 Mar 2020 11:35:21 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-Please pull hwmon fixes for Linux v5.6-rc5 from signed tag:
+> On 2020/3/6 =E4=B8=8A=E5=8D=881:14, Alex Williamson wrote:
+> > On Tue, 25 Feb 2020 14:09:07 +0800
+> > Jason Wang <jasowang@redhat.com> wrote:
+> > =20
+> >> On 2020/2/25 =E4=B8=8A=E5=8D=8810:33, Tian, Kevin wrote: =20
+> >>>> From: Alex Williamson
+> >>>> Sent: Thursday, February 20, 2020 2:54 AM
+> >>>>
+> >>>> Changes since v1 are primarily to patch 3/7 where the commit log is
+> >>>> rewritten, along with option parsing and failure logging based on
+> >>>> upstream discussions.  The primary user visible difference is that
+> >>>> option parsing is now much more strict.  If a vf_token option is
+> >>>> provided that cannot be used, we generate an error.  As a result of
+> >>>> this, opening a PF with a vf_token option will serve as a mechanism =
+of
+> >>>> setting the vf_token.  This seems like a more user friendly API than
+> >>>> the alternative of sometimes requiring the option (VFs in use) and
+> >>>> sometimes rejecting it, and upholds our desire that the option is
+> >>>> always either used or rejected.
+> >>>>
+> >>>> This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
+> >>>> means of setting the VF token, which might call into question whether
+> >>>> we absolutely need this new ioctl.  Currently I'm keeping it because=
+ I
+> >>>> can imagine use cases, for example if a hypervisor were to support
+> >>>> SR-IOV, the PF device might be opened without consideration for a VF
+> >>>> token and we'd require the hypservisor to close and re-open the PF in
+> >>>> order to set a known VF token, which is impractical.
+> >>>>
+> >>>> Series overview (same as provided with v1): =20
+> >>> Thanks for doing this!
+> >>>    =20
+> >>>> The synopsis of this series is that we have an ongoing desire to dri=
+ve
+> >>>> PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
+> >>>> for this with DPDK drivers and potentially interesting future use =20
+> >>> Can you provide a link to the DPDK discussion?
+> >>>    =20
+> >>>> cases in virtualization.  We've been reluctant to add this support
+> >>>> previously due to the dependency and trust relationship between the
+> >>>> VF device and PF driver.  Minimally the PF driver can induce a denial
+> >>>> of service to the VF, but depending on the specific implementation,
+> >>>> the PF driver might also be responsible for moving data between VFs
+> >>>> or have direct access to the state of the VF, including data or state
+> >>>> otherwise private to the VF or VF driver. =20
+> >>> Just a loud thinking. While the motivation of VF token sounds reasona=
+ble
+> >>> to me, I'm curious why the same concern is not raised in other usages.
+> >>> For example, there is no such design in virtio framework, where the
+> >>> virtio device could also be restarted, putting in separate process (v=
+host-user),
+> >>> and even in separate VM (virtio-vhost-user), etc. =20
+> >>
+> >> AFAIK, the restart could only be triggered by either VM or qemu. But
+> >> yes, the datapath could be offloaded.
+> >>
+> >> But I'm not sure introducing another dedicated mechanism is better than
+> >> using the exist generic POSIX mechanism to make sure the connection
+> >> (AF_UINX) is secure.
+> >>
+> >> =20
+> >>>    Of course the para-
+> >>> virtualized attribute of virtio implies some degree of trust, but as =
+you
+> >>> mentioned many SR-IOV implementations support VF->PF communication
+> >>> which also implies some level of trust. It's perfectly fine if VFIO j=
+ust tries
+> >>> to do better than other sub-systems, but knowing how other people
+> >>> tackle the similar problem may make the whole picture clearer. =F0=9F=
+=98=8A
+> >>>
+> >>> +Jason. =20
+> >>
+> >> I'm not quite sure e.g allowing userspace PF driver with kernel VF
+> >> driver would not break the assumption of kernel security model. At lea=
+st
+> >> we should forbid a unprivileged PF driver running in userspace. =20
+> > It might be useful to have your opinion on this series, because that's
+> > exactly what we're trying to do here.  Various environments, DPDK
+> > specifically, want a userspace PF driver.  This series takes steps to
+> > mitigate the risk of having such a driver, such as requiring this VF
+> > token interface to extend the VFIO interface and validate participation
+> > around a PF that is not considered trusted by the kernel. =20
+>=20
+>=20
+> I may miss something. But what happens if:
+>=20
+> - PF driver is running by unprivileged user
+> - PF is programmed to send translated DMA request
+> - Then unprivileged user can mangle the kernel data
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.6-rc5
-
+ATS is a security risk regardless of SR-IOV, how does this change it?
 Thanks,
-Guenter
-------
 
-The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
+Alex
 
-  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
+> > We also set
+> > a driver_override to try to make sure no host kernel driver can
+> > automatically bind to a VF of a user owned PF, only vfio-pci, but we
+> > don't prevent the admin from creating configurations where the VFs are
+> > used by other host kernel drivers.
+> >
+> > I think the question Kevin is inquiring about is whether virtio devices
+> > are susceptible to the type of collaborative, shared key environment
+> > we're creating here.  For example, can a VM or qemu have access to
+> > reset a virtio device in a way that could affect other devices, ex. FLR
+> > on a PF that could interfere with VF operation.  Thanks, =20
+>=20
+>=20
+> Right, but I'm not sure it can be done only via virtio or need support=20
+> from transport (e.g PCI).
+>=20
+> Thanks
+>=20
+>=20
+> >
+> > Alex
+> > =20
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.6-rc5
-
-for you to fetch changes up to 44f2f882909fedfc3a56e4b90026910456019743:
-
-  hwmon: (adt7462) Fix an error return in ADT7462_REG_VOLT() (2020-03-03 12:42:55 -0800)
-
-----------------------------------------------------------------
-hwmon fixes for v5.6-rc5
-
-Fix an error return in the adt7462 driver, bad voltage limits
-reported by the xdpe12284 driver, and a broken documentation
-reference in the adm1177 driver documentation.
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      hwmon: (adt7462) Fix an error return in ADT7462_REG_VOLT()
-
-Mauro Carvalho Chehab (1):
-      docs: adm1177: fix a broken reference
-
-Vadim Pasternak (1):
-      hwmon: (pmbus/xdpe12284) Add callback for vout limits conversion
-
- Documentation/hwmon/adm1177.rst |  3 +--
- drivers/hwmon/adt7462.c         |  2 +-
- drivers/hwmon/pmbus/xdpe12284.c | 54 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 56 insertions(+), 3 deletions(-)
