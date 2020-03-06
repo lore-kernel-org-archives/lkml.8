@@ -2,205 +2,190 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F912C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB49C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2D220848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9466E20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 12:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CqMIIU6O"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="cBP3CStA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCFMHS (ORCPT
+        id S1726650AbgCFMH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 07:07:18 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37733 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgCFMHS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 07:07:18 -0500
-Received: by mail-lf1-f68.google.com with SMTP id j11so1724602lfg.4
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 04:07:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4KPUPSTkugtYA0PbEeoVta4pOw/ai16ArIKK838lBEU=;
-        b=CqMIIU6OgUcYfP+nO15DqV4Gn+28U4l0XKINHu7YR8cz06yd1dTfyQOySiqK8perVe
-         q9cBlZ2hKQbb6Y6/ajVOTatYAlb8vOP2A+OXF4OW7VofwPUW8se8+6H3YntUcm9i03X0
-         dhmQuNmiKWxKSbFtmu3Dise3GGTlB0YOpqwp7veoFIANAJ/YXBAnSy0VfnbTKvbDT1un
-         de/8n7Nsne1PBues3q5A7DLVutU3rmafGrzSpvI7sWUzRtt1FntXj7ANmZRArJrX4P6N
-         v3sBy6cEI8TxFNCkLrLgmFRuuUUbivLim/IAEzmhkO9x3QDAIpTgcMcIbIzsGSY+zlbK
-         L3Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4KPUPSTkugtYA0PbEeoVta4pOw/ai16ArIKK838lBEU=;
-        b=oHuE0nyiE3FsBrCAk8rrPvvWGYn8S+VwBIIWyGB69I11L63c2ddKZbWP/IQLP/1IAs
-         HsPk6+0ejP8uo3ZyNv1kHq8zUlkZ8u/0+XeLmBHGcqIK4uef9+oAmQ4kVJbvp4Gj7k7k
-         957SktwsPqM84aMy/5qZgXO2pbE9fZYu+Jvjq8gFQHyqe0RDb4bDPluLizcVUwMK5Gv2
-         EaJi9sLy8Ng0PwoOjVSEjloUADRHMjElYT4Xlk+Bf1X2QNYAkY6ptW6CM6vgmZ40EA9N
-         BuvCW5/fR4Xpsg05/pSivi58jAIXvW/zOzZpSjNOiJ6wcf/QENnQft7gHUWMUUT2M4c3
-         W63w==
-X-Gm-Message-State: ANhLgQ3TIiIilIkEXtztIhdiOzSEGQENBUTj46nbLjcycg263nFlrSGa
-        ehFF9nYZA3kU1rcp0TyuwJATLIa6jV4j4RVvapgAsA==
-X-Google-Smtp-Source: ADFU+vvQ1aR+zpKusZ09dVvP7kf4bC66fgMS07Kbjp8L2S6t2eYS+496jT2rtl2R7T0gZJhh4p4P35QHGaUh8yls+jk=
-X-Received: by 2002:a19:c215:: with SMTP id l21mr1732735lfc.95.1583496435711;
- Fri, 06 Mar 2020 04:07:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20200305172921.22743-1-vincent.guittot@linaro.org>
- <e31aa232-bc7e-a7b9-5b6a-a1131ac88164@arm.com> <CAKfTPtAqg+CGNBHF53dXp4BcmtucgW4k4skQ1x1jxuyo0PDaMg@mail.gmail.com>
-In-Reply-To: <CAKfTPtAqg+CGNBHF53dXp4BcmtucgW4k4skQ1x1jxuyo0PDaMg@mail.gmail.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 6 Mar 2020 13:07:04 +0100
-Message-ID: <CAKfTPtB8YrVd=DjPXCs589wCJWT_Jo_dyLQ4WMdEKPTAt5GRvw@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: fix enqueue_task_fair warning
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Fri, 6 Mar 2020 07:07:29 -0500
+Received: from vps.xff.cz ([195.181.215.36]:53666 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726185AbgCFMH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 07:07:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1583496446; bh=xEkZMnAJaW3CjRi8Tr1/kP+MDL1qKFyRyqRQ+hjJeW8=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=cBP3CStA3Edz4S9BwQCuNbfWe+Fj/lOclcu8ezWy/dUGtOlmx74M2LTAsfj8Tw4d1
+         cJPGiiAfwrWAvq+4ii9HKLCpyxfF6lQoYVG4GA9jOX7ub842aFUHH4Wv+5bVBbcKgU
+         PGdpmjIyPoyGpyHQb1mgINbbcfEWPzxHIhgukGPw=
+Date:   Fri, 6 Mar 2020 13:07:26 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>, Torsten Duwe <duwe@suse.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "# v4 . 16+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Collabora Kernel ML <kernel@collabora.com>
+Subject: Re: [PATCH v2 2/2] drm/bridge: anx7688: Add anx7688 bridge driver
+ support
+Message-ID: <20200306120726.t7aitfz5rq3m7m6y@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>, Torsten Duwe <duwe@suse.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Collabora Kernel ML <kernel@collabora.com>
+References: <CA+E=qVffVzZwRTk9K7=xhWn-AOKExkew0aPcyL_W1nokx-mDdg@mail.gmail.com>
+ <CAFqH_53crnC6hLExNgQRjMgtO+TLJjT6uzA4g8WXvy7NkwHcJg@mail.gmail.com>
+ <CA+E=qVfGiQseZZVBvmmK6u2Mu=-91ViwLuhNegu96KRZNAHr_w@mail.gmail.com>
+ <CAFqH_505eWt9UU7Wj6tCQpQCMZFMfy9e1ETSkiqi7i5Zx6KULQ@mail.gmail.com>
+ <CA+E=qVff5_hdPFdaG4Lrg7Uzorea=JbEdPoy+sQd7rUGNTTZ5g@mail.gmail.com>
+ <5245a8e4-2320-46bd-04fd-f86ce6b17ce7@collabora.com>
+ <CA+E=qVcyRW4LNC5db27d-8x-T_Nk9QAhkBPwu5rwthTc6ewbYA@mail.gmail.com>
+ <20200305193505.4km5j7n25ph4b6hn@core.my.home>
+ <2a5a4a62-3189-e053-21db-983a4c766d44@collabora.com>
+ <5d72a8c6824b31163a303b5ef1526efe05121e5d.camel@aosc.io>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5d72a8c6824b31163a303b5ef1526efe05121e5d.camel@aosc.io>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 at 10:12, Vincent Guittot <vincent.guittot@linaro.org> wrote:
->
-> On Thu, 5 Mar 2020 at 20:07, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> >
-> > On 05/03/2020 18:29, Vincent Guittot wrote:
-> > > When a cfs rq is throttled, the latter and its child are removed from the
-> > > leaf list but their nr_running is not changed which includes staying higher
-> > > than 1. When a task is enqueued in this throttled branch, the cfs rqs must
-> > > be added back in order to ensure correct ordering in the list but this can
-> > > only happens if nr_running == 1.
-> > > When cfs bandwidth is used, we call unconditionnaly list_add_leaf_cfs_rq()
-> > > when enqueuing an entity to make sure that the complete branch will be
-> > > added.
-> > >
-> > > Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> > > Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> > > Cc: stable@vger.kernel.org #v5.1+
-> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > > ---
-> > >  kernel/sched/fair.c | 11 +++++++++--
-> > >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > index fcc968669aea..bdc5bb72ab31 100644
-> > > --- a/kernel/sched/fair.c
-> > > +++ b/kernel/sched/fair.c
-> > > @@ -4117,6 +4117,7 @@ static inline void check_schedstat_required(void)
-> > >  #endif
-> > >  }
-> > >
-> > > +static inline bool cfs_bandwidth_used(void);
-> > >
-> > >  /*
-> > >   * MIGRATION
-> > > @@ -4195,10 +4196,16 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
-> > >               __enqueue_entity(cfs_rq, se);
-> > >       se->on_rq = 1;
-> > >
-> > > -     if (cfs_rq->nr_running == 1) {
-> > > +     /*
-> > > +      * When bandwidth control is enabled, cfs might have been removed because of
-> > > +      * a parent been throttled but cfs->nr_running > 1. Try to add it
-> > > +      * unconditionnally.
-> > > +      */
-> > > +     if (cfs_rq->nr_running == 1 || cfs_bandwidth_used())
-> > >               list_add_leaf_cfs_rq(cfs_rq);
-> > > +
-> > > +     if (cfs_rq->nr_running == 1)
-> > >               check_enqueue_throttle(cfs_rq);
-> > > -     }
-> > >  }
-> > >
-> > >  static void __clear_buddies_last(struct sched_entity *se)
-> >
-> > I experimented with an rt-app based setup on Arm64 Juno (6 CPUs):
-> >
-> > cgroupv1 hierarchy A/B/C, all CFS bw controlled (30,000/100,000)
-> >
-> > I create A/B/C outside rt-app so I can have rt-app runs with an already
-> > existing taskgroup hierarchy. There is a 4 secs gap between consecutive
-> > rt-app runs.
-> >
-> > The rt-app files contains 6 periodic CFS tasks (25,000/100,000) running
-> > in /A/B/C, /A/B, /A (3 rt-app task phases).
-> >
-> > I get w/ the patch (and the debug patch applied to unthrottle_cfs_rq()):
-> >
-> > root@juno:~#
-> > [  409.236925] CPU1 path=/A/B on_list=1 nr_running=1 throttled=1
-> > [  409.242682] CPU1 path=/A on_list=0 nr_running=0 throttled=1
-> > [  409.248260] CPU1 path=/ on_list=1 nr_running=0 throttled=0
-> > [  409.253748] ------------[ cut here ]------------
-> > [  409.258365] rq->tmp_alone_branch != &rq->leaf_cfs_rq_list
-> > [  409.258382] WARNING: CPU: 1 PID: 0 at kernel/sched/fair.c:380
-> > unthrottle_cfs_rq+0x21c/0x2a8
-> > ...
-> > [  409.275196] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc3-dirty #62
-> > [  409.281990] Hardware name: ARM Juno development board (r0) (DT)
-> > ...
-> > [  409.384644] Call trace:
-> > [  409.387089]  unthrottle_cfs_rq+0x21c/0x2a8
-> > [  409.391188]  distribute_cfs_runtime+0xf4/0x198
-> > [  409.395634]  sched_cfs_period_timer+0x134/0x240
-> > [  409.400168]  __hrtimer_run_queues+0x10c/0x3c0
-> > [  409.404527]  hrtimer_interrupt+0xd4/0x250
-> > [  409.408539]  tick_handle_oneshot_broadcast+0x17c/0x208
-> > [  409.413683]  sp804_timer_interrupt+0x30/0x40
-> >
-> > If I add the following snippet the issue goes away:
+On Fri, Mar 06, 2020 at 04:53:46PM +0800, Icenowy Zheng wrote:
+> 在 2020-03-06星期五的 09:46 +0100，Enric Balletbo i Serra写道：
+> > Hi Ondrej,
+> > 
+> > On 5/3/20 20:35, Ondřej Jirman wrote:
+> > > Hi,
+> > > 
+> > > On Thu, Mar 05, 2020 at 10:29:33AM -0800, Vasily Khoruzhick wrote:
+> > > > On Thu, Mar 5, 2020 at 7:28 AM Enric Balletbo i Serra
+> > > > <enric.balletbo@collabora.com> wrote:
+> > > > > Hi Vasily,
+> > > > 
+> > > > CC: Icenowy and Ondrej
+> > > > > Would you mind to check which firmware version is running the
+> > > > > anx7688 in
+> > > > > PinePhone, I think should be easy to check with i2c-tools.
+> > > > 
+> > > > Icenowy, Ondrej, can you guys please check anx7688 firmware
+> > > > version?
+> > > 
+> > > i2cget 0 0x28 0x00 w
+> > > 0xaaaa
+> > > 
+> > > i2cget 0 0x28 0x02 w
+> > > 0x7688
+> > > 
+> > > i2cget 0 0x28 0x80 w
+> > > 0x0000
+> > > 
+> > 
+> > Can you check the value for 0x81 too?
+> 
+> root@ice-pinephone [ ~ ] # i2cdump 0 0x28
+> No size specified (using byte-data access)
+> WARNING! This program can confuse your I2C bus, cause data loss and
+> worse!
+> I will probe file /dev/i2c-0, address 0x28, mode byte
+> Continue? [Y/n] 
+>      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+> 00: aa aa 88 76 ac 00 00 00 00 00 00 00 00 00 05 05    ???v?.........??
+> 10: 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    0...............
+> 20: 00 00 00 00 00 00 00 00 00 00 00 24 f2 e4 ff 00    ...........$??..
+> 30: 06 40 00 04 94 11 20 ff ff 03 00 bf ff ff 10 01    ?@.??? ..?.?..??
+> 40: 72 a4 00 09 00 08 05 84 15 40 17 00 00 0a 00 e0    r?.?.????@?..?.?
+> 50: 00 00 00 0a 10 00 e0 df ff ff 00 00 00 10 71 00    ...??.??.....?q.
+> 60: 10 10 04 29 2d 21 10 01 09 13 00 03 e8 13 88 00    ???)-!????.????.
+> 70: 00 19 18 83 16 5c 11 00 ff 00 00 0d 04 38 42 07    .????\?....??8B?
+> 80: 00 00 00 00 00 74 1b 19 44 08 75 00 00 00 00 00    .....t??D?u.....
+> 90: 01 02 00 00 00 00 03 00 ff 30 00 59 01 00 00 00    ??....?..0.Y?...
+> a0: 00 ff fe ff ff 00 00 00 00 00 00 00 00 00 00 02    ..?............?
+> b0: 00 00 00 00 00 00 40 00 28 00 00 00 00 44 08 00    ......@.(....D?.
+> c0: 00 00 00 00 80 00 10 01 0a 10 18 00 00 fd 00 00    ....?.?????..?..
+> d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+> e0: 50 10 08 50 00 02 00 70 00 00 30 10 0b 02 1c 01    P??P.?.p..0?????
+> f0: 00 0b 07 00 94 11 7f 00 00 00 00 00 00 01 0e ff    .??.???......??.
 
-If it's fine for you, I'm going to add this in a new version of the patch
+My values for 0x28 address match this. ^
 
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index e9fd5379bb7e..5e03be046aba 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -4627,11 +4627,17 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
-> >                         break;
-> >         }
-> >
-> > -       assert_list_leaf_cfs_rq(rq);
-> > -
-> >         if (!se)
-> >                 add_nr_running(rq, task_delta);
-> >
+Interesting that it returns different register values for different
+device addresses.
 
-will add similar comment  as for enqueue_task_fair
-
-+ /*
-+ * The cfs_rq_throttled() breaks in the above iteration can result in
-+ * incomplete leaf list maintenance, resulting in triggering the assertion
-+ * below.
-+ */
-
-> > +       for_each_sched_entity(se) {
-> > +               cfs_rq = cfs_rq_of(se);
-> > +
-> > +               list_add_leaf_cfs_rq(cfs_rq);
-> > +       }
->
-> Yes make sense.
->
-> > +
-> > +       assert_list_leaf_cfs_rq(rq);
-> > +
-> >         /* Determine whether we need to wake up potentially idle CPU: */
-> >         if (rq->curr == rq->idle && rq->cfs.nr_running)
-> >                 resched_curr(rq);
+> root@ice-pinephone [ ~ ] # i2cdump 0 0x2c
+> No size specified (using byte-data access)
+> WARNING! This program can confuse your I2C bus, cause data loss and
+> worse!
+> I will probe file /dev/i2c-0, address 0x2c, mode byte
+> Continue? [Y/n] 
+>      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+> 00: 29 1f 88 76 00 ac 11 00 11 20 10 10 00 00 00 00    )??v.??.? ??....
+> 10: 03 00 ff 8f ff 7f 00 00 00 00 05 00 10 0a 0c 00    ?..?.?....?.???.
+> 20: 00 00 00 00 99 06 c0 00 00 00 00 00 00 00 02 00    ....???.......?.
+> 30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+> 40: 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ?...............
+> 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+> 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+> 70: b8 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ?...............
+> 80: 01 25 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ?%..............
+> 90: 0f 0f 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ??..............
+> a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+> b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+> c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+> d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+> 
+> > 
+> > Thanks,
+> >  Enric
+> > 
+> > 
+> > > regards,
+> > > 	o.
+> > > 
+> > > > > Thanks in advance,
+> > > > >  Enric
+> > > > > 
+> > > > > [snip]
+> 
