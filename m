@@ -2,72 +2,150 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8968C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B10FC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E10920848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F3B20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583469460;
-	bh=mxdW1VGI6eXUPnu0t6lHUTLnV9a3rWwkVHnbuxAjglI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lR9SNQO2nnGXPzZZbbzLTDyI7jeUcz2L3LXiqyfVoW6TudUkW3bmSnF2FrraW9NWn
-	 gYLzVtAJhD445vkLrMcBlmp09xO2Nf5YCjtgIzTq0ZoQjF4KBf8Gq0dvabF1SKY2QB
-	 a2q5InjP1XVmjs1rweEVv4k95GB5wrsEtpPIdcMA=
+	s=default; t=1583469672;
+	bh=jMaNzWwGNyJXrXRBCiJpddGoeLBF0dNI2ZOpUjqJRJQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jWVts5QtWfM5gCkfQ7RxsI9XJwMoealoSBNiN4Og/keZIK/YH0EMgAmF/K++d5jbN
+	 G62MNRE+JfqbIWRQiBP6wLx10QUdE6QLeDjeHq0gtHA/hWAPdxHzFy5x5biQ0QX/Pk
+	 Z5Ox1h5wruZyZjCt+lJqozyzDmd1x37tX8CI5/mY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgCFEhj (ORCPT
+        id S1726533AbgCFElL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 23:37:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44912 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 23:41:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbgCFEhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 23:37:39 -0500
-Received: from localhost (unknown [122.178.250.113])
+        id S1726251AbgCFElL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 23:41:11 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCAB02072D;
-        Fri,  6 Mar 2020 04:37:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05C832072D;
+        Fri,  6 Mar 2020 04:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583469458;
-        bh=mxdW1VGI6eXUPnu0t6lHUTLnV9a3rWwkVHnbuxAjglI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZDplQ8u01XZ4eduBCy2TVZfZt5//UWdDbEfHpbXhbOiBg5Qc3rJ/qxs4N8oY2HPNG
-         96D1nmZj3t+aZvQozvhI0I5xTEp2tZZeveezGi53eJ4Bntwmj62p/330QJRcqCa6V8
-         GJY7PcExHTTvP+cnbPJXfdHz/4wjEeQXauYEeEn4=
-Date:   Fri, 6 Mar 2020 10:07:32 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: msm8996: Define parent clocks
- for gcc
-Message-ID: <20200306043732.GB4148@vkoul-mobl>
-References: <20200106080546.3192125-1-bjorn.andersson@linaro.org>
- <20200106080546.3192125-3-bjorn.andersson@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106080546.3192125-3-bjorn.andersson@linaro.org>
+        s=default; t=1583469670;
+        bh=jMaNzWwGNyJXrXRBCiJpddGoeLBF0dNI2ZOpUjqJRJQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mGdiXoYeYvFstIQEK7caAUrHjH8h4/xKtNznaLuGjgXgOFKJjYQw11NyqgTvnY4/M
+         sU4aRm7gnUt4at7lCieJSD8xlulHfvn+rD51LaJwEQWd5XjtV4rrtX+TQA7R24EV2o
+         Gz7apFZYMLJ5s7t0ZDiIIkveSU4NKvblbLuQXVFM=
+Date:   Thu, 5 Mar 2020 20:41:09 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] memcg: optimize memory.numa_stat like memory.stat
+Message-Id: <20200305204109.be23f5053e2368d3b8ccaa06@linux-foundation.org>
+In-Reply-To: <20200304022058.248270-1-shakeelb@google.com>
+References: <20200304022058.248270-1-shakeelb@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-01-20, 00:05, Bjorn Andersson wrote:
-> The CLKREF clocks in GCC are parented by RPM_SMD_LN_BB_CLK, through the
-> CXO2 pad. Wire this up so that this is properly enabled when need by the
-> various PHYs.
+On Tue,  3 Mar 2020 18:20:58 -0800 Shakeel Butt <shakeelb@google.com> wrote:
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Currently reading memory.numa_stat traverses the underlying memcg tree
+> multiple times to accumulate the stats to present the hierarchical view
+> of the memcg tree. However the kernel already maintains the hierarchical
+> view of the stats and use it in memory.stat. Just use the same mechanism
+> in memory.numa_stat as well.
+> 
+> I ran a simple benchmark which reads root_mem_cgroup's memory.numa_stat
+> file in the presense of 10000 memcgs. The results are:
+> 
+> Without the patch:
+> $ time cat /dev/cgroup/memory/memory.numa_stat > /dev/null
+> 
+> real    0m0.700s
+> user    0m0.001s
+> sys     0m0.697s
+> 
+> With the patch:
+> $ time cat /dev/cgroup/memory/memory.numa_stat > /dev/null
+> 
+> real    0m0.001s
+> user    0m0.001s
+> sys     0m0.000s
+> 
 
--- 
-~Vinod
+Can't you do better than that ;)
+
+>
+> +	page_state = tree ? lruvec_page_state : lruvec_page_state_local;
+> ...
+>
+> +	page_state = tree ? memcg_page_state : memcg_page_state_local;
+>
+
+All four of these functions are inlined.  Taking their address in this
+fashion will force the compiler to generate out-of-line copies.
+
+If we do it the uglier-and-maybe-a-bit-slower way:
+
+--- a/mm/memcontrol.c~memcg-optimize-memorynuma_stat-like-memorystat-fix
++++ a/mm/memcontrol.c
+@@ -3658,17 +3658,16 @@ static unsigned long mem_cgroup_node_nr_
+ 	struct lruvec *lruvec = mem_cgroup_lruvec(memcg, NODE_DATA(nid));
+ 	unsigned long nr = 0;
+ 	enum lru_list lru;
+-	unsigned long (*page_state)(struct lruvec *lruvec,
+-				    enum node_stat_item idx);
+ 
+ 	VM_BUG_ON((unsigned)nid >= nr_node_ids);
+ 
+-	page_state = tree ? lruvec_page_state : lruvec_page_state_local;
+-
+ 	for_each_lru(lru) {
+ 		if (!(BIT(lru) & lru_mask))
+ 			continue;
+-		nr += page_state(lruvec, NR_LRU_BASE + lru);
++		if (tree)
++			nr += lruvec_page_state(lruvec, NR_LRU_BASE + lru);
++		else
++			nr += lruvec_page_state_local(lruvec, NR_LRU_BASE + lru);
+ 	}
+ 	return nr;
+ }
+@@ -3679,14 +3678,14 @@ static unsigned long mem_cgroup_nr_lru_p
+ {
+ 	unsigned long nr = 0;
+ 	enum lru_list lru;
+-	unsigned long (*page_state)(struct mem_cgroup *memcg, int idx);
+-
+-	page_state = tree ? memcg_page_state : memcg_page_state_local;
+ 
+ 	for_each_lru(lru) {
+ 		if (!(BIT(lru) & lru_mask))
+ 			continue;
+-		nr += page_state(memcg, NR_LRU_BASE + lru);
++		if (tree)
++			nr += memcg_page_state(memcg, NR_LRU_BASE + lru);
++		else
++			nr += memcg_page_state_local(memcg, NR_LRU_BASE + lru);
+ 	}
+ 	return nr;
+ }
+
+Then we get:
+
+                     text    data     bss     dec     hex filename
+now:               106705   35641    1024  143370   2300a mm/memcontrol.o
+shakeel:           107111   35657    1024  143792   231b0 mm/memcontrol.o
+shakeel+the-above: 106805   35657    1024  143486   2307e mm/memcontrol.o
+
+Which do we prefer?  The 100-byte patch or the 406-byte patch?
