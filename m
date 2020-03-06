@@ -2,112 +2,106 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DAAC10F25
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22091C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB9A2072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:42:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583512922;
-	bh=DStAMwpUFKCJjVHMSmPwm1TPMEHOzo1D99MN2bb/uMo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=VDc0ztdK4p2PhzPGAliuTAuBS7TRPil5V1EKwwMpFHCNkBdaX8bRBM2Kxf5480a65
-	 qterIbmzYIG48ONr7oMgEcb7gA4QDn8uQYjJwH7OoRNrS6xL0LuFleeJrqbpOIUpgt
-	 9YekjeIhUDgx/4j9HDoN7lwBxTZGmwcqToFVoJaI=
+	by mail.kernel.org (Postfix) with ESMTP id ECB7C2073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 16:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgCFQmB (ORCPT
+        id S1726485AbgCFQnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 11:42:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbgCFQmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 11:42:01 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 785572073D;
-        Fri,  6 Mar 2020 16:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583512920;
-        bh=DStAMwpUFKCJjVHMSmPwm1TPMEHOzo1D99MN2bb/uMo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HUXQp/mrePRhxF0ttHn34h8iL7Oylz99OR1/AuNhuBJlq61yPLaR9rz2v4fAa8jxI
-         VVXxEnzdt5ZJWzQRRYwNwo8krFPuY3gxm93QZ/IhyEaYtkbfqFy7PzOKHMwN3Kgriv
-         NLgUqrC1Av/IJ4Pymgcrm9Vhc/n/Jxc5b6ccFVok=
-Date:   Fri, 6 Mar 2020 10:41:57 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-Message-ID: <20200306164157.GA175224@google.com>
+        Fri, 6 Mar 2020 11:43:49 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2516 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726099AbgCFQnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 11:43:49 -0500
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 16B078550CAB53C01BB0;
+        Fri,  6 Mar 2020 16:43:48 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 6 Mar 2020 16:43:47 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 6 Mar 2020
+ 16:43:47 +0000
+Subject: Re: About commit "io: change inX() to have their own IO barrier
+ overrides"
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Sinan Kaya <okaya@kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
+ <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
+ <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
+ <6115fa56-a471-1e9f-edbb-e643fa4e7e11@kernel.org>
+ <7c955142-1fcb-d99e-69e4-1e0d3d9eb8c3@huawei.com>
+ <CAK8P3a0f9hnKGd6GJ8qFZSu+J-n4fY23TCGxQkmgJaxbpre50Q@mail.gmail.com>
+ <90af535f-00ef-c1e3-ec20-aae2bd2a0d88@kernel.org>
+ <CAK8P3a2Grd0JsBNsB19oAxrAFtOdpvjrpGcfeArKe7zD_jrUZw@mail.gmail.com>
+ <ae0a1bf1-948f-7df0-9efb-cd1e94e27d2d@huawei.com>
+ <CAK8P3a2wdCrBP=a8ZypWoC=HyCU3oYYNeCddWM7oT+xM9gTPhw@mail.gmail.com>
+ <182a37c2-7437-b1bd-8b86-5c9ce2e29f00@huawei.com>
+ <CAK8P3a22fEGdVKVVs_40Rc_vs9SQ2ikejwMtFpyR_o+74utWaA@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <15e7158d-184d-9591-89a6-cd6b10ef054d@huawei.com>
+Date:   Fri, 6 Mar 2020 16:43:46 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee591afe-f022-9152-9c6f-34fe9987077e@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CAK8P3a22fEGdVKVVs_40Rc_vs9SQ2ikejwMtFpyR_o+74utWaA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 08:11:41AM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> On 3/6/2020 8:04 AM, Bjorn Helgaas wrote:
-> > On Thu, Mar 05, 2020 at 09:45:46PM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> > > On 3/3/2020 6:36 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > 
-> > > > As per PCI firmware specification r3.2 System Firmware Intermediary
-> > > > (SFI) _OSC and DPC Updates ECR
-> > > > (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
-> > > > Event Handling Implementation Note", page 10, Error Disconnect Recover
-> > > > (EDR) support allows OS to handle error recovery and clearing Error
-> > > > Registers even in FF mode. So create new API pci_aer_raw_clear_status()
-> > > > which allows clearing AER registers without FF mode checks.
-> > > > 
-> > > > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > ---
-> > > >    drivers/pci/pci.h      |  2 ++
-> > > >    drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
-> > > >    2 files changed, 20 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > > index e57e78b619f8..c239e6dd2542 100644
-> > > > --- a/drivers/pci/pci.h
-> > > > +++ b/drivers/pci/pci.h
-> > > > @@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_group;
-> > > >    void pci_aer_clear_fatal_status(struct pci_dev *dev);
-> > > >    void pci_aer_clear_device_status(struct pci_dev *dev);
-> > > >    int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
-> > > > +int pci_aer_raw_clear_status(struct pci_dev *dev);
-> > > >    #else
-> > > >    static inline void pci_no_aer(void) { }
-> > > >    static inline void pci_aer_init(struct pci_dev *d) { }
-> > > > @@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
-> > > >    {
-> > > >    	return -EINVAL;
-> > > >    }
-> > > > +int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
-> > 
-> > > It's missing static specifier. It needs to be fixed. I can fix it in
-> > > next version.  Bjorn, if there is no need for next version, can you
-> > > please make this change?
-> > 
-> > pci_aer_raw_clear_status() is defined in aer.c and called from aer.c
-> > and edr.c, so I do not think it can be static.  Am I missing
-> > something?
+On 06/03/2020 16:29, Arnd Bergmann wrote:
+>> The idea is good, but it would be nice if we just somehow use a common
+>> asm-generic io.h definition directly in logic_pio.c, like:
+>>
+>> asm-generic io.h:
+>>
+>> #ifndef __raw_inw // name?
+>> #define __raw_inw __raw_inw
+>> static inline u16 __raw_inw(unsigned long addr)
+>> {
+>>          u16 val;
+>>
+>>          __io_pbr();
+>>          val = __le16_to_cpu(__raw_readw(addr));
+>>          __io_par(val);
+>>          return val;
+>> }
+>> #endif
+>>
+>> #include <linux/logic_pio.h>
+>>
+>> #ifndef inw
+>> #define inw __raw_inw
+>> #endif
+> Yes, makes sense. Maybe __arch_inw() then? Not great either, but I think
+> that's better than __raw_inw() because __raw_* would sound like it
+> mirrors __raw_readl() that lacks the barriers and byteswaps.
 
-> For kernel configs that does not define CONFIG_PCIEAER, it will create
-> redefinition error since pci.h can be included in many files.
+Right, I had the same concern. And maybe the "arch" prefix is 
+misleading. Just __inw could be ok, and hopefully not conflict with the 
+arch/arm/mach-* definitions.
 
-Oh, right, I thought you were talking about the definition in aer.c.
-The stub in pci.h is missing "inline" as well as "static".
-
-Fixed.
+Thanks,
+John
