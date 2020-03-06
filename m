@@ -2,91 +2,220 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94C6C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C20C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCABC2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71EB20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 11:14:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="gj5gjLuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgCFLOZ (ORCPT
+        id S1727026AbgCFLO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 6 Mar 2020 06:14:27 -0500
+Received: from mail-eopbgr70057.outbound.protection.outlook.com ([40.107.7.57]:53582
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726887AbgCFLOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Mar 2020 06:14:25 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43826 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgCFLOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 06:14:24 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E631BB1D1;
-        Fri,  6 Mar 2020 11:14:21 +0000 (UTC)
-Subject: Re: [PATCH v7 5/7] mm: support both pid and pidfd for process_madvise
-To:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        Christian Brauner <christian@brauner.io>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-6-minchan@kernel.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <14089609-5fb1-b082-716f-c2e129d27c48@suse.cz>
-Date:   Fri, 6 Mar 2020 12:14:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cP9xKJeJpeaPijZ+GxjOmwi0d6jt35BVp5riCXIS6ccZTSBXIxAKlAkFy5pOfpcEwC/wqtDXzevRG/rYEBFQi1tE9tRUCBZRxw/qE/BIHzxuDiEC8Tu0vuRWuU5n3EqoP2VtoFClnEjuc9sqGrHPyuY0Qy++7kPfB2FDHd+PqTWuRYcRlzX63VAAqLV4nZk+YXlh9jRkkYyuNO6bRQ+Hb2tr7i2cUhujI8/TjN0FJACtmUbtI/SFvQW6BEkd68lelZ5GnT8dDVYq/25grxRwOyWpqfQcLpBBAWfowdS07NOoBME70aoavFp9YLt/eR7QHfmppG5otQ4KYZB1BnvVog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S8+3V7iMb9OSo4m3pJoUvP5KFzRWC6DXF4HZJ4qbBHA=;
+ b=HVw2fKj+l+qt84HG6yBP5OP06IpJnY8q0FZHYLI7KkHFVWZtM4Eik8PadEze6VS/l7iZeWybxfPTCrRYmzc9W9QKpnShXePbpw3PRgT0lH8/WmsYRcDpDqUTzjnejiMnhjsT5Cua/1bbY+tlIvEBfIRTBg33GLhm3nynFLN64amG+LRWjckMgjeka4xhpyHBPaMGLvAXdSJhMnlSaXkUxo+njMseyYw2FiDGgshmiUmEjommVw9XipAW6wGTLmFB05ZX1P+snKZXoWZhYoSyLoAFbOIHePBcy8biudW3cOKSpfYVJ65xADj+hyhYGSruoFz2fl0x95lwCnpOge0wDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S8+3V7iMb9OSo4m3pJoUvP5KFzRWC6DXF4HZJ4qbBHA=;
+ b=gj5gjLuSaoESZCKbc0hRG94+lepFoujMOq+L1KxJfCn9sJxE0wGlBRzO4hMV48zmXxI9y6Jqt95FKpt8IEevtB/OH0K6TL69tP2gWKp6hvoS6YDKhG7wCKhhqIFDlrSKi9x4AQ/Z2UpSFHXqy192MPRwmLAVNyl0hKqy79rWnj0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@oss.nxp.com; 
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com (52.134.16.147) by
+ VI1PR0402MB2830.eurprd04.prod.outlook.com (10.175.21.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.14; Fri, 6 Mar 2020 11:14:19 +0000
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::35d0:31bc:91d9:ceb0]) by VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::35d0:31bc:91d9:ceb0%7]) with mapi id 15.20.2793.013; Fri, 6 Mar 2020
+ 11:14:19 +0000
+From:   Daniel Baluta <daniel.baluta@oss.nxp.com>
+To:     pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        kuninori.morimoto.gx@renesas.com, peter.ujfalusi@ti.com,
+        broonie@kernel.org, linux-imx@nxp.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Xiubo.Lee@gmail.com, shengjiu.wang@nxp.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        ranjani.sridharan@linux.intel.com, liam.r.girdwood@linux.intel.com,
+        sound-open-firmware@alsa-project.org,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v2 1/2] dt-bindings: sound: Add FSL CPU DAI bindings
+Date:   Fri,  6 Mar 2020 13:13:52 +0200
+Message-Id: <20200306111353.12906-2-daniel.baluta@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200306111353.12906-1-daniel.baluta@oss.nxp.com>
+References: <20200306111353.12906-1-daniel.baluta@oss.nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR02CA0039.eurprd02.prod.outlook.com
+ (2603:10a6:208:d2::16) To VI1PR0402MB3839.eurprd04.prod.outlook.com
+ (2603:10a6:803:21::19)
 MIME-Version: 1.0
-In-Reply-To: <20200302193630.68771-6-minchan@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-103.ro-buh02.nxp.com (89.37.124.34) by AM0PR02CA0039.eurprd02.prod.outlook.com (2603:10a6:208:d2::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Fri, 6 Mar 2020 11:14:18 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [89.37.124.34]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d1209482-6846-43ce-475a-08d7c1bf83dd
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB2830:|VI1PR0402MB2830:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB2830A4EB8E77E654D9589665B8E30@VI1PR0402MB2830.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0334223192
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(376002)(346002)(396003)(199004)(189003)(966005)(26005)(44832011)(6506007)(7416002)(186003)(956004)(16526019)(8936002)(81156014)(66946007)(66476007)(6486002)(2616005)(316002)(2906002)(81166006)(8676002)(66556008)(478600001)(5660300002)(6512007)(4326008)(6666004)(1076003)(86362001)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2830;H:VI1PR0402MB3839.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: M9oh7IkDmWw8kg3YdgBojOdA5B3/kDsuXZKYBdV/Qsz4kt1dj4FbabewQ7mxSZh4io3FVaI1YXSLqu2JLTh1TbLjLeWEhFXf2fiBixtZkh2ExioRR8FxD/Z3u5CFrkqVTLB8EYEcpmadsUzfLk3jBLCT+T9SKCuGcHSFYH8Hl2Fw1cCCz0F3trocy1flHkF2pl4UWJ4kki4U6nBHojIZ9wmctNrpgRIz6dWPF0vr8tMtK9qmtQiUb3U93+OllbDWQ7KOQhmZUVeZuJXwUoghND+ozUMlQ3gJjvrzWKtWsu7WGbLRB2y/Phu9F3xTAnSdVZnLCETM101bk+wMjr0GH8OTqURtXGPWxPVPDlPkZ6gHkpyyl5ABWjqLjL9BAlLicQeYhBVHwfW8nMWpkmbbhk1wYD3/e0l+bhw27f479knK3/IWz2wYEZHwyVFhPmysrK1M5kxKTUNtmOIhnizsxNs6Az5HYnui0ynLMSAkXuQcBGHv71jsAcxYF4le0d0IJld4BApsnQ2kjPwF9YHnew==
+X-MS-Exchange-AntiSpam-MessageData: +2vMXuXUsmQgEcOwFRD98bpqLKHmrMtsben155sq6/YjzMLjtFZ9U26YnONBJuGVCp0NeTFv2p4uZnviCoH2O00cpS6dXm/7PB7zo3dTxImxr2u8zqPzvrPvQbc2hmt6Kg7UproMUzvgvV80NbQP/Q==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1209482-6846-43ce-475a-08d7c1bf83dd
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2020 11:14:19.4244
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yVZXx/a+Ez6OOysUBGwjxU48Cn3GgwRdQC8P3SzKptnss5gBAFStrxm7PDBLrusBwHzlDrkSLRommNgiuHY35A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2830
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 8:36 PM, Minchan Kim wrote:
-> There is a demand[1] to support pid as well pidfd for process_madvise
-> to reduce unnecessary syscall to get pidfd if the user has control of
-> the target process(ie, they could guarantee the process is not gone
-> or pid is not reused).
-> 
-> This patch aims for supporting both options like waitid(2). So, the
-> syscall is currently,
-> 
-> 	int process_madvise(int which, pid_t pid, void *addr,
-> 		size_t length, int advise, unsigned long flag);
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-This is again halfway between kernel and userspace description, so if we stick
-to userspace then it's:
+Add dt bindings for he Generic FSL CPU DAI.
 
- 	int process_madvise(idtype_t idtype, id_t id, void *addr,
- 		size_t length, int advice, unsigned long flags);
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+---
+ .../devicetree/bindings/sound/fsl,dai.yaml    | 97 +++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,dai.yaml
 
+diff --git a/Documentation/devicetree/bindings/sound/fsl,dai.yaml b/Documentation/devicetree/bindings/sound/fsl,dai.yaml
+new file mode 100644
+index 000000000000..e6426af67d30
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/fsl,dai.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/fsl,dai.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Generic CPU FSL DAI driver for resource management
++
++maintainers:
++  - Daniel Baluta <daniel.baluta@nxp.com>
++
++description: |
++  On platforms with a DSP we need to split the resource handling between
++  Application Processor (AP) and DSP. On platforms where the DSP doesn't
++  have an easy access to resources, the AP will take care of
++  configuring them. Resources handled by this generic driver are: clocks,
++  power domains, pinctrl.
++
++properties:
++  '#sound-dai-cells':
++    const: 0
++
++  compatible:
++    enum:
++      - fsl,esai-dai
++      - fsl,sai-dai
++
++  clocks:
++    oneOf:
++      - items: # for ESAI
++          - description: Core clock used to access registers.
++          - description: ESAI baud clock for ESAI controller used to derive
++                         HCK, SCK and FS.
++          - description: The system clock derived from ahb clock used to derive
++                         HCK, SCK and FS.
++          - description: SPBA clock is required when ESAI is placed as a bus
++                         slave of the SP Bus and when two or more bus masters
++                         (CPU, DMA or DSP) try to access it. This property is
++                         optional depending on SoC design.
++      - items: # for SAI
++          - description: Bus clock for accessing registers
++          - description: Master clock 0 for providing bit clock and frame clock
++          - description: Master clock 1 for providing bit clock and frame clock
++          - description: Master clock 2 for providing bit clock and frame clock
++          - description: Master clock 3 for providing bit clock and frame clock
++
++  clock-names:
++    oneOf:
++      - items: # for ESAI
++          - const: core
++          - const: extal
++          - const: fsys
++          - const: spba
++      - items: # for SAI
++          - const: bus
++          - const: mclk0
++          - const: mclk1
++          - const: mclk2
++          - const: mclk3
++
++  pinctrl-0:
++    description: Should specify pin control groups used for this controller.
++
++  pinctrl-names:
++    const: default
++
++  power-domains:
++    $ref: '/schemas/types.yaml#/definitions/phandle-array'
++    description:
++      List of phandles and PM domain specifiers, as defined by bindings of the
++      PM domain provider.
++
++  fsl,dai-index:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: Physical DAI index, must match the index from topology file
++
++required:
++  - compatible
++  - clocks
++  - clock-names
++  - fsl,dai-index
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx8-clock.h>
++    esai0_port: esai-port {
++         #sound-dai-cells = <0>;
++        compatible = "fsl,esai-dai";
++
++        fsl,dai-index = <0>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&pinctrl_esai0>;
++
++        clocks = <&esai0_lpcg 1>, <&esai0_lpcg 0>,  <&esai0_lpcg 1>,
++            <&clk_dummy>;
++        clock-names = "core", "extal", "fsys", "spba";
++    };
+-- 
+2.17.1
 
-> @which is actually idtype_t for userspace libray and currently,
-> it supports P_PID and P_PIDFD.
-> 
-> [1]  https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
-> 
-> Cc: Christian Brauner <christian@brauner.io>
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-> Suggested-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
-
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
