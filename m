@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC2BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4433C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814442072D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A905A2072D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 17:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCFRod (ORCPT
+        id S1726300AbgCFRof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 12:44:33 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60580 "EHLO mx2.suse.de"
+        Fri, 6 Mar 2020 12:44:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60562 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726866AbgCFRoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 12:44:30 -0500
+        id S1726879AbgCFRod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 12:44:33 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E704DACC2;
-        Fri,  6 Mar 2020 17:44:28 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 8906AACC2;
+        Fri,  6 Mar 2020 17:44:32 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
-        Hu Ziji <huziji@marvell.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Cc:     phil@raspberrypi.com, linux-mmc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
         stefan.wahren@i2se.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v2 06/11] mmc: sdhci: xenon: Use sdhci_set_power_and_voltage()
-Date:   Fri,  6 Mar 2020 18:44:08 +0100
-Message-Id: <20200306174413.20634-7-nsaenzjulienne@suse.de>
+        linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v2 10/11] ARM: dts: bcm2711: Update expgpio's GPIO labels
+Date:   Fri,  6 Mar 2020 18:44:12 +0100
+Message-Id: <20200306174413.20634-11-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200306174413.20634-1-nsaenzjulienne@suse.de>
 References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
@@ -45,52 +44,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sdhci core provides a helper function with the same functionality as
-this controller's set_power() callback. Use it instead.
+The 6th line of the GPIO expander is used to power the board's SD card.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/mmc/host/sdhci-xenon.c | 20 +-------------------
- 1 file changed, 1 insertion(+), 19 deletions(-)
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
-index 1dea1ba66f7b..1e9a7a76f2ba 100644
---- a/drivers/mmc/host/sdhci-xenon.c
-+++ b/drivers/mmc/host/sdhci-xenon.c
-@@ -213,24 +213,6 @@ static void xenon_set_uhs_signaling(struct sdhci_host *host,
- 	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
- }
- 
--static void xenon_set_power(struct sdhci_host *host, unsigned char mode,
--		unsigned short vdd)
--{
--	struct mmc_host *mmc = host->mmc;
--	u8 pwr = host->pwr;
--
--	sdhci_set_power_noreg(host, mode, vdd);
--
--	if (host->pwr == pwr)
--		return;
--
--	if (host->pwr == 0)
--		vdd = 0;
--
--	if (!IS_ERR(mmc->supply.vmmc))
--		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
--}
--
- static void xenon_voltage_switch(struct sdhci_host *host)
- {
- 	/* Wait for 5ms after set 1.8V signal enable bit */
-@@ -240,7 +222,7 @@ static void xenon_voltage_switch(struct sdhci_host *host)
- static const struct sdhci_ops sdhci_xenon_ops = {
- 	.voltage_switch		= xenon_voltage_switch,
- 	.set_clock		= sdhci_set_clock,
--	.set_power		= xenon_set_power,
-+	.set_power		= sdhci_set_power_and_bus_voltage,
- 	.set_bus_width		= sdhci_set_bus_width,
- 	.reset			= xenon_reset,
- 	.set_uhs_signaling	= xenon_set_uhs_signaling,
+diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+index 1d4b589fe233..b0ea8233b636 100644
+--- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
++++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+@@ -68,7 +68,7 @@ expgpio: gpio {
+ 				  "GLOBAL_RESET",
+ 				  "VDD_SD_IO_SEL",
+ 				  "CAM_GPIO",
+-				  "",
++				  "SD_PWR_ON",
+ 				  "";
+ 		status = "okay";
+ 	};
 -- 
 2.25.1
 
