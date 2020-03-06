@@ -2,361 +2,255 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DD4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB09C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF2E207FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50A220848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VuT04Zcx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pqB+BlbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCFADz (ORCPT
+        id S1726498AbgCFAKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 19:03:55 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34484 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgCFADz (ORCPT
+        Thu, 5 Mar 2020 19:10:07 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:52848 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgCFAKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 19:03:55 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z15so298763wrl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 16:03:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UgANqYbsGGPlfxgnPY19cqvlngm9uRL0rxGTl9wSa3M=;
-        b=VuT04ZcxYbJTxOo9c0uCxOSd/ZPzH3MFfT5wf8LjBL7qAdsd5VqtjqapYQFbytIFS3
-         8FLfKHw8xifjDWR+KMLhzi+4VNWcoiciGfvU24+eleH1KnXNnEgqJwtFKTaqZ4HOcf9B
-         EeaSbrqz9uBVN6FAZakZf6jPhupLptJGajDVrjDZDgCYasmLJKBz5VAMAYGuOoLR4AY8
-         lqAcmKd8Sj07+k3sdRiOItoot14LqIBGCd+reJzWu9N4DNLaYhLsDE8JBxOhcPWHM/2u
-         /zGf1ChbrZjey3ij83tzHgCHjXUCCVJ55qoR/zMd3bTXKLyE+w6Q4YWoDZ0KufNNiAE7
-         NV/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UgANqYbsGGPlfxgnPY19cqvlngm9uRL0rxGTl9wSa3M=;
-        b=Jp/z9qP6cvOc6Fxpoif2dmJ5A551QDcYrckCDofl3ik4f8YnPU5nbYRkz1/DkpO9nP
-         Bhwvstggf79J+7Kv8MilMZ44cUhUWHwfBZ7tZrzz0k6/p5Ir6VMah3T2cGF3TwJ02wrs
-         iPYUAF96NsdAcs3oIbd34CIV5tJv+WBk1i68kkyt8fT2cGrSgOFTBiemyNIIGqBPMsFO
-         T55awHE6Pc+RMIMMKi+GBWQ/hzMf6YP4v0sg8m9B3fOMNS85Hd4mt2ljodZ9hRe9yyIO
-         XojWCZg2kdUAl/D//obi2PZvR1NbTK3tYRJR29LMyb3UlIILLgzWawYMmF1khpTBrLI1
-         tF9Q==
-X-Gm-Message-State: ANhLgQ3OY2CDKIlOoUCya/gCQaV/v6y0TWA4FxJUI1KFoBHqaexKmbLV
-        Z8zu7jFlXkdSI7DA8ivEgIECAbCeSBtbK1pKqt/WrA==
-X-Google-Smtp-Source: ADFU+vvPHPhDV3QLGOhnocetmGgOHke+UYjN7s2e+XU2kr0zx9ZpMna3SRiXthU32xwJ0SBdXc4xdQwQEGlhQUTSg7A=
-X-Received: by 2002:adf:e38d:: with SMTP id e13mr416724wrm.133.1583453031144;
- Thu, 05 Mar 2020 16:03:51 -0800 (PST)
+        Thu, 5 Mar 2020 19:10:06 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02608R7r051036;
+        Fri, 6 Mar 2020 00:09:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=1uqopwS4yz6Y2tWDAA94cnLce4rYml9GDblU748neAc=;
+ b=pqB+BlbSWlpVQ4jDAE10GBlREt2L0DJER/JXIFdaVsoyVLf/rJS/yFcKEkQ7gPuDcn4b
+ GCN7PtfXjqVru05ub1vFmBSbKD0WR5B6GfyA0xVn+IL3/s0ytHuhi9XU0XuP5/Z89cfR
+ mXhz8FzFBRnI6ubsUAynZ3GVDE/8+3QB9xWiTsWdsmRf3VZ/Jqay7q2pB+uMcowSHblL
+ rMXdcJQAdN7OkDjz6YfHMaaWLZNJscPhEYFDSvX0mE7VZKrx6Q+GoXoWVxzTNNH7zkgB
+ DtmY9SUFsYwmAKQHDJL8y35JvKvnVfchdNiuPIv/mlYA9FMAi1fm+kHTjTITt+q/rwh8 /A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2yffcv0dk2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 00:09:47 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02606flg176108;
+        Fri, 6 Mar 2020 00:09:47 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2yg1pbwj3v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Mar 2020 00:09:46 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02609iCT032157;
+        Fri, 6 Mar 2020 00:09:44 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Mar 2020 16:09:43 -0800
+Subject: Re: [PATCH] mm/hugetlb: avoid weird message in hugetlb_init
+To:     "Longpeng (Mike)" <longpeng2@huawei.com>
+Cc:     arei.gonglei@huawei.com, huangzhichao@huawei.com,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qian Cai <cai@lca.pw>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200305033014.1152-1-longpeng2@huawei.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <fe9af2ff-01de-93ce-9628-10a54543be07@oracle.com>
+Date:   Thu, 5 Mar 2020 16:09:42 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200226004608.8128-1-trishalfonso@google.com>
-In-Reply-To: <20200226004608.8128-1-trishalfonso@google.com>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Thu, 5 Mar 2020 16:03:39 -0800
-Message-ID: <CAKFsvULd7w21T_nEn8QiofQGMovFBmi94dq2W_-DOjxf5oD-=w@mail.gmail.com>
-Subject: Re: [PATCH] UML: add support for KASAN under x86_64
-To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Johannes Berg <johannes@sipsolutions.net>
-Cc:     kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200305033014.1152-1-longpeng2@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9551 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9551 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
+ adultscore=0 suspectscore=0 spamscore=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003050137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 4:46 PM Patricia Alfonso
-<trishalfonso@google.com> wrote:
->
-> Make KASAN run on User Mode Linux on x86_64.
->
-> Depends on Constructor support in UML - "[RFC PATCH] um:
-> implement CONFIG_CONSTRUCTORS for modules"
-> (https://patchwork.ozlabs.org/patch/1234551/) by Johannes Berg.
->
-> The location of the KASAN shadow memory, starting at
-> KASAN_SHADOW_OFFSET, can be configured using the
-> KASAN_SHADOW_OFFSET option. UML uses roughly 18TB of address
-> space, and KASAN requires 1/8th of this. The default location of
-> this offset is 0x7fff8000 as suggested by Dmitry Vyukov. There is
-> usually enough free space at this location; however, it is a config
-> option so that it can be easily changed if needed.
->
-> The UML-specific KASAN initializer uses mmap to map
-> the roughly 2.25TB of shadow memory to the location defined by
-> KASAN_SHADOW_OFFSET. kasan_init() utilizes constructors to initialize
-> KASAN before main().
->
-> Disable stack instrumentation on UML via KASAN_STACK config option to
-> avoid false positive KASAN reports.
->
-> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> ---
+On 3/4/20 7:30 PM, Longpeng(Mike) wrote:
+> From: Longpeng <longpeng2@huawei.com>
+> 
+> Some architectures(e.g. x86,risv) doesn't add 2M-hstate by default,
+> so if we add 'default_hugepagesz=2M' but without 'hugepagesz=2M' in
+> cmdline, we'll get a message as follow:
+> "HugeTLB: unsupported default_hugepagesz 2097152. Reverting to 2097152"
 
-Hi all, I just want to bump this so we can get all the comments while
-this is still fresh in everyone's minds. I would love if some UML
-maintainers could give their thoughts!
+Yes, that is a weird message that should not be printed.  Thanks for
+pointing out the issue!
 
-Thanks,
-Patricia
+> As architecture-specific HPAGE_SIZE hstate should be supported by
+> default, we can avoid this weird message by add it if we hadn't yet.
 
->  arch/um/Kconfig                  | 13 +++++++++++++
->  arch/um/Makefile                 |  6 ++++++
->  arch/um/include/asm/common.lds.S |  1 +
->  arch/um/include/asm/kasan.h      | 32 ++++++++++++++++++++++++++++++++
->  arch/um/kernel/dyn.lds.S         |  5 ++++-
->  arch/um/kernel/mem.c             | 18 ++++++++++++++++++
->  arch/um/os-Linux/mem.c           | 22 ++++++++++++++++++++++
->  arch/um/os-Linux/user_syms.c     |  4 ++--
->  arch/x86/um/Makefile             |  3 ++-
->  arch/x86/um/vdso/Makefile        |  3 +++
->  lib/Kconfig.kasan                |  2 +-
->  11 files changed, 104 insertions(+), 5 deletions(-)
->  create mode 100644 arch/um/include/asm/kasan.h
->
-> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-> index 0917f8443c28..fb2ad1fb05fd 100644
-> --- a/arch/um/Kconfig
-> +++ b/arch/um/Kconfig
-> @@ -8,6 +8,7 @@ config UML
->         select ARCH_HAS_KCOV
->         select ARCH_NO_PREEMPT
->         select HAVE_ARCH_AUDITSYSCALL
-> +       select HAVE_ARCH_KASAN if X86_64
->         select HAVE_ARCH_SECCOMP_FILTER
->         select HAVE_ASM_MODVERSIONS
->         select HAVE_UID16
-> @@ -200,6 +201,18 @@ config UML_TIME_TRAVEL_SUPPORT
->
->           It is safe to say Y, but you probably don't need this.
->
-> +config KASAN_SHADOW_OFFSET
-> +       hex
-> +       depends on KASAN
-> +       default 0x7fff8000
-> +       help
-> +         This is the offset at which the ~2.25TB of shadow memory is
-> +         mapped and used by KASAN for memory debugging. This can be any
-> +         address that has at least KASAN_SHADOW_SIZE(total address space divided
-> +         by 8) amount of space so that the KASAN shadow memory does not conflict
-> +         with anything. The default is 0x7fff8000, as it fits into immediate of
-> +         most instructions.
-> +
->  endmenu
->
->  source "arch/um/drivers/Kconfig"
-> diff --git a/arch/um/Makefile b/arch/um/Makefile
-> index d2daa206872d..28fe7a9a1858 100644
-> --- a/arch/um/Makefile
-> +++ b/arch/um/Makefile
-> @@ -75,6 +75,12 @@ USER_CFLAGS = $(patsubst $(KERNEL_DEFINES),,$(patsubst -I%,,$(KBUILD_CFLAGS))) \
->                 -D_FILE_OFFSET_BITS=64 -idirafter $(srctree)/include \
->                 -idirafter $(objtree)/include -D__KERNEL__ -D__UM_HOST__
->
-> +# Kernel config options are not included in USER_CFLAGS, but the option for KASAN
-> +# should be included if the KASAN config option was set.
-> +ifdef CONFIG_KASAN
-> +       USER_CFLAGS+=-DCONFIG_KASAN=y
-> +endif
-> +
->  #This will adjust *FLAGS accordingly to the platform.
->  include $(ARCH_DIR)/Makefile-os-$(OS)
->
-> diff --git a/arch/um/include/asm/common.lds.S b/arch/um/include/asm/common.lds.S
-> index eca6c452a41b..731f8c8422a2 100644
-> --- a/arch/um/include/asm/common.lds.S
-> +++ b/arch/um/include/asm/common.lds.S
-> @@ -83,6 +83,7 @@
->    }
->    .init_array : {
->         __init_array_start = .;
-> +       *(.kasan_init)
->         *(.init_array)
->         __init_array_end = .;
->    }
-> diff --git a/arch/um/include/asm/kasan.h b/arch/um/include/asm/kasan.h
-> new file mode 100644
-> index 000000000000..2b81e7bcd4af
-> --- /dev/null
-> +++ b/arch/um/include/asm/kasan.h
-> @@ -0,0 +1,32 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ASM_UM_KASAN_H
-> +#define __ASM_UM_KASAN_H
-> +
-> +#include <linux/init.h>
-> +#include <linux/const.h>
-> +
-> +#define KASAN_SHADOW_OFFSET _AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
-> +
-> +/* used in kasan_mem_to_shadow to divide by 8 */
-> +#define KASAN_SHADOW_SCALE_SHIFT 3
-> +
-> +#ifdef CONFIG_X86_64
-> +#define KASAN_HOST_USER_SPACE_END_ADDR 0x00007fffffffffffUL
-> +/* KASAN_SHADOW_SIZE is the size of total address space divided by 8 */
-> +#define KASAN_SHADOW_SIZE ((KASAN_HOST_USER_SPACE_END_ADDR + 1) >> \
-> +                       KASAN_SHADOW_SCALE_SHIFT)
-> +#else
-> +#error "KASAN_SHADOW_SIZE is not defined for this sub-architecture"
-> +#endif /* CONFIG_X86_64 */
-> +
-> +#define KASAN_SHADOW_START (KASAN_SHADOW_OFFSET)
-> +#define KASAN_SHADOW_END (KASAN_SHADOW_START + KASAN_SHADOW_SIZE)
-> +
-> +#ifdef CONFIG_KASAN
-> +void kasan_init(void);
-> +void kasan_map_memory(void *start, unsigned long len);
-> +#else
-> +static inline void kasan_init(void) { }
-> +#endif /* CONFIG_KASAN */
-> +
-> +#endif /* __ASM_UM_KASAN_H */
-> diff --git a/arch/um/kernel/dyn.lds.S b/arch/um/kernel/dyn.lds.S
-> index f5001481010c..d91bdb2c3143 100644
-> --- a/arch/um/kernel/dyn.lds.S
-> +++ b/arch/um/kernel/dyn.lds.S
-> @@ -103,7 +103,10 @@ SECTIONS
->       be empty, which isn't pretty.  */
->    . = ALIGN(32 / 8);
->    .preinit_array     : { *(.preinit_array) }
-> -  .init_array     : { *(.init_array) }
-> +  .init_array     : {
-> +    *(.kasan_init)
-> +    *(.init_array)
-> +  }
->    .fini_array     : { *(.fini_array) }
->    .data           : {
->      INIT_TASK_DATA(KERNEL_STACK_SIZE)
-> diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
-> index 30885d0b94ac..7b0d028aa079 100644
-> --- a/arch/um/kernel/mem.c
-> +++ b/arch/um/kernel/mem.c
-> @@ -18,6 +18,24 @@
->  #include <kern_util.h>
->  #include <mem_user.h>
->  #include <os.h>
-> +#include <linux/sched/task.h>
-> +
-> +#ifdef CONFIG_KASAN
-> +void kasan_init(void)
-> +{
-> +       /*
-> +        * kasan_map_memory will map all of the required address space and
-> +        * the host machine will allocate physical memory as necessary.
-> +        */
-> +       kasan_map_memory((void *)KASAN_SHADOW_START, KASAN_SHADOW_SIZE);
-> +       init_task.kasan_depth = 0;
-> +       os_info("KernelAddressSanitizer initialized\n");
-> +}
-> +
-> +static void (*kasan_init_ptr)(void)
-> +__section(.kasan_init) __used
-> += kasan_init;
-> +#endif
->
->  /* allocated in paging_init, zeroed in mem_init, and unchanged thereafter */
->  unsigned long *empty_zero_page = NULL;
-> diff --git a/arch/um/os-Linux/mem.c b/arch/um/os-Linux/mem.c
-> index 3c1b77474d2d..8530b2e08604 100644
-> --- a/arch/um/os-Linux/mem.c
-> +++ b/arch/um/os-Linux/mem.c
-> @@ -17,6 +17,28 @@
->  #include <init.h>
->  #include <os.h>
->
-> +/*
-> + * kasan_map_memory - maps memory from @start with a size of @len.
-> + * The allocated memory is filled with zeroes upon success.
-> + * @start: the start address of the memory to be mapped
-> + * @len: the length of the memory to be mapped
-> + *
-> + * This function is used to map shadow memory for KASAN in uml
-> + */
-> +void kasan_map_memory(void *start, size_t len)
-> +{
-> +       if (mmap(start,
-> +                len,
-> +                PROT_READ|PROT_WRITE,
-> +                MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE|MAP_NORESERVE,
-> +                -1,
-> +                0) == MAP_FAILED) {
-> +               os_info("Couldn't allocate shadow memory: %s\n.",
-> +                       strerror(errno));
-> +               exit(1);
-> +       }
-> +}
-> +
->  /* Set by make_tempfile() during early boot. */
->  static char *tempdir = NULL;
->
-> diff --git a/arch/um/os-Linux/user_syms.c b/arch/um/os-Linux/user_syms.c
-> index 715594fe5719..cb667c9225ab 100644
-> --- a/arch/um/os-Linux/user_syms.c
-> +++ b/arch/um/os-Linux/user_syms.c
-> @@ -27,10 +27,10 @@ EXPORT_SYMBOL(strstr);
->  #ifndef __x86_64__
->  extern void *memcpy(void *, const void *, size_t);
->  EXPORT_SYMBOL(memcpy);
-> -#endif
-> -
->  EXPORT_SYMBOL(memmove);
->  EXPORT_SYMBOL(memset);
-> +#endif
-> +
->  EXPORT_SYMBOL(printf);
->
->  /* Here, instead, I can provide a fake prototype. Yes, someone cares: genksyms.
-> diff --git a/arch/x86/um/Makefile b/arch/x86/um/Makefile
-> index 33c51c064c77..7dbd76c546fe 100644
-> --- a/arch/x86/um/Makefile
-> +++ b/arch/x86/um/Makefile
-> @@ -26,7 +26,8 @@ else
->
->  obj-y += syscalls_64.o vdso/
->
-> -subarch-y = ../lib/csum-partial_64.o ../lib/memcpy_64.o ../entry/thunk_64.o
-> +subarch-y = ../lib/csum-partial_64.o ../lib/memcpy_64.o ../entry/thunk_64.o \
-> +       ../lib/memmove_64.o ../lib/memset_64.o
->
->  endif
->
-> diff --git a/arch/x86/um/vdso/Makefile b/arch/x86/um/vdso/Makefile
-> index 0caddd6acb22..450efa0fb694 100644
-> --- a/arch/x86/um/vdso/Makefile
-> +++ b/arch/x86/um/vdso/Makefile
-> @@ -3,6 +3,9 @@
->  # Building vDSO images for x86.
->  #
->
-> +# do not instrument on vdso because KASAN is not compatible with user mode
-> +KASAN_SANITIZE                 := n
-> +
->  # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
->  KCOV_INSTRUMENT                := n
->
-> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-> index 81f5464ea9e1..5b54f3c9a741 100644
-> --- a/lib/Kconfig.kasan
-> +++ b/lib/Kconfig.kasan
-> @@ -125,7 +125,7 @@ config KASAN_STACK_ENABLE
->
->  config KASAN_STACK
->         int
-> -       default 1 if KASAN_STACK_ENABLE || CC_IS_GCC
-> +       default 1 if (KASAN_STACK_ENABLE || CC_IS_GCC) && !UML
->         default 0
->
->  config KASAN_S390_4_LEVEL_PAGING
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
+As you have discovered, some of the hugetlb size setup is done in
+architecture specific code.  And other code is architecture independent.
+
+The code which verifies huge page sizes (hugepagesz=) is architecture
+specific.  The code which reads default_hugepagesz= is architecture
+independent.  In fact, no verification of the 'default_hugepagesz' value
+is made when value is read from the command line.  The value is verified
+later after command line processing.  Current code considers the value
+'valid' if it corresponds to a hstate previously setup by architecture
+specific code.  If architecture specific code did not set up a corresponding 
+hstate, an error like that above is reported.
+
+Some architectures such as arm, powerpc and sparc set up hstates for all
+supported sizes.  Other architectures such as riscv, s390 and x86 only
+set up hstates for those requested on the command line with hugepagesz=.
+Depending on config options, x86 and riscv may or may not set up PUD_SIZE
+hstates.
+
+Therefore, on s390 and x86 and riscv (with certain config options) it
+would be possible to specify a valid huge page size (PUD_SIZE) with
+default_hugepagesz=, and have that value be rejected.  This is because
+the architecture specific code will not set up that hstate by default.
+
+The code you have proposed handles the case where the value specified
+by default_hugepagesz= coresponds to HPAGE_SIZE.  That is because the
+architecture independent code will set up the hstate for HPAGE_SIZE.
+HPAGE_SIZE is the only valid huge page size known by the architecture
+independent code.
+
+I am thinking we may want to have a more generic solution by allowing
+the default_hugepagesz= processing code to verify the passed size and
+set up the corresponding hstate.  This would require more cooperation
+between architecture specific and independent code.  This could be
+accomplished with a simple arch_hugetlb_valid_size() routine provided
+by the architectures.  Below is an untested patch to add such support
+to the architecture independent code and x86.  Other architectures would
+be similar.
+
+In addition, with architectures providing arch_hugetlb_valid_size() it
+should be possible to have a common routine in architecture independent
+code to read/process hugepagesz= command line arguments.
+
+Of course, another approach would be to simply require ALL architectures
+to set up hstates for ALL supported huge page sizes.
+
+Thoughts?
+-- 
+Mike Kravetz
+
+diff --git a/arch/x86/include/asm/hugetlb.h b/arch/x86/include/asm/hugetlb.h
+index f65cfb48cfdd..dc00c3df1f22 100644
+--- a/arch/x86/include/asm/hugetlb.h
++++ b/arch/x86/include/asm/hugetlb.h
+@@ -7,6 +7,9 @@
+ 
+ #define hugepages_supported() boot_cpu_has(X86_FEATURE_PSE)
+ 
++#define __HAVE_ARCH_HUGETLB_VALID_SIZE
++extern bool __init arch_hugetlb_valid_size(unsigned long size);
++
+ static inline int is_hugepage_only_range(struct mm_struct *mm,
+ 					 unsigned long addr,
+ 					 unsigned long len) {
+diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
+index 5bfd5aef5378..1c4372bfe782 100644
+--- a/arch/x86/mm/hugetlbpage.c
++++ b/arch/x86/mm/hugetlbpage.c
+@@ -181,13 +181,22 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+ #endif /* CONFIG_HUGETLB_PAGE */
+ 
+ #ifdef CONFIG_X86_64
++bool __init arch_hugetlb_valid_size(unsigned long size)
++{
++	if (size == PMD_SIZE)
++		return true;
++	else if (size == PUD_SIZE && boot_cpu_has(X86_FEATURE_GBPAGES))
++		return true;
++	else
++		return false;
++}
++
+ static __init int setup_hugepagesz(char *opt)
+ {
+ 	unsigned long ps = memparse(opt, &opt);
+-	if (ps == PMD_SIZE) {
+-		hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
+-	} else if (ps == PUD_SIZE && boot_cpu_has(X86_FEATURE_GBPAGES)) {
+-		hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
++
++	if (arch_hugetlb_valid_size(ps)) {
++		hugetlb_add_hstate(ilog2(ps) - PAGE_SHIFT);
+ 	} else {
+ 		hugetlb_bad_size();
+ 		printk(KERN_ERR "hugepagesz: Unsupported page size %lu M\n",
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 50480d16bd33..822d0d8559c7 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -678,6 +678,13 @@ static inline spinlock_t *huge_pte_lockptr(struct hstate *h,
+ 	return &mm->page_table_lock;
+ }
+ 
++#ifndef __HAVE_ARCH_HUGETLB_VALID_SIZE
++static inline bool arch_hugetlb_valid_size(unsigned long size)
++{
++	return (size == HPAGE_SIZE);
++}
++#endif
++
+ #ifndef hugepages_supported
+ /*
+  * Some platform decide whether they support huge pages at boot
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 7fb31750e670..fc3f0f1e3a27 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3078,17 +3078,13 @@ static int __init hugetlb_init(void)
+ 	if (!hugepages_supported())
+ 		return 0;
+ 
++	/* if default_hstate_size != 0, corresponding hstate was added */
+ 	if (!size_to_hstate(default_hstate_size)) {
+-		if (default_hstate_size != 0) {
+-			pr_err("HugeTLB: unsupported default_hugepagesz %lu. Reverting to %lu\n",
+-			       default_hstate_size, HPAGE_SIZE);
+-		}
+-
+ 		default_hstate_size = HPAGE_SIZE;
+-		if (!size_to_hstate(default_hstate_size))
+-			hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
++		hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
+ 	}
+ 	default_hstate_idx = hstate_index(size_to_hstate(default_hstate_size));
++
+ 	if (default_hstate_max_huge_pages) {
+ 		if (!default_hstate.max_huge_pages)
+ 			default_hstate.max_huge_pages = default_hstate_max_huge_pages;
+@@ -3195,7 +3191,15 @@ __setup("hugepages=", hugetlb_nrpages_setup);
+ 
+ static int __init hugetlb_default_setup(char *s)
+ {
+-	default_hstate_size = memparse(s, &s);
++	unsigned long size = memparse(s, &s);
++
++	if (arch_hugetlb_valid_size(size)) {
++		default_hstate_size = size;
++		hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
++	} else {
++		pr_err("HugeTLB: unsupported default_hugepagesz %lu.\n", size);
++		hugetlb_bad_size();
++	}
+ 	return 1;
+ }
+ __setup("default_hugepagesz=", hugetlb_default_setup);
