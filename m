@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AD5C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E717DC10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA1F2084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CB420848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 14:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbgCFOn5 (ORCPT
+        id S1726973AbgCFOmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 09:43:57 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53755 "EHLO
+        Fri, 6 Mar 2020 09:42:08 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53735 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgCFOmL (ORCPT
+        with ESMTP id S1726307AbgCFOmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 09:42:11 -0500
+        Fri, 6 Mar 2020 09:42:08 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAEAx-0006IS-3n; Fri, 06 Mar 2020 15:42:07 +0100
+        id 1jAEAu-0006HH-3R; Fri, 06 Mar 2020 15:42:04 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C52A71C21D5;
-        Fri,  6 Mar 2020 15:42:05 +0100 (CET)
-Date:   Fri, 06 Mar 2020 14:42:05 -0000
-From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BBCC91C21D3;
+        Fri,  6 Mar 2020 15:42:03 +0100 (CET)
+Date:   Fri, 06 Mar 2020 14:42:03 -0000
+From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Fix reordering of enqueue/dequeue_task_fair()
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+Subject: [tip: sched/core] thermal/cpu-cooling, sched/core: Move the
+ arch_set_thermal_pressure() API to generic scheduler code
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200306084208.12583-1-vincent.guittot@linaro.org>
-References: <20200306084208.12583-1-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158350572554.28353.7875541187781600400.tip-bot2@tip-bot2>
+Message-ID: <158350572343.28353.7289666129109152780.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,83 +56,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     5ab297bab984310267734dfbcc8104566658ebef
-Gitweb:        https://git.kernel.org/tip/5ab297bab984310267734dfbcc8104566658ebef
-Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Fri, 06 Mar 2020 09:42:08 +01:00
+Commit-ID:     14533a16c46db70b8a75eda8fa633c25ac446d81
+Gitweb:        https://git.kernel.org/tip/14533a16c46db70b8a75eda8fa633c25ac446d81
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Fri, 06 Mar 2020 14:26:31 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 06 Mar 2020 12:57:25 +01:00
+CommitterDate: Fri, 06 Mar 2020 14:26:31 +01:00
 
-sched/fair: Fix reordering of enqueue/dequeue_task_fair()
+thermal/cpu-cooling, sched/core: Move the arch_set_thermal_pressure() API to generic scheduler code
 
-Even when a cgroup is throttled, the group se of a child cgroup can still
-be enqueued and its gse->on_rq stays true. When a task is enqueued on such
-child, we still have to update the load_avg and increase
-h_nr_running of the throttled cfs. Nevertheless, the 1st
-for_each_sched_entity() loop is skipped because of gse->on_rq == true and the
-2nd loop because the cfs is throttled whereas we have to update both
-load_avg with the old h_nr_running and increase h_nr_running in such case.
+drivers/base/arch_topology.c is only built if CONFIG_GENERIC_ARCH_TOPOLOGY=y,
+resulting in such build failures:
 
-The same sequence can happen during dequeue when se moves to parent before
-breaking in the 1st loop.
+  cpufreq_cooling.c:(.text+0x1e7): undefined reference to `arch_set_thermal_pressure'
 
-Note that the update of load_avg will effectively happen only once in order
-to sync up to the throttled time. Next call for updating load_avg will stop
-early because the clock stays unchanged.
+Move it to sched/core.c instead, and keep it enabled on x86 despite
+us not having a arch_scale_thermal_pressure() facility there, to
+build-test this thing.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Thara Gopinath <thara.gopinath@linaro.org>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Fixes: 6d4d22468dae ("sched/fair: Reorder enqueue/dequeue_task_fair path")
-Link: https://lkml.kernel.org/r/20200306084208.12583-1-vincent.guittot@linaro.org
 ---
- kernel/sched/fair.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/base/arch_topology.c | 11 -----------
+ kernel/sched/core.c          | 11 +++++++++++
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 54bd628..1dea855 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5460,16 +5460,16 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 68dfa49..6119e11 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -42,17 +42,6 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
+ 	per_cpu(cpu_scale, cpu) = capacity;
+ }
  
--		/* end evaluation on encountering a throttled cfs_rq */
--		if (cfs_rq_throttled(cfs_rq))
--			goto enqueue_throttle;
+-DEFINE_PER_CPU(unsigned long, thermal_pressure);
 -
- 		update_load_avg(cfs_rq, se, UPDATE_TG);
- 		se_update_runnable(se);
- 		update_cfs_group(se);
- 
- 		cfs_rq->h_nr_running++;
- 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
-+
-+		/* end evaluation on encountering a throttled cfs_rq */
-+		if (cfs_rq_throttled(cfs_rq))
-+			goto enqueue_throttle;
- 	}
- 
- enqueue_throttle:
-@@ -5558,16 +5558,17 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
- 
--		/* end evaluation on encountering a throttled cfs_rq */
--		if (cfs_rq_throttled(cfs_rq))
--			goto dequeue_throttle;
+-void arch_set_thermal_pressure(struct cpumask *cpus,
+-			       unsigned long th_pressure)
+-{
+-	int cpu;
 -
- 		update_load_avg(cfs_rq, se, UPDATE_TG);
- 		se_update_runnable(se);
- 		update_cfs_group(se);
+-	for_each_cpu(cpu, cpus)
+-		WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
+-}
+-
+ static ssize_t cpu_capacity_show(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 char *buf)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 4d76df3..978bf6f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3576,6 +3576,17 @@ unsigned long long task_sched_runtime(struct task_struct *p)
+ 	return ns;
+ }
  
- 		cfs_rq->h_nr_running--;
- 		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
++DEFINE_PER_CPU(unsigned long, thermal_pressure);
 +
-+		/* end evaluation on encountering a throttled cfs_rq */
-+		if (cfs_rq_throttled(cfs_rq))
-+			goto dequeue_throttle;
++void arch_set_thermal_pressure(struct cpumask *cpus,
++			       unsigned long th_pressure)
++{
++	int cpu;
 +
- 	}
- 
- dequeue_throttle:
++	for_each_cpu(cpu, cpus)
++		WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
++}
++
+ /*
+  * This function gets called by the timer code, with HZ frequency.
+  * We call it with interrupts disabled.
