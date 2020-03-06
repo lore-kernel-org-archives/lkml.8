@@ -2,186 +2,100 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F31C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518E0C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DFD0206D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE0D20714
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:06:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="iJDRs8kl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgCFVFq (ORCPT
+        id S1726892AbgCFVGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 16:05:46 -0500
-Received: from mga07.intel.com ([134.134.136.100]:11923 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgCFVFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 16:05:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 13:05:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="275688904"
-Received: from jrbond-mobl.amr.corp.intel.com (HELO [10.254.11.58]) ([10.254.11.58])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Mar 2020 13:05:43 -0800
-Subject: Re: [PATCH 1/8] soundwire: bus_type: add master_device/driver support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20200227223206.5020-1-pierre-louis.bossart@linux.intel.com>
- <20200227223206.5020-2-pierre-louis.bossart@linux.intel.com>
- <20200303054136.GP4148@vkoul-mobl>
- <8a04eda6-cbcf-582f-c229-5d6e4557344b@linux.intel.com>
- <20200304095312.GT4148@vkoul-mobl>
- <05dbe43c-abf8-9d5a-d808-35bf4defe4ba@linux.intel.com>
- <20200305063646.GW4148@vkoul-mobl>
- <eb30ac49-788f-b856-6fcf-84ae580eb3c8@linux.intel.com>
- <20200306050115.GC4148@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <4fabb135-6fbb-106f-44fd-8155ea716c00@linux.intel.com>
-Date:   Fri, 6 Mar 2020 09:40:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 6 Mar 2020 16:06:41 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:17652 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCFVGk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 16:06:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583528798;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=bK/BibRyT71/ND5TtK3+5pHcq6COywL/GI3c3CyuBQc=;
+        b=iJDRs8klmiuv3d1W2mzhmi/+sX0bFaX3HU/Dr/Fx6o6G0xt1KvQTa7+00QOAllDVlI
+        tL5pUV14WiXsgRz62RnL1s0Nk8nGlh8yLWmdex9r/q74rq3te5/A9SK8MDvSRiCwk53r
+        0I3XM9iESjeONXl9t/uC2j1n4XsYSL0y74HmF9lbcf0YqM2TnQAYLZqYl9qZu9MS53tA
+        uWsi2KZssqflcDGevkJVONgbcj9bLOcLwifKOji57itYtZDQdqgT7HGVrmnWTuVrpZPk
+        YxHBr2XmLFQJQd+F6aZidMreDafnLrqHDPGiO/vaP9M+fWe6WhN2R9xWE4poRpKQrWj2
+        eJMA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6GQjzrz4="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw26L6aaJc
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 6 Mar 2020 22:06:36 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        Alex Smith <alex.smith@imgtec.com>
+Subject: [PATCH v7 1/3] MIPS: DTS: CI20: add DT node for IR sensor
+Date:   Fri,  6 Mar 2020 22:06:31 +0100
+Message-Id: <4bc5f062ca9d51457dec245cf8e11850c67207a9.1583528793.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1583528793.git.hns@goldelico.com>
+References: <cover.1583528793.git.hns@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <20200306050115.GC4148@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alex Smith <alex.smith@imgtec.com>
 
+The infrared sensor on the CI20 board is connected to a GPIO and can
+be operated by using the gpio-ir-recv driver. Add a DT node for the
+sensor to allow that driver to be used.
 
->>> Why do you need a extra driver for this. Do you have another set of
->>> device object and driver for DSP code? But you do manage that, right?
->>> I am proposing to simplify the device model here and have only one
->>> device (SOF PCI) and driver (SOF PCI driver), which is created by actual
->>> bus (PCI here) as you have in rest of the driver like HDA, DSP etc.
->>>
->>> I have already recommended is to make the int-sdw a module which is
->>> invoked by SOF PCI driver code (thereby all code uses SOF PCI device and
->>> SOF PCI driver) directly. The DSP in my time for skl was a separate
->>> module but used the parent objects.
->>>
->>> The SOF sdw init (the place where sdw routines are invoked after DSP
->>> load) can call sdw_probe and startup. Based on DSP sequencing you can
->>> call these functions directly without waiting for extra device to be
->>> probed etc.
->>>
->>> I feel your flows will be greatly simplified as a result of this.
->>
->> Not at all, no. This is not a simplification but an extremely invasive
->> proposal.
->>
->> The parent-child relationship is extremely useful for power management, and
->> guarantees that the PCI device remains on while one or more of the masters
->> are used, and conversely can suspend when all links are idle. I currently
->> don't need to do anything, it's all taken care of by the framework.
->>
->> If I have to do all the power management at the PCI device level, then I
->> will need to keep track of which links are currently active. All these links
->> are used independently, so it's racy as hell to keep track of the usage when
->> the pm framework already does so quite elegantly. You really want to use the
->> pm_runtime_get/put refcount for each master device, not manage them from the
->> PCI level.
-> 
-> Not at all, you still can call pm_runtime_get/put() calls in sdw module
-> for PCI device. That doesn't change at all.
-> 
-> Only change is for suspend/resume you have callbacks from PCI driver
-> rather than pm core.
-There are two other related issues that you didn't mention.
+Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-the ASoC layer does require a driver with a 'name' for the components 
-registered with the master device. So if you don't have a driver for the 
-master device, the DAIs will be associated with the PCI device.
-
-But the ASoC core does make pm_runtime calls on its own,
-
-soc_pcm_open(struct snd_pcm_substream *substream)
-{
-...
-	for_each_rtd_components(rtd, i, component)
-		pm_runtime_get_sync(component->dev);
-
-and if the device that's associated with the DAI is the PCI device, then 
-that will not result in the relevant master IP being activated, only the 
-PCI device refcount will be increased - meaning there is no hook that 
-would tell the PCI layer to turn on a specific link.
-
-What you are recommending would be an all-or-nothing solution with all 
-links on or all links off, which beats the purpose of having independent 
-link-level power management.
-
-Given these limitations, I am not willing to change directions on power 
-management. We have a tried-and-tested solution, backed by months of 
-validation, and you are sending down an unproven path with your suggestion.
-
-So what are the options?
-
-a) stay with the current approach and platform devices. Greg's vetoed 
-this so we can move to the next one.
-
-b) use a solution similar to what we suggested back in October, and very 
-similar to the GreyBus host device, which creates a master device but 
-did not require a full-blown master_driver, it only uses the name and 
-pm_ops fields of the raw driver structure, which is all we really need.
-
-the basic usage from the PCI layer was
-
-struct driver {
-    .name = "my-driver",
-    .pm_ops = &my_ops,
-} my_driver;
-
-md = sdw_master_device_add(&my_driver, parent, fw_node, link_id)
-
-and all the rest is platform-specific/optional.
-
-sdw_intel_master_device_init(md);
-      allocations and call to sdw_bus_master_add()
-sdw_intel_master_device_startup(md);
-      hardware enablement
-sdw_intel_master_device_wake_process(md).
-      deal with wake information coming from PCI layer.
-
-We liked this solution since it was as simple as can be, but you 
-rejected it on the grounds that the probe/init should be handled "by the 
-core" to quote your own words, but looking back it may be the best 
-solution for all. There is no additional overhead, and it deals with 
-both the ALSA name requirement and lets us us power management. If you 
-don't have power management at the link level you don't have to use the 
-pm_ops.
-
-c) use the proposal in this patch with a more elaborate driver handling. 
-Yes it requires a full-blown driver with callbacks but it addresses your 
-prior feedback that the core handles the probe/remove operations.
-
-All these solutions are proven to work. Pick one.
-
-If you want to suggest another, then please provide a pseudo API and 
-address the non-negotiable requirement of independent link-level power 
-management.
-
-Thanks
--Pierre
-
-
-
-
-
-
-
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index c340f947baa0..fc4e64200c3d 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -62,6 +62,11 @@
+ 		enable-active-high;
+ 	};
+ 
++	ir: ir {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
++	};
++
+ 	wlan0_power: fixedregulator@1 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "wlan0_power";
+-- 
+2.23.0
 
