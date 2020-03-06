@@ -7,61 +7,59 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1E3C3F2DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568DEC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5482146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07CE12084E
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 04:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hpxLlEnq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TdanpPhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgCFE2m (ORCPT
+        id S1727194AbgCFE2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 23:28:42 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:40121 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbgCFE2j (ORCPT
+        Thu, 5 Mar 2020 23:28:51 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:39567 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbgCFE2s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 23:28:39 -0500
-Received: by mail-yw1-f68.google.com with SMTP id t192so1078359ywe.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 20:28:39 -0800 (PST)
+        Thu, 5 Mar 2020 23:28:48 -0500
+Received: by mail-yw1-f65.google.com with SMTP id x184so1086789ywd.6
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 20:28:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lsl9uUeVXVFev0pr72IiS4wSx+T+dt+j5N8Q5snoWc4=;
-        b=hpxLlEnqh3cBFo/xoDkNmA/6zyHRuaVTMieAIMgbR7/YU6RoRqp9ErFcWegiVlWSYT
-         gaSDvjjl2o7FmJpZ1OoeqIqivqROGdBrjsd8lLUrJtwKNQpmseLeEn7Yn9x0gQduKoae
-         g1dEC8sId362ONpMrYixof82EPoSW3SqlgJxRq5Y5iCeEM9Au7xuxP8oJV1Mx9u2JOkK
-         Pi0IcXyIgD7i5eYJiPVR4M10vJGAbE1v3JwqA6cx8J/kyX9K+DnlnTsffwAS/A9Unzy+
-         Rr11prIMbuTUMiNjgcRSdEFFUkIXvv7cDAyz8uGaKt99PDNOHt238m7g7fy87OW1VmJP
-         PYDw==
+        bh=7mle7p02Xb0qr6DjqG1KSSYes6DlokB48ZSET+PHFhE=;
+        b=TdanpPhT+qlPFJnI0iMEEp9pF+ZNddg0CT6rgFTSQpPwx6djx3XnBS66TNJpKLUbk8
+         ehT4A5gesLG557sqh0lojU1Wgq6+04tyBRzqm2LnSOOwYEwJIGKb9xSCfa/kG9dgFoLz
+         is6bEpEtvKd6ROmmtCyK/Y4i9u3yvTdcBP3ptD4bcQfBSa1GFAHPsrOs2coml8rIzGOf
+         NjKbobezXxIY/6rNrOsha5j7Z8U3/C0g5WNIdkiogKwGOTBKikatzi/xKfqAglLqUmot
+         8y6ac+ewa0LsVj4nO1boGgED3HKGVHe4IEYK2reYAnb3Pyh0fLylzhKAQ9RUt1Zi0YNb
+         RQ8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lsl9uUeVXVFev0pr72IiS4wSx+T+dt+j5N8Q5snoWc4=;
-        b=XJhY9BIkmgbMxgt+cIJle5qgcRZWybNz+3MDHaQmBowVwn2x5Kp/BQX5f0qbQWQq7k
-         qIVSmtADNxzvP6Zj3WPUinOg5qss4WxO0DSXc4/db3whMnB48FNc0Sk6PTAEqB8CYVUH
-         0/9exX0lG1J5xOu7RSdJK94F2i3bn3LvvVOwwlEV2IqSZQ1/rjkVieQAbpb7CK67yD1K
-         UhcyGKWOaeU/lCkcByKfbtXj4capnjvrDc4quNxR53HEconfMWjldKfFv8iTnIwGnweX
-         kawFFTSfTjI7D0O8MDWFjcbFmUdZcDong57LVasy6OBObDyJqALjA5Nss0HfcYHZCPOJ
-         VrjA==
-X-Gm-Message-State: ANhLgQ2P9aeqr+7NHI1N+7POW+W7++F9B7UO1WauuEoelnpuSdKkIoxR
-        Y1weG9scgOr2DQjpMabr8PSArA==
-X-Google-Smtp-Source: ADFU+vuRYxZOZPphsdvOnDb45ug/CKm8ATDPH49kPWOEMK/i/l1B0Dp71eC1VbLDKPxgRxBTLDrE3w==
-X-Received: by 2002:a25:3255:: with SMTP id y82mr1799048yby.208.1583468918320;
-        Thu, 05 Mar 2020 20:28:38 -0800 (PST)
+        bh=7mle7p02Xb0qr6DjqG1KSSYes6DlokB48ZSET+PHFhE=;
+        b=VS9XGHMs3ZmjfHfOFkYHZqV4Djqd68KlvnCZnp86J2/rL2wMvQ80OKVnsoEEwprajX
+         1t1RweXxHkvMi7ZYX4cYDwmGqpuPhzhox/z4wwiwWzJB4RbV+r7j+T8RTR4aYkwOxfOy
+         G5QP2Grwx6WlBjubYObhjEtaYhEAIKuvT5H3u2OqFKSJpNQbmJmgFm/8FDe4NhU4iZ3q
+         mm9I4Q9Z5yrC3P+OUsrURHLRIkMO2FoXcJkLF4rvu0ehB5sSrLMy+A2iXxCPS5UXhvN3
+         RZLC79WHbn0xUqfgEjR1uIHI5Deqc2pgTZDmVIiQhuEdW9bYtgFMJkoqAHTHcUtM419A
+         vvVg==
+X-Gm-Message-State: ANhLgQ06F6GFKTSOUJXwQ8GzAdyo0MLoSXzKAtuI9VHOWiXXjpaOFGDS
+        6KgadhvjU/vQRb834RtkDquPTJ2AffA=
+X-Google-Smtp-Source: ADFU+vsuU/4ohIEs97WdK0Rz2jwHrzfbRahHqRbwEQOTVEOh/6GBUXqxtE/dtS5bD0y4xZqg7b6snQ==
+X-Received: by 2002:a25:2f43:: with SMTP id v64mr1958946ybv.71.1583468926179;
+        Thu, 05 Mar 2020 20:28:46 -0800 (PST)
 Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id x2sm12581836ywa.32.2020.03.05.20.28.36
+        by smtp.gmail.com with ESMTPSA id x2sm12581836ywa.32.2020.03.05.20.28.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 20:28:37 -0800 (PST)
+        Thu, 05 Mar 2020 20:28:45 -0800 (PST)
 From:   Alex Elder <elder@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        David Miller <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Andy Gross <agross@kernel.org>,
+To:     David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
         Johannes Berg <johannes@sipsolutions.net>,
         Dan Williams <dcbw@redhat.com>,
         Evan Green <evgreen@google.com>,
@@ -71,14 +69,15 @@ Cc:     Andy Gross <agross@kernel.org>,
         Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
         Siddharth Gupta <sidgup@codeaurora.org>,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/17] remoteproc: add IPA notification to q6v5 driver
-Date:   Thu,  5 Mar 2020 22:28:15 -0600
-Message-Id: <20200306042831.17827-2-elder@linaro.org>
+Subject: [PATCH v2 05/17] soc: qcom: ipa: clocking, interrupts, and memory
+Date:   Thu,  5 Mar 2020 22:28:19 -0600
+Message-Id: <20200306042831.17827-6-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200306042831.17827-1-elder@linaro.org>
 References: <20200306042831.17827-1-elder@linaro.org>
@@ -89,328 +88,1222 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set up a subdev in the q6v5 modem remoteproc driver that generates
-event notifications for the IPA driver to use for initialization and
-recovery following a modem shutdown or crash.
+This patch incorporates three source files (and their headers).  They're
+grouped into one patch mainly for the purpose of making the number and
+size of patches in this series somewhat reasonable.
 
-A pair of new functions provides a way for the IPA driver to register
-and deregister a notification callback function that will be called
-whenever modem events (about to boot, running, about to shut down,
-etc.) occur.  A void pointer value (provided by the IPA driver at
-registration time) and an event type are supplied to the callback
-function.
+  - "ipa_clock.c" and "ipa_clock.h" implement clocking for the IPA device.
+    The IPA has a single core clock managed by the common clock framework.
+    In addition, the IPA has three buses whose bandwidth is managed by the
+    Linux interconnect framework.  At this time the core clock and all
+    three buses are either on or off; we don't yet do any more fine-grained
+    management than that.  The core clock and interconnects are enabled
+    and disabled as a unit, using a unified clock-like abstraction,
+    ipa_clock_get()/ipa_clock_put().
 
-One event, MODEM_REMOVING, is signaled whenever the q6v5 driver is
-about to remove the notification subdevice.  It requires the IPA
-driver de-register its callback.
+  - "ipa_interrupt.c" and "ipa_interrupt.h" implement IPA interrupts.
+    There are two hardware IRQs used by the IPA driver (the other is
+    the GSI interrupt, described in a separate patch).  Several types
+    of interrupt are handled by the IPA IRQ handler; these are not part
+    of data/fast path.
 
-This sub-device is only used by the modem subsystem (MSS) driver,
-so the code that adds the new subdev and allows registration and
-deregistration of the notifier is found in "qcom_q6v6_mss.c".
+  - The IPA has a region of local memory that is accessible by the AP
+    (and modem).  Within that region are areas with certain defined
+    purposes.  "ipa_mem.c" and "ipa_mem.h" define those regions, and
+    implement their initialization.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/remoteproc/Kconfig                    |  6 ++
- drivers/remoteproc/Makefile                   |  1 +
- drivers/remoteproc/qcom_q6v5_ipa_notify.c     | 85 +++++++++++++++++++
- drivers/remoteproc/qcom_q6v5_mss.c            | 38 +++++++++
- .../linux/remoteproc/qcom_q6v5_ipa_notify.h   | 82 ++++++++++++++++++
- 5 files changed, 212 insertions(+)
- create mode 100644 drivers/remoteproc/qcom_q6v5_ipa_notify.c
- create mode 100644 include/linux/remoteproc/qcom_q6v5_ipa_notify.h
+ drivers/net/ipa/ipa_clock.c     | 313 +++++++++++++++++++++++++++++++
+ drivers/net/ipa/ipa_clock.h     |  53 ++++++
+ drivers/net/ipa/ipa_interrupt.c | 253 +++++++++++++++++++++++++
+ drivers/net/ipa/ipa_interrupt.h | 117 ++++++++++++
+ drivers/net/ipa/ipa_mem.c       | 314 ++++++++++++++++++++++++++++++++
+ drivers/net/ipa/ipa_mem.h       |  90 +++++++++
+ 6 files changed, 1140 insertions(+)
+ create mode 100644 drivers/net/ipa/ipa_clock.c
+ create mode 100644 drivers/net/ipa/ipa_clock.h
+ create mode 100644 drivers/net/ipa/ipa_interrupt.c
+ create mode 100644 drivers/net/ipa/ipa_interrupt.h
+ create mode 100644 drivers/net/ipa/ipa_mem.c
+ create mode 100644 drivers/net/ipa/ipa_mem.h
 
-diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-index de3862c15fcc..56084635dd63 100644
---- a/drivers/remoteproc/Kconfig
-+++ b/drivers/remoteproc/Kconfig
-@@ -167,6 +167,12 @@ config QCOM_Q6V5_WCSS
- 	  Say y here to support the Qualcomm Peripheral Image Loader for the
- 	  Hexagon V5 based WCSS remote processors.
- 
-+config QCOM_Q6V5_IPA_NOTIFY
-+	tristate
-+	depends on QCOM_IPA
-+	depends on QCOM_Q6V5_MSS
-+	default QCOM_IPA
-+
- config QCOM_SYSMON
- 	tristate "Qualcomm sysmon driver"
- 	depends on RPMSG
-diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-index e30a1b15fbac..0effd3825035 100644
---- a/drivers/remoteproc/Makefile
-+++ b/drivers/remoteproc/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
- obj-$(CONFIG_QCOM_Q6V5_MSS)		+= qcom_q6v5_mss.o
- obj-$(CONFIG_QCOM_Q6V5_PAS)		+= qcom_q6v5_pas.o
- obj-$(CONFIG_QCOM_Q6V5_WCSS)		+= qcom_q6v5_wcss.o
-+obj-$(CONFIG_QCOM_Q6V5_IPA_NOTIFY)	+= qcom_q6v5_ipa_notify.o
- obj-$(CONFIG_QCOM_SYSMON)		+= qcom_sysmon.o
- obj-$(CONFIG_QCOM_WCNSS_PIL)		+= qcom_wcnss_pil.o
- qcom_wcnss_pil-y			+= qcom_wcnss.o
-diff --git a/drivers/remoteproc/qcom_q6v5_ipa_notify.c b/drivers/remoteproc/qcom_q6v5_ipa_notify.c
+diff --git a/drivers/net/ipa/ipa_clock.c b/drivers/net/ipa/ipa_clock.c
 new file mode 100644
-index 000000000000..e1c10a128bfd
+index 000000000000..374491ea11cf
 --- /dev/null
-+++ b/drivers/remoteproc/qcom_q6v5_ipa_notify.c
-@@ -0,0 +1,85 @@
++++ b/drivers/net/ipa/ipa_clock.c
+@@ -0,0 +1,313 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+/*
-+ * Qualcomm IPA notification subdev support
-+ *
-+ * Copyright (C) 2019 Linaro Ltd.
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
 + */
 +
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/remoteproc.h>
-+#include <linux/remoteproc/qcom_q6v5_ipa_notify.h>
++#include <linux/atomic.h>
++#include <linux/mutex.h>
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/interconnect.h>
 +
-+static void
-+ipa_notify_common(struct rproc_subdev *subdev, enum qcom_rproc_event event)
++#include "ipa.h"
++#include "ipa_clock.h"
++#include "ipa_modem.h"
++
++/**
++ * DOC: IPA Clocking
++ *
++ * The "IPA Clock" manages both the IPA core clock and the interconnects
++ * (buses) the IPA depends on as a single logical entity.  A reference count
++ * is incremented by "get" operations and decremented by "put" operations.
++ * Transitions of that count from 0 to 1 result in the clock and interconnects
++ * being enabled, and transitions of the count from 1 to 0 cause them to be
++ * disabled.  We currently operate the core clock at a fixed clock rate, and
++ * all buses at a fixed average and peak bandwidth.  As more advanced IPA
++ * features are enabled, we can make better use of clock and bus scaling.
++ *
++ * An IPA clock reference must be held for any access to IPA hardware.
++ */
++
++#define	IPA_CORE_CLOCK_RATE		(75UL * 1000 * 1000)	/* Hz */
++
++/* Interconnect path bandwidths (each times 1000 bytes per second) */
++#define IPA_MEMORY_AVG			(80 * 1000)	/* 80 MBps */
++#define IPA_MEMORY_PEAK			(600 * 1000)
++
++#define IPA_IMEM_AVG			(80 * 1000)
++#define IPA_IMEM_PEAK			(350 * 1000)
++
++#define IPA_CONFIG_AVG			(40 * 1000)
++#define IPA_CONFIG_PEAK			(40 * 1000)
++
++/**
++ * struct ipa_clock - IPA clocking information
++ * @count:		Clocking reference count
++ * @mutex;		Protects clock enable/disable
++ * @core:		IPA core clock
++ * @memory_path:	Memory interconnect
++ * @imem_path:		Internal memory interconnect
++ * @config_path:	Configuration space interconnect
++ */
++struct ipa_clock {
++	atomic_t count;
++	struct mutex mutex; /* protects clock enable/disable */
++	struct clk *core;
++	struct icc_path *memory_path;
++	struct icc_path *imem_path;
++	struct icc_path *config_path;
++};
++
++static struct icc_path *
++ipa_interconnect_init_one(struct device *dev, const char *name)
 +{
-+	struct qcom_rproc_ipa_notify *ipa_notify;
-+	qcom_ipa_notify_t notify;
++	struct icc_path *path;
 +
-+	ipa_notify = container_of(subdev, struct qcom_rproc_ipa_notify, subdev);
-+	notify = ipa_notify->notify;
-+	if (notify)
-+		notify(ipa_notify->data, event);
++	path = of_icc_get(dev, name);
++	if (IS_ERR(path))
++		dev_err(dev, "error %ld getting memory interconnect\n",
++			PTR_ERR(path));
++
++	return path;
 +}
 +
-+static int ipa_notify_prepare(struct rproc_subdev *subdev)
++/* Initialize interconnects required for IPA operation */
++static int ipa_interconnect_init(struct ipa_clock *clock, struct device *dev)
 +{
-+	ipa_notify_common(subdev, MODEM_STARTING);
++	struct icc_path *path;
++
++	path = ipa_interconnect_init_one(dev, "memory");
++	if (IS_ERR(path))
++		goto err_return;
++	clock->memory_path = path;
++
++	path = ipa_interconnect_init_one(dev, "imem");
++	if (IS_ERR(path))
++		goto err_memory_path_put;
++	clock->imem_path = path;
++
++	path = ipa_interconnect_init_one(dev, "config");
++	if (IS_ERR(path))
++		goto err_imem_path_put;
++	clock->config_path = path;
 +
 +	return 0;
++
++err_imem_path_put:
++	icc_put(clock->imem_path);
++err_memory_path_put:
++	icc_put(clock->memory_path);
++err_return:
++	return PTR_ERR(path);
 +}
 +
-+static int ipa_notify_start(struct rproc_subdev *subdev)
++/* Inverse of ipa_interconnect_init() */
++static void ipa_interconnect_exit(struct ipa_clock *clock)
 +{
-+	ipa_notify_common(subdev, MODEM_RUNNING);
++	icc_put(clock->config_path);
++	icc_put(clock->imem_path);
++	icc_put(clock->memory_path);
++}
++
++/* Currently we only use one bandwidth level, so just "enable" interconnects */
++static int ipa_interconnect_enable(struct ipa *ipa)
++{
++	struct ipa_clock *clock = ipa->clock;
++	int ret;
++
++	ret = icc_set_bw(clock->memory_path, IPA_MEMORY_AVG, IPA_MEMORY_PEAK);
++	if (ret)
++		return ret;
++
++	ret = icc_set_bw(clock->imem_path, IPA_IMEM_AVG, IPA_IMEM_PEAK);
++	if (ret)
++		goto err_memory_path_disable;
++
++	ret = icc_set_bw(clock->config_path, IPA_CONFIG_AVG, IPA_CONFIG_PEAK);
++	if (ret)
++		goto err_imem_path_disable;
 +
 +	return 0;
++
++err_imem_path_disable:
++	(void)icc_set_bw(clock->imem_path, 0, 0);
++err_memory_path_disable:
++	(void)icc_set_bw(clock->memory_path, 0, 0);
++
++	return ret;
 +}
 +
-+static void ipa_notify_stop(struct rproc_subdev *subdev, bool crashed)
-+
++/* To disable an interconnect, we just its bandwidth to 0 */
++static int ipa_interconnect_disable(struct ipa *ipa)
 +{
-+	ipa_notify_common(subdev, crashed ? MODEM_CRASHED : MODEM_STOPPING);
-+}
++	struct ipa_clock *clock = ipa->clock;
++	int ret;
 +
-+static void ipa_notify_unprepare(struct rproc_subdev *subdev)
-+{
-+	ipa_notify_common(subdev, MODEM_OFFLINE);
-+}
++	ret = icc_set_bw(clock->memory_path, 0, 0);
++	if (ret)
++		return ret;
 +
-+static void ipa_notify_removing(struct rproc_subdev *subdev)
-+{
-+	ipa_notify_common(subdev, MODEM_REMOVING);
-+}
++	ret = icc_set_bw(clock->imem_path, 0, 0);
++	if (ret)
++		goto err_memory_path_reenable;
 +
-+/* Register the IPA notification subdevice with the Q6V5 MSS remoteproc */
-+void qcom_add_ipa_notify_subdev(struct rproc *rproc,
-+		struct qcom_rproc_ipa_notify *ipa_notify)
-+{
-+	ipa_notify->notify = NULL;
-+	ipa_notify->data = NULL;
-+	ipa_notify->subdev.prepare = ipa_notify_prepare;
-+	ipa_notify->subdev.start = ipa_notify_start;
-+	ipa_notify->subdev.stop = ipa_notify_stop;
-+	ipa_notify->subdev.unprepare = ipa_notify_unprepare;
-+
-+	rproc_add_subdev(rproc, &ipa_notify->subdev);
-+}
-+EXPORT_SYMBOL_GPL(qcom_add_ipa_notify_subdev);
-+
-+/* Remove the IPA notification subdevice */
-+void qcom_remove_ipa_notify_subdev(struct rproc *rproc,
-+		struct qcom_rproc_ipa_notify *ipa_notify)
-+{
-+	struct rproc_subdev *subdev = &ipa_notify->subdev;
-+
-+	ipa_notify_removing(subdev);
-+
-+	rproc_remove_subdev(rproc, subdev);
-+	ipa_notify->notify = NULL;	/* Make it obvious */
-+}
-+EXPORT_SYMBOL_GPL(qcom_remove_ipa_notify_subdev);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Qualcomm IPA notification remoteproc subdev");
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index a1cc9cbe038f..f9ccce76e44b 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -22,6 +22,7 @@
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/remoteproc.h>
-+#include "linux/remoteproc/qcom_q6v5_ipa_notify.h"
- #include <linux/reset.h>
- #include <linux/soc/qcom/mdt_loader.h>
- #include <linux/iopoll.h>
-@@ -201,6 +202,7 @@ struct q6v5 {
- 	struct qcom_rproc_glink glink_subdev;
- 	struct qcom_rproc_subdev smd_subdev;
- 	struct qcom_rproc_ssr ssr_subdev;
-+	struct qcom_rproc_ipa_notify ipa_notify_subdev;
- 	struct qcom_sysmon *sysmon;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
-@@ -1540,6 +1542,39 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
- 	return 0;
- }
- 
-+#if IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY)
-+
-+/* Register IPA notification function */
-+int qcom_register_ipa_notify(struct rproc *rproc, qcom_ipa_notify_t notify,
-+			     void *data)
-+{
-+	struct qcom_rproc_ipa_notify *ipa_notify;
-+	struct q6v5 *qproc = rproc->priv;
-+
-+	if (!notify)
-+		return -EINVAL;
-+
-+	ipa_notify = &qproc->ipa_notify_subdev;
-+	if (ipa_notify->notify)
-+		return -EBUSY;
-+
-+	ipa_notify->notify = notify;
-+	ipa_notify->data = data;
++	ret = icc_set_bw(clock->config_path, 0, 0);
++	if (ret)
++		goto err_imem_path_reenable;
 +
 +	return 0;
-+}
-+EXPORT_SYMBOL_GPL(qcom_register_ipa_notify);
 +
-+/* Deregister IPA notification function */
-+void qcom_deregister_ipa_notify(struct rproc *rproc)
++err_imem_path_reenable:
++	(void)icc_set_bw(clock->imem_path, IPA_IMEM_AVG, IPA_IMEM_PEAK);
++err_memory_path_reenable:
++	(void)icc_set_bw(clock->memory_path, IPA_MEMORY_AVG, IPA_MEMORY_PEAK);
++
++	return ret;
++}
++
++/* Turn on IPA clocks, including interconnects */
++static int ipa_clock_enable(struct ipa *ipa)
 +{
-+	struct q6v5 *qproc = rproc->priv;
++	int ret;
 +
-+	qproc->ipa_notify_subdev.notify = NULL;
++	ret = ipa_interconnect_enable(ipa);
++	if (ret)
++		return ret;
++
++	ret = clk_prepare_enable(ipa->clock->core);
++	if (ret)
++		ipa_interconnect_disable(ipa);
++
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(qcom_deregister_ipa_notify);
-+#endif /* !IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY) */
 +
- static int q6v5_probe(struct platform_device *pdev)
- {
- 	const struct rproc_hexagon_res *desc;
-@@ -1664,6 +1699,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
- 	qcom_add_smd_subdev(rproc, &qproc->smd_subdev);
- 	qcom_add_ssr_subdev(rproc, &qproc->ssr_subdev, "mpss");
-+	qcom_add_ipa_notify_subdev(rproc, &qproc->ipa_notify_subdev);
- 	qproc->sysmon = qcom_add_sysmon_subdev(rproc, "modem", 0x12);
- 	if (IS_ERR(qproc->sysmon)) {
- 		ret = PTR_ERR(qproc->sysmon);
-@@ -1677,6 +1713,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	return 0;
- 
- detach_proxy_pds:
-+	qcom_remove_ipa_notify_subdev(qproc->rproc, &qproc->ipa_notify_subdev);
- 	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
- detach_active_pds:
- 	q6v5_pds_detach(qproc, qproc->active_pds, qproc->active_pd_count);
-@@ -1693,6 +1730,7 @@ static int q6v5_remove(struct platform_device *pdev)
- 	rproc_del(qproc->rproc);
- 
- 	qcom_remove_sysmon_subdev(qproc->sysmon);
-+	qcom_remove_ipa_notify_subdev(qproc->rproc, &qproc->ipa_notify_subdev);
- 	qcom_remove_glink_subdev(qproc->rproc, &qproc->glink_subdev);
- 	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
- 	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
-diff --git a/include/linux/remoteproc/qcom_q6v5_ipa_notify.h b/include/linux/remoteproc/qcom_q6v5_ipa_notify.h
++/* Inverse of ipa_clock_enable() */
++static void ipa_clock_disable(struct ipa *ipa)
++{
++	clk_disable_unprepare(ipa->clock->core);
++	(void)ipa_interconnect_disable(ipa);
++}
++
++/* Get an IPA clock reference, but only if the reference count is
++ * already non-zero.  Returns true if the additional reference was
++ * added successfully, or false otherwise.
++ */
++bool ipa_clock_get_additional(struct ipa *ipa)
++{
++	return !!atomic_inc_not_zero(&ipa->clock->count);
++}
++
++/* Get an IPA clock reference.  If the reference count is non-zero, it is
++ * incremented and return is immediate.  Otherwise it is checked again
++ * under protection of the mutex, and if appropriate the clock (and
++ * interconnects) are enabled suspended endpoints (if any) are resumed
++ * before returning.
++ *
++ * Incrementing the reference count is intentionally deferred until
++ * after the clock is running and endpoints are resumed.
++ */
++void ipa_clock_get(struct ipa *ipa)
++{
++	struct ipa_clock *clock = ipa->clock;
++	int ret;
++
++	/* If the clock is running, just bump the reference count */
++	if (ipa_clock_get_additional(ipa))
++		return;
++
++	/* Otherwise get the mutex and check again */
++	mutex_lock(&clock->mutex);
++
++	/* A reference might have been added before we got the mutex. */
++	if (ipa_clock_get_additional(ipa))
++		goto out_mutex_unlock;
++
++	ret = ipa_clock_enable(ipa);
++	if (ret) {
++		dev_err(&ipa->pdev->dev, "error %d enabling IPA clock\n", ret);
++		goto out_mutex_unlock;
++	}
++
++	ipa_endpoint_resume(ipa);
++
++	atomic_inc(&clock->count);
++
++out_mutex_unlock:
++	mutex_unlock(&clock->mutex);
++}
++
++/* Attempt to remove an IPA clock reference.  If this represents the last
++ * reference, suspend endpoints and disable the clock (and interconnects)
++ * under protection of a mutex.
++ */
++void ipa_clock_put(struct ipa *ipa)
++{
++	struct ipa_clock *clock = ipa->clock;
++
++	/* If this is not the last reference there's nothing more to do */
++	if (!atomic_dec_and_mutex_lock(&clock->count, &clock->mutex))
++		return;
++
++	ipa_endpoint_suspend(ipa);
++
++	ipa_clock_disable(ipa);
++
++	mutex_unlock(&clock->mutex);
++}
++
++/* Initialize IPA clocking */
++struct ipa_clock *ipa_clock_init(struct device *dev)
++{
++	struct ipa_clock *clock;
++	struct clk *clk;
++	int ret;
++
++	clk = clk_get(dev, "core");
++	if (IS_ERR(clk)) {
++		dev_err(dev, "error %ld getting core clock\n", PTR_ERR(clk));
++		return ERR_CAST(clk);
++	}
++
++	ret = clk_set_rate(clk, IPA_CORE_CLOCK_RATE);
++	if (ret) {
++		dev_err(dev, "error %d setting core clock rate to %lu\n",
++			ret, IPA_CORE_CLOCK_RATE);
++		goto err_clk_put;
++	}
++
++	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
++	if (!clock) {
++		ret = -ENOMEM;
++		goto err_clk_put;
++	}
++	clock->core = clk;
++
++	ret = ipa_interconnect_init(clock, dev);
++	if (ret)
++		goto err_kfree;
++
++	mutex_init(&clock->mutex);
++	atomic_set(&clock->count, 0);
++
++	return clock;
++
++err_kfree:
++	kfree(clock);
++err_clk_put:
++	clk_put(clk);
++
++	return ERR_PTR(ret);
++}
++
++/* Inverse of ipa_clock_init() */
++void ipa_clock_exit(struct ipa_clock *clock)
++{
++	struct clk *clk = clock->core;
++
++	WARN_ON(atomic_read(&clock->count) != 0);
++	mutex_destroy(&clock->mutex);
++	ipa_interconnect_exit(clock);
++	kfree(clock);
++	clk_put(clk);
++}
+diff --git a/drivers/net/ipa/ipa_clock.h b/drivers/net/ipa/ipa_clock.h
 new file mode 100644
-index 000000000000..0820edc0ab7d
+index 000000000000..bc52b35e6bb2
 --- /dev/null
-+++ b/include/linux/remoteproc/qcom_q6v5_ipa_notify.h
-@@ -0,0 +1,82 @@
++++ b/drivers/net/ipa/ipa_clock.h
+@@ -0,0 +1,53 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
-+/* Copyright (C) 2019 Linaro Ltd. */
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++#ifndef _IPA_CLOCK_H_
++#define _IPA_CLOCK_H_
 +
-+#ifndef __QCOM_Q6V5_IPA_NOTIFY_H__
-+#define __QCOM_Q6V5_IPA_NOTIFY_H__
++struct device;
 +
-+#if IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY)
++struct ipa;
 +
-+#include <linux/remoteproc.h>
++/**
++ * ipa_clock_init() - Initialize IPA clocking
++ * @dev:	IPA device
++ *
++ * @Return:	A pointer to an ipa_clock structure, or a pointer-coded error
++ */
++struct ipa_clock *ipa_clock_init(struct device *dev);
 +
-+enum qcom_rproc_event {
-+	MODEM_STARTING	= 0,	/* Modem is about to be started */
-+	MODEM_RUNNING	= 1,	/* Startup complete; modem is operational */
-+	MODEM_STOPPING	= 2,	/* Modem is about to shut down */
-+	MODEM_CRASHED	= 3,	/* Modem has crashed (implies stopping) */
-+	MODEM_OFFLINE	= 4,	/* Modem is now offline */
-+	MODEM_REMOVING	= 5,	/* Modem is about to be removed */
++/**
++ * ipa_clock_exit() - Inverse of ipa_clock_init()
++ * @clock:	IPA clock pointer
++ */
++void ipa_clock_exit(struct ipa_clock *clock);
++
++/**
++ * ipa_clock_get() - Get an IPA clock reference
++ * @ipa:	IPA pointer
++ *
++ * This call blocks if this is the first reference.
++ */
++void ipa_clock_get(struct ipa *ipa);
++
++/**
++ * ipa_clock_get_additional() - Get an IPA clock reference if not first
++ * @ipa:	IPA pointer
++ *
++ * This returns immediately, and only takes a reference if not the first
++ */
++bool ipa_clock_get_additional(struct ipa *ipa);
++
++/**
++ * ipa_clock_put() - Drop an IPA clock reference
++ * @ipa:	IPA pointer
++ *
++ * This drops a clock reference.  If the last reference is being dropped,
++ * the clock is stopped and RX endpoints are suspended.  This call will
++ * not block unless the last reference is dropped.
++ */
++void ipa_clock_put(struct ipa *ipa);
++
++#endif /* _IPA_CLOCK_H_ */
+diff --git a/drivers/net/ipa/ipa_interrupt.c b/drivers/net/ipa/ipa_interrupt.c
+new file mode 100644
+index 000000000000..90353987c45f
+--- /dev/null
++++ b/drivers/net/ipa/ipa_interrupt.c
+@@ -0,0 +1,253 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++
++/* DOC: IPA Interrupts
++ *
++ * The IPA has an interrupt line distinct from the interrupt used by the GSI
++ * code.  Whereas GSI interrupts are generally related to channel events (like
++ * transfer completions), IPA interrupts are related to other events related
++ * to the IPA.  Some of the IPA interrupts come from a microcontroller
++ * embedded in the IPA.  Each IPA interrupt type can be both masked and
++ * acknowledged independent of the others.
++ *
++ * Two of the IPA interrupts are initiated by the microcontroller.  A third
++ * can be generated to signal the need for a wakeup/resume when an IPA
++ * endpoint has been suspended.  There are other IPA events, but at this
++ * time only these three are supported.
++ */
++
++#include <linux/types.h>
++#include <linux/interrupt.h>
++
++#include "ipa.h"
++#include "ipa_clock.h"
++#include "ipa_reg.h"
++#include "ipa_endpoint.h"
++#include "ipa_interrupt.h"
++
++/**
++ * struct ipa_interrupt - IPA interrupt information
++ * @ipa:		IPA pointer
++ * @irq:		Linux IRQ number used for IPA interrupts
++ * @enabled:		Mask indicating which interrupts are enabled
++ * @handler:		Array of handlers indexed by IPA interrupt ID
++ */
++struct ipa_interrupt {
++	struct ipa *ipa;
++	u32 irq;
++	u32 enabled;
++	ipa_irq_handler_t handler[IPA_IRQ_COUNT];
 +};
 +
-+typedef void (*qcom_ipa_notify_t)(void *data, enum qcom_rproc_event event);
++/* Returns true if the interrupt type is associated with the microcontroller */
++static bool ipa_interrupt_uc(struct ipa_interrupt *interrupt, u32 irq_id)
++{
++	return irq_id == IPA_IRQ_UC_0 || irq_id == IPA_IRQ_UC_1;
++}
 +
-+struct qcom_rproc_ipa_notify {
-+	struct rproc_subdev subdev;
++/* Process a particular interrupt type that has been received */
++static void ipa_interrupt_process(struct ipa_interrupt *interrupt, u32 irq_id)
++{
++	bool uc_irq = ipa_interrupt_uc(interrupt, irq_id);
++	struct ipa *ipa = interrupt->ipa;
++	u32 mask = BIT(irq_id);
 +
-+	qcom_ipa_notify_t notify;
-+	void *data;
++	/* For microcontroller interrupts, clear the interrupt right away,
++	 * "to avoid clearing unhandled interrupts."
++	 */
++	if (uc_irq)
++		iowrite32(mask, ipa->reg_virt + IPA_REG_IRQ_CLR_OFFSET);
++
++	if (irq_id < IPA_IRQ_COUNT && interrupt->handler[irq_id])
++		interrupt->handler[irq_id](interrupt->ipa, irq_id);
++
++	/* Clearing the SUSPEND_TX interrupt also clears the register
++	 * that tells us which suspended endpoint(s) caused the interrupt,
++	 * so defer clearing until after the handler has been called.
++	 */
++	if (!uc_irq)
++		iowrite32(mask, ipa->reg_virt + IPA_REG_IRQ_CLR_OFFSET);
++}
++
++/* Process all IPA interrupt types that have been signaled */
++static void ipa_interrupt_process_all(struct ipa_interrupt *interrupt)
++{
++	struct ipa *ipa = interrupt->ipa;
++	u32 enabled = interrupt->enabled;
++	u32 mask;
++
++	/* The status register indicates which conditions are present,
++	 * including conditions whose interrupt is not enabled.  Handle
++	 * only the enabled ones.
++	 */
++	mask = ioread32(ipa->reg_virt + IPA_REG_IRQ_STTS_OFFSET);
++	while ((mask &= enabled)) {
++		do {
++			u32 irq_id = __ffs(mask);
++
++			mask ^= BIT(irq_id);
++
++			ipa_interrupt_process(interrupt, irq_id);
++		} while (mask);
++		mask = ioread32(ipa->reg_virt + IPA_REG_IRQ_STTS_OFFSET);
++	}
++}
++
++/* Threaded part of the IPA IRQ handler */
++static irqreturn_t ipa_isr_thread(int irq, void *dev_id)
++{
++	struct ipa_interrupt *interrupt = dev_id;
++
++	ipa_clock_get(interrupt->ipa);
++
++	ipa_interrupt_process_all(interrupt);
++
++	ipa_clock_put(interrupt->ipa);
++
++	return IRQ_HANDLED;
++}
++
++/* Hard part (i.e., "real" IRQ handler) of the IRQ handler */
++static irqreturn_t ipa_isr(int irq, void *dev_id)
++{
++	struct ipa_interrupt *interrupt = dev_id;
++	struct ipa *ipa = interrupt->ipa;
++	u32 mask;
++
++	mask = ioread32(ipa->reg_virt + IPA_REG_IRQ_STTS_OFFSET);
++	if (mask & interrupt->enabled)
++		return IRQ_WAKE_THREAD;
++
++	/* Nothing in the mask was supposed to cause an interrupt */
++	iowrite32(mask, ipa->reg_virt + IPA_REG_IRQ_CLR_OFFSET);
++
++	dev_err(&ipa->pdev->dev, "%s: unexpected interrupt, mask 0x%08x\n",
++		__func__, mask);
++
++	return IRQ_HANDLED;
++}
++
++/* Common function used to enable/disable TX_SUSPEND for an endpoint */
++static void ipa_interrupt_suspend_control(struct ipa_interrupt *interrupt,
++					  u32 endpoint_id, bool enable)
++{
++	struct ipa *ipa = interrupt->ipa;
++	u32 mask = BIT(endpoint_id);
++	u32 val;
++
++	/* assert(mask & ipa->available); */
++	val = ioread32(ipa->reg_virt + IPA_REG_SUSPEND_IRQ_EN_OFFSET);
++	if (enable)
++		val |= mask;
++	else
++		val &= ~mask;
++	iowrite32(val, ipa->reg_virt + IPA_REG_SUSPEND_IRQ_EN_OFFSET);
++}
++
++/* Enable TX_SUSPEND for an endpoint */
++void
++ipa_interrupt_suspend_enable(struct ipa_interrupt *interrupt, u32 endpoint_id)
++{
++	ipa_interrupt_suspend_control(interrupt, endpoint_id, true);
++}
++
++/* Disable TX_SUSPEND for an endpoint */
++void
++ipa_interrupt_suspend_disable(struct ipa_interrupt *interrupt, u32 endpoint_id)
++{
++	ipa_interrupt_suspend_control(interrupt, endpoint_id, false);
++}
++
++/* Clear the suspend interrupt for all endpoints that signaled it */
++void ipa_interrupt_suspend_clear_all(struct ipa_interrupt *interrupt)
++{
++	struct ipa *ipa = interrupt->ipa;
++	u32 val;
++
++	val = ioread32(ipa->reg_virt + IPA_REG_IRQ_SUSPEND_INFO_OFFSET);
++	iowrite32(val, ipa->reg_virt + IPA_REG_SUSPEND_IRQ_CLR_OFFSET);
++}
++
++/* Simulate arrival of an IPA TX_SUSPEND interrupt */
++void ipa_interrupt_simulate_suspend(struct ipa_interrupt *interrupt)
++{
++	ipa_interrupt_process(interrupt, IPA_IRQ_TX_SUSPEND);
++}
++
++/* Add a handler for an IPA interrupt */
++void ipa_interrupt_add(struct ipa_interrupt *interrupt,
++		       enum ipa_irq_id ipa_irq, ipa_irq_handler_t handler)
++{
++	struct ipa *ipa = interrupt->ipa;
++
++	/* assert(ipa_irq < IPA_IRQ_COUNT); */
++	interrupt->handler[ipa_irq] = handler;
++
++	/* Update the IPA interrupt mask to enable it */
++	interrupt->enabled |= BIT(ipa_irq);
++	iowrite32(interrupt->enabled, ipa->reg_virt + IPA_REG_IRQ_EN_OFFSET);
++}
++
++/* Remove the handler for an IPA interrupt type */
++void
++ipa_interrupt_remove(struct ipa_interrupt *interrupt, enum ipa_irq_id ipa_irq)
++{
++	struct ipa *ipa = interrupt->ipa;
++
++	/* assert(ipa_irq < IPA_IRQ_COUNT); */
++	/* Update the IPA interrupt mask to disable it */
++	interrupt->enabled &= ~BIT(ipa_irq);
++	iowrite32(interrupt->enabled, ipa->reg_virt + IPA_REG_IRQ_EN_OFFSET);
++
++	interrupt->handler[ipa_irq] = NULL;
++}
++
++/* Set up the IPA interrupt framework */
++struct ipa_interrupt *ipa_interrupt_setup(struct ipa *ipa)
++{
++	struct device *dev = &ipa->pdev->dev;
++	struct ipa_interrupt *interrupt;
++	unsigned int irq;
++	int ret;
++
++	ret = platform_get_irq_byname(ipa->pdev, "ipa");
++	if (ret <= 0) {
++		dev_err(dev, "DT error %d getting \"ipa\" IRQ property\n",
++			ret);
++		return ERR_PTR(ret ? : -EINVAL);
++	}
++	irq = ret;
++
++	interrupt = kzalloc(sizeof(*interrupt), GFP_KERNEL);
++	if (!interrupt)
++		return ERR_PTR(-ENOMEM);
++	interrupt->ipa = ipa;
++	interrupt->irq = irq;
++
++	/* Start with all IPA interrupts disabled */
++	iowrite32(0, ipa->reg_virt + IPA_REG_IRQ_EN_OFFSET);
++
++	ret = request_threaded_irq(irq, ipa_isr, ipa_isr_thread, IRQF_ONESHOT,
++				   "ipa", interrupt);
++	if (ret) {
++		dev_err(dev, "error %d requesting \"ipa\" IRQ\n", ret);
++		goto err_kfree;
++	}
++
++	return interrupt;
++
++err_kfree:
++	kfree(interrupt);
++
++	return ERR_PTR(ret);
++}
++
++/* Tear down the IPA interrupt framework */
++void ipa_interrupt_teardown(struct ipa_interrupt *interrupt)
++{
++	free_irq(interrupt->irq, interrupt);
++	kfree(interrupt);
++}
+diff --git a/drivers/net/ipa/ipa_interrupt.h b/drivers/net/ipa/ipa_interrupt.h
+new file mode 100644
+index 000000000000..d4f4c1c9f0b1
+--- /dev/null
++++ b/drivers/net/ipa/ipa_interrupt.h
+@@ -0,0 +1,117 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++#ifndef _IPA_INTERRUPT_H_
++#define _IPA_INTERRUPT_H_
++
++#include <linux/types.h>
++#include <linux/bits.h>
++
++struct ipa;
++struct ipa_interrupt;
++
++/**
++ * enum ipa_irq_id - IPA interrupt type
++ * @IPA_IRQ_UC_0:	Microcontroller event interrupt
++ * @IPA_IRQ_UC_1:	Microcontroller response interrupt
++ * @IPA_IRQ_TX_SUSPEND:	Data ready interrupt
++ *
++ * The data ready interrupt is signaled if data has arrived that is destined
++ * for an AP RX endpoint whose underlying GSI channel is suspended/stopped.
++ */
++enum ipa_irq_id {
++	IPA_IRQ_UC_0		= 2,
++	IPA_IRQ_UC_1		= 3,
++	IPA_IRQ_TX_SUSPEND	= 14,
++	IPA_IRQ_COUNT,		/* Number of interrupt types (not an index) */
 +};
 +
 +/**
-+ * qcom_add_ipa_notify_subdev() - Register IPA notification subdevice
-+ * @rproc:	rproc handle
-+ * @ipa_notify:	IPA notification subdevice handle
++ * typedef ipa_irq_handler_t - IPA interrupt handler function type
++ * @ipa:	IPA pointer
++ * @irq_id:	interrupt type
 + *
-+ * Register the @ipa_notify subdevice with the @rproc so modem events
-+ * can be sent to IPA when they occur.
-+ *
-+ * This is defined in "qcom_q6v5_ipa_notify.c".
++ * Callback function registered by ipa_interrupt_add() to handle a specific
++ * IPA interrupt type
 + */
-+void qcom_add_ipa_notify_subdev(struct rproc *rproc,
-+		struct qcom_rproc_ipa_notify *ipa_notify);
++typedef void (*ipa_irq_handler_t)(struct ipa *ipa, enum ipa_irq_id irq_id);
 +
 +/**
-+ * qcom_remove_ipa_notify_subdev() - Remove IPA SSR subdevice
-+ * @rproc:	rproc handle
-+ * @ipa_notify:	IPA notification subdevice handle
++ * ipa_interrupt_add() - Register a handler for an IPA interrupt type
++ * @irq_id:	IPA interrupt type
++ * @handler:	Handler function for the interrupt
 + *
-+ * This is defined in "qcom_q6v5_ipa_notify.c".
++ * Add a handler for an IPA interrupt and enable it.  IPA interrupt
++ * handlers are run in threaded interrupt context, so are allowed to
++ * block.
 + */
-+void qcom_remove_ipa_notify_subdev(struct rproc *rproc,
-+		struct qcom_rproc_ipa_notify *ipa_notify);
++void ipa_interrupt_add(struct ipa_interrupt *interrupt, enum ipa_irq_id irq_id,
++		       ipa_irq_handler_t handler);
 +
 +/**
-+ * qcom_register_ipa_notify() - Register IPA notification function
-+ * @rproc:	Remote processor handle
-+ * @notify:	Non-null IPA notification callback function pointer
-+ * @data:	Data supplied to IPA notification callback function
++ * ipa_interrupt_remove() - Remove the handler for an IPA interrupt type
++ * @interrupt:	IPA interrupt structure
++ * @irq_id:	IPA interrupt type
 + *
-+ * @Return: 0 if successful, or a negative error code otherwise
-+ *
-+ * This is defined in "qcom_q6v5_mss.c".
++ * Remove an IPA interrupt handler and disable it.
 + */
-+int qcom_register_ipa_notify(struct rproc *rproc, qcom_ipa_notify_t notify,
-+			     void *data);
++void ipa_interrupt_remove(struct ipa_interrupt *interrupt,
++			  enum ipa_irq_id irq_id);
++
 +/**
-+ * qcom_deregister_ipa_notify() - Deregister IPA notification function
-+ * @rproc:	Remote processor handle
++ * ipa_interrupt_suspend_enable - Enable TX_SUSPEND for an endpoint
++ * @interrupt:		IPA interrupt structure
++ * @endpoint_id:	Endpoint whose interrupt should be enabled
 + *
-+ * This is defined in "qcom_q6v5_mss.c".
++ * Note:  The "TX" in the name is from the perspective of the IPA hardware.
++ * A TX_SUSPEND interrupt arrives on an AP RX enpoint when packet data can't
++ * be delivered to the endpoint because it is suspended (or its underlying
++ * channel is stopped).
 + */
-+void qcom_deregister_ipa_notify(struct rproc *rproc);
++void ipa_interrupt_suspend_enable(struct ipa_interrupt *interrupt,
++				  u32 endpoint_id);
 +
-+#else /* !IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY) */
++/**
++ * ipa_interrupt_suspend_disable - Disable TX_SUSPEND for an endpoint
++ * @interrupt:		IPA interrupt structure
++ * @endpoint_id:	Endpoint whose interrupt should be disabled
++ */
++void ipa_interrupt_suspend_disable(struct ipa_interrupt *interrupt,
++				   u32 endpoint_id);
 +
-+struct qcom_rproc_ipa_notify { /* empty */ };
++/**
++ * ipa_interrupt_suspend_clear_all - clear all suspend interrupts
++ * @interrupt:	IPA interrupt structure
++ *
++ * Clear the TX_SUSPEND interrupt for all endpoints that signaled it.
++ */
++void ipa_interrupt_suspend_clear_all(struct ipa_interrupt *interrupt);
 +
-+#define qcom_add_ipa_notify_subdev(rproc, ipa_notify)		/* no-op */
-+#define qcom_remove_ipa_notify_subdev(rproc, ipa_notify)	/* no-op */
++/**
++ * ipa_interrupt_simulate_suspend() - Simulate TX_SUSPEND IPA interrupt
++ * @interrupt:	IPA interrupt structure
++ *
++ * This calls the TX_SUSPEND interrupt handler, as if such an interrupt
++ * had been signaled.  This is needed to work around a hardware quirk
++ * that occurs if aggregation is active on an endpoint when its underlying
++ * channel is suspended.
++ */
++void ipa_interrupt_simulate_suspend(struct ipa_interrupt *interrupt);
 +
-+#endif /* !IS_ENABLED(CONFIG_QCOM_Q6V5_IPA_NOTIFY) */
++/**
++ * ipa_interrupt_setup() - Set up the IPA interrupt framework
++ * @ipa:	IPA pointer
++ *
++ * @Return:	Pointer to IPA SMP2P info, or a pointer-coded error
++ */
++struct ipa_interrupt *ipa_interrupt_setup(struct ipa *ipa);
 +
-+#endif /* !__QCOM_Q6V5_IPA_NOTIFY_H__ */
++/**
++ * ipa_interrupt_teardown() - Tear down the IPA interrupt framework
++ * @interrupt:	IPA interrupt structure
++ */
++void ipa_interrupt_teardown(struct ipa_interrupt *interrupt);
++
++#endif /* _IPA_INTERRUPT_H_ */
+diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
+new file mode 100644
+index 000000000000..42d2c29d9f0c
+--- /dev/null
++++ b/drivers/net/ipa/ipa_mem.c
+@@ -0,0 +1,314 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2019-2020 Linaro Ltd.
++ */
++
++#include <linux/types.h>
++#include <linux/bitfield.h>
++#include <linux/bug.h>
++#include <linux/dma-mapping.h>
++#include <linux/io.h>
++
++#include "ipa.h"
++#include "ipa_reg.h"
++#include "ipa_cmd.h"
++#include "ipa_mem.h"
++#include "ipa_data.h"
++#include "ipa_table.h"
++#include "gsi_trans.h"
++
++/* "Canary" value placed between memory regions to detect overflow */
++#define IPA_MEM_CANARY_VAL		cpu_to_le32(0xdeadbeef)
++
++/* Add an immediate command to a transaction that zeroes a memory region */
++static void
++ipa_mem_zero_region_add(struct gsi_trans *trans, const struct ipa_mem *mem)
++{
++	struct ipa *ipa = container_of(trans->gsi, struct ipa, gsi);
++	dma_addr_t addr = ipa->zero_addr;
++
++	if (!mem->size)
++		return;
++
++	ipa_cmd_dma_shared_mem_add(trans, mem->offset, mem->size, addr, true);
++}
++
++/**
++ * ipa_mem_setup() - Set up IPA AP and modem shared memory areas
++ *
++ * Set up the shared memory regions in IPA local memory.  This involves
++ * zero-filling memory regions, and in the case of header memory, telling
++ * the IPA where it's located.
++ *
++ * This function performs the initial setup of this memory.  If the modem
++ * crashes, its regions are re-zeroed in ipa_mem_zero_modem().
++ *
++ * The AP informs the modem where its portions of memory are located
++ * in a QMI exchange that occurs at modem startup.
++ *
++ * @Return:	0 if successful, or a negative error code
++ */
++int ipa_mem_setup(struct ipa *ipa)
++{
++	dma_addr_t addr = ipa->zero_addr;
++	struct gsi_trans *trans;
++	u32 offset;
++	u16 size;
++
++	/* Get a transaction to define the header memory region and to zero
++	 * the processing context and modem memory regions.
++	 */
++	trans = ipa_cmd_trans_alloc(ipa, 4);
++	if (!trans) {
++		dev_err(&ipa->pdev->dev, "no transaction for memory setup\n");
++		return -EBUSY;
++	}
++
++	/* Initialize IPA-local header memory.  The modem and AP header
++	 * regions are contiguous, and initialized together.
++	 */
++	offset = ipa->mem[IPA_MEM_MODEM_HEADER].offset;
++	size = ipa->mem[IPA_MEM_MODEM_HEADER].size;
++	size += ipa->mem[IPA_MEM_AP_HEADER].size;
++
++	ipa_cmd_hdr_init_local_add(trans, offset, size, addr);
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_MODEM_PROC_CTX]);
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_AP_PROC_CTX]);
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_MODEM]);
++
++	gsi_trans_commit_wait(trans);
++
++	/* Tell the hardware where the processing context area is located */
++	iowrite32(ipa->mem_offset + offset,
++		  ipa->reg_virt + IPA_REG_LOCAL_PKT_PROC_CNTXT_BASE_OFFSET);
++
++	return 0;
++}
++
++void ipa_mem_teardown(struct ipa *ipa)
++{
++	/* Nothing to do */
++}
++
++#ifdef IPA_VALIDATE
++
++static bool ipa_mem_valid(struct ipa *ipa, enum ipa_mem_id mem_id)
++{
++	const struct ipa_mem *mem = &ipa->mem[mem_id];
++	struct device *dev = &ipa->pdev->dev;
++	u16 size_multiple;
++
++	/* Other than modem memory, sizes must be a multiple of 8 */
++	size_multiple = mem_id == IPA_MEM_MODEM ? 4 : 8;
++	if (mem->size % size_multiple)
++		dev_err(dev, "region %u size not a multiple of %u bytes\n",
++			mem_id, size_multiple);
++	else if (mem->offset % 8)
++		dev_err(dev, "region %u offset not 8-byte aligned\n", mem_id);
++	else if (mem->offset < mem->canary_count * sizeof(__le32))
++		dev_err(dev, "region %u offset too small for %hu canaries\n",
++			mem_id, mem->canary_count);
++	else if (mem->offset + mem->size > ipa->mem_size)
++		dev_err(dev, "region %u ends beyond memory limit (0x%08x)\n",
++			mem_id, ipa->mem_size);
++	else
++		return true;
++
++	return false;
++}
++
++#else /* !IPA_VALIDATE */
++
++static bool ipa_mem_valid(struct ipa *ipa, enum ipa_mem_id mem_id)
++{
++	return true;
++}
++
++#endif /*! IPA_VALIDATE */
++
++/**
++ * ipa_mem_config() - Configure IPA shared memory
++ *
++ * @Return:	0 if successful, or a negative error code
++ */
++int ipa_mem_config(struct ipa *ipa)
++{
++	struct device *dev = &ipa->pdev->dev;
++	enum ipa_mem_id mem_id;
++	dma_addr_t addr;
++	u32 mem_size;
++	void *virt;
++	u32 val;
++
++	/* Check the advertised location and size of the shared memory area */
++	val = ioread32(ipa->reg_virt + IPA_REG_SHARED_MEM_SIZE_OFFSET);
++
++	/* The fields in the register are in 8 byte units */
++	ipa->mem_offset = 8 * u32_get_bits(val, SHARED_MEM_BADDR_FMASK);
++	/* Make sure the end is within the region's mapped space */
++	mem_size = 8 * u32_get_bits(val, SHARED_MEM_SIZE_FMASK);
++
++	/* If the sizes don't match, issue a warning */
++	if (ipa->mem_offset + mem_size > ipa->mem_size) {
++		dev_warn(dev, "ignoring larger reported memory size: 0x%08x\n",
++			mem_size);
++	} else if (ipa->mem_offset + mem_size < ipa->mem_size) {
++		dev_warn(dev, "limiting IPA memory size to 0x%08x\n",
++			 mem_size);
++		ipa->mem_size = mem_size;
++	}
++
++	/* Prealloc DMA memory for zeroing regions */
++	virt = dma_alloc_coherent(dev, IPA_MEM_MAX, &addr, GFP_KERNEL);
++	if (!virt)
++		return -ENOMEM;
++	ipa->zero_addr = addr;
++	ipa->zero_virt = virt;
++	ipa->zero_size = IPA_MEM_MAX;
++
++	/* Verify each defined memory region is valid, and if indicated
++	 * for the region, write "canary" values in the space prior to
++	 * the region's base address.
++	 */
++	for (mem_id = 0; mem_id < IPA_MEM_COUNT; mem_id++) {
++		const struct ipa_mem *mem = &ipa->mem[mem_id];
++		u16 canary_count;
++		__le32 *canary;
++
++		/* Validate all regions (even undefined ones) */
++		if (!ipa_mem_valid(ipa, mem_id))
++			goto err_dma_free;
++
++		/* Skip over undefined regions */
++		if (!mem->offset && !mem->size)
++			continue;
++
++		canary_count = mem->canary_count;
++		if (!canary_count)
++			continue;
++
++		/* Write canary values in the space before the region */
++		canary = ipa->mem_virt + ipa->mem_offset + mem->offset;
++		do
++			*--canary = IPA_MEM_CANARY_VAL;
++		while (--canary_count);
++	}
++
++	/* Make sure filter and route table memory regions are valid */
++	if (!ipa_table_valid(ipa))
++		goto err_dma_free;
++
++	/* Validate memory-related properties relevant to immediate commands */
++	if (!ipa_cmd_data_valid(ipa))
++		goto err_dma_free;
++
++	/* Verify the microcontroller ring alignment (0 is OK too) */
++	if (ipa->mem[IPA_MEM_UC_EVENT_RING].offset % 1024) {
++		dev_err(dev, "microcontroller ring not 1024-byte aligned\n");
++		goto err_dma_free;
++	}
++
++	return 0;
++
++err_dma_free:
++	dma_free_coherent(dev, IPA_MEM_MAX, ipa->zero_virt, ipa->zero_addr);
++
++	return -EINVAL;
++}
++
++/* Inverse of ipa_mem_config() */
++void ipa_mem_deconfig(struct ipa *ipa)
++{
++	struct device *dev = &ipa->pdev->dev;
++
++	dma_free_coherent(dev, ipa->zero_size, ipa->zero_virt, ipa->zero_addr);
++	ipa->zero_size = 0;
++	ipa->zero_virt = NULL;
++	ipa->zero_addr = 0;
++}
++
++/**
++ * ipa_mem_zero_modem() - Zero IPA-local memory regions owned by the modem
++ *
++ * Zero regions of IPA-local memory used by the modem.  These are configured
++ * (and initially zeroed) by ipa_mem_setup(), but if the modem crashes and
++ * restarts via SSR we need to re-initialize them.  A QMI message tells the
++ * modem where to find regions of IPA local memory it needs to know about
++ * (these included).
++ */
++int ipa_mem_zero_modem(struct ipa *ipa)
++{
++	struct gsi_trans *trans;
++
++	/* Get a transaction to zero the modem memory, modem header,
++	 * and modem processing context regions.
++	 */
++	trans = ipa_cmd_trans_alloc(ipa, 3);
++	if (!trans) {
++		dev_err(&ipa->pdev->dev,
++			"no transaction to zero modem memory\n");
++		return -EBUSY;
++	}
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_MODEM_HEADER]);
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_MODEM_PROC_CTX]);
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_MODEM]);
++
++	gsi_trans_commit_wait(trans);
++
++	return 0;
++}
++
++/* Perform memory region-related initialization */
++int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
++{
++	struct device *dev = &ipa->pdev->dev;
++	struct resource *res;
++	int ret;
++
++	if (count > IPA_MEM_COUNT) {
++		dev_err(dev, "to many memory regions (%u > %u)\n",
++			count, IPA_MEM_COUNT);
++		return -EINVAL;
++	}
++
++	ret = dma_set_mask_and_coherent(&ipa->pdev->dev, DMA_BIT_MASK(64));
++	if (ret) {
++		dev_err(dev, "error %d setting DMA mask\n", ret);
++		return ret;
++	}
++
++	res = platform_get_resource_byname(ipa->pdev, IORESOURCE_MEM,
++					   "ipa-shared");
++	if (!res) {
++		dev_err(dev,
++			"DT error getting \"ipa-shared\" memory property\n");
++		return -ENODEV;
++	}
++
++	ipa->mem_virt = memremap(res->start, resource_size(res), MEMREMAP_WC);
++	if (!ipa->mem_virt) {
++		dev_err(dev, "unable to remap \"ipa-shared\" memory\n");
++		return -ENOMEM;
++	}
++
++	ipa->mem_addr = res->start;
++	ipa->mem_size = resource_size(res);
++
++	/* The ipa->mem[] array is indexed by enum ipa_mem_id values */
++	ipa->mem = mem;
++
++	return 0;
++}
++
++/* Inverse of ipa_mem_init() */
++void ipa_mem_exit(struct ipa *ipa)
++{
++	memunmap(ipa->mem_virt);
++}
+diff --git a/drivers/net/ipa/ipa_mem.h b/drivers/net/ipa/ipa_mem.h
+new file mode 100644
+index 000000000000..065cb499ebe5
+--- /dev/null
++++ b/drivers/net/ipa/ipa_mem.h
+@@ -0,0 +1,90 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2019-2020 Linaro Ltd.
++ */
++#ifndef _IPA_MEM_H_
++#define _IPA_MEM_H_
++
++struct ipa;
++
++/**
++ * DOC: IPA Local Memory
++ *
++ * The IPA has a block of shared memory, divided into regions used for
++ * specific purposes.
++ *
++ * The regions within the shared block are bounded by an offset (relative to
++ * the "ipa-shared" memory range) and size found in the IPA_SHARED_MEM_SIZE
++ * register.
++ *
++ * Each region is optionally preceded by one or more 32-bit "canary" values.
++ * These are meant to detect out-of-range writes (if they become corrupted).
++ * A given region (such as a filter or routing table) has the same number
++ * of canaries for all IPA hardware versions.  Still, the number used is
++ * defined in the config data, allowing for generic handling of regions.
++ *
++ * The set of memory regions is defined in configuration data.  They are
++ * subject to these constraints:
++ * - a zero offset and zero size represents and undefined region
++ * - a region's offset is defined to be *past* all "canary" values
++ * - offset must be large enough to account for all canaries
++ * - a region's size may be zero, but may still have canaries
++ * - all offsets must be 8-byte aligned
++ * - most sizes must be a multiple of 8
++ * - modem memory size must be a multiple of 4
++ * - the microcontroller ring offset must be a multiple of 1024
++ */
++
++/* The maximum allowed size for any memory region */
++#define IPA_MEM_MAX	(2 * PAGE_SIZE)
++
++/* IPA-resident memory region ids */
++enum ipa_mem_id {
++	IPA_MEM_UC_SHARED,		/* 0 canaries */
++	IPA_MEM_UC_INFO,		/* 0 canaries */
++	IPA_MEM_V4_FILTER_HASHED,	/* 2 canaries */
++	IPA_MEM_V4_FILTER,		/* 2 canaries */
++	IPA_MEM_V6_FILTER_HASHED,	/* 2 canaries */
++	IPA_MEM_V6_FILTER,		/* 2 canaries */
++	IPA_MEM_V4_ROUTE_HASHED,	/* 2 canaries */
++	IPA_MEM_V4_ROUTE,		/* 2 canaries */
++	IPA_MEM_V6_ROUTE_HASHED,	/* 2 canaries */
++	IPA_MEM_V6_ROUTE,		/* 2 canaries */
++	IPA_MEM_MODEM_HEADER,		/* 2 canaries */
++	IPA_MEM_AP_HEADER,		/* 0 canaries */
++	IPA_MEM_MODEM_PROC_CTX,		/* 2 canaries */
++	IPA_MEM_AP_PROC_CTX,		/* 0 canaries */
++	IPA_MEM_PDN_CONFIG,		/* 2 canaries (IPA v4.0 and above) */
++	IPA_MEM_STATS_QUOTA,		/* 2 canaries (IPA v4.0 and above) */
++	IPA_MEM_STATS_TETHERING,	/* 0 canaries (IPA v4.0 and above) */
++	IPA_MEM_STATS_DROP,		/* 0 canaries (IPA v4.0 and above) */
++	IPA_MEM_MODEM,			/* 0 canaries */
++	IPA_MEM_UC_EVENT_RING,		/* 1 canary */
++	IPA_MEM_COUNT,			/* Number of regions (not an index) */
++};
++
++/**
++ * struct ipa_mem - IPA local memory region description
++ * @offset:		offset in IPA memory space to base of the region
++ * @size:		size in bytes base of the region
++ * @canary_count	# 32-bit "canary" values that precede region
++ */
++struct ipa_mem {
++	u32 offset;
++	u16 size;
++	u16 canary_count;
++};
++
++int ipa_mem_config(struct ipa *ipa);
++void ipa_mem_deconfig(struct ipa *ipa);
++
++int ipa_mem_setup(struct ipa *ipa);
++void ipa_mem_teardown(struct ipa *ipa);
++
++int ipa_mem_zero_modem(struct ipa *ipa);
++
++int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem);
++void ipa_mem_exit(struct ipa *ipa);
++
++#endif /* _IPA_MEM_H_ */
 -- 
 2.20.1
 
