@@ -2,145 +2,157 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23978C10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFACEC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10742070A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32E5207FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:08:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fbq6E4aa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nEcPiVzX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgCFKG5 (ORCPT
+        id S1726368AbgCFKIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:06:57 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29371 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726026AbgCFKG5 (ORCPT
+        Fri, 6 Mar 2020 05:08:20 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:44260 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbgCFKIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:06:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583489215;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CNDhmKPPyjU/I8ZjQqjbJHAaz9m6Pife/JBLkiK4lO0=;
-        b=Fbq6E4aayTeqC7ax+TfWPFZsVBHiViY7afgvbA8Ynj4Whh9AsPmqmEIkzTvrmq6nGV6TCF
-        HlwX4pjGvfVRqaJvBmsuXdOWsrpdAyvXQZg9+q6tkRwweXnBXJfrAOlYwVTmq2tyw60Css
-        frJ1p70NGJpEaJCkOYZ1LwqKlKxYkZI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-260-FUtuVDmlO923cxEjUIiV-Q-1; Fri, 06 Mar 2020 05:06:54 -0500
-X-MC-Unique: FUtuVDmlO923cxEjUIiV-Q-1
-Received: by mail-wr1-f70.google.com with SMTP id 72so790176wrc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:06:54 -0800 (PST)
+        Fri, 6 Mar 2020 05:08:20 -0500
+Received: by mail-ua1-f65.google.com with SMTP id a33so478786uad.11
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:08:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uNKCod9HWXu3nxzrNq2A6yL231Mu94A886+59BwdSMs=;
+        b=nEcPiVzXVIU3Kib52ncsdTxiBqwhamhygdS+O38NTLUeFv61aJ1sn68iVJc6k7JB7r
+         o/j/pLXeg7SUehGbmsn/QpATLwr7LQLZHvZApBZRExxELPQt213sRW113dkv9Il0TbzN
+         ymGZ/uZahmlGI2HkF99JYMa5ZWivoDErDZL+qUPAeu9fb6lEsWWejI5H2DoH1SvahW8D
+         KVsWYpzheANfyigtJZ8q6TipmSY1e30WUruYvr3nRpgkGAKSYDPF4JeR3QLQ1UjITByX
+         QTyh6GXV7tFacA2/ugy49rkZl8Ute2lZfcgMiqmbpl1lmSPwNRJXlr3Jk+Zce1xc/4Fa
+         jzOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=CNDhmKPPyjU/I8ZjQqjbJHAaz9m6Pife/JBLkiK4lO0=;
-        b=IKRFm1Q8P8gekoRXAw8906klVYaANFBgqQAFXWM31pn4ghRcKnOny9O1GayjMB8kgy
-         FFhfClF4N2WtJByBRwUL3R8A7oFjfCFuPg2EsuoUlbRCnUQ5O+4wMbX2rfrf4Jz23O8O
-         vyLlaTaf3o2Z6fWjZmDQ1ZfbTeyR37lUWsb+9L+bSWmFmsOsE0eHggsRpMB6Emkz8UuD
-         fp1j2fWxwXqqXuet6d4963in2KAAsO+kYtGTYxoJfQlWXXm2g9xrx0oc5CodmCACc1r2
-         SL17T9MVZsYAHyM2Zm9syt92YydrzaNPt8ITDxbUZVJyO/JLe9Ymh38jI0XfDagqf+5E
-         ATew==
-X-Gm-Message-State: ANhLgQ11v4f7tABeen2NObwbgLQiSKXCBdOitenuhZEALBgPEYKRzYrT
-        rd0YNH5hNV7zifD+AjQcAIO3mfBtYirAifvLsBfMsMti7YBWR/wUdQpUmZIPtUcFuA0yqajZnDA
-        dS1wvC0dkiUUyxdSYVoBEuRDP
-X-Received: by 2002:a05:600c:2f01:: with SMTP id r1mr3145204wmn.31.1583489213314;
-        Fri, 06 Mar 2020 02:06:53 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsCpKnLythwz5ylIW58CeFo2DLM+USTBNualw4sqyWdiqnoAs2Lj09ZRAWLj+zXfMhkGZXnnA==
-X-Received: by 2002:a05:600c:2f01:: with SMTP id r1mr3145181wmn.31.1583489213031;
-        Fri, 06 Mar 2020 02:06:53 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id s2sm10338017wmj.15.2020.03.06.02.06.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 02:06:52 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] KVM: VMX: untangle VMXON revision_id setting when using eVMCS
-In-Reply-To: <20200305201000.GQ11500@linux.intel.com>
-References: <20200305183725.28872-1-vkuznets@redhat.com> <20200305183725.28872-3-vkuznets@redhat.com> <20200305201000.GQ11500@linux.intel.com>
-Date:   Fri, 06 Mar 2020 11:06:51 +0100
-Message-ID: <87pndper0k.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uNKCod9HWXu3nxzrNq2A6yL231Mu94A886+59BwdSMs=;
+        b=Lx9cHQpAer+RZ4MpVjNUMYo9VCk47QYmr7U/JX6DWLbI7b1G/tMNG9y2RYPclWVR81
+         9gs6Eh49FuhhFQYpzvOL7c1nKBYnuj2mwOaAE/bfzjD+tAlp3fg1idrgoWX2fqlZ8sSp
+         Bhov0Rw8rwb0L93ejQzP1fFudcLn53MTZc55QkdbzAf218gsvziYzeYZC/E9ZRAU405Q
+         zf9nRSgpHrf0IrBX55uG8boZJQFJW0XPcVNrqLT4Jrl6bRlE229vlaNx4LR+2XQayL+T
+         GrhJUQtbVmfavUIPxA7uWcvxkdbFAfBGla15siGdpCHxkLeMifBIalH8El7XMBx2lYkC
+         T+yQ==
+X-Gm-Message-State: ANhLgQ02yRHAGrQaiji9zIFTfOHC8oe+4GCgST0VoJRr1gSJM+W9GcuT
+        9vmjOSr1jQvxTRNzo+lqk7H1eyF7wuqKljbqnJ0/dQ==
+X-Google-Smtp-Source: ADFU+vsPFcu0IamYO7zcUHclxL6+QOvOPAC3udRj76VGvSDRr2MgjVWcGiwDFu6MaHE/Uqw+4BybbwlP2HJccNuaWOc=
+X-Received: by 2002:ab0:7802:: with SMTP id x2mr1248889uaq.100.1583489298936;
+ Fri, 06 Mar 2020 02:08:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
+ <CAPDyKFqSJ4h7UvQfQzWmSq9gg97A0MXvdcuXXaY7b-YUHs=V2g@mail.gmail.com> <158334039680.7173.16159724456027777605@swboyd.mtv.corp.google.com>
+In-Reply-To: <158334039680.7173.16159724456027777605@swboyd.mtv.corp.google.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 6 Mar 2020 11:07:41 +0100
+Message-ID: <CAPDyKFqecH=AsvtN+JMxdk6pY2dntWUrhUWF6LEq_DLCcPe6pw@mail.gmail.com>
+Subject: Re: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks
+ of sdhci-msm platform driver
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Wed, 4 Mar 2020 at 17:46, Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Ulf Hansson (2020-03-04 07:34:29)
+> > On Thu, 20 Feb 2020 at 07:45, Shaik Sajida Bhanu <sbhanu@codeaurora.org> wrote:
+> > >
+> > > The existing suspend/resume callbacks of sdhci-msm driver are just
+> > > gating/un-gating the clocks. During suspend cycle more can be done
+> > > like disabling controller, disabling card detection, enabling wake-up events.
+> > >
+> > > So updating the system pm callbacks for performing these extra
+> > > actions besides controlling the clocks.
+> > >
+> > > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > > ---
+> > > Changes since V3:
+> > >     Invoking sdhci & cqhci resume if sdhci_host_suspend fails.
+> > >     Removed condition check before invoking cqhci_resume since its a dummy function.
+> > >
+> > > Changes since V2:
+> > >     Removed disabling/enabling pwr-irq from system pm ops.
+> > >
+> > > Changes since V1:
+> > >     Invoking pm_runtime_force_suspend/resume instead of
+> > >     sdhci_msm_runtime_suepend/resume.
+> > > diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> > > index 3955fa5d..3559b50 100644
+> > > --- a/drivers/mmc/host/sdhci-msm.c
+> > > +++ b/drivers/mmc/host/sdhci-msm.c
+> > > @@ -2159,9 +2159,52 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+> [...]
+> > > +
+> > > +       ret = sdhci_suspend_host(host);
+> > > +       if (ret)
+> > > +               goto resume_cqhci;
+> >
+> > sdhci_suspend_host() can't be called on a device that has been runtime
+> > suspended, as that would lead to accessing device registers when
+> > clocks/PM domains are gated.
+> >
+> > Depending on how the corresponding cqhci device is managed from a
+> > runtime PM point of view, it could also be problematic to call
+> > cqhci_suspend().
+>
+> There seems to be another patch floating around here[1] that is an
+> attempt at a fix to this patch. They should probably be combined so that
+> it's not confusing what's going on.
 
-> On Thu, Mar 05, 2020 at 07:37:25PM +0100, Vitaly Kuznetsov wrote:
->> As stated in alloc_vmxon_regions(), VMXON region needs to be tagged with
->> revision id from MSR_IA32_VMX_BASIC even in case of eVMCS. The logic to
->> do so is not very straightforward: first, we set
->> hdr.revision_id = KVM_EVMCS_VERSION in alloc_vmcs_cpu() just to reset it
->> back to vmcs_config.revision_id in alloc_vmxon_regions(). Simplify this by
->> introducing 'enum vmcs_type' parameter to alloc_vmcs_cpu().
->> 
->> No functional change intended.
->> 
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->
-> ...
->
->> +	 * However, even though not explicitly documented by TLFS, VMXArea
->> +	 * passed as VMXON argument should still be marked with revision_id
->> +	 * reported by physical CPU.
->
-> LOL, nice.
->
->
->> +	 */
->> +	if (type != VMXON_REGION && static_branch_unlikely(&enable_evmcs))
->>  		vmcs->hdr.revision_id = KVM_EVMCS_VERSION;
->>  	else
->>  		vmcs->hdr.revision_id = vmcs_config.revision_id;
->>  
->> -	if (shadow)
->> +	if (type == SHADOW_VMCS_REGION)
->>  		vmcs->hdr.shadow_vmcs = 1;
->>  	return vmcs;
->>  }
->
->> -struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags);
->> +enum vmcs_type {
->> +	VMXON_REGION,
->> +	VMCS_REGION,
->> +	SHADOW_VMCS_REGION,
->> +};
->> +
->> +struct vmcs *alloc_vmcs_cpu(enum vmcs_type type, int cpu, gfp_t flags);
->>  void free_vmcs(struct vmcs *vmcs);
->>  int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
->>  void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
->> @@ -498,8 +504,8 @@ void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs);
->>  
->>  static inline struct vmcs *alloc_vmcs(bool shadow)
->
-> I think it'd be cleaner overall to take "enum vmcs_type" in alloc_vmcs().
-> Then the ternary operator goes away and the callers (all two of 'em) are
-> self-documenting.
+Yeah, it would be easier if these are discussed together.
 
-Ya, it didn't seem to be needed with my initial suggestion to rename
-alloc_vmcs_cpu() to alloc_vmx_area_cpu() because in case we think of
-VMXON region as something different from VMCS we have only two options:
-normal VMCS or shadow VMCS and bool flag works perfectly. 
+>
+> >
+> > > +
+> > > +       ret = pm_runtime_force_suspend(dev);
+> >
+> > It looks to me that perhaps you could make use of solely
+> > pm_runtime_force_suspend(), then just skip calling
+> > sdhci_suspend|resume_host() altogether. Do you think that could work?
+>
+> Does that do all the things the commit text mentions is desired for
+> system suspend?
 
-v3 is on the way, stay tuned!
+No. :-)
 
--- 
-Vitaly
+But why is system wakeup needed for an eMMC card?
 
+>
+> > > like disabling controller, disabling card detection, enabling wake-up events.
+>
+> [1] https://lore.kernel.org/linux-arm-msm/1583322863-21790-1-git-send-email-vbadigan@codeaurora.org/
+
+Kind regards
+Uffe
