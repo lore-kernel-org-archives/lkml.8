@@ -2,132 +2,273 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0C4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC00C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A4E2072A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB63A2072A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:18:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A26MYVGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgCFPRM (ORCPT
+        id S1726382AbgCFPSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:17:12 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:45207 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCFPRL (ORCPT
+        Fri, 6 Mar 2020 10:18:39 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34178 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgCFPSi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:17:11 -0500
-Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N4yyQ-1jKAt80fDQ-010w81; Fri, 06 Mar 2020 16:17:10 +0100
-Received: by mail-qk1-f177.google.com with SMTP id p62so2636013qkb.0;
-        Fri, 06 Mar 2020 07:17:09 -0800 (PST)
-X-Gm-Message-State: ANhLgQ00yfbGOesMzKNnbaH0MXPu/RtTKkKNCnV6066uX0yesRPUH10a
-        Ga+99LkW2YwTYXG/yZR5ziCa3P8szyXefGORtQw=
-X-Google-Smtp-Source: ADFU+vuDaJsUN+5WX4+LLP5sq0sAGqnYo6p0nd7YbrvGU0xXwmka3Olj+EhE6qSwp8BgobIoBAs6cm1HFLnsNlxHW68=
-X-Received: by 2002:a37:b984:: with SMTP id j126mr3197034qkf.3.1583507828957;
- Fri, 06 Mar 2020 07:17:08 -0800 (PST)
+        Fri, 6 Mar 2020 10:18:38 -0500
+Received: by mail-pf1-f195.google.com with SMTP id y21so1273186pfp.1;
+        Fri, 06 Mar 2020 07:18:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zF1aUPvrJoqRWvHW9G34N4+Iycf5hM+l/TP/8XyWQD8=;
+        b=A26MYVGfEA/Zuj8FOfgiJXRYeX28jXApvtoXKSv9nyRC84S6lRoJR1PWCzLpPG2f3b
+         FELSFYtlTyuio+UT6fFOdzHcvxCTylelBkDeD9rX3+u9x2hc4S5lWyIHm2ZuYCI7VMJP
+         R/VZFv25I5/mQx0cc1YAG4Mo8LxUWJ4CIzFKoVP3g6xEhpnEyKAQFjqFs3Zk8z/LGV/I
+         AlD2dDx/l89pt0B4Pr3zsOdYn5f45X7TyJoF/W/gsAiJl+z12Ov/iPHs9Ujb2soEg9o6
+         X6IvcW0uEudYOavQfEHWDsk1GN5PokyHBx2PRF+uGDQW4S2tkYy85rhRYJPAvDrYkfU0
+         enQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zF1aUPvrJoqRWvHW9G34N4+Iycf5hM+l/TP/8XyWQD8=;
+        b=M2iOoRHAWfW4G7gQ7NtxSkaWoQ/xxY4RSnGSERi22Uxre+XnI+S+yRL+2r4/y6fl4p
+         eSYeOr1c97rIB5famjUdh7Ne9Dd+VuuCsATOx1v+CAdPjEBYWa7j8A/XE8LBU3k9UGhj
+         zzzYme4W8bAsSpycCCz7BXpyzq5n1Ckq3QlxHoiMtRef1NvU2DZkrXOi5oGy1/WCs/5S
+         BkZo/UognI9qmnpKzKZ9U8A7kz417gzlABlJgfzA/Cny7GtsXDFQ/BszgCWY/7ZGODDl
+         2riu1WNK3FcekVIva5HlxGB7MydC4+lFUHSFi7dhro9YXowd0bPxT4YYsmShpOmWUopB
+         1CEA==
+X-Gm-Message-State: ANhLgQ1B7ytM8cw/0QmN2J7XqRjtsEVlGAPWKzt5obDKylQQZ3OiPKj9
+        6c3j3GjaGgGzW055fExBFPPuKYY1
+X-Google-Smtp-Source: ADFU+vtYdSzic5qCSzVitOM5a6jZ6lRZWREC3pEXRO0lfFBvy/OAkyViWAOLv+4Hi24i2btOedRSAg==
+X-Received: by 2002:aa7:858a:: with SMTP id w10mr4200185pfn.210.1583507916924;
+        Fri, 06 Mar 2020 07:18:36 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x3sm9785005pjq.5.2020.03.06.07.18.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Mar 2020 07:18:36 -0800 (PST)
+Subject: Re: [PATCH 1/7] dt-bindings: watchdog: dw-wdt: Replace legacy
+ bindings file with YAML-based one
+To:     Sergey.Semin@baikalelectronics.ru,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132803.770DC8030792@mail.baikalelectronics.ru>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <8c10be04-5aa2-af5e-7b15-262dcdc04875@roeck-us.net>
+Date:   Fri, 6 Mar 2020 07:18:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
- <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org> <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
- <6115fa56-a471-1e9f-edbb-e643fa4e7e11@kernel.org> <7c955142-1fcb-d99e-69e4-1e0d3d9eb8c3@huawei.com>
- <CAK8P3a0f9hnKGd6GJ8qFZSu+J-n4fY23TCGxQkmgJaxbpre50Q@mail.gmail.com>
- <90af535f-00ef-c1e3-ec20-aae2bd2a0d88@kernel.org> <CAK8P3a2Grd0JsBNsB19oAxrAFtOdpvjrpGcfeArKe7zD_jrUZw@mail.gmail.com>
- <ae0a1bf1-948f-7df0-9efb-cd1e94e27d2d@huawei.com>
-In-Reply-To: <ae0a1bf1-948f-7df0-9efb-cd1e94e27d2d@huawei.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 6 Mar 2020 16:16:52 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2wdCrBP=a8ZypWoC=HyCU3oYYNeCddWM7oT+xM9gTPhw@mail.gmail.com>
-Message-ID: <CAK8P3a2wdCrBP=a8ZypWoC=HyCU3oYYNeCddWM7oT+xM9gTPhw@mail.gmail.com>
-Subject: Re: About commit "io: change inX() to have their own IO barrier overrides"
-To:     John Garry <john.garry@huawei.com>
-Cc:     Sinan Kaya <okaya@kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:t8A1ODL76LW33V6LCb+zM2r5JjoIA9oWfVI78q4zdx4cVlyh6yI
- JtEbiAZrTIz9PloGfwy84Ht/RQBohv88T5bWOJe7n+m2aoWr4HXZHs2CjVHmpfSo00zBOEg
- sLcMzR1eFsg/gSKC5HhvA/USrOtSKDu8SpUoX3wHa9rlZwCFVG4JMTfAecLXV4N6LITKWtH
- iSy70wmAhsbdOaNvRMn+A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4SGZ1MhXyWw=:3q7Sp8G5686Anlxa7G+Rlr
- ZAEOcww3mF21E7pNuaaCwQ9PRexwUWE/ExmANEpRbcEVAQGLIKzspDDX52VRinK2nYQIQYTtS
- Ioa70YYVauO93RZ3qRUH6U5p2ewptmfuDp/1OS2H1tkfWUfvnmfFImh6ZmKS4YjqsPCmoGpHY
- r+9GNhpg0jiCuf5N+3c+WaGVKoFEsEu4OeOMRfsBcmit1GCBWp8TcNeEfl7frL4APKTyBgCol
- rOWE/QVebaOu9cqhlN6f178N5qw2VFp/W3ty0/gPYqHvQdTQxut286rS7/wfApLxiBD+LeHsi
- THEpDSiTOU+ESRgXQdWeGe5ugCXuKCae+K+5nbwKwjnpTfPgXCWklQxdbj/iGS5nMc/GSpKMp
- ROTSpHBqdE9rxiYjYTuGOk00R+dGQRxApbt0vXZIcbGBLpOwcdakv/9zM2gdit24T1vURDNbq
- Tb/oRXf7TWE8HCUe8ZEhoVMO2cZvJWDjx85Yyxvoeu0qv7vqDCPFNiqftzM6/52ajhNbo7rLf
- dv1s9jtEg9F0u59UwSHK3cROkFypGdxaRE84aKL2fQHnoNWFuUJcZNfse5gmUsve//pRkW8Ib
- nHTLkWTTwWqvg/w0NcaXNwh7l3qHxIONxJ7zvkwNXDDNdMR128kDiitKsIZKvP38fH1EtKYtr
- 3w1/p6icXPyp4/iJ337v7mYsjY8ovrdUWA8KwKH+6sma8HDrraI+7ftHH5r9/QGu9WrWT/25X
- oUeBFWEfoysq8hdIw50sxDSsfND0oGKKciPENfYsRGpa7fazOnZ+o7r1b9siuKf02413eZJdB
- e/mDOa4xMl/BJxymO4G3aSDtzI1rdiMApuGNEF7V/q5CRs9+NQ=
+In-Reply-To: <20200306132803.770DC8030792@mail.baikalelectronics.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 11:40 AM John Garry <john.garry@huawei.com> wrote:
-> On 06/03/2020 07:54, Arnd Bergmann wrote:
-> > On Fri, Mar 6, 2020 at 4:44 AM Sinan Kaya <okaya@kernel.org> wrote:
-> -- a/lib/logic_pio.c
-> +++ b/lib/logic_pio.c
-> @@ -229,13 +229,21 @@ unsigned long
-> logic_pio_trans_cpuaddr(resource_size_t addr)
->   }
->
->   #if defined(CONFIG_INDIRECT_PIO) && defined(PCI_IOBASE)
+On 3/6/20 5:27 AM, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> Modern device tree bindings are supposed to be created as YAML-files
+> in accordane with dt-schema. This commit replaces the DW Watchdog
+> legacy bare text bindings with YAML file. As before the the bindings
+> states that the corresponding dts node is supposed to have a registers
+> range reference, at least one clocks phandle reference, optional reset
+> lines. Seeing all the platforms with DW Watchdog provide the watchdog
+> interrupt property and since in further commit we'll alter the driver
+> to use it for pre-timeout functionality implementation, lets declare
+> the IRQ property to be required.
+> 
+
+First, this is not just a replacement - it changes semantics.
+
+Second, I disagree with making interrupts mandatory. They are only needed
+for pretimeout functionality, and not everyone may want to enable that.
+I don't see the point of forcing everyone to enable and provide functionality
+that is neither wanted or needed for a given use case. Yes, the interrupt
+is provided by all users today, but we may have one coming up tomorrow
+where the interrupt line is not even wired up. What then ?
+
+Guenter
+
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> ---
+>  .../devicetree/bindings/watchdog/dw_wdt.txt   | 24 -------
+>  .../bindings/watchdog/snps,dw-wdt.yaml        | 66 +++++++++++++++++++
+>  2 files changed, 66 insertions(+), 24 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> deleted file mode 100644
+> index eb0914420c7c..000000000000
+> --- a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -Synopsys Designware Watchdog Timer
+> -
+> -Required Properties:
+> -
+> -- compatible	: Should contain "snps,dw-wdt"
+> -- reg		: Base address and size of the watchdog timer registers.
+> -- clocks	: phandle + clock-specifier for the clock that drives the
+> -		watchdog timer.
+> -
+> -Optional Properties:
+> -
+> -- interrupts	: The interrupt used for the watchdog timeout warning.
+> -- resets	: phandle pointing to the system reset controller with
+> -		line index for the watchdog.
+> -
+> -Example:
+> -
+> -	watchdog0: wd@ffd02000 {
+> -		compatible = "snps,dw-wdt";
+> -		reg = <0xffd02000 0x1000>;
+> -		interrupts = <0 171 4>;
+> -		clocks = <&per_base_clk>;
+> -		resets = <&rst WDT0_RESET>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> new file mode 100644
+> index 000000000000..8b30f9601c38
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) 2019 BAIKAL ELECTRONICS, JSC
+> +#
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/snps,dw-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#define logic_in_to_cpu_b(x) (x)
-> +#define logic_in_to_cpu_w(x) __le16_to_cpu(x)
-> +#define logic_in_to_cpu_l(x) __le32_to_cpu(x)
+> +title: Synopsys Designware Watchdog Timer
 > +
->   #define BUILD_LOGIC_IO(bw, type)                                      \
->   type logic_in##bw(unsigned long addr)                                 \
->   {                                                                     \
->          type ret = (type)~0;                                           \
->                                                                         \
->          if (addr < MMIO_UPPER_LIMIT) {                                 \
-> -               ret = read##bw(PCI_IOBASE + addr);                     \
-> +               void __iomem *_addr = PCI_IOBASE + addr;               \
-> +               __io_pbr();                                            \
-> +               ret = logic_in_to_cpu_##bw(__raw_read##bw(_addr));     \
-> +               __io_par(ret);                                         \
->          } else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {\
->                  struct logic_pio_hwaddr *entry = find_io_rang
->
-> We could prob combine the le_to_cpu and __raw_read into a single macro.
+> +allOf:
+> +  - $ref: "watchdog.yaml#"
+> +
+> +maintainers:
+> +  - Jamie Iles <jamie@jamieiles.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: snps,dw-wdt
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: DW Watchdog pre-timeout interrupts.
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    items:
+> +      - description: Watchdog timer reference clock.
+> +      - description: APB3 interface clock.
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    items:
+> +      - const: tclk
+> +      - const: pclk
+> +
+> +  assigned-clocks: true
+> +
+> +  assigned-clock-rates: true
+> +
+> +  resets:
+> +    description: Phandle to the DW Watchdog reset lane.
+> +    maxItems: 1
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    watchdog0: watchdog@ffd02000 {
+> +      compatible = "snps,dw-wdt";
+> +      reg = <0xffd02000 0x1000>;
+> +      interrupts = <0 171 4>;
+> +      clocks = <&per_base_clk>;
+> +      resets = <&wdt_rst>;
+> +    };
+> +...
+> 
 
-What is the purpose of splitting out the byteswap rather than leaving the
-open-coded rather than __le16_to_cpu(__raw_readw(PCI_IOBASE + addr))?
-
-If this is needed to work across architectures, how about adding
-an intermediate __raw_inw() etc in asm-generic/io.h like
-
-#ifndef __raw_inw
-#define __raw_inw(a) __raw_readw(PCI_IOBASE + addr));
-#endif
-
-#include <linux/logic_pio.h>
-
-#ifndef inw
-static inline u16 inw(unsigned long addr)
-{
-        u16 val;
-
-        __io_pbr();
-        val = __le16_to_cpu(__raw_inw(addr));
-        __io_par(val);
-        return val;
-}
-#endif
-
-       Arnd
