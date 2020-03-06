@@ -2,96 +2,164 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A0EC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A44C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825EB2073D
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 838E02073D
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 00:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCFAmq (ORCPT
+        id S1726650AbgCFAoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 19:42:46 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51786 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbgCFAmq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 19:42:46 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jA14I-0000gb-53; Fri, 06 Mar 2020 01:42:22 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 5E6A3104085; Fri,  6 Mar 2020 01:42:21 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-In-Reply-To: <20200213163800.5c51a5f1@gandalf.local.home>
-References: <20200212210139.382424693@infradead.org> <20200212210749.971717428@infradead.org> <20200212232005.GC115917@google.com> <20200213082716.GI14897@hirez.programming.kicks-ass.net> <20200213135138.GB2935@paulmck-ThinkPad-P72> <20200213164031.GH14914@hirez.programming.kicks-ass.net> <20200213185612.GG2935@paulmck-ThinkPad-P72> <20200213204444.GA94647@google.com> <20200213205442.GK2935@paulmck-ThinkPad-P72> <20200213211930.GG170680@google.com> <20200213163800.5c51a5f1@gandalf.local.home>
-Date:   Fri, 06 Mar 2020 01:42:21 +0100
-Message-ID: <87y2seb9g2.fsf@nanos.tec.linutronix.de>
+        Thu, 5 Mar 2020 19:44:05 -0500
+Received: from mga03.intel.com ([134.134.136.65]:7115 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgCFAoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 19:44:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 16:44:03 -0800
+X-IronPort-AV: E=Sophos;i="5.70,520,1574150400"; 
+   d="scan'208";a="244457440"
+Received: from ldmartin-desk1.jf.intel.com (HELO ldmartin-desk1) ([10.24.14.222])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 16:44:03 -0800
+Date:   Thu, 5 Mar 2020 16:44:04 -0800
+From:   Lucas De Marchi <lucas.demarchi@intel.com>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] modpost: move the namespace field in Module.symvers last
+Message-ID: <20200306004404.52wikm2ynsrea47t@ldmartin-desk1>
+References: <20200304170345.21218-1-jeyu@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200304170345.21218-1-jeyu@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Rostedt <rostedt@goodmis.org> writes:
-> rcu_nmi_enter() was marked NOKPROBE or other reasons. See commit
-
-Very well said: OR other reasons. I assume you meant 'for' but ...
-
-> c13324a505c77 ("x86/kprobes: Prohibit probing on functions before
-> kprobe_int3_handler()")
+On Wed, Mar 04, 2020 at 06:03:45PM +0100, Jessica Yu wrote:
+>In order to preserve backwards compatability with kmod tools, we have to
+>move the namespace field in Module.symvers last, as the depmod -e -E
+>option looks at the first three fields in Module.symvers to check symbol
+>versions (and it's expected they stay in the original order of crc,
+>symbol, module).
 >
-> The issue was that we must not allow anything in do_int3() call kprobe
-> code before kprobe_int3_handler() is called. Because ist_enter() (in
-> do_int3()) calls rcu_nmi_enter() it had to be marked NOKPROBE. It had
-> nothing to do with it being RCU nor NMI, but because it was simply
-> called in do_int3().
+>Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
+>Cc: stable@vger.kernel.org
+>Signed-off-by: Jessica Yu <jeyu@kernel.org>
+
+With the additional info provided in the commit message as requested in
+the other email,
+
+Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+
+thanks
+Lucas De Marchi
+
+>---
+> Documentation/kbuild/modules.rst |  4 ++--
+> scripts/export_report.pl         |  2 +-
+> scripts/mod/modpost.c            | 24 ++++++++++++------------
+> 3 files changed, 15 insertions(+), 15 deletions(-)
 >
-> Thus, there's no reason to make rcu_nmi_exit() NOKPROBE. But a commont
-> to why rcu_nmi_enter() would probably be useful, like below:
-
-... this is really wrong.
-
-While the int3 issue was the reason why it was marked NOKPROBE, fact is
-that aside of int3 problem (which is probably true for any other
-architecture using breakpoints for patching) any probe _before_ RCU is
-watching and _after_ RCU stopped watching is broken. Same applies for
-BPF and tracepoints which call into BPF or other nonsense.
-
-Can we please stop claiming that instrumentation can touch anything it
-wants and just admit that anything outside RCU covered regions is
-off-limits for instrumentation? Same applies for entry code and critical
-exceptions/traps.
-
-There is a reason why the tracer can't trace itself and there are very
-valid reasons to limit the instrumentation ability in other places.
-
-It's nice to be able to see into 'everything' but for 99.9999% of the
-cases the coverage of these things is absolutely irrelevant.
-
-Yes I know, "Correctness first" is this old school thing for grumpy old
-greybeards who are still stuck in the 90's. "Features first" is the new
-mantra. I deal with that every day by mopping up the mess it creates.
-
-Thanks,
-
-        tglx
+>diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
+>index 69fa48ee93d6..e0b45a257f21 100644
+>--- a/Documentation/kbuild/modules.rst
+>+++ b/Documentation/kbuild/modules.rst
+>@@ -470,9 +470,9 @@ build.
+>
+> 	The syntax of the Module.symvers file is::
+>
+>-	<CRC>       <Symbol>          <Namespace>  <Module>                         <Export Type>
+>+	<CRC>       <Symbol>         <Module>                         <Export Type>     <Namespace>
+>
+>-	0xe1cc2a05  usb_stor_suspend  USB_STORAGE  drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL
+>+	0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
+>
+> 	The fields are separated by tabs and values may be empty (e.g.
+> 	if no namespace is defined for an exported symbol).
+>diff --git a/scripts/export_report.pl b/scripts/export_report.pl
+>index 548330e8c4e7..feb3d5542a62 100755
+>--- a/scripts/export_report.pl
+>+++ b/scripts/export_report.pl
+>@@ -94,7 +94,7 @@ if (defined $opt{'o'}) {
+> #
+> while ( <$module_symvers> ) {
+> 	chomp;
+>-	my (undef, $symbol, $namespace, $module, $gpl) = split('\t');
+>+	my (undef, $symbol, $module, $gpl, $namespace) = split('\t');
+> 	$SYMBOL { $symbol } =  [ $module , "0" , $symbol, $gpl];
+> }
+> close($module_symvers);
+>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>index 7edfdb2f4497..6ab235354f36 100644
+>--- a/scripts/mod/modpost.c
+>+++ b/scripts/mod/modpost.c
+>@@ -2427,7 +2427,7 @@ static void write_if_changed(struct buffer *b, const char *fname)
+> }
+>
+> /* parse Module.symvers file. line format:
+>- * 0x12345678<tab>symbol<tab>module[[<tab>export]<tab>something]
+>+ * 0x12345678<tab>symbol<tab>module<tab>export<tab>namespace
+>  **/
+> static void read_dump(const char *fname, unsigned int kernel)
+> {
+>@@ -2440,7 +2440,7 @@ static void read_dump(const char *fname, unsigned int kernel)
+> 		return;
+>
+> 	while ((line = get_next_line(&pos, file, size))) {
+>-		char *symname, *namespace, *modname, *d, *export, *end;
+>+		char *symname, *namespace, *modname, *d, *export;
+> 		unsigned int crc;
+> 		struct module *mod;
+> 		struct symbol *s;
+>@@ -2448,16 +2448,16 @@ static void read_dump(const char *fname, unsigned int kernel)
+> 		if (!(symname = strchr(line, '\t')))
+> 			goto fail;
+> 		*symname++ = '\0';
+>-		if (!(namespace = strchr(symname, '\t')))
+>-			goto fail;
+>-		*namespace++ = '\0';
+>-		if (!(modname = strchr(namespace, '\t')))
+>+		if (!(modname = strchr(symname, '\t')))
+> 			goto fail;
+> 		*modname++ = '\0';
+>-		if ((export = strchr(modname, '\t')) != NULL)
+>-			*export++ = '\0';
+>-		if (export && ((end = strchr(export, '\t')) != NULL))
+>-			*end = '\0';
+>+		if (!(export = strchr(modname, '\t')))
+>+			goto fail;
+>+		*export++ = '\0';
+>+		if (!(namespace = strchr(export, '\t')))
+>+			goto fail;
+>+		*namespace++ = '\0';
+>+
+> 		crc = strtoul(line, &d, 16);
+> 		if (*symname == '\0' || *modname == '\0' || *d != '\0')
+> 			goto fail;
+>@@ -2508,9 +2508,9 @@ static void write_dump(const char *fname)
+> 				namespace = symbol->namespace;
+> 				buf_printf(&buf, "0x%08x\t%s\t%s\t%s\t%s\n",
+> 					   symbol->crc, symbol->name,
+>-					   namespace ? namespace : "",
+> 					   symbol->module->name,
+>-					   export_str(symbol->export));
+>+					   export_str(symbol->export),
+>+					   namespace ? namespace : "");
+> 			}
+> 			symbol = symbol->next;
+> 		}
+>-- 
+>2.16.4
+>
