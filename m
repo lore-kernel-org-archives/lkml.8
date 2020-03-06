@@ -2,216 +2,102 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A134CC10F27
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C984C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4692070A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="puBHa+EI"
+	by mail.kernel.org (Postfix) with ESMTP id 2C2A820709
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgCFT7F (ORCPT
+        id S1726269AbgCFUBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:59:05 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45064 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCFT7F (ORCPT
+        Fri, 6 Mar 2020 15:01:11 -0500
+Received: from shelob.surriel.com ([96.67.55.147]:42834 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgCFUBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:59:05 -0500
-Received: by mail-ot1-f66.google.com with SMTP id f21so3610754otp.12;
-        Fri, 06 Mar 2020 11:59:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9iMEAOJp31ZT3tbWUq0vVLKvRWpPQYGZdT0+aeaOx0U=;
-        b=puBHa+EImZpqs7EwGJ/YJHv+T/U6xfKvKJpTI3fIoKsp3WvXacEwlGNnSlR3ynznrP
-         fyHfEWsQ9NO/NfM+bWi2Wpovh+gumYQ9UxatPIU8Q2md9A7VWmHexcbRAbCd1XxV9vSC
-         S7Q+fAw8IX3GXZkrXHn/HhuZs3l9iLm2M2NW056NdvmsO0md2aMezTcdG4ezxQuQiD/L
-         SnojqdWKfgVX8lBZEswBsZSeINJFE6bD5g6+OmrjDJ2taRMzV+H/2wEgKMkWylpHWcf2
-         0cd4WiXzqTv8YEm6iVMO8lYRiIXpldz5r5YcBjnf76wsaM+eMl5NIBlYFSFe4LUv2czV
-         9M7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9iMEAOJp31ZT3tbWUq0vVLKvRWpPQYGZdT0+aeaOx0U=;
-        b=S2tDOavAVbGkKce1o0vnvCOt4yJTdqjGeaw+Vrpg9fwfSMeCrhqIO+2RTdZCC7ckpR
-         jgB80hgp9KunTFIFmFSpg40qTz8a0qIIQNBkJSKwqIa8H7UFpELrwI6Jq/G7fUcEHIVt
-         HUhRDglXkOa3Uab1CF61xLTFPkVTKwGSb3hq7tnThWDFBd+t1Gj1E1AvuwZbdEwdpl8C
-         wwonCNQSh0WW1/W2gFDqmXlqKnRxCq0hxacdmUxioa48npbKCcDVqN1I2zkpBFOnm+wl
-         GZylo7KSE6eEFRHE7NQmOmORuuk+c38pyyfTl4uPi4Di5MDIiRjLxxBH3ng/s1w6/HDL
-         5CYA==
-X-Gm-Message-State: ANhLgQ0nQHk8ikl+BO0rwW95YuSa9XFDIeDTXbjRG/nVo9uMZWCQX8x8
-        cPq75q9Zk3PZbpzqUHEQsy+qyafQwQ+qqw==
-X-Google-Smtp-Source: ADFU+vve+niu4SAo5/TFA8c8/hIWThZFju8y6ueh+HqfbYM8guXHo+GPOAUwp3p+L80vfYmevZYR6Q==
-X-Received: by 2002:a05:6830:1e07:: with SMTP id s7mr3984755otr.85.1583524744150;
-        Fri, 06 Mar 2020 11:59:04 -0800 (PST)
-Received: from [100.71.96.87] ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id v140sm67853oif.56.2020.03.06.11.59.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Mar 2020 11:59:02 -0800 (PST)
-Subject: Re: [PATCH v4] PCI: pciehp: Fix MSI interrupt race
-To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, narendra_k@dell.com,
-        Enzo Matsumiya <ematsumiya@suse.com>
-References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
- <78b4ced5072bfe6e369d20e8b47c279b8c7af12e.1582121613.git.lukas@wunner.de>
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Message-ID: <860e81c0-8030-57cd-2847-a8a7a9bbda5c@gmail.com>
-Date:   Fri, 6 Mar 2020 13:59:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 6 Mar 2020 15:01:10 -0500
+Received: from [2603:3005:d05:2b00:6e0b:84ff:fee2:98bb] (helo=imladris.surriel.com)
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1jAJ9b-0007hU-10; Fri, 06 Mar 2020 15:01:03 -0500
+Date:   Fri, 6 Mar 2020 15:01:02 -0500
+From:   Rik van Riel <riel@surriel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Roman Gushchin <guro@fb.com>,
+        Qian Cai <cai@lca.pw>, Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: [PATCH]  mm,page_alloc,cma: conditionally prefer cma pageblocks for
+ movable allocations
+Message-ID: <20200306150102.3e77354b@imladris.surriel.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <78b4ced5072bfe6e369d20e8b47c279b8c7af12e.1582121613.git.lukas@wunner.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Posting this one for Roman so I can deal with any upstream feedback and
+create a v2 if needed, while scratching my head over the next piece of
+this puzzle :)
+
+---8<---
+
+From: Roman Gushchin <guro@fb.com>
+
+Currently a cma area is barely used by the page allocator because
+it's used only as a fallback from movable, however kswapd tries
+hard to make sure that the fallback path isn't used.
+
+This results in a system evicting memory and pushing data into swap,
+while lots of CMA memory is still available. This happens despite the
+fact that alloc_contig_range is perfectly capable of moving any movable
+allocations out of the way of an allocation.
+
+To effectively use the cma area let's alter the rules: if the zone
+has more free cma pages than the half of total free pages in the zone,
+use cma pageblocks first and fallback to movable blocks in the case of
+failure.
+
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Co-developed-by: Rik van Riel <riel@surriel.com>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ mm/page_alloc.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3c4eb750a199..0fb3c1719625 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -2711,6 +2711,18 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
+ {
+ 	struct page *page;
+ 
++	/*
++	 * Balance movable allocations between regular and CMA areas by
++	 * allocating from CMA when over half of the zone's free memory
++	 * is in the CMA area.
++	 */
++	if (migratetype == MIGRATE_MOVABLE &&
++	    zone_page_state(zone, NR_FREE_CMA_PAGES) >
++	    zone_page_state(zone, NR_FREE_PAGES) / 2) {
++		page = __rmqueue_cma_fallback(zone, order);
++		if (page)
++			return page;
++	}
+ retry:
+ 	page = __rmqueue_smallest(zone, order, migratetype);
+ 	if (unlikely(!page)) {
+-- 
+2.24.1
 
 
-On 2/19/20 8:31 AM, Lukas Wunner wrote:
-> From: Stuart Hayes <stuart.w.hayes@gmail.com>
-> 
-> Without this commit, a PCIe hotplug port can stop generating interrupts
-> on hotplug events, so device adds and removals will not be seen:
-> 
-> The pciehp interrupt handler pciehp_isr() reads the Slot Status register
-> and then writes back to it to clear the bits that caused the interrupt.
-> If a different interrupt event bit gets set between the read and the
-> write, pciehp_isr() returns without having cleared all of the interrupt
-> event bits.  If this happens when the MSI isn't masked (which by default
-> it isn't in handle_edge_irq(), and which it will never be when MSI
-> per-vector masking is not supported), we won't get any more hotplug
-> interrupts from that device.
-> 
-> That is expected behavior, according to the PCIe Base Spec r5.0, section
-> 6.7.3.4, "Software Notification of Hot-Plug Events".
-> 
-> Because the Presence Detect Changed and Data Link Layer State Changed
-> event bits can both get set at nearly the same time when a device is
-> added or removed, this is more likely to happen than it might seem.
-> The issue was found (and can be reproduced rather easily) by connecting
-> and disconnecting an NVMe storage device on at least one system model
-> where the NVMe devices were being connected to an AMD PCIe port (PCI
-> device 0x1022/0x1483).
-> 
-> Fix the issue by modifying pciehp_isr() to loop back and re-read the
-> Slot Status register immediately after writing to it, until it sees that
-> all of the event status bits have been cleared.
-> 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> [lukas: drop loop count limitation, write "events" instead of "status",
-> don't loop back in INTx and poll modes, tweak code comment & commit msg]
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> ---
-> v4 (lukas):
->   * drop "MAX_ISR_STATUS_READS" loop count limitation
->   * drop unnecessary braces around PCI_EXP_SLTSTA_* flags
->   * write "events" instead of "status" variable to Slot Status register
->     to avoid unnecessary loop iterations if the same bit gets set
->     repeatedly
->   * don't loop back in INTx and poll modes
->   * shorten and tweak code comment & commit message
-> 
-> v3:
->   * removed pvm_capable flag (from v2) since MSI may not be masked
->     regardless of whether per-vector masking is supported
->   * tweaked comments
-> 
-> v2:
->   * fixed ctrl_warn() call
->   * improved comments
->   * added pvm_capable flag and changed pciehp_isr() to loop back only when
->     pvm_capable flag not set (suggested by Lukas Wunner)
-> 
->  drivers/pci/hotplug/pciehp_hpc.c | 26 ++++++++++++++++++++------
->  1 file changed, 20 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 8a2cb1764386..f64d10df9eb5 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -527,7 +527,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  	struct controller *ctrl = (struct controller *)dev_id;
->  	struct pci_dev *pdev = ctrl_dev(ctrl);
->  	struct device *parent = pdev->dev.parent;
-> -	u16 status, events;
-> +	u16 status, events = 0;
->  
->  	/*
->  	 * Interrupts only occur in D3hot or shallower and only if enabled
-> @@ -552,6 +552,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  		}
->  	}
->  
-> +read_status:
->  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
->  	if (status == (u16) ~0) {
->  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
-> @@ -564,24 +565,37 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  	 * Slot Status contains plain status bits as well as event
->  	 * notification bits; right now we only want the event bits.
->  	 */
-> -	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
-> -			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
-> -			   PCI_EXP_SLTSTA_DLLSC);
-> +	status &= PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
-> +		  PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
-> +		  PCI_EXP_SLTSTA_DLLSC;
->  
->  	/*
->  	 * If we've already reported a power fault, don't report it again
->  	 * until we've done something to handle it.
->  	 */
->  	if (ctrl->power_fault_detected)
-> -		events &= ~PCI_EXP_SLTSTA_PFD;
-> +		status &= ~PCI_EXP_SLTSTA_PFD;
->  
-> +	events |= status;
->  	if (!events) {
->  		if (parent)
->  			pm_runtime_put(parent);
->  		return IRQ_NONE;
->  	}
->  
-> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-> +	if (status) {
-> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-> +
-> +		/*
-> +		 * In MSI mode, all event bits must be zero before the port
-> +		 * will send a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).
-> +		 * So re-read the Slot Status register in case a bit was set
-> +		 * between read and write.
-> +		 */
-> +		if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode)
-> +			goto read_status;
-> +	}
-> +
->  	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
->  	if (parent)
->  		pm_runtime_put(parent);
-> 
-
-If it helps, you can add...
-Tested-by: Stuart Hayes <stuart.w.hayes@gmail.com>
