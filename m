@@ -2,178 +2,138 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14051C10F26
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF55C10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F5520665
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1105B206D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iORSAA+d"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GmNom6vw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCFUHp (ORCPT
+        id S1726490AbgCFULM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:07:45 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44824 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726162AbgCFUHp (ORCPT
+        Fri, 6 Mar 2020 15:11:12 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:37521 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgCFULM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:07:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583525264;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+YIIYWVi7RdgKfAy7yTaNL+3yMfo1EDUARXKVoiNRlk=;
-        b=iORSAA+dvGs8kGAy7INVNjSgZaeQlvWI0LcSQIeTCrDSFzVoNo2lizxJGSc4gpQvEeF4Ii
-        ywln5Q2Gx4dT0F37AfPsTsHjoWhmXSxNLzskAkYcIS4bJg7X8hsY0OJa56/m/6XBEXyf2K
-        ueAbIihO24iciP2EbmdSq2CsakVLOyQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-9S-s0OdCNB2jyIvWkNZXNg-1; Fri, 06 Mar 2020 15:07:35 -0500
-X-MC-Unique: 9S-s0OdCNB2jyIvWkNZXNg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB225184C804;
-        Fri,  6 Mar 2020 20:07:32 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AB79A1001B2D;
-        Fri,  6 Mar 2020 20:07:29 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-acpi@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Wei Yang <richardw.yang@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Manual definition of Soft Reserved memory devices
-References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Fri, 06 Mar 2020 15:07:28 -0500
-In-Reply-To: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
-        (Dan Williams's message of "Mon, 02 Mar 2020 14:19:57 -0800")
-Message-ID: <x49a74tnt6n.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 6 Mar 2020 15:11:12 -0500
+Received: by mail-yw1-f65.google.com with SMTP id g206so3425080ywb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 12:11:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cAmN2XomIZLyi4Gd5i7ZRZxhcZeRZofVGY0pFhBeAdk=;
+        b=GmNom6vwhKWFaoB9oOCygW9y/53nh42K1Q+7Fa0n5SuOLMZJTaUwTJ5ABWV/QM44f6
+         UW3/JwXZfV/jD42MeYLJX4zI/UuJg9NQfI9CXJd7anP66cAqtdL6BsjL7Lewzxz+FWR3
+         jgcxRTKpQ3xBO2TTx/T97X9MY3JjOA8a71r0kszuUltC2/u5N1rfkuIqPZ+0v0kIENH6
+         zNp6LQxT0vMxIu2o+9Qf3yG/Dx8WE1T1CE3A63eI3JKPGrUTJaqG87ZtdOL8fD29UOO0
+         LEl8raxrLdh5NWxtkJMquBsGd2wnrEcL250qvfO7gyZi0NleGYavixhZGXEc768M2vcA
+         VKaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cAmN2XomIZLyi4Gd5i7ZRZxhcZeRZofVGY0pFhBeAdk=;
+        b=Wr+rkxM80aKEz0AunaAe3n4tnMvW0pmQXbs1y68gw6tiuDW0p7VQkTKKk2u7RZcvOO
+         L4JV5c/0grwxkAV+075Wk3qPQpNQsehiAtSuJ0D6AVaYxgu0mvAludqFy+nGqMeDvIDY
+         2uQ8+SW++yTr1vFeN2zSRgn5oD86Zj29xtkw5sc2Rp3+LfDijpuE2WJ9Tev7I3+sDB9i
+         k87nVAF8fF3AMcUS04U3Prw8dA3I1btFeM5PfCDaEOKPlhJEQE8ZsFoEmq1EvnRM/b1a
+         ZR4WB6ZHcrq21foMJB9QlCEbtn9+mAOeRdY3fZ6mbqAYznaTXjhLdybaIyPfJGIbRIyx
+         uWrQ==
+X-Gm-Message-State: ANhLgQ2HK0HAj5AsnGex7JyVu+av+BhzWVRNhxQkzcthBgZUyzMSXZdt
+        ZH8gTfGG+Zovfr2qx17WgaqZ2K3Du3SiC0LeHLG8
+X-Google-Smtp-Source: ADFU+vsZ/T/ANgJZwUxVSGl1g9UyXYJKjUx+RFdVydzyCgbtEWGW5cCbO/LTCEwWG4zR5zplEPgZICoPLpClK4M+wIs=
+X-Received: by 2002:a0d:f305:: with SMTP id c5mr6195972ywf.292.1583525469694;
+ Fri, 06 Mar 2020 12:11:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200306002321.3344-1-jkardatzke@google.com> <892a0548-df6d-a4db-921f-7f4cfd69dc06@linaro.org>
+In-Reply-To: <892a0548-df6d-a4db-921f-7f4cfd69dc06@linaro.org>
+From:   Jeffrey Kardatzke <jkardatzke@google.com>
+Date:   Fri, 6 Mar 2020 12:10:58 -0800
+Message-ID: <CA+ddPcPg_LrxdgxhOjrzkkBBawWoP0+6ijBx6CSy+CpQtP6vbQ@mail.gmail.com>
+Subject: Re: [PATCH] media: venus: fix use after free for registeredbufs
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On Fri, Mar 6, 2020 at 1:03 AM Stanimir Varbanov
+<stanimir.varbanov@linaro.org> wrote:
+>
+> Hi Jeff,
+>
+> Thanks for the patch!
+>
+> On 3/6/20 2:23 AM, Jeffrey Kardatzke wrote:
+> > In dynamic bufmode we do not manage the buffers in the registeredbufs
+> > list, so do not add them there when they are initialized. Adding them
+> > there was causing a use after free of the list_head struct in the buffer
+> > when new buffers were allocated after existing buffers were freed.
+>
+> Is this fixing a real issue? How you come to it?
+>
+In our code we were allocating 64x64 capture queue buffers initially,
+then got a resolution change event for the actual video resolution of
+320x256 so we freed all the existing capture buffers and allocated new
+ones. I had noticed memory poisoning warnings in dmesg and tracked it
+down to the patch I created here. This is only a problem when the
+capture queue has its buffers freed and reallocated (which would
+happen during any resolution change).
 
-> Given the current dearth of systems that supply an ACPI HMAT table, and
-> the utility of being able to manually define device-dax "hmem" instances
-> via the efi_fake_mem= option, relax the requirements for creating these
-> devices. Specifically, add an option (numa=nohmat) to optionally disable
-> consideration of the HMAT and update efi_fake_mem= to behave like
-> memmap=nn!ss in terms of delimiting device boundaries.
+> >
+> > Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
+> > ---
+> >  drivers/media/platform/qcom/venus/helpers.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+> > index bcc603804041..688a3593b49b 100644
+> > --- a/drivers/media/platform/qcom/venus/helpers.c
+> > +++ b/drivers/media/platform/qcom/venus/helpers.c
+> > @@ -1054,8 +1054,10 @@ int venus_helper_vb2_buf_init(struct vb2_buffer *vb)
+> >       buf->size = vb2_plane_size(vb, 0);
+> >       buf->dma_addr = sg_dma_address(sgt->sgl);
+> >
+> > -     if (vb->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
+> > +     if (vb->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE &&
+> > +         !is_dynamic_bufmode(inst)) {
+>
+> If you add !is_dynamic_bufmode here, we will loose the reference frames
+> mechanism (see venus_helper_release_buf_ref()) which is not good.
 
-So, am I correct in deducing that your primary motivation is testing
-without hardware/firmware support?  This looks like a bit of a hack to
-me, and I think maybe it would be better to just emulate the HMAT using
-qemu.  I don't have a strong objection, though.
+In my testing, I never see venus_helper_release_buf_ref called.  I
+think something is wrong with reference frame management. I'm also
+seeing failure in my tests that very much look like reference frames
+that were dropped in the decoder (with or without my patch); but they
+are not consistent.
 
--Jeff
+>
+> Thus, I wonder (depending on when you observe the use-after-free issue)
+> does this is the correct resolution of the problem.
 
+I agree this is likely not the right solution to the problem, there's
+something deeper that's wrong I think because I never see events
+coming back from hfi with the release buffer reference event.
 >
-> All review welcome of course, but the E820 changes want an x86
-> maintainer ack, the efi_fake_mem update needs Ard, and Rafael has
-> previously shepherded the HMAT changes. For the changes to
-> kernel/resource.c, where there is no clear maintainer, I just copied the
-> last few people to make thoughtful changes in that area. I am happy to
-> take these through the nvdimm tree along with these prerequisites
-> already in -next:
+> >               list_add_tail(&buf->reg_list, &inst->registeredbufs);
+> > +     }
+> >
+> >       return 0;
+> >  }
+> >
 >
-> b2ca916ce392 ACPI: NUMA: Up-level "map to online node" functionality
-> 4fcbe96e4d0b mm/numa: Skip NUMA_NO_NODE and online nodes in numa_map_to_online_node()
-> 575e23b6e13c powerpc/papr_scm: Switch to numa_map_to_online_node()
-> 1e5d8e1e47af x86/mm: Introduce CONFIG_NUMA_KEEP_MEMINFO
-> 5d30f92e7631 x86/NUMA: Provide a range-to-target_node lookup facility
-> 7b27a8622f80 libnvdimm/e820: Retrieve and populate correct 'target_node' info
->
-> Tested with:
->
->         numa=nohmat efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
->
-> ...to create to device-dax instances:
->
-> 	# daxctl list -RDu
-> 	[
-> 	  {
-> 	    "path":"\/platform\/hmem.1",
-> 	    "id":1,
-> 	    "size":"4.00 GiB (4.29 GB)",
-> 	    "align":2097152,
-> 	    "devices":[
-> 	      {
-> 	        "chardev":"dax1.0",
-> 	        "size":"4.00 GiB (4.29 GB)",
-> 	        "target_node":3,
-> 	        "mode":"devdax"
-> 	      }
-> 	    ]
-> 	  },
-> 	  {
-> 	    "path":"\/platform\/hmem.0",
-> 	    "id":0,
-> 	    "size":"4.00 GiB (4.29 GB)",
-> 	    "align":2097152,
-> 	    "devices":[
-> 	      {
-> 	        "chardev":"dax0.0",
-> 	        "size":"4.00 GiB (4.29 GB)",
-> 	        "target_node":2,
-> 	        "mode":"devdax"
-> 	      }
-> 	    ]
-> 	  }
-> 	]
->
-> ---
->
-> Dan Williams (5):
->       ACPI: NUMA: Add 'nohmat' option
->       efi/fake_mem: Arrange for a resource entry per efi_fake_mem instance
->       ACPI: HMAT: Refactor hmat_register_target_device to hmem_register_device
->       resource: Report parent to walk_iomem_res_desc() callback
->       ACPI: HMAT: Attach a device for each soft-reserved range
->
->
->  arch/x86/kernel/e820.c              |   16 +++++-
->  arch/x86/mm/numa.c                  |    4 +
->  drivers/acpi/numa/hmat.c            |   71 +++-----------------------
->  drivers/dax/Kconfig                 |    5 ++
->  drivers/dax/Makefile                |    3 -
->  drivers/dax/hmem/Makefile           |    6 ++
->  drivers/dax/hmem/device.c           |   97 +++++++++++++++++++++++++++++++++++
->  drivers/dax/hmem/hmem.c             |    2 -
->  drivers/firmware/efi/x86_fake_mem.c |   12 +++-
->  include/acpi/acpi_numa.h            |    1 
->  include/linux/dax.h                 |    8 +++
->  kernel/resource.c                   |    1 
->  12 files changed, 156 insertions(+), 70 deletions(-)
->  create mode 100644 drivers/dax/hmem/Makefile
->  create mode 100644 drivers/dax/hmem/device.c
->  rename drivers/dax/{hmem.c => hmem/hmem.c} (98%)
->
-> base-commit: 7b27a8622f802761d5c6abd6c37b22312a35343c
-
+> --
+> regards,
+> Stan
