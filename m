@@ -2,108 +2,133 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B17C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A416C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC0520726
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:42:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XfqrDDLT"
+	by mail.kernel.org (Postfix) with ESMTP id 2E1D120726
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 15:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgCFPmD (ORCPT
+        id S1727060AbgCFPmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 10:42:03 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39457 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgCFPmD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 10:42:03 -0500
-Received: by mail-qk1-f195.google.com with SMTP id e16so2678472qkl.6
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 07:42:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=MXluHjiwZwq++M60EzdikuAJ7SQh4kY9FFj9/2rOI1E=;
-        b=XfqrDDLTdsV942+ut6/YkgkZKGbvL/q9ZDKBZ0SvOE4NI4GMCnyseOZpyMcDOvPNGZ
-         mTMdszu0nM0VoZ9KQVwhiv1MaoW9CiMGkkSDgwfpNo+rPszSxt5LFgvP/O/UElXlpaE5
-         BfIuiyR3UHdZ8/O0mXSUnPq5cqK9esf6CxUNqemabp/DjlRZ2CeCXEtmbLhIIcEZapqG
-         TPhQ3gttHvuK9qshLEbQhu4Qj9Pq+xPpZR05TVtTqCYr6pCGxbW+MMn9dFqJ2gvQRGNZ
-         ZIbA1hZJUpf4ZLh3euFZfQex4glc1YCWqSdesgDun9OM/Wg1zgYXHz1KRwmMJL1wPVKP
-         0WUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MXluHjiwZwq++M60EzdikuAJ7SQh4kY9FFj9/2rOI1E=;
-        b=hHYEN0Hti0gGyJIewgK4dK4inhjPrAKR6Ae95qad06SL/qw1c51MyrqpUGjg6tNTFQ
-         +2IL/HX0kiGH2yMZH99MI12hJ/WwbKYiW96vV0CkEJ2tcIaM1YUPoXxX3XTP6rXq7sPS
-         teC8Hx8u0kRU2iMPCdeGJN4X1+nSnRIbMRqlvViUcTYRPJXOPpT8IJ0yrZH6pJavQsXu
-         iX1OGNvsRIr9Bb2HkwSjh49tmbdOvmfpwUpMzWNvnwIc+4fbcMZQOL7c4pS4nS9uAY3Q
-         9UdKGJpNvNNEewGZ2tBHL3hNXfXP8NOC35LXwe3QRA5AXyZOUAvvtPlji/5EYaCxHDyr
-         p74A==
-X-Gm-Message-State: ANhLgQ0fLJGJHExqYqwhZVO+JWC86yMZyOfo18u9ECYHovwjseKrUJ1C
-        4ao2vdjOBmczTY5u5liksci1MQ==
-X-Google-Smtp-Source: ADFU+vudqeDY9lcAQWfY5s1B6AUUBMEYsqIgJhx8yfdx9+6DLvVj/rg/9shdrdKWk7ZCMCTeOV2R8Q==
-X-Received: by 2002:a37:ef04:: with SMTP id j4mr3491798qkk.68.1583509322259;
-        Fri, 06 Mar 2020 07:42:02 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id w11sm13942407qti.54.2020.03.06.07.42.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Mar 2020 07:42:01 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     peterz@infradead.org, mingo@redhat.com
-Cc:     juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Qian Cai <cai@lca.pw>
-Subject: [PATCH] sched/cputime: silence a -Wunused-function warning
-Date:   Fri,  6 Mar 2020 10:41:44 -0500
-Message-Id: <1583509304-28508-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 6 Mar 2020 10:42:53 -0500
+Received: from wind.enjellic.com ([76.10.64.91]:59400 "EHLO wind.enjellic.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726178AbgCFPmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:42:52 -0500
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 026FgN7D021662;
+        Fri, 6 Mar 2020 09:42:23 -0600
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 026FgMhA021661;
+        Fri, 6 Mar 2020 09:42:22 -0600
+Date:   Fri, 6 Mar 2020 09:42:22 -0600
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
+Message-ID: <20200306154222.GA20820@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com> <CAOASepN1JrD6OEzZycbqOr6_ZVACK=EctEOoQ8oSAEeigMr1Eg@mail.gmail.com> <04362c0cf66bf66e8f7c25a531830b9f294d2d09.camel@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <04362c0cf66bf66e8f7c25a531830b9f294d2d09.camel@linux.intel.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 06 Mar 2020 09:42:23 -0600 (CST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-account_other_time() is only used when CONFIG_IRQ_TIME_ACCOUNTING=y (in
-irqtime_account_process_tick()) or CONFIG_VIRT_CPU_ACCOUNTING_GEN=y (in
-get_vtime_delta()). When both are off, it will generate a compilation
-warning from Clang,
+On Thu, Mar 05, 2020 at 01:33:28PM +0200, Jarkko Sakkinen wrote:
 
-kernel/sched/cputime.c:255:19: warning: unused function
-'account_other_time' [-Wunused-function]
-static inline u64 account_other_time(u64 max)
+Good morning, I hope the end of the week is going well for everyone.
 
-Rather than wrapping around this function with a macro expression,
+> On Wed, 2020-03-04 at 14:27 -0500, Nathaniel McCallum wrote:
+> >         # Header
+> >         .fill   1, 8, 0                 # XSTATE_BV
+> >         .fill   1, 8, 1 << 63           # XCOMP_BV (compaction mode)
+> >         .fill   6, 8, 0
+> > 
+> > Also, since people are likely to copy this code for their own
+> > enclaves, it would be helpful to document which flags are set in FCW
+> > and MXCSR.
 
- if defined(CONFIG_IRQ_TIME_ACCOUNTING) || \
-    defined(CONFIG_VIRT_CPU_ACCOUNTING_GEN)
+> It was meant as a test program but I'd guess what you say is true
+> because it also might be the only alternative user space to Intel's
+> :-) And a great starting point if you want to do things from
+> scratch.
+>
+> Because I meant it as a smoke test program for SGX, not everything
+> is too well documented but given the multipurpose use for that code
+> I'll make the improvements that you are suggesting.
 
-just use __maybe_unused for this small function which seems like a good
-trade-off.
+At the risk of what will certainly be a fair amount of criticism, I
+will take on the moniker of being the pernicious voice of reality, if
+not intellectual honesty, in all of this.  No market or security
+relevant enclaves are going to get built by developers starting from
+scratch or copying this code, useful and informative as it might be,
+into their enclaves.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- kernel/sched/cputime.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That isn't to say that it isn't good to have some example code but
+Nate's point in a previous e-mail is well taken, it shouldn't have
+known security vulnerabilities in it.  Given the current realities of
+speculative execution attacks, there are a ton of subtle issues
+surrounding entry and exit into enclaves, which by definition is the
+primary attack surface for a trusted execution environment.
 
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index cff3e656566d..85da4d6dee24 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -252,7 +252,7 @@ static __always_inline u64 steal_account_process_time(u64 maxtime)
- /*
-  * Account how much elapsed time was spent in steal, irq, or softirq time.
-  */
--static inline u64 account_other_time(u64 max)
-+static inline __maybe_unused u64 account_other_time(u64 max)
- {
- 	u64 accounted;
- 
--- 
-1.8.3.1
+For the sake of those reading along at home, relevant enclave
+development needs, at an absolute minimum, the following:
 
+1.) A lot of trusted runtime initialization and scaffolding code.
+2.) An embedded C/C++ library.
+3.) A compiler intrinsics implementation.
+
+That gets you, maybe, something that you can start thinking about,
+'hello world', with, but nothing useful with respect to what anyone
+would want to do with an enclave.
+
+On top of that you need a lot of platform software to get the enclave
+relevantly signed, loaded, executed and supported.  Not the least of
+which is support for remote attestation, which means rolling up one's
+sleeves to do either a DCAP implementation or an EPID provisioning
+implementation.  The latter of which, believe me, is not for the faint
+of heart given that you have to develop it in an unknown oracle model.
+
+My point in all of this is that the only relevant consumers of this
+driver are groups that are resourced well enough to understand,
+deliver and support all of this infrastructure.  I will leave it to
+others, and history, to judge whether or not the driver has been
+developed with this frame of reference.
+
+> /Jarkko
+
+Best wishes for a pleasant weekend.
+
+Dr. Greg
+
+As always,
+Dr. Greg Wettstein, Ph.D.   Enjellic Systems Development, LLC.
+4206 N. 19th Ave.           SGX secured infrastructure and autonomously
+Fargo, ND  58102            self-defensive platforms.
+PH: 701-281-1686            EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"The couple is registered at Herbergers, Target and Fleet Farm."
+                                -- Wedding invitation
+                                   West Central Minnesota
