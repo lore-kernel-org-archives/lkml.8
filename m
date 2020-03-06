@@ -2,152 +2,120 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD4FC10F27
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682CBC10F26
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD2A2064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6FE2064A
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 19:33:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxSdDrqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgCFTbx (ORCPT
+        id S1726397AbgCFTdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 14:31:53 -0500
-Received: from mga02.intel.com ([134.134.136.20]:27677 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgCFTbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 14:31:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 11:31:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
-   d="scan'208";a="234941927"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Mar 2020 11:31:51 -0800
-Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
-        by linux.intel.com (Postfix) with ESMTP id 462105802C8;
-        Fri,  6 Mar 2020 11:31:51 -0800 (PST)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [patch 7/7] PCI/AER: Fix the broken interrupt injection
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>
-References: <20200306130341.199467200@linutronix.de>
- <20200306130624.098374457@linutronix.de>
- <08c51309-0bd1-9696-4f4b-4f7425762268@linux.intel.com>
-Organization: Intel
-Message-ID: <0d48a902-3168-ed1e-3c25-f7af19f19fbc@linux.intel.com>
-Date:   Fri, 6 Mar 2020 11:29:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 6 Mar 2020 14:33:15 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37024 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgCFTdO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 14:33:14 -0500
+Received: by mail-pl1-f193.google.com with SMTP id b8so1271710plx.4;
+        Fri, 06 Mar 2020 11:33:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=z3KT8EeBZ4kaVLgnDAz4UiYDB1f5ZpcHkzDsT+BdSZk=;
+        b=rxSdDrqzraT4uwdK4VFCE5tw55F0ImCJ4F37HWzATRmaxytGqnISM36ath42eIQYyS
+         rBxO7a6vHaGFt06R6XSFwSP1nK647qwCkhSGR3uLvqqK0Zl6BgHyntKqbDXBoqlJf96k
+         mwsBKxGe3/qFV7x7SqiCwoCNzEaFRucueRUkHjxI/aduFKiKdxl109Pf5SL+vws6BKUK
+         +eMM7neFp8TqrDj96iPZM2jdRCKC3rsRpjxGUVUmlbD2WmHYrE+Ns/PpMw6e2BZbL4rF
+         kDtclqHTx03ggdYNn8/LVa11NjdycrQMnWIfiK/oLXyIG2vM3XUsWAvm3PMHLW5RPo/O
+         WW0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z3KT8EeBZ4kaVLgnDAz4UiYDB1f5ZpcHkzDsT+BdSZk=;
+        b=gCmpp87GTQqwQXl65UfJp9nS9h6YuVB5ivacdhRDBxl1sT5OJJTibJPw3Gq2hbyPvF
+         UVEKg3nealg/mUZ92R7jgOOHuPQy3Jv4pJevwMcRVVgQGFjIaZCz5n/uXVF8FcZG3ATK
+         lrFbL1s9mXH//6zrIwXZRZ3/qQ3qX7ZGddBqyUTDefn+bGaDDDmcAK1BWT37i/iFuC+Y
+         vdWGy5HzjHRY6wDgiw3cavll8qb2Ni7HdYhu6HCF2diO5pJvwWMdc+Nir995GGZq34q4
+         8BaOwhL99gVz0qcMWQ7BPgGKFhOhUBC2fkdxTkSO5usnODjv6akYYxYS3JGdYBexNx7k
+         ekeg==
+X-Gm-Message-State: ANhLgQ0LgpLAN/JIMq4X+5waFi9omsLKILTSrAzuKBEAB0kEqZdChKTd
+        q9F0oxyFrLG/DlYPL8dzYcs=
+X-Google-Smtp-Source: ADFU+vsT3WVYwhpJooawROdOiTWGvCsUv6cL9HuV5P5d1U/LqQqpNY07JVvpUBPh8/8LLWwZnSFs9Q==
+X-Received: by 2002:a17:90a:ef17:: with SMTP id k23mr5138094pjz.139.1583523193162;
+        Fri, 06 Mar 2020 11:33:13 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id a7sm10093043pjo.11.2020.03.06.11.33.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 11:33:12 -0800 (PST)
+Date:   Fri, 6 Mar 2020 11:33:10 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        wim@linux-watchdog.org, linux@roeck-us.net, daniel.baluta@nxp.com,
+        linux@rempel-privat.de, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, m.felsch@pengutronix.de,
+        andriy.shevchenko@linux.intel.com, arnd@arndb.de,
+        enric.balletbo@collabora.com, ronald@innovation.ch,
+        krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 3/5] input: keyboard: add COMPILE_TEST support for
+ KEYBOARD_IMX_SC_KEY
+Message-ID: <20200306193310.GI217608@dtor-ws>
+References: <1583509356-8265-1-git-send-email-Anson.Huang@nxp.com>
+ <1583509356-8265-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <08c51309-0bd1-9696-4f4b-4f7425762268@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583509356-8265-3-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 06, 2020 at 11:42:34PM +0800, Anson Huang wrote:
+> Add COMPILE_TEST support to i.MX SC keyboard driver for better compile
+> testing coverage.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-On 3/6/20 10:32 AM, Kuppuswamy Sathyanarayanan wrote:
->
-> On 3/6/20 5:03 AM, Thomas Gleixner wrote:
->> The AER error injection mechanism just blindly abuses 
->> generic_handle_irq()
->> which is really not meant for consumption by random drivers. The 
->> include of
->> linux/irq.h should have been a red flag in the first place. Driver code,
->> unless implementing interrupt chips or low level hypervisor 
->> functionality
->> has absolutely no business with that.
->>
->> Invoking generic_handle_irq() from non interrupt handling context can 
->> have
->> nasty side effects at least on x86 due to the hardware trainwreck which
->> makes interrupt affinity changes a fragile beast. Sathyanarayanan 
->> triggered
->> a NULL pointer dereference in the low level APIC code that way. While 
->> the
->> particular pointer could be checked this would only paper over the issue
->> because there are other ways to trigger warnings or silently corrupt 
->> state.
->>
->> Invoke the new irq_inject_interrupt() mechanism, which has the necessary
->> sanity checks in place and injects the interrupt via the irq_retrigger()
->> mechanism, which is at least halfways safe vs. the fragile x86 affinity
->> change mechanics.
->>
->> It's safe on x86 as it does not corrupt state, but it still can cause a
->> premature completion of an interrupt affinity change causing the 
->> interrupt
->> line to become stale. Very unlikely, but possible.
->>
->> For regular operations this is a non issue as AER error injection is 
->> meant
->> for debugging and testing and not for usage on production systems. 
->> People
->> using this should better know what they are doing.
-> It looks good to me.
->
-> Reviewed-by: Kuppuswamy Sathyanarayanan 
-> <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Tested-by: Kuppuswamy Sathyanarayanan 
-> <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> Fixes: 390e2db82480 ("PCI/AER: Abstract AER interrupt handling")
-This patch is merged in v4.20 kernel. So this fix could be a candidate 
-for stable fix.
->> Reported-by: sathyanarayanan.kuppuswamy@linux.intel.com
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->> ---
->>   drivers/pci/pcie/Kconfig      |    1 +
->>   drivers/pci/pcie/aer_inject.c |    6 ++----
->>   2 files changed, 3 insertions(+), 4 deletions(-)
->>
->> --- a/drivers/pci/pcie/Kconfig
->> +++ b/drivers/pci/pcie/Kconfig
->> @@ -34,6 +34,7 @@ config PCIEAER
->>   config PCIEAER_INJECT
->>       tristate "PCI Express error injection support"
->>       depends on PCIEAER
->> +    select GENERIC_IRQ_INJECTION
->>       help
->>         This enables PCI Express Root Port Advanced Error Reporting
->>         (AER) software error injector.
->> --- a/drivers/pci/pcie/aer_inject.c
->> +++ b/drivers/pci/pcie/aer_inject.c
->> @@ -16,7 +16,7 @@
->>     #include <linux/module.h>
->>   #include <linux/init.h>
->> -#include <linux/irq.h>
->> +#include <linux/interrupt.h>
->>   #include <linux/miscdevice.h>
->>   #include <linux/pci.h>
->>   #include <linux/slab.h>
->> @@ -468,9 +468,7 @@ static int aer_inject(struct aer_error_i
->>           }
->>           pci_info(edev->port, "Injecting errors %08x/%08x into 
->> device %s\n",
->>                einj->cor_status, einj->uncor_status, pci_name(dev));
->> -        local_irq_disable();
->> -        generic_handle_irq(edev->irq);
->> -        local_irq_enable();
->> +        ret = irq_inject_interrupt(edev->irq);
->>       } else {
->>           pci_err(rpdev, "AER device not found\n");
->>           ret = -ENODEV;
->>
+Applied, thank you.
+
+> ---
+>  drivers/input/keyboard/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index 4706ff0..81e26f6 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -467,7 +467,7 @@ config KEYBOARD_IMX
+>  
+>  config KEYBOARD_IMX_SC_KEY
+>  	tristate "IMX SCU Key Driver"
+> -	depends on IMX_SCU
+> +	depends on IMX_SCU || COMPILE_TEST
+>  	help
+>  	  This is the system controller key driver for NXP i.MX SoCs with
+>  	  system controller inside.
+> -- 
+> 2.7.4
+> 
+
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
+Dmitry
