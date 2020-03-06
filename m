@@ -4,134 +4,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934FAC10F00
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362EEC10F25
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0F22084E
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB2420848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Iw0ZWJAT"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FTZpPoyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgCFKko (ORCPT
+        id S1726490AbgCFKlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:40:44 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44461 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgCFKkn (ORCPT
+        Fri, 6 Mar 2020 05:41:22 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51681 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgCFKlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:40:43 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n7so1728522wrt.11
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:40:42 -0800 (PST)
+        Fri, 6 Mar 2020 05:41:22 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a132so1829561wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 02:41:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=date:from:to:cc:subject:message-id:mail-followup-to:references
          :mime-version:content-disposition:in-reply-to;
-        bh=3uwQmoeCVMR1OjRUyFcSdUC36g6Oo2T6mj6l89+Qx08=;
-        b=Iw0ZWJATxL79py60HW/tvolmLUL5DiTJF3n+O9KSkscsoVaDd1sC+1a99B/XaFEnvD
-         pufFlRVL3+f+wG50aKPpypMk0JrVexnVpCKewc0I7WHWdopgdwRd8hv6V7g5QwBmbzwS
-         QJ68Po5jb2PQb1aJ9Oo25pmODM/axP3qzitM0=
+        bh=c1wu7CnjB7LWUSgWKY+oPfgF8Ae17D76/Awvhld15JQ=;
+        b=FTZpPoySb6SE3kKbyRE9Qqor+wYAfHak7cRwmcekJSuCp2naplvU8zddhGgy0ZmJJh
+         ELzBeWVQR8wxQU/CKCEPWE2XNsXl2fKHM6PeW8CPzF1A10dl/2ga/rRwE6tHOR3V8rMo
+         eDxC51Gi0HEO/6tjDSkLi261T45zwOcJ5J64M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to;
-        bh=3uwQmoeCVMR1OjRUyFcSdUC36g6Oo2T6mj6l89+Qx08=;
-        b=PWzwYnD/biv5fYm6meoCWb0D5oVDIIfG68kK4GAdXc8SFXScYgB7FkGVMt7XmLw44c
-         ZstlZUe0GTGHrsZGwpVL1iGCD6C9gZSfgA6r2itLFFoVVfjljiJaN+gp5LngIGwSNA/9
-         5060oddlxos/P1gF9cTXemlCdG5yEM+aCr5H8u2vptjKnDl2Xcb8UEq3wwrQsx6KeXGo
-         4dnM/MtNc/8wYdO0QaF+ht66i3tCbAr4sTrgDYCyRLI5VWhzgBNFDtZccrDkSoKQ4bXz
-         LRtDoL+Sbzlf8x+pZEt8MbKJnT5QcihwdvnLBPkhWnAaIjjg27Y6V8bhLfDDSqwHksEf
-         1IFw==
-X-Gm-Message-State: ANhLgQ3LeksVPeS1CAWlhhjFDeXmNnacN3X1baiCqLJaW8cJCKWxgS7+
-        22uW95/11iK1dUhAiQF2xxFcRA==
-X-Google-Smtp-Source: ADFU+vt7qifkWSBCAuJEHAUYhMENNpFsi58HIatC73FFg/bEqMfF/ZaCUxUJrkB7PDaKqB+vx7xcIA==
-X-Received: by 2002:a05:6000:4:: with SMTP id h4mr2203376wrx.14.1583491241522;
-        Fri, 06 Mar 2020 02:40:41 -0800 (PST)
+        bh=c1wu7CnjB7LWUSgWKY+oPfgF8Ae17D76/Awvhld15JQ=;
+        b=I25SYUh80I3UVfeD6c9UgCXldug8pC+uyrq7vZAfe3xfXbYGk3FcNDpkY2BNo7hRfO
+         M6NFKvuCqHVbVJUnbemuDwzovGr0GI526utDUvTU3EcjjDmqj7gojbKbCwDFjvPIyf5/
+         D0YvSsRvzCen4lojddSVCt/ih3BP/zMdzZi0rbd6VJV2AtiDQe+slTXAOrwQonqXFKNa
+         +Y3zDo8xYJnuGVrNvJkvegw3TRL/Z/GhySGN4IaontZrziKOR/uwVggjWXoFTzfgLZt/
+         Y8ZW93lqrm/YVsZyAhlYIxEVOptVGrex1UEDv3DfYp94p6hnli3cQIns8R0hgm1tGrwl
+         Oogg==
+X-Gm-Message-State: ANhLgQ2UJzaGKgJ6jmBKiWiZPcKLINmYzD0RqpUBZ1gEK70OECz1yRcS
+        6NzmBWwk6hznmkSbgXRxWmXqcQ==
+X-Google-Smtp-Source: ADFU+vvBTIMi9t1dx9pJC/4HMs9ttoNP7F6u7t1F9V0/9Qx4SEFsHfDu62Y7oZtF2ryRxPNB6eQ90A==
+X-Received: by 2002:a1c:3d46:: with SMTP id k67mr3529887wma.177.1583491280746;
+        Fri, 06 Mar 2020 02:41:20 -0800 (PST)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id t14sm16353673wrp.63.2020.03.06.02.40.40
+        by smtp.gmail.com with ESMTPSA id w8sm14588716wmm.0.2020.03.06.02.41.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 02:40:40 -0800 (PST)
-Date:   Fri, 6 Mar 2020 11:40:39 +0100
+        Fri, 06 Mar 2020 02:41:20 -0800 (PST)
+Date:   Fri, 6 Mar 2020 11:41:18 +0100
 From:   Daniel Vetter <daniel@ffwll.ch>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] drm/gma500/intel_bios.h: Replace zero-length array
- with flexible-array member
-Message-ID: <20200306104039.GU2363188@phenom.ffwll.local>
-Mail-Followup-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+Subject: Re: [PATCH][next] drm/vboxvideo/vboxvideo.h: Replace zero-length
+ array with flexible-array member
+Message-ID: <20200306104118.GV2363188@phenom.ffwll.local>
+Mail-Followup-To: Hans de Goede <hdegoede@redhat.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-References: <20200305105306.GA18788@embeddedor>
+References: <20200305105558.GA19124@embeddedor>
+ <8e2ab9a2-fb47-1d61-d09c-0510ad5ee5ff@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200305105306.GA18788@embeddedor>
+In-Reply-To: <8e2ab9a2-fb47-1d61-d09c-0510ad5ee5ff@redhat.com>
 X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 04:53:06AM -0600, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On Thu, Mar 05, 2020 at 03:22:38PM +0100, Hans de Goede wrote:
+> Hi,
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
+> On 3/5/20 11:55 AM, Gustavo A. R. Silva wrote:
+> > The current codebase makes use of the zero-length array language
+> > extension to the C90 standard, but the preferred mechanism to declare
+> > variable-length types such as these ones is a flexible array member[1][2],
+> > introduced in C99:
+> > 
+> > struct foo {
+> >          int stuff;
+> >          struct boo array[];
+> > };
+> > 
+> > By making use of the mechanism above, we will get a compiler warning
+> > in case the flexible array does not occur last in the structure, which
+> > will help us prevent some kind of undefined behavior bugs from being
+> > inadvertently introduced[3] to the codebase from now on.
+> > 
+> > Also, notice that, dynamic memory allocations won't be affected by
+> > this change:
+> > 
+> > "Flexible array members have incomplete type, and so the sizeof operator
+> > may not be applied. As a quirk of the original implementation of
+> > zero-length arrays, sizeof evaluates to zero."[1]
+> > 
+> > This issue was found with the help of Coccinelle.
+> > 
+> > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > [2] https://github.com/KSPP/linux/issues/21
+> > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
+> Patch looks good to me:
 > 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Applied to drm-misc-next, thanks for your patch.
+You're also going to push this? r-b by maintainers without any hint to
+what's going to happen is always rather confusing.
 -Daniel
 
-> ---
->  drivers/gpu/drm/gma500/intel_bios.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/gma500/intel_bios.h b/drivers/gpu/drm/gma500/intel_bios.h
-> index a1f9ce9465a5..0e6facf21e33 100644
-> --- a/drivers/gpu/drm/gma500/intel_bios.h
-> +++ b/drivers/gpu/drm/gma500/intel_bios.h
-> @@ -227,7 +227,7 @@ struct bdb_general_definitions {
->  	 * number = (block_size - sizeof(bdb_general_definitions))/
->  	 *	     sizeof(child_device_config);
->  	 */
-> -	struct child_device_config devices[0];
-> +	struct child_device_config devices[];
->  };
->  
->  struct bdb_lvds_options {
-> -- 
-> 2.25.0
+> Regards,
+> 
+> Hans
+> 
+> 
+> > ---
+> >   drivers/gpu/drm/vboxvideo/vboxvideo.h | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/vboxvideo/vboxvideo.h b/drivers/gpu/drm/vboxvideo/vboxvideo.h
+> > index 0592004f71aa..a5de40fe1a76 100644
+> > --- a/drivers/gpu/drm/vboxvideo/vboxvideo.h
+> > +++ b/drivers/gpu/drm/vboxvideo/vboxvideo.h
+> > @@ -138,7 +138,7 @@ struct vbva_buffer {
+> >   	u32 data_len;
+> >   	/* variable size for the rest of the vbva_buffer area in VRAM. */
+> > -	u8 data[0];
+> > +	u8 data[];
+> >   } __packed;
+> >   #define VBVA_MAX_RECORD_SIZE (128 * 1024 * 1024)
+> > 
 > 
 
 -- 
