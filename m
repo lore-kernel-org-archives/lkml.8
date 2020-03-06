@@ -2,179 +2,71 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBC4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5318C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2270420709
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 20:57:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Up+IQO/d"
+	by mail.kernel.org (Postfix) with ESMTP id 7F380206D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 21:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583528403;
+	bh=DQxCSRBY0YnfvZFBLyVMkqDoLgd1HJCY15OWxm+cCUo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=nA4NpRIdrCWmPSv20ommDzBu5Gcg3RuY5as6vuoOa5QuojXeR2ufhgSerQkvteczK
+	 p92SaNdE5Zc+37CvjjNINSBw3YAMGAJeHaTTcE6dFclxwu/ILpy4+RA5nWmqtky2lb
+	 YSyPkY4n5f9hyF/9RcnS5WdtKEcS2FY+avE7Ktdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCFU5S (ORCPT
+        id S1726359AbgCFVAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 15:57:18 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:37907 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgCFU5R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 15:57:17 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5CF4723E5E;
-        Fri,  6 Mar 2020 21:57:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583528233;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EPJLmz2DVWGgqqk8cwT2mreLOHFxvMmL1XrOvX71qAI=;
-        b=Up+IQO/dIx5xfdGvrpdGA/47mOW93sr6WH4rbOilIZpVtl1u02kYUzCQf7aDWOkZzttYsc
-        K9LmX/wYkDwPBuL3FVUlGs09aqanIfRAuaVGJ4XH7M7CFpSsHtYEHOCPNZAPvt7AWdUiJi
-        rKFkR1cJ7/jAUJTvk/TNdbDfOlfpwAw=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH 2/2] arm64: dts: ls1028a: add missing LPUART nodes
-Date:   Fri,  6 Mar 2020 21:57:03 +0100
-Message-Id: <20200306205703.30634-2-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200306205703.30634-1-michael@walle.cc>
-References: <20200306205703.30634-1-michael@walle.cc>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 5CF4723E5E
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         NEURAL_SPAM(0.00)[0.520];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.34.202.64:email,0.34.124.32:email,0.34.241.80:email,0.34.163.48:email];
-         RCPT_COUNT_SEVEN(0.00)[10];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+        Fri, 6 Mar 2020 16:00:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726185AbgCFVAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 16:00:02 -0500
+Subject: Re: [GIT PULL] file locking changes for v5.6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583528401;
+        bh=DQxCSRBY0YnfvZFBLyVMkqDoLgd1HJCY15OWxm+cCUo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=MoWrhNmnVOioCuK5NzjoX9rpLZ0KuKzr5mhm7QAYWFfn84gcGknuD6WOidjkVs5pH
+         5GC83ZMs7VAcMoTiWKqg81deKed+D7xZN0v91Kuj8Eq6Ub4GOe3M148tXA6mrVXZSS
+         3NWcDAh/Ah2iE6IzCggI7n3hmjI17bgrzJ6WxTgg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <a14229cc7aabebfdffd405018d939d7a0ae1f1cd.camel@kernel.org>
+References: <a14229cc7aabebfdffd405018d939d7a0ae1f1cd.camel@kernel.org>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <a14229cc7aabebfdffd405018d939d7a0ae1f1cd.camel@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git
+ tags/filelock-v5.6-1
+X-PR-Tracked-Commit-Id: 6d390e4b5d48ec03bb87e63cf0a2bff5f4e116da
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0b25d458035d0ca6502e678874e2ccb2fa2ddc23
+Message-Id: <158352840153.8472.9432123978920324502.pr-tracker-bot@kernel.org>
+Date:   Fri, 06 Mar 2020 21:00:01 +0000
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LS1028A has six LPUART controllers. Add the nodes.
+The pull request you sent on Fri, 06 Mar 2020 12:18:15 -0500:
 
-This was tested on a custom board.
+> git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git tags/filelock-v5.6-1
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 73 +++++++++++++++++++
- 1 file changed, 73 insertions(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0b25d458035d0ca6502e678874e2ccb2fa2ddc23
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 41c9633293fb..b152fa90cf5c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -372,6 +372,79 @@
- 			status = "disabled";
- 		};
- 
-+
-+		lpuart0: serial@2260000 {
-+			compatible = "fsl,ls1028a-lpuart";
-+			reg = <0x0 0x2260000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			clock-names = "ipg";
-+			dma-names = "rx","tx";
-+			dmas = <&edma0 1 32>,
-+			       <&edma0 1 33>;
-+			status = "disabled";
-+		};
-+
-+		lpuart1: serial@2270000 {
-+			compatible = "fsl,ls1028a-lpuart";
-+			reg = <0x0 0x2270000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			clock-names = "ipg";
-+			dma-names = "rx","tx";
-+			dmas = <&edma0 1 30>,
-+			       <&edma0 1 31>;
-+			status = "disabled";
-+		};
-+
-+		lpuart2: serial@2280000 {
-+			compatible = "fsl,ls1028a-lpuart";
-+			reg = <0x0 0x2280000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			clock-names = "ipg";
-+			dma-names = "rx","tx";
-+			dmas = <&edma0 1 28>,
-+			       <&edma0 1 29>;
-+			status = "disabled";
-+		};
-+
-+		lpuart3: serial@2290000 {
-+			compatible = "fsl,ls1028a-lpuart";
-+			reg = <0x0 0x2290000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 235 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			clock-names = "ipg";
-+			dma-names = "rx","tx";
-+			dmas = <&edma0 1 26>,
-+			       <&edma0 1 27>;
-+			status = "disabled";
-+		};
-+
-+		lpuart4: serial@22a0000 {
-+			compatible = "fsl,ls1028a-lpuart";
-+			reg = <0x0 0x22a0000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 236 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			clock-names = "ipg";
-+			dma-names = "rx","tx";
-+			dmas = <&edma0 1 24>,
-+			       <&edma0 1 25>;
-+			status = "disabled";
-+		};
-+
-+		lpuart5: serial@22b0000 {
-+			compatible = "fsl,ls1028a-lpuart";
-+			reg = <0x0 0x22b0000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 1>;
-+			clock-names = "ipg";
-+			dma-names = "rx","tx";
-+			dmas = <&edma0 1 22>,
-+			       <&edma0 1 23>;
-+			status = "disabled";
-+		};
-+
- 		edma0: dma-controller@22c0000 {
- 			#dma-cells = <2>;
- 			compatible = "fsl,ls1028a-edma";
+Thank you!
+
 -- 
-2.20.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
