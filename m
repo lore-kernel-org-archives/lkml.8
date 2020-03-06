@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75927C10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6498C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5051420726
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C441320726
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 10:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCFK6K (ORCPT
+        id S1727023AbgCFK6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 05:58:10 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:46644 "EHLO
+        Fri, 6 Mar 2020 05:58:13 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:49158 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbgCFK6I (ORCPT
+        by vger.kernel.org with ESMTP id S1726054AbgCFK6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 05:58:08 -0500
+        Fri, 6 Mar 2020 05:58:11 -0500
 Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026AsWRI025154;
-        Fri, 6 Mar 2020 05:58:06 -0500
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026AsTRU025101;
+        Fri, 6 Mar 2020 05:58:09 -0500
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52jr40-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52jr45-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Mar 2020 05:58:06 -0500
+        Fri, 06 Mar 2020 05:58:09 -0500
 Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 026Aw5Hr035269
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 026Aw8WE035303
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 6 Mar 2020 05:58:05 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 6 Mar 2020
- 05:58:04 -0500
+        Fri, 6 Mar 2020 05:58:08 -0500
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 6 Mar 2020 05:58:07 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 6 Mar 2020 05:58:07 -0500
 Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
  (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 6 Mar 2020 05:58:04 -0500
+ Transport; Fri, 6 Mar 2020 05:58:07 -0500
 Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 026Avuwr023157;
-        Fri, 6 Mar 2020 05:58:02 -0500
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 026Avuwt023157;
+        Fri, 6 Mar 2020 05:58:05 -0500
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>
 CC:     <jic23@kernel.org>, <robh+dt@kernel.org>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v8 4/8] iio: buffer-dmaengine: add dev-managed calls for buffer alloc
-Date:   Fri, 6 Mar 2020 13:00:56 +0200
-Message-ID: <20200306110100.22092-5-alexandru.ardelean@analog.com>
+Subject: [PATCH v8 6/8] dt-bindings: iio: adc: add bindings doc for AXI ADC driver
+Date:   Fri, 6 Mar 2020 13:00:58 +0200
+Message-ID: <20200306110100.22092-7-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200306110100.22092-1-alexandru.ardelean@analog.com>
 References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
@@ -59,8 +63,8 @@ X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-03-06_03:2020-03-06,2020-03-06 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
- impostorscore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ mlxlogscore=875 mlxscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2003060078
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,81 +72,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, when using a 'iio_dmaengine_buffer_alloc()', an matching call to
-'iio_dmaengine_buffer_free()' must be made.
-
-With this change, this can be avoided by using
-'devm_iio_dmaengine_buffer_alloc()'. The buffer will get free'd via the
-device's devres handling.
+This change adds the bindings documentation for the AXI ADC driver.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- .../buffer/industrialio-buffer-dmaengine.c    | 39 +++++++++++++++++++
- include/linux/iio/buffer-dmaengine.h          |  3 ++
- 2 files changed, 42 insertions(+)
+ .../bindings/iio/adc/adi,axi-adc.yaml         | 63 +++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
 
-diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-index 94da3b1ca3a2..6dedf12b69a4 100644
---- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-@@ -229,6 +229,45 @@ void iio_dmaengine_buffer_free(struct iio_buffer *buffer)
- }
- EXPORT_SYMBOL_GPL(iio_dmaengine_buffer_free);
- 
-+static void __devm_iio_dmaengine_buffer_free(struct device *dev, void *res)
-+{
-+	iio_dmaengine_buffer_free(*(struct iio_buffer **)res);
-+}
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+new file mode 100644
+index 000000000000..6bd80e241f40
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,axi-adc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+/**
-+ * devm_iio_dmaengine_buffer_alloc() - Resource-managed iio_dmaengine_buffer_alloc()
-+ * @dev: Parent device for the buffer
-+ * @channel: DMA channel name, typically "rx".
-+ *
-+ * This allocates a new IIO buffer which internally uses the DMAengine framework
-+ * to perform its transfers. The parent device will be used to request the DMA
-+ * channel.
-+ *
-+ * The buffer will be automatically de-allocated once the device gets destroyed.
-+ */
-+struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
-+	const char *channel)
-+{
-+	struct iio_buffer **bufferp, *buffer;
++title: Analog Devices AXI ADC IP core
 +
-+	bufferp = devres_alloc(__devm_iio_dmaengine_buffer_free,
-+			       sizeof(*bufferp), GFP_KERNEL);
-+	if (!bufferp)
-+		return ERR_PTR(-ENOMEM);
++maintainers:
++  - Michael Hennerich <michael.hennerich@analog.com>
++  - Alexandru Ardelean <alexandru.ardelean@analog.com>
 +
-+	buffer = iio_dmaengine_buffer_alloc(dev, channel);
-+	if (IS_ERR(buffer)) {
-+		devres_free(bufferp);
-+		return buffer;
-+	}
++description: |
++  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
++  with a high speed serial (JESD204B/C) or source synchronous parallel
++  interface (LVDS/CMOS).
++  Usually, some other interface type (i.e SPI) is used as a control
++  interface for the actual ADC, while this IP core will interface
++  to the data-lines of the ADC and handle the streaming of data into
++  memory via DMA.
 +
-+	*bufferp = buffer;
-+	devres_add(dev, bufferp);
++  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
 +
-+	return buffer;
-+}
-+EXPORT_SYMBOL_GPL(devm_iio_dmaengine_buffer_alloc);
++properties:
++  compatible:
++    enum:
++      - adi,axi-adc-10.0.a
 +
- MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
- MODULE_DESCRIPTION("DMA buffer for the IIO framework");
- MODULE_LICENSE("GPL");
-diff --git a/include/linux/iio/buffer-dmaengine.h b/include/linux/iio/buffer-dmaengine.h
-index b3a57444a886..0e503db71289 100644
---- a/include/linux/iio/buffer-dmaengine.h
-+++ b/include/linux/iio/buffer-dmaengine.h
-@@ -14,4 +14,7 @@ struct iio_buffer *iio_dmaengine_buffer_alloc(struct device *dev,
- 	const char *channel);
- void iio_dmaengine_buffer_free(struct iio_buffer *buffer);
- 
-+struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
-+						   const char *channel);
++  reg:
++    maxItems: 1
 +
- #endif
++  dmas:
++    maxItems: 1
++
++  dma-names:
++    maxItems: 1
++    items:
++      - const: rx
++
++  adi,adc-dev:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      A reference to a the actual ADC to which this FPGA ADC interfaces to.
++
++required:
++  - compatible
++  - dmas
++  - reg
++  - adi,adc-dev
++
++additionalProperties: false
++
++examples:
++  - |
++    axi-adc@44a00000 {
++          compatible = "adi,axi-adc-10.0.a";
++          reg = <0x44a00000 0x10000>;
++          dmas = <&rx_dma 0>;
++          dma-names = "rx";
++
++          adi,adc-dev = <&spi_adc>;
++    };
++...
 -- 
 2.20.1
 
