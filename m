@@ -2,128 +2,223 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AFDC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDA1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB57206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02AE5206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 23:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgCFXEb (ORCPT
+        id S1726733AbgCFXFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 18:04:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54634 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgCFXEa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 18:04:30 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jAM0Y-0005gY-Ev; Sat, 07 Mar 2020 00:03:54 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id C92FA104088; Sat,  7 Mar 2020 00:03:52 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Anchal Agarwal <anchalag@amazon.com>, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        linux-pm@vger.kernel.org, linux-mm@kvack.org, kamatam@amazon.com,
-        sstabellini@kernel.org, konrad.wilk@oracle.com,
-        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
-        anchalag@amazon.com, xen-devel@lists.xenproject.org,
-        vkuznets@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dwmw@amazon.co.uk,
-        fllinden@amaozn.com, benh@kernel.crashing.org
-Subject: Re: [RFC PATCH v3 07/12] genirq: Shutdown irq chips in suspend/resume during hibernation
-In-Reply-To: <e782c510916c8c05dc95ace151aba4eced207b31.1581721799.git.anchalag@amazon.com>
-Date:   Sat, 07 Mar 2020 00:03:52 +0100
-Message-ID: <87ftelaxwn.fsf@nanos.tec.linutronix.de>
+        Fri, 6 Mar 2020 18:05:41 -0500
+Received: from mga18.intel.com ([134.134.136.126]:40847 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbgCFXFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 18:05:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 15:05:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,523,1574150400"; 
+   d="scan'208";a="414088971"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 06 Mar 2020 15:05:39 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jAM2E-0002Ex-4z; Sat, 07 Mar 2020 07:05:38 +0800
+Date:   Sat, 07 Mar 2020 07:05:23 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 73c01f50194846de50e0d926b1251daffa06abd2
+Message-ID: <5e62d733.39+VSsZvpkQ4npYB%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anchal Agarwal <anchalag@amazon.com> writes:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 73c01f50194846de50e0d926b1251daffa06abd2  Merge branch 'sched/core'
 
-> There are no pm handlers for the legacy devices, so during tear down
-> stale event channel <> IRQ mapping may still remain in the image and
-> resume may fail. To avoid adding much code by implementing handlers for
-> legacy devices, add a new irq_chip flag IRQCHIP_SHUTDOWN_ON_SUSPEND which
-> when enabled on an irq-chip e.g xen-pirq, it will let core suspend/resume
-> irq code to shutdown and restart the active irqs. PM suspend/hibernation
-> code will rely on this.
-> Without this, in PM hibernation, information about the event channel
-> remains in hibernation image, but there is no guarantee that the same
-> event channel numbers are assigned to the devices when restoring the
-> system. This may cause conflict like the following and prevent some
-> devices from being restored correctly.
+elapsed time: 504m
 
-The above is just an agglomeration of words and acronyms and some of
-these sentences do not even make sense. Anyone who is not aware of event
-channels and whatever XENisms you talk about will be entirely
-confused. Changelogs really need to be understandable for mere mortals
-and there is no space restriction so acronyms can be written out.
+configs tested: 160
+configs skipped: 0
 
-Something like this:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-  Many legacy device drivers do not implement power management (PM)
-  functions which means that interrupts requested by these drivers stay
-  in active state when the kernel is hibernated.
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+alpha                               defconfig
+riscv                    nommu_virt_defconfig
+ia64                                defconfig
+powerpc                             defconfig
+m68k                           sun3_defconfig
+c6x                        evmc6678_defconfig
+m68k                          multi_defconfig
+s390                       zfcpdump_defconfig
+h8300                     edosk2674_defconfig
+ia64                              allnoconfig
+s390                          debug_defconfig
+um                           x86_64_defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+c6x                              allyesconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200305
+x86_64               randconfig-a002-20200305
+x86_64               randconfig-a003-20200305
+i386                 randconfig-a001-20200305
+i386                 randconfig-a002-20200305
+i386                 randconfig-a003-20200305
+alpha                randconfig-a001-20200306
+m68k                 randconfig-a001-20200306
+mips                 randconfig-a001-20200306
+nds32                randconfig-a001-20200306
+parisc               randconfig-a001-20200306
+riscv                randconfig-a001-20200306
+alpha                randconfig-a001-20200307
+m68k                 randconfig-a001-20200307
+mips                 randconfig-a001-20200307
+nds32                randconfig-a001-20200307
+parisc               randconfig-a001-20200307
+c6x                  randconfig-a001-20200306
+h8300                randconfig-a001-20200306
+microblaze           randconfig-a001-20200306
+nios2                randconfig-a001-20200306
+sparc64              randconfig-a001-20200306
+csky                 randconfig-a001-20200305
+openrisc             randconfig-a001-20200305
+s390                 randconfig-a001-20200305
+sh                   randconfig-a001-20200305
+xtensa               randconfig-a001-20200305
+csky                 randconfig-a001-20200306
+openrisc             randconfig-a001-20200306
+s390                 randconfig-a001-20200306
+sh                   randconfig-a001-20200306
+xtensa               randconfig-a001-20200306
+x86_64               randconfig-b002-20200305
+x86_64               randconfig-b001-20200305
+i386                 randconfig-b001-20200305
+i386                 randconfig-b003-20200305
+i386                 randconfig-b002-20200305
+x86_64               randconfig-b003-20200305
+x86_64               randconfig-c001-20200306
+x86_64               randconfig-c002-20200306
+x86_64               randconfig-c003-20200306
+i386                 randconfig-c001-20200306
+i386                 randconfig-c002-20200306
+i386                 randconfig-c003-20200306
+x86_64               randconfig-d001-20200306
+x86_64               randconfig-d002-20200306
+x86_64               randconfig-d003-20200306
+i386                 randconfig-d001-20200306
+i386                 randconfig-d002-20200306
+i386                 randconfig-d003-20200306
+x86_64               randconfig-e001-20200305
+x86_64               randconfig-e002-20200305
+x86_64               randconfig-e003-20200305
+i386                 randconfig-e001-20200305
+i386                 randconfig-e002-20200305
+i386                 randconfig-e003-20200305
+x86_64               randconfig-f001-20200306
+x86_64               randconfig-f002-20200306
+x86_64               randconfig-f003-20200306
+i386                 randconfig-f001-20200306
+i386                 randconfig-f002-20200306
+i386                 randconfig-f003-20200306
+x86_64               randconfig-h001-20200306
+x86_64               randconfig-h002-20200306
+x86_64               randconfig-h003-20200306
+i386                 randconfig-h001-20200306
+i386                 randconfig-h002-20200306
+i386                 randconfig-h003-20200306
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+um                                  defconfig
+um                             i386_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-  This does not matter on bare metal and on most hypervisors because the
-  interrupt is restored on resume without any noticable side effects as
-  it stays connected to the same physical or virtual interrupt line.
-
-  The XEN interrupt mechanism is different as it maintains a mapping
-  between the Linux interrupt number and a XEN event channel. If the
-  interrupt stays active on hibernation this mapping is preserved but
-  there is unfortunately no guarantee that on resume the same event
-  channels are reassigned to these devices. This can result in event
-  channel conflicts which prevent the affected devices from being
-  restored correctly.
-
-  One way to solve this would be to add the necessary power management
-  functions to all affected legacy device drivers, but that's a
-  questionable effort which does not provide any benefits on non-XEN
-  environments.
-
-  The least intrusive and most efficient solution is to provide a
-  mechanism which allows the core interrupt code to tear down these
-  interrupts on hibernation and bring them back up again on resume. This
-  allows the XEN event channel mechanism to assign an arbitrary event
-  channel on resume without affecting the functionality of these
-  devices.
-  
-  Fortunately all these device interrupts are handled by a dedicated XEN
-  interrupt chip so the chip can be marked that all interrupts connected
-  to it are handled this way. This is pretty much in line with the other
-  interrupt chip specific quirks, e.g. IRQCHIP_MASK_ON_SUSPEND.
-
-  Add a new quirk flag IRQCHIP_SHUTDOWN_ON_SUSPEND and add support for
-  it the core interrupt suspend/resume paths.
-
-Hmm?
-
-> Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-
-Not that I care much, but now that I've written both the patch and the
-changelog you might change that attribution slightly. For completeness
-sake:
-
- Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
-Thanks,
-
-        tglx
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
