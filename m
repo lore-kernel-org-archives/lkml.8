@@ -2,184 +2,107 @@ Return-Path: <SRS0=glOU=4X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9E9C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709A5C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC9D20848
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46AFB20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 03:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583466253;
+	bh=LefwvxIBpcgDkUuII0S/6ZNAIAh8S5CPv6c9pW7foWk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Mdd0MBEVQLd9ovO62Oo2KKxIOlnS6/8p6bESZBm524ShoZzME6eaebq/hdSCkvjZ7
+	 Rsjnx1StZ9nNMwwBcg+t1v5SQOwj184gHR0+FrWUBzdimcZo1TQG7tv1QpAqQ8bWvH
+	 zv9R0LekNF64Cc1SerNVjTjF1kaiBppGkx6XeW0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgCFDnz (ORCPT
+        id S1727123AbgCFDoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 22:43:55 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11178 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726317AbgCFDnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 22:43:43 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7FCBC9CC80129CB05B7A;
-        Fri,  6 Mar 2020 11:43:40 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 6 Mar 2020 11:43:31 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <tzimmermann@suse.de>, <kraxel@redhat.com>,
-        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
-        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <linuxarm@huawei.com>
-Subject: [PATCH] drm/hisilicon: Add the load and unload for hibmc_driver
-Date:   Fri, 6 Mar 2020 11:42:58 +0800
-Message-ID: <1583466184-7060-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 5 Mar 2020 22:44:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726317AbgCFDoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 22:44:11 -0500
+Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C5DC2072D;
+        Fri,  6 Mar 2020 03:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583466251;
+        bh=LefwvxIBpcgDkUuII0S/6ZNAIAh8S5CPv6c9pW7foWk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pnYJLxBsg3kgxIIltlnzjm59zE9NAfTNOwWEpDEwnD13OJ5LQw/18xps2jKdCPjlc
+         T6FJpo2I2+x6ysh1UJOnKm3N3gRXwOoRzz3kATGKFy8oe/CxrxwtQ854S6Ic4aju8y
+         w1shkzNdaUFxc7GeZTMCSV2qsgtY1UpBeGMNBUvU=
+Subject: Re: About commit "io: change inX() to have their own IO barrier
+ overrides"
+To:     Arnd Bergmann <arnd@arndb.de>, John Garry <john.garry@huawei.com>
+Cc:     "xuwei (O)" <xuwei5@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+References: <2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com>
+ <c1489f55-369d-2cff-ff36-b10fb5d3ee79@kernel.org>
+ <8207cd51-5b94-2f15-de9f-d85c9c385bca@huawei.com>
+ <6115fa56-a471-1e9f-edbb-e643fa4e7e11@kernel.org>
+ <7c955142-1fcb-d99e-69e4-1e0d3d9eb8c3@huawei.com>
+ <CAK8P3a0f9hnKGd6GJ8qFZSu+J-n4fY23TCGxQkmgJaxbpre50Q@mail.gmail.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <90af535f-00ef-c1e3-ec20-aae2bd2a0d88@kernel.org>
+Date:   Thu, 5 Mar 2020 22:44:08 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAK8P3a0f9hnKGd6GJ8qFZSu+J-n4fY23TCGxQkmgJaxbpre50Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-using the load and unload function provided by drm framework instead of
-doing the same work in the hibmc_pci_probe and do some code cleanup.
+On 3/3/2020 11:40 AM, Arnd Bergmann wrote:
+>> -          ret = read##bw(PCI_IOBASE + addr);
+>> +          __io_pbr();
+>> +          ret = __raw_read##bw(PCI_IOBASE + addr);
+>> +          __io_pbr();
+> __io_par();
+> 
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
----
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 62 +++++++++----------------
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h |  2 +
- 2 files changed, 24 insertions(+), 40 deletions(-)
+Why do we need to change read##bw above?
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index 79a180a..51f1c70 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -23,7 +23,7 @@
- #include <drm/drm_print.h>
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_vblank.h>
--
-+#include <drm/drm_pci.h>
- #include "hibmc_drm_drv.h"
- #include "hibmc_drm_regs.h"
- 
-@@ -49,6 +49,8 @@ static irqreturn_t hibmc_drm_interrupt(int irq, void *arg)
- 
- static struct drm_driver hibmc_driver = {
- 	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
-+	.load			= hibmc_load,
-+	.unload			= hibmc_unload,
- 	.fops			= &hibmc_fops,
- 	.name			= "hibmc",
- 	.date			= "20160828",
-@@ -232,6 +234,21 @@ static int hibmc_hw_map(struct hibmc_drm_private *priv)
- 	return 0;
- }
- 
-+static void hibmc_hw_unmap(struct hibmc_drm_private *priv)
-+{
-+	struct drm_device *dev = priv->dev;
-+
-+	if (priv->mmio) {
-+		devm_iounmap(dev->dev, priv->mmio);
-+		priv->mmio = NULL;
-+	}
-+
-+	if (priv->fb_map) {
-+		devm_iounmap(dev->dev, priv->fb_map);
-+		priv->fb_map = NULL;
-+	}
-+}
-+
- static int hibmc_hw_init(struct hibmc_drm_private *priv)
- {
- 	int ret;
-@@ -245,7 +262,7 @@ static int hibmc_hw_init(struct hibmc_drm_private *priv)
- 	return 0;
- }
- 
--static int hibmc_unload(struct drm_device *dev)
-+void hibmc_unload(struct drm_device *dev)
- {
- 	struct hibmc_drm_private *priv = dev->dev_private;
- 
-@@ -258,11 +275,12 @@ static int hibmc_unload(struct drm_device *dev)
- 
- 	hibmc_kms_fini(priv);
- 	hibmc_mm_fini(priv);
-+	hibmc_hw_unmap(priv);
- 	dev->dev_private = NULL;
- 	return 0;
- }
- 
--static int hibmc_load(struct drm_device *dev)
-+int hibmc_load(struct drm_device *dev, unsigned long flags)
- {
- 	struct hibmc_drm_private *priv;
- 	int ret;
-@@ -332,43 +350,7 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
- 	if (ret)
- 		return ret;
- 
--	dev = drm_dev_alloc(&hibmc_driver, &pdev->dev);
--	if (IS_ERR(dev)) {
--		DRM_ERROR("failed to allocate drm_device\n");
--		return PTR_ERR(dev);
--	}
--
--	dev->pdev = pdev;
--	pci_set_drvdata(pdev, dev);
--
--	ret = pci_enable_device(pdev);
--	if (ret) {
--		DRM_ERROR("failed to enable pci device: %d\n", ret);
--		goto err_free;
--	}
--
--	ret = hibmc_load(dev);
--	if (ret) {
--		DRM_ERROR("failed to load hibmc: %d\n", ret);
--		goto err_disable;
--	}
--
--	ret = drm_dev_register(dev, 0);
--	if (ret) {
--		DRM_ERROR("failed to register drv for userspace access: %d\n",
--			  ret);
--		goto err_unload;
--	}
--	return 0;
--
--err_unload:
--	hibmc_unload(dev);
--err_disable:
--	pci_disable_device(pdev);
--err_free:
--	drm_dev_put(dev);
--
--	return ret;
-+	return drm_get_pci_dev(pdev, ent, &hibmc_driver);
- }
- 
- static void hibmc_pci_remove(struct pci_dev *pdev)
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-index 50a0c1f..4e89cd7 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-@@ -37,6 +37,8 @@ void hibmc_set_power_mode(struct hibmc_drm_private *priv,
- void hibmc_set_current_gate(struct hibmc_drm_private *priv,
- 			    unsigned int gate);
- 
-+int hibmc_load(struct drm_device *dev, unsigned long flags);
-+void hibmc_unload(struct drm_device *dev);
- int hibmc_de_init(struct hibmc_drm_private *priv);
- int hibmc_vdac_init(struct hibmc_drm_private *priv);
- 
--- 
-2.7.4
-
+read##bw already provides strong ordering guarantees across multiple
+architectures.
