@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D7FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9AAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0598D208CD
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC4B20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Mar 2020 02:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgCFC6A (ORCPT
+        id S1727308AbgCFC6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 21:58:00 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38156 "EHLO huawei.com"
+        Thu, 5 Mar 2020 21:58:45 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38176 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726563AbgCFC6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726533AbgCFC6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Mar 2020 21:58:00 -0500
 Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 46AF96E88F00CB871696;
+        by Forcepoint Email with ESMTP id 4BE296EFDB17F3167F68;
         Fri,  6 Mar 2020 10:57:58 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 6 Mar 2020 10:57:50 +0800
+ 14.3.439.0; Fri, 6 Mar 2020 10:57:48 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Yufeng Mo <moyufeng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 7/9] net: hns3: print out command code when dump fails in debugfs
-Date:   Fri, 6 Mar 2020 10:57:16 +0800
-Message-ID: <1583463438-60953-8-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 2/9] net: hns3: rename macro HCLGE_MAX_NCL_CONFIG_LENGTH
+Date:   Fri, 6 Mar 2020 10:57:11 +0800
+Message-ID: <1583463438-60953-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583463438-60953-1-git-send-email-tanhuazhong@huawei.com>
 References: <1583463438-60953-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,147 +49,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yufeng Mo <moyufeng@huawei.com>
 
-This patch adds a local variable to save the command code in
-some dump cases which need to modify the command code, then
-the failing command code can be print out for debugging.
+The name of macro HCLGE_MAX_NCL_CONFIG_LENGTH is inaccurate,
+this patch renames it to HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD.
 
 Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 56 +++++++++++++---------
- 1 file changed, 34 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index 5814f36..8ba6985 100644
+index 5b4045c..5814f36 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -179,6 +179,7 @@ static void hclge_dbg_dump_dcb(struct hclge_dev *hdev, const char *cmd_buf)
+@@ -1137,7 +1137,7 @@ static void hclge_dbg_dump_ncl_config(struct hclge_dev *hdev,
+ 				      const char *cmd_buf)
  {
- 	struct device *dev = &hdev->pdev->dev;
- 	struct hclge_dbg_bitmap_cmd *bitmap;
-+	enum hclge_opcode_type cmd;
- 	int rq_id, pri_id, qset_id;
- 	int port_id, nq_id, pg_id;
- 	struct hclge_desc desc[2];
-@@ -193,10 +194,10 @@ static void hclge_dbg_dump_dcb(struct hclge_dev *hdev, const char *cmd_buf)
- 		return;
- 	}
+ #define HCLGE_MAX_NCL_CONFIG_OFFSET	4096
+-#define HCLGE_MAX_NCL_CONFIG_LENGTH	(20 + 24 * 4)
++#define HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD	(20 + 24 * 4)
  
--	ret = hclge_dbg_cmd_send(hdev, desc, qset_id, 1,
--				 HCLGE_OPC_QSET_DFX_STS);
-+	cmd = HCLGE_OPC_QSET_DFX_STS;
-+	ret = hclge_dbg_cmd_send(hdev, desc, qset_id, 1, cmd);
- 	if (ret)
--		return;
-+		goto err_dcb_cmd_send;
+ 	struct hclge_desc desc[HCLGE_CMD_NCL_CONFIG_BD_NUM];
+ 	int bd_num = HCLGE_CMD_NCL_CONFIG_BD_NUM;
+@@ -1161,8 +1161,8 @@ static void hclge_dbg_dump_ncl_config(struct hclge_dev *hdev,
  
- 	bitmap = (struct hclge_dbg_bitmap_cmd *)&desc[0].data[1];
- 	dev_info(dev, "roce_qset_mask: 0x%x\n", bitmap->bit0);
-@@ -204,48 +205,53 @@ static void hclge_dbg_dump_dcb(struct hclge_dev *hdev, const char *cmd_buf)
- 	dev_info(dev, "qs_shaping_pass: 0x%x\n", bitmap->bit2);
- 	dev_info(dev, "qs_bp_sts: 0x%x\n", bitmap->bit3);
- 
--	ret = hclge_dbg_cmd_send(hdev, desc, pri_id, 1, HCLGE_OPC_PRI_DFX_STS);
-+	cmd = HCLGE_OPC_PRI_DFX_STS;
-+	ret = hclge_dbg_cmd_send(hdev, desc, pri_id, 1, cmd);
- 	if (ret)
--		return;
-+		goto err_dcb_cmd_send;
- 
- 	bitmap = (struct hclge_dbg_bitmap_cmd *)&desc[0].data[1];
- 	dev_info(dev, "pri_mask: 0x%x\n", bitmap->bit0);
- 	dev_info(dev, "pri_cshaping_pass: 0x%x\n", bitmap->bit1);
- 	dev_info(dev, "pri_pshaping_pass: 0x%x\n", bitmap->bit2);
- 
--	ret = hclge_dbg_cmd_send(hdev, desc, pg_id, 1, HCLGE_OPC_PG_DFX_STS);
-+	cmd = HCLGE_OPC_PG_DFX_STS;
-+	ret = hclge_dbg_cmd_send(hdev, desc, pg_id, 1, cmd);
- 	if (ret)
--		return;
-+		goto err_dcb_cmd_send;
- 
- 	bitmap = (struct hclge_dbg_bitmap_cmd *)&desc[0].data[1];
- 	dev_info(dev, "pg_mask: 0x%x\n", bitmap->bit0);
- 	dev_info(dev, "pg_cshaping_pass: 0x%x\n", bitmap->bit1);
- 	dev_info(dev, "pg_pshaping_pass: 0x%x\n", bitmap->bit2);
- 
--	ret = hclge_dbg_cmd_send(hdev, desc, port_id, 1,
--				 HCLGE_OPC_PORT_DFX_STS);
-+	cmd = HCLGE_OPC_PORT_DFX_STS;
-+	ret = hclge_dbg_cmd_send(hdev, desc, port_id, 1, cmd);
- 	if (ret)
--		return;
-+		goto err_dcb_cmd_send;
- 
- 	bitmap = (struct hclge_dbg_bitmap_cmd *)&desc[0].data[1];
- 	dev_info(dev, "port_mask: 0x%x\n", bitmap->bit0);
- 	dev_info(dev, "port_shaping_pass: 0x%x\n", bitmap->bit1);
- 
--	ret = hclge_dbg_cmd_send(hdev, desc, nq_id, 1, HCLGE_OPC_SCH_NQ_CNT);
-+	cmd = HCLGE_OPC_SCH_NQ_CNT;
-+	ret = hclge_dbg_cmd_send(hdev, desc, nq_id, 1, cmd);
- 	if (ret)
--		return;
-+		goto err_dcb_cmd_send;
- 
- 	dev_info(dev, "sch_nq_cnt: 0x%x\n", le32_to_cpu(desc[0].data[1]));
- 
--	ret = hclge_dbg_cmd_send(hdev, desc, nq_id, 1, HCLGE_OPC_SCH_RQ_CNT);
-+	cmd = HCLGE_OPC_SCH_RQ_CNT;
-+	ret = hclge_dbg_cmd_send(hdev, desc, nq_id, 1, cmd);
- 	if (ret)
--		return;
-+		goto err_dcb_cmd_send;
- 
- 	dev_info(dev, "sch_rq_cnt: 0x%x\n", le32_to_cpu(desc[0].data[1]));
- 
--	ret = hclge_dbg_cmd_send(hdev, desc, 0, 2, HCLGE_OPC_TM_INTERNAL_STS);
-+	cmd = HCLGE_OPC_TM_INTERNAL_STS;
-+	ret = hclge_dbg_cmd_send(hdev, desc, 0, 2, cmd);
- 	if (ret)
--		return;
-+		goto err_dcb_cmd_send;
- 
- 	dev_info(dev, "pri_bp: 0x%x\n", le32_to_cpu(desc[0].data[1]));
- 	dev_info(dev, "fifo_dfx_info: 0x%x\n", le32_to_cpu(desc[0].data[2]));
-@@ -257,18 +263,18 @@ static void hclge_dbg_dump_dcb(struct hclge_dev *hdev, const char *cmd_buf)
- 	dev_info(dev, "SSU_TM_BYPASS_EN: 0x%x\n", le32_to_cpu(desc[1].data[0]));
- 	dev_info(dev, "SSU_RESERVE_CFG: 0x%x\n", le32_to_cpu(desc[1].data[1]));
- 
--	ret = hclge_dbg_cmd_send(hdev, desc, port_id, 1,
--				 HCLGE_OPC_TM_INTERNAL_CNT);
-+	cmd = HCLGE_OPC_TM_INTERNAL_CNT;
-+	ret = hclge_dbg_cmd_send(hdev, desc, port_id, 1, cmd);
- 	if (ret)
--		return;
-+		goto err_dcb_cmd_send;
- 
- 	dev_info(dev, "SCH_NIC_NUM: 0x%x\n", le32_to_cpu(desc[0].data[1]));
- 	dev_info(dev, "SCH_ROCE_NUM: 0x%x\n", le32_to_cpu(desc[0].data[2]));
- 
--	ret = hclge_dbg_cmd_send(hdev, desc, port_id, 1,
--				 HCLGE_OPC_TM_INTERNAL_STS_1);
-+	cmd = HCLGE_OPC_TM_INTERNAL_STS_1;
-+	ret = hclge_dbg_cmd_send(hdev, desc, port_id, 1, cmd);
- 	if (ret)
--		return;
-+		goto err_dcb_cmd_send;
- 
- 	dev_info(dev, "TC_MAP_SEL: 0x%x\n", le32_to_cpu(desc[0].data[1]));
- 	dev_info(dev, "IGU_PFC_PRI_EN: 0x%x\n", le32_to_cpu(desc[0].data[2]));
-@@ -277,6 +283,12 @@ static void hclge_dbg_dump_dcb(struct hclge_dev *hdev, const char *cmd_buf)
- 		 le32_to_cpu(desc[0].data[4]));
- 	dev_info(dev, "IGU_TX_PRI_MAP_TC_CFG: 0x%x\n",
- 		 le32_to_cpu(desc[0].data[5]));
-+	return;
-+
-+err_dcb_cmd_send:
-+	dev_err(&hdev->pdev->dev,
-+		"failed to dump dcb dfx, cmd = %#x, ret = %d\n",
-+		cmd, ret);
- }
- 
- static void hclge_dbg_dump_reg_cmd(struct hclge_dev *hdev, const char *cmd_buf)
+ 	while (length > 0) {
+ 		data0 = offset;
+-		if (length >= HCLGE_MAX_NCL_CONFIG_LENGTH)
+-			data0 |= HCLGE_MAX_NCL_CONFIG_LENGTH << 16;
++		if (length >= HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD)
++			data0 |= HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD << 16;
+ 		else
+ 			data0 |= length << 16;
+ 		ret = hclge_dbg_cmd_send(hdev, desc, data0, bd_num,
 -- 
 2.7.4
 
