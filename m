@@ -2,194 +2,77 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF40C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D96FC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920FF206D7
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583540079;
-	bh=M1tbo6L2USAr7nB0VUMkCjBbL9J4r/McJkF4HDYq3Bc=;
-	h=To:Cc:From:Subject:Date:List-ID:From;
-	b=1V7eE/FW8ElXDxW/T2zdZc+CVkrMn+09jNVTD3DK+A/wwa3gFpBFQ66mZ49jMgmGf
-	 QTKEFoaHEILEnEX2J4auyGZ0FZjvb+ZS3iLJflf8zYiFEM0Hlo2oJ4Sm9CH5kpEPv3
-	 w62XpmA4ZJL475RXhTja8IROdXYA2UpTO93XqzQQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0695E206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:18:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DhWWEw12"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCGAOi (ORCPT
+        id S1726982AbgCGASL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 19:14:38 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33719 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgCGAOi (ORCPT
+        Fri, 6 Mar 2020 19:18:11 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44908 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgCGASL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 19:14:38 -0500
-Received: by mail-io1-f67.google.com with SMTP id r15so3861381iog.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 16:14:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=qHW39RVm7bhWzHPvxHxpEyDEco8gsFv/J35u+/IoltA=;
-        b=J79Zz33ccEHtFjCmy9lqmtpwTUvJI7SNKysWkS0rgJ7VSULB0xWC3T/IZbHYf/Luhg
-         NOJbQKNg9RQdTxHqlkXNm/RKY3MsZmRAzD0Hvgs2LmdlkYLR6HaRxFVaObdn0TsO1hYC
-         K0om2DWVwl0rO0VzQnz2T8brn8vLec/IV5+Lo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=qHW39RVm7bhWzHPvxHxpEyDEco8gsFv/J35u+/IoltA=;
-        b=raha0OGIytCKiFajoLjJpiq+PSrkstBvLoUl7DmoFpNghpt25JWHstgDevU98ECjKs
-         SB3Sl2VXm8BVs8IzAo/5jFjc7Qxn5roUWCi879I3gUhWdQ0pJi53w/etG/84BIbZvg3o
-         jCOPIXSP7//tbSgKRykSgc+4EKt4r/jDOSXWt6+EXZNFEMZxKaaBjZVGjlzXuQrH/doJ
-         maMgnxcLpRQsFuWK++a9Vr5pgNFksqltiPzXtkBvqOqWa0gdJuBGZZJ8e7RM/LnnC+gL
-         f214OoGOkzqtYSguslLblUWoOC5KzgAz75BEvbHeL73yHwHEysOHegMlFDbb/93aMJfF
-         HmGg==
-X-Gm-Message-State: ANhLgQ35XjT6eqUXOnUvn87/jiGow+zys4RfS5l2t+G9WAleo1+6PQZa
-        7R0EapvT4D8RJyZSiJjrsEbxxpNXJjs=
-X-Google-Smtp-Source: ADFU+vsNFvIN9+G70hap688bVJo6dmQDejdpJW3FaYIdBZVo1714EoetqS+XDMy7CdNflLVK6xzBWw==
-X-Received: by 2002:a02:ce95:: with SMTP id y21mr5632116jaq.115.1583540077080;
-        Fri, 06 Mar 2020 16:14:37 -0800 (PST)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id o5sm4629011ils.78.2020.03.06.16.14.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2020 16:14:36 -0800 (PST)
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mike Gilbert <floppym@gentoo.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        Fri, 6 Mar 2020 19:18:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=fH7qPDX1r1WZFTF4wTmTa48BQqrtV6tetqMZ9bdxdZA=; b=DhWWEw12IXDRLSgTiPWgAMdM7R
+        jfMBzmO0YLP2fNwFk1HfOmPrW2y05We9ANYWoEWN7J1L0xIGDLKDzGL2+uIwPOIxcQSog+j//QRkF
+        IcMNMbUEcvKUTJ54bNLbjVN9yMlt9XUP81e8dz0NmE4mX6N7VTQgCH90XFcUGsNS6N/DRxj9OfVRX
+        PZKO1UdAfMuRkngUUqMQqM/Lv8i7jJqiUBitoKMsPXFve2QJJWllq6l9+nGNwXqd7Gqvp3QhS5N42
+        K92rb7FJtMFQJn9PX+zOFzt5zKxAZcqyEGVZUilcSsTwJV1z2BtSlphdNvpNVZlpjaCXJ7Yf0Di3g
+        oxcQNpxQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jANAQ-0006jJ-RG; Sat, 07 Mar 2020 00:18:10 +0000
+Subject: Re: kselftest selftest issues and clarifications
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        "Bird, Tim" <Tim.Bird@sony.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Thomas Renninger <trenn@suse.de>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] cpupower update for Linux 5.6-rc6
-Message-ID: <fcbb3dc4-38ae-8361-bd6b-a00ae00c189c@linuxfoundation.org>
-Date:   Fri, 6 Mar 2020 17:14:34 -0700
+        Kevin Hilman <khilman@baylibre.com>
+References: <MWHPR13MB0895B92C9B4807D94E1E6B04FDE30@MWHPR13MB0895.namprd13.prod.outlook.com>
+ <f1f991a6-6e05-6ba3-b5c1-174b93029a99@linuxfoundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <818d8b84-4ce2-4cbd-d561-293137c5d884@infradead.org>
+Date:   Fri, 6 Mar 2020 16:18:08 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------8783B7F020BFEFD5BCAAC3F8"
+In-Reply-To: <f1f991a6-6e05-6ba3-b5c1-174b93029a99@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------8783B7F020BFEFD5BCAAC3F8
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+On 3/6/20 3:30 PM, Shuah Khan wrote:
+>>
+>> And I'm using a KBUILD_OUTPUT environment variable, rather than O=.
+>> Let me know if you'd like me to build a matrix of these different build methods.
+>>
+> 
+> This is fine. Please note that relative paths don't work in both of
+> these. Something I will tackle once the bugger problems are addressed.
 
-Hi Rafael,
+Please see/test/try this patch:
 
-Please pull the following cpupower update for Linux 5.6-rc6.
-
-This cpupower update for Linux 5.6-rc6 consists of a fix from
-Mike Gilbert for build failures when -fno-common is enabled.
--fno-common will be default in gcc v10.
-
-Diff is attached.
-
-thanks,
--- Shuah
+https://lore.kernel.org/lkml/158351957799.3363.15269768530697526765.stgit@devnote2/
 
 
-----------------------------------------------------------------
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+-- 
+~Randy
 
-   Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux 
-tags/linux-cpupower-5.6-rc6
-
-for you to fetch changes up to 2de7fb60a4740135e03cf55c1982e393ccb87b6b:
-
-   cpupower: avoid multiple definition with gcc -fno-common (2020-03-02 
-08:53:34 -0700)
-
-----------------------------------------------------------------
-linux-cpupower-5.6-rc6
-
-This cpupower update for Linux 5.6-rc6 consists of a fix from
-Mike Gilbert for build failures when -fno-common is enabled.
--fno-common will be default in gcc v10.
-
-----------------------------------------------------------------
-Mike Gilbert (1):
-       cpupower: avoid multiple definition with gcc -fno-common
-
-  tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
-  tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
-  tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
-  tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
-  4 files changed, 5 insertions(+), 3 deletions(-)
-----------------------------------------------------------------
-
---------------8783B7F020BFEFD5BCAAC3F8
-Content-Type: text/x-patch; charset=UTF-8;
- name="linux-cpupower-5.6-rc6.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="linux-cpupower-5.6-rc6.diff"
-
-diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-index 33dc34db4f3c..20f46348271b 100644
---- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-@@ -82,7 +82,7 @@ static struct pci_access *pci_acc;
- static struct pci_dev *amd_fam14h_pci_dev;
- static int nbp1_entered;
- 
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- #ifdef DEBUG
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-index 3c4cee160b0e..a65f7d011513 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-@@ -19,7 +19,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
- 
- static unsigned long long **previous_count;
- static unsigned long long **current_count;
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- static int cpuidle_get_count_percent(unsigned int id, double *percent,
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-index 6d44fec55ad5..7c77045fef52 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-@@ -27,6 +27,8 @@ struct cpuidle_monitor *all_monitors[] = {
- 0
- };
- 
-+int cpu_count;
-+
- static struct cpuidle_monitor *monitors[MONITORS_MAX];
- static unsigned int avail_monitors;
- 
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-index 5b5eb1da0cce..c559d3115330 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-@@ -25,7 +25,7 @@
- #endif
- #define CSTATE_DESC_LEN 60
- 
--int cpu_count;
-+extern int cpu_count;
- 
- /* Hard to define the right names ...: */
- enum power_range_e {
-
---------------8783B7F020BFEFD5BCAAC3F8--
