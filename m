@@ -2,247 +2,166 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5424C10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 17:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722F4C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 17:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3E0206D7
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 17:16:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="xnb8+syU"
+	by mail.kernel.org (Postfix) with ESMTP id 4CBB420674
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 17:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgCGRQV (ORCPT
+        id S1726264AbgCGRYX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 12:16:21 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34631 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbgCGRQV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 12:16:21 -0500
-Received: by mail-qt1-f196.google.com with SMTP id 59so4153269qtb.1
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 09:16:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=sf3hP15eRwvb8EUmCxgQaU6ReVZMGdyORkxVGwsesys=;
-        b=xnb8+syUgPxLWAY5Rg8rqNubDZz5NmgMt77dMrNwU6l9eRn382zCYauHY75DOas5gS
-         YExVKCbk7qOaD4u7nbHfKYlxUTkXvMJENx0DzH2vkO5ejb6YLPHEWut/bks4bjDMoL/K
-         uQgYbJ0LskCRdw86ggJJNNnPZRLDTJ9E6Cox4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=sf3hP15eRwvb8EUmCxgQaU6ReVZMGdyORkxVGwsesys=;
-        b=C2ehcWm1Rs1/GnwxidGUaw7WHEVfHWldbFk1qpEMhE6YJ+ch1+x22nwtJ9en9LMGsg
-         kBw9GZQgNK6OOEpGyIixoo8v21vloXtFJqY8viowEYsbkQbCDhrSFWvhF6lOlWMH47gm
-         nW/bKaN0G0D7vRCnztiTwBotuYUU2yazH/If0uhVk89WYSKOAXm2jOLYL6+TqZIKl6ON
-         iON3dlizmiMM668G1LY6lsWHs2FQJZl/dZ/jb/AHwCtmz5osUQxM1PdbZ3m7U7+UYo6H
-         S73c032sfspAH1mPXuquhaI0pSPFpwGImmdveJiAUp75y+TKY49bAEzocHv0fLPEFHoh
-         vCJQ==
-X-Gm-Message-State: ANhLgQ2YuZ97Qs3eczTPyFoizrHO0cebRxvdBB2K+jCW2Tj6O0oLqeTx
-        GZfYA+9biN7R3Ec0J6LqGx0AVg==
-X-Google-Smtp-Source: ADFU+vtgo0lCQGOVhkbswQ5Q4KD9I2Ha2AGxjwE0BT5jQGWSvc3PFweIRvGz6exWwdA1wh2FWfr/Bg==
-X-Received: by 2002:ac8:7956:: with SMTP id r22mr7987794qtt.323.1583601379601;
-        Sat, 07 Mar 2020 09:16:19 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 17sm16972276qkc.81.2020.03.07.09.16.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 09:16:19 -0800 (PST)
-Date:   Sat, 7 Mar 2020 12:16:18 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Qian Cai <cai@lca.pw>, Peter Zijlstra <peterz@infradead.org>
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>
-Subject: Re: PROVE_RCU_LIST + /proc/lockdep warning
-Message-ID: <20200307171618.GC231616@google.com>
-References: <CA9BD318-A8C8-4F22-828A-65C355931A5C@lca.pw>
+        Sat, 7 Mar 2020 12:24:23 -0500
+Received: from mail-oln040092255073.outbound.protection.outlook.com ([40.92.255.73]:42736
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726109AbgCGRYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 12:24:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QEbRcDTBqpNTQ2t8FYLxyNt2Tsi9wW1VyFBXyCTPJYlijafAyK88NXcFZAXqJ2+wbQkYj6lc0/zhedYQ6nIwb7Um2hper0WoQjrqAwNL0kMClkXX9xvDW9JM8mzJiGtUY0ohh/aBYgBfzdoI4Ipz/rR1hJajkRRx6PnYk72Bdunuwas1Kkvzi/hETFzRd/yLLEUweWE/2G7mOK7YgY2rteHVr9UTG67Hy12++ICMck+RNjaibPWM4zTz0dcyZ/ZYldADMsDii8mRywZ04ObLdafgSJN0FblOVPUwOrWQjpXxOPpKR7ME0uGY3LKdL33F+2xIDvSS9ltU5L5Nmzucwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tszg2V2jeixee10Oj70ZOS/TDUOd20x4YdV/lCix7gI=;
+ b=QVNl/pGHeBktfVTc8fgTnx9V4cZII0VkN7Gub8ymmdKBexCyjKQg20pNfm4IqB2BhdgoIpu/i16EW+/2iNOd7NjNMMvpsYM2Pn2xUfYv71g0vFVCc+OGWdQSKwQi+eqzGX+g8e3Quxxy54tL/KrZIz5HIzpmURweC7kr+OZt1UtknJsgqVjXFarRNWrmFuWyw1G+mVj34S0/vB3uq798zKhZAG4uxNPVoRkTvFkjp8Xf0vR7H0/UmXD96uLIXPpX0XwhrXn1GEfrEOkUqjA7k5tl2f8tYxu21OgNLWboarXXaiMDkAWc9qXJ98Dn9zhBXD3nLKLoBeSVvmd//dU7UA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HK2APC01FT034.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebc::3b) by
+ HK2APC01HT229.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebc::320)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Sat, 7 Mar
+ 2020 17:24:18 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.54) by
+ HK2APC01FT034.mail.protection.outlook.com (10.152.248.191) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Sat, 7 Mar 2020 17:24:17 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2772.020; Sat, 7 Mar 2020
+ 17:24:17 +0000
+Received: from nicholas-dell-linux (2001:44b8:605f:11:6375:33df:328c:d925) by ME2PR01CA0095.ausprd01.prod.outlook.com (2603:10c6:201:2d::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Sat, 7 Mar 2020 17:24:15 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     xinhui pan <xinhui.pan@amd.com>,
+        =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
+        Felix Kuehling <felix.kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: WARN_ON_ONCE triggered "drm/amdgpu: Remove kfd eviction fence before
+ release bo (v2)"
+Thread-Topic: WARN_ON_ONCE triggered "drm/amdgpu: Remove kfd eviction fence
+ before release bo (v2)"
+Thread-Index: AQHV9KU6//AyqegTvUSeSsHX4mpYgg==
+Date:   Sat, 7 Mar 2020 17:24:17 +0000
+Message-ID: <PSXP216MB0438CD7C87160211C08DC9AE80E00@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0095.ausprd01.prod.outlook.com
+ (2603:10c6:201:2d::35) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:013A63E4E61CB68725738A554FFB09C27340E85A007E56AAE3C5E7E6E1BE3417;UpperCasedChecksum:C78260B0BAA6FB4658C1797DF97289FB7392ED68D7BD98450EC2B3180D5B4C2A;SizeAsReceived:7757;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [z4SCZKjD9+6UJWtuxZ7cYQJmWQEu7GrWh2qMDzkEcQfz8C4Hz1mEwqCGF9XxmiqB]
+x-microsoft-original-message-id: <20200307172408.GA4379@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 01e34570-8a73-4b4e-263d-08d7c2bc5cf0
+x-ms-traffictypediagnostic: HK2APC01HT229:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2cx2LnRyf6pSw/IDkENT2x9eVWOBChZW8GU5L31rN+AkSHFWkS38voGuc6ZqJuyE5F5eEWWfs/CNQtF8k6GkUkXN0M5k9AboovM/iuIXTFsRH/uU/3XdjT2MvCA6J8tsSF+KATTsiouxDTwQVYMslypS8/r2Dw8mxZCUlz/3ACH/k0NPzLD04DZOS/BOxlWz
+x-ms-exchange-antispam-messagedata: rIa86WHvWyKrRIanb00wBsi57+jpHKFHA5VSafvRmKaf80jhMkKO/qE6HPrHeR0KDlYOMBg8HLjI8AbjXXNdzekEcB/uIrJiXlKV7I+Mx3iWkK1ay/h9flFP8h0fyXFmUDagHPBZ63CN9QXjR1l6cTFMgRKTDy1CE2OdAI/O0xd0c/EcVerSXbGIrKIDQ9e95WQtFsVeG1bP26zGeYxLFA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <84EA49691E5BE24D8BF8C206241F24F1@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA9BD318-A8C8-4F22-828A-65C355931A5C@lca.pw>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01e34570-8a73-4b4e-263d-08d7c2bc5cf0
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2020 17:24:17.3973
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT229
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 11:06:10PM -0500, Qian Cai wrote:
-> Since the linux-next commit c9af03c14bfd (“Default enable RCU list lockdep debugging with PROVE_RCU”),
-> read /proc/lockdep will trigger a warning with this config below. Reverted the commit fixed the issue
-> right away.
-> 
-> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+Hi all,
 
-Hmm, since Peter hates the list-RCU checking patches and rejected a patch by
-Amol to fix this (;-)), the easiest way to resolve it would be to just bypass
-the check in lockdep code:
+I could not find the messages regarding this commit to reply to on 
+lore.kernel.org/lkml - so I started a new thread.
 
-Peter, this should be the last of the list-RCU changes and thank you for the
-patience.
+The commit f4a3c42b5c52 "drm/amdgpu: Remove kfd eviction fence before 
+release bo (v2)" adds a WARN_ON_ONCE which is getting triggered when I 
+hot-add an [1002:7300] Fiji XT GPU via Thunderbolt. It does not seem to 
+do it if the GPU is present at boot time.
 
-Should I or Amol send a patch for this?
+The WARN_ON_ONCE is at drivers/gpu/drm/amd/amdgpu/amdgpu_object.c +1311.
 
----8<-----------------------
+I do not know what this means or if it is significant, but nevertheless 
+I am alerting you to the fact. If this report results in any changes 
+being required, I am more than happy to test those changes and confirm 
+they solve the problem. If you need more information, just ask and I 
+will provide. :)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 32406ef0d6a2d..d47643d8081b2 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1493,7 +1493,7 @@ static int __bfs(struct lock_list *source_entry,
- 
- 		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
- 
--		list_for_each_entry_rcu(entry, head, entry) {
-+		list_for_each_entry_rcu(entry, head, entry, true) {
- 			if (!lock_accessed(entry)) {
- 				unsigned int cq_depth;
- 				mark_lock_accessed(entry, lock);
+Here is the dmesg:
 
-thanks,
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 2160 at drivers/gpu/drm/amd/amdgpu/amdgpu_object.c:1311 amdgpu_bo_release_notify+0x10c/0x130 [amdgpu]
+Modules linked in: usbhid amdgpu amd_iommu_v2 gpu_sched ttm ccm rfcomm cmac algif_hash algif_skcipher af_alg snd_hda_codec_hdmi bnep hid_multitouch hid_generic uvcvideo videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videobuf2_common videodev mc btusb btrtl btbcm btintel cdc_acm bluetooth ecdh_generic ecc joydev snd_hda_codec_realtek snd_hda_codec_generic 8021q garp mrp stp llc msr x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel dell_laptop ledtrig_audio dell_wmi kvm dell_smbios mei_hdcp dcdbas intel_rapl_msr wmi_bmof dell_wmi_descriptor intel_wmi_thunderbolt iwlmvm snd_hda_intel snd_intel_dspcfg crct10dif_pclmul crc32_pclmul ghash_clmulni_intel snd_hda_codec i915 mac80211 aesni_intel crypto_simd libarc4 snd_hda_core drm_kms_helper cryptd glue_helper intel_cstate snd_hwdep cec intel_rapl_perf psmouse input_leds iwlwifi rc_core pcspkr snd_pcm efi_pstore drm snd_timer snd i2c_algo_bit fb_sys_fops intel_lpss_pci soundcore intel_lpss i2c_i801 idma64
+processor_thermal_device cfg80211 ucsi_acpi syscopyarea mei_me thunderbolt intel_xhci_usb_role_switch sysfillrect typec_ucsi intel_rapl_common sysimgblt mei roles virt_dma intel_pch_thermal intel_soc_dts_iosf wmi typec i2c_hid hid int3400_thermal acpi_thermal_rel pinctrl_sunrisepoint int3403_thermal intel_hid int340x_thermal_zone pinctrl_intel video acpi_pad sparse_keymap mac_hid sch_fq_codel crypto_user ip_tables x_tables autofs4 rtsx_pci_sdmmc nvme serio_raw nvme_core rtsx_pci
+CPU: 1 PID: 2160 Comm: gnome-shel:cs0 Not tainted 5.6.0-rc4-next-20200305 #1
+Hardware name: Dell Inc. XPS 13 9370/09DKKT, BIOS 1.12.1 12/11/2019
+RIP: 0010:amdgpu_bo_release_notify+0x10c/0x130 [amdgpu]
+Code: 74 17 48 8d 78 38 ba ff ff ff ff f0 0f c1 50 38 83 fa 01 74 1c 85 d2 7e 23 48 8b bb f0 00 00 00 e8 d9 f3 d1 fb e9 28 ff ff ff <0f> 0b e9 72 ff ff ff e8 c8 4a 9a fb eb e1 0f 0b eb dd be 03 00 00
+RSP: 0018:ffff95b100f0bbf0 EFLAGS: 00010283
+RAX: ffff889297600948 RBX: ffff889297600850 RCX: 0000000000000000
+RDX: ffff88925dd097c0 RSI: ffff889297600948 RDI: ffff889297600850
+RBP: ffff95b100f0bc10 R08: 0000000000000020 R09: ffff88929c807800
+R10: ffff8892987e2140 R11: 0000000000000001 R12: ffff889297600800
+R13: ffffffffc0fccf28 R14: ffff88925fc24f50 R15: 0000000000030480
+FS:  00007fc8418e9700(0000) GS:ffff88929e640000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc8418e9a08 CR3: 0000000458b0e006 CR4: 00000000003606e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ ttm_bo_put+0x315/0x3f0 [ttm]
+ amdgpu_bo_unref+0x1e/0x30 [amdgpu]
+ amdgpu_gem_object_free+0x34/0x50 [amdgpu]
+ drm_gem_object_free+0x41/0x70 [drm]
+ drm_gem_object_put_unlocked+0x73/0x80 [drm]
+ drm_gem_object_handle_put_unlocked+0x70/0xb0 [drm]
+ drm_gem_object_release_handle+0x76/0xa0 [drm]
+ drm_gem_handle_delete+0x59/0xa0 [drm]
+ ? drm_gem_handle_create+0x40/0x40 [drm]
+ drm_gem_close_ioctl+0x24/0x30 [drm]
+ drm_ioctl_kernel+0xae/0xf0 [drm]
+ drm_ioctl+0x234/0x3d0 [drm]
+ ? drm_gem_handle_create+0x40/0x40 [drm]
+ amdgpu_drm_ioctl+0x4e/0x80 [amdgpu]
+ ksys_ioctl+0x9d/0xd0
+ __x64_sys_ioctl+0x1a/0x20
+ do_syscall_64+0x57/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fc85aa1c2eb
+Code: 0f 1e fa 48 8b 05 a5 8b 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 75 8b 0c 00 f7 d8 64 89 01 48
+RSP: 002b:00007fc8418e86d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fc8418e8710 RCX: 00007fc85aa1c2eb
+RDX: 00007fc8418e8710 RSI: 0000000040086409 RDI: 0000000000000012
+RBP: 0000000040086409 R08: 00007fc8240008d2 R09: 0000000000000001
+R10: 0000000000000007 R11: 0000000000000246 R12: 0000556d362b85a8
+R13: 0000000000000012 R14: 0000556d362b914c R15: 00007fc8418e8740
+---[ end trace 71c7143be8a94a69 ]---
 
- - Joel
-
-> 
-> [26405.676199][ T3548] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
-> [26405.676239][ T3548] WARNING: CPU: 11 PID: 3548 at kernel/locking/lockdep.c:4637 check_flags.part.28+0x218/0x220
-> [26405.756287][ T3548] Modules linked in: kvm_intel nls_iso8859_1 nls_cp437 kvm vfat fat irqbypass intel_cstate intel_uncore intel_rapl_perf dax_pmem dax_pmem_core efivars ip_tables x_tables xfs sd_mod bnx2x hpsa mdio scsi_transport_sas firmware_class dm_mirror dm_region_hash dm_log dm_mod efivarfs
-> [26405.881899][ T3548] CPU: 11 PID: 3548 Comm: cat Not tainted 5.6.0-rc4-next-20200305+ #8
-> [26405.920091][ T3548] Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
-> [26405.955370][ T3548] RIP: 0010:check_flags.part.28+0x218/0x220
-> [26405.983016][ T3548] Code: 13 8a e8 2b 3f 29 00 44 8b 15 84 df ba 01 45 85 d2 0f 85 c7 94 00 00 48 c7 c6 40 2b 47 89 48 c7 c7 40 04 47 89 e8 49 e3 f3 ff <0f> 0b e9 ad 94 00 00 90 55 48 89 e5 41 57 4d 89 cf 41 56 45 89 c6
-> [26406.076147][ T3548] RSP: 0018:ffffc9000695f848 EFLAGS: 00010086
-> [26406.104215][ T3548] RAX: 0000000000000000 RBX: ffff888fe6184040 RCX: ffffffff8858cecf
-> [26406.140856][ T3548] RDX: 0000000000000007 RSI: dffffc0000000000 RDI: 0000000000000000
-> [26406.178465][ T3548] RBP: ffffc9000695f850 R08: fffffbfff1377355 R09: fffffbfff1377355
-> [26406.217995][ T3548] R10: ffffffff89bb9aa3 R11: fffffbfff1377354 R12: 0000000000000000
-> [26406.256760][ T3548] R13: ffffffff8aa55ee0 R14: 0000000000000046 R15: ffffffff8aa55ec0
-> [26406.293708][ T3548] FS:  00007f58cf3a3540(0000) GS:ffff88905fa80000(0000) knlGS:0000000000000000
-> [26406.335252][ T3548] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [26406.366331][ T3548] CR2: 00007f58cf326000 CR3: 0000000f1ba38006 CR4: 00000000001606e0
-> [26406.402408][ T3548] Call Trace:
-> [26406.416739][ T3548]  lock_is_held_type+0x5d/0x150
-> [26406.438262][ T3548]  ? rcu_lockdep_current_cpu_online+0x64/0x80
-> [26406.466463][ T3548]  rcu_read_lock_any_held+0xac/0x100
-> [26406.490105][ T3548]  ? rcu_read_lock_held+0xc0/0xc0
-> [26406.513258][ T3548]  ? __slab_free+0x421/0x540
-> [26406.535012][ T3548]  ? kasan_kmalloc+0x9/0x10
-> [26406.555901][ T3548]  ? __kmalloc_node+0x1d7/0x320
-> [26406.578668][ T3548]  ? kvmalloc_node+0x6f/0x80
-> [26406.599872][ T3548]  __bfs+0x28a/0x3c0
-> [26406.617075][ T3548]  ? class_equal+0x30/0x30
-> [26406.637524][ T3548]  lockdep_count_forward_deps+0x11a/0x1a0
-> [26406.664134][ T3548]  ? check_noncircular+0x2e0/0x2e0
-> [26406.688191][ T3548]  ? __kasan_check_read+0x11/0x20
-> [26406.713581][ T3548]  ? check_chain_key+0x1df/0x2e0
-> [26406.738044][ T3548]  ? seq_vprintf+0x4e/0xb0
-> [26406.758241][ T3548]  ? seq_printf+0x9b/0xd0
-> [26406.778169][ T3548]  ? seq_vprintf+0xb0/0xb0
-> [26406.798172][ T3548]  l_show+0x1c4/0x380
-> [26406.816474][ T3548]  ? print_name+0xb0/0xb0
-> [26406.836393][ T3548]  seq_read+0x56b/0x750
-> [26406.855346][ T3548]  proc_reg_read+0x1b4/0x200
-> [26406.876737][ T3548]  ? proc_reg_unlocked_ioctl+0x1e0/0x1e0
-> [26406.903030][ T3548]  ? check_chain_key+0x1df/0x2e0
-> [26406.926531][ T3548]  ? find_held_lock+0xca/0xf0
-> [26406.948291][ T3548]  __vfs_read+0x50/0xa0
-> [26406.967391][ T3548]  vfs_read+0xcb/0x1e0
-> [26406.986102][ T3548]  ksys_read+0xc6/0x160
-> [26407.005405][ T3548]  ? kernel_write+0xc0/0xc0
-> [26407.026076][ T3548]  ? do_syscall_64+0x79/0xaec
-> [26407.047448][ T3548]  ? do_syscall_64+0x79/0xaec
-> [26407.068650][ T3548]  __x64_sys_read+0x43/0x50
-> [26407.089132][ T3548]  do_syscall_64+0xcc/0xaec
-> [26407.109939][ T3548]  ? trace_hardirqs_on_thunk+0x1a/0x1c
-> [26407.134924][ T3548]  ? syscall_return_slowpath+0x580/0x580
-> [26407.160854][ T3548]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
-> [26407.188943][ T3548]  ? trace_hardirqs_off_caller+0x3a/0x150
-> [26407.216692][ T3548]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-> [26407.243534][ T3548]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [26407.272720][ T3548] RIP: 0033:0x7f58ceeafd75
-> [26407.293162][ T3548] Code: fe ff ff 50 48 8d 3d 4a dc 09 00 e8 25 0e 02 00 0f 1f 44 00 00 f3 0f 1e fa 48 8d 05 a5 59 2d 00 8b 00 85 c0 75 0f 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 53 c3 66 90 41 54 49 89 d4 55 48 89 f5 53 89
-> [26407.386043][ T3548] RSP: 002b:00007ffc115111a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> [26407.425283][ T3548] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f58ceeafd75
-> [26407.462717][ T3548] RDX: 0000000000020000 RSI: 00007f58cf327000 RDI: 0000000000000003
-> [26407.500428][ T3548] RBP: 00007f58cf327000 R08: 00000000ffffffff R09: 0000000000000000
-> [26407.538473][ T3548] R10: 0000000000000022 R11: 0000000000000246 R12: 00007f58cf327000
-> [26407.575743][ T3548] R13: 0000000000000003 R14: 0000000000000fff R15: 0000000000020000
-> [26407.613112][ T3548] irq event stamp: 7161
-> [26407.632089][ T3548] hardirqs last  enabled at (7161): [<ffffffff88ea2684>] _raw_spin_unlock_irqrestore+0x44/0x50
-> [26407.680094][ T3548] hardirqs last disabled at (7160): [<ffffffff88ea2418>] _raw_spin_lock_irqsave+0x18/0x50
-> [26407.727273][ T3548] softirqs last  enabled at (5898): [<ffffffff89200447>] __do_softirq+0x447/0x766
-> [26407.774000][ T3548] softirqs last disabled at (5889): [<ffffffff884d20e6>] irq_exit+0xd6/0xf0
-> [26407.814407][ T3548] ---[ end trace 1026d00df66af83e ]---
-> [26407.839742][ T3548] possible reason: unannotated irqs-off.
-> [26407.866243][ T3548] irq event stamp: 7161
-> [26407.885407][ T3548] hardirqs last  enabled at (7161): [<ffffffff88ea2684>] _raw_spin_unlock_irqrestore+0x44/0x50
-> [26407.933602][ T3548] hardirqs last disabled at (7160): [<ffffffff88ea2418>] _raw_spin_lock_irqsave+0x18/0x50
-> [26407.980432][ T3548] softirqs last  enabled at (5898): [<ffffffff89200447>] __do_softirq+0x447/0x766
-> [26408.022826][ T3548] softirqs last disabled at (5889): [<ffffffff884d20e6>] irq_exit+0xd6/0xf0
-> 
-> On a side note, it likely to hit another bug in next-20200305 (not such problem on 0304) where it
-> will stuck during boot, but the reverting does not help there. Rebooting a few times could pass.
-> 
-> [    0.013514][    C0] NMI watchdog: Watchdog detected hard LOCKUP on cpu 0 
-> [    0.013514][    C0] Modules linked in: 
-> [    0.013514][    C0] irq event stamp: 64186318 
-> [    0.013514][    C0] hardirqs last  enabled at (64186317): [<ffffffff84c9b107>] _raw_spin_unlock_irq+0x27/0x40 
-> [    0.013514][    C0] hardirqs last disabled at (64186318): [<ffffffff84c8f384>] __schedule+0x214/0x1070 
-> [    0.013514][    C0] softirqs last  enabled at (267904): [<ffffffff85000447>] __do_softirq+0x447/0x766 
-> [    0.013514][    C0] softirqs last disabled at (267897): [<ffffffff842d1f16>] irq_exit+0xd6/0xf0 
-> [    0.013514][    C0] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200305+ #6 
-> [    0.013514][    C0] Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018 
-> [    0.013514][    C0] RIP: 0010:lock_is_held_type+0x12a/0x150 
-> [    0.013514][    C0] Code: 41 0f 94 c4 65 48 8b 1c 25 40 0f 02 00 48 8d bb 74 08 00 00 e8 77 c0 28 00 c7 83 74 08 00 00 00 00 00 00 41 56 9d 48 83 c4 18 <44> 89 e0 5b 41 5c 41 5d 41 5e 41 5f 5d c3 45 31 e4 eb c7 41 bc 01 
-> [    0.013514][    C0] RSP: 0000:ffffc9000628f9f8 EFLAGS: 00000082 
-> [    0.013514][    C0] RAX: 0000000000000000 RBX: ffff889880efc040 RCX: ffffffff8438b449 
-> [    0.013514][    C0] RDX: 0000000000000007 RSI: dffffc0000000000 RDI: ffff889880efc8b4 
-> [    0.013514][    C0] RBP: ffffc9000628fa20 R08: ffffed1108588a24 R09: ffffed1108588a24 
-> [    0.013514][    C0] R10: ffff888842c4511b R11: 0000000000000000 R12: 0000000000000000 
-> [    0.013514][    C0] R13: ffff889880efc908 R14: 0000000000000046 R15: 0000000000000003 
-> [    0.013514][    C0] FS:  0000000000000000(0000) GS:ffff888842c00000(0000) knlGS:0000000000000000 
-> [    0.013514][    C0] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
-> [    0.013514][    C0] CR2: ffff88a0707ff000 CR3: 0000000b72012001 CR4: 00000000001606f0 
-> [    0.013514][    C0] Call Trace: 
-> [    0.013514][    C0]  rcu_read_lock_sched_held+0xac/0xe0 
-> lock_is_held at include/linux/lockdep.h:361
-> (inlined by) rcu_read_lock_sched_held at kernel/rcu/update.c:121
-> [    0.013514][    C0]  ? rcu_read_lock_bh_held+0xc0/0xc0 
-> [    0.013514][    C0]  rcu_note_context_switcx186/0x3b0 
-> [    0.013514][    C0]  __schedule+0x21f/0x1070 
-> [    0.013514][    C0]  ? __sched_text_start+0x8/0x8 
-> [    0.013514][    C0]  schedule+0x95/0x160 
-> [    0.013514][    C0]  do_boot_cpu+0x58c/0xaf0 
-> [    0.013514][    C0]  native_cpu_up+0x298/0x430 
-> [    0.013514][    C0]  ? common_cpu_up+0x150/0x150 
-> [    0.013514][    C0]  bringup_cpu+0x44/0x310 
-> [    0.013514][    C0]  ? timers_prepare_cpu+0x114/0x190 
-> [    0.013514][    C0]  ? takedown_cpu+0x2e0/0x2e0 
-> [    0.013514][    C0]  cpuhp_invoke_callback+0x197/0x1120 
-> [    0.013514][    C0]  ? ring_buffer_record_is_set_on+0x40/0x40 
-> [    0.013514][    C0]  _cpu_up+0x171/0x280 
-> [    0.013514][    C0]  do_cpu_up+0xb1/0x120 
-> [    0.013514][    C0]  cpu_up+0x13/0x20 
-> [    0.013514][    C0]  smp_init+0x91/0x118 
-> [    0.013514][    C0]  kernel_init_freeable+0x221/0x4f8 
-> [    0.013514][    C0]  ? mark_held_locks+0x34/0xb0 
-> [    0.013514][    C0]  ? _raw_spin_unlock_irq+0x27/0x40 
-> [    0.013514][    C0]  ? start_kernel+0x876/0x876 
-> [    0.013514][    C0]  ? lockdep_hardirqs_on+0x1b0/0x2a0 
-> [    0.013514][    C0]  ? _raw_spin_unlock_irq+0x27/0x40 
-> [    0.013514][    C0]  ? rest_init+0x307/0x307 
-> [    0.013514][    C0]  kernel_init+0x  0.013514][    C0]  ? rest_init+0x307/0x307 
-> [    0.013514][    C0]  ret_from_fork+0x3a/0x50 
-> 
->  
-
-
+Kind regards,
+Nicholas Johnson
