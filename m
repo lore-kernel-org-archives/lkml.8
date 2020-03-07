@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C37EC10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB87CC10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B3720656
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A14C920656
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583594496;
-	bh=zXhA3RoLELcyY2UKL8bcqbSijN27udDZjliB55Zc+PM=;
+	s=default; t=1583594737;
+	bh=jTfoDTpBht4Oo/wm8OLluLVKnLxr7/DLRPtg/24rA6c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PiU0weVXza4ly2cw0h3JzSdLDprHGXTxAjlpuamrZlJCtghPUyeknS9nvyCMT9I7j
-	 v9JthyAeSE2zFwc2enlRWgS6sHQ9N6AGk6pdft516EGDygYTEPfHUOufSN5z3WqzoM
-	 YzyobrAt9aIiUOIazBd3asQaOWa5+wbL0V7T9aME=
+	b=FAoWiaR9+rZuoi9bAQHCa2/GFRFnGU6SDJJdyCKLx4rLtYwZNuwgzjFdjjUsfTn/r
+	 7ZmyQpUIROxreKkpAd8StJnplGSRyCaBUf7eMoSPeUgRQ+qFOUxwyKY27dxm2VcOqA
+	 P8lx4q7zN+YfsTZOWGgIBzwvianVK0re4hiyEXk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgCGPVf (ORCPT
+        id S1726225AbgCGPZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:21:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53084 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 10:25:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgCGPVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:21:35 -0500
+        id S1726086AbgCGPZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 10:25:36 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CCB020674;
-        Sat,  7 Mar 2020 15:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A3D920656;
+        Sat,  7 Mar 2020 15:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583594494;
-        bh=zXhA3RoLELcyY2UKL8bcqbSijN27udDZjliB55Zc+PM=;
+        s=default; t=1583594735;
+        bh=jTfoDTpBht4Oo/wm8OLluLVKnLxr7/DLRPtg/24rA6c=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eH3omeFiyPeHhZ9l62cNGCJmGil5/S2xcf4vhQoBUjPoOWVnsBYBk4gShULYCrSod
-         IdEaczUOrw4cfLWzoM4VAiNV9Vswma2J6qsiaghim6DUNPRFrFW0JuMxPiGK9mCOBn
-         vq8r9qma/eAE8YbYkWUXx3i6r9W5gPVV2ZZaRZ1o=
-Date:   Sat, 7 Mar 2020 15:21:27 +0000
+        b=gsGxyz+O+VogMCFWxY3SocOCsWoXO/Jf3bCMTr09LZGu9hvriHha288PP0urxzqGD
+         uWGG1j/wauuukU3doF14pEC2pV2Dc0NsI/wa12hw9dk3qH0vX5TOla/N2cyZu1yEAx
+         TwdcaOh2SW+nLDliZ1zKVG/nDJDm30Sc5ZYB5raE=
+Date:   Sat, 7 Mar 2020 15:25:31 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <benjamin.gaignard@st.com>, <alexandre.torgue@st.com>,
-        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
-        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH 2/2] iio: trigger: stm32-timer: add power management
- support
-Message-ID: <20200307152127.404aba78@archlinux>
-In-Reply-To: <1583247585-16698-3-git-send-email-fabrice.gasnier@st.com>
-References: <1583247585-16698-1-git-send-email-fabrice.gasnier@st.com>
-        <1583247585-16698-3-git-send-email-fabrice.gasnier@st.com>
+To:     Matt Ranostay <mranostay@gmail.com>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        matt.ranostay@konsulko.com
+Subject: Re: [PATCH v2] iio: potentiostat: lmp9100: fix
+ iio_triggered_buffer_{predisable,postenable} positions
+Message-ID: <20200307152531.159f14fb@archlinux>
+In-Reply-To: <CAKzfze8KMLG=GbMvZ9eydOer5wZw-i7_5fJVjpFcZ6fqyoHgJQ@mail.gmail.com>
+References: <20200304093633.32264-1-alexandru.ardelean@analog.com>
+        <20200304094105.2586-1-alexandru.ardelean@analog.com>
+        <CAKzfze8KMLG=GbMvZ9eydOer5wZw-i7_5fJVjpFcZ6fqyoHgJQ@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -63,119 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 15:59:45 +0100
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+On Wed, 4 Mar 2020 13:17:36 -0800
+Matt Ranostay <mranostay@gmail.com> wrote:
 
-> Add suspend/resume PM sleep ops to stm32-timer-trigger driver.
-> Register contents may be lost depending on low power modes.
-> When going to low power, enforce the timer isn't active. Gracefully
-> restore its state upon resume in case it's been left enabled prior to
-> suspend.
+> On Wed, Mar 4, 2020 at 1:38 AM Alexandru Ardelean
+> <alexandru.ardelean@analog.com> wrote:
+> >
+> > The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+> > the poll functions.
+> >
+> > For the predisable hook, the disable code should occur before detaching
+> > the poll func, and for the postenable hook, the poll func should be
+> > attached before the enable code.
+> >
+> > The lmp9100 was attaching a poll function but never detaching it via any
+> > IIO disable hook.
+> >
+> > This change adds the detaching of the poll function, and moves/renames
+> > lmp91000_buffer_preenable() function to lmp91000_buffer_postenable().
+> > The idea is to make it more symmetrical, so that when the
+> > iio_triggered_buffer_{predisable,postenable} functions get removed, it's
+> > easier to see.
+> >
+> > Fixes: 67e17300dc1d7 ("iio: potentiostat: add LMP91000 support")
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Seems sensible. Applied,
+> Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+
+I'm not going to rush this one in as it's been like this for a while
+
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it,
 
 Thanks,
 
 Jonathan
 
-> ---
->  drivers/iio/trigger/stm32-timer-trigger.c | 63 +++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
 > 
-> diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
-> index 32e1249..37545a8 100644
-> --- a/drivers/iio/trigger/stm32-timer-trigger.c
-> +++ b/drivers/iio/trigger/stm32-timer-trigger.c
-> @@ -75,6 +75,15 @@ static const void *stm32h7_valids_table[][MAX_VALIDS] = {
->  	{ }, /* timer 17 */
->  };
->  
-> +struct stm32_timer_trigger_regs {
-> +	u32 cr1;
-> +	u32 cr2;
-> +	u32 psc;
-> +	u32 arr;
-> +	u32 cnt;
-> +	u32 smcr;
-> +};
-> +
->  struct stm32_timer_trigger {
->  	struct device *dev;
->  	struct regmap *regmap;
-> @@ -86,6 +95,7 @@ struct stm32_timer_trigger {
->  	bool has_trgo2;
->  	struct mutex lock; /* concurrent sysfs configuration */
->  	struct list_head tr_list;
-> +	struct stm32_timer_trigger_regs bak;
->  };
->  
->  struct stm32_timer_trigger_cfg {
-> @@ -812,6 +822,58 @@ static int stm32_timer_trigger_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static int __maybe_unused stm32_timer_trigger_suspend(struct device *dev)
-> +{
-> +	struct stm32_timer_trigger *priv = dev_get_drvdata(dev);
-> +
-> +	/* Only take care of enabled timer: don't disturb other MFD child */
-> +	if (priv->enabled) {
-> +		/* Backup registers that may get lost in low power mode */
-> +		regmap_read(priv->regmap, TIM_CR1, &priv->bak.cr1);
-> +		regmap_read(priv->regmap, TIM_CR2, &priv->bak.cr2);
-> +		regmap_read(priv->regmap, TIM_PSC, &priv->bak.psc);
-> +		regmap_read(priv->regmap, TIM_ARR, &priv->bak.arr);
-> +		regmap_read(priv->regmap, TIM_CNT, &priv->bak.cnt);
-> +		regmap_read(priv->regmap, TIM_SMCR, &priv->bak.smcr);
-> +
-> +		/* Disable the timer */
-> +		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-> +		clk_disable(priv->clk);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused stm32_timer_trigger_resume(struct device *dev)
-> +{
-> +	struct stm32_timer_trigger *priv = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	if (priv->enabled) {
-> +		ret = clk_enable(priv->clk);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* restore master/slave modes */
-> +		regmap_write(priv->regmap, TIM_SMCR, priv->bak.smcr);
-> +		regmap_write(priv->regmap, TIM_CR2, priv->bak.cr2);
-> +
-> +		/* restore sampling_frequency (trgo / trgo2 triggers) */
-> +		regmap_write(priv->regmap, TIM_PSC, priv->bak.psc);
-> +		regmap_write(priv->regmap, TIM_ARR, priv->bak.arr);
-> +		regmap_write(priv->regmap, TIM_CNT, priv->bak.cnt);
-> +
-> +		/* Also re-enables the timer */
-> +		regmap_write(priv->regmap, TIM_CR1, priv->bak.cr1);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(stm32_timer_trigger_pm_ops,
-> +			 stm32_timer_trigger_suspend,
-> +			 stm32_timer_trigger_resume);
-> +
->  static const struct stm32_timer_trigger_cfg stm32_timer_trg_cfg = {
->  	.valids_table = valids_table,
->  	.num_valids_table = ARRAY_SIZE(valids_table),
-> @@ -840,6 +902,7 @@ static struct platform_driver stm32_timer_trigger_driver = {
->  	.driver = {
->  		.name = "stm32-timer-trigger",
->  		.of_match_table = stm32_trig_of_match,
-> +		.pm = &stm32_timer_trigger_pm_ops,
->  	},
->  };
->  module_platform_driver(stm32_timer_trigger_driver);
+> > ---
+> >
+> > Changelog v1 -> v2:
+> > * forgot to call iio_triggered_buffer_postenable() in
+> >   lmp91000_buffer_postenable() in v1
+> >
+> >  drivers/iio/potentiostat/lmp91000.c | 18 +++++++++++++-----
+> >  1 file changed, 13 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/iio/potentiostat/lmp91000.c b/drivers/iio/potentiostat/lmp91000.c
+> > index a0e5f530faa9..2cb11da18e0f 100644
+> > --- a/drivers/iio/potentiostat/lmp91000.c
+> > +++ b/drivers/iio/potentiostat/lmp91000.c
+> > @@ -275,11 +275,20 @@ static int lmp91000_buffer_cb(const void *val, void *private)
+> >  static const struct iio_trigger_ops lmp91000_trigger_ops = {
+> >  };
+> >
+> > -static int lmp91000_buffer_preenable(struct iio_dev *indio_dev)
+> > +static int lmp91000_buffer_postenable(struct iio_dev *indio_dev)
+> >  {
+> >         struct lmp91000_data *data = iio_priv(indio_dev);
+> > +       int err;
+> >
+> > -       return iio_channel_start_all_cb(data->cb_buffer);
+> > +       err = iio_triggered_buffer_postenable(indio_dev);
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       err = iio_channel_start_all_cb(data->cb_buffer);
+> > +       if (err)
+> > +               iio_triggered_buffer_predisable(indio_dev);
+> > +
+> > +       return err;
+> >  }
+> >
+> >  static int lmp91000_buffer_predisable(struct iio_dev *indio_dev)
+> > @@ -288,12 +297,11 @@ static int lmp91000_buffer_predisable(struct iio_dev *indio_dev)
+> >
+> >         iio_channel_stop_all_cb(data->cb_buffer);
+> >
+> > -       return 0;
+> > +       return iio_triggered_buffer_predisable(indio_dev);
+> >  }
+> >
+> >  static const struct iio_buffer_setup_ops lmp91000_buffer_setup_ops = {
+> > -       .preenable = lmp91000_buffer_preenable,
+> > -       .postenable = iio_triggered_buffer_postenable,
+> > +       .postenable = lmp91000_buffer_postenable,
+> >         .predisable = lmp91000_buffer_predisable,
+> >  };
+> >
+> > --
+> > 2.20.1
+> >  
 
