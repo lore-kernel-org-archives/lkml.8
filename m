@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6A4C10F00
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA49C10F25
 	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6A1206D5
+	by mail.kernel.org (Postfix) with ESMTP id B42B4206D5
 	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgCGDqN (ORCPT
+        id S1727050AbgCGDqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 22:46:13 -0500
+        Fri, 6 Mar 2020 22:46:15 -0500
 Received: from mga11.intel.com ([192.55.52.93]:57577 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgCGDqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:46:12 -0500
+        id S1726982AbgCGDqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 22:46:14 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 19:46:12 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 19:46:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,524,1574150400"; 
-   d="scan'208";a="235035991"
+   d="scan'208";a="235036001"
 Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Mar 2020 19:46:12 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 06 Mar 2020 19:46:14 -0800
 From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
 To:     shuah@kernel.org, linux-kselftest@vger.kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -36,9 +36,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         james.morse@arm.com, ravi.v.shankar@intel.com,
         fenghua.yu@intel.com, x86@kernel.org, linux-kernel@vger.kernel.org,
         Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Subject: [PATCH V1 01/13] selftests/resctrl: Fix feature detection
-Date:   Fri,  6 Mar 2020 19:40:42 -0800
-Message-Id: <7e3e4b91f5786a489e68eecda21e1d8049b60181.1583657204.git.sai.praneeth.prakhya@intel.com>
+Subject: [PATCH V1 03/13] selftests/resctrl: Fix typo in help text
+Date:   Fri,  6 Mar 2020 19:40:44 -0800
+Message-Id: <ca3c7c339240c153bed505d7cd3dcac1396cd9c2.1583657204.git.sai.praneeth.prakhya@intel.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
 References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
@@ -51,61 +51,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Reinette Chatre <reinette.chatre@intel.com>
 
-The intention of the resctrl selftests is to only run the tests
-associated with the feature(s) supported by the platform. Through
-parsing of the feature flags found in /proc/cpuinfo it is possible
-to learn which features are supported by the plaform.
-
-There are currently two issues with the platform feature detection that
-together result in tests always being run, whether the platform supports
-a feature or not. First, the parsing of the the feature flags loads the
-line containing the flags in a buffer that is too small (256 bytes) to
-always contain all flags. The consequence is that the flags of the features
-being tested for may not be present in the buffer. Second, the actual
-test for presence of a feature has an error in the logic, negating the
-test for a particular feature flag instead of testing for the presence of a
-particular feature flag.
-
-These two issues combined results in all tests being run on all
-platforms, whether the feature is supported or not.
-
-Fix these issue by (1) increasing the buffer size being used to parse
-the feature flags, and (2) change the logic to test for presence of the
-feature being tested for.
+Add a missing newline to the help text printed and fixup the next line
+to line it up to previous line for improved readability.
 
 Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
 Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
 ---
- tools/testing/selftests/resctrl/resctrlfs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/testing/selftests/resctrl/resctrl_tests.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
-index 19c0ec4045a4..226dd7fdcfb1 100644
---- a/tools/testing/selftests/resctrl/resctrlfs.c
-+++ b/tools/testing/selftests/resctrl/resctrlfs.c
-@@ -596,11 +596,11 @@ bool check_resctrlfs_support(void)
- 
- char *fgrep(FILE *inf, const char *str)
+diff --git a/tools/testing/selftests/resctrl/resctrl_tests.c b/tools/testing/selftests/resctrl/resctrl_tests.c
+index 425cc85ac883..f076d285d7c3 100644
+--- a/tools/testing/selftests/resctrl/resctrl_tests.c
++++ b/tools/testing/selftests/resctrl/resctrl_tests.c
+@@ -37,8 +37,8 @@ void detect_amd(void)
+ static void cmd_help(void)
  {
--	char line[256];
- 	int slen = strlen(str);
-+	char line[2048];
- 
- 	while (!feof(inf)) {
--		if (!fgets(line, 256, inf))
-+		if (!fgets(line, 2048, inf))
- 			break;
- 		if (strncmp(line, str, slen))
- 			continue;
-@@ -631,7 +631,7 @@ bool validate_resctrl_feature_request(char *resctrl_val)
- 	if (res) {
- 		char *s = strchr(res, ':');
- 
--		found = s && !strstr(s, resctrl_val);
-+		found = s && strstr(s, resctrl_val);
- 		free(res);
- 	}
- 	fclose(inf);
+ 	printf("usage: resctrl_tests [-h] [-b \"benchmark_cmd [options]\"] [-t test list] [-n no_of_bits]\n");
+-	printf("\t-b benchmark_cmd [options]: run specified benchmark for MBM, MBA and CQM");
+-	printf("\t default benchmark is builtin fill_buf\n");
++	printf("\t-b benchmark_cmd [options]: run specified benchmark for MBM, MBA and CQM\n");
++	printf("\t   default benchmark is builtin fill_buf\n");
+ 	printf("\t-t test list: run tests specified in the test list, ");
+ 	printf("e.g. -t mbm, mba, cqm, cat\n");
+ 	printf("\t-n no_of_bits: run cache tests using specified no of bits in cache bit mask\n");
 -- 
 2.7.4
 
