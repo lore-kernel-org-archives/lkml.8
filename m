@@ -2,109 +2,103 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB252C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 20:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A73C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 20:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 813B02070A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 20:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C0C20684
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 20:57:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="PV3bf2R9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvhkaQ8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgCGUst (ORCPT
+        id S1726283AbgCGU5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 15:48:49 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38363 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgCGUst (ORCPT
+        Sat, 7 Mar 2020 15:57:50 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43827 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgCGU5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 15:48:49 -0500
-Received: by mail-il1-f193.google.com with SMTP id f5so5259548ilq.5
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 12:48:47 -0800 (PST)
+        Sat, 7 Mar 2020 15:57:50 -0500
+Received: by mail-ed1-f66.google.com with SMTP id dc19so7087412edb.10;
+        Sat, 07 Mar 2020 12:57:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZlaiWBNqvrdyvkEefn9yJWjZp7C2bAb1YLICnuJhP8I=;
-        b=PV3bf2R9X3sQruGbBjzJvFY4AOshOxYvj+SiyibH20IZIQwjIExrhsqLUFM6P6R+lL
-         LrAJRQjI/qJXCe04P0VvuJgkt9vJeW2qTNk71iIlLi/SHzLO0MvLutNTnfsD4TjmaXrj
-         pun1BhXPZ65cZKYbR1qBfSXAyqWEqWfjqbGtM=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LtsEha/XMPd3H7XbaZdQYCuIT3uvzKy6NtPyu/HzRNM=;
+        b=hvhkaQ8m+8C9w1zT3C0+qJ790PBudbc5zOet6egLZ8Yyl/RT8shv2AK1pEGIZeuOBV
+         srtS9HPtlfji69lsJU+8WipYOGync1i8XhCPqeFZ0lZ6I8mocKSO3fGsOz7WW/XeFAT9
+         SkGczQwGkD/vsVfW82OmzkBrC0kLK/0GqEQVQC8gZoGYQ0WWfLpmK9hzbWnNxvttFi9E
+         PiNelIET+Cg13YZLIgBrQ8EWolS8zytEY8EuZpO/So/TG+LOh+cf47RSyi2bgicKI0SY
+         lMpWXJn01MICH1veIjClTlNWv31qEqbWPK3XkdmxW/tIJtWsaui+xxKnT4XBFsAPBUTr
+         2niA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZlaiWBNqvrdyvkEefn9yJWjZp7C2bAb1YLICnuJhP8I=;
-        b=GL5scZbDCpnBebqbg6bJjMT234/U5bmsKn7tS58GTDBZILhxDiay7pAZUAhBcEaW4J
-         Zq3yb/0cWB9umVmNCf+ewCaHs9x9FwnxCtTfAX+QmvLcbSZQYoIqobZbe/UH8gyWB3ZJ
-         cbegFFoHGHr42bcuJmnAlPVVANTtpYF9Z40OoYq6HoRGspN2Mft5Qwy0jWkoD03N4NIj
-         0XCoU3eZISmPYapAGYhQnybWpthQbF30xzKQYA319kUYXb0iJpWlKgywEhXb69N9WxJm
-         Zf5yBo4UMbKF5rWZBsJVhhHAGrOezQZC3SrBCfHjBicYKGiv9gqmBKj8VhGD8vOe1PWB
-         9rpA==
-X-Gm-Message-State: ANhLgQ3ivzJKusxmuTD67A4vYhrwuzjgzOcL/L3ZnYuFaPx+4OY/lwtF
-        MJqd2wPkG3mQC8tWmZsXf/Untu909dko2cZFN5FXFQ==
-X-Google-Smtp-Source: ADFU+vskwVXCTzkhh+ZXd7Wbqe2WHoM17S7U48HvUGcGrtwnAQOiiNlg5R1xofLf5jp6bJ1vVeTIGj3wJCAenoDZ5x8=
-X-Received: by 2002:a92:d745:: with SMTP id e5mr8793655ilq.285.1583614126795;
- Sat, 07 Mar 2020 12:48:46 -0800 (PST)
-MIME-Version: 1.0
-References: <1582556135.3384.4.camel@HansenPartnership.com>
- <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
- <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
- <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <20200306162549.GA28467@miu.piliscsaba.redhat.com> <20200307094834.GA3888906@kroah.com>
-In-Reply-To: <20200307094834.GA3888906@kroah.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Sat, 7 Mar 2020 21:48:35 +0100
-Message-ID: <CAJfpegvOi0ZPEW4Aq8N8SPDwiEw8Tgzo-ngf30WNmHXBdfHnqA@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LtsEha/XMPd3H7XbaZdQYCuIT3uvzKy6NtPyu/HzRNM=;
+        b=uBC8susR/OqYmF5pVyXMjXVm3pe/y/hvgpjP4TB622gtJR1ROri0CQslINCqnxOX9n
+         cepGCY5mOhhhZ/wuko0vHkKOD7dPqC+Bw7dmEByFn1DSReZYkVkzqYbs7i3Y4mr4quhe
+         KhDZ9JBMFcDEcNLNGMxSYm4m/SW238znVyVyhxR+Rq/IWyQZkNvB0zdjRQ8iE6s8wg6i
+         nl7+Sq+1MAhNmaWBoVFJVK3w2fT/E9HFJl1Vg6EYmcmAUsNQJzISTHlC5XRHEv3eF5OO
+         Wi+nDa3cAneYM1GaLNrt/Zhbwd+gyljJ0C2mvZJwZIb8wPBDTnAVk73hF8WNoPEgIIuo
+         F1hQ==
+X-Gm-Message-State: ANhLgQ3Mvu+6F2PRRY6anqe+RXT/y3RDOP3O1IycmHLH04Mm0vYhTj2W
+        62YZrN6K2L7mcYTaur9Yqzo=
+X-Google-Smtp-Source: ADFU+vttpXgHC3Io2gYpesXxMaP8TvXRjo8DxuX7Xi15swI6F5QAv7riGHHpPEnHAjHi1tBUXNZCTQ==
+X-Received: by 2002:aa7:d510:: with SMTP id y16mr9945582edq.214.1583614668444;
+        Sat, 07 Mar 2020 12:57:48 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2dee:1100:9dd1:961d:b5c1:34aa])
+        by smtp.gmail.com with ESMTPSA id z19sm1177268eja.53.2020.03.07.12.57.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Mar 2020 12:57:47 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: rectify the INTEL IADX DRIVER entry
+Date:   Sat,  7 Mar 2020 21:57:37 +0100
+Message-Id: <20200307205737.5829-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 7, 2020 at 10:48 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Mar 06, 2020 at 05:25:49PM +0100, Miklos Szeredi wrote:
-> > On Tue, Mar 03, 2020 at 08:46:09AM +0100, Miklos Szeredi wrote:
-> > >
-> > > I'm doing a patch.   Let's see how it fares in the face of all these
-> > > preconceptions.
-> >
-> > Here's a first cut.  Doesn't yet have superblock info, just mount info.
-> > Probably has rough edges, but appears to work.
-> >
-> > I started with sysfs, then kernfs, then went with a custom filesystem, because
-> > neither could do what I wanted.
->
-> Hm, what is wrong with kernfs that prevented you from using it here?
-> Just complexity or something else?
+Commit bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data
+accelerators") added the INTEL IADX DRIVER entry in MAINTAINERS, which
+mentions include/linux/idxd.h as file entry. However, this header file was
+not added in this commit, nor in any later one.
 
-I wanted to have a single instance covering all the namespaces, with
-just a filtered view depending on which namespace the task is looking
-at it.
+Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
 
-Having a kernfs_node for each attribute is also rather heavy compared
-to the size of struct mount.
+  warning: no file matches F: include/linux/idxd.h
 
-Thanks,
-Miklos
+Drop the file entry to the non-existing file in INTEL IADX DRIVER now.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+applies cleanly on current master and next-20200306
+
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c93e4937164c..303e1ea83484 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8478,7 +8478,6 @@ L:	dmaengine@vger.kernel.org
+ S:	Supported
+ F:	drivers/dma/idxd/*
+ F:	include/uapi/linux/idxd.h
+-F:	include/linux/idxd.h
+ 
+ INTEL IDLE DRIVER
+ M:	Jacob Pan <jacob.jun.pan@linux.intel.com>
+-- 
+2.17.1
+
