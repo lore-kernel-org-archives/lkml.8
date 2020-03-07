@@ -2,116 +2,139 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AB0C10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 16:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F7CC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 16:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8B320674
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 16:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6916620656
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 16:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RY4MKxaS"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ffR8Lwoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgCGQGG (ORCPT
+        id S1726289AbgCGQGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 11:06:06 -0500
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:38305 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgCGQGF (ORCPT
+        Sat, 7 Mar 2020 11:06:49 -0500
+Received: from mail.efficios.com ([167.114.26.124]:36038 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgCGQGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 11:06:05 -0500
-Received: by mail-wr1-f41.google.com with SMTP id t11so5878430wrw.5;
-        Sat, 07 Mar 2020 08:06:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iAetEvZraiflUEUc7nvvm8pl55tWCvaIeillv2HHKY4=;
-        b=RY4MKxaSmII1woTtclCslMgTGxlofSmYGl3WFzVaIKcUYL1o5RIExjEpCmugp4szQA
-         pnSfn6kQwEjA920C4NsfvqYiGQpOeXPVoot14HAWuRIIgHEjyA5f3/vkg+EYGbwD+DI5
-         f6ha9Pk8t6NbYSoWJD+Y/9rgfM6ZOdxABsDu6mdEk/wO89+pBZUuL6dCdHCaX3z11lVx
-         KNUgvmHmXlbCpOLFpnaN+oK3Ppyjt0Q8YbF9qP1YAOfzMFIlEFr9Ms38QRNxPwdzAkgx
-         OE9xcgVoZ+WSzP9c0LDrpQbFUHgoUzCDx6Syr2EdVHdhtMjO+3hcziTkuITm3mF+B9gy
-         1LXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iAetEvZraiflUEUc7nvvm8pl55tWCvaIeillv2HHKY4=;
-        b=I6axj7wXBiRLuBrI9MfVNiNCb9+Z5kRRroFafG4/i7WydmVShVGcdI5FWdkOfdfZPo
-         EwvCSGOGGlaWfE+BVywwn/5YVY86VsR6MNsBAVzA87IsUdEl/tzWdKIlINBnr7G4PrpM
-         kPRKYk7e5dTXWpwn/7CIumog0l1JTF68TaX5htOSsDwhxLfZbKGxqEoLFhdkTDvh4stC
-         +1lo+XGayrcnZrDx4AmkLbTmJOiWFXO5eS6pHW2naJv1+Mn+U31BLd98UwOCV27Lh5kq
-         TlKDgB/0Vae4p+a62EOTo+vxp0lT9LvHt9IsYY8+ahs9QPPxiNxfDy4W1b6pr+DB0JYr
-         VnFw==
-X-Gm-Message-State: ANhLgQ2wbnLmjjRsPXptQe3sz3hojgGH3gPbzbS4vFpiaPLhWDXv/wng
-        uff2DK5YQqjZz253WUVzYHQ=
-X-Google-Smtp-Source: ADFU+vsORIHVIXY/NGjz0qd0dQ3z+z+LGwdJWHv2GehbGa7/k9ONo/m7C/JJ4CkIdkadrGxj6NNxwQ==
-X-Received: by 2002:a5d:550f:: with SMTP id b15mr10220750wrv.19.1583597163324;
-        Sat, 07 Mar 2020 08:06:03 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k126sm17555105wme.4.2020.03.07.08.06.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Mar 2020 08:06:02 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     ulf.hansson@linaro.org
-Cc:     heiko@sntech.de, robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1] dt-bindings: mmc: synopsys-dw-mshc: fix clock-freq-min-max in example
-Date:   Sat,  7 Mar 2020 17:05:56 +0100
-Message-Id: <20200307160556.16226-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Sat, 7 Mar 2020 11:06:49 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id CBB6F270B1E;
+        Sat,  7 Mar 2020 11:06:47 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id gEXMLoGvbEdB; Sat,  7 Mar 2020 11:06:47 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 870472709B7;
+        Sat,  7 Mar 2020 11:06:47 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 870472709B7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583597207;
+        bh=EY6puMR1j0aA7xNeAuDaWQotUfbBgbb0ktp6KtbehMs=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ffR8LwoybG4Qo8XEGy9e4MVOrSP1hrsFn0yvu1AiwN1gbJ9zblmLjST2FKFIpaxCg
+         RMaSN3wJIzvvVCk6HdPQXdhGuaksGpjD+kJSuDkLRTUQNEXqT2iksPk9G0Qi5MlkY0
+         vkC2ZrbFsY+pgZSJFt8m21rKYo5mfu8X54LC1lvdwFzHZ2Z4MoOtkcSOgJ82wL6gvB
+         0W076/8hxLYGIW0jGFRem84QGX+C1GxIUgTSXALrNuTE0rbDFTXb5fAK2fpuEhgMNQ
+         yLsj26Ck2VS6wJ27iQmExFodvEfYwSADDscjTkiLFPpbX4N/G5xcLMZZcmjyua9bGO
+         /4u5H9i+BOjlA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id pJWShRz0bBjD; Sat,  7 Mar 2020 11:06:47 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 7926F270939;
+        Sat,  7 Mar 2020 11:06:47 -0500 (EST)
+Date:   Sat, 7 Mar 2020 11:06:47 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Li Zefan <lizefan@huawei.com>, cgroups <cgroups@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Message-ID: <316507033.21078.1583597207356.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200219161222.GF698990@mtj.thefacebook.com>
+References: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com> <20200219151922.GB698990@mtj.thefacebook.com> <1589496945.670.1582126985824.JavaMail.zimbra@efficios.com> <20200219154740.GD698990@mtj.thefacebook.com> <59426509.702.1582127435733.JavaMail.zimbra@efficios.com> <20200219155202.GE698990@mtj.thefacebook.com> <1358308409.804.1582128519523.JavaMail.zimbra@efficios.com> <20200219161222.GF698990@mtj.thefacebook.com>
+Subject: Re: [regression] cpuset: offlined CPUs removed from affinity masks
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: cpuset: offlined CPUs removed from affinity masks
+Thread-Index: rKDgzQVJg+DUsb3OXMOSNULnDpqU4Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below does not detect all errors
-in combination with 'additionalProperties: false' and
-allOf:
-  - $ref: "synopsys-dw-mshc-common.yaml#"
-allOf:
-  - $ref: "mmc-controller.yaml#"
+----- On Feb 19, 2020, at 11:12 AM, Tejun Heo tj@kernel.org wrote:
 
-'additionalProperties' applies to all properties that are not
-accounted-for by 'properties' or 'patternProperties' in
-the immediate schema.
+> On Wed, Feb 19, 2020 at 11:08:39AM -0500, Mathieu Desnoyers wrote:
+>> I wonder if applying the online cpu masks to the per-thread affinity mask
+>> is the correct approach ? I suspect what we may be looking for here is to keep
+> 
+> Oh, the whole thing is wrong.
+> 
+>> the affinity mask independent of cpu hotplug, and look-up both the per-thread
+>> affinity mask and the online cpu mask whenever the scheduler needs to perform
+>> "is_cpu_allowed()" to check task placement.
+> 
+> Yes, that's what it should have done from the get-go. The way it's
+> implemented now, maybe we can avoid some specific cases like cpuset
+> not being used at all but it'll constantly get in the way if you're
+> expecting thread affinity to retain its value across offlines.
 
-First when we combine synopsys-dw-mshc.yaml,
-synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
-this error:
+Looking into solving this, one key issue seems to get in the way: cpuset
+appear to care about not allowing to create a cpuset which has no currently
+active CPU where to run, e.g.:
 
-Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.example.dt.yaml:
-mmc@12200000: 'clock-freq-min-max' does not match any of the regexes:
-'^.*@[0-9]+$', '^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
-uhs-(sdr(12|25|50|104)|ddr50))$', 'pinctrl-[0-9]+'
+# it is forbidden to create an empty cpuset if the cpu is offlined first:
 
-'clock-freq-min-max' is deprecated, so replace it by 'max-frequency'.
+mkdir /sys/fs/cgroup/cpuset/test
 
-make ARCH=arm dt_binding_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+echo 2 > /sys/fs/cgroup/cpuset/test/cpusets.cpus
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+cat /sys/fs/cgroup/cpuset/test/cpusets.cpu
+2
 
-diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-index 05f9f36dc..dd2c1b147 100644
---- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-+++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
-@@ -62,7 +62,7 @@ examples:
-       cap-mmc-highspeed;
-       cap-sd-highspeed;
-       card-detect-delay = <200>;
--      clock-freq-min-max = <400000 200000000>;
-+      max-frequency = <200000000>;
-       clock-frequency = <400000000>;
-       data-addr = <0x200>;
-       fifo-depth = <0x80>;
+echo 0 > /sys/devices/system/cpu/cpu1/online
+
+echo 1 > /sys/fs/cgroup/cpuset/test/cpuset.cpus
+bash: echo: write error: Invalid argument
+
+cat /sys/fs/cgroup/cpuset/test/cpusets.cpu
+2
+
+
+# but it's perfectly fine to generate this empty cpuset by offlining
+# a cpu _after_ creating the cpuset:
+
+echo 0 > /sys/devices/system/cpu/cpu2/online
+
+cat /sys/fs/cgroup/cpuset/test/cpusets.cpu
+  <----- empty (nothing)
+
+Some further testing seems to show that tasks belonging to that empty
+cpuset are placed anywhere on active cpus.
+
+Clearly, there is an intent that cpusets take the active mask into
+account to prohibit creating an empty cpuset, but nothing prevents
+cpu hotplug from creating an empty cpuset.
+
+I wonder how to solve this inconsistency ?
+
+Thanks,
+
+Mathieu
+
 -- 
-2.11.0
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
