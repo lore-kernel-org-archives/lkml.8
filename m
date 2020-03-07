@@ -6,79 +6,74 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABCEC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BAAC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7034A2070A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CCC2070A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="au7G1ywR"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WF4b75xX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCGDbp (ORCPT
+        id S1726533AbgCGDd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 22:31:45 -0500
-Received: from mail-qk1-f182.google.com ([209.85.222.182]:46660 "EHLO
-        mail-qk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgCGDbo (ORCPT
+        Fri, 6 Mar 2020 22:33:27 -0500
+Received: from mail-qt1-f171.google.com ([209.85.160.171]:41314 "EHLO
+        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgCGDd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:31:44 -0500
-Received: by mail-qk1-f182.google.com with SMTP id u124so4295939qkh.13
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 19:31:42 -0800 (PST)
+        Fri, 6 Mar 2020 22:33:27 -0500
+Received: by mail-qt1-f171.google.com with SMTP id l21so3284771qtr.8
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 19:33:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lca.pw; s=google;
         h=mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=XARr/VuKYkjywi+JPn9ik9fPAL21/k/URnFAwAE8TVA=;
-        b=au7G1ywRJ1+LtrW503dRu7ZJvf1oPXt2rKOlSxg03AjtVDfObsrhae+pMIOWBAgwZI
-         TU7OSYijFgxEyvMAuENsaGqPF5sOU+kW1/0SyhpkBAthPV+LMyAqBMPWYg6rCFlNFVnC
-         fLPU/FbhRHpt73IzAvJ1x0S5SX/pJuuK9YNAUxTHrjg6o8hiRJDcYDLTtGkUcsAtlyNB
-         6lGxfEbBi9bOtsDAj0Wt0mZnazDwidXkWAEyU+yLQnrSvyDq1ENCs5t+fMvUUpg7Xe6M
-         b4H3UBkLH8PPinXCvkyQgob6DZt4wlpOr07QaKqDQXYgvDKK2P3Ccd3QBvfn6Pyem8uo
-         zkRA==
+        bh=yWvC0kkBmOA3iFTKCQGyV2Z6IPkQjFiOBlLksK4/WcI=;
+        b=WF4b75xXsJ7bXheJut50ZeKYt6rOXZItWoih1bMTVCYOp35Sc5K+pDKXId4BXS8D29
+         RTb+LY7ycNwBWJNUl4ChZWOfmfE9NcBuPeXyk0zAURmlzFhOo293aiTbvcRzrCC7Iz1e
+         hDe5F55IIAy3ZQlWQlYNXc2IMMTGtbndoZDmZgjP6VmHxC+YR4qQLpcQC8Qj8IdqdDSV
+         1+0sGOUW7Ot7Snd8Fr9OtUhHjADJbXlHxWdpQeHwhh+9cLBg/K5kpBU/L7c/eA9i3kdp
+         cHD7bsjFynfqnZ2h5w0ZSA+w4qVljTpYPdPUETJXCH+WFa1yZ/xCkyw3UV5UipSnmEIh
+         1yTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=XARr/VuKYkjywi+JPn9ik9fPAL21/k/URnFAwAE8TVA=;
-        b=diUriEd/mtx/KnYHFHWANckbF1SzM02eJSp5tPRT0wDXYxMK+suP8pgpN2UkVjzWlo
-         VIyzdtTEcBirxu2bO8x1ohozY3xpfJeI5TAIQYGlKTYybhVEjo+npjcQFeaAu5Bgeo15
-         HkA5nhHg2z2e+W/7pwpDXWQMZ0RAL8A9lprizjXuspT3slLONNv1j4owYdmsLxvzSAxL
-         OG7cCOK5Hgb3Q4bRhC3V11hvFbW+1Wa5IWoZIYDKjlvafaS9r2YUxnoMoaAKMaV1Unme
-         1twPAOrwCL+9f8T/g6oJzT8fBql452t1ktxoUuQmBd4khvJrXS/YDXxdGOOre3AIorqb
-         0Z7g==
-X-Gm-Message-State: ANhLgQ0KIrGtPV857uxPlBLVyFcn+ajBgrz39NFoSKRFVgRlH8nyNWuF
-        Lq0lMsSbHx7n6CIZeSDDiviIKQ==
-X-Google-Smtp-Source: ADFU+vshDVZSnam9ehuBOhF0vtYT+YiAcDoo1MLfZ+6JO6CHZ7hA5P/pIMQII9H+GfI1jDU/tBjBfg==
-X-Received: by 2002:a37:cc5:: with SMTP id 188mr6142295qkm.161.1583551901437;
-        Fri, 06 Mar 2020 19:31:41 -0800 (PST)
+        bh=yWvC0kkBmOA3iFTKCQGyV2Z6IPkQjFiOBlLksK4/WcI=;
+        b=WUA8M26cf0latfKIE5bCYxhDDGZnvekETpOXgiiGl/Sq2goXs30ISc1lT9aYCTx7/O
+         PNfM36zVlE3jw9tnh8hSc9BLuQ7MoOOuViaCjssuC9qEhnfMrKe5Wy/hvJj68I18af6v
+         SL4osJ9iuHl7nV/gfqpwLgCHnZ2Xjq+8ijQ8uXwf2CcJKtUDztlaYiubNH2oap/S0JQV
+         Q0wTBWtKPh0STOlPJ595q7b0ohpa0z3PlnFtLYSNqPR6pI9aiLULHyLT0xviSasopDOz
+         AoE3xgosqNtDQmi8bKehAqr4nXzS+2up9s2F1SrOUvgnSIu3zEsKshJbnu1gjdN9dSSK
+         /x7Q==
+X-Gm-Message-State: ANhLgQ0kZQgxHwcOiYx8ol9c4KeWhnz802jRs6YalOrmWuF7EE+CMJuv
+        /zCc0p/yrrguf8eDf4GQGpnWlg==
+X-Google-Smtp-Source: ADFU+vt5J+r0T8D+Mtv0eHCxm/U/E2qaELnto77SqaHWKdYT+AnfibJx+GhzROWnYastPlzlQ9KkGQ==
+X-Received: by 2002:ac8:48c7:: with SMTP id l7mr5809284qtr.174.1583552003986;
+        Fri, 06 Mar 2020 19:33:23 -0800 (PST)
 Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 79sm18940433qkf.129.2020.03.06.19.31.39
+        by smtp.gmail.com with ESMTPSA id 206sm5755555qkn.36.2020.03.06.19.33.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Mar 2020 19:31:40 -0800 (PST)
+        Fri, 06 Mar 2020 19:33:23 -0800 (PST)
 Content-Type: text/plain;
         charset=utf-8
 Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [failures] mm-vmscan-remove-unnecessary-lruvec-adding.patch
- removed from -mm tree
+Subject: Hard lockups due to "tick/common: Make tick_periodic() check for
+ missing ticks"
 From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <7149d2fb-2ff2-d251-2ed1-b4e6d81748ee@linux.alibaba.com>
-Date:   Fri, 6 Mar 2020 22:31:39 -0500
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, aarcange@redhat.com,
-        daniel.m.jordan@oracle.com, hannes@cmpxchg.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, kirill@shutemov.name,
-        kravetz@us.ibm.com, mhocko@kernel.org, mm-commits@vger.kernel.org,
-        tj@kernel.org, vdavydov.dev@gmail.com, willy@infradead.org,
-        yang.shi@linux.alibaba.com
+In-Reply-To: <CA9BD318-A8C8-4F22-828A-65C355931A5C@lca.pw>
+Date:   Fri, 6 Mar 2020 22:33:22 -0500
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <C10223BC-1156-43FB-B7D9-674076AFDE19@lca.pw>
-References: <20200306025041.rERhvnYmB%akpm@linux-foundation.org>
- <211632B1-2D6F-4BFA-A5A0-3030339D3D2A@lca.pw>
- <b123f1d8-eab0-4689-9400-ba1f853728b7@linux.alibaba.com>
- <f37b9b6b-730b-09b0-dd6b-5acba53e71e6@linux.alibaba.com>
- <792CE873-A64B-4FA6-A258-A8B6B951E698@lca.pw>
- <7149d2fb-2ff2-d251-2ed1-b4e6d81748ee@linux.alibaba.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
+Message-Id: <F95F95DE-77D9-4A1D-AA5C-CAC165F6B4C8@lca.pw>
+References: <CA9BD318-A8C8-4F22-828A-65C355931A5C@lca.pw>
+To:     Waiman Long <longman@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
 X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -87,143 +82,232 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On Mar 6, 2020, at 10:26 PM, Alex Shi <alex.shi@linux.alibaba.com> =
-wrote:
+> On Mar 5, 2020, at 11:06 PM, Qian Cai <cai@lca.pw> wrote:
 >=20
-> =E5=9C=A8 2020/3/7 =E4=B8=8A=E5=8D=8810:27, Qian Cai =E5=86=99=E9=81=93:=
 
->>> Compare to this patch's change, the 'c8cba0cc2a80 mm/thp: narrow lru =
-locking' is more
->>> likely bad. Maybe it's due to lru unlock was moved before =
-ClearPageCompound() from
->>> before remap_page(head); guess this unlock should be move after =
-ClearPageCompound or
->>> move back to origin place.
->> I can only confirmed that after reverted those 6 patches, I am no =
-long be able to reproduce it.
->>=20
->=20
-> Hi Qian,=20
->=20
-> Thanks for response!
-> Could you like just try to revert the patch: 'mm/thp: narrow lru =
-locking'? or would you like to
-> share me info of your tests and let me reproduce it? like kernel =
-config, system ENV, machine type.
-> I had run hundreds cycle of oom01, but akpm kernel(f2cbd107a99b) still =
-survived.
+Using this config,
 
-https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
 
-HPE ProLiant DL385 Gen10
-AMD EPYC 7601 32-Core Processor
-65536 MB memory, 400 GB disk space
-
-Processors	128
-Cores	64
-Sockets	2
-
-linux-next 20200306
+Reverted the linux-next commit d441dceb5dce (=E2=80=9Ctick/common: Make =
+tick_periodic() check for missing ticks=E2=80=9D)
+fixed the lockup that could easily happen during boot.
 
 >=20
-> I got my ltp mm testing results, it run total 75 cases, failed 2, skip =
-9 and others are success
-> and kernel works well after test on yesterday's akmp head: =
-f2cbd107a99b.
+> [    0.013514][    C0] NMI watchdog: Watchdog detected hard LOCKUP on =
+cpu 0=20
+> [    0.013514][    C0] Modules linked in:=20
+> [    0.013514][    C0] irq event stamp: 64186318=20
+> [    0.013514][    C0] hardirqs last  enabled at (64186317): =
+[<ffffffff84c9b107>] _raw_spin_unlock_irq+0x27/0x40=20
+> [    0.013514][    C0] hardirqs last disabled at (64186318): =
+[<ffffffff84c8f384>] __schedule+0x214/0x1070=20
+> [    0.013514][    C0] softirqs last  enabled at (267904): =
+[<ffffffff85000447>] __do_softirq+0x447/0x766=20
+> [    0.013514][    C0] softirqs last disabled at (267897): =
+[<ffffffff842d1f16>] irq_exit+0xd6/0xf0=20
+> [    0.013514][    C0] CPU: 0 PID: 1 Comm: swapper/0 Not tainted =
+5.6.0-rc4-next-20200305+ #6=20
+> [    0.013514][    C0] Hardware name: HP ProLiant BL660c Gen9, BIOS =
+I38 10/17/2018=20
+> [    0.013514][    C0] RIP: 0010:lock_is_held_type+0x12a/0x150=20
+> [    0.013514][    C0] Code: 41 0f 94 c4 65 48 8b 1c 25 40 0f 02 00 48 =
+8d bb 74 08 00 00 e8 77 c0 28 00 c7 83 74 08 00 00 00 00 00 00 41 56 9d =
+48 83 c4 18 <44> 89 e0 5b 41 5c 41 5d 41 5e 41 5f 5d c3 45 31 e4 eb c7 =
+41 bc 01=20
+> [    0.013514][    C0] RSP: 0000:ffffc9000628f9f8 EFLAGS: 00000082=20
+> [    0.013514][    C0] RAX: 0000000000000000 RBX: ffff889880efc040 =
+RCX: ffffffff8438b449=20
+> [    0.013514][    C0] RDX: 0000000000000007 RSI: dffffc0000000000 =
+RDI: ffff889880efc8b4=20
+> [    0.013514][    C0] RBP: ffffc9000628fa20 R08: ffffed1108588a24 =
+R09: ffffed1108588a24=20
+> [    0.013514][    C0] R10: ffff888842c4511b R11: 0000000000000000 =
+R12: 0000000000000000=20
+> [    0.013514][    C0] R13: ffff889880efc908 R14: 0000000000000046 =
+R15: 0000000000000003=20
+> [    0.013514][    C0] FS:  0000000000000000(0000) =
+GS:ffff888842c00000(0000) knlGS:0000000000000000=20
+> [    0.013514][    C0] CS:  0010 DS: 0000 ES: 0000 CR0: =
+0000000080050033=20
+> [    0.013514][    C0] CR2: ffff88a0707ff000 CR3: 0000000b72012001 =
+CR4: 00000000001606f0=20
+> [    0.013514][    C0] Call Trace:=20
+> [    0.013514][    C0]  rcu_read_lock_sched_held+0xac/0xe0=20
+> lock_is_held at include/linux/lockdep.h:361
+> (inlined by) rcu_read_lock_sched_held at kernel/rcu/update.c:121
+> [    0.013514][    C0]  ? rcu_read_lock_bh_held+0xc0/0xc0=20
+> [    0.013514][    C0]  rcu_note_context_switcx186/0x3b0=20
+> [    0.013514][    C0]  __schedule+0x21f/0x1070=20
+> [    0.013514][    C0]  ? __sched_text_start+0x8/0x8=20
+> [    0.013514][    C0]  schedule+0x95/0x160=20
+> [    0.013514][    C0]  do_boot_cpu+0x58c/0xaf0=20
+> [    0.013514][    C0]  native_cpu_up+0x298/0x430=20
+> [    0.013514][    C0]  ? common_cpu_up+0x150/0x150=20
+> [    0.013514][    C0]  bringup_cpu+0x44/0x310=20
+> [    0.013514][    C0]  ? timers_prepare_cpu+0x114/0x190=20
+> [    0.013514][    C0]  ? takedown_cpu+0x2e0/0x2e0=20
+> [    0.013514][    C0]  cpuhp_invoke_callback+0x197/0x1120=20
+> [    0.013514][    C0]  ? ring_buffer_record_is_set_on+0x40/0x40=20
+> [    0.013514][    C0]  _cpu_up+0x171/0x280=20
+> [    0.013514][    C0]  do_cpu_up+0xb1/0x120=20
+> [    0.013514][    C0]  cpu_up+0x13/0x20=20
+> [    0.013514][    C0]  smp_init+0x91/0x118=20
+> [    0.013514][    C0]  kernel_init_freeable+0x221/0x4f8=20
+> [    0.013514][    C0]  ? mark_held_locks+0x34/0xb0=20
+> [    0.013514][    C0]  ? _raw_spin_unlock_irq+0x27/0x40=20
+> [    0.013514][    C0]  ? start_kernel+0x876/0x876=20
+> [    0.013514][    C0]  ? lockdep_hardirqs_on+0x1b0/0x2a0=20
+> [    0.013514][    C0]  ? _raw_spin_unlock_irq+0x27/0x40=20
+> [    0.013514][    C0]  ? rest_init+0x307/0x307=20
+> [    0.013514][    C0]  kernel_init+0x  0.013514][    C0]  ? =
+rest_init+0x307/0x307=20
+> [    0.013514][    C0]  ret_from_fork+0x3a/0x50=20
 >=20
-> Many Thanks for help!
-> Alex
->=20
-> =3D=3D=3D=3D=3D
->=20
-> Test Start Time: Fri Mar  6 20:49:59 2020
-> -----------------------------------------
-> Testcase                                           Result     Exit =
-Value
-> --------                                           ------     =
-----------
-> mm01                                               PASS       0
-> mm02                                               PASS       0
-> mtest01                                            PASS       0
-> mtest01w                                           PASS       0
-> mtest05                                            PASS       0
-> mtest06                                            PASS       0
-> mtest06_2                                          PASS       0
-> mtest06_3                                          PASS       0
-> mem01                                              PASS       0
-> mem02                                              PASS       0
-> mem03                                              PASS       0
-> page01                                             PASS       0
-> page02                                             PASS       0
-> data_space                                         PASS       0
-> stack_space                                        PASS       0
-> shmt02                                             PASS       0
-> shmt03                                             PASS       0
-> shmt04                                             PASS       0
-> shmt05                                             PASS       0
-> shmt06                                             PASS       0
-> shmt07                                             PASS       0
-> shmt08                                             PASS       0
-> shmt09                                             PASS       0
-> shmt10                                             PASS       0
-> shm_test01                                         PASS       0
-> mallocstress01                                     PASS       0
-> mmapstress01                                       PASS       0
-> mmapstress02                                       PASS       0
-> mmapstress03                                       PASS       0
-> mmapstress04                                       PASS       0
-> mmapstress05                                       PASS       0
-> mmapstress06                                       PASS       0
-> mmapstress07                                       PASS       0
-> mmapstress08                                       PASS       0
-> mmapstress09                                       PASS       0
-> mmapstress10                                       PASS       0
-> mmap10                                             PASS       0
-> mmap10_1                                           PASS       0
-> mmap10_2                                           PASS       0
-> mmap10_3                                           PASS       0
-> mmap10_4                                           PASS       0
-> ksm01                                              FAIL       2
-> ksm01_1                                            FAIL       1
-> ksm02                                              CONF       32
-> ksm02_1                                            CONF       32
-> ksm03                                              PASS       0
-> ksm03_1                                            PASS       0
-> ksm04                                              CONF       32
-> ksm04_1                                            CONF       32
-> ksm05                                              PASS       0
-> ksm06                                              CONF       32
-> ksm06_1                                            CONF       32
-> ksm06_2                                            CONF       32
-> oom01                                              PASS       0
-> oom02                                              CONF       32
-> oom03                                              PASS       0
-> oom04                                              PASS       0
-> oom05                                              PASS       0
-> swapping01                                         PASS       0
-> thp01                                              PASS       0
-> thp02                                              PASS       0
-> thp03                                              PASS       0
-> vma01                                              PASS       0
-> vma02                                              PASS       0
-> vma03                                              CONF       32
-> vma04                                              PASS       0
-> vma05                                              PASS       0
-> overcommit_memory01                                PASS       0
-> overcommit_memory02                                PASS       0
-> overcommit_memory03                                PASS       0
-> overcommit_memory04                                PASS       0
-> overcommit_memory05                                PASS       0
-> overcommit_memory06                                PASS       0
-> max_map_count                                      PASS       0
-> min_free_kbytes                                    PASS       0
->=20
-> -----------------------------------------------
-> Total Tests: 75
-> Total Skipped Tests: 9
-> Total Failures: 2
-> Kernel Version: 5.6.0-rc4-06724-gf2cbd107a99b
-> Machine Architecture: x86_64
-> Hostname: alexshi-test
->=20
+
+We could have many slightly different traces,
+
+[    0.000000][    T0] smpboot: CPU 8 Converting physical 0 to logical =
+die 1
+[    0.021496][    C0] NMI watchdog: Watchdog detected hard LOCKUP on =
+cpu 0
+[    0.021496][    C0] Modules linked in:
+[    0.021496][    C0] irq event stamp: 53241496
+[    0.021496][    C0] hardirqs last  enabled at (53241495): =
+[<ffffffffa9c8c037>] _raw_spin_unlock_irq+0x27/0x40
+[    0.021496][    C0] hardirqs last disabled at (53241496): =
+[<ffffffffa9c80244>] __schedule+0x214/0x1070
+[    0.021496][    C0] softirqs last  enabled at (88160): =
+[<ffffffffaa000447>] __do_softirq+0x447/0x766
+[    0.021496][    C0] softirqs last disabled at (88153): =
+[<ffffffffa92d0c66>] irq_exit+0xd6/0xf0
+[    0.021496][    C0] CPU: 0 PID: 1 Comm: swapper/0 Not tainted =
+5.6.0-rc4+ #25
+[    0.021496][    C0] Hardware name: HPE ProLiant DL385 Gen10/ProLiant =
+DL385 Gen10, BIOS A40 03/09/2018
+[    0.021496][    C0] RIP: 0010:__asan_load8+0x0/0xa0
+[    0.021496][    C0] Code: e8 03 0f b6 04 30 84 c0 74 c2 38 d0 0f 9e =
+c0 84 c0 74 b9 ba 01 00 00 00 be 04 00 00 00 e8 c8 e3 ff ff 5d c3 66 0f =
+1f 44 00 00 <55> 48 89 e5 48 8b 4d 08 eb 3a 0f 1f 00 48 b8 00 00 00 00 =
+00 00 00
+[    0.021496][    C0] RSP: 0018:ffffc900031779d8 EFLAGS: 00000082
+[    0.021496][    C0] RAX: 000000000000000f RBX: ffff88820f118040 RCX: =
+ffffffffa9386e1c
+[    0.021496][    C0] RDX: ffff88820f1188b0 RSI: ffff8884534442d8 RDI: =
+ffff88820f118938
+[    0.021496][    C0] RBP: ffffc90003177a10 R08: ffffed1041e23009 R09: =
+ffffed1041e23009
+[    0.021496][    C0] R10: ffffed1041e23008 R11: 0000000000000000 R12: =
+ffff88820f118928
+[    0.021496][    C0] R13: ffff8884534442d8 R14: 0000000000000003 R15: =
+ffff88820f118928
+[    0.021496][    C0] FS:  0000000000000000(0000) =
+GS:ffff888453400000(0000) knlGS:0000000000000000
+[    0.021496][    C0] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.021496][    C0] CR2: ffff88887b9ff000 CR3: 0000000257c12000 CR4: =
+00000000003406f0
+[    0.021496][    C0] Call Trace:
+[    0.021496][    C0]  ? match_held_lock+0x20/0x250
+[    0.021496][    C0]  lock_unpin_lock+0x16a/0x260
+[    0.021496][    C0]  ? lock_repin_lock+0x210/0x210
+[    0.021496][    C0]  ? __kasan_check_read+0x11/0x20
+[    0.021496][    C0]  ? pick_next_task_fair+0x3a6/0x6b0
+[    0.021496][    C0]  __schedule+0xd4f/0x1070
+[    0.021496][    C0]  ? firmware_map_remove+0xee/0xee
+[    0.021496][    C0]  ? schedule+0xc9/0x160
+[    0.021496][    C0]  schedule+0x95/0x160
+[    0.021496][    C0]  do_boot_cpu+0x58c/0xaf0
+[    0.021496][    C0]  native_cpu_up+0x298/0x430
+[    0.021496][    C0]  ? common_cpu_up+0x150/0x150
+[    0.021496][    C0]  bringup_cpu+0x44/0x310
+[    0.021496][    C0]  ? timers_prepare_cpu+0x114/0x190
+[    0.021496][    C0]  ? takedown_cpu+0x2e0/0x2e0
+[    0.021496][    C0]  cpuhp_invoke_callback+0x197/0x1120
+[    0.021496][    C0]  ? ring_buffer_record_is_set_on+0x40/0x40
+[    0.021496][    C0]  _cpu_up+0x171/0x280
+[    0.021496][    C0]  do_cpu_up+0xb1/0x120
+[    0.021496][    C0]  cpu_up+0x13/0x20
+[    0.021496][    C0]  smp_init+0x91/0x118
+[    0.021496][    C0]  kernel_init_freeable+0x221/0x4f8
+[    0.021496][    C0]  ? mark_held_locks+0x34/0xb0
+[    0.021496][    C0]  ? _raw_spin_unlock_irq+0x27/0x40
+[    0.021496][    C0]  ? start_kernel+0x857/0x857
+[    0.021496][    C0]  ? lockdep_hardirqs_on+0x1b0/0x2a0
+[    0.021496][    C0]  ? _raw_spin_unlock_irq+0x27/0x40
+[    0.021496][    C0]  ? rest_init+0x307/0x307
+[    0.021496][    C0]  kernel_init+0x11/0x139
+[    0.021496][    C0]  ? rest_init+0x307/0x307
+[    0.021496][    C0]  ret_from_fork+0x27/0x50
+
+[    0.021458][    C0] NMI watchdog: Watchdog detected hard LOCKUP on =
+cpu 0
+[    0.021458][    C0] Modules linked in:
+[    0.021458][    C0] irq event stamp: 55574034
+[    0.021458][    C0] hardirqs last  enabled at (55574033): =
+[<ffffffffa549d4d7>] _raw_spin_unlock_irq+0x27/0x40
+[    0.021458][    C0] hardirqs last disabled at (55574034): =
+[<ffffffffa5491754>] __schedule+0x214/0x1070
+[    0.021458][    C0] softirqs last  enabled at (83640): =
+[<ffffffffa5800447>] __do_softirq+0x447/0x766
+[    0.021458][    C0] softirqs last disabled at (83623): =
+[<ffffffffa4ad2196>] irq_exit+0xd6/0xf0
+[    0.021458][    C0] CPU: 0 PID: 1 Comm: swapper/0 Not tainted =
+5.6.0-rc4+ #13
+[    0.021458][    C0] Hardware name: HPE ProLiant DL385 Gen10/ProLiant =
+DL385 Gen10, BIOS A40 03/09/2018
+[    0.021458][    C0] RIP: 0010:check_memory_region+0x136/0x200
+[    0.021458][    C0] Code: 00 eb 0c 49 83 c0 01 48 89 d8 49 39 d8 74 =
+10 41 80 38 00 74 ee 4b 8d 44 0d 00 4d 85 c0 75 4d 4c 89 e3 48 29 c3 e9 =
+3e ff ff ff <48> 85 db 74 2e 41 80 39 00 75 34 48 b8 01 00 00 00 00 fc =
+ff df 49
+[    0.021458][    C0] RSP: 0018:ffffc900031779e8 EFLAGS: 00000083
+[    0.021458][    C0] RAX: fffff5200062ef48 RBX: 0000000000000001 RCX: =
+ffffffffa4b94e16
+[    0.021458][    C0] RDX: 0000000000000001 RSI: 0000000000000004 RDI: =
+ffffc90003177a40
+[    0.021458][    C0] RBP: ffffc90003177a00 R08: 1ffff9200062ef48 R09: =
+fffff5200062ef48
+[    0.021458][    C0] R10: fffff5200062ef48 R11: ffffc90003177a43 R12: =
+fffff5200062ef49
+[    0.021458][    C0] R13: ffffc90003177a80 R14: ffff888453444310 R15: =
+ffff888453444308
+[    0.021458][    C0] FS:  0000000000000000(0000) =
+GS:ffff888453400000(0000) knlGS:0000000000000000
+[    0.021458][    C0] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.021458][    C0] CR2: ffff88887b9ff000 CR3: 00000006e6c12000 CR4: =
+00000000003406f0
+[    0.021458][    C0] Call Trace:
+[    0.021458][    C0]  __kasan_check_write+0x14/0x20
+[    0.021458][    C0]  do_raw_spin_lock+0xe6/0x1e0
+[    0.021458][    C0]  ? rwlock_bug.part.1+0x60/0x60
+[    0.021458][    C0]  ? __schedule+0x227/0x1070
+[    0.021458][    C0]  _raw_spin_lock+0x37/0x40
+[    0.021458][    C0]  ? __schedule+0x227/0x1070
+[    0.021458][    C0]  __schedule+0x227/0x1070
+[    0.021458][    C0]  ? __sched_text_start+0x8/0x8
+[    0.021458][    C0]  schedule+0x95/0x160
+[    0.021458][    C0]  do_boot_cpu+0x58c/0xaf0
+[    0.021458][    C0]  native_cpu_up+0x298/0x430
+[    0.021458][    C0]  ? common_cpu_up+0x150/0x150
+[    0.021458][    C0]  bringup_cpu+0x44/0x310
+[    0.021458][    C0]  ? timers_prepare_cpu+0x114/0x190
+[    0.021458][    C0]  ? takedown_cpu+0x2e0/0x2e0
+[    0.021458][    C0]  cpuhp_invoke_callback+0x197/0x1120
+[    0.021458][    C0]  ? ring_buffer_record_is_set_on+0x40/0x40
+[    0.021458][    C0]  _cpu_up+0x171/0x280
+[    0.021458][    C0]  do_cpu_up+0xb1/0x120
+[    0.021458][    C0]  cpu_up+0x13/0x20
+[    0.021458][    C0]  smp_init+0x91/0x118
+[    0.021458][    C0]  kernel_init_freeable+0x221/0x4f8
+[    0.021458][    C0]  ? mark_held_locks+0x34/0xb0
+[    0.021458][    C0]  ? _raw_spin_unlock_irq+0x27/0x40
+[    0.021458][    C0]  ? start_kernel+0x876/0x876
+[    0.021458][    C0]  ? lockdep_hardirqs_on+0x1b0/0x2a0
+[    0.021458][    C0]  ? _raw_spin_unlock_irq+0x27/0x40
+[    0.021458][    C0]  ? rest_init+0x307/0x307
+[    0.021458][    C0]  kernel_init+0x11/0x139
+[    0.021458][    C0]  ? rest_init+0x307/0x307
+[    0.021458][    C0]  ret_from_fork+0x27/0x50
+
+
 
