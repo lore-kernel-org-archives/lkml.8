@@ -2,169 +2,253 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA9DC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 04:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C151C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 04:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A120206D7
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 04:29:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="O08IJSgT"
+	by mail.kernel.org (Postfix) with ESMTP id 1FC4E206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 04:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgCGE2l (ORCPT
+        id S1726875AbgCGEik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 23:28:41 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36162 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgCGE2k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 23:28:40 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g12so1702216plo.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 20:28:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:date:message-id:mime-version:content-transfer-encoding:cc
-         :from:to;
-        bh=JqEEYRC8D7J1sqL+MKbRyD3O12DI0rJhBdywb3r67aQ=;
-        b=O08IJSgT9RRdq5UtU96pn7QHniy1dRZmoBOegNea4qVsuG7GW4BGZ1kf24iIzptTXj
-         n12w1q4o+KIEoHoIhFfdSgeBm5XuRuIxmHbXtULepqatTSsPw78lALhRAEgTBpyoIaHB
-         nKnb2PU1MabuA19gEBBI+cXC5+ri0TUQ6n+QlxLtFShaTABIHCgHCBS0koOv2cBd551h
-         7E/h3zaZ7x00dpfRzG59m56yMOrtuzyBH9W0rCYcafyls/igaqSl60l+KpdzA5ekQb1a
-         7SqiRqL31fJkJpkzGf5bPIhMM5x3CpqPoNM+XfOofd6TdIi/mvsLGTn5wTGO/L8rpIJ1
-         IjgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:message-id:mime-version
-         :content-transfer-encoding:cc:from:to;
-        bh=JqEEYRC8D7J1sqL+MKbRyD3O12DI0rJhBdywb3r67aQ=;
-        b=E2cn4EfnRrRa8PQAsfrbiYD8lqbkYxShSWwgkRFwvh5r8fNYMlC6AL2PeDzyw8IBR+
-         oYfR8gdoVZxOBg0ioZQVjdObJ4Yu5/pIaLz7a623RBsfUxQ1hMjrRen+NvvY372gdm0c
-         1bT+iFjQSt+zWoVsux+8WLCvte1HRCIiiA7TArE5XCVRsMjA4s/sH275hs7KqoCICmHt
-         Y1LMHPjugqzqY7sPcSO2TO41HP68jI/MWiIIaAjk5AeDgb3J+Im1wchJFRc1uLtkLRmq
-         ud4dQ3d9dJ0D642l5szO1rJl6xJniKU9i8EqT4/ZQHuxKMvUkiOWvJh6wBB7kPvAS/HV
-         h9pA==
-X-Gm-Message-State: ANhLgQ0Qf4FJayS6Sx30PyLjPzluLwiDSgCOuwF/iKaU5zJqLtMBZ6Kk
-        1SvIV2eDhB+dI2YuLo5V/2hzzw==
-X-Google-Smtp-Source: ADFU+vsXktTJfbSIn4OTidMPzYwPYVCPRU5N0l5d8ObjtGHmgqRiAVuDkF3RXOj+/nOfBuMLYLNPAg==
-X-Received: by 2002:a17:90a:20b:: with SMTP id c11mr6965847pjc.53.1583555317388;
-        Fri, 06 Mar 2020 20:28:37 -0800 (PST)
-Received: from localhost (c-67-161-15-180.hsd1.ca.comcast.net. [67.161.15.180])
-        by smtp.gmail.com with ESMTPSA id h4sm32082934pgq.20.2020.03.06.20.28.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 20:28:36 -0800 (PST)
-Subject: [PATCH] tty: sifive: Finish transmission before changing the clock
-Date:   Fri,  6 Mar 2020 20:26:38 -0800
-Message-Id: <20200307042637.83728-1-palmer@dabbelt.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        Fri, 6 Mar 2020 23:38:40 -0500
+Received: from mga11.intel.com ([192.55.52.93]:15624 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726314AbgCGEik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 23:38:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 20:38:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,524,1574150400"; 
+   d="scan'208";a="235032815"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 06 Mar 2020 20:38:37 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jARET-000Gth-7W; Sat, 07 Mar 2020 12:38:37 +0800
+Date:   Sat, 07 Mar 2020 12:38:17 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:smp/core] BUILD SUCCESS
+ fd3eafda8f146d4ad8f95f91a8c2b9a5319ff6b2
+Message-ID: <5e632539.hkbMsHJaHnyKHRNS%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc:     Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-serial@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        kernel-team@android.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Palmer Dabbelt <palmerdabbelt@google.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  smp/core
+branch HEAD: fd3eafda8f146d4ad8f95f91a8c2b9a5319ff6b2  sched/core: Remove rq.hrtick_csd_pending
 
-SiFive's UART has a software controller clock divider that produces the
-final baud rate clock.  Whenever the clock that drives the UART is
-changed this divider must be updated accordingly, and given that these
-two events are controlled by software they cannot be done atomically.
-During the period between updating the UART's driving clock and internal
-divider the UART will transmit a different baud rate than what the user
-has configured, which will probably result in a corrupted transmission
-stream.
+elapsed time: 836m
 
-The SiFive UART has a FIFO, but due to an issue with the programming
-interface there is no way to directly determine when the UART has
-finished transmitting.  We're essentially restricted to dead reckoning
-in order to figure that out: we can use the FIFO's TX busy register to
-figure out when the last frame has begun transmission and just delay for
-a long enough that the last frame is guaranteed to get out.
+configs tested: 190
+configs skipped: 0
 
-As far as the actual implementation goes: I've modified the existing
-existing clock notifier function to drain both the FIFO and the shift
-register in on PRE_RATE_CHANGE.  As far as I know there is no hardware
-flow control in this UART, so there's no good way to ask the other end
-to stop transmission while we can't receive (inserting software flow
-control messages seems like a bad idea here).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+alpha                               defconfig
+riscv                    nommu_virt_defconfig
+ia64                             allmodconfig
+c6x                        evmc6678_defconfig
+m68k                          multi_defconfig
+s390                       zfcpdump_defconfig
+h8300                     edosk2674_defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+x86_64               randconfig-a001-20200305
+x86_64               randconfig-a002-20200305
+x86_64               randconfig-a003-20200305
+i386                 randconfig-a001-20200305
+i386                 randconfig-a002-20200305
+i386                 randconfig-a003-20200305
+x86_64               randconfig-a001-20200306
+x86_64               randconfig-a002-20200306
+x86_64               randconfig-a003-20200306
+i386                 randconfig-a001-20200306
+i386                 randconfig-a002-20200306
+i386                 randconfig-a003-20200306
+riscv                randconfig-a001-20200306
+alpha                randconfig-a001-20200306
+m68k                 randconfig-a001-20200306
+nds32                randconfig-a001-20200306
+mips                 randconfig-a001-20200306
+parisc               randconfig-a001-20200306
+csky                 randconfig-a001-20200305
+openrisc             randconfig-a001-20200305
+s390                 randconfig-a001-20200305
+sh                   randconfig-a001-20200305
+xtensa               randconfig-a001-20200305
+csky                 randconfig-a001-20200306
+openrisc             randconfig-a001-20200306
+s390                 randconfig-a001-20200306
+sh                   randconfig-a001-20200306
+xtensa               randconfig-a001-20200306
+x86_64               randconfig-b001-20200306
+x86_64               randconfig-b002-20200306
+x86_64               randconfig-b003-20200306
+i386                 randconfig-b001-20200306
+i386                 randconfig-b002-20200306
+i386                 randconfig-b003-20200306
+x86_64               randconfig-b001-20200305
+x86_64               randconfig-b002-20200305
+x86_64               randconfig-b003-20200305
+i386                 randconfig-b001-20200305
+i386                 randconfig-b002-20200305
+i386                 randconfig-b003-20200305
+x86_64               randconfig-c001-20200306
+x86_64               randconfig-c002-20200306
+x86_64               randconfig-c003-20200306
+i386                 randconfig-c001-20200306
+i386                 randconfig-c002-20200306
+i386                 randconfig-c003-20200306
+x86_64               randconfig-c001-20200305
+x86_64               randconfig-c002-20200305
+x86_64               randconfig-c003-20200305
+i386                 randconfig-c001-20200305
+i386                 randconfig-c002-20200305
+i386                 randconfig-c003-20200305
+x86_64               randconfig-d001-20200306
+x86_64               randconfig-d002-20200306
+x86_64               randconfig-d003-20200306
+i386                 randconfig-d001-20200306
+i386                 randconfig-d002-20200306
+i386                 randconfig-d003-20200306
+x86_64               randconfig-e001-20200305
+x86_64               randconfig-e002-20200305
+x86_64               randconfig-e003-20200305
+i386                 randconfig-e001-20200305
+i386                 randconfig-e002-20200305
+i386                 randconfig-e003-20200305
+x86_64               randconfig-e001-20200306
+x86_64               randconfig-e002-20200306
+x86_64               randconfig-e003-20200306
+i386                 randconfig-e001-20200306
+i386                 randconfig-e002-20200306
+i386                 randconfig-e003-20200306
+x86_64               randconfig-f001-20200306
+x86_64               randconfig-f002-20200306
+x86_64               randconfig-f003-20200306
+i386                 randconfig-f001-20200306
+i386                 randconfig-f002-20200306
+i386                 randconfig-f003-20200306
+x86_64               randconfig-g001-20200305
+x86_64               randconfig-g002-20200305
+x86_64               randconfig-g003-20200305
+i386                 randconfig-g001-20200305
+i386                 randconfig-g002-20200305
+i386                 randconfig-g003-20200305
+x86_64               randconfig-g001-20200306
+x86_64               randconfig-g002-20200306
+x86_64               randconfig-g003-20200306
+i386                 randconfig-g001-20200306
+i386                 randconfig-g002-20200306
+i386                 randconfig-g003-20200306
+x86_64               randconfig-h001-20200306
+x86_64               randconfig-h002-20200306
+x86_64               randconfig-h003-20200306
+i386                 randconfig-h001-20200306
+i386                 randconfig-h002-20200306
+i386                 randconfig-h003-20200306
+arc                  randconfig-a001-20200305
+arm                  randconfig-a001-20200305
+arm64                randconfig-a001-20200305
+ia64                 randconfig-a001-20200305
+powerpc              randconfig-a001-20200305
+sparc                randconfig-a001-20200305
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
 ---
-I have not tested this, as I don't have any hardware.  I'm also not even
-remotely familiar with the serial subsystem, so I don't know if there's a
-better way of going about this.  I'm specifically worried about a udelay() that
-could be quite long.  Maybe some sort of "delay for short times, sleep for long
-times" approach would be better?
-
-I don't know if this manifests in practice on existing hardware when running
-real workloads, but I'd be willing to bet that it would be possible to trigger
-the bug on purpose as by my calculations there's about a 10k cycle window in
-which the clock can't change.  IIRC there's a lot of instability when changing
-the clock frequency on the HiFive Unleashed so I doubt people are going to
-stumble across the issue regularly in practice.
-
- drivers/tty/serial/sifive.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
-index d5f81b98e4d7..d34031e842d0 100644
---- a/drivers/tty/serial/sifive.c
-+++ b/drivers/tty/serial/sifive.c
-@@ -618,10 +618,10 @@ static void sifive_serial_shutdown(struct uart_port *port)
-  *
-  * On the V0 SoC, the UART IP block is derived from the CPU clock source
-  * after a synchronous divide-by-two divider, so any CPU clock rate change
-- * requires the UART baud rate to be updated.  This presumably could corrupt any
-- * serial word currently being transmitted or received.  It would probably
-- * be better to stop receives and transmits, then complete the baud rate
-- * change, then re-enable them.
-+ * requires the UART baud rate to be updated.  This presumably corrupts any
-+ * serial word currently being transmitted or received.  In order to avoid
-+ * corrupting the output data stream, we drain the transmit queue before
-+ * allowing the clock's rate to be changed.
-  */
- static int sifive_serial_clk_notifier(struct notifier_block *nb,
- 				      unsigned long event, void *data)
-@@ -629,6 +629,26 @@ static int sifive_serial_clk_notifier(struct notifier_block *nb,
- 	struct clk_notifier_data *cnd = data;
- 	struct sifive_serial_port *ssp = notifier_to_sifive_serial_port(nb);
- 
-+	if (event == PRE_RATE_CHANGE) {
-+		/*
-+		 * The TX watermark is always set to 1 by this driver, which
-+		 * means that the TX busy bit will lower when there are 0 bytes
-+		 * left in the TX queue -- in other words, when the TX FIFO is
-+		 * empty.
-+		 */
-+		__ssp_wait_for_xmitr(ssp);
-+		/*
-+		 * On the cycle the TX FIFO goes empty there is still a full
-+		 * UART frame left to be transmitted in the shift register.
-+		 * The UART provides no way for software to directly determine
-+		 * when that last frame has been transmitted, so we just sleep
-+		 * here instead.  As we're not tracking the number of stop bits
-+		 * they're just worst cased here.  The rest of the serial
-+		 * framing parameters aren't configurable by software.
-+		 */
-+		udelay(DIV_ROUND_UP(12 * 1000 * 1000, ssp->baud_rate));
-+	}
-+
- 	if (event == POST_RATE_CHANGE && ssp->clkin_rate != cnd->new_rate) {
- 		ssp->clkin_rate = cnd->new_rate;
- 		__ssp_update_div(ssp);
--- 
-2.25.1.481.gfbce0eb801-goog
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
