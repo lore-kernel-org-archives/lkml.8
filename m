@@ -2,226 +2,139 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DAAC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10541C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC6520675
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F2C20675
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:44:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+geA0KA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgCGPiM (ORCPT
+        id S1726199AbgCGPom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:38:12 -0500
-Received: from mga17.intel.com ([192.55.52.151]:49003 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgCGPiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:38:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2020 07:38:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,526,1574150400"; 
-   d="scan'208";a="288273311"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Mar 2020 07:38:08 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jAbWe-0007ab-Ol; Sat, 07 Mar 2020 23:38:04 +0800
-Date:   Sat, 07 Mar 2020 23:37:19 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:perf/urgent] BUILD SUCCESS
- 798048f85093901f475d25b2ac8d9ea1bc6d471a
-Message-ID: <5e63bfaf.JxFgeWCQ4wzGvzwg%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 7 Mar 2020 10:44:42 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45665 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgCGPom (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 10:44:42 -0500
+Received: by mail-wr1-f67.google.com with SMTP id v2so5795221wrp.12;
+        Sat, 07 Mar 2020 07:44:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=nyg6TKy7+Fqp191RefgM+5lFgqJLgXxO7mzKRJSy2Ps=;
+        b=S+geA0KAZcjOYk61LLzRWCM8Zr2ZibLk8dJ8JZAEz+UfftfJkpDDjJUiSWOkDF2rAc
+         0YT1BD4EVM/pwuXYIodMzE1aFHv+Kso2n38yfZa4oni4amIt7myrVX+qmhdD2YR8vbGi
+         ZJBBqajElFeof58kwBI3Odh/9hGMHJTaYJXw4IsGYJvEOJcNmHHAzSyMlLMLUExQJQpr
+         c8amRa0arGO83pPRxx/csJFFOMUTdFw9/s1XzC6gH9lQooR4r4u8W7CjYp93myGpBjyT
+         bsMzbx/rc62uL7jMfywJIerqYb1r9Uz5fNJyoFTzX6pxvbImzQoDZvEtbVq9EHlRdkHY
+         C2Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=nyg6TKy7+Fqp191RefgM+5lFgqJLgXxO7mzKRJSy2Ps=;
+        b=NtiFLQia5hs9RmhW9iQO0DRsYERUlEp2I+hYlXiLmkKn+mjwbX3WGf5HDi3xvTBJMb
+         84R+gWl97abK7Klo0txBuEiddshlLxo3gH4EM43+MA6HlHeaDzJnyaPHq2dybpbtzFAF
+         6hlqAls0aGeX9stsTZ19KiC8TstQ2QBIFqEmpu66W+HBidGweXSpkopsSzUSw/vQ2hNc
+         qDhQRU2iMpxIG78GAqELq28m9UUOtb9ZzKzHPcSueYgX5RHOpX1BjqEsnnVnOT+QOeNg
+         zBTUjx7lDf5WCZE6iBE2p/8LwfKwsXdtD0X/TNsXf7OKZ69WXZr0rijUhVyB0hNUK0IM
+         9ATw==
+X-Gm-Message-State: ANhLgQ2KOCHT283wRLonMlWOrGuHjw7Ozj4pudv7szNFW+ddk4tLUWlc
+        hQaRjVx3KNUduaLDXIgo0PnOwyE=
+X-Google-Smtp-Source: ADFU+vvoL44fhBh3tNhd2G+NxJgpiwLos+iPgdzRBDuyAv8MUR87npUKHBK9WkI1lQF5mgY44+Z6ug==
+X-Received: by 2002:a5d:6a4a:: with SMTP id t10mr2851835wrw.356.1583595878148;
+        Sat, 07 Mar 2020 07:44:38 -0800 (PST)
+Received: from avx2 ([46.53.250.34])
+        by smtp.gmail.com with ESMTPSA id y1sm16811929wrh.65.2020.03.07.07.44.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Mar 2020 07:44:37 -0800 (PST)
+Date:   Sat, 7 Mar 2020 18:44:35 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH] proc: speed up /proc/*/statm
+Message-ID: <20200307154435.GA2788@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/urgent
-branch HEAD: 798048f85093901f475d25b2ac8d9ea1bc6d471a  Merge tag 'perf-urgent-for-mingo-5.6-20200306' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
+top(1) reads all /proc/*/statm files but kernel threads will always have
+zeros. Print those zeroes directly without going through seq_put_decimal_ull().
 
-elapsed time: 481m
+Speed up reading /proc/2/statm (which is kthreadd) is like 3%.
 
-configs tested: 163
-configs skipped: 14
+My system has more kernel threads than normal processes after booting KDE.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-h8300                     edosk2674_defconfig
-ia64                                defconfig
-powerpc                             defconfig
-s390                              allnoconfig
-ia64                              allnoconfig
-riscv                          rv32_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sh                                allnoconfig
-s390                       zfcpdump_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-powerpc                          rhel-kconfig
-powerpc                           allnoconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                       ppc64_defconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200307
-x86_64               randconfig-a002-20200307
-x86_64               randconfig-a003-20200307
-i386                 randconfig-a001-20200307
-i386                 randconfig-a002-20200307
-i386                 randconfig-a003-20200307
-riscv                randconfig-a001-20200307
-alpha                randconfig-a001-20200307
-m68k                 randconfig-a001-20200307
-nds32                randconfig-a001-20200307
-mips                 randconfig-a001-20200307
-parisc               randconfig-a001-20200307
-sparc64              randconfig-a001-20200307
-c6x                  randconfig-a001-20200307
-nios2                randconfig-a001-20200307
-h8300                randconfig-a001-20200307
-csky                 randconfig-a001-20200307
-openrisc             randconfig-a001-20200307
-s390                 randconfig-a001-20200307
-sh                   randconfig-a001-20200307
-xtensa               randconfig-a001-20200307
-x86_64               randconfig-b002-20200307
-x86_64               randconfig-b001-20200307
-i386                 randconfig-b001-20200307
-i386                 randconfig-b003-20200307
-i386                 randconfig-b002-20200307
-x86_64               randconfig-b003-20200307
-x86_64               randconfig-c001-20200307
-x86_64               randconfig-c002-20200307
-x86_64               randconfig-c003-20200307
-i386                 randconfig-c001-20200307
-i386                 randconfig-c002-20200307
-i386                 randconfig-c003-20200307
-x86_64               randconfig-d001-20200307
-x86_64               randconfig-d002-20200307
-x86_64               randconfig-d003-20200307
-i386                 randconfig-d001-20200307
-i386                 randconfig-d002-20200307
-i386                 randconfig-d003-20200307
-i386                 randconfig-e001-20200307
-i386                 randconfig-e003-20200307
-x86_64               randconfig-e002-20200307
-x86_64               randconfig-e001-20200307
-x86_64               randconfig-e003-20200307
-i386                 randconfig-e002-20200307
-x86_64               randconfig-f001-20200307
-x86_64               randconfig-f002-20200307
-x86_64               randconfig-f003-20200307
-i386                 randconfig-f001-20200307
-i386                 randconfig-f002-20200307
-i386                 randconfig-f003-20200307
-x86_64               randconfig-g001-20200307
-x86_64               randconfig-g002-20200307
-x86_64               randconfig-g003-20200307
-i386                 randconfig-g001-20200307
-i386                 randconfig-g002-20200307
-i386                 randconfig-g003-20200307
-x86_64               randconfig-h001-20200307
-x86_64               randconfig-h002-20200307
-x86_64               randconfig-h003-20200307
-i386                 randconfig-h001-20200307
-i386                 randconfig-h002-20200307
-i386                 randconfig-h003-20200307
-arc                  randconfig-a001-20200307
-arm                  randconfig-a001-20200307
-arm64                randconfig-a001-20200307
-ia64                 randconfig-a001-20200307
-powerpc              randconfig-a001-20200307
-sparc                randconfig-a001-20200307
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                  sh7785lcr_32bit_defconfig
-sparc                            allyesconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+ fs/proc/array.c |   39 +++++++++++++++++++++++----------------
+ 1 file changed, 23 insertions(+), 16 deletions(-)
+
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -635,28 +635,35 @@ int proc_tgid_stat(struct seq_file *m, struct pid_namespace *ns,
+ int proc_pid_statm(struct seq_file *m, struct pid_namespace *ns,
+ 			struct pid *pid, struct task_struct *task)
+ {
+-	unsigned long size = 0, resident = 0, shared = 0, text = 0, data = 0;
+ 	struct mm_struct *mm = get_task_mm(task);
+ 
+ 	if (mm) {
++		unsigned long size;
++		unsigned long resident = 0;
++		unsigned long shared = 0;
++		unsigned long text = 0;
++		unsigned long data = 0;
++
+ 		size = task_statm(mm, &shared, &text, &data, &resident);
+ 		mmput(mm);
+-	}
+-	/*
+-	 * For quick read, open code by putting numbers directly
+-	 * expected format is
+-	 * seq_printf(m, "%lu %lu %lu %lu 0 %lu 0\n",
+-	 *               size, resident, shared, text, data);
+-	 */
+-	seq_put_decimal_ull(m, "", size);
+-	seq_put_decimal_ull(m, " ", resident);
+-	seq_put_decimal_ull(m, " ", shared);
+-	seq_put_decimal_ull(m, " ", text);
+-	seq_put_decimal_ull(m, " ", 0);
+-	seq_put_decimal_ull(m, " ", data);
+-	seq_put_decimal_ull(m, " ", 0);
+-	seq_putc(m, '\n');
+ 
++		/*
++		 * For quick read, open code by putting numbers directly
++		 * expected format is
++		 * seq_printf(m, "%lu %lu %lu %lu 0 %lu 0\n",
++		 *               size, resident, shared, text, data);
++		 */
++		seq_put_decimal_ull(m, "", size);
++		seq_put_decimal_ull(m, " ", resident);
++		seq_put_decimal_ull(m, " ", shared);
++		seq_put_decimal_ull(m, " ", text);
++		seq_put_decimal_ull(m, " ", 0);
++		seq_put_decimal_ull(m, " ", data);
++		seq_put_decimal_ull(m, " ", 0);
++		seq_putc(m, '\n');
++	} else {
++		seq_write(m, "0 0 0 0 0 0 0\n", 14);
++	}
+ 	return 0;
+ }
+ 
