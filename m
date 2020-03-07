@@ -2,269 +2,405 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F00C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE85C10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA66820705
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE85E206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="maDP+sv7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VWuHF0Ig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbgCGChP (ORCPT
+        id S1727067AbgCGChr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 21:37:15 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:40337 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgCGCgj (ORCPT
+        Fri, 6 Mar 2020 21:37:47 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34978 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbgCGChq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 21:36:39 -0500
-Received: by mail-pf1-f201.google.com with SMTP id d127so2805038pfa.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 18:36:38 -0800 (PST)
+        Fri, 6 Mar 2020 21:37:46 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so1629362plt.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 18:37:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=eY0o7zJ9ID5RkUnCQ8ZBfY0aWmEieO+fgK45vUzTAmI=;
-        b=maDP+sv7S5sg7dJ+wIj5K1mw8zKYw8OcIiPukgjB9zxHUGo+On7L3GC+ARA2qoCFrt
-         vIBGoqJloHTM/uAbxgHebuEJeJ19PSqBv2MSP1dpjQIjklO815/0Gc247hDyju9YBpEr
-         ICpkbEMJkPCMECSkW1EC4lwQYrxUSD65UPtAsURE+TGRjcHtmTS9w4izqCAdZkWq+KXs
-         2b9n/hik8XxhEwZBd35FbCld2A53Ae5EfQrqHQA0hgDr4cgkYeOoh3qWyeQQIpdgM2qz
-         vRJgeDpbg2t71sHRRvbdbYRKLd9mFgXgnKPCPz82+oicZ9gBSIzzICZQvRvDb88n2sRS
-         dGRw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5GIvve0FlG5w469nF3Y4ZvcUMBqV8AQMJnsHfo+5RpQ=;
+        b=VWuHF0IgCgP9XrC6GwTCfWsyZSt0Zc7z5qeNlZd0wzcbSldWjHcPAr5tD/WR2YSVzw
+         Guv8AfnxNiSi91wFKkMdecGcz3HjAQtSfEbNmdFbJuvKb4PSo8RevMybVt6N/CaeULFQ
+         FqItiUp/4V9MV6JMOolq9g8wVrF/9IPql9wDzZq0AtkWqAjo9QjggXEg4qQ9LEq80gRo
+         L9hA8wJr2RNOXXHDZ/j/mPkm1odncdCXRAj1X8OWmK1UVDzefTMnUuTR/uWn0TF9jbUA
+         jnQqq/jIDqXIJ6QB5nH71BMwXzqwdlfQ7J0Ac2pQncZ5GyYl/t+u/Z5fkL8CZqSgVKKt
+         BW/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=eY0o7zJ9ID5RkUnCQ8ZBfY0aWmEieO+fgK45vUzTAmI=;
-        b=qfUFJmaXrFRzTsL3ACLVUptu7VygUxj5LVVqnGD7sq3VADxInqjVPzqtcFY07zG0Ui
-         gjPM2bPIHZaPbilZD2ZpcB78HRAVhH+c4gMcGvLjiJkDRFrJrwH6N8GyrkXHtEblpvXE
-         ChtwbwsaefCyq6Glai5DA/c6lTHlBCA1jkF3NihU7khcVL3Qf5z7dD9gAyf7bfh0WKKM
-         rgRjd52d36yyA9wFgrAl20cV8jPCrzaQv5JbRcmORPmbsxnC9sEE29U3DTokFUiIYb7X
-         AmWi70rigMeZtaxGmD5nYd5K3CclV7FAnBQr5QnALhM4kEsUWo1TxyzLzOCCQ7obzct2
-         4R6w==
-X-Gm-Message-State: ANhLgQ3Q7HIMHSmLI3AZew9j8vVeryFbUV51SWsyzOzpm/6Yt3cmivcb
-        DPDETHomOUJEU11BzEo8SsS+Ny5z+D8=
-X-Google-Smtp-Source: ADFU+vvzA+1kQfLrYOGb8BKXwXlqs4orE2r9h0PUkhfDALGzmbnT0SpAK8/epSd/0whSxfO37yVzAKXtsmE=
-X-Received: by 2002:a17:90a:2466:: with SMTP id h93mr6538944pje.177.1583548598158;
- Fri, 06 Mar 2020 18:36:38 -0800 (PST)
-Date:   Fri,  6 Mar 2020 18:36:05 -0800
-In-Reply-To: <20200307023611.204708-1-drosen@google.com>
-Message-Id: <20200307023611.204708-3-drosen@google.com>
-Mime-Version: 1.0
-References: <20200307023611.204708-1-drosen@google.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v8 2/8] fs: Add standard casefolding support
-From:   Daniel Rosenberg <drosen@google.com>
-To:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>
-Cc:     linux-mtd@lists.infradead.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5GIvve0FlG5w469nF3Y4ZvcUMBqV8AQMJnsHfo+5RpQ=;
+        b=SohZKjtvXsfrExH5YiCMGbFAjR6+0q0nCWxPEsmuEbBXbxfBzoNo0T4OQ8OrVpRQP8
+         svkchFuTX7FSKoOQArbEJjheQmEqo/MRWLnZjRkc+sMXXzk5CKfzVaOGA9sxXy56mEcn
+         9b5VfkyiMKW+klOvIGl70ZP+JwX5qg/MHgK3MSL0b2GX/RYgQyY6H6eMs/vvssLE6bR9
+         7c5sWdX9QXPFy9PiTNtiYwZytn4aPdwvWl5ycjsOwnb+wrktRIz3CRcdqQwGbefKfyVL
+         LWOPFI9UVHP7PBCCsxW4c95f0WjXpeuEuFiuXsAs55MF888vlaFAoJ/d1GaQtGjLucqw
+         RFEg==
+X-Gm-Message-State: ANhLgQ0llVgBlPI8VSyzjKvjBYP87hHooc0DIr8hpqA8IR4aHmcKAufr
+        KnpZhhi7q02e1RrleXWTuPjYWg==
+X-Google-Smtp-Source: ADFU+vvLFEFhuvosMbYhjNKBga4ZTxXPoC+oty1ZBNO4A07s0fOMUCbsXcXsf9e0edb1EYMdkt9uhg==
+X-Received: by 2002:a17:90a:9b8a:: with SMTP id g10mr6842575pjp.163.1583548665067;
+        Fri, 06 Mar 2020 18:37:45 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x12sm27318128pfi.122.2020.03.06.18.37.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 18:37:44 -0800 (PST)
+Date:   Fri, 6 Mar 2020 18:37:42 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] arm64: dts: qcom: sdm845: Add ADSP audio support
+Message-ID: <20200307023742.GC1094083@builder>
+References: <20200305145344.14670-1-srinivas.kandagatla@linaro.org>
+ <20200305145344.14670-2-srinivas.kandagatla@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305145344.14670-2-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds general supporting functions for filesystems that use
-utf8 casefolding. It provides standard dentry_operations and adds the
-necessary structures in struct super_block to allow this standardization.
+On Thu 05 Mar 06:53 PST 2020, Srinivas Kandagatla wrote:
 
-Signed-off-by: Daniel Rosenberg <drosen@google.com>
----
- fs/libfs.c         | 114 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/fs.h |  22 +++++++++
- 2 files changed, 136 insertions(+)
+> This patch adds support to basic dsp audio, codec, slimbus
+> and soundwire controller DT nodes.
+> 
 
-diff --git a/fs/libfs.c b/fs/libfs.c
-index c686bd9caac67..0eaa63a9ae037 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -20,6 +20,8 @@
- #include <linux/fs_context.h>
- #include <linux/pseudo_fs.h>
- #include <linux/fsnotify.h>
-+#include <linux/unicode.h>
-+#include <linux/fscrypt.h>
- 
- #include <linux/uaccess.h>
- 
-@@ -1361,3 +1363,115 @@ bool is_empty_dir_inode(struct inode *inode)
- 	return (inode->i_fop == &empty_dir_operations) &&
- 		(inode->i_op == &empty_dir_inode_operations);
- }
-+
-+#ifdef CONFIG_UNICODE
-+/**
-+ * needs_casefold - determine if casefolding applies for a given directory
-+ * @dir:	Folder to check
-+ *
-+ * This function returns true if dentries within this folder should be
-+ * casefolded. If a folder is encrypted, but we don't have the key, it is not
-+ * meaningful to casefold the no-key token name.
-+ */
-+bool needs_casefold(const struct inode *dir)
-+{
-+	return IS_CASEFOLDED(dir) && dir->i_sb->s_encoding &&
-+			(!IS_ENCRYPTED(dir) || fscrypt_has_encryption_key(dir));
-+}
-+EXPORT_SYMBOL(needs_casefold);
-+
-+/*
-+ * Under RCU, small names may change, but utf8 expects a stable name
-+ * This operates similarly to take_dentry_name_snapshot, except that there
-+ * is no guarantee that it grabs a coherent string.
-+ */
-+static int make_name_stable(const struct unicode_map *um,
-+			   const struct dentry *dentry, struct qstr *entry,
-+			   char *buff)
-+{
-+	if (dentry->d_iname != (const unsigned char *)entry->name)
-+		return 0;
-+
-+	memcpy(buff, entry->name, entry->len + 1);
-+	entry->name = buff;
-+	return utf8_validate(um, entry);
-+}
-+
-+/**
-+ * generic_ci_d_compare - generic implementation of d_compare for casefolding
-+ * @dentry: Entry we are comparing against
-+ * @len: length of str
-+ * @str: name of the dentry, safely paired with len
-+ * @name: qstr to test against
-+ *
-+ * This performs a case insensitive comparison between the given name and str.
-+ * It can be used as d_compare for dentry_operations.
-+ */
-+int generic_ci_d_compare(const struct dentry *dentry, unsigned int len,
-+			  const char *str, const struct qstr *name)
-+{
-+	const struct dentry *parent = READ_ONCE(dentry->d_parent);
-+	const struct inode *inode = READ_ONCE(parent->d_inode);
-+	const struct super_block *sb = dentry->d_sb;
-+	const struct unicode_map *um = sb->s_encoding;
-+	char small_name[DNAME_INLINE_LEN];
-+	struct qstr entry = QSTR_INIT(str, len);
-+	int ret;
-+
-+	if (!inode || !needs_casefold(inode))
-+		goto fallback;
-+
-+	/* Under RCU, small names may change, but utf8 expects a stable name */
-+	if (make_name_stable(um, dentry, &entry, small_name))
-+		goto err;
-+	ret = utf8_strncasecmp(um, name, &entry);
-+	if (ret >= 0)
-+		return ret;
-+err:
-+	if (sb_has_enc_strict_mode(sb))
-+		return -EINVAL;
-+fallback:
-+	if (len != name->len)
-+		return 1;
-+	return !!memcmp(str, name->name, len);
-+}
-+EXPORT_SYMBOL(generic_ci_d_compare);
-+
-+/**
-+ * generic_ci_d_hash - generic implementation of d_hash for casefolding
-+ * @dentry: Entry whose name we are hashing
-+ * @len: length of str
-+ * @qstr: name of the dentry, safely paired with len
-+ * @str: qstr to set hash of
-+ *
-+ * This performs a case insensitive hash of the given str.
-+ * If casefolding is not required, it leaves the hash unchanged.
-+ */
-+int generic_ci_d_hash(const struct dentry *dentry, struct qstr *str)
-+{
-+	const struct inode *inode = READ_ONCE(dentry->d_inode);
-+	struct super_block *sb = dentry->d_sb;
-+	const struct unicode_map *um = sb->s_encoding;
-+	char small_name[DNAME_INLINE_LEN];
-+	struct qstr entry = QSTR_INIT(str->name, str->len);
-+	int ret = 0;
-+
-+	if (!inode || !needs_casefold(inode))
-+		return 0;
-+
-+	if (make_name_stable(um, dentry, &entry, small_name))
-+		goto err;
-+	ret = utf8_casefold_hash(um, dentry, &entry);
-+	if (ret < 0)
-+		goto err;
-+
-+	return 0;
-+err:
-+	if (sb_has_enc_strict_mode(sb))
-+		ret = -EINVAL;
-+	else
-+		ret = 0;
-+	return ret;
-+}
-+EXPORT_SYMBOL(generic_ci_d_hash);
-+#endif
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 3cd4fe6b845e7..8d20a3daa49a0 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1382,6 +1382,12 @@ extern int send_sigurg(struct fown_struct *fown);
- #define SB_ACTIVE	(1<<30)
- #define SB_NOUSER	(1<<31)
- 
-+/* These flags relate to encoding and casefolding, and are stored on disk */
-+#define SB_ENC_STRICT_MODE_FL	(1 << 0)
-+
-+#define sb_has_enc_strict_mode(sb) \
-+	(sb->s_encoding_flags & SB_ENC_STRICT_MODE_FL)
-+
- /*
-  *	Umount options
-  */
-@@ -1449,6 +1455,10 @@ struct super_block {
- #endif
- #ifdef CONFIG_FS_VERITY
- 	const struct fsverity_operations *s_vop;
-+#endif
-+#ifdef CONFIG_UNICODE
-+	struct unicode_map *s_encoding;
-+	u16 s_encoding_flags;
- #endif
- 	struct hlist_bl_head	s_roots;	/* alternate root dentries for NFS */
- 	struct list_head	s_mounts;	/* list of mounts; _not_ for fs use */
-@@ -3368,6 +3378,18 @@ extern int generic_file_fsync(struct file *, loff_t, loff_t, int);
- 
- extern int generic_check_addressable(unsigned, u64);
- 
-+#ifdef CONFIG_UNICODE
-+extern int generic_ci_d_hash(const struct dentry *dentry, struct qstr *str);
-+extern int generic_ci_d_compare(const struct dentry *dentry, unsigned int len,
-+				const char *str, const struct qstr *name);
-+extern bool needs_casefold(const struct inode *dir);
-+#else
-+static inline bool needs_casefold(const struct inode *dir)
-+{
-+	return false;
-+}
-+#endif
-+
- #ifdef CONFIG_MIGRATION
- extern int buffer_migrate_page(struct address_space *,
- 				struct page *, struct page *,
--- 
-2.25.1.481.gfbce0eb801-goog
+I wouldn't be against the idea of splitting this patch in a few...
 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 338 +++++++++++++++++++++++++++
+>  1 file changed, 338 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 061f49faab19..705d8a0c3a1e 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -20,6 +20,7 @@
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+>  #include <dt-bindings/thermal/thermal.h>
+> +#include <dt-bindings/soc/qcom,apr.h>
+
+Please keep these sorted alphabetically.
+
+>  
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -491,6 +492,54 @@
+>  			label = "lpass";
+>  			qcom,remote-pid = <2>;
+>  			mboxes = <&apss_shared 8>;
+
+Please add an empty line here.
+
+> +			apr {
+> +				compatible = "qcom,apr-v2";
+> +				qcom,glink-channels = "apr_audio_svc";
+> +				qcom,apr-domain = <APR_DOMAIN_ADSP>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				qcom,intents = <512 20>;
+> +
+> +				q6core {
+
+q6core@3
+
+Due to the reg.
+
+> +					reg = <APR_SVC_ADSP_CORE>;
+> +					compatible = "qcom,q6core";
+
+Don't we want some qcom,protection-domain properties on these?
+
+> +				};
+> +
+> +				q6afe: q6afe {
+
+q6afe@4
+
+> +					compatible = "qcom,q6afe";
+> +					reg = <APR_SVC_AFE>;
+> +					q6afedai: dais {
+> +						compatible = "qcom,q6afe-dais";
+> +						#address-cells = <1>;
+> +						#size-cells = <0>;
+> +						#sound-dai-cells = <1>;
+> +
+> +						qi2s@22 {
+> +							reg = <22>;
+> +							qcom,sd-lines = <0 1 2 3>;
+> +						};
+> +					};
+> +				};
+> +
+> +				q6asm: q6asm {
+
+q6asm@7
+
+> +					compatible = "qcom,q6asm";
+> +					reg = <APR_SVC_ASM>;
+> +					q6asmdai: dais {
+> +						compatible = "qcom,q6asm-dais";
+> +						#sound-dai-cells = <1>;
+> +						iommus = <&apps_smmu 0x1821 0x0>;
+> +					};
+> +				};
+> +
+> +				q6adm: q6adm {
+
+q6adm@8
+
+Or perhaps then, as we have a unit address, these could use a generic
+name and be on the form:
+
+q6adm: apr-service@8 {
+
+> +					compatible = "qcom,q6adm";
+> +					reg = <APR_SVC_ADM>;
+> +					q6routing: routing {
+> +						compatible = "qcom,q6adm-routing";
+> +						#sound-dai-cells = <0>;
+> +					};
+> +				};
+> +			};
+
+Please take the opportunity of adding an empty line here as well.
+
+>  			fastrpc {
+>  				compatible = "qcom,fastrpc";
+>  				qcom,glink-channels = "fastrpcglink-apps-dsp";
+> @@ -513,6 +562,9 @@
+>  		};
+>  	};
+>  
+> +	sound: sound {
+> +	};
+> +
+>  	cdsp_pas: remoteproc-cdsp {
+>  		compatible = "qcom,sdm845-cdsp-pas";
+>  
+> @@ -1782,6 +1834,142 @@
+>  				};
+>  			};
+>  
+> +			quat_mi2s_sleep: quat_mi2s_sleep {
+
+Are these all board-agnostic or should they live in the board.dts files
+instead?
+
+For all of these, please replace _ with - in the node names.
+
+> +				mux {
+> +					pins = "gpio58", "gpio59";
+> +					function = "gpio";
+> +				};
+> +
+> +				config {
+> +					pins = "gpio58", "gpio59";
+> +					drive-strength = <2>;   /* 2 mA */
+> +					bias-pull-down;         /* PULL DOWN */
+
+Please omit these comments, given that the properties are quite
+descriptive already.
+
+> +					input-enable;
+> +				};
+
+And you don't need the subnode level these days, i.e. this can be
+written as:
+
+			quat_mi2s_sleep: quat-mi2s-sleep {
+				pins = "gpio58", "gpio59";
+				function = "gpio";
+				drive-strength = <2>;
+				bias-pull-down;
+				input-enable;
+			};
+
+> +			};
+> +
+[..]
+> @@ -2602,6 +2843,91 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		slim_msm: slim@171c0000 {
+> +			compatible = "qcom,slim-ngd-v2.1.0";
+> +			reg = <0 0x171c0000 0 0x2C000>;
+
+Please lowercase the digits of the size.
+
+> +			reg-names = "ctrl";
+
+reg-names is not in binding, nor used by driver.
+
+> +			interrupts = <0 163 IRQ_TYPE_LEVEL_HIGH>;
+
+s/0/GIC_SPI/
+
+> +
+> +			qcom,apps-ch-pipes = <0x780000>;
+> +			qcom,ea-pc = <0x270>;
+> +			status = "okay";
+> +			dmas =	<&slimbam 3>, <&slimbam 4>,
+> +				<&slimbam 5>, <&slimbam 6>;
+> +			dma-names = "rx", "tx", "tx2", "rx2";
+> +
+> +			iommus = <&apps_smmu 0x1806 0x0>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			ngd@1 {
+> +				reg = <1>;
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +
+> +				wcd9340_ifd: tas-ifd {
+
+@0 given the reg, perhaps codec@0?
+
+> +					compatible = "slim217,250";
+> +					reg  = <0 0>;
+
+Out of curiosity, why does ngd@1 have #size-cells = <1>, but then all
+codecs have size 0?
+
+> +				};
+> +
+> +				wcd9340: codec@1{
+> +					pinctrl-0 = <&wcd_intr_default>;
+> +					pinctrl-names = "default";
+> +					compatible = "slim217,250";
+> +					reg  = <1 0>;
+
+I do prefer when the nodes start with compatible and then reg...
+
+> +					reset-gpios = <&tlmm 64 0>;
+> +					slim-ifc-dev  = <&wcd9340_ifd>;
+> +
+> +					#sound-dai-cells = <1>;
+> +
+> +					interrupt-parent = <&tlmm>;
+> +					interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
+
+
+How about combining the interrupt-parent and interrupts as:
+					interrupts-extended = <&tlmm 54 IRQ_TYPE_LEVEL_HIGH>;
+
+> +					interrupt-controller;
+> +					#interrupt-cells = <1>;
+> +
+> +					#clock-cells = <0>;
+> +					clock-frequency = <9600000>;
+> +					clock-output-names = "mclk";
+> +					qcom,micbias1-millivolt = <1800>;
+> +					qcom,micbias2-millivolt = <1800>;
+> +					qcom,micbias3-millivolt = <1800>;
+> +					qcom,micbias4-millivolt = <1800>;
+> +
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +
+> +					wcdpinctrl: wcd-pinctrl@42 {
+
+s/wcd-pinctrl/gpio-controller/
+
+> +						compatible = "qcom,wcd9340-gpio";
+> +						gpio-controller;
+> +						#gpio-cells = <2>;
+> +						reg = <0x42 0x2>;
+> +					};
+> +
+> +					swm: swm@c85 {
+> +						compatible = "qcom,soundwire-v1.3.0";
+> +						reg = <0xc85 0x40>;
+> +						interrupt-parent = <&wcd9340>;
+> +						interrupts = <20 IRQ_TYPE_EDGE_RISING>;
+
+interrupts-extended?
+
+> +						interrupt-names = "soundwire";
+
+No interrupt-names in binding and driver resolves the interrupt by
+index, so you can omit this.
+
+> +
+> +						qcom,dout-ports	= <6>;
+> +						qcom,din-ports	= <2>;
+> +						qcom,ports-sinterval-low =/bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
+> +						qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
+> +						qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
+> +
+> +						#sound-dai-cells = <1>;
+> +						clocks = <&wcd9340>;
+> +						clock-names = "iface";
+> +                                                #address-cells = <2>;
+> +                                                #size-cells = <0>;
+
+Odd indentation on these two.
+
+> +
+> +
+
+Empty lines?
+
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+>  		usb_1_hsphy: phy@88e2000 {
+>  			compatible = "qcom,sdm845-qusb2-phy";
+>  			reg = <0 0x088e2000 0 0x400>;
+> @@ -3446,6 +3772,18 @@
+>  			};
+>  		};
+>  
+> +		slimbam: bamdma@17184000 {
+
+s/bamdma/dma/
+
+Regards,
+Bjorn
+
+> +			compatible = "qcom,bam-v1.7.0";
+> +			qcom,controlled-remotely;
+> +			reg = <0 0x17184000 0 0x2a000>;
+> +			num-channels  = <31>;
+> +			interrupts = <0 164 IRQ_TYPE_LEVEL_HIGH>;
+
+s/0/GIC_SPI/
+
+Regards,
+Bjorn
+
+> +			#dma-cells = <1>;
+> +			qcom,ee = <1>;
+> +			qcom,num-ees = <2>;
+> +			iommus = <&apps_smmu 0x1806 0x0>;
+> +		};
+> +
+>  		timer@17c90000 {
+>  			#address-cells = <2>;
+>  			#size-cells = <2>;
+> -- 
+> 2.21.0
+> 
