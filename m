@@ -2,195 +2,542 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C196C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 10:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BADC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 10:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6EDD2070A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 10:32:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XGhfMvVc"
+	by mail.kernel.org (Postfix) with ESMTP id AE9E2206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 10:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583577780;
+	bh=pLNRX4IAg2dIEiox39DRnwsJniRxkH1/HhQensmtgdM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=uvyLRG0EFMLAkQZq9sdGSoDSpnAlM5dVcfKmMJ4vrAR2o0zflUaGokPKsQPsJ8yVM
+	 goIIE7wNDVz5VcO42kXQ0e5aqoPTMknswtD+6vUuwyY/QiFoirU/7j4gUkj14td1lf
+	 6tmboaRReUI3wg7+yv5TOHehGE5wqM7dY3rAluZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgCGKct (ORCPT
+        id S1726259AbgCGKm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 05:32:49 -0500
-Received: from mail-eopbgr70084.outbound.protection.outlook.com ([40.107.7.84]:6231
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726134AbgCGKcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 05:32:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cv0fvHoMQcMCiAubSNDV6vjfILhwTSSvXbILg12GjZtJx2a7a+230YB7rIxVMb2nrloOKW9XqJfdgO2bBWEZ5kz24qkSCTNhw1M5LeIFSa4VkygKhCEcwRFBXSgNd4PQGBHTqVM2JWPanhzKz8xkDzqpDBwzlZ5Hg9zSZrdOOTplA5ROu/w/jvV5gdHiCinASgiFmzqQEKE4hZufe6+Nfev/S9WJyKha7/mV7spIkIXRW5CbeoediXOkyE4rxQ4tIpTgGCqDaSjEiCjouFCPZgUCNx8i+Nj0sb0KWwYrTuJooRXzDkBpktdO8/X9Z1QRqjhles0R85B09gR7PdTdZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hEBuXWyv1XetsXi7ui67l+70cBo5wqeTypasg5rUfN8=;
- b=CyRKdRvtRicHmaxzf2zn/sTx2Kivamw9KNxZkVU6gEDjFUC4jC60Vfn0MZ8OOoLN3VOjutmz2ARsQq2W7AFmFSy9MjgFwHjMBA5qb/OSeiY9vWwUpZQbcNCAsK9YNIiAcvddYeUv4D4AcQz1j5IoGKcH2jAwZ8Xs7j606ZetAjhgIKVqCrH4/KGqJTXY5p/sfubMJSo4nfMW8OUXNfDVN7sddOLfo2gWouOqNKI77BDlOgXLv+YpJ55wtCW/Jzhc49PaiT/NgsRkCGYjrCIj7JiZCS6hHSjDZsc/8X1gmCYyvLD29vFsYCmQyiBJAlyKgd6qByP76Nbo2egmMXaB+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hEBuXWyv1XetsXi7ui67l+70cBo5wqeTypasg5rUfN8=;
- b=XGhfMvVckCBUg0wf7qZDC9zzs24pvLi+WRWebzFlNHzM63RW5f7kpeg01LDrrMWYMiy+XAX7o/3FLDqXGB0cSjTj1XXM+0Sy8Xo4kEpowCPPouUAKvALiRDBtXmazHfqiGTNRW17R+yVhdFsViFFuzIaLn5Ln0bW4UX22xPF3KQ=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB5757.eurprd04.prod.outlook.com (20.178.126.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.18; Sat, 7 Mar 2020 10:32:43 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::10f0:dc6d:c9f9:edfc]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::10f0:dc6d:c9f9:edfc%5]) with mapi id 15.20.2793.013; Sat, 7 Mar 2020
- 10:32:43 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Michael Walle <michael@walle.cc>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
-Subject: RE: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
- compatible
-Thread-Topic: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
- compatible
-Thread-Index: AQHV8/lsXqSm1fChNEm1yZWBD/JxAKg8YRCggAB7y4CAABECAA==
-Date:   Sat, 7 Mar 2020 10:32:43 +0000
-Message-ID: <VI1PR04MB4431F901BEEF2EAB9AB1D7C6EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20200306205403.29881-1-michael@walle.cc>
- <20200306205403.29881-2-michael@walle.cc>
- <VI1PR04MB44312A940BC5BFC7F13A5706EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
- <e0be23f7d1307621151594dd66d2b8fd@walle.cc>
-In-Reply-To: <e0be23f7d1307621151594dd66d2b8fd@walle.cc>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 99d88eeb-fa39-41b4-c3a2-08d7c282ded0
-x-ms-traffictypediagnostic: VI1PR04MB5757:|VI1PR04MB5757:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB575704B571D4DDC6212C0747EDE00@VI1PR04MB5757.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03355EE97E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(136003)(376002)(396003)(189003)(199004)(64756008)(52536014)(8936002)(26005)(4326008)(186003)(6506007)(66556008)(53546011)(55016002)(9686003)(81166006)(8676002)(54906003)(66946007)(66446008)(66476007)(316002)(81156014)(6916009)(76116006)(2906002)(86362001)(44832011)(7696005)(33656002)(71200400001)(478600001)(5660300002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5757;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: o0QrTt2pwm2WfGGw4xs5jcp118PPVLvgPnI0KrltBKbZcbnPxvJ6X3J144gNkVVGdyKdPD855SHZZr8TZH06+Tfr29oYQHdSXLiEr4sSMA6/fYgoYQkwNritVagjRGkRSQcFdhFWRoi0nIEtkxLTuedb5yim4bgiC3zH5X+1ouKQGNe1qx1kJGEFaQRP+oy1btDZTyZAEPIPf7OTjUjPCftN9hb7EEh3io3IbRdI8NLrHS80W+MjaN7ByZrHdUBw2Ruw7nIFW9lJYJSYGJm0kaErQhlFGSix5oYUms7IyvNiSJLMjoq0is2Rnow9mWu6Oc+i/oXG0uJ8xjYeQ22ZbDblO3t+yuK3XVYBiLfbuvsWNFeWg2TI0dUnOrQ8+LDFGqx4MD6V9KACOxhNRK2sAZXIs6uSqIxfubKdWpLPwHsYHlm029y8TLrcpe1RpEOvbZeuCsN4hq52osN94/v4J/VTcKcP9PQkaPgcfQdqXAT7DRQ4unNVuQyUTNFEBLap
-x-ms-exchange-antispam-messagedata: /SBy5y5zo0WTM2ySCm4nu29nQmnctYa0fBD24AwquAbidku+W6EgztfZl9CB6ZWYN8gJG0BaZtylnnyCBAPXJxpmIIvgmd9g7EDJfJqYA0KJpX4/wHyML4rY52sfUAN1mmWmDfTvz177KaAHSLj9fw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 7 Mar 2020 05:42:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbgCGKm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 05:42:58 -0500
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F8D1206D5
+        for <linux-kernel@vger.kernel.org>; Sat,  7 Mar 2020 10:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583577777;
+        bh=pLNRX4IAg2dIEiox39DRnwsJniRxkH1/HhQensmtgdM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oNZkJAhK36ICt9LxmAi8+M1+3NQVSP3Y1CuAWxkzWSmtmrYnzvoEQuYd2f0NAscMX
+         3nEftn659oMjEwiEADQTq0iIXFL9XgkD0ObfJWCVZdNkgnSs0RJiM/OA++VAuhw/ga
+         0OVkS2wIneAvV+bDNhwhvpJROhNsjSjUWF+m8BiI=
+Received: by pali.im (Postfix)
+        id EE4D011A1; Sat,  7 Mar 2020 11:42:43 +0100 (CET)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Subject: [PATCH] =?UTF-8?q?Change=20email=20address=20for=20Pali=20Roh?= =?UTF-8?q?=C3=A1r?=
+Date:   Sat,  7 Mar 2020 11:42:37 +0100
+Message-Id: <20200307104237.8199-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99d88eeb-fa39-41b4-c3a2-08d7c282ded0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2020 10:32:43.4046
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QZOmheLom8v9lgIhK+XccrT10DvyFRQLtED6W/yobLq3bVTfYiKjeP+tMSRTwQ3Q
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5757
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IE1pY2hhZWwgV2FsbGUgPG1p
-Y2hhZWxAd2FsbGUuY2M+DQo+U2VudDogMjAyMOW5tDPmnIg35pelIDE3OjI2DQo+VG86IFBlbmcg
-TWEgPHBlbmcubWFAbnhwLmNvbT4NCj5DYzogZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsgZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBWaW5vZCBLb3VsDQo+PHZrb3Vs
-QGtlcm5lbC5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRs
-YW5kDQo+PG1hcmsucnV0bGFuZEBhcm0uY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwu
-b3JnPjsgTGVvIExpDQo+PGxlb3lhbmcubGlAbnhwLmNvbT4NCj5TdWJqZWN0OiBSZTogW0VYVF0g
-W1BBVENIIDIvMl0gYXJtNjQ6IGR0czogbHMxMDI4YTogYWRkICJmc2wsdmY2MTAtZWRtYSINCj5j
-b21wYXRpYmxlDQo+DQo+Q2F1dGlvbjogRVhUIEVtYWlsDQo+DQo+SGkgUGVuZywNCj4NCj5BbSAy
-MDIwLTAzLTA3IDAzOjA5LCBzY2hyaWViIFBlbmcgTWE6DQo+Pj4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj4+PiBGcm9tOiBNaWNoYWVsIFdhbGxlIDxtaWNoYWVsQHdhbGxlLmNjPg0KPj4+
-IFNlbnQ6IDIwMjDlubQz5pyIN+aXpSA0OjU0DQo+Pj4gVG86IGRtYWVuZ2luZUB2Z2VyLmtlcm5l
-bC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPj4+IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPj4+IENj
-OiBWaW5vZCBLb3VsIDx2a291bEBrZXJuZWwub3JnPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
-bmVsLm9yZz47DQo+Pj4gTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXdu
-IEd1bw0KPjxzaGF3bmd1b0BrZXJuZWwub3JnPjsNCj4+PiBMZW8gTGkgPGxlb3lhbmcubGlAbnhw
-LmNvbT47IFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT47IE1pY2hhZWwgV2FsbGUNCj4+PiA8bWlj
-aGFlbEB3YWxsZS5jYz4NCj4+PiBTdWJqZWN0OiBbRVhUXSBbUEFUQ0ggMi8yXSBhcm02NDogZHRz
-OiBsczEwMjhhOiBhZGQgImZzbCx2ZjYxMC1lZG1hIg0KPj4+IGNvbXBhdGlibGUNCj4+Pg0KPj4+
-IENhdXRpb246IEVYVCBFbWFpbA0KPj4+DQo+Pj4gVGhlIGJvb3Rsb2FkZXIgZG9lcyB0aGUgSU9N
-TVUgZml4dXAgYW5kIGR5bmFtaWNhbGx5IGFkZHMgdGhlICJpb21tdXMiDQo+Pj4gcHJvcGVydHkg
-dG8gZGV2aWNlcyBhY2NvcmRpbmcgdG8gaXRzIGNvbXBhdGlibGUgc3RyaW5nLiBJbiBjYXNlIG9m
-DQo+Pj4gdGhlIGVETUEgY29udHJvbGxlciB0aGlzIHByb3BlcnR5IGlzIG1pc3NpbmcuIEFkZCBp
-dC4gQWZ0ZXIgdGhhdCB0aGUNCj4+PiBJT01NVSB3aWxsIHdvcmsgd2l0aCB0aGUgZURNQSBjb3Jl
-Lg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogTWljaGFlbCBXYWxsZSA8bWljaGFlbEB3YWxsZS5j
-Yz4NCj4+PiAtLS0NCj4+PiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4
-YS5kdHNpIHwgMiArLQ0KPj4+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
-dGlvbigtKQ0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
-YWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2ZzbC1sczEwMjhhLmR0c2kNCj4+PiBpbmRleCBiMTUyZmE5MGNmNWMuLmFhNDY3YmZmMjIwOSAx
-MDA2NDQNCj4+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4
-YS5kdHNpDQo+Pj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAy
-OGEuZHRzaQ0KPj4+IEBAIC00NDcsNyArNDQ3LDcgQEANCj4+Pg0KPj4+ICAgICAgICAgICAgICAg
-IGVkbWEwOiBkbWEtY29udHJvbGxlckAyMmMwMDAwIHsNCj4+PiAgICAgICAgICAgICAgICAgICAg
-ICAgICNkbWEtY2VsbHMgPSA8Mj47DQo+Pj4gLSAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0
-aWJsZSA9ICJmc2wsbHMxMDI4YS1lZG1hIjsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICBj
-b21wYXRpYmxlID0gImZzbCxsczEwMjhhLWVkbWEiLA0KPj4+ICsgImZzbCx2ZjYxMC1lZG1hIjsN
-Cj4+IEhpIE1pY2hhZWwsDQo+Pg0KPj4gWW91IHNob3VsZCBjaGFuZ2UgaXQgb24gYm9vdGxvYWRl
-ciBpbnN0ZWFkIG9mIGtlcm5lbCwgU29tZSBSZWcgb2YNCj4+IExTMTAyOGEgaXMgZGlmZmVyZW50
-IGZyb20gb3RoZXJzLCBTbyB3ZSB1c2VkIGNvbXBhdGlibGUNCj4+ICJmc2wsbHMxMDI4YS1lZG0i
-IHRvIGRpc3Rpbmd1aXNoICINCj4+IGZzbCx2ZjYxMC1lZG1hIi4NCj4NCj5ZZXMgdGhpcyBtaWdo
-dCBiZSB0aGUgcmlnaHQgdGhpbmcgdG8gZG8uIFNvIHNpbmNlIGl0IGlzIE5YUHMgYm9vdGxvYWRl
-ciBmZWVsIGZyZWUgdG8NCj5maXggdGhhdCA7KSBMb29raW5nIGF0IHRoZSB1LWJvb3QgY29kZSBy
-aWdodCBub3csIEkgZG9uJ3QgZXZlbiBrbm93IGl0IHRoYXQgaXMgdGhlDQo+cmlnaHQgZml4IGF0
-IGFsbC4gVGhlIGZpeHVwIGNvZGUgaW4gdS1ib290IGlzIFNvQyBpbmRlcGVuZGVudCAoaXRzIGlu
-IGZzbF9pY2lkLmggYW5kIGlzDQo+ZW5hYmxlZCB3aXRoIENPTkZJR19MU0NIMywgaWUgeW91ciBj
-aGFzc2lzIHZlcnNpb24pLiBGb3IgZXhhbXBsZSwgdGhlIHNkaGMNCj5maXh1cCB3aWxsIHNjYW4g
-dGhlIG5vZGVzIGZvciAiY29tcGF0aWJsZSA9IGZzbCxlc2RoYyIsIHdoaWNoIGlzIGFsc28gdGhl
-DQo+c2Vjb25kYXJ5IGNvbXBhdGlibGUgZm9yIHRoZSAibHMxMDI4YS1lc2RoYyIgY29tcGF0aWJs
-ZS4NCj4NCj5BbmQgaGVyZSBpcyBhbm90aGVyIHJlYXNvbiB0byBoYXZlIGl0IHRoaXMgd2F5OiB3
-ZSBuZWVkIGJhY2t3YXJkcyBjb21wYXRpYmlsaXR5LA0KPnRoZSBhcmUgYWxyZWFkeSBib2FyZHMg
-b3V0IHRoZXJlIHdob3NlIGJvb3Rsb2FkZXIgd2lsbCBmaXgtdXAgdGhlICJvbGQiIG5vZGUuDQo+
-VGh1cyBJIGRvbid0IHNlZSBhbnkgb3RoZXIgcG9zc2liaWx0eS4NCj4NCltQZW5nIE1hXSBPSywg
-VGhlcmUgaXMgbm9uIGZpeGVkIG9uIHVib290Lg0KSSB3aWxsIGZpeCBpdCBvbiB1Ym9vdCwgaWYg
-eW91IHdhbnQgdG8gdXNlIG5vdywgcGxlYXNlIGNoYW5nZSB0aGUgdWJvb3QgYXMgYmVsb3c6DQoN
-CmRpZmYgLS1naXQgYS9hcmNoL2FybS9jcHUvYXJtdjgvZnNsLWxheWVyc2NhcGUvbHMxMDI4X2lk
-cy5jIGIvYXJjaC9hcm0vY3B1L2FybXY4L2ZzbC1sYXllcnNjYXBlL2xzMTAyOF9pZHMuYw0KaW5k
-ZXggZDlkMTI1ZThiYS4uZGI5ZGQ2OTU0OCAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL2NwdS9hcm12
-OC9mc2wtbGF5ZXJzY2FwZS9sczEwMjhfaWRzLmMNCisrKyBiL2FyY2gvYXJtL2NwdS9hcm12OC9m
-c2wtbGF5ZXJzY2FwZS9sczEwMjhfaWRzLmMNCkBAIC0xNCw3ICsxNCw3IEBAIHN0cnVjdCBpY2lk
-X2lkX3RhYmxlIGljaWRfdGJsW10gPSB7DQogICAgICAgIFNFVF9TREhDX0lDSUQoMSwgRlNMX1NE
-TU1DX1NUUkVBTV9JRCksDQogICAgICAgIFNFVF9TREhDX0lDSUQoMiwgRlNMX1NETU1DMl9TVFJF
-QU1fSUQpLA0KICAgICAgICBTRVRfU0FUQV9JQ0lEKDEsICJmc2wsbHMxMDI4YS1haGNpIiwgRlNM
-X1NBVEExX1NUUkVBTV9JRCksDQotICAgICAgIFNFVF9FRE1BX0lDSUQoRlNMX0VETUFfU1RSRUFN
-X0lEKSwNCisgICAgICAgU0VUX0VETUFfSUNJRF9MUzEwMjgoRlNMX0VETUFfU1RSRUFNX0lEKSwN
-CiAgICAgICAgU0VUX1FETUFfSUNJRCgiZnNsLGxzMTAyOGEtcWRtYSIsIEZTTF9ETUFfU1RSRUFN
-X0lEKSwNCiAgICAgICAgU0VUX0dQVV9JQ0lEKCJmc2wsbHMxMDI4YS1ncHUiLCBGU0xfR1BVX1NU
-UkVBTV9JRCksDQogICAgICAgIFNFVF9ESVNQTEFZX0lDSUQoRlNMX0RJU1BMQVlfU1RSRUFNX0lE
-KSwNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9pbmNsdWRlL2FzbS9hcmNoLWZzbC1sYXllcnNjYXBl
-L2ZzbF9pY2lkLmggYi9hcmNoL2FybS9pbmNsdWRlL2FzbS9hcmNoLWZzbC1sYXllcnNjYXBlL2Zz
-bF9pY2lkLmgNCmluZGV4IDM3ZTJmZTRlNjYuLjE1ZDBiNjBkYmUgMTAwNjQ0DQotLS0gYS9hcmNo
-L2FybS9pbmNsdWRlL2FzbS9hcmNoLWZzbC1sYXllcnNjYXBlL2ZzbF9pY2lkLmgNCisrKyBiL2Fy
-Y2gvYXJtL2luY2x1ZGUvYXNtL2FyY2gtZnNsLWxheWVyc2NhcGUvZnNsX2ljaWQuaA0KQEAgLTE0
-NCw2ICsxNDQsMTAgQEAgZXh0ZXJuIGludCBmbWFuX2ljaWRfdGJsX3N6Ow0KICAgICAgICBTRVRf
-R1VSX0lDSUQoImZzbCx2ZjYxMC1lZG1hIiwgc3RyZWFtaWQsIHNwYXJlM19hbXFyLFwNCiAgICAg
-ICAgICAgICAgICBFRE1BX0JBU0VfQUREUikNCiANCisjZGVmaW5lIFNFVF9FRE1BX0lDSURfTFMx
-MDI4KHN0cmVhbWlkKSBcDQorICAgICAgIFNFVF9HVVJfSUNJRCgiZnNsLGxzMTAyOGEtZWRtYSIs
-IHN0cmVhbWlkLCBzcGFyZTNfYW1xcixcDQorICAgICAgICAgICAgICAgRURNQV9CQVNFX0FERFIp
-DQorDQogI2RlZmluZSBTRVRfR1BVX0lDSUQoY29tcGF0LCBzdHJlYW1pZCkgXA0KICAgICAgICBT
-RVRfR1VSX0lDSUQoY29tcGF0LCBzdHJlYW1pZCwgbWlzYzFfYW1xcixcDQogICAgICAgICAgICAg
-ICAgR1BVX0JBU0VfQUREUikNCg0KQlIsDQpQZW5nDQo+LW1pY2hhZWwNCj4NCj4+DQo+PiBUaGFu
-a3MsDQo+PiBQZW5nDQo+Pj4gICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4MjJj
-MDAwMCAweDAgMHgxMDAwMD4sDQo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHgw
-IDB4MjJkMDAwMCAweDAgMHgxMDAwMD4sDQo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICA8MHgwIDB4MjJlMDAwMCAweDAgMHgxMDAwMD47DQo+Pj4gLS0NCj4+PiAyLjIwLjENCg==
+For security reasons I stopped using gmail account and kernel address is
+now up-to-date alias to my personal address.
+
+People periodically send me emails to address which they found in source
+code of drivers, so this change reflects state where people can contact me.
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ .../ABI/testing/sysfs-platform-dell-laptop       |  8 ++++----
+ MAINTAINERS                                      | 16 ++++++++--------
+ arch/arm/mach-omap2/omap-secure.c                |  2 +-
+ arch/arm/mach-omap2/omap-secure.h                |  2 +-
+ arch/arm/mach-omap2/omap-smc.S                   |  2 +-
+ drivers/char/hw_random/omap3-rom-rng.c           |  4 ++--
+ drivers/hwmon/dell-smm-hwmon.c                   |  4 ++--
+ drivers/platform/x86/dell-laptop.c               |  4 ++--
+ drivers/platform/x86/dell-rbtn.c                 |  4 ++--
+ drivers/platform/x86/dell-rbtn.h                 |  2 +-
+ drivers/platform/x86/dell-smbios-base.c          |  4 ++--
+ drivers/platform/x86/dell-smbios-smm.c           |  2 +-
+ drivers/platform/x86/dell-smbios.h               |  2 +-
+ drivers/platform/x86/dell-smo8800.c              |  2 +-
+ drivers/platform/x86/dell-wmi.c                  |  4 ++--
+ drivers/power/supply/bq2415x_charger.c           |  4 ++--
+ drivers/power/supply/bq27xxx_battery.c           |  2 +-
+ drivers/power/supply/isp1704_charger.c           |  2 +-
+ drivers/power/supply/rx51_battery.c              |  4 ++--
+ fs/udf/ecma_167.h                                |  2 +-
+ fs/udf/osta_udf.h                                |  2 +-
+ include/linux/power/bq2415x_charger.h            |  2 +-
+ tools/laptop/freefall/freefall.c                 |  2 +-
+ 23 files changed, 41 insertions(+), 41 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-platform-dell-laptop b/Documentation/ABI/testing/sysfs-platform-dell-laptop
+index 8c6a0b8e1131..9b917c7453de 100644
+--- a/Documentation/ABI/testing/sysfs-platform-dell-laptop
++++ b/Documentation/ABI/testing/sysfs-platform-dell-laptop
+@@ -2,7 +2,7 @@ What:		/sys/class/leds/dell::kbd_backlight/als_enabled
+ Date:		December 2014
+ KernelVersion:	3.19
+ Contact:	Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+-		Pali Rohár <pali.rohar@gmail.com>
++		Pali Rohár <pali@kernel.org>
+ Description:
+ 		This file allows to control the automatic keyboard
+ 		illumination mode on some systems that have an ambient
+@@ -13,7 +13,7 @@ What:		/sys/class/leds/dell::kbd_backlight/als_setting
+ Date:		December 2014
+ KernelVersion:	3.19
+ Contact:	Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+-		Pali Rohár <pali.rohar@gmail.com>
++		Pali Rohár <pali@kernel.org>
+ Description:
+ 		This file allows to specifiy the on/off threshold value,
+ 		as reported by the ambient light sensor.
+@@ -22,7 +22,7 @@ What:		/sys/class/leds/dell::kbd_backlight/start_triggers
+ Date:		December 2014
+ KernelVersion:	3.19
+ Contact:	Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+-		Pali Rohár <pali.rohar@gmail.com>
++		Pali Rohár <pali@kernel.org>
+ Description:
+ 		This file allows to control the input triggers that
+ 		turn on the keyboard backlight illumination that is
+@@ -45,7 +45,7 @@ What:		/sys/class/leds/dell::kbd_backlight/stop_timeout
+ Date:		December 2014
+ KernelVersion:	3.19
+ Contact:	Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+-		Pali Rohár <pali.rohar@gmail.com>
++		Pali Rohár <pali@kernel.org>
+ Description:
+ 		This file allows to specify the interval after which the
+ 		keyboard illumination is disabled because of inactivity.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6158a143a13e..e8ebc20e18f1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -726,7 +726,7 @@ L:	linux-alpha@vger.kernel.org
+ F:	arch/alpha/
+ 
+ ALPS PS/2 TOUCHPAD DRIVER
+-R:	Pali Rohár <pali.rohar@gmail.com>
++R:	Pali Rohár <pali@kernel.org>
+ F:	drivers/input/mouse/alps.*
+ 
+ ALTERA I2C CONTROLLER DRIVER
+@@ -4725,7 +4725,7 @@ F:	drivers/media/platform/sunxi/sun8i-di/
+ F:	Documentation/devicetree/bindings/media/allwinner,sun8i-h3-deinterlace.yaml
+ 
+ DELL SMBIOS DRIVER
+-M:	Pali Rohár <pali.rohar@gmail.com>
++M:	Pali Rohár <pali@kernel.org>
+ M:	Mario Limonciello <mario.limonciello@dell.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+@@ -4751,18 +4751,18 @@ F:	drivers/net/fddi/defza.*
+ 
+ DELL LAPTOP DRIVER
+ M:	Matthew Garrett <mjg59@srcf.ucam.org>
+-M:	Pali Rohár <pali.rohar@gmail.com>
++M:	Pali Rohár <pali@kernel.org>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/dell-laptop.c
+ 
+ DELL LAPTOP FREEFALL DRIVER
+-M:	Pali Rohár <pali.rohar@gmail.com>
++M:	Pali Rohár <pali@kernel.org>
+ S:	Maintained
+ F:	drivers/platform/x86/dell-smo8800.c
+ 
+ DELL LAPTOP RBTN DRIVER
+-M:	Pali Rohár <pali.rohar@gmail.com>
++M:	Pali Rohár <pali@kernel.org>
+ S:	Maintained
+ F:	drivers/platform/x86/dell-rbtn.*
+ 
+@@ -4773,7 +4773,7 @@ S:	Maintained
+ F:	drivers/platform/x86/dell_rbu.c
+ 
+ DELL LAPTOP SMM DRIVER
+-M:	Pali Rohár <pali.rohar@gmail.com>
++M:	Pali Rohár <pali@kernel.org>
+ S:	Maintained
+ F:	drivers/hwmon/dell-smm-hwmon.c
+ F:	include/uapi/linux/i8k.h
+@@ -4787,7 +4787,7 @@ F:	drivers/platform/x86/dcdbas.*
+ 
+ DELL WMI NOTIFICATIONS DRIVER
+ M:	Matthew Garrett <mjg59@srcf.ucam.org>
+-M:	Pali Rohár <pali.rohar@gmail.com>
++M:	Pali Rohár <pali@kernel.org>
+ S:	Maintained
+ F:	drivers/platform/x86/dell-wmi.c
+ 
+@@ -11838,7 +11838,7 @@ F:	drivers/media/i2c/et8ek8
+ F:	drivers/media/i2c/ad5820.c
+ 
+ NOKIA N900 POWER SUPPLY DRIVERS
+-R:	Pali Rohár <pali.rohar@gmail.com>
++R:	Pali Rohár <pali@kernel.org>
+ F:	include/linux/power/bq2415x_charger.h
+ F:	include/linux/power/bq27xxx_battery.h
+ F:	drivers/power/supply/bq2415x_charger.c
+diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
+index d00e3c72e37d..f70d561f37f7 100644
+--- a/arch/arm/mach-omap2/omap-secure.c
++++ b/arch/arm/mach-omap2/omap-secure.c
+@@ -5,7 +5,7 @@
+  * Copyright (C) 2011 Texas Instruments, Inc.
+  *	Santosh Shilimkar <santosh.shilimkar@ti.com>
+  * Copyright (C) 2012 Ivaylo Dimitrov <freemangordon@abv.bg>
+- * Copyright (C) 2013 Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2013 Pali Rohár <pali@kernel.org>
+  */
+ 
+ #include <linux/arm-smccc.h>
+diff --git a/arch/arm/mach-omap2/omap-secure.h b/arch/arm/mach-omap2/omap-secure.h
+index ba8c486c0454..4aaa95706d39 100644
+--- a/arch/arm/mach-omap2/omap-secure.h
++++ b/arch/arm/mach-omap2/omap-secure.h
+@@ -5,7 +5,7 @@
+  * Copyright (C) 2011 Texas Instruments, Inc.
+  *	Santosh Shilimkar <santosh.shilimkar@ti.com>
+  * Copyright (C) 2012 Ivaylo Dimitrov <freemangordon@abv.bg>
+- * Copyright (C) 2013 Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2013 Pali Rohár <pali@kernel.org>
+  */
+ #ifndef OMAP_ARCH_OMAP_SECURE_H
+ #define OMAP_ARCH_OMAP_SECURE_H
+diff --git a/arch/arm/mach-omap2/omap-smc.S b/arch/arm/mach-omap2/omap-smc.S
+index d4832845a4e8..7376f528034d 100644
+--- a/arch/arm/mach-omap2/omap-smc.S
++++ b/arch/arm/mach-omap2/omap-smc.S
+@@ -6,7 +6,7 @@
+  * Written by Santosh Shilimkar <santosh.shilimkar@ti.com>
+  *
+  * Copyright (C) 2012 Ivaylo Dimitrov <freemangordon@abv.bg>
+- * Copyright (C) 2013 Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2013 Pali Rohár <pali@kernel.org>
+  */
+ 
+ #include <linux/linkage.h>
+diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
+index e08a8887e718..67ef794ccabf 100644
+--- a/drivers/char/hw_random/omap3-rom-rng.c
++++ b/drivers/char/hw_random/omap3-rom-rng.c
+@@ -4,7 +4,7 @@
+  * Copyright (C) 2009 Nokia Corporation
+  * Author: Juha Yrjola <juha.yrjola@solidboot.com>
+  *
+- * Copyright (C) 2013 Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2013 Pali Rohár <pali@kernel.org>
+  *
+  * This file is licensed under  the terms of the GNU General Public
+  * License version 2. This program is licensed "as is" without any
+@@ -177,5 +177,5 @@ module_platform_driver(omap3_rom_rng_driver);
+ 
+ MODULE_ALIAS("platform:omap3-rom-rng");
+ MODULE_AUTHOR("Juha Yrjola");
+-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
++MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
+index d4c83009d625..ab719d372b0d 100644
+--- a/drivers/hwmon/dell-smm-hwmon.c
++++ b/drivers/hwmon/dell-smm-hwmon.c
+@@ -7,7 +7,7 @@
+  * Hwmon integration:
+  * Copyright (C) 2011  Jean Delvare <jdelvare@suse.de>
+  * Copyright (C) 2013, 2014  Guenter Roeck <linux@roeck-us.net>
+- * Copyright (C) 2014, 2015  Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2014, 2015  Pali Rohár <pali@kernel.org>
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+@@ -86,7 +86,7 @@ static unsigned int auto_fan;
+ #define I8K_HWMON_HAVE_FAN3	(1 << 12)
+ 
+ MODULE_AUTHOR("Massimo Dal Zotto (dz@debian.org)");
+-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
++MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+ MODULE_DESCRIPTION("Dell laptop SMM BIOS hwmon driver");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("i8k");
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 74e988f839e8..f8d3e3bd1bb5 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -4,7 +4,7 @@
+  *
+  *  Copyright (c) Red Hat <mjg@redhat.com>
+  *  Copyright (c) 2014 Gabriele Mazzotta <gabriele.mzt@gmail.com>
+- *  Copyright (c) 2014 Pali Rohár <pali.rohar@gmail.com>
++ *  Copyright (c) 2014 Pali Rohár <pali@kernel.org>
+  *
+  *  Based on documentation in the libsmbios package:
+  *  Copyright (C) 2005-2014 Dell Inc.
+@@ -2295,6 +2295,6 @@ module_exit(dell_exit);
+ 
+ MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
+ MODULE_AUTHOR("Gabriele Mazzotta <gabriele.mzt@gmail.com>");
+-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
++MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+ MODULE_DESCRIPTION("Dell laptop driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/dell-rbtn.c
+index a6b856cd86bd..a89fad47ff13 100644
+--- a/drivers/platform/x86/dell-rbtn.c
++++ b/drivers/platform/x86/dell-rbtn.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+     Dell Airplane Mode Switch driver
+-    Copyright (C) 2014-2015  Pali Rohár <pali.rohar@gmail.com>
++    Copyright (C) 2014-2015  Pali Rohár <pali@kernel.org>
+ 
+ */
+ 
+@@ -495,5 +495,5 @@ MODULE_PARM_DESC(auto_remove_rfkill, "Automatically remove rfkill devices when "
+ 				     "(default true)");
+ MODULE_DEVICE_TABLE(acpi, rbtn_ids);
+ MODULE_DESCRIPTION("Dell Airplane Mode Switch driver");
+-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
++MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/dell-rbtn.h b/drivers/platform/x86/dell-rbtn.h
+index 0fdc81644458..5e030f926c58 100644
+--- a/drivers/platform/x86/dell-rbtn.h
++++ b/drivers/platform/x86/dell-rbtn.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0-or-later */
+ /*
+     Dell Airplane Mode Switch driver
+-    Copyright (C) 2014-2015  Pali Rohár <pali.rohar@gmail.com>
++    Copyright (C) 2014-2015  Pali Rohár <pali@kernel.org>
+ 
+ */
+ 
+diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell-smbios-base.c
+index fe59b0ebff31..2e2cd565926a 100644
+--- a/drivers/platform/x86/dell-smbios-base.c
++++ b/drivers/platform/x86/dell-smbios-base.c
+@@ -4,7 +4,7 @@
+  *
+  *  Copyright (c) Red Hat <mjg@redhat.com>
+  *  Copyright (c) 2014 Gabriele Mazzotta <gabriele.mzt@gmail.com>
+- *  Copyright (c) 2014 Pali Rohár <pali.rohar@gmail.com>
++ *  Copyright (c) 2014 Pali Rohár <pali@kernel.org>
+  *
+  *  Based on documentation in the libsmbios package:
+  *  Copyright (C) 2005-2014 Dell Inc.
+@@ -645,7 +645,7 @@ module_exit(dell_smbios_exit);
+ 
+ MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
+ MODULE_AUTHOR("Gabriele Mazzotta <gabriele.mzt@gmail.com>");
+-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
++MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+ MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
+ MODULE_DESCRIPTION("Common functions for kernel modules using Dell SMBIOS");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/dell-smbios-smm.c b/drivers/platform/x86/dell-smbios-smm.c
+index d6854d1c4119..97c52a839a3e 100644
+--- a/drivers/platform/x86/dell-smbios-smm.c
++++ b/drivers/platform/x86/dell-smbios-smm.c
+@@ -4,7 +4,7 @@
+  *
+  *  Copyright (c) Red Hat <mjg@redhat.com>
+  *  Copyright (c) 2014 Gabriele Mazzotta <gabriele.mzt@gmail.com>
+- *  Copyright (c) 2014 Pali Rohár <pali.rohar@gmail.com>
++ *  Copyright (c) 2014 Pali Rohár <pali@kernel.org>
+  *  Copyright (c) 2017 Dell Inc.
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
+index a7ff9803f41a..75fa8ea0476d 100644
+--- a/drivers/platform/x86/dell-smbios.h
++++ b/drivers/platform/x86/dell-smbios.h
+@@ -4,7 +4,7 @@
+  *
+  *  Copyright (c) Red Hat <mjg@redhat.com>
+  *  Copyright (c) 2014 Gabriele Mazzotta <gabriele.mzt@gmail.com>
+- *  Copyright (c) 2014 Pali Rohár <pali.rohar@gmail.com>
++ *  Copyright (c) 2014 Pali Rohár <pali@kernel.org>
+  *
+  *  Based on documentation in the libsmbios package:
+  *  Copyright (C) 2005-2014 Dell Inc.
+diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86/dell-smo8800.c
+index bfcc1d1b9b96..b96ea6142290 100644
+--- a/drivers/platform/x86/dell-smo8800.c
++++ b/drivers/platform/x86/dell-smo8800.c
+@@ -3,7 +3,7 @@
+  *  dell-smo8800.c - Dell Latitude ACPI SMO88XX freefall sensor driver
+  *
+  *  Copyright (C) 2012 Sonal Santan <sonal.santan@gmail.com>
+- *  Copyright (C) 2014 Pali Rohár <pali.rohar@gmail.com>
++ *  Copyright (C) 2014 Pali Rohár <pali@kernel.org>
+  *
+  *  This is loosely based on lis3lv02d driver.
+  */
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 6669db2555fb..86e8dd6a8b33 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -3,7 +3,7 @@
+  * Dell WMI hotkeys
+  *
+  * Copyright (C) 2008 Red Hat <mjg@redhat.com>
+- * Copyright (C) 2014-2015 Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2014-2015 Pali Rohár <pali@kernel.org>
+  *
+  * Portions based on wistron_btns.c:
+  * Copyright (C) 2005 Miloslav Trmac <mitr@volny.cz>
+@@ -29,7 +29,7 @@
+ #include "dell-wmi-descriptor.h"
+ 
+ MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
+-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
++MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+ MODULE_DESCRIPTION("Dell laptop WMI hotkeys driver");
+ MODULE_LICENSE("GPL");
+ 
+diff --git a/drivers/power/supply/bq2415x_charger.c b/drivers/power/supply/bq2415x_charger.c
+index 532f6e4fcafb..a1f00ae1c180 100644
+--- a/drivers/power/supply/bq2415x_charger.c
++++ b/drivers/power/supply/bq2415x_charger.c
+@@ -2,7 +2,7 @@
+ /*
+  * bq2415x charger driver
+  *
+- * Copyright (C) 2011-2013  Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2011-2013  Pali Rohár <pali@kernel.org>
+  *
+  * Datasheets:
+  * http://www.ti.com/product/bq24150
+@@ -1788,6 +1788,6 @@ static struct i2c_driver bq2415x_driver = {
+ };
+ module_i2c_driver(bq2415x_driver);
+ 
+-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
++MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+ MODULE_DESCRIPTION("bq2415x charger driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+index 195c18c2f426..ba698b0af0ad 100644
+--- a/drivers/power/supply/bq27xxx_battery.c
++++ b/drivers/power/supply/bq27xxx_battery.c
+@@ -4,7 +4,7 @@
+  * Copyright (C) 2008 Rodolfo Giometti <giometti@linux.it>
+  * Copyright (C) 2008 Eurotech S.p.A. <info@eurotech.it>
+  * Copyright (C) 2010-2011 Lars-Peter Clausen <lars@metafoo.de>
+- * Copyright (C) 2011 Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2011 Pali Rohár <pali@kernel.org>
+  * Copyright (C) 2017 Liam Breck <kernel@networkimprov.net>
+  *
+  * Based on a previous work by Copyright (C) 2008 Texas Instruments, Inc.
+diff --git a/drivers/power/supply/isp1704_charger.c b/drivers/power/supply/isp1704_charger.c
+index 4812ac1ff2df..b6efc454e4f0 100644
+--- a/drivers/power/supply/isp1704_charger.c
++++ b/drivers/power/supply/isp1704_charger.c
+@@ -3,7 +3,7 @@
+  * ISP1704 USB Charger Detection driver
+  *
+  * Copyright (C) 2010 Nokia Corporation
+- * Copyright (C) 2012 - 2013 Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2012 - 2013 Pali Rohár <pali@kernel.org>
+  */
+ 
+ #include <linux/kernel.h>
+diff --git a/drivers/power/supply/rx51_battery.c b/drivers/power/supply/rx51_battery.c
+index 8548b639ff2f..6e488ecf4dcb 100644
+--- a/drivers/power/supply/rx51_battery.c
++++ b/drivers/power/supply/rx51_battery.c
+@@ -2,7 +2,7 @@
+ /*
+  * Nokia RX-51 battery driver
+  *
+- * Copyright (C) 2012  Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2012  Pali Rohár <pali@kernel.org>
+  */
+ 
+ #include <linux/module.h>
+@@ -278,6 +278,6 @@ static struct platform_driver rx51_battery_driver = {
+ module_platform_driver(rx51_battery_driver);
+ 
+ MODULE_ALIAS("platform:rx51-battery");
+-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
++MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+ MODULE_DESCRIPTION("Nokia RX-51 battery driver");
+ MODULE_LICENSE("GPL");
+diff --git a/fs/udf/ecma_167.h b/fs/udf/ecma_167.h
+index 3fd85464abd5..736ebc5dc441 100644
+--- a/fs/udf/ecma_167.h
++++ b/fs/udf/ecma_167.h
+@@ -5,7 +5,7 @@
+  * http://www.ecma.ch
+  *
+  * Copyright (c) 2001-2002  Ben Fennema
+- * Copyright (c) 2017-2019  Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (c) 2017-2019  Pali Rohár <pali@kernel.org>
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+diff --git a/fs/udf/osta_udf.h b/fs/udf/osta_udf.h
+index 35e61b2cacfe..d5fbfab3ddb6 100644
+--- a/fs/udf/osta_udf.h
++++ b/fs/udf/osta_udf.h
+@@ -5,7 +5,7 @@
+  * http://www.osta.org
+  *
+  * Copyright (c) 2001-2004  Ben Fennema
+- * Copyright (c) 2017-2019  Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (c) 2017-2019  Pali Rohár <pali@kernel.org>
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+diff --git a/include/linux/power/bq2415x_charger.h b/include/linux/power/bq2415x_charger.h
+index 7a91b357e3ac..4ca08321e251 100644
+--- a/include/linux/power/bq2415x_charger.h
++++ b/include/linux/power/bq2415x_charger.h
+@@ -2,7 +2,7 @@
+ /*
+  * bq2415x charger driver
+  *
+- * Copyright (C) 2011-2013  Pali Rohár <pali.rohar@gmail.com>
++ * Copyright (C) 2011-2013  Pali Rohár <pali@kernel.org>
+  */
+ 
+ #ifndef BQ2415X_CHARGER_H
+diff --git a/tools/laptop/freefall/freefall.c b/tools/laptop/freefall/freefall.c
+index d29a86cda87f..d77d7861787c 100644
+--- a/tools/laptop/freefall/freefall.c
++++ b/tools/laptop/freefall/freefall.c
+@@ -4,7 +4,7 @@
+  * Copyright 2008 Eric Piel
+  * Copyright 2009 Pavel Machek <pavel@ucw.cz>
+  * Copyright 2012 Sonal Santan
+- * Copyright 2014 Pali Rohár <pali.rohar@gmail.com>
++ * Copyright 2014 Pali Rohár <pali@kernel.org>
+  */
+ 
+ #include <stdio.h>
+-- 
+2.20.1
+
