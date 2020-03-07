@@ -7,35 +7,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14083C10F28
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA12C10F29
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9EA7206D7
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B8A22073B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgCGDwm (ORCPT
+        id S1727273AbgCGDwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 22:52:42 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11607 "EHLO huawei.com"
+        Fri, 6 Mar 2020 22:52:41 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11601 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727049AbgCGDwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:52:34 -0500
+        id S1726368AbgCGDwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 22:52:35 -0500
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2B79423C44678E34114C;
+        by Forcepoint Email with ESMTP id 046BD973D302226F94EE;
         Sat,  7 Mar 2020 11:52:29 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 7 Mar 2020 11:52:18 +0800
+ 14.3.439.0; Sat, 7 Mar 2020 11:52:20 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Yufeng Mo <moyufeng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 2/9] net: hns3: rename macro HCLGE_MAX_NCL_CONFIG_LENGTH
-Date:   Sat, 7 Mar 2020 11:42:43 +0800
-Message-ID: <1583552570-51203-3-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 8/9] net: hns3: synchronize some print relating to reset issue
+Date:   Sat, 7 Mar 2020 11:42:49 +0800
+Message-ID: <1583552570-51203-9-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583552570-51203-1-git-send-email-tanhuazhong@huawei.com>
 References: <1583552570-51203-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,41 +47,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+This patch modifies some printing relating to reset issue.
 
-The name of macro HCLGE_MAX_NCL_CONFIG_LENGTH is inaccurate,
-this patch renames it to HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD.
-
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c         | 4 ++--
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index afa7c6ff..0538e81 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -1137,7 +1137,7 @@ static void hclge_dbg_dump_ncl_config(struct hclge_dev *hdev,
- 				      const char *cmd_buf)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index acb796c..c54f262 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -2228,7 +2228,7 @@ static void hns3_reset_prepare(struct pci_dev *pdev)
  {
- #define HCLGE_MAX_NCL_CONFIG_OFFSET	4096
--#define HCLGE_MAX_NCL_CONFIG_LENGTH	(20 + 24 * 4)
-+#define HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD	(20 + 24 * 4)
+ 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(pdev);
  
- 	struct hclge_desc desc[HCLGE_CMD_NCL_CONFIG_BD_NUM];
- 	int bd_num = HCLGE_CMD_NCL_CONFIG_BD_NUM;
-@@ -1161,8 +1161,8 @@ static void hclge_dbg_dump_ncl_config(struct hclge_dev *hdev,
+-	dev_info(&pdev->dev, "hns3 flr prepare\n");
++	dev_info(&pdev->dev, "FLR prepare\n");
+ 	if (ae_dev && ae_dev->ops && ae_dev->ops->flr_prepare)
+ 		ae_dev->ops->flr_prepare(ae_dev);
+ }
+@@ -2237,7 +2237,7 @@ static void hns3_reset_done(struct pci_dev *pdev)
+ {
+ 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(pdev);
  
- 	while (length > 0) {
- 		data0 = offset;
--		if (length >= HCLGE_MAX_NCL_CONFIG_LENGTH)
--			data0 |= HCLGE_MAX_NCL_CONFIG_LENGTH << 16;
-+		if (length >= HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD)
-+			data0 |= HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD << 16;
- 		else
- 			data0 |= length << 16;
- 		ret = hclge_dbg_cmd_send(hdev, desc, data0, bd_num,
+-	dev_info(&pdev->dev, "hns3 flr done\n");
++	dev_info(&pdev->dev, "FLR done\n");
+ 	if (ae_dev && ae_dev->ops && ae_dev->ops->flr_done)
+ 		ae_dev->ops->flr_done(ae_dev);
+ }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 69e2008..cdf7f4b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -3442,7 +3442,7 @@ static void hclge_do_reset(struct hclge_dev *hdev)
+ 	u32 val;
+ 
+ 	if (hclge_get_hw_reset_stat(handle)) {
+-		dev_info(&pdev->dev, "Hardware reset not finish\n");
++		dev_info(&pdev->dev, "hardware reset not finish\n");
+ 		dev_info(&pdev->dev, "func_rst_reg:0x%x, global_rst_reg:0x%x\n",
+ 			 hclge_read_dev(&hdev->hw, HCLGE_FUN_RST_ING),
+ 			 hclge_read_dev(&hdev->hw, HCLGE_GLOBAL_RESET_REG));
+@@ -3451,20 +3451,20 @@ static void hclge_do_reset(struct hclge_dev *hdev)
+ 
+ 	switch (hdev->reset_type) {
+ 	case HNAE3_GLOBAL_RESET:
++		dev_info(&pdev->dev, "global reset requested\n");
+ 		val = hclge_read_dev(&hdev->hw, HCLGE_GLOBAL_RESET_REG);
+ 		hnae3_set_bit(val, HCLGE_GLOBAL_RESET_BIT, 1);
+ 		hclge_write_dev(&hdev->hw, HCLGE_GLOBAL_RESET_REG, val);
+-		dev_info(&pdev->dev, "Global Reset requested\n");
+ 		break;
+ 	case HNAE3_FUNC_RESET:
+-		dev_info(&pdev->dev, "PF Reset requested\n");
++		dev_info(&pdev->dev, "PF reset requested\n");
+ 		/* schedule again to check later */
+ 		set_bit(HNAE3_FUNC_RESET, &hdev->reset_pending);
+ 		hclge_reset_task_schedule(hdev);
+ 		break;
+ 	default:
+ 		dev_warn(&pdev->dev,
+-			 "Unsupported reset type: %d\n", hdev->reset_type);
++			 "unsupported reset type: %d\n", hdev->reset_type);
+ 		break;
+ 	}
+ }
 -- 
 2.7.4
 
