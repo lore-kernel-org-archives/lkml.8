@@ -2,238 +2,200 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8E1C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6011C10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D744020675
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC792073D
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:04:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mbb917iU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgCGIAO (ORCPT
+        id S1726105AbgCGIE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 03:00:14 -0500
-Received: from smtprelay0148.hostedemail.com ([216.40.44.148]:39228 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725878AbgCGIAN (ORCPT
+        Sat, 7 Mar 2020 03:04:58 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33486 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgCGIE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 03:00:13 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id AB493182CED34;
-        Sat,  7 Mar 2020 08:00:11 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: thing31_16ce6d4a5145
-X-Filterd-Recvd-Size: 6434
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  7 Mar 2020 08:00:09 +0000 (UTC)
-Message-ID: <f62fea5d10eb0ccfc05d87c242a620c261219b66.camel@perches.com>
-Subject: [PATCH] mm: Use fallthrough;
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org
-Date:   Fri, 06 Mar 2020 23:58:33 -0800
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sat, 7 Mar 2020 03:04:58 -0500
+Received: by mail-pf1-f193.google.com with SMTP id n7so2301723pfn.0;
+        Sat, 07 Mar 2020 00:04:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
+         :user-agent;
+        bh=aBepW479p3B/E6bvG9ZQtUHEs6JGGZnu1HbF7uuB6cU=;
+        b=Mbb917iUQzgGBrHr4DYFKbfxPs4ORtlwKhvVh7TnQR2AiF2eWdlE/Ljnq06UQzqM9y
+         +vnWbdk768VuFM5PJFUp7e5apyoEu7cQHUyeY23G8HsfgiiKP9VHfOO0KEL+vWSronF4
+         Y23a37wNd7PQEvsXOBrgcAnz8ycHbVmJBwnaS4QkMG4psPXsK5QdktbNkszaoP1KMA6Y
+         8O9snngMjNy1O2GfbbgXn3FN7iXn44fVmz//X2RBpT6ft59j0UkCYW0pHOoCBMff/h3b
+         DeZYpkeI9qH+C1LFOmMN7hIaZZPvm5/ILRfBzGuhY4Nuuz1fVsiYMytzxhuNEQzL3zBE
+         pc9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
+         :content-disposition:user-agent;
+        bh=aBepW479p3B/E6bvG9ZQtUHEs6JGGZnu1HbF7uuB6cU=;
+        b=Lep8TInqYNl6dGaVcID+bQ+b2MdQU9ptIVipgLondsa+Rj5lNjOPdNFpHe+x4hzXZq
+         qyNLGcHh126OMxpsNDkH5F3xAhgLTMdLi5OiQmGzRbAkCPJ2w0YcGSuhp3dnUAP4fz8i
+         eUckX/sT1hkVh7PJPX44MwkXlb3rn+3RvFhEjLGgZVIMcBPq9DO9xcNSQrBF2TtcY4EX
+         jeZeGQSCmQYR0RwWnQLWKquGGTTN53djs6U6wkdVFqealvVbw00nEcpa8i9vJf7EBNQX
+         JxqMBFIIK0ufeUSpxjLVGuBhDePysc34zH1KKpOhUkUx8ZvZyLzYsEyrl6f/idkVSEqJ
+         MxcQ==
+X-Gm-Message-State: ANhLgQ2VnNTtGVmmd3LKQR0OCLJTADmqWwYKfqRSLhs//Xt29hptYLP1
+        P3aK9gPrfP44mP0v6hm/EoS8UVAeAsk=
+X-Google-Smtp-Source: ADFU+vufXAOy1RI3AuNchzWgWAfquQXbaJcG6cRWKAM4ZYFYDw6zUmN6pPoRmujB34JmWnpiCGdDfQ==
+X-Received: by 2002:a63:f74a:: with SMTP id f10mr6853056pgk.360.1583568297127;
+        Sat, 07 Mar 2020 00:04:57 -0800 (PST)
+Received: from SARKAR ([43.224.157.39])
+        by smtp.gmail.com with ESMTPSA id h65sm15828234pfg.12.2020.03.07.00.04.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Mar 2020 00:04:56 -0800 (PST)
+Message-ID: <5e6355a8.1c69fb81.36f2c.ab37@mx.google.com>
+X-Google-Original-Message-ID: <20200307080451.GA2587@rohitsarkar5398@gmail.com>
+Date:   Sat, 7 Mar 2020 13:34:51 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jic23@kernel.org, alexandru.ardelean@analog.com,
+        dragos.bogdan@analog.com
+Subject: [PATCH v4] iio: adc: max1363: replace uses of mlock
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the various /* fallthrough */ comments to the
-pseudo-keyword fallthrough;
+Replace usage indio_dev's mlock with either local lock or
+iio_device_claim_direct_mode.
 
-Done via script:
-https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
-
-Signed-off-by: Joe Perches <joe@perches.com>
+Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
 ---
+Changelog v3 -> v4
+* Fix indentation
 
-Might as well start with fallthrough conversions somewhere...
+Changelog v2 -> v3
+* use iio_device_claim_direct when switching modes
+* replace mlock usage in max1363_write_event_config
 
- mm/gup.c            | 2 +-
- mm/hugetlb_cgroup.c | 6 +++---
- mm/ksm.c            | 3 +--
- mm/list_lru.c       | 2 +-
- mm/memcontrol.c     | 2 +-
- mm/mempolicy.c      | 3 ---
- mm/mmap.c           | 5 ++---
- mm/shmem.c          | 2 +-
- mm/zsmalloc.c       | 2 +-
- 9 files changed, 11 insertions(+), 16 deletions(-)
+Changelog v1 -> v2
+* Fix indentation
 
-diff --git a/mm/gup.c b/mm/gup.c
-index f58929..4bfd753 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1072,7 +1072,7 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
- 				goto retry;
- 			case -EBUSY:
- 				ret = 0;
--				/* FALLTHRU */
-+				fallthrough;
- 			case -EFAULT:
- 			case -ENOMEM:
- 			case -EHWPOISON:
-diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-index 790f63..7994eb8 100644
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -468,14 +468,14 @@ static int hugetlb_cgroup_read_u64_max(struct seq_file *seq, void *v)
- 	switch (MEMFILE_ATTR(cft->private)) {
- 	case RES_RSVD_USAGE:
- 		counter = &h_cg->rsvd_hugepage[idx];
--		/* Fall through. */
-+		fallthrough;
- 	case RES_USAGE:
- 		val = (u64)page_counter_read(counter);
- 		seq_printf(seq, "%llu\n", val * PAGE_SIZE);
- 		break;
- 	case RES_RSVD_LIMIT:
- 		counter = &h_cg->rsvd_hugepage[idx];
--		/* Fall through. */
-+		fallthrough;
- 	case RES_LIMIT:
- 		val = (u64)counter->max;
- 		if (val == limit)
-@@ -515,7 +515,7 @@ static ssize_t hugetlb_cgroup_write(struct kernfs_open_file *of,
- 	switch (MEMFILE_ATTR(of_cft(of)->private)) {
- 	case RES_RSVD_LIMIT:
- 		rsvd = true;
--		/* Fall through. */
-+		fallthrough;
- 	case RES_LIMIT:
- 		mutex_lock(&hugetlb_limit_mutex);
- 		ret = page_counter_set_max(
-diff --git a/mm/ksm.c b/mm/ksm.c
-index 363ec8..a558da9 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -2813,8 +2813,7 @@ static int ksm_memory_callback(struct notifier_block *self,
- 		 */
- 		ksm_check_stable_tree(mn->start_pfn,
- 				      mn->start_pfn + mn->nr_pages);
--		/* fallthrough */
--
-+		fallthrough;
- 	case MEM_CANCEL_OFFLINE:
- 		mutex_lock(&ksm_thread_mutex);
- 		ksm_run &= ~KSM_RUN_OFFLINE;
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 9e4a28..87b540f 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -223,7 +223,7 @@ __list_lru_walk_one(struct list_lru_node *nlru, int memcg_idx,
- 		switch (ret) {
- 		case LRU_REMOVED_RETRY:
- 			assert_spin_locked(&nlru->lock);
--			/* fall through */
-+			fallthrough;
- 		case LRU_REMOVED:
- 			isolated++;
- 			nlru->nr_items--;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 1e1260..dfe191 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5756,7 +5756,7 @@ static int mem_cgroup_move_charge_pte_range(pmd_t *pmd,
- 		switch (get_mctgt_type(vma, addr, ptent, &target)) {
- 		case MC_TARGET_DEVICE:
- 			device = true;
--			/* fall through */
-+			fallthrough;
- 		case MC_TARGET_PAGE:
- 			page = target.page;
- 			/*
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 6d30379..45eb0a5 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -907,7 +907,6 @@ static void get_policy_nodemask(struct mempolicy *p, nodemask_t *nodes)
+ drivers/iio/adc/max1363.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
+index 5c2cc61b666e..a1550c0b4c0a 100644
+--- a/drivers/iio/adc/max1363.c
++++ b/drivers/iio/adc/max1363.c
+@@ -150,6 +150,7 @@ struct max1363_chip_info {
+  * @current_mode:	the scan mode of this chip
+  * @requestedmask:	a valid requested set of channels
+  * @reg:		supply regulator
++ * @lock		lock to ensure state is consistent
+  * @monitor_on:		whether monitor mode is enabled
+  * @monitor_speed:	parameter corresponding to device monitor speed setting
+  * @mask_high:		bitmask for enabled high thresholds
+@@ -169,6 +170,7 @@ struct max1363_state {
+ 	const struct max1363_mode	*current_mode;
+ 	u32				requestedmask;
+ 	struct regulator		*reg;
++	struct mutex			lock;
  
- 	switch (p->mode) {
- 	case MPOL_BIND:
--		/* Fall through */
- 	case MPOL_INTERLEAVE:
- 		*nodes = p->v.nodes;
- 		break;
-@@ -2092,7 +2091,6 @@ bool init_nodemask_of_mempolicy(nodemask_t *mask)
- 		break;
+ 	/* Using monitor modes and buffer at the same time is
+ 	   currently not supported */
+@@ -364,7 +366,9 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+ 	struct max1363_state *st = iio_priv(indio_dev);
+ 	struct i2c_client *client = st->client;
  
- 	case MPOL_BIND:
--		/* Fall through */
- 	case MPOL_INTERLEAVE:
- 		*mask =  mempolicy->v.nodes;
- 		break;
-@@ -2359,7 +2357,6 @@ bool __mpol_equal(struct mempolicy *a, struct mempolicy *b)
+-	mutex_lock(&indio_dev->mlock);
++	ret = iio_device_claim_direct_mode(indio_dev);
++	if (ret < 0)
++		goto error_ret;
+ 	/*
+ 	 * If monitor mode is enabled, the method for reading a single
+ 	 * channel will have to be rather different and has not yet
+@@ -372,7 +376,7 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+ 	 *
+ 	 * Also, cannot read directly if buffered capture enabled.
+ 	 */
+-	if (st->monitor_on || iio_buffer_enabled(indio_dev)) {
++	if (st->monitor_on) {
+ 		ret = -EBUSY;
+ 		goto error_ret;
+ 	}
+@@ -404,8 +408,9 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
+ 		data = rxbuf[0];
+ 	}
+ 	*val = data;
++
+ error_ret:
+-	mutex_unlock(&indio_dev->mlock);
++	iio_device_release_direct_mode(indio_dev);
+ 	return ret;
  
- 	switch (a->mode) {
- 	case MPOL_BIND:
--		/* Fall through */
- 	case MPOL_INTERLEAVE:
- 		return !!nodes_equal(a->v.nodes, b->v.nodes);
- 	case MPOL_PREFERRED:
-diff --git a/mm/mmap.c b/mm/mmap.c
-index f8ea04..60dc38 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1457,7 +1457,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 			 * with MAP_SHARED to preserve backward compatibility.
- 			 */
- 			flags &= LEGACY_MAP_MASK;
--			/* fall through */
-+			fallthrough;
- 		case MAP_SHARED_VALIDATE:
- 			if (flags & ~flags_mask)
- 				return -EOPNOTSUPP;
-@@ -1480,8 +1480,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 			vm_flags |= VM_SHARED | VM_MAYSHARE;
- 			if (!(file->f_mode & FMODE_WRITE))
- 				vm_flags &= ~(VM_MAYWRITE | VM_SHARED);
--
--			/* fall through */
-+			fallthrough;
- 		case MAP_PRIVATE:
- 			if (!(file->f_mode & FMODE_READ))
- 				return -EACCES;
-diff --git a/mm/shmem.c b/mm/shmem.c
-index d01d5b..1e9b377 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -3992,7 +3992,7 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
- 			if (i_size >= HPAGE_PMD_SIZE &&
- 					i_size >> PAGE_SHIFT >= off)
- 				return true;
--			/* fall through */
-+			fallthrough;
- 		case SHMEM_HUGE_ADVISE:
- 			/* TODO: implement fadvise() hints */
- 			return (vma->vm_flags & VM_HUGEPAGE);
-diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-index 2aa2d5..2f836a2b 100644
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -424,7 +424,7 @@ static void *zs_zpool_map(void *pool, unsigned long handle,
- 	case ZPOOL_MM_WO:
- 		zs_mm = ZS_MM_WO;
- 		break;
--	case ZPOOL_MM_RW: /* fall through */
-+	case ZPOOL_MM_RW:
- 	default:
- 		zs_mm = ZS_MM_RW;
- 		break;
-
+ }
+@@ -705,9 +710,9 @@ static ssize_t max1363_monitor_store_freq(struct device *dev,
+ 	if (!found)
+ 		return -EINVAL;
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 	st->monitor_speed = i;
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 
+ 	return 0;
+ }
+@@ -810,12 +815,12 @@ static int max1363_read_event_config(struct iio_dev *indio_dev,
+ 	int val;
+ 	int number = chan->channel;
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 	if (dir == IIO_EV_DIR_FALLING)
+ 		val = (1 << number) & st->mask_low;
+ 	else
+ 		val = (1 << number) & st->mask_high;
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 
+ 	return val;
+ }
+@@ -962,7 +967,7 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
+ 	u16 unifiedmask;
+ 	int number = chan->channel;
+ 
+-	mutex_lock(&indio_dev->mlock);
++	iio_device_claim_direct_mode(indio_dev);
+ 	unifiedmask = st->mask_low | st->mask_high;
+ 	if (dir == IIO_EV_DIR_FALLING) {
+ 
+@@ -989,7 +994,7 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
+ 
+ 	max1363_monitor_mode_update(st, !!(st->mask_high | st->mask_low));
+ error_ret:
+-	mutex_unlock(&indio_dev->mlock);
++	iio_device_release_direct_mode(indio_dev);
+ 
+ 	return ret;
+ }
+@@ -1587,6 +1592,7 @@ static int max1363_probe(struct i2c_client *client,
+ 
+ 	st = iio_priv(indio_dev);
+ 
++	mutex_init(&st->lock);
+ 	st->reg = devm_regulator_get(&client->dev, "vcc");
+ 	if (IS_ERR(st->reg)) {
+ 		ret = PTR_ERR(st->reg);
+-- 
+2.23.0.385.gbc12974a89
 
