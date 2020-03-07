@@ -2,301 +2,145 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57FCC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE23C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83156206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27BF206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:29:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Cmfk0Dxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgCGIXe (ORCPT
+        id S1726267AbgCGI3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 03:23:34 -0500
-Received: from mga07.intel.com ([134.134.136.100]:35652 "EHLO mga07.intel.com"
+        Sat, 7 Mar 2020 03:29:30 -0500
+Received: from mout.gmx.net ([212.227.17.21]:60209 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgCGIXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 03:23:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2020 00:23:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,525,1574150400"; 
-   d="scan'208";a="442202037"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Mar 2020 00:23:29 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jAUk5-00066x-22; Sat, 07 Mar 2020 16:23:29 +0800
-Date:   Sat, 07 Mar 2020 16:23:08 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/mm] BUILD SUCCESS
- 681ff0181bbfb183e32bc6beb6ec076304470479
-Message-ID: <5e6359ec.9tc9sl2mIw1yrjoy%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725954AbgCGI3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 03:29:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1583569763;
+        bh=h79C+D9/EzcE+etbcbZdLaCiNxPE5dspkTyds0Z1D14=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=Cmfk0Dxr0eO5wFGCFqKBoT264bq+7WbFiB/B7ewBbTVA5VkXU3L8QD4W62qXxHRMh
+         DHkdLH5VBh9iIG0ssxXinGvo5wZEzZaBqp8r6XvK/olKFS/tCK71xdPfyqU7wwjacZ
+         tyu3hfj078NEUnY8GTMmjpHJWaM7nOums7w4v7iI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1Mlf4c-1jaVyi3cwM-00iixk; Sat, 07
+ Mar 2020 09:29:23 +0100
+Date:   Sat, 7 Mar 2020 09:29:06 +0100
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Forest Bond <forest@alittletooquiet.net>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: vt6656: Declare a few variables as __read_mostly
+Message-ID: <20200307082906.GA2948@ubuntu>
+References: <20200301112620.7892-1-oscar.carter@gmx.com>
+ <20200301122514.GA1461917@kroah.com>
+ <20200301131701.GA7487@ubuntu>
+ <20200301150913.GA1470815@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200301150913.GA1470815@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:/AbFBE0f0Zp6NqvRYmi/sHN078hyV83hTiMzs2AAgg1PNV/aoct
+ SHvt/qID4eDmdTU1LS0/w7sHSKXUi2nxKLdi8Vu9Cy+nGT/2KsmP3Wlo7EJPGd00Il3HtHO
+ 3YfIpUmqfnrMbIeWroX+fWlEzMu9fhfCq2rsYaS3yediHnoRj14g6SPzciLxij6d4/F0qCz
+ oNU82aIlLKA2NfGqv61OQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MNFbH05vUpg=:0e7OB0RPcLe5GHyg0KXodm
+ wEU1MNmm2cozk5fuk47ptom9QD3bvKlQdDVdp3Vah0issdUV8VUlQpzy+A+WRG1iO8vIDuuoQ
+ biNOb6h0C66uF2yibEqzZsZKDi1O95PTRKcajRchzbQkM22DyVy60A4F9JJbxEVXiyks2j+wi
+ O2ouYM8EtHKqt/JuO+85dLDH6EZKHAhdNV0sVzcQl8QVR6JIT2NBIvbmQJt2BXVdA4kFn2BgP
+ EbwZbWENuPEahVxv89QAzJDHL/7h1zdoZYQ/5MeaB3gfPyObpydZzP3fd4G7Wivqh0slP7cHo
+ 9kl4C3qG7inzIy4GrB5RI6MNUK4S8LcanN9ypjBiA8ZpHqonSNlHF2O+a7aWjZOg1hFWQylSs
+ UBzAltiZ4DLfsSNrjdr5lPTfoU5XAN8GSzfmE592H570vHfMfmzMwS8np2owRC/ts+k+zJYq8
+ Ju3V+SiRgyK7rRpPqXSBEQ963KoMZ8VDhOx5BnbI4tmficlKF7F50rVgkKIGXiSrWlYwtpsdK
+ l8peJKwFNnj2cWCdDCwZu7fD+qR8V6xPS0FIcKHRfUEkT3yNw/lStK4Mix+aKjGN6rVUOAbj/
+ xeqo/Jx0Jo2uBwoGJxrGyPK4ncvOTfpqwVzJ20i6x/qTyTLfQr7pfkI+h3LdgjDSYufosVRZz
+ al9VlXAjldteorzdUYRtVVoBsU95LxrJp5a3RPcK65sb/K//VWINySOo4DFl8iyciSDGohERN
+ Vm390r0wS4T0/w2oZXwM9cLmHBQfmF/u+Q+XiG/yG/u41N1tnbiGctnRrwUdUw7iHt5LMDxNk
+ 60Tuz2Tb/J44u5qowXWwLqYCiKYSAuD+9jM9ChLAYDkXEqw5AAaikW8HGeoUKzoevFgXZu0NU
+ oK7AhcSsEOPgVAihwbrbhjZEbGUOw52FNh/ap04UbvEr+iLH1XflC3/tLzdIfVguPQxr0W+ER
+ 1FV+t/OyYyPqa80bmVpC8Er884btTCDl7qeFpS96GxrZkLUzrCapWEWV4bl/zXbWkEiAaSMSx
+ ZLpmcCnXoaFsoq+GYiQsmybhWwoS9DJe9yitsRODq+x/qnI5DCpBwf8jzEEhOS5en+kBrOIYy
+ b++WAPjU5z8SHmPUX2R9mecOmefbKuBsBsanhMBz/BBqkXJziUkaIaGTSyBM7fsG1hVUsipXk
+ TjpmjxIdruGmEb8Ie+Sdz+zRiCviS03XvSryRInavZd0Hi4diW9MXILfX5IkUcO754iQU3jbG
+ ETstdqqYPSsVHCIq6
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/mm
-branch HEAD: 681ff0181bbfb183e32bc6beb6ec076304470479  x86/mm/init/32: Stop printing the virtual memory layout
+On Sun, Mar 01, 2020 at 04:09:13PM +0100, Greg Kroah-Hartman wrote:
+> On Sun, Mar 01, 2020 at 02:17:01PM +0100, Oscar Carter wrote:
+> > On Sun, Mar 01, 2020 at 01:25:14PM +0100, Greg Kroah-Hartman wrote:
+> > > On Sun, Mar 01, 2020 at 12:26:20PM +0100, Oscar Carter wrote:
+> > > > These include module parameters.
+> > > >
+> > > > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> > > > ---
+> > > >  drivers/staging/vt6656/main_usb.c | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/v=
+t6656/main_usb.c
+> > > > index 5e48b3ddb94c..701300202b21 100644
+> > > > --- a/drivers/staging/vt6656/main_usb.c
+> > > > +++ b/drivers/staging/vt6656/main_usb.c
+> > > > @@ -49,12 +49,12 @@ MODULE_LICENSE("GPL");
+> > > >  MODULE_DESCRIPTION(DEVICE_FULL_DRV_NAM);
+> > > >
+> > > >  #define RX_DESC_DEF0 64
+> > > > -static int vnt_rx_buffers =3D RX_DESC_DEF0;
+> > > > +static int __read_mostly vnt_rx_buffers =3D RX_DESC_DEF0;
+> > > >  module_param_named(rx_buffers, vnt_rx_buffers, int, 0644);
+> > > >  MODULE_PARM_DESC(rx_buffers, "Number of receive usb rx buffers");
+> > > >
+> > > >  #define TX_DESC_DEF0 64
+> > > > -static int vnt_tx_buffers =3D TX_DESC_DEF0;
+> > > > +static int __read_mostly vnt_tx_buffers =3D TX_DESC_DEF0;
+> > > >  module_param_named(tx_buffers, vnt_tx_buffers, int, 0644);
+> > > >  MODULE_PARM_DESC(tx_buffers, "Number of receive usb tx buffers");
+> > > >
+> > >
+> > > Why?  What does this help with?
+> >
+> > If we declare these variables __read_mostly we can improve the perform=
+ance. If
+> > these variables are read many more times than written, each core of a =
+multicore
+> > system can maintain a copy in a local cache and the time to access is =
+less than
+> > if they use the shared-cache.
+>
+> This is a USB driver, performance is always limited to the hardware, not
+> the CPU location of variables.
 
-elapsed time: 2007m
+Thank you for the explanation.
 
-configs tested: 238
-configs skipped: 84
+>
+> Please always benchmark things to see if it actually makes sense to make
+> changes like this, before proposing them.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I'm sorry.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-parisc                generic-64bit_defconfig
-h8300                    h8300h-sim_defconfig
-ia64                                defconfig
-powerpc                             defconfig
-sh                                allnoconfig
-s390                             allyesconfig
-s390                       zfcpdump_defconfig
-sparc64                           allnoconfig
-mips                             allmodconfig
-s390                                defconfig
-um                                  defconfig
-powerpc                           allnoconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-x86_64               randconfig-a001-20200305
-x86_64               randconfig-a002-20200305
-x86_64               randconfig-a003-20200305
-i386                 randconfig-a001-20200305
-i386                 randconfig-a002-20200305
-i386                 randconfig-a003-20200305
-x86_64               randconfig-a001-20200306
-x86_64               randconfig-a002-20200306
-x86_64               randconfig-a003-20200306
-i386                 randconfig-a001-20200306
-i386                 randconfig-a002-20200306
-i386                 randconfig-a003-20200306
-x86_64               randconfig-a001-20200307
-x86_64               randconfig-a002-20200307
-x86_64               randconfig-a003-20200307
-i386                 randconfig-a001-20200307
-i386                 randconfig-a002-20200307
-i386                 randconfig-a003-20200307
-alpha                randconfig-a001-20200306
-m68k                 randconfig-a001-20200306
-mips                 randconfig-a001-20200306
-nds32                randconfig-a001-20200306
-parisc               randconfig-a001-20200306
-riscv                randconfig-a001-20200306
-alpha                randconfig-a001-20200307
-m68k                 randconfig-a001-20200307
-mips                 randconfig-a001-20200307
-nds32                randconfig-a001-20200307
-parisc               randconfig-a001-20200307
-c6x                  randconfig-a001-20200306
-h8300                randconfig-a001-20200306
-microblaze           randconfig-a001-20200306
-nios2                randconfig-a001-20200306
-sparc64              randconfig-a001-20200306
-csky                 randconfig-a001-20200305
-openrisc             randconfig-a001-20200305
-s390                 randconfig-a001-20200305
-sh                   randconfig-a001-20200305
-xtensa               randconfig-a001-20200305
-csky                 randconfig-a001-20200306
-openrisc             randconfig-a001-20200306
-s390                 randconfig-a001-20200306
-sh                   randconfig-a001-20200306
-xtensa               randconfig-a001-20200306
-x86_64               randconfig-b001-20200306
-x86_64               randconfig-b002-20200306
-x86_64               randconfig-b003-20200306
-i386                 randconfig-b001-20200306
-i386                 randconfig-b002-20200306
-i386                 randconfig-b003-20200306
-x86_64               randconfig-b001-20200305
-x86_64               randconfig-b002-20200305
-x86_64               randconfig-b003-20200305
-i386                 randconfig-b001-20200305
-i386                 randconfig-b002-20200305
-i386                 randconfig-b003-20200305
-x86_64               randconfig-c001-20200305
-x86_64               randconfig-c002-20200305
-x86_64               randconfig-c003-20200305
-i386                 randconfig-c001-20200305
-i386                 randconfig-c002-20200305
-i386                 randconfig-c003-20200305
-x86_64               randconfig-c001-20200306
-x86_64               randconfig-c002-20200306
-x86_64               randconfig-c003-20200306
-i386                 randconfig-c001-20200306
-i386                 randconfig-c002-20200306
-i386                 randconfig-c003-20200306
-x86_64               randconfig-d001-20200305
-x86_64               randconfig-d002-20200305
-x86_64               randconfig-d003-20200305
-i386                 randconfig-d001-20200305
-i386                 randconfig-d002-20200305
-i386                 randconfig-d003-20200305
-x86_64               randconfig-d001-20200306
-x86_64               randconfig-d002-20200306
-x86_64               randconfig-d003-20200306
-i386                 randconfig-d001-20200306
-i386                 randconfig-d002-20200306
-i386                 randconfig-d003-20200306
-x86_64               randconfig-e001-20200305
-x86_64               randconfig-e002-20200305
-x86_64               randconfig-e003-20200305
-i386                 randconfig-e001-20200305
-i386                 randconfig-e002-20200305
-i386                 randconfig-e003-20200305
-x86_64               randconfig-e001-20200306
-x86_64               randconfig-e002-20200306
-x86_64               randconfig-e003-20200306
-i386                 randconfig-e001-20200306
-i386                 randconfig-e002-20200306
-i386                 randconfig-e003-20200306
-x86_64               randconfig-f001-20200305
-x86_64               randconfig-f002-20200305
-x86_64               randconfig-f003-20200305
-i386                 randconfig-f001-20200305
-i386                 randconfig-f002-20200305
-i386                 randconfig-f003-20200305
-x86_64               randconfig-f001-20200306
-x86_64               randconfig-f002-20200306
-x86_64               randconfig-f003-20200306
-i386                 randconfig-f001-20200306
-i386                 randconfig-f002-20200306
-i386                 randconfig-f003-20200306
-x86_64               randconfig-f001-20200307
-x86_64               randconfig-f002-20200307
-x86_64               randconfig-f003-20200307
-i386                 randconfig-f001-20200307
-i386                 randconfig-f002-20200307
-i386                 randconfig-f003-20200307
-x86_64               randconfig-g001-20200305
-x86_64               randconfig-g002-20200305
-x86_64               randconfig-g003-20200305
-i386                 randconfig-g001-20200305
-i386                 randconfig-g002-20200305
-i386                 randconfig-g003-20200305
-x86_64               randconfig-g001-20200306
-x86_64               randconfig-g002-20200306
-x86_64               randconfig-g003-20200306
-i386                 randconfig-g001-20200306
-i386                 randconfig-g002-20200306
-i386                 randconfig-g003-20200306
-x86_64               randconfig-h001-20200305
-x86_64               randconfig-h002-20200305
-x86_64               randconfig-h003-20200305
-i386                 randconfig-h001-20200305
-i386                 randconfig-h002-20200305
-i386                 randconfig-h003-20200305
-x86_64               randconfig-h001-20200306
-x86_64               randconfig-h002-20200306
-x86_64               randconfig-h003-20200306
-i386                 randconfig-h001-20200306
-i386                 randconfig-h002-20200306
-i386                 randconfig-h003-20200306
-arc                  randconfig-a001-20200306
-arm                  randconfig-a001-20200306
-arm64                randconfig-a001-20200306
-ia64                 randconfig-a001-20200306
-powerpc              randconfig-a001-20200306
-sparc                randconfig-a001-20200306
-arc                  randconfig-a001-20200305
-arm                  randconfig-a001-20200305
-arm64                randconfig-a001-20200305
-ia64                 randconfig-a001-20200305
-powerpc              randconfig-a001-20200305
-sparc                randconfig-a001-20200305
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                          debug_defconfig
-sh                               allmodconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+>
+> thanks,
+>
+> greg k-h
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+thanks,
+
+Oscar
