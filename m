@@ -2,107 +2,105 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D3FC10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D617C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE4B207FD
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:45:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YerQZWqL"
+	by mail.kernel.org (Postfix) with ESMTP id 4E3B9206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgCGDpk (ORCPT
+        id S1726874AbgCGDqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 22:45:40 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53907 "EHLO ozlabs.org"
+        Fri, 6 Mar 2020 22:46:10 -0500
+Received: from mga11.intel.com ([192.55.52.93]:57577 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgCGDpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:45:39 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Z9P72Ttgz9s3x;
-        Sat,  7 Mar 2020 14:45:27 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583552734;
-        bh=/uBtVQlQdI3TPN7OTG8f8ITHXiSieBJKrtT8V3oon2A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YerQZWqLuMkiMOSXMx2KT4g62g9aftk7QDkaeudjiWExGFkC5gpsQzcwT8ti6XJPr
-         xwNgn5metkp7YNF+wTZ/82m7suteYmZSIG1w5zREnZ6uP/UwhCMV+voAcvhD3CtvCn
-         HkLM5YM8G95jqNf7I/hZtDj8kInPBzzBiqAR+Wq3C0gTZ9dYGksTgwZ63e0bpVJtzd
-         cS8I2knNeWnjP34ShwuZ2c0BVwKh3KsKAUnDqkPlJWO3aS7G9Y1BHe6AiTLLsuc3x4
-         aFk/2y8vk9AOSwdcyNTJi+Zke811C+SUyXTrUpg2Ri6As0uLArFsPdKNbUBdQfaxF8
-         CvohOyL6evlfQ==
-Date:   Sat, 7 Mar 2020 14:45:06 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     sameo@linux.intel.com
-Cc:     David Miller <davem@davemloft.net>, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        johannes@sipsolutions.net
-Subject: Re: linux-next: the nfc-next tree seems to be old
-Message-ID: <20200307144506.7585f0f5@canb.auug.org.au>
-In-Reply-To: <20200305.180823.1274906337509861200.davem@davemloft.net>
-References: <20200130105538.7b07b150@canb.auug.org.au>
-        <20200306104825.068268eb@canb.auug.org.au>
-        <20200305.180823.1274906337509861200.davem@davemloft.net>
+        id S1726300AbgCGDqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 22:46:09 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 19:46:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,524,1574150400"; 
+   d="scan'208";a="235035981"
+Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Mar 2020 19:46:08 -0800
+From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+To:     shuah@kernel.org, linux-kselftest@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        tony.luck@intel.com, reinette.chatre@intel.com, babu.moger@amd.com,
+        james.morse@arm.com, ravi.v.shankar@intel.com,
+        fenghua.yu@intel.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Subject: [PATCH V1 00/13] Miscellaneous fixes for resctrl selftests
+Date:   Fri,  6 Mar 2020 19:40:41 -0800
+Message-Id: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zzr+wf8CgUL20Essy6WdNE/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zzr+wf8CgUL20Essy6WdNE/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch set has several miscellaneous fixes to resctrl selftest tool. Some
+fixes are minor in nature while other are major fixes.
 
-Hi all,
+The minor fixes are
+1. Typos, comment format
+2. Fix MBA feature detection
+3. Fix a bug while selecting sibling cpu
+4. Remove unnecessary use of variable arguments
+5. Change MBM/MBA results reporting format from absolute values to percentage
 
-On Thu, 05 Mar 2020 18:08:23 -0800 (PST) David Miller <davem@davemloft.net>=
- wrote:
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Fri, 6 Mar 2020 10:48:25 +1100
->=20
-> > On Thu, 30 Jan 2020 10:55:38 +1100 Stephen Rothwell <sfr@canb.auug.org.=
-au> wrote: =20
-> >>
-> >> Hi Samuel,
-> >>=20
-> >> I noticed that the nfc-next tree has not changed since June 2018 and
-> >> has been orphaned in May 2019, so am wondering if the commits in it are
-> >> still relevant or should I just remove the tree from linux-next. =20
-> >=20
-> > Since I have had no response, I will remove it tomorrow. =20
->=20
-> We've been integrating NFC patches directly into my networking tree for
-> a while now, so this is indeed the thing to do.
+The major fixes are changing CAT and CQM test cases. CAT test wasn't testing
+CAT as it isn't using the cache it's allocated, hence, change the test case to
+test noisy neighbor use case. CAT guarantees a user specified amount of cache
+for a process or a group of processes, hence test this use case. The updated
+test case checks if critical process is impacted by noisy neighbor or not. If
+it's impacted the test fails.
 
-I have removed it now.
+The present CQM test assumes that all the allocated memory (size less than LLC
+size) for a process will fit into cache and there won't be any overlappings.
+While this is mostly true, it cannot be *always* true by the nature of how cache
+works i.e. two addresses could index into same cache line. Hence, change CQM
+test such that it now uses CAT. Allocate a specific amount of cache using CAT
+and check if CQM reports more than what CAT has allocated.
 
---=20
-Cheers,
-Stephen Rothwell
+Fenghua Yu (1):
+  selftests/resctrl: Fix missing options "-n" and "-p"
 
---Sig_/zzr+wf8CgUL20Essy6WdNE/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Reinette Chatre (4):
+  selftests/resctrl: Fix feature detection
+  selftests/resctrl: Fix typo
+  selftests/resctrl: Fix typo in help text
+  selftests/resctrl: Ensure sibling CPU is not same as original CPU
 
------BEGIN PGP SIGNATURE-----
+Sai Praneeth Prakhya (8):
+  selftests/resctrl: Fix MBA/MBM results reporting format
+  selftests/resctrl: Don't use variable argument list for setup function
+  selftests/resctrl: Fix typos
+  selftests/resctrl: Modularize fill_buf for new CAT test case
+  selftests/resctrl: Change Cache Allocation Technology (CAT) test
+  selftests/resctrl: Change Cache Quality Monitoring (CQM) test
+  selftests/resctrl: Dynamically select buffer size for CAT test
+  selftests/resctrl: Cleanup fill_buff after changing CAT test
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5jGMIACgkQAVBC80lX
-0GxjlQf/QXcx752LzbAakMG6nS8i2OKAXSyrt/QZ33QeMOyKno1Gxl/gyjOjCXsw
-zX4VWlKD9OA+J3QoRBABuNKh0fy82Je2RRPpdZTNKHXINJ+Wh3Kw31l9cRTrJET+
-SnYTDD9zwMz72/9mprfgYVXC6Xdp1zvR6F8vFGjy/pcFcHpPcc0iv5/6cojgEQEE
-kQcxPQGxJQBmaar3ge+Uvqyog6pL7MV79W3hgY7grvhx+fSPqgvbxWoy6MscsoMo
-XSRnWjcKvhDRfBB7rEkcHBBTGGvXJNiA9KQGUqH+1oxvd/d7VeQqvqMBn/4BX5Ml
-GKuRWAoY6Dpz19eVS04m1JvDv/WzrQ==
-=OluB
------END PGP SIGNATURE-----
+ tools/testing/selftests/resctrl/cache.c         | 179 ++++++++-----
+ tools/testing/selftests/resctrl/cat_test.c      | 322 +++++++++++++-----------
+ tools/testing/selftests/resctrl/cqm_test.c      | 210 +++++++++-------
+ tools/testing/selftests/resctrl/fill_buf.c      | 113 ++++++---
+ tools/testing/selftests/resctrl/mba_test.c      |  32 ++-
+ tools/testing/selftests/resctrl/mbm_test.c      |  33 ++-
+ tools/testing/selftests/resctrl/resctrl.h       |  19 +-
+ tools/testing/selftests/resctrl/resctrl_tests.c |  26 +-
+ tools/testing/selftests/resctrl/resctrl_val.c   |  22 +-
+ tools/testing/selftests/resctrl/resctrlfs.c     |  52 +++-
+ 10 files changed, 592 insertions(+), 416 deletions(-)
 
---Sig_/zzr+wf8CgUL20Essy6WdNE/--
+-- 
+2.7.4
+
