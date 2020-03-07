@@ -2,148 +2,114 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7908C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4B0C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9512A20675
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="f3AcMYR6"
+	by mail.kernel.org (Postfix) with ESMTP id EED9E2073D
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583566289;
+	bh=/8wztW9Zw/Qy4YL7T27+Awuor+c/aBqBFPJ4+2qen6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JbpHmc46YUfZVsCbvCqiudPZY1WD7Llh2jTlM7xosenflyJT1+1AFMGgeEEb/B41l
+	 ZxhrRIxKwP9vHHlxBhKXJi+oOFziMjxT63Ar4sNDAGDSvPul/Ktq6hVg5O5Hu52OH9
+	 5qDdM3EeEXjTOF814MQKuUec1G5Lg2/W6iU3UdYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgCGHUh (ORCPT
+        id S1726104AbgCGHbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 02:20:37 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.61]:23838 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725832AbgCGHUg (ORCPT
+        Sat, 7 Mar 2020 02:31:16 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37971 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgCGHbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 02:20:36 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id B962CAAE3
-        for <linux-kernel@vger.kernel.org>; Sat,  7 Mar 2020 01:20:35 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ATlDjDwazSl8qATlDjpsHN; Sat, 07 Mar 2020 01:20:35 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nPIkrMLQnP0dr060HQym6OsrCHskJGkKPcQsUcVYkjI=; b=f3AcMYR67OTD+hjujqCMd+3HUJ
-        RTShWLhM/Te5PembN5mXl3RtLQdsDZcqaB+E3KMt5wEE6D7N3K8YLL7sZJaaE7BnINNZ7mRXzOreq
-        jvo7z3BWTqgN0Ic/pNwRaEmrjOTfuXuTZyXGrUNZ2gjKbcbpVQNhfKs2V87HR+siqahh7fhQiGonX
-        M+c8tDUGaIttVayVowa0jqJAWTRiTrxXo6VB6ZA8AwGDIZhOM2RSm5pJqi6BLtUL3P7BeIBbwXT6d
-        764mWIEcBtxB849/fupd7dDzPL6Kz9PjAOkyKVboyBScvWik3eRsnKgY0wVru17EreRgQfRxR8u39
-        KGfRZHMA==;
-Received: from [201.162.241.123] (port=2971 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jATlD-0008Gy-Ce; Sat, 07 Mar 2020 01:20:35 -0600
-Subject: Re: [PATCH] auxdisplay: charlcd: replace zero-length array with
- flexible-array member
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200212195231.GA2867@embeddedor>
- <CANiq72nt19x2Z6ErT8a1_2c0sKfjkv_yUFMZS2mf3HWp3RvnDQ@mail.gmail.com>
- <0dd75019-4d02-24ee-fdf1-f713a99d4141@embeddedor.com>
- <CANiq72nWDHV3z9kemqjKuVwsSN0XxJvgvngVu+V1y2d54V6obQ@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzSxHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPsLBfQQTAQgAJwUCWywcDAIbIwUJ
- CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
- l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
- obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
- cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
- ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
- JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
- JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
- PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
- R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
- 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
- e5YnLxF8ctRAp7K4yVlvA87BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
- H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
- DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
- 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
- otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
- l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
- jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
- zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
- I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
- ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
- EQEAAcLBZQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
- UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
- XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
- WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
- imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
- fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
- 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
- ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
- YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
- GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <3f49ee22-f691-e23a-31f6-ceadb8ce213e@embeddedor.com>
-Date:   Sat, 7 Mar 2020 01:23:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 7 Mar 2020 02:31:16 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t11so4918109wrw.5;
+        Fri, 06 Mar 2020 23:31:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GZ63kSzDRSNavMbJagZdDOIL2ssyD8h5PHQ+jSGVk9g=;
+        b=nLUQinBitKbEXi4eN/VMqeM4FTz1hfr4Pafaq8jZpg9jUQ10bAJt5SqBSVbwZFjMB/
+         UwOyfGEd82Lhq2KfbJ6/oNYDsquNYpNwT8XwrhIlu6jDwCaMoTIL9muYjCshhtHlj5l1
+         m6gSXmtQUiZ0iXYSWFQ8zBoKzmP74N/IW4O7frsQRF54qMsG0LWkRkGJr8ItWVQTrxlA
+         I+5AYXOY3LeisQ/IEtUqL5oXnTD7TondRR9zmHfwHqlbolYwCWEg5q5GeU/AtgtOnQBq
+         b6ul5tLm1eCy7feIepCGKvmtg8zENQHxezv6cqF6Ixh5oB7OeDh0aG5B9gLmQuIGg6z2
+         6glA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GZ63kSzDRSNavMbJagZdDOIL2ssyD8h5PHQ+jSGVk9g=;
+        b=VAih7++ZSxbC3OVKQuULdlUNjc8q8iHQ05HEjWjlqSn/pM6jDSD94gxZ0AXvZ64+th
+         3FsWaOXCKT+1kdyhc4JQkEKwPuZNLnLoxhH6ZQi7GoxrbG3zYTgHYXt9AIt7s2oqi7AV
+         RSrlHJ18/q+sqGPDHx3ZODQj8XJe6ZRvpcBV8/1Ew0vhoqtEkVkqZkn0LVNk65X3x6hK
+         dMmX4qP7YQ4NkcVlPpNaXr9VlNNOOachzwZOxWG5Fv3VBQayV/8QaIQORjoSWPbgVj6B
+         G6WhNYLmEEvtYpHsP2PpqoJiYIvbbEw1K+SG7Vf4P96CgWKBSGEdWOUkfKRQtIxZzI0w
+         Ab0g==
+X-Gm-Message-State: ANhLgQ16fjaSoJse3ws4FIxbEGF1BvWSKyKLsmuoW0Un/KMfMmgzkgsi
+        eDzS6JlJ0kUR4b7owEwdDGw=
+X-Google-Smtp-Source: ADFU+vvIaY4nJ0X48HYp4pHbU++MtBaUb4eCQr7QNMijWKDUUZXX5XXPCQs5tb0OFx99zbyXmn3dIg==
+X-Received: by 2002:a5d:4b09:: with SMTP id v9mr7971140wrq.85.1583566275057;
+        Fri, 06 Mar 2020 23:31:15 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id f207sm19608124wme.9.2020.03.06.23.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 23:31:14 -0800 (PST)
+Date:   Sat, 7 Mar 2020 08:31:11 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Nick Desaulniers <nick.desaulniers@gmail.com>,
+        Tommi Rantala <tommi.t.rantala@nokia.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf/urgent fixes
+Message-ID: <20200307073111.GA32920@gmail.com>
+References: <20200306191144.12762-1-acme@kernel.org>
+ <20200306215642.GA15931@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CANiq72nWDHV3z9kemqjKuVwsSN0XxJvgvngVu+V1y2d54V6obQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.241.123
-X-Source-L: No
-X-Exim-ID: 1jATlD-0008Gy-Ce
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.241.123]:2971
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306215642.GA15931@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miguel,
 
-On 3/6/20 15:24, Miguel Ojeda wrote:
-> Hi Gustavo,
-> 
-> On Thu, Feb 13, 2020 at 7:11 AM Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
->>
->> Please, go ahead and handle it.
-> 
-> Picking it up for next week!
-> 
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Awesome. :)
+> Em Fri, Mar 06, 2020 at 04:11:33PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Hi Ingo/Thomas,
+> > 
+> > 	Please consider pulling,
+> > 
+> > Best regards,
+> 
+> OOps, messed up and sent more messages than needed, the branch should be
+> ok tho:
+> 
+> [acme@quaco perf]$ git log --oneline acme/perf/urgent tip/perf/urgent..perf-urgent-for-mingo-5.6-20200306
+> 441b62acd9c8 (tag: perf-urgent-for-mingo-5.6-20200306, five/perf/urgent, acme/perf/urgent, acme.korg/perf/urgent) tools: Fix off-by 1 relative directory includes
+> 3f5777fbaf04 perf jevents: Fix leak of mapfile memory
+> 7b919a53102d perf bench: Clear struct sigaction before sigaction() syscall
+> f649bd9dd5d5 perf bench futex-wake: Restore thread count default to online CPU count
+> 29b4f5f18857 perf top: Fix stdio interface input handling with glibc 2.28+
+> cfd3bc752a3f perf diff: Fix undefined string comparision spotted by clang's -Wstring-compare
+> [acme@quaco perf]$
+> 
+> Sorry about that,
 
-Thank you
---
-Gustavo
+No problem, and pulled into perf/urgent, thanks Arnaldo!
+
+	Ingo
