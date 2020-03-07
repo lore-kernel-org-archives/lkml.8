@@ -2,118 +2,162 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5594C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA2DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF4120726
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:02:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583550139;
-	bh=KL3/2VYI5+pqT4gg3RT6fC0ThurhRFfSREX6XD1ck8M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=2uVmDF926ZDO11GkFH8y4GNxQet+Fcp6zypHWo7KfMI34G2tNIGdFAyo4Ra/IXiaJ
-	 lx6GGEvw+LMcEInIweo7fUWoUOCoFSH7I1O35f4zEKjKXywxqrZJb+BCv71Frx/sK3
-	 9gvtHfaJ8SJy+ta1C9oa+8ALj7+H26VD09BvIq64=
+	by mail.kernel.org (Postfix) with ESMTP id A28D5206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgCGDCS (ORCPT
+        id S1726674AbgCGDFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 22:02:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbgCGDCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:02:18 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA446206D5;
-        Sat,  7 Mar 2020 03:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583550137;
-        bh=KL3/2VYI5+pqT4gg3RT6fC0ThurhRFfSREX6XD1ck8M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=s1k85rJaTFgjUN+9IAXMvRBHC/mhxX2vWHqatKWCKGV6Tau+hnGQYbL9Fml4yBK9Y
-         iRtC9UAUpE+RxmQ7ZOjqcfNi1JrGgKZu+y85+g1TDux+UtjT1GpbExKN1Xo3Lt2HIx
-         Al80lRySL7x4jXDyn+LQS/Y3tTNqCpHQdEZ2vDJU=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        stable@vger.kernel.org
-Subject: [PATCH] x86/kprobes: Prohibit probing on rcu_nmi_exit() and ist_exit()
-Date:   Sat,  7 Mar 2020 12:02:12 +0900
-Message-Id: <158355013189.14191.9105069890402942867.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-User-Agent: StGit/0.17.1-dirty
+        Fri, 6 Mar 2020 22:05:14 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:47087 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCGDFN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 22:05:13 -0500
+Received: by mail-il1-f199.google.com with SMTP id a2so3069790ill.13
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 19:05:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=YYl6JExefSfOEbggY6HfaOvFYm0l87zuFjeztMviPFc=;
+        b=GfHEpDvg2WaCwp1P8gQeWNS/s2vcfSr262nAsIirA0UkOQfWBTRyKOEBkRtslz/Q+F
+         z3X7Gc3/lgWTKW5EPYu1ds3RTNo0LkmDB75tnNPz5sTIXptO4ca8Wqh2QGkNXawT3rnm
+         btpUHA5JmsB6IcAo4uw487oSd6U42ugxofb0/KrgiiLfUt1X/MkIrF5CKdmRDiNQVznw
+         pVqWb/XIgLjXoXJm/7Vzz/FchQlyQYcBAYiUwc+3cnT8hnwLHq6rl0f6tV1e7zfbZZ1v
+         8T96aWMnSHz7/UNQ9dMwLZj9Px8acj8kjqyiNMR/pxYVnCv/wexO1YA73vVcC0HAW7T2
+         MWfA==
+X-Gm-Message-State: ANhLgQ1z1iqAJ58Qtzsfduv8/IqdoctZfIb5fsDxhyFffvfzFADPLRNK
+        h6z+TzPlDtYs1xNKK522cLIy4g6V4iQxZcRhioqwiEO3zMEW
+X-Google-Smtp-Source: ADFU+vsj2Biqb2M2UCTaQAg5SpHHDHvNwBUAEDzCSC8MOa3dosXjBDEB+jwJsE4VqcCyc2KugV9COIrQUWKFR9g8T7thzQnNVpUQ
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:4e:: with SMTP id 75mr5932841ila.276.1583550311597;
+ Fri, 06 Mar 2020 19:05:11 -0800 (PST)
+Date:   Fri, 06 Mar 2020 19:05:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ce8d2305a03b0988@google.com>
+Subject: INFO: trying to register non-static key in uhid_char_release
+From:   syzbot <syzbot+8357fbef0d7bb602de45@syzkaller.appspotmail.com>
+To:     benjamin.tissoires@redhat.com, dh.herrmann@googlemail.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prohibit probing on rcu_nmi_exit() and ist_exit() which
-are called from do_int3()'s kprobe path after kprobe_int3_handler().
+Hello,
 
-The commit c13324a505c7 ("x86/kprobes: Prohibit probing on
-functions before kprobe_int3_handler()") tried to fix similar
-issue, but it only marks the functions before kprobe_int3_handler()
-in do_int3().
+syzbot found the following crash on:
 
-If we put a kprobe on rcu_nmi_exit() or ist_exit(), the kprobes
-will detect reentrance. However, it only skips the kprobe handler,
-exits from do_int3() and hits ist_exit() and rcu_nmi_exit() again.
-Thus, it causes another int3 exception and finally we will get
-the kernel panic with "Unrecoverable kprobe detected." error message.
+HEAD commit:    fb279f4e Merge branch 'i2c/for-current-fixed' of git://git..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16bc5181e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8b13b05f0e61d957
+dashboard link: https://syzkaller.appspot.com/bug?extid=8357fbef0d7bb602de45
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
-This is reproducible by the following commands.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-/ # echo 0 > /proc/sys/debug/kprobes-optimization
-/ # echo p vfs_read > /sys/kernel/debug/tracing/kprobe_events
-/ # echo p rcu_nmi_exit >> /sys/kernel/debug/tracing/kprobe_events
-/ # echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8357fbef0d7bb602de45@syzkaller.appspotmail.com
 
-Fixes: c13324a505c7 ("x86/kprobes: Prohibit probing on functions before kprobe_int3_handler()")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 9870 Comm: syz-executor.1 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ register_lock_class+0x6f4/0xec0 kernel/locking/lockdep.c:443
+ __lock_acquire+0x116/0x1bc0 kernel/locking/lockdep.c:3836
+ lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x9e/0xc0 kernel/locking/spinlock.c:159
+ __wake_up_common_lock kernel/sched/wait.c:122 [inline]
+ __wake_up+0xb8/0x150 kernel/sched/wait.c:142
+ uhid_dev_destroy drivers/hid/uhid.c:563 [inline]
+ uhid_char_release+0x99/0x600 drivers/hid/uhid.c:642
+ __fput+0x2d8/0x730 fs/file_table.c:280
+ task_work_run+0x176/0x1b0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
+ prepare_exit_to_usermode+0x48a/0x5c0 arch/x86/entry/common.c:195
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x416041
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffd2649c0a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416041
+RDX: 0000001b2f820000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000001 R08: 00000000a5a41883 R09: 00000000a5a41887
+R10: 00007ffd2649c180 R11: 0000000000000293 R12: 000000000076bf20
+R13: 00000000007715a0 R14: 000000000003bd20 R15: 000000000076bf2c
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 PID: 9870 Comm: syz-executor.1 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__wake_up_common+0x297/0x4d0 kernel/sched/wait.c:86
+Code: fb 01 00 00 45 31 f6 eb 13 66 2e 0f 1f 84 00 00 00 00 00 4d 39 fc 0f 84 e3 01 00 00 4c 89 fb 49 8d 6f e8 4c 89 f8 48 c1 e8 03 <80> 3c 10 00 74 12 48 89 df e8 eb 48 59 00 48 ba 00 00 00 00 00 fc
+RSP: 0018:ffffc900049a7d20 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: dffffc0000000000 RSI: 0000000000000001 RDI: ffff888048e513c8
+RBP: ffffffffffffffe8 R08: 0000000000000000 R09: ffffc900049a7d88
+R10: fffff52000934fa4 R11: 0000000000000000 R12: ffff888048e51400
+R13: 1ffff92000934fb1 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000000ed3940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2f822000 CR3: 0000000098f9a000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __wake_up_common_lock kernel/sched/wait.c:123 [inline]
+ __wake_up+0xd4/0x150 kernel/sched/wait.c:142
+ uhid_dev_destroy drivers/hid/uhid.c:563 [inline]
+ uhid_char_release+0x99/0x600 drivers/hid/uhid.c:642
+ __fput+0x2d8/0x730 fs/file_table.c:280
+ task_work_run+0x176/0x1b0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
+ prepare_exit_to_usermode+0x48a/0x5c0 arch/x86/entry/common.c:195
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x416041
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffd2649c0a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416041
+RDX: 0000001b2f820000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000001 R08: 00000000a5a41883 R09: 00000000a5a41887
+R10: 00007ffd2649c180 R11: 0000000000000293 R12: 000000000076bf20
+R13: 00000000007715a0 R14: 000000000003bd20 R15: 000000000076bf2c
+Modules linked in:
+---[ end trace bb22508a82bfb9e5 ]---
+RIP: 0010:__wake_up_common+0x297/0x4d0 kernel/sched/wait.c:86
+Code: fb 01 00 00 45 31 f6 eb 13 66 2e 0f 1f 84 00 00 00 00 00 4d 39 fc 0f 84 e3 01 00 00 4c 89 fb 49 8d 6f e8 4c 89 f8 48 c1 e8 03 <80> 3c 10 00 74 12 48 89 df e8 eb 48 59 00 48 ba 00 00 00 00 00 fc
+RSP: 0018:ffffc900049a7d20 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: dffffc0000000000 RSI: 0000000000000001 RDI: ffff888048e513c8
+RBP: ffffffffffffffe8 R08: 0000000000000000 R09: ffffc900049a7d88
+R10: fffff52000934fa4 R11: 0000000000000000 R12: ffff888048e51400
+R13: 1ffff92000934fb1 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000000ed3940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2f822000 CR3: 0000000098f9a000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- arch/x86/kernel/traps.c |    1 +
- kernel/rcu/tree.c       |    1 +
- 2 files changed, 2 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 6ef00eb6fbb9..c63fb7697794 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -115,6 +115,7 @@ void ist_exit(struct pt_regs *regs)
- 	if (!user_mode(regs))
- 		rcu_nmi_exit();
- }
-+NOKPROBE_SYMBOL(ist_exit);
- 
- /**
-  * ist_begin_non_atomic() - begin a non-atomic section in an IST exception
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d91c9156fab2..c49ea0e919f9 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -670,6 +670,7 @@ void rcu_nmi_exit(void)
- {
- 	rcu_nmi_exit_common(false);
- }
-+NOKPROBE_SYMBOL(rcu_nmi_exit);
- 
- /**
-  * rcu_irq_exit - inform RCU that current CPU is exiting irq towards idle
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
