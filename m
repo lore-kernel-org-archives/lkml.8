@@ -2,68 +2,109 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02EFC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AE5C10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C9D206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E7C20656
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583591427;
-	bh=aqx9wdW6cgs6DwzR9YqYO7lOArZ+awEW6YBOBGrp3MI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=cSD+LkYouxU/h/BvUxyYM0PJg2dye+xNewACdgMhDUxPKy9c8Dzyi5Ms4zGBXB1Yu
-	 cJZZ2yYsyx3c4O23V82UkXpowKBWx7Kb5DbMEI0Fm8phNS+X9dvy1/NtqYHFJMogCE
-	 FrG4/MVGp7byi/hWz6k5OY+Ap4T07qkiWVpx3mXU=
+	s=default; t=1583591761;
+	bh=45OV6CLg6Fo3/uUQ0kWXa8upeRwnERzGdfibPI0dQ2w=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=QTSTj48OixsgN0BmfarFGt+kXd29w1ettkRL3oBHy5GPheCuJONH+ej/BSNSJZRyh
+	 w+SFlRqZNhG9FAmUiXzw2EG93BzN3MAZrDlpmUjQtgfyK8uBfE+9C7wa/zf6Jsx+C9
+	 JCp1hc2sQeDn+RAZxqtjG8g+to/Dyw1llEkBTlH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgCGOa0 (ORCPT
+        id S1726338AbgCGOf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 09:30:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33674 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 09:35:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgCGOaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 09:30:06 -0500
-Subject: Re: [GIT PULL] xen: branch for v5.6-rc5
+        id S1726283AbgCGOf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 09:35:58 -0500
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0DF22051A;
+        Sat,  7 Mar 2020 14:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583591406;
-        bh=aqx9wdW6cgs6DwzR9YqYO7lOArZ+awEW6YBOBGrp3MI=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=bDZ2G/PIeycTqk3YVEa2+GD4/ceIG/5gSwYbDresg1n+8o1Uoyp8qUYRc5l/3KxG3
-         xSbzjoys00uXWKTq8sOE3S9KDjaE74rfkKWOIVIJ8Ui4VXTEI7+dLtt00yBAH0BZ+k
-         dWaN7N2aoUV69HXw1AYPvjlvbRdF1ujIPQbZfZm4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200307093617.11819-1-jgross@suse.com>
-References: <20200307093617.11819-1-jgross@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200307093617.11819-1-jgross@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git
- for-linus-5.6b-rc5-tag
-X-PR-Tracked-Commit-Id: 4ab50af63d2eb5da5c1571f8518948514f535782
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cbee7c8b4485fb876895b82ddba19ae4e2e2d102
-Message-Id: <158359140623.13770.12361787339122894366.pr-tracker-bot@kernel.org>
-Date:   Sat, 07 Mar 2020 14:30:06 +0000
-To:     Juergen Gross <jgross@suse.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com
+        s=default; t=1583591758;
+        bh=45OV6CLg6Fo3/uUQ0kWXa8upeRwnERzGdfibPI0dQ2w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tEYIM3W6to8lMIUjgA2FCWw7IwU5TiA1WyC+SuQbi3jnTcQT/pqd5ociYd5kSrKrR
+         JgQmfHqD6Tve6yVAkSri/sBwlLVWFCVyH0+QHvd14NXKRJDExjEHw5wJqZHVaERYoY
+         bSpkP2Sl3+hIidqCCgOXtoU2h9/CddjQK2By0eoc=
+Date:   Sat, 7 Mar 2020 15:35:54 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL for v5.6-rc5] media fixes
+Message-ID: <20200307153554.1411ffb3@coco.lan>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat,  7 Mar 2020 10:36:17 +0100:
+Hi Linus,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.6b-rc5-tag
+Please pull from:
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.6-2
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cbee7c8b4485fb876895b82ddba19ae4e2e2d102
 
-Thank you!
+For:
+  - a fix at the media controller links at both hantro driver and at
+    v4l2-mem2mem core;
+  - Some fixes at pulse8-cec driver;
+  - vicodec: handle alpha channel for RGB32 formats, as it may be used;
+  - mc-entity.c: fix handling of pad flags.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Regards,
+Mauro
+
+-
+
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.6-2
+
+for you to fetch changes up to d171c45da874e3858a83e6377e00280a507fe2f2:
+
+  media: hantro: Fix broken media controller links (2020-02-24 15:10:39 +0100)
+
+----------------------------------------------------------------
+media fixes for v5.6-rc5
+
+----------------------------------------------------------------
+Ezequiel Garcia (1):
+      media: hantro: Fix broken media controller links
+
+Hans Verkuil (5):
+      media: pulse8-cec: INIT_DELAYED_WORK was called too late
+      media: pulse8-cec: close serio in disconnect, not adap_free
+      media: vicodec: process all 4 components for RGB32 formats
+      media: v4l2-mem2mem.c: fix broken links
+      media: mc-entity.c: use & to check pad flags, not ==
+
+ drivers/media/mc/mc-entity.c                     |  4 +--
+ drivers/media/platform/vicodec/codec-v4l2-fwht.c | 34 +++++++-----------------
+ drivers/media/usb/pulse8-cec/pulse8-cec.c        | 12 +++++----
+ drivers/media/v4l2-core/v4l2-mem2mem.c           |  4 +--
+ drivers/staging/media/hantro/hantro_drv.c        |  4 +--
+ 5 files changed, 22 insertions(+), 36 deletions(-)
+
