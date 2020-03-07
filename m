@@ -2,189 +2,236 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2308DC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21F3C10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9AC62073C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:03:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHPC1Cbs"
+	by mail.kernel.org (Postfix) with ESMTP id A2B902073C
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583586308;
+	bh=ONFocAkrUcHoVQEyEgxN8icyVv9InTwdB8WDDcNQl3s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ml4CasL4EcT7nWQq8QnSZ+W//wmb6nAOibuva9JoEak7V+DeADZPpohf9An6Y0GyQ
+	 ExgkqtQ+xPIraSUm7BqPfi+px4LVY+cUTdZITUA7L3FY0cAuioQG0XkhApuQP9wuHs
+	 goBnNjS5bRXHhdit+ZuyUZJ0tuxYrDnq06gWb+hI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgCGNDe (ORCPT
+        id S1726269AbgCGNFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:03:34 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36895 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgCGNDe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 08:03:34 -0500
-Received: by mail-oi1-f194.google.com with SMTP id q65so5501312oif.4;
-        Sat, 07 Mar 2020 05:03:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6pgNNlcavLuVjj49GMK+wfXOssMj69a2cB8yGId4NYQ=;
-        b=kHPC1Cbso2QiFygJ85SMacvt12NOT6uZqn/DoWRVLm60z0YcE63a2NZFtHTWlBRofT
-         JwBks+FmsyoUImjcYPpQe/Fn5KG4Ptec+vQesKcHvvfSdTWBz8ise8LqZKIIx2ale9LA
-         9HDi/sxRPjtjXplwMY1Zv1wII9Ip0CgJQMu5EbL0/cSPSm95TIS1qeKCry1sHqtAN6pE
-         6ATzT9PeU0jm3ti3OuWT2jc4jWJJ1kkifakYXx6iEWiTb/hhTcaRew1/5VeXHp7rbteZ
-         IVGGmq6+CT0qm4YrdQpnw1q9V5LtZfZrMqrQcQOryVFFTPcuFtxwGjgxV1oD+G46dhgi
-         jKzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6pgNNlcavLuVjj49GMK+wfXOssMj69a2cB8yGId4NYQ=;
-        b=p/Yy5mLCsy2dEFj+7Hj759ywUVB1SrFeuQI8PIr5rbMv3J1cqOr71Fd5uQrtZYkqPO
-         43HzrSYQoQG5Fsxp9/bKov/6oPrNEE7XUcgkz/9oaJDCQ7a22MC09EMkI86tz9zC05Rm
-         JOd1ZZF7x3Kbid53acGh6E4efRbtj8VtdoD0liSe0TDhgU9NLLgwhw0zEoWaeB2QUGv1
-         nqixLBW+JOVaXNkscjsScf20Y4UhtMzxSUh172sJkVf4afVQa1sfV4MLBpdF2Iylhu5p
-         vsHd9LjF6XxPsTu3f+l70Ek/0FpVpwgNeIcmQK4uoAuMABEFV5tpX0ZDSXzRrd2Blayk
-         L8gA==
-X-Gm-Message-State: ANhLgQ11LfB3I7J/NWi8cou8FwtnZWKSG45FeCPblM2+JMMrit93EPbm
-        Lq4BrYOufj5f1JiM7BFVmt586ubL/S3exkhmYRYmWitR
-X-Google-Smtp-Source: ADFU+vsFjKRpKP1FY2AISTU9jdkvs1VcpproCi+zI9mfkHt+92OJN0c1Rigdv4o+9F6A/9j277d25GPdxY0HMhCh4qU=
-X-Received: by 2002:aca:f405:: with SMTP id s5mr5809255oih.93.1583586211093;
- Sat, 07 Mar 2020 05:03:31 -0800 (PST)
+        Sat, 7 Mar 2020 08:05:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgCGNFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 08:05:07 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 211142073C;
+        Sat,  7 Mar 2020 13:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583586305;
+        bh=ONFocAkrUcHoVQEyEgxN8icyVv9InTwdB8WDDcNQl3s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0Fk/1wobdEc6sU534pRZd2KrZ37yXXxMQr8Q2ehM2euopFA6qmaIqDQ6oqWbMXBAW
+         JfadcYCR6HYmc3RHJBFxN7QAIxSo4C3Dx7OXVDut9zQgft2A9LOFnQQlUizkXw4l8T
+         F0XX2JvnrWwYNPL7Qd+O6Jt23hjADUvwQEHAFrtI=
+Date:   Sat, 7 Mar 2020 13:05:02 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] counter: 104-quad-8: Support Differential Encoder
+ Cable Status
+Message-ID: <20200307130502.5b27b73e@archlinux>
+In-Reply-To: <20200301220719.25173-1-vilhelm.gray@gmail.com>
+References: <20200301220719.25173-1-vilhelm.gray@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200228165011.17898-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200228165011.17898-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200304204715.GC1791497@oden.dyn.berto.se>
-In-Reply-To: <20200304204715.GC1791497@oden.dyn.berto.se>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sat, 7 Mar 2020 13:03:04 +0000
-Message-ID: <CA+V-a8sV9CUoyp1C6+ZPhBbP17ypdsCD_KuPnCd+-miO2npaXQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] media: rcar-csi2: Fix registering camera endpoint to VIN
-To:     Niklas <niklas.soderlund@ragnatech.se>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas,
+On Sun,  1 Mar 2020 17:07:19 -0500
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-Thank you for the review.
+> The ACCES 104-QUAD-8 series provides status information about the
+> connection state of the differential encoder cable inputs. This patch
+> implements support to expose such information from these devices.
+> 
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+Looks good to me.  Applied to the togreg branch of iio.git
+and pushed out as testing for the autobuilders to play with it.
 
-On Wed, Mar 4, 2020 at 8:47 PM Niklas <niklas.soderlund@ragnatech.se> wrote=
-:
->
-> Hi Lad,
->
-> Thanks for your work.
->
-> On 2020-02-28 16:50:10 +0000, Lad Prabhakar wrote:
-> > CSI2 registers camera/sensor as v4l2 async sub device with fwnode is
-> > remote endpoint and the camera/sensor register itself as v4l2 sub devic=
-e
-> > with fwnode is remote device as a result the match.fwnode should be
-> > fwnode_graph_get_remote_port_parent and not
-> > fwnode_graph_get_remote_endpoint.
-> >
-> > This patch makes use of v4l2 helper function
-> > v4l2_async_notifier_add_fwnode_remote_subdev() which uses
-> > fwnode_graph_get_remote_port_parent as match.fwnode fixing the issue
-> > of registering camera endpoint to the driver.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> I'm afraid this is not the right solution. The rcar-csi2 driver uses the
-> v4l2-async framework to do endpoint matching instead of node matching.
-> This is needed as it needs to work with the adv748x driver which
-> register it self in v4l2-async using endpoints instead of nodes. The
-> reason for this is that from a single DT node it creates multiple
-> subdevices, one for each endpoint IIRC.
->
-> Without this patch the two CSI-2 receivers on R-Car M3-n registers the
-> two following 'paths' in v4l2 to be able to find the two subdevice CSI-2
-> transmitters created by the ADV748x.
->
-> rcar-csi2 fea80000.csi2: '/soc/i2c@e66d8000/video-receiver@70/port@b/endp=
-oint'
-> rcar-csi2 feaa0000.csi2: '/soc/i2c@e66d8000/video-receiver@70/port@a/endp=
-oint'
->
-> With this patch applied it registers the following which can't be found
-> as they are not present in the v4l2-async list of subdevices (as they
-> are registerd as above).
->
-> rcar-csi2 fea80000.csi2: '/soc/i2c@e66d8000/video-receiver@70'
-> rcar-csi2 feaa0000.csi2: '/soc/i2c@e66d8000/video-receiver@70'
-> rcar-csi2: probe of feaa0000.csi2 failed with error -17
->
-> This patch may unlock your use-case as it's a known problem that
-> endpoint and node matching do not mix. But it will break the already
-> upstream use-case and for that reason, I'm really sorry about this.
->
-Completely missed it, thank you for pointing out.
+Thanks,
 
-> Nacked-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se>
->
-> The real solution to this problem IMHO is to make all of v4l2-async
-> operate using endpoint matching or possibly some kind of fallback to
-> node matching if no endpoint can be found. Never the less some work is
-> required in the v4l2-async core to sort out node and endpoint matching
-> coexistence.
->
-Thank you for the pointers, I shall do some digging in v4l2-asyn.
+Jonathan
 
-Cheers,
---Prabhakar
+> ---
+> Changes in v3:
+>  - Split cable_status attribute into cable_fault and cable_fault_enable;
+>    both under each Signal so we can control each channel independently
+>  - Initialize to a default state of disabled for all channels
+> 
+>  .../ABI/testing/sysfs-bus-counter-104-quad-8  | 18 +++++
+>  drivers/counter/104-quad-8.c                  | 75 +++++++++++++++++++
+>  2 files changed, 93 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8 b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+> index 3c905d3cf5d7..eac32180c40d 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+> +++ b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+> @@ -1,3 +1,21 @@
+> +What:		/sys/bus/counter/devices/counterX/signalY/cable_fault
+> +KernelVersion:	5.7
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Read-only attribute that indicates whether a differential
+> +		encoder cable fault (not connected or loose wires) is detected
+> +		for the respective channel of Signal Y. Valid attribute values
+> +		are boolean. Detection must first be enabled via the
+> +		corresponding cable_fault_enable attribute.
+> +
+> +What:		/sys/bus/counter/devices/counterX/signalY/cable_fault_enable
+> +KernelVersion:	5.7
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Whether detection of differential encoder cable faults for the
+> +		respective channel of Signal Y is enabled. Valid attribute
+> +		values are boolean.
+> +
+>  What:		/sys/bus/counter/devices/counterX/signalY/filter_clock_prescaler
+>  KernelVersion:	5.7
+>  Contact:	linux-iio@vger.kernel.org
+> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+> index 0cfc813ee2cb..9dab190c49b0 100644
+> --- a/drivers/counter/104-quad-8.c
+> +++ b/drivers/counter/104-quad-8.c
+> @@ -31,6 +31,7 @@ MODULE_PARM_DESC(base, "ACCES 104-QUAD-8 base addresses");
+>  /**
+>   * struct quad8_iio - IIO device private data structure
+>   * @counter:		instance of the counter_device
+> + * @fck_prescaler:	array of filter clock prescaler configurations
+>   * @preset:		array of preset values
+>   * @count_mode:		array of count mode configurations
+>   * @quadrature_mode:	array of quadrature mode configurations
+> @@ -39,6 +40,7 @@ MODULE_PARM_DESC(base, "ACCES 104-QUAD-8 base addresses");
+>   * @preset_enable:	array of set_to_preset_on_index attribute configurations
+>   * @synchronous_mode:	array of index function synchronous mode configurations
+>   * @index_polarity:	array of index function polarity configurations
+> + * @cable_fault_enable:	differential encoder cable status enable configurations
+>   * @base:		base port address of the IIO device
+>   */
+>  struct quad8_iio {
+> @@ -52,11 +54,13 @@ struct quad8_iio {
+>  	unsigned int preset_enable[QUAD8_NUM_COUNTERS];
+>  	unsigned int synchronous_mode[QUAD8_NUM_COUNTERS];
+>  	unsigned int index_polarity[QUAD8_NUM_COUNTERS];
+> +	unsigned int cable_fault_enable;
+>  	unsigned int base;
+>  };
+>  
+>  #define QUAD8_REG_CHAN_OP 0x11
+>  #define QUAD8_REG_INDEX_INPUT_LEVELS 0x16
+> +#define QUAD8_DIFF_ENCODER_CABLE_STATUS 0x17
+>  /* Borrow Toggle flip-flop */
+>  #define QUAD8_FLAG_BT BIT(0)
+>  /* Carry Toggle flip-flop */
+> @@ -1143,6 +1147,66 @@ static ssize_t quad8_count_preset_enable_write(struct counter_device *counter,
+>  	return len;
+>  }
+>  
+> +static ssize_t quad8_signal_cable_fault_read(struct counter_device *counter,
+> +					     struct counter_signal *signal,
+> +					     void *private, char *buf)
+> +{
+> +	const struct quad8_iio *const priv = counter->priv;
+> +	const size_t channel_id = signal->id / 2;
+> +	const bool disabled = !(priv->cable_fault_enable & BIT(channel_id));
+> +	unsigned int status;
+> +	unsigned int fault;
+> +
+> +	if (disabled)
+> +		return -EINVAL;
+> +
+> +	/* Logic 0 = cable fault */
+> +	status = inb(priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
+> +
+> +	/* Mask respective channel and invert logic */
+> +	fault = !(status & BIT(channel_id));
+> +
+> +	return sprintf(buf, "%u\n", fault);
+> +}
+> +
+> +static ssize_t quad8_signal_cable_fault_enable_read(
+> +	struct counter_device *counter, struct counter_signal *signal,
+> +	void *private, char *buf)
+> +{
+> +	const struct quad8_iio *const priv = counter->priv;
+> +	const size_t channel_id = signal->id / 2;
+> +	const unsigned int enb = !!(priv->cable_fault_enable & BIT(channel_id));
+> +
+> +	return sprintf(buf, "%u\n", enb);
+> +}
+> +
+> +static ssize_t quad8_signal_cable_fault_enable_write(
+> +	struct counter_device *counter, struct counter_signal *signal,
+> +	void *private, const char *buf, size_t len)
+> +{
+> +	struct quad8_iio *const priv = counter->priv;
+> +	const size_t channel_id = signal->id / 2;
+> +	bool enable;
+> +	int ret;
+> +	unsigned int cable_fault_enable;
+> +
+> +	ret = kstrtobool(buf, &enable);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (enable)
+> +		priv->cable_fault_enable |= BIT(channel_id);
+> +	else
+> +		priv->cable_fault_enable &= ~BIT(channel_id);
+> +
+> +	/* Enable is active low in Differential Encoder Cable Status register */
+> +	cable_fault_enable = ~priv->cable_fault_enable;
+> +
+> +	outb(cable_fault_enable, priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
+> +
+> +	return len;
+> +}
+> +
+>  static ssize_t quad8_signal_fck_prescaler_read(struct counter_device *counter,
+>  	struct counter_signal *signal, void *private, char *buf)
+>  {
+> @@ -1180,6 +1244,15 @@ static ssize_t quad8_signal_fck_prescaler_write(struct counter_device *counter,
+>  }
+>  
+>  static const struct counter_signal_ext quad8_signal_ext[] = {
+> +	{
+> +		.name = "cable_fault",
+> +		.read = quad8_signal_cable_fault_read
+> +	},
+> +	{
+> +		.name = "cable_fault_enable",
+> +		.read = quad8_signal_cable_fault_enable_read,
+> +		.write = quad8_signal_cable_fault_enable_write
+> +	},
+>  	{
+>  		.name = "filter_clock_prescaler",
+>  		.read = quad8_signal_fck_prescaler_read,
+> @@ -1383,6 +1456,8 @@ static int quad8_probe(struct device *dev, unsigned int id)
+>  		/* Disable index function; negative index polarity */
+>  		outb(QUAD8_CTR_IDR, base_offset + 1);
+>  	}
+> +	/* Disable Differential Encoder Cable Status for all channels */
+> +	outb(0xFF, base[id] + QUAD8_DIFF_ENCODER_CABLE_STATUS);
+>  	/* Enable all counters */
+>  	outb(QUAD8_CHAN_OP_ENABLE_COUNTERS, base[id] + QUAD8_REG_CHAN_OP);
+>  
 
-> > ---
-> >  drivers/media/platform/rcar-vin/rcar-csi2.c | 14 ++++++--------
-> >  1 file changed, 6 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/medi=
-a/platform/rcar-vin/rcar-csi2.c
-> > index faa9fb23a2e9..5b04e4768eb1 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > @@ -833,20 +833,18 @@ static int rcsi2_parse_dt(struct rcar_csi2 *priv)
-> >               return ret;
-> >       }
-> >
-> > -     priv->asd.match.fwnode =3D
-> > -             fwnode_graph_get_remote_endpoint(of_fwnode_handle(ep));
-> > -     priv->asd.match_type =3D V4L2_ASYNC_MATCH_FWNODE;
-> > -
-> > -     of_node_put(ep);
-> > -
-> >       v4l2_async_notifier_init(&priv->notifier);
-> >
-> > -     ret =3D v4l2_async_notifier_add_subdev(&priv->notifier, &priv->as=
-d);
-> > +     ret =3D v4l2_async_notifier_add_fwnode_remote_subdev(&priv->notif=
-ier,
-> > +                                                        of_fwnode_hand=
-le(ep),
-> > +                                                        &priv->asd);
-> >       if (ret) {
-> > -             fwnode_handle_put(priv->asd.match.fwnode);
-> > +             of_node_put(ep);
-> >               return ret;
-> >       }
-> >
-> > +     of_node_put(ep);
-> > +
-> >       priv->notifier.ops =3D &rcar_csi2_notify_ops;
-> >
-> >       dev_dbg(priv->dev, "Found '%pOF'\n",
-> > --
-> > 2.20.1
-> >
->
-> --
-> Regards,
-> Niklas S=C3=B6derlund
