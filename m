@@ -2,234 +2,183 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEC4C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B52C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE9F2067C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE887206E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:28:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HpWAYO0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgCGBZL (ORCPT
+        id S1726462AbgCGB2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 20:25:11 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:33779 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCGBZL (ORCPT
+        Fri, 6 Mar 2020 20:28:01 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35318 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgCGB2B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 20:25:11 -0500
-Received: by mail-io1-f70.google.com with SMTP id a23so2710185ioa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 17:25:10 -0800 (PST)
+        Fri, 6 Mar 2020 20:28:01 -0500
+Received: by mail-lj1-f196.google.com with SMTP id a12so4147508ljj.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 17:27:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tM5rNBDzDBfUzH8FigDCfHhd1rXYSHwTeF/Tvps25Ao=;
+        b=HpWAYO0LOjmlNMsNvaoN+lgWUHGKA8P4Sdwn1m2ycN0+57X7bxCNbb4H/jMrbdlkFG
+         O+tISKs7zkNKeaL26enQ0oB+/d1pULikT52MHYmfhd/C+qFMjwppkxxHiwwOgoLtO49n
+         OIFjOgVCPylgn+ZSTR/4wEnhsRFMXOTd3FBSDy+a2A+Bbk0uEww0vtON8gfJMNvMmrOz
+         mm9+lyc7fLEYhWUT0UxiVLifqQClK0Bj3Ese/LbI0Po2RpPpEtEx7AI5CIcKCLBkBBx9
+         pQYXoRJ2Eu63G0SPdGTbc5Y6ygn1lRPtwhCC1MQk4h00NyIOehUvSzO4UXnAZDUT4KDv
+         c35Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Nm4HsAgs4/0yQMfo2emBE21H/Z/pFUU7IYdmI4v3O0o=;
-        b=KfT856ZkqD4wdvzM/2qkxmkcHoQy6QVGkYLF2Kh88XzObF/9ofZXe2IMO04HbrtvhK
-         4bBmgyeNUgCwdFz34zJPWWThZRgl3ci8NdqhT5L8gyIbrN9vTp4Y9i7/ZB3t8LHN2xiN
-         oLGS3JCGnnp0JpDx9TOTEmv1CYRCEjWidfv0AaMwPl4D3w2Ca/kqUruLmbnbIrqP6UsR
-         lZ0PVuMzuaseB5MEdxkSmBI/bSynbewbWfcPm+ibows2yFmUtPca0qJh8RW6RNwWEErC
-         62TrBl3qDH8Yc18BzHDjLpqF9/Og9K/NtcnfWrllzGWuLKZN0xkIQVZsHbpegf8/7UFD
-         TuPg==
-X-Gm-Message-State: ANhLgQ3bMawA/xMXQ63L3jMMdqKlE2LqK/D2vYLfr+3x7CgxgaZst+dM
-        7h4WyzNyqfKalUutK53AQz5mmFlSW/khelJlnxHsCZ8rYOa0
-X-Google-Smtp-Source: ADFU+vsjcWEP3Tbe1+wcd5mTKH1dxnCCT7pkHPVoeFAJMRFFSQDTLq0Ck+PB588dnqoBenflzSi5dPjfBci5C6QuNbEUs2Z+6Pr+
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tM5rNBDzDBfUzH8FigDCfHhd1rXYSHwTeF/Tvps25Ao=;
+        b=oDDbhZtWk4ivZUWGJMan2UxII5A6HDj+JL2J0zmqTCL2zUl9n50nr+AMKx+nh8jjUn
+         cpf79WWZ52FanuqEEQZWNdX9VGv0Esj3enc/H4UQkINffPu4sMYo0HMlNzPjJAwN9J6T
+         jS2VnWiVtTMAx9x2X+KGYce9dX1Bc4VdRJIaeO4qW5LBSoP2RAT+aN6gC+8WAXKTZOxI
+         Fnp/POs5QGxT3lx9IuVAmiHfMRLd8NgemEpNp//d6o4YiIoUkBkiYX4pwj6f+orE/w6b
+         07UNiSUOwM3sMvZyhBoX1BYs2id1T/DbRbHxNvj+zkjPsE0n7GjalE3JwlwIx7O4D3mg
+         t7QQ==
+X-Gm-Message-State: ANhLgQ16O5jgPhvTpzKqJTFnUerzDglFuQB9pCogNY3rgs8OzsWrt0QX
+        xH6eJkSPybK3xoxMWrdJNBobxSwjoMV76E+39L76gg==
+X-Google-Smtp-Source: ADFU+vswaj44TqozErjCWa7iRzdIsg2d5K2y0B3N/jpQwQkIl3T1+K9wNnp5/KhPTopivHokdBJHWhLYsjVl7GpbTvY=
+X-Received: by 2002:a2e:b88d:: with SMTP id r13mr3340787ljp.66.1583544477713;
+ Fri, 06 Mar 2020 17:27:57 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a02:cf1b:: with SMTP id q27mr2929281jar.99.1583544310045;
- Fri, 06 Mar 2020 17:25:10 -0800 (PST)
-Date:   Fri, 06 Mar 2020 17:25:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000161ee805a039a49e@google.com>
-Subject: possible deadlock in siw_create_listen
-From:   syzbot <syzbot+3fbea977bd382a4e6140@syzkaller.appspotmail.com>
-To:     bmt@zurich.ibm.com, dledford@redhat.com, jgg@ziepe.ca,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20200305012338.219746-1-rajatja@google.com> <20200305012338.219746-4-rajatja@google.com>
+ <87k13znmrc.fsf@intel.com> <CACK8Z6ERZpZaSXsxrk_yGrRAtrgwytb5TEpyt1sX+V40U7m0sQ@mail.gmail.com>
+ <87pndpoklz.fsf@intel.com>
+In-Reply-To: <87pndpoklz.fsf@intel.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Fri, 6 Mar 2020 17:27:21 -0800
+Message-ID: <CACK8Z6G1y+osmBeOFmGyFgC2SX=HoY=rogKxk=F6D2GPxoMt1w@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] drm/i915: Add support for integrated privacy screens
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        intel-gfx@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mat King <mathewk@google.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
+        Sean Paul <seanpaul@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Nitin Joshi1 <njoshi1@lenovo.com>,
+        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
+        Tomoki Maruichi <maruichit@lenovo.com>,
+        Guenter Roeck <groeck@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Thanks Jani so much for the detailed explanation.
 
-syzbot found the following crash on:
+I was able to write the code for this, but I am facing one problem, see below.
 
-HEAD commit:    68e2c376 Merge branch 'hsr-several-code-cleanup-for-hsr-mo..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10c92e91e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7e519c35f474a428
-dashboard link: https://syzkaller.appspot.com/bug?extid=3fbea977bd382a4e6140
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+On Fri, Mar 6, 2020 at 2:15 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
+>
+> On Thu, 05 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
+> > OK, will do. In order to do that I may need to introduce driver level
+> > hooks that i915 driver can populate and drm core can call (or may be
+> > some functions to add privacy screen property that drm core exports
+> > and i915 driver will call).
+>
+> The latter. Look at drm_connector_attach_*() functions in
+> drm_connector.c. i915 (or any other driver) can create and attach the
+> property as needed. drm_atomic_connector_{get,set}_property in
+> drm_atomic_uapi.c need to handle the properties, but *only* to get/set
+> the value in drm_connector_state, nothing more. How that value is
+> actually used is up to the drivers, but the userspace interface will be
+> the same instead of being driver specific.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Understood, done.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3fbea977bd382a4e6140@syzkaller.appspotmail.com
+>
+> >> > @@ -93,15 +97,18 @@ int intel_digital_connector_atomic_set_property(struct drm_connector *connector,
+> >> >       struct drm_i915_private *dev_priv = to_i915(dev);
+> >> >       struct intel_digital_connector_state *intel_conn_state =
+> >> >               to_intel_digital_connector_state(state);
+> >> > +     struct intel_connector *intel_connector = to_intel_connector(connector);
+> >> >
+> >> >       if (property == dev_priv->force_audio_property) {
+> >> >               intel_conn_state->force_audio = val;
+> >> >               return 0;
+> >> > -     }
+> >> > -
+> >> > -     if (property == dev_priv->broadcast_rgb_property) {
+> >> > +     } else if (property == dev_priv->broadcast_rgb_property) {
+> >> >               intel_conn_state->broadcast_rgb = val;
+> >> >               return 0;
+> >> > +     } else if (property == intel_connector->privacy_screen_property) {
+> >> > +             intel_privacy_screen_set_val(intel_connector, val);
+> >>
+> >> I think this part should only change the connector state. The driver
+> >> would then do the magic at commit stage according to the property value.
+>
+> Also, this would be the part that's done in drm core level.
+>
 
-iwpm_register_pid: Unable to send a nlmsg (client = 2)
-======================================================
-WARNING: possible circular locking dependency detected
-5.6.0-rc3-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.5/2139 is trying to acquire lock:
-ffffffff8a34e5c0 (rtnl_mutex){+.+.}, at: siw_create_listen+0x329/0xed0 drivers/infiniband/sw/siw/siw_cm.c:1951
+Yup.
 
-but task is already holding lock:
-ffffffff8a1d3600 (lock#3){+.+.}, at: cma_add_one+0x5dc/0xb60 drivers/infiniband/core/cma.c:4663
+> > Can you please point me to some code reference as to where in code
+> > does the "commit stage" apply the changes?
+>
+> Look at, say, drm_connector_attach_scaling_mode_property(). In the
+> getter/setter code it'll just read/change state->scaling_mode. You can
+> use the value in encoder ->enable, ->disable, and ->update_pipe
+> hooks. Enable should enable the privacy screen if desired, disable
+> should probably unconditionally disable the privacy screen while
+> disabling the display, and update should just change the state according
+> to the value. Update is called if there isn't a full modeset. (Scaling
+> mode is a bit more indirect than that, affecting other things in the
+> encoder ->compute_config hook, leading to similar effects.)
 
-which lock already depends on the new lock.
+For my testing purposes, I'm testing this using the proptest utility
+in our distribution (I think from
+https://github.com/CPFL/drm/blob/master/tests/proptest/proptest.c). I
+notice that when I change the value of the property from userspace,
+even though the drm_connector_state->privacy_screen_status gets
+updated and reflects the change, the encoder->update_pipe() is not
+getting called. Just wanted to ask if this is expected since you seem
+to imply this update_pipe() might *not* get called if there *is* a
+full modeset? (What is the hook that gets called for a full modeset
+where i915 driver should commit this property change to the hardware?)
 
+Thanks & Best Regards,
 
-the existing dependency chain (in reverse order) is:
-
--> #1 (lock#3){+.+.}:
-       __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-       __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-       cma_netdev_callback+0xc5/0x380 drivers/infiniband/core/cma.c:4605
-       notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
-       call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
-       call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
-       call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
-       call_netdevice_notifiers+0x79/0xa0 net/core/dev.c:1974
-       bond_change_active_slave+0x80e/0x1d90 drivers/net/bonding/bond_main.c:944
-       bond_select_active_slave+0x250/0xa60 drivers/net/bonding/bond_main.c:986
-       bond_enslave+0x4281/0x4800 drivers/net/bonding/bond_main.c:1823
-       do_set_master net/core/rtnetlink.c:2468 [inline]
-       do_set_master+0x1d7/0x230 net/core/rtnetlink.c:2441
-       __rtnl_newlink+0x11d4/0x1590 net/core/rtnetlink.c:3346
-       rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
-       rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
-       netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
-       netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-       netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-       netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-       sock_sendmsg_nosec net/socket.c:652 [inline]
-       sock_sendmsg+0xcf/0x120 net/socket.c:672
-       ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
-       ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-       __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
-       do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (rtnl_mutex){+.+.}:
-       check_prev_add kernel/locking/lockdep.c:2475 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
-       validate_chain kernel/locking/lockdep.c:2970 [inline]
-       __lock_acquire+0x201b/0x3ca0 kernel/locking/lockdep.c:3954
-       lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
-       __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-       __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-       siw_create_listen+0x329/0xed0 drivers/infiniband/sw/siw/siw_cm.c:1951
-       iw_cm_listen+0x166/0x1e0 drivers/infiniband/core/iwcm.c:582
-       cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
-       rdma_listen+0x5e2/0x910 drivers/infiniband/core/cma.c:3614
-       cma_listen_on_dev+0x512/0x650 drivers/infiniband/core/cma.c:2501
-       cma_add_one+0x6aa/0xb60 drivers/infiniband/core/cma.c:4666
-       add_client_context+0x3b4/0x520 drivers/infiniband/core/device.c:681
-       enable_device_and_get+0x1cd/0x3b0 drivers/infiniband/core/device.c:1316
-       ib_register_device drivers/infiniband/core/device.c:1382 [inline]
-       ib_register_device+0xa12/0xda0 drivers/infiniband/core/device.c:1343
-       siw_device_register drivers/infiniband/sw/siw/siw_main.c:70 [inline]
-       siw_newlink drivers/infiniband/sw/siw/siw_main.c:565 [inline]
-       siw_newlink+0xdef/0x1310 drivers/infiniband/sw/siw/siw_main.c:542
-       nldev_newlink+0x27f/0x400 drivers/infiniband/core/nldev.c:1538
-       rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
-       rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
-       rdma_nl_rcv+0x586/0x900 drivers/infiniband/core/netlink.c:259
-       netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-       netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-       netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-       sock_sendmsg_nosec net/socket.c:652 [inline]
-       sock_sendmsg+0xcf/0x120 net/socket.c:672
-       ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
-       ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-       __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
-       do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(lock#3);
-                               lock(rtnl_mutex);
-                               lock(lock#3);
-  lock(rtnl_mutex);
-
- *** DEADLOCK ***
-
-6 locks held by syz-executor.5/2139:
- #0: ffffffff8cf316c0 (&rdma_nl_types[idx].sem){.+.+}, at: rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:164 [inline]
- #0: ffffffff8cf316c0 (&rdma_nl_types[idx].sem){.+.+}, at: rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
- #0: ffffffff8cf316c0 (&rdma_nl_types[idx].sem){.+.+}, at: rdma_nl_rcv+0x3ba/0x900 drivers/infiniband/core/netlink.c:259
- #1: ffffffff8a1c8fc8 (link_ops_rwsem){++++}, at: nldev_newlink+0x23b/0x400 drivers/infiniband/core/nldev.c:1528
- #2: ffffffff8a1bcae8 (devices_rwsem){++++}, at: enable_device_and_get+0xfc/0x3b0 drivers/infiniband/core/device.c:1306
- #3: ffffffff8a1bc9a8 (clients_rwsem){++++}, at: enable_device_and_get+0x15b/0x3b0 drivers/infiniband/core/device.c:1314
- #4: ffff8880550d8538 (&device->client_data_rwsem){++++}, at: add_client_context+0x382/0x520 drivers/infiniband/core/device.c:679
- #5: ffffffff8a1d3600 (lock#3){+.+.}, at: cma_add_one+0x5dc/0xb60 drivers/infiniband/core/cma.c:4663
-
-stack backtrace:
-CPU: 0 PID: 2139 Comm: syz-executor.5 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1808
- check_prev_add kernel/locking/lockdep.c:2475 [inline]
- check_prevs_add kernel/locking/lockdep.c:2580 [inline]
- validate_chain kernel/locking/lockdep.c:2970 [inline]
- __lock_acquire+0x201b/0x3ca0 kernel/locking/lockdep.c:3954
- lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
- __mutex_lock_common kernel/locking/mutex.c:956 [inline]
- __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
- siw_create_listen+0x329/0xed0 drivers/infiniband/sw/siw/siw_cm.c:1951
- iw_cm_listen+0x166/0x1e0 drivers/infiniband/core/iwcm.c:582
- cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
- rdma_listen+0x5e2/0x910 drivers/infiniband/core/cma.c:3614
- cma_listen_on_dev+0x512/0x650 drivers/infiniband/core/cma.c:2501
- cma_add_one+0x6aa/0xb60 drivers/infiniband/core/cma.c:4666
- add_client_context+0x3b4/0x520 drivers/infiniband/core/device.c:681
- enable_device_and_get+0x1cd/0x3b0 drivers/infiniband/core/device.c:1316
- ib_register_device drivers/infiniband/core/device.c:1382 [inline]
- ib_register_device+0xa12/0xda0 drivers/infiniband/core/device.c:1343
- siw_device_register drivers/infiniband/sw/siw/siw_main.c:70 [inline]
- siw_newlink drivers/infiniband/sw/siw/siw_main.c:565 [inline]
- siw_newlink+0xdef/0x1310 drivers/infiniband/sw/siw/siw_main.c:542
- nldev_newlink+0x27f/0x400 drivers/infiniband/core/nldev.c:1538
- rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
- rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
- rdma_nl_rcv+0x586/0x900 drivers/infiniband/core/netlink.c:259
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
- do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c4a9
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f9634c65c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f9634c666d4 RCX: 000000000045c4a9
-RDX: 0000000000000000 RSI: 00000000200031c0 RDI: 0000000000000003
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000009a3 R14: 00000000004d5798 R15: 000000000076bf2c
-infiniband syz1: RDMA CMA: cma_listen_on_dev, error -22
-infiniband syz1: RDMA CMA: cma_listen_on_dev, error -98
+Rajat
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> Ville, anything I missed?
+>
+> BR,
+> Jani.
+>
+>
+> --
+> Jani Nikula, Intel Open Source Graphics Center
