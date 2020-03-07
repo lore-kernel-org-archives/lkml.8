@@ -2,114 +2,217 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4B0C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4C0C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED9E2073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:31:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583566289;
-	bh=/8wztW9Zw/Qy4YL7T27+Awuor+c/aBqBFPJ4+2qen6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JbpHmc46YUfZVsCbvCqiudPZY1WD7Llh2jTlM7xosenflyJT1+1AFMGgeEEb/B41l
-	 ZxhrRIxKwP9vHHlxBhKXJi+oOFziMjxT63Ar4sNDAGDSvPul/Ktq6hVg5O5Hu52OH9
-	 5qDdM3EeEXjTOF814MQKuUec1G5Lg2/W6iU3UdYs=
+	by mail.kernel.org (Postfix) with ESMTP id 48C532073D
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jKbOA4bB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgCGHbQ (ORCPT
+        id S1726174AbgCGHbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 02:31:16 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37971 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgCGHbQ (ORCPT
+        Sat, 7 Mar 2020 02:31:36 -0500
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:53722 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgCGHbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 02:31:16 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t11so4918109wrw.5;
-        Fri, 06 Mar 2020 23:31:15 -0800 (PST)
+        Sat, 7 Mar 2020 02:31:35 -0500
+Received: by mail-pl1-f202.google.com with SMTP id 2so2741528plb.20
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 23:31:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GZ63kSzDRSNavMbJagZdDOIL2ssyD8h5PHQ+jSGVk9g=;
-        b=nLUQinBitKbEXi4eN/VMqeM4FTz1hfr4Pafaq8jZpg9jUQ10bAJt5SqBSVbwZFjMB/
-         UwOyfGEd82Lhq2KfbJ6/oNYDsquNYpNwT8XwrhIlu6jDwCaMoTIL9muYjCshhtHlj5l1
-         m6gSXmtQUiZ0iXYSWFQ8zBoKzmP74N/IW4O7frsQRF54qMsG0LWkRkGJr8ItWVQTrxlA
-         I+5AYXOY3LeisQ/IEtUqL5oXnTD7TondRR9zmHfwHqlbolYwCWEg5q5GeU/AtgtOnQBq
-         b6ul5tLm1eCy7feIepCGKvmtg8zENQHxezv6cqF6Ixh5oB7OeDh0aG5B9gLmQuIGg6z2
-         6glA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Nvst3AaP56nlItqXpc0+4F52f+TlnZkB8BIILlWHxto=;
+        b=jKbOA4bB1Ir9nELIHowpTynl98yX6B0mVQXHRh6uiZFvUUCQznNVW7WnOYdMIEqAwv
+         CtyNzm9GgNbFhN6+sEZUEseb3mx7kjvyL0QH8mkv+kX70AaMFfXs5y5lTXUX/BBxpRXB
+         fW/Ht8ykjk5bFbdjuBLf3bNGSzRrsG8sCqLtt3lKjF6jLwtNeS7pcT9DO9kAMOwaqx8Q
+         n7G+TZ+XGSgaqWTloRPdur88HBdUPDnavwUOr7y24oxEZxXfonmeeE+oSPhDBQ0zF2yu
+         9g9yLa4XnX0jUxqwSvMiCjgGsSh+pxCOVARd/02xSIr5VqkmAMkCW7f/uCkXwR8LsyNe
+         qCEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GZ63kSzDRSNavMbJagZdDOIL2ssyD8h5PHQ+jSGVk9g=;
-        b=VAih7++ZSxbC3OVKQuULdlUNjc8q8iHQ05HEjWjlqSn/pM6jDSD94gxZ0AXvZ64+th
-         3FsWaOXCKT+1kdyhc4JQkEKwPuZNLnLoxhH6ZQi7GoxrbG3zYTgHYXt9AIt7s2oqi7AV
-         RSrlHJ18/q+sqGPDHx3ZODQj8XJe6ZRvpcBV8/1Ew0vhoqtEkVkqZkn0LVNk65X3x6hK
-         dMmX4qP7YQ4NkcVlPpNaXr9VlNNOOachzwZOxWG5Fv3VBQayV/8QaIQORjoSWPbgVj6B
-         G6WhNYLmEEvtYpHsP2PpqoJiYIvbbEw1K+SG7Vf4P96CgWKBSGEdWOUkfKRQtIxZzI0w
-         Ab0g==
-X-Gm-Message-State: ANhLgQ16fjaSoJse3ws4FIxbEGF1BvWSKyKLsmuoW0Un/KMfMmgzkgsi
-        eDzS6JlJ0kUR4b7owEwdDGw=
-X-Google-Smtp-Source: ADFU+vvIaY4nJ0X48HYp4pHbU++MtBaUb4eCQr7QNMijWKDUUZXX5XXPCQs5tb0OFx99zbyXmn3dIg==
-X-Received: by 2002:a5d:4b09:: with SMTP id v9mr7971140wrq.85.1583566275057;
-        Fri, 06 Mar 2020 23:31:15 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id f207sm19608124wme.9.2020.03.06.23.31.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 23:31:14 -0800 (PST)
-Date:   Sat, 7 Mar 2020 08:31:11 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Nvst3AaP56nlItqXpc0+4F52f+TlnZkB8BIILlWHxto=;
+        b=iPsTAKBfRHxH5F49hffOXrYS3EnbdRebEp+mb0wUlxwUhvvU5w/MLnrOaReTAkIYzr
+         0DJhEccT7L1EYmaALJ6SjtYZSM37tQeGNfV8g4JbqvEkgA+J/jNE2IPRLKoZC8VHZqWa
+         OvzQgE+VqeIllvHZZdOfuYyAxfhpe1jMOFXxviHBejZKoNwCWBT0Tr3EPmyqjwOgadra
+         4VhmMWEeWjOukybtfLgSTzjjzFj5lVAxqSuIhk+pRcHR40hiTNn5C1Hjd5KmBV+nGSNH
+         FGSokL03hsRqoeo5Ww7eSNbKZjljv3d/tME6/BJLblplJnCprWztwfIeXZ5SZLMe+cZa
+         1NEQ==
+X-Gm-Message-State: ANhLgQ2XQ/mGGJcPQPyAAIuoNlNgNdBRMywbIWxrNp6mxyEbmeGBjwIA
+        lV8e04u6yJF4WGS+RMwMaw5Aor1Z3Dj8
+X-Google-Smtp-Source: ADFU+vsw8x7MWXyDf4IxfrrvBCRczJ7ClsSFvxk8cp71B5CIbfdBnN/K8cUuZ3t7y3wgsPOQB+rbX1y/UhpF
+X-Received: by 2002:a17:90b:1989:: with SMTP id mv9mr7699891pjb.72.1583566293905;
+ Fri, 06 Mar 2020 23:31:33 -0800 (PST)
+Date:   Fri,  6 Mar 2020 23:31:21 -0800
+Message-Id: <20200307073121.203816-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH 1/1] perf/tool: fix read in event parsing
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Ian Rogers <irogers@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Nick Desaulniers <nick.desaulniers@gmail.com>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf/urgent fixes
-Message-ID: <20200307073111.GA32920@gmail.com>
-References: <20200306191144.12762-1-acme@kernel.org>
- <20200306215642.GA15931@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306215642.GA15931@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ADD_CONFIG_TERM accesses term->weak, however, in get_config_chgs this
+value is accessed outside of the list_for_each_entry and references
+invalid memory. Add an argument for ADD_CONFIG_TERM for weak and set it
+to false in the get_config_chgs case.
+This bug was cause by clang's address sanitizer and libfuzzer. It can be
+reproduced with a command line of:
+  perf stat -a -e i/bs,tsc,L2/o
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.c | 46 +++++++++++++++++-----------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
-> Em Fri, Mar 06, 2020 at 04:11:33PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Hi Ingo/Thomas,
-> > 
-> > 	Please consider pulling,
-> > 
-> > Best regards,
-> 
-> OOps, messed up and sent more messages than needed, the branch should be
-> ok tho:
-> 
-> [acme@quaco perf]$ git log --oneline acme/perf/urgent tip/perf/urgent..perf-urgent-for-mingo-5.6-20200306
-> 441b62acd9c8 (tag: perf-urgent-for-mingo-5.6-20200306, five/perf/urgent, acme/perf/urgent, acme.korg/perf/urgent) tools: Fix off-by 1 relative directory includes
-> 3f5777fbaf04 perf jevents: Fix leak of mapfile memory
-> 7b919a53102d perf bench: Clear struct sigaction before sigaction() syscall
-> f649bd9dd5d5 perf bench futex-wake: Restore thread count default to online CPU count
-> 29b4f5f18857 perf top: Fix stdio interface input handling with glibc 2.28+
-> cfd3bc752a3f perf diff: Fix undefined string comparision spotted by clang's -Wstring-compare
-> [acme@quaco perf]$
-> 
-> Sorry about that,
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index a14995835d85..a7dc0b096974 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1213,7 +1213,7 @@ static int config_attr(struct perf_event_attr *attr,
+ static int get_config_terms(struct list_head *head_config,
+ 			    struct list_head *head_terms __maybe_unused)
+ {
+-#define ADD_CONFIG_TERM(__type)					\
++#define ADD_CONFIG_TERM(__type, __weak)				\
+ 	struct perf_evsel_config_term *__t;			\
+ 								\
+ 	__t = zalloc(sizeof(*__t));				\
+@@ -1222,18 +1222,18 @@ static int get_config_terms(struct list_head *head_config,
+ 								\
+ 	INIT_LIST_HEAD(&__t->list);				\
+ 	__t->type       = PERF_EVSEL__CONFIG_TERM_ ## __type;	\
+-	__t->weak	= term->weak;				\
++	__t->weak	= __weak;				\
+ 	list_add_tail(&__t->list, head_terms)
+ 
+-#define ADD_CONFIG_TERM_VAL(__type, __name, __val)		\
++#define ADD_CONFIG_TERM_VAL(__type, __name, __val, __weak)	\
+ do {								\
+-	ADD_CONFIG_TERM(__type);				\
++	ADD_CONFIG_TERM(__type, __weak);			\
+ 	__t->val.__name = __val;				\
+ } while (0)
+ 
+-#define ADD_CONFIG_TERM_STR(__type, __val)			\
++#define ADD_CONFIG_TERM_STR(__type, __val, __weak)		\
+ do {								\
+-	ADD_CONFIG_TERM(__type);				\
++	ADD_CONFIG_TERM(__type, __weak);			\
+ 	__t->val.str = strdup(__val);				\
+ 	if (!__t->val.str) {					\
+ 		zfree(&__t);					\
+@@ -1247,62 +1247,62 @@ do {								\
+ 	list_for_each_entry(term, head_config, list) {
+ 		switch (term->type_term) {
+ 		case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
+-			ADD_CONFIG_TERM_VAL(PERIOD, period, term->val.num);
++			ADD_CONFIG_TERM_VAL(PERIOD, period, term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
+-			ADD_CONFIG_TERM_VAL(FREQ, freq, term->val.num);
++			ADD_CONFIG_TERM_VAL(FREQ, freq, term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_TIME:
+-			ADD_CONFIG_TERM_VAL(TIME, time, term->val.num);
++			ADD_CONFIG_TERM_VAL(TIME, time, term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_CALLGRAPH:
+-			ADD_CONFIG_TERM_STR(CALLGRAPH, term->val.str);
++			ADD_CONFIG_TERM_STR(CALLGRAPH, term->val.str, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_BRANCH_SAMPLE_TYPE:
+-			ADD_CONFIG_TERM_STR(BRANCH, term->val.str);
++			ADD_CONFIG_TERM_STR(BRANCH, term->val.str, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_STACKSIZE:
+ 			ADD_CONFIG_TERM_VAL(STACK_USER, stack_user,
+-					    term->val.num);
++					    term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_INHERIT:
+ 			ADD_CONFIG_TERM_VAL(INHERIT, inherit,
+-					    term->val.num ? 1 : 0);
++					    term->val.num ? 1 : 0, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_NOINHERIT:
+ 			ADD_CONFIG_TERM_VAL(INHERIT, inherit,
+-					    term->val.num ? 0 : 1);
++					    term->val.num ? 0 : 1, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_MAX_STACK:
+ 			ADD_CONFIG_TERM_VAL(MAX_STACK, max_stack,
+-					    term->val.num);
++					    term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_MAX_EVENTS:
+ 			ADD_CONFIG_TERM_VAL(MAX_EVENTS, max_events,
+-					    term->val.num);
++					    term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_OVERWRITE:
+ 			ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite,
+-					    term->val.num ? 1 : 0);
++					    term->val.num ? 1 : 0, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_NOOVERWRITE:
+ 			ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite,
+-					    term->val.num ? 0 : 1);
++					    term->val.num ? 0 : 1, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
+-			ADD_CONFIG_TERM_STR(DRV_CFG, term->val.str);
++			ADD_CONFIG_TERM_STR(DRV_CFG, term->val.str, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_PERCORE:
+ 			ADD_CONFIG_TERM_VAL(PERCORE, percore,
+-					    term->val.num ? true : false);
++					    term->val.num ? true : false, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
+ 			ADD_CONFIG_TERM_VAL(AUX_OUTPUT, aux_output,
+-					    term->val.num ? 1 : 0);
++					    term->val.num ? 1 : 0, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
+ 			ADD_CONFIG_TERM_VAL(AUX_SAMPLE_SIZE, aux_sample_size,
+-					    term->val.num);
++					    term->val.num, term->weak);
+ 			break;
+ 		default:
+ 			break;
+@@ -1339,7 +1339,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct list_head *head_config,
+ 	}
+ 
+ 	if (bits)
+-		ADD_CONFIG_TERM_VAL(CFG_CHG, cfg_chg, bits);
++		ADD_CONFIG_TERM_VAL(CFG_CHG, cfg_chg, bits, false);
+ 
+ #undef ADD_CONFIG_TERM
+ 	return 0;
+-- 
+2.25.1.481.gfbce0eb801-goog
 
-No problem, and pulled into perf/urgent, thanks Arnaldo!
-
-	Ingo
