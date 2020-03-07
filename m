@@ -2,145 +2,128 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE23C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B47C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27BF206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08DA20675
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Cmfk0Dxr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Besub7F/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgCGI3a (ORCPT
+        id S1726276AbgCGImo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 03:29:30 -0500
-Received: from mout.gmx.net ([212.227.17.21]:60209 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbgCGI3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 03:29:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583569763;
-        bh=h79C+D9/EzcE+etbcbZdLaCiNxPE5dspkTyds0Z1D14=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=Cmfk0Dxr0eO5wFGCFqKBoT264bq+7WbFiB/B7ewBbTVA5VkXU3L8QD4W62qXxHRMh
-         DHkdLH5VBh9iIG0ssxXinGvo5wZEzZaBqp8r6XvK/olKFS/tCK71xdPfyqU7wwjacZ
-         tyu3hfj078NEUnY8GTMmjpHJWaM7nOums7w4v7iI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1Mlf4c-1jaVyi3cwM-00iixk; Sat, 07
- Mar 2020 09:29:23 +0100
-Date:   Sat, 7 Mar 2020 09:29:06 +0100
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: vt6656: Declare a few variables as __read_mostly
-Message-ID: <20200307082906.GA2948@ubuntu>
-References: <20200301112620.7892-1-oscar.carter@gmx.com>
- <20200301122514.GA1461917@kroah.com>
- <20200301131701.GA7487@ubuntu>
- <20200301150913.GA1470815@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200301150913.GA1470815@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:/AbFBE0f0Zp6NqvRYmi/sHN078hyV83hTiMzs2AAgg1PNV/aoct
- SHvt/qID4eDmdTU1LS0/w7sHSKXUi2nxKLdi8Vu9Cy+nGT/2KsmP3Wlo7EJPGd00Il3HtHO
- 3YfIpUmqfnrMbIeWroX+fWlEzMu9fhfCq2rsYaS3yediHnoRj14g6SPzciLxij6d4/F0qCz
- oNU82aIlLKA2NfGqv61OQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MNFbH05vUpg=:0e7OB0RPcLe5GHyg0KXodm
- wEU1MNmm2cozk5fuk47ptom9QD3bvKlQdDVdp3Vah0issdUV8VUlQpzy+A+WRG1iO8vIDuuoQ
- biNOb6h0C66uF2yibEqzZsZKDi1O95PTRKcajRchzbQkM22DyVy60A4F9JJbxEVXiyks2j+wi
- O2ouYM8EtHKqt/JuO+85dLDH6EZKHAhdNV0sVzcQl8QVR6JIT2NBIvbmQJt2BXVdA4kFn2BgP
- EbwZbWENuPEahVxv89QAzJDHL/7h1zdoZYQ/5MeaB3gfPyObpydZzP3fd4G7Wivqh0slP7cHo
- 9kl4C3qG7inzIy4GrB5RI6MNUK4S8LcanN9ypjBiA8ZpHqonSNlHF2O+a7aWjZOg1hFWQylSs
- UBzAltiZ4DLfsSNrjdr5lPTfoU5XAN8GSzfmE592H570vHfMfmzMwS8np2owRC/ts+k+zJYq8
- Ju3V+SiRgyK7rRpPqXSBEQ963KoMZ8VDhOx5BnbI4tmficlKF7F50rVgkKIGXiSrWlYwtpsdK
- l8peJKwFNnj2cWCdDCwZu7fD+qR8V6xPS0FIcKHRfUEkT3yNw/lStK4Mix+aKjGN6rVUOAbj/
- xeqo/Jx0Jo2uBwoGJxrGyPK4ncvOTfpqwVzJ20i6x/qTyTLfQr7pfkI+h3LdgjDSYufosVRZz
- al9VlXAjldteorzdUYRtVVoBsU95LxrJp5a3RPcK65sb/K//VWINySOo4DFl8iyciSDGohERN
- Vm390r0wS4T0/w2oZXwM9cLmHBQfmF/u+Q+XiG/yG/u41N1tnbiGctnRrwUdUw7iHt5LMDxNk
- 60Tuz2Tb/J44u5qowXWwLqYCiKYSAuD+9jM9ChLAYDkXEqw5AAaikW8HGeoUKzoevFgXZu0NU
- oK7AhcSsEOPgVAihwbrbhjZEbGUOw52FNh/ap04UbvEr+iLH1XflC3/tLzdIfVguPQxr0W+ER
- 1FV+t/OyYyPqa80bmVpC8Er884btTCDl7qeFpS96GxrZkLUzrCapWEWV4bl/zXbWkEiAaSMSx
- ZLpmcCnXoaFsoq+GYiQsmybhWwoS9DJe9yitsRODq+x/qnI5DCpBwf8jzEEhOS5en+kBrOIYy
- b++WAPjU5z8SHmPUX2R9mecOmefbKuBsBsanhMBz/BBqkXJziUkaIaGTSyBM7fsG1hVUsipXk
- TjpmjxIdruGmEb8Ie+Sdz+zRiCviS03XvSryRInavZd0Hi4diW9MXILfX5IkUcO754iQU3jbG
- ETstdqqYPSsVHCIq6
-Content-Transfer-Encoding: quoted-printable
+        Sat, 7 Mar 2020 03:42:44 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58387 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726193AbgCGImo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 03:42:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583570563;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=GmgXVGiA+TBQpnsnaXGXkc4+xi5nwhM2ZnRo/JQe/AI=;
+        b=Besub7F/KsyMau+8P+bgK+8p1Zz28/FKT20EtJDY9pzl/HYxAgrpxqw4KvnEi/30KJG7qu
+        d9yd3dUJlWFV7LZIymxRRS6/e6zXbWMIrRptspbItTmoV1N0vxGnm3EWumzP5wu1aV2hCa
+        2gOE1w/18mIA9O90OTpxgZP7RHodOkM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219--Q7cM5PqOoCJv0w6QBDDIw-1; Sat, 07 Mar 2020 03:42:39 -0500
+X-MC-Unique: -Q7cM5PqOoCJv0w6QBDDIw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D4618017CC;
+        Sat,  7 Mar 2020 08:42:37 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-29.pek2.redhat.com [10.72.12.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2305A5D9CA;
+        Sat,  7 Mar 2020 08:42:30 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@suse.com,
+        david@redhat.com, richardw.yang@linux.intel.com,
+        dan.j.williams@intel.com, osalvador@suse.de, rppt@linux.ibm.com,
+        bhe@redhat.com
+Subject: [PATCH v3 0/7] mm/hotplug: Only use subsection map for VMEMMAP
+Date:   Sat,  7 Mar 2020 16:42:22 +0800
+Message-Id: <20200307084229.28251-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 01, 2020 at 04:09:13PM +0100, Greg Kroah-Hartman wrote:
-> On Sun, Mar 01, 2020 at 02:17:01PM +0100, Oscar Carter wrote:
-> > On Sun, Mar 01, 2020 at 01:25:14PM +0100, Greg Kroah-Hartman wrote:
-> > > On Sun, Mar 01, 2020 at 12:26:20PM +0100, Oscar Carter wrote:
-> > > > These include module parameters.
-> > > >
-> > > > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> > > > ---
-> > > >  drivers/staging/vt6656/main_usb.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/v=
-t6656/main_usb.c
-> > > > index 5e48b3ddb94c..701300202b21 100644
-> > > > --- a/drivers/staging/vt6656/main_usb.c
-> > > > +++ b/drivers/staging/vt6656/main_usb.c
-> > > > @@ -49,12 +49,12 @@ MODULE_LICENSE("GPL");
-> > > >  MODULE_DESCRIPTION(DEVICE_FULL_DRV_NAM);
-> > > >
-> > > >  #define RX_DESC_DEF0 64
-> > > > -static int vnt_rx_buffers =3D RX_DESC_DEF0;
-> > > > +static int __read_mostly vnt_rx_buffers =3D RX_DESC_DEF0;
-> > > >  module_param_named(rx_buffers, vnt_rx_buffers, int, 0644);
-> > > >  MODULE_PARM_DESC(rx_buffers, "Number of receive usb rx buffers");
-> > > >
-> > > >  #define TX_DESC_DEF0 64
-> > > > -static int vnt_tx_buffers =3D TX_DESC_DEF0;
-> > > > +static int __read_mostly vnt_tx_buffers =3D TX_DESC_DEF0;
-> > > >  module_param_named(tx_buffers, vnt_tx_buffers, int, 0644);
-> > > >  MODULE_PARM_DESC(tx_buffers, "Number of receive usb tx buffers");
-> > > >
-> > >
-> > > Why?  What does this help with?
-> >
-> > If we declare these variables __read_mostly we can improve the perform=
-ance. If
-> > these variables are read many more times than written, each core of a =
-multicore
-> > system can maintain a copy in a local cache and the time to access is =
-less than
-> > if they use the shared-cache.
->
-> This is a USB driver, performance is always limited to the hardware, not
-> the CPU location of variables.
+Memory sub-section hotplug was added to fix the issue that nvdimm could
+be mapped at non-section aligned starting address. A subsection map is
+added into struct mem_section_usage to implement it. 
 
-Thank you for the explanation.
+However, config ZONE_DEVICE depends on SPARSEMEM_VMEMMAP. It means
+subsection map only makes sense when SPARSEMEM_VMEMMAP enabled. For the                                                                           
+classic sparse, subsection map is meaningless and confusing.
 
->
-> Please always benchmark things to see if it actually makes sense to make
-> changes like this, before proposing them.
+About the classic sparse which doesn't support subsection hotplug, Dan
+said it's more because the effort and maintenance burden outweighs the
+benefit. Besides, the current 64 bit ARCHes all enable
+SPARSEMEM_VMEMMAP_ENABLE by default.
 
-I'm sorry.
+In this patchset, the patches 2~4 ares used to make sub-section map and the
+relevant operation only available for VMEMMAP. 
 
->
-> thanks,
->
-> greg k-h
+Patch 1 fixes a hot remove failure when the classic sparse is enabled.
 
-thanks,
+Patches 5~7 are for document adding and doc/code cleanup.
 
-Oscar
+Changelog
+
+v2->v3:
+  David spotted a code bug in the old patch 1, the old local variable
+  subsection_map is invalid once ms->usage is resetting. Add a local
+  variable 'empty' to cache if subsection_map is empty or not.
+
+  Remove the kernel-doc comments for the newly added functions
+  fill_subsection_map() and clear_subsection_map(). Michal and David
+  suggested this.
+
+  Add a new static function is_subsection_map_empty() to check if the
+  handled section map is empty, but not return the value from
+  clear_subsection_map(). David suggested this.
+
+  Add document about only VMEMMAP supporting sub-section hotplug, and
+  check_pfn_span() gating the alignment and size. Michal help rephrase
+  the words. 
+
+v1->v2:
+  Move the hot remove fixing patch to the front so that people can
+  back port it to easier. Suggested by David.
+
+  Split the old patch which invalidate the sub-section map in
+  !VMEMMAP case into two patches, patch 4/7, and patch 6/7. This
+  makes patch reviewing easier. Suggested by David.
+
+  Take Wei Yang's fixing patch out to post alone, since it has been
+  reviewed and acked by people. Suggested by Andrew.
+
+  Fix a code comment mistake in the current patch 2/7. Found out by
+  Wei Yang during reviewing.
+
+Baoquan He (7):
+  mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case
+  mm/sparse.c: introduce new function fill_subsection_map()
+  mm/sparse.c: introduce a new function clear_subsection_map()
+  mm/sparse.c: only use subsection map in VMEMMAP case
+  mm/sparse.c: add note about only VMEMMAP supporting sub-section
+    support
+  mm/sparse.c: move subsection_map related codes together
+  mm/sparse.c: Use __get_free_pages() instead in
+    populate_section_memmap()
+
+ include/linux/mmzone.h |   2 +
+ mm/sparse.c            | 159 +++++++++++++++++++++++++++--------------
+ 2 files changed, 107 insertions(+), 54 deletions(-)
+
+-- 
+2.17.2
+
