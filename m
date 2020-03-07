@@ -2,100 +2,238 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBCAC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8E1C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F24320675
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:51:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BEpDNdyx"
+	by mail.kernel.org (Postfix) with ESMTP id D744020675
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:00:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgCGHvb (ORCPT
+        id S1726074AbgCGIAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 02:51:31 -0500
-Received: from mail-pl1-f180.google.com ([209.85.214.180]:44556 "EHLO
-        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgCGHva (ORCPT
+        Sat, 7 Mar 2020 03:00:14 -0500
+Received: from smtprelay0148.hostedemail.com ([216.40.44.148]:39228 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725878AbgCGIAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 02:51:30 -0500
-Received: by mail-pl1-f180.google.com with SMTP id d9so1828955plo.11
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 23:51:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=72BokNb8+LRSUqSnxvdTJFvIWXTSEo6fEq3Gaxcb910=;
-        b=BEpDNdyx71F/hSRDAJAun6HAJilAUYxlfls/m7UjSN+TFYEJloIyFSIHdSNYTVxKzz
-         AjL3TQgsUdoqf4BQbAFPLf74QCsFrFrJB1W3Lqozw9LFMzUECsdwO50nVyPTeDOfEqbe
-         /IWuGWiTYZ55XuxZ8j8OjLstHN+tEemVjYnAY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=72BokNb8+LRSUqSnxvdTJFvIWXTSEo6fEq3Gaxcb910=;
-        b=MX6073qQSo7JSmUKR0f6oGPdqR1+uPS312Ldt5VXyvhXH1sj59PxVaqLDsaBezBsmj
-         M/YW7Z44zzf3c4dYUH5n5Zj7xViZqws34+5tkpVhIhLTi7aQR3yuMhn2Zm8fIpsiLtzh
-         XOgHEpD5/QupVLqbMt6t1q76fDMfgB8CoNAw7dPn8g9WHbOJMs/Q9NaXecpxH/j85SYA
-         jn+5eiaE+8d6HDnSdRdPd5KtLtwyIlINhBdtKGRkUF/6Qg3f3hfotV1FmiB1FpbqIgsc
-         Wtig9/qsClNXemeJkUNw+ZqIfGklPaUt2NCiTioUxnjRuQubydQMw8/7X9T44RTJkM9k
-         SUnA==
-X-Gm-Message-State: ANhLgQ2au4eWdIsxjfWlA17DfrQBQLkkAGyn5efELdMOy2pzAOI8D6qF
-        wkTTShhXOhzjZVSa/vMEGpZ7EQ==
-X-Google-Smtp-Source: ADFU+vtTXPsliF19xRSptfi9Zpe5YBygsbKqgsfbJRHtpar7l8SNDU/a8t6xhuVE0ZHysXHaCVrXAg==
-X-Received: by 2002:a17:90a:858c:: with SMTP id m12mr7480297pjn.127.1583567489536;
-        Fri, 06 Mar 2020 23:51:29 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id h2sm7621630pjc.7.2020.03.06.23.51.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 23:51:28 -0800 (PST)
-Date:   Sat, 7 Mar 2020 16:51:27 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 05/11] videobuf2: handle
- V4L2_FLAG_MEMORY_NON_CONSISTENT flag
-Message-ID: <20200307075127.GD176460@google.com>
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-6-senozhatsky@chromium.org>
- <70144162-3bbe-4ea5-a3f7-e52d4585db53@xs4all.nl>
+        Sat, 7 Mar 2020 03:00:13 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id AB493182CED34;
+        Sat,  7 Mar 2020 08:00:11 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: thing31_16ce6d4a5145
+X-Filterd-Recvd-Size: 6434
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  7 Mar 2020 08:00:09 +0000 (UTC)
+Message-ID: <f62fea5d10eb0ccfc05d87c242a620c261219b66.camel@perches.com>
+Subject: [PATCH] mm: Use fallthrough;
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org
+Date:   Fri, 06 Mar 2020 23:58:33 -0800
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70144162-3bbe-4ea5-a3f7-e52d4585db53@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/06 16:30), Hans Verkuil wrote:
-[..]
-> >  
-> >  /* capabilities for struct v4l2_requestbuffers and v4l2_create_buffers */
-> > @@ -2446,7 +2449,8 @@ struct v4l2_create_buffers {
-> >  	__u32			memory;
-> >  	struct v4l2_format	format;
-> >  	__u32			capabilities;
-> > -	__u32			reserved[7];
-> > +	__u32			flags;
-> 
-> The new flags argument needs to be documented in the command for struct v4l2_create_buffers.
-> 
+Convert the various /* fallthrough */ comments to the
+pseudo-keyword fallthrough;
 
-Will add.
+Done via script:
+https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
 
-	-ss
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+
+Might as well start with fallthrough conversions somewhere...
+
+ mm/gup.c            | 2 +-
+ mm/hugetlb_cgroup.c | 6 +++---
+ mm/ksm.c            | 3 +--
+ mm/list_lru.c       | 2 +-
+ mm/memcontrol.c     | 2 +-
+ mm/mempolicy.c      | 3 ---
+ mm/mmap.c           | 5 ++---
+ mm/shmem.c          | 2 +-
+ mm/zsmalloc.c       | 2 +-
+ 9 files changed, 11 insertions(+), 16 deletions(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index f58929..4bfd753 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1072,7 +1072,7 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
+ 				goto retry;
+ 			case -EBUSY:
+ 				ret = 0;
+-				/* FALLTHRU */
++				fallthrough;
+ 			case -EFAULT:
+ 			case -ENOMEM:
+ 			case -EHWPOISON:
+diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+index 790f63..7994eb8 100644
+--- a/mm/hugetlb_cgroup.c
++++ b/mm/hugetlb_cgroup.c
+@@ -468,14 +468,14 @@ static int hugetlb_cgroup_read_u64_max(struct seq_file *seq, void *v)
+ 	switch (MEMFILE_ATTR(cft->private)) {
+ 	case RES_RSVD_USAGE:
+ 		counter = &h_cg->rsvd_hugepage[idx];
+-		/* Fall through. */
++		fallthrough;
+ 	case RES_USAGE:
+ 		val = (u64)page_counter_read(counter);
+ 		seq_printf(seq, "%llu\n", val * PAGE_SIZE);
+ 		break;
+ 	case RES_RSVD_LIMIT:
+ 		counter = &h_cg->rsvd_hugepage[idx];
+-		/* Fall through. */
++		fallthrough;
+ 	case RES_LIMIT:
+ 		val = (u64)counter->max;
+ 		if (val == limit)
+@@ -515,7 +515,7 @@ static ssize_t hugetlb_cgroup_write(struct kernfs_open_file *of,
+ 	switch (MEMFILE_ATTR(of_cft(of)->private)) {
+ 	case RES_RSVD_LIMIT:
+ 		rsvd = true;
+-		/* Fall through. */
++		fallthrough;
+ 	case RES_LIMIT:
+ 		mutex_lock(&hugetlb_limit_mutex);
+ 		ret = page_counter_set_max(
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 363ec8..a558da9 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -2813,8 +2813,7 @@ static int ksm_memory_callback(struct notifier_block *self,
+ 		 */
+ 		ksm_check_stable_tree(mn->start_pfn,
+ 				      mn->start_pfn + mn->nr_pages);
+-		/* fallthrough */
+-
++		fallthrough;
+ 	case MEM_CANCEL_OFFLINE:
+ 		mutex_lock(&ksm_thread_mutex);
+ 		ksm_run &= ~KSM_RUN_OFFLINE;
+diff --git a/mm/list_lru.c b/mm/list_lru.c
+index 9e4a28..87b540f 100644
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -223,7 +223,7 @@ __list_lru_walk_one(struct list_lru_node *nlru, int memcg_idx,
+ 		switch (ret) {
+ 		case LRU_REMOVED_RETRY:
+ 			assert_spin_locked(&nlru->lock);
+-			/* fall through */
++			fallthrough;
+ 		case LRU_REMOVED:
+ 			isolated++;
+ 			nlru->nr_items--;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 1e1260..dfe191 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5756,7 +5756,7 @@ static int mem_cgroup_move_charge_pte_range(pmd_t *pmd,
+ 		switch (get_mctgt_type(vma, addr, ptent, &target)) {
+ 		case MC_TARGET_DEVICE:
+ 			device = true;
+-			/* fall through */
++			fallthrough;
+ 		case MC_TARGET_PAGE:
+ 			page = target.page;
+ 			/*
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 6d30379..45eb0a5 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -907,7 +907,6 @@ static void get_policy_nodemask(struct mempolicy *p, nodemask_t *nodes)
+ 
+ 	switch (p->mode) {
+ 	case MPOL_BIND:
+-		/* Fall through */
+ 	case MPOL_INTERLEAVE:
+ 		*nodes = p->v.nodes;
+ 		break;
+@@ -2092,7 +2091,6 @@ bool init_nodemask_of_mempolicy(nodemask_t *mask)
+ 		break;
+ 
+ 	case MPOL_BIND:
+-		/* Fall through */
+ 	case MPOL_INTERLEAVE:
+ 		*mask =  mempolicy->v.nodes;
+ 		break;
+@@ -2359,7 +2357,6 @@ bool __mpol_equal(struct mempolicy *a, struct mempolicy *b)
+ 
+ 	switch (a->mode) {
+ 	case MPOL_BIND:
+-		/* Fall through */
+ 	case MPOL_INTERLEAVE:
+ 		return !!nodes_equal(a->v.nodes, b->v.nodes);
+ 	case MPOL_PREFERRED:
+diff --git a/mm/mmap.c b/mm/mmap.c
+index f8ea04..60dc38 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1457,7 +1457,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+ 			 * with MAP_SHARED to preserve backward compatibility.
+ 			 */
+ 			flags &= LEGACY_MAP_MASK;
+-			/* fall through */
++			fallthrough;
+ 		case MAP_SHARED_VALIDATE:
+ 			if (flags & ~flags_mask)
+ 				return -EOPNOTSUPP;
+@@ -1480,8 +1480,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+ 			vm_flags |= VM_SHARED | VM_MAYSHARE;
+ 			if (!(file->f_mode & FMODE_WRITE))
+ 				vm_flags &= ~(VM_MAYWRITE | VM_SHARED);
+-
+-			/* fall through */
++			fallthrough;
+ 		case MAP_PRIVATE:
+ 			if (!(file->f_mode & FMODE_READ))
+ 				return -EACCES;
+diff --git a/mm/shmem.c b/mm/shmem.c
+index d01d5b..1e9b377 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -3992,7 +3992,7 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
+ 			if (i_size >= HPAGE_PMD_SIZE &&
+ 					i_size >> PAGE_SHIFT >= off)
+ 				return true;
+-			/* fall through */
++			fallthrough;
+ 		case SHMEM_HUGE_ADVISE:
+ 			/* TODO: implement fadvise() hints */
+ 			return (vma->vm_flags & VM_HUGEPAGE);
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index 2aa2d5..2f836a2b 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -424,7 +424,7 @@ static void *zs_zpool_map(void *pool, unsigned long handle,
+ 	case ZPOOL_MM_WO:
+ 		zs_mm = ZS_MM_WO;
+ 		break;
+-	case ZPOOL_MM_RW: /* fall through */
++	case ZPOOL_MM_RW:
+ 	default:
+ 		zs_mm = ZS_MM_RW;
+ 		break;
+
+
