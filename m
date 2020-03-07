@@ -2,85 +2,213 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FC1C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16575C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD86620880
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC57D2067C
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:35:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BFWHfNZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgCGBc7 (ORCPT
+        id S1726485AbgCGBfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 20:32:59 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:60926 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726635AbgCGBcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 20:32:55 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4144B200D87;
-        Sat,  7 Mar 2020 02:32:54 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 49AAB200D9B;
-        Sat,  7 Mar 2020 02:32:34 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DD145402DA;
-        Sat,  7 Mar 2020 09:32:20 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, dmitry.torokhov@gmail.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, wim@linux-watchdog.org,
-        linux@roeck-us.net, daniel.baluta@nxp.com, linux@rempel-privat.de,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        m.felsch@pengutronix.de, andriy.shevchenko@linux.intel.com,
-        arnd@arndb.de, robh@kernel.org, yuehaibing@huawei.com,
-        ronald@innovation.ch, krzk@kernel.org, leonard.crestez@nxp.com,
-        aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 7/7] thermal: add COMPILE_TEST support for IMX_SC_THERMAL
-Date:   Sat,  7 Mar 2020 09:25:59 +0800
-Message-Id: <1583544359-515-7-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583544359-515-1-git-send-email-Anson.Huang@nxp.com>
-References: <1583544359-515-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 6 Mar 2020 20:35:14 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:58278 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgCGBfO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 20:35:14 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0271YEK5174321;
+        Sat, 7 Mar 2020 01:34:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=PbQUxrRcvnBhgB9zACPzqhbzr3oDdrTvmkqMm9T8DrI=;
+ b=BFWHfNZMOYZoyDbucUc0ikaOBFRq+Plc5QWsIgyXSrTsVM/Siqw7AYWnuMrz9i5KeBt5
+ +PUPpnMwHOQjVKbpN5PxurB1F/WwWSFlBlZV/Ht1YrSqqoV2WTqmILDZSsR8Hvvzc9O5
+ WqZrBsA0UpUzPme9PNVOWUI8kie0we3Px1KndpjdR0dRsL2WD6YAcKKF+7iPYlifCYZ4
+ gd1f1T/Z6vkOb82SbSw/EbpSKdhooQqv+Fy5G+w7E51UX+dC92vsvGXd/BA/Ppw25fVI
+ ZtqMCiMKn8/C8O1Nf5gjLdZsmQu/k0V7G1hn84WAwTQeLUOhnDhqM2nhz/4bR5jVDd22 Iw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2yffwre7v9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 07 Mar 2020 01:34:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0271Y1HV096404;
+        Sat, 7 Mar 2020 01:34:14 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2ym1ndgk5x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 07 Mar 2020 01:34:13 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0271YC1c022890;
+        Sat, 7 Mar 2020 01:34:12 GMT
+Received: from localhost.localdomain (/10.159.228.115)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 06 Mar 2020 17:34:11 -0800
+Subject: Re: [PATCH v3 2/2] KVM: VMX: untangle VMXON revision_id setting when
+ using eVMCS
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200306130215.150686-1-vkuznets@redhat.com>
+ <20200306130215.150686-3-vkuznets@redhat.com>
+ <908345f1-9bfd-004f-3ba6-0d6dce67d11e@oracle.com>
+ <20200306230747.GA27868@linux.intel.com>
+ <ceb19682-4374-313a-cf05-8af6cd8d6c3b@oracle.com>
+ <20200307002852.GA28225@linux.intel.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <6ce77a63-0505-36f8-3a92-f0f6b275fed1@oracle.com>
+Date:   Fri, 6 Mar 2020 17:34:10 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200307002852.GA28225@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ suspectscore=2 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003070008
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=2
+ phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003070008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add COMPILE_TEST support to i.MX SC thermal driver for better compile
-testing coverage.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
----
-no change.
----
- drivers/thermal/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 3/6/20 4:28 PM, Sean Christopherson wrote:
+> On Fri, Mar 06, 2020 at 03:57:25PM -0800, Krish Sadhukhan wrote:
+>> On 3/6/20 3:07 PM, Sean Christopherson wrote:
+>>> On Fri, Mar 06, 2020 at 02:20:13PM -0800, Krish Sadhukhan wrote:
+>>>>> @@ -2599,7 +2607,7 @@ void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+>>>>>   int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+>>>>>   {
+>>>>> -	loaded_vmcs->vmcs = alloc_vmcs(false);
+>>>>> +	loaded_vmcs->vmcs = alloc_vmcs(VMCS_REGION);
+>>>>>   	if (!loaded_vmcs->vmcs)
+>>>>>   		return -ENOMEM;
+>>>>> @@ -2652,25 +2660,13 @@ static __init int alloc_vmxon_regions(void)
+>>>>>   	for_each_possible_cpu(cpu) {
+>>>>>   		struct vmcs *vmcs;
+>>>>> -		vmcs = alloc_vmcs_cpu(false, cpu, GFP_KERNEL);
+>>>>> +		/* The VMXON region is really just a special type of VMCS. */
+>>>> Not sure if this is the right way to correlate the two.
+>>>>
+>>>> AFAIU, the SDM calls VMXON region as a memory area that holds the VMCS data
+>>>> structure and it calls VMCS the data structure that is used by software to
+>>>> switch between VMX root-mode and not-root-mode. So VMXON is a memory area
+>>>> whereas VMCS is the structure of the data that resides in that memory area.
+>>>>
+>>>> So if we follow this interpretation, your enum should rather look like,
+>>>>
+>>>> enum vmcs_type {
+>>>> +    VMCS,
+>>>> +    EVMCS,
+>>>> +    SHADOW_VMCS
+>>> No (to the EVMCS suggestion), because this allocation needs to happen for
+>>> !eVMCS.  The SDM never explictly calls the VMXON region a VMCS, but it's
+>>> just being coy.  E.g. VMCLEAR doesn't fail if you point it at random
+>>> memory, but point it at the VMXON region and it yells.
+>>>
+>>> We could call it VMXON_VMCS if that helps.
+>> Are you saying,
+>>
+>> + enum vmcs_type {
+>> +     VMXON_REGION,
+>> +     VMXON_VMCS,
+>> +     SHADOW_VMCS_REGION,
+>> +};
+>>
+>> ?
+>>
+>> In that case, "VMXON_REGION" and "VMXON_VMCS" are no different according to
+>> your explanation.
+>    enum vmcs_type {
+> 	VMXON_VMCS,
+> 	VMCS,
+> 	SHADOW_VMCS,
+>    };
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 91af271..55c7641 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -254,7 +254,7 @@ config IMX_THERMAL
- 
- config IMX_SC_THERMAL
- 	tristate "Temperature sensor driver for NXP i.MX SoCs with System Controller"
--	depends on IMX_SCU
-+	depends on IMX_SCU || COMPILE_TEST
- 	depends on OF
- 	help
- 	  Support for Temperature Monitor (TEMPMON) found on NXP i.MX SoCs with
--- 
-2.7.4
 
+It looks reasonable.
+
+
+>
+> alloc_vmcs_cpu() does more than just allocate the memory, it also
+> initializes the data structure, e.g. "allocate and initalize a VMXON VMCS",
+>
+>>>   The SDM does call the memory
+>>> allocation for regular VMCSes a "VMCS region":
+>>>
+>>>    A logical processor associates a region in memory with each VMCS. This
+>>>    region is called the VMCS region.
+>>>
+>>> I don't think I've ever heard anyone differentiate that two though, i.e.
+>>> VMCS is used colloquially to mean both the data structure itself and the
+>>> memory region containing the data structure.
+>>>
+>>>>> +		vmcs = alloc_vmcs_cpu(VMXON_REGION, cpu, GFP_KERNEL);
+>>>>>   		if (!vmcs) {
+>>>>>   			free_vmxon_regions();
+>>>>>   			return -ENOMEM;
+>>>>>   		}
+>>>>> -		/*
+>>>>> -		 * When eVMCS is enabled, alloc_vmcs_cpu() sets
+>>>>> -		 * vmcs->revision_id to KVM_EVMCS_VERSION instead of
+>>>>> -		 * revision_id reported by MSR_IA32_VMX_BASIC.
+>>>>> -		 *
+>>>>> -		 * However, even though not explicitly documented by
+>>>>> -		 * TLFS, VMXArea passed as VMXON argument should
+>>>>> -		 * still be marked with revision_id reported by
+>>>>> -		 * physical CPU.
+>>>>> -		 */
+>>>>> -		if (static_branch_unlikely(&enable_evmcs))
+>>>>> -			vmcs->hdr.revision_id = vmcs_config.revision_id;
+>>>>> -
+>>>>>   		per_cpu(vmxarea, cpu) = vmcs;
+>>>>>   	}
+>>>>>   	return 0;
+>>>>> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+>>>>> index e64da06c7009..a5eb92638ac2 100644
+>>>>> --- a/arch/x86/kvm/vmx/vmx.h
+>>>>> +++ b/arch/x86/kvm/vmx/vmx.h
+>>>>> @@ -489,16 +489,22 @@ static inline struct pi_desc *vcpu_to_pi_desc(struct kvm_vcpu *vcpu)
+>>>>>   	return &(to_vmx(vcpu)->pi_desc);
+>>>>>   }
+>>>>> -struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags);
+>>>>> +enum vmcs_type {
+>>>>> +	VMXON_REGION,
+>>>>> +	VMCS_REGION,
+>>>>> +	SHADOW_VMCS_REGION,
+>>>>> +};
+>>>>> +
+>>>>> +struct vmcs *alloc_vmcs_cpu(enum vmcs_type type, int cpu, gfp_t flags);
+>>>>>   void free_vmcs(struct vmcs *vmcs);
+>>>>>   int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+>>>>>   void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+>>>>>   void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs);
+>>>>>   void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs);
+>>>>> -static inline struct vmcs *alloc_vmcs(bool shadow)
+>>>>> +static inline struct vmcs *alloc_vmcs(enum vmcs_type type)
+>>>>>   {
+>>>>> -	return alloc_vmcs_cpu(shadow, raw_smp_processor_id(),
+>>>>> +	return alloc_vmcs_cpu(type, raw_smp_processor_id(),
+>>>>>   			      GFP_KERNEL_ACCOUNT);
+>>>>>   }
