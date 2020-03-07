@@ -2,109 +2,165 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179F9C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A4BC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFDB4206CC
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:24:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6CTG2Bc"
+	by mail.kernel.org (Postfix) with ESMTP id 87E342070A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCGDYo (ORCPT
+        id S1726751AbgCGD0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 22:24:44 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36703 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCGDYn (ORCPT
+        Fri, 6 Mar 2020 22:26:55 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:37343 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726237AbgCGD0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:24:43 -0500
-Received: by mail-qk1-f195.google.com with SMTP id u25so4352951qkk.3;
-        Fri, 06 Mar 2020 19:24:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xx47FJX+QZbsjpJJ8x5FoZzQPuJdzEkyLKKPH7vo5sk=;
-        b=V6CTG2BcTle4ax3VW2GMHUYNQikRPHCX4W8GrQB30I7oTu+yciihautJPRVRVjQ/Fc
-         4kw1eamGfYWI+0JA2+f4WTC0j66nFLcnd99j+u/JabWCi3MKzZqlGYpUGHSL2uG7mtIF
-         BfhUwv1spkZ3ujZfrr3fUBm8ngmoJQzhDuiHuJu/QP0GKueGBjshtLXt46XuOmZgKx/k
-         JuhzFIkghSF56z6430kkDS6XYJ9RA+oqlafgd4aUUnS5t52RLf0rttvgMrL1JBERiRYX
-         RpwRRbLrCwoL2EWUcYPnjqPBEq6rHC9UTbskZJ/gSdsjmpVPKgwIbE0mfl05KL3hJagt
-         G8jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xx47FJX+QZbsjpJJ8x5FoZzQPuJdzEkyLKKPH7vo5sk=;
-        b=ZtNJrkPrOYNUvLBuBSYru29cikjWe24CmuHm7vdRHvcqmzpb77S1/X3tEhepW2hMkP
-         /nTV9rt0PJwKWaXJ59SV7tHIdkdBgJPdVedeWVQ0+ivDwc/s3JS+1Jm2u6xqMY2aF20k
-         /5JEdNiQAO4dBJk/8xuwWqmcQIJRfU410oMylwR2EJvLUsOkSJM17jZBXOC9/RnnKEXW
-         QIpR3ZXLTGGwkp/kLDFKiec+aZUDq56VXEKncMErOi1cl6mg6miXlhYTc9qVDTKCWkpB
-         1Z15ZtIa7OrhhjihDWIem7/h/NyzQElJQLhyWKYVdxNpG+Lzr+jseaWDewDR0b8QSyYA
-         cO3A==
-X-Gm-Message-State: ANhLgQ2mWJQW63OGtyC95nD/emT9nKXhb900gy40S3fsakI1eAO57y4Y
-        0+SIJsKOt7OoxFocaq3k/yI+JxwwcoicDHid1ug=
-X-Google-Smtp-Source: ADFU+vsrgn/I7/3yq0U87aezc5EPcL/v/ioSyi8uCEcZqO8JoZIjCstooShLZGMYvgHn2vn/uc1R6Au9Gus47NWljDo=
-X-Received: by 2002:a37:a50d:: with SMTP id o13mr5736750qke.37.1583551482955;
- Fri, 06 Mar 2020 19:24:42 -0800 (PST)
+        Fri, 6 Mar 2020 22:26:55 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0TrsR0i9_1583551608;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TrsR0i9_1583551608)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 07 Mar 2020 11:26:49 +0800
+Subject: Re: [failures] mm-vmscan-remove-unnecessary-lruvec-adding.patch
+ removed from -mm tree
+To:     Qian Cai <cai@lca.pw>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, aarcange@redhat.com,
+        daniel.m.jordan@oracle.com, hannes@cmpxchg.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, kirill@shutemov.name,
+        kravetz@us.ibm.com, mhocko@kernel.org, mm-commits@vger.kernel.org,
+        tj@kernel.org, vdavydov.dev@gmail.com, willy@infradead.org,
+        yang.shi@linux.alibaba.com
+References: <20200306025041.rERhvnYmB%akpm@linux-foundation.org>
+ <211632B1-2D6F-4BFA-A5A0-3030339D3D2A@lca.pw>
+ <b123f1d8-eab0-4689-9400-ba1f853728b7@linux.alibaba.com>
+ <f37b9b6b-730b-09b0-dd6b-5acba53e71e6@linux.alibaba.com>
+ <792CE873-A64B-4FA6-A258-A8B6B951E698@lca.pw>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <7149d2fb-2ff2-d251-2ed1-b4e6d81748ee@linux.alibaba.com>
+Date:   Sat, 7 Mar 2020 11:26:47 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <cover.1583039752.git.shengjiu.wang@nxp.com> <872c2e1082de6348318e14ccd31884d62355c282.1583039752.git.shengjiu.wang@nxp.com>
- <20200303014133.GA24596@bogus> <CAA+D8ANgECaz=tRtRwNP=jMXBD0XciAE0HUYROH8uuo03iDejg@mail.gmail.com>
- <20200303124739.GE3866@sirena.org.uk>
-In-Reply-To: <20200303124739.GE3866@sirena.org.uk>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Sat, 7 Mar 2020 11:24:32 +0800
-Message-ID: <CAA+D8AMkmHZoZ7Oa0_OGfgRAC+H-117e1bNJgzyiWGTueyxDzg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/8] ASoC: dt-bindings: fsl_asrc: Change asrc-width to asrc-format
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>, linux-imx@nxp.com,
-        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <792CE873-A64B-4FA6-A258-A8B6B951E698@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+在 2020/3/7 上午10:27, Qian Cai 写道:
+>> Compare to this patch's change, the 'c8cba0cc2a80 mm/thp: narrow lru locking' is more
+>> likely bad. Maybe it's due to lru unlock was moved before ClearPageCompound() from
+>> before remap_page(head); guess this unlock should be move after ClearPageCompound or
+>> move back to origin place.
+> I can only confirmed that after reverted those 6 patches, I am no long be able to reproduce it.
+> 
 
-On Tue, Mar 3, 2020 at 8:47 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, Mar 03, 2020 at 11:59:30AM +0800, Shengjiu Wang wrote:
-> > On Tue, Mar 3, 2020 at 9:43 AM Rob Herring <robh@kernel.org> wrote:
->
-> > > > -   - fsl,asrc-width  : Defines a mutual sample width used by DPCM Back Ends.
-> > > > +   - fsl,asrc-format : Defines a mutual sample format used by DPCM Back
-> > > > +                       Ends. The value is one of SNDRV_PCM_FORMAT_XX in
-> > > > +                       "include/uapi/sound/asound.h"
->
-> > > You can't just change properties. They are an ABI.
->
-> > I have updated all the things related with this ABI in this patch series.
-> > What else should I do?
->
-> Like Nicolin says you should continue to support the old stuff.  The
-> kernel should work with people's out of tree DTs too so simply updating
-> everything in the tree isn't enough.
+Hi Qian, 
 
-Thanks for review, I will update patch in next version.
+Thanks for response!
+Could you like just try to revert the patch: 'mm/thp: narrow lru locking'? or would you like to
+share me info of your tests and let me reproduce it? like kernel config, system ENV, machine type.
+I had run hundreds cycle of oom01, but akpm kernel(f2cbd107a99b) still survived.
 
-best regards
-wang shengjiu
+I got my ltp mm testing results, it run total 75 cases, failed 2, skip 9 and others are success
+and kernel works well after test on yesterday's akmp head: f2cbd107a99b.
+
+Many Thanks for help!
+Alex
+
+=====
+
+Test Start Time: Fri Mar  6 20:49:59 2020
+-----------------------------------------
+Testcase                                           Result     Exit Value
+--------                                           ------     ----------
+mm01                                               PASS       0
+mm02                                               PASS       0
+mtest01                                            PASS       0
+mtest01w                                           PASS       0
+mtest05                                            PASS       0
+mtest06                                            PASS       0
+mtest06_2                                          PASS       0
+mtest06_3                                          PASS       0
+mem01                                              PASS       0
+mem02                                              PASS       0
+mem03                                              PASS       0
+page01                                             PASS       0
+page02                                             PASS       0
+data_space                                         PASS       0
+stack_space                                        PASS       0
+shmt02                                             PASS       0
+shmt03                                             PASS       0
+shmt04                                             PASS       0
+shmt05                                             PASS       0
+shmt06                                             PASS       0
+shmt07                                             PASS       0
+shmt08                                             PASS       0
+shmt09                                             PASS       0
+shmt10                                             PASS       0
+shm_test01                                         PASS       0
+mallocstress01                                     PASS       0
+mmapstress01                                       PASS       0
+mmapstress02                                       PASS       0
+mmapstress03                                       PASS       0
+mmapstress04                                       PASS       0
+mmapstress05                                       PASS       0
+mmapstress06                                       PASS       0
+mmapstress07                                       PASS       0
+mmapstress08                                       PASS       0
+mmapstress09                                       PASS       0
+mmapstress10                                       PASS       0
+mmap10                                             PASS       0
+mmap10_1                                           PASS       0
+mmap10_2                                           PASS       0
+mmap10_3                                           PASS       0
+mmap10_4                                           PASS       0
+ksm01                                              FAIL       2
+ksm01_1                                            FAIL       1
+ksm02                                              CONF       32
+ksm02_1                                            CONF       32
+ksm03                                              PASS       0
+ksm03_1                                            PASS       0
+ksm04                                              CONF       32
+ksm04_1                                            CONF       32
+ksm05                                              PASS       0
+ksm06                                              CONF       32
+ksm06_1                                            CONF       32
+ksm06_2                                            CONF       32
+oom01                                              PASS       0
+oom02                                              CONF       32
+oom03                                              PASS       0
+oom04                                              PASS       0
+oom05                                              PASS       0
+swapping01                                         PASS       0
+thp01                                              PASS       0
+thp02                                              PASS       0
+thp03                                              PASS       0
+vma01                                              PASS       0
+vma02                                              PASS       0
+vma03                                              CONF       32
+vma04                                              PASS       0
+vma05                                              PASS       0
+overcommit_memory01                                PASS       0
+overcommit_memory02                                PASS       0
+overcommit_memory03                                PASS       0
+overcommit_memory04                                PASS       0
+overcommit_memory05                                PASS       0
+overcommit_memory06                                PASS       0
+max_map_count                                      PASS       0
+min_free_kbytes                                    PASS       0
+
+-----------------------------------------------
+Total Tests: 75
+Total Skipped Tests: 9
+Total Failures: 2
+Kernel Version: 5.6.0-rc4-06724-gf2cbd107a99b
+Machine Architecture: x86_64
+Hostname: alexshi-test
+
