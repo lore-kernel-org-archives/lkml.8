@@ -5,130 +5,91 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02715C10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4664AC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C32B32075B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F652073C
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NfYmzcoZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zo5SiZ1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgCGNtB (ORCPT
+        id S1726246AbgCGN6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:49:01 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39597 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgCGNsz (ORCPT
+        Sat, 7 Mar 2020 08:58:15 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46935 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgCGN6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 08:48:55 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r15so563717wrx.6;
-        Sat, 07 Mar 2020 05:48:52 -0800 (PST)
+        Sat, 7 Mar 2020 08:58:15 -0500
+Received: by mail-pl1-f194.google.com with SMTP id w12so2055534pll.13;
+        Sat, 07 Mar 2020 05:58:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=r8vU221Fl1wRDhepKyfW4xhkJN/Ivc1A7S2pOvLbFIU=;
-        b=NfYmzcoZPQlWO8KkyWMuaJlZPYo19zE/UOr4wWnKj0CXCeV5mI3VM14xv/GTDDfC+Q
-         aJ/I4k7kR2K3vFGUM17z8EpkkPdUESTEw4ap/uAmbuBrcmzcmPTxty/QVlNCPONcwRuB
-         VR3tL7aNU0JN7wHU0BjO7tk3165sP1n+4WkSaQEVnGI2rqi4PZkLK/X/rqpoESXw+C0y
-         iw51B9JbCFDuVX+lyFlUkJuBWsE6IUjCxBj5mlHzKLV85FVaB22hphOHsSl8IqPxsICM
-         JhM69/IXjbk7QAiwYopnQoBndYH12Ro1nhGPwlqVEM5P8EakCx2eDcAmJvYdcMDN9SBH
-         uUew==
+        h=from:to:cc:subject:date:message-id;
+        bh=YttYJY2hEu0o9ieZzIqW+Sf4nL0+gX4KSVXdg9N5DNU=;
+        b=Zo5SiZ1APLQC++VQvG/MZYrhXfyqAhqKEHXuVf2gdx4xLkNQGvwi1/UiuiRXzi/RXn
+         JXr9fhDCARuBH7pAZycvrKCz+HFxV7CwLiNb1m5d9dXgU90mGSETx2F4Y95QEGS/Wcy4
+         XEh5P5KF7phVHqe1YoR+KlvB/ycvu6wD7vqkMhAYxQPPKTi0CfAsvhc0eChBrWVOGAFw
+         Pq5D6uc3mncsYQW/tUACTQl5InajSaf0m227B3dZqQHH8VK1t4utEvHeaItIGy/eNepF
+         WAtE5r9R8E3ls/Rkfqq9RtdHncM6YOxTawI3ltdG313PJYEPBBnLAB8nEk65+NItn2uU
+         QjNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=r8vU221Fl1wRDhepKyfW4xhkJN/Ivc1A7S2pOvLbFIU=;
-        b=B0Fu7D1fE7uhKzxnjap5cw8D4S77EHbQkNwhAObdflkaICzZ6T3EvU7S8XXYBRBqSX
-         pcZdjzldVLP/4ZpSzvy6nXj+ofCRKSG66jiPVP+fwvJG0JtWEs7hlf6Nn2cVVdAhxH50
-         wzwwREaDJuFAWlIZZ5QWXv2MJRnNljgZ/KWq3jqLWazWauSs1juYw+JYFz4DXYABhKq0
-         4b8m0fAJmQS+s0VeXQcpOgzvJNPHC6TTCo/nkpuRKsuMyz/YkWyAGPhCOFBVVFxD7A8Y
-         qUjfn5S+vF8vONjHXXqWvlef0n7V22kw0pAlmWVP60bPpjjBsabu4crLPepwrImrFWjW
-         JDWw==
-X-Gm-Message-State: ANhLgQ254LWp4tEn+Sw5OEkOMmAmx2r+J5r3oI5jKQ6/B54WcUgkclZW
-        9kDNqpr+PIv+m8w+wqXVi0Y=
-X-Google-Smtp-Source: ADFU+vuqgLoogFvxDf8zmOIagX/6EgMcrmjZMR1lY83duVqibjH1wJOvkB2FC4KR1mQPDt79vOxiRw==
-X-Received: by 2002:a5d:5702:: with SMTP id a2mr3848479wrv.17.1583588932141;
-        Sat, 07 Mar 2020 05:48:52 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 9sm11767265wmx.32.2020.03.07.05.48.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YttYJY2hEu0o9ieZzIqW+Sf4nL0+gX4KSVXdg9N5DNU=;
+        b=UP+h9X9hUyVT1gOe5fwD7SFyN6duBR7sAufNORoFEFBUMDQ0cOVsQdBE5P9cuFnzW+
+         VgAGtoXAGp/p+hMTy8iDGTkVdxg8cYPPb3d4C0m2gFGNHKkeEOwk835QV+6wcLod2ynf
+         1lVl9L1ncPT8NnCsinTN2z6LtQYON4gGFRIMoMd51y7p4RQAZNN4FarHR+X2NV810kmv
+         C4rme7CzWsfMo3wN4QmMqoWVVfD82H4Zxjr6LGx123Xtx4fG+x3xxI6BhDQR+D5RmvA7
+         n6jJI53T7jaq/ciY4hkq8oOvr2M70BbulS8LQrJAJBjTOSndVj8KH1DMKU0s86TjVqfB
+         ELug==
+X-Gm-Message-State: ANhLgQ0OmGGqffaaGdlV/4z9iLz1N/+i+FqUvkaklYAjkxQaZg/kII4q
+        qta4xbIQNY8G8UekiP6aeEk=
+X-Google-Smtp-Source: ADFU+vs4CKXfeoUiFDnFoMUD4Yhp6hvzZsVFA01ru2dnM86QFvbm5rhxncjWPzQFEZPxKZW0qt8guw==
+X-Received: by 2002:a17:902:694b:: with SMTP id k11mr7718361plt.334.1583589493848;
+        Sat, 07 Mar 2020 05:58:13 -0800 (PST)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id y28sm14694177pgc.69.2020.03.07.05.58.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Mar 2020 05:48:51 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 5/5] arm64: dts: rockchip: replace clock-freq-min-max by max-frequency
-Date:   Sat,  7 Mar 2020 14:48:41 +0100
-Message-Id: <20200307134841.13803-5-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200307134841.13803-1-jbx6244@gmail.com>
-References: <20200307134841.13803-1-jbx6244@gmail.com>
+        Sat, 07 Mar 2020 05:58:13 -0800 (PST)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     marcel@holtmann.org
+Cc:     johan.hedberg@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] bluetooth/rfcomm: fix ODEBUG bug in rfcomm_dev_ioctl
+Date:   Sat,  7 Mar 2020 21:58:08 +0800
+Message-Id: <1583589488-22450-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below does not detect all errors
-in combination with 'additionalProperties: false' and
-allOf:
-  - $ref: "synopsys-dw-mshc-common.yaml#"
-allOf:
-  - $ref: "mmc-controller.yaml#"
+Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
+increase dlc->refcnt.
 
-'additionalProperties' applies to all properties that are not
-accounted-for by 'properties' or 'patternProperties' in
-the immediate schema.
-
-First when we combine rockchip-dw-mshc.yaml,
-synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
-for example this error:
-
-arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dt.yaml: mmc@fe320000:
-'clock-freq-min-max' does not match any of the regexes:
-'^.*@[0-9]+$', '^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
-uhs-(sdr(12|25|50|104)|ddr50))$', 'pinctrl-[0-9]+'
-
-'clock-freq-min-max' is deprecated, so replace it by 'max-frequency'.
-
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts | 2 +-
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ net/bluetooth/rfcomm/tty.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-index d69a613fb..f2ffee639 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-@@ -555,7 +555,7 @@
- 
- &sdmmc {
- 	clock-frequency = <150000000>;
--	clock-freq-min-max = <200000 150000000>;
-+	max-frequency = <150000000>;
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
- 	cap-sd-highspeed;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-index b69f0f2cb..ba7c75c9f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-@@ -542,7 +542,7 @@
- 	cap-mmc-highspeed;
- 	cap-sd-highspeed;
- 	clock-frequency = <100000000>;
--	clock-freq-min-max = <100000 100000000>;
-+	max-frequency = <100000000>;
- 	cd-gpios = <&gpio0 7 GPIO_ACTIVE_LOW>;
- 	disable-wp;
- 	sd-uhs-sdr104;
+diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
+index 0c7d31c..ea2a1df0 100644
+--- a/net/bluetooth/rfcomm/tty.c
++++ b/net/bluetooth/rfcomm/tty.c
+@@ -414,7 +414,6 @@ static int __rfcomm_create_dev(struct sock *sk, void __user *arg)
+ 		if (IS_ERR(dlc))
+ 			return PTR_ERR(dlc);
+ 		else if (dlc) {
+-			rfcomm_dlc_put(dlc);
+ 			return -EBUSY;
+ 		}
+ 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
 -- 
-2.11.0
+1.8.3.1
 
