@@ -2,119 +2,151 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339C0C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0010BC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105952070A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C322A2070A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:56:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="haHvIz5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgCGLxJ (ORCPT
+        id S1726180AbgCGL4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 06:53:09 -0500
-Received: from mga17.intel.com ([192.55.52.151]:37913 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgCGLxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 06:53:08 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2020 03:53:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,525,1574150400"; 
-   d="scan'208";a="388090759"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.211.93]) ([10.254.211.93])
-  by orsmga004.jf.intel.com with ESMTP; 07 Mar 2020 03:53:06 -0800
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] iommu/dmar: silence RCU-list debugging warnings
-To:     Qian Cai <cai@lca.pw>, jroedel@suse.de
-References: <1583439302-11393-1-git-send-email-cai@lca.pw>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <e70ebe24-d3cb-79c7-9104-f0c3a5b62918@linux.intel.com>
-Date:   Sat, 7 Mar 2020 19:53:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 7 Mar 2020 06:56:07 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31397 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726065AbgCGL4H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 06:56:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583582165;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jVGh5l7IYfQ0JRs6ZhFDe9dOS0KlBegkv9u7kXJdDx0=;
+        b=haHvIz5DdRD0hf1/rgLQxnsQe02i18C+I5jhotb5oEF25SYVY+h+Sj0iclBAzuzLKTSp+W
+        BioUaJuCq91k0AfkuEXiIOfWXO5pBPprZuyvjjKGAqnEIei0vbqHZE2v49gNizWK890gyh
+        iJ85SVHdBd/XC+x3go4KRF3rwSG7hx0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-44-w7WOqL_qPleAx0MieHxsHg-1; Sat, 07 Mar 2020 06:56:03 -0500
+X-MC-Unique: w7WOqL_qPleAx0MieHxsHg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77FE7801E6C;
+        Sat,  7 Mar 2020 11:56:02 +0000 (UTC)
+Received: from localhost (ovpn-12-29.pek2.redhat.com [10.72.12.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CFD5A9078A;
+        Sat,  7 Mar 2020 11:55:58 +0000 (UTC)
+Date:   Sat, 7 Mar 2020 19:55:56 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@suse.com,
+        david@redhat.com, richardw.yang@linux.intel.com,
+        dan.j.williams@intel.com, osalvador@suse.de, rppt@linux.ibm.com
+Subject: Re: [PATCH v3 5/7] mm/sparse.c: add note about only VMEMMAP
+ supporting sub-section support
+Message-ID: <20200307115556.GB27711@MiWiFi-R3L-srv>
+References: <20200307084229.28251-1-bhe@redhat.com>
+ <20200307084229.28251-6-bhe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1583439302-11393-1-git-send-email-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200307084229.28251-6-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 03/07/20 at 04:42pm, Baoquan He wrote:
 
-On 2020/3/6 4:15, Qian Cai wrote:
-> Similar to the commit 02d715b4a818 ("iommu/vt-d: Fix RCU list debugging
-> warnings"), there are several other places that call
-> list_for_each_entry_rcu() outside of an RCU read side critical section
-> but with dmar_global_lock held. Silence those false positives as well.
+Sorry, the subject should be:
+
+mm/sparse.c: add note about only VMEMMAP supporting sub-section hotplug
+
+> And tell check_pfn_span() gating the porper alignment and size of
+> hot added memory region.
 > 
->   drivers/iommu/intel-iommu.c:4288 RCU-list traversed in non-reader section!!
->   1 lock held by swapper/0/1:
->    #0: ffffffff935892c8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1ad/0xb97
+> And also move the code comments from inside section_deactivate()
+> to being above it. The code comments are reasonable for the whole
+> function, and the moving makes code cleaner.
 > 
->   drivers/iommu/dmar.c:366 RCU-list traversed in non-reader section!!
->   1 lock held by swapper/0/1:
->    #0: ffffffff935892c8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x125/0xb97
-> 
->   drivers/iommu/intel-iommu.c:5057 RCU-list traversed in non-reader section!!
->   1 lock held by swapper/0/1:
->    #0: ffffffffa71892c8 (dmar_global_lock){++++}, at: intel_iommu_init+0x61a/0xb13
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-
-
-Thanks for the fix.
-
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-Best regards,
-baolu
-
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
->   drivers/iommu/dmar.c | 3 ++-
->   include/linux/dmar.h | 6 ++++--
->   2 files changed, 6 insertions(+), 3 deletions(-)
+>  mm/sparse.c | 37 ++++++++++++++++++++-----------------
+>  1 file changed, 20 insertions(+), 17 deletions(-)
 > 
-> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> index 071bb42bbbc5..7b16c4db40b4 100644
-> --- a/drivers/iommu/dmar.c
-> +++ b/drivers/iommu/dmar.c
-> @@ -363,7 +363,8 @@ static int dmar_pci_bus_notifier(struct notifier_block *nb,
->   {
->   	struct dmar_drhd_unit *dmaru;
->   
-> -	list_for_each_entry_rcu(dmaru, &dmar_drhd_units, list)
-> +	list_for_each_entry_rcu(dmaru, &dmar_drhd_units, list,
-> +				dmar_rcu_check())
->   		if (dmaru->segment == drhd->segment &&
->   		    dmaru->reg_base_addr == drhd->address)
->   			return dmaru;
-> diff --git a/include/linux/dmar.h b/include/linux/dmar.h
-> index 712be8bc6a7c..d7bf029df737 100644
-> --- a/include/linux/dmar.h
-> +++ b/include/linux/dmar.h
-> @@ -74,11 +74,13 @@ struct dmar_pci_notify_info {
->   				dmar_rcu_check())
->   
->   #define for_each_active_drhd_unit(drhd)					\
-> -	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
-> +	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
-> +				dmar_rcu_check())			\
->   		if (drhd->ignored) {} else
->   
->   #define for_each_active_iommu(i, drhd)					\
-> -	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
-> +	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
-> +				dmar_rcu_check())			\
->   		if (i=drhd->iommu, drhd->ignored) {} else
->   
->   #define for_each_iommu(i, drhd)						\
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 2142045ab5c5..0fbd79c4ad81 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -772,6 +772,22 @@ static bool is_subsection_map_empty(struct mem_section *ms)
+>  }
+>  #endif
+>  
+> +/*
+> + * To deactivate a memory region, there are 3 cases to handle across
+> + * two configurations (SPARSEMEM_VMEMMAP={y,n}):
+> + *
+> + * 1. deactivation of a partial hot-added section (only possible in
+> + *    the SPARSEMEM_VMEMMAP=y case).
+> + *      a) section was present at memory init.
+> + *      b) section was hot-added post memory init.
+> + * 2. deactivation of a complete hot-added section.
+> + * 3. deactivation of a complete section from memory init.
+> + *
+> + * For 1, when subsection_map does not empty we will not be freeing the
+> + * usage map, but still need to free the vmemmap range.
+> + *
+> + * For 2 and 3, the SPARSEMEM_VMEMMAP={y,n} cases are unified
+> + */
+>  static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  		struct vmem_altmap *altmap)
+>  {
+> @@ -784,23 +800,6 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  		return;
+>  
+>  	empty = is_subsection_map_empty(ms);
+> -	/*
+> -	 * There are 3 cases to handle across two configurations
+> -	 * (SPARSEMEM_VMEMMAP={y,n}):
+> -	 *
+> -	 * 1/ deactivation of a partial hot-added section (only possible
+> -	 * in the SPARSEMEM_VMEMMAP=y case).
+> -	 *    a/ section was present at memory init
+> -	 *    b/ section was hot-added post memory init
+> -	 * 2/ deactivation of a complete hot-added section
+> -	 * 3/ deactivation of a complete section from memory init
+> -	 *
+> -	 * For 1/, when subsection_map does not empty we will not be
+> -	 * freeing the usage map, but still need to free the vmemmap
+> -	 * range.
+> -	 *
+> -	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
+> -	 */
+>  	if (empty) {
+>  		unsigned long section_nr = pfn_to_section_nr(pfn);
+>  
+> @@ -907,6 +906,10 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>   *
+>   * This is only intended for hotplug.
+>   *
+> + * Note that only VMEMMAP supports sub-section aligned hotplug,
+> + * the proper alignment and size are gated by check_pfn_span().
+> + *
+> + *
+>   * Return:
+>   * * 0		- On success.
+>   * * -EEXIST	- Section has been present.
+> -- 
+> 2.17.2
 > 
+
