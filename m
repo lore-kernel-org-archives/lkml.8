@@ -2,76 +2,91 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19737C10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB0DC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD80206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19180206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:25:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583591131;
+	bh=O+87n042lk3PkORkXovI5bSszMbNt147sH09kFHUQZc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=H8VZP4MmV10r8KlGp7sESTCKUG1wXLq1+xZdsIv0+cBGEZPTYVipXg+vH9q8FKDq3
+	 Le7YlXExy7kA1Zw65QzHTQuC5E55oMBnVn3eQNxmvyFHq16FLEdB1gupo6jlAAJEck
+	 Rzk1ZxmdFVyqOPve7dYr+hgK2r6yYN60XvfwrHPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgCGOVr (ORCPT
+        id S1726298AbgCGOZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 09:21:47 -0500
-Received: from verein.lst.de ([213.95.11.211]:41220 "EHLO verein.lst.de"
+        Sat, 7 Mar 2020 09:25:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgCGOVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 09:21:47 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id DB26E68BE1; Sat,  7 Mar 2020 15:21:44 +0100 (CET)
-Date:   Sat, 7 Mar 2020 15:21:44 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
-        jacob.jun.pan@linux.intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Daniel Drake <drake@endlessm.com>,
-        Derrick Jonathan <jonathan.derrick@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 3/6] iommu/vt-d: Don't force 32bit devices to uses DMA
- domain
-Message-ID: <20200307142144.GB26190@lst.de>
-References: <20200307062014.3288-1-baolu.lu@linux.intel.com> <20200307062014.3288-4-baolu.lu@linux.intel.com>
+        id S1726154AbgCGOZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 09:25:26 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D82EF206D5;
+        Sat,  7 Mar 2020 14:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583591126;
+        bh=O+87n042lk3PkORkXovI5bSszMbNt147sH09kFHUQZc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I5+9DXhZkr8Q/Qh/JRatBSfcgpqDpdE4nT5OlH06Vu6sWh3alDs6JOsejOOMgFlAM
+         uy4Tb+I4ZuSOS9ZlSMGzAbQ53WDPIQmiHLEsCb6R0wDRE5miJ+Fzy1DPdLrkJE8dP8
+         Iz6SGy11IzGMSfQwCS9N+ZVLiNw0DNWRd9Mv1dng=
+Date:   Sat, 7 Mar 2020 14:25:21 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        Moritz Fischer <mdf@kernel.org>
+Subject: Re: [PATCH v8 1/8] include: fpga: adi-axi-common.h: fixup
+ whitespace tab -> space
+Message-ID: <20200307142521.3efbe4a4@archlinux>
+In-Reply-To: <20200306110100.22092-2-alexandru.ardelean@analog.com>
+References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
+        <20200306110100.22092-2-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200307062014.3288-4-baolu.lu@linux.intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 02:20:11PM +0800, Lu Baolu wrote:
-> Currently, if a 32bit device initially uses an identity domain,
-> Intel IOMMU driver will convert it forcibly to a DMA one if its
-> address capability is not enough for the whole system memory.
-> The motivation was to overcome the overhead caused by possible
-> bounced buffer.
+On Fri, 6 Mar 2020 13:00:53 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+
+> The initial version use a tab between '#define' & 'ADI_AXI_REG_VERSION'.
+> This changes it to space. The change is purely cosmetic.
 > 
-> Unfortunately, this improvement has led to many problems. For
-> example, some 32bit devices are required to use an identity
-> domain, forcing them to use DMA domain will cause the device
-> not to work anymore. On the other hand, the VMD sub-devices
-> share a domain but each sub-device might have different address
-> capability. Forcing a VMD sub-device to use DMA domain blindly
-> will impact the operation of other sub-devices without any
-> notification. Further more, PCI aliased devices (PCI bridge
-> and all devices beneath it, VMD devices and various devices
-> quirked with pci_add_dma_alias()) must use the same domain.
-> Forcing one device to switch to DMA domain during runtime
-> will cause in-fligh DMAs for other devices to abort or target
-> to other memory which might cause undefind system behavior.
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Whilst this is trivial it still needs an ack from relevant maintainer
+for that directory. Moritz I think...
 
-I still don't like the idea to enforce either a strict dynamic
-IOMMU mapping or an identify mapping mode.
+Jonathan
 
-Can we add a new AUTO domain which will allow using the identity
-mapping when available?  That somewhat matches the existing x86
-default, and also what powerpc does.  I have a series to lift
-that bypass mode into the core dma-mapping code that I need
-to repost, which I think would be suitable for intel-iommu as well.
+> ---
+>  include/linux/fpga/adi-axi-common.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
+> index 7fc95d5c95bb..ebd4e07ae3d8 100644
+> --- a/include/linux/fpga/adi-axi-common.h
+> +++ b/include/linux/fpga/adi-axi-common.h
+> @@ -11,7 +11,7 @@
+>  #ifndef ADI_AXI_COMMON_H_
+>  #define ADI_AXI_COMMON_H_
+>  
+> -#define	ADI_AXI_REG_VERSION			0x0000
+> +#define ADI_AXI_REG_VERSION			0x0000
+>  
+>  #define ADI_AXI_PCORE_VER(major, minor, patch)	\
+>  	(((major) << 16) | ((minor) << 8) | (patch))
+
