@@ -2,152 +2,94 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E47C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064A3C10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E29020705
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:12:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ADvKaVVX"
+	by mail.kernel.org (Postfix) with ESMTP id CA344206E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583547393;
+	bh=ZIV6z1lwkiwcQzPHzg5HwO+jQAtalo0Uf9NvrIMC3qw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SiA8TiPTlR4kNK58dcVPQ4yVdrx88wulmnsJ/d6+C6N5m2bcG+fux7gVkUYeL6vYP
+	 etvuuqBLRZdJM7NhhWkD/+c5zxHB6QXEXjeK/JjI+ncmCsEnO+JdTyN6K/+o/Uoeg5
+	 nMPyPiQCKCRSrcADaohCgx8a3Y3ohkp8p5wk14Zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCGCMB (ORCPT
+        id S1726633AbgCGCQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 21:12:01 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2142 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgCGCMB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 21:12:01 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e6302c50001>; Fri, 06 Mar 2020 18:11:18 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 06 Mar 2020 18:12:00 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 06 Mar 2020 18:12:00 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Mar
- 2020 02:11:59 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sat, 7 Mar 2020 02:11:59 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e6302ef0000>; Fri, 06 Mar 2020 18:11:59 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Matthew Wilcox <willy@infradead.org>, <linux-doc@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH] mm/gup: fixup for ce35133be382 mm/gup: track FOLL_PIN pages
-Date:   Fri, 6 Mar 2020 18:11:57 -0800
-Message-ID: <20200307021157.235726-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 6 Mar 2020 21:16:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbgCGCQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 21:16:32 -0500
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E32EA2067C;
+        Sat,  7 Mar 2020 02:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583547392;
+        bh=ZIV6z1lwkiwcQzPHzg5HwO+jQAtalo0Uf9NvrIMC3qw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=m7uWRUdrjOTLRGmZ4uhPFL/Scr9zbtshS1wDjuGwg54H8+1QaeZN5+r+Yh/gV+coV
+         qCrIlI0dfVXZ/ma9a/eJalmZQhazh+o/Z5MuBinffJQBH/GNBSgYAfqM01Iaekb3gO
+         RtIUVeBjktTdEgO99gcevvp20QlHi7Y9pfzYIFjo=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+Date:   Fri,  6 Mar 2020 18:16:27 -0800
+Message-Id: <25d5c6de22cabf6a4ecb44ce077f33aa5f10b4d4.1583547371.git.luto@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583547078; bh=iLW9L2KGSEmZt4RMbKRU9iH7ArJGdygY6FFfahuV/tQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=ADvKaVVX6pXY8WUtRIsve54FkosMGm3HbHmXkN7J3MO7EqMeVD1eqfL4Xk4Uh4Pgl
-         RerHhHE24nq0mK2MEiC2Znu1sTxa8ZOv3xR9r1xj88KiHvtELgAUiLfKtfsxN0OySV
-         EtyPkb5UJOxQ5novejG+pBg61Uvmli8uUYiRhjjrlGPbo2QI0TTXkMZtwjzKmJcm6Z
-         s/6uRS1Yuo7AksZjDpzJJI/r2MaYVIJBnXDnWWDhQGOau6FYaxyQtOeOKC/m4Aiytt
-         fycklPSUQDfpMcO6LA2Aac2qxAveVZY/TutWbesqSrnUR0qWFwXtKqSTDLOHTJlRXW
-         OmrHPv/APW6qQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a fixup for the mmotm commit ce35133be382
-("mm/gup: track FOLL_PIN pages").
+The ABI is broken and we cannot support it properly.  Turn it off.
 
-Add kerneldoc comments for pin_user_pages*() routines, in order
-to get rid of "make -W1" warnings when building mm/gup.o.
+If this causes a meaningful performance regression for someone, KVM
+can introduce an improved ABI that is supportable.
 
-This just adds @param documentation of:
-    pin_user_pages()
-    pin_user_pages_fast()
-    pin_user_pages_remote()
-
-The param documentation was stolen from other gup.c functions,
-because it looks reasonable enough.
-
-Reported-by: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- mm/gup.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/x86/kernel/kvm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index f589299b0d4a..54af3b290cb0 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2766,6 +2766,12 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast);
- /**
-  * pin_user_pages_fast() - pin user pages in memory without taking locks
-  *
-+ * @start:      starting user address
-+ * @nr_pages:   number of pages from start to pin
-+ * @gup_flags:  flags modifying pin behaviour
-+ * @pages:      array that receives pointers to the pages pinned.
-+ *              Should be at least nr_pages long.
-+ *
-  * Nearly the same as get_user_pages_fast(), except that FOLL_PIN is set. =
-See
-  * get_user_pages_fast() for documentation on the function arguments, beca=
-use
-  * the arguments here are identical.
-@@ -2791,6 +2797,21 @@ EXPORT_SYMBOL_GPL(pin_user_pages_fast);
- /**
-  * pin_user_pages_remote() - pin pages of a remote process (task !=3D curr=
-ent)
-  *
-+ * @tsk:	the task_struct to use for page fault accounting, or
-+ *		NULL if faults are not to be recorded.
-+ * @mm:		mm_struct of target mm
-+ * @start:	starting user address
-+ * @nr_pages:	number of pages from start to pin
-+ * @gup_flags:	flags modifying lookup behaviour
-+ * @pages:	array that receives pointers to the pages pinned.
-+ *		Should be at least nr_pages long. Or NULL, if caller
-+ *		only intends to ensure the pages are faulted in.
-+ * @vmas:	array of pointers to vmas corresponding to each page.
-+ *		Or NULL if the caller does not require them.
-+ * @locked:	pointer to lock flag indicating whether lock is held and
-+ *		subsequently whether VM_FAULT_RETRY functionality can be
-+ *		utilised. Lock must initially be held.
-+ *
-  * Nearly the same as get_user_pages_remote(), except that FOLL_PIN is set=
-. See
-  * get_user_pages_remote() for documentation on the function arguments, be=
-cause
-  * the arguments here are identical.
-@@ -2819,6 +2840,15 @@ EXPORT_SYMBOL(pin_user_pages_remote);
- /**
-  * pin_user_pages() - pin user pages in memory for use by other devices
-  *
-+ * @start:	starting user address
-+ * @nr_pages:	number of pages from start to pin
-+ * @gup_flags:	flags modifying lookup behaviour
-+ * @pages:	array that receives pointers to the pages pinned.
-+ *		Should be at least nr_pages long. Or NULL, if caller
-+ *		only intends to ensure the pages are faulted in.
-+ * @vmas:	array of pointers to vmas corresponding to each page.
-+ *		Or NULL if the caller does not require them.
-+ *
-  * Nearly the same as get_user_pages(), except that FOLL_TOUCH is not set,=
- and
-  * FOLL_PIN is set.
-  *
---=20
-2.25.1
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 93ab0cbd304e..71f9f39f93da 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -318,11 +318,16 @@ static void kvm_guest_cpu_init(void)
+ 
+ 		pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
+ 
+-#ifdef CONFIG_PREEMPTION
+-		pa |= KVM_ASYNC_PF_SEND_ALWAYS;
+-#endif
+ 		pa |= KVM_ASYNC_PF_ENABLED;
+ 
++		/*
++		 * We do not set KVM_ASYNC_PF_SEND_ALWAYS.  With the current
++		 * KVM paravirt ABI, if an async page fault occurs on an early
++		 * memory access in the normal (sync) #PF path or in an NMI
++		 * that happens early in the #PF code, the combination of CR2
++		 * and the APF reason field will be corrupted.
++		 */
++
+ 		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_VMEXIT))
+ 			pa |= KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT;
+ 
+-- 
+2.24.1
 
