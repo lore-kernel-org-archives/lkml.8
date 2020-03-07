@@ -2,91 +2,114 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19617C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AC1C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B262075B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:09:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y6x+ktQY"
+	by mail.kernel.org (Postfix) with ESMTP id 7E32C2075B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgCGIJf (ORCPT
+        id S1726264AbgCGIK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 03:09:35 -0500
-Received: from mail-pl1-f171.google.com ([209.85.214.171]:46683 "EHLO
-        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgCGIJf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 03:09:35 -0500
-Received: by mail-pl1-f171.google.com with SMTP id w12so1837121pll.13
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 00:09:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Il0BuirtXElX3OhJ8KQ+VVPD82PshE9sC+bGdFWDsGU=;
-        b=Y6x+ktQYKlOTGiFoCpzmgJHyWqjxMCmMqSAxY4SB8JzMC5JWisoxpp7cHnfLHFX5OT
-         qQIk8bBOtAsU0XfsP37BubttZaRh1tZPPYyBEVOCVfznu+iSOQxvl6ksS5n/GJrr4Hr2
-         B87D5TVYJ+RAA2v2G8kT63cJd9bRecv1Ue+6s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Il0BuirtXElX3OhJ8KQ+VVPD82PshE9sC+bGdFWDsGU=;
-        b=EleXO4seymtIeJoJbeDqrIEnW+fry4/I7fNUq7Hd+GB2e0E4jLFYTh83Y9klTAAtw1
-         I3/+tQhREou1d1Gerc5YGztcOlSnVa9bQ6WOCqGtPnr1oX2p06F0KSZ5JS2gucytn/3M
-         bRVcyyFRaV07NZ3Gq9dbOnTGrbC/wWJ0SiUikpYw1QH+Tuq0QjQ5viafLPXrBqRylhVm
-         lZwNAZ2xn+abHqzbib3j8iN7bB5+0XXienXAE1VGsmoJDHtmwjAmL9qUr5FwHKF3Jl0L
-         UBD7RlexDO13Q9b+Q563cz8fb96bDodBfJBJGx74zz175Zf9PkXq4mn1vq53SnBskDas
-         EN6w==
-X-Gm-Message-State: ANhLgQ10wQMjP2hvAFu3BfrwChTXXCTVml4zAVAeV9r4RQKoj3LFArwL
-        z4IxGX8zkAQfUyUlOvPRHwpsXg==
-X-Google-Smtp-Source: ADFU+vstyaUZAA30a7Gyv0ev+TGK+vA0QMq+YD9kZGE7d7/4+YCQfrphuGxCCpOOwROkghJ9eGxANg==
-X-Received: by 2002:a17:90a:1ae9:: with SMTP id p96mr7809803pjp.123.1583568574186;
-        Sat, 07 Mar 2020 00:09:34 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id x9sm7359744pfa.188.2020.03.07.00.09.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 00:09:33 -0800 (PST)
-Date:   Sat, 7 Mar 2020 17:09:32 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 03/11] videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT
- flag
-Message-ID: <20200307080932.GF176460@google.com>
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-4-senozhatsky@chromium.org>
- <40b1cc23-5e28-837b-49d5-e32d9dd3edee@xs4all.nl>
+        Sat, 7 Mar 2020 03:10:27 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11194 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725907AbgCGIK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 03:10:26 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A364B773BC8948E5605A;
+        Sat,  7 Mar 2020 16:10:19 +0800 (CST)
+Received: from huawei.com (10.67.133.63) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Sat, 7 Mar 2020
+ 16:10:09 +0800
+From:   Qiang Su <suqiang4@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <suqiang4@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCH V2] UIO: make maximum memory and port regions configurable
+Date:   Sat, 7 Mar 2020 16:10:08 +0800
+Message-ID: <20200307081008.26848-1-suqiang4@huawei.com>
+X-Mailer: git-send-email 2.12.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <40b1cc23-5e28-837b-49d5-e32d9dd3edee@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Originating-IP: [10.67.133.63]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/06 14:58), Hans Verkuil wrote:
-> 
-> Please fold that in this patch.
-> 
+Now each uio device can only support 5 memory regions and
+5 port regions. It is far from enough for some big system.
+On the other hand, the hard-coded style is not flexible.
 
-Thanks!
+Consider the marco is used as array index, so a range for
+the config is set in menuconfig. The range is set as 1 to 512.
+The default value is still set as 5 to keep consistent with
+current code.
 
-	-ss
+Signed-off-by: Qiang Su <suqiang4@huawei.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+---
+Changes since v1:
+- also make port regions configurable in menuconfig.
+- fix kbuild errors.
+---
+ drivers/uio/Kconfig        | 18 ++++++++++++++++++
+ include/linux/uio_driver.h |  4 ++--
+ 2 files changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+index 202ee81cfc2b..cee7d93cfea2 100644
+--- a/drivers/uio/Kconfig
++++ b/drivers/uio/Kconfig
+@@ -165,4 +165,22 @@ config UIO_HV_GENERIC
+ 	  to network and storage devices from userspace.
+ 
+ 	  If you compile this as a module, it will be called uio_hv_generic.
++
++config MAX_UIO_MAPS
++	depends on UIO
++	int "Maximum of memory nodes each uio device support(1-512)"
++	range 1 512
++	default 5
++	help
++	  make the max number of memory regions in uio device configurable.
++
++config MAX_UIO_PORT_REGIONS
++	depends on UIO
++	int "Maximum of port regions each uio device support(1-512)"
++	range 1 512
++	default 5
++	help
++	  make the max number of port regions in uio device configurable.
++
++
+ endif
+diff --git a/include/linux/uio_driver.h b/include/linux/uio_driver.h
+index 01081c4726c0..5dc60088834c 100644
+--- a/include/linux/uio_driver.h
++++ b/include/linux/uio_driver.h
+@@ -44,7 +44,7 @@ struct uio_mem {
+ 	struct uio_map		*map;
+ };
+ 
+-#define MAX_UIO_MAPS	5
++#define MAX_UIO_MAPS	CONFIG_MAX_UIO_MAPS
+ 
+ struct uio_portio;
+ 
+@@ -64,7 +64,7 @@ struct uio_port {
+ 	struct uio_portio	*portio;
+ };
+ 
+-#define MAX_UIO_PORT_REGIONS	5
++#define MAX_UIO_PORT_REGIONS	CONFIG_MAX_UIO_PORT_REGIONS
+ 
+ struct uio_device {
+         struct module           *owner;
+-- 
+2.12.3
+
