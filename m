@@ -2,136 +2,151 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FDBC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E2EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405FD206D7
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27505206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHA7XKgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCGDMO (ORCPT
+        id S1726733AbgCGDOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 22:12:14 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:56298 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgCGDMN (ORCPT
+        Fri, 6 Mar 2020 22:14:03 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42302 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgCGDOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:12:13 -0500
-Received: by mail-il1-f197.google.com with SMTP id p7so3062232ilr.22
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 19:12:11 -0800 (PST)
+        Fri, 6 Mar 2020 22:14:02 -0500
+Received: by mail-pg1-f194.google.com with SMTP id h8so1953591pgs.9
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 19:14:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JLaY/mwaUY5Lw3+X8HHyKsKco3Sn1Zy97OVjrAF44zg=;
+        b=PHA7XKguacwBINKxP1kYumjzpt88nlSoF/bQ1UrLVpBLfk1AxhV43/VCSJ/G5gt7uM
+         N4EZgwScVyjs+P9plXz8u5YyHRRxYlwiKPvfAqXKn8hYj+SsOcV/R1WO217ZNg37cxH8
+         0baSMt7bS/D322XiSv8+nNo8zZbz9j57Fpg52BuJYgqbFDXDXKWyoRbJIUNfSBFRJOzf
+         bK/V2GgeWno9hW5qCfa7mzZ2mLssw49ONERCUFRwqo9B2SiddXO37y9xT8ahekO/+kCy
+         ROpPdSbRcw0JYyzYsbN6KgLSL09HEpTZ34YFzzIJjccsy7sfBulqrYMFa7pTAglZXxfU
+         MSYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=rGa49jzL97d8NBTpQJxKinf44vLh+Dm5/2B8sc7NuXA=;
-        b=Y7E98pE/gpx1hKGpip3Su53aKiDapZMYxpeXXfw4qKk1qwNNBUoiZWgPcch2D7luit
-         Y/x8tr5l7Zjff4jMjJOKNQja14yJosgBAp4B350Hg4X62WAv6AMstlWfBn3saGcvPfri
-         tX5ZwsBZxeVrTsDsyWeUT1f1zi8we/jkELPv/JaRdUcSUzHW31V3sMhLYNXDUm6kWMvK
-         Npd8RI71cFCcOI9S4gOPrTIfAuWfdJwZErGWls0+D8LDcsFa0AhB1WJuc2WCGQ69G6Ra
-         uk9HsjgpUr02lkKkKUEhdj9JxkTsS4lJ2YK4HUX61inpz+1FPkCSDUV/3IikzluwR7kc
-         2zMQ==
-X-Gm-Message-State: ANhLgQ1em9K3A4sfQwgt3PTVFhTa3TWg/qHZzuj+3YS+XwlsvIictnZO
-        q3QiyhTFZvMC/ie5NjQD5BX1a8ChZS4PZnEnRfXzyu+7wQA1
-X-Google-Smtp-Source: ADFU+vsn/jjdVuTsM+rDcGkrH4gL31+pb5vITFI0gP9q2qHLjfECDFBd2lLhVSwRagNzG10JKg/QKQAqFU4pLgfZHfte7M+CxLyM
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JLaY/mwaUY5Lw3+X8HHyKsKco3Sn1Zy97OVjrAF44zg=;
+        b=R3hg4a9njjYIbZcUZuyBbEPgpDX7fbjFdX8vtiI1exKUug4/+cM0ONXiu6H5K9+0fW
+         j+lT2he9qF2F0Ps6W+sv7IYeGU0p94H4kKhorQQOA82KEG5Hvc0+ZvaO6SoPIJDHjHKe
+         8uz3p/mGScfYusNQkGciOEMk10JjNNoFNlZYuUQ4J086aSprWlIz8UlhDLHOn+UIKktm
+         sv+kRTAHDRfxdkCLC0iTHswORghHTSWb2TSPOeE9RxgCKR+3vQbL/FIPqU7FthM7wO5y
+         hSifbyISsz1Cwhs6/JL+3BnEdtQJOUH4cqxCFnUXSde60f0gsPTJ3+6ANDVj3LxEOpTl
+         QrzA==
+X-Gm-Message-State: ANhLgQ1KWSFIlCu4KZA+jRMih6+HqodQzUOnwkjj/vQdnLoGU5Dy2HXf
+        2nMeBN4yBUB3i8Y3l9mxg8w=
+X-Google-Smtp-Source: ADFU+vswFrjlVf8UdNcR2Cz7hZrcblVbc2RW0rVxR3WGbS8yzKY35UsHs64fff9cum5JZWCo1ayu8w==
+X-Received: by 2002:aa7:9726:: with SMTP id k6mr6838588pfg.196.1583550839714;
+        Fri, 06 Mar 2020 19:13:59 -0800 (PST)
+Received: from ziqianlu-desktop.localdomain ([47.89.83.64])
+        by smtp.gmail.com with ESMTPSA id 9sm32532232pge.65.2020.03.06.19.13.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 19:13:58 -0800 (PST)
+Date:   Sat, 7 Mar 2020 11:13:50 +0800
+From:   Aaron Lu <aaron.lwe@gmail.com>
+To:     Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Phil Auld <pauld@redhat.com>, Aubrey Li <aubrey.intel@gmail.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+Message-ID: <20200307031312.GA8101@ziqianlu-desktop.localdomain>
+References: <20200225034438.GA617271@ziqianlu-desktop.localdomain>
+ <CANaguZD205ccu1V_2W-QuMRrJA9SjJ5ng1do4NCdLy8NDKKrbA@mail.gmail.com>
+ <20200227020432.GA628749@ziqianlu-desktop.localdomain>
+ <20200227141032.GA30178@pauld.bos.csb>
+ <20200228025405.GA634650@ziqianlu-desktop.localdomain>
+ <CAERHkrunq=BqB=NmS2b_BfjePX2+nNpbv1EfTWw5rExbvYHyJw@mail.gmail.com>
+ <20200306024116.GA16400@ziqianlu-desktop.localdomain>
+ <98719a4e-f620-dc8c-f29f-fd63c43e1597@linux.intel.com>
+ <20200306183340.GC23145@pauld.bos.csb>
+ <9bf44d68-de78-66d5-ea8c-6cc8a30d90c0@linux.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:6c0e:: with SMTP id h14mr3695514ilc.81.1583550731471;
- Fri, 06 Mar 2020 19:12:11 -0800 (PST)
-Date:   Fri, 06 Mar 2020 19:12:11 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d5529b05a03b2251@google.com>
-Subject: general protection fault in __loop_clr_fd
-From:   syzbot <syzbot+3967212746d25888b189@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9bf44d68-de78-66d5-ea8c-6cc8a30d90c0@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Mar 06, 2020 at 01:44:08PM -0800, Tim Chen wrote:
+> On 3/6/20 10:33 AM, Phil Auld wrote:
+> > On Fri, Mar 06, 2020 at 10:06:16AM -0800 Tim Chen wrote:
+> >> On 3/5/20 6:41 PM, Aaron Lu wrote:
+> >>
+> >>>>> So this appeared to me like a question of: is it desirable to protect/enhance
+> >>>>> high weight task performance in the presence of core scheduling?
+> >>>>
+> >>>> This sounds to me a policy VS mechanism question. Do you have any idea
+> >>>> how to spread high weight task among the cores with coresched enabled?
+> >>>
+> >>> Yes I would like to get us on the same page of the expected behaviour
+> >>> before jumping to the implementation details. As for how to achieve
+> >>> that: I'm thinking about to make core wide load balanced and then high
+> >>> weight task shall spread on different cores. This isn't just about load
+> >>> balance, the initial task placement will also need to be considered of
+> >>> course if the high weight task only runs a small period.
+> >>>
+> >>
+> >> I am wondering why this is not happening:  
+> >>
+> >> When the low weight task group has exceeded its cfs allocation during a cfs period, the task group
+> >> should be throttled.  In that case, the CPU cores that the low
+> >> weight task group occupies will become idle, and allow load balance from the
+> >> overloaded CPUs for the high weight task group to migrate over.  
+> >>
+> > 
+> > cpu.shares is not quota. I think it will only get throttled if it has and 
+> > exceeds quota.  Shares are supposed to be used to help weight contention
+> > without providing a hard limit. 
+> > 
+> 
+> Ah yes.  cpu.quota is not set in Aaron's test case.  
+> 
+> That said, I wonder if the time consumed is getting out of whack with the 
+> cpu shares assigned, we can leverage the quota mechanism to throttle
+> those cgroup that have overused their shares of cpu.  Most of the stats and machinery
+> needed are already in the throttling mechanism.  
 
-syzbot found the following crash on:
+cpu.quota is not work conserving IIUC, it will reduce noise workload's
+performance when real workload has no demand for CPU.
 
-HEAD commit:    770fbb32 Add linux-next specific files for 20200228
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=103aee2de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=576314276bce4ad5
-dashboard link: https://syzkaller.appspot.com/bug?extid=3967212746d25888b189
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fc670de00000
+Also, while not exceeding quota, the noise workload can still hurt real
+workload's performance. To protect real workload from noise, cpu.shares
+and SCHED_IDLE seems appropriate but the implementation may not be
+enough as of now.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3967212746d25888b189@syzkaller.appspotmail.com
+> 
+> I am hoping that allowing task migration with task group mismatch
+> under large load imbalance between CPUs will be good enough.
 
-general protection fault, probably for non-canonical address 0xdffffc0000000021: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000108-0x000000000000010f]
-CPU: 1 PID: 9504 Comm: syz-executor.1 Not tainted 5.6.0-rc3-next-20200228-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:workqueue_sysfs_unregister kernel/workqueue.c:5691 [inline]
-RIP: 0010:destroy_workqueue+0x2e/0x6b0 kernel/workqueue.c:4351
-Code: 49 89 fe 41 55 41 54 55 53 48 83 ec 08 e8 8a 6a 26 00 49 8d be 08 01 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e0 05 00 00 49 8b 9e 08 01 00 00 48 85 db 74 19
-RSP: 0018:ffffc90002277cc8 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
-RDX: 0000000000000021 RSI: ffffffff814c2af6 RDI: 0000000000000108
-RBP: ffff888218af18f0 R08: ffff88809880e480 R09: fffffbfff185270a
-R10: fffffbfff1852709 R11: ffffffff8c29384f R12: ffff888218af1800
-R13: ffff888218af1804 R14: 0000000000000000 R15: 0000000000004c01
-FS:  00000000027e1940(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa010a7d000 CR3: 0000000088d30000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- loop_unprepare_queue drivers/block/loop.c:891 [inline]
- __loop_clr_fd+0x185/0x1280 drivers/block/loop.c:1210
- loop_clr_fd drivers/block/loop.c:1335 [inline]
- lo_ioctl+0x2b4/0x1460 drivers/block/loop.c:1704
- __blkdev_driver_ioctl block/ioctl.c:321 [inline]
- blkdev_ioctl+0x25b/0x660 block/ioctl.c:717
- block_ioctl+0xe9/0x130 fs/block_dev.c:1983
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
- do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c317
-Code: 48 83 c4 08 48 89 d8 5b 5d c3 66 0f 1f 84 00 00 00 00 00 48 89 e8 48 f7 d8 48 39 c3 0f 92 c0 eb 92 66 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 0d b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd75653418 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045c317
-RDX: 0000000000000000 RSI: 0000000000004c01 RDI: 0000000000000003
-RBP: 0000000000000002 R08: 0000000000000000 R09: 000000000000000a
-R10: 0000000000000075 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007ffd75653450 R14: 0000000000016fbc R15: 00007ffd75653460
-Modules linked in:
----[ end trace 4ad871aadd3b1dba ]---
-RIP: 0010:workqueue_sysfs_unregister kernel/workqueue.c:5691 [inline]
-RIP: 0010:destroy_workqueue+0x2e/0x6b0 kernel/workqueue.c:4351
-Code: 49 89 fe 41 55 41 54 55 53 48 83 ec 08 e8 8a 6a 26 00 49 8d be 08 01 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e0 05 00 00 49 8b 9e 08 01 00 00 48 85 db 74 19
-RSP: 0018:ffffc90002277cc8 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000002 RCX: 0000000000000000
-RDX: 0000000000000021 RSI: ffffffff814c2af6 RDI: 0000000000000108
-RBP: ffff888218af18f0 R08: ffff88809880e480 R09: fffffbfff185270a
-R10: fffffbfff1852709 R11: ffffffff8c29384f R12: ffff888218af1800
-R13: ffff888218af1804 R14: 0000000000000000 R15: 0000000000004c01
-FS:  00000000027e1940(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f692de4b110 CR3: 0000000088d30000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+I also hope so :-)
