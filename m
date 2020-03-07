@@ -2,198 +2,177 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBA0C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 10:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6424DC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 10:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3123206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 10:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39851206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 10:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583575321;
+	bh=K57qheI3BUpEK74C2M8dStCHv7ATP2ASTLRAtzGxQpE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ypUEetEQGBjnT8ccnGpsLkw+/LKZT8aGTPIDazq5GqL0bJDCzRcE+Ek+f8n8931FF
+	 XUnOemJI54h1MlJ2w2g1Z/j3etfBv8BEldWA/TB1z6TXgYHmh7oKDj07bPCAWrrPce
+	 H4AkjZa/Rm1j1OEWKs5+pwhDUNAX6cCLRryFvYFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgCGKBb convert rfc822-to-8bit (ORCPT
+        id S1726284AbgCGKCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 05:01:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55339 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgCGKBa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 05:01:30 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jAWGr-0004yV-HQ; Sat, 07 Mar 2020 11:01:25 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 2BA96104088; Sat,  7 Mar 2020 11:01:19 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [patch 2/2] x86/kvm: Sanitize kvm_async_pf_task_wait()
-In-Reply-To: <CALCETrV74siTTHHWRPv+Gz=YS3SAUA6eqB6FX1XaHKvZDCbaNg@mail.gmail.com>
-References: <20200306234204.847674001@linutronix.de> <20200307000259.448059232@linutronix.de> <CALCETrV74siTTHHWRPv+Gz=YS3SAUA6eqB6FX1XaHKvZDCbaNg@mail.gmail.com>
-Date:   Sat, 07 Mar 2020 11:01:19 +0100
-Message-ID: <87r1y4a3gw.fsf@nanos.tec.linutronix.de>
+        Sat, 7 Mar 2020 05:02:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbgCGKB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 05:01:59 -0500
+Received: from onda.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DEB4206D5;
+        Sat,  7 Mar 2020 10:01:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583575318;
+        bh=K57qheI3BUpEK74C2M8dStCHv7ATP2ASTLRAtzGxQpE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ucBz2YSHIN/jLFT1Th7tmwlEMgYBachNyqUpxAr3o8UYYjXUF0ZxCqSWqwyvRPyge
+         RDbJFh1lkxwghJX9TvLBD37F1kfD6g9JTLON/X6d5H+Z/G/iTKg0cRlHsaAX76Mpoe
+         3V8RCtWDkNx5m/OlnSPoVSu1kgrGR4qnj5TmKZDY=
+Date:   Sat, 7 Mar 2020 11:01:54 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
+Message-ID: <20200307110154.719572e4@onda.lan>
+In-Reply-To: <alpine.DEB.2.21.2003062214500.5521@felia>
+References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
+        <20200304131035.731a3947@lwn.net>
+        <alpine.DEB.2.21.2003042145340.2698@felia>
+        <e43f0cf0117fbfa8fe8c7e62538fd47a24b4657a.camel@perches.com>
+        <alpine.DEB.2.21.2003062214500.5521@felia>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
->> On Mar 6, 2020, at 4:12 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
->> Aside of that the actual code is a convoluted one fits it all swiss army
->> knife. It is invoked from different places with different RCU constraints:
->>
->> 1) Host side:
->>
->>   vcpu_enter_guest()
->>     kvm_x86_ops->handle_exit()
->>       kvm_handle_page_fault()
->>         kvm_async_pf_task_wait()
->>
->>   The invocation happens from fully preemptible context.
->
-> I’m a bit baffled as to why the host uses this code at all instead of
-> just sleeping the old fashioned way when the guest takes a (host) page
-> fault.  Oh well.
+Em Fri, 6 Mar 2020 22:17:49 +0100 (CET)
+Lukas Bulwahn <lukas.bulwahn@gmail.com> escreveu:
 
-If I can trust the crystal ball which I used to decode this maze then it
-actually makes sense.
+> On Wed, 4 Mar 2020, Joe Perches wrote:
+> 
+> > On Wed, 2020-03-04 at 21:50 +0100, Lukas Bulwahn wrote:  
+> > > 
+> > > On Wed, 4 Mar 2020, Jonathan Corbet wrote:
+> > >   
+> > > > On Wed,  4 Mar 2020 08:29:50 +0100
+> > > > Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:  
+> > > > > Jonathan, pick pick this patch for doc-next.  
+> > > > 
+> > > > Sigh, I need to work a MAINTAINERS check into my workflow...
+> > > >   
+> > > 
+> > > I getting closer to have zero warnings on the MAINTAINER file matches and 
+> > > then, I would set up a bot following the mailing lists to warn when anyone
+> > > sends a patch that potentially introduces such warning.  
+> > 
+> > Hey Lukas.
+> > 
+> > I wrote a hacky script that sent emails
+> > for invalid MAINTAINER F: and X: patterns
+> > a couple years back.
+> > 
+> > I ran it in September 2018 and March 2019.
+> > 
+> > It's attached if you want to play with it.
+> > The email sending bit is commented out.
+> > 
+> > The script is used like:
+> > 
+> > $ perl ./scripts/get_maintainer.pl --self-test=patterns | \
+> >   cut -f2 -d: | \
+> >   while read line ; do \
+> >     perl ./dump_section.perl $line \
+> >   done
+> >   
+> 
+> Thanks, Joe. That is certainly helpful, I will try to make use of it in 
+> the future; fortunately, there really not too many invalid F: patterns 
+> left, and I can send the last few patches out myself.
 
-Aysnc faults are faults which cannot be handled by the guest, i.e. the
-host either pulled a page away under the guest or did not populate it in
-the first place.
+Talking about problems at MAINTAINERS file, while the entries are
+supposed to be in alphabetical order, there are some things at the
+wrong place there.
 
-So the reasoning is that if this happens the guest might be in a
-situation where it can schedule other tasks instead of being stopped
-completely by the host until the page arrives.
+This can easily seen with:
 
-Now you could argue that this mostly makes sense for CPL 0 faults, but
-there is definitely code in the kernel where it makes sense as well,
-e.g. exec. But of course as this is designed without a proper handshake
-there is no way for the hypervisor to figure out whether it makes sense
-or not.
+	$ cat MAINTAINERS |grep -E '^[A-Z][A-Z]' >a;sort -f a >b;diff -U1 a b|less
 
-If the async fault cannot be delivered to the guest (async PF disabled,
-async PF only enabled for CPL 0, IF == 0) then the host utilizes the
-same data structure and wait mechanism. That really makes sense.
+See for example the first hunk:
 
-The part which does not make sense in the current implementation is the
-kvm_async_pf_task_wait() trainwreck. A clear upfront separation of
-schedulable and non schedulable wait mechanisms would have avoided all
-the RCU duct tape nonsense and also spared me the brain damage caused by
-reverse engineering this completely undocumented mess.
+@@ -54,3 +54,2 @@
+ ALACRITECH GIGABIT ETHERNET DRIVER
+-FORCEDETH GIGABIT ETHERNET DRIVER
+ ALCATEL SPEEDTOUCH USB DRIVER
 
->> +static void kvm_async_pf_task_wait_halt(u32 token)
->> +{
->> +    struct kvm_task_sleep_node n;
->> +
->> +    if (!kvm_async_pf_queue_task(token, true, &n))
->> +        return;
->>
->>  for (;;) {
->> -        if (!n.halted)
->> -            prepare_to_swait_exclusive(&n.wq, &wait, TASK_UNINTERRUPTIBLE);
->>      if (hlist_unhashed(&n.link))
->>          break;
->> +        /*
->> +         * No point in doing anything about RCU here. Any RCU read
->> +         * side critical section or RCU watching section can be
->> +         * interrupted by VMEXITs and the host is free to keep the
->> +         * vCPU scheduled out as long as it sees fit. This is not
->> +         * any different just because of the halt induced voluntary
->> +         * VMEXIT.
->> +         *
->> +         * Also the async page fault could have interrupted any RCU
->> +         * watching context, so invoking rcu_irq_exit()/enter()
->> +         * around this is not gaining anything.
->> +         */
->> +        native_safe_halt();
->> +        local_irq_disable();
->
-> What’s the local_irq_disable() here for? I would believe a
-> lockdep_assert_irqs_disabled() somewhere in here would make sense.
-> (Yes, I see you copied this from the old code. It’s still nonsense.)
+The FORCEDETH entry is completely misplaced.
 
-native_safe_halt() does:
+Same happens here:
 
-         STI
-         HLT
+@@ -529,4 +529,2 @@
+ DIOLAN U2C-12 I2C DRIVER
+-FILESYSTEM DIRECT ACCESS (DAX)
+-DEVICE DIRECT ACCESS (DAX)
+ DIRECTORY NOTIFICATION (DNOTIFY)
 
-So the irq disable is required as the loop should exit with interrupts
-disabled.
+With this name, the FILESYSTEM DIRECT ACCESS (DAX) is also misplaced.
+Maybe it was called something else starting with DEVICE in the past?
 
-> I also find it truly bizarre that hlt actually works in this context.
-> Does KVM in fact wake a HLTed guest that HLTed with IRQs off when a
-> pending async pf is satisfied?  This would make sense if the wake
-> event were an interrupt, but it’s not according to Paolo.
+In any case, I wonder if it would make sense to re-order at least those 
+completely out order entries. On a quick check,  there are only 16 entries
+that seem to be really wrong, if we compare just the first two
+characters of the entries names.
 
-See above. safe halt enables interrupts, which means IF == 1 and the
-host sanity check for IF == 1 is satisfied.
+I'm using this small perl script to check:
 
-In fact, if e.g. some regular interrupt arrives before the page becomes
-available and the guest entered the halt loop because the fault happened
-inside a RCU read side critical section with preemption enabled, then
-the interrupt might wake up another task, set need resched and this
-other task can run. At some point the halt waiting task gets back into
-the loop and either finds the page ready or goes back into halt.
+	open IN, "MAINTAINERS";
+	my $prev = "00";
+	while (<IN>) {
+		next if (m/THE REST/);
+		if (m/^([A-Z\d][A-Z\d])/) {
+			$cur = $1;
+			$entry = $_;
+			$entry =~ s/\s+$//;
+			print "$entry < $full_prev\n" if ($cur lt $prev);
+			$prev = $cur;
+			$full_prev = $entry;
+		}
+	}
 
-If the fault hit a preempt disabled region then still the interrupt and
-eventual resulting soft interrupts can be handled.
+It got those results:
 
-Both scenarios are correct when you actually manage to mentaly
-disconnect regular #PF and async #PF completely.
+	ALCATEL SPEEDTOUCH USB DRIVER < FORCEDETH GIGABIT ETHERNET DRIVER
+	AMAZON ANNAPURNA LABS FIC DRIVER < ARM PRIMECELL VIC PL190/PL192 DRIVER
+	802.11 (including CFG80211/NL80211) < CFAG12864BFB LCD FRAMEBUFFER DRIVER
+	DEVICE DIRECT ACCESS (DAX) < FILESYSTEM DIRECT ACCESS (DAX)
+	GASKET DRIVER FRAMEWORK < GCC PLUGINS
+	NXP FSPI DRIVER < OBJAGG
+	OMFS FILESYSTEM < ONION OMEGA2+ BOARD
+	FLYSKY FSIA6B RC RECEIVER < PHOENIX RC FLIGHT CONTROLLER ADAPTER
+	HANTRO VPU CODEC DRIVER < ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+	REALTEK WIRELESS DRIVER (rtlwifi family) < RTL8187 WIRELESS DRIVER
+	EMMC CMDQ HOST CONTROLLER INTERFACE (CQHCI) DRIVER < SECURE DIGITAL HOST CONTROLLER INTERFACE (SDHCI) DRIVER
+	SECURE DIGITAL HOST CONTROLLER INTERFACE (SDHCI) MICROCHIP DRIVER < SYNOPSYS SDHCI COMPLIANT DWC MSHC DRIVER
+	SERIAL LOW-POWER INTER-CHIP MEDIA BUS (SLIMbus) < SLEEPABLE READ-COPY UPDATE (SRCU)
+	EXTRA BOOT CONFIG < STMMAC ETHERNET DRIVER
+	TEMPO SEMICONDUCTOR DRIVERS < TRIVIAL PATCHES
+	RCMM REMOTE CONTROLS DECODER < WINBOND CIR DRIVER
 
-Of course the overloading of regular #PF, the utter lack of
-documentation and the crappy and duct taped implementation makes this
-really a mind boggling exercise.
-
-> All this being said, the only remotely sane case is when regs->flags
-> has IF==1. Perhaps this code should actually do:
->
-> WARN_ON(!(regs->flags & X86_EFLAGS_IF));
-
-Yes, that want's to be somewhere early and also cover the async wake
-case. Neither wake nor wait can be injected when IF == 0.
-
-> while (the page isn’t ready) {
->  local_irq_enable();
->  native_safe_halt();
->  local_irq_disable();
-> }
->
-> with some provision to survive the case where the warning fires so we
-> at least get logs.
-
-I don't think that any attempt to survive a async #PF injection into a
-interrupt disabled region makes sense aside of looking smart and being
-uncomprehensible voodoo.
-
-If this ever happens then the host side is completely buggered and all
-we can do is warn and pray or warn and die hard.
-
-My personal preference is to warn and die hard.
-
-> In any event, I just sent a patch to disable async page faults that
-> happen in kernel mode.
-
-I don't think it's justified. The host side really makes sure that the
-guest does have IF == 1 before injecting anything which is not a NMI. If
-the guest enables interrupts at the wrong place then this is really not
-the hosts problem.
-
-Having a warning in that async pf entry for the IF == 0 injection case
-is good enough IMO.
-
-Thanks,
-
-        tglx
+	
+Regards,
+Mauro
