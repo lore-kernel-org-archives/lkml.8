@@ -2,148 +2,350 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33927C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23496C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C65120674
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B572067C
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583592935;
-	bh=G56W4s2AMvnzLVMiKyD0uT/GN1PYnZGAbwnVpGtv+AM=;
+	s=default; t=1583593297;
+	bh=XtGD4Df9UP8bBp/OM5Affx133/DB+NR9MNKFeqJjTw4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tRpgTE8kMnDw7eQFlMD7VfKVnNqTKiQYdgnJ3izxS3UsGSz9ixBe7c47KvXOphlkP
-	 HJfMS/TfiPgRGk2oTxFPo7Crhk9rzisexSp4P+3fm7zPR8n60pAhpwm0SjvbKNq5t7
-	 E9UYkdiu9EJi6Y1xcN1YnsaV6JZ2c+52XB1aR3L8=
+	b=CoVu3pk7LBWjpkY/B/qWr0ELsO+hEwiMuunp354+6juOzw7056GSRjAumot9BzTdD
+	 MtO6kXze9MRy66hxrnoaF+hhHUCzNAdlF3eOeUnuuDORjqnvoGrO8ckE2320NE2YRF
+	 4Qqw3MkIlXZ+JDuv6GaHmbf0g0JDJ+mz/G9etxzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgCGOzc (ORCPT
+        id S1726206AbgCGPBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 09:55:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43560 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 10:01:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgCGOzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 09:55:32 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1726073AbgCGPBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 10:01:33 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FE4D20674;
-        Sat,  7 Mar 2020 14:55:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ACA820674;
+        Sat,  7 Mar 2020 15:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583592931;
-        bh=G56W4s2AMvnzLVMiKyD0uT/GN1PYnZGAbwnVpGtv+AM=;
+        s=default; t=1583593293;
+        bh=XtGD4Df9UP8bBp/OM5Affx133/DB+NR9MNKFeqJjTw4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PAu2PEWWrQ/KXbUot2j0VFLrOKO4df+uzMoJkY2yoSSp9MzVXlg7MGE5Q9iBpPI+p
-         cNqVvAg4fYZ7COrxvBGZAbmer29VoIxgKSbzcblBENiKRg2hwD+EDJjhIj7/G7Kgpj
-         8C9YzE+5xGRchUYVv6sZI6TkCwFRoCaztywy1PIw=
-Date:   Sat, 7 Mar 2020 14:55:27 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCH v8 6/8] dt-bindings: iio: adc: add bindings doc for AXI
- ADC driver
-Message-ID: <20200307145527.1729f155@archlinux>
-In-Reply-To: <20200306110100.22092-7-alexandru.ardelean@analog.com>
-References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
-        <20200306110100.22092-7-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        b=hN0tuSNlP0eLxHH6BSndXedzXFU53sFTdoqFF2FwAAZDXN3Y4RlIk1vpdFW3bOF1L
+         dDF0T2gSCc7RAairTjlljGMckD+9llpAVMn2j6tBKCKZhm7AJPx1OjO7jHcx1uUIoH
+         F67/M0BELJNaO5a5nyDRILpqDVN08HHnGtQ7k8cY=
+Received: from [185.104.136.29] (helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jAaxG-00Aqqa-RM; Sat, 07 Mar 2020 15:01:31 +0000
+Date:   Sat, 07 Mar 2020 15:01:31 +0000
+Message-ID: <8636ak6wfo.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 03/10] irqchip: Add driver for Loongson-3 HyperTransport PIC controller
+In-Reply-To: <20200221050942.507775-4-jiaxun.yang@flygoat.com>
+References: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
+        <20200221050942.507775-4-jiaxun.yang@flygoat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org, chenhc@lemote.com, allison@lohutok.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 13:00:58 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> This change adds the bindings documentation for the AXI ADC driver.
+On Fri, 21 Feb 2020 05:09:18 +0000,
+Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Looks fine to me, but I'll be wanting an ack from a DT maintainer.
+> This controller appeared on Loongson-3 family of chips to receive interrupts
+> from PCH PIC.
+
+Please explain for us mere mortals what the relationship is between
+this interrupt controller and the i8259.
+
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/include/asm/i8259.h        |   1 +
+>  drivers/irqchip/Kconfig              |  10 ++
+>  drivers/irqchip/Makefile             |   1 +
+>  drivers/irqchip/irq-i8259.c          |   6 +-
+>  drivers/irqchip/irq-loongson-htpic.c | 146 +++++++++++++++++++++++++++
+>  5 files changed, 161 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+> 
+> diff --git a/arch/mips/include/asm/i8259.h b/arch/mips/include/asm/i8259.h
+> index 97a5e41ed1ab..1ec3dbb1588f 100644
+> --- a/arch/mips/include/asm/i8259.h
+> +++ b/arch/mips/include/asm/i8259.h
+> @@ -36,6 +36,7 @@ extern raw_spinlock_t i8259A_lock;
+>  extern void make_8259A_irq(unsigned int irq);
+>  
+>  extern void init_i8259_irqs(void);
+> +extern struct irq_domain *of_init_i8259_irqs(struct device_node *node);
+>  
+>  /**
+>   * i8159_set_poll() - Override the i8259 polling function
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index c609eaa319d2..cae6f480c987 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -522,4 +522,14 @@ config LOONGSON_LIOINTC
+>  	help
+>  	  Support for the Loongson Local I/O Interrupt Controller.
+>  
+> +config LOONGSON_HTPIC
+> +	bool "Loongson3 HyperTransport PIC Controller"
+> +	depends on MACH_LOONGSON64
+> +	default y
+> +	select IRQ_DOMAIN
+> +	select GENERIC_IRQ_CHIP
+> +	select I8259
+> +	help
+> +	  Support for the Loongson-3 HyperTransport PIC Controller.
+> +
+>  endmenu
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 5e7678efdfe6..37bbe39bf909 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -106,3 +106,4 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+>  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
+>  obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
+> +obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
+> diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
+> index d000870d9b6b..9d79acce6c0c 100644
+> --- a/drivers/irqchip/irq-i8259.c
+> +++ b/drivers/irqchip/irq-i8259.c
+> @@ -309,7 +309,7 @@ static const struct irq_domain_ops i8259A_ops = {
+>   * driver compatibility reasons interrupts 0 - 15 to be the i8259
+>   * interrupts even if the hardware uses a different interrupt numbering.
+>   */
+> -struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
+> +struct irq_domain * __init of_init_i8259_irqs(struct device_node *node)
+
+I don't think this renaming brings much to the table.
+
+>  {
+>  	struct irq_domain *domain;
+>  
+> @@ -330,7 +330,7 @@ struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
+>  
+>  void __init init_i8259_irqs(void)
+>  {
+> -	__init_i8259_irqs(NULL);
+> +	of_init_i8259_irqs(NULL);
+>  }
+>  
+>  static void i8259_irq_dispatch(struct irq_desc *desc)
+> @@ -351,7 +351,7 @@ int __init i8259_of_init(struct device_node *node, struct device_node *parent)
+>  	struct irq_domain *domain;
+>  	unsigned int parent_irq;
+>  
+> -	domain = __init_i8259_irqs(node);
+> +	domain = of_init_i8259_irqs(node);
+>  
+>  	parent_irq = irq_of_parse_and_map(node, 0);
+>  	if (!parent_irq) {
+> diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loongson-htpic.c
+> new file mode 100644
+> index 000000000000..a90cf4357285
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-loongson-htpic.c
+> @@ -0,0 +1,146 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + *  Loongson HTPIC IRQ support
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irq.h>
+> +#include <linux/io.h>
+> +#include <linux/syscore_ops.h>
+> +
+> +#include <asm/i8259.h>
+> +
+> +#define HTPIC_MAX_PARENT_IRQ	4
+> +#define HTINT_NUM_VECTORS	8
+> +#define HTINT_EN_OFF		0x20
+> +
+> +struct loongson_htpic {
+> +	void __iomem *base;
+> +	struct irq_domain *domain;
+> +};
+> +
+> +struct loongson_htpic *htpic;
+
+static?
+
+> +
+> +static void htpic_irq_dispatch(struct irq_desc *desc)
+> +{
+> +	struct loongson_htpic *priv = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	uint32_t pending;
+> +
+> +	chained_irq_enter(chip, desc);
+> +	pending = readl(priv->base);
+> +	/* Ack all IRQs */
+> +	writel(pending, priv->base);
+
+Why isn't this done as part of the irq_ack() callback instead? If the
+flow handling is different from the 8259, then maybe you shouldn't be
+hijacking it...
+
+> +
+> +	if (!pending)
+> +		spurious_interrupt();
+> +
+> +	while (pending) {
+> +		int bit = __ffs(pending);
+> +
+> +		if (unlikely(bit > 15))
+> +			spurious_interrupt();
+
+and yet you continue handling it?
+
+> +
+> +		generic_handle_irq(irq_linear_revmap(priv->domain, bit));
+> +		pending &= ~BIT(bit);
+> +	}
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static void htpic_reg_init(void)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < HTINT_NUM_VECTORS; i++) {
+> +		uint32_t val;
+> +
+> +		/* Disable all HT Vectors */
+> +		writel(0x0, htpic->base + HTINT_EN_OFF + i * 0x4);
+> +		val = readl(htpic->base + i * 0x4);
+> +		/* Ack all possible pending IRQs */
+> +		writel(GENMASK(31, 0), htpic->base + i * 0x4);
+> +	}
+> +
+> +	/* Enable 16 vectors for PIC */
+> +	writel(0xffff, htpic->base + HTINT_EN_OFF);
+> +}
+> +
+> +static void htpic_resume(void)
+> +{
+> +	htpic_reg_init();
+> +}
+> +
+> +struct syscore_ops htpic_syscore_ops = {
+> +	.resume		= htpic_resume,
+> +};
+> +
+> +int __init htpic_of_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	unsigned int parent_irq[4];
+> +	int i, err;
+> +	int num_parents = 0;
+> +
+> +	if (htpic) {
+> +		pr_err("loongson-htpic: Only one HTPIC is allowed in the system\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
+> +	if (!htpic) {
+> +		err = -ENOMEM;
+> +		goto out_free;
+> +	}
+> +
+> +	htpic->base = of_iomap(node, 0);
+> +	if (!htpic->base) {
+> +		err = -ENODEV;
+> +		goto out_free;
+> +	}
+> +
+> +	htpic->domain = of_init_i8259_irqs(node);
+> +	if (!htpic->domain) {
+> +		pr_err("loongson-htpic: Failed to initialize i8259 IRQs\n");
+> +		err = -ENOMEM;
+> +		goto out_iounmap;
+> +	}
+> +
+> +	for (i = 0; i < HTPIC_MAX_PARENT_IRQ; i++) {
+> +		parent_irq[i] = irq_of_parse_and_map(node, 0);
+
+So you only care about the first interrupt in the DT?
+
+> +		if (parent_irq[i] < 0)
+
+0 is an invalid interrupt.
+
+> +			break;
+> +
+> +		num_parents++;
+> +	}
+> +
+> +	if (!num_parents) {
+> +		pr_err("loongson-htpic: Failed to get parent irqs\n");
+> +		err = -ENODEV;
+> +		goto out_remove_domain;
+> +	}
+> +
+> +	htpic_reg_init();
+> +
+> +	for (i = 0; i < num_parents; i++) {
+> +		irq_set_chained_handler_and_data(parent_irq[i],
+> +						htpic_irq_dispatch, htpic);
+> +	}
+
+What is the mapping between the 16 inputs and the 4 outputs?
+
+> +
+> +	register_syscore_ops(&htpic_syscore_ops);
+> +
+> +	return 0;
+> +
+> +out_remove_domain:
+> +	irq_domain_remove(htpic->domain);
+> +out_iounmap:
+> +	iounmap(htpic->base);
+> +out_free:
+> +	kfree(htpic);
+> +	return err;
+> +}
+> +
+> +IRQCHIP_DECLARE(loongson_htpic, "loongson,htpic-1.0", htpic_of_init);
 
 Thanks,
 
-Jonathan
+	M.
 
-> ---
->  .../bindings/iio/adc/adi,axi-adc.yaml         | 63 +++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> new file mode 100644
-> index 000000000000..6bd80e241f40
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> @@ -0,0 +1,63 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,axi-adc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AXI ADC IP core
-> +
-> +maintainers:
-> +  - Michael Hennerich <michael.hennerich@analog.com>
-> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> +
-> +description: |
-> +  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
-> +  with a high speed serial (JESD204B/C) or source synchronous parallel
-> +  interface (LVDS/CMOS).
-> +  Usually, some other interface type (i.e SPI) is used as a control
-> +  interface for the actual ADC, while this IP core will interface
-> +  to the data-lines of the ADC and handle the streaming of data into
-> +  memory via DMA.
-> +
-> +  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,axi-adc-10.0.a
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    maxItems: 1
-> +
-> +  dma-names:
-> +    maxItems: 1
-> +    items:
-> +      - const: rx
-> +
-> +  adi,adc-dev:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      A reference to a the actual ADC to which this FPGA ADC interfaces to.
-> +
-> +required:
-> +  - compatible
-> +  - dmas
-> +  - reg
-> +  - adi,adc-dev
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    axi-adc@44a00000 {
-> +          compatible = "adi,axi-adc-10.0.a";
-> +          reg = <0x44a00000 0x10000>;
-> +          dmas = <&rx_dma 0>;
-> +          dma-names = "rx";
-> +
-> +          adi,adc-dev = <&spi_adc>;
-> +    };
-> +...
-
+-- 
+Jazz is not dead, it just smells funny.
