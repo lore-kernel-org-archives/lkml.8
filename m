@@ -2,178 +2,121 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250E9C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452CDC10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA6212073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2019320674
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583596612;
-	bh=8MI55DjI7SPa+6493Wp4gaug1CV3Sfs7TkkZ1Zeatf4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SwW6DtxHXLNZicSGTEsmQrn0yvh4vqxA3VDxIqE9btWUJ/KEa+tZgQvjUo3TFlwqL
-	 6q0FG77YBqwShL+Ua+TghcBdoUu+O7YFsk1dRdPKWYbvi4SCzkGuiY0RSW4Nt48zl4
-	 jrwHSUevycjwabr0hQ7muYbvXY99kXI+hKO0DrLY=
+	s=default; t=1583596779;
+	bh=zMkJH6cK603hkiloMil4J7KbZG+wEMJbLxkolozJ8y4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=i325EbzvUEC/dbXr1NSKyr18gJM2PM5su31MSJM3H72xbpY7LwHZ6Dn+YNuAoXcNp
+	 6/VPp6vWfCL6Fw8Y0taRKD7ndRLtlq8eoqVBXTTAZMT9a4s5suZ6qeNQeYB4b6s4rQ
+	 fKyIDTgZzs3wcfAmSXKp/FCfCCB10gWboDY94D9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgCGP4u (ORCPT
+        id S1726266AbgCGP7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:56:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 10:59:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbgCGP4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:56:50 -0500
-Received: from cam-smtp0.cambridge.arm.com (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1726114AbgCGP7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 10:59:38 -0500
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76CE220674;
-        Sat,  7 Mar 2020 15:56:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A26520674
+        for <linux-kernel@vger.kernel.org>; Sat,  7 Mar 2020 15:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583596609;
-        bh=8MI55DjI7SPa+6493Wp4gaug1CV3Sfs7TkkZ1Zeatf4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XN4+nqBNMho+duUIrX23I+mrOOnkh08cKbD638f8l+7aYa1pwjeF9ju1G2kb9Axva
-         Ej5AX+ZKPVZb3swYRS8m3NlxrDw8nwEMKVT1/zIqSuLLCr5AQoSfkRMZfGtx5QpKTZ
-         jSHb+QAparaCq53NISnb/n7ZCqX3z0IgEXtzxxc8=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-        hdegoede@redhat.com, nivedita@alum.mit.edu
-Subject: [GIT PULL v2] More EFI updates for v5.7
-Date:   Sat,  7 Mar 2020 16:56:43 +0100
-Message-Id: <20200307155643.18095-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1583596776;
+        bh=zMkJH6cK603hkiloMil4J7KbZG+wEMJbLxkolozJ8y4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wl6DWydhYNyJg+uXDV7caWUBz1t5DhX+qqoTIdiOgeLjAPAFFlLTyvGdS2MGNhdsD
+         BbZNFXXAt8+rfk8lQgEp59HhLFhhQ54p1j1ZLE2N/Pz133vyTUsNnc1URmioveU0nF
+         ob12zJh5RHBqImzhx6w4EdEknItkP2Is8eUfe71I=
+Received: by mail-wm1-f41.google.com with SMTP id n8so1579439wmc.4
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 07:59:36 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3yJbjpyJJn0X6oru9endy/IDq8i+YZN45nXvLsVE1rSO3LuSgz
+        /3ByizXwGh6e2vNhxFPce0cJ99HYOaWTzO8BqL1p5Q==
+X-Google-Smtp-Source: ADFU+vvxDbLv30/SJ1GdrACcZi2erMHbijB2e7fHbV/Q2v+aZ/w3oszY1ocnI9nhuP4cv/N2cbSsd3T6zolnXE6tflg=
+X-Received: by 2002:a7b:cd83:: with SMTP id y3mr10159179wmj.176.1583596774941;
+ Sat, 07 Mar 2020 07:59:34 -0800 (PST)
+MIME-Version: 1.0
+References: <ed71d0967113a35f670a9625a058b8e6e0b2f104.1583547991.git.luto@kernel.org>
+ <CALCETrVmsF9JSMLSd44-3GGWEz6siJQxudeaYiVnvv__YDT1BQ@mail.gmail.com> <87ftek9ngq.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87ftek9ngq.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 7 Mar 2020 07:59:22 -0800
+X-Gmail-Original-Message-ID: <CALCETrVsc-t=tDRPbCg5dWHDY0NFv2zjz12ahD-vnGPn8T+RXA@mail.gmail.com>
+Message-ID: <CALCETrVsc-t=tDRPbCg5dWHDY0NFv2zjz12ahD-vnGPn8T+RXA@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Ingo, Thomas,
+On Sat, Mar 7, 2020 at 7:47 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy Lutomirski <luto@kernel.org> writes:
+> > On Fri, Mar 6, 2020 at 6:26 PM Andy Lutomirski <luto@kernel.org> wrote:
+> >> +               /*
+> >> +                * We do not set KVM_ASYNC_PF_SEND_ALWAYS.  With the current
+> >> +                * KVM paravirt ABI, the following scenario is possible:
+> >> +                *
+> >> +                * #PF: async page fault (KVM_PV_REASON_PAGE_NOT_PRESENT)
+> >> +                *  NMI before CR2 or KVM_PF_REASON_PAGE_NOT_PRESENT
+> >> +                *   NMI accesses user memory, e.g. due to perf
+> >> +                *    #PF: normal page fault
+> >> +                *     #PF reads CR2 and apf_reason -- apf_reason should be 0
+> >> +                *
+> >> +                *  outer #PF reads CR2 and apf_reason -- apf_reason should be
+> >> +                *  KVM_PV_REASON_PAGE_NOT_PRESENT
+> >> +                *
+> >> +                * There is no possible way that both reads of CR2 and
+> >> +                * apf_reason get the correct values.  Fixing this would
+> >> +                * require paravirt ABI changes.
+> >> +                */
+> >> +
+> >
+> > Upon re-reading my own comment, I think the problem is real, but I
+> > don't think my patch fixes it.  The outer #PF could just as easily
+> > have come from user mode.  We may actually need the NMI code (and
+> > perhaps MCE and maybe #DB too) to save, clear, and restore apf_reason.
+> > If we do this, then maybe CPL0 async PFs are actually okay, but the
+> > semantics are so poorly defined that I'm not very confident about
+> > that.
+>
+> I think even with the current mode this is fixable on the host side when
+> it keeps track of the state.
+>
+> The host knows exactly when it injects a async PF and it can store CR2
+> and reason of that async PF in flight.
+>
+> On the next VMEXIT it checks whether apf_reason is 0. If apf_reason is 0
+> then it knows that the guest has read CR2 and apf_reason. All good
+> nothing to worry about.
+>
+> If not it needs to be careful.
+>
+> As long as the apf_reason of the last async #PF is not cleared by the
+> guest no new async #PF can be injected. That's already correct because
+> in that case IF==0 which prevents a nested async #PF.
+>
+> If MCE, NMI trigger a real pagefault then the #PF injection needs to
+> clear apf_reason and set the correct CR2. When that #PF returns then the
+> old CR2 and apf_reason need to be restored.
 
-This is v2 of my pull request for the second batch of EFI updates for v5.7.
-It incorporates the stable branch created to help get Hans's embedded
-firmware stuff merged, so I am sending this as an ordinary pull request
-as well.
-
-Please pull.
-
-
-The following changes since commit e9765680a31b22ca6703936c000ce5cc46192e10:
-
-  Merge tag 'efi-next' of git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi into efi/core (2020-02-26 15:21:22 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
-
-for you to fetch changes up to dfb2a1c61fcdc8be5dd74608c411c78008a0f078:
-
-  partitions/efi: Fix partition name parsing in GUID partition entry (2020-03-06 11:17:42 +0100)
-
-----------------------------------------------------------------
-More EFI updates for v5.7
-
-- a fix for a boot regression in the IMA code on x86 booting without UEFI
-- memory encryption fixes for x86, so that the TPM tables and the RNG
-  config table created by the stub are correctly identified as living in
-  unencrypted memory
-- style tweak and doc update from Heinrich
-- followup to the ARM EFI entry code simplifications to ensure that we
-  don't rely on EFI_LOADER_DATA memory being RWX
-- fixes from Arvind to ensure that the new mixed mode approach works as
-  expected regardless of where the image is loaded in memory by the UEFI
-  PE/COFF loader
-- more fixes from Arvind to make it more likely that the image can be
-  decompressed in place, regardless of where it was loaded in memory
-- efivars bugfix and some cleanup from Vladis
-- incorporate a stable branch with the EFI pieces of Hans's work on
-  loading device firmware from EFI boot service memory regions
-- some followup fixes for the EFI stub changes that are queued for
-  v5.7 already
-- an endianness fix for the EFI GPT partition table driver
-
-----------------------------------------------------------------
-Ard Biesheuvel (8):
-      Merge tag 'stable-shared-branch-for-driver-tree' into HEAD
-      efi/arm: clean EFI stub exit code from cache instead of avoiding it
-      efi/arm64: clean EFI stub exit code from cache instead of avoiding it
-      efi: mark all EFI runtime services as unsupported on non-EFI boot
-      efi/libstub/x86: deal with exit() boot service returning
-      efi/x86: ignore memory attributes table on i386
-      efi/x86: preserve %ebx correctly in efi_set_virtual_address_map()
-      efi/libstub/x86: use ULONG_MAX as upper bound for all allocations
-
-Arvind Sankar (11):
-      efi/x86: Annotate the LOADED_IMAGE_PROTOCOL_GUID with SYM_DATA
-      efi/x86: Respect 32-bit ABI in efi32_pe_entry
-      efi/x86: Make efi32_pe_entry more readable
-      efi/x86: Avoid using code32_start
-      x86/boot: Use unsigned comparison for addresses
-      x86/boot/compressed/32: Save the output address instead of recalculating it
-      efi/x86: Decompress at start of PE image load address
-      efi/x86: Add kernel preferred address to PE header
-      efi/x86: Remove extra headroom for setup block
-      efi/x86: Don't relocate the kernel unless necessary
-      efi/x86: Fix cast of image argument
-
-Hans de Goede (2):
-      efi: Export boot-services code and data as debugfs-blobs
-      efi: Add embedded peripheral firmware support
-
-Heinrich Schuchardt (2):
-      efi: don't shadow i in efi_config_parse_tables()
-      efi/libstub: add libstub/mem.c to documentation tree
-
-Lukas Bulwahn (1):
-      MAINTAINERS: adjust EFI entry to removing eboot.c
-
-Masahiro Yamada (1):
-      efi/libstub: avoid linking libstub/lib-ksyms.o into vmlinux
-
-Nikolai Merinov (1):
-      partitions/efi: Fix partition name parsing in GUID partition entry
-
-Tom Lendacky (2):
-      efi/x86: Add TPM related EFI tables to unencrypted mapping checks
-      efi/x86: Add RNG seed EFI table to unencrypted mapping check
-
-Vladis Dronov (3):
-      efi: fix a race and a buffer overflow while reading efivars via sysfs
-      efi: add a sanity check to efivar_store_raw()
-      efi: fix a mistype in comments mentioning efivar_entry_iter_begin()
-
- Documentation/driver-api/firmware/efi/index.rst |  11 ++
- Documentation/driver-api/firmware/index.rst     |   1 +
- MAINTAINERS                                     |   1 -
- arch/arm/boot/compressed/head.S                 |  18 ++-
- arch/arm64/kernel/efi-entry.S                   |  26 ++---
- arch/arm64/kernel/image-vars.h                  |   4 +-
- arch/x86/boot/compressed/head_32.S              |  47 +++++---
- arch/x86/boot/compressed/head_64.S              | 112 ++++++++++++++----
- arch/x86/boot/header.S                          |   6 +-
- arch/x86/boot/tools/build.c                     |  44 +++++--
- arch/x86/kernel/asm-offsets.c                   |   1 -
- arch/x86/platform/efi/efi.c                     |   5 +
- arch/x86/platform/efi/efi_stub_32.S             |   2 +-
- arch/x86/platform/efi/quirks.c                  |   4 +
- block/partitions/efi.c                          |  35 ++++--
- block/partitions/efi.h                          |   2 +-
- drivers/firmware/efi/Kconfig                    |   5 +
- drivers/firmware/efi/Makefile                   |   3 +-
- drivers/firmware/efi/efi-pstore.c               |   2 +-
- drivers/firmware/efi/efi.c                      |  84 +++++++++++---
- drivers/firmware/efi/efivars.c                  |  32 ++++--
- drivers/firmware/efi/embedded-firmware.c        | 147 ++++++++++++++++++++++++
- drivers/firmware/efi/libstub/x86-stub.c         |  80 +++++++++----
- drivers/firmware/efi/vars.c                     |   2 +-
- include/linux/efi.h                             |   9 ++
- include/linux/efi_embedded_fw.h                 |  41 +++++++
- 26 files changed, 583 insertions(+), 141 deletions(-)
- create mode 100644 Documentation/driver-api/firmware/efi/index.rst
- create mode 100644 drivers/firmware/efi/embedded-firmware.c
- create mode 100644 include/linux/efi_embedded_fw.h
+How is the host supposed to know when the #PF returns?  Intercepting
+IRET sounds like a bad idea and, in any case, is not actually a
+reliable indication that #PF returned.
