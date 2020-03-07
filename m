@@ -4,348 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23496C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E49CC10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B572067C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA6E206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583593297;
-	bh=XtGD4Df9UP8bBp/OM5Affx133/DB+NR9MNKFeqJjTw4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CoVu3pk7LBWjpkY/B/qWr0ELsO+hEwiMuunp354+6juOzw7056GSRjAumot9BzTdD
-	 MtO6kXze9MRy66hxrnoaF+hhHUCzNAdlF3eOeUnuuDORjqnvoGrO8ckE2320NE2YRF
-	 4Qqw3MkIlXZ+JDuv6GaHmbf0g0JDJ+mz/G9etxzw=
+	s=default; t=1583593420;
+	bh=gb+O6z+9Bp+875fdIg1OajoBwMGiyVEXOzXUFw4o4j4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tyY5j2yJOGc6+mYGtNnM9sSfgs0X62wx25DDMIglUSXGrtOMtAIygXev/BSnWCV+/
+	 lm+v/oFGww9qH1CfOPg6J+vwue/uWZ1sTBcd33LxAXMPMAFmNjyqirOmWuUb7WSito
+	 +lfe1MoGBt5ICJ7IwYtbpwA1IQBr1uBCqyyimieY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgCGPBe (ORCPT
+        id S1726267AbgCGPDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:01:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 10:03:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgCGPBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:01:33 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726086AbgCGPDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 10:03:38 -0500
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ACA820674;
-        Sat,  7 Mar 2020 15:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 597CB206D5
+        for <linux-kernel@vger.kernel.org>; Sat,  7 Mar 2020 15:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583593293;
-        bh=XtGD4Df9UP8bBp/OM5Affx133/DB+NR9MNKFeqJjTw4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hN0tuSNlP0eLxHH6BSndXedzXFU53sFTdoqFF2FwAAZDXN3Y4RlIk1vpdFW3bOF1L
-         dDF0T2gSCc7RAairTjlljGMckD+9llpAVMn2j6tBKCKZhm7AJPx1OjO7jHcx1uUIoH
-         F67/M0BELJNaO5a5nyDRILpqDVN08HHnGtQ7k8cY=
-Received: from [185.104.136.29] (helo=big-swifty.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jAaxG-00Aqqa-RM; Sat, 07 Mar 2020 15:01:31 +0000
-Date:   Sat, 07 Mar 2020 15:01:31 +0000
-Message-ID: <8636ak6wfo.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 03/10] irqchip: Add driver for Loongson-3 HyperTransport PIC controller
-In-Reply-To: <20200221050942.507775-4-jiaxun.yang@flygoat.com>
-References: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
-        <20200221050942.507775-4-jiaxun.yang@flygoat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.104.136.29
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org, chenhc@lemote.com, allison@lohutok.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        s=default; t=1583593417;
+        bh=gb+O6z+9Bp+875fdIg1OajoBwMGiyVEXOzXUFw4o4j4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U7olKMgOCMIcDQr5xxy2ln7zt7vri1p5Wm43iRVBTnuDReATLV/mEwYGQyMlRhdtB
+         iW+fy0kGwfBantX7l57vHro/6qk+bBhNbhU+qK23EC31X2iYDlWI/HKpkvDMIBUyVc
+         HcJL52xfTHOWFk1keNbp4cG8BOdbsGYKB+Fm7n+0=
+Received: by mail-wr1-f47.google.com with SMTP id r7so5773118wro.2
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 07:03:37 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2NM5xF8+vkCeXT7QGF+hv2OT7Ihm23yCOyVtqplCdqdokHZ/oy
+        KtrZe4wYFct25YYOnpTG/R9azvuLM9XCSXrRQw7stg==
+X-Google-Smtp-Source: ADFU+vveIuzEq5Kwfs56DpUeADDUUUk9qCufveZZV2SZfwZgsMCl8i/GUS2tNZ3Z1YpOEYC9VC9XuCHOmMuyOdBsoAE=
+X-Received: by 2002:adf:b641:: with SMTP id i1mr10119012wre.18.1583593415752;
+ Sat, 07 Mar 2020 07:03:35 -0800 (PST)
+MIME-Version: 1.0
+References: <ed71d0967113a35f670a9625a058b8e6e0b2f104.1583547991.git.luto@kernel.org>
+In-Reply-To: <ed71d0967113a35f670a9625a058b8e6e0b2f104.1583547991.git.luto@kernel.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 7 Mar 2020 07:03:24 -0800
+X-Gmail-Original-Message-ID: <CALCETrVmsF9JSMLSd44-3GGWEz6siJQxudeaYiVnvv__YDT1BQ@mail.gmail.com>
+Message-ID: <CALCETrVmsF9JSMLSd44-3GGWEz6siJQxudeaYiVnvv__YDT1BQ@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 05:09:18 +0000,
-Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-> 
-> This controller appeared on Loongson-3 family of chips to receive interrupts
-> from PCH PIC.
-
-Please explain for us mere mortals what the relationship is between
-this interrupt controller and the i8259.
-
+On Fri, Mar 6, 2020 at 6:26 PM Andy Lutomirski <luto@kernel.org> wrote:
 >
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> The ABI is broken and we cannot support it properly.  Turn it off.
+>
+> If this causes a meaningful performance regression for someone, KVM
+> can introduce an improved ABI that is supportable.
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
 > ---
->  arch/mips/include/asm/i8259.h        |   1 +
->  drivers/irqchip/Kconfig              |  10 ++
->  drivers/irqchip/Makefile             |   1 +
->  drivers/irqchip/irq-i8259.c          |   6 +-
->  drivers/irqchip/irq-loongson-htpic.c | 146 +++++++++++++++++++++++++++
->  5 files changed, 161 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/irqchip/irq-loongson-htpic.c
-> 
-> diff --git a/arch/mips/include/asm/i8259.h b/arch/mips/include/asm/i8259.h
-> index 97a5e41ed1ab..1ec3dbb1588f 100644
-> --- a/arch/mips/include/asm/i8259.h
-> +++ b/arch/mips/include/asm/i8259.h
-> @@ -36,6 +36,7 @@ extern raw_spinlock_t i8259A_lock;
->  extern void make_8259A_irq(unsigned int irq);
->  
->  extern void init_i8259_irqs(void);
-> +extern struct irq_domain *of_init_i8259_irqs(struct device_node *node);
->  
->  /**
->   * i8159_set_poll() - Override the i8259 polling function
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index c609eaa319d2..cae6f480c987 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -522,4 +522,14 @@ config LOONGSON_LIOINTC
->  	help
->  	  Support for the Loongson Local I/O Interrupt Controller.
->  
-> +config LOONGSON_HTPIC
-> +	bool "Loongson3 HyperTransport PIC Controller"
-> +	depends on MACH_LOONGSON64
-> +	default y
-> +	select IRQ_DOMAIN
-> +	select GENERIC_IRQ_CHIP
-> +	select I8259
-> +	help
-> +	  Support for the Loongson-3 HyperTransport PIC Controller.
+>  arch/x86/kernel/kvm.c | 21 ++++++++++++++++++---
+>  1 file changed, 18 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 93ab0cbd304e..e6f2aefa298b 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -318,11 +318,26 @@ static void kvm_guest_cpu_init(void)
+>
+>                 pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
+>
+> -#ifdef CONFIG_PREEMPTION
+> -               pa |= KVM_ASYNC_PF_SEND_ALWAYS;
+> -#endif
+>                 pa |= KVM_ASYNC_PF_ENABLED;
+>
+> +               /*
+> +                * We do not set KVM_ASYNC_PF_SEND_ALWAYS.  With the current
+> +                * KVM paravirt ABI, the following scenario is possible:
+> +                *
+> +                * #PF: async page fault (KVM_PV_REASON_PAGE_NOT_PRESENT)
+> +                *  NMI before CR2 or KVM_PF_REASON_PAGE_NOT_PRESENT
+> +                *   NMI accesses user memory, e.g. due to perf
+> +                *    #PF: normal page fault
+> +                *     #PF reads CR2 and apf_reason -- apf_reason should be 0
+> +                *
+> +                *  outer #PF reads CR2 and apf_reason -- apf_reason should be
+> +                *  KVM_PV_REASON_PAGE_NOT_PRESENT
+> +                *
+> +                * There is no possible way that both reads of CR2 and
+> +                * apf_reason get the correct values.  Fixing this would
+> +                * require paravirt ABI changes.
+> +                */
 > +
->  endmenu
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 5e7678efdfe6..37bbe39bf909 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -106,3 +106,4 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
->  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
->  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
->  obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
-> +obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-> diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
-> index d000870d9b6b..9d79acce6c0c 100644
-> --- a/drivers/irqchip/irq-i8259.c
-> +++ b/drivers/irqchip/irq-i8259.c
-> @@ -309,7 +309,7 @@ static const struct irq_domain_ops i8259A_ops = {
->   * driver compatibility reasons interrupts 0 - 15 to be the i8259
->   * interrupts even if the hardware uses a different interrupt numbering.
->   */
-> -struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
-> +struct irq_domain * __init of_init_i8259_irqs(struct device_node *node)
 
-I don't think this renaming brings much to the table.
-
->  {
->  	struct irq_domain *domain;
->  
-> @@ -330,7 +330,7 @@ struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
->  
->  void __init init_i8259_irqs(void)
->  {
-> -	__init_i8259_irqs(NULL);
-> +	of_init_i8259_irqs(NULL);
->  }
->  
->  static void i8259_irq_dispatch(struct irq_desc *desc)
-> @@ -351,7 +351,7 @@ int __init i8259_of_init(struct device_node *node, struct device_node *parent)
->  	struct irq_domain *domain;
->  	unsigned int parent_irq;
->  
-> -	domain = __init_i8259_irqs(node);
-> +	domain = of_init_i8259_irqs(node);
->  
->  	parent_irq = irq_of_parse_and_map(node, 0);
->  	if (!parent_irq) {
-> diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loongson-htpic.c
-> new file mode 100644
-> index 000000000000..a90cf4357285
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-loongson-htpic.c
-> @@ -0,0 +1,146 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-> + *  Loongson HTPIC IRQ support
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/irq.h>
-> +#include <linux/io.h>
-> +#include <linux/syscore_ops.h>
-> +
-> +#include <asm/i8259.h>
-> +
-> +#define HTPIC_MAX_PARENT_IRQ	4
-> +#define HTINT_NUM_VECTORS	8
-> +#define HTINT_EN_OFF		0x20
-> +
-> +struct loongson_htpic {
-> +	void __iomem *base;
-> +	struct irq_domain *domain;
-> +};
-> +
-> +struct loongson_htpic *htpic;
-
-static?
-
-> +
-> +static void htpic_irq_dispatch(struct irq_desc *desc)
-> +{
-> +	struct loongson_htpic *priv = irq_desc_get_handler_data(desc);
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	uint32_t pending;
-> +
-> +	chained_irq_enter(chip, desc);
-> +	pending = readl(priv->base);
-> +	/* Ack all IRQs */
-> +	writel(pending, priv->base);
-
-Why isn't this done as part of the irq_ack() callback instead? If the
-flow handling is different from the 8259, then maybe you shouldn't be
-hijacking it...
-
-> +
-> +	if (!pending)
-> +		spurious_interrupt();
-> +
-> +	while (pending) {
-> +		int bit = __ffs(pending);
-> +
-> +		if (unlikely(bit > 15))
-> +			spurious_interrupt();
-
-and yet you continue handling it?
-
-> +
-> +		generic_handle_irq(irq_linear_revmap(priv->domain, bit));
-> +		pending &= ~BIT(bit);
-> +	}
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static void htpic_reg_init(void)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < HTINT_NUM_VECTORS; i++) {
-> +		uint32_t val;
-> +
-> +		/* Disable all HT Vectors */
-> +		writel(0x0, htpic->base + HTINT_EN_OFF + i * 0x4);
-> +		val = readl(htpic->base + i * 0x4);
-> +		/* Ack all possible pending IRQs */
-> +		writel(GENMASK(31, 0), htpic->base + i * 0x4);
-> +	}
-> +
-> +	/* Enable 16 vectors for PIC */
-> +	writel(0xffff, htpic->base + HTINT_EN_OFF);
-> +}
-> +
-> +static void htpic_resume(void)
-> +{
-> +	htpic_reg_init();
-> +}
-> +
-> +struct syscore_ops htpic_syscore_ops = {
-> +	.resume		= htpic_resume,
-> +};
-> +
-> +int __init htpic_of_init(struct device_node *node, struct device_node *parent)
-> +{
-> +	unsigned int parent_irq[4];
-> +	int i, err;
-> +	int num_parents = 0;
-> +
-> +	if (htpic) {
-> +		pr_err("loongson-htpic: Only one HTPIC is allowed in the system\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
-> +	if (!htpic) {
-> +		err = -ENOMEM;
-> +		goto out_free;
-> +	}
-> +
-> +	htpic->base = of_iomap(node, 0);
-> +	if (!htpic->base) {
-> +		err = -ENODEV;
-> +		goto out_free;
-> +	}
-> +
-> +	htpic->domain = of_init_i8259_irqs(node);
-> +	if (!htpic->domain) {
-> +		pr_err("loongson-htpic: Failed to initialize i8259 IRQs\n");
-> +		err = -ENOMEM;
-> +		goto out_iounmap;
-> +	}
-> +
-> +	for (i = 0; i < HTPIC_MAX_PARENT_IRQ; i++) {
-> +		parent_irq[i] = irq_of_parse_and_map(node, 0);
-
-So you only care about the first interrupt in the DT?
-
-> +		if (parent_irq[i] < 0)
-
-0 is an invalid interrupt.
-
-> +			break;
-> +
-> +		num_parents++;
-> +	}
-> +
-> +	if (!num_parents) {
-> +		pr_err("loongson-htpic: Failed to get parent irqs\n");
-> +		err = -ENODEV;
-> +		goto out_remove_domain;
-> +	}
-> +
-> +	htpic_reg_init();
-> +
-> +	for (i = 0; i < num_parents; i++) {
-> +		irq_set_chained_handler_and_data(parent_irq[i],
-> +						htpic_irq_dispatch, htpic);
-> +	}
-
-What is the mapping between the 16 inputs and the 4 outputs?
-
-> +
-> +	register_syscore_ops(&htpic_syscore_ops);
-> +
-> +	return 0;
-> +
-> +out_remove_domain:
-> +	irq_domain_remove(htpic->domain);
-> +out_iounmap:
-> +	iounmap(htpic->base);
-> +out_free:
-> +	kfree(htpic);
-> +	return err;
-> +}
-> +
-> +IRQCHIP_DECLARE(loongson_htpic, "loongson,htpic-1.0", htpic_of_init);
-
-Thanks,
-
-	M.
-
--- 
-Jazz is not dead, it just smells funny.
+Upon re-reading my own comment, I think the problem is real, but I
+don't think my patch fixes it.  The outer #PF could just as easily
+have come from user mode.  We may actually need the NMI code (and
+perhaps MCE and maybe #DB too) to save, clear, and restore apf_reason.
+If we do this, then maybe CPL0 async PFs are actually okay, but the
+semantics are so poorly defined that I'm not very confident about
+that.
