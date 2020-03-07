@@ -2,106 +2,108 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821D9C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFCEC10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A079206E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:19:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583540399;
-	bh=AQzF6OqEcMz+JNwqEn75W80QTzWVCt362BYnIuITObo=;
-	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
-	b=SRMLiFctim85GsHv33Jl8rItRTvXKaFCrNxpu2uYzwi0bK3qquOJXY770n8NSLZOo
-	 AC3ybDWz7nwqljEB2gCmbwwVF5kaacqXri9SVoFS/9V+MJ/FH7UDtRlx5sm3vmYpRv
-	 hLcLDBu5QpjFq+6paZ+Fo0BLUq99LFs6y9bfCOCY=
+	by mail.kernel.org (Postfix) with ESMTP id A30A0206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:20:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j1sLhFYa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgCGAT6 (ORCPT
+        id S1727002AbgCGAUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 19:19:58 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39624 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgCGAT5 (ORCPT
+        Fri, 6 Mar 2020 19:20:06 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38242 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbgCGAUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 19:19:57 -0500
-Received: by mail-io1-f67.google.com with SMTP id h3so3825928ioj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 16:19:57 -0800 (PST)
+        Fri, 6 Mar 2020 19:20:05 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so1820448pgh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 16:20:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=NSjfSL+QfSTDf8gsw0rEhWcCVhS3ZyC2JHCZZDzLAkk=;
-        b=BfHT6MrTqmTvz6StrgNngfhAD9KFspP5YNkvhnAgFKMFrW2HsdtpPY+eM9MTT560bx
-         AT5zjLYF75bZYSGUwUaG685a/NdICEkNElbBvzqGy9Cw/ZvVyXV3TE7izOhF/G7kmCjJ
-         hYYz4hbVwOuQWTk5fzEc7eXGUZtxXsZnT3e88=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=34J28lgHrpYhHjKOEF2LFXrP2R68/iu1HhoAglQIiu8=;
+        b=j1sLhFYaHguaJXa97cYJ42mzQj+XxEOiLC8RHWmJdh65QSlxFjrxBP498kLkxgmGnZ
+         guiewPA+UUcIG15xzS3RPoskofT39l8eZkbG5nMxs3/mZyDtfJI6Yez3lwWzuAgCnm+z
+         4etgWiZOirvqtBmuG4qy8yK6L3fIwsx0AmhrE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NSjfSL+QfSTDf8gsw0rEhWcCVhS3ZyC2JHCZZDzLAkk=;
-        b=jxnIopnTZ97d/N+7lzl2xs9Hu0CPyQRdNfcBT3IVwbwTAyDdRPvCZjawKcf6FA8mZd
-         eDbKg/3ddgbdFkBCpMQTg4Se3iJPFKhK+xIZCYY/tWM24ctdmNDZD/Qha4LMRBZdMk0v
-         PCBdIwtLE4T5Fm8SsGZYbzAoMoqmSShLI1049Tf3eOZvFcGE3QGYZVkFS0XKVeOg7KvA
-         SFMlh5nHhPlpErxcA9iBHGWU9qWU/KofNwnx+MzoI3kziSMJFL8jQvrZvZ9oIHE/lPEO
-         xawT7/cagW/Z2Kh/g+NSI4JFkkrWfrTJY2siIJAS8wJ2bHK3QQhaK3K3SugU72aBjVJA
-         FvCg==
-X-Gm-Message-State: ANhLgQ3m+nBy1/kScFF/rX9IFEcz7q9+qx9Lg8fyBI2Xf2FNcU5PjdsZ
-        I0+RSAbWnxi/4Sc5PntoJ/a2PQ==
-X-Google-Smtp-Source: ADFU+vsZcOc+y0H4k1ol3rKOKsW2mSj+/AU6MpZ505QjGYHGgFwSGBxKCxVcY4XqUfBzlAgk7WzLRw==
-X-Received: by 2002:a6b:e013:: with SMTP id z19mr5109744iog.103.1583540397178;
-        Fri, 06 Mar 2020 16:19:57 -0800 (PST)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id n5sm685109ion.25.2020.03.06.16.19.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Mar 2020 16:19:56 -0800 (PST)
-Subject: Re: kselftest selftest issues and clarifications
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        "Bird, Tim" <Tim.Bird@sony.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
-References: <MWHPR13MB0895B92C9B4807D94E1E6B04FDE30@MWHPR13MB0895.namprd13.prod.outlook.com>
- <f1f991a6-6e05-6ba3-b5c1-174b93029a99@linuxfoundation.org>
- <818d8b84-4ce2-4cbd-d561-293137c5d884@infradead.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <6af54eab-a982-dfa9-c6d3-c3e017dd4ed2@linuxfoundation.org>
-Date:   Fri, 6 Mar 2020 17:19:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=34J28lgHrpYhHjKOEF2LFXrP2R68/iu1HhoAglQIiu8=;
+        b=J0pM2h2W5YypgkUIYYJB+Mw9w0xF9UQ8VLlOPD/Eqp+skahOwu33xAmi7NumjshYy+
+         NNrCrHmc47b7CpqTcgYNwBKnjJqH12PL+VZTG1FUJ0wf1HcvsAPsnlDYBO73AjM9BfE+
+         qdP/O5k3ArxWJ/DW2lD2DNzQUBk1jPgQPCUJMJkmb81IkS07jcKIr41slm/7ukwbujx8
+         2KCPViEfzhqV+eqyROg+ZSN/2ijzpzfaj01XYDYUh5D6+K8PphgntCwA1AbTJl05avKS
+         9PSjErgWXDGt90OnJCDjTYckaJQNpUk/tgxzpc4ybmd/XEXSGESU40YV5Yr01zVcbaz3
+         pYMw==
+X-Gm-Message-State: ANhLgQ2xevys5tJ+O5Zw46NkSL+Jm/nSa0F9dCln0cc8m92KlqJh+CTw
+        6KiNevCNhQCc9Au84Q5APMKgTaaGeV8=
+X-Google-Smtp-Source: ADFU+vuzIIoftwyB2+mS5QJZvibeBUZGiH3Fg/M4pv/0zP7Xiq47/0vF+lo4/psqqym1fXDQXpqZ/w==
+X-Received: by 2002:a63:fe0a:: with SMTP id p10mr5484311pgh.96.1583540404467;
+        Fri, 06 Mar 2020 16:20:04 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v123sm11797272pfv.146.2020.03.06.16.20.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 16:20:03 -0800 (PST)
+Date:   Fri, 6 Mar 2020 16:20:02 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs_parse: Remove pr_notice() about each validation
+Message-ID: <202003061617.A8835CAAF@keescook>
 MIME-Version: 1.0
-In-Reply-To: <818d8b84-4ce2-4cbd-d561-293137c5d884@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 5:18 PM, Randy Dunlap wrote:
-> On 3/6/20 3:30 PM, Shuah Khan wrote:
->>>
->>> And I'm using a KBUILD_OUTPUT environment variable, rather than O=.
->>> Let me know if you'd like me to build a matrix of these different build methods.
->>>
->>
->> This is fine. Please note that relative paths don't work in both of
->> these. Something I will tackle once the bugger problems are addressed.
-> 
-> Please see/test/try this patch:
-> 
-> https://lore.kernel.org/lkml/158351957799.3363.15269768530697526765.stgit@devnote2/
-> 
-> 
+This notice fills my boot logs with scary-looking asterisks but doesn't
+really tell me anything. Let's just remove it; validation errors
+are already reported separately, so this is just a redundant list of
+filesystems.
+
+$ dmesg | grep VALIDATE
+[    0.306256] *** VALIDATE tmpfs ***
+[    0.307422] *** VALIDATE proc ***
+[    0.308355] *** VALIDATE cgroup ***
+[    0.308741] *** VALIDATE cgroup2 ***
+[    0.813256] *** VALIDATE bpf ***
+[    0.815272] *** VALIDATE ramfs ***
+[    0.815665] *** VALIDATE hugetlbfs ***
+[    0.876970] *** VALIDATE nfs ***
+[    0.877383] *** VALIDATE nfs4 ***
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/fs_parser.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+index 7e6fb43f9541..ab53e42a874a 100644
+--- a/fs/fs_parser.c
++++ b/fs/fs_parser.c
+@@ -368,8 +368,6 @@ bool fs_validate_description(const char *name,
+ 	const struct fs_parameter_spec *param, *p2;
+ 	bool good = true;
+ 
+-	pr_notice("*** VALIDATE %s ***\n", name);
+-
+ 	for (param = desc; param->name; param++) {
+ 		/* Check for duplicate parameter names */
+ 		for (p2 = desc; p2 < param; p2++) {
+-- 
+2.20.1
 
 
-Will do. Thanks Randy for the pointer.
-
--- Shuah
+-- 
+Kees Cook
