@@ -2,103 +2,95 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A73C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 20:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4124C10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 20:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C0C20684
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 20:57:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvhkaQ8m"
+	by mail.kernel.org (Postfix) with ESMTP id 8A9F32075A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 20:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583614774;
+	bh=5d3Oip03/coW7PPRWqkmaJXd6+0g1van/+FSAiBvGgU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lgKVgW2WZ30h9CqXSBk66fzlTu+O3SgEaJdAXfIulWbLhYjZQF/D9yjeJ7bennJyA
+	 /ZZyG4KvXEPCTGV3Mbbgjw09X55nHQVxBmp2/3U+nLLk4J1rKogP6v+3o9NP9G1+Lf
+	 kBO8N0fsvAB+jqhr440sr9Jzu71k9GhFrJVHqM4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgCGU5u (ORCPT
+        id S1726289AbgCGU7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 15:57:50 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43827 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgCGU5u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 15:57:50 -0500
-Received: by mail-ed1-f66.google.com with SMTP id dc19so7087412edb.10;
-        Sat, 07 Mar 2020 12:57:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LtsEha/XMPd3H7XbaZdQYCuIT3uvzKy6NtPyu/HzRNM=;
-        b=hvhkaQ8m+8C9w1zT3C0+qJ790PBudbc5zOet6egLZ8Yyl/RT8shv2AK1pEGIZeuOBV
-         srtS9HPtlfji69lsJU+8WipYOGync1i8XhCPqeFZ0lZ6I8mocKSO3fGsOz7WW/XeFAT9
-         SkGczQwGkD/vsVfW82OmzkBrC0kLK/0GqEQVQC8gZoGYQ0WWfLpmK9hzbWnNxvttFi9E
-         PiNelIET+Cg13YZLIgBrQ8EWolS8zytEY8EuZpO/So/TG+LOh+cf47RSyi2bgicKI0SY
-         lMpWXJn01MICH1veIjClTlNWv31qEqbWPK3XkdmxW/tIJtWsaui+xxKnT4XBFsAPBUTr
-         2niA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LtsEha/XMPd3H7XbaZdQYCuIT3uvzKy6NtPyu/HzRNM=;
-        b=uBC8susR/OqYmF5pVyXMjXVm3pe/y/hvgpjP4TB622gtJR1ROri0CQslINCqnxOX9n
-         cepGCY5mOhhhZ/wuko0vHkKOD7dPqC+Bw7dmEByFn1DSReZYkVkzqYbs7i3Y4mr4quhe
-         KhDZ9JBMFcDEcNLNGMxSYm4m/SW238znVyVyhxR+Rq/IWyQZkNvB0zdjRQ8iE6s8wg6i
-         nl7+Sq+1MAhNmaWBoVFJVK3w2fT/E9HFJl1Vg6EYmcmAUsNQJzISTHlC5XRHEv3eF5OO
-         Wi+nDa3cAneYM1GaLNrt/Zhbwd+gyljJ0C2mvZJwZIb8wPBDTnAVk73hF8WNoPEgIIuo
-         F1hQ==
-X-Gm-Message-State: ANhLgQ3Mvu+6F2PRRY6anqe+RXT/y3RDOP3O1IycmHLH04Mm0vYhTj2W
-        62YZrN6K2L7mcYTaur9Yqzo=
-X-Google-Smtp-Source: ADFU+vttpXgHC3Io2gYpesXxMaP8TvXRjo8DxuX7Xi15swI6F5QAv7riGHHpPEnHAjHi1tBUXNZCTQ==
-X-Received: by 2002:aa7:d510:: with SMTP id y16mr9945582edq.214.1583614668444;
-        Sat, 07 Mar 2020 12:57:48 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2dee:1100:9dd1:961d:b5c1:34aa])
-        by smtp.gmail.com with ESMTPSA id z19sm1177268eja.53.2020.03.07.12.57.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 12:57:47 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: rectify the INTEL IADX DRIVER entry
-Date:   Sat,  7 Mar 2020 21:57:37 +0100
-Message-Id: <20200307205737.5829-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 7 Mar 2020 15:59:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726098AbgCGU7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 15:59:32 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4EB520684;
+        Sat,  7 Mar 2020 20:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583614772;
+        bh=5d3Oip03/coW7PPRWqkmaJXd6+0g1van/+FSAiBvGgU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Jwr3HrLwzhKeT1MNi4405W6ajHbQO1VkY6Hk8xqcmkAHCUUTMLmGUOO9cBD/9VcaP
+         T5GSMRBEwfhRT37kVexan1Hr03ly009hYQpDC+tclYYfTPuMhnv7GVTY4SnyBO18Nr
+         MJhvsJh5fS8BxPbbutzrFtaF76hYYfcE5457ZAag=
+Date:   Sat, 7 Mar 2020 12:59:31 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
+        david@redhat.com, richardw.yang@linux.intel.com,
+        dan.j.williams@intel.com, osalvador@suse.de, rppt@linux.ibm.com
+Subject: Re: [PATCH v3 1/7] mm/hotplug: fix hot remove failure in
+ SPARSEMEM|!VMEMMAP case
+Message-Id: <20200307125931.8e75709181f5c4bda40b1ee5@linux-foundation.org>
+In-Reply-To: <20200307084229.28251-2-bhe@redhat.com>
+References: <20200307084229.28251-1-bhe@redhat.com>
+        <20200307084229.28251-2-bhe@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data
-accelerators") added the INTEL IADX DRIVER entry in MAINTAINERS, which
-mentions include/linux/idxd.h as file entry. However, this header file was
-not added in this commit, nor in any later one.
+On Sat,  7 Mar 2020 16:42:23 +0800 Baoquan He <bhe@redhat.com> wrote:
 
-Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
+> In section_deactivate(), pfn_to_page() doesn't work any more after
+> ms->section_mem_map is resetting to NULL in SPARSEMEM|!VMEMMAP case.
+> It caused hot remove failure:
+> 
+> kernel BUG at mm/page_alloc.c:4806!
+> invalid opcode: 0000 [#1] SMP PTI
+> CPU: 3 PID: 8 Comm: kworker/u16:0 Tainted: G        W         5.5.0-next-20200205+ #340
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+> Workqueue: kacpi_hotplug acpi_hotplug_work_fn
+> RIP: 0010:free_pages+0x85/0xa0
+> Call Trace:
+>  __remove_pages+0x99/0xc0
+>  arch_remove_memory+0x23/0x4d
+>  try_remove_memory+0xc8/0x130
+>  ? walk_memory_blocks+0x72/0xa0
+>  __remove_memory+0xa/0x11
+>  acpi_memory_device_remove+0x72/0x100
+>  acpi_bus_trim+0x55/0x90
+>  acpi_device_hotplug+0x2eb/0x3d0
+>  acpi_hotplug_work_fn+0x1a/0x30
+>  process_one_work+0x1a7/0x370
+>  worker_thread+0x30/0x380
+>  ? flush_rcu_work+0x30/0x30
+>  kthread+0x112/0x130
+>  ? kthread_create_on_node+0x60/0x60
+>  ret_from_fork+0x35/0x40
+> 
+> Let's move the ->section_mem_map resetting after depopulate_section_memmap()
+> to fix it.
 
-  warning: no file matches F: include/linux/idxd.h
-
-Drop the file entry to the non-existing file in INTEL IADX DRIVER now.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-applies cleanly on current master and next-20200306
-
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c93e4937164c..303e1ea83484 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8478,7 +8478,6 @@ L:	dmaengine@vger.kernel.org
- S:	Supported
- F:	drivers/dma/idxd/*
- F:	include/uapi/linux/idxd.h
--F:	include/linux/idxd.h
- 
- INTEL IDLE DRIVER
- M:	Jacob Pan <jacob.jun.pan@linux.intel.com>
--- 
-2.17.1
+Thanks.  I think I'll cherrypick this fix and shall await more
+review/testing input on the rest of the series.
 
