@@ -2,96 +2,94 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C05C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D13C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9BF92070A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:46:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MRcjzBNz"
+	by mail.kernel.org (Postfix) with ESMTP id 9ABA82073D
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583574523;
+	bh=cPpuEcuoYPfsokOR2Tl6vph58NA3oVUGnjnGJvqn9Ys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TaE2Fb/gSohlkuaq/kjLPjUVDool7Dg4zZve25Jyc9aDulAMzzlsAFUdklL9gbbiX
+	 z9Q8jc7tZwlmwAk3y4CLbkjibnddNE4CChB2si//A24i9uL8E0tDgIE40F48cCDWNC
+	 73IJS25UlFaXCtyOYGpvcYtGTO5CkH3wnGn0/XGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgCGJqi (ORCPT
+        id S1726276AbgCGJsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 04:46:38 -0500
-Received: from mail-pj1-f48.google.com ([209.85.216.48]:51528 "EHLO
-        mail-pj1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgCGJqi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 04:46:38 -0500
-Received: by mail-pj1-f48.google.com with SMTP id l8so2131285pjy.1
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 01:46:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RrUVYR+Ncmf3+5c5RCoXaObVour9qF7+lbeQrqlz+7c=;
-        b=MRcjzBNzTh5m3HSl5QjeZjeXKY2VA6NvugpKkaY9BkbYggMALXdwJmatwbyzt4HVaN
-         FNVwzPydWl9DfNHfnZpihcslmKiTLENkCGlOZ1pnwEXwB5KfPBF87uI20I4WeQLruafb
-         k51o3Yw1Kue72BUfoIjgvPAQ90aUwsFtPxcMs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RrUVYR+Ncmf3+5c5RCoXaObVour9qF7+lbeQrqlz+7c=;
-        b=G11lXpOpaL1opHf8j36+b+NSbQvDbeg9VxJqdH8lOCfzLxjDtJc07qD9MOdxhlLnyO
-         FAuF7U7ByHDumDew9TYfm9Jg3GCCdyHtGW7HWnCOGh0OgLLf6SyKIusPxuIwsxcRQjFC
-         CIZ2GwRwnK+LUAU1jb9aV+dS0eozL+PeNttwr6Tr8eBMxziMQlCuORXe3/Zi+1B45TCZ
-         r7dk4e8aNFqJ9gysFRMZuaqJ7p9sg9Wn3171/0eZ1LtPLpdPq7M0DIqPSqJ/B6Yu5Cjr
-         HqXxMvhvJqROAexn5Nvw7dSn+zCdBPCl7vYg4J7pnu6SsHVhT597OGIOYXUiXxIg426G
-         XtzQ==
-X-Gm-Message-State: ANhLgQ1csBggT1k3m/xvCpJgJm4SkQeC6DFFr3bVYYwSOSKZ6ZRiR2qV
-        wxDQPuF132KhZVPNMtmUZqfN1g==
-X-Google-Smtp-Source: ADFU+vu/3aSIwqudH328r7Q6d2ReouzpmLb4lMtmayKrIiBYtfhZmjNz5NkivGbIl4PV33pL8GnFfQ==
-X-Received: by 2002:a17:902:b497:: with SMTP id y23mr6987040plr.81.1583574397292;
-        Sat, 07 Mar 2020 01:46:37 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id b10sm11855226pjo.32.2020.03.07.01.46.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 01:46:36 -0800 (PST)
-Date:   Sat, 7 Mar 2020 18:46:34 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 01/11] videobuf2: add cache management members
-Message-ID: <20200307094634.GB29464@google.com>
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-2-senozhatsky@chromium.org>
- <17060663-9c30-de5e-da58-0c847b93e4d3@xs4all.nl>
+        Sat, 7 Mar 2020 04:48:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726065AbgCGJsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 04:48:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7A1D2070A;
+        Sat,  7 Mar 2020 09:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583574518;
+        bh=cPpuEcuoYPfsokOR2Tl6vph58NA3oVUGnjnGJvqn9Ys=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oW7gpCaBYbilRdEyOH3/KpNpwEewkJjAbXdf7AYJzWS07GeR53ATEYDJqIMsLgwTL
+         SEZXJyDNKbBvqx++GhTsIMN5Iqg8Nm0f3g4KiINFWqZENTVFo1VvukSSwFA0sciBmW
+         qR5zCQzwXdkWzgrZj9zdcjhzGyms2cYv0mBtrjCM=
+Date:   Sat, 7 Mar 2020 10:48:34 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200307094834.GA3888906@kroah.com>
+References: <1582556135.3384.4.camel@HansenPartnership.com>
+ <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
+ <1582644535.3361.8.camel@HansenPartnership.com>
+ <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
+ <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <20200306162549.GA28467@miu.piliscsaba.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <17060663-9c30-de5e-da58-0c847b93e4d3@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200306162549.GA28467@miu.piliscsaba.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/06 14:57), Hans Verkuil wrote:
-[..]
-> >   * @lock:	pointer to a mutex that protects the &struct vb2_queue. The
-> >   *		driver can set this to a mutex to let the v4l2 core serialize
-> >   *		the queuing ioctls. If the driver wants to handle locking
-> > @@ -564,6 +573,7 @@ struct vb2_queue {
-> >  	unsigned			requires_requests:1;
-> >  	unsigned			uses_qbuf:1;
-> >  	unsigned			uses_requests:1;
-> > +	unsigned			allow_cache_hints:1;
+On Fri, Mar 06, 2020 at 05:25:49PM +0100, Miklos Szeredi wrote:
+> On Tue, Mar 03, 2020 at 08:46:09AM +0100, Miklos Szeredi wrote:
+> > 
+> > I'm doing a patch.   Let's see how it fares in the face of all these
+> > preconceptions.
+> 
+> Here's a first cut.  Doesn't yet have superblock info, just mount info.
+> Probably has rough edges, but appears to work.
+> 
+> I started with sysfs, then kernfs, then went with a custom filesystem, because
+> neither could do what I wanted.
 
-Shall I use "unsigned int" here instead of "unsigned"?
+Hm, what is wrong with kernfs that prevented you from using it here?
+Just complexity or something else?
 
-	-ss
+thanks,
+
+greg k-h
