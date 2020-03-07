@@ -3,247 +3,238 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1CFC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C9CC10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C15206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9566B206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jh4Gk6G8"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Sr2AX/wp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgCGNKP (ORCPT
+        id S1726346AbgCGNKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:10:15 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41021 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgCGNKP (ORCPT
+        Sat, 7 Mar 2020 08:10:25 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:54135 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgCGNKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 08:10:15 -0500
-Received: by mail-oi1-f196.google.com with SMTP id i1so5482892oie.8;
-        Sat, 07 Mar 2020 05:10:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RwrGlWUeDdrZs72IT+J7vSx4hepf4WZav0X4UAXwBbg=;
-        b=jh4Gk6G8k3mK3s/gTGl2ObaH2xmSCBeX3xnIIwKu68MTiZ0oLJJ+1KGQIoqKe0hX5g
-         PhfJqlpFKa2kNj/QenEH36cekVlVRM+wEuVGNrkvwCdiyvDNhIJNlXSS2wVhIVPsjB9G
-         +65ZcEq5j7cElKuIqFHJkFWnSIAPp5Dm1UoYafYV+AQRwvP/VKWYehiizVpb7xQ2waQ5
-         +bMap4KfTlenQ9VTzsHXmZ0F97cCEPVBeNdGJddYAqZxXpkvMkf/U1emcugxnISnhOti
-         Tpa9PVP/WAnG+VBZWewVI4RsaD6dAMCyWv89DjnszpzmBKuHojbsfdi7usYUjWmqvKsH
-         kcLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RwrGlWUeDdrZs72IT+J7vSx4hepf4WZav0X4UAXwBbg=;
-        b=iWlYCbcvf4s5OVFwdIHKu/lsIZjQBdMfRIq0iOnTXWthXW3tpqrMKdqiOd0LfL18wq
-         coPTmijQk7UEgwbxRhqGuCGApggz4hTHcBhnradUZFXIjBW3UNkAC9RZoPAzt+fQ32OE
-         FrormN+y2BOpG1/CAdhvAcheJ30ALi8WteIByPI3cniaZ23Qh4MYwJ7+8URdlVdCLKWg
-         dOJgV4gvJQW0fYF+kAkqqaaAu/RvGy1RVKOn0eJLF9ML/D7Yk2SyW7ADd4fKBx0ABgb9
-         cU3oiIKDjBKaY+DyZ2yUOiRKgZYpY5Os+zXk1jTzRY8ojMDdPU+W9aC/v+nCL1vh3LG2
-         FuNQ==
-X-Gm-Message-State: ANhLgQ0lmbxt6EOZhTi1QT5QUG5qomC6ztVnsAcIJ1RaJOMmtbec2FWp
-        hw7TtNJQWc5tZyIUZxIv7nraeokLxWY4wP/a7ww=
-X-Google-Smtp-Source: ADFU+vsJVnZ/8WOsPjnjwHpe2WrHSMchbfxiPVRfxu/vDlc3O+3DIyxaReRUbE4Osnl9xW0cOkHE2Y90v3LT70IK8U8=
-X-Received: by 2002:aca:524a:: with SMTP id g71mr5833060oib.7.1583586612418;
- Sat, 07 Mar 2020 05:10:12 -0800 (PST)
+        Sat, 7 Mar 2020 08:10:25 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 7F4DB23058;
+        Sat,  7 Mar 2020 14:10:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583586621;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1uf4sgSuEO4KOdf8x8D6sp3g7Zg8u/DJumv1+dN6104=;
+        b=Sr2AX/wpTsaLJT9ULkatEcmcgDKiRWrU9g0NOoXxW654sP4fRHuho0Yjx+09Ja7OYbYoNQ
+        3aJFUcdVKnlXvKwyk3tWNIwQJ5+t3Qk9ynsTlZzrpY/fHLOewLq/gaR7jDKFGTqFaU/J56
+        gyDzJekCsrGrDENhzdQmEVmIlZB+Y3k=
 MIME-Version: 1.0
-References: <20200228165011.17898-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200228165011.17898-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200304205516.GD1791497@oden.dyn.berto.se>
-In-Reply-To: <20200304205516.GD1791497@oden.dyn.berto.se>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sat, 7 Mar 2020 13:09:46 +0000
-Message-ID: <CA+V-a8u6CzinQHuppXHqnAxTU0WUpSbof7o_Anw9Tdz-vvhqSA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] media: rcar-vin: Add support for SRGGB8_1X8
-To:     Niklas <niklas.soderlund@ragnatech.se>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sat, 07 Mar 2020 14:10:19 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
+ compatible
+In-Reply-To: <VI1PR04MB4431F901BEEF2EAB9AB1D7C6EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20200306205403.29881-1-michael@walle.cc>
+ <20200306205403.29881-2-michael@walle.cc>
+ <VI1PR04MB44312A940BC5BFC7F13A5706EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
+ <e0be23f7d1307621151594dd66d2b8fd@walle.cc>
+ <VI1PR04MB4431F901BEEF2EAB9AB1D7C6EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
+Message-ID: <433418e889347784bc74f3c22c23e644@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 7F4DB23058
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         NEURAL_HAM(-0.00)[-0.568];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,kernel.org,arm.com,nxp.com,gmail.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas,
 
-Thank you for the review.
+Hi Peng,
 
-On Wed, Mar 4, 2020 at 8:55 PM Niklas <niklas.soderlund@ragnatech.se> wrote=
-:
->
-> Hi Lad,
->
-> Thanks for your work.
->
-> On 2020-02-28 16:50:11 +0000, Lad Prabhakar wrote:
-> > Most of the RZ/G2x boards can support capturing frames in SRGGB8_1X8
-> > format, add support for this with a runtime check that the running
-> > hardware supports it.
->
-> Where is the runtime check for supported hardware? Also out of curiosity
-> which boars can't support SRGGB and what setup are you using to test
-> SRGGB capture?
->
-My bad l'll drop the statement "runtime check for supported hardware".
-All the G2x
-boards support SRGGB8. I am currently testing this on a G2E board connected=
- with
-a mipi adapter (https://www.96boards.org/product/mipiadapter/) and
-raspberry pi camera
-module (https://www.raspberrypi.org/products/camera-module-v2/).
+Am 2020-03-07 11:32, schrieb Peng Ma:
+>> -----Original Message-----
+>> From: Michael Walle <michael@walle.cc>
+>> Sent: 2020年3月7日 17:26
+>> To: Peng Ma <peng.ma@nxp.com>
+>> Cc: dmaengine@vger.kernel.org; devicetree@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; 
+>> Vinod Koul
+>> <vkoul@kernel.org>; Rob Herring <robh+dt@kernel.org>; Mark Rutland
+>> <mark.rutland@arm.com>; Shawn Guo <shawnguo@kernel.org>; Leo Li
+>> <leoyang.li@nxp.com>
+>> Subject: Re: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add 
+>> "fsl,vf610-edma"
+>> compatible
+>> 
+>> Caution: EXT Email
+>> 
+>> Hi Peng,
+>> 
+>> Am 2020-03-07 03:09, schrieb Peng Ma:
+>>>> -----Original Message-----
+>>>> From: Michael Walle <michael@walle.cc>
+>>>> Sent: 2020年3月7日 4:54
+>>>> To: dmaengine@vger.kernel.org; devicetree@vger.kernel.org;
+>>>> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+>>>> Cc: Vinod Koul <vkoul@kernel.org>; Rob Herring <robh+dt@kernel.org>;
+>>>> Mark Rutland <mark.rutland@arm.com>; Shawn Guo
+>> <shawnguo@kernel.org>;
+>>>> Leo Li <leoyang.li@nxp.com>; Peng Ma <peng.ma@nxp.com>; Michael 
+>>>> Walle
+>>>> <michael@walle.cc>
+>>>> Subject: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
+>>>> compatible
+>>>> 
+>>>> Caution: EXT Email
+>>>> 
+>>>> The bootloader does the IOMMU fixup and dynamically adds the 
+>>>> "iommus"
+>>>> property to devices according to its compatible string. In case of
+>>>> the eDMA controller this property is missing. Add it. After that the
+>>>> IOMMU will work with the eDMA core.
+>>>> 
+>>>> Signed-off-by: Michael Walle <michael@walle.cc>
+>>>> ---
+>>>> arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
+>>>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>> 
+>>>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>>>> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>>>> index b152fa90cf5c..aa467bff2209 100644
+>>>> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>>>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>>>> @@ -447,7 +447,7 @@
+>>>> 
+>>>>                edma0: dma-controller@22c0000 {
+>>>>                        #dma-cells = <2>;
+>>>> -                       compatible = "fsl,ls1028a-edma";
+>>>> +                       compatible = "fsl,ls1028a-edma",
+>>>> + "fsl,vf610-edma";
+>>> Hi Michael,
+>>> 
+>>> You should change it on bootloader instead of kernel, Some Reg of
+>>> LS1028a is different from others, So we used compatible
+>>> "fsl,ls1028a-edm" to distinguish "
+>>> fsl,vf610-edma".
+>> 
+>> Yes this might be the right thing to do. So since it is NXPs 
+>> bootloader feel free to
+>> fix that ;) Looking at the u-boot code right now, I don't even know it 
+>> that is the
+>> right fix at all. The fixup code in u-boot is SoC independent (its in 
+>> fsl_icid.h and is
+>> enabled with CONFIG_LSCH3, ie your chassis version). For example, the 
+>> sdhc
+>> fixup will scan the nodes for "compatible = fsl,esdhc", which is also 
+>> the
+>> secondary compatible for the "ls1028a-esdhc" compatible.
+>> 
+>> And here is another reason to have it this way: we need backwards 
+>> compatibility,
+>> the are already boards out there whose bootloader will fix-up the 
+>> "old" node.
+>> Thus I don't see any other possibilty.
+>> 
+> [Peng Ma] OK, There is non fixed on uboot.
+> I will fix it on uboot, if you want to use now, please change the
+> uboot as below:
 
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/media/platform/rcar-vin/rcar-core.c |  1 +
-> >  drivers/media/platform/rcar-vin/rcar-csi2.c |  1 +
-> >  drivers/media/platform/rcar-vin/rcar-dma.c  | 14 ++++++++++++--
-> >  drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
->
-> This patch shall be split in two. One which touches rcar-csi2.c and one
-> for the other files as they are two different drivers.
->
-sure will split this patch into two.
+As I told you, I cannot be changed for shipped bootloaders. While it can 
+be
+changed for newer ones, I would really like to retain backwards 
+compatibility.
+And so should you.
 
-> >  4 files changed, 18 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/medi=
-a/platform/rcar-vin/rcar-core.c
-> > index 7440c8965d27..76daf2fe5bcd 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> > @@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct rv=
-in_dev *vin,
-> >               case MEDIA_BUS_FMT_UYVY8_2X8:
-> >               case MEDIA_BUS_FMT_UYVY10_2X10:
-> >               case MEDIA_BUS_FMT_RGB888_1X24:
-> > +             case MEDIA_BUS_FMT_SRGGB8_1X8:
-> >                       vin->mbus_code =3D code.code;
-> >                       vin_dbg(vin, "Found media bus format for %s: %d\n=
-",
-> >                               subdev->name, vin->mbus_code);
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/medi=
-a/platform/rcar-vin/rcar-csi2.c
-> > index 5b04e4768eb1..97e4886f63f0 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> > @@ -320,6 +320,7 @@ static const struct rcar_csi2_format rcar_csi2_form=
-ats[] =3D {
-> >       { .code =3D MEDIA_BUS_FMT_YUYV8_1X16,     .datatype =3D 0x1e, .bp=
-p =3D 16 },
-> >       { .code =3D MEDIA_BUS_FMT_UYVY8_2X8,      .datatype =3D 0x1e, .bp=
-p =3D 16 },
-> >       { .code =3D MEDIA_BUS_FMT_YUYV10_2X10,    .datatype =3D 0x1e, .bp=
-p =3D 20 },
-> > +     { .code =3D MEDIA_BUS_FMT_SRGGB8_1X8,     .datatype =3D 0x2a, .bp=
-p =3D 8 },
-> >  };
-> >
-> >  static const struct rcar_csi2_format *rcsi2_code_to_fmt(unsigned int c=
-ode)
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media=
-/platform/rcar-vin/rcar-dma.c
-> > index 1a30cd036371..63709b4bbf7a 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-dma.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-> > @@ -85,6 +85,7 @@
-> >  #define VNMC_INF_YUV8_BT601  (1 << 16)
-> >  #define VNMC_INF_YUV10_BT656 (2 << 16)
-> >  #define VNMC_INF_YUV10_BT601 (3 << 16)
-> > +#define VNMC_INF_RAW8                (4 << 16)
-> >  #define VNMC_INF_YUV16               (5 << 16)
-> >  #define VNMC_INF_RGB888              (6 << 16)
-> >  #define VNMC_VUP             (1 << 10)
-> > @@ -587,13 +588,15 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
-> >       rvin_write(vin, vin->crop.top, VNSLPRC_REG);
-> >       rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG=
-);
-> >
-> > -
-> >       /* TODO: Add support for the UDS scaler. */
-> >       if (vin->info->model !=3D RCAR_GEN3)
-> >               rvin_crop_scale_comp_gen2(vin);
-> >
-> >       fmt =3D rvin_format_from_pixel(vin, vin->format.pixelformat);
-> > -     stride =3D vin->format.bytesperline / fmt->bpp;
-> > +     if (vin->format.pixelformat =3D=3D V4L2_PIX_FMT_SRGGB8)
-> > +             stride =3D ALIGN(vin->format.bytesperline / 2, 0x10);
-> > +     else
-> > +             stride =3D vin->format.bytesperline / fmt->bpp;
->
-> This does not look right, you should to move this logic into
-> rvin_format_bytesperline().
->
-sure will move it.
+That being said, I don't see a problem in having both compatibles. Linux
+will use the ls1028a-emda one and u-boot will fix up the "older"
+vf610-edma one.
 
-Cheers,
---Prabhakar
+Unfortunately, this patch will not only affect eDMA but all other 
+drivers
+which uses eDMA, eg. sound, lpuart, i2c and maybe DSPI.
 
-> >       rvin_write(vin, stride, VNIS_REG);
-> >  }
-> >
-> > @@ -676,6 +679,9 @@ static int rvin_setup(struct rvin_dev *vin)
-> >
-> >               input_is_yuv =3D true;
-> >               break;
-> > +     case MEDIA_BUS_FMT_SRGGB8_1X8:
-> > +             vnmc |=3D VNMC_INF_RAW8;
-> > +             break;
-> >       default:
-> >               break;
-> >       }
-> > @@ -737,6 +743,9 @@ static int rvin_setup(struct rvin_dev *vin)
-> >       case V4L2_PIX_FMT_ABGR32:
-> >               dmr =3D VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTM=
-D_ARGB;
-> >               break;
-> > +     case V4L2_PIX_FMT_SRGGB8:
-> > +             dmr =3D 0;
-> > +             break;
-> >       default:
-> >               vin_err(vin, "Invalid pixelformat (0x%x)\n",
-> >                       vin->format.pixelformat);
-> > @@ -1110,6 +1119,7 @@ static int rvin_mc_validate_format(struct rvin_de=
-v *vin, struct v4l2_subdev *sd,
-> >       case MEDIA_BUS_FMT_UYVY8_2X8:
-> >       case MEDIA_BUS_FMT_UYVY10_2X10:
-> >       case MEDIA_BUS_FMT_RGB888_1X24:
-> > +     case MEDIA_BUS_FMT_SRGGB8_1X8:
-> >               vin->mbus_code =3D fmt.format.code;
-> >               break;
-> >       default:
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/medi=
-a/platform/rcar-vin/rcar-v4l2.c
-> > index b12b3f88836a..d56cf85ba065 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > @@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[]=
- =3D {
-> >               .fourcc                 =3D V4L2_PIX_FMT_ABGR32,
-> >               .bpp                    =3D 4,
-> >       },
-> > +     {
-> > +             .fourcc                 =3D V4L2_PIX_FMT_SRGGB8,
-> > +             .bpp                    =3D 1,
-> > +     },
-> >  };
-> >
-> >  const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev=
- *vin,
-> > --
-> > 2.20.1
-> >
->
-> --
-> Regards,
-> Niklas S=C3=B6derlund
+-michael
+
+> 
+> diff --git a/arch/arm/cpu/armv8/fsl-layerscape/ls1028_ids.c
+> b/arch/arm/cpu/armv8/fsl-layerscape/ls1028_ids.c
+> index d9d125e8ba..db9dd69548 100644
+> --- a/arch/arm/cpu/armv8/fsl-layerscape/ls1028_ids.c
+> +++ b/arch/arm/cpu/armv8/fsl-layerscape/ls1028_ids.c
+> @@ -14,7 +14,7 @@ struct icid_id_table icid_tbl[] = {
+>         SET_SDHC_ICID(1, FSL_SDMMC_STREAM_ID),
+>         SET_SDHC_ICID(2, FSL_SDMMC2_STREAM_ID),
+>         SET_SATA_ICID(1, "fsl,ls1028a-ahci", FSL_SATA1_STREAM_ID),
+> -       SET_EDMA_ICID(FSL_EDMA_STREAM_ID),
+> +       SET_EDMA_ICID_LS1028(FSL_EDMA_STREAM_ID),
+>         SET_QDMA_ICID("fsl,ls1028a-qdma", FSL_DMA_STREAM_ID),
+>         SET_GPU_ICID("fsl,ls1028a-gpu", FSL_GPU_STREAM_ID),
+>         SET_DISPLAY_ICID(FSL_DISPLAY_STREAM_ID),
+> diff --git a/arch/arm/include/asm/arch-fsl-layerscape/fsl_icid.h
+> b/arch/arm/include/asm/arch-fsl-layerscape/fsl_icid.h
+> index 37e2fe4e66..15d0b60dbe 100644
+> --- a/arch/arm/include/asm/arch-fsl-layerscape/fsl_icid.h
+> +++ b/arch/arm/include/asm/arch-fsl-layerscape/fsl_icid.h
+> @@ -144,6 +144,10 @@ extern int fman_icid_tbl_sz;
+>         SET_GUR_ICID("fsl,vf610-edma", streamid, spare3_amqr,\
+>                 EDMA_BASE_ADDR)
+> 
+> +#define SET_EDMA_ICID_LS1028(streamid) \
+> +       SET_GUR_ICID("fsl,ls1028a-edma", streamid, spare3_amqr,\
+> +               EDMA_BASE_ADDR)
+> +
+>  #define SET_GPU_ICID(compat, streamid) \
+>         SET_GUR_ICID(compat, streamid, misc1_amqr,\
+>                 GPU_BASE_ADDR)
+> 
+> BR,
+> Peng
+>> -michael
+>> 
+>>> 
+>>> Thanks,
+>>> Peng
+>>>>                        reg = <0x0 0x22c0000 0x0 0x10000>,
+>>>>                              <0x0 0x22d0000 0x0 0x10000>,
+>>>>                              <0x0 0x22e0000 0x0 0x10000>;
+>>>> --
+>>>> 2.20.1
