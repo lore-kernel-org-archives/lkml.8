@@ -2,140 +2,125 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCF7C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC95C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74232075A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E022073C
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ehCCfPww"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ImJFabrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgCGLrE (ORCPT
+        id S1726269AbgCGLrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 06:47:04 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:34213 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726073AbgCGLrE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 06:47:04 -0500
-Received: from [IPv6:2001:983:e9a7:1:1586:2568:209f:70b3]
- ([IPv6:2001:983:e9a7:1:1586:2568:209f:70b3])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id AXv2j7V2sEE3qAXv3jEQxb; Sat, 07 Mar 2020 12:47:01 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1583581621; bh=80WwQrQ/p8cnQL54LmjoJhB/o3YhB3T/bByi4ZAEShA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=ehCCfPwwwa8WymgmuyV7n5tRvEa7IbeKYg7FTBJ1nejyY2nduo1YbEYKkKSKcbFUv
-         XahAlW17og20GFwzKmpvmLBAeQhPr0svhglIT3vOY8Cu1bb2fi5LvPp1dfuA9cZPfQ
-         4Br7KOMjym1SVO0/YzSulDlrPxS1LlKon4mWIktptDUdTJ5PBcuXjSLSeRfMP8HmvZ
-         1g7XOpGso5+1MI+8np90t73t3qoplVLqTkGy6n1K9KcmvmqaX2EyoWha55TajOPTcF
-         6l5fFIclV4V8Q1/pbxFhfP2rPnFq5eYnxZladKnOLb43ozATj1qDvBHK4BtlZFvETy
-         mV4qTkO/AVWfA==
-Subject: Re: [PATCHv4 01/11] videobuf2: add cache management members
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-2-senozhatsky@chromium.org>
- <17060663-9c30-de5e-da58-0c847b93e4d3@xs4all.nl>
- <20200307094634.GB29464@google.com>
- <6f5916dd-63f6-5d19-13f4-edd523205a1f@xs4all.nl>
- <20200307112838.GA125961@google.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <a4d85ac3-0eea-bc19-cd44-0c8f5b71f6bc@xs4all.nl>
-Date:   Sat, 7 Mar 2020 12:47:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 7 Mar 2020 06:47:41 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36655 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbgCGLrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 06:47:40 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ZN5J3Jygz9sPJ;
+        Sat,  7 Mar 2020 22:47:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1583581657;
+        bh=T3Lc6pu0BF+ofHjpid246WVPoobyjA8sQizLZI14QII=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ImJFabrrCN7wW00obUBvVIVpYWRF9ZE+ny/CHzmGTLU1ytFKk7TUeUUOVBZ7DWsxE
+         8KehbT2GLm8euKGOjfAVEcXd9NRp3LBcu46vMyeW22GMGA66Bln+5az1Z3YP/U6FNS
+         wpcFe8xoZs2a2mpKof/eh8bNa7E+DxsQuLoPUxqIxF5Fp9A8DbUh8ZxN2kKqXGSuwb
+         +3SEwZdrKXtPE9/I6buseCX+chTXBH/dsFv6G9fcXD0Faimh1cTIpynjnnbsTBMATS
+         YTm9tfdlaFkGOnBxrINkeyl+cL+CTm4a5KsWwUy3VzRfap2Fe10Rgkn4JIKkzFlH4W
+         xpfHzHe0KBi1g==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     desnesn@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, naveen.n.rao@linux.vnet.ibm.com,
+        ravi.bangoria@linux.ibm.com
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.6-4 tag
+Date:   Sat, 07 Mar 2020 22:47:24 +1100
+Message-ID: <87imjgpesz.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200307112838.GA125961@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfISfwr9ZJrP5bmFIUfMuLk8cVVxIyO0SaCDCO6+zq3uo+EqLg0AHYVmtDsA/ieQ5ei99sLgtf24J3qh3+X/WJO+hFLRm/61TgwjAwbndS3J0aqPRD21y
- H9QmY7THlaLEfDOUmqmP4esr/tenbDzf62//QBCRjWcPShMTwAM1Njnj+WCu8Zk3SkO0YN3JZj68JJzo4bnIIHFLNcvdqWCNG722P6tpx97tkNuPhKaOfdHv
- EKlpAQPt04Ni2gjfqyfYm+qTYEJ0xT7UKffG3qfYu1yCBLNBaLQoozXI6eKOoO5Td+1ni4mdw4kqWwdz/tRsaA+lxPAK+NSc/FSh3XzJJoB50+aN5cM5/nd8
- nC1TxbP5D/sqhmuwTquSy7rKqdJIz8o0+zne+xmQ2uCa5z5UPA20cvtu0JPUTsjJo8j/+AyUYoZCaKZRoHf5gPn+EB5k5aFpWcp+XKKXSn5RpyBgZV9T8AsQ
- TaSSs7BAJnPnwV4ihEzvC/A//JWLGtBcTVf++yAusJt3ZFjNBHwyrnkqYb19Ld1tbtkPdfiVzzUgnYroqjdg3DJ5PEFURg3/11KBc6igJj+qnJbhu7OdVMTh
- HOJPqXIqiNzTs8YKqRza5d2vDwuCCR/+mUKPNW2WRKC19Q==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/03/2020 12:28, Sergey Senozhatsky wrote:
-> On (20/03/07 11:10), Hans Verkuil wrote:
-> [..]
->>>>> @@ -564,6 +573,7 @@ struct vb2_queue {
->>>>>  	unsigned			requires_requests:1;
->>>>>  	unsigned			uses_qbuf:1;
->>>>>  	unsigned			uses_requests:1;
->>>>> +	unsigned			allow_cache_hints:1;
->>>
->>> Shall I use "unsigned int" here instead of "unsigned"?
->>
->> The vb2_queue bitfields are the only places in that header were 'unsigned' is
->> used. I think that that should be fixed in a separate patch. It's nice to have
->> it consistent.
->>
->> Put that patch in the beginning of the series, that way I can pick it up in the
->> next pull request.
-> 
-> OK, done.
-> 
-> For the time being the series has moved to github public repo [0],
-> I'll try to run more 'twisty' cases and re-submit once it survives
-> beating.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-Create those tests in v4l2-compliance: that's where they belong.
+Hi Linus,
 
-You need these tests:
+Please pull some more powerpc fixes for 5.6:
 
-For non-MMAP modes:
+The following changes since commit 9eb425b2e04e0e3006adffea5bf5f227a896f128:
 
-1) test that V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS is never set.
+  powerpc/entry: Fix an #if which should be an #ifdef in entry_32.S (2020-02-19 10:35:22 +1100)
 
-If V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS is not set, then:
+are available in the git repository at:
 
-1) attempting to use V4L2_FLAG_MEMORY_NON_CONSISTENT will clear the flag
-   upon return (test with both reqbufs and create_bufs).
-2) attempting to use V4L2_BUF_FLAG_NO_CACHE_INVALIDATE or V4L2_BUF_FLAG_NO_CACHE_CLEAN
-   will clear those flags upon return (do we actually do that in the patch series?).
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.6-4
 
-If V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS is set, then:
+for you to fetch changes up to 59bee45b9712c759ea4d3dcc4eff1752f3a66558:
 
-1) set V4L2_FLAG_MEMORY_NON_CONSISTENT in reqbufs, but clear in create_bufs:
-   this should fail.
-2) clear V4L2_FLAG_MEMORY_NON_CONSISTENT in reqbufs, but set in create_bufs:
-   this should fail.
-3) set V4L2_FLAG_MEMORY_NON_CONSISTENT in both reqbufs and create_bufs: this should
-   work.
-4) clear V4L2_FLAG_MEMORY_NON_CONSISTENT in both reqbufs and create_bufs: this should
-   work.
-5) you can use V4L2_BUF_FLAG_NO_CACHE_INVALIDATE or V4L2_BUF_FLAG_NO_CACHE_CLEAN
-   without these flags being cleared in v4l2_buffer.
+  powerpc/mm: Fix missing KUAP disable in flush_coherent_icache() (2020-03-05 17:15:08 +1100)
 
-All these tests can be done in testReqBufs().
+- ------------------------------------------------------------------
+powerpc fixes for 5.6 #4
 
-Regards,
+One fix for a recent regression to our breakpoint/watchpoint code.
 
-	Hans
+Another fix for our KUAP support, this time a missing annotation in a rarely
+used path in signal handling.
 
-> 
-> [0] https://github.com/sergey-senozhatsky/v4l2-mmap-cache-flags
-> 
-> 	-ss
-> 
+A fix for our handling of a CPU feature that effects the PMU, when booting
+guests in some configurations.
 
+A minor fix to our linker script to explicitly include the .BTF section.
+
+Thanks to:
+  Christophe Leroy, Desnes A. Nunes do Rosario, Leonardo Bras, Naveen N. Rao,
+  Ravi Bangoria, Stefan Berger.
+
+- ------------------------------------------------------------------
+Desnes A. Nunes do Rosario (1):
+      powerpc: fix hardware PMU exception bug on PowerVM compatibility mode systems
+
+Michael Ellerman (1):
+      powerpc/mm: Fix missing KUAP disable in flush_coherent_icache()
+
+Naveen N. Rao (1):
+      powerpc: Include .BTF section
+
+Ravi Bangoria (1):
+      powerpc/watchpoint: Don't call dar_within_range() for Book3S
+
+
+ arch/powerpc/kernel/cputable.c      |  4 +++-
+ arch/powerpc/kernel/hw_breakpoint.c | 12 +++++++-----
+ arch/powerpc/kernel/vmlinux.lds.S   |  6 ++++++
+ arch/powerpc/mm/mem.c               |  2 ++
+ 4 files changed, 18 insertions(+), 6 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl5jhbEACgkQUevqPMjh
+pYChUw/+OoOuPWLsnCm6G1qNXl0Bybos15zThSvFIt9/LDk4w1FA7DsO0fsaSejZ
+r/N/AN02sxTprINhd9+cEjTIdfMR45CVbGJZPqN7ynovhMOQieT60uMjoBUr+9Xx
+htHXyPokQNWRn4n5CTTxiwTlu9ehA0zqT9moEHMkERUdsx2BMWEb65lkNT1Jc5/C
+qdQ334Raj5ckZFaSBzvGRNGZYDg+lPlDU6Bnu+gxsPLZN+Yr9p9Pr3PHEXDrrEOs
+ILknaRoBq0vkI8np2q5iJeqQPri+LgVsTI9400zfJBTWVw4IiFbTmQnPsCOhpXr9
+ruUXWROq0hj2216T5pSS+zQkfLLVYI1Wb6O4tFAL2KogrC895qhx+11IAQo+fcKM
+IoR4cuQsE1OuWwQjKZfXTz2b+2zdPHEIUSh34rtoo3zT9BUZ5V6peXMIV8UVCdv4
+esjOI5oL8R3pa+8MOstDfH8wBDLX49zwjv5g4vCIuiAEqN/Cd6JdCqbLDbpYMIRt
+KClQQySKOfh45rl59a3+HRlrgPjLQCVjqHIaoPtxj647y8p33HvLVDXEduJtQ0QK
+KwFrzpkpD00L8aV+94pPVFTALG+lsxLxqtgOVd4sMwtHTDlrJ9FWefU+Hh4GuKTi
+glUuT0+C21UpLPcvazM5utqQOWWrpk+03Z0Ny9UGxKRTBtiBn6U=
+=0jhJ
+-----END PGP SIGNATURE-----
