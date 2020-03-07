@@ -2,33 +2,32 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508C3C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20234C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A70020705
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA02D206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgCGC3R (ORCPT
+        id S1727273AbgCGC3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 21:29:17 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:37302 "EHLO inva020.nxp.com"
+        Fri, 6 Mar 2020 21:29:42 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:37174 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbgCGC3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726397AbgCGC3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Mar 2020 21:29:17 -0500
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2341B1A19A1;
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0947A1A0E38;
         Sat,  7 Mar 2020 03:29:15 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5BECF1A199B;
-        Sat,  7 Mar 2020 03:28:19 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A3E6B1A1975;
+        Sat,  7 Mar 2020 03:28:10 +0100 (CET)
 Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E35D7402F3;
-        Sat,  7 Mar 2020 10:28:07 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 434F840294;
+        Sat,  7 Mar 2020 10:27:59 +0800 (SGT)
 From:   Xiaowei Bao <xiaowei.bao@nxp.com>
 To:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
         bhelgaas@google.com, robh+dt@kernel.org, shawnguo@kernel.org,
@@ -39,48 +38,46 @@ To:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org
 Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v5 05/11] dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a and ls2088a
-Date:   Sat,  7 Mar 2020 10:14:24 +0800
-Message-Id: <20200307021430.36826-6-xiaowei.bao@nxp.com>
+Subject: [PATCH v4 00/11] Add the multiple PF support for DWC and Layerscape
+Date:   Sat,  7 Mar 2020 10:14:19 +0800
+Message-Id: <20200307021430.36826-1-xiaowei.bao@nxp.com>
 X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200307021430.36826-1-xiaowei.bao@nxp.com>
-References: <20200307021430.36826-1-xiaowei.bao@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add compatible strings for ls1088a and ls2088a.
+Add the PCIe EP multiple PF support for DWC and Layerscape, add
+the doorbell MSIX function for DWC, use list to manage the PF of
+one PCIe controller, and refactor the Layerscape EP driver due to
+some platforms difference.
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-v2:
- - No change.
-v3:
- - Use one valid combination of compatible strings.
-v4:
- - Add the comma between the two compatible.
-v5:
- - No change.
+Xiaowei Bao (11):
+  PCI: designware-ep: Add multiple PFs support for DWC
+  PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
+  PCI: designware-ep: Move the function of getting MSI capability
+    forward
+  PCI: designware-ep: Modify MSI and MSIX CAP way of finding
+  dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a
+    and ls2088a
+  PCI: layerscape: Fix some format issue of the code
+  PCI: layerscape: Modify the way of getting capability with different
+    PEX
+  PCI: layerscape: Modify the MSIX to the doorbell mode
+  PCI: layerscape: Add EP mode support for ls1088a and ls2088a
+  arm64: dts: layerscape: Add PCIe EP node for ls1088a
+  misc: pci_endpoint_test: Add LS1088a in pci_device_id table
 
- Documentation/devicetree/bindings/pci/layerscape-pci.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/pci/layerscape-pci.txt     |   2 +
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |  31 +++
+ drivers/misc/pci_endpoint_test.c                   |   2 +
+ drivers/pci/controller/dwc/pci-layerscape-ep.c     | 100 ++++++--
+ drivers/pci/controller/dwc/pcie-designware-ep.c    | 255 +++++++++++++++++----
+ drivers/pci/controller/dwc/pcie-designware.c       |  59 +++--
+ drivers/pci/controller/dwc/pcie-designware.h       |  48 +++-
+ 7 files changed, 404 insertions(+), 93 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index 99a386e..daa99f7 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -24,6 +24,8 @@ Required properties:
-         "fsl,ls1028a-pcie"
-   EP mode:
- 	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
-+	"fsl,ls1088a-pcie-ep", "fsl,ls-pcie-ep"
-+	"fsl,ls2088a-pcie-ep", "fsl,ls-pcie-ep"
- - reg: base addresses and lengths of the PCIe controller register blocks.
- - interrupts: A list of interrupt outputs of the controller. Must contain an
-   entry for each entry in the interrupt-names property.
 -- 
 2.9.5
 
