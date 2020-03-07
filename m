@@ -2,160 +2,180 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D853C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EE7C10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DDAA206E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3684E206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GrgDu1DE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mr40nDBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgCGBgs (ORCPT
+        id S1726633AbgCGBje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 20:36:48 -0500
-Received: from mail-eopbgr00077.outbound.protection.outlook.com ([40.107.0.77]:14246
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726245AbgCGBgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 20:36:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ILvWHR+ST0m81eaKsSkqN2KQVjSXBaglMEm2z1WR+f1aV8tD70gDjv2uyclX1CheHvubj48W+OWpwXjpssMTr1g6GmKeZ95Gr3mS1fM03JuRBf5lK8uH3QxHV1bMun3+Uiv99+2789FBu1JMk9ORWcccUYKF8TW10M05cg49j2lACrcmmqaYn21YtQ7YaqWgj1DC6syOxB+WnnUmn12/q59tNCZ8rnt/hxQmWLQFIIty3yC8ftXNlVBKGi2/xmrUstkr19xiCuIWtip0ZBZl1r+vMyU+dNOhyb03hjoOwdI7M0r75jKfIwtNZDCnfBnQnPXsG2HqTxCa76LToQAywQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q6khbcMqOFAgFLGrsIlKsHz+X5UCJ4twK4ocS3k+hH4=;
- b=Wtej2Nhcd/6if5iWYfKURBmil5+OQZwysXtOL3IoEe7hPcoXhnKwjuZqDYqVOpBXHlEFx/5Rf853fmZ2gldPTSw8ens3ubBbJRXvPW+pCIljp2ifZ15aytAp/4U1qmSxVQU2Asw4vo1XKkPBJgJ0aFDx8gO9ag5TUS0ZorC0aQIVHwgaL5R0wP09UjZ5HRTnsItRYOCfZQiHCTN63ux+7zOrwhMfd2QgvFIqa9sTAYK2gJBQBRfcMoSQUo1hjm44EN1jiWhngR7OAgO+Me39tK3sq9LO+3mE5Y22kpN54z1gz1/Bi4ck0VQOKGHivB5THHY90EVw6dfF0HiQPWZNIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q6khbcMqOFAgFLGrsIlKsHz+X5UCJ4twK4ocS3k+hH4=;
- b=GrgDu1DERfL7Crs+GayMBboL4yco6Y2KebhR2+wnY1DH0rBZb/1T3BQWAqOsooniRQW14+J0P1PKybTb2RymSAoXzEZJc7EBWo5cx8zZk/EFIHF5k5hK8lCcXmHvABlzt3vzQrcCx/zrjLiL9827GmfBKEQHCroOEtkSiiH3fx8=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3882.eurprd04.prod.outlook.com (52.134.72.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Sat, 7 Mar 2020 01:36:40 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2772.019; Sat, 7 Mar 2020
- 01:36:39 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        =?utf-8?B?Um9uYWxkIFRzY2hhbMOkcg==?= <ronald@innovation.ch>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 3/5] input: keyboard: add COMPILE_TEST support for
- KEYBOARD_IMX_SC_KEY
-Thread-Topic: [PATCH 3/5] input: keyboard: add COMPILE_TEST support for
- KEYBOARD_IMX_SC_KEY
-Thread-Index: AQHV887MNanm8ugiD0KiUbBo9lnYDag79IUAgAAJFwCAABOKAIAASDdQ
-Date:   Sat, 7 Mar 2020 01:36:39 +0000
-Message-ID: <DB3PR0402MB39164192146D17327A45DA6CF5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1583509356-8265-1-git-send-email-Anson.Huang@nxp.com>
- <1583509356-8265-3-git-send-email-Anson.Huang@nxp.com>
- <20200306193310.GI217608@dtor-ws>
- <CAKdAkRRhXE6Hviqx90_5hWmP7YQnKO2QLJgDYnzt_CPjeH7D0A@mail.gmail.com>
- <20200306211538.GA8060@piout.net>
-In-Reply-To: <20200306211538.GA8060@piout.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ae50851e-c2c5-4169-da48-08d7c237fbce
-x-ms-traffictypediagnostic: DB3PR0402MB3882:|DB3PR0402MB3882:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB38825E84B78724440E0DDE6BF5E00@DB3PR0402MB3882.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 03355EE97E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(136003)(376002)(366004)(199004)(189003)(55016002)(76116006)(7416002)(9686003)(8936002)(54906003)(52536014)(316002)(7696005)(478600001)(71200400001)(4326008)(86362001)(26005)(110136005)(66446008)(64756008)(66946007)(66556008)(5660300002)(66476007)(53546011)(6506007)(44832011)(2906002)(8676002)(33656002)(81156014)(81166006)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3882;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1myGFHIZrCm5TeldWy47hVU/DbljG98VjrAbojOsVyqq9ebjvRJG/gMR/USSVKD4objwRL1ZterLHPKcUlD6CKeOgtvoZ9dF6TZcIJ8ypgYL6B03T/vb6GwraaqBiR8gbAqMWeE5LkhKPYMSq/j9rFYIwi3lg4cvoTAzSLVvp890sSf0nthN8MeYhOMFO60mPwuqzoPYyMJVqbdY5p63onzp7WYZAH8Dsd/8/9wCk+boCLdcAeY+/+pA2/WggS+PKYWlAiS8EtBpGqlLZrulbqdDWCvT5XdE9o4L8fSCRi4hvJxXjBg4EChtEsDsqHxrhYZRVPooZ2CZJx+uj9jAiBUJXWGOcAI7hLDjpSadC9gqA7B76k/U6wp+CqTb3n9HPqUO2C5ekyPF6hBho6ldmU0J1Ra6jlFOCUfq/68XWxQhs8OOtTjI/ndTmQ/bgUOI
-x-ms-exchange-antispam-messagedata: wEnk5ULSEK1yZAXUnyS6RTMR1axprM+qXUGWyYFCG/0aPEE7o+ZJUdw+UTaj0IBS+0ut7mEp3PFLTySQka/M0fGoThYCIHKDvpd3JuTgqB6ws7wfq0iEoJPp/2gIls8WO8LnOwfqoKvAWQGI2w0Z0w==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 6 Mar 2020 20:39:34 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40476 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgCGBjd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 20:39:33 -0500
+Received: by mail-lj1-f196.google.com with SMTP id 19so1336143ljj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 17:39:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vk7WexqGs9tKsJw0u0mXwTU3mYoTxeM70bWaTcQP0sk=;
+        b=Mr40nDBsa29tmNy/wYcVN8rJvjzzdDoxgm/e0OT/i+X5gj6oERCsq+lDLv8GhQsZvs
+         /BW/cUQyoz4S/WPxdEptsHM+GBEilpD4Nq2ZVnf1e/VdUZcP0S3oH15LeXAmHUqNpMJU
+         hc+dfOGM0+/pKDaVUcRjZuLA2ZX+8fzJpf6a2+OZhv4DoKt4FhZxKsKX+TMfoM8eV3cX
+         gdf6759jtZGcpu+05fD27i3KizcmrSWCB490SZhraUQfGXmd1xm/l2W3UJxNjhz63IlK
+         KwRoD0XOwJmlTmmjvAY3H6VoHLcfOfb/26gbr1LMAchIY5Qk65YOqoeA6kQTVQKBaRnJ
+         rxLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vk7WexqGs9tKsJw0u0mXwTU3mYoTxeM70bWaTcQP0sk=;
+        b=TI8EdJYR8PZX6eHpEKfJ5iE//r+WxWUi8WBGbYSR4exe5KJAxUag9yI7jUXmORF2kL
+         KJL8ozeveOwFb9y8woDFPRxz+LOXiOuACJRIDSf4c9yydR3KAv1Q7MCPD8AQn26MrGCC
+         5WK2RmYLntPyw4LIsW7MiLjXmfntmtnZdp6T4wGHgoqTTYsGxSe9htk27NKMGS6IZtRh
+         zxvW4ZrifSuMorSTUK39gARxla7avj3LMLssYbujIgQk9Z3QUviFV4+KFZgmsb1nFf2h
+         NdVwmaE5IStPmqUdRv6gbgOLKRvq74NG32r99FVdx9oVVI1Z+amBDkhyDUNqjiy8evIm
+         Cfaw==
+X-Gm-Message-State: ANhLgQ21uvnZwk+AhOovGcSKF0H1ILFoZabwG9akdAwEuLgVwrAv7BP6
+        ibJvO4FF9BIvnqiU5moRpQb84OmamB408NTff4rYjQ==
+X-Google-Smtp-Source: ADFU+vsV+qVX0unqQUwWcGQVeYWEY2ubHw2+vJbqxcPBD1kNsVUvnDRy2az5R7tCqlw5INchb6uGPLZKiPuNJEV393c=
+X-Received: by 2002:a2e:b88d:: with SMTP id r13mr3359183ljp.66.1583545170498;
+ Fri, 06 Mar 2020 17:39:30 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae50851e-c2c5-4169-da48-08d7c237fbce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2020 01:36:39.7813
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OkT7tseAPuzwjXyIOkLnpO54cjgXl9rEWACrCCAiZWr7bbAntTbQdN4Vx3j6vaVZ5gbC3Js2QCSxhVJTqZYF3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3882
+References: <20200305012338.219746-1-rajatja@google.com> <20200305012338.219746-3-rajatja@google.com>
+ <87o8tbnnqa.fsf@intel.com> <CACK8Z6HRB9q1KeborGr7V-0Qp0AApHV6gBTkc6xD5NokH8gr0w@mail.gmail.com>
+ <87tv31om53.fsf@intel.com>
+In-Reply-To: <87tv31om53.fsf@intel.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Fri, 6 Mar 2020 17:38:53 -0800
+Message-ID: <CACK8Z6HFOpsfhHo=y9Qj_NSdiCGBHsvchZ335mU1BQ5CYQq1VQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] drm/i915: Lookup and attach ACPI device node for connectors
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        intel-gfx@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mat King <mathewk@google.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
+        Sean Paul <seanpaul@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Nitin Joshi1 <njoshi1@lenovo.com>,
+        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
+        Tomoki Maruichi <maruichit@lenovo.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEFsZXhhbmRyZQ0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMy81XSBpbnB1dDoga2V5Ym9h
-cmQ6IGFkZCBDT01QSUxFX1RFU1Qgc3VwcG9ydCBmb3INCj4gS0VZQk9BUkRfSU1YX1NDX0tFWQ0K
-PiANCj4gT24gMDYvMDMvMjAyMCAxMjowNTo0Mi0wODAwLCBEbWl0cnkgVG9yb2tob3Ygd3JvdGU6
-DQo+ID4gT24gRnJpLCBNYXIgNiwgMjAyMCBhdCAxMTozMyBBTSBEbWl0cnkgVG9yb2tob3YNCj4g
-PiA8ZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gT24gRnJp
-LCBNYXIgMDYsIDIwMjAgYXQgMTE6NDI6MzRQTSArMDgwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+
-ID4gPiA+IEFkZCBDT01QSUxFX1RFU1Qgc3VwcG9ydCB0byBpLk1YIFNDIGtleWJvYXJkIGRyaXZl
-ciBmb3IgYmV0dGVyDQo+ID4gPiA+IGNvbXBpbGUgdGVzdGluZyBjb3ZlcmFnZS4NCj4gPiA+ID4N
-Cj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+
-DQo+ID4gPg0KPiA+ID4gQXBwbGllZCwgdGhhbmsgeW91Lg0KPiA+DQo+ID4gQWN0dWFsbHksIG5v
-dDoNCj4gPg0KPiA+IEVSUk9SOiAiaW14X3NjdV9pcnFfcmVnaXN0ZXJfbm90aWZpZXIiDQo+ID4g
-W2RyaXZlcnMvaW5wdXQva2V5Ym9hcmQvaW14X3NjX2tleS5rb10gdW5kZWZpbmVkIQ0KPiA+IEVS
-Uk9SOiAiaW14X3NjdV9nZXRfaGFuZGxlIiBbZHJpdmVycy9pbnB1dC9rZXlib2FyZC9pbXhfc2Nf
-a2V5LmtvXQ0KPiB1bmRlZmluZWQhDQo+ID4gRVJST1I6ICJpbXhfc2N1X2NhbGxfcnBjIiBbZHJp
-dmVycy9pbnB1dC9rZXlib2FyZC9pbXhfc2Nfa2V5LmtvXQ0KPiB1bmRlZmluZWQhDQo+ID4gRVJS
-T1I6ICJpbXhfc2N1X2lycV91bnJlZ2lzdGVyX25vdGlmaWVyIg0KPiA+IFtkcml2ZXJzL2lucHV0
-L2tleWJvYXJkL2lteF9zY19rZXkua29dIHVuZGVmaW5lZCENCj4gPiBFUlJPUjogImlteF9zY3Vf
-aXJxX2dyb3VwX2VuYWJsZSINCj4gPiBbZHJpdmVycy9pbnB1dC9rZXlib2FyZC9pbXhfc2Nfa2V5
-LmtvXSB1bmRlZmluZWQhDQo+ID4gbWFrZVsxXTogKioqIFtzY3JpcHRzL01ha2VmaWxlLm1vZHBv
-c3Q6OTQ6IF9fbW9kcG9zdF0gRXJyb3IgMQ0KPiA+IG1ha2U6ICoqKiBbTWFrZWZpbGU6MTI4Mjog
-bW9kdWxlc10gRXJyb3IgMg0KPiA+DQo+ID4gSWYgeW91IHdhbnQgdG8gZW5hYmxlIGNvbXBpbGUg
-dGVzdCBjb3ZlcmFnZSB5b3UgbmVlZCB0byBwcm92aWRlIHN0dWJzDQo+ID4gZm9yIHRoZSBhYm92
-ZSBmdW5jdGlvbnMuDQo+ID4NCj4gDQo+IG9yIHNlbGVjdCBJTVhfU0NVDQo+IA0KPiBvciBsZWF2
-ZSBvdXQgQ09NUElMRV9URVNUIGZyb20gdGhlIGluZGl2aWR1YWwgZHJpdmVycyBhcyBoYXZpbmcN
-Cj4gQ09NUElMRV9URVNUIGZvciBJTVhfU0NVIGlzIGVub3VnaCB0byBiZSBhYmxlIHRvIHNlbGVj
-dCB0aGUgZHJpdmVycy4NCg0KVGhhbmtzLCBJIGFscmVhZHkgYWRkZWQgdGhlIENPTVBJTEVfVEVT
-VCBmb3IgSU1YX1NDVSB3aGljaCBpcyBpbiB0aGlzIHNhbWUgcGF0Y2ggc2VyaWVzLA0Kd2l0aG91
-dCB0aGF0IElNWF9TQ1UgQ09NUElMRV9URVNUIHBhdGNoLCB0aGUgYnVpbGQgd2lsbCBmYWlsZWQs
-IHNvIGluIFYyLCBJIGFsc28gYWRkZWQNCnRoZSBzdHVicyBpbnRvIHRob3NlIElNWCBTQ1UgQVBJ
-cyB0byBtYWtlIHN1cmUgZXZlbiBJTVhfU0NVIGlzIE5PVCBlbmFibGVkLCBtb2R1bGVzDQp3aXRo
-IENPTVBJTEVfVEVTVCBjYW4gc3RpbGwgcGFzcyBidWlsZCwgcGxlYXNlIGhlbHAgcmV2aWV3IFYy
-IHBhdGNoIHNldC4NCg0KVGhhbmtzLA0KQW5zb24NCg==
+On Fri, Mar 6, 2020 at 1:42 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
+>
+> On Thu, 05 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
+> > On Thu, Mar 5, 2020 at 1:41 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
+> >>
+> >> On Wed, 04 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
+> >> 1) See if we can postpone creating and attaching properties to connector
+> >> ->late_register hook. (I didn't have the time to look into it yet, at
+> >> all.)
+> >
+> > Apparently not. The drm core doesn't like to add properties in
+> > late_register() callback. I just tried it and get this warning:
+>
+> I kind of had a feeling this would be the case, thanks for checking.
+
+Thinking about it again, it looks like there is a difference in
+creating a property and attaching a property. I'm wondering if drm
+would let me (unconditionally) create a property before registering,
+and attach it in late_register() only in case a privacy screen is
+detected. (If not present, I can destroy the property in
+late_register()). If this approach sound more promising, I can try it
+out.
+
+>
+> >> 2) Provide a way to populate connector->acpi_device_id and
+> >> connector->acpi_handle on a per-connector basis. At least the device id
+> >> remains constant for the lifetime of the drm_device
+> >
+> > Are you confirming that the connector->acpi_device_id remains constant
+> > for the lifetime of the drm_device, as calculated in
+> > intel_acpi_device_id_update()?  Even in the face of external displays
+> > (monitors) being connected and disconnected during the lifetime of the
+> > system? If so, then I think we can have a solution.
+>
+> First I thought so. Alas it does not hold for DP MST, where you can have
+> connectors added and removed dynamically. I think we could ensure they
+> stay the same for all other connectors though. I'm pretty sure this is
+> already the case; they get added/removed after all others.
+>
+> Another thought, from the ACPI perspective, I'm not sure the dynamically
+> added/removed DP MST connectors should even have acpi handles. But
+> again, tying all this together with ACPI stuff is not something I am an
+> expert on.
+
+I propose that we:
+
+1) Maintain a display_index[] array within the drm_dev, and increment
+as connectors are added.
+2) Initialize connector->acpi_device_id and and connector->acpi_handle
+while registering (one time per connector).
+3) Remove the code to update acpi_device_id on every resume.
+
+It doesn't look like anyone on the DP MST side has cared for ACPI so
+far, so I doubt if we can do anything that might break MST currently.
+In other words, the above should not make things any worse for MST, if
+not better. For connectors other than MST, this should allow them to
+get ACPI handle and play with it, if they need.
+
+WDYT?
+
+Thanks,
+
+Rajat
+
+>
+> >> (why do we keep
+> >> updating it at every resume?!) but can we be sure ->acpi_handle does
+> >> too? (I don't really know my way around ACPI.)
+> >
+> > I don't understand why this was being updated on every resume in that
+> > case (this existed even before my patchset). I believe we do not need
+> > it. Yes, the ->acpi_handle will not change if the ->acpi_device_id
+> > does not change. I believe the way forward should then be to populate
+> > connector->acpi_device_id and connector->acpi_handle ONE TIME at the
+> > time of connector init (and not update it on every resume). Does this
+> > sound ok?
+>
+> If a DP MST connector gets removed, should the other ACPI display
+> indexes after that shift, or remain the same? I really don't know.
+>
+> BR,
+> Jani.
+>
+> --
+> Jani Nikula, Intel Open Source Graphics Center
