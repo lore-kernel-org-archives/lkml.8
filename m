@@ -2,180 +2,248 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EE7C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C9FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3684E206D7
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:39:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mr40nDBs"
+	by mail.kernel.org (Postfix) with ESMTP id 00415206E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583546036;
+	bh=mQv/gm1JDvQ+NoQtrtDoSNIjFb/SqMpZqNM/ofjbOmE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TbYK0rNpq3N12pxp9Tb8VnyLT+LwpgPgXqHhYwzVYalInxqSAXNSmuHGerl0+EuZ3
+	 jxLOwuOdKASsfmIS0b7r0KoPxwY5IF3KDXfEnvbOyL/OZnT/LjDE5aSGmdsyexrzb2
+	 1TGitIfL8VbKXj79IRjtADbmNdRS9eCsR5Coj+F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCGBje (ORCPT
+        id S1726635AbgCGBxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 20:39:34 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40476 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgCGBjd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 20:39:33 -0500
-Received: by mail-lj1-f196.google.com with SMTP id 19so1336143ljj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 17:39:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vk7WexqGs9tKsJw0u0mXwTU3mYoTxeM70bWaTcQP0sk=;
-        b=Mr40nDBsa29tmNy/wYcVN8rJvjzzdDoxgm/e0OT/i+X5gj6oERCsq+lDLv8GhQsZvs
-         /BW/cUQyoz4S/WPxdEptsHM+GBEilpD4Nq2ZVnf1e/VdUZcP0S3oH15LeXAmHUqNpMJU
-         hc+dfOGM0+/pKDaVUcRjZuLA2ZX+8fzJpf6a2+OZhv4DoKt4FhZxKsKX+TMfoM8eV3cX
-         gdf6759jtZGcpu+05fD27i3KizcmrSWCB490SZhraUQfGXmd1xm/l2W3UJxNjhz63IlK
-         KwRoD0XOwJmlTmmjvAY3H6VoHLcfOfb/26gbr1LMAchIY5Qk65YOqoeA6kQTVQKBaRnJ
-         rxLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vk7WexqGs9tKsJw0u0mXwTU3mYoTxeM70bWaTcQP0sk=;
-        b=TI8EdJYR8PZX6eHpEKfJ5iE//r+WxWUi8WBGbYSR4exe5KJAxUag9yI7jUXmORF2kL
-         KJL8ozeveOwFb9y8woDFPRxz+LOXiOuACJRIDSf4c9yydR3KAv1Q7MCPD8AQn26MrGCC
-         5WK2RmYLntPyw4LIsW7MiLjXmfntmtnZdp6T4wGHgoqTTYsGxSe9htk27NKMGS6IZtRh
-         zxvW4ZrifSuMorSTUK39gARxla7avj3LMLssYbujIgQk9Z3QUviFV4+KFZgmsb1nFf2h
-         NdVwmaE5IStPmqUdRv6gbgOLKRvq74NG32r99FVdx9oVVI1Z+amBDkhyDUNqjiy8evIm
-         Cfaw==
-X-Gm-Message-State: ANhLgQ21uvnZwk+AhOovGcSKF0H1ILFoZabwG9akdAwEuLgVwrAv7BP6
-        ibJvO4FF9BIvnqiU5moRpQb84OmamB408NTff4rYjQ==
-X-Google-Smtp-Source: ADFU+vsV+qVX0unqQUwWcGQVeYWEY2ubHw2+vJbqxcPBD1kNsVUvnDRy2az5R7tCqlw5INchb6uGPLZKiPuNJEV393c=
-X-Received: by 2002:a2e:b88d:: with SMTP id r13mr3359183ljp.66.1583545170498;
- Fri, 06 Mar 2020 17:39:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20200305012338.219746-1-rajatja@google.com> <20200305012338.219746-3-rajatja@google.com>
- <87o8tbnnqa.fsf@intel.com> <CACK8Z6HRB9q1KeborGr7V-0Qp0AApHV6gBTkc6xD5NokH8gr0w@mail.gmail.com>
- <87tv31om53.fsf@intel.com>
-In-Reply-To: <87tv31om53.fsf@intel.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Fri, 6 Mar 2020 17:38:53 -0800
-Message-ID: <CACK8Z6HFOpsfhHo=y9Qj_NSdiCGBHsvchZ335mU1BQ5CYQq1VQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] drm/i915: Lookup and attach ACPI device node for connectors
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mat King <mathewk@google.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        Sean Paul <seanpaul@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
-        Tomoki Maruichi <maruichit@lenovo.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 6 Mar 2020 20:53:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbgCGBxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 20:53:51 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 819C3206CC;
+        Sat,  7 Mar 2020 01:53:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583546031;
+        bh=mQv/gm1JDvQ+NoQtrtDoSNIjFb/SqMpZqNM/ofjbOmE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XXNcL/8YTAvxKRfeJOftINjDpRcvOhhTODR4YfaMrowdmWIszZ0Ln7DTdwYueBJ9O
+         J3zK+sNiux0+bmTbSFasMzqfMSp0J3j+WE0f/4XtQTrE5k9w7dDjLC9+T/963HuLv6
+         jjaTANNemCC95JEHpYyIl19m7luE7zeEx1lYEjPk=
+Date:   Sat, 7 Mar 2020 10:53:45 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
+        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v4 05/27] x86: Replace ist_enter() with nmi_enter()
+Message-Id: <20200307105345.e33c2ced6d1f020e1bf91018@kernel.org>
+In-Reply-To: <20200226102758.GV18400@hirez.programming.kicks-ass.net>
+References: <20200221133416.777099322@infradead.org>
+        <20200221134215.328642621@infradead.org>
+        <CALCETrU7nezN7d3GEZ8h8HbRfvZ0+F9+Ahb7fLvZ9FVaHN9x2w@mail.gmail.com>
+        <20200221202246.GA14897@hirez.programming.kicks-ass.net>
+        <20200224104346.GJ14946@hirez.programming.kicks-ass.net>
+        <20200224112708.4f307ba3@gandalf.local.home>
+        <20200224163409.GJ18400@hirez.programming.kicks-ass.net>
+        <20200224114754.0fb798c1@gandalf.local.home>
+        <20200224213139.GO11457@worktop.programming.kicks-ass.net>
+        <20200224170231.3807931d@gandalf.local.home>
+        <20200226102758.GV18400@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 1:42 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
->
-> On Thu, 05 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
-> > On Thu, Mar 5, 2020 at 1:41 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> >>
-> >> On Wed, 04 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
-> >> 1) See if we can postpone creating and attaching properties to connector
-> >> ->late_register hook. (I didn't have the time to look into it yet, at
-> >> all.)
-> >
-> > Apparently not. The drm core doesn't like to add properties in
-> > late_register() callback. I just tried it and get this warning:
->
-> I kind of had a feeling this would be the case, thanks for checking.
+Hi Peter,
 
-Thinking about it again, it looks like there is a difference in
-creating a property and attaching a property. I'm wondering if drm
-would let me (unconditionally) create a property before registering,
-and attach it in late_register() only in case a privacy screen is
-detected. (If not present, I can destroy the property in
-late_register()). If this approach sound more promising, I can try it
-out.
+On Wed, 26 Feb 2020 11:27:58 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
->
-> >> 2) Provide a way to populate connector->acpi_device_id and
-> >> connector->acpi_handle on a per-connector basis. At least the device id
-> >> remains constant for the lifetime of the drm_device
-> >
-> > Are you confirming that the connector->acpi_device_id remains constant
-> > for the lifetime of the drm_device, as calculated in
-> > intel_acpi_device_id_update()?  Even in the face of external displays
-> > (monitors) being connected and disconnected during the lifetime of the
-> > system? If so, then I think we can have a solution.
->
-> First I thought so. Alas it does not hold for DP MST, where you can have
-> connectors added and removed dynamically. I think we could ensure they
-> stay the same for all other connectors though. I'm pretty sure this is
-> already the case; they get added/removed after all others.
->
-> Another thought, from the ACPI perspective, I'm not sure the dynamically
-> added/removed DP MST connectors should even have acpi handles. But
-> again, tying all this together with ACPI stuff is not something I am an
-> expert on.
+> On Mon, Feb 24, 2020 at 05:02:31PM -0500, Steven Rostedt wrote:
+> 
+> > The other is for the hwlat detector that measures the time it was in an
+> > NMI, as NMIs appear as a hardware latency too.
+> 
+> Yeah,.. I hate that one. But I ended up with this patch.
+> 
+> And yes, I know some of those notrace annotations are strictly
+> unnessecary due to Makefile crap, but having them is _SO_ much easier.
+> 
+> ---
+> Subject: x86,tracing: Robustify ftrace_nmi_enter()
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Mon Feb 24 23:40:29 CET 2020
+> 
+>   ftrace_nmi_enter()
+>      trace_hwlat_callback()
+>        trace_clock_local()
+>          sched_clock()
+>            paravirt_sched_clock()
+>            native_sched_clock()
+> 
+> All must not be traced or kprobed, it will be called from do_debug()
+> before the kprobe handler.
 
-I propose that we:
+As I found today, we need to make NOKPROBE on exit side too, and this
+covers exit side.
 
-1) Maintain a display_index[] array within the drm_dev, and increment
-as connectors are added.
-2) Initialize connector->acpi_device_id and and connector->acpi_handle
-while registering (one time per connector).
-3) Remove the code to update acpi_device_id on every resume.
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-It doesn't look like anyone on the DP MST side has cared for ACPI so
-far, so I doubt if we can do anything that might break MST currently.
-In other words, the above should not make things any worse for MST, if
-not better. For connectors other than MST, this should allow them to
-get ACPI handle and play with it, if they need.
+Thank you,
 
-WDYT?
 
-Thanks,
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/include/asm/paravirt.h |    2 +-
+>  arch/x86/kernel/tsc.c           |    7 +++++--
+>  include/linux/ftrace_irq.h      |    4 ++--
+>  kernel/trace/trace_clock.c      |    2 ++
+>  kernel/trace/trace_hwlat.c      |    4 +++-
+>  5 files changed, 13 insertions(+), 6 deletions(-)
+> 
+> --- a/arch/x86/include/asm/paravirt.h
+> +++ b/arch/x86/include/asm/paravirt.h
+> @@ -17,7 +17,7 @@
+>  #include <linux/cpumask.h>
+>  #include <asm/frame.h>
+>  
+> -static inline unsigned long long paravirt_sched_clock(void)
+> +static __always_inline unsigned long long paravirt_sched_clock(void)
+>  {
+>  	return PVOP_CALL0(unsigned long long, time.sched_clock);
+>  }
+> --- a/arch/x86/kernel/tsc.c
+> +++ b/arch/x86/kernel/tsc.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/percpu.h>
+>  #include <linux/timex.h>
+>  #include <linux/static_key.h>
+> +#include <linux/kprobes.h>
+>  
+>  #include <asm/hpet.h>
+>  #include <asm/timer.h>
+> @@ -207,7 +208,7 @@ static void __init cyc2ns_init_secondary
+>  /*
+>   * Scheduler clock - returns current time in nanosec units.
+>   */
+> -u64 native_sched_clock(void)
+> +notrace u64 native_sched_clock(void)
+>  {
+>  	if (static_branch_likely(&__use_tsc)) {
+>  		u64 tsc_now = rdtsc();
+> @@ -228,6 +229,7 @@ u64 native_sched_clock(void)
+>  	/* No locking but a rare wrong value is not a big deal: */
+>  	return (jiffies_64 - INITIAL_JIFFIES) * (1000000000 / HZ);
+>  }
+> +NOKPROBE_SYMBOL(native_sched_clock);
+>  
+>  /*
+>   * Generate a sched_clock if you already have a TSC value.
+> @@ -240,10 +242,11 @@ u64 native_sched_clock_from_tsc(u64 tsc)
+>  /* We need to define a real function for sched_clock, to override the
+>     weak default version */
+>  #ifdef CONFIG_PARAVIRT
+> -unsigned long long sched_clock(void)
+> +notrace unsigned long long sched_clock(void)
+>  {
+>  	return paravirt_sched_clock();
+>  }
+> +NOKPROBE_SYMBOL(sched_clock);
+>  
+>  bool using_native_sched_clock(void)
+>  {
+> --- a/include/linux/ftrace_irq.h
+> +++ b/include/linux/ftrace_irq.h
+> @@ -7,7 +7,7 @@ extern bool trace_hwlat_callback_enabled
+>  extern void trace_hwlat_callback(bool enter);
+>  #endif
+>  
+> -static inline void ftrace_nmi_enter(void)
+> +static __always_inline void ftrace_nmi_enter(void)
+>  {
+>  #ifdef CONFIG_HWLAT_TRACER
+>  	if (trace_hwlat_callback_enabled)
+> @@ -15,7 +15,7 @@ static inline void ftrace_nmi_enter(void
+>  #endif
+>  }
+>  
+> -static inline void ftrace_nmi_exit(void)
+> +static __always_inline void ftrace_nmi_exit(void)
+>  {
+>  #ifdef CONFIG_HWLAT_TRACER
+>  	if (trace_hwlat_callback_enabled)
+> --- a/kernel/trace/trace_clock.c
+> +++ b/kernel/trace/trace_clock.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/sched/clock.h>
+>  #include <linux/ktime.h>
+>  #include <linux/trace_clock.h>
+> +#include <linux/kprobes.h>
+>  
+>  /*
+>   * trace_clock_local(): the simplest and least coherent tracing clock.
+> @@ -44,6 +45,7 @@ u64 notrace trace_clock_local(void)
+>  
+>  	return clock;
+>  }
+> +NOKPROBE_SYMBOL(trace_clock_local);
+>  EXPORT_SYMBOL_GPL(trace_clock_local);
+>  
+>  /*
+> --- a/kernel/trace/trace_hwlat.c
+> +++ b/kernel/trace/trace_hwlat.c
+> @@ -43,6 +43,7 @@
+>  #include <linux/cpumask.h>
+>  #include <linux/delay.h>
+>  #include <linux/sched/clock.h>
+> +#include <linux/kprobes.h>
+>  #include "trace.h"
+>  
+>  static struct trace_array	*hwlat_trace;
+> @@ -137,7 +138,7 @@ static void trace_hwlat_sample(struct hw
+>  #define init_time(a, b)	(a = b)
+>  #define time_u64(a)	a
+>  
+> -void trace_hwlat_callback(bool enter)
+> +notrace void trace_hwlat_callback(bool enter)
+>  {
+>  	if (smp_processor_id() != nmi_cpu)
+>  		return;
+> @@ -156,6 +157,7 @@ void trace_hwlat_callback(bool enter)
+>  	if (enter)
+>  		nmi_count++;
+>  }
+> +NOKPROBE_SYMBOL(trace_hwlat_callback);
+>  
+>  /**
+>   * get_sample - sample the CPU TSC and look for likely hardware latencies
 
-Rajat
 
->
-> >> (why do we keep
-> >> updating it at every resume?!) but can we be sure ->acpi_handle does
-> >> too? (I don't really know my way around ACPI.)
-> >
-> > I don't understand why this was being updated on every resume in that
-> > case (this existed even before my patchset). I believe we do not need
-> > it. Yes, the ->acpi_handle will not change if the ->acpi_device_id
-> > does not change. I believe the way forward should then be to populate
-> > connector->acpi_device_id and connector->acpi_handle ONE TIME at the
-> > time of connector init (and not update it on every resume). Does this
-> > sound ok?
->
-> If a DP MST connector gets removed, should the other ACPI display
-> indexes after that shift, or remain the same? I really don't know.
->
-> BR,
-> Jani.
->
-> --
-> Jani Nikula, Intel Open Source Graphics Center
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
