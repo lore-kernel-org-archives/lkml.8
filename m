@@ -2,250 +2,199 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97CAC10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 21:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3E7C10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 21:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7523420684
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 21:03:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u/fYFypz"
+	by mail.kernel.org (Postfix) with ESMTP id 230DE2077C
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 21:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgCGVDD (ORCPT
+        id S1726239AbgCGVFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 16:03:03 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45765 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbgCGVDD (ORCPT
+        Sat, 7 Mar 2020 16:05:12 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:47557 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbgCGVFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 16:03:03 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so2902862pfg.12;
-        Sat, 07 Mar 2020 13:03:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9dUdKs486Qf2sNPUmggGQF9hkh/az1B9/gX/zjLCHfE=;
-        b=u/fYFypze6McXtHJzbV9f6SiPwk5OuT1dAEvq2UXtd6LTM7SgZdyz46JG+pQXi01Mv
-         dFq8ZBMNLKhLdTve2T45wjZb+fgMIVxXZwWm02IC/ogLlOwKiGh2pM2ppatoWjZ/GYzn
-         h4bzsat7WOcAvlBkI5PYBnuOss13GiM6Fj78WipsxpWg9hPzuKq2QQ6m2dXxLky6eg9+
-         LvcXO3ntdPTDW27snZrrPh2s5rrsaR+026VbplOSWd4vhY2x2jD6Rkcxo+nZfcpbEChC
-         Uo+Jd6GAcMwcdt1Iw3erDlsVKJ3f01OHlR7A11f2r1/6LfQxsWTosWIwQXspMVR6YjyX
-         yRAA==
+        Sat, 7 Mar 2020 16:05:11 -0500
+Received: by mail-il1-f200.google.com with SMTP id a4so4455611ili.14
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 13:05:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9dUdKs486Qf2sNPUmggGQF9hkh/az1B9/gX/zjLCHfE=;
-        b=tMOB5BlQJk31YByso/xcLDjeBKVsf5llKbyYDYSf99uckRr8KCFMfEE4o8ZjLCrcuj
-         Kbik2HJ5TMksuKTWDlA6klccimI/G95paYNuGdz42CLLzL4HKKgLVbbedfvbf6udWwIH
-         2W5CHFaQ3I+Ah5lz0Y/w7qqqJJZJDCmR3vQyvn0R+ZW79OQHW5kZdZPVkf8rSGfnpxkC
-         iKnyjN/fgKpQXMCPqdivdghaVtEj8wwg36a5wBdWCDNter0XIY0Bgrxw4iyQPcfOOIek
-         UgtLKvt7fJgqL0BeK4UQJb5PkaaAJSchh0w1xWr8wbxeSnPRsBf1tdAosdW6Aerobqx3
-         zUHQ==
-X-Gm-Message-State: ANhLgQ0B/ve+4CBdxt/okHvrNub1p3+Qk/wsgejpepLkhrXMtXCtS2u5
-        c262mTY5zvBFDKoTGmCQkrE=
-X-Google-Smtp-Source: ADFU+vuDAIugF+nu1N5hw3f9J43H6ybj5hMWrUQXj/Jm25hpsK3juvORKw8Z/MD73jQcZqvhzqLYfw==
-X-Received: by 2002:a65:404d:: with SMTP id h13mr9191507pgp.156.1583614981676;
-        Sat, 07 Mar 2020 13:03:01 -0800 (PST)
-Received: from SARKAR ([43.224.157.39])
-        by smtp.gmail.com with ESMTPSA id a9sm39479931pfo.35.2020.03.07.13.03.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 13:03:01 -0800 (PST)
-Message-ID: <5e640c05.1c69fb81.4dd6f.a3c8@mx.google.com>
-X-Google-Original-Message-ID: <20200307210256.GC12716@rohitsarkar5398@gmail.com>
-Date:   Sun, 8 Mar 2020 02:32:56 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alexandru.ardelean@analog.com, dragos.bogdan@analog.com
-Subject: Re: [PATCH v4] iio: adc: max1363: replace uses of mlock
-References: <5e6355a8.1c69fb81.36f2c.ab37@mx.google.com>
- <20200307141946.79661dd0@archlinux>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=O1ccFeNcaK8O1b3uUp4LiaEXL8aJeslQL+A0Zwji8U0=;
+        b=VPzb7imKYurzm7RN91OoneMIy4ruVu4OqLIOPgSrbEzkNbS00WiRY70X1++MWnvJ4P
+         j6sOvifNg6QADB8zCni+mwFvWY8jfSGWvWGyNPpFbnhDiS+t8lgqUwPcids6LmTjxQA+
+         6pbkkbbRczu5FUc8HuUeG0nVfggrdd103bWAIAKjk0ajynQVuGk/QEbZyVJUH+tXkknw
+         eT7RT4/4QoQgr4iM/r3KGRw6dc7X4cwqiawCMnXJqRhpzVYoLOn+Y+bg9HVEWi7bh6J8
+         S/FsYfyIfOzHR8bXKEtQb6VSMZCAmbb4uuFGkKjZXz1Hypguu1wUJA0b7dAfsN4eC6TK
+         r68A==
+X-Gm-Message-State: ANhLgQ1b39SNZ8rUkP+UvbU/4txv/vKsAve9CCSA/nDa/7xrXChGIbE6
+        VLn8Y0GW0PtFrs4h7jnknGS+5lVZfs/ussLgXtQk7uGGtVuX
+X-Google-Smtp-Source: ADFU+vuUZiUcXNLMejnvQX9m1BhaeK/4+otxEb29NkXyHXCgmY51ipzqKu0Rt6/WI/MsIsqGUJQaCqk4xGwKgwwhj0Wn6XLSF8CH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200307141946.79661dd0@archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a92:d09:: with SMTP id 9mr8484060iln.191.1583615110700;
+ Sat, 07 Mar 2020 13:05:10 -0800 (PST)
+Date:   Sat, 07 Mar 2020 13:05:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000022640205a04a20d8@google.com>
+Subject: linux-next test error: BUG: using __this_cpu_read() in preemptible
+ code in __mod_memcg_state
+From:   syzbot <syzbot+826543256ed3b8c37f62@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mhocko@kernel.org,
+        syzkaller-bugs@googlegroups.com, vdavydov.dev@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 02:19:46PM +0000, Jonathan Cameron wrote:
-> On Sat, 7 Mar 2020 13:34:51 +0530
-> Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
-> 
-> > Replace usage indio_dev's mlock with either local lock or
-> > iio_device_claim_direct_mode.
-> > 
-> > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
-> 
-> There is a subtlety in here (which is why this one never
-> got cleaned up before).  We need to protect against:
-> 
-> 1) Driver state being accessed from multiple places concurrently.
->    That will use your new lock.
-> 2) Doing actions that cannot occur if in buffered mode.  The
->    claim_direct_mode stuff is for that.
-I did consider using both, the local driver lock and the claim_direct in
-some places, however I noticed that the claim_direct_mode internally uses
-the mlock, hence I didnt think it was necessary to set the local lock as
-well, as according to my understanding once a process acquires the mlock
-no other process can run the critical section before the initial process
-releases the mlock. Thus the driver state also remains consistent.
+Hello,
 
-> 3) Prevent us enabling monitor mode when in buffered mode, or
->    buffered mode when in monitor mode (because it's really
->    fiddly to support both given the odd way this hardware
->    works and I never bothered).  That requires making sure
->    direct mode is claimed before trying to enable the monitor
->    mode and also that we don't enable buffered mode. Now interestingly
->    there doesn't actually seem to be anything stopping buffered mode
->    if monitor mode is on.  Probably a bug, but I'd be nervous about
->    fixing that without test hardware.
-> 
-> Ignoring that last subtle bit, we sometimes for 1 and 2 need to take
-> both locks.  We can't be in buffered mode and we need to edit
-> local state.
-> 
-> Jonathan
-> 
-> > ---
-> 
-> That's better :)  I should have looked at v4 before v3 I guess.
-> 
-Forgot to add the changelog in v3 :) . Should have mentioned that
-explicitly, my bad!
-> > Changelog v3 -> v4
-> > * Fix indentation
-> > 
-> > Changelog v2 -> v3
-> > * use iio_device_claim_direct when switching modes
-> > * replace mlock usage in max1363_write_event_config
-> > 
-> > Changelog v1 -> v2
-> > * Fix indentation
-> > 
-> >  drivers/iio/adc/max1363.c | 24 +++++++++++++++---------
-> >  1 file changed, 15 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> > index 5c2cc61b666e..a1550c0b4c0a 100644
-> > --- a/drivers/iio/adc/max1363.c
-> > +++ b/drivers/iio/adc/max1363.c
-> > @@ -150,6 +150,7 @@ struct max1363_chip_info {
-> >   * @current_mode:	the scan mode of this chip
-> >   * @requestedmask:	a valid requested set of channels
-> >   * @reg:		supply regulator
-> > + * @lock		lock to ensure state is consistent
-> >   * @monitor_on:		whether monitor mode is enabled
-> >   * @monitor_speed:	parameter corresponding to device monitor speed setting
-> >   * @mask_high:		bitmask for enabled high thresholds
-> > @@ -169,6 +170,7 @@ struct max1363_state {
-> >  	const struct max1363_mode	*current_mode;
-> >  	u32				requestedmask;
-> >  	struct regulator		*reg;
-> > +	struct mutex			lock;
-> >  
-> >  	/* Using monitor modes and buffer at the same time is
-> >  	   currently not supported */
-> > @@ -364,7 +366,9 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
-> >  	struct max1363_state *st = iio_priv(indio_dev);
-> >  	struct i2c_client *client = st->client;
-> >  
-> > -	mutex_lock(&indio_dev->mlock);
-> > +	ret = iio_device_claim_direct_mode(indio_dev);
-> 
-> So this protects against change of state from polled to buffered mode.
-> Great.  However, we also use state in here which should be protected
-> by the local lock.  The solution is to take that local lock as well.
-> 
-> > +	if (ret < 0)
-> > +		goto error_ret;
-> >  	/*
-> >  	 * If monitor mode is enabled, the method for reading a single
-> >  	 * channel will have to be rather different and has not yet
-> > @@ -372,7 +376,7 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
-> >  	 *
-> >  	 * Also, cannot read directly if buffered capture enabled.
-> >  	 */
-> > -	if (st->monitor_on || iio_buffer_enabled(indio_dev)) {
-> > +	if (st->monitor_on) {
-> >  		ret = -EBUSY;
-> >  		goto error_ret;
-> >  	}
-> > @@ -404,8 +408,9 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
-> >  		data = rxbuf[0];
-> >  	}
-> >  	*val = data;
-> > +
-> >  error_ret:
-> > -	mutex_unlock(&indio_dev->mlock);
-> > +	iio_device_release_direct_mode(indio_dev);
-> >  	return ret;
-> >  
-> >  }
-> > @@ -705,9 +710,9 @@ static ssize_t max1363_monitor_store_freq(struct device *dev,
-> >  	if (!found)
-> >  		return -EINVAL;
-> >  
-> > -	mutex_lock(&indio_dev->mlock);
-> > +	mutex_lock(&st->lock);
-> >  	st->monitor_speed = i;
-> > -	mutex_unlock(&indio_dev->mlock);
-> > +	mutex_unlock(&st->lock);
-> >  
-> >  	return 0;
-> >  }
-> > @@ -810,12 +815,12 @@ static int max1363_read_event_config(struct iio_dev *indio_dev,
-> >  	int val;
-> >  	int number = chan->channel;
-> >  
-> > -	mutex_lock(&indio_dev->mlock);
-> > +	mutex_lock(&st->lock);
-> >  	if (dir == IIO_EV_DIR_FALLING)
-> >  		val = (1 << number) & st->mask_low;
-> >  	else
-> >  		val = (1 << number) & st->mask_high;
-> > -	mutex_unlock(&indio_dev->mlock);
-> > +	mutex_unlock(&st->lock);
-> >  
-> >  	return val;
-> >  }
-> > @@ -962,7 +967,7 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
-> >  	u16 unifiedmask;
-> >  	int number = chan->channel;
-> >  
-> > -	mutex_lock(&indio_dev->mlock);
-> > +	iio_device_claim_direct_mode(indio_dev);
-> 
-> So the question is whether we are stopping this changing because
-> we are in buffered mode or because it's local state...
-> 
-> >  	unifiedmask = st->mask_low | st->mask_high;
-> >  	if (dir == IIO_EV_DIR_FALLING) {
-> >  
-> > @@ -989,7 +994,7 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
-> >  
-> >  	max1363_monitor_mode_update(st, !!(st->mask_high | st->mask_low));
-> >  error_ret:
-> > -	mutex_unlock(&indio_dev->mlock);
-> > +	iio_device_release_direct_mode(indio_dev);
-> >  
-> >  	return ret;
-> >  }
-> > @@ -1587,6 +1592,7 @@ static int max1363_probe(struct i2c_client *client,
-> >  
-> >  	st = iio_priv(indio_dev);
-> >  
-> > +	mutex_init(&st->lock);
-> >  	st->reg = devm_regulator_get(&client->dev, "vcc");
-> >  	if (IS_ERR(st->reg)) {
-> >  		ret = PTR_ERR(st->reg);
-> 
+syzbot found the following crash on:
+
+HEAD commit:    b86a6a24 Add linux-next specific files for 20200306
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1766b731e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9c79dccc623ccc6f
+dashboard link: https://syzkaller.appspot.com/bug?extid=826543256ed3b8c37f62
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+826543256ed3b8c37f62@syzkaller.appspotmail.com
+
+check_preemption_disabled: 3 callbacks suppressed
+BUG: using __this_cpu_read() in preemptible [00000000] code: syz-fuzzer/9432
+caller is __mod_memcg_state+0x27/0x1a0 mm/memcontrol.c:689
+CPU: 1 PID: 9432 Comm: syz-fuzzer Not tainted 5.6.0-rc4-next-20200306-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ __this_cpu_preempt_check.cold+0x84/0x90 lib/smp_processor_id.c:64
+ __mod_memcg_state+0x27/0x1a0 mm/memcontrol.c:689
+ __split_huge_page mm/huge_memory.c:2575 [inline]
+ split_huge_page_to_list+0x124b/0x3380 mm/huge_memory.c:2862
+ split_huge_page include/linux/huge_mm.h:167 [inline]
+ madvise_free_huge_pmd+0x873/0xb90 mm/huge_memory.c:1766
+ madvise_free_pte_range+0x6ff/0x2650 mm/madvise.c:584
+ walk_pmd_range mm/pagewalk.c:89 [inline]
+ walk_pud_range mm/pagewalk.c:160 [inline]
+ walk_p4d_range mm/pagewalk.c:193 [inline]
+ walk_pgd_range mm/pagewalk.c:229 [inline]
+ __walk_page_range+0xcfb/0x2070 mm/pagewalk.c:331
+ walk_page_range+0x1bd/0x3a0 mm/pagewalk.c:427
+ madvise_free_single_vma+0x384/0x550 mm/madvise.c:731
+ madvise_dontneed_free mm/madvise.c:819 [inline]
+ madvise_vma mm/madvise.c:958 [inline]
+ do_madvise mm/madvise.c:1161 [inline]
+ do_madvise+0x5ba/0x1b80 mm/madvise.c:1084
+ __do_sys_madvise mm/madvise.c:1189 [inline]
+ __se_sys_madvise mm/madvise.c:1187 [inline]
+ __x64_sys_madvise+0xae/0x120 mm/madvise.c:1187
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x460bf7
+Code: 8b 24 24 48 8b 6c 24 10 48 83 c4 18 c3 cc cc cc cc cc cc 48 8b 7c 24 08 48 8b 74 24 10 8b 54 24 18 48 c7 c0 1c 00 00 00 0f 05 <89> 44 24 20 c3 cc cc cc cc 48 8b 7c 24 08 8b 74 24 10 8b 54 24 14
+RSP: 002b:00007ffd6e086670 EFLAGS: 00000246 ORIG_RAX: 000000000000001c
+RAX: ffffffffffffffda RBX: 0000000000000008 RCX: 0000000000460bf7
+RDX: 0000000000000008 RSI: 000000000000a000 RDI: 000000c00029a000
+RBP: 00007ffd6e0866b0 R08: 000000c000200000 R09: 000000c0002a4000
+R10: 00007fffffffffff R11: 0000000000000246 R12: 0000000000000007
+R13: 00007f30cae546d0 R14: 0000000000000080 R15: 00000000000000fa
+BUG: using __this_cpu_add() in preemptible [00000000] code: syz-fuzzer/9432
+caller is __mod_memcg_state+0xca/0x1a0 mm/memcontrol.c:697
+CPU: 1 PID: 9432 Comm: syz-fuzzer Not tainted 5.6.0-rc4-next-20200306-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ __this_cpu_preempt_check.cold+0x84/0x90 lib/smp_processor_id.c:64
+ __mod_memcg_state+0xca/0x1a0 mm/memcontrol.c:697
+ __split_huge_page mm/huge_memory.c:2575 [inline]
+ split_huge_page_to_list+0x124b/0x3380 mm/huge_memory.c:2862
+ split_huge_page include/linux/huge_mm.h:167 [inline]
+ madvise_free_huge_pmd+0x873/0xb90 mm/huge_memory.c:1766
+ madvise_free_pte_range+0x6ff/0x2650 mm/madvise.c:584
+ walk_pmd_range mm/pagewalk.c:89 [inline]
+ walk_pud_range mm/pagewalk.c:160 [inline]
+ walk_p4d_range mm/pagewalk.c:193 [inline]
+ walk_pgd_range mm/pagewalk.c:229 [inline]
+ __walk_page_range+0xcfb/0x2070 mm/pagewalk.c:331
+ walk_page_range+0x1bd/0x3a0 mm/pagewalk.c:427
+ madvise_free_single_vma+0x384/0x550 mm/madvise.c:731
+ madvise_dontneed_free mm/madvise.c:819 [inline]
+ madvise_vma mm/madvise.c:958 [inline]
+ do_madvise mm/madvise.c:1161 [inline]
+ do_madvise+0x5ba/0x1b80 mm/madvise.c:1084
+ __do_sys_madvise mm/madvise.c:1189 [inline]
+ __se_sys_madvise mm/madvise.c:1187 [inline]
+ __x64_sys_madvise+0xae/0x120 mm/madvise.c:1187
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x460bf7
+Code: 8b 24 24 48 8b 6c 24 10 48 83 c4 18 c3 cc cc cc cc cc cc 48 8b 7c 24 08 48 8b 74 24 10 8b 54 24 18 48 c7 c0 1c 00 00 00 0f 05 <89> 44 24 20 c3 cc cc cc cc 48 8b 7c 24 08 8b 74 24 10 8b 54 24 14
+RSP: 002b:00007ffd6e086670 EFLAGS: 00000246 ORIG_RAX: 000000000000001c
+RAX: ffffffffffffffda RBX: 0000000000000008 RCX: 0000000000460bf7
+RDX: 0000000000000008 RSI: 000000000000a000 RDI: 000000c00029a000
+RBP: 00007ffd6e0866b0 R08: 000000c000200000 R09: 000000c0002a4000
+R10: 00007fffffffffff R11: 0000000000000246 R12: 0000000000000007
+R13: 00007f30cae546d0 R14: 0000000000000080 R15: 00000000000000fa
+BUG: using __this_cpu_write() in preemptible [00000000] code: syz-fuzzer/9432
+caller is __mod_memcg_state+0x87/0x1a0 mm/memcontrol.c:702
+CPU: 1 PID: 9432 Comm: syz-fuzzer Not tainted 5.6.0-rc4-next-20200306-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ __this_cpu_preempt_check.cold+0x84/0x90 lib/smp_processor_id.c:64
+ __mod_memcg_state+0x87/0x1a0 mm/memcontrol.c:702
+ __split_huge_page mm/huge_memory.c:2575 [inline]
+ split_huge_page_to_list+0x124b/0x3380 mm/huge_memory.c:2862
+ split_huge_page include/linux/huge_mm.h:167 [inline]
+ madvise_free_huge_pmd+0x873/0xb90 mm/huge_memory.c:1766
+ madvise_free_pte_range+0x6ff/0x2650 mm/madvise.c:584
+ walk_pmd_range mm/pagewalk.c:89 [inline]
+ walk_pud_range mm/pagewalk.c:160 [inline]
+ walk_p4d_range mm/pagewalk.c:193 [inline]
+ walk_pgd_range mm/pagewalk.c:229 [inline]
+ __walk_page_range+0xcfb/0x2070 mm/pagewalk.c:331
+ walk_page_range+0x1bd/0x3a0 mm/pagewalk.c:427
+ madvise_free_single_vma+0x384/0x550 mm/madvise.c:731
+ madvise_dontneed_free mm/madvise.c:819 [inline]
+ madvise_vma mm/madvise.c:958 [inline]
+ do_madvise mm/madvise.c:1161 [inline]
+ do_madvise+0x5ba/0x1b80 mm/madvise.c:1084
+ __do_sys_madvise mm/madvise.c:1189 [inline]
+ __se_sys_madvise mm/madvise.c:1187 [inline]
+ __x64_sys_madvise+0xae/0x120 mm/madvise.c:1187
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x460bf7
+Code: 8b 24 24 48 8b 6c 24 10 48 83 c4 18 c3 cc cc cc cc cc cc 48 8b 7c 24 08 48 8b 74 24 10 8b 54 24 18 48 c7 c0 1c 00 00 00 0f 05 <89> 44 24 20 c3 cc cc cc cc 48 8b 7c 24 08 8b 74 24 10 8b 54 24 14
+RSP: 002b:00007ffd6e086670 EFLAGS: 00000246 ORIG_RAX: 000000000000001c
+RAX: ffffffffffffffda RBX: 0000000000000008 RCX: 0000000000460bf7
+RDX: 0000000000000008 RSI: 000000000000a000 RDI: 000000c00029a000
+RBP: 00007ffd6e0866b0 R08: 000000c000200000 R09: 000000c0002a4000
+R10: 00007fffffffffff R11: 0000000000000246 R12: 0000000000000007
+R13: 00007f30cae546d0 R14: 0000000000000080 R15: 00000000000000fa
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
