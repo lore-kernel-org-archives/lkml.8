@@ -2,126 +2,127 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED89C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 23:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71BAC10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 23:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DACFA2075A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 23:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD762206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 23:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583624867;
-	bh=sO2549TXeIeA/LiuWHdqg4t8QGOOV438IVO1eJHrkPU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=T+F1HzC63DfXPJqN5vmbjXftlLaF9UsWvWdPxYT/gMrLcI+XCyuuJVmeOGwLNdmFl
-	 hd1VRHbOSLzCPk1eE0oQBmZW5iuXyo/Q3CT5yDf0wxwmSLyIJIGU7FwlZHM+MC8q5E
-	 oWUR4QYbX5i+zN8LUc2LtYOGu7cTz54MLFDyzymw=
+	s=default; t=1583625287;
+	bh=VVsyNzo2F5KuxEt/5CP/yxqltHQWAAUGynUzhXuXthk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T8GGpLHVQ5MzWoGgeweFBOhrp2jZIeGTKM4hRfS5zpBIY1pBDJ34X1VdRWs76TCZi
+	 iSvjVNgOZhH+DQKsR9UH7nKgmM0IKpNqXWtZAwzacwqVCPa1X7q0YU7Le8KFiuMeSo
+	 xi/eTFr7h5uJrmug8scYVeUpk00QCp2UEL96M6UQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgCGXrq (ORCPT
+        id S1726281AbgCGXyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 18:47:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43408 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 18:54:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgCGXrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 18:47:46 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        id S1726174AbgCGXyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 18:54:39 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15B582070A;
-        Sat,  7 Mar 2020 23:47:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F3A4206D7;
+        Sat,  7 Mar 2020 23:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583624865;
-        bh=sO2549TXeIeA/LiuWHdqg4t8QGOOV438IVO1eJHrkPU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=retgJCHFk2bDFrUXZSlHH4zCjGooNSMmNg1dTKxvBs96tHWW3KF/zkp2bwFn5mIca
-         8nqLP7nJFnULtVzV9JqCSH1p4kOIwZDSnaxEUPYFlHhlwNLZqwiIZlivrUVKyb6iVs
-         G65ErDyoEdgzPQnwTjpN41sZ2GJddNk9wQ331gJs=
-Date:   Sat, 7 Mar 2020 15:47:44 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Jaewon Kim <jaewon31.kim@samsung.com>
-Cc:     walken@google.com, bp@suse.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com
-Subject: Re: [PATCH] mm: mmap: show vm_unmapped_area error log
-Message-Id: <20200307154744.acd523831b45efa8d0fc1dfa@linux-foundation.org>
-In-Reply-To: <5E61EAB6.5080609@samsung.com>
-References: <CGME20200304030211epcas1p4da8cb569947aefb3aad1da039aaabce4@epcas1p4.samsung.com>
-        <20200304030206.1706-1-jaewon31.kim@samsung.com>
-        <5E605749.9050509@samsung.com>
-        <20200305202443.8de3598558336b1d75afbba7@linux-foundation.org>
-        <5E61EAB6.5080609@samsung.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1583625279;
+        bh=VVsyNzo2F5KuxEt/5CP/yxqltHQWAAUGynUzhXuXthk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K5dd3gLjcMnryPgXE9LvLVQSTxHw08pryu4adtWNb/eHhq+mnCdgQKjRmfqPa+36Q
+         4Z4vN1lV1sFu/cx65Wc3MFqXpGNzfxSP3N5cgHO7IQTKhCHEgjcb5AWdRe0mhgGLQI
+         KhygizvaajFvQeLSdfIdrkPxWZ5ErhmOgNMHbNas=
+Date:   Sat, 7 Mar 2020 15:54:37 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     glider@google.com
+Cc:     syzbot <syzbot+af962bf9e7e27bccd025@syzkaller.appspotmail.com>,
+        len.brown@intel.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, pavel@ucw.cz, rjw@rjwysocki.net,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KMSAN: uninit-value in snapshot_compat_ioctl
+Message-ID: <20200307235437.GW15444@sol.localdomain>
+References: <000000000000938a57059f7cafe4@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000938a57059f7cafe4@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 15:16:22 +0900 Jaewon Kim <jaewon31.kim@samsung.com> wrote:
-
+On Wed, Feb 26, 2020 at 07:59:13AM -0800, syzbot wrote:
+> Hello,
 > 
-> Even on 64 bit kernel, the mmap failure can happen for a 32 bit task.
-> Virtual memory space shortage of a task on mmap is reported to userspace
-> as -ENOMEM. It can be confused as physical memory shortage of overall
-> system.
+> syzbot found the following crash on:
 > 
-> The vm_unmapped_area can be called to by some drivers or other kernel
-> core system like filesystem. It can be hard to know which code layer
-> returns the -ENOMEM.
+> HEAD commit:    8bbbc5cf kmsan: don't compile memmove
+> git tree:       https://github.com/google/kmsan.git master
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11514265e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
+> dashboard link: https://syzkaller.appspot.com/bug?extid=af962bf9e7e27bccd025
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> userspace arch: i386
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a89109e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=176f774ee00000
 > 
-> Print error log of vm_unmapped_area with rate limited. Without rate
-> limited, soft lockup ocurrs on infinite mmap sytem call.
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+af962bf9e7e27bccd025@syzkaller.appspotmail.com
 > 
-> i.e.)
-> <4>[   68.556470]  [2:  mmap_infinite:12363] mmap: vm_unmapped_area err:-12 total_vm:0xf4c08 flags:0x1 len:0x100000 low:0x8000 high:0xf4583000 mask:0x0 offset:0x0
+> =====================================================
+> BUG: KMSAN: uninit-value in kmsan_check_memory+0xd/0x10 mm/kmsan/kmsan_hooks.c:413
+> CPU: 1 PID: 11659 Comm: syz-executor923 Not tainted 5.6.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+>  kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+>  kmsan_internal_check_memory+0x358/0x3d0 mm/kmsan/kmsan.c:457
+>  kmsan_check_memory+0xd/0x10 mm/kmsan/kmsan_hooks.c:413
+>  snapshot_compat_ioctl+0x559/0x650 kernel/power/user.c:422
+>  __do_compat_sys_ioctl fs/ioctl.c:857 [inline]
+>  __se_compat_sys_ioctl+0x57c/0xed0 fs/ioctl.c:808
+>  __ia32_compat_sys_ioctl+0xd9/0x110 fs/ioctl.c:808
+>  do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+>  do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+>  entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+> RIP: 0023:0xf7f70d99
+> Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+> RSP: 002b:00000000ffec145c EFLAGS: 00000213 ORIG_RAX: 0000000000000036
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000080083313
+> RDX: 0000000000000000 RSI: 00000000080ea078 RDI: 00000000ffec14b0
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 > 
-> ...
->
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
+> Uninit was stored to memory at:
+>  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+>  kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+>  __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
+>  snapshot_compat_ioctl+0x5e0/0x650 kernel/power/user.c:422
+>  __do_compat_sys_ioctl fs/ioctl.c:857 [inline]
+>  __se_compat_sys_ioctl+0x57c/0xed0 fs/ioctl.c:808
+>  __ia32_compat_sys_ioctl+0xd9/0x110 fs/ioctl.c:808
+>  do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+>  do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+>  entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+> 
+> Local variable ----offset@snapshot_compat_ioctl created at:
+>  get_current arch/x86/include/asm/current.h:15 [inline]
+>  snapshot_compat_ioctl+0x324/0x650 kernel/power/user.c:418
+>  get_current arch/x86/include/asm/current.h:15 [inline]
+>  snapshot_compat_ioctl+0x324/0x650 kernel/power/user.c:418
+> 
+> Bytes 0-7 of 8 are uninitialized
+> Memory access of size 8 starts at ffff9946c156bd30
+> =====================================================
 
-This patch was messed up by your email client (tabs expanded to spaces).
-
-> @@ -27,6 +27,7 @@
->  #include <linux/memremap.h>
->  #include <linux/overflow.h>
->  #include <linux/sizes.h>
-> +#include <linux/ratelimit.h>
->  
->  struct mempolicy;
->  struct anon_vma;
-> @@ -2379,10 +2380,20 @@ extern unsigned long unmapped_area_topdown(struct vm_unmapped_area_info *info);
->  static inline unsigned long
->  vm_unmapped_area(struct vm_unmapped_area_info *info)
->  {
-> +    unsigned long addr;
-> +
->      if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
-> -        return unmapped_area_topdown(info);
-> +        addr = unmapped_area_topdown(info);
->      else
-> -        return unmapped_area(info);
-> +        addr = unmapped_area(info);
-> +
-> +    if (IS_ERR_VALUE(addr)) {
-> +        pr_warn_ratelimited("%s err:%ld total_vm:0x%lx flags:0x%lx len:0x%lx low:0x%lx high:0x%lx mask:0x%lx offset:0x%lx\n",
-> +            __func__, addr, current->mm->total_vm, info->flags,
-> +            info->length, info->low_limit, info->high_limit,
-> +            info->align_mask, info->align_offset);
-> +    }
-> +    return addr;
->  }
-
-pr_warn_ratelimited() contains static state.  Using it in an inlined
-function means that each callsite gets its own copy of that state, so
-we're ratelimiting the vm_unmapped_area() output on a per-callsite
-basis, not on a kernelwide basis.
-
-Maybe that's what we want, maybe it's not.  But I think
-vm_unmapped_area() has become too large to be inlined anyway, so I
-suggest making it a regular out-of-line function in mmap.c.  I don't
-believe that function needs to be exported to modules.
-
+Looks like a KMSAN false positive?  As far as I can tell, the memory is being
+initialized by put_user() called under set_fs(KERNEL_DS).
