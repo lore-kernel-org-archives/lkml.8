@@ -2,129 +2,157 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D73C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C451CC10F27
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E1A2073D
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C0420674
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583596346;
+	bh=Q5OgmfAuoQXNCqMtFrWXCGyZGPd5S7/Agtzu3prSlIk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BVs4MjAvK30mb4dG3emWrnCo6F+ck2HOoRV1EFBaXJxBO1unQvWa5b7za7RLtWM/J
+	 QHXrSRfeOf4KRT1jALuv1jNTyihYleCn3DdnWWww6chyN/3oCA/e0dfuvkGogGoQbC
+	 88oiSKHSTMv686RuSx+mu2XCMHH68BrG3PGTFYZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgCGPwW convert rfc822-to-8bit (ORCPT
+        id S1726346AbgCGPwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:52:22 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55636 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgCGPwV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:52:21 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jAbkP-0006ge-Qx; Sat, 07 Mar 2020 16:52:17 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 37D92104088; Sat,  7 Mar 2020 16:52:17 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [patch 2/2] x86/kvm: Sanitize kvm_async_pf_task_wait()
-In-Reply-To: <CALCETrWc0wM1x-mAcKCPRUiGtzONtXiNVMFgWZwkRD3v3K3jsA@mail.gmail.com>
-References: <20200306234204.847674001@linutronix.de> <20200307000259.448059232@linutronix.de> <CALCETrV74siTTHHWRPv+Gz=YS3SAUA6eqB6FX1XaHKvZDCbaNg@mail.gmail.com> <87r1y4a3gw.fsf@nanos.tec.linutronix.de> <CALCETrWc0wM1x-mAcKCPRUiGtzONtXiNVMFgWZwkRD3v3K3jsA@mail.gmail.com>
-Date:   Sat, 07 Mar 2020 16:52:17 +0100
-Message-ID: <87d09o9n7y.fsf@nanos.tec.linutronix.de>
+        Sat, 7 Mar 2020 10:52:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbgCGPwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 10:52:24 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0157020674;
+        Sat,  7 Mar 2020 15:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583596343;
+        bh=Q5OgmfAuoQXNCqMtFrWXCGyZGPd5S7/Agtzu3prSlIk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RdH06yS6QRnangGMOBtGsnbpXQfMYaoG4QRdhMXss9L3kcA3SwzjrIen7+y8/vZWJ
+         UFWJCMp4qocFeItVJmffS0nWuqqNv2+9YTOuyD7jC0qB1fadfaqZqdeb6fRGe7Y6h4
+         Mi9p2onjwof8LAuR4I70uy67xjjTRjnzT3IEN3zw=
+Date:   Sat, 7 Mar 2020 15:52:20 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] iio: light: gp2ap020a00f: fix
+ iio_triggered_buffer_{predisable,postenable} positions
+Message-ID: <20200307155220.2e238b0c@archlinux>
+In-Reply-To: <20200306111137.23572-1-alexandru.ardelean@analog.com>
+References: <20200304082653.19374-1-alexandru.ardelean@analog.com>
+        <20200306111137.23572-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Sat, Mar 7, 2020 at 2:01 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->> > What’s the local_irq_disable() here for? I would believe a
->> > lockdep_assert_irqs_disabled() somewhere in here would make sense.
->> > (Yes, I see you copied this from the old code. It’s still nonsense.)
->>
->> native_safe_halt() does:
->>
->>          STI
->>          HLT
->>
->> So the irq disable is required as the loop should exit with interrupts
->> disabled.
->
-> Oops, should have looked at what native_safe_halt() does.
->
->>
->> > I also find it truly bizarre that hlt actually works in this context.
->> > Does KVM in fact wake a HLTed guest that HLTed with IRQs off when a
->> > pending async pf is satisfied?  This would make sense if the wake
->> > event were an interrupt, but it’s not according to Paolo.
->>
->> See above. safe halt enables interrupts, which means IF == 1 and the
->> host sanity check for IF == 1 is satisfied.
->>
->> In fact, if e.g. some regular interrupt arrives before the page becomes
->> available and the guest entered the halt loop because the fault happened
->> inside a RCU read side critical section with preemption enabled, then
->> the interrupt might wake up another task, set need resched and this
->> other task can run.
->
-> Now I'm confused again.  Your patch is very careful not to schedule if
-> we're in an RCU read-side critical section, but the regular preemption
-> code (preempt_schedule_irq, etc) seems to be willing to schedule
-> inside an RCU read-side critical section.  Why is the latter okay but
-> not the async pf case?
+On Fri, 6 Mar 2020 13:11:37 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Preemption is fine, but voluntary schedule not. voluntary schedule might
-end up in idle if this is the last runnable task.
+> The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+> the poll functions.
+> 
+> For the predisable hook, the disable code should occur before detaching
+> the poll func, and for the postenable hook, the poll func should be
+> attached before the enable code.
+> 
+> This change moves the postenable/predisable hooks into the correct
+> positions.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-> Ignoring that, this still seems racy:
->
-> STI
-> nested #PF telling us to wake up
-> #PF returns
-> HLT
+Seems unlikely anyone who knows this driver well will respond, so
+applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to poke at it - maybe...
 
-You will say Ooops, should have looked .... when I tell you that the
-above cannot happen. From the SDM:
+There is an odd warning I'm getting in here on x86 builds but it
+has nothing to do with your patch so hopefully autobuilders won't
+moan about.
 
-  If IF = 0, maskable hardware interrupts remain inhibited on the
-  instruction boundary following an execution of STI.
+thanks,
 
-Otherwise safe_halt would not work at all :)
+Jonathan
 
-> doesn't this result in putting the CPU asleep for no good reason until
-> the next interrupt hits?
-
-No :)
-
->
->> > All this being said, the only remotely sane case is when regs->flags
->> > has IF==1. Perhaps this code should actually do:
->> >
->> > WARN_ON(!(regs->flags & X86_EFLAGS_IF));
->>
->> Yes, that want's to be somewhere early and also cover the async wake
->> case. Neither wake nor wait can be injected when IF == 0.
->
-> Sadly, wrmsr to turn off async pf will inject wakeups even if IF == 0.
-
-WHAT? That's fundamentally broken. Can you point me to the code in
-question?
-
-Thanks,
-
-        tglx
-
+> ---
+> 
+> Changelog v1 -> v2:
+> * Fix omitted compiler warnings: 'warning: unused label 'error_unlock' [-Wunused-label]'
+>   Reported-by: kbuild test robot <lkp@intel.com>
+> 
+>  drivers/iio/light/gp2ap020a00f.c | 23 ++++++++++++-----------
+>  1 file changed, 12 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/iio/light/gp2ap020a00f.c b/drivers/iio/light/gp2ap020a00f.c
+> index 4d70c5bf35da..7fbbce0d4bc7 100644
+> --- a/drivers/iio/light/gp2ap020a00f.c
+> +++ b/drivers/iio/light/gp2ap020a00f.c
+> @@ -1390,6 +1390,12 @@ static int gp2ap020a00f_buffer_postenable(struct iio_dev *indio_dev)
+>  
+>  	mutex_lock(&data->lock);
+>  
+> +	err = iio_triggered_buffer_postenable(indio_dev);
+> +	if (err < 0) {
+> +		mutex_unlock(&data->lock);
+> +		return err;
+> +	}
+> +
+>  	/*
+>  	 * Enable triggers according to the scan_mask. Enabling either
+>  	 * LIGHT_CLEAR or LIGHT_IR scan mode results in enabling ALS
+> @@ -1420,14 +1426,12 @@ static int gp2ap020a00f_buffer_postenable(struct iio_dev *indio_dev)
+>  		goto error_unlock;
+>  
+>  	data->buffer = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);
+> -	if (!data->buffer) {
+> +	if (!data->buffer)
+>  		err = -ENOMEM;
+> -		goto error_unlock;
+> -	}
+> -
+> -	err = iio_triggered_buffer_postenable(indio_dev);
+>  
+>  error_unlock:
+> +	if (err < 0)
+> +		iio_triggered_buffer_predisable(indio_dev);
+>  	mutex_unlock(&data->lock);
+>  
+>  	return err;
+> @@ -1436,14 +1440,10 @@ static int gp2ap020a00f_buffer_postenable(struct iio_dev *indio_dev)
+>  static int gp2ap020a00f_buffer_predisable(struct iio_dev *indio_dev)
+>  {
+>  	struct gp2ap020a00f_data *data = iio_priv(indio_dev);
+> -	int i, err;
+> +	int i, err = 0;
+>  
+>  	mutex_lock(&data->lock);
+>  
+> -	err = iio_triggered_buffer_predisable(indio_dev);
+> -	if (err < 0)
+> -		goto error_unlock;
+> -
+>  	for_each_set_bit(i, indio_dev->active_scan_mask,
+>  		indio_dev->masklength) {
+>  		switch (i) {
+> @@ -1465,7 +1465,8 @@ static int gp2ap020a00f_buffer_predisable(struct iio_dev *indio_dev)
+>  	if (err == 0)
+>  		kfree(data->buffer);
+>  
+> -error_unlock:
+> +	iio_triggered_buffer_predisable(indio_dev);
+> +
+>  	mutex_unlock(&data->lock);
+>  
+>  	return err;
 
