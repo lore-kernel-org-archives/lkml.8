@@ -2,150 +2,144 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0230BC10F00
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F703C10F27
 	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CDE2051A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:55:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="ylpat4kR"
+	by mail.kernel.org (Postfix) with ESMTP id 586B620656
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:55:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583574951;
+	bh=gQRp4hFTqo4KkDpvhpmcHmhosoj3bEke3t7VFR4Ae1w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Mfdg/XE2gMzU+Hqk7cKvLIdfY5cR1VFs3FNajFYLxQ7lL1EDDzvsLcC8piB0Ac95E
+	 mSXllwlYio0UZeIKmJDQu9pKtb3mWWFi/IZyT+gLCLAprAzqEfzChXmrhWveTr/5JL
+	 n8QcAtK45zJlvXjhHo7kJmPyN7PUxbxcvrWR4tlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgCGJyc (ORCPT
+        id S1726259AbgCGJyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 04:54:32 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35149 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgCGJyc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 04:54:32 -0500
-Received: by mail-lf1-f68.google.com with SMTP id z9so3875894lfa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 01:54:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+iY7vg8Db28lbZpkj8YbZ4nAiqLqC1ZkxS8MIhuLcMU=;
-        b=ylpat4kRdMth3tgWlvM26uho69yQ9OBDlJqz9C4W2FP/opded7R33Gs9dCZ441sDeE
-         XXcCUprakY2Zx3bRayE+q+uD4obMIAircprbTxdJYpe0/qTADFTqpBe8JJ2igckRHAvT
-         dP4JYIuo8Y/qjWN7nj4ykCDfVsEOCmPMALohd4iLGEzL4XbxBtw8A+esMWN4Y62zJU9t
-         eGNr4baLxZ2rUHx2gNf2f5QIze1ZEoBsuHtfznFaQerUm+yB8zo/NKsh2ibjgx4tEY6e
-         Hd8Xp1eCtoOc1T7H4kcg3+4wc1scUop9Bh1WiUdxKbXAe3XK/R1Nx3UcKD5Hdmv6qH/1
-         whIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+iY7vg8Db28lbZpkj8YbZ4nAiqLqC1ZkxS8MIhuLcMU=;
-        b=j3mB6jXlagV3Q1Ge+a+IeBEczHIonG9HVdlQ01afD9fK+8q1/+gK999JNXGJr13at1
-         I4u7q0iMt4td6zMuXb8Ocw1TWray3r+EUxIFhGrHK0wFqqZYgD+/1wMwXGlSPtoyiI5B
-         9NhNvEgFDlnfE7iEdjWdNRFYIfePgAjPOW58MppWJuYDG7QdokWfkNcwtPPwygoqmYGf
-         ncAyGJyNpBUi/jiTo72D2VA4co96l1vhMuwJ2sp9pogxcbOaTO65B36lyPX3gbCvpn1j
-         Xz46EC0aHBq+CDD6cM41Rs5G3PW2m+xnhg9qd2wuqgpehRzqec+tWqTprcHzGNy/8k8A
-         +76w==
-X-Gm-Message-State: ANhLgQ1+alRSptBWGL8swQz5n2n2EabTjZIM8U5kShP+vTTMrKsaYIKx
-        5ArQ9Ss7qaB7oIVftdmuTE1OoQ==
-X-Google-Smtp-Source: ADFU+vv6OIWzoXOg4mWHENdK4mbxgfXz8v6v9hX1jJMwhRRBJ60rFJUXuMg07DvgtCrrYsNkhjdr7Q==
-X-Received: by 2002:a05:6512:692:: with SMTP id t18mr4284908lfe.212.1583574870677;
-        Sat, 07 Mar 2020 01:54:30 -0800 (PST)
-Received: from ?IPv6:2a00:1fa0:402:864b:dd24:504:68eb:a9fe? ([2a00:1fa0:402:864b:dd24:504:68eb:a9fe])
-        by smtp.gmail.com with ESMTPSA id j17sm2554029ljc.0.2020.03.07.01.54.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Mar 2020 01:54:29 -0800 (PST)
-Subject: Re: [PATCH v4 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
-        gregkh@linuxfoundation.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, wahrenst@gmx.net
-References: <20200306114348.5172-1-nsaenzjulienne@suse.de>
- <20200306114348.5172-5-nsaenzjulienne@suse.de>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <b4fb58f0-6d51-657b-bcf6-5f4b0c798312@cogentembedded.com>
-Date:   Sat, 7 Mar 2020 12:54:27 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200306114348.5172-5-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 7 Mar 2020 04:54:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbgCGJyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 04:54:44 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DDBC2073D;
+        Sat,  7 Mar 2020 09:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583574884;
+        bh=gQRp4hFTqo4KkDpvhpmcHmhosoj3bEke3t7VFR4Ae1w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=U49/ZN5xSCyzsM/kraUH/xSsLapsiK4cis7pIBjBD0nMOJoWNVhakn2slJnjrZs7A
+         pX6CmHD9zoNFF0XLdZ55qFgfjLjWq8Z7V7gFOzxKYphWjMXElOTM2P5h+2koWGd+Pc
+         arFIlMBCwThbkHb3pWO+EKAL/P+mPE7J9tVAWzeI=
+Date:   Sat, 7 Mar 2020 18:54:39 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     "chengjian (D)" <cj.chengjian@huawei.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
+        <bobo.shaobowang@huawei.com>, <naveen.n.rao@linux.ibm.com>,
+        <anil.s.keshavamurthy@intel.com>, <davem@davemloft.net>
+Subject: Re: [PATCH] kretprobe: check re-registration of the same kretprobe
+ earlier
+Message-Id: <20200307185439.9e88f3c8b55a3f11923ea694@kernel.org>
+In-Reply-To: <9b122a6f-f5fa-3eb4-4fd7-f101b8aec205@huawei.com>
+References: <1583487306-81985-1-git-send-email-cj.chengjian@huawei.com>
+        <20200307002115.b96be2310cc553a922e1ba31@kernel.org>
+        <9b122a6f-f5fa-3eb4-4fd7-f101b8aec205@huawei.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Sat, 7 Mar 2020 10:16:35 +0800
+"chengjian (D)" <cj.chengjian@huawei.com> wrote:
 
-On 06.03.2020 14:43, Nicolas Saenz Julienne wrote:
+> 
+> On 2020/3/6 23:21, Masami Hiramatsu wrote:
+> > Hi Cheng,
+> >
+> > On Fri, 6 Mar 2020 17:35:06 +0800
+> > Cheng Jian <cj.chengjian@huawei.com> wrote:
+> >
+> >> Our system encountered a use-after-free when re-register a
+> >> same kretprobe. it access the hlist node in rp->free_instances
+> >> which has been released already.
+> >>
+> >> Prevent re-registration has been implemented for kprobe before,
+> >> but it's too late for kretprobe. We must check the re-registration
+> >> before re-initializing the kretprobe, otherwise it will destroy the
+> >> data and struct of the kretprobe registered, it can lead to memory
+> >> leak and use-after-free.
+> > I couldn't get how it cause use-after-free, but it causes memory leak.
+> > Anyway, if we can help to find a wrong usage, it might be good.
+> >
+> > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> >
+> > BTW, I think we should use WARN_ON() for this error, because this
+> > means the caller is completely buggy.
+> >
+> > Thank you,
+> 
+> Hi Masami
+> 
+> When we try to re-register the same kretprobe, the register_kprobe() 
+> return failed and try to free_rp_inst
+> 
+>      register_kretprobe()
+> 
+>          raw_spin_lock_init(&rp->lock);
+>          INIT_HLIST_HEAD(&rp->free_instances);    # re-init
+> 
+>          inst = kmalloc(sizeof(struct kretprobe_instance) + 
+> p->data_size, GFP_KERNEL); # re-alloc
+> 
+>          ret = register_kprobe(&rp->kp);  # failed
+> 
+>          free_rp_inst(rp);   # free all the free_instances
+> 
+> at the same time, the kretprobe registed handle(trigger), it tries to 
+> access the free_instances.
+> 
+> Since we broke the rp->lock and free_instances when re-registering, we 
+> are accessing the newly
+> 
+> allocated free_instances and it's being released.
+> 
+> pre_handler_kretprobe
+> 
+>      ri = hlist_entry(rp->free_instances.first, struct 
+> kretprobe_instance, hlist); # access the new free_instances. BOOM!!!
+> 
+>      hlist_del(&ri->hlist); #BOOM!!!
 
-> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> loaded directly from an EEPROM or, if not present, by the SoC's
-> VideCore. Inform VideCore that VL805 was just reset.
-> 
-> Also, as this creates a dependency between XHCI_PCI and VideoCore's
-> firmware interface, reflect that on the firmware interface Kconfg.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
-> 
-> Changes since v3:
->   - Add more complete error message.
->   - Add braces around if statement
-> 
-> Changes since v1:
->   - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
->     gets compiled when needed.
-> 
->   drivers/firmware/Kconfig      |  1 +
->   drivers/usb/host/pci-quirks.c | 16 ++++++++++++++++
->   2 files changed, 17 insertions(+)
-[...]
-> diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-> index beb2efa71341..452f5f12b042 100644
-> --- a/drivers/usb/host/pci-quirks.c
-> +++ b/drivers/usb/host/pci-quirks.c
-> @@ -16,6 +16,9 @@
->   #include <linux/export.h>
->   #include <linux/acpi.h>
->   #include <linux/dmi.h>
-> +
-> +#include <soc/bcm2835/raspberrypi-firmware.h>
-> +
->   #include "pci-quirks.h"
->   #include "xhci-ext-caps.h"
->   
-> @@ -1243,11 +1246,24 @@ static void quirk_usb_handoff_xhci(struct pci_dev *pdev)
->   
->   static void quirk_usb_early_handoff(struct pci_dev *pdev)
->   {
-> +	int ret;
-> +
->   	/* Skip Netlogic mips SoC's internal PCI USB controller.
->   	 * This device does not need/support EHCI/OHCI handoff
->   	 */
->   	if (pdev->vendor == 0x184e)	/* vendor Netlogic */
->   		return;
-> +
-> +	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483) {
-> +		ret = rpi_firmware_init_vl805(pdev);
-> +		if (ret) {
-> +			/* Firmware might be outdated, or something failed */
-> +			dev_warn(&pdev->dev, "Failed to load VL805's firmware: %d\n", ret);
-> +			dev_warn(&pdev->dev, "Will continue to attempt to work, "
-> +				 "but bad things might happen. You should fix this...\n");
+Ah, I see. I thought that you said ri is use-after-free, but in reality,
+rp is use-after-free (use-after-init). OK.
 
-    Don't break up the long kernel messages (checkpatch.pl should not complain 
-about them).
+> And the problem here is destructive, it destroyed all the data of the 
+> previously registered kretprobe,
+> it can lead to a system crash, memory leak, use-after-free and even some 
+> other unexpected behavior.
 
-[...]
+Yes, so I think we should do 
 
-MBR, Sergei
++	/* Return error if it's being re-registered */
++	ret = check_kprobe_rereg(&rp->kp);
++	if (WARN_ON(ret))
++		return ret;
+
+This will give a warning message to the developer.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
