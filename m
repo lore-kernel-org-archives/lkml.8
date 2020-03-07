@@ -2,83 +2,248 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E56FC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1CFC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59EB7206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C15206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:10:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jh4Gk6G8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgCGNIS (ORCPT
+        id S1726314AbgCGNKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:08:18 -0500
-Received: from unicorn.mansr.com ([81.2.72.234]:59430 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgCGNIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 08:08:17 -0500
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 165E615F0E; Sat,  7 Mar 2020 13:08:16 +0000 (GMT)
-From:   Mans Rullgard <mans@mansr.com>
-To:     Bin Liu <b-liu@ti.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: musb: fix crash with highmen PIO and usbmon
-Date:   Sat,  7 Mar 2020 13:07:20 +0000
-Message-Id: <20200307130720.16652-1-mans@mansr.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 7 Mar 2020 08:10:15 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41021 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgCGNKP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 08:10:15 -0500
+Received: by mail-oi1-f196.google.com with SMTP id i1so5482892oie.8;
+        Sat, 07 Mar 2020 05:10:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RwrGlWUeDdrZs72IT+J7vSx4hepf4WZav0X4UAXwBbg=;
+        b=jh4Gk6G8k3mK3s/gTGl2ObaH2xmSCBeX3xnIIwKu68MTiZ0oLJJ+1KGQIoqKe0hX5g
+         PhfJqlpFKa2kNj/QenEH36cekVlVRM+wEuVGNrkvwCdiyvDNhIJNlXSS2wVhIVPsjB9G
+         +65ZcEq5j7cElKuIqFHJkFWnSIAPp5Dm1UoYafYV+AQRwvP/VKWYehiizVpb7xQ2waQ5
+         +bMap4KfTlenQ9VTzsHXmZ0F97cCEPVBeNdGJddYAqZxXpkvMkf/U1emcugxnISnhOti
+         Tpa9PVP/WAnG+VBZWewVI4RsaD6dAMCyWv89DjnszpzmBKuHojbsfdi7usYUjWmqvKsH
+         kcLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RwrGlWUeDdrZs72IT+J7vSx4hepf4WZav0X4UAXwBbg=;
+        b=iWlYCbcvf4s5OVFwdIHKu/lsIZjQBdMfRIq0iOnTXWthXW3tpqrMKdqiOd0LfL18wq
+         coPTmijQk7UEgwbxRhqGuCGApggz4hTHcBhnradUZFXIjBW3UNkAC9RZoPAzt+fQ32OE
+         FrormN+y2BOpG1/CAdhvAcheJ30ALi8WteIByPI3cniaZ23Qh4MYwJ7+8URdlVdCLKWg
+         dOJgV4gvJQW0fYF+kAkqqaaAu/RvGy1RVKOn0eJLF9ML/D7Yk2SyW7ADd4fKBx0ABgb9
+         cU3oiIKDjBKaY+DyZ2yUOiRKgZYpY5Os+zXk1jTzRY8ojMDdPU+W9aC/v+nCL1vh3LG2
+         FuNQ==
+X-Gm-Message-State: ANhLgQ0lmbxt6EOZhTi1QT5QUG5qomC6ztVnsAcIJ1RaJOMmtbec2FWp
+        hw7TtNJQWc5tZyIUZxIv7nraeokLxWY4wP/a7ww=
+X-Google-Smtp-Source: ADFU+vsJVnZ/8WOsPjnjwHpe2WrHSMchbfxiPVRfxu/vDlc3O+3DIyxaReRUbE4Osnl9xW0cOkHE2Y90v3LT70IK8U8=
+X-Received: by 2002:aca:524a:: with SMTP id g71mr5833060oib.7.1583586612418;
+ Sat, 07 Mar 2020 05:10:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200228165011.17898-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200228165011.17898-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200304205516.GD1791497@oden.dyn.berto.se>
+In-Reply-To: <20200304205516.GD1791497@oden.dyn.berto.se>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Sat, 7 Mar 2020 13:09:46 +0000
+Message-ID: <CA+V-a8u6CzinQHuppXHqnAxTU0WUpSbof7o_Anw9Tdz-vvhqSA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] media: rcar-vin: Add support for SRGGB8_1X8
+To:     Niklas <niklas.soderlund@ragnatech.se>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When handling a PIO bulk transfer with highmem buffer, a temporary
-mapping is assigned to urb->transfer_buffer.  After the transfer is
-complete, an invalid address is left behind in this pointer.  This is
-not ordinarily a problem since nothing touches that buffer before the
-urb is released.  However, when usbmon is active, usbmon_urb_complete()
-calls (indirectly) mon_bin_get_data() which does access the transfer
-buffer if it is set.  To prevent an invalid memory access here, reset
-urb->tranfer_buffer to NULL when finished.
+Hi Niklas,
 
-Fixes: 8e8a55165469 ("usb: musb: host: Handle highmem in PIO mode")
-Signed-off-by: Mans Rullgard <mans@mansr.com>
----
- drivers/usb/musb/musb_host.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Thank you for the review.
 
-diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
-index 1c813c37462a..b67b40de1947 100644
---- a/drivers/usb/musb/musb_host.c
-+++ b/drivers/usb/musb/musb_host.c
-@@ -1459,8 +1459,10 @@ void musb_host_tx(struct musb *musb, u8 epnum)
- 	qh->segsize = length;
- 
- 	if (qh->use_sg) {
--		if (offset + length >= urb->transfer_buffer_length)
-+		if (offset + length >= urb->transfer_buffer_length) {
- 			qh->use_sg = false;
-+			urb->transfer_buffer = NULL;
-+		}
- 	}
- 
- 	musb_ep_select(mbase, epnum);
-@@ -1977,8 +1979,10 @@ void musb_host_rx(struct musb *musb, u8 epnum)
- 	urb->actual_length += xfer_len;
- 	qh->offset += xfer_len;
- 	if (done) {
--		if (qh->use_sg)
-+		if (qh->use_sg) {
- 			qh->use_sg = false;
-+			urb->transfer_buffer = NULL;
-+		}
- 
- 		if (urb->status == -EINPROGRESS)
- 			urb->status = status;
--- 
-2.25.1
+On Wed, Mar 4, 2020 at 8:55 PM Niklas <niklas.soderlund@ragnatech.se> wrote=
+:
+>
+> Hi Lad,
+>
+> Thanks for your work.
+>
+> On 2020-02-28 16:50:11 +0000, Lad Prabhakar wrote:
+> > Most of the RZ/G2x boards can support capturing frames in SRGGB8_1X8
+> > format, add support for this with a runtime check that the running
+> > hardware supports it.
+>
+> Where is the runtime check for supported hardware? Also out of curiosity
+> which boars can't support SRGGB and what setup are you using to test
+> SRGGB capture?
+>
+My bad l'll drop the statement "runtime check for supported hardware".
+All the G2x
+boards support SRGGB8. I am currently testing this on a G2E board connected=
+ with
+a mipi adapter (https://www.96boards.org/product/mipiadapter/) and
+raspberry pi camera
+module (https://www.raspberrypi.org/products/camera-module-v2/).
 
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  drivers/media/platform/rcar-vin/rcar-core.c |  1 +
+> >  drivers/media/platform/rcar-vin/rcar-csi2.c |  1 +
+> >  drivers/media/platform/rcar-vin/rcar-dma.c  | 14 ++++++++++++--
+> >  drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
+>
+> This patch shall be split in two. One which touches rcar-csi2.c and one
+> for the other files as they are two different drivers.
+>
+sure will split this patch into two.
+
+> >  4 files changed, 18 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/medi=
+a/platform/rcar-vin/rcar-core.c
+> > index 7440c8965d27..76daf2fe5bcd 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> > @@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct rv=
+in_dev *vin,
+> >               case MEDIA_BUS_FMT_UYVY8_2X8:
+> >               case MEDIA_BUS_FMT_UYVY10_2X10:
+> >               case MEDIA_BUS_FMT_RGB888_1X24:
+> > +             case MEDIA_BUS_FMT_SRGGB8_1X8:
+> >                       vin->mbus_code =3D code.code;
+> >                       vin_dbg(vin, "Found media bus format for %s: %d\n=
+",
+> >                               subdev->name, vin->mbus_code);
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/medi=
+a/platform/rcar-vin/rcar-csi2.c
+> > index 5b04e4768eb1..97e4886f63f0 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > @@ -320,6 +320,7 @@ static const struct rcar_csi2_format rcar_csi2_form=
+ats[] =3D {
+> >       { .code =3D MEDIA_BUS_FMT_YUYV8_1X16,     .datatype =3D 0x1e, .bp=
+p =3D 16 },
+> >       { .code =3D MEDIA_BUS_FMT_UYVY8_2X8,      .datatype =3D 0x1e, .bp=
+p =3D 16 },
+> >       { .code =3D MEDIA_BUS_FMT_YUYV10_2X10,    .datatype =3D 0x1e, .bp=
+p =3D 20 },
+> > +     { .code =3D MEDIA_BUS_FMT_SRGGB8_1X8,     .datatype =3D 0x2a, .bp=
+p =3D 8 },
+> >  };
+> >
+> >  static const struct rcar_csi2_format *rcsi2_code_to_fmt(unsigned int c=
+ode)
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media=
+/platform/rcar-vin/rcar-dma.c
+> > index 1a30cd036371..63709b4bbf7a 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-dma.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+> > @@ -85,6 +85,7 @@
+> >  #define VNMC_INF_YUV8_BT601  (1 << 16)
+> >  #define VNMC_INF_YUV10_BT656 (2 << 16)
+> >  #define VNMC_INF_YUV10_BT601 (3 << 16)
+> > +#define VNMC_INF_RAW8                (4 << 16)
+> >  #define VNMC_INF_YUV16               (5 << 16)
+> >  #define VNMC_INF_RGB888              (6 << 16)
+> >  #define VNMC_VUP             (1 << 10)
+> > @@ -587,13 +588,15 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
+> >       rvin_write(vin, vin->crop.top, VNSLPRC_REG);
+> >       rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG=
+);
+> >
+> > -
+> >       /* TODO: Add support for the UDS scaler. */
+> >       if (vin->info->model !=3D RCAR_GEN3)
+> >               rvin_crop_scale_comp_gen2(vin);
+> >
+> >       fmt =3D rvin_format_from_pixel(vin, vin->format.pixelformat);
+> > -     stride =3D vin->format.bytesperline / fmt->bpp;
+> > +     if (vin->format.pixelformat =3D=3D V4L2_PIX_FMT_SRGGB8)
+> > +             stride =3D ALIGN(vin->format.bytesperline / 2, 0x10);
+> > +     else
+> > +             stride =3D vin->format.bytesperline / fmt->bpp;
+>
+> This does not look right, you should to move this logic into
+> rvin_format_bytesperline().
+>
+sure will move it.
+
+Cheers,
+--Prabhakar
+
+> >       rvin_write(vin, stride, VNIS_REG);
+> >  }
+> >
+> > @@ -676,6 +679,9 @@ static int rvin_setup(struct rvin_dev *vin)
+> >
+> >               input_is_yuv =3D true;
+> >               break;
+> > +     case MEDIA_BUS_FMT_SRGGB8_1X8:
+> > +             vnmc |=3D VNMC_INF_RAW8;
+> > +             break;
+> >       default:
+> >               break;
+> >       }
+> > @@ -737,6 +743,9 @@ static int rvin_setup(struct rvin_dev *vin)
+> >       case V4L2_PIX_FMT_ABGR32:
+> >               dmr =3D VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTM=
+D_ARGB;
+> >               break;
+> > +     case V4L2_PIX_FMT_SRGGB8:
+> > +             dmr =3D 0;
+> > +             break;
+> >       default:
+> >               vin_err(vin, "Invalid pixelformat (0x%x)\n",
+> >                       vin->format.pixelformat);
+> > @@ -1110,6 +1119,7 @@ static int rvin_mc_validate_format(struct rvin_de=
+v *vin, struct v4l2_subdev *sd,
+> >       case MEDIA_BUS_FMT_UYVY8_2X8:
+> >       case MEDIA_BUS_FMT_UYVY10_2X10:
+> >       case MEDIA_BUS_FMT_RGB888_1X24:
+> > +     case MEDIA_BUS_FMT_SRGGB8_1X8:
+> >               vin->mbus_code =3D fmt.format.code;
+> >               break;
+> >       default:
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/medi=
+a/platform/rcar-vin/rcar-v4l2.c
+> > index b12b3f88836a..d56cf85ba065 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > @@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[]=
+ =3D {
+> >               .fourcc                 =3D V4L2_PIX_FMT_ABGR32,
+> >               .bpp                    =3D 4,
+> >       },
+> > +     {
+> > +             .fourcc                 =3D V4L2_PIX_FMT_SRGGB8,
+> > +             .bpp                    =3D 1,
+> > +     },
+> >  };
+> >
+> >  const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev=
+ *vin,
+> > --
+> > 2.20.1
+> >
+>
+> --
+> Regards,
+> Niklas S=C3=B6derlund
