@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0456EC10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 12:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96807C10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 12:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D219C206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 12:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707BA206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 12:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583582991;
-	bh=wVfsIRTo1dZQhjeuU0x1McX2IlXWTN3PEbN4+tM98j4=;
+	s=default; t=1583583132;
+	bh=P8N4UNcKSNSGMcRht8RlKDglPptQ3j1/8pnNFx0TVgE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pMczZVkpgJ2NbznFp2KDfJ0GlKztlsU8H3UJt8CEL126L7cnd61AL8ojPSowrwpI8
-	 bpnd9zxCNnZnuHIz1kJUxM/qiem6RlRO8JcmD4mphN7piCjfBQmoQ/M1f8nbKASGtH
-	 Pnf5vPXcqwQp3W2spbLmjSFA4gq3ZTP/IfEem1EU=
+	b=ok3lARxswPGeJOr7iI8b5qASydCDw9QhbMMW85EVMfSRK5bsR29k4bwUDa2WAiABh
+	 I2pTBgahPU5qs7jjQlgpSvh9R/b3b6uxSmIF9CXGS4250FWOy5z6MkMZMFDfmG7RA6
+	 LF8f3HBshz+9sW1ENZReeSXUyhLBJdlosiwX2yNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgCGMJu (ORCPT
+        id S1726246AbgCGMML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 07:09:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52636 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 07:12:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgCGMJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 07:09:50 -0500
+        id S1726017AbgCGMML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 07:12:11 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ADA1206D5;
-        Sat,  7 Mar 2020 12:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E62206D5;
+        Sat,  7 Mar 2020 12:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583582989;
-        bh=wVfsIRTo1dZQhjeuU0x1McX2IlXWTN3PEbN4+tM98j4=;
+        s=default; t=1583583130;
+        bh=P8N4UNcKSNSGMcRht8RlKDglPptQ3j1/8pnNFx0TVgE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2sLERTBveKXyRYHPBsO8wyvQyqkOI8fKx97HGemxCj7RJPhpCYW874E8XV1n5G4Ht
-         e/Y1GZCyI+n6uRnFpUKjIcOSZY75rBEyMfMgtKFJGGjsaCTJo1mYishV1/CpvYTWxU
-         gW8zWYsU8DPc1xRH5w06sEI07YzG3brSxoPDJeAM=
-Date:   Sat, 7 Mar 2020 12:09:44 +0000
+        b=mBerlUJISCnGRaiiA9XbYCDfLWqNhdnea1/0oLm4zKi6NqJK1C0jFQAywo/4CDGLp
+         awlSHOdEcyeI1mIKgLIeXQ7ykavDyvSbGvk7O2zP8JK4mPbGqd2/dDUQj4RtqJx+SZ
+         HpkXzKoxGK90efbbZRnl7WgDn1AuhbG3sqRJTHHs=
+Date:   Sat, 7 Mar 2020 12:12:06 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Alexandru Tachici <alexandru.tachici@analog.com>
 Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 6/6] iio: accel: adxl372: Update sysfs docs
-Message-ID: <20200307120944.5e369676@archlinux>
-In-Reply-To: <20200225120909.12629-7-alexandru.tachici@analog.com>
+Subject: Re: [PATCH v2 4/6] iio: accel: adxl372: add iio events
+Message-ID: <20200307121206.2d92521a@archlinux>
+In-Reply-To: <20200225120909.12629-5-alexandru.tachici@analog.com>
 References: <20200225120909.12629-1-alexandru.tachici@analog.com>
-        <20200225120909.12629-7-alexandru.tachici@analog.com>
+        <20200225120909.12629-5-alexandru.tachici@analog.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -57,63 +57,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 14:09:09 +0200
+On Tue, 25 Feb 2020 14:09:07 +0200
 Alexandru Tachici <alexandru.tachici@analog.com> wrote:
 
-> This patch adds entries in the syfs docs of ADXL372.
+> Set INT1 interrupts to fire when activity/inactivity
+> is detected by the device. On irq, push event code by calling
+> iio_push_event().
 > 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 > Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 > ---
->  .../ABI/testing/sysfs-bus-iio-accel-adxl372   | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
+>  drivers/iio/accel/adxl372.c | 37 +++++++++++++++++++++++++++++++++++--
+>  1 file changed, 35 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372 b/Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
-> new file mode 100644
-> index 000000000000..709376b54bec
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-accel-adxl372
-> @@ -0,0 +1,30 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/buffer_peak_mode_enable
-> +KernelVersion:
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		This attribute allows to configure the FIFO to store sample
-> +		sets of impact event peak (x, y, z). As a precondition, all
-> +		three channels (x, y, z) need to be enabled.
-> +		Writing 1, peak fifo mode will be enabled, if cleared and
-> +		all three channels are enabled, sample sets of concurrent
-> +		3-axis data will be stored in the FIFO.
-
-As this is referring to the internal fifo (I think!) should we name it
-hwfifo_peak_mode_enable to separate it from being related to the software "buffer"?
-
-
+> diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
+> index 775dc4f0aaf4..e669eaaaa07e 100644
+> --- a/drivers/iio/accel/adxl372.c
+> +++ b/drivers/iio/accel/adxl372.c
+> @@ -114,6 +114,11 @@
+>  #define ADXL372_STATUS_1_AWAKE(x)		(((x) >> 6) & 0x1)
+>  #define ADXL372_STATUS_1_ERR_USR_REGS(x)	(((x) >> 7) & 0x1)
+>  
+> +/* ADXL372_STATUS_2 */
+> +#define ADXL372_STATUS_2_INACT(x)		(((x) >> 4) & 0x1)
+> +#define ADXL372_STATUS_2_ACT(x)			(((x) >> 5) & 0x1)
+> +#define ADXL372_STATUS_2_AC2(x)			(((x) >> 6) & 0x1)
 > +
-> +What:		/sys/bus/iio/devices/iio:deviceX/activity_detect_event
-> +KernelVersion:
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		adxl372 works in loop mode. It will loop  between activity
-> +		and inactivity detection mode. The thresh_rising sysfs files
-> +		found in events/ need to be configured in order to define when
-> +		the device will mark a sensed acceleration over a period of
-> +		time as activity.
-
-Hmm. As you noted in the cover letter this is a bit odd having a mixture of
-an event and a more fundamental state control.
-
-Please state what value this will provide when read.
-
+>  /* ADXL372_INT1_MAP */
+>  #define ADXL372_INT1_MAP_DATA_RDY_MSK		BIT(0)
+>  #define ADXL372_INT1_MAP_DATA_RDY_MODE(x)	(((x) & 0x1) << 0)
+> @@ -585,6 +590,27 @@ static int adxl372_get_status(struct adxl372_state *st,
+>  	return ret;
+>  }
+>  
+> +static void adxl372_push_event(struct iio_dev *indio_dev, s64 timestamp,
+> +			       u8 status2)
+> +{
+> +	unsigned int ev_dir;
 > +
-> +What:		/sys/bus/iio/devices/iio:deviceX/inactivity_detect_event
-> +KernelVersion:
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		adxl372 works in loop mode. It will loop  between activity
-> +		and inactivity detection mode. The thresh_falling sysfs files
-> +		found in events/ need to be configured in order to define when
-> +		the device will mark a sensed acceleration over a period of
-> +		time as inactivity.
+> +	if (ADXL372_STATUS_2_ACT(status2))
+> +		ev_dir = IIO_EV_DIR_RISING;
+> +
+> +	if (ADXL372_STATUS_2_INACT(status2))
+> +		ev_dir = IIO_EV_DIR_FALLING;
+> +
+> +	if (ev_dir != IIO_EV_DIR_NONE)
+
+Unless I'm missing something we don't have an enable / disable control for this
+event.  Can we add one?
+
+> +		iio_push_event(indio_dev,
+> +			       IIO_MOD_EVENT_CODE(IIO_ACCEL,
+> +						  0,
+> +						  IIO_MOD_X_OR_Y_OR_Z,
+> +						  IIO_EV_TYPE_THRESH,
+> +						  ev_dir),
+> +						  timestamp);
+> +}
+> +
+>  static irqreturn_t adxl372_trigger_handler(int irq, void  *p)
+>  {
+>  	struct iio_poll_func *pf = p;
+> @@ -598,6 +624,8 @@ static irqreturn_t adxl372_trigger_handler(int irq, void  *p)
+>  	if (ret < 0)
+>  		goto err;
+>  
+> +	adxl372_push_event(indio_dev, iio_get_time_ns(indio_dev), status2);
+> +
+>  	if (st->fifo_mode != ADXL372_FIFO_BYPASSED &&
+>  	    ADXL372_STATUS_1_FIFO_FULL(status1)) {
+>  		/*
+> @@ -989,7 +1017,10 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = adxl372_set_interrupts(st, ADXL372_INT1_MAP_FIFO_FULL_MSK, 0);
+> +	mask = ADXL372_INT1_MAP_FIFO_FULL_MSK |
+> +	       ADXL372_INT1_MAP_ACT_MSK	 |
+> +	       ADXL372_INT1_MAP_INACT_MSK;
+> +	ret = adxl372_set_interrupts(st, mask, 0);
+>  	if (ret < 0)
+>  		goto err;
+>  
+> @@ -1067,7 +1098,9 @@ static int adxl372_dready_trig_set_state(struct iio_trigger *trig,
+>  	unsigned long int mask = 0;
+>  
+>  	if (state)
+> -		mask = ADXL372_INT1_MAP_FIFO_FULL_MSK;
+> +		mask = ADXL372_INT1_MAP_FIFO_FULL_MSK |
+> +		       ADXL372_INT1_MAP_ACT_MSK	 |
+> +		       ADXL372_INT1_MAP_INACT_MSK;
+>  
+>  	return adxl372_set_interrupts(st, mask, 0);
+>  }
 
