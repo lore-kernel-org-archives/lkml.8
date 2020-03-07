@@ -2,107 +2,131 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF731C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 17:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946DAC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 17:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C572051A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 17:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F8F2051A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 17:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgCGRmz (ORCPT
+        id S1726267AbgCGRpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 12:42:55 -0500
-Received: from wind.enjellic.com ([76.10.64.91]:59474 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbgCGRmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 12:42:55 -0500
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 027HgO0B031288;
-        Sat, 7 Mar 2020 11:42:24 -0600
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 027HgNKI031287;
-        Sat, 7 Mar 2020 11:42:23 -0600
-Date:   Sat, 7 Mar 2020 11:42:23 -0600
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
-Message-ID: <20200307174223.GA30928@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com> <CAOASepN1JrD6OEzZycbqOr6_ZVACK=EctEOoQ8oSAEeigMr1Eg@mail.gmail.com> <04362c0cf66bf66e8f7c25a531830b9f294d2d09.camel@linux.intel.com> <20200306154222.GA20820@wind.enjellic.com> <20200306190753.GH7472@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306190753.GH7472@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Sat, 07 Mar 2020 11:42:24 -0600 (CST)
+        Sat, 7 Mar 2020 12:45:13 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:41967 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgCGRpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 12:45:12 -0500
+Received: by mail-il1-f199.google.com with SMTP id f6so4189841ilg.8
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 09:45:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=adrPTs5EReBXNjXAz2JJkhvKUk54b45LCW/ZFGpHhpw=;
+        b=cfvYO78ut9XgywoD5EqnFU+nwdOHWbS5ixMY0nIIS7kWbQ/k3PmLeHthK92uTrIFVs
+         DA6CvSyh1UTj328c8gh1N9ITFFnxhnRIZXoytynLQw2XqavRFAM4llevijunCxw0hihm
+         04bAD0fBsoL5d8VacNWQ2DjhrsyOoVQx4tnVhEgVijwRuYvvtngbvZFbCyKhAL5w6SHm
+         1dyRoqtOUOYp208Zr9bsWzJaMOcU+X8SpzpFGzQOCJA+YnhPP0U8+yFNdVvVFu6liaHR
+         wCuun2yo1OzBrkRDsCmiV0jZdhJVmYRHoDOJynLdrACJ3YEiJua+/SVYswUqGUwbdNRr
+         0PTg==
+X-Gm-Message-State: ANhLgQ3FE8JG7X9Y+QlZP+HC0i19bnGiT6bkY1zYB/QQofTZL36IZXSf
+        EMKL6MDctg/6pmmpg4KWBB6m1PuCzRGtZK4xf/m5tW54XrOd
+X-Google-Smtp-Source: ADFU+vvPJdT0lErpVGKSwp+bdK2H2RInnrNgD5oOyHnfRJO1wLyxv3r1p4RZSjsApzQx1kabfKjTAgJitFO44xE95LVcgxfygpc2
+MIME-Version: 1.0
+X-Received: by 2002:a92:670f:: with SMTP id b15mr8527912ilc.71.1583603111955;
+ Sat, 07 Mar 2020 09:45:11 -0800 (PST)
+Date:   Sat, 07 Mar 2020 09:45:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f415bd05a047548f@google.com>
+Subject: kernel BUG at drivers/dma-buf/dma-buf.c:LINE!
+From:   syzbot <syzbot+d6734079f30f7fc39021@syzkaller.appspotmail.com>
+To:     dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        sumit.semwal@linaro.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 09:07:53PM +0200, Jarkko Sakkinen wrote:
+Hello,
 
-Good morning, I hope the weekend is going well for everyone.
+syzbot found the following crash on:
 
-> Actually many people have applaused to have a small scoped, even if
-> not perfect, test program to look at how SGX works. One that is only
-> dependent on glibc. None of the selftests are meant to be production
-> peaces of code. You are getting wrong the role of the selftest in
-> the first place.
+HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=177bf331e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+dashboard link: https://syzkaller.appspot.com/bug?extid=d6734079f30f7fc39021
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109d3ac3e00000
 
-We certainly want to be counted in the camp of those who are
-applausing you for making the selftests available, particularly the
-new VDSO setup and entry code.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d6734079f30f7fc39021@syzkaller.appspotmail.com
 
-We arguably have similar motivations.  We architected and authored an
-entire SGX runtime that has as its only dependencies the MUSL C
-library, libelf and OpenSSL, primarily because we needed an easily
-auditable and low footprint SGX implementation.
+------------[ cut here ]------------
+kernel BUG at drivers/dma-buf/dma-buf.c:99!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 18500 Comm: syz-executor.0 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:dma_buf_release+0x35b/0x420 drivers/dma-buf/dma-buf.c:99
+Code: 00 00 e8 f8 d3 ec fc 4c 89 e7 45 31 e4 e8 ed 7a 35 fd e8 38 25 f7 fc 44 89 e0 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 25 25 f7 fc <0f> 0b e8 1e 25 f7 fc 4c 89 ef e8 46 eb 00 00 eb 97 e8 0f 25 f7 fc
+RSP: 0018:ffffc9000296fdc8 EFLAGS: 00010293
+RAX: ffff888094086300 RBX: 0000000000000004 RCX: ffffffff847e6fc5
+RDX: 0000000000000000 RSI: ffffffff847e722b RDI: 0000000000000005
+RBP: ffffc9000296fdf0 R08: ffff888094086300 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff88808c6ec800
+R13: ffff88808e6ecd7c R14: ffff88808e6ecd28 R15: ffff888097011940
+FS:  0000000002b7b940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000008a9e80 CR3: 00000000916f0000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+ prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+ do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x416011
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007fff23e39030 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000009 RCX: 0000000000416011
+RDX: 0000000000000000 RSI: 0000000000000081 RDI: 0000000000000008
+RBP: 0000000000000000 R08: 0000000000000000 R09: 01ffffffffffffff
+R10: 0000000000770938 R11: 0000000000000293 R12: 000000000076bf20
+R13: 0000000000770948 R14: 0000000000000000 R15: 000000000076bf2c
+Modules linked in:
+---[ end trace 432bc1955550b75d ]---
+RIP: 0010:dma_buf_release+0x35b/0x420 drivers/dma-buf/dma-buf.c:99
+Code: 00 00 e8 f8 d3 ec fc 4c 89 e7 45 31 e4 e8 ed 7a 35 fd e8 38 25 f7 fc 44 89 e0 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 25 25 f7 fc <0f> 0b e8 1e 25 f7 fc 4c 89 ef e8 46 eb 00 00 eb 97 e8 0f 25 f7 fc
+RSP: 0018:ffffc9000296fdc8 EFLAGS: 00010293
+RAX: ffff888094086300 RBX: 0000000000000004 RCX: ffffffff847e6fc5
+RDX: 0000000000000000 RSI: ffffffff847e722b RDI: 0000000000000005
+RBP: ffffc9000296fdf0 R08: ffff888094086300 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff88808c6ec800
+R13: ffff88808e6ecd7c R14: ffff88808e6ecd28 R15: ffff888097011940
+FS:  0000000002b7b940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000008a9e80 CR3: 00000000916f0000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-To the point at hand though, I'm certainly not a very smart guy so I
-doubt that I am able to understand the role of the selftests.  We do
-seem to agree though that they only provide a rudimentary exercise of
-the driver.
 
-We also seem to agree that the primary role of the driver is to
-service the needs of those of us that are building production level
-SGX runtime stacks.  In service of that premise, it would be helpful
-to know if you are internally testing the driver/VDSO against enclaves
-of production quality, with metadata, or just the two page selftest
-enclave.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Since Intel signs and releases binary enclaves, (QE, LE, PCE), it
-would seem that a load and initialization of these enclaves would
-provide a good reference point for all of us to agree on with respect
-to basic driver testing and validation.
-
-> /Jarkko
-
-Have a good remainder of the weekend.
-
-Dr. Greg
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           SGX secured infrastructure and
-Fargo, ND  58102            autonomously self-defensive platforms.
-PH: 701-281-1686            EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"... remember that innovation is saying 'no' to 1000 things."
-                                -- Moxie Marlinspike
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
