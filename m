@@ -2,53 +2,52 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4904C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 05:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5802C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 05:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38FD2070A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 05:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6F02070A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 05:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgCGFkN (ORCPT
+        id S1726276AbgCGFlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 00:40:13 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:48228 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgCGFkM (ORCPT
+        Sat, 7 Mar 2020 00:41:14 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:45753 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgCGFlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 00:40:12 -0500
-Received: by mail-il1-f197.google.com with SMTP id c1so3246913ilj.15
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 21:40:12 -0800 (PST)
+        Sat, 7 Mar 2020 00:41:14 -0500
+Received: by mail-io1-f71.google.com with SMTP id t12so2939109iog.12
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 21:41:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=qgfToczf7DEQuzSkGPQXLwPPopcDsBOkFi/RISrdjEg=;
-        b=MVU+FGouo3vE8fajJzYoFWOeHf19vbGEpzAtQZVHZ9Q9igDinJf2iG43ONe1Vr1EDT
-         L+jk4tgQRE76Qzu9gTZX0X0RpHLK+tEIDGi63LenZLKGq3k7JBWhE5LDdDGQyhaFMIPa
-         Uti0ArJ0aB3Y/IIXQ0G6CL3NJh9zXnPQnOQi7SSvzC9V9Vf+WYVTDMjPq8CDcszX8bEW
-         VLQjs/VHqAhTWAGQpVM5coNggMKqGdehrdrWbrd7/xkqoGtjOh+qFfDlQvsbhqh7oNIV
-         4O/QHyfQrA/SjRbeo7XLM5zvQL9Dg/LWLd/YePPr9270jj9m3dBA/dK8jsL5Qbct+ZGV
-         5zUg==
-X-Gm-Message-State: ANhLgQ1zIzEFyKG6QzIa21AsdRqY4uiIw58EUjXMRb5HTSEcci2F0nTP
-        1xWYLhjrpmn5ScGe/Auz8VMBkEw1ZckJQuAYS5j8fxqqpFAT
-X-Google-Smtp-Source: ADFU+vtm0KKw8dNW9tqKxlP/M6gMnwlkK7/bAKoxLPVsGLBR3MWu0u/FfLh16MY8r1ycH0aJdAbWPF2qmQDCK3Aq4zKV/2mFcVCE
+        bh=8QrBn6vtevMXdmEfXm7wyezrQLMzd+pZc9pFYXzbb7A=;
+        b=LTxPGgsdEfAvLKb9U+kSOgyFzTXG0br8kza72XfYis9hFnABPHJIfVnSP+zuYzqlXj
+         8zwKTnsr/3SZXvbY/Ujc3K2Lyc7/98LEE1QRo9fB4RABbxR+I+ugwqe4jQ3ruWPDn2Tc
+         Du0NLl8bpCJVk+EuL6qMGtWO6Uuoob7AUgipi2UT6ggt2ypzJKg3GNwcx0+wUUV8IOL8
+         YwFfkxBFEWv+7WrzdoAwVi2ngJM7S9KhVJ88LZ4GWNSDXGe4tyNT98nKXB5Vmmn3MTy1
+         4xhIs166tuGWRDDL/MJbIhCEqHarssetxrdo3bT4Gy1qq6/3XyguXFfudszK76cZO7bP
+         E7GA==
+X-Gm-Message-State: ANhLgQ0yiPoOXkjN9xnDKGf/1CoLXjpLEhkuZ4D4arcbnZmPXDyFTo6q
+        xBbBmwM5k2aGLoDXE+i+KvZOZPhnpzGLVTNAejkxhReH4qDG
+X-Google-Smtp-Source: ADFU+vvEoEH+SghOZX3ris+rh4hGitpSlR4lu5HDAW/qGPxB9MopvIOmmBZK9ETnHrmCjsBACLReYgPzIMB/Tx+3s2poekB1/kQ2
 MIME-Version: 1.0
-X-Received: by 2002:a6b:f60f:: with SMTP id n15mr5740254ioh.32.1583559612127;
- Fri, 06 Mar 2020 21:40:12 -0800 (PST)
-Date:   Fri, 06 Mar 2020 21:40:12 -0800
+X-Received: by 2002:a02:3093:: with SMTP id q141mr6351871jaq.121.1583559673441;
+ Fri, 06 Mar 2020 21:41:13 -0800 (PST)
+Date:   Fri, 06 Mar 2020 21:41:13 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000295deb05a03d3415@google.com>
-Subject: WARNING: ODEBUG bug in rfcomm_dev_ioctl
-From:   syzbot <syzbot+4496e82090657320efc6@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000d0f3cb05a03d37ec@google.com>
+Subject: KASAN: use-after-free Read in dmabuffs_dname
+From:   syzbot <syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com>
+To:     dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        sumit.semwal@linaro.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,70 +58,121 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    fb279f4e Merge branch 'i2c/for-current-fixed' of git://git..
+HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=168c481de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8b13b05f0e61d957
-dashboard link: https://syzkaller.appspot.com/bug?extid=4496e82090657320efc6
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+console output: https://syzkaller.appspot.com/x/log.txt?x=11653ac3e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+dashboard link: https://syzkaller.appspot.com/bug?extid=3643a18836bce555bff6
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
+Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: timer_list hint: rfcomm_dlc_timeout+0x0/0xc0 net/bluetooth/rfcomm/core.c:300
-WARNING: CPU: 0 PID: 9181 at lib/debugobjects.c:488 debug_print_object lib/debugobjects.c:485 [inline]
-WARNING: CPU: 0 PID: 9181 at lib/debugobjects.c:488 __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-WARNING: CPU: 0 PID: 9181 at lib/debugobjects.c:488 debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9181 Comm: syz-executor.3 Not tainted 5.6.0-rc3-syzkaller #0
+==================================================================
+BUG: KASAN: use-after-free in dmabuffs_dname+0x4f4/0x560 drivers/dma-buf/dma-buf.c:48
+Read of size 8 at addr ffff8880a6b390e8 by task syz-executor.1/2394
+
+CPU: 1 PID: 2394 Comm: syz-executor.1 Not tainted 5.6.0-rc3-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:debug_print_object lib/debugobjects.c:485 [inline]
-RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-RIP: 0010:debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
-Code: 74 08 4c 89 f7 e8 64 2d 18 fe 4d 8b 06 48 c7 c7 53 10 d1 88 48 c7 c6 0f 01 cf 88 48 89 da 89 e9 4d 89 f9 31 c0 e8 c4 cd ae fd <0f> 0b 48 ba 00 00 00 00 00 fc ff df ff 05 c6 39 b1 05 48 8b 5c 24
-RSP: 0018:ffffc90001907c88 EFLAGS: 00010046
-RAX: 72f8f847df918a00 RBX: ffffffff88d4edca RCX: 0000000000040000
-RDX: ffffc90011373000 RSI: 0000000000013ee9 RDI: 0000000000013eea
-RBP: 0000000000000000 R08: ffffffff815e1276 R09: ffffed1015d04592
-R10: ffffed1015d04592 R11: 0000000000000000 R12: ffff88808ea6fbac
-R13: ffffffff8b592e40 R14: ffffffff890ddc78 R15: ffffffff873dcc50
- kfree+0xfc/0x220 mm/slab.c:3756
- rfcomm_dlc_put include/net/bluetooth/rfcomm.h:258 [inline]
- __rfcomm_create_dev net/bluetooth/rfcomm/tty.c:417 [inline]
- rfcomm_create_dev net/bluetooth/rfcomm/tty.c:486 [inline]
- rfcomm_dev_ioctl+0xe37/0x2340 net/bluetooth/rfcomm/tty.c:588
- rfcomm_sock_ioctl+0x79/0xa0 net/bluetooth/rfcomm/sock.c:902
- sock_do_ioctl+0x7b/0x260 net/socket.c:1053
- sock_ioctl+0x4aa/0x690 net/socket.c:1204
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl fs/ioctl.c:763 [inline]
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl+0xf9/0x160 fs/ioctl.c:770
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c4a9
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fd490578c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fd4905796d4 RCX: 000000000045c4a9
-RDX: 0000000020000100 RSI: 00000000400452c8 RDI: 0000000000000004
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000317 R14: 00000000004c5443 R15: 000000000076bf2c
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ dmabuffs_dname+0x4f4/0x560 drivers/dma-buf/dma-buf.c:48
+ tomoyo_realpath_from_path+0x165/0x660 security/tomoyo/realpath.c:259
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_check_open_permission+0x2a3/0x3e0 security/tomoyo/file.c:771
+ tomoyo_file_open security/tomoyo/tomoyo.c:319 [inline]
+ tomoyo_file_open+0xa9/0xd0 security/tomoyo/tomoyo.c:314
+ security_file_open+0x71/0x300 security/security.c:1529
+ do_dentry_open+0x37a/0x1380 fs/open.c:784
+ vfs_open+0xa0/0xd0 fs/open.c:914
+ do_last fs/namei.c:3490 [inline]
+ path_openat+0x12ee/0x3490 fs/namei.c:3607
+ do_filp_open+0x192/0x260 fs/namei.c:3637
+ do_sys_openat2+0x5eb/0x7e0 fs/open.c:1149
+ do_sys_open+0xf2/0x180 fs/open.c:1165
+ __do_compat_sys_open fs/open.c:1212 [inline]
+ __se_compat_sys_open fs/open.c:1210 [inline]
+ __ia32_compat_sys_open+0x79/0xb0 fs/open.c:1210
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7fd8e39
+Code: 1d 00 00 00 89 d3 5b 5e 5d c3 8b 04 24 c3 8b 1c 24 c3 8b 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000f5db2014 EFLAGS: 00000296 ORIG_RAX: 0000000000000005
+RAX: ffffffffffffffda RBX: 00000000f5db204c RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000c09 RDI: 00000000f5db204c
+RBP: 00000000f5db2168 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 2388:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x163/0x770 mm/slab.c:3665
+ kmalloc include/linux/slab.h:560 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ dma_buf_export+0x24d/0xa80 drivers/dma-buf/dma-buf.c:533
+ ion_alloc drivers/staging/android/ion/ion.c:386 [inline]
+ ion_ioctl+0x5a9/0xd20 drivers/staging/android/ion/ion.c:495
+ compat_ptr_ioctl+0x6e/0xa0 fs/ioctl.c:804
+ __do_compat_sys_ioctl fs/ioctl.c:857 [inline]
+ __se_compat_sys_ioctl fs/ioctl.c:808 [inline]
+ __ia32_compat_sys_ioctl+0x245/0x2c0 fs/ioctl.c:808
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+
+Freed by task 2380:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ dma_buf_release+0x343/0x420 drivers/dma-buf/dma-buf.c:111
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+ prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+ do_syscall_32_irqs_on arch/x86/entry/common.c:352 [inline]
+ do_fast_syscall_32+0xbbd/0xe16 arch/x86/entry/common.c:408
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+
+The buggy address belongs to the object at ffff8880a6b39000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 232 bytes inside of
+ 1024-byte region [ffff8880a6b39000, ffff8880a6b39400)
+The buggy address belongs to the page:
+page:ffffea00029ace40 refcount:1 mapcount:0 mapping:ffff8880aa400c40 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0002346b48 ffffea00022f49c8 ffff8880aa400c40
+raw: 0000000000000000 ffff8880a6b39000 0000000100000002 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880a6b38f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880a6b39000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880a6b39080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                          ^
+ ffff8880a6b39100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a6b39180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
 ---
