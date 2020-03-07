@@ -7,34 +7,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 938BFC10F27
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14083C10F28
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7341B2073B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EA7206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgCGDwo (ORCPT
+        id S1726368AbgCGDwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 22:52:44 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11602 "EHLO huawei.com"
+        Fri, 6 Mar 2020 22:52:42 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11607 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726269AbgCGDwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:52:33 -0500
+        id S1727049AbgCGDwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 22:52:34 -0500
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0FC4ED79C3F7489753D0;
+        by Forcepoint Email with ESMTP id 2B79423C44678E34114C;
         Sat,  7 Mar 2020 11:52:29 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 7 Mar 2020 11:52:20 +0800
+ 14.3.439.0; Sat, 7 Mar 2020 11:52:18 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
+        Yufeng Mo <moyufeng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 6/9] net: hns3: print out status register when VF receives unknown source interrupt
-Date:   Sat, 7 Mar 2020 11:42:47 +0800
-Message-ID: <1583552570-51203-7-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 2/9] net: hns3: rename macro HCLGE_MAX_NCL_CONFIG_LENGTH
+Date:   Sat, 7 Mar 2020 11:42:43 +0800
+Message-ID: <1583552570-51203-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583552570-51203-1-git-send-email-tanhuazhong@huawei.com>
 References: <1583552570-51203-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,32 +48,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When received an unknown vector 0 interrupt, there is not a
-helpful information for user to realize that now. So this patch
-prints out the value of the status register for this case, and
-uses dev_info() instead of dev_dbg() in hclge_check_event_cause().
+From: Yufeng Mo <moyufeng@huawei.com>
 
+The name of macro HCLGE_MAX_NCL_CONFIG_LENGTH is inaccurate,
+this patch renames it to HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD.
+
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index d659720..f199a23 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -2002,7 +2002,10 @@ static enum hclgevf_evt_cause hclgevf_check_evt_cause(struct hclgevf_dev *hdev,
- 		return HCLGEVF_VECTOR0_EVENT_MBX;
- 	}
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+index afa7c6ff..0538e81 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+@@ -1137,7 +1137,7 @@ static void hclge_dbg_dump_ncl_config(struct hclge_dev *hdev,
+ 				      const char *cmd_buf)
+ {
+ #define HCLGE_MAX_NCL_CONFIG_OFFSET	4096
+-#define HCLGE_MAX_NCL_CONFIG_LENGTH	(20 + 24 * 4)
++#define HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD	(20 + 24 * 4)
  
--	dev_dbg(&hdev->pdev->dev, "vector 0 interrupt from unknown source\n");
-+	/* print other vector0 event source */
-+	dev_info(&hdev->pdev->dev,
-+		 "vector 0 interrupt from unknown source, cmdq_src = %#x\n",
-+		 cmdq_stat_reg);
+ 	struct hclge_desc desc[HCLGE_CMD_NCL_CONFIG_BD_NUM];
+ 	int bd_num = HCLGE_CMD_NCL_CONFIG_BD_NUM;
+@@ -1161,8 +1161,8 @@ static void hclge_dbg_dump_ncl_config(struct hclge_dev *hdev,
  
- 	return HCLGEVF_VECTOR0_EVENT_OTHER;
- }
+ 	while (length > 0) {
+ 		data0 = offset;
+-		if (length >= HCLGE_MAX_NCL_CONFIG_LENGTH)
+-			data0 |= HCLGE_MAX_NCL_CONFIG_LENGTH << 16;
++		if (length >= HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD)
++			data0 |= HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD << 16;
+ 		else
+ 			data0 |= length << 16;
+ 		ret = hclge_dbg_cmd_send(hdev, desc, data0, bd_num,
 -- 
 2.7.4
 
