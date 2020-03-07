@@ -2,112 +2,114 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7170EC10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 19:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4318EC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 19:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B22220684
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 19:16:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="OFKiEK9r"
+	by mail.kernel.org (Postfix) with ESMTP id 1C0EB20684
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 19:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgCGTQi (ORCPT
+        id S1726319AbgCGTSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 14:16:38 -0500
-Received: from mail-pf1-f180.google.com ([209.85.210.180]:42563 "EHLO
-        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgCGTQh (ORCPT
+        Sat, 7 Mar 2020 14:18:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55808 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgCGTSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 14:16:37 -0500
-Received: by mail-pf1-f180.google.com with SMTP id f5so2826311pfk.9
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 11:16:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=eGcbbDGmdFPg+blpFgNt5fk4FJZSVRnYmpe1I78QzBg=;
-        b=OFKiEK9rXwwl0CHY2j3FkIsqxYczJLl5px2s/tJAAAX8dFUu314yr5/3NOOAqz+bD0
-         sBgj0hc5+Lq851u8a0oPMrs+VbZNO6/KW4OUwP4TZHlQep5qeOTVoYfdugbDlJoMLCDC
-         GsjalZc7eFw9dtwYqs0ykj4QWAXazDJLjFkppHkPLWRRzZ0fMNLyVZI9pI9SA/87siGM
-         e9BerHP9tQ6Jy1xNvNbh29FGp4N+mf/JpPRtpKo2iQaVwTKe5A5Pc6p2wPN/wlD+wU40
-         7VbC7se+VMkc7ZWLdSbUjwlp0VrIMMioNiQ0ZKaJh9Zo2d4eBbeRI8J5qytsHDwJDe/z
-         X0tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=eGcbbDGmdFPg+blpFgNt5fk4FJZSVRnYmpe1I78QzBg=;
-        b=fWY4e1sHCm+BJQWltVToMtZi342RY6cHJjMEXunMgsw6TY6alnqRDD2TWIe13r17f8
-         d3KkvUkIewKsffMABiiPoRVXm318NYzRhbkqVLIDV0iPZqHocsl1LUDV/7/c+pHG0J8t
-         06FFP/2aC7l1Lir4lAv/dP/hK/sQGZSfl6E49xVnhA5iYV/1Hsm+TNwHBVtua7SxaFlb
-         VahZWNkl1r2oxaUM85mDLZG5dLIb/4+UVIVHpXeKOew6vTb0YFtOYJRwBscZThE64ben
-         ACThuDI59jzwUzQuDwnHW+mKR3BUoqb6BMr3BO9EWOuDqw6LTwaFWAiWeGxW33xffu4e
-         aQzA==
-X-Gm-Message-State: ANhLgQ3nI2Wg6GwntTUu+b4umef2FkdALVfm/Yb+yBXfpC88Yrr75api
-        AEMGsj1tQ0k3624qVogE+CEX3OvdwBQ=
-X-Google-Smtp-Source: ADFU+vuhccMaJUQFPMqIN8WhD2HFX3Gl3ECYINAPWasV4myFyKWg48nV0wD9WOuO/TWVjynZIVgnkA==
-X-Received: by 2002:a63:8343:: with SMTP id h64mr8751590pge.73.1583608596284;
-        Sat, 07 Mar 2020 11:16:36 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id h12sm23741951pfk.124.2020.03.07.11.16.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Mar 2020 11:16:35 -0800 (PST)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring fixes for 5.6-rc
-Message-ID: <b8c32cfe-9bf8-ee8c-a91b-565583a44a8c@kernel.dk>
-Date:   Sat, 7 Mar 2020 12:16:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 7 Mar 2020 14:18:35 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jAexz-0007je-8N; Sat, 07 Mar 2020 20:18:31 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id A78DF104088; Sat,  7 Mar 2020 20:18:30 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [patch 2/2] x86/kvm: Sanitize kvm_async_pf_task_wait()
+In-Reply-To: <CALCETrX4p+++nS6N_yW2CnvMGUxngQBua65x9A9T-PB740LY0A@mail.gmail.com>
+References: <20200306234204.847674001@linutronix.de> <20200307000259.448059232@linutronix.de> <CALCETrV74siTTHHWRPv+Gz=YS3SAUA6eqB6FX1XaHKvZDCbaNg@mail.gmail.com> <87r1y4a3gw.fsf@nanos.tec.linutronix.de> <CALCETrWc0wM1x-mAcKCPRUiGtzONtXiNVMFgWZwkRD3v3K3jsA@mail.gmail.com> <CALCETrX4p+++nS6N_yW2CnvMGUxngQBua65x9A9T-PB740LY0A@mail.gmail.com>
+Date:   Sat, 07 Mar 2020 20:18:30 +0100
+Message-ID: <875zfg9do9.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Andy Lutomirski <luto@kernel.org> writes:
+> On Sat, Mar 7, 2020 at 7:10 AM Andy Lutomirski <luto@kernel.org> wrote:
+>> On Sat, Mar 7, 2020 at 2:01 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> >
+>> > Andy Lutomirski <luto@kernel.org> writes:
+>
+>> Now I'm confused again.  Your patch is very careful not to schedule if
+>> we're in an RCU read-side critical section, but the regular preemption
+>> code (preempt_schedule_irq, etc) seems to be willing to schedule
+>> inside an RCU read-side critical section.  Why is the latter okay but
+>> not the async pf case?
+>
+> I read more docs.  I guess the relevant situation is
+> CONFIG_PREEMPT_CPU, in which case it is legal to preempt an RCU
+> read-side critical section and obviously legal to put the whole CPU to
+> sleep, but it's illegal to explicitly block in an RCU read-side
+> critical section.  So I have a question for Paul: is it, in fact,
+> entirely illegal to block or merely illegal to block for an
+> excessively long time, e.g. waiting for user space or network traffic?
 
-Here are a few io_uring fixes that should go into this release. This
-pull request contains:
+Two issues here:
 
-- Removal of (now) unused io_wq_flush() and associated flag (Pavel)
+    - excessive blocking time
 
-- Fix cancelation lockup with linked timeouts (Pavel)
+    - entering idle with an RCU read side critical section blocking
 
-- Fix for potential use-after-free when freeing percpu ref for fixed
-  file sets
+>  In this situation, we cannot make progress until the host says we
+> can, so we are, in effect, blocking until the host tells us to stop
+> blocking.  Regardless, I agree that turning IRQs on is reasonable, and
+> allowing those IRQs to preempt us is reasonable.
+>
+> As it stands in your patch, the situation is rather odd: we'll run
+> another task if that task *preempts* us (e.g. we block long enough to
+> run out of our time slice), but we won't run another task if we aren't
+> preempted.  This seems bizarre.
 
-- io-wq cancelation fixups (Pavel)
+Yes, it looks odd. We could do:
 
-Please pull!
+	preempt_disable();
+	while (!page_arrived()) {
+		if (preempt_count() == 1 && this_cpu_runnable_tasks() > 1) {
+        		set_need_resched();
+                	schedule_preempt_disabled();
+		} else {
+                	native_safe_halt();
+                        local_irq_disable();
+		}
+	}
+        preempt_enable();
 
+Don't know if it's worth the trouble. But that's not the problem :)
 
-  git://git.kernel.dk/linux-block.git tags/io_uring-5.6-2020-03-07
+> I think this issue still stands and is actually a fairly easy race to hit.
+>
+> STI
+> IRQ happens and we get preempted
+> another task runs and gets the #PF "async pf wakeup" event
+> reschedule, back to original task
+> HLT
 
+See the other mail about STI :)
 
-----------------------------------------------------------------
-Jens Axboe (1):
-      io_uring: free fixed_file_data after RCU grace period
+Thanks,
 
-Pavel Begunkov (3):
-      io-wq: fix IO_WQ_WORK_NO_CANCEL cancellation
-      io-wq: remove io_wq_flush and IO_WQ_WORK_INTERNAL
-      io_uring: fix lockup with timeouts
-
- fs/io-wq.c    | 58 +++++++++++++++-------------------------------------------
- fs/io-wq.h    |  2 --
- fs/io_uring.c | 25 +++++++++++++++++++++++--
- 3 files changed, 38 insertions(+), 47 deletions(-)
-
--- 
-Jens Axboe
-
+        tglx
