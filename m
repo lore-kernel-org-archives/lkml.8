@@ -2,110 +2,98 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07FEC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34915C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F8B206E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E33206CC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Uqs0s22z"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="EGv7Xx0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgCGBJH (ORCPT
+        id S1726490AbgCGBK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 20:09:07 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:37968 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCGBJH (ORCPT
+        Fri, 6 Mar 2020 20:10:56 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:41017 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgCGBK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 20:09:07 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0270xSfu089023;
-        Sat, 7 Mar 2020 01:08:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=jZ/9waIGl3FuS/HeKNiN38qC4SIq/ljoQkSPu9FdPf8=;
- b=Uqs0s22zrTEyv0b7mZ6uR92KBRV+hDQZyS/SZQiDnL7G8R9y8dakPYUR8NdJm/DePhqC
- Q2c4t32fLC00Y/1D+Xctdb4lydFk+pIGcgIT6XI+GKSONNQY7mIQmbj8M5fG9kK/tfBL
- 9mtqxay+7QRBJxDY9Mg6Jqx6rBqT82qIkJ0qUJi5ONbTPG4y7jPujNrsvbpqzIS6RoMp
- YtcsgSG39WelIKtN9gPBi8/EKSL0YO+4f+8ZFUzw1xFQu6UG/vuio2nWnXHUkdr4j3LL
- TIghQTqX/nRg2rcl0qAKXXCSb0XSkxKkpsgBG53/IW/PRpQHDjxPImEgtJtzR2HjRI3/ Tg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yghn3syrr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 07 Mar 2020 01:08:24 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02716utR147358;
-        Sat, 7 Mar 2020 01:08:24 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2ym0quu3wk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 07 Mar 2020 01:08:24 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 027184eq023779;
-        Sat, 7 Mar 2020 01:08:04 GMT
-Received: from [10.11.0.40] (/10.11.0.40)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 06 Mar 2020 17:08:04 -0800
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-To:     Nishanth Menon <nm@ti.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Tero Kristo <t-kristo@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Fri, 6 Mar 2020 20:10:56 -0500
+Received: by mail-qv1-f68.google.com with SMTP id s15so1846934qvn.8
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 17:10:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=EgkVlU+1chmZAdNkyF5q9aYrIAuysLZZez5WmPdEesQ=;
+        b=EGv7Xx0mZhZufvegZpMUc+XHUkn93SE5ZYbqMRcl5l03s/x6c5RGn1Ma2qadFUAf7S
+         mDQMjSqV0IMWb0LKZbXtHgPTizxmZGQTJdUUxxDOzRNaQofngetBXfwNZBmrbUir4STy
+         e3xaR5vaUH0X/eG5wGlkW6iyRZ9+AVrlHBQUd8rTQK2YW8J6Zd2RLf0s/Z6jQ5Xya9vu
+         aeJUNlgp7kS5lPRKKgCNzhDAIzhO4wqNELMKCmK5Pf7jkprIcuqhfAVWcp5Z+XuxcskU
+         0FpMxIT78jjgIVAOm8sfqI2jqD5aX8zFE6cx/mP42YiyM5KNoK8iovEJATfquaQSZhHz
+         6eAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=EgkVlU+1chmZAdNkyF5q9aYrIAuysLZZez5WmPdEesQ=;
+        b=Bcd5EUvfq2exD2OhsoI/O2S4avGIpHAR57n9VElUxBnqgCIZ2ZllhbPyBhwN260GOz
+         kt3X45FguX/uNpOye7+FqIxBOxQZVCltSCknRLi43ijCaDGnV2kkCRH2ND/xYikBW9qW
+         w+a4JWaTOlOcr/PLKvwv3vBEVczYJDi4A/42YvdTqOuo0KskRafDs6x5kADdqyEOCIHG
+         fMWcpYp0I2D7ADceGKWjTep/oPoeorrpgwblIuJEzVJuHsioMm9R8kd7U/5S/2+srBhH
+         cub0R83iaDok9ZGpm0k4K+uwxQuHzpsfOqIzlshY/Fu0OqaHvsal2scyCv8gUxYwMzKj
+         34LQ==
+X-Gm-Message-State: ANhLgQ1gb7W930ylyKeTZ9q8fZr3WmxDmQJYBz8+y8+70a57FErbK1kJ
+        utaKtnMuRjlw5pHTiW2S4pI7Ag==
+X-Google-Smtp-Source: ADFU+vsw52nux5Uc1WpPZ0fNtyFcwSVbVBgSYAhgVo8M+FINwP2UYIzF3QTk5i6KnfgTnuq5ecGdaA==
+X-Received: by 2002:a0c:e401:: with SMTP id o1mr5556949qvl.19.1583543455511;
+        Fri, 06 Mar 2020 17:10:55 -0800 (PST)
+Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d35sm17605260qtc.21.2020.03.06.17.10.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Mar 2020 17:10:54 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH V15] mm/debug: Add tests validating architecture page
+ table helpers
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <a45834bc-e6f2-ac21-de9e-1aff67d12797@arm.com>
+Date:   Fri, 6 Mar 2020 20:10:52 -0500
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-References: <20200211193101.GA178975@cmpxchg.org>
- <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
- <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
- <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
- <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
- <20200212085004.GL25745@shell.armlinux.org.uk>
- <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
- <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
- <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
- <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
- <20200306203439.peytghdqragjfhdx@kahuna>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <7b179d51-3d08-53f5-9b6e-552869f8ed78@oracle.com>
-Date:   Fri, 6 Mar 2020 17:08:03 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20200306203439.peytghdqragjfhdx@kahuna>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
- suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003070004
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9552 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 clxscore=1011 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003070003
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C65A91AB-3F70-4120-893D-2751601C0F25@lca.pw>
+References: <61250cdc-f80b-2e50-5168-2ec67ec6f1e6@arm.com>
+ <CEEAD95E-D468-4C58-A65B-7E8AED91168A@lca.pw>
+ <a45834bc-e6f2-ac21-de9e-1aff67d12797@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -113,58 +101,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 3/6/20 12:34 PM, Nishanth Menon wrote:
-> On 13:11-20200226, santosh.shilimkar@oracle.com wrote:
->> +Nishant, Tero
->>
->> On 2/26/20 1:01 PM, Arnd Bergmann wrote:
->>> On Wed, Feb 26, 2020 at 7:04 PM <santosh.shilimkar@oracle.com> wrote:
->>>>
->>>> On 2/13/20 8:52 AM, Arnd Bergmann wrote:
->>>>> On Wed, Feb 12, 2020 at 9:50 AM Russell King - ARM Linux admin
->>>>> <linux@armlinux.org.uk> wrote:
->>>>
->>>> The Keystone generations of SOCs have been used in different areas and
->>>> they will be used for long unless says otherwise.
->>>>
->>>> Apart from just split of lowmem and highmem, one of the peculiar thing
->>>> with Keystome family of SOCs is the DDR is addressable from two
->>>> addressing ranges. The lowmem address range is actually non-cached
->>>> range and the higher range is the cacheable.
->>>
->>> I'm aware of Keystone's special physical memory layout, but for the
->>> discussion here, this is actually irrelevant for the discussion about
->>> highmem here, which is only about the way we map all or part of the
->>> available physical memory into the 4GB of virtual address space.
->>>
->>> The far more important question is how much memory any users
->>> (in particular the subset that are going to update their kernels
->>> several years from now) actually have installed. Keystone-II is
->>> one of the rare 32-bit chips with fairly wide memory interfaces,
->>> having two 72-bit (with ECC) channels rather than the usual one
->>>    or two channels of 32-bit DDR3. This means a relatively cheap
->>> 4GB configuration using eight 256Mx16 chips is possible, or
->>> even a 8GB using sixteen or eighteen 512Mx8.
->>>
->>> Do you have an estimate on how common these 4GB and 8GB
->>> configurations are in practice outside of the TI evaluation
->>> board?
->>>
->>  From my TI memories, many K2 customers were going to install
->> more than 2G memory. Don't remember 8G, but 4G was the dominant
->> one afair. Will let Nishant/Tero elaborate latest on this.
->>
-> 
-> Thanks for the headsup, it took a little to dig up the current
-> situation:
-> 
-> ~few 1000s still relevant spread between 4G and 8G (confirmed that both
-> are present, relevant and in use).
-> 
-> I wish we could sunset, but unfortunately, I am told(and agree)
-> that we should'nt just leave products (and these are long term
-> products stuck in critical parts in our world) hanging in the air, and
-> migrations to newer kernel do still take place periodically (the best
-> I can talk in public forum at least).
-> 
-Thanks Nishant !!
+> On Mar 6, 2020, at 7:56 PM, Anshuman Khandual =
+<anshuman.khandual@arm.com> wrote:
+>=20
+>=20
+>=20
+> On 03/07/2020 06:04 AM, Qian Cai wrote:
+>>=20
+>>=20
+>>> On Mar 6, 2020, at 7:03 PM, Anshuman Khandual =
+<Anshuman.Khandual@arm.com> wrote:
+>>>=20
+>>> Hmm, set_pte_at() function is not preferred here for these tests. =
+The idea
+>>> is to avoid or atleast minimize TLB/cache flushes triggered from =
+these sort
+>>> of 'static' tests. set_pte_at() is platform provided and could/might =
+trigger
+>>> these flushes or some other platform specific synchronization stuff. =
+Just
+>>=20
+>> Why is that important for this debugging option?
+>=20
+> Primarily reason is to avoid TLB/cache flush instructions on the =
+system
+> during these tests that only involve transforming different page table
+> level entries through helpers. Unless really necessary, why should it
+> emit any TLB/cache flush instructions ?
+>=20
+>>=20
+>>> wondering is there specific reason with respect to the soft lock up =
+problem
+>>> making it necessary to use set_pte_at() rather than a simple =
+WRITE_ONCE() ?
+>>=20
+>> Looks at the s390 version of set_pte_at(), it has this comment,
+>> vmaddr);
+>>=20
+>> /*
+>> * Certain architectures need to do special things when PTEs
+>> * within a page table are directly modified.  Thus, the following
+>> * hook is made available.
+>> */
+>>=20
+>> I can only guess that powerpc  could be the same here.
+>=20
+> This comment is present in multiple platforms while defining =
+set_pte_at().
+> Is not 'barrier()' here alone good enough ? Else what exactly =
+set_pte_at()
+
+No, barrier() is not enough.
+
+> does as compared to WRITE_ONCE() that avoids the soft lock up, just =
+trying
+> to understand.
+
+I surely can spend hours to figure which exact things in set_pte_at() is =
+necessary for
+pte_clear() not to stuck, and then propose a solution and possible need =
+to retest on
+multiple arches. I am not sure if that is a good use of my time just to =
+saving
+a few TLB/cache flush on a debug kernel?=
