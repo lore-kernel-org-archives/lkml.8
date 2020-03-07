@@ -2,205 +2,158 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E12C10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02B8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E4A206E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:00:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YRsSIbpM"
+	by mail.kernel.org (Postfix) with ESMTP id 7768E20705
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgCGAAv (ORCPT
+        id S1726676AbgCGAD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 19:00:51 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44617 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgCGAAY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 19:00:24 -0500
-Received: by mail-pg1-f196.google.com with SMTP id n24so1786847pgk.11
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 16:00:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Fa535hrpTpxZVWC2jXEsXv4d9XUZa691SL9SgolYs4Y=;
-        b=YRsSIbpMAkMDVgwzUvqYgt5Pw2FWe38K7hVWxuT56wcYfjeSCrGFticDa/8sZo8SrP
-         muEqQOjyKmXZDNM5RUGBdpKKU4Dx8lFk9b59ItnlKq08BTRHOfFL/OKdsXhnD/O7Phtr
-         nZUnQAxr/+hYCGdRZl8k2U7iNsQroUXrOX19w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Fa535hrpTpxZVWC2jXEsXv4d9XUZa691SL9SgolYs4Y=;
-        b=HGVTcoI4uwBmbsBRJaHm//HUdpxWhA0LmHTXz9iaTT78GLlNNCBZNOvYJo95rN7FuE
-         hcezzNArL3t7NSxY6zxgCEAgihCObs6MUC1nADvqFeKKaz1WOhIH/B6eGuEnkMUoNTTH
-         WgAM0TMokaYLomdnlEPhOHX2tqKc4x3vr6PupGtAAekZV5NbwiRLQTkRdx4NfIq3MRWf
-         QmKBtfDwMyjt2E8frwI0+jZHnzg4D01BxfrhpMvV7LB6pKqIvyFiS52j7k1CbwsPcY1Z
-         88iq2HOZzR2fRRK5XXt5JRc5ZP+SuNG3qr0YtwBTIBt6AQWLy8u9ISa2/8Nq7P2zroOG
-         AdvA==
-X-Gm-Message-State: ANhLgQ0m+prDhideeyx7hjxRSu6KBdaMv8xK7fAfRwoVe5mEazo4vvUU
-        l48IUIGQ6TU+ADdKqfAspaHvuA==
-X-Google-Smtp-Source: ADFU+vuLg3Bqwh0pMdmhbZ2lf/7W/K+nOSsEUZ6rUJLzRWGPCGc0yXBD0jE1vPdLfE2P1yx40LUpLA==
-X-Received: by 2002:a63:c643:: with SMTP id x3mr5167987pgg.299.1583539221779;
-        Fri, 06 Mar 2020 16:00:21 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id 9sm32302246pge.65.2020.03.06.16.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 16:00:21 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, mka@chromium.org,
-        evgreen@chromium.org, swboyd@chromium.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFT PATCH 1/9] drivers: qcom: rpmh-rsc: Clean code reading/writing regs/cmds
-Date:   Fri,  6 Mar 2020 15:59:43 -0800
-Message-Id: <20200306155707.RFT.1.I1b754137e8089e46cf33fc2ea270734ec3847ec4@changeid>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-In-Reply-To: <20200306235951.214678-1-dianders@chromium.org>
-References: <20200306235951.214678-1-dianders@chromium.org>
+        Fri, 6 Mar 2020 19:03:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:39500 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbgCGAD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 19:03:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A3A530E;
+        Fri,  6 Mar 2020 16:03:26 -0800 (PST)
+Received: from [10.163.1.59] (unknown [10.163.1.59])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 689F93F237;
+        Fri,  6 Mar 2020 16:03:17 -0800 (PST)
+Subject: Re: [PATCH V15] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Qian Cai <cai@lca.pw>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+References: <1583452659-11801-1-git-send-email-anshuman.khandual@arm.com>
+ <1583527481.7365.165.camel@lca.pw>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <61250cdc-f80b-2e50-5168-2ec67ec6f1e6@arm.com>
+Date:   Sat, 7 Mar 2020 05:33:15 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <1583527481.7365.165.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch makes two changes, both of which should be no-ops:
 
-1. Make read_tcs_reg() / read_tcs_cmd() symmetric to write_tcs_reg() /
-   write_tcs_cmd().
 
-2. Change the order of operations in the above functions to make it
-   more obvious to me what the math is doing.  Specifically first you
-   want to find the right TCS, then the right register, and then
-   multiply by the command ID if necessary.
+On 03/07/2020 02:14 AM, Qian Cai wrote:
+> On Fri, 2020-03-06 at 05:27 +0530, Anshuman Khandual wrote:
+>> This adds tests which will validate architecture page table helpers and
+>> other accessors in their compliance with expected generic MM semantics.
+>> This will help various architectures in validating changes to existing
+>> page table helpers or addition of new ones.
+>>
+>> This test covers basic page table entry transformations including but not
+>> limited to old, young, dirty, clean, write, write protect etc at various
+>> level along with populating intermediate entries with next page table page
+>> and validating them.
+>>
+>> Test page table pages are allocated from system memory with required size
+>> and alignments. The mapped pfns at page table levels are derived from a
+>> real pfn representing a valid kernel text symbol. This test gets called
+>> inside kernel_init() right after async_synchronize_full().
+>>
+>> This test gets built and run when CONFIG_DEBUG_VM_PGTABLE is selected. Any
+>> architecture, which is willing to subscribe this test will need to select
+>> ARCH_HAS_DEBUG_VM_PGTABLE. For now this is limited to arc, arm64, x86, s390
+>> and ppc32 platforms where the test is known to build and run successfully.
+>> Going forward, other architectures too can subscribe the test after fixing
+>> any build or runtime problems with their page table helpers. Meanwhile for
+>> better platform coverage, the test can also be enabled with CONFIG_EXPERT
+>> even without ARCH_HAS_DEBUG_VM_PGTABLE.
+>>
+>> Folks interested in making sure that a given platform's page table helpers
+>> conform to expected generic MM semantics should enable the above config
+>> which will just trigger this test during boot. Any non conformity here will
+>> be reported as an warning which would need to be fixed. This test will help
+>> catch any changes to the agreed upon semantics expected from generic MM and
+>> enable platforms to accommodate it thereafter.
+> 
+> OK, I get this working on powerpc hash MMU as well, so this?
+> 
+> diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+> b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+> index 64d0f9b15c49..c527d05c0459 100644
+> --- a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+> +++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+> @@ -22,8 +22,7 @@
+>      |       nios2: | TODO |
+>      |    openrisc: | TODO |
+>      |      parisc: | TODO |
+> -    |  powerpc/32: |  ok  |
+> -    |  powerpc/64: | TODO |
+> +    |     powerpc: |  ok  |
+>      |       riscv: | TODO |
+>      |        s390: |  ok  |
+>      |          sh: | TODO |
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 2e7eee523ba1..176930f40e07 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -116,7 +116,7 @@ config PPC
+>  	#
+>  	select ARCH_32BIT_OFF_T if PPC32
+>  	select ARCH_HAS_DEBUG_VIRTUAL
+> -	select ARCH_HAS_DEBUG_VM_PGTABLE if PPC32
+> +	select ARCH_HAS_DEBUG_VM_PGTABLE
+>  	select ARCH_HAS_DEVMEM_IS_ALLOWED
+>  	select ARCH_HAS_ELF_RANDOMIZE
+>  	select ARCH_HAS_FORTIFY_SOURCE
+> diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+> index 96a91bda3a85..98990a515268 100644
+> --- a/mm/debug_vm_pgtable.c
+> +++ b/mm/debug_vm_pgtable.c
+> @@ -256,7 +256,8 @@ static void __init pte_clear_tests(struct mm_struct *mm,
+> pte_t *ptep,
+>  	pte_t pte = READ_ONCE(*ptep);
+>  
+>  	pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
+> -	WRITE_ONCE(*ptep, pte);
+> +	set_pte_at(mm, vaddr, ptep, pte);
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+Hmm, set_pte_at() function is not preferred here for these tests. The idea
+is to avoid or atleast minimize TLB/cache flushes triggered from these sort
+of 'static' tests. set_pte_at() is platform provided and could/might trigger
+these flushes or some other platform specific synchronization stuff. Just
+wondering is there specific reason with respect to the soft lock up problem
+making it necessary to use set_pte_at() rather than a simple WRITE_ONCE() ?
 
- drivers/soc/qcom/rpmh-rsc.c | 31 ++++++++++++++++++-------------
- 1 file changed, 18 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index e278fc11fe5c..5c88b8cd5bf8 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -61,28 +61,33 @@
- #define CMD_STATUS_ISSUED		BIT(8)
- #define CMD_STATUS_COMPL		BIT(16)
- 
--static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
-+static u32 read_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
- {
--	return readl_relaxed(drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
-+	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
- 			     RSC_DRV_CMD_OFFSET * cmd_id);
- }
- 
-+static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id)
-+{
-+	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
-+}
-+
- static void write_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id,
- 			  u32 data)
- {
--	writel_relaxed(data, drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
-+	writel_relaxed(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
- 		       RSC_DRV_CMD_OFFSET * cmd_id);
- }
- 
- static void write_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, u32 data)
- {
--	writel_relaxed(data, drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id);
-+	writel_relaxed(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
- }
- 
- static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
- 			       u32 data)
- {
--	writel(data, drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id);
-+	writel(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
- 	for (;;) {
- 		if (data == readl(drv->tcs_base + reg +
- 				  RSC_DRV_TCS_OFFSET * tcs_id))
-@@ -94,7 +99,7 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
- static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
- {
- 	return !test_bit(tcs_id, drv->tcs_in_use) &&
--	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id, 0);
-+	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id);
- }
- 
- static struct tcs_group *get_tcs_of_type(struct rsc_drv *drv, int type)
-@@ -212,7 +217,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
- 	const struct tcs_request *req;
- 	struct tcs_cmd *cmd;
- 
--	irq_status = read_tcs_reg(drv, RSC_DRV_IRQ_STATUS, 0, 0);
-+	irq_status = read_tcs_reg(drv, RSC_DRV_IRQ_STATUS, 0);
- 
- 	for_each_set_bit(i, &irq_status, BITS_PER_LONG) {
- 		req = get_req_from_tcs(drv, i);
-@@ -226,7 +231,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
- 			u32 sts;
- 
- 			cmd = &req->cmds[j];
--			sts = read_tcs_reg(drv, RSC_DRV_CMD_STATUS, i, j);
-+			sts = read_tcs_cmd(drv, RSC_DRV_CMD_STATUS, i, j);
- 			if (!(sts & CMD_STATUS_ISSUED) ||
- 			   ((req->wait_for_compl || cmd->wait) &&
- 			   !(sts & CMD_STATUS_COMPL))) {
-@@ -265,7 +270,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
- 	cmd_msgid |= msg->wait_for_compl ? CMD_MSGID_RESP_REQ : 0;
- 	cmd_msgid |= CMD_MSGID_WRITE;
- 
--	cmd_complete = read_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, 0);
-+	cmd_complete = read_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id);
- 
- 	for (i = 0, j = cmd_id; i < msg->num_cmds; i++, j++) {
- 		cmd = &msg->cmds[i];
-@@ -281,7 +286,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
- 	}
- 
- 	write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, cmd_complete);
--	cmd_enable |= read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
-+	cmd_enable |= read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id);
- 	write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, cmd_enable);
- }
- 
-@@ -294,7 +299,7 @@ static void __tcs_trigger(struct rsc_drv *drv, int tcs_id)
- 	 * While clearing ensure that the AMC mode trigger is cleared
- 	 * and then the mode enable is cleared.
- 	 */
--	enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, 0);
-+	enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id);
- 	enable &= ~TCS_AMC_MODE_TRIGGER;
- 	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
- 	enable &= ~TCS_AMC_MODE_ENABLE;
-@@ -319,10 +324,10 @@ static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_group *tcs,
- 		if (tcs_is_free(drv, tcs_id))
- 			continue;
- 
--		curr_enabled = read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
-+		curr_enabled = read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id);
- 
- 		for_each_set_bit(j, &curr_enabled, MAX_CMDS_PER_TCS) {
--			addr = read_tcs_reg(drv, RSC_DRV_CMD_ADDR, tcs_id, j);
-+			addr = read_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tcs_id, j);
- 			for (k = 0; k < msg->num_cmds; k++) {
- 				if (addr == msg->cmds[k].addr)
- 					return -EBUSY;
--- 
-2.25.1.481.gfbce0eb801-goog
-
+> +	barrier();
+>  	pte_clear(mm, vaddr, ptep);
+>  	pte = READ_ONCE(*ptep);
+>  	WARN_ON(!pte_none(pte));
+> 
