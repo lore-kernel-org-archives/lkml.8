@@ -2,155 +2,119 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7ECC10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788FEC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 115542073C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5182B2075A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:32:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ZOqzzySJ"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="IElGU+Nn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgCGJZ7 (ORCPT
+        id S1726134AbgCGJcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 04:25:59 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:57673 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgCGJZ6 (ORCPT
+        Sat, 7 Mar 2020 04:32:47 -0500
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:40605 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725878AbgCGJcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 04:25:58 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 11FCA23EB4;
-        Sat,  7 Mar 2020 10:25:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583573156;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k5ZQ+jGPB/XqVL4rRP9EmsAWoBDvpiXvAb7VKbopIoM=;
-        b=ZOqzzySJsyMFJdD2BnnD0p1c2FIDVyA1rZSwjwFlgyKyIuYiUXq8hJPZ3bhvzq4vFWspVW
-        xdNVvVSKbL/plsWkSUo9TlTb+xhQKzVP8uf9VP/sbxpkJxs3RuFK+lseR6BEufLKutSHH8
-        pjfkdV4Qoxlopt0pYskNih+n9Q8oj2w=
+        Sat, 7 Mar 2020 04:32:46 -0500
+Received: from [IPv6:2001:983:e9a7:1:558f:c736:2117:17d1]
+ ([IPv6:2001:983:e9a7:1:558f:c736:2117:17d1])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id AVp4jx1PZ9Im2AVp5jJ1Ey; Sat, 07 Mar 2020 10:32:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1583573564; bh=qWaLrRMEa0H6bqFO0jtJCqfA8jNFPKhl2ErMRoaoQHw=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=IElGU+NnXTMjTHcDTz3x3maihzMdU9BCsmCqwtlCfQbPKjOtltUN+d2RZubmHKfe0
+         RkEZwiPlftL5fgaOm4VWKVXnO6uR4k2v9HY/ik63nqs3POHFpSMiZSjlCFErMhe7A5
+         ccZUIMtgGJQx/A8ScvcaCcVJDdn9qkzbPfpPp+weVNZJW0g5QLJgePQJbFzCx9gTa7
+         RMJgJLZ0GdlikC5gODepvK9VhoDRI15Tfm3YkD31lXGw62Bw/zqJUqz0NSSTkbrscT
+         eUnN8c+oyD5SwW7OORyS8/2nXp7J+sCsK91j/MxRe3Ckl+sIcOiRF/D8QNzuOUoM07
+         cy98CrsQAmgRg==
+Subject: Re: [PATCHv4 10/11] videobuf2: add begin/end cpu_access callbacks to
+ dma-sg
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200302041213.27662-1-senozhatsky@chromium.org>
+ <20200302041213.27662-11-senozhatsky@chromium.org>
+ <f99cd8d2-26a2-acd1-a986-aee66cd2ba12@xs4all.nl>
+ <20200307052628.GB176460@google.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8150bc6c-f6a4-fa2c-4e2e-552dcb168df0@xs4all.nl>
+Date:   Sat, 7 Mar 2020 10:32:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Sat, 07 Mar 2020 10:25:55 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
-Subject: Re: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
- compatible
-In-Reply-To: <VI1PR04MB44312A940BC5BFC7F13A5706EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20200306205403.29881-1-michael@walle.cc>
- <20200306205403.29881-2-michael@walle.cc>
- <VI1PR04MB44312A940BC5BFC7F13A5706EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
-Message-ID: <e0be23f7d1307621151594dd66d2b8fd@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 11FCA23EB4
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[10];
-         NEURAL_HAM(-0.00)[-0.462];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+In-Reply-To: <20200307052628.GB176460@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEwhK2PpFlwrt7pMeGwxfncC4Y00enycjjuQwazf0ibd9yUp4vxgG4AvMSJNNj2kB3ed5tB894CI84FMbXT4t5g/2Hgg4XahtISRrM6WeFxwK2Z1DLLw
+ z3FUPumVEVBvHvTr0G1cDpyWdC43q9+frV1Cd0GtaiSTVlgW4yCzsQdjbVSwwjH3S+bT12C4SZHcBs40tgmMTO/Qf5Cij6b8l6DEVTt7WRGLl1PPklPJXlDr
+ 275IJDkjWZ7kbGsHy/BKgnZJzUcX3dkrqWBU0+3DlTXGtjLFSIk8d+7wunDYWM8hxqEYaM2REqrK8MU5oFuPy8dJsydKCX8HowMuQm9rID+qe7R90V6/pN8x
+ 9hKs2bUjf/WtctevvjgoBVQncvbHuvVOdbk5oC9dRLs1Qy+RNyP3t9rnCP/hbDCTn2sfPH4UQTPDX8g6VCTYga4Q4qvWGNP6oDHWRJP2Lau+6Jj7oeyGzMmJ
+ 3u0NeEhSIDAnNbCXPORa650Y3mHy25PHWISggQZB6LM4VOviXReQZEfd8QmnWl0eBNG5fuHf2FfwKm+yXokt/Viw5Euu6zGXpU6Jt6P4eslS2272q+zSi2m9
+ FPITVQRyvgEJDIf3/7CXKKAwNa+aUpcpiWKU7rA5AeAzbA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peng,
-
-Am 2020-03-07 03:09, schrieb Peng Ma:
->> -----Original Message-----
->> From: Michael Walle <michael@walle.cc>
->> Sent: 2020年3月7日 4:54
->> To: dmaengine@vger.kernel.org; devicetree@vger.kernel.org;
->> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
->> Cc: Vinod Koul <vkoul@kernel.org>; Rob Herring <robh+dt@kernel.org>; 
->> Mark
->> Rutland <mark.rutland@arm.com>; Shawn Guo <shawnguo@kernel.org>; Leo 
->> Li
->> <leoyang.li@nxp.com>; Peng Ma <peng.ma@nxp.com>; Michael Walle
->> <michael@walle.cc>
->> Subject: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
->> compatible
->> 
->> Caution: EXT Email
->> 
->> The bootloader does the IOMMU fixup and dynamically adds the "iommus"
->> property to devices according to its compatible string. In case of the 
->> eDMA
->> controller this property is missing. Add it. After that the IOMMU will 
->> work with
->> the eDMA core.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->> arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> index b152fa90cf5c..aa467bff2209 100644
->> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
->> @@ -447,7 +447,7 @@
->> 
->>                edma0: dma-controller@22c0000 {
->>                        #dma-cells = <2>;
->> -                       compatible = "fsl,ls1028a-edma";
->> +                       compatible = "fsl,ls1028a-edma",
->> + "fsl,vf610-edma";
-> Hi Michael,
+On 07/03/2020 06:26, Sergey Senozhatsky wrote:
+> On (20/03/06 15:04), Hans Verkuil wrote:
+> [..]
+>>> +	/*
+>>> +	 * NOTE: dma-sg allocates memory using the page allocator directly, so
+>>> +	 * there is no memory consistency guarantee, hence dma-sg ignores DMA
+>>> +	 * attributes passed from the upper layer. That means that
+>>> +	 * V4L2_FLAG_MEMORY_NON_CONSISTENT has no effect on dma-sg buffers.
+>>> +	 */
+>>>  	buf->pages = kvmalloc_array(buf->num_pages, sizeof(struct page *),
+>>>  				    GFP_KERNEL | __GFP_ZERO);
+>>>  	if (!buf->pages)
+>>> @@ -470,6 +476,26 @@ static void vb2_dma_sg_dmabuf_ops_release(struct dma_buf *dbuf)
+>>>  	vb2_dma_sg_put(dbuf->priv);
+>>>  }
+>>>  
+>>> +static int vb2_dma_sg_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
+>>> +					enum dma_data_direction direction)
+>>
+>> I suggest you use this style to avoid checkpatch warnings:
+>>
+>> static int
+>> vb2_dma_sg_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
+>> 				       enum dma_data_direction direction)
 > 
-> You should change it on bootloader instead of kernel, Some Reg of
-> LS1028a is different
-> from others, So we used compatible "fsl,ls1028a-edm" to distinguish "
-> fsl,vf610-edma".
-
-Yes this might be the right thing to do. So since it is NXPs bootloader
-feel free to fix that ;) Looking at the u-boot code right now, I don't
-even know it that is the right fix at all. The fixup code in u-boot is
-SoC independent (its in fsl_icid.h and is enabled with CONFIG_LSCH3, ie
-your chassis version). For example, the sdhc fixup will scan the nodes
-for "compatible = fsl,esdhc", which is also the secondary compatible
-for the "ls1028a-esdhc" compatible.
-
-And here is another reason to have it this way: we need backwards
-compatibility, the are already boards out there whose bootloader will
-fix-up the "old" node. Thus I don't see any other possibilty.
-
--michael
-
+> OK, will do.
 > 
-> Thanks,
-> Peng
->>                        reg = <0x0 0x22c0000 0x0 0x10000>,
->>                              <0x0 0x22d0000 0x0 0x10000>,
->>                              <0x0 0x22e0000 0x0 0x10000>;
->> --
->> 2.20.1
+> Just for information, my checkpatch doesn't warn me:
+> 
+> $ ./scripts/checkpatch.pl outgoing/0010-videobuf2-add-begin-end-cpu_access-callbacks-to-dma-.patch
+
+We use the --strict option to checkpatch.
+
+Regards,
+
+	Hans
+
+> total: 0 errors, 0 warnings, 46 lines checked
+> 
+> outgoing/0010-videobuf2-add-begin-end-cpu_access-callbacks-to-dma-.patch has no obvious style problems and is ready for submission.
+> 
+> 	-ss
+> 
+
