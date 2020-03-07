@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7240DC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3ACC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C474206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F260C20828
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgCGHhQ (ORCPT
+        id S1726206AbgCGHhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 02:37:16 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55247 "EHLO
+        Sat, 7 Mar 2020 02:37:05 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55237 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgCGHhI (ORCPT
+        with ESMTP id S1725815AbgCGHhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 02:37:08 -0500
+        Sat, 7 Mar 2020 02:37:05 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAU0v-0004Hm-8L; Sat, 07 Mar 2020 08:36:49 +0100
+        id 1jAU0u-0004Hg-HB; Sat, 07 Mar 2020 08:36:48 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E35DC1C21A5;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 313BF1C21A5;
         Sat,  7 Mar 2020 08:36:48 +0100 (CET)
-Date:   Sat, 07 Mar 2020 07:36:48 -0000
-From:   "tip-bot2 for Nick Desaulniers" <tip-bot2@linutronix.de>
+Date:   Sat, 07 Mar 2020 07:36:47 -0000
+From:   "tip-bot2 for Tommi Rantala" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf diff: Fix undefined string comparision
- spotted by clang's -Wstring-compare
-Cc:     Nick Desaulniers <nick.desaulniers@gmail.com>,
-        Ian Rogers <irogers@google.com>,
+Subject: [tip: perf/urgent] perf bench futex-wake: Restore thread count
+ default to online CPU count
+Cc:     Tommi Rantala <tommi.t.rantala@nokia.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, John Keeping <john@metanate.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jiri Olsa <jolsa@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        clang-built-linux@googlegroups.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200223193456.25291-1-nick.desaulniers@gmail.com>
-References: <20200223193456.25291-1-nick.desaulniers@gmail.com>
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200305083714.9381-3-tommi.t.rantala@nokia.com>
+References: <20200305083714.9381-3-tommi.t.rantala@nokia.com>
 MIME-Version: 1.0
-Message-ID: <158356660863.28353.13163883291738121062.tip-bot2@tip-bot2>
+Message-ID: <158356660791.28353.2323821212643953114.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,111 +65,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     cfd3bc752a3f5529506d279deb42e3bc8055695b
-Gitweb:        https://git.kernel.org/tip/cfd3bc752a3f5529506d279deb42e3bc8055695b
-Author:        Nick Desaulniers <nick.desaulniers@gmail.com>
-AuthorDate:    Sun, 23 Feb 2020 11:34:49 -08:00
+Commit-ID:     f649bd9dd5d5004543bbc3c50b829577b49f5d75
+Gitweb:        https://git.kernel.org/tip/f649bd9dd5d5004543bbc3c50b829577b49f5d75
+Author:        Tommi Rantala <tommi.t.rantala@nokia.com>
+AuthorDate:    Thu, 05 Mar 2020 10:37:13 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Fri, 06 Mar 2020 08:30:29 -03:00
+CommitterDate: Fri, 06 Mar 2020 08:30:47 -03:00
 
-perf diff: Fix undefined string comparision spotted by clang's -Wstring-compare
+perf bench futex-wake: Restore thread count default to online CPU count
 
-clang warns:
+Since commit 3b2323c2c1c4 ("perf bench futex: Use cpumaps") the default
+number of threads the benchmark uses got changed from number of online
+CPUs to zero:
 
-  util/block-info.c:298:18: error: result of comparison against a string
-  literal is unspecified (use an explicit string comparison function
-  instead) [-Werror,-Wstring-compare]
-          if ((start_line != SRCLINE_UNKNOWN) && (end_line != SRCLINE_UNKNOWN)) {
-                          ^  ~~~~~~~~~~~~~~~
-  util/block-info.c:298:51: error: result of comparison against a string
-  literal is unspecified (use an explicit string comparison function
-  instead) [-Werror,-Wstring-compare]
-          if ((start_line != SRCLINE_UNKNOWN) && (end_line != SRCLINE_UNKNOWN)) {
-                                                           ^  ~~~~~~~~~~~~~~~
-  util/block-info.c:298:18: error: result of comparison against a string
-  literal is unspecified (use an explicit string
-  comparison function instead) [-Werror,-Wstring-compare]
-          if ((start_line != SRCLINE_UNKNOWN) && (end_line != SRCLINE_UNKNOWN)) {
-                          ^  ~~~~~~~~~~~~~~~
-  util/block-info.c:298:51: error: result of comparison against a string
-  literal is unspecified (use an explicit string comparison function
-  instead) [-Werror,-Wstring-compare]
-          if ((start_line != SRCLINE_UNKNOWN) && (end_line != SRCLINE_UNKNOWN)) {
-                                                           ^  ~~~~~~~~~~~~~~~
-  util/map.c:434:15: error: result of comparison against a string literal
-  is unspecified (use an explicit string comparison function instead)
-  [-Werror,-Wstring-compare]
-                  if (srcline != SRCLINE_UNKNOWN)
-                              ^  ~~~~~~~~~~~~~~~
+  $ perf bench futex wake
+  # Running 'futex/wake' benchmark:
+  Run summary [PID 15930]: blocking on 0 threads (at [private] futex 0x558b8ee4bfac), waking up 1 at a time.
+  [Run 1]: Wokeup 0 of 0 threads in 0.0000 ms
+  [...]
+  [Run 10]: Wokeup 0 of 0 threads in 0.0000 ms
+  Wokeup 0 of 0 threads in 0.0004 ms (+-40.82%)
 
-Reviewer Notes:
+Restore the old behavior by grabbing the number of online CPUs via
+cpu->nr:
 
-Looks good to me. Some more context:
-https://clang.llvm.org/docs/DiagnosticsReference.html#wstring-compare
-The spec says:
-J.1 Unspecified behavior
-The following are unspecified:
-.. Whether two string literals result in distinct arrays (6.4.5).
+  $ perf bench futex wake
+  # Running 'futex/wake' benchmark:
+  Run summary [PID 18356]: blocking on 8 threads (at [private] futex 0xb3e62c), waking up 1 at a time.
+  [Run 1]: Wokeup 8 of 8 threads in 0.0260 ms
+  [...]
+  [Run 10]: Wokeup 8 of 8 threads in 0.0270 ms
+  Wokeup 8 of 8 threads in 0.0419 ms (+-24.35%)
 
-Signed-off-by: Nick Desaulniers <nick.desaulniers@gmail.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
+Fixes: 3b2323c2c1c4 ("perf bench futex: Use cpumaps")
+Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Keeping <john@metanate.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/900
-Link: http://lore.kernel.org/lkml/20200223193456.25291-1-nick.desaulniers@gmail.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lore.kernel.org/lkml/20200305083714.9381-3-tommi.t.rantala@nokia.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-diff.c    | 3 ++-
- tools/perf/util/block-info.c | 3 ++-
- tools/perf/util/map.c        | 2 +-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/bench/futex-wake.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index f8b6ae5..c03c36f 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -1312,7 +1312,8 @@ static int cycles_printf(struct hist_entry *he, struct hist_entry *pair,
- 	end_line = map__srcline(he->ms.map, bi->sym->start + bi->end,
- 				he->ms.sym);
+diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
+index df81009..58906e9 100644
+--- a/tools/perf/bench/futex-wake.c
++++ b/tools/perf/bench/futex-wake.c
+@@ -43,7 +43,7 @@ static bool done = false, silent = false, fshared = false;
+ static pthread_mutex_t thread_lock;
+ static pthread_cond_t thread_parent, thread_worker;
+ static struct stats waketime_stats, wakeup_stats;
+-static unsigned int ncpus, threads_starting, nthreads = 0;
++static unsigned int threads_starting, nthreads = 0;
+ static int futex_flag = 0;
  
--	if ((start_line != SRCLINE_UNKNOWN) && (end_line != SRCLINE_UNKNOWN)) {
-+	if ((strncmp(start_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) != 0) &&
-+	    (strncmp(end_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) != 0)) {
- 		scnprintf(buf, sizeof(buf), "[%s -> %s] %4ld",
- 			  start_line, end_line, block_he->diff.cycles);
- 	} else {
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index c4b030b..fbbb6d6 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -295,7 +295,8 @@ static int block_range_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 	end_line = map__srcline(he->ms.map, bi->sym->start + bi->end,
- 				he->ms.sym);
+ static const struct option options[] = {
+@@ -141,7 +141,7 @@ int bench_futex_wake(int argc, const char **argv)
+ 	sigaction(SIGINT, &act, NULL);
  
--	if ((start_line != SRCLINE_UNKNOWN) && (end_line != SRCLINE_UNKNOWN)) {
-+	if ((strncmp(start_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) != 0) &&
-+	    (strncmp(end_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) != 0)) {
- 		scnprintf(buf, sizeof(buf), "[%s -> %s]",
- 			  start_line, end_line);
- 	} else {
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index a08ca27..9542851 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -431,7 +431,7 @@ int map__fprintf_srcline(struct map *map, u64 addr, const char *prefix,
+ 	if (!nthreads)
+-		nthreads = ncpus;
++		nthreads = cpu->nr;
  
- 	if (map && map->dso) {
- 		char *srcline = map__srcline(map, addr, NULL);
--		if (srcline != SRCLINE_UNKNOWN)
-+		if (strncmp(srcline, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) != 0)
- 			ret = fprintf(fp, "%s%s", prefix, srcline);
- 		free_srcline(srcline);
- 	}
+ 	worker = calloc(nthreads, sizeof(*worker));
+ 	if (!worker)
