@@ -2,310 +2,180 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06854C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E644C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D87206E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A1A206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:12:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="J41KuqeB";
+	dkim=temperror (0-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="n0p5D++x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgCGAMV (ORCPT
+        id S1727059AbgCGAMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 19:12:21 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54694 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgCGAMT (ORCPT
+        Fri, 6 Mar 2020 19:12:54 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:53262 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726300AbgCGAMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 19:12:19 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jAN4V-0007au-El; Sat, 07 Mar 2020 01:12:04 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id EA253104088;
-        Sat,  7 Mar 2020 01:12:02 +0100 (CET)
-Message-Id: <20200307000259.340436953@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Sat, 07 Mar 2020 00:42:05 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        KVM <kvm@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [patch 1/2] x86/kvm: Handle async page faults directly through do_page_fault()
-References: <20200306234204.847674001@linutronix.de>
+        Fri, 6 Mar 2020 19:12:53 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C121240363;
+        Sat,  7 Mar 2020 00:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1583539972; bh=K4DjTge5fKCxSjOxFd3X4QASyztdWM8e67ep58p2s4s=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=J41KuqeBS/4v3uPQ/lq3GNQbgkbfF+32ysGOYcQALRjg+oiWWqsunbSFpllKFVhSu
+         IOLY+R4S6fpV4GGuXWaRE/fyxNF2upVSVTEdX+RzxZfXKb9sULJMnl0ru+0Cd2Ey8b
+         JcWD+bHa7oRwbKTEOypHDZJK7b12Egv/p4QDZWEL7XLoy6B2bFBwcmXW+5TnVmTlIh
+         zRYw92HIdVTA7aMr13cq4RY1zw4RotsJN/vEozoHYlVkY95gRUNLlEtXDqTRzqCPJ1
+         HBZiAaY7XcEBzVbLMIfmrIU4z91Bsm9y6wPmJWZoeCGCyJuQv+1VmQZbK7fv6v7wu8
+         u1KCSpI1SfWOQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 7B46EA0069;
+        Sat,  7 Mar 2020 00:12:52 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 6 Mar 2020 16:12:36 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 6 Mar 2020 16:12:36 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J1JbrxIJx/iVniy+3G7usCPmIMbMggnp0J3r53523MIS7bMaaA/7Onju+tSc06FK655LK7UZ1aUdzaTRQL+3jrHXF4t9bQtMRO15GZNzybJ4tEGbTmR5mmjT6Ae67kLMUj84CNyRpcHfc0WLSk+L0T1UBob4ONsxHaoDZH/PKc7YWB9CfDnNqCi3NPJsw6YNMIZZmYh2vAK6mFAdpxtMjqWmiEO6pj81yqaWBIycHk7ErjU3oNMhAKZqcf2ikuWQ73K7MWDibGYPBSow1rmTOLJ2TM4YNapM4ARIm1jKuuQGacaZTWLRkOMbHLHhscfS2TTAO4dpB+TDRZJgmu/CCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K4DjTge5fKCxSjOxFd3X4QASyztdWM8e67ep58p2s4s=;
+ b=aykENi3XS6OQUcLTIdJgygtTjaO9iuS1MPD2rcTGU9/wBhvj7kuvAb2MMw46P3eL9cO+X40bbJsHfjjfZAK3WQAoZLa5d0Zb7f6UE1G7/2KF0VCPskkpIYaMmufYf42V4zcV3rWT7YOf0z6o/41Cr4V6HpAVETKJUWK5uXj/hWi2OQP5GsA2VlQnabtR6dkNYDhCzYC9nzUM9gW6hkCCLEQiUpzPzrVwN1pNNA1ZIO1uVlftnXVa/1+0ReezUg5dixue5lrrPLp6hVLIeqq/E3RfIp+Z/Xtuo1Yt9Wu8OzQzcqtwIrACDXMEs3FcJ3LGszkzDy3bF7hQ/3twlGIfsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K4DjTge5fKCxSjOxFd3X4QASyztdWM8e67ep58p2s4s=;
+ b=n0p5D++xNXmtGTbOJrSzJH4M8uhGg+OBJpE7CJCnywHtIyrEKZiyHC9PoYiZymO9KpN2/uv4+nHxq2uwFydTY1dFbtRRK2V5SUtmkPIeLHsIC/o96j/CwFBPdhBLTqm+Chi8A7q2fx15S+YP2Beu8h/hup8xo0OjR0p4q1jH1RM=
+Received: from BYAPR12MB3592.namprd12.prod.outlook.com (2603:10b6:a03:db::25)
+ by BYAPR12MB3029.namprd12.prod.outlook.com (2603:10b6:a03:ab::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Sat, 7 Mar
+ 2020 00:12:35 +0000
+Received: from BYAPR12MB3592.namprd12.prod.outlook.com
+ ([fe80::a45a:6a41:3fe5:2eb7]) by BYAPR12MB3592.namprd12.prod.outlook.com
+ ([fe80::a45a:6a41:3fe5:2eb7%7]) with mapi id 15.20.2793.013; Sat, 7 Mar 2020
+ 00:12:35 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] ARC: handle DSP presence in HW
+Thread-Topic: [PATCH v2 2/4] ARC: handle DSP presence in HW
+Thread-Index: AQHV8yku7EOtW/wWqUKB6P65LyNDjag8Q9+A
+Date:   Sat, 7 Mar 2020 00:12:35 +0000
+Message-ID: <2d11b6d9-a37a-8cc3-1feb-a9dbc345de12@synopsys.com>
+References: <20200305200252.14278-1-Eugeniy.Paltsev@synopsys.com>
+ <20200305200252.14278-3-Eugeniy.Paltsev@synopsys.com>
+In-Reply-To: <20200305200252.14278-3-Eugeniy.Paltsev@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vgupta@synopsys.com; 
+x-originating-ip: [149.117.75.13]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5892b2d6-efc4-494d-20f5-08d7c22c3d0c
+x-ms-traffictypediagnostic: BYAPR12MB3029:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR12MB30294B12F6E5782F4F7BAAE8B6E00@BYAPR12MB3029.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 03355EE97E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(346002)(366004)(136003)(396003)(199004)(189003)(6506007)(53546011)(86362001)(8936002)(81166006)(81156014)(8676002)(66556008)(66946007)(66476007)(31696002)(76116006)(2616005)(64756008)(66446008)(26005)(186003)(6486002)(5660300002)(6512007)(4326008)(2906002)(31686004)(54906003)(478600001)(36756003)(316002)(71200400001)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB3029;H:BYAPR12MB3592.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oMXLEFkedWIOjclkss9PqMOghuCtVKsnOsy+9p2d5XDkEAeJ1Oaga6OQ9d0ZIbN+MgG1nlLoMC+B6h0jPgttLdyhpSvFx/i5yxG/mKEy9AzbrJioxDbxzvRblLnWTd3G4XyXWZuoZkRXku7dwqRyKmGlQ1+VxreJWkrCUAgqS63Op4KTuy7Ukv4irtxbbQo7+1pey8fgSt6dI+uJUW7FV2wUXDR1r2it95uZJ53SVPn+CIoS3qT/m7cbPAaRlBxm9AiwQspeUh2tv33QxthcYfw2UmVDB0WchUr6xwkf4rrpAG2G9VpXiIc/lGdmcbEVHUFHdMEKoks2moD1Y1YSv9TAI2MDxdeu/UE98pCzF9d1fVf3tN1LcwAVNB/F8ZmN7pQSYyN0woato50PKLzyfS1n20FVnEU2EgbnRIbE1RBNekoSiuNDy6LLpEGLOF9x
+x-ms-exchange-antispam-messagedata: 41P5w+HE/q7Wd8HSlqTThGeLu8SARcrv4pvs8J6uGehAsr58ZRIKmsbbHCSyl+GQH7bzPuk6L76oWnZBLD3J6Lh1qtuMxNWOH5BGld+2d23ca99q/D0lLlFQIT46Tz90s4Axdc7tF9j0/LpwUDitYg==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A9A7859ED4C2534C882847321EC6AE35@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5892b2d6-efc4-494d-20f5-08d7c22c3d0c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2020 00:12:35.3030
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XhX7cCGaTYO8C1NOa+eFNdDiGCen2SzLfCtaDAEqt0+l2W4TuUAa2hRzL8ahufw29f5htDFJeCgqQH2fnU2wzA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3029
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
-
-KVM overloads #PF to indicate two types of not-actually-page-fault
-events.  Right now, the KVM guest code intercepts them by modifying
-the IDT and hooking the #PF vector.  This makes the already fragile
-fault code even harder to understand, and it also pollutes call
-traces with async_page_fault and do_async_page_fault for normal page
-faults.
-
-Clean it up by moving the logic into do_page_fault() using a static
-branch.  This gets rid of the platform trap_init override mechanism
-completely.
-
-[ tglx: Fixed up 32bit, removed error code from the async functions and
-  	massaged coding style ]
-
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/entry/entry_32.S       |    8 --------
- arch/x86/entry/entry_64.S       |    4 ----
- arch/x86/include/asm/kvm_para.h |   19 +++++++++++++++++--
- arch/x86/include/asm/x86_init.h |    2 --
- arch/x86/kernel/kvm.c           |   39 +++++++++++++++++++++------------------
- arch/x86/kernel/traps.c         |    2 --
- arch/x86/kernel/x86_init.c      |    1 -
- arch/x86/mm/fault.c             |   19 +++++++++++++++++++
- 8 files changed, 57 insertions(+), 37 deletions(-)
-
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1698,14 +1698,6 @@ SYM_CODE_START(general_protection)
- 	jmp	common_exception
- SYM_CODE_END(general_protection)
- 
--#ifdef CONFIG_KVM_GUEST
--SYM_CODE_START(async_page_fault)
--	ASM_CLAC
--	pushl	$do_async_page_fault
--	jmp	common_exception_read_cr2
--SYM_CODE_END(async_page_fault)
--#endif
--
- SYM_CODE_START(rewind_stack_do_exit)
- 	/* Prevent any naive code from trying to unwind to our caller. */
- 	xorl	%ebp, %ebp
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1202,10 +1202,6 @@ idtentry xendebug		do_debug		has_error_c
- idtentry general_protection	do_general_protection	has_error_code=1
- idtentry page_fault		do_page_fault		has_error_code=1	read_cr2=1
- 
--#ifdef CONFIG_KVM_GUEST
--idtentry async_page_fault	do_async_page_fault	has_error_code=1	read_cr2=1
--#endif
--
- #ifdef CONFIG_X86_MCE
- idtentry machine_check		do_mce			has_error_code=0	paranoid=1
- #endif
---- a/arch/x86/include/asm/kvm_para.h
-+++ b/arch/x86/include/asm/kvm_para.h
-@@ -91,8 +91,18 @@ unsigned int kvm_arch_para_hints(void);
- void kvm_async_pf_task_wait(u32 token, int interrupt_kernel);
- void kvm_async_pf_task_wake(u32 token);
- u32 kvm_read_and_reset_pf_reason(void);
--extern void kvm_disable_steal_time(void);
--void do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
-+void kvm_disable_steal_time(void);
-+bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token);
-+
-+DECLARE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
-+
-+static __always_inline bool kvm_handle_async_pf(struct pt_regs *regs, u32 token)
-+{
-+	if (static_branch_unlikely(&kvm_async_pf_enabled))
-+		return __kvm_handle_async_pf(regs, token);
-+	else
-+		return false;
-+}
- 
- #ifdef CONFIG_PARAVIRT_SPINLOCKS
- void __init kvm_spinlock_init(void);
-@@ -130,6 +140,11 @@ static inline void kvm_disable_steal_tim
- {
- 	return;
- }
-+
-+static inline bool kvm_handle_async_pf(struct pt_regs *regs, u32 token)
-+{
-+	return false;
-+}
- #endif
- 
- #endif /* _ASM_X86_KVM_PARA_H */
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -50,14 +50,12 @@ struct x86_init_resources {
-  * @pre_vector_init:		init code to run before interrupt vectors
-  *				are set up.
-  * @intr_init:			interrupt init code
-- * @trap_init:			platform specific trap setup
-  * @intr_mode_select:		interrupt delivery mode selection
-  * @intr_mode_init:		interrupt delivery mode setup
-  */
- struct x86_init_irqs {
- 	void (*pre_vector_init)(void);
- 	void (*intr_init)(void);
--	void (*trap_init)(void);
- 	void (*intr_mode_select)(void);
- 	void (*intr_mode_init)(void);
- };
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -35,6 +35,8 @@
- #include <asm/tlb.h>
- #include <asm/cpuidle_haltpoll.h>
- 
-+DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
-+
- static int kvmapf = 1;
- 
- static int __init parse_no_kvmapf(char *arg)
-@@ -242,25 +244,27 @@ u32 kvm_read_and_reset_pf_reason(void)
- EXPORT_SYMBOL_GPL(kvm_read_and_reset_pf_reason);
- NOKPROBE_SYMBOL(kvm_read_and_reset_pf_reason);
- 
--dotraplinkage void
--do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address)
-+bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
- {
-+	/*
-+	 * If we get a page fault right here, the pf_reason seems likely
-+	 * to be clobbered.  Bummer.
-+	 */
- 	switch (kvm_read_and_reset_pf_reason()) {
- 	default:
--		do_page_fault(regs, error_code, address);
--		break;
-+		return false;
- 	case KVM_PV_REASON_PAGE_NOT_PRESENT:
- 		/* page is swapped out by the host. */
--		kvm_async_pf_task_wait((u32)address, !user_mode(regs));
--		break;
-+		kvm_async_pf_task_wait(token, !user_mode(regs));
-+		return true;
- 	case KVM_PV_REASON_PAGE_READY:
- 		rcu_irq_enter();
--		kvm_async_pf_task_wake((u32)address);
-+		kvm_async_pf_task_wake(token);
- 		rcu_irq_exit();
--		break;
-+		return true;
- 	}
- }
--NOKPROBE_SYMBOL(do_async_page_fault);
-+NOKPROBE_SYMBOL(__kvm_handle_async_pf);
- 
- static void __init paravirt_ops_setup(void)
- {
-@@ -306,7 +310,11 @@ static notrace void kvm_guest_apic_eoi_w
- static void kvm_guest_cpu_init(void)
- {
- 	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf) {
--		u64 pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
-+		u64 pa;
-+
-+		WARN_ON_ONCE(!static_branch_likely(&kvm_async_pf_enabled));
-+
-+		pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
- 
- #ifdef CONFIG_PREEMPTION
- 		pa |= KVM_ASYNC_PF_SEND_ALWAYS;
-@@ -592,12 +600,6 @@ static int kvm_cpu_down_prepare(unsigned
- }
- #endif
- 
--static void __init kvm_apf_trap_init(void)
--{
--	update_intr_gate(X86_TRAP_PF, async_page_fault);
--}
--
--
- static void kvm_flush_tlb_others(const struct cpumask *cpumask,
- 			const struct flush_tlb_info *info)
- {
-@@ -632,8 +634,6 @@ static void __init kvm_guest_init(void)
- 	register_reboot_notifier(&kvm_pv_reboot_nb);
- 	for (i = 0; i < KVM_TASK_SLEEP_HASHSIZE; i++)
- 		raw_spin_lock_init(&async_pf_sleepers[i].lock);
--	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF))
--		x86_init.irqs.trap_init = kvm_apf_trap_init;
- 
- 	if (kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
- 		has_steal_clock = 1;
-@@ -670,6 +670,9 @@ static void __init kvm_guest_init(void)
- 	 * overcommitted.
- 	 */
- 	hardlockup_detector_disable();
-+
-+	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf)
-+		static_branch_enable(&kvm_async_pf_enabled);
- }
- 
- static noinline uint32_t __kvm_cpuid_base(void)
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -936,7 +936,5 @@ void __init trap_init(void)
- 
- 	idt_setup_ist_traps();
- 
--	x86_init.irqs.trap_init();
--
- 	idt_setup_debugidt_traps();
- }
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -79,7 +79,6 @@ struct x86_init_ops x86_init __initdata
- 	.irqs = {
- 		.pre_vector_init	= init_ISA_irqs,
- 		.intr_init		= native_init_IRQ,
--		.trap_init		= x86_init_noop,
- 		.intr_mode_select	= apic_intr_mode_select,
- 		.intr_mode_init		= apic_intr_mode_init
- 	},
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -30,6 +30,7 @@
- #include <asm/desc.h>			/* store_idt(), ...		*/
- #include <asm/cpu_entry_area.h>		/* exception stack		*/
- #include <asm/pgtable_areas.h>		/* VMALLOC_START, ...		*/
-+#include <asm/kvm_para.h>		/* kvm_handle_async_pf		*/
- 
- #define CREATE_TRACE_POINTS
- #include <asm/trace/exceptions.h>
-@@ -1505,6 +1506,24 @@ do_page_fault(struct pt_regs *regs, unsi
- 		unsigned long address)
- {
- 	prefetchw(&current->mm->mmap_sem);
-+	/*
-+	 * KVM has two types of events that are, logically, interrupts, but
-+	 * are unfortunately delivered using the #PF vector.  These events are
-+	 * "you just accessed valid memory, but the host doesn't have it right
-+	 * now, so I'll put you to sleep if you continue" and "that memory
-+	 * you tried to access earlier is available now."
-+	 *
-+	 * We are relying on the interrupted context being sane (valid RSP,
-+	 * relevant locks not held, etc.), which is fine as long as the
-+	 * interrupted context had IF=1.  We are also relying on the KVM
-+	 * async pf type field and CR2 being read consistently instead of
-+	 * getting values from real and async page faults mixed up.
-+	 *
-+	 * Fingers crossed.
-+	 */
-+	if (kvm_handle_async_pf(regs, (u32)address))
-+		return;
-+
- 	trace_page_fault_entries(regs, hw_error_code, address);
- 
- 	if (unlikely(kmmio_fault(regs, address)))
-
+T24gMy81LzIwIDEyOjAyIFBNLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6DQo+IEluIGNhc2Ugb2Yg
+RFNQIGV4dGVuc2lvbiBwcmVzZW5jZSBpbiBIVyBzb21lIGluc3RydWN0aW9ucw0KPiAocmVsYXRl
+ZCB0byBpbnRlZ2VyIG11bHRpcGx5LCBtdWx0aXBseS1hY2N1bXVsYXRlLCBhbmQgZGl2aWRlDQo+
+IG9wZXJhdGlvbikgZXhlY3V0ZXMgb24gdGhpcyBEU1AgZXhlY3V0aW9uIHVuaXQuIFNvIHRoZWly
+DQo+IGV4ZWN1dGlvbiB3aWxsIGRlcGVuZCBvbiBkc3AgY29uZmlndXJhdGlvbiByZWdpc3RlciAo
+RFNQX0NUUkwpDQo+IA0KPiBBcyB3ZSB3YW50IHRoZXNlIGluc3RydWN0aW9ucyB0byBleGVjdXRl
+IHRoZSBzYW1lIHdheSByZWdhcmRsZXNzDQo+IG9mIERTUCBwcmVzZW5jZSB3ZSBuZWVkIHRvIHNl
+dCBEU1BfQ1RSTCBwcm9wZXJseS4gSG93ZXZlciB0aGlzDQo+IHJlZ2lzdGVyIGNhbiBiZSBtb2Rp
+ZmllZCBidSBhbnkgdXNlcnNhY2UgYXBwIHRoZXJlZm9yZSBhbnkNCj4gdXNlcnNhY2UgbWF5IGJy
+ZWFrIGtlcm5lbCBleGVjdXRpb24uDQo+IA0KPiBGaXggdGhhdCBieSBjb25maWd1cmUgRFNQX0NU
+UkwgaW4gQ1BVIGVhcmx5IGNvZGUgYW5kIGluIElSUXMNCj4gZW50cmllcy4NCg0KSG93IGFib3V0
+IGJlbG93IC4uLi4NCg0KIldoZW4gRFNQIGV4dGVuc2lvbnMgYXJlIHByZXNlbnQsIHNvbWUgb2Yg
+dGhlIHJlZ3VsYXIgaW50ZWdlciBpbnN0cnVjdGlvbnMgc3VjaCBhcw0KRElWLCBNQUNEIGV0YyBh
+cmUgZXhlY3V0ZWQgaW4gdGhlIERTUCB1bml0IHdpdGggc2VtYW50aWNzIGFsdGVyYWJsZSBieSBm
+bGFncyBpbg0KRFNQX0NUUkwgYXV4IHJlZ2lzdGVyLiBUaGlzIHJlZ2lzdGVyIGlzIHdyaXRhYmxl
+IGJ5IHVzZXJzcGFjZSBhbmQgdGh1cyBjYW4NCnBvdGVudGlhbGx5IGFmZmVjdCBjb3JyZXNwb25k
+aW5nIGluc3RydWN0aW9ucyBpbiBrZXJuZWwgY29kZSwgaW50ZW50aW9uYWxseSBvcg0Kb3RoZXJ3
+aXNlLiBTbyBzYWZlZ2F1cmQga2VybmVsIGJ5IGVmZmVjdGl2ZWx5IGRpc2FibGluZyBEU1BfQ1RS
+TCB1cG9uIGJvb3R1cCBhbmQNCmV2ZXJ5IGVudHJ5IHRvIGtlcm5lbC4NCg0KRG8gbm90ZSB0aGF0
+IGZvciB0aGlzIGNvbmZpZyB3ZSBzaW1wbHkgemVybyBvdXQgdGhlIERTUF9DVFJMIHJlZyBhc3N1
+bWluZw0KdXNlcnNwYWNlIGRvZXNuJ3QgcmVhbGx5IGNhcmUgYWJvdXQgRFNQLiBUaGUgbmV4dCBw
+YXRjaCBjYXRlcnMgdG8gdGhlIERTUCBhd2FyZQ0KdXNlcnNwYWNlIHdoaWNoIHRoaXMgYWN0dWFs
+bHkgc2F2ZWQvcmVzdG9yZWQgdXBvbiBrZXJuZWwgZW50cnkuIg0KDQoNCg0KPiANCj4gU2lnbmVk
+LW9mZi1ieTogRXVnZW5peSBQYWx0c2V2IDxFdWdlbml5LlBhbHRzZXZAc3lub3BzeXMuY29tPg0K
+PiAtLS0NCj4gIGFyY2gvYXJjL0tjb25maWcgICAgICAgICAgICAgICAgICAgfCAyOSArKysrKysr
+KysrKysrKystDQo+ICBhcmNoL2FyYy9pbmNsdWRlL2FzbS9hcmNyZWdzLmggICAgIHwgMTIgKysr
+KysrKw0KPiAgYXJjaC9hcmMvaW5jbHVkZS9hc20vZHNwLWltcGwuaCAgICB8IDU0ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKw0KPiAgYXJjaC9hcmMvaW5jbHVkZS9hc20vZW50cnktYXJj
+djIuaCB8ICAzICsrDQo+ICBhcmNoL2FyYy9rZXJuZWwvaGVhZC5TICAgICAgICAgICAgIHwgIDQg
+KysrDQo+ICBhcmNoL2FyYy9rZXJuZWwvc2V0dXAuYyAgICAgICAgICAgIHwgIDMgKysNCj4gIDYg
+ZmlsZXMgY2hhbmdlZCwgMTA0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBhcmNoL2FyYy9pbmNsdWRlL2FzbS9kc3AtaW1wbC5oDQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvYXJjaC9hcmMvS2NvbmZpZyBiL2FyY2gvYXJjL0tjb25maWcNCj4gaW5kZXggNzEy
+NGFiODJkZmEzLi41NTQzMmE4ZmMyMGQgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJjL0tjb25maWcN
+Cj4gKysrIGIvYXJjaC9hcmMvS2NvbmZpZw0KPiBAQCAtNDAxLDEzICs0MDEsNDAgQEAgY29uZmln
+IEFSQ19IQVNfRElWX1JFTQ0KPiAgCWRlZmF1bHQgeQ0KPiAgDQo+ICBjb25maWcgQVJDX0hBU19B
+Q0NMX1JFR1MNCj4gLQlib29sICJSZWcgUGFpciBBQ0NMOkFDQ0ggKEZQVSBhbmQvb3IgTVBZID4g
+NikiDQo+ICsJYm9vbCAiUmVnIFBhaXIgQUNDTDpBQ0NIIChGUFUgYW5kL29yIE1QWSA+IDYgYW5k
+L29yIERTUCkiDQo+ICAJZGVmYXVsdCB5DQo+ICAJaGVscA0KPiAgCSAgRGVwZW5kaW5nIG9uIHRo
+ZSBjb25maWd1cmF0aW9uLCBDUFUgY2FuIGNvbnRhaW4gYWNjdW11bGF0b3IgcmVnLXBhaXINCj4g
+IAkgIChhbHNvIHJlZmVycmVkIHRvIGFzIHI1ODpyNTkpLiBUaGVzZSBjYW4gYWxzbyBiZSB1c2Vk
+IGJ5IGdjYyBhcyBHUFIgc28NCj4gIAkgIGtlcm5lbCBuZWVkcyB0byBzYXZlL3Jlc3RvcmUgcGVy
+IHByb2Nlc3MNCj4gIA0KPiArY29uZmlnIEFSQ19EU1BfSEFORExFRA0KPiArCWRlZl9ib29sIG4N
+Cj4gKw0KPiArY2hvaWNlDQo+ICsJcHJvbXB0ICJEU1Agc3VwcG9ydCINCj4gKwlkZWZhdWx0IEFS
+Q19EU1BfTk9ORQ0KPiArCWhlbHANCj4gKwkgIERlcGVuZGluZyBvbiB0aGUgY29uZmlndXJhdGlv
+biwgQ1BVIGNhbiBjb250YWluIERTUCByZWdpc3RlcnMNCj4gKwkgIChBQ0MwX0dMTywgQUNDMF9H
+SEksIERTUF9CRkxZMCwgRFNQX0NUUkwsIERTUF9GRlRfQ1RSTCkuDQo+ICsJICBCZWxsb3cgaXMg
+b3B0aW9ucyBkZXNjcmliaW5nIGhvdyB0byBoYW5kbGUgdGhlc2UgcmVnaXN0ZXJzIGluDQoNCnR5
+cG86IEJlbG93DQoNCkxvb2tzIGdvb2Qgb3RoZXJ3aXNlLiBObyBuZWVkIHRvIHJlc3BpbiBqdXN0
+IGZvciB0aGlzLg0KDQpSZXZpZXdlZC1ieTogVmluZWV0IEd1cHRhIDx2Z3VwdGFAc3lub3BzeXMu
+Y29tPg0K
