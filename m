@@ -2,117 +2,180 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D006DC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C37EC10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE2D206D7
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B3720656
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583594496;
+	bh=zXhA3RoLELcyY2UKL8bcqbSijN27udDZjliB55Zc+PM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PiU0weVXza4ly2cw0h3JzSdLDprHGXTxAjlpuamrZlJCtghPUyeknS9nvyCMT9I7j
+	 v9JthyAeSE2zFwc2enlRWgS6sHQ9N6AGk6pdft516EGDygYTEPfHUOufSN5z3WqzoM
+	 YzyobrAt9aIiUOIazBd3asQaOWa5+wbL0V7T9aME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgCGPVC (ORCPT
+        id S1726327AbgCGPVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:21:02 -0500
-Received: from mga11.intel.com ([192.55.52.93]:12682 "EHLO mga11.intel.com"
+        Sat, 7 Mar 2020 10:21:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgCGPVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:21:02 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2020 07:21:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,526,1574150400"; 
-   d="scan'208";a="235151962"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Mar 2020 07:21:00 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jAbG7-0006az-SF; Sat, 07 Mar 2020 23:20:59 +0800
-Date:   Sat, 7 Mar 2020 23:20:11 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Li Yang <leoyang.li@nxp.com>, Timur Tabi <timur@kernel.org>
-Subject: drivers/soc/fsl/qe/ucc.c:637:20: sparse: sparse: incorrect type in
- assignment (different address spaces)
-Message-ID: <202003072307.Es4yunVB%lkp@intel.com>
+        id S1726074AbgCGPVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 10:21:35 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CCB020674;
+        Sat,  7 Mar 2020 15:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583594494;
+        bh=zXhA3RoLELcyY2UKL8bcqbSijN27udDZjliB55Zc+PM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eH3omeFiyPeHhZ9l62cNGCJmGil5/S2xcf4vhQoBUjPoOWVnsBYBk4gShULYCrSod
+         IdEaczUOrw4cfLWzoM4VAiNV9Vswma2J6qsiaghim6DUNPRFrFW0JuMxPiGK9mCOBn
+         vq8r9qma/eAE8YbYkWUXx3i6r9W5gPVV2ZZaRZ1o=
+Date:   Sat, 7 Mar 2020 15:21:27 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <benjamin.gaignard@st.com>, <alexandre.torgue@st.com>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH 2/2] iio: trigger: stm32-timer: add power management
+ support
+Message-ID: <20200307152127.404aba78@archlinux>
+In-Reply-To: <1583247585-16698-3-git-send-email-fabrice.gasnier@st.com>
+References: <1583247585-16698-1-git-send-email-fabrice.gasnier@st.com>
+        <1583247585-16698-3-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus,
+On Tue, 3 Mar 2020 15:59:45 +0100
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-First bad commit (maybe != root cause):
+> Add suspend/resume PM sleep ops to stm32-timer-trigger driver.
+> Register contents may be lost depending on low power modes.
+> When going to low power, enforce the timer isn't active. Gracefully
+> restore its state upon resume in case it's been left enabled prior to
+> suspend.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Seems sensible. Applied,
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   63849c8f410717eb2e6662f3953ff674727303e7
-commit: 5a35435ef4e6e4bd2aabd6706b146b298a9cffe5 soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE
-date:   3 months ago
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-174-g094d5a94-dirty
-        git checkout 5a35435ef4e6e4bd2aabd6706b146b298a9cffe5
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Thanks,
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Jonathan
 
+> ---
+>  drivers/iio/trigger/stm32-timer-trigger.c | 63 +++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+> 
+> diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
+> index 32e1249..37545a8 100644
+> --- a/drivers/iio/trigger/stm32-timer-trigger.c
+> +++ b/drivers/iio/trigger/stm32-timer-trigger.c
+> @@ -75,6 +75,15 @@ static const void *stm32h7_valids_table[][MAX_VALIDS] = {
+>  	{ }, /* timer 17 */
+>  };
+>  
+> +struct stm32_timer_trigger_regs {
+> +	u32 cr1;
+> +	u32 cr2;
+> +	u32 psc;
+> +	u32 arr;
+> +	u32 cnt;
+> +	u32 smcr;
+> +};
+> +
+>  struct stm32_timer_trigger {
+>  	struct device *dev;
+>  	struct regmap *regmap;
+> @@ -86,6 +95,7 @@ struct stm32_timer_trigger {
+>  	bool has_trgo2;
+>  	struct mutex lock; /* concurrent sysfs configuration */
+>  	struct list_head tr_list;
+> +	struct stm32_timer_trigger_regs bak;
+>  };
+>  
+>  struct stm32_timer_trigger_cfg {
+> @@ -812,6 +822,58 @@ static int stm32_timer_trigger_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int __maybe_unused stm32_timer_trigger_suspend(struct device *dev)
+> +{
+> +	struct stm32_timer_trigger *priv = dev_get_drvdata(dev);
+> +
+> +	/* Only take care of enabled timer: don't disturb other MFD child */
+> +	if (priv->enabled) {
+> +		/* Backup registers that may get lost in low power mode */
+> +		regmap_read(priv->regmap, TIM_CR1, &priv->bak.cr1);
+> +		regmap_read(priv->regmap, TIM_CR2, &priv->bak.cr2);
+> +		regmap_read(priv->regmap, TIM_PSC, &priv->bak.psc);
+> +		regmap_read(priv->regmap, TIM_ARR, &priv->bak.arr);
+> +		regmap_read(priv->regmap, TIM_CNT, &priv->bak.cnt);
+> +		regmap_read(priv->regmap, TIM_SMCR, &priv->bak.smcr);
+> +
+> +		/* Disable the timer */
+> +		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
+> +		clk_disable(priv->clk);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused stm32_timer_trigger_resume(struct device *dev)
+> +{
+> +	struct stm32_timer_trigger *priv = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	if (priv->enabled) {
+> +		ret = clk_enable(priv->clk);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* restore master/slave modes */
+> +		regmap_write(priv->regmap, TIM_SMCR, priv->bak.smcr);
+> +		regmap_write(priv->regmap, TIM_CR2, priv->bak.cr2);
+> +
+> +		/* restore sampling_frequency (trgo / trgo2 triggers) */
+> +		regmap_write(priv->regmap, TIM_PSC, priv->bak.psc);
+> +		regmap_write(priv->regmap, TIM_ARR, priv->bak.arr);
+> +		regmap_write(priv->regmap, TIM_CNT, priv->bak.cnt);
+> +
+> +		/* Also re-enables the timer */
+> +		regmap_write(priv->regmap, TIM_CR1, priv->bak.cr1);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(stm32_timer_trigger_pm_ops,
+> +			 stm32_timer_trigger_suspend,
+> +			 stm32_timer_trigger_resume);
+> +
+>  static const struct stm32_timer_trigger_cfg stm32_timer_trg_cfg = {
+>  	.valids_table = valids_table,
+>  	.num_valids_table = ARRAY_SIZE(valids_table),
+> @@ -840,6 +902,7 @@ static struct platform_driver stm32_timer_trigger_driver = {
+>  	.driver = {
+>  		.name = "stm32-timer-trigger",
+>  		.of_match_table = stm32_trig_of_match,
+> +		.pm = &stm32_timer_trigger_pm_ops,
+>  	},
+>  };
+>  module_platform_driver(stm32_timer_trigger_driver);
 
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/soc/fsl/qe/ucc.c:637:20: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected struct qe_mux *qe_mux_reg @@    got struct qe_mux [nodstruct qe_mux *qe_mux_reg @@
-   drivers/soc/fsl/qe/ucc.c:637:20: sparse:    expected struct qe_mux *qe_mux_reg
-   drivers/soc/fsl/qe/ucc.c:637:20: sparse:    got struct qe_mux [noderef] <asn:2> *
->> drivers/soc/fsl/qe/ucc.c:652:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void [noderef] <asn:2> * @@    got [noderef] <asn:2> * @@
-   drivers/soc/fsl/qe/ucc.c:652:9: sparse:    expected void [noderef] <asn:2> *
-   drivers/soc/fsl/qe/ucc.c:652:9: sparse:    got restricted __be32 *
-   drivers/soc/fsl/qe/ucc.c:652:9: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void [noderef] <asn:2> * @@    got [noderef] <asn:2> * @@
-   drivers/soc/fsl/qe/ucc.c:652:9: sparse:    expected void [noderef] <asn:2> *
-   drivers/soc/fsl/qe/ucc.c:652:9: sparse:    got restricted __be32 *
-
-vim +637 drivers/soc/fsl/qe/ucc.c
-
-bb8b2062aff321 Zhao Qiang       2016-06-06  629  
-bb8b2062aff321 Zhao Qiang       2016-06-06  630  int ucc_set_tdm_rxtx_sync(u32 tdm_num, enum qe_clock clock,
-bb8b2062aff321 Zhao Qiang       2016-06-06  631  			  enum comm_dir mode)
-bb8b2062aff321 Zhao Qiang       2016-06-06  632  {
-bb8b2062aff321 Zhao Qiang       2016-06-06  633  	int source;
-bb8b2062aff321 Zhao Qiang       2016-06-06  634  	u32 shift;
-bb8b2062aff321 Zhao Qiang       2016-06-06  635  	struct qe_mux *qe_mux_reg;
-bb8b2062aff321 Zhao Qiang       2016-06-06  636  
-bb8b2062aff321 Zhao Qiang       2016-06-06 @637  	qe_mux_reg = &qe_immr->qmx;
-bb8b2062aff321 Zhao Qiang       2016-06-06  638  
-bb8b2062aff321 Zhao Qiang       2016-06-06  639  	if (tdm_num >= UCC_TDM_NUM)
-bb8b2062aff321 Zhao Qiang       2016-06-06  640  		return -EINVAL;
-bb8b2062aff321 Zhao Qiang       2016-06-06  641  
-bb8b2062aff321 Zhao Qiang       2016-06-06  642  	/* The communications direction must be RX or TX */
-bb8b2062aff321 Zhao Qiang       2016-06-06  643  	if (mode != COMM_DIR_RX && mode != COMM_DIR_TX)
-bb8b2062aff321 Zhao Qiang       2016-06-06  644  		return -EINVAL;
-bb8b2062aff321 Zhao Qiang       2016-06-06  645  
-bb8b2062aff321 Zhao Qiang       2016-06-06  646  	source = ucc_get_tdm_sync_source(tdm_num, clock, mode);
-bb8b2062aff321 Zhao Qiang       2016-06-06  647  	if (source < 0)
-bb8b2062aff321 Zhao Qiang       2016-06-06  648  		return -EINVAL;
-bb8b2062aff321 Zhao Qiang       2016-06-06  649  
-bb8b2062aff321 Zhao Qiang       2016-06-06  650  	shift = ucc_get_tdm_sync_shift(mode, tdm_num);
-bb8b2062aff321 Zhao Qiang       2016-06-06  651  
-d9d95bcad38d18 Rasmus Villemoes 2019-11-28 @652  	qe_clrsetbits_be32(&qe_mux_reg->cmxsi1syr,
-
-:::::: The code at line 637 was first introduced by commit
-:::::: bb8b2062aff321af1fc58781cc07fbbea01cceb3 fsl/qe: setup clock source for TDM mode
-
-:::::: TO: Zhao Qiang <qiang.zhao@nxp.com>
-:::::: CC: David S. Miller <davem@davemloft.net>
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
