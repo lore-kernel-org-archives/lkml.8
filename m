@@ -2,139 +2,109 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10541C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732C6C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F2C20675
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+geA0KA"
+	by mail.kernel.org (Postfix) with ESMTP id 4A4412073C
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgCGPom (ORCPT
+        id S1726283AbgCGPrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:44:42 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45665 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgCGPom (ORCPT
+        Sat, 7 Mar 2020 10:47:08 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55627 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgCGPrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:44:42 -0500
-Received: by mail-wr1-f67.google.com with SMTP id v2so5795221wrp.12;
-        Sat, 07 Mar 2020 07:44:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=nyg6TKy7+Fqp191RefgM+5lFgqJLgXxO7mzKRJSy2Ps=;
-        b=S+geA0KAZcjOYk61LLzRWCM8Zr2ZibLk8dJ8JZAEz+UfftfJkpDDjJUiSWOkDF2rAc
-         0YT1BD4EVM/pwuXYIodMzE1aFHv+Kso2n38yfZa4oni4amIt7myrVX+qmhdD2YR8vbGi
-         ZJBBqajElFeof58kwBI3Odh/9hGMHJTaYJXw4IsGYJvEOJcNmHHAzSyMlLMLUExQJQpr
-         c8amRa0arGO83pPRxx/csJFFOMUTdFw9/s1XzC6gH9lQooR4r4u8W7CjYp93myGpBjyT
-         bsMzbx/rc62uL7jMfywJIerqYb1r9Uz5fNJyoFTzX6pxvbImzQoDZvEtbVq9EHlRdkHY
-         C2Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=nyg6TKy7+Fqp191RefgM+5lFgqJLgXxO7mzKRJSy2Ps=;
-        b=NtiFLQia5hs9RmhW9iQO0DRsYERUlEp2I+hYlXiLmkKn+mjwbX3WGf5HDi3xvTBJMb
-         84R+gWl97abK7Klo0txBuEiddshlLxo3gH4EM43+MA6HlHeaDzJnyaPHq2dybpbtzFAF
-         6hlqAls0aGeX9stsTZ19KiC8TstQ2QBIFqEmpu66W+HBidGweXSpkopsSzUSw/vQ2hNc
-         qDhQRU2iMpxIG78GAqELq28m9UUOtb9ZzKzHPcSueYgX5RHOpX1BjqEsnnVnOT+QOeNg
-         zBTUjx7lDf5WCZE6iBE2p/8LwfKwsXdtD0X/TNsXf7OKZ69WXZr0rijUhVyB0hNUK0IM
-         9ATw==
-X-Gm-Message-State: ANhLgQ2KOCHT283wRLonMlWOrGuHjw7Ozj4pudv7szNFW+ddk4tLUWlc
-        hQaRjVx3KNUduaLDXIgo0PnOwyE=
-X-Google-Smtp-Source: ADFU+vvoL44fhBh3tNhd2G+NxJgpiwLos+iPgdzRBDuyAv8MUR87npUKHBK9WkI1lQF5mgY44+Z6ug==
-X-Received: by 2002:a5d:6a4a:: with SMTP id t10mr2851835wrw.356.1583595878148;
-        Sat, 07 Mar 2020 07:44:38 -0800 (PST)
-Received: from avx2 ([46.53.250.34])
-        by smtp.gmail.com with ESMTPSA id y1sm16811929wrh.65.2020.03.07.07.44.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 07:44:37 -0800 (PST)
-Date:   Sat, 7 Mar 2020 18:44:35 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] proc: speed up /proc/*/statm
-Message-ID: <20200307154435.GA2788@avx2>
+        Sat, 7 Mar 2020 10:47:08 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jAbfL-0006eZ-M6; Sat, 07 Mar 2020 16:47:04 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 7F7D0104088; Sat,  7 Mar 2020 16:47:01 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+In-Reply-To: <CALCETrVmsF9JSMLSd44-3GGWEz6siJQxudeaYiVnvv__YDT1BQ@mail.gmail.com>
+References: <ed71d0967113a35f670a9625a058b8e6e0b2f104.1583547991.git.luto@kernel.org> <CALCETrVmsF9JSMLSd44-3GGWEz6siJQxudeaYiVnvv__YDT1BQ@mail.gmail.com>
+Date:   Sat, 07 Mar 2020 16:47:01 +0100
+Message-ID: <87ftek9ngq.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-top(1) reads all /proc/*/statm files but kernel threads will always have
-zeros. Print those zeroes directly without going through seq_put_decimal_ull().
+Andy Lutomirski <luto@kernel.org> writes:
+> On Fri, Mar 6, 2020 at 6:26 PM Andy Lutomirski <luto@kernel.org> wrote:
+>> +               /*
+>> +                * We do not set KVM_ASYNC_PF_SEND_ALWAYS.  With the current
+>> +                * KVM paravirt ABI, the following scenario is possible:
+>> +                *
+>> +                * #PF: async page fault (KVM_PV_REASON_PAGE_NOT_PRESENT)
+>> +                *  NMI before CR2 or KVM_PF_REASON_PAGE_NOT_PRESENT
+>> +                *   NMI accesses user memory, e.g. due to perf
+>> +                *    #PF: normal page fault
+>> +                *     #PF reads CR2 and apf_reason -- apf_reason should be 0
+>> +                *
+>> +                *  outer #PF reads CR2 and apf_reason -- apf_reason should be
+>> +                *  KVM_PV_REASON_PAGE_NOT_PRESENT
+>> +                *
+>> +                * There is no possible way that both reads of CR2 and
+>> +                * apf_reason get the correct values.  Fixing this would
+>> +                * require paravirt ABI changes.
+>> +                */
+>> +
+>
+> Upon re-reading my own comment, I think the problem is real, but I
+> don't think my patch fixes it.  The outer #PF could just as easily
+> have come from user mode.  We may actually need the NMI code (and
+> perhaps MCE and maybe #DB too) to save, clear, and restore apf_reason.
+> If we do this, then maybe CPL0 async PFs are actually okay, but the
+> semantics are so poorly defined that I'm not very confident about
+> that.
 
-Speed up reading /proc/2/statm (which is kthreadd) is like 3%.
+I think even with the current mode this is fixable on the host side when
+it keeps track of the state.
 
-My system has more kernel threads than normal processes after booting KDE.
+The host knows exactly when it injects a async PF and it can store CR2
+and reason of that async PF in flight.
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+On the next VMEXIT it checks whether apf_reason is 0. If apf_reason is 0
+then it knows that the guest has read CR2 and apf_reason. All good
+nothing to worry about.
 
- fs/proc/array.c |   39 +++++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 16 deletions(-)
+If not it needs to be careful.
 
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -635,28 +635,35 @@ int proc_tgid_stat(struct seq_file *m, struct pid_namespace *ns,
- int proc_pid_statm(struct seq_file *m, struct pid_namespace *ns,
- 			struct pid *pid, struct task_struct *task)
- {
--	unsigned long size = 0, resident = 0, shared = 0, text = 0, data = 0;
- 	struct mm_struct *mm = get_task_mm(task);
- 
- 	if (mm) {
-+		unsigned long size;
-+		unsigned long resident = 0;
-+		unsigned long shared = 0;
-+		unsigned long text = 0;
-+		unsigned long data = 0;
-+
- 		size = task_statm(mm, &shared, &text, &data, &resident);
- 		mmput(mm);
--	}
--	/*
--	 * For quick read, open code by putting numbers directly
--	 * expected format is
--	 * seq_printf(m, "%lu %lu %lu %lu 0 %lu 0\n",
--	 *               size, resident, shared, text, data);
--	 */
--	seq_put_decimal_ull(m, "", size);
--	seq_put_decimal_ull(m, " ", resident);
--	seq_put_decimal_ull(m, " ", shared);
--	seq_put_decimal_ull(m, " ", text);
--	seq_put_decimal_ull(m, " ", 0);
--	seq_put_decimal_ull(m, " ", data);
--	seq_put_decimal_ull(m, " ", 0);
--	seq_putc(m, '\n');
- 
-+		/*
-+		 * For quick read, open code by putting numbers directly
-+		 * expected format is
-+		 * seq_printf(m, "%lu %lu %lu %lu 0 %lu 0\n",
-+		 *               size, resident, shared, text, data);
-+		 */
-+		seq_put_decimal_ull(m, "", size);
-+		seq_put_decimal_ull(m, " ", resident);
-+		seq_put_decimal_ull(m, " ", shared);
-+		seq_put_decimal_ull(m, " ", text);
-+		seq_put_decimal_ull(m, " ", 0);
-+		seq_put_decimal_ull(m, " ", data);
-+		seq_put_decimal_ull(m, " ", 0);
-+		seq_putc(m, '\n');
-+	} else {
-+		seq_write(m, "0 0 0 0 0 0 0\n", 14);
-+	}
- 	return 0;
- }
- 
+As long as the apf_reason of the last async #PF is not cleared by the
+guest no new async #PF can be injected. That's already correct because
+in that case IF==0 which prevents a nested async #PF.
+
+If MCE, NMI trigger a real pagefault then the #PF injection needs to
+clear apf_reason and set the correct CR2. When that #PF returns then the
+old CR2 and apf_reason need to be restored.
+
+I tried to figure out whether any of this logic exists in the KVM code,
+but I got completely lost in that code. Maybe I try later today again.
+
+Thanks,
+
+	tglx
+
+
+
+
