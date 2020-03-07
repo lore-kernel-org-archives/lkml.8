@@ -2,189 +2,103 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94436C10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 12:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B273DC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 12:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C06A206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 12:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583583317;
-	bh=swjbPZsjwyYGkWKjMPGgDWT6H3gVa79oH1QNna5nIeg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cuY0vrxksL+l5tcxb1UWXALGI69Ei7JPM1iNEDduEyj/H/fDYzNp1Zq93SSPVM0Cu
-	 ZvwnmxIcSLaVi/5iDqgnwz2vJES+rGEfLLVJvDUnJmenh/yxkVlv6qzJYJohir9a8V
-	 pWnVIBQAia68P7+mtGa+1rStP4ivEgplvRfYAXU0=
+	by mail.kernel.org (Postfix) with ESMTP id 94AF8206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 12:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgCGMPQ (ORCPT
+        id S1726300AbgCGMeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 07:15:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53416 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 07:34:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38562 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgCGMPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 07:15:15 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E390206D5;
-        Sat,  7 Mar 2020 12:15:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583583315;
-        bh=swjbPZsjwyYGkWKjMPGgDWT6H3gVa79oH1QNna5nIeg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Nj8SOrgy83YvxzIuzf9bGlm4QJ29ZdTP6slxRV/8dpTrFb6LNhIY4507njJj11Rha
-         WRY3DMHKcpvTUEtDz2CG/twz9ZOUKJradAduEp3Ty3mokU9oOUOzUN2cUV48JLkgT6
-         8zyOa4E+XWclBBGEXQGNNoyf+VL+BheB3gmoSQFg=
-Date:   Sat, 7 Mar 2020 12:15:10 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/6] iio: accel: adxl372: add sysfs for time
- registers
-Message-ID: <20200307121510.01ebdd93@archlinux>
-In-Reply-To: <20200225120909.12629-3-alexandru.tachici@analog.com>
-References: <20200225120909.12629-1-alexandru.tachici@analog.com>
-        <20200225120909.12629-3-alexandru.tachici@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726105AbgCGMeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 07:34:17 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7E2AFADD7;
+        Sat,  7 Mar 2020 12:34:13 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200229104358.GB19610@mani>
+ <20200307002453.350430-1-matheus@castello.eng.br>
+ <20200307002453.350430-2-matheus@castello.eng.br>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <62e115af-9d8c-572a-a400-91bdef9d9292@suse.de>
+Date:   Sat, 7 Mar 2020 13:34:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200307002453.350430-2-matheus@castello.eng.br>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 14:09:05 +0200
-Alexandru Tachici <alexandru.tachici@analog.com> wrote:
+Hi Matheus,
 
-> Currently the driver configures adxl372 to work in loop mode.
-> The inactivity and activity timings  decide how fast the chip
-> will loop through the awake and waiting states.
+Am 07.03.20 um 01:24 schrieb Matheus Castello:
+> The Caninos Loucos Program develops Single Board Computers with an open
+> structure. The Program wants to form a community of developers to use
+> the IoT technology and disseminate the learning of embedded systems in
+
+I would suggest "IoT technologies" without "the".
+
+> Brazil.
 > 
-> This patch adds standard events sysfs entries for the inactivity
-> and activity timings: thresh_falling_period/thresh_rising_period.
+> The boards are designed and manufactured by LSI-TEC NPO.
 > 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-I think this is a rare occasion where combining a couple of patches would
-have made it easier to see the whole scope of the 'event' side of things.
-
-Reality is that we need to configure enable / threshold  and period for
-this to make any sense, so I'd put them all in one patch.
-
-(noting that enable doesn't seem to exist currently..)
-
-For the enable, we will definitely want to be able to turn these off.
-Not all users are going to open the even interface as they may not care
-what state we are in, just about the data that they get from the fifo.
-
-Jonathan
-
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 > ---
->  drivers/iio/accel/adxl372.c | 68 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
+>   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-> index ed93534f8dba..5da3c924c62d 100644
-> --- a/drivers/iio/accel/adxl372.c
-> +++ b/drivers/iio/accel/adxl372.c
-> @@ -222,6 +222,18 @@ static const struct adxl372_axis_lookup adxl372_axis_lookup_table[] = {
->  	{ BIT(0) | BIT(1) | BIT(2), ADXL372_XYZ_FIFO },
->  };
->  
-> +static const struct iio_event_spec adxl372_events[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_shared_by_all = BIT(IIO_EV_INFO_PERIOD),
-> +	}, {
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_shared_by_all = BIT(IIO_EV_INFO_PERIOD),
-> +	},
-> +};
-> +
->  #define ADXL372_ACCEL_CHANNEL(index, reg, axis) {			\
->  	.type = IIO_ACCEL,						\
->  	.address = reg,							\
-> @@ -238,6 +250,8 @@ static const struct adxl372_axis_lookup adxl372_axis_lookup_table[] = {
->  		.storagebits = 16,					\
->  		.shift = 4,						\
->  	},								\
-> +	.event_spec = adxl372_events,					\
-> +	.num_event_specs = 2						\
->  }
->  
->  static const struct iio_chan_spec adxl372_channels[] = {
-> @@ -723,6 +737,58 @@ static int adxl372_write_raw(struct iio_dev *indio_dev,
->  	}
->  }
->  
-> +int adxl372_read_event_value(struct iio_dev *indio_dev,
-> +			     const struct iio_chan_spec *chan,
-> +			     enum iio_event_type type,
-> +			     enum iio_event_direction dir,
-> +			     enum iio_event_info info, int *val, int *val2)
-> +{
-> +	struct adxl372_state *st = iio_priv(indio_dev);
-> +
-> +	switch (info) {
-> +	case IIO_EV_INFO_PERIOD:
-> +		switch (dir) {
-> +		case IIO_EV_DIR_RISING:
-> +			*val = st->act_time_ms;
-> +			*val2 = 1000;
-> +			return IIO_VAL_FRACTIONAL;
-> +		case IIO_EV_DIR_FALLING:
-> +			*val = st->inact_time_ms;
-> +			*val2 = 1000;
-> +			return IIO_VAL_FRACTIONAL;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +int adxl372_write_event_value(struct iio_dev *indio_dev,
-> +			      const struct iio_chan_spec *chan,
-> +			      enum iio_event_type type,
-> +			      enum iio_event_direction dir,
-> +			      enum iio_event_info info, int val, int val2)
-> +{
-> +	struct adxl372_state *st = iio_priv(indio_dev);
-> +	unsigned int val_ms;
-> +
-> +	switch (info) {
-> +	case IIO_EV_INFO_PERIOD:
-> +		val_ms = val * 1000 + DIV_ROUND_UP(val2, 1000);
-> +		switch (dir) {
-> +		case IIO_EV_DIR_RISING:
-> +			return adxl372_set_activity_time_ms(st, val_ms);
-> +		case IIO_EV_DIR_FALLING:
-> +			return adxl372_set_inactivity_time_ms(st, val_ms);
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
->  static ssize_t adxl372_peak_fifo_en_get(struct device *dev,
->  					struct device_attribute *attr,
->  					char *buf)
-> @@ -952,6 +1018,8 @@ static const struct iio_info adxl372_info = {
->  	.attrs = &adxl372_attrs_group,
->  	.read_raw = adxl372_read_raw,
->  	.write_raw = adxl372_write_raw,
-> +	.read_event_value = adxl372_read_event_value,
-> +	.write_event_value = adxl372_write_event_value,
->  	.debugfs_reg_access = &adxl372_reg_access,
->  	.hwfifo_set_watermark = adxl372_set_watermark,
->  };
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 9e67944bec9c..3e974dd563cf 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -167,6 +167,8 @@ patternProperties:
+>       description: Calxeda
+>     "^capella,.*":
+>       description: Capella Microsystems, Inc
+> +  "^caninos,.*":
+> +    description: Caninos Loucos LSI-TEC NPO
 
+Alphabetical order: n goes before p.
+
+I'm confused by the description... Either this Caninos Loucos is an 
+independent vendor and gets its own prefix, or it's LSI-Tec and uses 
+something like lsi-tec,caninosloucos-foo. Please clarify commit message 
+and/or description line, at least by inserting something like "program 
+by", "brand by" or the like rather than just concatenating names. Maybe 
+compare UDOO by SECO. Is caninos,foo unique enough or should it be 
+caninosloucos,foo? (crazy canines?)
+
+Note that I usually attempt to CC the organizations I'm assigning a 
+vendor prefix for. Do you represent them or coordinated with them?
+
+Regards,
+Andreas
+
+>     "^cascoda,.*":
+>       description: Cascoda, Ltd.
+>     "^catalyst,.*":
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
