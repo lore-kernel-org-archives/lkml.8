@@ -2,151 +2,180 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0010BC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE88C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 12:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C322A2070A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:56:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="haHvIz5D"
+	by mail.kernel.org (Postfix) with ESMTP id A149A2075A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 12:02:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583582573;
+	bh=h4LZiNlY3M3sfJcyIUQooDL+8Nx54UuhSZVLawI2IaQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zlAfGtHizJssoO3/+qcy3dJBngz70bc4yhXdcey1NPAVZeVd/1KzN06dATEeQmrvw
+	 Jk+Mdzbw/BOBBNwqWxRJbQw+4XwIKelfYUbFNdnfAd6flU1pKlS0+Fn5t1RrHWrlcX
+	 o+AYfSeSPD95KJ767i4M5ayOLtAgj1Z/ri0skkho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgCGL4H (ORCPT
+        id S1726138AbgCGMCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 06:56:07 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31397 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726065AbgCGL4H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 06:56:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583582165;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jVGh5l7IYfQ0JRs6ZhFDe9dOS0KlBegkv9u7kXJdDx0=;
-        b=haHvIz5DdRD0hf1/rgLQxnsQe02i18C+I5jhotb5oEF25SYVY+h+Sj0iclBAzuzLKTSp+W
-        BioUaJuCq91k0AfkuEXiIOfWXO5pBPprZuyvjjKGAqnEIei0vbqHZE2v49gNizWK890gyh
-        iJ85SVHdBd/XC+x3go4KRF3rwSG7hx0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-44-w7WOqL_qPleAx0MieHxsHg-1; Sat, 07 Mar 2020 06:56:03 -0500
-X-MC-Unique: w7WOqL_qPleAx0MieHxsHg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 7 Mar 2020 07:02:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbgCGMCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 07:02:45 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77FE7801E6C;
-        Sat,  7 Mar 2020 11:56:02 +0000 (UTC)
-Received: from localhost (ovpn-12-29.pek2.redhat.com [10.72.12.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CFD5A9078A;
-        Sat,  7 Mar 2020 11:55:58 +0000 (UTC)
-Date:   Sat, 7 Mar 2020 19:55:56 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@suse.com,
-        david@redhat.com, richardw.yang@linux.intel.com,
-        dan.j.williams@intel.com, osalvador@suse.de, rppt@linux.ibm.com
-Subject: Re: [PATCH v3 5/7] mm/sparse.c: add note about only VMEMMAP
- supporting sub-section support
-Message-ID: <20200307115556.GB27711@MiWiFi-R3L-srv>
-References: <20200307084229.28251-1-bhe@redhat.com>
- <20200307084229.28251-6-bhe@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4049C2075A;
+        Sat,  7 Mar 2020 12:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583582564;
+        bh=h4LZiNlY3M3sfJcyIUQooDL+8Nx54UuhSZVLawI2IaQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I6UAesuHdH6qF8zX7LQ0XU5iEMsIHKT9nMdjZGlwPHWOG2EfHZTgIAOcA6ku2QDOP
+         IbKT75AAckhh6mPgGlCBkb3baDr+9x2CtSx3Esey7qWu/mWMHQ32rNBdwCl0leH5SL
+         tOMLAvaMLI/oSxgvhxF14mlNkBlnx1Dk6KV5BiKc=
+Date:   Sat, 7 Mar 2020 12:02:41 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/6] iio: accel: adxl372: Add support for FIFO peak
+ mode
+Message-ID: <20200307120241.7bee0dc8@archlinux>
+In-Reply-To: <20200225120909.12629-2-alexandru.tachici@analog.com>
+References: <20200225120909.12629-1-alexandru.tachici@analog.com>
+        <20200225120909.12629-2-alexandru.tachici@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200307084229.28251-6-bhe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/07/20 at 04:42pm, Baoquan He wrote:
+On Tue, 25 Feb 2020 14:09:04 +0200
+Alexandru Tachici <alexandru.tachici@analog.com> wrote:
 
-Sorry, the subject should be:
-
-mm/sparse.c: add note about only VMEMMAP supporting sub-section hotplug
-
-> And tell check_pfn_span() gating the porper alignment and size of
-> hot added memory region.
+> From: Stefan Popa <stefan.popa@analog.com>
 > 
-> And also move the code comments from inside section_deactivate()
-> to being above it. The code comments are reasonable for the whole
-> function, and the moving makes code cleaner.
+> By default, if all three channels (x, y, z) are enabled, sample sets of
+> concurrent 3-axis data is stored in the FIFO. This patch adds the option
+> to configure the FIFO to store peak acceleration (x, y and z) of every
+> over-threshold event. Since we cannot store 1 or 2 axis peak acceleration
+> data in the FIFO, then all three axis need to be enabled in order for this
+> mode to work.
 > 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+
+First apologies this was one of the sets that I didn't get to last week.
+
+This is a bit of an odd one, but I suppose the general approach is fine.
+
+A few questions on specifics inline.
+
 > ---
->  mm/sparse.c | 37 ++++++++++++++++++++-----------------
->  1 file changed, 20 insertions(+), 17 deletions(-)
+>  drivers/iio/accel/adxl372.c | 46 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
 > 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 2142045ab5c5..0fbd79c4ad81 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -772,6 +772,22 @@ static bool is_subsection_map_empty(struct mem_section *ms)
+> diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
+> index 67b8817995c0..ed93534f8dba 100644
+> --- a/drivers/iio/accel/adxl372.c
+> +++ b/drivers/iio/accel/adxl372.c
+> @@ -264,6 +264,7 @@ struct adxl372_state {
+>  	u8				int2_bitmask;
+>  	u16				watermark;
+>  	__be16				fifo_buf[ADXL372_FIFO_SIZE];
+> +	bool				peak_fifo_mode_en;
+>  };
+>  
+>  static const unsigned long adxl372_channel_masks[] = {
+> @@ -722,6 +723,40 @@ static int adxl372_write_raw(struct iio_dev *indio_dev,
+>  	}
 >  }
->  #endif
 >  
-> +/*
-> + * To deactivate a memory region, there are 3 cases to handle across
-> + * two configurations (SPARSEMEM_VMEMMAP={y,n}):
-> + *
-> + * 1. deactivation of a partial hot-added section (only possible in
-> + *    the SPARSEMEM_VMEMMAP=y case).
-> + *      a) section was present at memory init.
-> + *      b) section was hot-added post memory init.
-> + * 2. deactivation of a complete hot-added section.
-> + * 3. deactivation of a complete section from memory init.
-> + *
-> + * For 1, when subsection_map does not empty we will not be freeing the
-> + * usage map, but still need to free the vmemmap range.
-> + *
-> + * For 2 and 3, the SPARSEMEM_VMEMMAP={y,n} cases are unified
-> + */
->  static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  		struct vmem_altmap *altmap)
->  {
-> @@ -784,23 +800,6 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  		return;
+> +static ssize_t adxl372_peak_fifo_en_get(struct device *dev,
+> +					struct device_attribute *attr,
+> +					char *buf)
+> +{
+> +	struct adxl372_state *st = iio_priv(dev_to_iio_dev(dev));
+> +
+> +	return sprintf(buf, "%d\n", st->peak_fifo_mode_en);
+> +}
+> +
+> +static ssize_t adxl372_peak_fifo_en_set(struct device *dev,
+> +					struct device_attribute *attr,
+> +					const char *buf, size_t len)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct adxl372_state *st = iio_priv(indio_dev);
+> +	bool val;
+> +	int ret;
+> +
+> +	if (iio_buffer_enabled(indio_dev))
+> +		return -EBUSY;
+
+Prefer if you use the iio_claim_direct_mode to ensure we are in
+non buffered mode until we reach a consistent state.  Then set
+the variable and release direct mode.
+
+Otherwise you might have a race between a write
+to this and enabling the buffered mode.
+
+> +
+> +	ret = kstrtobool(buf, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->peak_fifo_mode_en = val;
+> +
+> +	return len;
+> +}
+> +
+> +static IIO_DEVICE_ATTR(buffer_peak_mode_enable, 0644,
+> +		       adxl372_peak_fifo_en_get,
+> +		       adxl372_peak_fifo_en_set, 0);
+> +
+>  static ssize_t adxl372_show_filter_freq_avail(struct device *dev,
+>  					      struct device_attribute *attr,
+>  					      char *buf)
+> @@ -817,11 +852,21 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
+>  	st->fifo_format = adxl372_axis_lookup_table[i].fifo_format;
+>  	st->fifo_set_size = bitmap_weight(indio_dev->active_scan_mask,
+>  					  indio_dev->masklength);
+> +
+> +	/* Configure the FIFO to store sets of impact event peak. */
+> +	if (st->peak_fifo_mode_en) {
+> +		st->fifo_format = ADXL372_XYZ_PEAK_FIFO;
+> +		if (st->fifo_set_size != 3)
+> +			dev_warn(&indio_dev->dev,
+> +				 "All axis must be enabled in peak mode.");
+
+What happens otherwise?  Real question is should this just be an error and
+result in us dropping out of buffered mode again?  How would a userspace
+program that had hit this know there was an issue?
+
+> +	}
+> +
+>  	/*
+>  	 * The 512 FIFO samples can be allotted in several ways, such as:
+>  	 * 170 sample sets of concurrent 3-axis data
+>  	 * 256 sample sets of concurrent 2-axis data (user selectable)
+>  	 * 512 sample sets of single-axis data
+> +	 * 170 sets of impact event peak (x, y, z)
+>  	 */
+>  	if ((st->watermark * st->fifo_set_size) > ADXL372_FIFO_SIZE)
+>  		st->watermark = (ADXL372_FIFO_SIZE  / st->fifo_set_size);
+> @@ -894,6 +939,7 @@ static IIO_DEVICE_ATTR(in_accel_filter_low_pass_3db_frequency_available,
+>  static struct attribute *adxl372_attributes[] = {
+>  	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
+>  	&iio_dev_attr_in_accel_filter_low_pass_3db_frequency_available.dev_attr.attr,
+> +	&iio_dev_attr_buffer_peak_mode_enable.dev_attr.attr,
+>  	NULL,
+>  };
 >  
->  	empty = is_subsection_map_empty(ms);
-> -	/*
-> -	 * There are 3 cases to handle across two configurations
-> -	 * (SPARSEMEM_VMEMMAP={y,n}):
-> -	 *
-> -	 * 1/ deactivation of a partial hot-added section (only possible
-> -	 * in the SPARSEMEM_VMEMMAP=y case).
-> -	 *    a/ section was present at memory init
-> -	 *    b/ section was hot-added post memory init
-> -	 * 2/ deactivation of a complete hot-added section
-> -	 * 3/ deactivation of a complete section from memory init
-> -	 *
-> -	 * For 1/, when subsection_map does not empty we will not be
-> -	 * freeing the usage map, but still need to free the vmemmap
-> -	 * range.
-> -	 *
-> -	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
-> -	 */
->  	if (empty) {
->  		unsigned long section_nr = pfn_to_section_nr(pfn);
->  
-> @@ -907,6 +906,10 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
->   *
->   * This is only intended for hotplug.
->   *
-> + * Note that only VMEMMAP supports sub-section aligned hotplug,
-> + * the proper alignment and size are gated by check_pfn_span().
-> + *
-> + *
->   * Return:
->   * * 0		- On success.
->   * * -EEXIST	- Section has been present.
-> -- 
-> 2.17.2
-> 
 
