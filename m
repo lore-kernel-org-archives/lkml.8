@@ -2,94 +2,112 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4664AC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C147C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F652073C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:59:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zo5SiZ1A"
+	by mail.kernel.org (Postfix) with ESMTP id 3C21F20675
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgCGN6P (ORCPT
+        id S1726289AbgCGOAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:58:15 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46935 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgCGN6P (ORCPT
+        Sat, 7 Mar 2020 09:00:24 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:56006 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgCGOAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 08:58:15 -0500
-Received: by mail-pl1-f194.google.com with SMTP id w12so2055534pll.13;
-        Sat, 07 Mar 2020 05:58:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YttYJY2hEu0o9ieZzIqW+Sf4nL0+gX4KSVXdg9N5DNU=;
-        b=Zo5SiZ1APLQC++VQvG/MZYrhXfyqAhqKEHXuVf2gdx4xLkNQGvwi1/UiuiRXzi/RXn
-         JXr9fhDCARuBH7pAZycvrKCz+HFxV7CwLiNb1m5d9dXgU90mGSETx2F4Y95QEGS/Wcy4
-         XEh5P5KF7phVHqe1YoR+KlvB/ycvu6wD7vqkMhAYxQPPKTi0CfAsvhc0eChBrWVOGAFw
-         Pq5D6uc3mncsYQW/tUACTQl5InajSaf0m227B3dZqQHH8VK1t4utEvHeaItIGy/eNepF
-         WAtE5r9R8E3ls/Rkfqq9RtdHncM6YOxTawI3ltdG313PJYEPBBnLAB8nEk65+NItn2uU
-         QjNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YttYJY2hEu0o9ieZzIqW+Sf4nL0+gX4KSVXdg9N5DNU=;
-        b=UP+h9X9hUyVT1gOe5fwD7SFyN6duBR7sAufNORoFEFBUMDQ0cOVsQdBE5P9cuFnzW+
-         VgAGtoXAGp/p+hMTy8iDGTkVdxg8cYPPb3d4C0m2gFGNHKkeEOwk835QV+6wcLod2ynf
-         1lVl9L1ncPT8NnCsinTN2z6LtQYON4gGFRIMoMd51y7p4RQAZNN4FarHR+X2NV810kmv
-         C4rme7CzWsfMo3wN4QmMqoWVVfD82H4Zxjr6LGx123Xtx4fG+x3xxI6BhDQR+D5RmvA7
-         n6jJI53T7jaq/ciY4hkq8oOvr2M70BbulS8LQrJAJBjTOSndVj8KH1DMKU0s86TjVqfB
-         ELug==
-X-Gm-Message-State: ANhLgQ0OmGGqffaaGdlV/4z9iLz1N/+i+FqUvkaklYAjkxQaZg/kII4q
-        qta4xbIQNY8G8UekiP6aeEk=
-X-Google-Smtp-Source: ADFU+vs4CKXfeoUiFDnFoMUD4Yhp6hvzZsVFA01ru2dnM86QFvbm5rhxncjWPzQFEZPxKZW0qt8guw==
-X-Received: by 2002:a17:902:694b:: with SMTP id k11mr7718361plt.334.1583589493848;
-        Sat, 07 Mar 2020 05:58:13 -0800 (PST)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id y28sm14694177pgc.69.2020.03.07.05.58.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Mar 2020 05:58:13 -0800 (PST)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     marcel@holtmann.org
-Cc:     johan.hedberg@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] bluetooth/rfcomm: fix ODEBUG bug in rfcomm_dev_ioctl
-Date:   Sat,  7 Mar 2020 21:58:08 +0800
-Message-Id: <1583589488-22450-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sat, 7 Mar 2020 09:00:23 -0500
+Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 027DwcKw034153;
+        Sat, 7 Mar 2020 22:58:38 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp);
+ Sat, 07 Mar 2020 22:58:38 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp)
+Received: from ccsecurity.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 027DwVo3033899
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Sat, 7 Mar 2020 22:58:38 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Matthew Garrett <mjg59@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: [PATCH v2] Add kernel config option for fuzz testing.
+Date:   Sat,  7 Mar 2020 22:58:22 +0900
+Message-Id: <20200307135822.3894-1-penguin-kernel@I-love.SAKURA.ne.jp>
+X-Mailer: git-send-email 2.18.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
-increase dlc->refcnt.
+While syzkaller is finding many bugs, sometimes syzkaller examines
+stupid operations. Currently we prevent syzkaller from examining
+stupid operations by blacklisting syscall arguments and/or disabling
+whole functionality using existing kernel config options, but it is
+a whack-a-mole approach. We need cooperation from kernel side [1].
 
-Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+This patch introduces a kernel config option which allows disabling
+only specific operations. This kernel config option should be enabled
+only when building kernels for fuzz testing.
+
+We discussed possibility of disabling specific operations at run-time
+using some lockdown mechanism [2], but conclusion seems that build-time
+control (i.e. kernel config option) fits better for this purpose.
+Since patches for users of this kernel config option will want a lot of
+explanation [3], this patch provides only kernel config option for them.
+
+[1] https://github.com/google/syzkaller/issues/1622
+[2] https://lkml.kernel.org/r/CACdnJutc7OQeoor6WLTh8as10da_CN=crs79v3Fp0mJTaO=+yw@mail.gmail.com
+[3] https://lkml.kernel.org/r/20191216163155.GB2258618@kroah.com
+
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Dmitry Vyukov <dvyukov@google.com>
 ---
- net/bluetooth/rfcomm/tty.c | 1 -
- 1 file changed, 1 deletion(-)
+ lib/Kconfig.debug | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
-index 0c7d31c..ea2a1df0 100644
---- a/net/bluetooth/rfcomm/tty.c
-+++ b/net/bluetooth/rfcomm/tty.c
-@@ -414,7 +414,6 @@ static int __rfcomm_create_dev(struct sock *sk, void __user *arg)
- 		if (IS_ERR(dlc))
- 			return PTR_ERR(dlc);
- 		else if (dlc) {
--			rfcomm_dlc_put(dlc);
- 			return -EBUSY;
- 		}
- 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
+Changes since v1:
+  Drop users of this kernel config option.
+  Update patch description.
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 53e786e0a604..e360090e24c5 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2208,4 +2208,14 @@ config HYPERV_TESTING
+ 
+ endmenu # "Kernel Testing and Coverage"
+ 
++config KERNEL_BUILT_FOR_FUZZ_TESTING
++       bool "Build kernel for fuzz testing"
++       default n
++       help
++	 Say N unless you are building kernels for fuzz testing.
++	 Saying Y here disables several things that legitimately cause
++	 damage under a fuzzer workload (e.g. copying to arbitrary
++	 user-specified kernel address, changing console loglevel,
++	 freezing filesystems).
++
+ endmenu # Kernel hacking
 -- 
-1.8.3.1
+2.18.2
 
