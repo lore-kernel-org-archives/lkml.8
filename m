@@ -2,106 +2,159 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1513CC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3AAC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB9C2070A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26582070A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:39:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z6Qq6/1B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/Ump+m7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbgCGJjZ (ORCPT
+        id S1726267AbgCGJjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 04:39:25 -0500
-Received: from mail-pf1-f175.google.com ([209.85.210.175]:44124 "EHLO
-        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgCGJjZ (ORCPT
+        Sat, 7 Mar 2020 04:39:42 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42913 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgCGJjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 04:39:25 -0500
-Received: by mail-pf1-f175.google.com with SMTP id y26so2352533pfn.11
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 01:39:24 -0800 (PST)
+        Sat, 7 Mar 2020 04:39:42 -0500
+Received: by mail-pg1-f196.google.com with SMTP id h8so2274016pgs.9
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 01:39:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7a3AAdOd9aTW9nDmpj4pfI4b0wQoKltwVVKhvV6YEWo=;
-        b=Z6Qq6/1BqFIylyqfS6Pv05Y6BNWVpCBFW7z4NRcvmpUbx0CCBnp383iDE0xtThbgF0
-         CvlCohuP6bRjR/9CaLi7X6m7p+Jg1DeaBU4v/ZyAPTkswwjFbMxm9jQgiH78PNSTFbqC
-         sOBuUr21Ll7e8Ep/vSwax0azbtJntHQOFwbMY=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TQrEvZ13F8kEvhfqqpGuqFY2wEN2DIfUxspJmPRPnIo=;
+        b=S/Ump+m7pX1/2CQ88Se755gIiG6OFrXK2l/vah7aFG/d2RAfEoB7TE8hjfGUTil34U
+         yOaTgDLAAka5xml/5Pud4/O/GJ4N43tPXekh3oTC0Ip5ViOMJHy5GwRKliFKleSrNjt5
+         CntuBDxL66X6Tt4URFw7EACYFPbil8BU9wlYdCaH/uXNYaDvqi624jOc9Un1jcgUEi3p
+         MNa45X3SwRRzhlZoAhG5vXImE/Yy7RrqiZw18wVv0XwDZ17L+OjYm4JBQmXEmeD2mfXp
+         CcoGiIiEnVw6N4a3/flDIX+mJwATmetu4O3tOBszVqf/yyvFawLFMIaIn+CEIlN8y7V+
+         ugXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7a3AAdOd9aTW9nDmpj4pfI4b0wQoKltwVVKhvV6YEWo=;
-        b=O2asKjFywyAbHTPKfg7P5YHmP2NyJfCx9GiR+9xPumngzJu240W2HXxt4RjcXRjsoH
-         cnA53zdPAu3vf0y2pfEAc3kI0jAQaDtgWXutf3jDHkbm4vxkv4HkM2rB9I9fG5iV102t
-         6pwieHiOHLyaONipZuHYg/qyxTu2O8s5rQ6DTOkkmj4S6wza2dslBQ4MCcBxnuOZH14M
-         2BOPO9dxR6KGK4dpAuZfi55M5YHuo8XlvY/8ucV1hufqJcChUSzYuALgsm/Gph3PdJmd
-         aQe9PAA0lkAI9DdleaAlXLs1Z8+eI8wlSR5TPJrjgKpw7fYr5PDWZnf6uMlQX2H9QQRy
-         8pqw==
-X-Gm-Message-State: ANhLgQ2lbKrMArAfTdx65gzawGHVOa79ZDRFAGAFiTzaFiQq0SGgW0VE
-        ieA2QvsN9YYlbuct+IhYnZe3yw==
-X-Google-Smtp-Source: ADFU+vvn+Juchn8PjjSyhg0i99Mf32mKkqJVst/dcmMctSpXzE9UH+SIP0x31txil9XG5a1Hj4flwg==
-X-Received: by 2002:a63:1e44:: with SMTP id p4mr7242868pgm.367.1583573964284;
-        Sat, 07 Mar 2020 01:39:24 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id x197sm23115196pfd.74.2020.03.07.01.39.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TQrEvZ13F8kEvhfqqpGuqFY2wEN2DIfUxspJmPRPnIo=;
+        b=KTXmHMjl7t0dZBKpYZRDp/Di45HQhV/osG11vyKE0y0Qk0PKqQwA4/RDzD5polyYdl
+         c7y1ttSMtZimX6W5bqE9b+N5gDXVZa9pOEG6zPZPz09FCXtOPHU0qJfAmvlJJhSrkt8E
+         TMelJmbWXN4noYuq9BA5V/Mcr1bOm34resflf+N2eHT9p6FrIu1xha70KcpZMmltE2Ax
+         7R+M4ZmNH+IPv1C5kzoqTv/egLkk7fEOS7Xwu2k/iS6YbL3T+UG3y6u3zEh0buWvODTj
+         mHzw+98AAMosWzd2Jc9OrH68Hr9tk/NHK6AuGB6Ca6C0MQvqIlmAZF0HsP1cLYzcRZ86
+         rWLg==
+X-Gm-Message-State: ANhLgQ1YbO4cbjhsfH0qbba8dKnUDQ2CRcF6Bd2M98gCmmuAV3NRb1zr
+        KM7ATIKVLw28cQqrcSBWmiw=
+X-Google-Smtp-Source: ADFU+vsMj19AZ1LMNkk/TpNkNt56C7jYnDIJMIFA0yMpCIVVFSYlfPbfxqUpAEoPlL07hhQWMJ5ofg==
+X-Received: by 2002:a63:348b:: with SMTP id b133mr7346984pga.372.1583573980485;
+        Sat, 07 Mar 2020 01:39:40 -0800 (PST)
+Received: from debian.net.fpt ([2405:4800:58f7:2133:c967:474d:b56a:15e9])
+        by smtp.gmail.com with ESMTPSA id q13sm37932689pgh.30.2020.03.07.01.39.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 01:39:23 -0800 (PST)
-Date:   Sat, 7 Mar 2020 18:39:22 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 10/11] videobuf2: add begin/end cpu_access callbacks to
- dma-sg
-Message-ID: <20200307093922.GA29464@google.com>
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-11-senozhatsky@chromium.org>
- <f99cd8d2-26a2-acd1-a986-aee66cd2ba12@xs4all.nl>
- <20200307052628.GB176460@google.com>
- <8150bc6c-f6a4-fa2c-4e2e-552dcb168df0@xs4all.nl>
+        Sat, 07 Mar 2020 01:39:39 -0800 (PST)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     catalin.marinas@arm.com, will@kernel.org, alexios.zavras@intel.com,
+        tglx@linutronix.de, akpm@linux-foundation.org,
+        steven.price@arm.com, steve.capper@arm.com, mark.rutland@arm.com,
+        broonie@kernel.org, keescook@chromium.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com,
+        Phong Tran <tranmanphong@gmail.com>
+Subject: [PATCH] arm64: add check_wx_pages debugfs for CHECK_WX
+Date:   Sat,  7 Mar 2020 16:39:26 +0700
+Message-Id: <20200307093926.27145-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8150bc6c-f6a4-fa2c-4e2e-552dcb168df0@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/07 10:32), Hans Verkuil wrote:
-> >>> +static int vb2_dma_sg_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
-> >>> +					enum dma_data_direction direction)
-> >>
-> >> I suggest you use this style to avoid checkpatch warnings:
-> >>
-> >> static int
-> >> vb2_dma_sg_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
-> >> 				       enum dma_data_direction direction)
-> > 
-> > OK, will do.
-> > 
-> > Just for information, my checkpatch doesn't warn me:
-> > 
-> > $ ./scripts/checkpatch.pl outgoing/0010-videobuf2-add-begin-end-cpu_access-callbacks-to-dma-.patch
-> 
-> We use the --strict option to checkpatch.
+follow the suggestion from
+https://github.com/KSPP/linux/issues/35
 
-Got it.
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+---
+ arch/arm64/Kconfig.debug        |  3 ++-
+ arch/arm64/include/asm/ptdump.h |  2 ++
+ arch/arm64/mm/dump.c            |  1 +
+ arch/arm64/mm/ptdump_debugfs.c  | 18 ++++++++++++++++++
+ 4 files changed, 23 insertions(+), 1 deletion(-)
 
-	-ss
+diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
+index 1c906d932d6b..be552fa351e2 100644
+--- a/arch/arm64/Kconfig.debug
++++ b/arch/arm64/Kconfig.debug
+@@ -48,7 +48,8 @@ config DEBUG_WX
+ 	  of other unfixed kernel bugs easier.
+ 
+ 	  There is no runtime or memory usage effect of this option
+-	  once the kernel has booted up - it's a one time check.
++	  once the kernel has booted up - it's a one time check and
++	  can be checked by echo "1" to "check_wx_pages" debugfs in runtime.
+ 
+ 	  If in doubt, say "Y".
+ 
+diff --git a/arch/arm64/include/asm/ptdump.h b/arch/arm64/include/asm/ptdump.h
+index 38187f74e089..b80d6b4fc508 100644
+--- a/arch/arm64/include/asm/ptdump.h
++++ b/arch/arm64/include/asm/ptdump.h
+@@ -24,9 +24,11 @@ struct ptdump_info {
+ void ptdump_walk(struct seq_file *s, struct ptdump_info *info);
+ #ifdef CONFIG_PTDUMP_DEBUGFS
+ void ptdump_debugfs_register(struct ptdump_info *info, const char *name);
++int ptdump_check_wx_init(void);
+ #else
+ static inline void ptdump_debugfs_register(struct ptdump_info *info,
+ 					   const char *name) { }
++static inline int ptdump_check_wx_init(void) { return 0; }
+ #endif
+ void ptdump_check_wx(void);
+ #endif /* CONFIG_PTDUMP_CORE */
+diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
+index 860c00ec8bd3..60c99a047763 100644
+--- a/arch/arm64/mm/dump.c
++++ b/arch/arm64/mm/dump.c
+@@ -378,6 +378,7 @@ static int ptdump_init(void)
+ #endif
+ 	ptdump_initialize();
+ 	ptdump_debugfs_register(&kernel_ptdump_info, "kernel_page_tables");
++	ptdump_check_wx_init();
+ 	return 0;
+ }
+ device_initcall(ptdump_init);
+diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
+index 1f2eae3e988b..73cddc12c3c2 100644
+--- a/arch/arm64/mm/ptdump_debugfs.c
++++ b/arch/arm64/mm/ptdump_debugfs.c
+@@ -16,3 +16,21 @@ void ptdump_debugfs_register(struct ptdump_info *info, const char *name)
+ {
+ 	debugfs_create_file(name, 0400, NULL, info, &ptdump_fops);
+ }
++
++static int check_wx_debugfs_set(void *data, u64 val)
++{
++	if (val != 1ULL)
++		return -EINVAL;
++
++	ptdump_check_wx();
++
++	return 0;
++}
++
++DEFINE_SIMPLE_ATTRIBUTE(check_wx_fops, NULL, check_wx_debugfs_set, "%llu\n");
++
++int ptdump_check_wx_init(void)
++{
++	return debugfs_create_file("check_wx_pages", 0200, NULL,
++				   NULL, &check_wx_fops) ? 0 : -ENOMEM;
++}
+-- 
+2.20.1
+
