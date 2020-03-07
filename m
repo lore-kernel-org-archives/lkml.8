@@ -2,118 +2,174 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8039CC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FE5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5E9206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583540682;
-	bh=B72rG1jwLbG2y/Xk21RtChGVMs08LLX26UA7wxJK7XI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0VEd/SToA0G7jmz7U2OpQijPBfPY4c4hRtcqf4XOLEgnV0gj/bBctR7VlonTpzJ7M
-	 9YCPaQq86eT5a9ULqoSXwbnRH5WKb2fEu9cohXJEEmiGlWuTkhyA34Jze3Y/QfzsIU
-	 GaEcfKbYw3ktIuhDQbFJtegOZH7rLoElGW8VY89M=
+	by mail.kernel.org (Postfix) with ESMTP id 91975206E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgCGAYl (ORCPT
+        id S1726704AbgCGA2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 19:24:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59696 "EHLO mail.kernel.org"
+        Fri, 6 Mar 2020 19:28:54 -0500
+Received: from mga11.intel.com ([192.55.52.93]:47074 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgCGAYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 19:24:41 -0500
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 901C0206E2;
-        Sat,  7 Mar 2020 00:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583540680;
-        bh=B72rG1jwLbG2y/Xk21RtChGVMs08LLX26UA7wxJK7XI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tpSqdkzjbvlHV87zP5VZdFv9lE0mA/6eQJkWRgcGgYArXxTgvSeCyV8Z8vgOiD8Ku
-         91oZt4IM9h1yIscyunfSHVvMeIaPPVyKpdb/Rv1cNXPvtx77nBUxiEHWy/UCmZ5nLp
-         E1SSOAedqG+uu7BrqfC++0gy/ad+A7ngWYpF2or8=
-Date:   Fri, 6 Mar 2020 16:24:40 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Daniel Rosenberg <drosen@google.com>, kernel-team@android.com
-Subject: Re: [PATCH v2] f2fs: fix wrong check on F2FS_IOC_FSSETXATTR
-Message-ID: <20200307002440.GA7944@google.com>
-References: <20200305234822.178708-1-jaegeuk@kernel.org>
+        id S1726300AbgCGA2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 19:28:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 16:28:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,524,1574150400"; 
+   d="scan'208";a="440297238"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Mar 2020 16:28:53 -0800
+Date:   Fri, 6 Mar 2020 16:28:53 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] KVM: VMX: untangle VMXON revision_id setting when
+ using eVMCS
+Message-ID: <20200307002852.GA28225@linux.intel.com>
+References: <20200306130215.150686-1-vkuznets@redhat.com>
+ <20200306130215.150686-3-vkuznets@redhat.com>
+ <908345f1-9bfd-004f-3ba6-0d6dce67d11e@oracle.com>
+ <20200306230747.GA27868@linux.intel.com>
+ <ceb19682-4374-313a-cf05-8af6cd8d6c3b@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200305234822.178708-1-jaegeuk@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ceb19682-4374-313a-cf05-8af6cd8d6c3b@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes the incorrect failure when enabling project quota on casefold-enabled
-file.
+On Fri, Mar 06, 2020 at 03:57:25PM -0800, Krish Sadhukhan wrote:
+> 
+> On 3/6/20 3:07 PM, Sean Christopherson wrote:
+> >On Fri, Mar 06, 2020 at 02:20:13PM -0800, Krish Sadhukhan wrote:
+> >>>@@ -2599,7 +2607,7 @@ void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+> >>>  int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+> >>>  {
+> >>>-	loaded_vmcs->vmcs = alloc_vmcs(false);
+> >>>+	loaded_vmcs->vmcs = alloc_vmcs(VMCS_REGION);
+> >>>  	if (!loaded_vmcs->vmcs)
+> >>>  		return -ENOMEM;
+> >>>@@ -2652,25 +2660,13 @@ static __init int alloc_vmxon_regions(void)
+> >>>  	for_each_possible_cpu(cpu) {
+> >>>  		struct vmcs *vmcs;
+> >>>-		vmcs = alloc_vmcs_cpu(false, cpu, GFP_KERNEL);
+> >>>+		/* The VMXON region is really just a special type of VMCS. */
+> >>
+> >>Not sure if this is the right way to correlate the two.
+> >>
+> >>AFAIU, the SDM calls VMXON region as a memory area that holds the VMCS data
+> >>structure and it calls VMCS the data structure that is used by software to
+> >>switch between VMX root-mode and not-root-mode. So VMXON is a memory area
+> >>whereas VMCS is the structure of the data that resides in that memory area.
+> >>
+> >>So if we follow this interpretation, your enum should rather look like,
+> >>
+> >>enum vmcs_type {
+> >>+    VMCS,
+> >>+    EVMCS,
+> >>+    SHADOW_VMCS
+> >No (to the EVMCS suggestion), because this allocation needs to happen for
+> >!eVMCS.  The SDM never explictly calls the VMXON region a VMCS, but it's
+> >just being coy.  E.g. VMCLEAR doesn't fail if you point it at random
+> >memory, but point it at the VMXON region and it yells.
+> >
+> >We could call it VMXON_VMCS if that helps.
+> 
+> Are you saying,
+> 
+> + enum vmcs_type {
+> +     VMXON_REGION,
+> +     VMXON_VMCS,
+> +     SHADOW_VMCS_REGION,
+> +};
+> 
+> ?
+> 
+> In that case, "VMXON_REGION" and "VMXON_VMCS" are no different according to
+> your explanation.
 
-Cc: Daniel Rosenberg <drosen@google.com>
-Cc: kernel-team@android.com
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- log from v1:
-  - fix the last check
+  enum vmcs_type {
+	VMXON_VMCS,
+	VMCS,
+	SHADOW_VMCS,
+  };
 
- fs/f2fs/file.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+alloc_vmcs_cpu() does more than just allocate the memory, it also
+initializes the data structure, e.g. "allocate and initalize a VMXON VMCS",
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index b443dc2947c7..07f636732199 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1794,12 +1794,15 @@ static int f2fs_file_flush(struct file *file, fl_owner_t id)
- static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
- {
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
-+	u32 masked_flags = fi->i_flags & mask;
-+
-+	f2fs_bug_on(F2FS_I_SB(inode), (iflags & ~mask));
- 
- 	/* Is it quota file? Do not allow user to mess with it */
- 	if (IS_NOQUOTA(inode))
- 		return -EPERM;
- 
--	if ((iflags ^ fi->i_flags) & F2FS_CASEFOLD_FL) {
-+	if ((iflags ^ masked_flags) & F2FS_CASEFOLD_FL) {
- 		if (!f2fs_sb_has_casefold(F2FS_I_SB(inode)))
- 			return -EOPNOTSUPP;
- 		if (!f2fs_empty_dir(inode))
-@@ -1813,9 +1816,9 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
- 			return -EINVAL;
- 	}
- 
--	if ((iflags ^ fi->i_flags) & F2FS_COMPR_FL) {
-+	if ((iflags ^ masked_flags) & F2FS_COMPR_FL) {
- 		if (S_ISREG(inode->i_mode) &&
--			(fi->i_flags & F2FS_COMPR_FL || i_size_read(inode) ||
-+			(masked_flags & F2FS_COMPR_FL || i_size_read(inode) ||
- 						F2FS_HAS_BLOCKS(inode)))
- 			return -EINVAL;
- 		if (iflags & F2FS_NOCOMP_FL)
-@@ -1832,8 +1835,8 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
- 			set_compress_context(inode);
- 		}
- 	}
--	if ((iflags ^ fi->i_flags) & F2FS_NOCOMP_FL) {
--		if (fi->i_flags & F2FS_COMPR_FL)
-+	if ((iflags ^ masked_flags) & F2FS_NOCOMP_FL) {
-+		if (masked_flags & F2FS_COMPR_FL)
- 			return -EINVAL;
- 	}
- 
--- 
-2.25.1.481.gfbce0eb801-goog
-
+> >  The SDM does call the memory
+> >allocation for regular VMCSes a "VMCS region":
+> >
+> >   A logical processor associates a region in memory with each VMCS. This
+> >   region is called the VMCS region.
+> >
+> >I don't think I've ever heard anyone differentiate that two though, i.e.
+> >VMCS is used colloquially to mean both the data structure itself and the
+> >memory region containing the data structure.
+> >
+> >>>+		vmcs = alloc_vmcs_cpu(VMXON_REGION, cpu, GFP_KERNEL);
+> >>>  		if (!vmcs) {
+> >>>  			free_vmxon_regions();
+> >>>  			return -ENOMEM;
+> >>>  		}
+> >>>-		/*
+> >>>-		 * When eVMCS is enabled, alloc_vmcs_cpu() sets
+> >>>-		 * vmcs->revision_id to KVM_EVMCS_VERSION instead of
+> >>>-		 * revision_id reported by MSR_IA32_VMX_BASIC.
+> >>>-		 *
+> >>>-		 * However, even though not explicitly documented by
+> >>>-		 * TLFS, VMXArea passed as VMXON argument should
+> >>>-		 * still be marked with revision_id reported by
+> >>>-		 * physical CPU.
+> >>>-		 */
+> >>>-		if (static_branch_unlikely(&enable_evmcs))
+> >>>-			vmcs->hdr.revision_id = vmcs_config.revision_id;
+> >>>-
+> >>>  		per_cpu(vmxarea, cpu) = vmcs;
+> >>>  	}
+> >>>  	return 0;
+> >>>diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> >>>index e64da06c7009..a5eb92638ac2 100644
+> >>>--- a/arch/x86/kvm/vmx/vmx.h
+> >>>+++ b/arch/x86/kvm/vmx/vmx.h
+> >>>@@ -489,16 +489,22 @@ static inline struct pi_desc *vcpu_to_pi_desc(struct kvm_vcpu *vcpu)
+> >>>  	return &(to_vmx(vcpu)->pi_desc);
+> >>>  }
+> >>>-struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags);
+> >>>+enum vmcs_type {
+> >>>+	VMXON_REGION,
+> >>>+	VMCS_REGION,
+> >>>+	SHADOW_VMCS_REGION,
+> >>>+};
+> >>>+
+> >>>+struct vmcs *alloc_vmcs_cpu(enum vmcs_type type, int cpu, gfp_t flags);
+> >>>  void free_vmcs(struct vmcs *vmcs);
+> >>>  int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+> >>>  void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
+> >>>  void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs);
+> >>>  void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs);
+> >>>-static inline struct vmcs *alloc_vmcs(bool shadow)
+> >>>+static inline struct vmcs *alloc_vmcs(enum vmcs_type type)
+> >>>  {
+> >>>-	return alloc_vmcs_cpu(shadow, raw_smp_processor_id(),
+> >>>+	return alloc_vmcs_cpu(type, raw_smp_processor_id(),
+> >>>  			      GFP_KERNEL_ACCOUNT);
+> >>>  }
