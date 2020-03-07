@@ -2,183 +2,344 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2217C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86ADC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD3820675
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931082073C
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 14:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyHbDrjx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WzMwG2N1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgCGOFD (ORCPT
+        id S1726199AbgCGOHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 09:05:03 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:46345 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbgCGOFD (ORCPT
+        Sat, 7 Mar 2020 09:07:45 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36985 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbgCGOHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 09:05:03 -0500
-Received: by mail-vs1-f66.google.com with SMTP id s9so2570516vsi.13;
-        Sat, 07 Mar 2020 06:05:01 -0800 (PST)
+        Sat, 7 Mar 2020 09:07:44 -0500
+Received: by mail-lj1-f194.google.com with SMTP id d12so5284639lji.4
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 06:07:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cax6KFpzInYrHNglxfQ4soBhGGoSO8AhKGG8fHutMYk=;
-        b=dyHbDrjxvoSGv57ec2iNs0PdgmaGTE23YF82Exlv+JTjzD9Q4ppacSEgqUc8QhhbIh
-         w1b+83tKSojhETRihlgJ1WkhAGxab4a3ygLTPunGhnA5X2W4zloNL66fQed4fStNtHgw
-         yXOa0NQuU/miLkCXFCqJ333iyTJBGmKKLzaNdKCY5ntw5ECpHnaq6g5Rpc7tVXoHaCta
-         MTfJyBNzoCYWpJzzAj2DxzhGzg+NT9iooOsQ126+3UBEI0m3iXKt7OgK6u4DPx9p75ZI
-         M9Bx26lOy2DXSthl0VZqv8Ar/LDZJgrIUFo/HAM0ol9bCsqYSywa8+ZNX3DQJLh8QbRt
-         nIYA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SAPTiIY4xCYjQg2yAiFkFznaR9UtQLYFudDUUNqKEUw=;
+        b=WzMwG2N1DF9xQ7wEpZJWsNbztQYwwK9VM2pEA8+qUu+RbdY9wCOMt6syRjLuM9Q32r
+         6S84dVIlL7LjIL6h3tslK+omexZcADElRzVjD63RQ5bxQJuLjA9LayA5hFI0klj8Jnau
+         oAFgT86vkCq2i3oddJzDcO+q0pF4QxAyh1leIVbDtdHBSU6ADTN7jydP6z+IYs8W+76n
+         90waKYW2Ij6oyUiG0mXas/3fktPqhP0WKWxiKkHC4Y1tPHCdtORMVhNfH7xmgfBkWCW3
+         Pi5jU3r7Zt40jpPdJ3Oz7BiRE6qd7DM6s1dLiqjkrvWQu6sxo1ijhD6cdJGyJLhneutI
+         fDgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cax6KFpzInYrHNglxfQ4soBhGGoSO8AhKGG8fHutMYk=;
-        b=qXmvdnyjkSey+7JYZW9jrd/syu9r5ffdwguxh2iqieKb8edZbzdKCFg0sB2Yag7HCD
-         7rDMRWSNLat+Vya4WQQXkGyuFclfVxEX4cAOxdophtNJP549N0LgdzGSbggbhAaXbPp8
-         BiBOy+9PCZh2DVYKMKQUtwGhbPoAX9iaAzj8TwEZcTY5druKdKfeqgSj/5hzhMRqQB3/
-         Ap9Qko4iCqR4h6GP40aTEZFIKqBB49reOqadhmMV1XEKB2VWQGQFv7zpRxMbXf9lTlL5
-         W+sg/eTmitCvnsjC/rW3CjzkJy/0EOz77/3DZAt5UNNy0cpGKVn67c1b8eej60i5YTIG
-         WN0A==
-X-Gm-Message-State: ANhLgQ3BCeX+boFxLISr3nDDiqoBmbbEO1jxU2Xr1NQl3Pcj1bfMnFA4
-        HIf8QOXjulZ/2jqJwA6P9MUIvU84olvZ4GtA8l8=
-X-Google-Smtp-Source: ADFU+vsvp3cR+gGziXo7WY9FDolP2tjjgWNMenk6T5Ee7ZlV3vWH6yZOlHnG3PDtutNHF+xZhtsGklRQ5IsTqOWcNxQ=
-X-Received: by 2002:a67:fbcd:: with SMTP id o13mr337575vsr.174.1583589901011;
- Sat, 07 Mar 2020 06:05:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SAPTiIY4xCYjQg2yAiFkFznaR9UtQLYFudDUUNqKEUw=;
+        b=Qba+nIzWoFmSogGfd8PlPN+icDg5BEjBLfLSwJn3JHLd8ny0dsZiMtJdhq9YSEnFyY
+         d7tsGMPvfpKKi+IVW9Tyv/fUQBTADgaTGJ2lFsPLJnAxXCrXpgDx1EJDqGIgXcCpGEgB
+         aBL7K9SRQTMOTAjBBVvwLJsnKWJPyNAe7sA9L7Bv+tTjKB7bLfZr2Y/DYM3VVMXqx9Me
+         jBEzcyztaPxrPe2SpZetOskvWfAHHKCrOUc5+r7hTaCMfV8znKXipmfOjaymG9gXFntS
+         NCWHarhBVtufJq7fAY4Sml0HAhtTM6qhIFPkOcoilcTgq0+Z9964Cttkjyfbh/2MfgaU
+         H7dQ==
+X-Gm-Message-State: ANhLgQ1elRScOSvPvOm9ZeThY8YST15Uvgcb4EQDNv0oUMzMSq2lFEpi
+        GZauX9+2HjRp008LCz6iqGl2F4zM
+X-Google-Smtp-Source: ADFU+vvlgtkVJZ65rhnHkztQqKa5tOQMw1zHH6gvZea/Y8PpTCYgj2B/9iZF7vq+9Aa6qOjx6DQnPw==
+X-Received: by 2002:a2e:9e16:: with SMTP id e22mr5176350ljk.220.1583590061828;
+        Sat, 07 Mar 2020 06:07:41 -0800 (PST)
+Received: from localhost ([85.174.198.166])
+        by smtp.gmail.com with ESMTPSA id 140sm6210719lfk.19.2020.03.07.06.07.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Mar 2020 06:07:40 -0800 (PST)
+Date:   Sat, 7 Mar 2020 06:07:39 -0800
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Stefano Brivio <sbrivio@redhat.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lib/bitmap: rework bitmap_cut()
+Message-ID: <20200307140739.GA31182@yury-thinkpad>
+References: <20200306221423.18631-1-yury.norov@gmail.com>
+ <20200307143341.5497e7ee@elisabeth>
 MIME-Version: 1.0
-References: <1583589488-22450-1-git-send-email-hqjagain@gmail.com>
-In-Reply-To: <1583589488-22450-1-git-send-email-hqjagain@gmail.com>
-From:   =?UTF-8?B?6buE56eL6ZKn?= <anenbupt@gmail.com>
-Date:   Sat, 7 Mar 2020 22:04:49 +0800
-Message-ID: <CADG63jBGo0yLYO+SR04iDSuN0UsSoL5PaaZemyk4Wne7KThzRw@mail.gmail.com>
-Subject: Re: [PATCH] bluetooth/rfcomm: fix ODEBUG bug in rfcomm_dev_ioctl
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com, davem@davemloft.net,
-        kuba@kernel.org, linux-bluetooth@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200307143341.5497e7ee@elisabeth>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, Mar 07, 2020 at 02:33:41PM +0100, Stefano Brivio wrote:
+> On Fri,  6 Mar 2020 14:14:23 -0800
+> Yury Norov <yury.norov@gmail.com> wrote:
+> 
+> > diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+> > index 99058eb81042..ed60b7272437 100644
+> > --- a/include/linux/bitmap.h
+> > +++ b/include/linux/bitmap.h
+> > @@ -59,7 +59,7 @@
+> >   *  						Iterate over all set regions
+> >   *  bitmap_shift_right(dst, src, n, nbits)      *dst = *src >> n
+> >   *  bitmap_shift_left(dst, src, n, nbits)       *dst = *src << n
+> > - *  bitmap_cut(dst, src, first, n, nbits)       Cut n bits from first, copy rest
+> > + *  bitmap_cut(bmap, first, n, nbits)           Cut n bits from first, copy rest
+> 
+> I think the first argument should be called 'map', for consistency with
+> similar operations.
+> 
+> >   *  bitmap_replace(dst, old, new, mask, nbits)  *dst = (*old & ~(*mask)) | (*new & *mask)
+> >   *  bitmap_remap(dst, src, old, new, nbits)     *dst = map(old, new)(src)
+> >   *  bitmap_bitremap(oldbit, old, new, nbits)    newbit = map(old, new)(oldbit)
+> > @@ -140,9 +140,8 @@ extern void __bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+> >  				unsigned int shift, unsigned int nbits);
+> >  extern void __bitmap_shift_left(unsigned long *dst, const unsigned long *src,
+> >  				unsigned int shift, unsigned int nbits);
+> > -extern void bitmap_cut(unsigned long *dst, const unsigned long *src,
+> > -		       unsigned int first, unsigned int cut,
+> > -		       unsigned int nbits);
+> > +extern void bitmap_cut(unsigned long *bmap, unsigned int first,
+> 
+> Same here.
+> 
+> > +			unsigned int cut, unsigned int nbits);
+> >  extern int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
+> >  			const unsigned long *bitmap2, unsigned int nbits);
+> >  extern void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
+> > diff --git a/lib/bitmap.c b/lib/bitmap.c
+> > index 89260aa342d6..06e06e0c3096 100644
+> > --- a/lib/bitmap.c
+> > +++ b/lib/bitmap.c
+> > @@ -170,67 +170,42 @@ EXPORT_SYMBOL(__bitmap_shift_left);
+> >  
+> >  /**
+> >   * bitmap_cut() - remove bit region from bitmap and right shift remaining bits
+> > - * @dst: destination bitmap, might overlap with src
+> > - * @src: source bitmap
+> > + * @bmap:  bitmap to cut
+> 
+> Same here, and excess whitespace.
+> 
+> >   * @first: start bit of region to be removed
+> >   * @cut: number of bits to remove
+> >   * @nbits: bitmap size, in bits
+> >   *
+> > - * Set the n-th bit of @dst iff the n-th bit of @src is set and
+> > - * n is less than @first, or the m-th bit of @src is set for any
+> > - * m such that @first <= n < nbits, and m = n + @cut.
+> > - *
+> >   * In pictures, example for a big-endian 32-bit architecture:
+> >   *
+> > - * @src:
+> > + * @bmap:
+> >   * 31                                   63
+> >   * |                                    |
+> >   * 10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101
+> >   *                 |  |              |                                    |
+> >   *                16  14             0                                   32
+> >   *
+> > - * if @cut is 3, and @first is 14, bits 14-16 in @src are cut and @dst is:
+> > + * if @cut is 3, and @first is 14, bits 14-16 in @bmap are cut and @dst is:
+> >   *
+> >   * 31                                   63
+> >   * |                                    |
+> >   * 10110000 00011000 00110010 00010101  00010000 00011000 00101110 01000010
+> >   *                    |              |                                    |
+> >   *                    14 (bit 17     0                                   32
+> > - *                        from @src)
+> > - *
+> > - * Note that @dst and @src might overlap partially or entirely.
+> > - *
+> > - * This is implemented in the obvious way, with a shift and carry
+> > - * step for each moved bit. Optimisation is left as an exercise
+> > - * for the compiler.
+> > + *                        from @bmap)
+> >   */
+> > -void bitmap_cut(unsigned long *dst, const unsigned long *src,
+> > -		unsigned int first, unsigned int cut, unsigned int nbits)
+> > +void bitmap_cut(unsigned long *bmap, unsigned int first,
+> > +		unsigned int cut, unsigned int nbits)
+> >  {
+> > -	unsigned int len = BITS_TO_LONGS(nbits);
+> > -	unsigned long keep = 0, carry;
+> > -	int i;
+> > -
+> > -	memmove(dst, src, len * sizeof(*dst));
+> > -
+> > -	if (first % BITS_PER_LONG) {
+> > -		keep = src[first / BITS_PER_LONG] &
+> > -		       (~0UL >> (BITS_PER_LONG - first % BITS_PER_LONG));
+> > -	}
+> > +	unsigned long tmp;
+> > +	unsigned long *b = bmap + first / BITS_PER_LONG;
+> 
+> You could keep the declarations on a single line.
+> 
+> >  
+> > -	while (cut--) {
+> > -		for (i = first / BITS_PER_LONG; i < len; i++) {
+> > -			if (i < len - 1)
+> > -				carry = dst[i + 1] & 1UL;
+> > -			else
+> > -				carry = 0;
+> > +	if (first % BITS_PER_LONG)
+> > +		tmp = b[0] & BITMAP_LAST_WORD_MASK(first);
+> >  
+> > -			dst[i] = (dst[i] >> 1) | (carry << (BITS_PER_LONG - 1));
+> > -		}
+> > -	}
+> > +	bitmap_shift_right(b, b, cut - first, nbits - first);
+> 
+> This causes an out-of-bounds write, you can easily trigger that with
+> nftables case:
+> 	tests/shell/testcases/sets/0043concatenated_ranges_0
+> 
+> or even with the 'correctness' test for "net,port" sets from kselftest:
+> 	tools/testing/selftests/netfilter/nft_concat_range.sh
+> 
+> [  146.074987] BUG: unable to handle page fault for address: ffffed1176e86005
+> [  146.076827] #PF: supervisor read access in kernel mode
+> [  146.078054] #PF: error_code(0x0000) - not-present page
+> [  146.079291] PGD 43ffc6067 P4D 43ffc6067 PUD 0 
+> [  146.080411] Oops: 0000 [#1] SMP KASAN NOPTI
+> [  146.081441] CPU: 6 PID: 1301 Comm: nft Not tainted 5.6.0-rc2+ #253
+> [  146.082899] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+> [  146.084929] RIP: 0010:check_memory_region+0x108/0x1c0
+> [  146.086158] Code: 00 00 00 00 00 00 ff e9 35 ff ff ff 41 bc 08 00 00 00 45 29 c4 49 89 d8 4d 8d 0c 1c eb 0c 49 83 c0 01 4c 89 c8 4d 39 c8 74 0f <41> 80 38 00 74 ee 49 8d 04 1c 4d 85 c0 75 0b 49 89 e9 49 29 c1 e9
+> [  146.090711] RSP: 0018:ffff888361d271a8 EFLAGS: 00010206
+> [  146.091945] RAX: ffffed1176e86005 RBX: ffffed1176e86005 RCX: ffffffff9b449d82
+> [  146.093691] RDX: 0000000000000001 RSI: 000000001ffffff8 RDI: ffff888bb7430028
+> [  146.095450] RBP: ffffed117ae86004 R08: ffffed1176e86005 R09: ffffed1176e86008
+> [  146.097115] R10: ffffed117ae86003 R11: ffff888bd743001f R12: 0000000000000003
+> [  146.098695] R13: 0000000000000000 R14: dffffc0000000000 R15: ffff8883cc3b4678
+> [  146.100633] FS:  00007f6a70820740(0000) GS:ffff8883df100000(0000) knlGS:0000000000000000
+> [  146.102449] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  146.103739] CR2: ffffed1176e86005 CR3: 00000003d1700000 CR4: 00000000003406e0
+> [  146.105369] Call Trace:
+> [  146.105946]  memset+0x20/0x40
+> [  146.106642]  bitmap_cut+0x62/0xf0
+> [  146.107425]  pipapo_drop+0x1d3/0x630 [nf_tables]
+> [  146.108507]  nft_pipapo_remove+0x928/0xc50 [nf_tables]
+> [  146.109783]  ? nft_pipapo_deactivate+0x10/0x10 [nf_tables]
+> [  146.111121]  ? __free_pages_ok+0x92e/0xcc0
+> [  146.112128]  ? nf_tables_newrule+0xdc0/0x2380 [nf_tables]
+> [  146.113410]  __nf_tables_abort+0xac1/0x3510 [nf_tables]
+> [  146.114618]  ? nft_add_set_elem+0x2550/0x2550 [nf_tables]
+> [  146.115865]  ? __nft_release_basechain+0x4d0/0x4d0 [nf_tables]
+> [  146.117217]  nf_tables_abort+0x13/0x30 [nf_tables]
+> [  146.118311]  nfnetlink_rcv_batch+0xa47/0x1510
+> [  146.119324]  ? nfnetlink_subsys_register+0x340/0x340
+> [  146.120456]  ? __lock_acquire+0x92c/0x1420
+> [  146.121384]  ? memset+0x20/0x40
+> [  146.122119]  ? __nla_validate_parse+0x3e/0x270
+> [  146.123146]  nfnetlink_rcv+0x2c1/0x340
+> [  146.124015]  ? nfnetlink_rcv_batch+0x1510/0x1510
+> [  146.126901]  netlink_unicast+0x430/0x650
+> [  146.129580]  ? netlink_attachskb+0x6f0/0x6f0
+> [  146.132475]  netlink_sendmsg+0x75f/0xc10
+> [  146.135096]  ? netlink_unicast+0x650/0x650
+> [  146.137726]  ? netlink_unicast+0x650/0x650
+> [  146.140217]  sock_sendmsg+0xf0/0x120
+> [  146.142602]  ____sys_sendmsg+0x522/0x770
+> [  146.145063]  ? copy_msghdr_from_user+0x20b/0x370
+> [  146.147662]  ? __might_fault+0xef/0x1a0
+> [  146.150142]  ? kernel_sendmsg+0x30/0x30
+> [  146.152577]  ___sys_sendmsg+0xe9/0x160
+> [  146.154956]  ? sendmsg_copy_msghdr+0x30/0x30
+> [  146.157455]  ? rcu_read_lock_held+0xaf/0xc0
+> [  146.159918]  ? rcu_read_lock_sched_held+0xe0/0xe0
+> [  146.162509]  ? __cgroup_bpf_prog_array_is_empty+0xef/0x1b0
+> [  146.165246]  ? __cgroup_bpf_run_filter_getsockopt+0x152/0x770
+> [  146.167997]  ? __might_fault+0xef/0x1a0
+> [  146.170342]  ? __cgroup_bpf_run_filter_skb+0x10f0/0x10f0
+> [  146.172955]  ? __fget_light+0x51/0x210
+> [  146.175182]  __sys_sendmsg+0xbe/0x150
+> [  146.177371]  ? __sys_sendmsg_sock+0xa0/0xa0
+> [  146.179633]  ? __down_read+0x400/0x400
+> [  146.181824]  ? do_syscall_64+0x22/0x510
+> [  146.183977]  do_syscall_64+0x9f/0x510
+> [  146.186095]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [  146.188490] RIP: 0033:0x7f6a70b84914
+> [  146.190575] Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b5 0f 1f 80 00 00 00 00 48 8d 05 e9 5d 0c 00 8b 00 85 c0 75 13 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 41 54 41 89 d4 55 48 89 f5 53
+> [  146.197226] RSP: 002b:00007ffcca05b178 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> [  146.200181] RAX: ffffffffffffffda RBX: 00007ffcca05c340 RCX: 00007f6a70b84914
+> [  146.203090] RDX: 0000000000000000 RSI: 00007ffcca05c200 RDI: 0000000000000003
+> [  146.206014] RBP: 00007ffcca05c2f0 R08: 00007ffcca05b15c R09: 00007ffcca05b180
+> [  146.208954] R10: fffffffffffffaad R11: 0000000000000246 R12: 0000000000020000
+> [  146.211881] R13: 0000000000000ec4 R14: 00007ffcca05b190 R15: 0000000000000003
+> [  146.214837] Modules linked in: snd_hda_codec_generic ledtrig_audio crct10dif_pclmul crc32_pclmul ghash_clmulni_intel bochs_drm snd_hda_intel drm_kms_helper snd_intel_dspcfg snd_hda_codec syscopyarea sysfillrect sysimgblt snd_hwdep fb_sys_fops cec snd_hda_core drm_vram_helper drm_ttm_helper snd_pcm ttm snd_timer joydev drm pcspkr snd virtio_console serio_raw virtio_balloon soundcore nfsd auth_rpcgss nfs_acl lockd grace nf_tables sunrpc ip_tables ext4 mbcache jbd2 ata_generic ata_piix virtio_net net_failover libata virtio_blk crc32c_intel failover i2c_piix4
+> [  146.233119] CR2: ffffed1176e86005
+> [  146.235560] ---[ end trace 93407644ed852c1d ]---
+> [  146.238240] RIP: 0010:check_memory_region+0x108/0x1c0
+> [  146.240991] Code: 00 00 00 00 00 00 ff e9 35 ff ff ff 41 bc 08 00 00 00 45 29 c4 49 89 d8 4d 8d 0c 1c eb 0c 49 83 c0 01 4c 89 c8 4d 39 c8 74 0f <41> 80 38 00 74 ee 49 8d 04 1c 4d 85 c0 75 0b 49 89 e9 49 29 c1 e9
+> [  146.248368] RSP: 0018:ffff888361d271a8 EFLAGS: 00010206
+> [  146.251280] RAX: ffffed1176e86005 RBX: ffffed1176e86005 RCX: ffffffff9b449d82
+> [  146.254603] RDX: 0000000000000001 RSI: 000000001ffffff8 RDI: ffff888bb7430028
+> [  146.257939] RBP: ffffed117ae86004 R08: ffffed1176e86005 R09: ffffed1176e86008
+> [  146.261291] R10: ffffed117ae86003 R11: ffff888bd743001f R12: 0000000000000003
+> [  146.264654] R13: 0000000000000000 R14: dffffc0000000000 R15: ffff8883cc3b4678
+> [  146.268006] FS:  00007f6a70820740(0000) GS:ffff8883df100000(0000) knlGS:0000000000000000
+> [  146.271593] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  146.274753] CR2: ffffed1176e86005 CR3: 00000003d1700000 CR4: 00000000003406e0
+> [  146.278225] Kernel panic - not syncing: Fatal exception
+> [  146.282758] Kernel Offset: 0x19600000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> [  146.287110] ---[ end Kernel panic - not syncing: Fatal exception ]---
+> 
+> Return to bitmap cut is at 0x1902:
+> 
+> bitmap_shift_right():
+> /home/sbrivio/nf-next/./include/linux/bitmap.h:432
+>     18fd:       e8 00 00 00 00          callq  1902 <bitmap_cut+0x62>
+>                         18fe: R_X86_64_PLT32    __bitmap_shift_right-0x4
+> bitmap_cut():
+> /home/sbrivio/nf-next/lib/bitmap.c:208
+>     1902:       4c 89 e2                mov    %r12,%rdx
+> 
+> so it's caused by the memset in __bitmap_shift_right():
+> 
+> 		memset(&dst[lim - off], 0, off*sizeof(unsigned long));
+> 
+> >  
+> > -	dst[first / BITS_PER_LONG] &= ~0UL << (first % BITS_PER_LONG);
+> > -	dst[first / BITS_PER_LONG] |= keep;
+> > +	if (first % BITS_PER_LONG)
+> > +		b[0] = tmp | (b[0] & BITMAP_FIRST_WORD_MASK(first));
+> >  }
+> >  EXPORT_SYMBOL(bitmap_cut);
+> >  
+> > diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+> > index 6b13150667f5..4b2fef13003d 100644
+> > --- a/lib/test_bitmap.c
+> > +++ b/lib/test_bitmap.c
+> > @@ -540,6 +540,37 @@ static void __init test_bitmap_arr32(void)
+> >  	}
+> >  }
+> >  
+> > +struct test_bitmap_cut {
+> > +	unsigned int first;
+> > +	unsigned int last;
+> > +	unsigned int nbits;
+> > +	unsigned long in;
+> > +	unsigned long out;
+> > +};
+> > +
+> > +static struct test_bitmap_cut test_cut[] = {
+> > +	{ 0,  0,  BITS_PER_LONG, 0xdeadbeefUL, 0xdeadbeefUL },
+> > +	{ 0,  8,  BITS_PER_LONG, 0xdeadbeefUL, 0xdeadbeUL },
+> > +	{ 4,  8,  BITS_PER_LONG, 0xdeadbeefUL, 0xdeadbefUL },
+> > +	{ 8,  24, BITS_PER_LONG, 0xdeadbeefUL, 0xdeefUL },
+> > +	{ 16, 32, BITS_PER_LONG, 0xdeadbeefUL, 0xbeefUL },
+> 
+> ...which means it would be a good idea to also add tests for numbers of
+> bits that are not multiple of eight, and single bits too.
 
-syzbot found the following crash on:
-
-HEAD commit:    fb279f4e Merge branch 'i2c/for-current-fixed' of git://git.=
-.
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D168c481de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D8b13b05f0e61d95=
-7
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D4496e82090657320e=
-fc6
-compiler:       clang version 10.0.0
-(https://github.com/llvm/llvm-project/
-c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: timer_list hint:
-rfcomm_dlc_timeout+0x0/0xc0 net/bluetooth/rfcomm/core.c:300
-WARNING: CPU: 0 PID: 9181 at lib/debugobjects.c:488 debug_print_object
-lib/debugobjects.c:485 [inline]
-WARNING: CPU: 0 PID: 9181 at lib/debugobjects.c:488
-__debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-WARNING: CPU: 0 PID: 9181 at lib/debugobjects.c:488
-debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9181 Comm: syz-executor.3 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:debug_print_object lib/debugobjects.c:485 [inline]
-RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
-RIP: 0010:debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
-Code: 74 08 4c 89 f7 e8 64 2d 18 fe 4d 8b 06 48 c7 c7 53 10 d1 88 48
-c7 c6 0f 01 cf 88 48 89 da 89 e9 4d 89 f9 31 c0 e8 c4 cd ae fd <0f> 0b
-48 ba 00 00 00 00 00 fc ff df ff 05 c6 39 b1 05 48 8b 5c 24
-RSP: 0018:ffffc90001907c88 EFLAGS: 00010046
-RAX: 72f8f847df918a00 RBX: ffffffff88d4edca RCX: 0000000000040000
-RDX: ffffc90011373000 RSI: 0000000000013ee9 RDI: 0000000000013eea
-RBP: 0000000000000000 R08: ffffffff815e1276 R09: ffffed1015d04592
-R10: ffffed1015d04592 R11: 0000000000000000 R12: ffff88808ea6fbac
-R13: ffffffff8b592e40 R14: ffffffff890ddc78 R15: ffffffff873dcc50
- kfree+0xfc/0x220 mm/slab.c:3756
- rfcomm_dlc_put include/net/bluetooth/rfcomm.h:258 [inline]
- __rfcomm_create_dev net/bluetooth/rfcomm/tty.c:417 [inline]
- rfcomm_create_dev net/bluetooth/rfcomm/tty.c:486 [inline]
- rfcomm_dev_ioctl+0xe37/0x2340 net/bluetooth/rfcomm/tty.c:588
- rfcomm_sock_ioctl+0x79/0xa0 net/bluetooth/rfcomm/sock.c:902
- sock_do_ioctl+0x7b/0x260 net/socket.c:1053
- sock_ioctl+0x4aa/0x690 net/socket.c:1204
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl fs/ioctl.c:763 [inline]
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl+0xf9/0x160 fs/ioctl.c:770
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c4a9
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48
-89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
-01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fd490578c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fd4905796d4 RCX: 000000000045c4a9
-RDX: 0000000020000100 RSI: 00000000400452c8 RDI: 0000000000000004
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000317 R14: 00000000004c5443 R15: 000000000076bf2c
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-Qiujun Huang <hqjagain@gmail.com> =E4=BA=8E2020=E5=B9=B43=E6=9C=887=E6=97=
-=A5=E5=91=A8=E5=85=AD =E4=B8=8B=E5=8D=8810:00=E5=86=99=E9=81=93=EF=BC=9A
->
-> Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
-> increase dlc->refcnt.
->
-> Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> ---
->  net/bluetooth/rfcomm/tty.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
-> index 0c7d31c..ea2a1df0 100644
-> --- a/net/bluetooth/rfcomm/tty.c
-> +++ b/net/bluetooth/rfcomm/tty.c
-> @@ -414,7 +414,6 @@ static int __rfcomm_create_dev(struct sock *sk, void =
-__user *arg)
->                 if (IS_ERR(dlc))
->                         return PTR_ERR(dlc);
->                 else if (dlc) {
-> -                       rfcomm_dlc_put(dlc);
->                         return -EBUSY;
->                 }
->                 dlc =3D rfcomm_dlc_alloc(GFP_KERNEL);
-> --
-> 1.8.3.1
->
+OK, I will look at this and send v2
