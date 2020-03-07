@@ -2,132 +2,118 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FAAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5594C10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18F620705
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF4120726
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583550139;
+	bh=KL3/2VYI5+pqT4gg3RT6fC0ThurhRFfSREX6XD1ck8M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=2uVmDF926ZDO11GkFH8y4GNxQet+Fcp6zypHWo7KfMI34G2tNIGdFAyo4Ra/IXiaJ
+	 lx6GGEvw+LMcEInIweo7fUWoUOCoFSH7I1O35f4zEKjKXywxqrZJb+BCv71Frx/sK3
+	 9gvtHfaJ8SJy+ta1C9oa+8ALj7+H26VD09BvIq64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCGC51 (ORCPT
+        id S1726766AbgCGDCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 21:57:27 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:46129 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgCGC51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 21:57:27 -0500
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E1D1F200002;
-        Sat,  7 Mar 2020 02:57:20 +0000 (UTC)
-Date:   Sat, 7 Mar 2020 03:57:20 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 3/5] input: keyboard: add COMPILE_TEST support for
- KEYBOARD_IMX_SC_KEY
-Message-ID: <20200307025720.GA52231@piout.net>
-References: <1583509356-8265-1-git-send-email-Anson.Huang@nxp.com>
- <1583509356-8265-3-git-send-email-Anson.Huang@nxp.com>
- <20200306193310.GI217608@dtor-ws>
- <CAKdAkRRhXE6Hviqx90_5hWmP7YQnKO2QLJgDYnzt_CPjeH7D0A@mail.gmail.com>
- <20200306211538.GA8060@piout.net>
- <DB3PR0402MB39164192146D17327A45DA6CF5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Fri, 6 Mar 2020 22:02:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbgCGDCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 22:02:18 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA446206D5;
+        Sat,  7 Mar 2020 03:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583550137;
+        bh=KL3/2VYI5+pqT4gg3RT6fC0ThurhRFfSREX6XD1ck8M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=s1k85rJaTFgjUN+9IAXMvRBHC/mhxX2vWHqatKWCKGV6Tau+hnGQYbL9Fml4yBK9Y
+         iRtC9UAUpE+RxmQ7ZOjqcfNi1JrGgKZu+y85+g1TDux+UtjT1GpbExKN1Xo3Lt2HIx
+         Al80lRySL7x4jXDyn+LQS/Y3tTNqCpHQdEZ2vDJU=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        stable@vger.kernel.org
+Subject: [PATCH] x86/kprobes: Prohibit probing on rcu_nmi_exit() and ist_exit()
+Date:   Sat,  7 Mar 2020 12:02:12 +0900
+Message-Id: <158355013189.14191.9105069890402942867.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39164192146D17327A45DA6CF5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/03/2020 01:36:39+0000, Anson Huang wrote:
-> Hi, Alexandre
-> 
-> > Subject: Re: [PATCH 3/5] input: keyboard: add COMPILE_TEST support for
-> > KEYBOARD_IMX_SC_KEY
-> > 
-> > On 06/03/2020 12:05:42-0800, Dmitry Torokhov wrote:
-> > > On Fri, Mar 6, 2020 at 11:33 AM Dmitry Torokhov
-> > > <dmitry.torokhov@gmail.com> wrote:
-> > > >
-> > > > On Fri, Mar 06, 2020 at 11:42:34PM +0800, Anson Huang wrote:
-> > > > > Add COMPILE_TEST support to i.MX SC keyboard driver for better
-> > > > > compile testing coverage.
-> > > > >
-> > > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > >
-> > > > Applied, thank you.
-> > >
-> > > Actually, not:
-> > >
-> > > ERROR: "imx_scu_irq_register_notifier"
-> > > [drivers/input/keyboard/imx_sc_key.ko] undefined!
-> > > ERROR: "imx_scu_get_handle" [drivers/input/keyboard/imx_sc_key.ko]
-> > undefined!
-> > > ERROR: "imx_scu_call_rpc" [drivers/input/keyboard/imx_sc_key.ko]
-> > undefined!
-> > > ERROR: "imx_scu_irq_unregister_notifier"
-> > > [drivers/input/keyboard/imx_sc_key.ko] undefined!
-> > > ERROR: "imx_scu_irq_group_enable"
-> > > [drivers/input/keyboard/imx_sc_key.ko] undefined!
-> > > make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
-> > > make: *** [Makefile:1282: modules] Error 2
-> > >
-> > > If you want to enable compile test coverage you need to provide stubs
-> > > for the above functions.
-> > >
-> > 
-> > or select IMX_SCU
-> > 
-> > or leave out COMPILE_TEST from the individual drivers as having
-> > COMPILE_TEST for IMX_SCU is enough to be able to select the drivers.
-> 
-> Thanks, I already added the COMPILE_TEST for IMX_SCU which is in this same patch series,
-> without that IMX_SCU COMPILE_TEST patch, the build will failed, so in V2, I also added
-> the stubs into those IMX SCU APIs to make sure even IMX_SCU is NOT enabled, modules
-> with COMPILE_TEST can still pass build, please help review V2 patch set.
-> 
+Prohibit probing on rcu_nmi_exit() and ist_exit() which
+are called from do_int3()'s kprobe path after kprobe_int3_handler().
 
-My point is that there is no need for the stubs. Simply have
-COMPILE_TEST for IMX_SCU as this is enough to extend coverage to all the
-drivers and significantly reduces the code size versus what you did in
-v2.
+The commit c13324a505c7 ("x86/kprobes: Prohibit probing on
+functions before kprobe_int3_handler()") tried to fix similar
+issue, but it only marks the functions before kprobe_int3_handler()
+in do_int3().
 
+If we put a kprobe on rcu_nmi_exit() or ist_exit(), the kprobes
+will detect reentrance. However, it only skips the kprobe handler,
+exits from do_int3() and hits ist_exit() and rcu_nmi_exit() again.
+Thus, it causes another int3 exception and finally we will get
+the kernel panic with "Unrecoverable kprobe detected." error message.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+This is reproducible by the following commands.
+
+/ # echo 0 > /proc/sys/debug/kprobes-optimization
+/ # echo p vfs_read > /sys/kernel/debug/tracing/kprobe_events
+/ # echo p rcu_nmi_exit >> /sys/kernel/debug/tracing/kprobe_events
+/ # echo 1 > /sys/kernel/debug/tracing/events/kprobes/enable
+
+Fixes: c13324a505c7 ("x86/kprobes: Prohibit probing on functions before kprobe_int3_handler()")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/kernel/traps.c |    1 +
+ kernel/rcu/tree.c       |    1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 6ef00eb6fbb9..c63fb7697794 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -115,6 +115,7 @@ void ist_exit(struct pt_regs *regs)
+ 	if (!user_mode(regs))
+ 		rcu_nmi_exit();
+ }
++NOKPROBE_SYMBOL(ist_exit);
+ 
+ /**
+  * ist_begin_non_atomic() - begin a non-atomic section in an IST exception
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index d91c9156fab2..c49ea0e919f9 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -670,6 +670,7 @@ void rcu_nmi_exit(void)
+ {
+ 	rcu_nmi_exit_common(false);
+ }
++NOKPROBE_SYMBOL(rcu_nmi_exit);
+ 
+ /**
+  * rcu_irq_exit - inform RCU that current CPU is exiting irq towards idle
+
