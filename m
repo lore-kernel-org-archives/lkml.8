@@ -2,92 +2,226 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20136C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DAAC10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA2420675
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:36:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="o6S4yzpE"
+	by mail.kernel.org (Postfix) with ESMTP id 0CC6520675
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgCGPgd (ORCPT
+        id S1726266AbgCGPiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:36:33 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37282 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgCGPgd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:36:33 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z12so2561868pgl.4
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 07:36:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=X8Q0iQvt9yySsKBxTObcLgqNokyvnZ8EgfUe1/v9Oag=;
-        b=o6S4yzpEbBoXuEbGBPbuI2aVMha7Hq4/PaqQ+0ISNq4VryGl2gneRQo1uyI5G8y+sM
-         MPep6y8foCYeMdjVWvSmCeZEwaoTKAss0DymSfmCUSw5mmZy8dX5EYd0dbPtFQauatHF
-         Tq4KA4FK5iTzaF1F4yo8NafTb/L4UDtzPK83LM7ZmbnT7zKe0gGyKf3jHiMrOQMIAj1Q
-         MfomBNKKxgx1Conwk1sof1Cok2NUDN5FKrEfTepJgbx5JaYYRiaLnCHu9LKwQNVYkhgJ
-         FMMS37a1CReTT0N3q6GxYYXPvCZBvu2NdjFjkSSS92EVfXv6oWmHy5AHH69Fg0i8xEGb
-         d8dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=X8Q0iQvt9yySsKBxTObcLgqNokyvnZ8EgfUe1/v9Oag=;
-        b=Ci9jjI+9Hkho8ma7KvFF1zmXEqnTtzG4dleFhZmn7FhxLh+A0tmsdhrq+jhL5NHMYd
-         kYeJREU06o7+Rb9UmKULSzXWAzYclkIROb63ME6IN4oa9dTIrY6Fo5ywZ4Noy993/lAK
-         mYi7DdbXpchLU+lsa/8cbSYgfaGWivnbG3EL/a3M7YTPihU+bsUp7M4gGwa8R0EeSwbH
-         Yxznapl+Da3L9etQOYbXPmpDQANEWTUewG6+pF7dwXxji6tGWrKYWPoPNr0LPM5uhRLU
-         rLfVj0ff0IWFjKeSfZ626rEg/Wl2VyK/l1xpIUpYz7w8mIPAsQALSRPG++ZW6NskXAq1
-         K/tw==
-X-Gm-Message-State: ANhLgQ3enOrKxUWD0sVqH3CrsRV4uORlu2yRPFNkhzFB0JBE5EPH4km0
-        dErxCVQAMLhJtg/UhuUy9gQFwkFZ5/w=
-X-Google-Smtp-Source: ADFU+vv/CpDAMDYJcxi9ndwAxm1jhXPFLdwR0Dr7LdLSFsjt7ExIeOBElk+ZsZWGCaJjSUGKsulRyA==
-X-Received: by 2002:aa7:8502:: with SMTP id v2mr8739393pfn.232.1583595392111;
-        Sat, 07 Mar 2020 07:36:32 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id c18sm38291906pgw.17.2020.03.07.07.36.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Mar 2020 07:36:31 -0800 (PST)
-Subject: Re: [PATCH 1/1] io_uring: fix lockup with timeouts
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <54e141c75da11f55f607d53c54943b9fee5bbd70.1583532280.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4a96385c-52ea-cba8-455d-6fd3042bd49e@kernel.dk>
-Date:   Sat, 7 Mar 2020 08:36:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 7 Mar 2020 10:38:12 -0500
+Received: from mga17.intel.com ([192.55.52.151]:49003 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbgCGPiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 10:38:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2020 07:38:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,526,1574150400"; 
+   d="scan'208";a="288273311"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 07 Mar 2020 07:38:08 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jAbWe-0007ab-Ol; Sat, 07 Mar 2020 23:38:04 +0800
+Date:   Sat, 07 Mar 2020 23:37:19 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:perf/urgent] BUILD SUCCESS
+ 798048f85093901f475d25b2ac8d9ea1bc6d471a
+Message-ID: <5e63bfaf.JxFgeWCQ4wzGvzwg%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <54e141c75da11f55f607d53c54943b9fee5bbd70.1583532280.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 3:15 PM, Pavel Begunkov wrote:
-> There is a recipe to deadlock the kernel: submit a timeout sqe with a
-> linked_timeout (e.g.  test_single_link_timeout_ception() from liburing),
-> and SIGKILL the process.
-> 
-> Then, io_kill_timeouts() takes @ctx->completion_lock, but the timeout
-> isn't flagged with REQ_F_COMP_LOCKED, and will try to double grab it
-> during io_put_free() to cancel the linked timeout. Probably, the same
-> can happen with another io_kill_timeout() call site, that is
-> io_commit_cqring().
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/urgent
+branch HEAD: 798048f85093901f475d25b2ac8d9ea1bc6d471a  Merge tag 'perf-urgent-for-mingo-5.6-20200306' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
 
-Thanks, looks good, applied.
+elapsed time: 481m
 
--- 
-Jens Axboe
+configs tested: 163
+configs skipped: 14
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+h8300                     edosk2674_defconfig
+ia64                                defconfig
+powerpc                             defconfig
+s390                              allnoconfig
+ia64                              allnoconfig
+riscv                          rv32_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sh                                allnoconfig
+s390                       zfcpdump_defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+powerpc                          rhel-kconfig
+powerpc                           allnoconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                       ppc64_defconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+x86_64               randconfig-a001-20200307
+x86_64               randconfig-a002-20200307
+x86_64               randconfig-a003-20200307
+i386                 randconfig-a001-20200307
+i386                 randconfig-a002-20200307
+i386                 randconfig-a003-20200307
+riscv                randconfig-a001-20200307
+alpha                randconfig-a001-20200307
+m68k                 randconfig-a001-20200307
+nds32                randconfig-a001-20200307
+mips                 randconfig-a001-20200307
+parisc               randconfig-a001-20200307
+sparc64              randconfig-a001-20200307
+c6x                  randconfig-a001-20200307
+nios2                randconfig-a001-20200307
+h8300                randconfig-a001-20200307
+csky                 randconfig-a001-20200307
+openrisc             randconfig-a001-20200307
+s390                 randconfig-a001-20200307
+sh                   randconfig-a001-20200307
+xtensa               randconfig-a001-20200307
+x86_64               randconfig-b002-20200307
+x86_64               randconfig-b001-20200307
+i386                 randconfig-b001-20200307
+i386                 randconfig-b003-20200307
+i386                 randconfig-b002-20200307
+x86_64               randconfig-b003-20200307
+x86_64               randconfig-c001-20200307
+x86_64               randconfig-c002-20200307
+x86_64               randconfig-c003-20200307
+i386                 randconfig-c001-20200307
+i386                 randconfig-c002-20200307
+i386                 randconfig-c003-20200307
+x86_64               randconfig-d001-20200307
+x86_64               randconfig-d002-20200307
+x86_64               randconfig-d003-20200307
+i386                 randconfig-d001-20200307
+i386                 randconfig-d002-20200307
+i386                 randconfig-d003-20200307
+i386                 randconfig-e001-20200307
+i386                 randconfig-e003-20200307
+x86_64               randconfig-e002-20200307
+x86_64               randconfig-e001-20200307
+x86_64               randconfig-e003-20200307
+i386                 randconfig-e002-20200307
+x86_64               randconfig-f001-20200307
+x86_64               randconfig-f002-20200307
+x86_64               randconfig-f003-20200307
+i386                 randconfig-f001-20200307
+i386                 randconfig-f002-20200307
+i386                 randconfig-f003-20200307
+x86_64               randconfig-g001-20200307
+x86_64               randconfig-g002-20200307
+x86_64               randconfig-g003-20200307
+i386                 randconfig-g001-20200307
+i386                 randconfig-g002-20200307
+i386                 randconfig-g003-20200307
+x86_64               randconfig-h001-20200307
+x86_64               randconfig-h002-20200307
+x86_64               randconfig-h003-20200307
+i386                 randconfig-h001-20200307
+i386                 randconfig-h002-20200307
+i386                 randconfig-h003-20200307
+arc                  randconfig-a001-20200307
+arm                  randconfig-a001-20200307
+arm64                randconfig-a001-20200307
+ia64                 randconfig-a001-20200307
+powerpc              randconfig-a001-20200307
+sparc                randconfig-a001-20200307
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                  sh7785lcr_32bit_defconfig
+sparc                            allyesconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
