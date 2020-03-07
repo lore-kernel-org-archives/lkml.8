@@ -2,94 +2,107 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9434C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D3FC10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46DE206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE4B207FD
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7rgDDLv"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YerQZWqL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCGDn5 (ORCPT
+        id S1726798AbgCGDpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 22:43:57 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34105 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCGDn4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:43:56 -0500
-Received: by mail-pg1-f196.google.com with SMTP id t3so1993907pgn.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 19:43:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=RyudsTdaiGHdFq2ORRXJ0vk3t3fWMudqINaDB7phCEY=;
-        b=J7rgDDLvA1rYGh/ekUcB7X11u9jS0nSXNVPy+Q7X5W2LpPG0jJLdniIuBRGqdQVmAm
-         77u75Y7RPHvgPiRn6+Fan50dZS9FifQYM76YNl5YBjCK62GfFScvfuj7CCwzFwOByCO7
-         zn9SFf13jig2uPdtsvfaC0BSdq7QbpKX1CNsf2/1SNQprOE0k4GpC8oQ8eghx9alURNR
-         NlICFDqKmDbSfjt1bhn4CNFdQPYf0/9JMYW7uSgibTkccJq6AxDN0l5L3sBN8M4fX0mH
-         80o8Rm6onazI2VAQa9Xnrcc+dSPCZrBcBefUWVqROSqmk4xy1TrzK4M4ejDZFVESCo/o
-         pvvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=RyudsTdaiGHdFq2ORRXJ0vk3t3fWMudqINaDB7phCEY=;
-        b=UnH6Y+CUTlmm961LUDbIHnFpdWUoz+giIERuS1BTrbuX7iyiCRkR4fNpGjFqex25ro
-         KjO5dvyWNjhX7jDpqQl216Jwz58RAWd7nQyj4A1NbxxUqunddgJTJF+AerKudQg0qH43
-         dyuGAksBvHDuJJAFrnK6q9M0kNwryWkg3Vo8EmWtiT69q6RsZAfnA5e3K7iIDNnG2IQ0
-         EVadmiLpalt45r/76idxVP8J+o0NoydZoWtpXLCbx+lRxHHvcxo3AiSvT5s76lHb7ibl
-         ynBDIwEAENWLsM16EKiKVfU2eQLK2mauZJuh/nV3IH0LAqUq66Xuc+hf3H+Sy6V+aLrR
-         wkbg==
-X-Gm-Message-State: ANhLgQ3vFWeOlxoWJ48qHz2+X1uSpvP++S0CARgtWU4wFbuN1vdfT8uA
-        dS7bpLp1sp/mlRm5pRk0yeE=
-X-Google-Smtp-Source: ADFU+vuSv7ZAxDPkRs6S3la7AoljE7jfHdZexGf8PGawj2OmS/6Mr9r0F9PTxbm7HPXNju7DYOsvBQ==
-X-Received: by 2002:a63:5d51:: with SMTP id o17mr4841331pgm.159.1583552635497;
-        Fri, 06 Mar 2020 19:43:55 -0800 (PST)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id 127sm17520262pfb.130.2020.03.06.19.43.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Mar 2020 19:43:55 -0800 (PST)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     mst@redhat.com
-Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] virtio: silence a -Wunused-label warning
-Date:   Sat,  7 Mar 2020 11:43:50 +0800
-Message-Id: <1583552630-20799-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 6 Mar 2020 22:45:40 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53907 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726300AbgCGDpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 22:45:39 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Z9P72Ttgz9s3x;
+        Sat,  7 Mar 2020 14:45:27 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583552734;
+        bh=/uBtVQlQdI3TPN7OTG8f8ITHXiSieBJKrtT8V3oon2A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YerQZWqLuMkiMOSXMx2KT4g62g9aftk7QDkaeudjiWExGFkC5gpsQzcwT8ti6XJPr
+         xwNgn5metkp7YNF+wTZ/82m7suteYmZSIG1w5zREnZ6uP/UwhCMV+voAcvhD3CtvCn
+         HkLM5YM8G95jqNf7I/hZtDj8kInPBzzBiqAR+Wq3C0gTZ9dYGksTgwZ63e0bpVJtzd
+         cS8I2knNeWnjP34ShwuZ2c0BVwKh3KsKAUnDqkPlJWO3aS7G9Y1BHe6AiTLLsuc3x4
+         aFk/2y8vk9AOSwdcyNTJi+Zke811C+SUyXTrUpg2Ri6As0uLArFsPdKNbUBdQfaxF8
+         CvohOyL6evlfQ==
+Date:   Sat, 7 Mar 2020 14:45:06 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     sameo@linux.intel.com
+Cc:     David Miller <davem@davemloft.net>, linux-next@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        johannes@sipsolutions.net
+Subject: Re: linux-next: the nfc-next tree seems to be old
+Message-ID: <20200307144506.7585f0f5@canb.auug.org.au>
+In-Reply-To: <20200305.180823.1274906337509861200.davem@davemloft.net>
+References: <20200130105538.7b07b150@canb.auug.org.au>
+        <20200306104825.068268eb@canb.auug.org.au>
+        <20200305.180823.1274906337509861200.davem@davemloft.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/zzr+wf8CgUL20Essy6WdNE/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The label 'out_del_vqs:' is only used by CONFIG_BALLOON_COMPACTION,
-so move it to the region.
+--Sig_/zzr+wf8CgUL20Essy6WdNE/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- drivers/virtio/virtio_balloon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 7bfe365..341458f 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -959,8 +959,8 @@ static int virtballoon_probe(struct virtio_device *vdev)
- 	iput(vb->vb_dev_info.inode);
- out_kern_unmount:
- 	kern_unmount(balloon_mnt);
--#endif
- out_del_vqs:
-+#endif
- 	vdev->config->del_vqs(vdev);
- out_free_vb:
- 	kfree(vb);
--- 
-1.8.3.1
+On Thu, 05 Mar 2020 18:08:23 -0800 (PST) David Miller <davem@davemloft.net>=
+ wrote:
+>
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Fri, 6 Mar 2020 10:48:25 +1100
+>=20
+> > On Thu, 30 Jan 2020 10:55:38 +1100 Stephen Rothwell <sfr@canb.auug.org.=
+au> wrote: =20
+> >>
+> >> Hi Samuel,
+> >>=20
+> >> I noticed that the nfc-next tree has not changed since June 2018 and
+> >> has been orphaned in May 2019, so am wondering if the commits in it are
+> >> still relevant or should I just remove the tree from linux-next. =20
+> >=20
+> > Since I have had no response, I will remove it tomorrow. =20
+>=20
+> We've been integrating NFC patches directly into my networking tree for
+> a while now, so this is indeed the thing to do.
 
+I have removed it now.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/zzr+wf8CgUL20Essy6WdNE/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5jGMIACgkQAVBC80lX
+0GxjlQf/QXcx752LzbAakMG6nS8i2OKAXSyrt/QZ33QeMOyKno1Gxl/gyjOjCXsw
+zX4VWlKD9OA+J3QoRBABuNKh0fy82Je2RRPpdZTNKHXINJ+Wh3Kw31l9cRTrJET+
+SnYTDD9zwMz72/9mprfgYVXC6Xdp1zvR6F8vFGjy/pcFcHpPcc0iv5/6cojgEQEE
+kQcxPQGxJQBmaar3ge+Uvqyog6pL7MV79W3hgY7grvhx+fSPqgvbxWoy6MscsoMo
+XSRnWjcKvhDRfBB7rEkcHBBTGGvXJNiA9KQGUqH+1oxvd/d7VeQqvqMBn/4BX5Ml
+GKuRWAoY6Dpz19eVS04m1JvDv/WzrQ==
+=OluB
+-----END PGP SIGNATURE-----
+
+--Sig_/zzr+wf8CgUL20Essy6WdNE/--
