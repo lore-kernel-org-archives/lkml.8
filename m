@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31543C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508C3C10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060CC206E6
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A70020705
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgCGC3g (ORCPT
+        id S1727089AbgCGC3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 21:29:36 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:37466 "EHLO inva020.nxp.com"
+        Fri, 6 Mar 2020 21:29:17 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:37302 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbgCGC3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726833AbgCGC3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 6 Mar 2020 21:29:17 -0500
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 26FF11A1989;
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2341B1A19A1;
         Sat,  7 Mar 2020 03:29:15 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A30471A199F;
-        Sat,  7 Mar 2020 03:28:20 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5BECF1A199B;
+        Sat,  7 Mar 2020 03:28:19 +0100 (CET)
 Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A73DB40302;
-        Sat,  7 Mar 2020 10:28:09 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E35D7402F3;
+        Sat,  7 Mar 2020 10:28:07 +0800 (SGT)
 From:   Xiaowei Bao <xiaowei.bao@nxp.com>
 To:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
         bhelgaas@google.com, robh+dt@kernel.org, shawnguo@kernel.org,
@@ -38,9 +39,9 @@ To:     Zhiqiang.Hou@nxp.com, Minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org
 Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v5 06/11] PCI: layerscape: Fix some format issue of the code
-Date:   Sat,  7 Mar 2020 10:14:25 +0800
-Message-Id: <20200307021430.36826-7-xiaowei.bao@nxp.com>
+Subject: [PATCH v5 05/11] dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a and ls2088a
+Date:   Sat,  7 Mar 2020 10:14:24 +0800
+Message-Id: <20200307021430.36826-6-xiaowei.bao@nxp.com>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200307021430.36826-1-xiaowei.bao@nxp.com>
 References: <20200307021430.36826-1-xiaowei.bao@nxp.com>
@@ -50,45 +51,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix some format issue of the code in EP driver.
+Add compatible strings for ls1088a and ls2088a.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
 v2:
  - No change.
 v3:
- - No change.
+ - Use one valid combination of compatible strings.
 v4:
- - No change.
+ - Add the comma between the two compatible.
 v5:
  - No change.
 
- drivers/pci/controller/dwc/pci-layerscape-ep.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/pci/layerscape-pci.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index 0d151ce..0691d9a 100644
---- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -63,7 +63,7 @@ static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
- }
- 
- static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				  enum pci_epc_irq_type type, u16 interrupt_num)
-+				enum pci_epc_irq_type type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
-@@ -87,7 +87,7 @@ static const struct dw_pcie_ep_ops pcie_ep_ops = {
- };
- 
- static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
--					struct platform_device *pdev)
-+				 struct platform_device *pdev)
- {
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index 99a386e..daa99f7 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -24,6 +24,8 @@ Required properties:
+         "fsl,ls1028a-pcie"
+   EP mode:
+ 	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
++	"fsl,ls1088a-pcie-ep", "fsl,ls-pcie-ep"
++	"fsl,ls2088a-pcie-ep", "fsl,ls-pcie-ep"
+ - reg: base addresses and lengths of the PCIe controller register blocks.
+ - interrupts: A list of interrupt outputs of the controller. Must contain an
+   entry for each entry in the interrupt-names property.
 -- 
 2.9.5
 
