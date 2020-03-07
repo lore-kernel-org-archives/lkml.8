@@ -2,139 +2,152 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8576FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E47C10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5041A2067C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E29020705
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 02:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hafatfYx"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ADvKaVVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCGCJi (ORCPT
+        id S1726682AbgCGCMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 21:09:38 -0500
-Received: from mail-eopbgr50052.outbound.protection.outlook.com ([40.107.5.52]:57666
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726240AbgCGCJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 21:09:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UV1ZOdozDjml3HHLwcFKqV92KVucYunWkI3LAEwpjj+D2YuB3uFFFgYaoKXqCBxzFINnyXtEk+I91dVGCLzFAetKmeXzZuopTVJanaKRAutL/vzHBr8zKXX6eqq/g6w9793VmW69EtFRoqt3jIaYbhgWLStet+dLTXztByzfQilnfcOSQlfvOuBC5G0chDwkmXXJmLrqoNWWiK15r4z5p72m1avfK2VHaryGMub05VnrEkf41UZToEOb05CA0czmf5urPqW+8s3urQIGWVyZv8B5gyEGnrvkaMcE3+KOlabA87QT10lfeFv2I4kr1+EWZnTd4Z9xW8BeLSNxspXInA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vh8e5ReA7lxS3NA+fdZxDQL+LxaRTRiVPwRn5z2tWLE=;
- b=QPfatNdknzTBY7AU3Ko+zhMqmZcVTjadHC4ASlihebPqK74SCKJGodIuEMLlLZf8MwEEdK8cSC5F2638mAZXYLknUqRy+2WI6s/xLBT0/SsHIS9IUkxM79ZUyoShpwHpCqtP8Lm+4n3lZN83kwC9u6pTpAaX2ypARRVqW7zn0nFiB2hSUijpGNKzskDJGfQeNwsKzNpCvXAwpBZNpjGx2JGyy5/elTZCmhBCvUH/mb/t3MRt8/hAaqxE+x467y0iOH991mvCwbSR/J56LaWbRFqVp4iTSNYxdLG5es9qw95jMQY9SmEZtwpQmRDohkYAYn0CPJhAZUckeQNwrnPzew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vh8e5ReA7lxS3NA+fdZxDQL+LxaRTRiVPwRn5z2tWLE=;
- b=hafatfYx9cKrmaFLqPH9B4lL29aKfmKDmZvo3/Cijqq4tGN2xjnTAsWncx1a2JdsJ3xmn7dxW4jtdzKxll0pOfdiUTjGYiQ0FJbDcFc2Q3glbGz2FXQN/rAFknEpIBMwMcaiQmB4TTdMW6bwQvxo6uC7n2s37GQwzJDjF9U/hgM=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB4766.eurprd04.prod.outlook.com (20.177.49.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15; Sat, 7 Mar 2020 02:09:33 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::10f0:dc6d:c9f9:edfc]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::10f0:dc6d:c9f9:edfc%5]) with mapi id 15.20.2793.013; Sat, 7 Mar 2020
- 02:09:33 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Michael Walle <michael@walle.cc>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
-Subject: RE: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
- compatible
-Thread-Topic: [EXT] [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma"
- compatible
-Thread-Index: AQHV8/lsXqSm1fChNEm1yZWBD/JxAKg8YRCg
-Date:   Sat, 7 Mar 2020 02:09:32 +0000
-Message-ID: <VI1PR04MB44312A940BC5BFC7F13A5706EDE00@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20200306205403.29881-1-michael@walle.cc>
- <20200306205403.29881-2-michael@walle.cc>
-In-Reply-To: <20200306205403.29881-2-michael@walle.cc>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8c7a3f05-1c63-4008-e1cf-08d7c23c93ee
-x-ms-traffictypediagnostic: VI1PR04MB4766:|VI1PR04MB4766:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB4766DAFCE1EDDEEC6026EAA1EDE00@VI1PR04MB4766.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 03355EE97E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(189003)(199004)(2906002)(110136005)(6506007)(54906003)(86362001)(316002)(64756008)(66476007)(66446008)(66556008)(44832011)(4326008)(26005)(71200400001)(52536014)(33656002)(5660300002)(76116006)(55016002)(9686003)(7696005)(8936002)(186003)(8676002)(81156014)(81166006)(66946007)(478600001)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4766;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Lk62mPr1XEUB/PrNDPmJbzSgEYBVYMW2AFCBi1KV9vHU5VClqtciiT2IWCibC29Fb0ih0Qep9ny6xeScZm7prNmX0s1c5yJ3T0rE2Ps/sg58cfp+OQeOq52Fv9aEzznj+nDgzQjzKsWJNRaFZGwyJ/9bC2qXKAx0XKZEqkDieNZ7D7Csqu5wzDunbv3wt/67/09PtmmOQ90p7Je1YzsLNQ4ONWY0DpWShuRsbcfp3SpH9K0+KUFoVxL2c3hlLHAKqWKBw/FBhHF0NNzgQIwC/NXy1H95ubLz2HHjpjBlEQBpyaxlKA+fnHkswZCcYH98uAqli7TeuNdIEOZn31qLNMuy2VoSgCXPiKRPqCLMKoWNsTpg9ynR6l4VMZ4QUPWavmy2lN8WnID+y1z9GQEk9Cz6XFL9B4VXmVNxh/Jzh0ytSRisffCGUbhnLnbj0NUDZgPStrpnc9lIRzEkAry7ELaJ1WTs+IjqPoBiiSFo5a2V0Ur0hAeD07EYKqaUFQSJ
-x-ms-exchange-antispam-messagedata: dSza8f4qs8M50n8TyjOVuqgF7+F2pjtVhQgsnCq0a6vJKCxlDuICOkM/FOxpfz+c818leNhu+oFaTF5Ahs8WLNAMy6msjPbIzy/vnelBgSuA1IzvQ/BBnnAB42fRkbEj9/7WtNEHqtYpmJVIzBfLnQ==
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Fri, 6 Mar 2020 21:12:01 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2142 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbgCGCMB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 21:12:01 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e6302c50001>; Fri, 06 Mar 2020 18:11:18 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 06 Mar 2020 18:12:00 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 06 Mar 2020 18:12:00 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 7 Mar
+ 2020 02:11:59 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 7 Mar 2020 02:11:59 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e6302ef0000>; Fri, 06 Mar 2020 18:11:59 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Matthew Wilcox <willy@infradead.org>, <linux-doc@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH] mm/gup: fixup for ce35133be382 mm/gup: track FOLL_PIN pages
+Date:   Fri, 6 Mar 2020 18:11:57 -0800
+Message-ID: <20200307021157.235726-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c7a3f05-1c63-4008-e1cf-08d7c23c93ee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2020 02:09:33.1107
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FNtWcSR8AHB9N1ftdQIUtxlpVf5e44xxbkM4dDiWMLJhT5TDMWgrZl0idAUUZ29z
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4766
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583547078; bh=iLW9L2KGSEmZt4RMbKRU9iH7ArJGdygY6FFfahuV/tQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=ADvKaVVX6pXY8WUtRIsve54FkosMGm3HbHmXkN7J3MO7EqMeVD1eqfL4Xk4Uh4Pgl
+         RerHhHE24nq0mK2MEiC2Znu1sTxa8ZOv3xR9r1xj88KiHvtELgAUiLfKtfsxN0OySV
+         EtyPkb5UJOxQ5novejG+pBg61Uvmli8uUYiRhjjrlGPbo2QI0TTXkMZtwjzKmJcm6Z
+         s/6uRS1Yuo7AksZjDpzJJI/r2MaYVIJBnXDnWWDhQGOau6FYaxyQtOeOKC/m4Aiytt
+         fycklPSUQDfpMcO6LA2Aac2qxAveVZY/TutWbesqSrnUR0qWFwXtKqSTDLOHTJlRXW
+         OmrHPv/APW6qQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IE1pY2hhZWwgV2FsbGUgPG1p
-Y2hhZWxAd2FsbGUuY2M+DQo+U2VudDogMjAyMMTqM9TCN8jVIDQ6NTQNCj5UbzogZG1hZW5naW5l
-QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+bGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-DQo+Q2M6IFZpbm9kIEtvdWwgPHZrb3VsQGtlcm5lbC5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtk
-dEBrZXJuZWwub3JnPjsgTWFyaw0KPlJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgU2hh
-d24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgTGVvIExpDQo+PGxlb3lhbmcubGlAbnhwLmNv
-bT47IFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT47IE1pY2hhZWwgV2FsbGUNCj48bWljaGFlbEB3
-YWxsZS5jYz4NCj5TdWJqZWN0OiBbRVhUXSBbUEFUQ0ggMi8yXSBhcm02NDogZHRzOiBsczEwMjhh
-OiBhZGQgImZzbCx2ZjYxMC1lZG1hIg0KPmNvbXBhdGlibGUNCj4NCj5DYXV0aW9uOiBFWFQgRW1h
-aWwNCj4NCj5UaGUgYm9vdGxvYWRlciBkb2VzIHRoZSBJT01NVSBmaXh1cCBhbmQgZHluYW1pY2Fs
-bHkgYWRkcyB0aGUgImlvbW11cyINCj5wcm9wZXJ0eSB0byBkZXZpY2VzIGFjY29yZGluZyB0byBp
-dHMgY29tcGF0aWJsZSBzdHJpbmcuIEluIGNhc2Ugb2YgdGhlIGVETUENCj5jb250cm9sbGVyIHRo
-aXMgcHJvcGVydHkgaXMgbWlzc2luZy4gQWRkIGl0LiBBZnRlciB0aGF0IHRoZSBJT01NVSB3aWxs
-IHdvcmsgd2l0aA0KPnRoZSBlRE1BIGNvcmUuDQo+DQo+U2lnbmVkLW9mZi1ieTogTWljaGFlbCBX
-YWxsZSA8bWljaGFlbEB3YWxsZS5jYz4NCj4tLS0NCj4gYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTAyOGEuZHRzaSB8IDIgKy0NCj4gMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
-aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+DQo+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj5iL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
-ZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj5pbmRleCBiMTUyZmE5MGNmNWMuLmFhNDY3YmZmMjIw
-OSAxMDA2NDQNCj4tLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4
-YS5kdHNpDQo+KysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEu
-ZHRzaQ0KPkBAIC00NDcsNyArNDQ3LDcgQEANCj4NCj4gICAgICAgICAgICAgICAgZWRtYTA6IGRt
-YS1jb250cm9sbGVyQDIyYzAwMDAgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICNkbWEtY2Vs
-bHMgPSA8Mj47DQo+LSAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMx
-MDI4YS1lZG1hIjsNCj4rICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxs
-czEwMjhhLWVkbWEiLA0KPisgImZzbCx2ZjYxMC1lZG1hIjsNCkhpIE1pY2hhZWwsDQoNCllvdSBz
-aG91bGQgY2hhbmdlIGl0IG9uIGJvb3Rsb2FkZXIgaW5zdGVhZCBvZiBrZXJuZWwsIFNvbWUgUmVn
-IG9mIExTMTAyOGEgaXMgZGlmZmVyZW50DQpmcm9tIG90aGVycywgU28gd2UgdXNlZCBjb21wYXRp
-YmxlICJmc2wsbHMxMDI4YS1lZG0iIHRvIGRpc3Rpbmd1aXNoICIgZnNsLHZmNjEwLWVkbWEiLg0K
-DQpUaGFua3MsDQpQZW5nDQo+ICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweDIy
-YzAwMDAgMHgwIDB4MTAwMDA+LA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwweDAg
-MHgyMmQwMDAwIDB4MCAweDEwMDAwPiwNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8
-MHgwIDB4MjJlMDAwMCAweDAgMHgxMDAwMD47DQo+LS0NCj4yLjIwLjENCg0K
+This is a fixup for the mmotm commit ce35133be382
+("mm/gup: track FOLL_PIN pages").
+
+Add kerneldoc comments for pin_user_pages*() routines, in order
+to get rid of "make -W1" warnings when building mm/gup.o.
+
+This just adds @param documentation of:
+    pin_user_pages()
+    pin_user_pages_fast()
+    pin_user_pages_remote()
+
+The param documentation was stolen from other gup.c functions,
+because it looks reasonable enough.
+
+Reported-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ mm/gup.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index f589299b0d4a..54af3b290cb0 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2766,6 +2766,12 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast);
+ /**
+  * pin_user_pages_fast() - pin user pages in memory without taking locks
+  *
++ * @start:      starting user address
++ * @nr_pages:   number of pages from start to pin
++ * @gup_flags:  flags modifying pin behaviour
++ * @pages:      array that receives pointers to the pages pinned.
++ *              Should be at least nr_pages long.
++ *
+  * Nearly the same as get_user_pages_fast(), except that FOLL_PIN is set. =
+See
+  * get_user_pages_fast() for documentation on the function arguments, beca=
+use
+  * the arguments here are identical.
+@@ -2791,6 +2797,21 @@ EXPORT_SYMBOL_GPL(pin_user_pages_fast);
+ /**
+  * pin_user_pages_remote() - pin pages of a remote process (task !=3D curr=
+ent)
+  *
++ * @tsk:	the task_struct to use for page fault accounting, or
++ *		NULL if faults are not to be recorded.
++ * @mm:		mm_struct of target mm
++ * @start:	starting user address
++ * @nr_pages:	number of pages from start to pin
++ * @gup_flags:	flags modifying lookup behaviour
++ * @pages:	array that receives pointers to the pages pinned.
++ *		Should be at least nr_pages long. Or NULL, if caller
++ *		only intends to ensure the pages are faulted in.
++ * @vmas:	array of pointers to vmas corresponding to each page.
++ *		Or NULL if the caller does not require them.
++ * @locked:	pointer to lock flag indicating whether lock is held and
++ *		subsequently whether VM_FAULT_RETRY functionality can be
++ *		utilised. Lock must initially be held.
++ *
+  * Nearly the same as get_user_pages_remote(), except that FOLL_PIN is set=
+. See
+  * get_user_pages_remote() for documentation on the function arguments, be=
+cause
+  * the arguments here are identical.
+@@ -2819,6 +2840,15 @@ EXPORT_SYMBOL(pin_user_pages_remote);
+ /**
+  * pin_user_pages() - pin user pages in memory for use by other devices
+  *
++ * @start:	starting user address
++ * @nr_pages:	number of pages from start to pin
++ * @gup_flags:	flags modifying lookup behaviour
++ * @pages:	array that receives pointers to the pages pinned.
++ *		Should be at least nr_pages long. Or NULL, if caller
++ *		only intends to ensure the pages are faulted in.
++ * @vmas:	array of pointers to vmas corresponding to each page.
++ *		Or NULL if the caller does not require them.
++ *
+  * Nearly the same as get_user_pages(), except that FOLL_TOUCH is not set,=
+ and
+  * FOLL_PIN is set.
+  *
+--=20
+2.25.1
+
