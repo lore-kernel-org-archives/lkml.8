@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3BBC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19617C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A02102075B
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B262075B
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 08:09:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HR10p5le"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y6x+ktQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgCGIJB (ORCPT
+        id S1726262AbgCGIJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 03:09:01 -0500
-Received: from mail-pf1-f177.google.com ([209.85.210.177]:46157 "EHLO
-        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgCGIJB (ORCPT
+        Sat, 7 Mar 2020 03:09:35 -0500
+Received: from mail-pl1-f171.google.com ([209.85.214.171]:46683 "EHLO
+        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgCGIJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 03:09:01 -0500
-Received: by mail-pf1-f177.google.com with SMTP id o24so2275851pfp.13
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 00:08:58 -0800 (PST)
+        Sat, 7 Mar 2020 03:09:35 -0500
+Received: by mail-pl1-f171.google.com with SMTP id w12so1837121pll.13
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 00:09:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=nU16B2xp2DIniBDEEsyS+pcU0JMbdNxb8GbdumZjS0k=;
-        b=HR10p5leSjFRnwqUNx/Gv31a/IZ40Dd7xPHR6I6PRT8uz9ssb0Y2Bz3NBM+yPWuZ52
-         d2cv715aawG7DMJxN4yddW3r5hT2qweQjWwYUPr5Ei4zElV0V6jPGXeKDuI1Iu9Ozj7L
-         rrgz+WPxWeUO3jBlE8MwXTq1Q07C46kQ7Li+s=
+        bh=Il0BuirtXElX3OhJ8KQ+VVPD82PshE9sC+bGdFWDsGU=;
+        b=Y6x+ktQYKlOTGiFoCpzmgJHyWqjxMCmMqSAxY4SB8JzMC5JWisoxpp7cHnfLHFX5OT
+         qQIk8bBOtAsU0XfsP37BubttZaRh1tZPPYyBEVOCVfznu+iSOQxvl6ksS5n/GJrr4Hr2
+         B87D5TVYJ+RAA2v2G8kT63cJd9bRecv1Ue+6s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nU16B2xp2DIniBDEEsyS+pcU0JMbdNxb8GbdumZjS0k=;
-        b=o2bOaweehnl+2X7fg/nt4sLRvnew2Wr4NVAO53WgyciSHUqhsSpkTMYoZoyFpD9gGy
-         qVUjYFER6qDpq3qFmmVu0eSuedXJNeO1lCIrS4FWNn/H/nM8mQW4QgXQn22UE/vpXf1f
-         CJ0JwHVyMndFvqG6XBo+ZranQjEH4Ul8n0kQHqcuBo3+71V3BxTUtlPNyiSXFbaVCPiF
-         8OSVkSQKny23s+2xtZvyD7oSd5pblPNRNwqnsC2m0L5/Ekv++JLj6vAGaGt2KgmBjY3l
-         PPR+22HwneqR9Y9JFTQ/ByB41VJPw3tS7qLmjEk8Mc5pcImF/qvWmkVLq0sxK2nJFff+
-         5S/g==
-X-Gm-Message-State: ANhLgQ31TYLWu1b+xJxKD0MMAzTJjXA788AbFkfbwiKXtn1uvZEwPy5O
-        hpjldKzXYlnP2G+ESrmWb9J8PQ==
-X-Google-Smtp-Source: ADFU+vskDNL0SpSDH5EH2mSWBx/vmBvwPv11i4h/1pELnQ8rLtQ5q2SeYWpH0NindybguMHaTHjlrw==
-X-Received: by 2002:a62:17d1:: with SMTP id 200mr7480449pfx.227.1583568538332;
-        Sat, 07 Mar 2020 00:08:58 -0800 (PST)
+        bh=Il0BuirtXElX3OhJ8KQ+VVPD82PshE9sC+bGdFWDsGU=;
+        b=EleXO4seymtIeJoJbeDqrIEnW+fry4/I7fNUq7Hd+GB2e0E4jLFYTh83Y9klTAAtw1
+         I3/+tQhREou1d1Gerc5YGztcOlSnVa9bQ6WOCqGtPnr1oX2p06F0KSZ5JS2gucytn/3M
+         bRVcyyFRaV07NZ3Gq9dbOnTGrbC/wWJ0SiUikpYw1QH+Tuq0QjQ5viafLPXrBqRylhVm
+         lZwNAZ2xn+abHqzbib3j8iN7bB5+0XXienXAE1VGsmoJDHtmwjAmL9qUr5FwHKF3Jl0L
+         UBD7RlexDO13Q9b+Q563cz8fb96bDodBfJBJGx74zz175Zf9PkXq4mn1vq53SnBskDas
+         EN6w==
+X-Gm-Message-State: ANhLgQ10wQMjP2hvAFu3BfrwChTXXCTVml4zAVAeV9r4RQKoj3LFArwL
+        z4IxGX8zkAQfUyUlOvPRHwpsXg==
+X-Google-Smtp-Source: ADFU+vstyaUZAA30a7Gyv0ev+TGK+vA0QMq+YD9kZGE7d7/4+YCQfrphuGxCCpOOwROkghJ9eGxANg==
+X-Received: by 2002:a17:90a:1ae9:: with SMTP id p96mr7809803pjp.123.1583568574186;
+        Sat, 07 Mar 2020 00:09:34 -0800 (PST)
 Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id m12sm11775429pjf.25.2020.03.07.00.08.57
+        by smtp.gmail.com with ESMTPSA id x9sm7359744pfa.188.2020.03.07.00.09.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 00:08:57 -0800 (PST)
-Date:   Sat, 7 Mar 2020 17:08:55 +0900
+        Sat, 07 Mar 2020 00:09:33 -0800 (PST)
+Date:   Sat, 7 Mar 2020 17:09:32 +0900
 From:   Sergey Senozhatsky <senozhatsky@chromium.org>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
@@ -66,53 +66,27 @@ Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Pawel Osciak <posciak@chromium.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 00/11] Implement V4L2_BUF_FLAG_NO_CACHE_* flags
-Message-ID: <20200307080855.GE176460@google.com>
+Subject: Re: [PATCHv4 03/11] videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT
+ flag
+Message-ID: <20200307080932.GF176460@google.com>
 References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <04241ce5-dc41-9ea8-a058-5c0d8f9ba5a4@xs4all.nl>
+ <20200302041213.27662-4-senozhatsky@chromium.org>
+ <40b1cc23-5e28-837b-49d5-e32d9dd3edee@xs4all.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <04241ce5-dc41-9ea8-a058-5c0d8f9ba5a4@xs4all.nl>
+In-Reply-To: <40b1cc23-5e28-837b-49d5-e32d9dd3edee@xs4all.nl>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/06 15:18), Hans Verkuil wrote:
-[..]
-> As mentioned in my v4 review I found a serious bug when testing with
-> v4l2-compliance. That meant that this series was not tested properly,
-> which is a requirement for something that touches the core framework.
+On (20/03/06 14:58), Hans Verkuil wrote:
+> 
+> Please fold that in this patch.
+> 
 
-I run tests locally on my board, but the scenarios are rather limited.
-
-> I've posted an RFC patch with my v4l-utils changes (assumes you've run
-> 'make sync-with-kernel' first), but that's just very basic testing. You
-> can use it as your starting point.
-
-Thanks. I'll try to use it as a starting point and run more "diverse"
-tests cases.
-
-> It needs to be expanded to test the various combinations of flags and
-> capabilities. I don't think there is a reliable way of actually testing
-> the cache hint functionality, so that can be skipped, but the compliance
-> test should at least test the basic behavior depending on whether or not
-> the cache hints capability is set.
-
-I'll take a look.
-
-> I also would like to see a patch adding cache hint support to an existing
-> driver (more than one if possible) and the compliance output when tested
-> against that driver.
-
-Need to talk to Tomasz and Pawel first.
-
-> You should also test with the test-media script in contrib/test: run as
-> 'sudo test-media mc' to test with all the virtual drivers. If it all passes,
-> then that's a good indication that there are at least no regressions.
-
-OK, let me try.
+Thanks!
 
 	-ss
