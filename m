@@ -2,822 +2,112 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0827EC10F27
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 19:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7170EC10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 19:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69742073C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 19:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B22220684
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 19:16:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="OFKiEK9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgCGTIR (ORCPT
+        id S1726289AbgCGTQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 14:08:17 -0500
-Received: from [167.172.186.51] ([167.172.186.51]:42000 "EHLO shell.v3.sk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726109AbgCGTIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 14:08:15 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 32A44E00D1;
-        Sat,  7 Mar 2020 19:08:29 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id GrG9WfZJ4quP; Sat,  7 Mar 2020 19:08:26 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id E6439E0180;
-        Sat,  7 Mar 2020 19:08:25 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id hRBL7Mc7s_Ig; Sat,  7 Mar 2020 19:08:24 +0000 (UTC)
-Received: from furthur.lan (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 174FDE017E;
-        Sat,  7 Mar 2020 19:08:24 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [RESEND PATCH v2 3/3] drm/bridge: chrontel-ch7033: Add a new driver
-Date:   Sat,  7 Mar 2020 20:08:00 +0100
-Message-Id: <20200307190800.142658-4-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200307190800.142658-1-lkundrak@v3.sk>
-References: <20200307190800.142658-1-lkundrak@v3.sk>
+        Sat, 7 Mar 2020 14:16:38 -0500
+Received: from mail-pf1-f180.google.com ([209.85.210.180]:42563 "EHLO
+        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgCGTQh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 14:16:37 -0500
+Received: by mail-pf1-f180.google.com with SMTP id f5so2826311pfk.9
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 11:16:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=eGcbbDGmdFPg+blpFgNt5fk4FJZSVRnYmpe1I78QzBg=;
+        b=OFKiEK9rXwwl0CHY2j3FkIsqxYczJLl5px2s/tJAAAX8dFUu314yr5/3NOOAqz+bD0
+         sBgj0hc5+Lq851u8a0oPMrs+VbZNO6/KW4OUwP4TZHlQep5qeOTVoYfdugbDlJoMLCDC
+         GsjalZc7eFw9dtwYqs0ykj4QWAXazDJLjFkppHkPLWRRzZ0fMNLyVZI9pI9SA/87siGM
+         e9BerHP9tQ6Jy1xNvNbh29FGp4N+mf/JpPRtpKo2iQaVwTKe5A5Pc6p2wPN/wlD+wU40
+         7VbC7se+VMkc7ZWLdSbUjwlp0VrIMMioNiQ0ZKaJh9Zo2d4eBbeRI8J5qytsHDwJDe/z
+         X0tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=eGcbbDGmdFPg+blpFgNt5fk4FJZSVRnYmpe1I78QzBg=;
+        b=fWY4e1sHCm+BJQWltVToMtZi342RY6cHJjMEXunMgsw6TY6alnqRDD2TWIe13r17f8
+         d3KkvUkIewKsffMABiiPoRVXm318NYzRhbkqVLIDV0iPZqHocsl1LUDV/7/c+pHG0J8t
+         06FFP/2aC7l1Lir4lAv/dP/hK/sQGZSfl6E49xVnhA5iYV/1Hsm+TNwHBVtua7SxaFlb
+         VahZWNkl1r2oxaUM85mDLZG5dLIb/4+UVIVHpXeKOew6vTb0YFtOYJRwBscZThE64ben
+         ACThuDI59jzwUzQuDwnHW+mKR3BUoqb6BMr3BO9EWOuDqw6LTwaFWAiWeGxW33xffu4e
+         aQzA==
+X-Gm-Message-State: ANhLgQ3nI2Wg6GwntTUu+b4umef2FkdALVfm/Yb+yBXfpC88Yrr75api
+        AEMGsj1tQ0k3624qVogE+CEX3OvdwBQ=
+X-Google-Smtp-Source: ADFU+vuhccMaJUQFPMqIN8WhD2HFX3Gl3ECYINAPWasV4myFyKWg48nV0wD9WOuO/TWVjynZIVgnkA==
+X-Received: by 2002:a63:8343:: with SMTP id h64mr8751590pge.73.1583608596284;
+        Sat, 07 Mar 2020 11:16:36 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id h12sm23741951pfk.124.2020.03.07.11.16.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Mar 2020 11:16:35 -0800 (PST)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] io_uring fixes for 5.6-rc
+Message-ID: <b8c32cfe-9bf8-ee8c-a91b-565583a44a8c@kernel.dk>
+Date:   Sat, 7 Mar 2020 12:16:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a driver for video encoder with VGA and DVI/HDMI outputs.
+Hi Linus,
 
-There is no documentation for the chip -- the operation was guessed from
-what was sniffed on a Dell Wyse 3020 ThinOS terminal, the register names
-come from the ch7035 driver in Mediatek's GPL code dump.
+Here are a few io_uring fixes that should go into this release. This
+pull request contains:
 
-Only bare minimum is implemented -- no fancy stuff, such as scaling. That
-would only worsen our misery. We don't load the firmware and we don't nee=
-d
-to even bother enabling the MCU.  There are probably no distributable
-firmware images anyway.
+- Removal of (now) unused io_wq_flush() and associated flag (Pavel)
 
-Just like the tda998x driver, this one uses the component framework and
-adds an encoder on component bind, so that it works with the Armada DRM
-driver.
+- Fix cancelation lockup with linked timeouts (Pavel)
 
-Tested with a handful of monitors ranging from 1024x768@75 to 1400x1050@6=
-0,
-with VGA as well as DVI.
+- Fix for potential use-after-free when freeing percpu ref for fixed
+  file sets
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+- io-wq cancelation fixups (Pavel)
 
----
-Changes since v1:
-- Sort the includes
-- Drop a useless model id read
-- Chain to the bridge-connector instead of dealing with the HPD/EDID
-  readout machinery ourselves
-- Utilize regmap to access the registers
+Please pull!
 
- drivers/gpu/drm/bridge/Kconfig           |  10 +
- drivers/gpu/drm/bridge/Makefile          |   1 +
- drivers/gpu/drm/bridge/chrontel-ch7033.c | 675 +++++++++++++++++++++++
- 3 files changed, 686 insertions(+)
- create mode 100644 drivers/gpu/drm/bridge/chrontel-ch7033.c
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kcon=
-fig
-index aaed2347ace9d..0ebc72d62a5b2 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -27,6 +27,16 @@ config DRM_CDNS_DSI
- 	  Support Cadence DPI to DSI bridge. This is an internal
- 	  bridge and is meant to be directly embedded in a SoC.
-=20
-+config DRM_CHRONTEL_CH7033
-+	tristate "Chrontel CH7033 Video Encoder"
-+	depends on OF
-+	select DRM_KMS_HELPER
-+	help
-+	  Enable support for the Chrontel CH7033 VGA/DVI/HDMI Encoder, as
-+	  found in the Dell Wyse 3020 thin client.
-+
-+	  If in doubt, say "N".
-+
- config DRM_DISPLAY_CONNECTOR
- 	tristate "Display connector support"
- 	depends on OF
-diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Mak=
-efile
-index 6fb062b5b0f04..a844315feddb4 100644
---- a/drivers/gpu/drm/bridge/Makefile
-+++ b/drivers/gpu/drm/bridge/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_DRM_CDNS_DSI) +=3D cdns-dsi.o
-+obj-$(CONFIG_DRM_CHRONTEL_CH7033) +=3D chrontel-ch7033.o
- obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) +=3D display-connector.o
- obj-$(CONFIG_DRM_LVDS_CODEC) +=3D lvds-codec.o
- obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) +=3D megachips-stdpxxx=
-x-ge-b850v3-fw.o
-diff --git a/drivers/gpu/drm/bridge/chrontel-ch7033.c b/drivers/gpu/drm/b=
-ridge/chrontel-ch7033.c
-new file mode 100644
-index 0000000000000..342b2e2bd2b1c
---- /dev/null
-+++ b/drivers/gpu/drm/bridge/chrontel-ch7033.c
-@@ -0,0 +1,675 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Chrontel CH7033 Video Encoder Driver
-+ *
-+ * Copyright (C) 2019,2020 Lubomir Rintel
-+ */
-+
-+#include <linux/component.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_bridge.h>
-+#include <drm/drm_edid.h>
-+#include <drm/drm_of.h>
-+#include <drm/drm_print.h>
-+#include <drm/drm_probe_helper.h>
-+
-+/* Page 0, Register 0x07 */
-+enum {
-+	DRI_PD		=3D BIT(3),
-+	IO_PD		=3D BIT(5),
-+};
-+
-+/* Page 0, Register 0x08 */
-+enum {
-+	DRI_PDDRI	=3D GENMASK(7, 4),
-+	PDDAC		=3D GENMASK(3, 1),
-+	PANEN		=3D BIT(0),
-+};
-+
-+/* Page 0, Register 0x09 */
-+enum {
-+	DPD		=3D BIT(7),
-+	GCKOFF		=3D BIT(6),
-+	TV_BP		=3D BIT(5),
-+	SCLPD		=3D BIT(4),
-+	SDPD		=3D BIT(3),
-+	VGA_PD		=3D BIT(2),
-+	HDBKPD		=3D BIT(1),
-+	HDMI_PD		=3D BIT(0),
-+};
-+
-+/* Page 0, Register 0x0a */
-+enum {
-+	MEMINIT		=3D BIT(7),
-+	MEMIDLE		=3D BIT(6),
-+	MEMPD		=3D BIT(5),
-+	STOP		=3D BIT(4),
-+	LVDS_PD		=3D BIT(3),
-+	HD_DVIB		=3D BIT(2),
-+	HDCP_PD		=3D BIT(1),
-+	MCU_PD		=3D BIT(0),
-+};
-+
-+/* Page 0, Register 0x18 */
-+enum {
-+	IDF		=3D GENMASK(7, 4),
-+	INTEN		=3D BIT(3),
-+	SWAP		=3D GENMASK(2, 0),
-+};
-+
-+enum {
-+	BYTE_SWAP_RGB	=3D 0,
-+	BYTE_SWAP_RBG	=3D 1,
-+	BYTE_SWAP_GRB	=3D 2,
-+	BYTE_SWAP_GBR	=3D 3,
-+	BYTE_SWAP_BRG	=3D 4,
-+	BYTE_SWAP_BGR	=3D 5,
-+};
-+
-+/* Page 0, Register 0x19 */
-+enum {
-+	HPO_I		=3D BIT(5),
-+	VPO_I		=3D BIT(4),
-+	DEPO_I		=3D BIT(3),
-+	CRYS_EN		=3D BIT(2),
-+	GCLKFREQ	=3D GENMASK(2, 0),
-+};
-+
-+/* Page 0, Register 0x2e */
-+enum {
-+	HFLIP		=3D BIT(7),
-+	VFLIP		=3D BIT(6),
-+	DEPO_O		=3D BIT(5),
-+	HPO_O		=3D BIT(4),
-+	VPO_O		=3D BIT(3),
-+	TE		=3D GENMASK(2, 0),
-+};
-+
-+/* Page 0, Register 0x2b */
-+enum {
-+	SWAPS		=3D GENMASK(7, 4),
-+	VFMT		=3D GENMASK(3, 0),
-+};
-+
-+/* Page 0, Register 0x54 */
-+enum {
-+	COMP_BP		=3D BIT(7),
-+	DAC_EN_T	=3D BIT(6),
-+	HWO_HDMI_HI	=3D GENMASK(5, 3),
-+	HOO_HDMI_HI	=3D GENMASK(2, 0),
-+};
-+
-+/* Page 0, Register 0x57 */
-+enum {
-+	FLDSEN		=3D BIT(7),
-+	VWO_HDMI_HI	=3D GENMASK(5, 3),
-+	VOO_HDMI_HI	=3D GENMASK(2, 0),
-+};
-+
-+/* Page 0, Register 0x7e */
-+enum {
-+	HDMI_LVDS_SEL	=3D BIT(7),
-+	DE_GEN		=3D BIT(6),
-+	PWM_INDEX_HI	=3D BIT(5),
-+	USE_DE		=3D BIT(4),
-+	R_INT		=3D GENMASK(3, 0),
-+};
-+
-+/* Page 1, Register 0x07 */
-+enum {
-+	BPCKSEL		=3D BIT(7),
-+	DRI_CMFB_EN	=3D BIT(6),
-+	CEC_PUEN	=3D BIT(5),
-+	CEC_T		=3D BIT(3),
-+	CKINV		=3D BIT(2),
-+	CK_TVINV	=3D BIT(1),
-+	DRI_CKS2	=3D BIT(0),
-+};
-+
-+/* Page 1, Register 0x08 */
-+enum {
-+	DACG		=3D BIT(6),
-+	DACKTST		=3D BIT(5),
-+	DEDGEB		=3D BIT(4),
-+	SYO		=3D BIT(3),
-+	DRI_IT_LVDS	=3D GENMASK(2, 1),
-+	DISPON		=3D BIT(0),
-+};
-+
-+/* Page 1, Register 0x0c */
-+enum {
-+	DRI_PLL_CP	=3D GENMASK(7, 6),
-+	DRI_PLL_DIVSEL	=3D BIT(5),
-+	DRI_PLL_N1_1	=3D BIT(4),
-+	DRI_PLL_N1_0	=3D BIT(3),
-+	DRI_PLL_N3_1	=3D BIT(2),
-+	DRI_PLL_N3_0	=3D BIT(1),
-+	DRI_PLL_CKTSTEN =3D BIT(0),
-+};
-+
-+/* Page 1, Register 0x6b */
-+enum {
-+	VCO3CS		=3D GENMASK(7, 6),
-+	ICPGBK2_0	=3D GENMASK(5, 3),
-+	DRI_VCO357SC	=3D BIT(2),
-+	PDPLL2		=3D BIT(1),
-+	DRI_PD_SER	=3D BIT(0),
-+};
-+
-+/* Page 1, Register 0x6c */
-+enum {
-+	PLL2N11		=3D GENMASK(7, 4),
-+	PLL2N5_4	=3D BIT(3),
-+	PLL2N5_TOP	=3D BIT(2),
-+	DRI_PLL_PD	=3D BIT(1),
-+	PD_I2CM		=3D BIT(0),
-+};
-+
-+/* Page 3, Register 0x28 */
-+enum {
-+	DIFF_EN		=3D GENMASK(7, 6),
-+	CORREC_EN	=3D GENMASK(5, 4),
-+	VGACLK_BP	=3D BIT(3),
-+	HM_LV_SEL	=3D BIT(2),
-+	HD_VGA_SEL	=3D BIT(1),
-+};
-+
-+/* Page 3, Register 0x2a */
-+enum {
-+	LVDSCLK_BP	=3D BIT(7),
-+	HDTVCLK_BP	=3D BIT(6),
-+	HDMICLK_BP	=3D BIT(5),
-+	HDTV_BP		=3D BIT(4),
-+	HDMI_BP		=3D BIT(3),
-+	THRWL		=3D GENMASK(2, 0),
-+};
-+
-+/* Page 4, Register 0x52 */
-+enum {
-+	PGM_ARSTB	=3D BIT(7),
-+	MCU_ARSTB	=3D BIT(6),
-+	MCU_RETB	=3D BIT(2),
-+	RESETIB		=3D BIT(1),
-+	RESETDB		=3D BIT(0),
-+};
-+
-+struct ch7033_priv {
-+	struct regmap *regmap;
-+	struct drm_bridge *next_bridge;
-+	struct drm_encoder encoder;
-+	struct drm_bridge bridge;
-+	struct drm_connector connector;
-+};
-+
-+#define conn_to_ch7033_priv(x) \
-+	container_of(x, struct ch7033_priv, connector)
-+#define bridge_to_ch7033_priv(x) \
-+	container_of(x, struct ch7033_priv, bridge)
-+
-+
-+static enum drm_connector_status ch7033_connector_detect(
-+	struct drm_connector *connector, bool force)
-+{
-+	struct ch7033_priv *priv =3D conn_to_ch7033_priv(connector);
-+
-+	return drm_bridge_detect(priv->next_bridge);
-+}
-+
-+static const struct drm_connector_funcs ch7033_connector_funcs =3D {
-+	.reset =3D drm_atomic_helper_connector_reset,
-+	.fill_modes =3D drm_helper_probe_single_connector_modes,
-+	.detect =3D ch7033_connector_detect,
-+	.destroy =3D drm_connector_cleanup,
-+	.atomic_duplicate_state =3D drm_atomic_helper_connector_duplicate_state=
-,
-+	.atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state,
-+};
-+
-+static int ch7033_connector_get_modes(struct drm_connector *connector)
-+{
-+	struct ch7033_priv *priv =3D conn_to_ch7033_priv(connector);
-+	struct edid *edid;
-+	int ret;
-+
-+	edid =3D drm_bridge_get_edid(priv->next_bridge, connector);
-+	drm_connector_update_edid_property(connector, edid);
-+	if (edid) {
-+		ret =3D drm_add_edid_modes(connector, edid);
-+		kfree(edid);
-+	} else {
-+		ret =3D drm_add_modes_noedid(connector, 1920, 1080);
-+		drm_set_preferred_mode(connector, 1024, 768);
-+	}
-+
-+	return ret;
-+}
-+
-+static struct drm_encoder *ch7033_connector_best_encoder(
-+			struct drm_connector *connector)
-+{
-+	struct ch7033_priv *priv =3D conn_to_ch7033_priv(connector);
-+
-+	return priv->bridge.encoder;
-+}
-+
-+static const struct drm_connector_helper_funcs ch7033_connector_helper_f=
-uncs =3D {
-+	.get_modes =3D ch7033_connector_get_modes,
-+	.best_encoder =3D ch7033_connector_best_encoder,
-+};
-+
-+static void ch7033_hpd_event(void *arg, enum drm_connector_status status=
-)
-+{
-+	struct ch7033_priv *priv =3D arg;
-+
-+	if (priv->bridge.dev)
-+		drm_helper_hpd_irq_event(priv->connector.dev);
-+}
-+
-+static int ch7033_bridge_attach(struct drm_bridge *bridge,
-+				enum drm_bridge_attach_flags flags)
-+{
-+	struct ch7033_priv *priv =3D bridge_to_ch7033_priv(bridge);
-+	struct drm_connector *connector =3D &priv->connector;
-+	int ret;
-+
-+	ret =3D drm_bridge_attach(bridge->encoder, priv->next_bridge, bridge,
-+				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)
-+		return 0;
-+
-+	if (priv->next_bridge->ops & DRM_BRIDGE_OP_DETECT) {
-+		connector->polled =3D DRM_CONNECTOR_POLL_HPD;
-+	} else {
-+		connector->polled =3D DRM_CONNECTOR_POLL_CONNECT |
-+				    DRM_CONNECTOR_POLL_DISCONNECT;
-+	}
-+
-+	if (priv->next_bridge->ops & DRM_BRIDGE_OP_HPD) {
-+		drm_bridge_hpd_enable(priv->next_bridge, ch7033_hpd_event,
-+				      priv);
-+	}
-+
-+	drm_connector_helper_add(connector,
-+				 &ch7033_connector_helper_funcs);
-+	ret =3D drm_connector_init_with_ddc(bridge->dev, &priv->connector,
-+					  &ch7033_connector_funcs,
-+					  priv->next_bridge->type,
-+					  priv->next_bridge->ddc);
-+	if (ret) {
-+		DRM_ERROR("Failed to initialize connector\n");
-+		return ret;
-+	}
-+
-+	drm_connector_attach_encoder(&priv->connector, bridge->encoder);
-+	return 0;
-+}
-+
-+static void ch7033_bridge_detach(struct drm_bridge *bridge)
-+{
-+	struct ch7033_priv *priv =3D bridge_to_ch7033_priv(bridge);
-+
-+	if (priv->next_bridge->ops & DRM_BRIDGE_OP_HPD)
-+		drm_bridge_hpd_disable(priv->next_bridge);
-+	drm_connector_cleanup(&priv->connector);
-+}
-+
-+static enum drm_mode_status ch7033_bridge_mode_valid(struct drm_bridge *=
-bridge,
-+				     const struct drm_display_mode *mode)
-+{
-+	if (mode->clock > 165000)
-+		return MODE_CLOCK_HIGH;
-+	if (mode->hdisplay >=3D 1920)
-+		return MODE_BAD_HVALUE;
-+	if (mode->vdisplay >=3D 1080)
-+		return MODE_BAD_VVALUE;
-+	return MODE_OK;
-+}
-+
-+static void ch7033_bridge_disable(struct drm_bridge *bridge)
-+{
-+	struct ch7033_priv *priv =3D bridge_to_ch7033_priv(bridge);
-+
-+	regmap_write(priv->regmap, 0x03, 0x04);
-+	regmap_update_bits(priv->regmap, 0x52, RESETDB, 0x00);
-+}
-+
-+static void ch7033_bridge_enable(struct drm_bridge *bridge)
-+{
-+	struct ch7033_priv *priv =3D bridge_to_ch7033_priv(bridge);
-+
-+	regmap_write(priv->regmap, 0x03, 0x04);
-+	regmap_update_bits(priv->regmap, 0x52, RESETDB, RESETDB);
-+}
-+
-+static void ch7033_bridge_mode_set(struct drm_bridge *bridge,
-+				   const struct drm_display_mode *mode,
-+				   const struct drm_display_mode *adjusted_mode)
-+{
-+	struct ch7033_priv *priv =3D bridge_to_ch7033_priv(bridge);
-+	int hbporch =3D mode->hsync_start - mode->hdisplay;
-+	int hsynclen =3D mode->hsync_end - mode->hsync_start;
-+	int vbporch =3D mode->vsync_start - mode->vdisplay;
-+	int vsynclen =3D mode->vsync_end - mode->vsync_start;
-+
-+	/*
-+	 * Page 4
-+	 */
-+	regmap_write(priv->regmap, 0x03, 0x04);
-+
-+	/* Turn everything off to set all the registers to their defaults. */
-+	regmap_write(priv->regmap, 0x52, 0x00);
-+	/* Bring I/O block up. */
-+	regmap_write(priv->regmap, 0x52, RESETIB);
-+
-+	/*
-+	 * Page 0
-+	 */
-+	regmap_write(priv->regmap, 0x03, 0x00);
-+
-+	/* Bring up parts we need from the power down. */
-+	regmap_update_bits(priv->regmap, 0x07, DRI_PD | IO_PD, 0);
-+	regmap_update_bits(priv->regmap, 0x08, DRI_PDDRI | PDDAC | PANEN, 0);
-+	regmap_update_bits(priv->regmap, 0x09, DPD | GCKOFF |
-+					       HDMI_PD | VGA_PD, 0);
-+	regmap_update_bits(priv->regmap, 0x0a, HD_DVIB, 0);
-+
-+	/* Horizontal input timing. */
-+	regmap_write(priv->regmap, 0x0b, (mode->htotal >> 8) << 3 |
-+					 (mode->hdisplay >> 8));
-+	regmap_write(priv->regmap, 0x0c, mode->hdisplay);
-+	regmap_write(priv->regmap, 0x0d, mode->htotal);
-+	regmap_write(priv->regmap, 0x0e, (hsynclen >> 8) << 3 |
-+					 (hbporch >> 8));
-+	regmap_write(priv->regmap, 0x0f, hbporch);
-+	regmap_write(priv->regmap, 0x10, hsynclen);
-+
-+	/* Vertical input timing. */
-+	regmap_write(priv->regmap, 0x11, (mode->vtotal >> 8) << 3 |
-+					 (mode->vdisplay >> 8));
-+	regmap_write(priv->regmap, 0x12, mode->vdisplay);
-+	regmap_write(priv->regmap, 0x13, mode->vtotal);
-+	regmap_write(priv->regmap, 0x14, ((vsynclen >> 8) << 3) |
-+					 (vbporch >> 8));
-+	regmap_write(priv->regmap, 0x15, vbporch);
-+	regmap_write(priv->regmap, 0x16, vsynclen);
-+
-+	/* Input color swap. */
-+	regmap_update_bits(priv->regmap, 0x18, SWAP, BYTE_SWAP_BGR);
-+
-+	/* Input clock and sync polarity. */
-+	regmap_update_bits(priv->regmap, 0x19, 0x1, mode->clock >> 16);
-+	regmap_update_bits(priv->regmap, 0x19, HPO_I | VPO_I | GCLKFREQ,
-+			   (mode->flags & DRM_MODE_FLAG_PHSYNC) ? HPO_I : 0 |
-+			   (mode->flags & DRM_MODE_FLAG_PVSYNC) ? VPO_I : 0 |
-+			   mode->clock >> 16);
-+	regmap_write(priv->regmap, 0x1a, mode->clock >> 8);
-+	regmap_write(priv->regmap, 0x1b, mode->clock);
-+
-+	/* Horizontal output timing. */
-+	regmap_write(priv->regmap, 0x1f, (mode->htotal >> 8) << 3 |
-+					 (mode->hdisplay >> 8));
-+	regmap_write(priv->regmap, 0x20, mode->hdisplay);
-+	regmap_write(priv->regmap, 0x21, mode->htotal);
-+
-+	/* Vertical output timing. */
-+	regmap_write(priv->regmap, 0x25, (mode->vtotal >> 8) << 3 |
-+					 (mode->vdisplay >> 8));
-+	regmap_write(priv->regmap, 0x26, mode->vdisplay);
-+	regmap_write(priv->regmap, 0x27, mode->vtotal);
-+
-+	/* VGA channel bypass */
-+	regmap_update_bits(priv->regmap, 0x2b, VFMT, 9);
-+
-+	/* Output sync polarity. */
-+	regmap_update_bits(priv->regmap, 0x2e, HPO_O | VPO_O,
-+			   (mode->flags & DRM_MODE_FLAG_PHSYNC) ? HPO_O : 0 |
-+			   (mode->flags & DRM_MODE_FLAG_PVSYNC) ? VPO_O : 0);
-+
-+	/* HDMI horizontal output timing. */
-+	regmap_update_bits(priv->regmap, 0x54, HWO_HDMI_HI | HOO_HDMI_HI,
-+					       (hsynclen >> 8) << 3 |
-+					       (hbporch >> 8));
-+	regmap_write(priv->regmap, 0x55, hbporch);
-+	regmap_write(priv->regmap, 0x56, hsynclen);
-+
-+	/* HDMI vertical output timing. */
-+	regmap_update_bits(priv->regmap, 0x57, VWO_HDMI_HI | VOO_HDMI_HI,
-+					       (vsynclen >> 8) << 3 |
-+					       (vbporch >> 8));
-+	regmap_write(priv->regmap, 0x58, vbporch);
-+	regmap_write(priv->regmap, 0x59, vsynclen);
-+
-+	/* Pick HDMI, not LVDS. */
-+	regmap_update_bits(priv->regmap, 0x7e, HDMI_LVDS_SEL, HDMI_LVDS_SEL);
-+
-+	/*
-+	 * Page 1
-+	 */
-+	regmap_write(priv->regmap, 0x03, 0x01);
-+
-+	/* No idea what these do, but VGA is wobbly and blinky without them. */
-+	regmap_update_bits(priv->regmap, 0x07, CKINV, CKINV);
-+	regmap_update_bits(priv->regmap, 0x08, DISPON, DISPON);
-+
-+	/* DRI PLL */
-+	regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_DIVSEL, DRI_PLL_DIVSEL);
-+	if (mode->clock <=3D 40000) {
-+		regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_N1_1 |
-+						       DRI_PLL_N1_0 |
-+						       DRI_PLL_N3_1 |
-+						       DRI_PLL_N3_0,
-+						       0);
-+	} else if (mode->clock < 80000) {
-+		regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_N1_1 |
-+						       DRI_PLL_N1_0 |
-+						       DRI_PLL_N3_1 |
-+						       DRI_PLL_N3_0,
-+						       DRI_PLL_N3_0 |
-+						       DRI_PLL_N1_0);
-+	} else {
-+		regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_N1_1 |
-+						       DRI_PLL_N1_0 |
-+						       DRI_PLL_N3_1 |
-+						       DRI_PLL_N3_0,
-+						       DRI_PLL_N3_1 |
-+						       DRI_PLL_N1_1);
-+	}
-+
-+	/* This seems to be color calibration for VGA. */
-+	regmap_write(priv->regmap, 0x64, 0x29); /* LSB Blue */
-+	regmap_write(priv->regmap, 0x65, 0x29); /* LSB Green */
-+	regmap_write(priv->regmap, 0x66, 0x29); /* LSB Red */
-+	regmap_write(priv->regmap, 0x67, 0x00); /* MSB Blue */
-+	regmap_write(priv->regmap, 0x68, 0x00); /* MSB Green */
-+	regmap_write(priv->regmap, 0x69, 0x00); /* MSB Red */
-+
-+	regmap_update_bits(priv->regmap, 0x6b, DRI_PD_SER, 0x00);
-+	regmap_update_bits(priv->regmap, 0x6c, DRI_PLL_PD, 0x00);
-+
-+	/*
-+	 * Page 3
-+	 */
-+	regmap_write(priv->regmap, 0x03, 0x03);
-+
-+	/* More bypasses and apparently another HDMI/LVDS selector. */
-+	regmap_update_bits(priv->regmap, 0x28, VGACLK_BP | HM_LV_SEL,
-+					       VGACLK_BP | HM_LV_SEL);
-+	regmap_update_bits(priv->regmap, 0x2a, HDMICLK_BP | HDMI_BP,
-+					       HDMICLK_BP | HDMI_BP);
-+
-+	/*
-+	 * Page 4
-+	 */
-+	regmap_write(priv->regmap, 0x03, 0x04);
-+
-+	/* Output clock. */
-+	regmap_write(priv->regmap, 0x10, mode->clock >> 16);
-+	regmap_write(priv->regmap, 0x11, mode->clock >> 8);
-+	regmap_write(priv->regmap, 0x12, mode->clock);
-+}
-+
-+static const struct drm_bridge_funcs ch7033_bridge_funcs =3D {
-+	.attach =3D ch7033_bridge_attach,
-+	.detach =3D ch7033_bridge_detach,
-+	.mode_valid =3D ch7033_bridge_mode_valid,
-+	.disable =3D ch7033_bridge_disable,
-+	.enable =3D ch7033_bridge_enable,
-+	.mode_set =3D ch7033_bridge_mode_set,
-+};
-+
-+static void ch7033_encoder_destroy(struct drm_encoder *encoder)
-+{
-+	drm_encoder_cleanup(encoder);
-+}
-+
-+static const struct drm_encoder_funcs ch7033_encoder_funcs =3D {
-+	.destroy =3D ch7033_encoder_destroy,
-+};
-+
-+static int ch7033_bind(struct device *dev, struct device *master,
-+		       void *data)
-+{
-+	struct drm_device *drm =3D data;
-+	struct ch7033_priv *priv =3D dev_get_drvdata(dev);
-+	uint32_t crtcs;
-+	int ret;
-+
-+	crtcs =3D drm_of_find_possible_crtcs(drm, dev->of_node);
-+	priv->encoder.possible_crtcs =3D crtcs;
-+
-+	ret =3D drm_encoder_init(drm, &priv->encoder, &ch7033_encoder_funcs,
-+			       DRM_MODE_ENCODER_TMDS, NULL);
-+	if (ret)
-+		return ret;
-+
-+	ret =3D drm_bridge_attach(&priv->encoder, &priv->bridge, NULL, 0);
-+	if (ret)
-+		drm_encoder_cleanup(&priv->encoder);
-+
-+	return ret;
-+}
-+
-+static void ch7033_unbind(struct device *dev, struct device *master,
-+			  void *data)
-+{
-+	struct ch7033_priv *priv =3D dev_get_drvdata(dev);
-+
-+	drm_encoder_cleanup(&priv->encoder);
-+}
-+
-+static const struct regmap_config ch7033_regmap_config =3D {
-+	.reg_bits =3D 8,
-+	.val_bits =3D 8,
-+	.max_register =3D 0x7f,
-+};
-+
-+static const struct component_ops ch7033_ops =3D {
-+	.bind =3D ch7033_bind,
-+	.unbind =3D ch7033_unbind,
-+};
-+
-+static int ch7033_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct device *dev =3D &client->dev;
-+	struct ch7033_priv *priv;
-+	unsigned int val;
-+	int ret;
-+
-+	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(dev, priv);
-+
-+	ret =3D drm_of_find_panel_or_bridge(dev->of_node, 1, -1, NULL,
-+					  &priv->next_bridge);
-+	if (ret)
-+		return ret;
-+
-+	priv->regmap =3D devm_regmap_init_i2c(client, &ch7033_regmap_config);
-+	if (IS_ERR(priv->regmap)) {
-+		dev_err(&client->dev, "regmap init failed\n");
-+		return PTR_ERR(priv->regmap);
-+	}
-+
-+	ret =3D regmap_read(priv->regmap, 0x00, &val);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "error reading the model id: %d\n", ret);
-+		return ret;
-+	}
-+	if ((val & 0xf7) !=3D 0x56) {
-+		dev_err(&client->dev, "the device is not a ch7033\n");
-+		return -ENODEV;
-+	}
-+
-+	regmap_write(priv->regmap, 0x03, 0x04);
-+	ret =3D regmap_read(priv->regmap, 0x51, &val);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "error reading the model id: %d\n", ret);
-+		return ret;
-+	}
-+	if ((val & 0x0f) !=3D 3) {
-+		dev_err(&client->dev, "unknown revision %u\n", val);
-+		return -ENODEV;
-+	}
-+
-+	INIT_LIST_HEAD(&priv->bridge.list);
-+	priv->bridge.funcs =3D &ch7033_bridge_funcs;
-+	priv->bridge.of_node =3D dev->of_node;
-+	drm_bridge_add(&priv->bridge);
-+
-+	ret =3D component_add(dev, &ch7033_ops);
-+	if (ret) {
-+		drm_bridge_remove(&priv->bridge);
-+		return ret;
-+	}
-+
-+	dev_info(dev, "Chrontel CH7033 Video Encoder\n");
-+	return 0;
-+}
-+
-+static int ch7033_remove(struct i2c_client *client)
-+{
-+	struct device *dev =3D &client->dev;
-+	struct ch7033_priv *priv =3D dev_get_drvdata(dev);
-+
-+	component_del(dev, &ch7033_ops);
-+	drm_bridge_remove(&priv->bridge);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ch7033_dt_ids[] =3D {
-+	{ .compatible =3D "chrontel,ch7033", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ch7033_dt_ids);
-+
-+static const struct i2c_device_id ch7033_ids[] =3D {
-+	{ "ch7033", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, ch7033_ids);
-+
-+static struct i2c_driver ch7033_driver =3D {
-+	.probe =3D ch7033_probe,
-+	.remove =3D ch7033_remove,
-+	.driver =3D {
-+		.name =3D "ch7033",
-+		.of_match_table =3D of_match_ptr(ch7033_dt_ids),
-+	},
-+	.id_table =3D ch7033_ids,
-+};
-+
-+module_i2c_driver(ch7033_driver);
-+
-+MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-+MODULE_DESCRIPTION("Chrontel CH7033 Video Encoder Driver");
-+MODULE_LICENSE("GPL v2");
---=20
-2.24.1
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.6-2020-03-07
+
+
+----------------------------------------------------------------
+Jens Axboe (1):
+      io_uring: free fixed_file_data after RCU grace period
+
+Pavel Begunkov (3):
+      io-wq: fix IO_WQ_WORK_NO_CANCEL cancellation
+      io-wq: remove io_wq_flush and IO_WQ_WORK_INTERNAL
+      io_uring: fix lockup with timeouts
+
+ fs/io-wq.c    | 58 +++++++++++++++-------------------------------------------
+ fs/io-wq.h    |  2 --
+ fs/io_uring.c | 25 +++++++++++++++++++++++--
+ 3 files changed, 38 insertions(+), 47 deletions(-)
+
+-- 
+Jens Axboe
 
