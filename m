@@ -2,148 +2,202 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4175DC10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA357C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B368206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8979020675
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 15:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583593689;
-	bh=RQpDqkyyxmFg9c3rc/jOhh1yQA+Hq7TSDoK7PRzgQ0I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a+Gjl9M7U5Gk1N8WBBle8jRmkePKlZzfkQdgjwCulg/867OsSvUkl86ndyNOk8g/Q
-	 e9Cgqk6ysa0Fkp5k5SBvEEMXEraY7bt1E8PjBOLGzrLZAHgiZO83KgNJYAJv+/zdLb
-	 7D8APjUl9lGOl0zGQ1eW1HCqa+c7BL4KeidmCPl0=
+	s=default; t=1583593863;
+	bh=6NdNS0GAHUDfvT4DtjAA+fDfKBLy7jzUedqlH8lqoYQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YgjCCSyPWWSXrCR/nrNgGXFjCuKZq5T8u9W6LvMWdgu8ktLl0V0XUAnB/Fii0/G7N
+	 dLvNPkPTZyIiE0+nCbYlwJtWULsJMVAbsmSqcAIxPyjC88chFPgiKmoYK6H8ft4yod
+	 jHwVfFUX8g1mMhwzVHXVDNfYpKU53d23uIFrFGpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbgCGPII (ORCPT
+        id S1726266AbgCGPLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 10:08:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47734 "EHLO mail.kernel.org"
+        Sat, 7 Mar 2020 10:11:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgCGPIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 10:08:07 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726086AbgCGPLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 10:11:02 -0500
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91AEB20675;
-        Sat,  7 Mar 2020 15:08:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7959120674
+        for <linux-kernel@vger.kernel.org>; Sat,  7 Mar 2020 15:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583593686;
-        bh=RQpDqkyyxmFg9c3rc/jOhh1yQA+Hq7TSDoK7PRzgQ0I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QRgraDd5g2lyhqe/VHYJfWH8Kx0++0nF5g8fRF/GUXbIuEPV9DQEEa1eot9plToWK
-         vpMZCqgUDGZG+77uAOPhuyjJUC1uClW+UBh0S8S+YKoo8YF15uRlT08pYMHJjPDCJJ
-         PsQvSvEBfJGiP17xk+Yba/GFY1PuY6mHGdbrQqAI=
-Date:   Sat, 7 Mar 2020 15:08:01 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <benjamin.gaignard@st.com>, <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: adc: stm32-adc: fix sleep in atomic context
-Message-ID: <20200307150801.011f35b2@archlinux>
-In-Reply-To: <20200306155335.6019-1-olivier.moysan@st.com>
-References: <20200306155335.6019-1-olivier.moysan@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1583593860;
+        bh=6NdNS0GAHUDfvT4DtjAA+fDfKBLy7jzUedqlH8lqoYQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NUCnUlC/h2VWFBjTRzxiq9DJMLSiZiQtYB7g4vw40LUa6l1b4FGJzDSfsb+bkHSrA
+         su+wv/PJdjLYNSnTai2BXNNtMiji59+mvLamFp9YJTd92uv8MGhdESm05B5bYfwExQ
+         DTg1G/0YNjxnSuuIGYnGwxqe8CiMHslCTOdLmbA8=
+Received: by mail-wm1-f53.google.com with SMTP id x3so6334425wmj.1
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 07:11:00 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3lGGgZWjsINz2bojdt6kUviink7jyQOilNsBUiBbdO6bxYp/Pj
+        8BPr0hUIQsiNnst5B9I0c4pCOdZBqAR4TgavLzJaDA==
+X-Google-Smtp-Source: ADFU+vufcAJjVQHbdpKJ/AKtOP092nZ3gCqnJW3XccZOJdjunHUTHNhXXH8lgIOGgbiH8MqBCcuCMLu0f5GPFIouTWM=
+X-Received: by 2002:a7b:cbcf:: with SMTP id n15mr10106227wmi.21.1583593858853;
+ Sat, 07 Mar 2020 07:10:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200306234204.847674001@linutronix.de> <20200307000259.448059232@linutronix.de>
+ <CALCETrV74siTTHHWRPv+Gz=YS3SAUA6eqB6FX1XaHKvZDCbaNg@mail.gmail.com> <87r1y4a3gw.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87r1y4a3gw.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 7 Mar 2020 07:10:47 -0800
+X-Gmail-Original-Message-ID: <CALCETrWc0wM1x-mAcKCPRUiGtzONtXiNVMFgWZwkRD3v3K3jsA@mail.gmail.com>
+Message-ID: <CALCETrWc0wM1x-mAcKCPRUiGtzONtXiNVMFgWZwkRD3v3K3jsA@mail.gmail.com>
+Subject: Re: [patch 2/2] x86/kvm: Sanitize kvm_async_pf_task_wait()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 16:53:35 +0100
-Olivier Moysan <olivier.moysan@st.com> wrote:
+On Sat, Mar 7, 2020 at 2:01 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy Lutomirski <luto@kernel.org> writes:
+> >> On Mar 6, 2020, at 4:12 PM, Thomas Gleixner <tglx@linutronix.de> wrote=
+:
+> >> Aside of that the actual code is a convoluted one fits it all swiss ar=
+my
+> >> knife. It is invoked from different places with different RCU constrai=
+nts:
+> >>
+> >> 1) Host side:
+> >>
+> >>   vcpu_enter_guest()
+> >>     kvm_x86_ops->handle_exit()
+> >>       kvm_handle_page_fault()
+> >>         kvm_async_pf_task_wait()
+> >>
+> >>   The invocation happens from fully preemptible context.
+> >
+> > I=E2=80=99m a bit baffled as to why the host uses this code at all inst=
+ead of
+> > just sleeping the old fashioned way when the guest takes a (host) page
+> > fault.  Oh well.
+>
+> If I can trust the crystal ball which I used to decode this maze then it
+> actually makes sense.
+>
+> Aysnc faults are faults which cannot be handled by the guest, i.e. the
+> host either pulled a page away under the guest or did not populate it in
+> the first place.
+>
+> So the reasoning is that if this happens the guest might be in a
+> situation where it can schedule other tasks instead of being stopped
+> completely by the host until the page arrives.
+>
+> Now you could argue that this mostly makes sense for CPL 0 faults, but
+> there is definitely code in the kernel where it makes sense as well,
+> e.g. exec. But of course as this is designed without a proper handshake
+> there is no way for the hypervisor to figure out whether it makes sense
+> or not.
+>
+> If the async fault cannot be delivered to the guest (async PF disabled,
+> async PF only enabled for CPL 0, IF =3D=3D 0) then the host utilizes the
+> same data structure and wait mechanism. That really makes sense.
+>
+> The part which does not make sense in the current implementation is the
+> kvm_async_pf_task_wait() trainwreck. A clear upfront separation of
+> schedulable and non schedulable wait mechanisms would have avoided all
+> the RCU duct tape nonsense and also spared me the brain damage caused by
+> reverse engineering this completely undocumented mess.
+>
+> >> +static void kvm_async_pf_task_wait_halt(u32 token)
+> >> +{
+> >> +    struct kvm_task_sleep_node n;
+> >> +
+> >> +    if (!kvm_async_pf_queue_task(token, true, &n))
+> >> +        return;
+> >>
+> >>  for (;;) {
+> >> -        if (!n.halted)
+> >> -            prepare_to_swait_exclusive(&n.wq, &wait, TASK_UNINTERRUPT=
+IBLE);
+> >>      if (hlist_unhashed(&n.link))
+> >>          break;
+> >> +        /*
+> >> +         * No point in doing anything about RCU here. Any RCU read
+> >> +         * side critical section or RCU watching section can be
+> >> +         * interrupted by VMEXITs and the host is free to keep the
+> >> +         * vCPU scheduled out as long as it sees fit. This is not
+> >> +         * any different just because of the halt induced voluntary
+> >> +         * VMEXIT.
+> >> +         *
+> >> +         * Also the async page fault could have interrupted any RCU
+> >> +         * watching context, so invoking rcu_irq_exit()/enter()
+> >> +         * around this is not gaining anything.
+> >> +         */
+> >> +        native_safe_halt();
+> >> +        local_irq_disable();
+> >
+> > What=E2=80=99s the local_irq_disable() here for? I would believe a
+> > lockdep_assert_irqs_disabled() somewhere in here would make sense.
+> > (Yes, I see you copied this from the old code. It=E2=80=99s still nonse=
+nse.)
+>
+> native_safe_halt() does:
+>
+>          STI
+>          HLT
+>
+> So the irq disable is required as the loop should exit with interrupts
+> disabled.
 
-> This commit fixes the following error:
-> "BUG: sleeping function called from invalid context at kernel/irq/chip.c"
-> 
-> In DMA mode suppress the trigger irq handler, and make the buffer
-> transfers directly in DMA callback, instead.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-looks good to me, but... fixes tag?
+Oops, should have looked at what native_safe_halt() does.
 
-We probably want to backport this so good to know when we introduced
-the issue.
+>
+> > I also find it truly bizarre that hlt actually works in this context.
+> > Does KVM in fact wake a HLTed guest that HLTed with IRQs off when a
+> > pending async pf is satisfied?  This would make sense if the wake
+> > event were an interrupt, but it=E2=80=99s not according to Paolo.
+>
+> See above. safe halt enables interrupts, which means IF =3D=3D 1 and the
+> host sanity check for IF =3D=3D 1 is satisfied.
+>
+> In fact, if e.g. some regular interrupt arrives before the page becomes
+> available and the guest entered the halt loop because the fault happened
+> inside a RCU read side critical section with preemption enabled, then
+> the interrupt might wake up another task, set need resched and this
+> other task can run.
 
-Thanks,
+Now I'm confused again.  Your patch is very careful not to schedule if
+we're in an RCU read-side critical section, but the regular preemption
+code (preempt_schedule_irq, etc) seems to be willing to schedule
+inside an RCU read-side critical section.  Why is the latter okay but
+not the async pf case?
 
-Jonathan
+Ignoring that, this still seems racy:
 
-> ---
-> This solution has been already discussed in the thread
-> https://lkml.org/lkml/2019/3/30/171, and applied in STM32 DFSDM driver:
-> e19ac9d9a978 ("iio: adc: stm32-dfsdm: fix sleep in atomic context")
-> ---
->  drivers/iio/adc/stm32-adc.c | 31 ++++++++++++++++++++++++++++---
->  1 file changed, 28 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> index 80c3f963527b..ae622ee6d08c 100644
-> --- a/drivers/iio/adc/stm32-adc.c
-> +++ b/drivers/iio/adc/stm32-adc.c
-> @@ -1418,8 +1418,30 @@ static unsigned int stm32_adc_dma_residue(struct stm32_adc *adc)
->  static void stm32_adc_dma_buffer_done(void *data)
->  {
->  	struct iio_dev *indio_dev = data;
-> +	struct stm32_adc *adc = iio_priv(indio_dev);
-> +	int residue = stm32_adc_dma_residue(adc);
-> +
-> +	/*
-> +	 * In DMA mode the trigger services of IIO are not used
-> +	 * (e.g. no call to iio_trigger_poll).
-> +	 * Calling irq handler associated to the hardware trigger is not
-> +	 * relevant as the conversions have already been done. Data
-> +	 * transfers are performed directly in DMA callback instead.
-> +	 * This implementation avoids to call trigger irq handler that
-> +	 * may sleep, in an atomic context (DMA irq handler context).
-> +	 */
-> +	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
->  
-> -	iio_trigger_poll_chained(indio_dev->trig);
-> +	while (residue >= indio_dev->scan_bytes) {
-> +		u16 *buffer = (u16 *)&adc->rx_buf[adc->bufi];
-> +
-> +		iio_push_to_buffers(indio_dev, buffer);
-> +
-> +		residue -= indio_dev->scan_bytes;
-> +		adc->bufi += indio_dev->scan_bytes;
-> +		if (adc->bufi >= adc->rx_buf_sz)
-> +			adc->bufi = 0;
-> +	}
->  }
->  
->  static int stm32_adc_dma_start(struct iio_dev *indio_dev)
-> @@ -1845,6 +1867,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
->  {
->  	struct iio_dev *indio_dev;
->  	struct device *dev = &pdev->dev;
-> +	irqreturn_t (*handler)(int irq, void *p) = NULL;
->  	struct stm32_adc *adc;
->  	int ret;
->  
-> @@ -1911,9 +1934,11 @@ static int stm32_adc_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		return ret;
->  
-> +	if (!adc->dma_chan)
-> +		handler = &stm32_adc_trigger_handler;
-> +
->  	ret = iio_triggered_buffer_setup(indio_dev,
-> -					 &iio_pollfunc_store_time,
-> -					 &stm32_adc_trigger_handler,
-> +					 &iio_pollfunc_store_time, handler,
->  					 &stm32_adc_buffer_setup_ops);
->  	if (ret) {
->  		dev_err(&pdev->dev, "buffer setup failed\n");
+STI
+nested #PF telling us to wake up
+#PF returns
+HLT
 
+doesn't this result in putting the CPU asleep for no good reason until
+the next interrupt hits?
+
+
+> > All this being said, the only remotely sane case is when regs->flags
+> > has IF=3D=3D1. Perhaps this code should actually do:
+> >
+> > WARN_ON(!(regs->flags & X86_EFLAGS_IF));
+>
+> Yes, that want's to be somewhere early and also cover the async wake
+> case. Neither wake nor wait can be injected when IF =3D=3D 0.
+
+Sadly, wrmsr to turn off async pf will inject wakeups even if IF =3D=3D 0.
