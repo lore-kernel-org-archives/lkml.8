@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318F6C10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79855C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A4C20801
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE3D2075A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCGDwc (ORCPT
+        id S1727023AbgCGDwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 6 Mar 2020 22:52:32 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11600 "EHLO huawei.com"
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11604 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726314AbgCGDwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:52:31 -0500
+        id S1726382AbgCGDwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 22:52:32 -0500
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0A236B3BACE8DD0E0889;
+        by Forcepoint Email with ESMTP id 18B8E1C941367119C118;
         Sat,  7 Mar 2020 11:52:29 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 7 Mar 2020 11:52:18 +0800
+ 14.3.439.0; Sat, 7 Mar 2020 11:52:19 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +33,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Guojia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 1/9] net: hns3: fix some mixed type assignment
-Date:   Sat, 7 Mar 2020 11:42:42 +0800
-Message-ID: <1583552570-51203-2-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 4/9] net: hns3: delete some reduandant code
+Date:   Sat, 7 Mar 2020 11:42:45 +0800
+Message-ID: <1583552570-51203-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583552570-51203-1-git-send-email-tanhuazhong@huawei.com>
 References: <1583552570-51203-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,107 +50,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guojia Liao <liaoguojia@huawei.com>
 
-This patch cleans up some incorrect type in assignment reported by sparse
-and compiler.
-The warning as below:
-- warning : restricted __le16 degrades to integer
-- warning : cast from restricted __le32
-- warning : cast from restricted __be32
-- warning : cast from restricted __be16
-and "mixed operation".
+In hclge_add_mc_addr_common() and hclge_rm_mc_addr_common(),
+variable req had been set as "0" by memset(), so it's unnecessary
+to set .entry_type field as "0" with hnae3_set_bit() again.
 
 Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 25 ++++++++++++----------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |  3 ++-
- 2 files changed, 16 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index 6295cf9..afa7c6ff 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -87,7 +87,7 @@ static int hclge_dbg_get_dfx_bd_num(struct hclge_dev *hdev, int offset)
- 
- 	entries_per_desc = ARRAY_SIZE(desc[0].data);
- 	index = offset % entries_per_desc;
--	return (int)desc[offset / entries_per_desc].data[index];
-+	return le32_to_cpu(desc[offset / entries_per_desc].data[index]);
- }
- 
- static int hclge_dbg_cmd_send(struct hclge_dev *hdev,
-@@ -583,7 +583,7 @@ static void hclge_dbg_dump_tm_map(struct hclge_dev *hdev,
- 	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
- 	if (ret)
- 		goto err_tm_map_cmd_send;
--	qset_id = nq_to_qs_map->qset_id & 0x3FF;
-+	qset_id = le16_to_cpu(nq_to_qs_map->qset_id) & 0x3FF;
- 
- 	cmd = HCLGE_OPC_TM_QS_TO_PRI_LINK;
- 	map = (struct hclge_qs_to_pri_link_cmd *)desc.data;
-@@ -623,7 +623,8 @@ static void hclge_dbg_dump_tm_map(struct hclge_dev *hdev,
- 		if (ret)
- 			goto err_tm_map_cmd_send;
- 
--		qset_maping[group_id] = bp_to_qs_map_cmd->qs_bit_map;
-+		qset_maping[group_id] =
-+			le32_to_cpu(bp_to_qs_map_cmd->qs_bit_map);
- 	}
- 
- 	dev_info(&hdev->pdev->dev, "index | tm bp qset maping:\n");
-@@ -826,6 +827,7 @@ static void hclge_dbg_dump_mng_table(struct hclge_dev *hdev)
- 	struct hclge_mac_ethertype_idx_rd_cmd *req0;
- 	char printf_buf[HCLGE_DBG_BUF_LEN];
- 	struct hclge_desc desc;
-+	u32 msg_egress_port;
- 	int ret, i;
- 
- 	dev_info(&hdev->pdev->dev, "mng tab:\n");
-@@ -867,20 +869,21 @@ static void hclge_dbg_dump_mng_table(struct hclge_dev *hdev)
- 			 HCLGE_DBG_BUF_LEN - strlen(printf_buf),
- 			 "%x   |%04x |%x   |%04x|%x   |%02x   |%02x   |",
- 			 !!(req0->flags & HCLGE_DBG_MNG_MAC_MASK_B),
--			 req0->ethter_type,
-+			 le16_to_cpu(req0->ethter_type),
- 			 !!(req0->flags & HCLGE_DBG_MNG_ETHER_MASK_B),
--			 req0->vlan_tag & HCLGE_DBG_MNG_VLAN_TAG,
-+			 le16_to_cpu(req0->vlan_tag) & HCLGE_DBG_MNG_VLAN_TAG,
- 			 !!(req0->flags & HCLGE_DBG_MNG_VLAN_MASK_B),
- 			 req0->i_port_bitmap, req0->i_port_direction);
- 
-+		msg_egress_port = le16_to_cpu(req0->egress_port);
- 		snprintf(printf_buf + strlen(printf_buf),
- 			 HCLGE_DBG_BUF_LEN - strlen(printf_buf),
--			 "%d     |%d    |%02d   |%04d|%x\n",
--			 !!(req0->egress_port & HCLGE_DBG_MNG_E_TYPE_B),
--			 req0->egress_port & HCLGE_DBG_MNG_PF_ID,
--			 (req0->egress_port >> 3) & HCLGE_DBG_MNG_VF_ID,
--			 req0->egress_queue,
--			 !!(req0->egress_port & HCLGE_DBG_MNG_DROP_B));
-+			 "%x     |%x    |%02x   |%04x|%x\n",
-+			 !!(msg_egress_port & HCLGE_DBG_MNG_E_TYPE_B),
-+			 msg_egress_port & HCLGE_DBG_MNG_PF_ID,
-+			 (msg_egress_port >> 3) & HCLGE_DBG_MNG_VF_ID,
-+			 le16_to_cpu(req0->egress_queue),
-+			 !!(msg_egress_port & HCLGE_DBG_MNG_DROP_B));
- 
- 		dev_info(&hdev->pdev->dev, "%s", printf_buf);
- 	}
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 89d3523..e64027c 100644
+index e64027c..6da55fb3 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -10252,8 +10252,9 @@ static int hclge_dfx_reg_fetch_data(struct hclge_desc *desc_src, int bd_num,
- static int hclge_get_dfx_reg_len(struct hclge_dev *hdev, int *len)
- {
- 	u32 dfx_reg_type_num = ARRAY_SIZE(hclge_dfx_bd_offset_list);
--	int data_len_per_desc, data_len, bd_num, i;
-+	int data_len_per_desc, bd_num, i;
- 	int bd_num_list[BD_LIST_MAX_NUM];
-+	u32 data_len;
- 	int ret;
+@@ -7354,7 +7354,6 @@ int hclge_add_mc_addr_common(struct hclge_vport *vport,
+ 		return -EINVAL;
+ 	}
+ 	memset(&req, 0, sizeof(req));
+-	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
+ 	hclge_prepare_mac_addr(&req, addr, true);
+ 	status = hclge_lookup_mac_vlan_tbl(vport, &req, desc, true);
+ 	if (status) {
+@@ -7399,7 +7398,6 @@ int hclge_rm_mc_addr_common(struct hclge_vport *vport,
+ 	}
  
- 	ret = hclge_get_dfx_reg_bd_num(hdev, bd_num_list, dfx_reg_type_num);
+ 	memset(&req, 0, sizeof(req));
+-	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
+ 	hclge_prepare_mac_addr(&req, addr, true);
+ 	status = hclge_lookup_mac_vlan_tbl(vport, &req, desc, true);
+ 	if (!status) {
 -- 
 2.7.4
 
