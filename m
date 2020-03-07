@@ -2,159 +2,289 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81552C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E825C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574D2206D5
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492D620675
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 07:20:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hFwvKFlt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jW2BNI0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgCGHFO (ORCPT
+        id S1726105AbgCGHUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 02:05:14 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:2841 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbgCGHFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 02:05:14 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48ZFqW22V5zB09Zy;
-        Sat,  7 Mar 2020 08:05:11 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=hFwvKFlt; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id JH70JFMo2Nhm; Sat,  7 Mar 2020 08:05:11 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48ZFqW06j2zB09Zx;
-        Sat,  7 Mar 2020 08:05:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1583564711; bh=KLykoiwakmvXlj7iOgiNeBA+k4S6on8FDV27weKg6MI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hFwvKFlt5tItEoeChiMcVbq8Z6WEJiAIueL914VqsjAkNiTW/tX4E4mkXgZPRPVQp
-         1TSwGC1wl0uEf1SM3tvrvXA0/srRG2BvZ2uOnFi+rWlXqmPEgF9Of2NNwJRqkfVxFW
-         8RUJEw8G1tWI+NWaS36EliXDmOzscoTf3q3gSbXQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D550D8B784;
-        Sat,  7 Mar 2020 08:05:11 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id OhKGFoGl11OV; Sat,  7 Mar 2020 08:05:11 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4A0DC8B776;
-        Sat,  7 Mar 2020 08:05:09 +0100 (CET)
-Subject: Re: [PATCH V15] mm/debug: Add tests validating architecture page
- table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Qian Cai <cai@lca.pw>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <61250cdc-f80b-2e50-5168-2ec67ec6f1e6@arm.com>
- <CEEAD95E-D468-4C58-A65B-7E8AED91168A@lca.pw>
- <a45834bc-e6f2-ac21-de9e-1aff67d12797@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <c40d907a-b64b-ae0d-e58f-33dddf0e8edc@c-s.fr>
-Date:   Sat, 7 Mar 2020 08:05:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 7 Mar 2020 02:20:11 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35326 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbgCGHUL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 02:20:11 -0500
+Received: by mail-pf1-f193.google.com with SMTP id u68so1538993pfb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 23:20:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e3PMYYBHQGex2U1IYow6ZhmcfHguiYqwTzhAXYhQp2g=;
+        b=jW2BNI0m13J9kLuQvuXNLnXtrbLSv1uykgB+aL82tn77ODy9ZIoiKHtxQ1I5n8TVSl
+         sAiZT3NOqvSMzS96NDpFRPc1B/nJ+IQEPGuZSKY1Oe3muoyHhsLuw09txYt6Z1Q1dIXN
+         lFWdJu6uhqsfU/AR0uA2HdZb5IyjRRGZgyN84hJMZOPqUEX43wjM9k0h8JG2LSB/GxDp
+         Dg2ow6Tc4jtJHCwZ2h7g2QmUYmlGXyT0aSm2tyCiMDjl1q45ZHWFNTQRo6Z0geFlJQjp
+         ROq3jZ/hA7lN55+lmi2qXsEFenbkr5+qF6Wd/z23ILScvrlQuW1+NoZL1hLnRzQG3BnE
+         WLaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e3PMYYBHQGex2U1IYow6ZhmcfHguiYqwTzhAXYhQp2g=;
+        b=hIEgfwfRvHGCYWZxlBCb5uiewejhH5EmQeCoLvEMnDAxGgU+lctwPBD+fJVZQTuOde
+         yHmEDkUZfk1fHl9lIHNg8HtaNbdTx3o0TXfskN7loyISRD5Wd/uy0E27PRfkwuOFjs+F
+         wHF6668mQKNbL1yLMpGR2zD2a36R+qU342VPtAKoWEqklZNH84KSwZGQOqsif/NEJJdg
+         +8RuSGdbdC4gV6GREdV8sE/Z3oCoPCdobfe9M1gO8OQ6Rt1fec+LnOhZYXdxXq2lLigl
+         EB421+TTrsTzom4FV8UpwcXHh+JWM7wogmMcrGxCph52ZXt8ELaQxGAqqBu+K5jp1Qfk
+         GPGQ==
+X-Gm-Message-State: ANhLgQ3fr8jy7WH0Ogp3Z6Dn+QKUdA6AjC140ngThxZPF5cOgrsvmVO4
+        FtCD511sZ5h5JjbAzTo9vyAKyA==
+X-Google-Smtp-Source: ADFU+vt5OUcqIil2Ct4vz63TlxrwHEsqPTuii1IorFFwcmTz22ozqVVbfCRZsWhbsRGbPxnR73O5PA==
+X-Received: by 2002:a62:fb07:: with SMTP id x7mr7417872pfm.125.1583565607694;
+        Fri, 06 Mar 2020 23:20:07 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y14sm8776103pfp.59.2020.03.06.23.20.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 23:20:06 -0800 (PST)
+Date:   Fri, 6 Mar 2020 23:20:04 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        robh@kernel.org, linux-kernel@vger.kernel.org,
+        Yu Chen <chenyu56@huawei.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Guillaume Gardet <Guillaume.Gardet@arm.com>,
+        devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v7 06/18] usb: dwc3: Registering a role switch in the DRD
+ code.
+Message-ID: <20200307072004.GI1094083@builder>
+References: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
+ <20200303171159.246992-7-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <a45834bc-e6f2-ac21-de9e-1aff67d12797@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303171159.246992-7-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 03 Mar 09:11 PST 2020, Bryan O'Donoghue wrote:
 
-
-Le 07/03/2020 à 01:56, Anshuman Khandual a écrit :
+> From: Yu Chen <chenyu56@huawei.com>
 > 
+> The Type-C drivers use USB role switch API to inform the
+> system about the negotiated data role, so registering a role
+> switch in the DRD code in order to support platforms with
+> USB Type-C connectors.
 > 
-> On 03/07/2020 06:04 AM, Qian Cai wrote:
->>
->>
->>> On Mar 6, 2020, at 7:03 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
->>>
->>> Hmm, set_pte_at() function is not preferred here for these tests. The idea
->>> is to avoid or atleast minimize TLB/cache flushes triggered from these sort
->>> of 'static' tests. set_pte_at() is platform provided and could/might trigger
->>> these flushes or some other platform specific synchronization stuff. Just
->>
->> Why is that important for this debugging option?
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> CC: ShuFan Lee <shufan_lee@richtek.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Jun Li <lijun.kernel@gmail.com>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Guillaume Gardet <Guillaume.Gardet@arm.com>
+> Cc: Jack Pham <jackp@codeaurora.org>
+> Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/usb/dwc3/core.h |  3 ++
+>  drivers/usb/dwc3/drd.c  | 77 ++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 79 insertions(+), 1 deletion(-)
 > 
-> Primarily reason is to avoid TLB/cache flush instructions on the system
-> during these tests that only involve transforming different page table
-> level entries through helpers. Unless really necessary, why should it
-> emit any TLB/cache flush instructions ?
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 77c4a9abe365..a99e57636172 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/usb/ch9.h>
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/role.h>
+>  #include <linux/ulpi/interface.h>
+>  
+>  #include <linux/phy/phy.h>
+> @@ -953,6 +954,7 @@ struct dwc3_scratchpad_array {
+>   * @hsphy_mode: UTMI phy mode, one of following:
+>   *		- USBPHY_INTERFACE_MODE_UTMI
+>   *		- USBPHY_INTERFACE_MODE_UTMIW
+> + * @role_sw: usb_role_switch handle
+>   * @usb2_phy: pointer to USB2 PHY
+>   * @usb3_phy: pointer to USB3 PHY
+>   * @usb2_generic_phy: pointer to USB2 PHY
+> @@ -1086,6 +1088,7 @@ struct dwc3 {
+>  	struct extcon_dev	*edev;
+>  	struct notifier_block	edev_nb;
+>  	enum usb_phy_interface	hsphy_mode;
+> +	struct usb_role_switch	*role_sw;
+>  
+>  	u32			fladj;
+>  	u32			irq_gadget;
+> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> index c946d64142ad..331c6e997f0c 100644
+> --- a/drivers/usb/dwc3/drd.c
+> +++ b/drivers/usb/dwc3/drd.c
+> @@ -476,6 +476,73 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
+>  	return edev;
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
+> +#define ROLE_SWITCH 1
+> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
 
-What's the problem with thoses flushes ?
+The prototype for set and get was changed in 'bce3052f0c16 ("usb: roles:
+Provide the switch drivers handle to the switch in the API")', so this
+no longer compiles.
 
+The new prototype should be:
+static int dwc3_usb_role_switch_set(struct usb_role_switch *sw, enum usb_role role)
+
+> +{
+> +	struct dwc3 *dwc = dev_get_drvdata(dev);
+
+And this would then be:
+	struct dwc3 *dwc = usb_role_switch_get_drvdata(sw);
+
+> +	u32 mode;
+> +
+> +	switch (role) {
+> +	case USB_ROLE_HOST:
+> +		mode = DWC3_GCTL_PRTCAP_HOST;
+> +		break;
+> +	case USB_ROLE_DEVICE:
+> +		mode = DWC3_GCTL_PRTCAP_DEVICE;
+> +		break;
+> +	default:
+> +		mode = DWC3_GCTL_PRTCAP_DEVICE;
+> +		break;
+> +	}
+> +
+> +	dwc3_set_mode(dwc, mode);
+> +	return 0;
+> +}
+> +
+> +static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
+
+static enum usb_role dwc3_usb_role_switch_get(struct usb_role_switch sw)
+
+> +{
+> +	struct dwc3 *dwc = dev_get_drvdata(dev);
+
+	struct dwc3 *dwc = usb_role_switch_get_drvdata(sw);
+
+> +	unsigned long flags;
+> +	enum usb_role role;
+> +
+> +	spin_lock_irqsave(&dwc->lock, flags);
+> +	switch (dwc->current_dr_role) {
+> +	case DWC3_GCTL_PRTCAP_HOST:
+> +		role = USB_ROLE_HOST;
+> +		break;
+> +	case DWC3_GCTL_PRTCAP_DEVICE:
+> +		role = USB_ROLE_DEVICE;
+> +		break;
+> +	case DWC3_GCTL_PRTCAP_OTG:
+> +		role = dwc->current_otg_role;
+> +		break;
+> +	default:
+> +		role = USB_ROLE_DEVICE;
+> +		break;
+> +	}
+> +	spin_unlock_irqrestore(&dwc->lock, flags);
+> +	return role;
+> +}
+> +
+> +static int dwc3_setup_role_switch(struct dwc3 *dwc)
+> +{
+> +	struct usb_role_switch_desc dwc3_role_switch = {NULL};
+> +
+> +	dwc3_role_switch.fwnode = dev_fwnode(dwc->dev);
+> +	dwc3_role_switch.set = dwc3_usb_role_switch_set;
+> +	dwc3_role_switch.get = dwc3_usb_role_switch_get;
+
+And you need to pass dwc as .driver_data here:
+
+	dwc3_role_switch.driver_data = dwc;
+
+With this the series compiles and both dwc3 devices probes nicely. I
+haven't done any further testing though...
+
+Regards,
+Bjorn
+
+> +	dwc->role_sw = usb_role_switch_register(dwc->dev, &dwc3_role_switch);
+> +	if (IS_ERR(dwc->role_sw))
+> +		return PTR_ERR(dwc->role_sw);
+> +
+> +	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
+> +	return 0;
+> +}
+> +#else
+> +#define ROLE_SWITCH 0
+> +#define dwc3_setup_role_switch(x) 0
+> +#endif
+> +
+>  int dwc3_drd_init(struct dwc3 *dwc)
+>  {
+>  	int ret, irq;
+> @@ -484,7 +551,12 @@ int dwc3_drd_init(struct dwc3 *dwc)
+>  	if (IS_ERR(dwc->edev))
+>  		return PTR_ERR(dwc->edev);
+>  
+> -	if (dwc->edev) {
+> +	if (ROLE_SWITCH &&
+> +	    device_property_read_bool(dwc->dev, "usb-role-switch")) {
+> +		ret = dwc3_setup_role_switch(dwc);
+> +		if (ret < 0)
+> +			return ret;
+> +	} else if (dwc->edev) {
+>  		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
+>  		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
+>  					       &dwc->edev_nb);
+> @@ -531,6 +603,9 @@ void dwc3_drd_exit(struct dwc3 *dwc)
+>  {
+>  	unsigned long flags;
+>  
+> +	if (dwc->role_sw)
+> +		usb_role_switch_unregister(dwc->role_sw);
+> +
+>  	if (dwc->edev)
+>  		extcon_unregister_notifier(dwc->edev, EXTCON_USB_HOST,
+>  					   &dwc->edev_nb);
+> -- 
+> 2.25.1
 > 
->>
->>> wondering is there specific reason with respect to the soft lock up problem
->>> making it necessary to use set_pte_at() rather than a simple WRITE_ONCE() ?
->>
->> Looks at the s390 version of set_pte_at(), it has this comment,
->> vmaddr);
->>
->> /*
->>   * Certain architectures need to do special things when PTEs
->>   * within a page table are directly modified.  Thus, the following
->>   * hook is made available.
->>   */
->>
->> I can only guess that powerpc  could be the same here.
-> 
-> This comment is present in multiple platforms while defining set_pte_at().
-> Is not 'barrier()' here alone good enough ? Else what exactly set_pte_at()
-> does as compared to WRITE_ONCE() that avoids the soft lock up, just trying
-> to understand.
-> 
-
-
-Argh ! I didn't realise that you were writing directly into the page 
-tables. When it works, that's only by chance I guess.
-
-To properly set the page table entries, set_pte_at() has to be used:
-- On powerpc 8xx, with 16k pages, the page table entry must be copied 
-four times. set_pte_at() does it, WRITE_ONCE() doesn't.
-- On powerpc book3s/32 (hash MMU), the flag _PAGE_HASHPTE must be 
-preserved among writes. set_pte_at() preserves it, WRITE_ONCE() doesn't.
-
-set_pte_at() also does a few other mandatory things, like calling 
-pte_mkpte()
-
-So, the WRITE_ONCE() must definitely become a set_pte_at()
-
-Christophe
