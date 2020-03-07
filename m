@@ -2,244 +2,374 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C90C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D08C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9042A206CC
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441A0206CC
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 01:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583544039;
+	bh=tKs0d9Kq0Y/zSX5jcC5OD9ImyGddCv9D1ncrA85uCUc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=o0F6F9wgIY6H+S49QXvXemx4v+9yLN9Z8YKIWbWTeV6S5kUR1TRUe+WQ8KTWmtDV+
+	 7CuGMawaZ9ZUwFQ48pJxu0TQ6qy12XlWDp2FNkufPZgOOM1GHYc0taI1d7eW4TOs5/
+	 wMAEPgUNi8hPcNqpsUpLYs1TQdbo/+hm9gaoovQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgCGBTM (ORCPT
+        id S1726846AbgCGBUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 20:19:12 -0500
-Received: from mga06.intel.com ([134.134.136.31]:44266 "EHLO mga06.intel.com"
+        Fri, 6 Mar 2020 20:20:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgCGBTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 20:19:12 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Mar 2020 17:19:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,524,1574150400"; 
-   d="scan'208";a="288124344"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Mar 2020 17:19:06 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jAO7M-000EES-Hp; Sat, 07 Mar 2020 09:19:04 +0800
-Date:   Sat, 7 Mar 2020 09:18:22 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, cavery@redhat.com, vkuznets@redhat.com,
-        jan.kiszka@siemens.com, wei.huang2@amd.com
-Subject: Re: [PATCH 3/4] KVM: nSVM: implement check_nested_events for
- interrupts
-Message-ID: <202003070954.akHT8HEM%lkp@intel.com>
-References: <1583403227-11432-4-git-send-email-pbonzini@redhat.com>
+        id S1726269AbgCGBUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 20:20:31 -0500
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AB40206CC;
+        Sat,  7 Mar 2020 01:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583544030;
+        bh=tKs0d9Kq0Y/zSX5jcC5OD9ImyGddCv9D1ncrA85uCUc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=q+NkS8vRoVTkd9rU2ut9EXjn+06UBked/9OiXI/5EdijyHZhV+JoUTiMge6cDyVQH
+         tsMuXFU18tlU7E1QPkOERGXZOaPuFRr7Or0mJYJ/ZGG9OH3cwz9cGI1J6yyJyM5c0R
+         S7aHn+XwVz1AxVdaLuGiZnkh1cqauKHatr4kaU7U=
+Date:   Fri, 6 Mar 2020 17:20:27 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2 5/9] net: ethernet: ti: introduce
+ am65x/j721e gigabit eth subsystem driver
+Message-ID: <20200306172027.18d88fb0@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <20200306234734.15014-6-grygorii.strashko@ti.com>
+References: <20200306234734.15014-1-grygorii.strashko@ti.com>
+        <20200306234734.15014-6-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583403227-11432-4-git-send-email-pbonzini@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+> +static void am65_cpsw_get_drvinfo(struct net_device *ndev,
+> +				  struct ethtool_drvinfo *info)
+> +{
+> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
+> +
+> +	strlcpy(info->driver, dev_driver_string(common->dev),
+> +		sizeof(info->driver));
+> +	strlcpy(info->version, AM65_CPSW_DRV_VER, sizeof(info->version));
 
-I love your patch! Perhaps something to improve:
+Please remove the driver version, use of driver versions is being deprecated upstream.
 
-[auto build test WARNING on kvm/linux-next]
-[also build test WARNING on linus/master v5.6-rc4 next-20200306]
-[cannot apply to linux/master vhost/linux-next]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> +	strlcpy(info->bus_info, dev_name(common->dev), sizeof(info->bus_info));
+> +}
 
-url:    https://github.com/0day-ci/linux/commits/Paolo-Bonzini/KVM-nSVM-first-step-towards-fixing-event-injection/20200306-015933
-base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git linux-next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-174-g094d5a94-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> +static void am65_cpsw_get_channels(struct net_device *ndev,
+> +				   struct ethtool_channels *ch)
+> +{
+> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
+> +
+> +	ch->max_combined = 0;
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+no need to zero fields
 
+> +	ch->max_rx = AM65_CPSW_MAX_RX_QUEUES;
+> +	ch->max_tx = AM65_CPSW_MAX_TX_QUEUES;
+> +	ch->max_other = 0;
+> +	ch->other_count = 0;
+> +	ch->rx_count = AM65_CPSW_MAX_RX_QUEUES;
+> +	ch->tx_count = common->tx_ch_num;
+> +	ch->combined_count = 0;
+> +}
+> +
+> +static int am65_cpsw_set_channels(struct net_device *ndev,
+> +				  struct ethtool_channels *chs)
+> +{
+> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
+> +
+> +	if (chs->combined_count)
+> +		return -EINVAL;
 
-sparse warnings: (new ones prefixed by >>)
+core will check if its larger than max_combined
 
->> arch/x86/kvm/svm.c:7538:32: sparse: sparse: incorrect type in initializer (different argument counts)
->> arch/x86/kvm/svm.c:7538:32: sparse:    expected int ( *check_nested_events )( ... )
->> arch/x86/kvm/svm.c:7538:32: sparse:    got int ( * )( ... )
-   arch/x86/include/asm/paravirt.h:200:9: sparse: sparse: cast truncates bits from constant value (100000000 becomes 0)
-   arch/x86/include/asm/paravirt.h:200:9: sparse: sparse: cast truncates bits from constant value (100000000 becomes 0)
-   arch/x86/include/asm/bitops.h:77:37: sparse: sparse: cast truncates bits from constant value (ffffff7f becomes 7f)
-   arch/x86/kvm/svm.c:6920:60: sparse: sparse: dereference of noderef expression
-   arch/x86/kvm/svm.c:6920:60: sparse: sparse: dereference of noderef expression
-   arch/x86/kvm/svm.c:6943:14: sparse: sparse: dereference of noderef expression
-   arch/x86/kvm/svm.c:6949:59: sparse: sparse: dereference of noderef expression
-   arch/x86/kvm/svm.c:6949:59: sparse: sparse: dereference of noderef expression
-   arch/x86/kvm/svm.c:6963:14: sparse: sparse: dereference of noderef expression
-   arch/x86/kvm/svm.c:6988:70: sparse: sparse: dereference of noderef expression
-   arch/x86/kvm/svm.c:6988:70: sparse: sparse: dereference of noderef expression
+> +	if (!chs->rx_count || !chs->tx_count)
+> +		return -EINVAL;
+> +
+> +	if (chs->rx_count != 1 ||
+> +	    chs->tx_count > AM65_CPSW_MAX_TX_QUEUES)
+> +		return -EINVAL;
 
-vim +7538 arch/x86/kvm/svm.c
+ditto
 
-  7396	
-  7397	static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
-  7398		.cpu_has_kvm_support = has_svm,
-  7399		.disabled_by_bios = is_disabled,
-  7400		.hardware_setup = svm_hardware_setup,
-  7401		.hardware_unsetup = svm_hardware_teardown,
-  7402		.check_processor_compatibility = svm_check_processor_compat,
-  7403		.hardware_enable = svm_hardware_enable,
-  7404		.hardware_disable = svm_hardware_disable,
-  7405		.cpu_has_accelerated_tpr = svm_cpu_has_accelerated_tpr,
-  7406		.has_emulated_msr = svm_has_emulated_msr,
-  7407	
-  7408		.vcpu_create = svm_create_vcpu,
-  7409		.vcpu_free = svm_free_vcpu,
-  7410		.vcpu_reset = svm_vcpu_reset,
-  7411	
-  7412		.vm_alloc = svm_vm_alloc,
-  7413		.vm_free = svm_vm_free,
-  7414		.vm_init = svm_vm_init,
-  7415		.vm_destroy = svm_vm_destroy,
-  7416	
-  7417		.prepare_guest_switch = svm_prepare_guest_switch,
-  7418		.vcpu_load = svm_vcpu_load,
-  7419		.vcpu_put = svm_vcpu_put,
-  7420		.vcpu_blocking = svm_vcpu_blocking,
-  7421		.vcpu_unblocking = svm_vcpu_unblocking,
-  7422	
-  7423		.update_bp_intercept = update_bp_intercept,
-  7424		.get_msr_feature = svm_get_msr_feature,
-  7425		.get_msr = svm_get_msr,
-  7426		.set_msr = svm_set_msr,
-  7427		.get_segment_base = svm_get_segment_base,
-  7428		.get_segment = svm_get_segment,
-  7429		.set_segment = svm_set_segment,
-  7430		.get_cpl = svm_get_cpl,
-  7431		.get_cs_db_l_bits = kvm_get_cs_db_l_bits,
-  7432		.decache_cr0_guest_bits = svm_decache_cr0_guest_bits,
-  7433		.decache_cr4_guest_bits = svm_decache_cr4_guest_bits,
-  7434		.set_cr0 = svm_set_cr0,
-  7435		.set_cr3 = svm_set_cr3,
-  7436		.set_cr4 = svm_set_cr4,
-  7437		.set_efer = svm_set_efer,
-  7438		.get_idt = svm_get_idt,
-  7439		.set_idt = svm_set_idt,
-  7440		.get_gdt = svm_get_gdt,
-  7441		.set_gdt = svm_set_gdt,
-  7442		.get_dr6 = svm_get_dr6,
-  7443		.set_dr6 = svm_set_dr6,
-  7444		.set_dr7 = svm_set_dr7,
-  7445		.sync_dirty_debug_regs = svm_sync_dirty_debug_regs,
-  7446		.cache_reg = svm_cache_reg,
-  7447		.get_rflags = svm_get_rflags,
-  7448		.set_rflags = svm_set_rflags,
-  7449	
-  7450		.tlb_flush = svm_flush_tlb,
-  7451		.tlb_flush_gva = svm_flush_tlb_gva,
-  7452	
-  7453		.run = svm_vcpu_run,
-  7454		.handle_exit = handle_exit,
-  7455		.skip_emulated_instruction = skip_emulated_instruction,
-  7456		.update_emulated_instruction = NULL,
-  7457		.set_interrupt_shadow = svm_set_interrupt_shadow,
-  7458		.get_interrupt_shadow = svm_get_interrupt_shadow,
-  7459		.patch_hypercall = svm_patch_hypercall,
-  7460		.set_irq = svm_set_irq,
-  7461		.set_nmi = svm_inject_nmi,
-  7462		.queue_exception = svm_queue_exception,
-  7463		.cancel_injection = svm_cancel_injection,
-  7464		.interrupt_allowed = svm_interrupt_allowed,
-  7465		.nmi_allowed = svm_nmi_allowed,
-  7466		.get_nmi_mask = svm_get_nmi_mask,
-  7467		.set_nmi_mask = svm_set_nmi_mask,
-  7468		.enable_nmi_window = enable_nmi_window,
-  7469		.enable_irq_window = enable_irq_window,
-  7470		.update_cr8_intercept = update_cr8_intercept,
-  7471		.set_virtual_apic_mode = svm_set_virtual_apic_mode,
-  7472		.refresh_apicv_exec_ctrl = svm_refresh_apicv_exec_ctrl,
-  7473		.check_apicv_inhibit_reasons = svm_check_apicv_inhibit_reasons,
-  7474		.pre_update_apicv_exec_ctrl = svm_pre_update_apicv_exec_ctrl,
-  7475		.load_eoi_exitmap = svm_load_eoi_exitmap,
-  7476		.hwapic_irr_update = svm_hwapic_irr_update,
-  7477		.hwapic_isr_update = svm_hwapic_isr_update,
-  7478		.sync_pir_to_irr = kvm_lapic_find_highest_irr,
-  7479		.apicv_post_state_restore = avic_post_state_restore,
-  7480	
-  7481		.set_tss_addr = svm_set_tss_addr,
-  7482		.set_identity_map_addr = svm_set_identity_map_addr,
-  7483		.get_tdp_level = get_npt_level,
-  7484		.get_mt_mask = svm_get_mt_mask,
-  7485	
-  7486		.get_exit_info = svm_get_exit_info,
-  7487	
-  7488		.get_lpage_level = svm_get_lpage_level,
-  7489	
-  7490		.cpuid_update = svm_cpuid_update,
-  7491	
-  7492		.rdtscp_supported = svm_rdtscp_supported,
-  7493		.invpcid_supported = svm_invpcid_supported,
-  7494		.mpx_supported = svm_mpx_supported,
-  7495		.xsaves_supported = svm_xsaves_supported,
-  7496		.umip_emulated = svm_umip_emulated,
-  7497		.pt_supported = svm_pt_supported,
-  7498		.pku_supported = svm_pku_supported,
-  7499	
-  7500		.set_supported_cpuid = svm_set_supported_cpuid,
-  7501	
-  7502		.has_wbinvd_exit = svm_has_wbinvd_exit,
-  7503	
-  7504		.read_l1_tsc_offset = svm_read_l1_tsc_offset,
-  7505		.write_l1_tsc_offset = svm_write_l1_tsc_offset,
-  7506	
-  7507		.set_tdp_cr3 = set_tdp_cr3,
-  7508	
-  7509		.check_intercept = svm_check_intercept,
-  7510		.handle_exit_irqoff = svm_handle_exit_irqoff,
-  7511	
-  7512		.request_immediate_exit = __kvm_request_immediate_exit,
-  7513	
-  7514		.sched_in = svm_sched_in,
-  7515	
-  7516		.pmu_ops = &amd_pmu_ops,
-  7517		.deliver_posted_interrupt = svm_deliver_avic_intr,
-  7518		.dy_apicv_has_pending_interrupt = svm_dy_apicv_has_pending_interrupt,
-  7519		.update_pi_irte = svm_update_pi_irte,
-  7520		.setup_mce = svm_setup_mce,
-  7521	
-  7522		.smi_allowed = svm_smi_allowed,
-  7523		.pre_enter_smm = svm_pre_enter_smm,
-  7524		.pre_leave_smm = svm_pre_leave_smm,
-  7525		.enable_smi_window = enable_smi_window,
-  7526	
-  7527		.mem_enc_op = svm_mem_enc_op,
-  7528		.mem_enc_reg_region = svm_register_enc_region,
-  7529		.mem_enc_unreg_region = svm_unregister_enc_region,
-  7530	
-  7531		.nested_enable_evmcs = NULL,
-  7532		.nested_get_evmcs_version = NULL,
-  7533	
-  7534		.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
-  7535	
-  7536		.apic_init_signal_blocked = svm_apic_init_signal_blocked,
-  7537	
-> 7538		.check_nested_events = svm_check_nested_events,
-  7539	};
-  7540	
+> +	/* Check if interface is up. Can change the num queues when
+> +	 * the interface is down.
+> +	 */
+> +	if (netif_running(ndev))
+> +		return -EBUSY;
+> +
+> +	am65_cpsw_nuss_remove_tx_chns(common);
+> +
+> +	return am65_cpsw_nuss_update_tx_chns(common, chs->tx_count);
+> +}
+> +
+> +static void am65_cpsw_get_ringparam(struct net_device *ndev,
+> +				    struct ethtool_ringparam *ering)
+> +{
+> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
+> +
+> +	/* not supported */
+> +	ering->tx_max_pending = 0;
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+no need to zero fields
+
+> +	ering->tx_pending = common->tx_chns[0].descs_num;
+> +	ering->rx_max_pending = 0;
+> +	ering->rx_pending = common->rx_chns.descs_num;
+> +}
+
+> +EXPORT_SYMBOL_GPL(am65_cpsw_nuss_adjust_link);
+
+Why does this need to be exported?
+
+> +	psdata = cppi5_hdesc_get_psdata(desc_rx);
+> +	csum_info = psdata[2];
+> +	dev_dbg(dev, "%s rx csum_info:%#x\n", __func__, csum_info);
+> +
+> +	dma_unmap_single(dev, buf_dma, buf_dma_len, DMA_FROM_DEVICE);
+> +
+> +	k3_udma_desc_pool_free(rx_chn->desc_pool, desc_rx);
+> +
+> +	if (unlikely(!netif_running(skb->dev))) {
+
+This is strange, does am65_cpsw_nuss_ndo_slave_stop() not stop RX?
+
+> +		dev_kfree_skb_any(skb);
+> +		return 0;
+> +	}
+> +
+> +	new_skb = netdev_alloc_skb_ip_align(ndev, AM65_CPSW_MAX_PACKET_SIZE);
+> +	if (new_skb) {
+> +		skb_put(skb, pkt_len);
+> +		skb->protocol = eth_type_trans(skb, ndev);
+> +		am65_cpsw_nuss_rx_csum(skb, csum_info);
+> +		napi_gro_receive(&common->napi_rx, skb);
+> +
+> +		ndev_priv = netdev_priv(ndev);
+> +		stats = this_cpu_ptr(ndev_priv->stats);
+> +
+> +		u64_stats_update_begin(&stats->syncp);
+> +		stats->rx_packets++;
+> +		stats->rx_bytes += pkt_len;
+> +		u64_stats_update_end(&stats->syncp);
+> +		kmemleak_not_leak(new_skb);
+> +	} else {
+> +		ndev->stats.rx_dropped++;
+> +		new_skb = skb;
+> +	}
+
+> +static int am65_cpsw_nuss_tx_poll(struct napi_struct *napi_tx, int budget)
+> +{
+> +	struct am65_cpsw_tx_chn *tx_chn = am65_cpsw_napi_to_tx_chn(napi_tx);
+> +	int num_tx;
+> +
+> +	num_tx = am65_cpsw_nuss_tx_compl_packets(tx_chn->common, tx_chn->id,
+> +						 budget);
+> +	if (num_tx < budget) {
+
+The budget is for RX, you can just complete all TX on a NAPI poll.
+
+> +		napi_complete(napi_tx);
+> +		enable_irq(tx_chn->irq);
+> +	}
+> +
+> +	return num_tx;
+> +}
+
+> +static netdev_tx_t am65_cpsw_nuss_ndo_slave_xmit(struct sk_buff *skb,
+> +						 struct net_device *ndev)
+> +{
+> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
+> +	struct cppi5_host_desc_t *first_desc, *next_desc, *cur_desc;
+> +	struct am65_cpsw_port *port = am65_ndev_to_port(ndev);
+> +	struct device *dev = common->dev;
+> +	struct am65_cpsw_tx_chn *tx_chn;
+> +	struct netdev_queue *netif_txq;
+> +	dma_addr_t desc_dma, buf_dma;
+> +	int ret, q_idx, i;
+> +	void **swdata;
+> +	u32 *psdata;
+> +	u32 pkt_len;
+> +
+> +	/* frag list based linkage is not supported for now. */
+> +	if (skb_shinfo(skb)->frag_list) {
+> +		dev_err_ratelimited(dev, "NETIF_F_FRAGLIST not supported\n");
+> +		ret = -EINVAL;
+> +		goto drop_free_skb;
+> +	}
+
+You don't advertise the feature, there is no need for this check.
+
+> +	/* padding enabled in hw */
+> +	pkt_len = skb_headlen(skb);
+> +
+> +	q_idx = skb_get_queue_mapping(skb);
+> +	dev_dbg(dev, "%s skb_queue:%d\n", __func__, q_idx);
+> +	q_idx = q_idx % common->tx_ch_num;
+
+You should never see a packet for ring above your ring count, this
+modulo is unnecessary.
+
+> +	tx_chn = &common->tx_chns[q_idx];
+> +	netif_txq = netdev_get_tx_queue(ndev, q_idx);
+> +
+> +	/* Map the linear buffer */
+> +	buf_dma = dma_map_single(dev, skb->data, pkt_len,
+> +				 DMA_TO_DEVICE);
+> +	if (unlikely(dma_mapping_error(dev, buf_dma))) {
+> +		dev_err(dev, "Failed to map tx skb buffer\n");
+
+You probably don't want to print errors when memory gets depleted.
+Counter is enough
+
+> +		ret = -EINVAL;
+
+EINVAL is not a valid netdev_tx_t..
+
+> +		ndev->stats.tx_errors++;
+> +		goto drop_stop_q;
+
+Why stop queue on memory mapping error? What will re-enable it?
+
+> +	}
+> +
+> +	first_desc = k3_udma_desc_pool_alloc(tx_chn->desc_pool);
+> +	if (!first_desc) {
+> +		dev_dbg(dev, "Failed to allocate descriptor\n");
+
+ret not set
+
+> +		dma_unmap_single(dev, buf_dma, pkt_len, DMA_TO_DEVICE);
+> +		goto drop_stop_q_busy;
+> +	}
+
+> +done_tx:
+> +	skb_tx_timestamp(skb);
+> +
+> +	/* report bql before sending packet */
+> +	netdev_tx_sent_queue(netif_txq, pkt_len);
+> +
+> +	cppi5_hdesc_set_pktlen(first_desc, pkt_len);
+> +	desc_dma = k3_udma_desc_pool_virt2dma(tx_chn->desc_pool, first_desc);
+> +	ret = k3_udma_glue_push_tx_chn(tx_chn->tx_chn, first_desc, desc_dma);
+> +	if (ret) {
+> +		dev_err(dev, "can't push desc %d\n", ret);
+> +		ndev->stats.tx_errors++;
+> +		goto drop_free_descs;
+
+BQL already counted this frame.
+
+> +	}
+> +
+> +	if (k3_udma_desc_pool_avail(tx_chn->desc_pool) < MAX_SKB_FRAGS) {
+> +		netif_tx_stop_queue(netif_txq);
+> +		/* Barrier, so that stop_queue visible to other cpus */
+> +		smp_mb__after_atomic();
+> +		dev_err(dev, "netif_tx_stop_queue %d\n", q_idx);
+
+How many descriptors are there if it's okay to print an error when
+descriptors run out? :o
+
+> +		/* re-check for smp */
+> +		if (k3_udma_desc_pool_avail(tx_chn->desc_pool) >=
+> +		    MAX_SKB_FRAGS) {
+> +			netif_tx_wake_queue(netif_txq);
+> +			dev_err(dev, "netif_tx_wake_queue %d\n", q_idx);
+> +		}
+> +	}
+> +
+> +	return NETDEV_TX_OK;
+> +
+> +drop_free_descs:
+> +	am65_cpsw_nuss_xmit_free(tx_chn, dev, first_desc);
+> +drop_stop_q:
+> +	netif_tx_stop_queue(netif_txq);
+> +drop_free_skb:
+> +	ndev->stats.tx_dropped++;
+> +	dev_kfree_skb_any(skb);
+> +	return ret;
+
+return NETDEV_TX_OK;
+
+> +
+> +drop_stop_q_busy:
+> +	netif_tx_stop_queue(netif_txq);
+> +	return NETDEV_TX_BUSY;
+> +}
+
+> +static int am65_cpsw_nuss_ndev_add_napi_2g(struct am65_cpsw_common *common)
+> +{
+> +	struct device *dev = common->dev;
+> +	struct am65_cpsw_port *port;
+> +	int i, ret = 0;
+> +
+> +	port = am65_common_get_port(common, 1);
+> +
+> +	for (i = 0; i < common->tx_ch_num; i++) {
+> +		struct am65_cpsw_tx_chn	*tx_chn = &common->tx_chns[i];
+> +
+> +		netif_tx_napi_add(port->ndev, &tx_chn->napi_tx,
+> +				  am65_cpsw_nuss_tx_poll, NAPI_POLL_WEIGHT);
+> +
+> +		ret = devm_request_irq(dev, tx_chn->irq,
+> +				       am65_cpsw_nuss_tx_irq,
+> +				       0, tx_chn->tx_chn_name, tx_chn);
+> +		if (ret) {
+> +			dev_err(dev, "failure requesting tx%u irq %u, %d\n",
+> +				tx_chn->id, tx_chn->irq, ret);
+> +			goto err;
+
+If this fails half way through the loop is there something that'd call 
+netif_tx_napi_del()?
+
+> +		}
+> +	}
+> +
+> +err:
+> +	return ret;
+> +}
+
+> +	/* register devres action here, so dev will be disabled
+> +	 * at right moment. The dev will be enabled in .remove() callback
+> +	 * unconditionally.
+> +	 */
+> +	ret = devm_add_action_or_reset(dev, am65_cpsw_pm_runtime_free, dev);
+> +	if (ret) {
+> +		dev_err(dev, "failed to add pm put reset action %d", ret);
+> +		return ret;
+> +	}
+
+Could you explain why you need this? Why can't remove disable PM?
+
+In general looks to me like this driver abuses devm_ infra in ways
+which make it more complex than it needs to be :(
+
+> +	ret = devm_of_platform_populate(dev);
+> +	/* We do not want to force this, as in some cases may not have child */
+> +	if (ret)
+> +		dev_warn(dev, "populating child nodes err:%d\n", ret);
+> +
+> +	am65_cpsw_nuss_get_ver(common);
