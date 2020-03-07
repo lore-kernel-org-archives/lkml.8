@@ -2,125 +2,127 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC95C10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AC9C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E022073C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:47:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ImJFabrr"
+	by mail.kernel.org (Postfix) with ESMTP id F2FC62070A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgCGLrl (ORCPT
+        id S1726252AbgCGLwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 06:47:41 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36655 "EHLO ozlabs.org"
+        Sat, 7 Mar 2020 06:52:31 -0500
+Received: from mga17.intel.com ([192.55.52.151]:37877 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgCGLrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 06:47:40 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ZN5J3Jygz9sPJ;
-        Sat,  7 Mar 2020 22:47:32 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1583581657;
-        bh=T3Lc6pu0BF+ofHjpid246WVPoobyjA8sQizLZI14QII=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ImJFabrrCN7wW00obUBvVIVpYWRF9ZE+ny/CHzmGTLU1ytFKk7TUeUUOVBZ7DWsxE
-         8KehbT2GLm8euKGOjfAVEcXd9NRp3LBcu46vMyeW22GMGA66Bln+5az1Z3YP/U6FNS
-         wpcFe8xoZs2a2mpKof/eh8bNa7E+DxsQuLoPUxqIxF5Fp9A8DbUh8ZxN2kKqXGSuwb
-         +3SEwZdrKXtPE9/I6buseCX+chTXBH/dsFv6G9fcXD0Faimh1cTIpynjnnbsTBMATS
-         YTm9tfdlaFkGOnBxrINkeyl+cL+CTm4a5KsWwUy3VzRfap2Fe10Rgkn4JIKkzFlH4W
-         xpfHzHe0KBi1g==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     desnesn@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, naveen.n.rao@linux.vnet.ibm.com,
-        ravi.bangoria@linux.ibm.com
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.6-4 tag
-Date:   Sat, 07 Mar 2020 22:47:24 +1100
-Message-ID: <87imjgpesz.fsf@mpe.ellerman.id.au>
+        id S1726116AbgCGLwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 06:52:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2020 03:52:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,525,1574150400"; 
+   d="scan'208";a="388090627"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.211.93]) ([10.254.211.93])
+  by orsmga004.jf.intel.com with ESMTP; 07 Mar 2020 03:52:28 -0800
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/vt-d: fix RCU-list bugs in intel_iommu_init
+To:     Qian Cai <cai@lca.pw>, jroedel@suse.de
+References: <1583438446-9959-1-git-send-email-cai@lca.pw>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <4d2297b6-f719-68d5-973b-df9405caa7a0@linux.intel.com>
+Date:   Sat, 7 Mar 2020 19:52:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1583438446-9959-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+Hi,
 
-Hi Linus,
+On 2020/3/6 4:00, Qian Cai wrote:
+> There are several places traverse RCU-list without holding any lock in
+> intel_iommu_init(). Fix them by acquiring dmar_global_lock.
+> 
+>   WARNING: suspicious RCU usage
+>   -----------------------------
+>   drivers/iommu/intel-iommu.c:5216 RCU-list traversed in non-reader section!!
+> 
+>   other info that might help us debug this:
+> 
+>   rcu_scheduler_active = 2, debug_locks = 1
+>   no locks held by swapper/0/1.
+> 
+>   Call Trace:
+>    dump_stack+0xa0/0xea
+>    lockdep_rcu_suspicious+0x102/0x10b
+>    intel_iommu_init+0x947/0xb13
+>    pci_iommu_init+0x26/0x62
+>    do_one_initcall+0xfe/0x500
+>    kernel_init_freeable+0x45a/0x4f8
+>    kernel_init+0x11/0x139
+>    ret_from_fork+0x3a/0x50
+>   DMAR: Intel(R) Virtualization Technology for Directed I/O
+> 
+> Fixes: d8190dc63886 ("iommu/vt-d: Enable DMA remapping after rmrr mapped")
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Please pull some more powerpc fixes for 5.6:
+Thanks for the fix.
 
-The following changes since commit 9eb425b2e04e0e3006adffea5bf5f227a896f128:
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-  powerpc/entry: Fix an #if which should be an #ifdef in entry_32.S (2020-02-19 10:35:22 +1100)
+Best regards,
+baolu
 
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.6-4
-
-for you to fetch changes up to 59bee45b9712c759ea4d3dcc4eff1752f3a66558:
-
-  powerpc/mm: Fix missing KUAP disable in flush_coherent_icache() (2020-03-05 17:15:08 +1100)
-
-- ------------------------------------------------------------------
-powerpc fixes for 5.6 #4
-
-One fix for a recent regression to our breakpoint/watchpoint code.
-
-Another fix for our KUAP support, this time a missing annotation in a rarely
-used path in signal handling.
-
-A fix for our handling of a CPU feature that effects the PMU, when booting
-guests in some configurations.
-
-A minor fix to our linker script to explicitly include the .BTF section.
-
-Thanks to:
-  Christophe Leroy, Desnes A. Nunes do Rosario, Leonardo Bras, Naveen N. Rao,
-  Ravi Bangoria, Stefan Berger.
-
-- ------------------------------------------------------------------
-Desnes A. Nunes do Rosario (1):
-      powerpc: fix hardware PMU exception bug on PowerVM compatibility mode systems
-
-Michael Ellerman (1):
-      powerpc/mm: Fix missing KUAP disable in flush_coherent_icache()
-
-Naveen N. Rao (1):
-      powerpc: Include .BTF section
-
-Ravi Bangoria (1):
-      powerpc/watchpoint: Don't call dar_within_range() for Book3S
-
-
- arch/powerpc/kernel/cputable.c      |  4 +++-
- arch/powerpc/kernel/hw_breakpoint.c | 12 +++++++-----
- arch/powerpc/kernel/vmlinux.lds.S   |  6 ++++++
- arch/powerpc/mm/mem.c               |  2 ++
- 4 files changed, 18 insertions(+), 6 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl5jhbEACgkQUevqPMjh
-pYChUw/+OoOuPWLsnCm6G1qNXl0Bybos15zThSvFIt9/LDk4w1FA7DsO0fsaSejZ
-r/N/AN02sxTprINhd9+cEjTIdfMR45CVbGJZPqN7ynovhMOQieT60uMjoBUr+9Xx
-htHXyPokQNWRn4n5CTTxiwTlu9ehA0zqT9moEHMkERUdsx2BMWEb65lkNT1Jc5/C
-qdQ334Raj5ckZFaSBzvGRNGZYDg+lPlDU6Bnu+gxsPLZN+Yr9p9Pr3PHEXDrrEOs
-ILknaRoBq0vkI8np2q5iJeqQPri+LgVsTI9400zfJBTWVw4IiFbTmQnPsCOhpXr9
-ruUXWROq0hj2216T5pSS+zQkfLLVYI1Wb6O4tFAL2KogrC895qhx+11IAQo+fcKM
-IoR4cuQsE1OuWwQjKZfXTz2b+2zdPHEIUSh34rtoo3zT9BUZ5V6peXMIV8UVCdv4
-esjOI5oL8R3pa+8MOstDfH8wBDLX49zwjv5g4vCIuiAEqN/Cd6JdCqbLDbpYMIRt
-KClQQySKOfh45rl59a3+HRlrgPjLQCVjqHIaoPtxj647y8p33HvLVDXEduJtQ0QK
-KwFrzpkpD00L8aV+94pPVFTALG+lsxLxqtgOVd4sMwtHTDlrJ9FWefU+Hh4GuKTi
-glUuT0+C21UpLPcvazM5utqQOWWrpk+03Z0Ny9UGxKRTBtiBn6U=
-=0jhJ
------END PGP SIGNATURE-----
+> ---
+>   drivers/iommu/intel-iommu.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 6fa6de2b6ad5..bc138ceb07bc 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -5193,6 +5193,7 @@ int __init intel_iommu_init(void)
+>   
+>   	init_iommu_pm_ops();
+>   
+> +	down_read(&dmar_global_lock);
+>   	for_each_active_iommu(iommu, drhd) {
+>   		iommu_device_sysfs_add(&iommu->iommu, NULL,
+>   				       intel_iommu_groups,
+> @@ -5200,6 +5201,7 @@ int __init intel_iommu_init(void)
+>   		iommu_device_set_ops(&iommu->iommu, &intel_iommu_ops);
+>   		iommu_device_register(&iommu->iommu);
+>   	}
+> +	up_read(&dmar_global_lock);
+>   
+>   	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
+>   	if (si_domain && !hw_pass_through)
+> @@ -5210,7 +5212,6 @@ int __init intel_iommu_init(void)
+>   	down_read(&dmar_global_lock);
+>   	if (probe_acpi_namespace_devices())
+>   		pr_warn("ACPI name space devices didn't probe correctly\n");
+> -	up_read(&dmar_global_lock);
+>   
+>   	/* Finally, we enable the DMA remapping hardware. */
+>   	for_each_iommu(iommu, drhd) {
+> @@ -5219,6 +5220,8 @@ int __init intel_iommu_init(void)
+>   
+>   		iommu_disable_protect_mem_regions(iommu);
+>   	}
+> +	up_read(&dmar_global_lock);
+> +
+>   	pr_info("Intel(R) Virtualization Technology for Directed I/O\n");
+>   
+>   	intel_iommu_enabled = 1;
+> 
