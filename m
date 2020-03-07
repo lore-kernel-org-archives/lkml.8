@@ -2,236 +2,155 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21F3C10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25678C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B902073C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583586308;
-	bh=ONFocAkrUcHoVQEyEgxN8icyVv9InTwdB8WDDcNQl3s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ml4CasL4EcT7nWQq8QnSZ+W//wmb6nAOibuva9JoEak7V+DeADZPpohf9An6Y0GyQ
-	 ExgkqtQ+xPIraSUm7BqPfi+px4LVY+cUTdZITUA7L3FY0cAuioQG0XkhApuQP9wuHs
-	 goBnNjS5bRXHhdit+ZuyUZJ0tuxYrDnq06gWb+hI=
+	by mail.kernel.org (Postfix) with ESMTP id EE490206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 13:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgCGNFH (ORCPT
+        id S1726283AbgCGNGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 08:05:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgCGNFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 08:05:07 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 211142073C;
-        Sat,  7 Mar 2020 13:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583586305;
-        bh=ONFocAkrUcHoVQEyEgxN8icyVv9InTwdB8WDDcNQl3s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0Fk/1wobdEc6sU534pRZd2KrZ37yXXxMQr8Q2ehM2euopFA6qmaIqDQ6oqWbMXBAW
-         JfadcYCR6HYmc3RHJBFxN7QAIxSo4C3Dx7OXVDut9zQgft2A9LOFnQQlUizkXw4l8T
-         F0XX2JvnrWwYNPL7Qd+O6Jt23hjADUvwQEHAFrtI=
-Date:   Sat, 7 Mar 2020 13:05:02 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] counter: 104-quad-8: Support Differential Encoder
- Cable Status
-Message-ID: <20200307130502.5b27b73e@archlinux>
-In-Reply-To: <20200301220719.25173-1-vilhelm.gray@gmail.com>
-References: <20200301220719.25173-1-vilhelm.gray@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 7 Mar 2020 08:06:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47634 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726109AbgCGNGz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 08:06:55 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 027D3ubS033583
+        for <linux-kernel@vger.kernel.org>; Sat, 7 Mar 2020 08:06:54 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ym90cv9kx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 08:06:54 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Sat, 7 Mar 2020 13:06:51 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 7 Mar 2020 13:06:48 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 027D6lHT59572422
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 7 Mar 2020 13:06:47 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 247FDA4057;
+        Sat,  7 Mar 2020 13:06:47 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B7219A404D;
+        Sat,  7 Mar 2020 13:06:46 +0000 (GMT)
+Received: from localhost (unknown [9.145.71.16])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat,  7 Mar 2020 13:06:46 +0000 (GMT)
+Date:   Sat, 7 Mar 2020 14:06:45 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 5.6-rc5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+x-cbid: 20030713-4275-0000-0000-000003A93B1C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030713-4276-0000-0000-000038BE4F31
+Message-Id: <your-ad-here.call-01583586405-ext-2652@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-07_03:2020-03-06,2020-03-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ spamscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0 suspectscore=2
+ priorityscore=1501 mlxscore=0 malwarescore=0 adultscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003070098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  1 Mar 2020 17:07:19 -0500
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+Hello Linus,
 
-> The ACCES 104-QUAD-8 series provides status information about the
-> connection state of the differential encoder cable inputs. This patch
-> implements support to expose such information from these devices.
-> 
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-Looks good to me.  Applied to the togreg branch of iio.git
-and pushed out as testing for the autobuilders to play with it.
+please pull s390 changes for 5.6-rc5.
 
-Thanks,
+Thank you,
+Vasily
 
-Jonathan
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
 
-> ---
-> Changes in v3:
->  - Split cable_status attribute into cable_fault and cable_fault_enable;
->    both under each Signal so we can control each channel independently
->  - Initialize to a default state of disabled for all channels
-> 
->  .../ABI/testing/sysfs-bus-counter-104-quad-8  | 18 +++++
->  drivers/counter/104-quad-8.c                  | 75 +++++++++++++++++++
->  2 files changed, 93 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8 b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
-> index 3c905d3cf5d7..eac32180c40d 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
-> +++ b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
-> @@ -1,3 +1,21 @@
-> +What:		/sys/bus/counter/devices/counterX/signalY/cable_fault
-> +KernelVersion:	5.7
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Read-only attribute that indicates whether a differential
-> +		encoder cable fault (not connected or loose wires) is detected
-> +		for the respective channel of Signal Y. Valid attribute values
-> +		are boolean. Detection must first be enabled via the
-> +		corresponding cable_fault_enable attribute.
-> +
-> +What:		/sys/bus/counter/devices/counterX/signalY/cable_fault_enable
-> +KernelVersion:	5.7
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Whether detection of differential encoder cable faults for the
-> +		respective channel of Signal Y is enabled. Valid attribute
-> +		values are boolean.
-> +
->  What:		/sys/bus/counter/devices/counterX/signalY/filter_clock_prescaler
->  KernelVersion:	5.7
->  Contact:	linux-iio@vger.kernel.org
-> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
-> index 0cfc813ee2cb..9dab190c49b0 100644
-> --- a/drivers/counter/104-quad-8.c
-> +++ b/drivers/counter/104-quad-8.c
-> @@ -31,6 +31,7 @@ MODULE_PARM_DESC(base, "ACCES 104-QUAD-8 base addresses");
->  /**
->   * struct quad8_iio - IIO device private data structure
->   * @counter:		instance of the counter_device
-> + * @fck_prescaler:	array of filter clock prescaler configurations
->   * @preset:		array of preset values
->   * @count_mode:		array of count mode configurations
->   * @quadrature_mode:	array of quadrature mode configurations
-> @@ -39,6 +40,7 @@ MODULE_PARM_DESC(base, "ACCES 104-QUAD-8 base addresses");
->   * @preset_enable:	array of set_to_preset_on_index attribute configurations
->   * @synchronous_mode:	array of index function synchronous mode configurations
->   * @index_polarity:	array of index function polarity configurations
-> + * @cable_fault_enable:	differential encoder cable status enable configurations
->   * @base:		base port address of the IIO device
->   */
->  struct quad8_iio {
-> @@ -52,11 +54,13 @@ struct quad8_iio {
->  	unsigned int preset_enable[QUAD8_NUM_COUNTERS];
->  	unsigned int synchronous_mode[QUAD8_NUM_COUNTERS];
->  	unsigned int index_polarity[QUAD8_NUM_COUNTERS];
-> +	unsigned int cable_fault_enable;
->  	unsigned int base;
->  };
->  
->  #define QUAD8_REG_CHAN_OP 0x11
->  #define QUAD8_REG_INDEX_INPUT_LEVELS 0x16
-> +#define QUAD8_DIFF_ENCODER_CABLE_STATUS 0x17
->  /* Borrow Toggle flip-flop */
->  #define QUAD8_FLAG_BT BIT(0)
->  /* Carry Toggle flip-flop */
-> @@ -1143,6 +1147,66 @@ static ssize_t quad8_count_preset_enable_write(struct counter_device *counter,
->  	return len;
->  }
->  
-> +static ssize_t quad8_signal_cable_fault_read(struct counter_device *counter,
-> +					     struct counter_signal *signal,
-> +					     void *private, char *buf)
-> +{
-> +	const struct quad8_iio *const priv = counter->priv;
-> +	const size_t channel_id = signal->id / 2;
-> +	const bool disabled = !(priv->cable_fault_enable & BIT(channel_id));
-> +	unsigned int status;
-> +	unsigned int fault;
-> +
-> +	if (disabled)
-> +		return -EINVAL;
-> +
-> +	/* Logic 0 = cable fault */
-> +	status = inb(priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
-> +
-> +	/* Mask respective channel and invert logic */
-> +	fault = !(status & BIT(channel_id));
-> +
-> +	return sprintf(buf, "%u\n", fault);
-> +}
-> +
-> +static ssize_t quad8_signal_cable_fault_enable_read(
-> +	struct counter_device *counter, struct counter_signal *signal,
-> +	void *private, char *buf)
-> +{
-> +	const struct quad8_iio *const priv = counter->priv;
-> +	const size_t channel_id = signal->id / 2;
-> +	const unsigned int enb = !!(priv->cable_fault_enable & BIT(channel_id));
-> +
-> +	return sprintf(buf, "%u\n", enb);
-> +}
-> +
-> +static ssize_t quad8_signal_cable_fault_enable_write(
-> +	struct counter_device *counter, struct counter_signal *signal,
-> +	void *private, const char *buf, size_t len)
-> +{
-> +	struct quad8_iio *const priv = counter->priv;
-> +	const size_t channel_id = signal->id / 2;
-> +	bool enable;
-> +	int ret;
-> +	unsigned int cable_fault_enable;
-> +
-> +	ret = kstrtobool(buf, &enable);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (enable)
-> +		priv->cable_fault_enable |= BIT(channel_id);
-> +	else
-> +		priv->cable_fault_enable &= ~BIT(channel_id);
-> +
-> +	/* Enable is active low in Differential Encoder Cable Status register */
-> +	cable_fault_enable = ~priv->cable_fault_enable;
-> +
-> +	outb(cable_fault_enable, priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
-> +
-> +	return len;
-> +}
-> +
->  static ssize_t quad8_signal_fck_prescaler_read(struct counter_device *counter,
->  	struct counter_signal *signal, void *private, char *buf)
->  {
-> @@ -1180,6 +1244,15 @@ static ssize_t quad8_signal_fck_prescaler_write(struct counter_device *counter,
->  }
->  
->  static const struct counter_signal_ext quad8_signal_ext[] = {
-> +	{
-> +		.name = "cable_fault",
-> +		.read = quad8_signal_cable_fault_read
-> +	},
-> +	{
-> +		.name = "cable_fault_enable",
-> +		.read = quad8_signal_cable_fault_enable_read,
-> +		.write = quad8_signal_cable_fault_enable_write
-> +	},
->  	{
->  		.name = "filter_clock_prescaler",
->  		.read = quad8_signal_fck_prescaler_read,
-> @@ -1383,6 +1456,8 @@ static int quad8_probe(struct device *dev, unsigned int id)
->  		/* Disable index function; negative index polarity */
->  		outb(QUAD8_CTR_IDR, base_offset + 1);
->  	}
-> +	/* Disable Differential Encoder Cable Status for all channels */
-> +	outb(0xFF, base[id] + QUAD8_DIFF_ENCODER_CABLE_STATUS);
->  	/* Enable all counters */
->  	outb(QUAD8_CHAN_OP_ENABLE_COUNTERS, base[id] + QUAD8_REG_CHAN_OP);
->  
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.6-5
+
+for you to fetch changes up to df057c914a9c219ac8b8ed22caf7da2f80c1fe26:
+
+  s390/pci: Fix unexpected write combine on resource (2020-03-04 11:18:03 +0100)
+
+----------------------------------------------------------------
+s390 updates for 5.6-rc5
+
+- Fix panic in gup_fast on large pud by providing an implementation of
+  pud_write. This has been overlooked during migration to common gup code.
+
+- Fix unexpected write combining on PCI stores.
+
+----------------------------------------------------------------
+Gerald Schaefer (1):
+      s390/mm: fix panic in gup_fast on large pud
+
+Niklas Schnelle (1):
+      s390/pci: Fix unexpected write combine on resource
+
+ arch/s390/include/asm/pgtable.h | 6 ++++++
+ arch/s390/pci/pci.c             | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 137a3920ca36..6d7c3b7e9281 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -752,6 +752,12 @@ static inline int pmd_write(pmd_t pmd)
+ 	return (pmd_val(pmd) & _SEGMENT_ENTRY_WRITE) != 0;
+ }
+ 
++#define pud_write pud_write
++static inline int pud_write(pud_t pud)
++{
++	return (pud_val(pud) & _REGION3_ENTRY_WRITE) != 0;
++}
++
+ static inline int pmd_dirty(pmd_t pmd)
+ {
+ 	return (pmd_val(pmd) & _SEGMENT_ENTRY_DIRTY) != 0;
+diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+index bc61ea18e88d..60716d18ce5a 100644
+--- a/arch/s390/pci/pci.c
++++ b/arch/s390/pci/pci.c
+@@ -424,7 +424,7 @@ static void zpci_map_resources(struct pci_dev *pdev)
+ 
+ 		if (zpci_use_mio(zdev))
+ 			pdev->resource[i].start =
+-				(resource_size_t __force) zdev->bars[i].mio_wb;
++				(resource_size_t __force) zdev->bars[i].mio_wt;
+ 		else
+ 			pdev->resource[i].start = (resource_size_t __force)
+ 				pci_iomap_range_fh(pdev, i, 0, 0);
+@@ -531,7 +531,7 @@ static int zpci_setup_bus_resources(struct zpci_dev *zdev,
+ 			flags |= IORESOURCE_MEM_64;
+ 
+ 		if (zpci_use_mio(zdev))
+-			addr = (unsigned long) zdev->bars[i].mio_wb;
++			addr = (unsigned long) zdev->bars[i].mio_wt;
+ 		else
+ 			addr = ZPCI_ADDR(entry);
+ 		size = 1UL << zdev->bars[i].size;
 
