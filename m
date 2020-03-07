@@ -2,82 +2,67 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2EEC10F00
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11319C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02BAB2070A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F37206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 11:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgCGLJZ (ORCPT
+        id S1726193AbgCGL17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 06:09:25 -0500
-Received: from mga04.intel.com ([192.55.52.120]:18953 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgCGLJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 06:09:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2020 03:09:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,525,1574150400"; 
-   d="scan'208";a="241437777"
-Received: from vbogdan-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.27.190])
-  by orsmga003.jf.intel.com with ESMTP; 07 Mar 2020 03:09:19 -0800
-Date:   Sat, 7 Mar 2020 13:09:18 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca
-Subject: Re: [PATCH v6 3/3] tpm: ibmvtpm: Add support for TPM2
-Message-ID: <20200307110825.GA6705@linux.intel.com>
-References: <20200304132243.179402-1-stefanb@linux.vnet.ibm.com>
- <20200304132243.179402-4-stefanb@linux.vnet.ibm.com>
- <a54d6cffe536d568a9fde46f1f32616e89a42d30.camel@linux.intel.com>
- <8dcd22c1-b05f-d619-58c5-fd2248c75b9e@linux.ibm.com>
- <20200306183305.GA7472@linux.intel.com>
- <9905c816-04f3-4674-055c-b2606e30fc17@linux.ibm.com>
+        Sat, 7 Mar 2020 06:27:59 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55439 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgCGL17 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 06:27:59 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jAXcV-0005PB-7a; Sat, 07 Mar 2020 12:27:51 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 98600104088; Sat,  7 Mar 2020 12:27:50 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Cao jin <caoj.fnst@cn.fujitsu.com>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: Re: Is this code chunk in init_apic_mappings() superfluous?
+In-Reply-To: <978293b9-8e9f-55f6-6ec4-e2d66c4db0de@cn.fujitsu.com>
+References: <978293b9-8e9f-55f6-6ec4-e2d66c4db0de@cn.fujitsu.com>
+Date:   Sat, 07 Mar 2020 12:27:50 +0100
+Message-ID: <87imjg9zgp.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9905c816-04f3-4674-055c-b2606e30fc17@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 01:51:30PM -0500, Stefan Berger wrote:
-> On 3/6/20 1:33 PM, Jarkko Sakkinen wrote:
-> > On Thu, Mar 05, 2020 at 08:58:15AM -0500, Stefan Berger wrote:
-> > > On 3/5/20 6:21 AM, Jarkko Sakkinen wrote:
-> > > > On Wed, 2020-03-04 at 08:22 -0500, Stefan Berger wrote:
-> > > > > From: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > 
-> > > > > Support TPM2 in the IBM vTPM driver. The hypervisor tells us what
-> > > > > version of TPM is connected through the vio_device_id.
-> > > > > 
-> > > > > In case a TPM2 device is found, we set the TPM_CHIP_FLAG_TPM2 flag
-> > > > > and get the command codes attributes table. The driver does
-> > > > > not need the timeouts and durations, though.
-> > > > > 
-> > > > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > > There is huge bunch of people in the cc-list and these patches
-> > > > have total zero tested-by's. Why is that?
-> > > 
-> > > I cc'ed them because of their involvement in other layers. That's all I can
-> > > say.
-> > OK, so there is no one who can test this?
-> 
-> Nayna said she will test it next week.
+Cao jin <caoj.fnst@cn.fujitsu.com> writes:
+> Hi,
+>
+> I am trying to figure the following code chunk out:
+>
+> 	if (x2apic_mode) {
+> 		boot_cpu_physical_apicid = read_apic_id();
+> 		return;
+> 	}
+>
+> As my understanding, even in x2APIC mode, boot_cpu_physical_apicid is
+> also got via early_acpi_process_madt --> ... --> register_lapic_address,
+> so, is it for any corner case I am not aware?
 
-That'd be great. Otherwise, I have no issues pulling the patches.
+The case when there are neither ACPI nor valid mptables. Unlikely, but
+possible in theory.
 
-/Jarkko
+Thanks,
+
+        tglx
