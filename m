@@ -2,61 +2,122 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F137C10F25
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABB6C10F26
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DBE2070A
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240ED2075A
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 09:13:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="gdS/SamM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgCGJAl (ORCPT
+        id S1726283AbgCGJNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 04:00:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39616 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgCGJAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 04:00:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8832EAEC7;
-        Sat,  7 Mar 2020 09:00:39 +0000 (UTC)
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Correct MIPS patchwork URL
-Date:   Sat,  7 Mar 2020 10:00:22 +0100
-Message-Id: <20200307090022.6633-1-tsbogend@alpha.franken.de>
-X-Mailer: git-send-email 2.25.0
+        Sat, 7 Mar 2020 04:13:25 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:51831 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgCGJNY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 04:13:24 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 7141923EB4;
+        Sat,  7 Mar 2020 10:13:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583572402;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=aQvWXFXM1KKL95QbKcc07473AJv43uHjCpM12hw17EU=;
+        b=gdS/SamMKlWk1FtIvy3xbj6EdrCJ6Et4Ll0kweAt/dxrCsb5GHM+0FGzQKKMlPw8gjZNyn
+        XpFfbabLXyDghlj1M9FcZIp8NW+Cxv0FsH9dqOTUWsXnbuTQ6LuF2JMeKrSdDUA4RSxf3f
+        BFuldIYKprhY5sHtcJwFrOa/BcQObtU=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Michael Walle <michael@walle.cc>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: serial: lpuart: add ls1028a compatibility
+Date:   Sat,  7 Mar 2020 10:13:01 +0100
+Message-Id: <20200307091302.14881-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 7141923EB4
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_SPAM(0.00)[0.536];
+         TO_MATCH_ENVRCPT_SOME(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MIPS patchwork lives on patchwork.kernel.org for quite some time.
+Add the LS1028A SoC compatibility string to the lpuart devicetree
+bindings documentation.
 
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Michael Walle <michael@walle.cc>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+changes since v1:
+ - add changelog text
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 68eebf3650ac..6fdceffaf69b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11119,7 +11119,7 @@ M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
- L:	linux-mips@vger.kernel.org
- W:	http://www.linux-mips.org/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
--Q:	http://patchwork.linux-mips.org/project/linux-mips/list/
-+Q:	https://patchwork.kernel.org/project/linux-mips/list/
- S:	Maintained
- F:	Documentation/devicetree/bindings/mips/
- F:	Documentation/mips/
+ .../devicetree/bindings/serial/fsl-lpuart.txt          | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+index c904e2e68332..e7448b92dd9d 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+@@ -6,6 +6,8 @@ Required properties:
+     on Vybrid vf610 SoC with 8-bit register organization
+   - "fsl,ls1021a-lpuart" for lpuart compatible with the one integrated
+     on LS1021A SoC with 32-bit big-endian register organization
++  - "fsl,ls1028a-lpuart" for lpuart compatible with the one integrated
++    on LS1028A SoC with 32-bit little-endian register organization
+   - "fsl,imx7ulp-lpuart" for lpuart compatible with the one integrated
+     on i.MX7ULP SoC with 32-bit little-endian register organization
+   - "fsl,imx8qxp-lpuart" for lpuart compatible with the one integrated
+@@ -15,10 +17,10 @@ Required properties:
+ - reg : Address and length of the register set for the device
+ - interrupts : Should contain uart interrupt
+ - clocks : phandle + clock specifier pairs, one for each entry in clock-names
+-- clock-names : For vf610/ls1021a/imx7ulp, "ipg" clock is for uart bus/baud
+-  clock. For imx8qxp lpuart, "ipg" clock is bus clock that is used to access
+-  lpuart controller registers, it also requires "baud" clock for module to
+-  receive/transmit data.
++- clock-names : For vf610/ls1021a/ls1028a/imx7ulp, "ipg" clock is for uart
++  bus/baud clock. For imx8qxp lpuart, "ipg" clock is bus clock that is used
++  to access lpuart controller registers, it also requires "baud" clock for
++  module to receive/transmit data.
+ 
+ Optional properties:
+ - dmas: A list of two dma specifiers, one for each entry in dma-names.
 -- 
-2.25.0
+2.20.1
 
