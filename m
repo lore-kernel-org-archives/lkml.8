@@ -2,181 +2,160 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2ABC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA94C10F25
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B224820637
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4F3206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 00:51:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="hzsuDJzq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l18WCI1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgCGAug (ORCPT
+        id S1726682AbgCGAvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 19:50:36 -0500
-Received: from gateway34.websitewelcome.com ([192.185.148.142]:12431 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726231AbgCGAuf (ORCPT
+        Fri, 6 Mar 2020 19:51:53 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46696 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgCGAvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 19:50:35 -0500
-X-Greylist: delayed 1466 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Mar 2020 19:50:35 EST
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 737C29C9A76
-        for <linux-kernel@vger.kernel.org>; Fri,  6 Mar 2020 18:26:08 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id ANI8jWugtRP4zANI8jtw3d; Fri, 06 Mar 2020 18:26:08 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=msXgc3TGQhw2fSPO6AXY+2RmKkB9onA2Nue9cLwXGQI=; b=hzsuDJzqHrn7CrKIhYBOffx5FB
-        reovpBTHdQE0LIYla3E2AySPD7mJ957Nl/JTwPDB2xijwvGHSAAe+duO1JNfGW+Jcwl393c4S/uUd
-        fJrrkmUgxY9Vrkw3J5IknOlGwWoR3VtO57uvpSOQcoim+2raXEDOpkfoiV3lb9NlS/aBZvlXWlOd6
-        GAbJ39Eg6TEt1JjeEDeY8xNEJivr7Zcj2t2gVPdbmC3D1zEsm7UxYQAVMp2vhYBWNGL+JUFszd4q9
-        gizZrCZJ93q4ZQy/RAR3h7P5IvyL6JnB77kjnY1KDoN4oLaSANkxUJsStUEqKprNnUy62SWePA+7x
-        5RtjdTOg==;
-Received: from [191.31.207.132] (port=48872 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1jANI7-001YDM-Ri; Fri, 06 Mar 2020 21:26:08 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v2 3/3] ARM: dts: Add Caninos Loucos Labrador
-Date:   Fri,  6 Mar 2020 21:24:53 -0300
-Message-Id: <20200307002453.350430-4-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200307002453.350430-1-matheus@castello.eng.br>
-References: <20200229104358.GB19610@mani>
- <20200307002453.350430-1-matheus@castello.eng.br>
+        Fri, 6 Mar 2020 19:51:53 -0500
+Received: by mail-pf1-f194.google.com with SMTP id o24so1902603pfp.13;
+        Fri, 06 Mar 2020 16:51:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=skFcNwjthieJP7sfKB/M5QNBEnIrH81qXi4ZuvR5djg=;
+        b=l18WCI1TN3rqxsUOpYhZQ3/fq9phH85TBCpcWGcQS49YSPYIQdrjc692qZ7FzTN+op
+         488oR7rShJN3X5O1mO4hc3n9t0Rjo11NlXKlVTCZFS/+nA7pZGzG9nV7GFg9LE+twuwz
+         pIC37vtJMVP1EfDiGa0TIaCTxez9k16KJKwv5pykJVVBLvKGByl78TDJKrsDupfHLc17
+         TpPPMICQPP2sNqAtzAVJbJtj5f3WZleShFnso9bEYPBRMGZt7Ff1NM7iKj0JUSY+KvBF
+         fXTh/d3jvMeBZYp00q9uLDcrlJxcdr/hQhVSTlH34p500BPtTfJQLZZOPW9URYjTeWSI
+         2vkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=skFcNwjthieJP7sfKB/M5QNBEnIrH81qXi4ZuvR5djg=;
+        b=hBovPc0jyhqMuBdMQA4khUhzCJV+yJc5Am5FNIcEUxVZUqi5e3ybPs8+U50ymJ7PvZ
+         uiYPv6pGqzIVhLGdeN2KRhT4zVcxgVa7dGndeFwG06+hMSZPLXFUkc9C0A9NK+AWqJu4
+         bdHyL7+oV3PSO5WMw969E0BQ2UJaUxDiCxaOrPB/JByY9U6Ap4zmBkupopiRBYe3Vo4W
+         5nghcEB6gFeAe2peu/xOgtLr9y72ndPko87YqC8/HNQYraL+t9DAUcj4yMxD+xcHvCZF
+         hx+l3AoivXVyyfzZKNh603FeTohS/qYt80oFf2PYQ0odbzSC9MGa6C5OHE2d6RuuJvlU
+         7/3Q==
+X-Gm-Message-State: ANhLgQ1TJh0T7kJ2aAYQ9BwmFnFGWDqGeuANutE9ydUXUFag/90CNt9u
+        rW90bwNPe+GXea8fVFGvuDs=
+X-Google-Smtp-Source: ADFU+vtSQp9AWTTxOFlya+y8suvpoKkjEitYDODYKQsTl7ClwUFUeZRpe5JzxUchhAi7ZxyXVM9GJg==
+X-Received: by 2002:a63:5401:: with SMTP id i1mr5547231pgb.181.1583542310016;
+        Fri, 06 Mar 2020 16:51:50 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id 9sm32356910pge.65.2020.03.06.16.51.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Mar 2020 16:51:49 -0800 (PST)
+Date:   Fri, 6 Mar 2020 16:51:46 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 3/5] input: keyboard: add COMPILE_TEST support for
+ KEYBOARD_IMX_SC_KEY
+Message-ID: <20200307005146.GM217608@dtor-ws>
+References: <1583509356-8265-1-git-send-email-Anson.Huang@nxp.com>
+ <1583509356-8265-3-git-send-email-Anson.Huang@nxp.com>
+ <20200306193310.GI217608@dtor-ws>
+ <CAKdAkRRhXE6Hviqx90_5hWmP7YQnKO2QLJgDYnzt_CPjeH7D0A@mail.gmail.com>
+ <DB3PR0402MB3916EA7BAACBBE64F2609DB6F5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.207.132
-X-Source-L: No
-X-Exim-ID: 1jANI7-001YDM-Ri
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.207.132]:48872
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 25
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB3916EA7BAACBBE64F2609DB6F5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Device Trees for Caninos Loucos Labrador CoM and base board.
-Based on the work of Andreas Färber on Lemaker Guitar device tree.
+On Sat, Mar 07, 2020 at 12:18:38AM +0000, Anson Huang wrote:
+> Hi, Dmitry
+> 
+> > Subject: Re: [PATCH 3/5] input: keyboard: add COMPILE_TEST support for
+> > KEYBOARD_IMX_SC_KEY
+> > 
+> > On Fri, Mar 6, 2020 at 11:33 AM Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com> wrote:
+> > >
+> > > On Fri, Mar 06, 2020 at 11:42:34PM +0800, Anson Huang wrote:
+> > > > Add COMPILE_TEST support to i.MX SC keyboard driver for better
+> > > > compile testing coverage.
+> > > >
+> > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > >
+> > > Applied, thank you.
+> > 
+> > Actually, not:
+> > 
+> > ERROR: "imx_scu_irq_register_notifier"
+> > [drivers/input/keyboard/imx_sc_key.ko] undefined!
+> > ERROR: "imx_scu_get_handle" [drivers/input/keyboard/imx_sc_key.ko]
+> > undefined!
+> > ERROR: "imx_scu_call_rpc" [drivers/input/keyboard/imx_sc_key.ko]
+> > undefined!
+> > ERROR: "imx_scu_irq_unregister_notifier"
+> > [drivers/input/keyboard/imx_sc_key.ko] undefined!
+> > ERROR: "imx_scu_irq_group_enable"
+> > [drivers/input/keyboard/imx_sc_key.ko] undefined!
+> > make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
+> > make: *** [Makefile:1282: modules] Error 2
+> > 
+> > If you want to enable compile test coverage you need to provide stubs for
+> > the above functions.
+> 
+> These i.MX SCU drivers depends on IMX_SCU, I already add the COMPILE_TEST
+> to IMX_SCU driver as well, that is why I put these patches in a patch series.
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- arch/arm/boot/dts/Makefile                  |  1 +
- arch/arm/boot/dts/owl-s500-labrador-bb.dts  | 34 +++++++++++++++++++++
- arch/arm/boot/dts/owl-s500-labrador-v2.dtsi | 21 +++++++++++++
- 3 files changed, 56 insertions(+)
- create mode 100644 arch/arm/boot/dts/owl-s500-labrador-bb.dts
- create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+Adding "|| COMPILE_TEST" you are removing hard dependency on IMX_SCU,
+which as you can see can result in broken build.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d6546d2676b9..99f633460833 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -842,6 +842,7 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
- dtb-$(CONFIG_ARCH_ACTIONS) += \
- 	owl-s500-cubieboard6.dtb \
- 	owl-s500-guitar-bb-rev-b.dtb \
-+	owl-s500-labrador-bb.dtb \
- 	owl-s500-sparky.dtb
- dtb-$(CONFIG_ARCH_PRIMA2) += \
- 	prima2-evb.dtb
-diff --git a/arch/arm/boot/dts/owl-s500-labrador-bb.dts b/arch/arm/boot/dts/owl-s500-labrador-bb.dts
-new file mode 100644
-index 000000000000..91012b4a4c30
---- /dev/null
-+++ b/arch/arm/boot/dts/owl-s500-labrador-bb.dts
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Caninos Labrador Base Board
-+ *
-+ * Copyright (c) 2019-2020 Matheus Castello
-+ */
-+
-+/dts-v1/;
-+
-+#include "owl-s500-labrador-v2.dtsi"
-+
-+/ {
-+	compatible = "caninos,labrador-bb", "caninos,labrador", "actions,s500";
-+	model = "Caninos Labrador Base Board M v1.0";
-+
-+	aliases {
-+		serial3 = &uart3;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial3:115200n8";
-+	};
-+
-+	uart3_clk: uart3-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <921600>;
-+		#clock-cells = <0>;
-+	};
-+};
-+
-+&uart3 {
-+	status = "okay";
-+	clocks = <&uart3_clk>;
-+};
-diff --git a/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
-new file mode 100644
-index 000000000000..0b54f1ef3ec0
---- /dev/null
-+++ b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Caninos Labrador CoM V2
-+ *
-+ * Copyright (c) 2019-2020 Matheus Castello
-+ */
-+
-+#include "owl-s500.dtsi"
-+
-+/ {
-+	compatible = "caninos,labrador", "actions,s500";
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000>;
-+	};
-+};
-+
-+&timer {
-+	clocks = <&hosc>;
-+};
---
-2.25.0
+> Maybe
+> I can add stubs as well to make sure build passed even when IMX_SCU is NOT compiled?
+> Will send V2 to add stubs, it makes more sense.
 
+It is up to you whether you make IMX_SCU buildable with COMPILE_TEST
+and leave the sub-driver as is, or add the stubs and make sub-drivers
+buildable even without IMX_SCU being present.
+
+Thanks.
+
+-- 
+Dmitry
