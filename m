@@ -2,152 +2,108 @@ Return-Path: <SRS0=IBMW=4Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F9EC10F26
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A22C10F00
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 04:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 911252073C
-	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 03:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB26F206D7
+	for <linux-kernel@archiver.kernel.org>; Sat,  7 Mar 2020 04:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583553625;
+	bh=oV9dzypff0UA0jPadqQOWi55OmuNhXb+CU9VyawDDys=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=O7F/QgsTpv3RmhFygFWnjHyyPvAYQTGTkGEAsHqOqbnzQIowWniqwBkKsXdA2OCTK
+	 i8+8gOZHzuggWSbzApXX5obs2LmIiAWDMu//zoJ9n86Q33q5z+YVXW50tfkIGaQuGl
+	 VhXZ+PN2+75n1TsrlfEfVFgHQfhbX+AfxJZqugrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgCGDzN (ORCPT
+        id S1726635AbgCGEAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Mar 2020 22:55:13 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:46450 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgCGDzN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Mar 2020 22:55:13 -0500
-Received: by mail-il1-f199.google.com with SMTP id a2so3118228ill.13
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Mar 2020 19:55:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=rdquNNGKuX/KSxwPrAJ3QB04nJPCe9ZSROBzyqMDPwc=;
-        b=ebxAEAP4nwQBFTGPuzr3Gb0Y7qlYaODD4NUYDcJeTA4vsoWCSdykxzksddSODPgKp1
-         /dqYkaAh+KuUlvKQYzXCgFhh1JTYsKz94VVZWhR8GnpQyFHqXCA8f+eptrhy6ER9qsNc
-         o53bpakdipuAELnvNmawdG4B3oDEIwlJkoDpanVd17M5lC0PKzDvZxL3rq9Vq1AYF9LA
-         2H/m8p2wdU8bOhYUciNG2xJIk5ofnjowH2RjB69CzF7BqzZx0Bg3fjh9a5ZL99aqQepk
-         EtWRNpMLzjAsxksX2kGS1wjO49vqvPOtgJfETXsYeSzoqaYycTk8KzcZ+Yads8BjXIdw
-         GojQ==
-X-Gm-Message-State: ANhLgQ07ffUbBZR/e7XITkxga4FcAn3cJDPOUzLzxH6xKnBSlmsI0dN9
-        9weKoiJdEhD3epq4N3ogPnHOkgurzVH681hnl9pbM+hBC0yS
-X-Google-Smtp-Source: ADFU+vsW3AVSlPG3mP5XBZW+aR4i0MoXjs1O7Ptp3iLtdy+gFarE8PH5BOg0Vpcjq7j3Vl19sGkQgVOBbOZ3nUJ+aH27SRfxp12u
-MIME-Version: 1.0
-X-Received: by 2002:a02:7111:: with SMTP id n17mr5933928jac.129.1583553312294;
- Fri, 06 Mar 2020 19:55:12 -0800 (PST)
-Date:   Fri, 06 Mar 2020 19:55:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a98a1705a03bbcbe@google.com>
-Subject: general protection fault in __queue_work (2)
-From:   syzbot <syzbot+889cc963ed79ee90f74f@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 6 Mar 2020 23:00:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbgCGEAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Mar 2020 23:00:20 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2EA206D5;
+        Sat,  7 Mar 2020 04:00:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583553618;
+        bh=oV9dzypff0UA0jPadqQOWi55OmuNhXb+CU9VyawDDys=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SGgOZOJ38TBhL5PMq2t97iVlOYiTJrLFrJZwUFY+PkmX4j8DweXDMSJ8amOibPULY
+         dukXRc++p/7grHQAkoJmRzC/WSXOXanM1qDKv14ejj7flbmiHB/27z6x/csQKB/k1O
+         jFq+DE3IugyBsaFEvfl6ba2s2SLpEYfJdkqCDacY=
+Date:   Fri, 6 Mar 2020 20:00:16 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        James Morse <james.morse@arm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        openrisc@lists.librecores.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v3 07/14] powerpc/32: drop get_pteptr()
+Message-Id: <20200306200016.6f3865ada0daa68b645fe5d7@linux-foundation.org>
+In-Reply-To: <20200227084608.18223-8-rppt@kernel.org>
+References: <20200227084608.18223-1-rppt@kernel.org>
+        <20200227084608.18223-8-rppt@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, 27 Feb 2020 10:46:01 +0200 Mike Rapoport <rppt@kernel.org> wrote:
 
-syzbot found the following crash on:
+> Commit 8d30c14cab30 ("powerpc/mm: Rework I$/D$ coherency (v3)") and
+> commit 90ac19a8b21b ("[POWERPC] Abolish iopa(), mm_ptov(),
+> io_block_mapping() from arch/powerpc") removed the use of get_pteptr()
+> outside of mm/pgtable_32.c
+> 
+> In mm/pgtable_32.c, the only user of get_pteptr() is __change_page_attr()
+> which operates on kernel context and on lowmem pages only.
+> 
+> Move page table traversal to __change_page_attr() and drop get_pteptr().
 
-HEAD commit:    770fbb32 Add linux-next specific files for 20200228
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=104fdfa1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=576314276bce4ad5
-dashboard link: https://syzkaller.appspot.com/bug?extid=889cc963ed79ee90f74f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176d7f29e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134c481de00000
+People have been changing things in linux-next and the powerpc patches
+are hurting.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+889cc963ed79ee90f74f@syzkaller.appspotmail.com
+I'll disable this patch series for now.  Can you please redo
+powerpc-32-drop-get_pteptr.patch and
+powerpc-add-support-for-folded-p4d-page-tables.patch (and
+powerpc-add-support-for-folded-p4d-page-tables-fix.patch)?
 
-general protection fault, probably for non-canonical address 0xdffffc0000000030: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000180-0x0000000000000187]
-CPU: 0 PID: 9989 Comm: blkid Not tainted 5.6.0-rc3-next-20200228-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__queue_work+0xe8/0x1280 kernel/workqueue.c:1409
-Code: c6 00 bf 97 89 4c 89 e7 e8 15 14 48 02 49 8d 86 80 01 00 00 48 89 c2 48 89 44 24 18 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 94 0e 00 00 41 8b 9e 80 01 00
-RSP: 0018:ffffc90002457078 EFLAGS: 00010006
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000030 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: 0000000000000040 R08: ffff88809e21a180 R09: fffffbfff190c866
-R10: fffffbfff190c865 R11: ffffffff8c86432b R12: ffff8880a677e518
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000040
-FS:  00007fe98e0e6740(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000bd7058 CR3: 00000000a3381000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- queue_work_on+0x18b/0x200 kernel/workqueue.c:1515
- queue_work include/linux/workqueue.h:507 [inline]
- loop_queue_work drivers/block/loop.c:984 [inline]
- loop_queue_rq+0x5ac/0x1050 drivers/block/loop.c:2038
- blk_mq_dispatch_rq_list+0x997/0x17f0 block/blk-mq.c:1246
- blk_mq_do_dispatch_sched+0x188/0x3f0 block/blk-mq-sched.c:115
- blk_mq_sched_dispatch_requests+0x3cd/0x650 block/blk-mq-sched.c:211
- __blk_mq_run_hw_queue+0x1b8/0x2c0 block/blk-mq.c:1382
- __blk_mq_delay_run_hw_queue+0x522/0x5e0 block/blk-mq.c:1459
- blk_mq_run_hw_queue+0x16c/0x2f0 block/blk-mq.c:1512
- blk_mq_sched_insert_requests+0x2d4/0x5f0 block/blk-mq-sched.c:444
- blk_mq_flush_plug_list+0x452/0x880 block/blk-mq.c:1758
- blk_flush_plug_list+0x2ff/0x460 block/blk-core.c:1772
- blk_finish_plug block/blk-core.c:1789 [inline]
- blk_finish_plug+0x50/0x97 block/blk-core.c:1785
- read_pages+0x125/0x610 mm/readahead.c:142
- ? 0xffffffff81000000
- __do_page_cache_readahead+0x47c/0x570 mm/readahead.c:212
- force_page_cache_readahead+0x1dc/0x320 mm/readahead.c:243
- page_cache_sync_readahead mm/readahead.c:522 [inline]
- page_cache_sync_readahead+0x4b8/0x520 mm/readahead.c:509
- generic_file_buffered_read mm/filemap.c:2029 [inline]
- generic_file_read_iter+0x1650/0x2a40 mm/filemap.c:2302
- blkdev_read_iter+0x11b/0x180 fs/block_dev.c:2039
- call_read_iter include/linux/fs.h:1895 [inline]
- new_sync_read+0x4a2/0x790 fs/read_write.c:414
- __vfs_read+0xc9/0x100 fs/read_write.c:427
- vfs_read+0x1ea/0x430 fs/read_write.c:461
- ksys_read+0x127/0x250 fs/read_write.c:587
- do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7fe98d9ee310
-Code: 73 01 c3 48 8b 0d 28 4b 2b 00 31 d2 48 29 c2 64 89 11 48 83 c8 ff eb ea 90 90 83 3d e5 a2 2b 00 00 75 10 b8 00 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 6e 8a 01 00 48 89 04 24
-RSP: 002b:00007ffd4d1e1df8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fe98d9ee310
-RDX: 0000000000000400 RSI: 0000000000bd6c58 RDI: 0000000000000003
-RBP: 0000000000bd6c30 R08: 0000000000000028 R09: 0000000001680000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000bd6030
-R13: 0000000000000400 R14: 0000000000bd6080 R15: 0000000000bd6c48
-Modules linked in:
----[ end trace 0e35dd0f272c5c88 ]---
-RIP: 0010:__queue_work+0xe8/0x1280 kernel/workqueue.c:1409
-Code: c6 00 bf 97 89 4c 89 e7 e8 15 14 48 02 49 8d 86 80 01 00 00 48 89 c2 48 89 44 24 18 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 94 0e 00 00 41 8b 9e 80 01 00
-RSP: 0018:ffffc90002457078 EFLAGS: 00010006
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000030 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: 0000000000000040 R08: ffff88809e21a180 R09: fffffbfff190c866
-R10: fffffbfff190c865 R11: ffffffff8c86432b R12: ffff8880a677e518
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000040
-FS:  00007fe98e0e6740(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000bd7058 CR3: 00000000a3381000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Thanks.
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
