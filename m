@@ -2,141 +2,124 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313E4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 18:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF5BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 18:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107CC2067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 18:44:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nreiNSIL"
+	by mail.kernel.org (Postfix) with ESMTP id DF8DF206D7
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 18:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583693688;
+	bh=Q+kfL4mkXLvM4nEGnLgXVk4GKzZ0+K/A2ern3w+0xSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zw7B4ZpD7UmD9Giabya/8avYC0rV2y29oPWhNGZTAeeHhhBlm+02rdcmSJcsaj3zt
+	 finwhTokoYWlpgZvh5V8Pc5R/Ddq6yo6LsfwQL3Qsr1JAzfrE0ODGyTGuk4nkhlW4x
+	 yn/8I0+JquFcDUFMEOIOO+90P4hPwpEmc5AOGqqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCHSoK (ORCPT
+        id S1726368AbgCHSys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 14:44:10 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:32938 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgCHSoJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 14:44:09 -0400
-Received: by mail-yw1-f66.google.com with SMTP id j186so7951497ywe.0;
-        Sun, 08 Mar 2020 11:44:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KKIjJU0Jcr/i2OtFnZ1TFH4hXFzpfr4RFpHDB2WtKvI=;
-        b=nreiNSILwtuTWEJ2tdIYX6tvM05njLVG5fdM7asr8qgPsBtWKFmz3etkv30JS57Ym8
-         EGhdRTeplo805LwXh3Dyr+DpxgRvP26US4Oruqv9yyk4byc0aRO6DAhmfU5Sj65SwM89
-         R62oGDxLmFiDnKeGbjglD1HmSi3ldrftGCWmJojlSgdyN3yIsqEIqpAoGZNl0ZnbGYWe
-         d7fTSO1M7yebuIuBkYLkwPS3J4gRmDIyj9VpUD+jGcKhLYNNzAa/Hd9xbbYp2miBktRz
-         i+FFcrW5bZB0SJ0QRDXu7GjaskRk50tdeNIAZRiCa52+s/WeizsdcVP0qKturz1uXMmp
-         un+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KKIjJU0Jcr/i2OtFnZ1TFH4hXFzpfr4RFpHDB2WtKvI=;
-        b=Hn0ZTdTxj3ZlYjMz7EEj7G8VbidLIy2OjhRsZQoQpLCqkJCUJdxLf5Ov0uv0jpVEuE
-         b5wxpGCRuhLoTR5Wvup6azPn/quLEH08si0SdNcSbxVmu0L+/kPZqdXSSgLFgbtgG+pO
-         kg3S49vI0NYOmkHFU6A70IqajmT7PW0rwbVGzDcGpFPy+b3bYAMKIHA+tczMEB6jvQ+T
-         NYmPkz1D0s5knK4zI+ws3eKT1F+uYl3DQ3MCYo1YLByQXW//aIrdQNSRR+iTIolezoJ8
-         aMl/VLeRj4RKw2uCTRu1dK7bctp4nQHnWtM+uZdiqiwpjzldY4LccBQc9XIIRwOpxPtw
-         je0g==
-X-Gm-Message-State: ANhLgQ1LDNZIVB/FP4u2Kh85xor3E9tTtR1c6qJsD5SdSq711Q6lNLwN
-        z6gHN5q2Dpy9N5jBcPy8O4Q/OFfUMj9QYpRBDmI=
-X-Google-Smtp-Source: ADFU+vtnfprRZoQimB2PWgBavUyh5kNGPoDaD0HE2dib7g11l1ZtJkyTIe+otEES+a3vraiF3W/X916cPo4xE93Ye+I=
-X-Received: by 2002:a0d:e297:: with SMTP id l145mr14471732ywe.132.1583693046841;
- Sun, 08 Mar 2020 11:44:06 -0700 (PDT)
+        Sun, 8 Mar 2020 14:54:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726318AbgCHSyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 14:54:47 -0400
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C576E20663;
+        Sun,  8 Mar 2020 18:54:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583693687;
+        bh=Q+kfL4mkXLvM4nEGnLgXVk4GKzZ0+K/A2ern3w+0xSU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GL42HVY51ZG+Fp9Jnf0GgKOU1R/rQc66l7JTQISLGNJHbMqKeLW+DTThTwAEk5JxL
+         zselZ4tkuwqc/tZOcqiKK1DhPGWmmEuB/ySZGmCypYcBkhrH0THm2TLNewIn4GaJWd
+         62mbeKY+pBVqH/rdXrd91X1p6Qo7HdhfgIZXDCT8=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 5DAAB3C0C82; Sun,  8 Mar 2020 19:54:44 +0100 (CET)
+Date:   Sun, 8 Mar 2020 19:54:44 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Claudiu.Beznea@microchip.com
+Cc:     Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/15] rework at91-reset driver
+Message-ID: <20200308185444.lpkpumgxhya7n356@earth.universe>
+References: <1579601001-5711-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-References: <20200308043645.1034870-1-ebiggers@kernel.org> <20200308061611.1185481-1-ebiggers@kernel.org>
-In-Reply-To: <20200308061611.1185481-1-ebiggers@kernel.org>
-From:   Steve French <smfrench@gmail.com>
-Date:   Sun, 8 Mar 2020 13:43:56 -0500
-Message-ID: <CAH2r5mtRvs1NkWyvMvO1Pg2OPa9xq=gMUvHLgbA73bsj44DxVQ@mail.gmail.com>
-Subject: Re: [PATCH v2] cifs: clear PF_MEMALLOC before exiting demultiplex thread
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kc3gxuytlvcwlxwg"
+Content-Disposition: inline
+In-Reply-To: <1579601001-5711-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-merged into cifs-2.6.git for-next
 
-running buildbot cifs/smb3 automated regression tests now
+--kc3gxuytlvcwlxwg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 8, 2020 at 12:17 AM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> From: Eric Biggers <ebiggers@google.com>
->
-> Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-> during do_exit().  That can confuse things.  For example, if BSD process
-> accounting is enabled, then it's possible for do_exit() to end up
-> calling ext4_write_inode().  That triggers the
-> WARN_ON_ONCE(current->flags & PF_MEMALLOC) there, as it assumes
-> (appropriately) that inodes aren't written when allocating memory.
->
-> This case was reported by syzbot at
-> https://lkml.kernel.org/r/0000000000000e7156059f751d7b@google.com.
->
-> Fix this in cifs_demultiplex_thread() by using the helper functions to
-> save and restore PF_MEMALLOC.
->
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->
-> v2: added missing include of <linux/sched/mm.h>
->     (I missed that I didn't actually have CONFIG_CIFS set...)
->
->  fs/cifs/connect.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-> index 4804d1df8c1c..97b8eb585cf9 100644
-> --- a/fs/cifs/connect.c
-> +++ b/fs/cifs/connect.c
-> @@ -21,6 +21,7 @@
->  #include <linux/fs.h>
->  #include <linux/net.h>
->  #include <linux/string.h>
-> +#include <linux/sched/mm.h>
->  #include <linux/sched/signal.h>
->  #include <linux/list.h>
->  #include <linux/wait.h>
-> @@ -1164,8 +1165,9 @@ cifs_demultiplex_thread(void *p)
->         struct task_struct *task_to_wake = NULL;
->         struct mid_q_entry *mids[MAX_COMPOUND];
->         char *bufs[MAX_COMPOUND];
-> +       unsigned int noreclaim_flag;
->
-> -       current->flags |= PF_MEMALLOC;
-> +       noreclaim_flag = memalloc_noreclaim_save();
->         cifs_dbg(FYI, "Demultiplex PID: %d\n", task_pid_nr(current));
->
->         length = atomic_inc_return(&tcpSesAllocCount);
-> @@ -1320,6 +1322,7 @@ cifs_demultiplex_thread(void *p)
->                 set_current_state(TASK_RUNNING);
->         }
->
-> +       memalloc_noreclaim_restore(noreclaim_flag);
->         module_put_and_exit(0);
->  }
->
-> --
-> 2.25.1
->
+Hi,
 
+On Tue, Jan 21, 2020 at 10:03:29AM +0000, Claudiu.Beznea@microchip.com wrot=
+e:
+> The following patches rework the at91-reset driver and solves
+> the SAM9X60 VDDCORE fast drop in the first 100us after power down.
 
--- 
-Thanks,
+Thanks, queued to power-supply's for-next branch.
 
-Steve
+-- Sebastian
+
+> Claudiu Beznea (15):
+>   power: reset: at91-reset: introduce struct at91_reset
+>   power: reset: at91-reset: add ramc_base[] to struct at91_reset
+>   power: reset: at91-reset: add sclk to struct at91_reset
+>   power: reset: at91-reset: add notifier block to struct at91_reset
+>   power: reset: at91-reset: convert reset in pointer to struct
+>     at91_reset
+>   power: reset: at91-reset: pass rstc base address to
+>     at91_reset_status()
+>   power: reset: at91-reset: devm_kzalloc() for at91_reset data structure
+>   power: reset: at91-reset: introduce struct at91_reset_data
+>   power: reset: at91-reset: introduce args member in at91_reset_data
+>   power: reset: at91-reset: use r4 as tmp argument
+>   power: reset: at91-reset: introduce ramc_lpr to struct at91_reset
+>   power: reset: at91-reset: make at91sam9g45_restart() generic
+>   power: reset: at91-reset: keep only one reset function
+>   power: reset: at91-reset: get rid of at91_reset_data
+>   power: reset: at91-reset: handle nrst async for sam9x60
+>=20
+>  drivers/power/reset/at91-reset.c | 190 +++++++++++++++++++--------------=
+------
+>  1 file changed, 94 insertions(+), 96 deletions(-)
+>=20
+> --=20
+> 2.7.4
+
+--kc3gxuytlvcwlxwg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5lP20ACgkQ2O7X88g7
++prHbg/+O0XOtdVGtEj+dgQdKkxCtRq/tHyIWB/3PAUQ3fAEGtBmQVdDZS6EHi9A
+xvKRTAIPw4NL4LvX3KLx90iyJdwokAU61/MX6aGcWUe7v5jgOGHsdXlfEIVlMzEo
+U7UEexjUAMEAgA2aG1Dl38GNY6q/Df1QKRg63D2x1n6wRD72lzgLTYpVxQVmeEoL
+FP6wYdjvYgBrvjHd0VVoUdrk218eQtzFBA/BsEyJ3Vh3RNiqTNJWamaxe83p10vb
+XMVfSkdyqc/hqBDx95+QkwFcsZM6y/B1iTfjaoc08uEh3GI3k0ggpRoZDm+S3aVr
+Y2n1CDekjlVisufZhwvTkDYijwyWelH4aXlUbyAK/TBJ0zOeESq7mJxHry5az5u2
++161MxZZivVZvklCh0QUgpgP0DOv1vWA4sX7thw7EXLz5HHIJacstKAQGnrUtZNL
+ohIZLEU4awX3xplOltncY0PqKztbv+BTfE9RN8K6EWFjqo76pkMgHoXE+J1VtZA7
+eSQiRvByrAWiWdftZGwoSjTgcO5BlqxAvzFK7nuyvAgrTkip28i+5QGs4ihgpLbz
+s6DWLgts47zHLA03Ymr0Cqw9Ej+2mSeZNhzR4yJAG/fmzoICs4kvfSin9uHJDHyZ
+wubsG9S0HGzZJoGQkm8458zN2GFus96QrGOwx4TLebvipvS69GU=
+=ox0n
+-----END PGP SIGNATURE-----
+
+--kc3gxuytlvcwlxwg--
