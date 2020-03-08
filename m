@@ -2,108 +2,104 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EF9C18E5F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 05:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F65C10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92BE52072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 05:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612E72072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r3PrAbng"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ohLVqCZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725819AbgCHF4Q (ORCPT
+        id S1726163AbgCHGBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 00:56:16 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38589 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgCHF4Q (ORCPT
+        Sun, 8 Mar 2020 01:01:02 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36000 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgCHGBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 00:56:16 -0500
-Received: by mail-pf1-f196.google.com with SMTP id g21so3300241pfb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 21:56:15 -0800 (PST)
+        Sun, 8 Mar 2020 01:01:01 -0500
+Received: by mail-pg1-f194.google.com with SMTP id d9so3189020pgu.3;
+        Sat, 07 Mar 2020 22:01:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZQLcaG4v4iP9SXWeTRwv6UzXT7p+SW2HOZis4ljRrU8=;
-        b=r3PrAbngur1I3ac8O7nrPt5vFQcuLshUpHLyjwDgQx5bahchJ4LgeBcyOhQkmB3zZ2
-         GlHcgsK5vR6Em9CAKrfI+kNkABaITMonig5UXcFWr09Lk1d3MGepfzrm5T6pHvo+IotW
-         zNaYONaMlaBK9Z8ZF0r+qMTauSeo25I2HhhGt/GIMmNVaR/cKQGaFaYldixeQCTnJmBI
-         KHU8jMgYR54PPUaSWLL8Ni5TQvr3ewjtlgNf4Vjziu9Rk5ftFrBBszJVG8HSARrqODui
-         rVcufxgfteyv5F02a+0gdoF4pqBLurIVs9iul3hAiNZgO0EN5WCqNCQ3Nsmo9I0UAKKb
-         CH8g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Nj+26QvFCgpaOHrw23MsZ4NAuEdSFH7yEAjrK++Ph7Q=;
+        b=ohLVqCZz9ZojWIUPgcMSqQIPWwojo/6mzc71lhE48LHeFgJxOmmVwdgdPBpmL1iDQO
+         U9jROmGe8Yx5d35U5P4flLgvzyFNmAY6de6jbRaGf/hg4gERmcQUjcm6PstFd6WjRopj
+         POLd7iVt7NLAvjST3yvpJTAYsS31oGABAD6YRv12FXb7h7vsSUJeGfHddG0Imz3U5h3t
+         AqsaPoeSJpLcwBloOAGGsHdzb/e8rSnH0nE/sEtHCdTPzZqLtWcWJSmLq77sooRG9sEX
+         NRsym+L6Ju1OBB3JJVqslN6C7ZzlnFvZaXUr4TXulNYIAVv0n18tyq7OgztF4f+VPnnE
+         YO0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZQLcaG4v4iP9SXWeTRwv6UzXT7p+SW2HOZis4ljRrU8=;
-        b=k9j2L1LKz58SuRuBDYk67JhhoMxnVb4qnWKccOCrukhXpSFveqzc3xuUNMQD1gXPA+
-         T8j7EXyPj4oiIqCAmGfFiTFb+wjbZNNRrIznWuRD7XvOvE6w3WoyQp9muX5tEaoJtnXz
-         tB8BYvPsHsBl/LkYYwlS+cQUEnKYrEJuwSlkpE3IgXCofwPIVHoVxDnCBs1DUkIpAnG7
-         bTBy36K5B+91GYz1C5pQ5IeiAmdfIeyAblQCIQ0zS9cxuTuLz8twRbS+/mvGARKEXDYk
-         TVKmBIuYNogQOmBHmnwksbl9hDw/SB/DFR4iARrGrE75ntSXjHlgx6jXYTSJGRSWNr1L
-         shDg==
-X-Gm-Message-State: ANhLgQ3uAWgbjisGhNwezIn9UF4JEQN4zMXOgw+NnNotMse+XydhZP+u
-        ReM38gC2s4ywUw4ObAQYaxZSgA==
-X-Google-Smtp-Source: ADFU+vvtxEJiap8kXC5Tov4FW+UxaNfAA81JqXk07ynGpFMuJ/1wUtQooNds0qI0B70AI7/sw1U1mg==
-X-Received: by 2002:aa7:8119:: with SMTP id b25mr8184678pfi.122.1583646974936;
-        Sat, 07 Mar 2020 21:56:14 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k72sm14305175pjb.47.2020.03.07.21.56.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Nj+26QvFCgpaOHrw23MsZ4NAuEdSFH7yEAjrK++Ph7Q=;
+        b=BtFvzhe9Atvrxc7Jw+ACTm08cun3MB61CF0S/DSHtDxZy3ocMXIctH7MpWXbRRtRM5
+         rGsyXsAgRWBm5ZMP3Eswf+U3mdGNIBEegJ3VX7La0zYn0OmrfjjWPmdEM6gsszWoTzEg
+         oHyQ0Jts+URR10ChG9d7z51V5lx69ilk30FQG9gxV1i0qSILP71qTE3ipOKpR4tZ+Cj3
+         H+0NcPlH2dQYTKxhLvgYkSENtqWHNyWwV8xvurf4DnuJz3t9q7ppMMChTq/GPFZeibGZ
+         +aQjlZenbNE2XnccMZBrbZk9EIDGQRjTo06SbCyceEbPl1L/AsgegiOf0PiOLuzdKegE
+         6Gfw==
+X-Gm-Message-State: ANhLgQ0y5jczMJdrGf3DwUP0KE/SeDaxSAObp7tCULCpuN/7vs+E8Kxd
+        fYNLqOI3qRB5kP+CTHQhqrQ=
+X-Google-Smtp-Source: ADFU+vt2Xz7+USz64L6//xelwLrvzVvwplLv4CLEaJIuDQbH02H0pJn7CyGnd6EjkOX4Ul/JTOO07g==
+X-Received: by 2002:a63:1044:: with SMTP id 4mr10987545pgq.412.1583647260210;
+        Sat, 07 Mar 2020 22:01:00 -0800 (PST)
+Received: from localhost.localdomain ([149.129.63.152])
+        by smtp.gmail.com with ESMTPSA id 185sm33483620pfv.104.2020.03.07.22.00.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 21:56:14 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: msm8998-mtp: Disable funnel 4 and 5
-Date:   Sat,  7 Mar 2020 21:54:45 -0800
-Message-Id: <20200308055445.1992189-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 07 Mar 2020 22:00:59 -0800 (PST)
+From:   Jianhui Zhao <zhaojh329@gmail.com>
+To:     herbert@gondor.apana.org.au
+Cc:     davem@davemloft.net, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jianhui Zhao <zhaojh329@gmail.com>
+Subject: [PATCH] crypto: atmel-i2c - Fix wakeup fail
+Date:   Sun,  8 Mar 2020 14:00:53 +0800
+Message-Id: <20200308060053.23515-1-zhaojh329@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable Coresight funnel 4 and 5, for now, as these causes the MTP to
-crash when clock late_initcall disables unused clocks.
+The wake token cannot be sent without ignoring the nack for the
+device address
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Jianhui Zhao <zhaojh329@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/crypto/atmel-i2c.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-index 0e0b9bc12945..8a14b2bf7bca 100644
---- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-@@ -95,11 +95,15 @@ &funnel3 {
- };
+diff --git a/drivers/crypto/atmel-i2c.c b/drivers/crypto/atmel-i2c.c
+index 1d3355913b40..13624cde67e8 100644
+--- a/drivers/crypto/atmel-i2c.c
++++ b/drivers/crypto/atmel-i2c.c
+@@ -3,6 +3,7 @@
+  * Microchip / Atmel ECC (I2C) driver.
+  *
+  * Copyright (c) 2017, Microchip Technology Inc.
++ * Copyright (c) 2020 Jianhui Zhao <zhaojh329@gmail.com>
+  * Author: Tudor Ambarus <tudor.ambarus@microchip.com>
+  */
  
- &funnel4 {
--	status = "okay";
-+	// FIXME: Figure out why clock late_initcall crashes the board with
-+	// this enabled.
-+	// status = "okay";
- };
+@@ -176,7 +177,8 @@ static int atmel_i2c_wakeup(struct i2c_client *client)
+ 	 * device is idle, asleep or during waking up. Don't check for error
+ 	 * when waking up the device.
+ 	 */
+-	i2c_master_send(client, i2c_priv->wake_token, i2c_priv->wake_token_sz);
++	i2c_transfer_buffer_flags(client, i2c_priv->wake_token,
++				i2c_priv->wake_token_sz, I2C_M_IGNORE_NAK);
  
- &funnel5 {
--	status = "okay";
-+	// FIXME: Figure out why clock late_initcall crashes the board with
-+	// this enabled.
-+	// status = "okay";
- };
- 
- &pm8005_lsid1 {
+ 	/*
+ 	 * Wait to wake the device. Typical execution times for ecdh and genkey
 -- 
-2.24.0
+2.17.1
 
