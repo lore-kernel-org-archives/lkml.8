@@ -2,124 +2,170 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF5BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 18:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D354C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8DF206D7
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 18:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583693688;
-	bh=Q+kfL4mkXLvM4nEGnLgXVk4GKzZ0+K/A2ern3w+0xSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zw7B4ZpD7UmD9Giabya/8avYC0rV2y29oPWhNGZTAeeHhhBlm+02rdcmSJcsaj3zt
-	 finwhTokoYWlpgZvh5V8Pc5R/Ddq6yo6LsfwQL3Qsr1JAzfrE0ODGyTGuk4nkhlW4x
-	 yn/8I0+JquFcDUFMEOIOO+90P4hPwpEmc5AOGqqo=
+	by mail.kernel.org (Postfix) with ESMTP id 2ADCC206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:08:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXKCEnly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgCHSys (ORCPT
+        id S1726380AbgCHTH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 14:54:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgCHSyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 14:54:47 -0400
-Received: from earth.universe (unknown [185.62.205.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C576E20663;
-        Sun,  8 Mar 2020 18:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583693687;
-        bh=Q+kfL4mkXLvM4nEGnLgXVk4GKzZ0+K/A2ern3w+0xSU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GL42HVY51ZG+Fp9Jnf0GgKOU1R/rQc66l7JTQISLGNJHbMqKeLW+DTThTwAEk5JxL
-         zselZ4tkuwqc/tZOcqiKK1DhPGWmmEuB/ySZGmCypYcBkhrH0THm2TLNewIn4GaJWd
-         62mbeKY+pBVqH/rdXrd91X1p6Qo7HdhfgIZXDCT8=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 5DAAB3C0C82; Sun,  8 Mar 2020 19:54:44 +0100 (CET)
-Date:   Sun, 8 Mar 2020 19:54:44 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Claudiu.Beznea@microchip.com
-Cc:     Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/15] rework at91-reset driver
-Message-ID: <20200308185444.lpkpumgxhya7n356@earth.universe>
-References: <1579601001-5711-1-git-send-email-claudiu.beznea@microchip.com>
+        Sun, 8 Mar 2020 15:07:58 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33242 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgCHTH6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 15:07:58 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d22so5559532qtn.0;
+        Sun, 08 Mar 2020 12:07:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=q9gIS4U5Axb2UV/TlkmoKYkwkraygD1wbePWfXVPOcw=;
+        b=TXKCEnlyU80n3IUULzxYxQ2QaUidkrNMG/2yUohwmHP1jwU6PTB0LHc5q4Zl3UHH9z
+         QX7NilsZjqIK0N/bUVHtKQG/GmA20luiyPSe0MWh9cfPjS0702OICJQCHhKPe0aHL88C
+         IzJDs6BqN/SiyMYk5F+3JdV+GZ2DiWtcgmKQErxNJ/27daMjFZ9BtJbM6hs0ug5UgGxV
+         9qcCRsIzI4k2umhRSrZOIjMSzQpy8w2ukAZBxqYb+1H0X+7qNODMxTVR4ah2TjETANVr
+         WOKvssAWJVwWvRzNsRmX3+IswTN4jqW+Tp1vTUnED9Gavt8stfaSz1TRgFXf4uCtDVMH
+         Ip5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=q9gIS4U5Axb2UV/TlkmoKYkwkraygD1wbePWfXVPOcw=;
+        b=Sw0cA4cIJaH9wk11r5nlOu/qUC5nOA5W15KaMPxpvnflKWJYoDAoRRnf2p3sab0U2J
+         3V+OxOnfS/KKffwpJd1GRu+RlsRfeRUGmy5FUgVfqixvOuPUJWhvZak4IcenfJtnGq2i
+         kpAQooHW1M9wmrRyoysYYhat0P4XBWibhhhWz2vCBklOuu/sLY9P5Xb747tTLa7oBcIL
+         4cXHuc8Pdvrp/qO2wTKQJAn+nkZVa85T4W/nekyacuiY4b3TF7Ej4RmmIsFCpqk9TZKV
+         AWDfxLZbO2e+UdNcWuUBcxmXO4Bq0+Wi5yt51Sgo5y7mFrMeDGShsbJ1VBlNW4jZ6m10
+         KT1w==
+X-Gm-Message-State: ANhLgQ16OS8pRY2NeI5TmectKonLny+cWwZ45S6M8Lk036B7F45WdxVK
+        cEdV9m73kS9AupGR1GAx2EpiNJ5cQQRshAq20UM=
+X-Google-Smtp-Source: ADFU+vsOimvYnlJjSAb5ewq/pe6fyi+A4Mpsw3y4Aue/tx3nJ9/UVmpbzyx/MsAJ8RLOIQMsslyv/pKarL3MxmoRH1I=
+X-Received: by 2002:ac8:4d1c:: with SMTP id w28mr12051926qtv.48.1583694476930;
+ Sun, 08 Mar 2020 12:07:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kc3gxuytlvcwlxwg"
-Content-Disposition: inline
-In-Reply-To: <1579601001-5711-1-git-send-email-claudiu.beznea@microchip.com>
+References: <CA+4pmEueEiz0Act8X6t4y3+4LOaOh_-ZfzScH0CbOKT99x91NA@mail.gmail.com>
+ <87wo7una02.fsf@miraculix.mork.no>
+In-Reply-To: <87wo7una02.fsf@miraculix.mork.no>
+From:   Daniele Palmas <dnlplm@gmail.com>
+Date:   Sun, 8 Mar 2020 20:07:46 +0100
+Message-ID: <CAGRyCJE-VYRthco5=rZ_PX0hkzhXmQ45yGJe_Gm1UvYJBKYQvQ@mail.gmail.com>
+Subject: Re: [PATCH] net: usb: qmi_wwan: Fix for packets being rejected in the
+ ring buffer used by the xHCI controller.
+To:     =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Cc:     Paul Gildea <paul.gildea@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bj=C3=B8rn and Paul,
 
---kc3gxuytlvcwlxwg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Il giorno dom 8 mar 2020 alle ore 16:28 Bj=C3=B8rn Mork <bjorn@mork.no> ha =
+scritto:
+>
+> Paul Gildea <paul.gildea@gmail.com> writes:
+>
+> > When MTU of modem is set to less than 1500 and a packet larger than MTU
+> > arrives in Linux from a modem, it is discarded with -EOVERFLOW error
+> > (Babble error). This is seen on USB3.0 and USB2.0 busses. This is
+> > essentially because the MRU (Max Receive Size) is not a separate entity=
+ to
+> > the MTU (Max Transmit Size) and the received packets can be larger than
+> > those transmitted. Following the babble error there were an endless sup=
+ply
+> > of zero-length URBs which are rejected with -EPROTO (increasing the rx
+> > input error counter each time). This is only seen on USB3.0. These cont=
+inue
+> > to come ad infinitum until the modem is shutdown, rendering the modem
+> > unusable. There is a bug in the core USB handling code in Linux that
+> > doesn't deal well with network MTUs smaller than 1500 bytes. By default=
+ the
+> > dev->hard_mtu (the "real" MTU) is in lockstep with dev->rx_urb_size
+> > (essentially an MRU), and it's the latter that is causing trouble. This=
+ has
+> > nothing to do with the modems; the issue can be reproduced by getting a
+> > USB-Ethernet dongle, setting the MTU to 1430, and pinging with size gre=
+ater
+> > than 1406.
+> >
+> > Signed-off-by: Paul Gildea <Paul.Gildea@gmail.com>
+> > ---
+> > drivers/net/usb/qmi_wwan.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+> > index 5754bb6..545c772 100644
+> > --- a/drivers/net/usb/qmi_wwan.c
+> > +++ b/drivers/net/usb/qmi_wwan.c
+> > @@ -815,6 +815,13 @@ static int qmi_wwan_bind(struct usbnet *dev, struc=
+t
+> > usb_interface *intf)
+> >     }
+> >     dev->net->netdev_ops =3D &qmi_wwan_netdev_ops;
+> >     dev->net->sysfs_groups[0] =3D &qmi_wwan_sysfs_attr_group;
+> > +    /* LTE Networks don't always respect their own MTU on receive side=
+;
+> > +    * e.g. AT&T pushes 1430 MTU but still allows 1500 byte packets fro=
+m
+> > +    * far-end network. Make receive buffer large enough to accommodate
+> > +    * them, and add four bytes so MTU does not equal MRU on network
+> > +    * with 1500 MTU otherwise usbnet_change_mtu() will change both.
+> > +    */
+> > +   dev->rx_urb_size =3D ETH_DATA_LEN + 4;
 
-Hi,
+Isn't this going to break the change MTU workaround for dl data
+aggregation when using qmap?
 
-On Tue, Jan 21, 2020 at 10:03:29AM +0000, Claudiu.Beznea@microchip.com wrot=
-e:
-> The following patches rework the at91-reset driver and solves
-> the SAM9X60 VDDCORE fast drop in the first 100us after power down.
+Regards,
+Daniele
 
-Thanks, queued to power-supply's for-next branch.
-
--- Sebastian
-
-> Claudiu Beznea (15):
->   power: reset: at91-reset: introduce struct at91_reset
->   power: reset: at91-reset: add ramc_base[] to struct at91_reset
->   power: reset: at91-reset: add sclk to struct at91_reset
->   power: reset: at91-reset: add notifier block to struct at91_reset
->   power: reset: at91-reset: convert reset in pointer to struct
->     at91_reset
->   power: reset: at91-reset: pass rstc base address to
->     at91_reset_status()
->   power: reset: at91-reset: devm_kzalloc() for at91_reset data structure
->   power: reset: at91-reset: introduce struct at91_reset_data
->   power: reset: at91-reset: introduce args member in at91_reset_data
->   power: reset: at91-reset: use r4 as tmp argument
->   power: reset: at91-reset: introduce ramc_lpr to struct at91_reset
->   power: reset: at91-reset: make at91sam9g45_restart() generic
->   power: reset: at91-reset: keep only one reset function
->   power: reset: at91-reset: get rid of at91_reset_data
->   power: reset: at91-reset: handle nrst async for sam9x60
->=20
->  drivers/power/reset/at91-reset.c | 190 +++++++++++++++++++--------------=
-------
->  1 file changed, 94 insertions(+), 96 deletions(-)
->=20
-> --=20
-> 2.7.4
-
---kc3gxuytlvcwlxwg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5lP20ACgkQ2O7X88g7
-+prHbg/+O0XOtdVGtEj+dgQdKkxCtRq/tHyIWB/3PAUQ3fAEGtBmQVdDZS6EHi9A
-xvKRTAIPw4NL4LvX3KLx90iyJdwokAU61/MX6aGcWUe7v5jgOGHsdXlfEIVlMzEo
-U7UEexjUAMEAgA2aG1Dl38GNY6q/Df1QKRg63D2x1n6wRD72lzgLTYpVxQVmeEoL
-FP6wYdjvYgBrvjHd0VVoUdrk218eQtzFBA/BsEyJ3Vh3RNiqTNJWamaxe83p10vb
-XMVfSkdyqc/hqBDx95+QkwFcsZM6y/B1iTfjaoc08uEh3GI3k0ggpRoZDm+S3aVr
-Y2n1CDekjlVisufZhwvTkDYijwyWelH4aXlUbyAK/TBJ0zOeESq7mJxHry5az5u2
-+161MxZZivVZvklCh0QUgpgP0DOv1vWA4sX7thw7EXLz5HHIJacstKAQGnrUtZNL
-ohIZLEU4awX3xplOltncY0PqKztbv+BTfE9RN8K6EWFjqo76pkMgHoXE+J1VtZA7
-eSQiRvByrAWiWdftZGwoSjTgcO5BlqxAvzFK7nuyvAgrTkip28i+5QGs4ihgpLbz
-s6DWLgts47zHLA03Ymr0Cqw9Ej+2mSeZNhzR4yJAG/fmzoICs4kvfSin9uHJDHyZ
-wubsG9S0HGzZJoGQkm8458zN2GFus96QrGOwx4TLebvipvS69GU=
-=ox0n
------END PGP SIGNATURE-----
-
---kc3gxuytlvcwlxwg--
+> >  err:
+> >     return status;
+> >  }
+> > --
+> > 1.9.1
+>
+>
+> This is fine as a first step towards saner buffer handling in qmi_wwan.
+> If real world devices use asymmetric MTUs, then we should just deal with
+> that.
+>
+> So I was going to add my ack.  But the patch does not apply:
+>
+>
+>  bjorn@miraculix:/usr/local/src/git/linux$ git am /tmp/l
+>  Applying: net: usb: qmi_wwan: Fix for packets being rejected in the ring=
+ buffer used by the xHCI controller.
+>  error: corrupt patch at line 10
+>
+> and checkpatch says why:
+>
+>  bjorn@miraculix:/usr/local/src/git/linux$ scripts/checkpatch.pl /tmp/l
+>  ERROR: patch seems to be corrupt (line wrapped?)
+>  #34: FILE: drivers/net/usb/qmi_wwan.c:814:
+>  usb_interface *intf)
+>
+>
+> Could you fix up and resend? You might have to use a different email
+> client.  See
+> https://www.kernel.org/doc/html/latest/process/email-clients.html#email-c=
+lients
+>
+>
+> Bj=C3=B8rn
