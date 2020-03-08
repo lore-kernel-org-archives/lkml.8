@@ -2,423 +2,121 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F5FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15586C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C9D2072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:04:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="chfkh4NS"
+	by mail.kernel.org (Postfix) with ESMTP id E3B33206D7
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgCHMEF (ORCPT
+        id S1726330AbgCHMHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 08:04:05 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33153 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgCHMEF (ORCPT
+        Sun, 8 Mar 2020 08:07:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56562 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCHMHh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 08:04:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m5so3431473pgg.0;
-        Sun, 08 Mar 2020 05:04:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bsJR63Xp/kCHQcTGSq6ZyuHtQE0W4qb6JkpEhLJJk4U=;
-        b=chfkh4NSozGodfqaoSIkGkJUM7+2j7PEMPU9AlgLzRlzrebQMOS5EUX+svAE0vc98J
-         y0AtXAEfYAqZLI91snzR5tyN2v3rv2lJCy7L7ZY+Gq6+kHOCeCwqnmpW8jqGTsLoO/ze
-         OCNT03/O5WlI/e7pNv8VI71HK/25AOZcOUSAltC6sr1qjTsUbZz7WaYmLyjCg0aQXYDj
-         C5qh+30rrCfM6Deu8QTzAQHuApMKJCNk05hajUu5acHAHcIR9k3lmruL6i5XNaAFB7SV
-         Yb3rtbUGKOAKyv8oE153EChlawVIXzEe2djGAExH6bubQTnncTJvaxeAmxMzRNRWprCu
-         4d2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=bsJR63Xp/kCHQcTGSq6ZyuHtQE0W4qb6JkpEhLJJk4U=;
-        b=nkyjwFMtUpBd8Ngc81L0JRL5ZACmh0pzmvPqzj+Dg+N4B2TpzC0Ra5CkikzUNmw7cg
-         2/tAB9WHhs+6cAa+ywPEDz76Nf4HbAZB5ZJrSNS+OiEnVT5LF5GvHwy7v8aGtrAYBi2o
-         YwX1rOYE82hwc/JJWw7/7bOdO2RAI69htZHzWG+P1MhTmxSDNanqXIyd9cfH/OxuYN9R
-         7x77mAX2vNVKy7YAPJs0ukkVpvQwHAehMYT12IUy8T4jFCoUkf4mWJtO7FTC0z1FJvoQ
-         LUoW2jSSqpjoXyy8AtK98OjP6LoRmlovHMoZDLNbiS8VlDpzwCyeYQfSyOTTamdPRXDa
-         RrTg==
-X-Gm-Message-State: ANhLgQ34imgnbjOtuCZorFdkCKHiHvyN4kreTrcmqhf4okQdD2+qszHL
-        UsSlzw7XnfHWSYIQvURjRsMtqgrA
-X-Google-Smtp-Source: ADFU+vu36jBgpd6tirWZWJRDuLS6DVtQRFR7v3KETkUjKaLhe18N+xe9BZJXPCSnO+K2YPC6QzwUfg==
-X-Received: by 2002:a63:2c50:: with SMTP id s77mr11430477pgs.182.1583669042115;
-        Sun, 08 Mar 2020 05:04:02 -0700 (PDT)
-Received: from localhost.localdomain ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id u5sm19818638pfb.153.2020.03.08.05.03.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2020 05:04:01 -0700 (PDT)
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v4] ia64: replace setup_irq() by request_irq()
-Date:   Sun,  8 Mar 2020 17:33:49 +0530
-Message-Id: <20200308120350.19117-1-afzal.mohd.ma@gmail.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200304004936.4955-1-afzal.mohd.ma@gmail.com>
-References: <20200304004936.4955-1-afzal.mohd.ma@gmail.com>
+        Sun, 8 Mar 2020 08:07:37 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jAuiU-0005fZ-CX; Sun, 08 Mar 2020 13:07:34 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B88711C220A;
+        Sun,  8 Mar 2020 13:07:33 +0100 (CET)
+Date:   Sun, 08 Mar 2020 12:07:33 -0000
+From:   "tip-bot2 for Alexander Sverdlin" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] genirq/irqdomain: Check pointer in
+ irq_domain_alloc_irqs_hierarchy()
+Cc:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200306174720.82604-1-alexander.sverdlin@nokia.com>
+References: <20200306174720.82604-1-alexander.sverdlin@nokia.com>
+MIME-Version: 1.0
+Message-ID: <158366925336.28353.5904197587974966508.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-request_irq() is preferred over setup_irq(). Invocations of setup_irq()
-occur after memory allocators are ready.
+The following commit has been merged into the irq/core branch of tip:
 
-Per tglx[1], setup_irq() existed in olden days when allocators were not
-ready by the time early interrupts were initialized.
+Commit-ID:     87f2d1c662fa1761359fdf558246f97e484d177a
+Gitweb:        https://git.kernel.org/tip/87f2d1c662fa1761359fdf558246f97e484d177a
+Author:        Alexander Sverdlin <alexander.sverdlin@nokia.com>
+AuthorDate:    Fri, 06 Mar 2020 18:47:20 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sun, 08 Mar 2020 13:03:41 +01:00
 
-Hence replace setup_irq() by request_irq().
+genirq/irqdomain: Check pointer in irq_domain_alloc_irqs_hierarchy()
 
-Changing 'ia64_native_register_percpu_irq' decleration to include
-'irq_handler_t' as an argument type in arch/ia64/include/asm/hw_irq.h
-was causing build error - 'unknown type name 'irq_handler_t''
+irq_domain_alloc_irqs_hierarchy() has 3 call sites in the compilation unit
+but only one of them checks for the pointer which is being dereferenced
+inside the called function. Move the check into the function. This allows
+for catching the error instead of the following crash:
 
-This was due to below header file sequence,
-+ include/interrupt.h
- + include/hardirq.h
-  + asm/hardirq.h
-   + include/irq.h
-    + asm/hw_irq.h
-       [ 'ia64_native_register_percpu_irq' declared w/ 'irq_handler_t']
- [ 'irq_handler_t' typedef'ed here in 'include/interrupt.h']
+Unable to handle kernel NULL pointer dereference at virtual address 00000000
+PC is at 0x0
+LR is at gpiochip_hierarchy_irq_domain_alloc+0x11f/0x140
+...
+[<c06c23ff>] (gpiochip_hierarchy_irq_domain_alloc)
+[<c0462a89>] (__irq_domain_alloc_irqs)
+[<c0462dad>] (irq_create_fwspec_mapping)
+[<c06c2251>] (gpiochip_to_irq)
+[<c06c1c9b>] (gpiod_to_irq)
+[<bf973073>] (gpio_irqs_init [gpio_irqs])
+[<bf974048>] (gpio_irqs_exit+0xecc/0xe84 [gpio_irqs])
+Code: bad PC value
 
-'register_percpu_irq' defined to 'ia64_native_register_percpu_irq' is
-the one invoked by the caller, not the latter directly. This was done
-to support paravirtualization which was removed around 4 years back.
-And 'register_percpu_irq' is invoked only inside 'arch/ia64/kernel'.
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200306174720.82604-1-alexander.sverdlin@nokia.com
 
-So 'register_percpu_irq' define to 'ia64_native_register_percpu_irq' is
-removed, instead 'ia64_native_register_percpu_irq' is renamed to
-'register_precpu_irq()' & it is directly invoked. Also,
-'register_precpu_irq()' is declared in a new header file 'irq.h' inside
-'arch/ia64/kernel/', this header file is included by C files invoking
-'register_percpu_irq()'.
-
-[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 ---
+ kernel/irq/irqdomain.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Link to v3, v2 & v1,
-[v3] https://lkml.kernel.org/r/20200304004936.4955-1-afzal.mohd.ma@gmail.com
-[v2] https://lkml.kernel.org/r/cover.1582471508.git.afzal.mohd.ma@gmail.com
-[v1] https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
-
-v4:
- * Fix build errors
- * Include modifications to callers of 'register_percpu_irq()' at two
-	instances left out (as it's signature changed)
-v3:
- * Split out from tree wide series, as Thomas suggested to get it thr'
-	respective maintainers
- * Modify pr_err displayed in case of error
- * Re-arrange code & choose pr_err args as required to improve readability
- * Remove irrelevant parts from commit message & improve
- 
-v2:
- * Replace pr_err("request_irq() on %s failed" by
-           pr_err("%s: request_irq() failed"
- * Commit message massage
-
- arch/ia64/include/asm/hw_irq.h |  2 --
- arch/ia64/kernel/irq.h         |  3 ++
- arch/ia64/kernel/irq_ia64.c    | 43 ++++++++++-------------------
- arch/ia64/kernel/mca.c         | 50 ++++++++++------------------------
- arch/ia64/kernel/perfmon.c     | 10 +++----
- arch/ia64/kernel/time.c        | 11 ++------
- 6 files changed, 39 insertions(+), 80 deletions(-)
- create mode 100644 arch/ia64/kernel/irq.h
-
-diff --git a/arch/ia64/include/asm/hw_irq.h b/arch/ia64/include/asm/hw_irq.h
-index e6385c7bdeb0..f6ff95b4ecb1 100644
---- a/arch/ia64/include/asm/hw_irq.h
-+++ b/arch/ia64/include/asm/hw_irq.h
-@@ -113,7 +113,6 @@ extern struct irq_chip irq_type_ia64_lsapic;	/* CPU-internal interrupt controlle
- #define ia64_register_ipi	ia64_native_register_ipi
- #define assign_irq_vector	ia64_native_assign_irq_vector
- #define free_irq_vector		ia64_native_free_irq_vector
--#define register_percpu_irq	ia64_native_register_percpu_irq
- #define ia64_resend_irq		ia64_native_resend_irq
- 
- extern void ia64_native_register_ipi(void);
-@@ -123,7 +122,6 @@ extern void ia64_native_free_irq_vector (int vector);
- extern int reserve_irq_vector (int vector);
- extern void __setup_vector_irq(int cpu);
- extern void ia64_send_ipi (int cpu, int vector, int delivery_mode, int redirect);
--extern void ia64_native_register_percpu_irq (ia64_vector vec, struct irqaction *action);
- extern void destroy_and_reserve_irq (unsigned int irq);
- 
- #ifdef CONFIG_SMP
-diff --git a/arch/ia64/kernel/irq.h b/arch/ia64/kernel/irq.h
-new file mode 100644
-index 000000000000..4d16f3cbeb1d
---- /dev/null
-+++ b/arch/ia64/kernel/irq.h
-@@ -0,0 +1,3 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+extern void register_percpu_irq(ia64_vector vec, irq_handler_t handler,
-+				unsigned long flags, const char *name);
-diff --git a/arch/ia64/kernel/irq_ia64.c b/arch/ia64/kernel/irq_ia64.c
-index 8e91c86e8072..e7862e4cb1e7 100644
---- a/arch/ia64/kernel/irq_ia64.c
-+++ b/arch/ia64/kernel/irq_ia64.c
-@@ -351,11 +351,6 @@ static irqreturn_t smp_irq_move_cleanup_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction irq_move_irqaction = {
--	.handler =	smp_irq_move_cleanup_interrupt,
--	.name =		"irq_move"
--};
--
- static int __init parse_vector_domain(char *arg)
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index fdfc213..35b8d97 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1310,6 +1310,11 @@ int irq_domain_alloc_irqs_hierarchy(struct irq_domain *domain,
+ 				    unsigned int irq_base,
+ 				    unsigned int nr_irqs, void *arg)
  {
- 	if (!arg)
-@@ -586,28 +581,15 @@ static irqreturn_t dummy_handler (int irq, void *dev_id)
- 	return IRQ_NONE;
- }
- 
--static struct irqaction ipi_irqaction = {
--	.handler =	handle_IPI,
--	.name =		"IPI"
--};
--
- /*
-  * KVM uses this interrupt to force a cpu out of guest mode
-  */
--static struct irqaction resched_irqaction = {
--	.handler =	dummy_handler,
--	.name =		"resched"
--};
--
--static struct irqaction tlb_irqaction = {
--	.handler =	dummy_handler,
--	.name =		"tlb_flush"
--};
- 
- #endif
- 
- void
--ia64_native_register_percpu_irq (ia64_vector vec, struct irqaction *action)
-+register_percpu_irq(ia64_vector vec, irq_handler_t handler, unsigned long flags,
-+		    const char *name)
- {
- 	unsigned int irq;
- 
-@@ -615,8 +597,9 @@ ia64_native_register_percpu_irq (ia64_vector vec, struct irqaction *action)
- 	BUG_ON(bind_irq_vector(irq, vec, CPU_MASK_ALL));
- 	irq_set_status_flags(irq, IRQ_PER_CPU);
- 	irq_set_chip(irq, &irq_type_ia64_lsapic);
--	if (action)
--		setup_irq(irq, action);
-+	if (handler)
-+		if (request_irq(irq, handler, flags, name, NULL))
-+			pr_err("Failed to request irq %u (%s)\n", irq, name);
- 	irq_set_handler(irq, handle_percpu_irq);
- }
- 
-@@ -624,9 +607,10 @@ void __init
- ia64_native_register_ipi(void)
- {
- #ifdef CONFIG_SMP
--	register_percpu_irq(IA64_IPI_VECTOR, &ipi_irqaction);
--	register_percpu_irq(IA64_IPI_RESCHEDULE, &resched_irqaction);
--	register_percpu_irq(IA64_IPI_LOCAL_TLB_FLUSH, &tlb_irqaction);
-+	register_percpu_irq(IA64_IPI_VECTOR, handle_IPI, 0, "IPI");
-+	register_percpu_irq(IA64_IPI_RESCHEDULE, dummy_handler, 0, "resched");
-+	register_percpu_irq(IA64_IPI_LOCAL_TLB_FLUSH, dummy_handler, 0,
-+			    "tlb_flush");
- #endif
- }
- 
-@@ -635,10 +619,13 @@ init_IRQ (void)
- {
- 	acpi_boot_init();
- 	ia64_register_ipi();
--	register_percpu_irq(IA64_SPURIOUS_INT_VECTOR, NULL);
-+	register_percpu_irq(IA64_SPURIOUS_INT_VECTOR, NULL, 0, NULL);
- #ifdef CONFIG_SMP
--	if (vector_domain_type != VECTOR_DOMAIN_NONE)
--		register_percpu_irq(IA64_IRQ_MOVE_VECTOR, &irq_move_irqaction);
-+	if (vector_domain_type != VECTOR_DOMAIN_NONE) {
-+		register_percpu_irq(IA64_IRQ_MOVE_VECTOR,
-+				    smp_irq_move_cleanup_interrupt, 0,
-+				    "irq_move");
++	if (!domain->ops->alloc) {
++		pr_debug("domain->ops->alloc() is NULL\n");
++		return -ENOSYS;
 +	}
- #endif
- #ifdef CONFIG_PERFMON
- 	pfm_init_percpu();
-diff --git a/arch/ia64/kernel/mca.c b/arch/ia64/kernel/mca.c
-index bf2cb9294795..6fb54dfa1350 100644
---- a/arch/ia64/kernel/mca.c
-+++ b/arch/ia64/kernel/mca.c
-@@ -104,6 +104,7 @@
- 
- #include "mca_drv.h"
- #include "entry.h"
-+#include "irq.h"
- 
- #if defined(IA64_MCA_DEBUG_INFO)
- # define IA64_MCA_DEBUG(fmt...)	printk(fmt)
-@@ -1766,36 +1767,6 @@ ia64_mca_disable_cpe_polling(char *str)
- 
- __setup("disable_cpe_poll", ia64_mca_disable_cpe_polling);
- 
--static struct irqaction cmci_irqaction = {
--	.handler =	ia64_mca_cmc_int_handler,
--	.name =		"cmc_hndlr"
--};
--
--static struct irqaction cmcp_irqaction = {
--	.handler =	ia64_mca_cmc_int_caller,
--	.name =		"cmc_poll"
--};
--
--static struct irqaction mca_rdzv_irqaction = {
--	.handler =	ia64_mca_rendez_int_handler,
--	.name =		"mca_rdzv"
--};
--
--static struct irqaction mca_wkup_irqaction = {
--	.handler =	ia64_mca_wakeup_int_handler,
--	.name =		"mca_wkup"
--};
--
--static struct irqaction mca_cpe_irqaction = {
--	.handler =	ia64_mca_cpe_int_handler,
--	.name =		"cpe_hndlr"
--};
--
--static struct irqaction mca_cpep_irqaction = {
--	.handler =	ia64_mca_cpe_int_caller,
--	.name =		"cpe_poll"
--};
--
- /* Minimal format of the MCA/INIT stacks.  The pseudo processes that run on
-  * these stacks can never sleep, they cannot return from the kernel to user
-  * space, they do not appear in a normal ps listing.  So there is no need to
-@@ -2056,18 +2027,23 @@ void __init ia64_mca_irq_init(void)
- 	 *  Configure the CMCI/P vector and handler. Interrupts for CMC are
- 	 *  per-processor, so AP CMC interrupts are setup in smp_callin() (smpboot.c).
- 	 */
--	register_percpu_irq(IA64_CMC_VECTOR, &cmci_irqaction);
--	register_percpu_irq(IA64_CMCP_VECTOR, &cmcp_irqaction);
-+	register_percpu_irq(IA64_CMC_VECTOR, ia64_mca_cmc_int_handler, 0,
-+			    "cmc_hndlr");
-+	register_percpu_irq(IA64_CMCP_VECTOR, ia64_mca_cmc_int_caller, 0,
-+			    "cmc_poll");
- 	ia64_mca_cmc_vector_setup();       /* Setup vector on BSP */
- 
- 	/* Setup the MCA rendezvous interrupt vector */
--	register_percpu_irq(IA64_MCA_RENDEZ_VECTOR, &mca_rdzv_irqaction);
-+	register_percpu_irq(IA64_MCA_RENDEZ_VECTOR, ia64_mca_rendez_int_handler,
-+			    0, "mca_rdzv");
- 
- 	/* Setup the MCA wakeup interrupt vector */
--	register_percpu_irq(IA64_MCA_WAKEUP_VECTOR, &mca_wkup_irqaction);
-+	register_percpu_irq(IA64_MCA_WAKEUP_VECTOR, ia64_mca_wakeup_int_handler,
-+			    0, "mca_wkup");
- 
- 	/* Setup the CPEI/P handler */
--	register_percpu_irq(IA64_CPEP_VECTOR, &mca_cpep_irqaction);
-+	register_percpu_irq(IA64_CPEP_VECTOR, ia64_mca_cpe_int_caller, 0,
-+			    "cpe_poll");
- }
- 
- /*
-@@ -2108,7 +2084,9 @@ ia64_mca_late_init(void)
- 			if (irq > 0) {
- 				cpe_poll_enabled = 0;
- 				irq_set_status_flags(irq, IRQ_PER_CPU);
--				setup_irq(irq, &mca_cpe_irqaction);
-+				if (request_irq(irq, ia64_mca_cpe_int_handler,
-+						0, "cpe_hndlr", NULL))
-+					pr_err("Failed to register cpe_hndlr interrupt\n");
- 				ia64_cpe_irq = irq;
- 				ia64_mca_register_cpev(cpe_vector);
- 				IA64_MCA_DEBUG("%s: CPEI/P setup and enabled.\n",
-diff --git a/arch/ia64/kernel/perfmon.c b/arch/ia64/kernel/perfmon.c
-index a23c3938a1c4..df257002950e 100644
---- a/arch/ia64/kernel/perfmon.c
-+++ b/arch/ia64/kernel/perfmon.c
-@@ -57,6 +57,8 @@
- #include <linux/uaccess.h>
- #include <asm/delay.h>
- 
-+#include "irq.h"
 +
- #ifdef CONFIG_PERFMON
- /*
-  * perfmon context state
-@@ -6313,11 +6315,6 @@ pfm_flush_pmds(struct task_struct *task, pfm_context_t *ctx)
- 	}
+ 	return domain->ops->alloc(domain, irq_base, nr_irqs, arg);
  }
  
--static struct irqaction perfmon_irqaction = {
--	.handler = pfm_interrupt_handler,
--	.name    = "perfmon"
--};
--
- static void
- pfm_alt_save_pmu_state(void *data)
- {
-@@ -6591,7 +6588,8 @@ pfm_init_percpu (void)
- 	pfm_unfreeze_pmu();
- 
- 	if (first_time) {
--		register_percpu_irq(IA64_PERFMON_VECTOR, &perfmon_irqaction);
-+		register_percpu_irq(IA64_PERFMON_VECTOR, pfm_interrupt_handler,
-+				    0, "perfmon");
- 		first_time=0;
+@@ -1347,11 +1352,6 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
+ 			return -EINVAL;
  	}
  
-diff --git a/arch/ia64/kernel/time.c b/arch/ia64/kernel/time.c
-index 91b4024c9351..7abc5f37bfaf 100644
---- a/arch/ia64/kernel/time.c
-+++ b/arch/ia64/kernel/time.c
-@@ -32,6 +32,7 @@
- #include <asm/sections.h>
- 
- #include "fsyscall_gtod_data.h"
-+#include "irq.h"
- 
- static u64 itc_get_cycles(struct clocksource *cs);
- 
-@@ -380,13 +381,6 @@ static u64 itc_get_cycles(struct clocksource *cs)
- 	return now;
- }
- 
+-	if (!domain->ops->alloc) {
+-		pr_debug("domain->ops->alloc() is NULL\n");
+-		return -ENOSYS;
+-	}
 -
--static struct irqaction timer_irqaction = {
--	.handler =	timer_interrupt,
--	.flags =	IRQF_IRQPOLL,
--	.name =		"timer"
--};
--
- void read_persistent_clock64(struct timespec64 *ts)
- {
- 	efi_gettimeofday(ts);
-@@ -395,7 +389,8 @@ void read_persistent_clock64(struct timespec64 *ts)
- void __init
- time_init (void)
- {
--	register_percpu_irq(IA64_TIMER_VECTOR, &timer_irqaction);
-+	register_percpu_irq(IA64_TIMER_VECTOR, timer_interrupt, IRQF_IRQPOLL,
-+			    "timer");
- 	ia64_init_itm();
- }
- 
--- 
-2.18.0
-
+ 	if (realloc && irq_base >= 0) {
+ 		virq = irq_base;
+ 	} else {
