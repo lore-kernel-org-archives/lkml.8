@@ -2,100 +2,104 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BE4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A033FC10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CFF20838
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FC12084E
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583661194;
-	bh=7z5w5Mo9GoOfooKxpQz035prhFQReuF5ube04Cvb6hQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=dSaDFTUN78Rbi/Cx2lvHaA0QmG9Ytm95ZiZLEgDUtpQIBi60kNJwEJwg38YStAzqw
-	 Hh0Go0jBrpFQJ0sGfAt635m3SMYQEWaYgzS3x8CLSUXMjBb0Gc3y2Gj9bbiE1MyQqR
-	 GkeYzvFTGQV1Y7W7I/s6hsaK2vLqhZZjNHy36nnA=
+	s=default; t=1583661204;
+	bh=a+fEawxUrmRXxmSzSy/C7nojpkQvXf9neNEOdNooh+Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BuBrd8M/B8ISJ4qTgh43EdDJ7lZKNbhtJ6axnRizwpxXjcr++982yeP5GcAtYHUM7
+	 zKyBlqk0B8YR2OnhgG5HOTPPXPGmLVXp5/tMqBfCQRuo6p98rUYGpSmIZCtss7oSQI
+	 daO7qpVb+aMgjQA8wG9wVeXSAKyOROR5otYUn5fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgCHJxN (ORCPT
+        id S1726411AbgCHJxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 05:53:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37008 "EHLO mail.kernel.org"
+        Sun, 8 Mar 2020 05:53:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgCHJxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 05:53:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725306AbgCHJxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 05:53:22 -0400
+Received: from localhost.localdomain (unknown [89.208.247.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A95020828;
-        Sun,  8 Mar 2020 09:53:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3A3220828;
+        Sun,  8 Mar 2020 09:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583661193;
-        bh=7z5w5Mo9GoOfooKxpQz035prhFQReuF5ube04Cvb6hQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HJ+pqAVdDvlRtdCrERpwZaCxbdXeG5ID1Kq2h3Spb0Jpc6ElCTyFpzOn6XRw4qdxp
-         D2CnTb0W/sWOQGKE5QAJ2i9XpWicvqbI/tVtOJniV/lrfz2pcGGoQryxyKtPSb+Etk
-         5DhO2XUN5yeRUH8rj6MXPRluzI4ihNvAjq4y4+X0=
-Date:   Sun, 8 Mar 2020 10:53:10 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Char/Misc driver fixes for 5.6-rc5
-Message-ID: <20200308095310.GA4027283@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        s=default; t=1583661202;
+        bh=a+fEawxUrmRXxmSzSy/C7nojpkQvXf9neNEOdNooh+Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eowOCkteI7Hf21jyWkewxxreP87MDWIRPPkAP3C2tqj0EycanQMnp9TkLmAWqCEd+
+         cD8rWoNCZh+kj2Z6JktJW/B08sqaeCspHXpHIFhdK+sm8zgMF0mNSqO81Mdk4vswHQ
+         TLTKMuNiSgGkvBNzRu5YPu1lQEC7MnJ6t4JCP+D4=
+From:   guoren@kernel.org
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com, Anup.Patel@wdc.com,
+        greentime.hu@sifive.com
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        arnd@arndb.de, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: [RFC PATCH V3 01/11] riscv: Separate patch for cflags and aflags
+Date:   Sun,  8 Mar 2020 17:49:44 +0800
+Message-Id: <20200308094954.13258-2-guoren@kernel.org>
+X-Mailer: git-send-email 2.17.0
+In-Reply-To: <20200308094954.13258-1-guoren@kernel.org>
+References: <20200308094954.13258-1-guoren@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
+From: Guo Ren <guoren@linux.alibaba.com>
 
-  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
+From: Guo Ren <ren_guo@c-sky.com>
 
-are available in the Git repository at:
+Use "subst fd" in Makefile is a hack way and it's not convenient
+to add new ISA feature. Just separate them into riscv-march-cflags
+and riscv-march-aflags.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.6-rc5
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+---
+ arch/riscv/Makefile | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-for you to fetch changes up to f0fe2c0f050d31babcad7d65f1d550d462a40064:
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index b9009a2fbaf5..6d09b53cf106 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -35,12 +35,18 @@ else
+ endif
+ 
+ # ISA string setting
+-riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32ima
+-riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64ima
+-riscv-march-$(CONFIG_FPU)		:= $(riscv-march-y)fd
+-riscv-march-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-y)c
+-KBUILD_CFLAGS += -march=$(subst fd,,$(riscv-march-y))
+-KBUILD_AFLAGS += -march=$(riscv-march-y)
++riscv-march-cflags-$(CONFIG_ARCH_RV32I)		:= rv32ima
++riscv-march-cflags-$(CONFIG_ARCH_RV64I)		:= rv64ima
++riscv-march-$(CONFIG_FPU)			:= $(riscv-march-y)fd
++riscv-march-cflags-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-cflags-y)c
++
++riscv-march-aflags-$(CONFIG_ARCH_RV32I)		:= rv32ima
++riscv-march-aflags-$(CONFIG_ARCH_RV64I)		:= rv64ima
++riscv-march-aflags-$(CONFIG_FPU)		:= $(riscv-march-aflags-y)fd
++riscv-march-aflags-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-aflags-y)c
++
++KBUILD_CFLAGS += -march=$(riscv-march-cflags-y)
++KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)
+ 
+ KBUILD_CFLAGS += -mno-save-restore
+ KBUILD_CFLAGS += -DCONFIG_PAGE_OFFSET=$(CONFIG_PAGE_OFFSET)
+-- 
+2.17.0
 
-  binder: prevent UAF for binderfs devices II (2020-03-03 19:58:37 +0100)
-
-----------------------------------------------------------------
-Char/Misc fixes for 5.6-rc5
-
-Here are 4 small char/misc driver fixes for reported issues for 5.6-rc5.
-
-These fixes are:
-	- binder fix for a potential use-after-free problem found (took
-	  2 tries to get it right)
-	- interconnect core fix
-	- altera-stapl driver fix
-
-All 4 of these have been in linux-next for a while with no reported
-issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Christian Brauner (2):
-      binder: prevent UAF for binderfs devices
-      binder: prevent UAF for binderfs devices II
-
-Daniel Axtens (1):
-      altera-stapl: altera_get_note: prevent write beyond end of 'key'
-
-Georgi Djakov (1):
-      interconnect: Handle memory allocation errors
-
- drivers/android/binder.c           |  9 +++++++++
- drivers/android/binder_internal.h  |  2 ++
- drivers/android/binderfs.c         |  7 +++++--
- drivers/interconnect/core.c        |  9 +++++++++
- drivers/misc/altera-stapl/altera.c | 12 ++++++------
- 5 files changed, 31 insertions(+), 8 deletions(-)
