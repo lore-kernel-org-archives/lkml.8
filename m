@@ -2,308 +2,90 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9238C10F29
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F260C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81CDD20866
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:31:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="djLmLpty"
+	by mail.kernel.org (Postfix) with ESMTP id E152A2084E
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583675101;
+	bh=RBjZPGsUiQKMAYuCVc9l3M8rUSO+5QKpF3FnNFmV69Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XRsA8MkrawIaX91lkFFi19zDc0Ch+a11mm1u3nM1X99wZ4LUmQVvAZ0lpsW6ejrei
+	 5k73u4OZ3cfZF2a9GTd4S3oVV+HytnWjqr0NAd3FrZ7wLVwTH9PynQ/q1gQD69CmCT
+	 L3Q+KID97CcxitT6F2TCETaOODJdK+HBe2QoesUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgCHNbN (ORCPT
+        id S1726332AbgCHNpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 09:31:13 -0400
-Received: from mail-eopbgr40043.outbound.protection.outlook.com ([40.107.4.43]:2309
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726289AbgCHNbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 09:31:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mue+aJC0StCnuUq/AXrvJaZncxlwc+Y2AKnG9b6kKO2JBEe95oXeMis9GZmQRUmYxxYQ8xBYzhGJY7lfT82UO+xVCi0lVc2+V5+AMgvrcGQl/gCk1mcf6vmIu0+W7K4rAqkF+RdVfF97fEfD8RIDijuMZbnO/EKtde4GroS9uFGyMx0nPoPUvZcszRBZvyuxC8E+ptOsRERL/s7Uendx01zkVw12J/dzyV1HeFPoU399zNoXhOAuGCvIDKrlFBozgUNBBd+YlUvw2ww60NrAbgvEx26SMXlpIPLhh5HRAEk54PAbVhmXYdlw840cOAJyPmJyhLVpEgKMKKZsaV86Gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cXHX2MtAryfb/y++IhNIyI5FmDd2LlmtusEMdRX0BFA=;
- b=afZCdV7VrtG4Jss9ZEAvQMLV6bAQ5Um5OLhykhnLxhA4e0yMCadqpFm7orj0wct6mynfaiyJQ678R/HHbwlQbMbRVPIsCXh6qT2Oobly/M8JtV7AR7/SIb4A03R7p2eEan6bFCy7k6+XTgMLAtlmYqD+RhRGsXPDiuE/qMOeVLpx5pzqp35linevEk1wXKGCBni1o1azb3O0LtUgahaSq9n0Ghf76hBBxIe6y/V75IL+hxhJkQ+m1aCnenPtr65f96yGS0FcIMD/zFRoVYc7gGndc45h9EF0L1fLBVgdUQ5KxThshceAwdVJmrMRJrZG/pgGGx96M8KLhBotzOMCdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cXHX2MtAryfb/y++IhNIyI5FmDd2LlmtusEMdRX0BFA=;
- b=djLmLpty0zPflx42YtHYpFzK3TvF/oqxuU8b7WbyEBNFrlf975W9yJ+kFozgTlu/pSYFf4SBhENspHwLQVHZLnnFiAouz4Ow3E4gET9OUgmFvmbkKHbpa4eGR7htkZSJLLGstas33iqJmi/47wLyFbWmJCSk55LNKHT2+aGLPPM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6275.eurprd04.prod.outlook.com (20.179.36.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.15; Sun, 8 Mar 2020 13:31:10 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.013; Sun, 8 Mar 2020
- 13:31:10 +0000
-From:   peng.fan@nxp.com
-To:     sudeep.holla@arm.com, robh+dt@kernel.org
-Cc:     viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V5 2/2] firmware: arm_scmi: add smc/hvc transport
-Date:   Sun,  8 Mar 2020 21:24:39 +0800
-Message-Id: <1583673879-20714-3-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583673879-20714-1-git-send-email-peng.fan@nxp.com>
-References: <1583673879-20714-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0116.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::20) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        Sun, 8 Mar 2020 09:45:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbgCHNpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 09:45:00 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C6DD20848;
+        Sun,  8 Mar 2020 13:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583675099;
+        bh=RBjZPGsUiQKMAYuCVc9l3M8rUSO+5QKpF3FnNFmV69Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kMD8MttDVLiX3hA3MfRHVv5qnHIj82BuiW9zyDU0N9kIUBn18YRIocVffjTyk6jSL
+         xA7TmOVqT+smgBO85YN9LCnqi2NNZXEdF47yhMLofmVP08yRmQzTXEKMeZf+BaMSzD
+         gWRoj81zeFl4LGOZBCp084DMWmas1tbLxMZOVd/0=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jAwEj-00B2cM-AM; Sun, 08 Mar 2020 13:44:57 +0000
+Date:   Sun, 8 Mar 2020 13:44:53 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3] irqchip: Replace setup_irq() by request_irq()
+Message-ID: <20200308134453.32ab0fea@why>
+In-Reply-To: <20200304004839.4729-1-afzal.mohd.ma@gmail.com>
+References: <20200304004839.4729-1-afzal.mohd.ma@gmail.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR01CA0116.apcprd01.prod.exchangelabs.com (2603:1096:4:40::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.14 via Frontend Transport; Sun, 8 Mar 2020 13:31:07 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 80cda6e6-f553-48fc-3a32-08d7c364f68a
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6275:|AM0PR04MB6275:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB6275CA614591ED1FD09FF40788E10@AM0PR04MB6275.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 03361FCC43
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(366004)(346002)(376002)(136003)(199004)(189003)(5660300002)(16526019)(186003)(2616005)(956004)(2906002)(4326008)(6506007)(6512007)(6666004)(9686003)(52116002)(66556008)(6486002)(81156014)(81166006)(86362001)(478600001)(8676002)(316002)(66946007)(66476007)(26005)(36756003)(69590400007)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6275;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qU6kXjNfFiLBL8id9RLRKmOg9/STbfLJKr6fJ3svxgcGIsbnkF/cEtAjGZ07bgZ0W2kxXF6jzml/Gp0ZLZ2BIZzuM0oIhkXJmId4a3/YjqWPsJ7g0atBMBzwnLZ/Am+gOvi9Khm+dQsG96YDety+JDzQ07HvFemXlUDviwmAVFS2cy+HskFe1RARmSX2uRlktKU4IioDpIQsSjBtHkIGC4CZpfPm6wxjBEy52l4Yk+V0ogZlg7FIdo0lUlY32RuKHrdDr3x7mYqAh9cenx7RuAy2uhg5q5JG1Ns+llOPEs5K1Ljo8MQOYCJTqXYbTvse3botEOWnQsYX8AJi3yJ6HQKP2ZfF5XH6CW81OfhHa0PRLuEV8VW04JA1g8aqwdd09RGnfF67a7VKAWSThRYTXrb3wLvQRvlJ5QN3uPbqSKzRVzVklo8ERl7LD3FtG6lIa91KbQnFbGKrKccIk0Chg6gUslLH4epVh+fN8NUcwyuWfH2VKX84YvUaogrTkSG8
-X-MS-Exchange-AntiSpam-MessageData: jiLIqD8npSxqKI5BZF4sKg3SetXMMJ+Z121mcOKrsEkVRjlB70Aed5+nUByBTocBMiOohLanziOR/3diGwMwrtroxZlttwlaY1iIRhlaruJM+k7PqlBuJjQihhhONmVXeVvsH+U78AiUWXfuWKy1Ng==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80cda6e6-f553-48fc-3a32-08d7c364f68a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2020 13:31:10.7917
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qYwwHUwFFDkV4gBoElqKcg2uRHp7LXd53wpn/XOPb1ZpZDmgnB4tHqT9HBWOY8H+fVSMA6C0fBDaFr04AhymHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6275
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: afzal.mohd.ma@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, paul@crapouillou.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Wed,  4 Mar 2020 06:18:38 +0530
+afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
 
-Take arm,smc-id as the 1st arg, leave the other args as zero for now.
-There is no Rx, only Tx because of smc/hvc not support Rx.
+> request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+> occur after memory allocators are ready.
+> 
+> Per tglx[1], setup_irq() existed in olden days when allocators were not
+> ready by the time early interrupts were initialized.
+> 
+> Hence replace setup_irq() by request_irq().
+> 
+> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+> 
+> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/firmware/arm_scmi/Makefile |   2 +-
- drivers/firmware/arm_scmi/common.h |   1 +
- drivers/firmware/arm_scmi/driver.c |   1 +
- drivers/firmware/arm_scmi/smc.c    | 152 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 155 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/arm_scmi/smc.c
+I've queued this for 5.7.
 
-diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index 6694d0d908d6..6b1b0d6c6d0e 100644
---- a/drivers/firmware/arm_scmi/Makefile
-+++ b/drivers/firmware/arm_scmi/Makefile
-@@ -2,6 +2,6 @@
- obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o scmi-transport.o
- scmi-bus-y = bus.o
- scmi-driver-y = driver.o
--scmi-transport-y = mailbox.o shmem.o
-+scmi-transport-y = mailbox.o shmem.o smc.o
- scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
- obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 5ac06469b01c..94fc2b2df940 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -210,6 +210,7 @@ struct scmi_desc {
- };
- 
- extern const struct scmi_desc scmi_mailbox_desc;
-+extern const struct scmi_desc scmi_smc_desc;
- 
- void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr);
- void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr, int id);
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index dbec767222e9..e76a3fab1074 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -827,6 +827,7 @@ ATTRIBUTE_GROUPS(versions);
- /* Each compatible listed below must have descriptor associated with it */
- static const struct of_device_id scmi_of_match[] = {
- 	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
-+	{ .compatible = "arm,scmi-smc", .data = &scmi_smc_desc},
- 	{ /* Sentinel */ },
- };
- 
-diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
-new file mode 100644
-index 000000000000..336168e40f49
---- /dev/null
-+++ b/drivers/firmware/arm_scmi/smc.c
-@@ -0,0 +1,152 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * System Control and Management Interface (SCMI) Message SMC/HVC
-+ * Transport driver
-+ *
-+ * Copyright 2020 NXP
-+ */
-+
-+#include <linux/arm-smccc.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
-+
-+#include "common.h"
-+
-+/**
-+ * struct scmi_smc - Structure representing a SCMI smc transport
-+ *
-+ * @cinfo: SCMI channel info
-+ * @shmem: Transmit/Receive shared memory area
-+ * @func_id: smc/hvc call function id
-+ */
-+
-+struct scmi_smc {
-+	struct scmi_chan_info *cinfo;
-+	struct scmi_shared_mem __iomem *shmem;
-+	u32 func_id;
-+};
-+
-+static DEFINE_MUTEX(smc_mutex);
-+
-+static bool smc_chan_available(struct device *dev, int idx)
-+{
-+	return true;
-+}
-+
-+static int smc_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
-+			  bool tx)
-+{
-+	struct device *cdev = cinfo->dev;
-+	struct scmi_smc *scmi_info;
-+	resource_size_t size;
-+	struct resource res;
-+	struct device_node *np;
-+	u32 func_id;
-+	int ret;
-+
-+	if (!tx)
-+		return -ENODEV;
-+
-+	scmi_info = devm_kzalloc(dev, sizeof(*scmi_info), GFP_KERNEL);
-+	if (!scmi_info)
-+		return -ENOMEM;
-+
-+	np = of_parse_phandle(cdev->of_node, "shmem", 0);
-+	if (!np)
-+		np = of_parse_phandle(dev->of_node, "shmem", 0);
-+	ret = of_address_to_resource(np, 0, &res);
-+	of_node_put(np);
-+	if (ret) {
-+		dev_err(cdev, "failed to get SCMI Tx shared memory\n");
-+		return ret;
-+	}
-+
-+	size = resource_size(&res);
-+	scmi_info->shmem = devm_ioremap(dev, res.start, size);
-+	if (!scmi_info->shmem) {
-+		dev_err(dev, "failed to ioremap SCMI Tx shared memory\n");
-+		return -EADDRNOTAVAIL;
-+	}
-+
-+	ret = of_property_read_u32(dev->of_node, "arm,smc-id", &func_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	scmi_info->func_id = func_id;
-+	scmi_info->cinfo = cinfo;
-+	cinfo->transport_info = scmi_info;
-+
-+	return 0;
-+}
-+
-+static int smc_chan_free(int id, void *p, void *data)
-+{
-+	struct scmi_chan_info *cinfo = p;
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+
-+	cinfo->transport_info = NULL;
-+	scmi_info->cinfo = NULL;
-+
-+	scmi_free_channel(cinfo, data, id);
-+
-+	return 0;
-+}
-+
-+static int smc_send_message(struct scmi_chan_info *cinfo,
-+			    struct scmi_xfer *xfer)
-+{
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+	struct arm_smccc_res res;
-+
-+	mutex_lock(&smc_mutex);
-+
-+	shmem_tx_prepare(scmi_info->shmem, xfer);
-+
-+	arm_smccc_1_1_invoke(scmi_info->func_id, 0, 0, 0, 0, 0, 0, 0, &res);
-+	scmi_rx_callback(scmi_info->cinfo, shmem_read_header(scmi_info->shmem));
-+
-+	mutex_unlock(&smc_mutex);
-+
-+	return res.a0;
-+}
-+
-+static void smc_mark_txdone(struct scmi_chan_info *cinfo, int ret)
-+{
-+}
-+
-+static void smc_fetch_response(struct scmi_chan_info *cinfo,
-+			       struct scmi_xfer *xfer)
-+{
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+
-+	shmem_fetch_response(scmi_info->shmem, xfer);
-+}
-+
-+static bool
-+smc_poll_done(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
-+{
-+	struct scmi_smc *scmi_info = cinfo->transport_info;
-+
-+	return shmem_poll_done(scmi_info->shmem, xfer);
-+}
-+
-+static struct scmi_transport_ops scmi_smc_ops = {
-+	.chan_available = smc_chan_available,
-+	.chan_setup = smc_chan_setup,
-+	.chan_free = smc_chan_free,
-+	.send_message = smc_send_message,
-+	.mark_txdone = smc_mark_txdone,
-+	.fetch_response = smc_fetch_response,
-+	.poll_done = smc_poll_done,
-+};
-+
-+const struct scmi_desc scmi_smc_desc = {
-+	.ops = &scmi_smc_ops,
-+	.max_rx_timeout_ms = 30,
-+	.max_msg = 1,
-+	.max_msg_size = 128,
-+};
+Thanks,
+
+	M.
 -- 
-2.16.4
-
+Jazz is not dead. It just smells funny...
