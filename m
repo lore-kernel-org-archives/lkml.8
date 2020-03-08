@@ -2,96 +2,91 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D723FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38F8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 07:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED3320838
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:55:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583650543;
-	bh=lAhBIsdsIoz5OulCUzYlLY6/s6fpUovxZYcQI0rfdIw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A3toQeQ2gi3xT7ggpCIX0CdBfmEOM49OQVUGZa4wMQTAmEXRrf7wm+eIc2rfjyIgm
-	 cJjkuyHA5POX8vUmZWGjOHzKjSpK/UXMJbI0+v9oqnSb6reMVAg+IX3ybZBMnvRwu8
-	 x8aCcpj0ADiBmw4BXjcVDHJ1bm7hLoAftN95wKzg=
+	by mail.kernel.org (Postfix) with ESMTP id B97CF20828
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 07:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgCHGzm (ORCPT
+        id S1726197AbgCHHED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 01:55:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbgCHGzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 01:55:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52B9420828;
-        Sun,  8 Mar 2020 06:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583650541;
-        bh=lAhBIsdsIoz5OulCUzYlLY6/s6fpUovxZYcQI0rfdIw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l1IIJTAJDx5Qruopgru/0PHNXaifkm/SG+nmoGSA+OoHvztPFvHRABTQAaUA+jFtg
-         PY1LVMKQWkdbSYFJmE/AhZ8eG1ysmmpbYH9EwlYboup0gqmdxTWt57xzpNiwMZICl5
-         cC00WBkrfsBeesUzridpLEEHJ5hlrFGmKHiXp1sM=
-Date:   Sun, 8 Mar 2020 07:55:38 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        devel@driverdev.osuosl.org, Malcolm Priestley <tvboxspy@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>
-Subject: Re: [PATCH] staging: vt6656: Use BIT_ULL() macro instead of bit
- shift operation
-Message-ID: <20200308065538.GF3983392@kroah.com>
-References: <20200307104929.7710-1-oscar.carter@gmx.com>
+        Sun, 8 Mar 2020 03:04:03 -0400
+Received: from smtprelay0242.hostedemail.com ([216.40.44.242]:42323 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725854AbgCHHED (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 03:04:03 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id C87A4181D3417;
+        Sun,  8 Mar 2020 07:04:01 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: form16_5f6d69e56317
+X-Filterd-Recvd-Size: 2200
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  8 Mar 2020 07:04:00 +0000 (UTC)
+Message-ID: <259f405155a948f90229d3fc8cad928d434b46f9.camel@perches.com>
+Subject: Re: [PATCH] cvt_fallthrough: A tool to convert /* fallthrough */
+ comments to fallthrough;
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     clang-built-linux@googlegroups.com
+Date:   Sat, 07 Mar 2020 23:02:23 -0800
+In-Reply-To: <6773b7e3-8ce4-55d1-8bb7-bde6d9f6e887@embeddedor.com>
+References: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
+         <576fe2ab-7937-4698-b32a-8599813d6ad1@embeddedor.com>
+         <4304de54a44b7c8c22d8c2d9249d716664cf5ce8.camel@perches.com>
+         <6773b7e3-8ce4-55d1-8bb7-bde6d9f6e887@embeddedor.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200307104929.7710-1-oscar.carter@gmx.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 11:49:29AM +0100, Oscar Carter wrote:
-> Replace the bit left shift operation with the BIT_ULL() macro and remove
-> the unnecessary "and" operation against the bit_nr variable.
+On Sun, 2020-03-08 at 00:46 -0600, Gustavo A. R. Silva wrote:
 > 
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> ---
->  drivers/staging/vt6656/main_usb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> On 3/7/20 21:01, Joe Perches wrote:
+> > On Sat, 2020-03-07 at 15:30 -0600, Gustavo A. R. Silva wrote:
+> > > Some people consistently add blank lines as part of their code style,
+> > > and if I were
+> > > one of those people, I wouldn't like to have such lines removed.
+> > 
+> > It's a patch generator, it's not perfect.
+> > Nothing is nor ever will be.
 > 
-> diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
-> index 5e48b3ddb94c..f7ca9e97594d 100644
-> --- a/drivers/staging/vt6656/main_usb.c
-> +++ b/drivers/staging/vt6656/main_usb.c
-> @@ -21,6 +21,7 @@
->   */
->  #undef __NO_VERSION__
+> Wise words. The thing is that this is feedback over a proposed
+> patch.
 > 
-> +#include <linux/bits.h>
->  #include <linux/etherdevice.h>
->  #include <linux/file.h>
->  #include "device.h"
-> @@ -802,8 +803,7 @@ static u64 vnt_prepare_multicast(struct ieee80211_hw *hw,
+> > It's quite simple to add blank lines if that's
+> > what any maintainer desires.
+> > 
 > 
->  	netdev_hw_addr_list_for_each(ha, mc_list) {
->  		bit_nr = ether_crc(ETH_ALEN, ha->addr) >> 26;
-> -
-> -		mc_filter |= 1ULL << (bit_nr & 0x3f);
-> +		mc_filter |= BIT_ULL(bit_nr);
+> I'm not sure if you are saying that it's not a problem to
+> update your proposed patch,
 
-Are you sure this does the same thing?  You are not masking off bit_nr
-anymore, why not?
+It's not a problem with my proposed patch.
+Consistency is good.
 
-thanks,
+Nearly all uses in mm do not have blank lines
+after break.
 
-greg k-h
+> or if you are suggesting that
+> the maintainers will have the predisposition of applying
+> patches that will modify their coding style and then go and
+> willingly fix that. I doubt the latter, though.
+
+If any do actually use the script, I guess we'll see.
+
+> --
+> Gustavo
+
