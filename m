@@ -2,221 +2,120 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07637C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607D3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF100206D7
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:19:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p+wh5q8+"
+	by mail.kernel.org (Postfix) with ESMTP id 336AC20828
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgCHNTv (ORCPT
+        id S1726330AbgCHNXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 09:19:51 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40831 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgCHNTv (ORCPT
+        Sun, 8 Mar 2020 09:23:14 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:45650 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbgCHNXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 09:19:51 -0400
-Received: by mail-wm1-f68.google.com with SMTP id e26so6991728wme.5
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 06:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JtE0GdtEt7/HiG2oS0nuHmJGbnr3pvPyW/vanPbcLQY=;
-        b=p+wh5q8+v+1S1wIMD6XHhhm0IIIn9o/fOEsKsNUx9IwB/p6NslaqBAkDbaa2J2Etv4
-         0Cvsb1G9VPt3E5FxC+rx+H512jS68HQebfHiUaIIu1V0LaswF9bKAdJaw+vxa3K1YDO3
-         hJTFGt6IqxLZQzdfxkbFFeD23dMhqeo3BYnEO5Hj3K5OiMqZhQPdtgW59H+2g9aQs9/Z
-         IZzXMJsCgzP683xnoHaIqv2e/9C7ziDE4VWDe5/arSm3pQCNaOpULJEAn2lsf0FZL/kN
-         sIxSqhi6PuiyI/Z8bcsLMGBVVvepneknq23z9p2PFepNl3tNJ64mgviFpVdn/A23qpA6
-         /Xlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JtE0GdtEt7/HiG2oS0nuHmJGbnr3pvPyW/vanPbcLQY=;
-        b=RIkwaeDNVL+e1uuGubt+39AAoaUp0n5apV1AsPwpU2Kb+RLdOx6H+dKjUaPJ51+sJ+
-         C+yzU3LXCz9oDfL1FLhvor+dXn55JJBPdbcaHbad49MA9qDuCvKRG2y2rkmWn2JcFJOD
-         0W9WlxB+N6UIzdsVluR6gbQmLb2soIRgtPSzwo6IO08ANZ/h0KPsujLB0gYqdUlEPWvI
-         ApcbyIumlzUd6KlEZDlgrpWZrmM/27kNaypPxb2/t1oEoNYwS5lO9GBi2a2NeUoeVElj
-         ck0B0Rt7MHM+xVB1q3CDxvNkXSDRpQGLBqEOsOD6xZCX8aDmgIyOS4Rs6TMdjSvkF6zW
-         b8jg==
-X-Gm-Message-State: ANhLgQ2RlL1Pb55IAoitGBHa3BabKeSq3mvreO0Mc6HDrQIJAfX/yeLG
-        EV6Ug4WEWgDDSbhful8VpjA=
-X-Google-Smtp-Source: ADFU+vsuKpMDH71NTKmQQEnEX3L/zLhoMcAfBF1HXCMjmeYM9g0hgt40yYxF3vJg8khYDT9VjNjOhA==
-X-Received: by 2002:a1c:3241:: with SMTP id y62mr11004089wmy.66.1583673588266;
-        Sun, 08 Mar 2020 06:19:48 -0700 (PDT)
-Received: from kbp1-lhp-F74019 (a81-14-236-68.net-htp.de. [81.14.236.68])
-        by smtp.gmail.com with ESMTPSA id a26sm22342748wmm.18.2020.03.08.06.19.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 08 Mar 2020 06:19:47 -0700 (PDT)
-Date:   Sun, 8 Mar 2020 15:19:44 +0200
-From:   Yan Yankovskyi <yyankovskyi@gmail.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     Jan Beulich <jbeulich@suse.com>, Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xen: Use evtchn_type_t as a type for event channels
-Message-ID: <20200308131944.GA18740@kbp1-lhp-F74019>
-References: <20200307134322.GA27756@kbp1-lhp-F74019>
- <d190793c-fe6b-263e-7793-ccd73f9ccad4@oracle.com>
+        Sun, 8 Mar 2020 09:23:14 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1jAvtb-00042O-AD; Sun, 08 Mar 2020 09:23:07 -0400
+Message-ID: <2f3e2cde7b94dfdb8e1f0532d1074e07ef675bc4.camel@surriel.com>
+Subject: Re: [PATCH]  mm,page_alloc,cma: conditionally prefer cma pageblocks
+ for movable allocations
+From:   Rik van Riel <riel@surriel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Roman Gushchin <guro@fb.com>,
+        Qian Cai <cai@lca.pw>, Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Date:   Sun, 08 Mar 2020 09:23:06 -0400
+In-Reply-To: <20200307143849.a2fcb81a9626dad3ee46471f@linux-foundation.org>
+References: <20200306150102.3e77354b@imladris.surriel.com>
+         <20200307143849.a2fcb81a9626dad3ee46471f@linux-foundation.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Zfoz2TVd9hG/2oLi3xrD"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d190793c-fe6b-263e-7793-ccd73f9ccad4@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 02:41:44PM -0500, Boris Ostrovsky wrote:
-> 
-> 
-> On 3/7/20 8:43 AM, Yan Yankovskyi wrote:
-> > Make event channel functions pass event channel port using
-> > evtchn_port_t type. It eliminates signed <-> unsigned conversion.
-> >
-> 
-> 
-> >  static int find_virq(unsigned int virq, unsigned int cpu)
+
+--=-Zfoz2TVd9hG/2oLi3xrD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, 2020-03-07 at 14:38 -0800, Andrew Morton wrote:
+> On Fri, 6 Mar 2020 15:01:02 -0500 Rik van Riel <riel@surriel.com>
+> wrote:
+
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -2711,6 +2711,18 @@ __rmqueue(struct zone *zone, unsigned int
+> > order, int migratetype,
 > >  {
-> >  	struct evtchn_status status;
-> > -	int port, rc = -ENOENT;
-> > +	evtchn_port_t port;
-> > +	int rc = -ENOENT;
-> >  
-> >  	memset(&status, 0, sizeof(status));
-> >  	for (port = 0; port < xen_evtchn_max_channels(); port++) {
-> > @@ -962,7 +963,8 @@ EXPORT_SYMBOL_GPL(xen_evtchn_nr_channels);
-> >  int bind_virq_to_irq(unsigned int virq, unsigned int cpu, bool percpu)
-> >  {
-> >  	struct evtchn_bind_virq bind_virq;
-> > -	int evtchn, irq, ret;
-> > +	evtchn_port_t evtchn = xen_evtchn_max_channels();
-> > +	int irq, ret;
-> >  
-> >  	mutex_lock(&irq_mapping_update_lock);
-> >  
-> > @@ -990,7 +992,6 @@ int bind_virq_to_irq(unsigned int virq, unsigned int cpu, bool percpu)
-> >  			if (ret == -EEXIST)
-> >  				ret = find_virq(virq, cpu);
-> >  			BUG_ON(ret < 0);
-> > -			evtchn = ret;
-> 
-> 
-> This looks suspicious. What would you be passing to
-> xen_irq_info_virq_setup() below?
+> >  	struct page *page;
+> > =20
+> > +	/*
+> > +	 * Balance movable allocations between regular and CMA areas by
+> > +	 * allocating from CMA when over half of the zone's free memory
+> > +	 * is in the CMA area.
+> > +	 */
+> > +	if (migratetype =3D=3D MIGRATE_MOVABLE &&
+> > +	    zone_page_state(zone, NR_FREE_CMA_PAGES) >
+> > +	    zone_page_state(zone, NR_FREE_PAGES) / 2) {
+> > +		page =3D __rmqueue_cma_fallback(zone, order);
+> > +		if (page)
+> > +			return page;
+> > +	}
+> >  retry:
+> >  	page =3D __rmqueue_smallest(zone, order, migratetype);
+> >  	if (unlikely(!page)) {
+>=20
+> __rmqueue() is a hot path (as much as any per-page operation can be a
+> hot path).  What is the impact here?
 
-Right, this line should be preserved.
+That is a good question. For MIGRATE_MOVABLE allocations,
+most allocations seem to be order 0, which go through the
+per cpu pages array, and rmqueue_pcplist, or be order 9.
 
-> I also think that, given that this patch is trying to get types in
-> order, find_virq() will need more changes: it is supposed to return
-> evtchn_port_t. But then it also wants to return a (signed) error.
- 
-As we don't care which error we got during find_virq call, we can just
-return 0 in case of error, and port number otherwise. Port 0 is never
-valid, so this approach can work for the other functions as well.
-On the other hand, passing port using pointer and returning actual
-error message, as it's done in xenbus_alloc_evtchn(), sounds like a
-better approach overall. What do you think?
+For order 9 allocations, other things seem likely to dominate
+the allocation anyway, while for order 0 allocations the
+pcp list should take away the sting?
 
-> >  		}
-> >  
-> >  		ret = xen_irq_info_virq_setup(cpu, irq, evtchn, virq);
-> > @@ -1019,7 +1020,7 @@ static void unbind_from_irq(unsigned int irq)
-> >  	mutex_unlock(&irq_mapping_update_lock);
-> >  }
-> >  
-> 
-> 
-> 
-> >  {
-> >  	struct evtchn_close close;
-> >  	int err;
-> > @@ -423,7 +423,7 @@ int xenbus_free_evtchn(struct xenbus_device *dev, int port)
-> 
-> And why not here, especially since you updated format?
+What I do not know is how much impact this change would
+have on other allocations, like order 3 or order 4 network
+buffer allocations from irq context...
 
-I missed it.
+Are there cases in particular that we should be testing?
 
-> >  
-> >  	err = HYPERVISOR_event_channel_op(EVTCHNOP_close, &close);
-> >  	if (err)
-> > -		xenbus_dev_error(dev, err, "freeing event channel %d", port);
-> > +		xenbus_dev_error(dev, err, "freeing event channel %u", port);
-> >  
-> >  	return err;
-> >  }
-> 
-> 
-> 
-> >  
-> > diff --git a/include/xen/interface/event_channel.h b/include/xen/interface/event_channel.h
-> > index 45650c9a06d5..cf80e338fbb0 100644
-> > --- a/include/xen/interface/event_channel.h
-> > +++ b/include/xen/interface/event_channel.h
-> > @@ -220,7 +220,7 @@ struct evtchn_expand_array {
-> >  #define EVTCHNOP_set_priority    13
-> >  struct evtchn_set_priority {
-> >  	/* IN parameters. */
-> > -	uint32_t port;
-> > +	evtchn_port_t port;
-> 
-> This definition comes from Xen so I think it needs to be fixed there first.
+--=20
+All Rights Reversed.
 
-Will be done.
+--=-Zfoz2TVd9hG/2oLi3xrD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-> > --- a/drivers/xen/xenbus/xenbus_client.c
-> > +++ b/drivers/xen/xenbus/xenbus_client.c
-> > @@ -391,7 +391,7 @@ EXPORT_SYMBOL_GPL(xenbus_grant_ring);
-> >   * error, the device will switch to XenbusStateClosing, and the error will be
-> >   * saved in the store.
-> >   */
-> > -int xenbus_alloc_evtchn(struct xenbus_device *dev, int *port)
-> > +int xenbus_alloc_evtchn(struct xenbus_device *dev, evtchn_port_t *port)
-> 
-> Right. But then why is the declaration in include/xen/xenbus.h (at the
-> very end of the patch) different?
-> 
-> >  {
-> >  	struct evtchn_alloc_unbound alloc_unbound;
-> >  	int err;
-> > @@ -414,7 +414,7 @@ EXPORT_SYMBOL_GPL(xenbus_alloc_evtchn);
-> >  /**
-> >   * Free an existing event channel. Returns 0 on success or -errno on error.
-> >   */
-> > -int xenbus_free_evtchn(struct xenbus_device *dev, int port)
-> > +int xenbus_free_evtchn(struct xenbus_device *dev, evtchn_port_t port)
-> 
-> Here too.
-> 
-> >  	uint32_t priority;
-> >  };
-> >  
-> > diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-> > index 89a889585ba0..4f35216064ba 100644
-> > --- a/include/xen/xenbus.h
-> > +++ b/include/xen/xenbus.h
-> > @@ -218,8 +218,8 @@ int xenbus_unmap_ring(struct xenbus_device *dev,
-> >  		      grant_handle_t *handles, unsigned int nr_handles,
-> >  		      unsigned long *vaddrs);
-> >  
-> > -int xenbus_alloc_evtchn(struct xenbus_device *dev, int *port);
-> > -int xenbus_free_evtchn(struct xenbus_device *dev, int port);
-> > +int xenbus_alloc_evtchn(struct xenbus_device *dev, unsigned int *port);
-> > +int xenbus_free_evtchn(struct xenbus_device *dev, unsigned int port);
-> 
-> These.
+-----BEGIN PGP SIGNATURE-----
 
-I was reluctant with inclusion of event channel header into xenbus.
-Will be fixed.
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5k8boACgkQznnekoTE
+3oNzDgf/b23t5rPuQYzgUxsXx9l2rT+R+nlh3KEN+PXzObY/1EEk69KwFipsvq63
+iNRVN55lIjGtBWyvwEbqh1ZLV1vO2k0uTfJ7z5HfVCJrlyyOdnMGZJcxE+9ifsSJ
+MKXMaXMy0U29MoqLFq/8Z1QizRRTk6/nr6X7mirpECfKqrCLTfg9Esixde9aIcQc
+vbIZDo9rwEvUG5Ig226VOLBO75mAOJrvXUUZ0ctrs51vnhjLYEhvNNhHIOP3Qlv2
+2bE0oXgRBvD29ka8CbjYrljeD8clZ2xKJ2DVb/ZZWUlqFV+vTGUnHuEE9lvIYD8D
+bYGt2r05+IMc7thEzDEqKa3QY8N87w==
+=HNtA
+-----END PGP SIGNATURE-----
 
-> -boris
-> 
+--=-Zfoz2TVd9hG/2oLi3xrD--
+
