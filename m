@@ -2,177 +2,161 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E855C18E7A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934BAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C47302166E
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="FORN1mGR";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="D+8S9RS9"
+	by mail.kernel.org (Postfix) with ESMTP id 6E58B2087F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583647698;
+	bh=71yIqpukPBtHV5I6LSMjfrv1qewJJ4OfYr4Z6XsKuEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2F/dfslm2AW2J1DjMviln2J5AckhqMXdrVxaauwiBcbauOoyC3MSv1GDT9rEsyQr1
+	 IjOQNuPz9GjZh+uS5FO5ivhEMjX8AnUkR7xcSP4of3EFslGCERzQk5sfvlD8c1Hg2J
+	 ZEXC008UGd0olOdeMQyErUBAg8qaK11HD3GXDDds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgCHGHP (ORCPT
+        id S1726271AbgCHGIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 01:07:15 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:37622 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbgCHGHP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 01:07:15 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02864kM8027595;
-        Sat, 7 Mar 2020 22:06:25 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=zIFKKHEGW+vn11Hf3a1dMwqMiRnNbSOpSezFNbnFG8o=;
- b=FORN1mGRqG7tS1PsE2n4uGFgaXPL1mmMET/W/fhgkzsNyMO2ljJ/8w5QiiNicRbh6LDG
- cw9HGUvdYdsZ01e0C1qurJLMUse4FRf5wRrFCAALnZvRfZW7AX77ULookAMMtMMKPwCv
- HDnmP38d1VlknMqOUxus6Fl1l+xRvGiG542VKlOnUS7ierEDy8ouhfPPcfTQZJ4dpxPG
- ddN9a48XWx08pLdMSY66ra3UgeM9FfEzbSzUUOhVQAjhogtbdr2HN6ZLOKv2tQwUl2f7
- Q9PK0R+dCuEyk2U4pI7GYx0cWVPHln7+JZso/kzQQQGjHbYHlKYY+wWuckd+eVSn0MRj 4A== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2ymc0sj9e1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Sat, 07 Mar 2020 22:06:25 -0800
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 7 Mar
- 2020 22:06:23 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Sat, 7 Mar 2020 22:06:22 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mPUtT8yLcmlSYo0+9yogdd4oGCr7qu9H1ywuqL7bDlL/NUTxSketBvSE94zwqkTqh6LBnv66ODGiECrFRF2FgW9VpuS+onNROyJhF27bCCOYsfylfMGo+pYD7RlTsqSGM/NG/Ou8GV3lXbdDQn60aMARZruNK2uIoIt1m9GejBI/Sat9tEShl3xHQvOAgtuWl+5P70PPNOaAj5oHUDcjOxl0sht9CSJkVDv5WnnBezZVqwLfpYndNhiiwv4664hxBJvhLumIA1cPm+GB32HFsXsR0ImcOUja5TJKLYCZIBxrJPWMGcZFdazhUBOe1Efq/8eInVRW00OjEBAa21scMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zIFKKHEGW+vn11Hf3a1dMwqMiRnNbSOpSezFNbnFG8o=;
- b=W0cOY73doUwnyFMsw2xOf4g+MuSYpMFvlu2lIoC0PjOKIW+JGKeGd2OrkiHhf/xuJajquNlyOV7LDgT1vWZsuZvnTbpZ9W/V9A/whsBsMi49TjGpBohODnzc201neJpFiMj1W/4+UcBurA5pNL7voQ7zP+ELEYLr6dMeqIk4GDI1ZxkMomgfSTpCIPXWBa/UgWn2KAVnq2T1bfBznuZPHaIx4N/yhTxxAqJhlZblhfX6ODxt3RBOG00TQU8PqLCYccgMJ7js2uw1T6WWOenmsKQFhLba9U8DfgFAzABq3VlxeiEkhmfez+ClcgBOH2mklCTOtkaRkocC3aUUJmUOiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zIFKKHEGW+vn11Hf3a1dMwqMiRnNbSOpSezFNbnFG8o=;
- b=D+8S9RS9T/Trm/Mvx6Ho6qvV8azrc/vy0b3Q3088Uv+4QtSz4lhCS/nVMHvVMb1rfUCjce3EaafbpuwL+aXl0cdN8dEukH0oVbrn7Q8kFCL5bNEt/rhfjf2OV55N/K2by0EOLgGrjELvgSh0KhJCUViprp93eNYPTYVszbSyXTQ=
-Received: from BYAPR18MB2535.namprd18.prod.outlook.com (2603:10b6:a03:137::17)
- by BYAPR18MB2662.namprd18.prod.outlook.com (2603:10b6:a03:130::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Sun, 8 Mar
- 2020 06:06:20 +0000
-Received: from BYAPR18MB2535.namprd18.prod.outlook.com
- ([fe80::8cd1:1741:8d2d:1c23]) by BYAPR18MB2535.namprd18.prod.outlook.com
- ([fe80::8cd1:1741:8d2d:1c23%7]) with mapi id 15.20.2793.013; Sun, 8 Mar 2020
- 06:06:20 +0000
-From:   Alex Belits <abelits@marvell.com>
-To:     "frederic@kernel.org" <frederic@kernel.org>
-CC:     "mingo@kernel.org" <mingo@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "Prasun Kapoor" <pkapoor@marvell.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "will@kernel.org" <will@kernel.org>
-Subject: Re: [EXT] Re: [PATCH 03/12] task_isolation: userspace hard isolation
- from kernel
-Thread-Topic: [EXT] Re: [PATCH 03/12] task_isolation: userspace hard isolation
- from kernel
-Thread-Index: AQHV8j73SZ7gA0FMRkuOSCw4mVFsAKg7sr2AgAKII4A=
-Date:   Sun, 8 Mar 2020 06:06:19 +0000
-Message-ID: <5b819b1a8c3a4c9c2361ff10a31ac91df1851b83.camel@marvell.com>
-References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
-         <36d84b8dd168a38e6a56549dedc15dd6ebf8c09e.camel@marvell.com>
-         <20200306152632.GB8590@lenoir>
-In-Reply-To: <20200306152632.GB8590@lenoir>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [199.233.58.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fda5adf1-ee54-41b8-b341-08d7c326d24e
-x-ms-traffictypediagnostic: BYAPR18MB2662:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR18MB26624A47E63058FB1F817E0FBCE10@BYAPR18MB2662.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 03361FCC43
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(39840400004)(366004)(396003)(189003)(199004)(316002)(2906002)(54906003)(6486002)(7416002)(5660300002)(86362001)(478600001)(186003)(8936002)(71200400001)(36756003)(4326008)(66946007)(26005)(81166006)(6916009)(6506007)(76116006)(2616005)(91956017)(66476007)(81156014)(8676002)(66556008)(66446008)(6512007)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR18MB2662;H:BYAPR18MB2535.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EE9BGWrC1sXMUU31FqMJeThnubd+j4PBwVvTaEBzu7mrg/a0hmiJC01hsXRwlzljEiMqWs5aSWa60Wjij+lnq6eKePDVMCImdKm0NRXL7EdSND9MXjWIwjVlkkkDarFqa3lXWKSGezPX8RcY1ND9iVHDHtVo5ou8dksQkjD/qgIIGQIkHDI7y8ETpGm/ZIoaWyEFuW+Fc8lLQ3655LkeyIV605ifNbYj955aMNzygnpmRBD1VzLp3h1ndbFuST0Q1yVzBfKIDrnLeQeE1vY7mCqsSKGdfM+WJ5wJi3BimIsZLJU45Sf92/DJN27REJlcgu4I4zntjb+/o46iZc0ncSPZ0EOQZbV1J0Q683VESltgH8GarD7U6tWmn3nv/r8KCTKzYc58t5gKFPgV7/N1VAPV2AaZTOy4JW/D3AJ0jXpG4+ATnH2wAg/jpYfwSw4G
-x-ms-exchange-antispam-messagedata: xRIxEzv9npUjnbJdOiPeOMPNH6YSwGqkppbI8Oa6wkgmW7/EejkJKz+BUq+OMrV2/V9wwk+gdfKuckgTBL89QDgbnPsYDMxNywysVErHadBR16hEeCqrG0t9BellOd7PNvOGOlCoMqaH6V4ISvO/vg==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3ED4782FA3D7DB4CB3FB6ACA8D014FFC@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sun, 8 Mar 2020 01:08:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgCHGIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 01:08:17 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CD8F20848;
+        Sun,  8 Mar 2020 06:08:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583647695;
+        bh=71yIqpukPBtHV5I6LSMjfrv1qewJJ4OfYr4Z6XsKuEU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uYT0VbTRkTUqLPjTx8M2N8tMB3YkE1jHtJ2ZKZFAkODgQIkv60UMP5H1o60eNpeD8
+         DErEbTWNUpli08Jwb6GJhfSHo/cWxR35ivORXla+SkXwV9ikBqlufT8D5LXm4xbEQ7
+         YzVPtsPIAj7sUnXWdQA+uEvxGMrkwDemE4d3x0m8=
+Date:   Sat, 7 Mar 2020 22:08:14 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+8357fbef0d7bb602de45@syzkaller.appspotmail.com>,
+        benjamin.tissoires@redhat.com, dh.herrmann@googlemail.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: INFO: trying to register non-static key in uhid_char_release
+Message-ID: <20200308060814.GZ15444@sol.localdomain>
+References: <000000000000ce8d2305a03b0988@google.com>
+ <20200308040535.1540-1-hdanton@sina.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: fda5adf1-ee54-41b8-b341-08d7c326d24e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2020 06:06:19.9182
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AMA2aDtZ6kxf2ig/DNXk2uF/RCocVQu+DIt/40YGMs0mGl9W9eewTlV+ztjyil10c0DSRU4h7o2UQit7s0XZ6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2662
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-08_01:2020-03-06,2020-03-08 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200308040535.1540-1-hdanton@sina.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAzLTA2IGF0IDE2OjI2ICswMTAwLCBGcmVkZXJpYyBXZWlzYmVja2VyIHdy
-b3RlOg0KPiBPbiBXZWQsIE1hciAwNCwgMjAyMCBhdCAwNDowNzoxMlBNICswMDAwLCBBbGV4IEJl
-bGl0cyB3cm90ZToNCj4gPiAJCWRvIHsNCj4gPiArCQkJLyogTWFrZSBzdXJlIHdlIGFyZSByZWFk
-aW5nIHVwIHRvIGRhdGUgdmFsdWVzDQo+ID4gKi8NCj4gPiArCQkJc21wX21iKCk7DQo+ID4gKwkJ
-CWluZCA9IGluZF9jb3VudGVyICYgMTsNCj4gPiArCQkJc25wcmludGYoYnVmX3ByZWZpeCwgc2l6
-ZW9mKGJ1Zl9wcmVmaXgpLA0KPiA+ICsJCQkJICJpc29sYXRpb24gJXMvJWQvJWQgKGNwdSAlZCki
-LA0KPiA+ICsJCQkJIGRlc2MtPmNvbW1baW5kXSwgZGVzYy0+dGdpZFtpbmRdLA0KPiA+ICsJCQkJ
-IGRlc2MtPnBpZFtpbmRdLCBjcHUpOw0KPiA+ICsJCQlkZXNjLT53YXJuZWRbaW5kXSA9IHRydWU7
-DQo+ID4gKwkJCWluZF9jb3VudGVyX29sZCA9IGluZF9jb3VudGVyOw0KPiA+ICsJCQkvKiBSZWNv
-cmQgdGhlIHdhcm5lZCBmbGFnLCB0aGVuIHJlLXJlYWQNCj4gPiBkZXNjcmlwdG9yICovDQo+ID4g
-KwkJCXNtcF9tYigpOw0KPiA+ICsJCQlpbmRfY291bnRlciA9IGF0b21pY19yZWFkKCZkZXNjLT5j
-dXJyX2luZGV4KTsNCj4gPiArCQkJLyoNCj4gPiArCQkJICogSWYgdGhlIGNvdW50ZXIgY2hhbmdl
-ZCwgc29tZXRoaW5nIHdhcw0KPiA+IHVwZGF0ZWQsIHNvDQo+ID4gKwkJCSAqIHJlcGVhdCBldmVy
-eXRoaW5nIHRvIGdldCB0aGUgY3VycmVudCBkYXRhDQo+ID4gKwkJCSAqLw0KPiA+ICsJCX0gd2hp
-bGUgKGluZF9jb3VudGVyICE9IGluZF9jb3VudGVyX29sZCk7DQo+ID4gKwl9DQo+IA0KPiBTbyB0
-aGUgbmVlZCB0byBsb2cgdGhlIGZhY3Qgd2UgYXJlIHNlbmRpbmcgYW4gZXZlbnQgdG8gYSByZW1v
-dGUgQ1BVDQo+IHRoYXQgKm1heSBiZSoNCj4gcnVubmluZyBhbiBpc29sYXRlZCB0YXNrIG1ha2Vz
-IHRoaW5ncyB2ZXJ5IGNvbXBsaWNhdGVkIGFuZCBldmVuIHJhY3kuDQoNClRoZSBvbmx5IHJlYXNv
-biB3aHkgdGhlIHJlc3VsdCBvZiB0aGlzIHdvdWxkIGJlIHdyb25nLCBpcyB0aGUgcmFjZQ0KYmV0
-d2VlbiBtdWx0aXBsZSBjYXVzZXMgb2YgYnJlYWtpbmcgaXNvbGF0aW9uIG9mIHRoZSBzYW1lIHRh
-c2sgb3IgcmFjZQ0Kd2l0aCB0aGUgdGFzayBleGl0aW5nIGlzb2xhdGlvbiBvbiBpdHMgb3duIGF0
-IHRoZSBzYW1lIHRpbWUgKGFuZA0KcG9zc2libHkgcmUtZW50ZXJpbmcgaXQsIG9yIGV2ZW4gYW5v
-dGhlciB0YXNrIGVudGVyaW5nIG9uIHRoZSBzYW1lIENQVQ0KY29yZSkuIFRoaXMgaXMgcG9zc2li
-bGUsIGhvd2V2ZXIgZm9yIGFsbCBwcmFjdGljYWwgcHVycG9zZXMgd2UgYXJlDQpzdGlsbCBsb2dn
-aW5nIGFuIGlzb2xhdGlvbi1icmVha2luZyBldmVudCB0aGF0IGhhcHBlbmVkIHdoaWxlIGEgcmVh
-bA0KaXNvbGF0ZWQgdGFzayB3YXMgcnVubmluZy4gV2Ugc2hvdWxkIGtlZXAgaW4gbWluZCB0aGUg
-cG9zc2liaWxpdHkgdGhhdA0KdGhpcyBpc29sYXRpb24tYnJlYWtpbmcgZXZlbnQgY291bGQgYmUg
-cHJlZW1wdGVkIGJ5IGFub3RoZXIgaXNvbGF0aW9uDQpicmVha2luZyBjYXVzZSwgYW5kIGFsbCBv
-ZiB0aGVtIHdpbGwgYmUgcmVjb3JkZWQgZXZlbiBpZiBvbmx5IG9uZSBlbmRlZA0KdXAgY2F1c2lu
-ZyBmYXN0X3Rhc2tfaXNvbGF0aW9uX2NwdV9jbGVhbnVwKCkgdG8gYmUgY2FsbGVkIG9uIHRoZSB0
-YXJnZXQNCkNQVSBjb3JlLg0KDQo+IEhvdyBiYWQgd291bGQgaXQgYmUgdG8gb25seSBsb2cgdGhv
-c2UgaW50ZXJydXB0aW9ucyBvbmNlIHRoZXkgbGFuZCBvbg0KPiB0aGUgdGFyZ2V0Pw0KPiANCg0K
-Rm9yIHRoZSBwdXJwb3NlIG9mIGRldGVybWluaW5nIHRoZSBjYXVzZSBvZiBpc29sYXRpb24gYnJl
-YWtpbmcgLS0gdmVyeQ0KYmFkLiBFYXJseSB2ZXJzaW9ucyBvZiB0aGlzIG1hZGUgcGVvcGxlIHRl
-YXIgdGhlaXIgaGFpciBvdXQgdHJ5aW5nIHRvDQpkaXZpbmUsIHdoZXJlIHNvbWUgSVBJIGNhbWUg
-ZnJvbS4gVGhlbiB0aGVyZSB3YXMgYSBtb25zdHJvc2l0eSB0aGF0IGRpZA0Kc29tZSByYXRoZXIg
-dW5zYWZlIG1hbmlwdWxhdGlvbnMgd2l0aCB0YXNrX3N0cnVjdCwgaG93ZXZlciBpdCB3YXMgb25s
-eQ0Kc3VpdGFibGUgYXMgYSB0ZW1wb3JhcnkgbWVjaGFuaXNtIGZvciBkZXZlbG9wbWVudC4gVGhp
-cyB2ZXJzaW9uIGtlZXBzDQp0aGluZ3MgY29uc2lzdGVudCBhbmQgb25seSBzaG93cyB1cCB3aGVu
-IHRoZXJlIGlzIHNvbWV0aGluZyB0aGF0IHNob3VsZA0KYmUgcmVwb3J0ZWQuDQoNCj4gVGhhbmtz
-Lg0KDQpUaGFua3MhDQoNCi0tIA0KQWxleA0K
+On Sun, Mar 08, 2020 at 12:05:35PM +0800, Hillf Danton wrote:
+> 
+> Fri, 06 Mar 2020 19:05:11 -0800
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    fb279f4e Merge branch 'i2c/for-current-fixed' of git://git..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=16bc5181e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8b13b05f0e61d957
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=8357fbef0d7bb602de45
+> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > 
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+8357fbef0d7bb602de45@syzkaller.appspotmail.com
+> > 
+> > INFO: trying to register non-static key.
+> > the code is fine but needs lockdep annotation.
+> > turning off the locking correctness validator.
+> > CPU: 0 PID: 9870 Comm: syz-executor.1 Not tainted 5.6.0-rc3-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+> >  register_lock_class+0x6f4/0xec0 kernel/locking/lockdep.c:443
+> >  __lock_acquire+0x116/0x1bc0 kernel/locking/lockdep.c:3836
+> >  lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+> >  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+> >  _raw_spin_lock_irqsave+0x9e/0xc0 kernel/locking/spinlock.c:159
+> >  __wake_up_common_lock kernel/sched/wait.c:122 [inline]
+> >  __wake_up+0xb8/0x150 kernel/sched/wait.c:142
+> >  uhid_dev_destroy drivers/hid/uhid.c:563 [inline]
+> >  uhid_char_release+0x99/0x600 drivers/hid/uhid.c:642
+> >  __fput+0x2d8/0x730 fs/file_table.c:280
+> >  task_work_run+0x176/0x1b0 kernel/task_work.c:113
+> >  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+> >  exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
+> >  prepare_exit_to_usermode+0x48a/0x5c0 arch/x86/entry/common.c:195
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x416041
+> > Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+> > RSP: 002b:00007ffd2649c0a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+> > RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416041
+> > RDX: 0000001b2f820000 RSI: 0000000000000000 RDI: 0000000000000003
+> > RBP: 0000000000000001 R08: 00000000a5a41883 R09: 00000000a5a41887
+> > R10: 00007ffd2649c180 R11: 0000000000000293 R12: 000000000076bf20
+> > R13: 00000000007715a0 R14: 000000000003bd20 R15: 000000000076bf2c
+> > 
+> > general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+> > KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+> > CPU: 0 PID: 9870 Comm: syz-executor.1 Not tainted 5.6.0-rc3-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > RIP: 0010:__wake_up_common+0x297/0x4d0 kernel/sched/wait.c:86
+> > Code: fb 01 00 00 45 31 f6 eb 13 66 2e 0f 1f 84 00 00 00 00 00 4d 39 fc 0f 84 e3 01 00 00 4c 89 fb 49 8d 6f e8 4c 89 f8 48 c1 e8 03 <80> 3c 10 00 74 12 48 89 df e8 eb 48 59 00 48 ba 00 00 00 00 00 fc
+> > RSP: 0018:ffffc900049a7d20 EFLAGS: 00010046
+> > RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> > RDX: dffffc0000000000 RSI: 0000000000000001 RDI: ffff888048e513c8
+> > RBP: ffffffffffffffe8 R08: 0000000000000000 R09: ffffc900049a7d88
+> > R10: fffff52000934fa4 R11: 0000000000000000 R12: ffff888048e51400
+> > R13: 1ffff92000934fb1 R14: 0000000000000000 R15: 0000000000000000
+> > FS:  0000000000ed3940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 0000001b2f822000 CR3: 0000000098f9a000 CR4: 00000000001406f0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  __wake_up_common_lock kernel/sched/wait.c:123 [inline]
+> >  __wake_up+0xd4/0x150 kernel/sched/wait.c:142
+> >  uhid_dev_destroy drivers/hid/uhid.c:563 [inline]
+> >  uhid_char_release+0x99/0x600 drivers/hid/uhid.c:642
+> >  __fput+0x2d8/0x730 fs/file_table.c:280
+> >  task_work_run+0x176/0x1b0 kernel/task_work.c:113
+> >  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+> >  exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
+> >  prepare_exit_to_usermode+0x48a/0x5c0 arch/x86/entry/common.c:195
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Only for gpf.
+> 
+> --- a/drivers/hid/uhid.c
+> +++ b/drivers/hid/uhid.c
+> @@ -636,9 +636,13 @@ static int uhid_char_open(struct inode *
+>  
+>  static int uhid_char_release(struct inode *inode, struct file *file)
+>  {
+> -	struct uhid_device *uhid = file->private_data;
+> +	struct uhid_device *uhid;
+>  	unsigned int i;
+>  
+> +	uhid = xchg(&file->private_data, NULL);
+> +	if (!uhid)
+> +		return 0; /* race is benign */
+> +
+>  	uhid_dev_destroy(uhid);
+>  
+>  	for (i = 0; i < UHID_BUFSIZE; ++i)
+> 
+
+That looks wrong.  The normal semantics for files (and uhid looks no different)
+is that file->private_data is valid as long as they're open, and then
+->release() frees it.  ->release() should never see NULL private_data.
