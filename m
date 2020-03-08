@@ -2,90 +2,158 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB730C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAB4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD5492072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BD3206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:23:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IQkBQgUi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bsR7I29s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgCHVSa (ORCPT
+        id S1726414AbgCHVXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 17:18:30 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38041 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726332AbgCHVSa (ORCPT
+        Sun, 8 Mar 2020 17:23:52 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53761 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgCHVXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 17:18:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583702308;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XDFf6JJJ7oL8PZR807yO8QrfcQ0rQRkQyjpFnIU1DFg=;
-        b=IQkBQgUi+sl2qcW3aCjcBdCxirrxhsbabqRnXGaoqzXiAnCv0+PAy4oXis2C6NL2jidEmL
-        atXHMzsCE+7KFOFFr6ogP8eRw6omFzQ4cB0oPJ8qkKa5lRrYdBgwt02uthQmmuouvXQEYW
-        0D3E8iRTcxoaj+m9n9/pKJrdl1YXdb4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45-j7H4v-dmMfS0qUjk-mtQVg-1; Sun, 08 Mar 2020 17:18:25 -0400
-X-MC-Unique: j7H4v-dmMfS0qUjk-mtQVg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E8DDE1005509;
-        Sun,  8 Mar 2020 21:18:23 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-120-251.rdu2.redhat.com [10.10.120.251])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB9A15D9C5;
-        Sun,  8 Mar 2020 21:18:21 +0000 (UTC)
-Subject: Re: Hard lockups due to "tick/common: Make tick_periodic() check for
- missing ticks"
-To:     Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>
-References: <CA9BD318-A8C8-4F22-828A-65C355931A5C@lca.pw>
- <F95F95DE-77D9-4A1D-AA5C-CAC165F6B4C8@lca.pw>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <68ef67a1-306f-ee87-14c8-14f8863a67a1@redhat.com>
-Date:   Sun, 8 Mar 2020 17:18:21 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 8 Mar 2020 17:23:51 -0400
+Received: by mail-pj1-f65.google.com with SMTP id l36so681657pjb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 14:23:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1tzW7HssZBtY3SvxCb22E4ke3jvHNoIbFs14WY4NcNA=;
+        b=bsR7I29sZ7HfQSRCAWI51eV06TbZfLHVY993eC6fVQqxIVQt1NptdMVXm/LrxLBCbl
+         Tlz0S0zWxgO+UynwKVdIWh9nCHZxu74LqYXv2XWjUiTkt1XmFmUl9JG4kgka3YKjBTqL
+         bzm6pFJdujJETyNaI9EGQk1oSgV0oqBlguB9s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1tzW7HssZBtY3SvxCb22E4ke3jvHNoIbFs14WY4NcNA=;
+        b=c4NUSUS3JwLerkpu+S6+rHPPLMO8CGFa3XE9zs7nd5V66u/8QE8IlyXfQ7FxsPm6bY
+         gCU5x7nI+lpc1TGQ8PDGGxe+Rw16rUevYSW6lAQlU7WuF5dK2IcJpW95zjDaf9/KlVVl
+         4QJ6BK7aQvNhlcPZbFaLksHgJ6AA7S9tY8t8M5P0bfpjNTneGULYqV7nEdlVGkg62fPU
+         f48jVTIfiPGEitJS69yyLgqxGiUiBOXRxA/xfgVkxx//cC4Gtr0126IcgCZySy2ghlcP
+         5iMAbpqqO/wbakZeQPK1Fo/cvxFADxfYxYw7ZFW+JihFAy2AERDZe5NASCJaRHl0sN6T
+         7eEg==
+X-Gm-Message-State: ANhLgQ2jz6jZEVp3PD/uQCEqINipE+zCtaaysgGLlCz2913ixMu/K5mk
+        1wjRz1OWFK6Us6/1DBEy1uEbZA==
+X-Google-Smtp-Source: ADFU+vvelZvzMJOKHIDQCA76OpDS1N/lyb9dlkT4CLYv3R+PMp59C7h2DOAkY1Yx0ZU74tx7JibdGQ==
+X-Received: by 2002:a17:902:6b48:: with SMTP id g8mr12825346plt.149.1583702630315;
+        Sun, 08 Mar 2020 14:23:50 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id k1sm39509228pgt.70.2020.03.08.14.23.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 14:23:49 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org, luiz.dentz@gmail.com, alainm@chromium.org
+Cc:     linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [RFC PATCH v5 0/5] Bluetooth: Handle system suspend gracefully
+Date:   Sun,  8 Mar 2020 14:23:29 -0700
+Message-Id: <20200308212334.213841-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-In-Reply-To: <F95F95DE-77D9-4A1D-AA5C-CAC165F6B4C8@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 10:33 PM, Qian Cai wrote:
->
->> On Mar 5, 2020, at 11:06 PM, Qian Cai <cai@lca.pw> wrote:
->>
-> Using this config,
->
->> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
-> Reverted the linux-next commit d441dceb5dce (=E2=80=9Ctick/common: Make=
- tick_periodic() check for missing ticks=E2=80=9D)
-> fixed the lockup that could easily happen during boot.
->
-I will take a look at that and get back to you ASAP.
 
-Thanks,
-Longman
+Hi linux-bluetooth,
+
+This patch series prepares the Bluetooth controller for system suspend
+by disconnecting all devices and preparing the event filter and LE
+whitelist with devices that can wake the system from suspend.
+
+The main motivation for doing this is so we can enable Bluetooth as
+a wake up source during suspend without it being noisy. Bluetooth should
+wake the system when a HID device receives user input but otherwise not
+send any events to the host.
+
+This patch series was tested on several Chromebooks with both btusb and
+hci_serdev on kernel 4.19. The set of tests was basically the following:
+* Reconnects after suspend succeed
+* HID devices can wake the system from suspend (needs some related bluez
+  changes to call the Set Wake Capable management command)
+* System properly pauses and unpauses discovery + advertising around
+  suspend
+* System does not wake from any events from non wakeable devices
+
+Series 2 has refactored the change into multiple smaller commits as
+requested. I tried to simplify some of the whitelist filtering edge
+cases but unfortunately it remains quite complex.
+
+Series 3 has refactored it further and should have resolved the
+whitelisting complexity in series 2.
+
+Series 4 adds a fix to check for powered down and powering down adapters.
+
+Series 5 moves set_wake_capable to the last patch in the series and
+changes BT_DBG to bt_dev_dbg.
+
+Please review and provide any feedback.
+
+Thanks
+Abhishek
+
+
+Changes in v5:
+* Convert BT_DBG to bt_dev_dbg
+* Added wakeable list and changed BT_DBG to bt_dev_dbg
+* Add wakeable to hci_conn_params and change BT_DBG to bt_dev_dbg
+* Changed BT_DBG to bt_dev_dbg
+* Wakeable entries moved to other commits
+* Patch moved to end of series
+
+Changes in v4:
+* Added check for mgmt_powering_down and hdev_is_powered in notifier
+
+Changes in v3:
+* Refactored to only handle BR/EDR devices
+* Split LE changes into its own commit
+* Added wakeable property to le_conn_param
+* Use wakeable list for BR/EDR and wakeable property for LE
+
+Changes in v2:
+* Moved pm notifier registration into its own patch and moved params out
+  of separate suspend_state
+* Refactored filters and whitelist settings to its own patch
+* Refactored update_white_list to have clearer edge cases
+* Add connected devices to whitelist (previously missing corner case)
+* Refactored pause discovery + advertising into its own patch
+
+Abhishek Pandit-Subedi (5):
+  Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND
+  Bluetooth: Handle BR/EDR devices during suspend
+  Bluetooth: Handle LE devices during suspend
+  Bluetooth: Pause discovery and advertising during suspend
+  Bluetooth: Add mgmt op set_wake_capable
+
+ include/net/bluetooth/hci.h      |  17 +-
+ include/net/bluetooth/hci_core.h |  43 ++++
+ include/net/bluetooth/mgmt.h     |   7 +
+ net/bluetooth/hci_core.c         | 102 ++++++++++
+ net/bluetooth/hci_event.c        |  24 +++
+ net/bluetooth/hci_request.c      | 331 ++++++++++++++++++++++++++-----
+ net/bluetooth/hci_request.h      |   2 +
+ net/bluetooth/mgmt.c             |  92 +++++++++
+ 8 files changed, 558 insertions(+), 60 deletions(-)
+
+-- 
+2.25.1.481.gfbce0eb801-goog
 
