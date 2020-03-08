@@ -2,81 +2,169 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24694C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 20:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60C3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 20:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012B22067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 20:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8013E2067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 20:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgCHUS3 (ORCPT
+        id S1726391AbgCHUVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 16:18:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:32787 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgCHUS3 (ORCPT
+        Sun, 8 Mar 2020 16:21:10 -0400
+Received: from smtprelay0228.hostedemail.com ([216.40.44.228]:51307 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726340AbgCHUVJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 16:18:29 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jB2NU-0003GY-PR; Sun, 08 Mar 2020 21:18:24 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jB2NH-0006Ms-Fq; Sun, 08 Mar 2020 21:18:11 +0100
-Date:   Sun, 8 Mar 2020 21:18:11 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Sam Shih <sam.shih@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 1/1] pwm: mediatek: add longer period support
-Message-ID: <20200308201811.hlac57s3h4p4cgev@pengutronix.de>
-References: <1583230755-25986-1-git-send-email-sam.shih@mediatek.com>
- <1583230755-25986-2-git-send-email-sam.shih@mediatek.com>
- <1a3a523e-62ff-e380-c67b-12f742d348ea@gmail.com>
+        Sun, 8 Mar 2020 16:21:09 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 675C9182CED2A;
+        Sun,  8 Mar 2020 20:21:08 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: lift73_7e1d8c9f8d338
+X-Filterd-Recvd-Size: 3514
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  8 Mar 2020 20:21:06 +0000 (UTC)
+Message-ID: <cc0adb1f81afda526780fb217559a72031513909.camel@perches.com>
+Subject: Re: [Outreachy kernel] [PATCH] Staging: rtl8188eu: Add space around
+ operator
+From:   Joe Perches <joe@perches.com>
+To:     Shreeya Patel <shreeya.patel23498@gmail.com>,
+        Julia Lawall <julia.lawall@inria.fr>
+Cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com, sbrivio@redhat.com,
+        daniel.baluta@gmail.com, nramas@linux.microsoft.com,
+        hverkuil@xs4all.nl
+Date:   Sun, 08 Mar 2020 13:19:27 -0700
+In-Reply-To: <465a7cfe822438a8edd32d3a5120bd565797ca4d.camel@gmail.com>
+References: <20200308192152.26403-1-shreeya.patel23498@gmail.com>
+         <alpine.DEB.2.21.2003082030310.2400@hadrien>
+         <5a28241e8c3b11cbfe1776caadcb799cd9e39ee4.camel@perches.com>
+         <465a7cfe822438a8edd32d3a5120bd565797ca4d.camel@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1a3a523e-62ff-e380-c67b-12f742d348ea@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, 2020-03-09 at 01:40 +0530, Shreeya Patel wrote:
+> On Sun, 2020-03-08 at 12:59 -0700, Joe Perches wrote:
+> Hi Joe,
 
-On Sat, Mar 07, 2020 at 10:28:36PM +0100, Matthias Brugger wrote:
-> On 03/03/2020 11:19, Sam Shih wrote:
-> > The pwm clock source could be divided by 1625 with PWM_CON
-> > BIT(3) setting in mediatek hardware.
+Hello.
+[]
+> > > > diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c
+> > > > b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+> > []
+> > > > @@ -924,7 +924,7 @@ static void rtw_joinbss_update_network(struct
+> > > > adapter *padapter, struct wlan_net
+> > > >  	/* update fw_state will clr _FW_UNDER_LINKING here indirectly
+> > > > */
+> > > >  	switch (pnetwork->network.InfrastructureMode) {
+> > > >  	case Ndis802_11Infrastructure:
+> > > > -		if (pmlmepriv->fw_state&WIFI_UNDER_WPS)
+> > > > +		if (pmlmepriv->fw_state & WIFI_UNDER_WPS)
+> > > >  			pmlmepriv->fw_state =
+> > > > WIFI_STATION_STATE|WIFI_UNDER_WPS;
 > > 
-> > This patch add support for longer pwm period configuration,
-> > which allowing blinking LEDs via pwm interface.
-> 
-> Is this a fix? In this case please provide a Fixes tag with the commit ID which
-> introduced the bug.
+> > Like adding spaces around the | here too.
+> > 
+> I thought of doing this but then it was introducing another warning of
+> "Line over 80 charachters" that is why I didn't proceed with it.
+[]
+> What is your suggestion over it? Should I let the line be over 80
+> characters and add spaces around the operators?
 
-I'd say it qualifies as a fix if without it a request with a long period
-returns success but isn't properly implemented. Otherwise it's only a
-new feature.
+Just ignore the long line warnings, there are many already
+existing long
+lines in that subsystem.
 
-Best regards
-Uwe
+That should be a style challenge for a later time.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+$ git ls-files drivers/staging/rtl8188eu | \
+  xargs awk '{ print length($0); }' | \
+  sort | uniq -c | sort -rn -k2
+      1 187
+      1 180
+      1 171
+      1 166
+      1 163
+      1 159
+      1 158
+      2 157
+      1 153
+      2 151
+      1 146
+      1 145
+      1 144
+      1 143
+      1 142
+      2 141
+      1 140
+      1 139
+      1 137
+      1 135
+      5 134
+      6 132
+      3 131
+      3 130
+      6 129
+      3 128
+      6 127
+      6 126
+      3 125
+      3 124
+      5 123
+      4 122
+      8 121
+      6 120
+      4 119
+      7 118
+     10 117
+     11 116
+      9 115
+      5 114
+     11 113
+     13 112
+      8 111
+     17 110
+     25 109
+     24 108
+     14 107
+     20 106
+     19 105
+     34 104
+     19 103
+     26 102
+     22 101
+     22 100
+     25 99
+     20 98
+     23 97
+     33 96
+     32 95
+     43 94
+     40 93
+     49 92
+     47 91
+     51 90
+     48 89
+     55 88
+     50 87
+     37 86
+     48 85
+     57 84
+     45 83
+     61 82
+     61 81
+
+
