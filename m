@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37203C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A08C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0930A20863
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837EF222C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbgCHXZk (ORCPT
+        id S1727341AbgCHXZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 19:25:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57243 "EHLO
+        Sun, 8 Mar 2020 19:25:45 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57239 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgCHXXz (ORCPT
+        with ESMTP id S1726668AbgCHXXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 8 Mar 2020 19:23:55 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jB5Gj-000365-OI; Mon, 09 Mar 2020 00:23:38 +0100
+        id 1jB5Gg-00035I-LO; Mon, 09 Mar 2020 00:23:35 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 75D451040B2;
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 05C631040AD;
         Mon,  9 Mar 2020 00:23:30 +0100 (CET)
-Message-Id: <20200308222610.040107039@linutronix.de>
+Message-Id: <20200308222609.825111830@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 08 Mar 2020 23:24:10 +0100
+Date:   Sun, 08 Mar 2020 23:24:08 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,7 +38,7 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Frederic Weisbecker <frederic@kernel.org>,
         Alexandre Chartre <alexandre.chartre@oracle.com>
-Subject: [patch part-II V2 11/13] x86/speculation/mds: Mark mds_user_clear_cpu_buffers() __always_inline
+Subject: [patch part-II V2 09/13] x86/entry/common: Split hardirq tracing into lockdep and ftrace parts
 References: <20200308222359.370649591@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -50,33 +50,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prevent the compiler from uninlining and creating traceable/probable
-functions as this is invoked _after_ context tracking switched to
-CONTEXT_USER and rcu idle.
+trace_hardirqs_off() is in fact a tracepoint which can be utilized by BPF,
+which is unsafe before calling enter_from_user_mode(), which in turn
+invokes context tracking. trace_hardirqs_off() also invokes
+lockdep_hardirqs_off() under the hood.
+
+OTOH lockdep needs to know about the interrupts disabled state before
+enter_from_user_mode(). lockdep_hardirqs_off() is safe to call at this
+point.
+
+Split it so lockdep knows about the state and invoke the tracepoint after
+the context is set straight.
+
+Even if the functions attached to a tracepoint would all be safe to be
+called in rcuidle having it split up is still giving a performance
+advantage because rcu_read_lock_sched() is avoiding the whole dance of:
+
+   scru_read_lock();
+   rcu_irq_enter_irqson();
+   ...
+   rcu_irq_exit_irqson();
+   scru_read_unlock();
+   
+around the tracepoint function invocation just to have the C entry points
+of syscalls call enter_from_user_mode() right after the above dance.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/nospec-branch.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+V2: New patch
+---
+ arch/x86/entry/common.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -319,7 +319,7 @@ DECLARE_STATIC_KEY_FALSE(mds_idle_clear)
-  * combination with microcode which triggers a CPU buffer flush when the
-  * instruction is executed.
-  */
--static inline void mds_clear_cpu_buffers(void)
-+static __always_inline void mds_clear_cpu_buffers(void)
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -60,10 +60,19 @@ static __always_inline void syscall_entr
  {
- 	static const u16 ds = __KERNEL_DS;
+ 	/*
+ 	 * Usermode is traced as interrupts enabled, but the syscall entry
+-	 * mechanisms disable interrupts. Tell the tracer.
++	 * mechanisms disable interrupts. Tell lockdep before calling
++	 * enter_from_user_mode(). This is safe vs. RCU while the
++	 * tracepoint is not.
+ 	 */
+-	trace_hardirqs_off();
++	lockdep_hardirqs_on(CALLER_ADDR0);
++
+ 	enter_from_user_mode();
++
++	/*
++	 * Tell the tracer about the irq state as well before enabling
++	 * interrupts.
++	 */
++	__trace_hardirqs_off();
+ 	local_irq_enable();
+ }
  
-@@ -340,7 +340,7 @@ static inline void mds_clear_cpu_buffers
-  *
-  * Clear CPU buffers if the corresponding static key is enabled
-  */
--static inline void mds_user_clear_cpu_buffers(void)
-+static __always_inline void mds_user_clear_cpu_buffers(void)
- {
- 	if (static_branch_likely(&mds_user_clear))
- 		mds_clear_cpu_buffers();
 
