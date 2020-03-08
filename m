@@ -2,130 +2,661 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C03BC10F28
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 20:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0460EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 20:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D08206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 20:00:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="bStQPB0k"
+	by mail.kernel.org (Postfix) with ESMTP id 9F6B7206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 20:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgCHUAZ (ORCPT
+        id S1726385AbgCHUBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 16:00:25 -0400
-Received: from mout.gmx.net ([212.227.15.19]:53429 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgCHUAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 16:00:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583697610;
-        bh=5NB8LwQMEvov2zrTRiSnhoKN590O6XxnwdUjG/0cBtU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=bStQPB0kDiEdJ1iuKcjufnf5bqKEjxVCdTPPYrZ25TwwY+mHnsldR6Cv5YHljWrC7
-         UR7/DQEFwb7LpDOFHvAsYCzmg9hza1n52NZKMJUKybhDJWeG/ZjwuaYslSWFolbPMV
-         qKtZzoyP2TqVzHDYUpptqzG78sUlNDD8DNBXwhig=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.212]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MvbBk-1jS8wG2sGU-00seM1; Sun, 08
- Mar 2020 21:00:10 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH 3/3] docs: atomic_ops: Steer readers towards using refcount_t for reference counts
-Date:   Sun,  8 Mar 2020 21:00:06 +0100
-Message-Id: <20200308200007.23314-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200308195618.22768-1-j.neuschaefer@gmx.net>
-References: <20200308195618.22768-1-j.neuschaefer@gmx.net>
+        Sun, 8 Mar 2020 16:01:42 -0400
+Received: from smtprelay0121.hostedemail.com ([216.40.44.121]:47510 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726318AbgCHUBm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 16:01:42 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id DB209837F24D;
+        Sun,  8 Mar 2020 20:01:37 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: tank01_652d63c6da44f
+X-Filterd-Recvd-Size: 58525
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  8 Mar 2020 20:01:35 +0000 (UTC)
+Message-ID: <5a28241e8c3b11cbfe1776caadcb799cd9e39ee4.camel@perches.com>
+Subject: Re: [Outreachy kernel] [PATCH] Staging: rtl8188eu: Add space around
+ operator
+From:   Joe Perches <joe@perches.com>
+To:     Julia Lawall <julia.lawall@inria.fr>,
+        Shreeya Patel <shreeya.patel23498@gmail.com>
+Cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com, sbrivio@redhat.com,
+        daniel.baluta@gmail.com, nramas@linux.microsoft.com,
+        hverkuil@xs4all.nl
+Date:   Sun, 08 Mar 2020 12:59:56 -0700
+In-Reply-To: <alpine.DEB.2.21.2003082030310.2400@hadrien>
+References: <20200308192152.26403-1-shreeya.patel23498@gmail.com>
+         <alpine.DEB.2.21.2003082030310.2400@hadrien>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:z15oJjooRKTTsLoeHqs+S+XtNMzfWJb/k0eTrWC6vXtAkWl5Yke
- V2O0zrYdI9o2LVloVIG1f2+kKa1byBzaizxeUCMCqQr6fU1fbMklbN8k45+Eh69eQr2u5Q/
- DcgQ5YHxzTbPl4hkI6oyG2TXp58hj1oDLpPsRV389rpboi5C/pykMpyGhtt12wyRC96JM6O
- 6CWclKPLLUCPsgqfWCXhw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:57m9kADrkYk=:m5A9Ng7axhqlvIfaIRYweD
- V/54F+iwmL3X+FU5FIVDQOpgi+AmD5+UJmBxO2DKATOrRA4D+7VNyirXD7CC1CWwvtjqyvA0m
- sBPB+5qFGkfqbvs1kVKaYt0etzbqstr/GP8NuiElMt1FAOPXBg40pjDdoleimgWwtxpANmYkY
- ni9rM+YTK/wFekfSiZhuqE5uRBQdNBYsgGlkLZ2Jar0d8N3tnQquUYhV7rMEkCDlNGLq+bVCQ
- ma5ksa00/YPCSVm2dfyGNECswp8VZTx8u6hsNHhDMKMHOf7uSZT6aJ0LLtPa7iaDR5y7pnbGL
- /WX0TWQ2NEQDDtIHbssh15Q/YB4pZ9aEVoXvCAQf0bffcrALhVpYEzHCUMRUO+fm0AfwjnLSH
- 8rNHjWMKPZron+IhygRLBRHzUZ73BKK/esolNpJRvdcIVIBbbPNkdrewR2pzj85IzCAEHrZKh
- HI0V0cJ60WuKp9zOmTw0PEX5/ysc4r1dkSfCmLPq4/2cB1K7wRAuZn+oKrxmMwVMqOWxMAv2p
- c8F5AOHq4Pvg9lhVLQapWlBiAbawg+83Jahaix3IVbIRxrmfUw0BE6cRL54WKscssfGc4Sqm4
- 96tDctmdNINVSuji9B8gWACTP9fpkj8KB2g8A2+ZsjyfvC8yuzWkgK0Azpw7DRpbO65kon2ik
- 7jlO3QEsEQ6C8PekXadwQIbPU95corTwXDz7hnzv3JCkjTB16blYrE246lbItB3PpA46qZv95
- kMEsUk80T/U4WDEPQclM9Hn2UKFpgHO2TsnfDPZvaDQueqSst+l8S8f9NSuiw+YNTjdzuKRu1
- zKRlBueDe5cUlVTWr0RJiRC8HjDvQgBzs3Ugo3/IFVEJZYz051MSF+3PAM+o89CxCq/sGNYc4
- UZjpcxIv7H60md1RfKQb0h1kbPbogukdoYrxZBTpi6/RWWfekQjb6Pz5J3Lwkp19B4hnEHEun
- g+UhEu5oquCq/r9Ffyr1DtjqU8MuMKGrz4G8cmyJr8+k6GFFJffMoAfak923ldJarRGkeYxDO
- /NAJiVv829nYdkSErzaxbnJcEMPFJyYoczoBvbJCi229ojem7cUibVHIUbEFb+93iRNxLvTJf
- no5aTAjNI+jvKF2gYeD7ehCTkVkRNlVppc6ZzV5C0CqgTFhY3w5jMnpbVGy4BdQ/orD8MV1hh
- 993YSvM/9OK9D8xJa6wxjq+kM7bBAuUUKqBovGw7gsbiOuW6TLQEvmv5H7pLl/5UdL1whWcVD
- MeiOpE0rGstp4cZVK
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/core-api/atomic_ops.rst         | 6 ++++++
- Documentation/core-api/refcount-vs-atomic.rst | 2 ++
- 2 files changed, 8 insertions(+)
+On Sun, 2020-03-08 at 20:31 +0100, Julia Lawall wrote:
+> On Mon, 9 Mar 2020, Shreeya Patel wrote:
+> 
+> > Add space around & operator for improving the code
+> > readability.
 
-diff --git a/Documentation/core-api/atomic_ops.rst b/Documentation/core-ap=
-i/atomic_ops.rst
-index 73033fc954ad..37a0ffe1a9f1 100644
-=2D-- a/Documentation/core-api/atomic_ops.rst
-+++ b/Documentation/core-api/atomic_ops.rst
-@@ -392,6 +392,12 @@ be guaranteed that no other entity can be accessing t=
-he object::
- 	memory barriers in kfree_skb() that exposed the atomic_t memory barrier
- 	requirements quite clearly.
+> I guess you found this with checkpatch.  If so, it could be nice to add
+> "Reported by checkpatch." to the log message.  OK otherwise.
 
-+.. note::
-+
-+        More recently, reference counts are implement using the
-+        :ref:`refcount_t <refcount_t_vs_atomic_t>` type, which works like
-+        atomic_t but protects against wraparound.
-+
- Given the above scheme, it must be the case that the obj->active
- update done by the obj list deletion be visible to other processors
- before the atomic counter decrement is performed.
-diff --git a/Documentation/core-api/refcount-vs-atomic.rst b/Documentation=
-/core-api/refcount-vs-atomic.rst
-index 79a009ce11df..d979ff5166ae 100644
-=2D-- a/Documentation/core-api/refcount-vs-atomic.rst
-+++ b/Documentation/core-api/refcount-vs-atomic.rst
-@@ -1,3 +1,5 @@
-+.. _refcount_t_vs_atomic_t:
-+
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- refcount_t API compared to atomic_t
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-
-2.20.1
+It's also be nice to do all the whitespace changes at once.
+
+See below...
+
+> Acked-by: Julia Lawall <julia.lawall@inria.fr>
+> 
+> > Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
+[]
+> > diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+[]
+> > @@ -924,7 +924,7 @@ static void rtw_joinbss_update_network(struct adapter *padapter, struct wlan_net
+> >  	/* update fw_state will clr _FW_UNDER_LINKING here indirectly */
+> >  	switch (pnetwork->network.InfrastructureMode) {
+> >  	case Ndis802_11Infrastructure:
+> > -		if (pmlmepriv->fw_state&WIFI_UNDER_WPS)
+> > +		if (pmlmepriv->fw_state & WIFI_UNDER_WPS)
+> >  			pmlmepriv->fw_state = WIFI_STATION_STATE|WIFI_UNDER_WPS;
+
+Like adding spaces around the | here too.
+
+An automated way to do this is:
+
+Here's the diff produced by the commands below
+
+$ git diff --shortstat drivers/staging/rtl8188eu
+ 32 files changed, 407 insertions(+), 407 deletions(-)
+$ git diff -w --shortstat drivers/staging/rtl8188eu
+ 32 files changed, 0 insertions(+), 0 deletions(-)
+
+$ git ls-files drivers/staging/rtl8188eu | \
+  xargs ./scripts/checkpatch.pl --fix-inplace -f --types=spacing --terse --no-summary
+drivers/staging/rtl8188eu/core/rtw_mlme.c:152: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:252: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:253: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:360: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:360: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:360: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:361: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:361: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:361: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:362: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:362: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:362: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:513: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:513: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:927: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:928: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1100: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1107: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1126: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1126: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1216: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1216: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1643: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1643: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1643: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1643: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1643: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1737: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1742: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1743: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1868: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1868: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1907: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1913: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1913: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1916: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_mlme.c:1916: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_pwrctrl.c:208: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_pwrctrl.c:209: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_pwrctrl.c:211: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_pwrctrl.c:252: CHECK: spaces preferred around that '%' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:255: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:256: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:256: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:258: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:258: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:269: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:280: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:280: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:280: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:281: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:281: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:281: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:282: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:282: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:285: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:285: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:285: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:286: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:286: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:286: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:287: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:287: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:298: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:299: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:299: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:300: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:300: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:301: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:301: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:302: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:302: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:303: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:303: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:304: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:304: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:305: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:305: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:499: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:564: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:567: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:573: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:577: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:581: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:586: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:895: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:899: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:903: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:908: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:921: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:921: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:959: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:1277: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:1278: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:1278: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:1297: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_recv.c:1553: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:83: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:83: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:83: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:83: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:83: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:83: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:84: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:84: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:84: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:84: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:84: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:84: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:85: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:85: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:85: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:85: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:263: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:299: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:340: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:354: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:356: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:362: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:385: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:385: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:385: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:500: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:500: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:501: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:501: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:502: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:502: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:503: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:503: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:504: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:504: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:569: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:569: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:570: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:570: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:616: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:617: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:617: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:622: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:626: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:627: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:627: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:627: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:635: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:637: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:637: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:637: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:641: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:692: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:693: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:693: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:694: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:694: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:699: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:709: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:711: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:712: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:713: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:714: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:717: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:903: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1028: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1028: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1038: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1038: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1131: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1132: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1133: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1134: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1135: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1177: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1181: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1190: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1195: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1207: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1207: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1207: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1257: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1258: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1258: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1258: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1262: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1262: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_security.c:1262: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/core/rtw_sta_mgt.c:115: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:21: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:22: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:24: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:27: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:29: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:31: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:33: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:35: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:37: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:39: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/hal_com.c:40: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:345: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:345: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:422: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:435: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:521: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:522: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:524: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:525: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:527: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:528: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:530: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:537: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:538: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:547: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:550: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:550: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:550: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:550: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:586: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:633: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:633: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:634: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:635: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:635: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:636: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:636: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:721: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:727: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:735: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:735: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:736: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:736: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:736: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm.c:914: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:106: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:111: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:114: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:117: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:120: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:124: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:126: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:129: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:132: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:141: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:141: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:141: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:141: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:165: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:203: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:204: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:283: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:284: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:292: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:293: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:331: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:336: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:341: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:352: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:357: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:361: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:370: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:374: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:374: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:378: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/odm_hwconfig.c:379: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:72: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:75: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:105: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:105: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:146: CHECK: space preferred before that '+' (ctx:VxE)
+drivers/staging/rtl8188eu/hal/phy.c:149: CHECK: space preferred before that '+' (ctx:VxE)
+drivers/staging/rtl8188eu/hal/phy.c:154: CHECK: space preferred before that '+' (ctx:VxE)
+drivers/staging/rtl8188eu/hal/phy.c:155: CHECK: space preferred before that '+' (ctx:VxE)
+drivers/staging/rtl8188eu/hal/phy.c:158: CHECK: space preferred before that '+' (ctx:VxE)
+drivers/staging/rtl8188eu/hal/phy.c:159: CHECK: space preferred before that '+' (ctx:VxE)
+drivers/staging/rtl8188eu/hal/phy.c:208: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:218: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:219: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:220: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:239: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:340: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:340: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:341: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:392: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:394: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:475: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:479: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:480: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:485: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:486: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:551: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:552: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:603: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:604: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:609: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:609: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:651: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:652: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:680: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:681: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:687: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:688: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:714: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:722: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:722: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:724: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:726: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:760: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:769: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:769: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:771: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:773: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:854: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:856: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:905: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:906: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:907: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:908: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:910: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:912: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:918: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:920: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:920: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:920: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:920: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1041: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1041: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1043: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1043: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1052: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1052: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1054: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1054: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1076: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1076: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1078: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1078: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1080: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1080: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1082: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1082: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1086: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1086: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1088: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1088: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1141: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1142: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1146: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1160: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1160: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1165: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1165: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1173: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/phy.c:1178: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/pwrseqcmd.c:88: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:52: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:53: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:54: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:66: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:67: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:68: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:72: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:76: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:103: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:105: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:109: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:111: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:127: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:127: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:128: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:129: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:137: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:137: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:138: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:160: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:170: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:182: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:184: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:187: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:189: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:203: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:204: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:205: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:224: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:243: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:243: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:243: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:243: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:247: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:247: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf.c:248: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf_cfg.c:146: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rf_cfg.c:193: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:116: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:118: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:124: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:124: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:126: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:126: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:133: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:175: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:175: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:242: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:244: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:261: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:476: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:486: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:496: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:507: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:549: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:554: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:559: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:568: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:568: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:585: CHECK: spaces preferred around that '%' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:603: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:611: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c:624: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:25: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:45: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:47: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:57: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:67: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:95: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:96: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:96: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:97: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:97: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:125: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:166: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:166: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:169: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:169: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:311: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:322: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:322: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:330: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:340: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:340: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:348: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:357: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:357: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:365: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:453: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:455: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:535: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:535: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:537: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_hal_init.c:537: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188e_rxdesc.c:185: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:61: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:61: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:61: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:63: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:66: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:66: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:94: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:94: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:99: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:99: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:103: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:103: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:130: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:147: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:174: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:266: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:270: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:281: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:281: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:291: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:304: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:304: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:469: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/hal/rtl8188eu_xmit.c:520: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:31: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:33: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:38: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:40: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:42: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:44: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:44: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:46: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:46: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:48: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal8188e_rate_adaptive.h:48: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/hal_com.h:84: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/include/odm.h:247: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/odm.h:247: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/odm_types.h:18: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/odm_types.h:20: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/odm_types.h:22: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/osdep_service.h:85: CHECK: No space is necessary after a cast
+drivers/staging/rtl8188eu/include/rtl8188e_hal.h:49: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_hal.h:59: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_hal.h:60: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_hal.h:61: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_hal.h:62: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_hal.h:109: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_hal.h:109: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_xmit.h:33: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_xmit.h:35: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_xmit.h:37: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_xmit.h:104: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_xmit.h:142: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_xmit.h:144: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtl8188e_xmit.h:144: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_cmd.h:118: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_efuse.h:47: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_pwrctrl.h:87: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_recv.h:17: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_security.h:224: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_security.h:224: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_security.h:225: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_security.h:281: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_security.h:282: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_security.h:282: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_security.h:286: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_security.h:286: CHECK: spaces preferred around that '>>' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_xmit.h:45: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_xmit.h:46: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_xmit.h:55: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_xmit.h:60: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_xmit.h:68: CHECK: spaces preferred around that '<<' (ctx:VxV)
+drivers/staging/rtl8188eu/include/rtw_xmit.h:73: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/include/wifi.h:38: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/include/wlan_bssdef.h:152: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:123: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:198: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:207: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:209: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:214: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:287: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:287: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:456: ERROR: space prohibited before that close parenthesis ')'
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:515: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:515: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:515: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:515: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:515: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:515: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:515: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:589: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:597: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:597: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:600: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:600: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:631: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:785: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:1096: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:1105: CHECK: spaces preferred around that '*' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:1131: CHECK: spaces preferred around that '+' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:1242: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:1398: CHECK: spaces preferred around that '/' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:1893: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:1938: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2415: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2415: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2444: CHECK: spaces preferred around that '|' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2459: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2468: CHECK: spaces preferred around that '&' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2628: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2628: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2662: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2662: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2691: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:2691: CHECK: spaces preferred around that '-' (ctx:VxV)
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:3027: CHECK: spaces preferred around that '+' (ctx:VxV)
+
 
