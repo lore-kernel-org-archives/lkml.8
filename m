@@ -7,125 +7,109 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F63C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DCCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0342920828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92A32067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIyP1mP8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U72MCeQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgCHTWM (ORCPT
+        id S1726359AbgCHTZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 15:22:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50931 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbgCHTWL (ORCPT
+        Sun, 8 Mar 2020 15:25:34 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41577 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbgCHTZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 15:22:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a5so7717723wmb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 12:22:11 -0700 (PDT)
+        Sun, 8 Mar 2020 15:25:34 -0400
+Received: by mail-lf1-f66.google.com with SMTP id q10so5123290lfo.8;
+        Sun, 08 Mar 2020 12:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D7+79NwrEk95vLhnhqaYEUgUdXDmRjOIGLsgZ0X1kRw=;
-        b=hIyP1mP82HEjKwYkK6Qczyu5S6k56AX/xd4eZnJeT/xKxNvhxKdubhRFjvnKawCry/
-         hqnxOCUZy6p1xQpAF2huP3IZbSJo4aaYGgZ25ZF+ptn2MrRoktHyGUNiSKMKm2uiRJzv
-         3nKobObqO93N4XKTV1q3rV6d/Pw84A6U9cHsJ3a7FyHFJNTRYVmXes3ZdxYbB3TaX184
-         ZHaARSL/xg6BkDErgRSTp11u0lQTkp8wWNRb4FILrgu4IWEaXjOXXQlvii/O0fYgz4Sv
-         CQCLKGPJJTgsaZA5yODi1uaM61LGovNuksSE1b08jF/sJLQ5TH7gw9UnlH7OLG1/Uenh
-         vHwQ==
+        bh=JxZYFn4zeJMpwkX6vuh6I8IQU6SvLZUc8s3XS8zSKTE=;
+        b=U72MCeQCix41eb3o4rWSARF6wTqWl1S639veM4bjWY7kuPO7vldX0Qdhu35y4PWhju
+         5X0vkP0tbgXTpHkFgYsfkumKAQLNAEJ/mdLJHsD0/FIInxSWYrZFYHHA1bFsOHjfKe8J
+         ze8lWJILtx9zmcpLxtKzPVJPWyx52Gc2jXlIOYzZyqlSk/f1JfTP4/9cHMLQ06xP0Cw/
+         qWmzN/ebKthDbQxQIPAj5A8tCj0MAPe+W6oLWgkMx0bzFaTA0IUzebJmHtISiXIlcOWd
+         Pm1m1ePAEf/fbO8qljMlx/sfX9OV5DX4IBv+m/QbksoFPzG0Rd0kz/WSsJM/G9mY0n0W
+         Kn2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=D7+79NwrEk95vLhnhqaYEUgUdXDmRjOIGLsgZ0X1kRw=;
-        b=Ex/G2cYL1S29rddX7Gem2O321SEPY08x1T1JDhMAI1ZodgWDtmaPl7bRQQX8zPdqpX
-         xtm8Z7VeZfMaLD8SeVdMGsxs5OL9qezJVR2DSQ2dpn7DK0CJKQD1iECodcCZnl6IknRl
-         qakioR/nLFvBIwVsIjnQmTT+US98HMlYO2yBNJ3RjDcYRORX0jPFL+HhtRa2CcFu4KV+
-         QZeM6WfbApEbDD4xsY/2byjry+Rcs1m4UfCqjBhtMVXXnZcUHl3T8szVKo0GtSMzWfnt
-         OL8QLAlvwcX0LDLhXcqXblIyZq1fWS8oANvJsapfT8ow0ChPLvNC825FdwzgPRSynERi
-         L0GQ==
-X-Gm-Message-State: ANhLgQ1QzZrswz5c7/fnkVvvAn5RtZXsEvuX9nNkROsKzhKfBp7UKOuf
-        q0w+umNRcvPi8w/BGnIE48w=
-X-Google-Smtp-Source: ADFU+vsimzND9hNjfuJemOYs6CO9wGT5V9Ylg0dKLRicgR7dX/djBgKE989ZF0qNyFVha5+lUwvPWQ==
-X-Received: by 2002:a1c:4c19:: with SMTP id z25mr15511807wmf.184.1583695330527;
-        Sun, 08 Mar 2020 12:22:10 -0700 (PDT)
-Received: from [192.168.43.18] (92.40.248.47.threembb.co.uk. [92.40.248.47])
-        by smtp.gmail.com with ESMTPSA id p10sm55410271wrx.81.2020.03.08.12.22.09
+        bh=JxZYFn4zeJMpwkX6vuh6I8IQU6SvLZUc8s3XS8zSKTE=;
+        b=K9bIeyI7ptk+JXMeAWFAnADETPE4/fPKhq9fwt+iEp5WTjP/mcla5hTTQQRQi3twCn
+         0AJ61fjAEIszuB3QYCeGEBJw7SdzbwgO8856p87ORQBL1Bk28YDdZxhhQDZEpCcBC0rH
+         Z/F3pHg+efdRghgJaNLo2cDRdHVnviLPc+RLqBnEWxVzxN6i+gFsZyFxOsWHTAUHX77M
+         DhUCbxXZPeyXAhSTKyVoJNAu9zaD8UbOnbbX2aFFWV9PUof71JGXYigKl9NaJUEdSxzx
+         gK8gorbGL/e4NLIsI/8n2AIuR/WdapOmLhtWN+5ndknQqLwRvRoY+pna9TWr+XJXwnWj
+         YLDQ==
+X-Gm-Message-State: ANhLgQ1Wz01XhUonQgmDe9Pi0bU6XnZR9qaGNtdkNgU5ouNl1X/r4mxY
+        MzyGIa/n5RrGhuRHUgu9lwYfidMR
+X-Google-Smtp-Source: ADFU+vv6EXBzesa1UohyZfW57/Zw7JVhLpGkJ6whXSKyCZiygwRlWd8TmnbSR4Kzrlv/OWKXDs+a1Q==
+X-Received: by 2002:ac2:52b1:: with SMTP id r17mr7528524lfm.205.1583695532480;
+        Sun, 08 Mar 2020 12:25:32 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id j12sm2543932lfp.23.2020.03.08.12.25.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Mar 2020 12:22:10 -0700 (PDT)
-Subject: Re: [PATCH] staging: vt6656: Use BIT_ULL() macro instead of bit shift
- operation
-To:     Oscar Carter <oscar.carter@gmx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>
-References: <20200307104929.7710-1-oscar.carter@gmx.com>
- <20200308065538.GF3983392@kroah.com> <20200308161047.GA3285@ubuntu>
-From:   Malcolm Priestley <tvboxspy@gmail.com>
-Message-ID: <561bc968-f88c-40e3-f53c-5c03f74f75ea@gmail.com>
-Date:   Sun, 8 Mar 2020 19:22:07 +0000
+        Sun, 08 Mar 2020 12:25:31 -0700 (PDT)
+Subject: Re: [PATCH v10 0/2] Panel rotation patches
+To:     Derek Basehore <dbasehore@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20200306002112.255361-1-dbasehore@chromium.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ecbfb5f8-615a-4a88-5dac-de17158125bf@gmail.com>
+Date:   Sun, 8 Mar 2020 22:25:30 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200308161047.GA3285@ubuntu>
+In-Reply-To: <20200306002112.255361-1-dbasehore@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>   */
->>>  #undef __NO_VERSION__
->>>
->>> +#include <linux/bits.h>
->>>  #include <linux/etherdevice.h>
->>>  #include <linux/file.h>
->>>  #include "device.h"
->>> @@ -802,8 +803,7 @@ static u64 vnt_prepare_multicast(struct ieee80211_hw *hw,
->>>
->>>  	netdev_hw_addr_list_for_each(ha, mc_list) {
->>>  		bit_nr = ether_crc(ETH_ALEN, ha->addr) >> 26;
->>> -
->>> -		mc_filter |= 1ULL << (bit_nr & 0x3f);
->>> +		mc_filter |= BIT_ULL(bit_nr);
->>
->> Are you sure this does the same thing?  You are not masking off bit_nr
->> anymore, why not?
-> 
-> My reasons are exposed below:
-> 
-> The ether_crc function returns an u32 type (unsigned of 32 bits). Then the right
-> shift operand discards the 26 lsb bits (the bits shifted off the right side are
-> discarded). The 6 msb bits of the u32 returned by the ether_crc function are
-> positioned in bit 5 to bit 0 of the variable bit_nr. Due to the right shift
-> happens over an unsigned type, the 26 new bits added on the left side will be 0.
-> 
-> In summary, after the right bit shift operation we obtain in the variable bit_nr
-> (unsigned of 32 bits) the value represented by the 6 msb bits of the value
-> returned by the ether_crc function. So, only the 6 lsb bits of the variable
-> bit_nr are important. The 26 msb bits of this variable are 0.
-> 
-> In this situation, the "and" operation with the mask 0x3f (mask of 6 lsb bits)
-> is unnecessary due to its purpose is to reset (set to 0 value) the 26 msb bits
-> that are yet 0.
+06.03.2020 03:21, Derek Basehore пишет:
+> This adds the plumbing for reading panel rotation from the devicetree
+> and sets up adding a panel property for the panel orientation on
+> Mediatek SoCs when a rotation is present.
 
-The mask is only there out of legacy originally it was 31(0x1f) and the
-bit_nr spread across two mc_filter u32 arrays.
+Hello Derek and everyone,
 
-The mask is not needed now it is u64.
+I'm looking at adding display rotation support to NVIDIA Tegra DRM
+driver because some devices have display panel physically mounted
+upside-down, and thus, display controller's scan-out needs to be rotated
+by 180° in this case.
 
-The patch is fine.
+Derek, yours panel-rotation patches add support for assigning panel's
+orientation to the connector, but then only primary display plane
+receives rotation value in [1], while rotation needs to be applied to
+all available overlay/cursor planes and this should happen in other
+places than [1] as well.
 
-Regards
+[1] drm_client_modeset_commit_atomic()
 
-Malcolm
+Please also note that in a case of the scan-out rotation, plane's
+coordinates need to be changed in accordance to the display's rotation.
 
-
+I looked briefly through the DRM code and my understanding that the DRM
+core currently doesn't support use-case where scan-out needs to rotated
+based on a panel's orientation, correct? Is it the use-case you're
+working on for the Mediatek driver?
