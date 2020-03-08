@@ -2,170 +2,115 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECFCC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28514C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCDA20828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF51620675
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:38:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mw2CW8uP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgCHTfP (ORCPT
+        id S1726373AbgCHTiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 15:35:15 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:41854 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgCHTfP (ORCPT
+        Sun, 8 Mar 2020 15:38:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52746 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726322AbgCHTiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 15:35:15 -0400
-Received: by mail-il1-f198.google.com with SMTP id f19so791981ill.8
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 12:35:12 -0700 (PDT)
+        Sun, 8 Mar 2020 15:38:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583696303;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OhYbYf/ZU5BRDGgvDuE9sRmfmL1pRAe4uJZ1vmuPsdE=;
+        b=Mw2CW8uPESdm+24hiJ5jBGTDVtuuglxLKHXy/dclBdEQfNh4KtphJVgJuZv8XEAio0zu61
+        QXy3jT32eKsa6dxnILRlxPsYcRUgeWddB7+aXGEC//yigy9T5ZkUEnN+rcmLsHJTttY1ue
+        03i1nojHOJI34ij8vIQ+j41KGfxPWZ4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-Hayse1Q1Pz-d94qEpopruQ-1; Sun, 08 Mar 2020 15:38:21 -0400
+X-MC-Unique: Hayse1Q1Pz-d94qEpopruQ-1
+Received: by mail-wr1-f71.google.com with SMTP id 31so4126175wrq.0
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 12:38:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=USf8eI6Wdkyc+LQps75FiL8cu4kVeYj/e5bvhNKIsNE=;
-        b=FLULnUOs/uTidECXeBQJ6AKA04oa6BdaMgjXJTfJk7OviWw01lNIOxrEyFBtqT+T/S
-         V1X3lWvoWoHSIHtXkH41DmOKBZV0ckcYjVleCzlz5bzHQ8DDSVoTm38elvT9eHeCrRSZ
-         cLiu6gBn/0+Zg2AgFQNXv/qcDe+e3kjS7LmDzp+pBUyFJSC23wm/2kMX3Pwy8Zgjlb/z
-         NVhtUwLeMYfIog4qstDNT8zzrOGS7kwCXdyUJU7FO5X1ezAPDx5eSObThW5iFye+YfjT
-         Y7VBaQFJTDgBqBh5IgvrBPI30DZsJHCmlq5lzVIJENDiQnboyj7tc8Oam/yj/t/0Y2hW
-         7hmA==
-X-Gm-Message-State: ANhLgQ11UWc6kI4+w2MX9t1R+4tEP5wU1cAomOmZH57yfbUEpzVPfURw
-        I7az+nuHthQ71yg5/7YrdIfaBzOZXHZTFrAuoQWh4n3XV5KX
-X-Google-Smtp-Source: ADFU+vsOKxwbKePeK6GT73C8F2pLyHRC/1xx/KDJ/1Vu1y7/kUrttE8KXLP0hPwdBuN1h7DDVpj4NwF7FWcMp41dWpBFIKZyK0wS
-MIME-Version: 1.0
-X-Received: by 2002:a6b:ee12:: with SMTP id i18mr8572276ioh.125.1583696112273;
- Sun, 08 Mar 2020 12:35:12 -0700 (PDT)
-Date:   Sun, 08 Mar 2020 12:35:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000034513e05a05cfc23@google.com>
-Subject: KASAN: invalid-free in tcf_exts_destroy
-From:   syzbot <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=OhYbYf/ZU5BRDGgvDuE9sRmfmL1pRAe4uJZ1vmuPsdE=;
+        b=A49TPRIeIHx3a6Jlg5+6kU16ugq3mqGYFF5Hr8gjpMlcDna8Oq0Dyz6C9M91lNimnv
+         oPw6PNJZSxlsqrvsC0YoeA7CUiQlSo4xDiKwwCKj7bKcnslYMaVOOaUzqvXpeygePRmM
+         lWmBpSwqx/RoFGtVL9bkZpLwpXWyErp6yh7ClKtQmzRDpLe8S04N7gt2SUFW5xcaV9gJ
+         yPfBaS9YChldhdHfF6kpqE6RriFFumBSXBMpqXXtETXv0qZORmZN6GEb0gHDmwU/E8M5
+         SwWqXPJpfZzipVW4mps3/C0vHZQmnXQLB0NwmYBiIYi0RMP7NrGzY8XajXP88nWVGSNG
+         bMTQ==
+X-Gm-Message-State: ANhLgQ2eHs24vXYJKSkayNrQB+0L5Tbl8c15c8wOe6aZ3MRO9BYo0vG8
+        3AmNYApsHjNLNjVHf/gf7bSONfooApsLVl5zFl+COnmkmpgQT2DR3RFIXDRAIHN2y25pJDN3FRU
+        pzHaqnxEDEkgbeyN2BVvoT3nw
+X-Received: by 2002:a5d:4406:: with SMTP id z6mr11146782wrq.68.1583696300589;
+        Sun, 08 Mar 2020 12:38:20 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtR+roVGIB9QcNPPLe+Ab25Z1fyDczychjr0ciDJc5L01xETBP8QuMhOXXxwCs2SpRZL86VGg==
+X-Received: by 2002:a5d:4406:: with SMTP id z6mr11146771wrq.68.1583696300395;
+        Sun, 08 Mar 2020 12:38:20 -0700 (PDT)
+Received: from [192.168.3.122] (p5B0C674A.dip0.t-ipconnect.de. [91.12.103.74])
+        by smtp.gmail.com with ESMTPSA id o11sm48616184wrn.6.2020.03.08.12.38.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Mar 2020 12:38:19 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] drivers: virtio: Make out_del_vqs dependent on BALLOON_COMPACTION
+Date:   Sun, 8 Mar 2020 20:38:19 +0100
+Message-Id: <4AB99BBC-0EC7-40F0-96ED-04796A73CBA2@redhat.com>
+References: <20200306105528.5272-1-vincenzo.frascino@arm.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+In-Reply-To: <20200306105528.5272-1-vincenzo.frascino@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    c2003765 Merge tag 'io_uring-5.6-2020-03-07' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10cd2ae3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4527d1e2fb19fd5c
-dashboard link: https://syzkaller.appspot.com/bug?extid=dcc34d54d68ef7d2d53d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1561b01de00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15aad2f9e00000
-
-The bug was bisected to:
-
-commit 599be01ee567b61f4471ee8078870847d0a11e8e
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon Feb 3 05:14:35 2020 +0000
-
-    net_sched: fix an OOB access in cls_tcindex
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a275fde00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12a275fde00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14a275fde00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com
-Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
-
-IPVS: ftp: loaded support on port[0] = 21
-==================================================================
-BUG: KASAN: double-free or invalid-free in tcf_exts_destroy+0x62/0xc0 net/sched/cls_api.c:3002
-
-CPU: 1 PID: 9507 Comm: syz-executor467 Not tainted 5.6.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
- kasan_report_invalid_free+0x61/0xa0 mm/kasan/report.c:468
- __kasan_slab_free+0x129/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x109/0x2b0 mm/slab.c:3757
- tcf_exts_destroy+0x62/0xc0 net/sched/cls_api.c:3002
- tcf_exts_change+0xf4/0x150 net/sched/cls_api.c:3059
- tcindex_set_parms+0xed8/0x1a00 net/sched/cls_tcindex.c:456
- tcindex_change+0x203/0x2e0 net/sched/cls_tcindex.c:518
- tc_new_tfilter+0xa59/0x20b0 net/sched/cls_api.c:2103
- rtnetlink_rcv_msg+0x810/0xad0 net/core/rtnetlink.c:5427
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x270/0xe8f arch/x86/entry/common.c:408
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-
-Allocated by task 1:
- save_stack+0x1b/0x80 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:515 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
- kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- __class_register+0x46/0x450 drivers/base/class.c:160
- spi_transport_init+0xf0/0x132 drivers/scsi/scsi_transport_spi.c:1609
- do_one_initcall+0x10a/0x7d0 init/main.c:1152
- do_initcall_level init/main.c:1225 [inline]
- do_initcalls init/main.c:1241 [inline]
- do_basic_setup init/main.c:1261 [inline]
- kernel_init_freeable+0x501/0x5ae init/main.c:1445
- kernel_init+0xd/0x1bb init/main.c:1352
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffff8880a12d5000
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 152 bytes inside of
- 1024-byte region [ffff8880a12d5000, ffff8880a12d5400)
-The buggy address belongs to the page:
-page:ffffea000284b540 refcount:1 mapcount:0 mapping:ffff8880aa000c40 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000285c288 ffffea000284b588 ffff8880aa000c40
-raw: 0000000000000000 ffff8880a12d5000 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a12d4f80: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8880a12d5000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff8880a12d5080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                            ^
- ffff8880a12d5100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8880a12d5180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> Am 06.03.2020 um 11:56 schrieb Vincenzo Frascino <vincenzo.frascino@arm.co=
+m>:
+>=20
+> =EF=BB=BFout_del_vqs label is currently used only when BALLOON_COMPACTION
+> configuration option is enabled. Having it disabled triggers the
+> following warning at compile time:
+>=20
+> drivers/virtio/virtio_balloon.c: In function =E2=80=98virtballoon_probe=E2=
+=80=99:
+> drivers/virtio/virtio_balloon.c:963:1: warning: label =E2=80=98out_del_vqs=
+=E2=80=99
+> defined but not used [-Wunused-label]
+>  963 | out_del_vqs:
+>      | ^~~~~~~~~~~
+>=20
+> Make out_del_vqs dependent on BALLOON_COMPACTION to address the
+> issue.
+>=20
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+I think this is now the third patch on the list that tries to fix this warni=
+ng.
+
+Michael, can we finally queue one of these (or is there one in -next already=
+ - did not check)?
+
+Thanks=
+
