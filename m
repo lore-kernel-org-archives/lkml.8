@@ -2,103 +2,132 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E4CC10F26
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D2DC10F25
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB511206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62F12073D
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583635229;
+	bh=BPtvgaMeJv/7+wbzTP9+Rt7/Uf1D7JLT0hjpTXsJ53Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v874nnaTysNIjp4uxaiX36GaK5Y6nMMMYmTkYNFbiQoQE4qy82UeVe0fQb0KfwG/A
+	 V6VOWVgdWuTYnnAOWb4m66G+LnBtyRC0bqhq43DJcT+ZGHqzJ167nTyJ07NeBMoJfR
+	 J7yk1veV+PgM6EWTQK+4GY3xOOwG8oA89lFh9UKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgCHCXk (ORCPT
+        id S1726330AbgCHCk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 21:23:40 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40876 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgCHCXk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 21:23:40 -0500
-Received: by mail-pg1-f195.google.com with SMTP id t24so3042551pgj.7;
-        Sat, 07 Mar 2020 18:23:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=prRadkOgljmcVFZ0EQ43osDjYhqzZ8ylMyUcgnXfTLI=;
-        b=t+PyG7exAmaLMMrfercqQWvZ3tnDuEiKKh/KGEBxXuJOGbZGnWhE7PpOHipdbHHNxU
-         fZ/CqgNTLSO2RAP5OfK2KXlLcK7xJ7TJ8ZmAmoHW+zkAemmUAHb+7iLh368g9gXc4CEQ
-         bckl9jc2wXTP31Y1WnRiRUFvAebv41YxUoo4ra04eXuRxov4x9uRllu2184woQQseinr
-         27gYbI5Vo6N5me5EV8RIaNzv08YVyLHXVLieQARZ+kCmTIEQN4IuVZI378V47+BAsW8j
-         jQqRVBF+dfan88uzvIdBIoyb/TwnuQW3yDE8ezIUueEYfD43OQSviRHaLYwrnFnLkQH6
-         oS8g==
-X-Gm-Message-State: ANhLgQ0eA16H5TI5QKNZK/TxABZ0EN3qIvZz3uMpOCy6Z+rhr6EYRiJM
-        3N1/6r9PRx9ZHpA3Mn9nKR0=
-X-Google-Smtp-Source: ADFU+vvnClbMcuiLeqrDI5Lh99HdoJJA21S7J1NbeCWVEL9gbVNgSRgtAtCfZna2aKWto3/j77Rs5w==
-X-Received: by 2002:a63:fc1c:: with SMTP id j28mr10281377pgi.289.1583634219265;
-        Sat, 07 Mar 2020 18:23:39 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:d7:b9ba:8890:46d5:d60d? ([2601:647:4000:d7:b9ba:8890:46d5:d60d])
-        by smtp.gmail.com with ESMTPSA id ay10sm13897002pjb.37.2020.03.07.18.23.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Mar 2020 18:23:38 -0800 (PST)
-Subject: Re: [PATCH v2] scsi: aacraid: fix -Wcast-function-type
-To:     Phong Tran <tranmanphong@gmail.com>, aacraid@microsemi.com,
-        jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keescook@chromium.org
-References: <20200307132103.4687-1-tranmanphong@gmail.com>
- <20200308020143.9351-1-tranmanphong@gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <d18e3d83-d1b5-5979-c2ec-235e4f5095a3@acm.org>
-Date:   Sat, 7 Mar 2020 18:23:37 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 7 Mar 2020 21:40:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbgCHCk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 21:40:26 -0500
+Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C19AC2070A;
+        Sun,  8 Mar 2020 02:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583635226;
+        bh=BPtvgaMeJv/7+wbzTP9+Rt7/Uf1D7JLT0hjpTXsJ53Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=w9g/UFgDcfUEx8nRARyA6ndQRVnHUX3u6hozDBqtWlc249Q8kAfovksCNVMk+PPFk
+         hiq3st+xKpSXbsnz9lkZyzENnRsOSD+OaWcHO2CWNd4oA61YdmfIqRaUTFqN/+vo+0
+         mC3b3GtebYk6N2/2tou71NgklaZ8dN9Uf67fLbUQ=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk
+Cc:     glider@google.com, arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, rafael@kernel.org,
+        syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: [PATCH] libfs: fix infoleak in simple_attr_read()
+Date:   Sat,  7 Mar 2020 18:38:49 -0800
+Message-Id: <20200308023849.988264-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAG_fn=WvVp7Nxm5E+1dYs4guMYUV8D1XZEt_AZFF6rAQEbbAeg@mail.gmail.com>
+References: <CAG_fn=WvVp7Nxm5E+1dYs4guMYUV8D1XZEt_AZFF6rAQEbbAeg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200308020143.9351-1-tranmanphong@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-07 18:01, Phong Tran wrote:
-> correct usage prototype of callback scsi_cmnd.scsi_done()
-> Report by: https://github.com/KSPP/linux/issues/20
+From: Eric Biggers <ebiggers@google.com>
 
-This description is confusing. I think a better description would have
-been "Make the aacraid driver -Wcast-function-type clean."
+Reading from a debugfs file at a nonzero position, without first reading
+at position 0, leaks uninitialized memory to userspace.
 
-Anyway:
+It's a bit tricky to do this, since lseek() and pread() aren't allowed
+on these files, and write() doesn't update the position on them.  But
+writing to them with splice() *does* update the position:
 
-Reviewed-by: Bart van Assche <bvanassche@acm.org>
+	#define _GNU_SOURCE 1
+	#include <fcntl.h>
+	#include <stdio.h>
+	#include <unistd.h>
+	int main()
+	{
+		int pipes[2], fd, n, i;
+		char buf[32];
 
+		pipe(pipes);
+		write(pipes[1], "0", 1);
+		fd = open("/sys/kernel/debug/fault_around_bytes", O_RDWR);
+		splice(pipes[0], NULL, fd, NULL, 1, 0);
+		n = read(fd, buf, sizeof(buf));
+		for (i = 0; i < n; i++)
+			printf("%02x", buf[i]);
+		printf("\n");
+	}
 
+Output:
+	5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a30
 
+Fix the infoleak by making simple_attr_read() always fill
+simple_attr::get_buf if it hasn't been filled yet.
+
+Reported-by: syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com
+Reported-by: Alexander Potapenko <glider@google.com>
+Fixes: acaefc25d21f ("[PATCH] libfs: add simple attribute files")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ fs/libfs.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/fs/libfs.c b/fs/libfs.c
+index c686bd9caac6..3759fbacf522 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -891,7 +891,7 @@ int simple_attr_open(struct inode *inode, struct file *file,
+ {
+ 	struct simple_attr *attr;
+ 
+-	attr = kmalloc(sizeof(*attr), GFP_KERNEL);
++	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
+ 	if (!attr)
+ 		return -ENOMEM;
+ 
+@@ -931,9 +931,11 @@ ssize_t simple_attr_read(struct file *file, char __user *buf,
+ 	if (ret)
+ 		return ret;
+ 
+-	if (*ppos) {		/* continued read */
++	if (*ppos && attr->get_buf[0]) {
++		/* continued read */
+ 		size = strlen(attr->get_buf);
+-	} else {		/* first read */
++	} else {
++		/* first read */
+ 		u64 val;
+ 		ret = attr->get(attr->data, &val);
+ 		if (ret)
+-- 
+2.25.1
 
