@@ -2,100 +2,127 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9EAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBDFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA4F2072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyG+FlBv"
+	by mail.kernel.org (Postfix) with ESMTP id B311D20848
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583661035;
+	bh=5RwqW1sdWVKit0aXrD2fYj6d889HCKwGTAToICtI/cU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cbDeeY4iYfdy7QfwF37NC3ULsWZvR8/oTQdvscF9+s36VUtJYh7W1KthbSBpbxQzi
+	 eOTivCVTcVjQc/3JUUFTh5+Mno8s+yBPYLsM4N8Er5tXS+O7W+eHsYul1UcZKUfeeq
+	 DcF/BaFpV6NBsQJuhq9ykwwZrrnDvgEUuGiNrlHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgCHJpe (ORCPT
+        id S1726296AbgCHJuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 05:45:34 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38601 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgCHJpe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 05:45:34 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g21so3450512pfb.5;
-        Sun, 08 Mar 2020 01:45:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Aa3m98s9W+HyU21/D2jhm/INGzeeIBZDLFGCZvKBfcU=;
-        b=pyG+FlBv7lYcHJarifLHdqmmA3EAcTTZ8kEiWPuX4e5UjydOV62NqD8p7Auzjn++IQ
-         Zmw4HwiKpZXFLGN72DnNdD7+Z0aSZJjxtMpxrJf11JYVDMHawypylnLm7MqAxiS8XMyv
-         w3SXuc8AlFyta+5nT6cGIBw+qn82l6JMdhlA6rJba5o0ZVSJ5EXPG/uc3m1HOnJ6qrCw
-         +TF0InMXdexqNnyJo6OrFinG1QilocWba3vzEKLNdj/RVgDyulWne5RhFtm0Em2tVRMO
-         06bdF21YoJuc+tI41/sgCcHR0nRss7cTZSY988HxC+68YDe/w0eIkK+89aR3zgk/rHxs
-         odSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Aa3m98s9W+HyU21/D2jhm/INGzeeIBZDLFGCZvKBfcU=;
-        b=CentyL2VlbyrOaoYdbW+HjYqz+3mvYIw0n0Pas+le+nFXrIbvBoCGg0r5VeyYYyOFj
-         qinK6kK3Z04zOpKdF9Da8OBrT88dgH00Cv5/BXmPOOvIdouieThHorfgrfBAopXF5hWa
-         3kAZSrJNr9l4K4oW2zRpWzgCXcX4eASRj7yUQULoSEpuKoKzbnftLWMlnzF0BA21dxMM
-         UNM+jETJi/piNUD7NRuVYrUqiQhdnlMKGElH0huOW8nf1hXbxAjVtUEo8uyzrmYMAKcE
-         nopStmrMydzkEVjrZgfw7Bosypx95+I8mHQKjSJghU9AAn5y2TyQsnvFyxJBh7tYUxeA
-         rA7g==
-X-Gm-Message-State: ANhLgQ0sj5I7ILEYLrm25kV2HmoW6HjpoV99yFzlTosBaoEYOsUL7rzi
-        tK0/5gyFrntwU53FkNuRQMrJ7eVD
-X-Google-Smtp-Source: ADFU+vuvewk+1/JlAdwXumnrwoaepCNypYxB34T4DKSXS6+fKtAtZqd6m42WcSY85xX+QiZk7AHESw==
-X-Received: by 2002:a63:f74a:: with SMTP id f10mr11164849pgk.360.1583660733303;
-        Sun, 08 Mar 2020 01:45:33 -0800 (PST)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id n22sm1343627pjq.36.2020.03.08.01.45.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Mar 2020 01:45:32 -0800 (PST)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     marcel@holtmann.org
-Cc:     johan.hedberg@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hdanton@sina.com,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH v2] bluetooth/rfcomm: fix ODEBUG bug in rfcomm_dev_ioctl
-Date:   Sun,  8 Mar 2020 17:45:27 +0800
-Message-Id: <1583660727-9227-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 8 Mar 2020 05:50:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34876 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbgCHJub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 05:50:31 -0400
+Received: from localhost.localdomain (unknown [89.208.247.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 362952072A;
+        Sun,  8 Mar 2020 09:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583661031;
+        bh=5RwqW1sdWVKit0aXrD2fYj6d889HCKwGTAToICtI/cU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bNPFQIsbGwzZjFXOnMz0WfJoe038y2t6dNdQ3/6fVXTJIReihMud53NhB7mNOaV4J
+         //HVZI6Szshsam4mwuePwr5Y1TL0WN5cSoDy/oTCik7yplvl0ODNYuEFMZe2lyLwoy
+         J2qzV8HfoJL0YyBMETsIjyAB1bx7bI+Kci50OpE4=
+From:   guoren@kernel.org
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com, Anup.Patel@wdc.com,
+        greentime.hu@sifive.com
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        arnd@arndb.de, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Liu Zhiwei <zhiwei_liu@c-sky.com>
+Subject: [RFC PATCH V3 00/11] riscv: Add vector ISA support
+Date:   Sun,  8 Mar 2020 17:49:43 +0800
+Message-Id: <20200308094954.13258-1-guoren@kernel.org>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Needn't call 'rfcomm_dlc_put' here, because 'rfcomm_dlc_exists' didn't
-increase dlc->refcnt.
+From: Guo Ren <guoren@linux.alibaba.com>
 
-Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Suggested-by: Hillf Danton <hdanton@sina.com>
+The implementation follow the RISC-V "V" Vector Extension draft v0.8 with
+128bit-vlen and it's based on linux-5.6-rc3 and tested with qemu [1].
+
+The patch implement basic context switch, sigcontext save/restore and
+ptrace interface with a new regset NT_RISCV_VECTOR. Only fixed 128bit-vlen
+is implemented. We need to discuss about vlen-size for libc sigcontext and
+ptrace (the maximum size of vlen is unlimited in spec).
+
+Puzzle:
+Dave Martin has talked "Growing CPU register state without breaking ABI" [2]
+before, and riscv also met vlen size problem. Let's discuss the common issue
+for all architectures and we need a better solution for unlimited vlen.
+
+Any help are welcomed :)
+
+ 1: https://github.com/romanheros/qemu.git branch:vector-upstream-v3
+ 2: https://blog.linuxplumbersconf.org/2017/ocw/sessions/4671.html
+
 ---
- net/bluetooth/rfcomm/tty.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Changelog V3
+ - Rebase linux-5.6-rc3 and tested with qemu
+ - Seperate patches with Anup's advice
+ - Give out a ABI puzzle with unlimited vlen
 
-diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
-index 0c7d31c..a585849 100644
---- a/net/bluetooth/rfcomm/tty.c
-+++ b/net/bluetooth/rfcomm/tty.c
-@@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct sock *sk, void __user *arg)
- 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
- 		if (IS_ERR(dlc))
- 			return PTR_ERR(dlc);
--		else if (dlc) {
--			rfcomm_dlc_put(dlc);
-+		if (dlc)
- 			return -EBUSY;
--		}
- 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
- 		if (!dlc)
- 			return -ENOMEM;
+Changelog V2
+ - Fixup typo "vecotr, fstate_save->vstate_save".
+ - Fixup wrong saved registers' length in vector.S.
+ - Seperate unrelated patches from this one.
+
+Guo Ren (11):
+  riscv: Separate patch for cflags and aflags
+  riscv: Rename __switch_to_aux -> fpu
+  riscv: Extending cpufeature.c to detect V-extension
+  riscv: Add CSR defines related to VECTOR extension
+  riscv: Add vector feature to compile
+  riscv: Add has_vector detect
+  riscv: Reset vector register
+  riscv: Add vector struct and assembler definitions
+  riscv: Add task switch support for VECTOR
+  riscv: Add ptrace support
+  riscv: Add sigcontext save/restore
+
+ arch/riscv/Kconfig                       |   9 ++
+ arch/riscv/Makefile                      |  19 ++-
+ arch/riscv/include/asm/csr.h             |  17 ++-
+ arch/riscv/include/asm/processor.h       |   1 +
+ arch/riscv/include/asm/switch_to.h       |  54 ++++++-
+ arch/riscv/include/uapi/asm/elf.h        |   1 +
+ arch/riscv/include/uapi/asm/hwcap.h      |   1 +
+ arch/riscv/include/uapi/asm/ptrace.h     |   9 ++
+ arch/riscv/include/uapi/asm/sigcontext.h |   1 +
+ arch/riscv/kernel/Makefile               |   1 +
+ arch/riscv/kernel/asm-offsets.c          | 187 +++++++++++++++++++++++
+ arch/riscv/kernel/cpufeature.c           |  12 +-
+ arch/riscv/kernel/entry.S                |   2 +-
+ arch/riscv/kernel/head.S                 |  49 +++++-
+ arch/riscv/kernel/process.c              |  10 ++
+ arch/riscv/kernel/ptrace.c               |  41 +++++
+ arch/riscv/kernel/signal.c               |  40 +++++
+ arch/riscv/kernel/vector.S               |  84 ++++++++++
+ include/uapi/linux/elf.h                 |   1 +
+ 19 files changed, 524 insertions(+), 15 deletions(-)
+ create mode 100644 arch/riscv/kernel/vector.S
+
 -- 
-1.8.3.1
+2.17.0
 
