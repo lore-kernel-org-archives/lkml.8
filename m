@@ -2,245 +2,104 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71F5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644CBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A410520866
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583684090;
-	bh=oDnDXOHrzJPCTRj8HMe9/xXDgwWbCQV7+UR3qAzBCeQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uIaXMwLiDACE7+RcXIi0H6ZF1zLkE3Q5l8IlWaeg3V/4+UFABuOYmzO/tyRS8oFAd
-	 +GgEiLVk24MJt2UaSBQSBMI8YAlRdQclIMiQqQw8cvHAVw1h6l6LUMACip0Gw1qhdl
-	 XcGp9VxEnEwDdgU0jPmUmxO/jGrpBJlniN8bQE6U=
+	by mail.kernel.org (Postfix) with ESMTP id 3B741206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:17:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QoHwCUSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgCHQOg (ORCPT
+        id S1726340AbgCHQRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 12:14:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgCHQOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 12:14:35 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9526A20866;
-        Sun,  8 Mar 2020 16:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583684074;
-        bh=oDnDXOHrzJPCTRj8HMe9/xXDgwWbCQV7+UR3qAzBCeQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=L8GIS/fK3roA7dzXiPjv66A0tSIBr4WN98jvFrwZrXOMsc/m/H/KgQSJIDVh5+BC5
-         uNfkpWqmCkaqMk2g/+ZoG4szOh/igBSKy2TX0vsVaozu1pi/I/WB8f9n105jQDuBF1
-         JDoxzwfFK72Nx0ijbh5QriWTFi0GzVw0EZCah8z8=
-Date:   Sun, 8 Mar 2020 16:14:26 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alexandru.ardelean@analog.com, dragos.bogdan@analog.com
-Subject: Re: [PATCH v4] iio: adc: max1363: replace uses of mlock
-Message-ID: <20200308161426.716d1ffb@archlinux>
-In-Reply-To: <5e640c05.1c69fb81.4dd6f.a3c8@mx.google.com>
-References: <5e6355a8.1c69fb81.36f2c.ab37@mx.google.com>
-        <20200307141946.79661dd0@archlinux>
-        <5e640c05.1c69fb81.4dd6f.a3c8@mx.google.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 8 Mar 2020 12:17:38 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40690 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgCHQRi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 12:17:38 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t24so3578156pgj.7
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 09:17:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WCkD2GCSn4fdPzhz3uAykC3W9XDlvidafgBD2tiPQpo=;
+        b=QoHwCUSv4rJBDXa2itzwaIu3wRYYX2GUVK9uHnslsV1YKP3XSaRMv0NfUG+PeE9K3p
+         oHkz2NCH1gKTgAsB/GuazLIDUe6Pb5QHVZ2oB+85KOUN38qVhhFNKmfsQ8d1bjkfOsrW
+         ougpE2ICCbm9Y/DSIyrsC0GbhTaMijJ/HVD5wDghADsvU+rtv9AcX/4k/O11IQ0MgMez
+         35Ip3dALn2vmKIuV5cemUp9K5V9nsZAoDbeirJFT9kl9f9KEwzcI3VJ5TVh+2P3AJDre
+         UCnUDluEjITs1dLsFhlic/Qpvj0SkPbBiKleJZwQe3VkIYvKrB30MuA+StsLrtm7UAX+
+         o40A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WCkD2GCSn4fdPzhz3uAykC3W9XDlvidafgBD2tiPQpo=;
+        b=BAKOQdChlxOtDmZywBwy3j10gm585iFDsPPOI4mCbNSyiafFCTE+JGwD1vPLz76wAx
+         q/iIGJ/N9K+Uk1+W3WpFHY22L0hX+BjOwE4S0QYyQWaTXXuZ8AzhVawlM9xdup3AS3oj
+         WnQrpR+T5VCQ0i7rhs8DPT4AdAwJiqxkzcIBgdf/1EQ1eu2sVFIxzM525t5GZE4XEoLy
+         vo4pdLSxC2spipamiLZwF57ck5cgAw5v1Xokq8o4G7j/UjSHW9R9ZO0P7haFgNb//PDv
+         HVkZ6qO2ByPBOOhZ2GqG4OmY5C9R1jFscTq9Qf+vYlHqbyOpTGrkuPDq/WwCuAEk3sRn
+         ozWg==
+X-Gm-Message-State: ANhLgQ1DRUQmHfMcbAwV0JCbgctObv+N7ca443rTwV45duZ6L6INZnL1
+        lgxhLpQYp7ClLz2mkCg8ZrY5yA==
+X-Google-Smtp-Source: ADFU+vvD6ZfzpxybygFl/1F6qmMKjdEn6yiOT7FGJmbzufWw8rlwU4yrKqONxYhhpX9EHIaEqdqWmw==
+X-Received: by 2002:a62:c543:: with SMTP id j64mr12936023pfg.129.1583684255347;
+        Sun, 08 Mar 2020 09:17:35 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id b10sm15542888pjo.32.2020.03.08.09.17.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Mar 2020 09:17:34 -0700 (PDT)
+Subject: Re: general protection fault in __queue_work (2)
+To:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+889cc963ed79ee90f74f@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, hannes@cmpxchg.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        schatzberg.dan@gmail.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com
+References: <20200308094448.15320-1-hdanton@sina.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <407fcb3f-4380-e965-d19c-e57990711d3e@kernel.dk>
+Date:   Sun, 8 Mar 2020 10:17:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200308094448.15320-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 8 Mar 2020 02:32:56 +0530
-Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
+On 3/8/20 3:44 AM, Hillf Danton wrote:
+> @@ -1208,8 +1211,16 @@ static int __loop_clr_fd(struct loop_dev
+>  	 *
+>  	 * 3) unlock, del_timer_sync so if timer raced it will be a no-op
+>  	 */
+> -	loop_unprepare_queue(lo);
+>  	spin_lock_irq(&lo->lo_lock);
+> +	do {
+> +		struct workqueue_struct *wq = lo->workqueue;
+> +
+> +		lo->workqueue = ERR_PTR(-EINVAL);
+> +		spin_unlock_irq(&lo->lo_lock);
+> +		destroy_workqueue(wq);
+> +		spin_lock_irq(&lo->lo_lock);
+> +	} while (0);
 
-> On Sat, Mar 07, 2020 at 02:19:46PM +0000, Jonathan Cameron wrote:
-> > On Sat, 7 Mar 2020 13:34:51 +0530
-> > Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
-> >   
-> > > Replace usage indio_dev's mlock with either local lock or
-> > > iio_device_claim_direct_mode.
-> > > 
-> > > Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>  
-> > 
-> > There is a subtlety in here (which is why this one never
-> > got cleaned up before).  We need to protect against:
-> > 
-> > 1) Driver state being accessed from multiple places concurrently.
-> >    That will use your new lock.
-> > 2) Doing actions that cannot occur if in buffered mode.  The
-> >    claim_direct_mode stuff is for that.  
-> I did consider using both, the local driver lock and the claim_direct in
-> some places, however I noticed that the claim_direct_mode internally uses
-> the mlock, hence I didnt think it was necessary to set the local lock as
-> well, as according to my understanding once a process acquires the mlock
-> no other process can run the critical section before the initial process
-> releases the mlock. Thus the driver state also remains consistent.
+This looks highly suspicious, what's the point of this loop?
 
-Any state changes in the driver done under the local lock can still happen.
-There is also a question of 'obviousness'.  The driver code should not
-'care' what the internals of claim_direct_mode is doing.
-That can be expected to protect against moving out of direct mode, but
-not anything about 'how'.
+Also think this series a) might not be fully cooked, and b) really
+should have gone through the block tree.
 
-Hence, take them both.
-
-> 
-> > 3) Prevent us enabling monitor mode when in buffered mode, or
-> >    buffered mode when in monitor mode (because it's really
-> >    fiddly to support both given the odd way this hardware
-> >    works and I never bothered).  That requires making sure
-> >    direct mode is claimed before trying to enable the monitor
-> >    mode and also that we don't enable buffered mode. Now interestingly
-> >    there doesn't actually seem to be anything stopping buffered mode
-> >    if monitor mode is on.  Probably a bug, but I'd be nervous about
-> >    fixing that without test hardware.
-> > 
-> > Ignoring that last subtle bit, we sometimes for 1 and 2 need to take
-> > both locks.  We can't be in buffered mode and we need to edit
-> > local state.
-> > 
-> > Jonathan
-> >   
-> > > ---  
-> > 
-> > That's better :)  I should have looked at v4 before v3 I guess.
-> >   
-> Forgot to add the changelog in v3 :) . Should have mentioned that
-> explicitly, my bad!
-> > > Changelog v3 -> v4
-> > > * Fix indentation
-> > > 
-> > > Changelog v2 -> v3
-> > > * use iio_device_claim_direct when switching modes
-> > > * replace mlock usage in max1363_write_event_config
-> > > 
-> > > Changelog v1 -> v2
-> > > * Fix indentation
-> > > 
-> > >  drivers/iio/adc/max1363.c | 24 +++++++++++++++---------
-> > >  1 file changed, 15 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> > > index 5c2cc61b666e..a1550c0b4c0a 100644
-> > > --- a/drivers/iio/adc/max1363.c
-> > > +++ b/drivers/iio/adc/max1363.c
-> > > @@ -150,6 +150,7 @@ struct max1363_chip_info {
-> > >   * @current_mode:	the scan mode of this chip
-> > >   * @requestedmask:	a valid requested set of channels
-> > >   * @reg:		supply regulator
-> > > + * @lock		lock to ensure state is consistent
-> > >   * @monitor_on:		whether monitor mode is enabled
-> > >   * @monitor_speed:	parameter corresponding to device monitor speed setting
-> > >   * @mask_high:		bitmask for enabled high thresholds
-> > > @@ -169,6 +170,7 @@ struct max1363_state {
-> > >  	const struct max1363_mode	*current_mode;
-> > >  	u32				requestedmask;
-> > >  	struct regulator		*reg;
-> > > +	struct mutex			lock;
-> > >  
-> > >  	/* Using monitor modes and buffer at the same time is
-> > >  	   currently not supported */
-> > > @@ -364,7 +366,9 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
-> > >  	struct max1363_state *st = iio_priv(indio_dev);
-> > >  	struct i2c_client *client = st->client;
-> > >  
-> > > -	mutex_lock(&indio_dev->mlock);
-> > > +	ret = iio_device_claim_direct_mode(indio_dev);  
-> > 
-> > So this protects against change of state from polled to buffered mode.
-> > Great.  However, we also use state in here which should be protected
-> > by the local lock.  The solution is to take that local lock as well.
-> >   
-> > > +	if (ret < 0)
-> > > +		goto error_ret;
-> > >  	/*
-> > >  	 * If monitor mode is enabled, the method for reading a single
-> > >  	 * channel will have to be rather different and has not yet
-> > > @@ -372,7 +376,7 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
-> > >  	 *
-> > >  	 * Also, cannot read directly if buffered capture enabled.
-> > >  	 */
-> > > -	if (st->monitor_on || iio_buffer_enabled(indio_dev)) {
-> > > +	if (st->monitor_on) {
-> > >  		ret = -EBUSY;
-> > >  		goto error_ret;
-> > >  	}
-> > > @@ -404,8 +408,9 @@ static int max1363_read_single_chan(struct iio_dev *indio_dev,
-> > >  		data = rxbuf[0];
-> > >  	}
-> > >  	*val = data;
-> > > +
-> > >  error_ret:
-> > > -	mutex_unlock(&indio_dev->mlock);
-> > > +	iio_device_release_direct_mode(indio_dev);
-> > >  	return ret;
-> > >  
-> > >  }
-> > > @@ -705,9 +710,9 @@ static ssize_t max1363_monitor_store_freq(struct device *dev,
-> > >  	if (!found)
-> > >  		return -EINVAL;
-> > >  
-> > > -	mutex_lock(&indio_dev->mlock);
-> > > +	mutex_lock(&st->lock);
-> > >  	st->monitor_speed = i;
-> > > -	mutex_unlock(&indio_dev->mlock);
-> > > +	mutex_unlock(&st->lock);
-> > >  
-> > >  	return 0;
-> > >  }
-> > > @@ -810,12 +815,12 @@ static int max1363_read_event_config(struct iio_dev *indio_dev,
-> > >  	int val;
-> > >  	int number = chan->channel;
-> > >  
-> > > -	mutex_lock(&indio_dev->mlock);
-> > > +	mutex_lock(&st->lock);
-> > >  	if (dir == IIO_EV_DIR_FALLING)
-> > >  		val = (1 << number) & st->mask_low;
-> > >  	else
-> > >  		val = (1 << number) & st->mask_high;
-> > > -	mutex_unlock(&indio_dev->mlock);
-> > > +	mutex_unlock(&st->lock);
-> > >  
-> > >  	return val;
-> > >  }
-> > > @@ -962,7 +967,7 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
-> > >  	u16 unifiedmask;
-> > >  	int number = chan->channel;
-> > >  
-> > > -	mutex_lock(&indio_dev->mlock);
-> > > +	iio_device_claim_direct_mode(indio_dev);  
-> > 
-> > So the question is whether we are stopping this changing because
-> > we are in buffered mode or because it's local state...
-> >   
-> > >  	unifiedmask = st->mask_low | st->mask_high;
-> > >  	if (dir == IIO_EV_DIR_FALLING) {
-> > >  
-> > > @@ -989,7 +994,7 @@ static int max1363_write_event_config(struct iio_dev *indio_dev,
-> > >  
-> > >  	max1363_monitor_mode_update(st, !!(st->mask_high | st->mask_low));
-> > >  error_ret:
-> > > -	mutex_unlock(&indio_dev->mlock);
-> > > +	iio_device_release_direct_mode(indio_dev);
-> > >  
-> > >  	return ret;
-> > >  }
-> > > @@ -1587,6 +1592,7 @@ static int max1363_probe(struct i2c_client *client,
-> > >  
-> > >  	st = iio_priv(indio_dev);
-> > >  
-> > > +	mutex_init(&st->lock);
-> > >  	st->reg = devm_regulator_get(&client->dev, "vcc");
-> > >  	if (IS_ERR(st->reg)) {
-> > >  		ret = PTR_ERR(st->reg);  
-> >   
+-- 
+Jens Axboe
 
