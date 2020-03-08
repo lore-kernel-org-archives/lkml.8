@@ -2,89 +2,227 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF39EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D557C10F27
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BED420684
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C15A20684
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgCHXNA (ORCPT
+        id S1726604AbgCHXNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 19:13:00 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:46679 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726354AbgCHXNA (ORCPT
+        Sun, 8 Mar 2020 19:13:18 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:36232 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgCHXNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 19:13:00 -0400
-Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 7F5A43A1EC1;
-        Mon,  9 Mar 2020 10:12:54 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jB56L-0004tJ-SX; Mon, 09 Mar 2020 10:12:53 +1100
-Date:   Mon, 9 Mar 2020 10:12:53 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] fs/direct-io.c: avoid workqueue allocation race
-Message-ID: <20200308231253.GN10776@dread.disaster.area>
-References: <CACT4Y+Zt+fjBwJk-TcsccohBgxRNs37Hb4m6ZkZGy7u5P2+aaA@mail.gmail.com>
- <20200308055221.1088089-1-ebiggers@kernel.org>
+        Sun, 8 Mar 2020 19:13:17 -0400
+Received: by mail-io1-f69.google.com with SMTP id s66so2692599iod.3
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 16:13:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=abYmmhF6Q7DLK3Z0QKmJcgEQC2mjkVTtHh82fGU2+rc=;
+        b=L/I2PtUt98NLrHiARkvdMJStp4XCOC4VskOBUwD9H2l5We7h7OT0ueW2aCejimemKN
+         if3feDw89+lqQIY9N7ICqnp2NfymvHP2j8vmKZo/ScftNV12qxrlMeCqHEBfoqpwpS0v
+         wIkSErxTO5t9ZHE3cup4JMF44KJTyrxgBIz8C/7GEO471ByQKw5Apd5jt6qhBdsD1Nhh
+         mfPygEBYYb56Ks5CGsasI4rV+hc4w3VtdXaryXwM/zC4BEm42i+NyrFQsbqUhsw6dQzF
+         jBTHPyOqOw5CZCu7l2GTQy/YZIRaZRZA8G7YqH0QL2lzUffEYT77ATCVaPAPg3kJujEU
+         Qb5A==
+X-Gm-Message-State: ANhLgQ0m5CZoeu8PE6X6gqH36jBTTCii/mGckv+fiepUSthekAFI+KnB
+        SzMt6MiJFZJT/7/0jbPvCUraUOxhssZgZIQW6Ab/wvLR/lja
+X-Google-Smtp-Source: ADFU+vtd9wHLTBgvqgbn0NZbUEEirAQbL87tn3frzt1CkTcKlcVwA9WMFIVBaQfXCkR8oMG1kJvwFe9iMv7EWkoSWwrrGcLqr++I
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200308055221.1088089-1-ebiggers@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
-        a=1XWaLZrsAAAA:8 a=7-415B0cAAAA:8 a=sjk0pT0bszA0zqNz9kcA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Received: by 2002:a92:9f4e:: with SMTP id u75mr12953754ili.116.1583709195084;
+ Sun, 08 Mar 2020 16:13:15 -0700 (PDT)
+Date:   Sun, 08 Mar 2020 16:13:15 -0700
+In-Reply-To: <000000000000161ee805a039a49e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000002a8c05a0600814@google.com>
+Subject: Re: possible deadlock in siw_create_listen
+From:   syzbot <syzbot+3fbea977bd382a4e6140@syzkaller.appspotmail.com>
+To:     bmt@zurich.ibm.com, dledford@redhat.com, jgg@ziepe.ca,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 09:52:21PM -0800, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> When a thread loses the workqueue allocation race in
-> sb_init_dio_done_wq(), lockdep reports that the call to
-> destroy_workqueue() can deadlock waiting for work to complete.  This is
-> a false positive since the workqueue is empty.  But we shouldn't simply
-> skip the lockdep check for empty workqueues for everyone.
+syzbot has found a reproducer for the following crash on:
 
-Why not? If the wq is empty, it can't deadlock, so this is a problem
-with the workqueue lockdep annotations, not a problem with code that
-is destroying an empty workqueue.
+HEAD commit:    425c075d Merge branch 'tun-debug'
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1531a0b1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=598678fc6e800071
+dashboard link: https://syzkaller.appspot.com/bug?extid=3fbea977bd382a4e6140
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e3df31e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=163d0439e00000
 
-> Just avoid this issue by using a mutex to serialize the workqueue
-> allocation.  We still keep the preliminary check for ->s_dio_done_wq, so
-> this doesn't affect direct I/O performance.
-> 
-> Also fix the preliminary check for ->s_dio_done_wq to use READ_ONCE(),
-> since it's a data race.  (That part wasn't actually found by syzbot yet,
-> but it could be detected by KCSAN in the future.)
-> 
-> Note: the lockdep false positive could alternatively be fixed by
-> introducing a new function like "destroy_unused_workqueue()" to the
-> workqueue API as previously suggested.  But I think it makes sense to
-> avoid the double allocation anyway.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3fbea977bd382a4e6140@syzkaller.appspotmail.com
 
-Fix the infrastructure, don't work around it be placing constraints
-on how the callers can use the infrastructure to work around
-problems internal to the infrastructure.
+bond1: (slave gretap1): making interface the new active one
+bond1: (slave gretap1): Enslaving as an active interface with an up link
+iwpm_register_pid: Unable to send a nlmsg (client = 2)
+======================================================
+WARNING: possible circular locking dependency detected
+5.6.0-rc3-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor343/9626 is trying to acquire lock:
+ffffffff8a34eb80 (rtnl_mutex){+.+.}, at: siw_create_listen+0x329/0xed0 drivers/infiniband/sw/siw/siw_cm.c:1951
 
-Cheers,
+but task is already holding lock:
+ffffffff8a1d3ba0 (lock#3){+.+.}, at: cma_add_one+0x5dc/0xb60 drivers/infiniband/core/cma.c:4663
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (lock#3){+.+.}:
+       __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+       __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+       cma_netdev_callback+0xc5/0x380 drivers/infiniband/core/cma.c:4605
+       notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+       call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+       call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+       call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+       call_netdevice_notifiers+0x79/0xa0 net/core/dev.c:1974
+       bond_change_active_slave+0x80e/0x1d90 drivers/net/bonding/bond_main.c:944
+       bond_select_active_slave+0x250/0xa60 drivers/net/bonding/bond_main.c:986
+       bond_enslave+0x4281/0x4800 drivers/net/bonding/bond_main.c:1823
+       do_set_master net/core/rtnetlink.c:2468 [inline]
+       do_set_master+0x1d7/0x230 net/core/rtnetlink.c:2441
+       __rtnl_newlink+0x11d4/0x1590 net/core/rtnetlink.c:3346
+       rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3377
+       rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5440
+       netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
+       netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+       netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+       netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+       sock_sendmsg_nosec net/socket.c:652 [inline]
+       sock_sendmsg+0xcf/0x120 net/socket.c:672
+       ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
+       ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+       __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
+       do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (rtnl_mutex){+.+.}:
+       check_prev_add kernel/locking/lockdep.c:2475 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+       validate_chain kernel/locking/lockdep.c:2970 [inline]
+       __lock_acquire+0x201b/0x3ca0 kernel/locking/lockdep.c:3954
+       lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
+       __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+       __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+       siw_create_listen+0x329/0xed0 drivers/infiniband/sw/siw/siw_cm.c:1951
+       iw_cm_listen+0x166/0x1e0 drivers/infiniband/core/iwcm.c:582
+       cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
+       rdma_listen+0x5e2/0x910 drivers/infiniband/core/cma.c:3614
+       cma_listen_on_dev+0x512/0x650 drivers/infiniband/core/cma.c:2501
+       cma_add_one+0x6aa/0xb60 drivers/infiniband/core/cma.c:4666
+       add_client_context+0x3b4/0x520 drivers/infiniband/core/device.c:681
+       enable_device_and_get+0x1cd/0x3b0 drivers/infiniband/core/device.c:1316
+       ib_register_device drivers/infiniband/core/device.c:1382 [inline]
+       ib_register_device+0xa12/0xda0 drivers/infiniband/core/device.c:1343
+       siw_device_register drivers/infiniband/sw/siw/siw_main.c:70 [inline]
+       siw_newlink drivers/infiniband/sw/siw/siw_main.c:565 [inline]
+       siw_newlink+0xdef/0x1310 drivers/infiniband/sw/siw/siw_main.c:542
+       nldev_newlink+0x27f/0x400 drivers/infiniband/core/nldev.c:1538
+       rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+       rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+       rdma_nl_rcv+0x586/0x900 drivers/infiniband/core/netlink.c:259
+       netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+       netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+       netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+       sock_sendmsg_nosec net/socket.c:652 [inline]
+       sock_sendmsg+0xcf/0x120 net/socket.c:672
+       ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
+       ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+       __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
+       do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(lock#3);
+                               lock(rtnl_mutex);
+                               lock(lock#3);
+  lock(rtnl_mutex);
+
+ *** DEADLOCK ***
+
+6 locks held by syz-executor343/9626:
+ #0: ffffffff8cf2f700 (&rdma_nl_types[idx].sem){.+.+}, at: rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:164 [inline]
+ #0: ffffffff8cf2f700 (&rdma_nl_types[idx].sem){.+.+}, at: rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ #0: ffffffff8cf2f700 (&rdma_nl_types[idx].sem){.+.+}, at: rdma_nl_rcv+0x3ba/0x900 drivers/infiniband/core/netlink.c:259
+ #1: ffffffff8a1c9568 (link_ops_rwsem){++++}, at: nldev_newlink+0x23b/0x400 drivers/infiniband/core/nldev.c:1528
+ #2: ffffffff8a1bd088 (devices_rwsem){++++}, at: enable_device_and_get+0xfc/0x3b0 drivers/infiniband/core/device.c:1306
+ #3: ffffffff8a1bcf48 (clients_rwsem){++++}, at: enable_device_and_get+0x15b/0x3b0 drivers/infiniband/core/device.c:1314
+ #4: ffff88808f288538 (&device->client_data_rwsem){++++}, at: add_client_context+0x382/0x520 drivers/infiniband/core/device.c:679
+ #5: ffffffff8a1d3ba0 (lock#3){+.+.}, at: cma_add_one+0x5dc/0xb60 drivers/infiniband/core/cma.c:4663
+
+stack backtrace:
+CPU: 0 PID: 9626 Comm: syz-executor343 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1808
+ check_prev_add kernel/locking/lockdep.c:2475 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+ validate_chain kernel/locking/lockdep.c:2970 [inline]
+ __lock_acquire+0x201b/0x3ca0 kernel/locking/lockdep.c:3954
+ lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
+ __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+ __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+ siw_create_listen+0x329/0xed0 drivers/infiniband/sw/siw/siw_cm.c:1951
+ iw_cm_listen+0x166/0x1e0 drivers/infiniband/core/iwcm.c:582
+ cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
+ rdma_listen+0x5e2/0x910 drivers/infiniband/core/cma.c:3614
+ cma_listen_on_dev+0x512/0x650 drivers/infiniband/core/cma.c:2501
+ cma_add_one+0x6aa/0xb60 drivers/infiniband/core/cma.c:4666
+ add_client_context+0x3b4/0x520 drivers/infiniband/core/device.c:681
+ enable_device_and_get+0x1cd/0x3b0 drivers/infiniband/core/device.c:1316
+ ib_register_device drivers/infiniband/core/device.c:1382 [inline]
+ ib_register_device+0xa12/0xda0 drivers/infiniband/core/device.c:1343
+ siw_device_register drivers/infiniband/sw/siw/siw_main.c:70 [inline]
+ siw_newlink drivers/infiniband/sw/siw/siw_main.c:565 [inline]
+ siw_newlink+0xdef/0x1310 drivers/infiniband/sw/siw/siw_main.c:542
+ nldev_newlink+0x27f/0x400 drivers/infiniband/core/nldev.c:1538
+ rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x586/0x900 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
+ do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x443679
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc6eef77d8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443679
+RDX: 0000000000000000 RSI: 00000000200031c0 RDI: 0000000000000005
+RBP: 00007ffc6eef77f0 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
+R10: 0000000001bbbbbb R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000404c10 R14: 0000000000000000 R15: 0000000000000000
+infiniband syz2: RDMA CMA: cma_listen_on_dev, error -98
+
