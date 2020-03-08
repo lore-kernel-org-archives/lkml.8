@@ -2,121 +2,163 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15586C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D20C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B33206D7
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E6820838
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgCHMHh (ORCPT
+        id S1726339AbgCHMI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 08:07:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56562 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCHMHh (ORCPT
+        Sun, 8 Mar 2020 08:08:59 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46902 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgCHMI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 08:07:37 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jAuiU-0005fZ-CX; Sun, 08 Mar 2020 13:07:34 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B88711C220A;
-        Sun,  8 Mar 2020 13:07:33 +0100 (CET)
-Date:   Sun, 08 Mar 2020 12:07:33 -0000
-From:   "tip-bot2 for Alexander Sverdlin" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] genirq/irqdomain: Check pointer in
- irq_domain_alloc_irqs_hierarchy()
-Cc:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200306174720.82604-1-alexander.sverdlin@nokia.com>
-References: <20200306174720.82604-1-alexander.sverdlin@nokia.com>
+        Sun, 8 Mar 2020 08:08:58 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 324B71C0319; Sun,  8 Mar 2020 13:08:56 +0100 (CET)
+Date:   Sun, 8 Mar 2020 13:08:55 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     linux-leds@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] leds: add sgm3140 driver
+Message-ID: <20200308120855.GA29321@duo.ucw.cz>
+References: <20200227185015.212479-1-luca@z3ntu.xyz>
 MIME-Version: 1.0
-Message-ID: <158366925336.28353.5904197587974966508.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
+Content-Disposition: inline
+In-Reply-To: <20200227185015.212479-1-luca@z3ntu.xyz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     87f2d1c662fa1761359fdf558246f97e484d177a
-Gitweb:        https://git.kernel.org/tip/87f2d1c662fa1761359fdf558246f97e484d177a
-Author:        Alexander Sverdlin <alexander.sverdlin@nokia.com>
-AuthorDate:    Fri, 06 Mar 2020 18:47:20 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sun, 08 Mar 2020 13:03:41 +01:00
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-genirq/irqdomain: Check pointer in irq_domain_alloc_irqs_hierarchy()
+Hi!
 
-irq_domain_alloc_irqs_hierarchy() has 3 call sites in the compilation unit
-but only one of them checks for the pointer which is being dereferenced
-inside the called function. Move the check into the function. This allows
-for catching the error instead of the following crash:
+> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000000
-PC is at 0x0
-LR is at gpiochip_hierarchy_irq_domain_alloc+0x11f/0x140
-...
-[<c06c23ff>] (gpiochip_hierarchy_irq_domain_alloc)
-[<c0462a89>] (__irq_domain_alloc_irqs)
-[<c0462dad>] (irq_create_fwspec_mapping)
-[<c06c2251>] (gpiochip_to_irq)
-[<c06c1c9b>] (gpiod_to_irq)
-[<bf973073>] (gpio_irqs_init [gpio_irqs])
-[<bf974048>] (gpio_irqs_exit+0xecc/0xe84 [gpio_irqs])
-Code: bad PC value
+That's pinephone, right?
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200306174720.82604-1-alexander.sverdlin@nokia.com
+> This device is controller by two GPIO lines, one for enabling the LED
+> and the second one for switching between torch and flash mode.
+>=20
+> The device will automatically switch to torch mode after being in flash
+> mode for about 250-300ms, so after that time the driver will turn the
+> LED off again automatically.
 
----
- kernel/irq/irqdomain.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+I don't quite see how this is supposed to work.
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index fdfc213..35b8d97 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1310,6 +1310,11 @@ int irq_domain_alloc_irqs_hierarchy(struct irq_domain *domain,
- 				    unsigned int irq_base,
- 				    unsigned int nr_irqs, void *arg)
- {
-+	if (!domain->ops->alloc) {
-+		pr_debug("domain->ops->alloc() is NULL\n");
-+		return -ENOSYS;
-+	}
-+
- 	return domain->ops->alloc(domain, irq_base, nr_irqs, arg);
- }
- 
-@@ -1347,11 +1352,6 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
- 			return -EINVAL;
- 	}
- 
--	if (!domain->ops->alloc) {
--		pr_debug("domain->ops->alloc() is NULL\n");
--		return -ENOSYS;
--	}
--
- 	if (realloc && irq_base >= 0) {
- 		virq = irq_base;
- 	} else {
+> Hi, this driver is controllable via sysfs and v4l2 APIs (as documented
+> in Documentation/leds/leds-class-flash.rst).
+>=20
+> The following is possible:
+>=20
+> # Torch on
+> echo 1 > /sys/class/leds/white\:flash/brightness
+> # Torch off
+> echo 0 > /sys/class/leds/white\:flash/brightness
+> # Activate flash
+> echo 1 > /sys/class/leds/white\:flash/flash_strobe
+
+So.. "activate flash" will turn the LED on in very bright mode, then
+put it back to previous brightness after a timeout?
+
+What happens if some kind of malware does flash_strobe every 300msec?
+
+> # Torch on
+> v4l2-ctl -d /dev/video1 -c led_mode=3D2
+> # Torch off
+> v4l2-ctl -d /dev/video1 -c led_mode=3D0
+> # Activate flash
+> v4l2-ctl -d /dev/video1 -c strobe=3D1
+>=20
+> Unfortunately the last command (enabling the 'flash' via v4l2 results in
+> the following being printed and nothing happening:
+>=20
+>   VIDIOC_S_EXT_CTRLS: failed: Resource busy
+>   strobe: Resource busy
+>=20
+> Unfortunately I couldn't figure out the reason so I'm hoping to get some
+> guidance for this. iirc it worked at some point but then stopped.
+
+Actually, LED flash drivers are getting quite common. Having common
+code (so we could just say this is led flash, register it to both v4l
+and LED) might be quite interesting.
+
+Unfortunately, some LED flashes also have integrated red LED for
+indication, further complicating stuff.
+
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 2da39e896ce8..38d57dd53e4b 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -85,6 +85,7 @@ obj-$(CONFIG_LEDS_LM3601X)		+=3D leds-lm3601x.o
+>  obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+=3D leds-ti-lmu-common.o
+>  obj-$(CONFIG_LEDS_LM3697)		+=3D leds-lm3697.o
+>  obj-$(CONFIG_LEDS_LM36274)		+=3D leds-lm36274.o
+> +obj-$(CONFIG_LEDS_SGM3140)		+=3D leds-sgm3140.o
+
+I would not mind "flash" drivers going to separate directory.
+
+> +int sgm3140_brightness_set(struct led_classdev *led_cdev,
+> +			   enum led_brightness brightness)
+> +{
+> +	struct led_classdev_flash *fled_cdev =3D lcdev_to_flcdev(led_cdev);
+> +	struct sgm3140 *priv =3D flcdev_to_sgm3140(fled_cdev);
+> +
+> +	if (brightness =3D=3D LED_OFF)
+> +		gpiod_set_value_cansleep(priv->enable_gpio, 0);
+> +	else
+> +		gpiod_set_value_cansleep(priv->enable_gpio, 1);
+> +
+> +	return 0;
+> +}
+
+Umm. So this cancels running strobe?
+
+> +static void sgm3140_powerdown_timer(struct timer_list *t)
+> +{
+> +	struct sgm3140 *priv =3D from_timer(priv, t, powerdown_timer);
+> +
+> +	gpiod_set_value_cansleep(priv->enable_gpio, 0);
+> +	gpiod_set_value_cansleep(priv->flash_gpio, 0);
+> +}
+
+And this does not return to previous brightness.
+
+Do we want to provide the "strobe" functionality through sysfs at all?
+Should we make it v4l-only, and independend of the LED stuff?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXmTgVwAKCRAw5/Bqldv6
+8gI9AKC+38d/h8HCQJ9hmjMQkdEjx4sxjQCfWf8+7GcqR11vwa1Xmg1qh9jZoZM=
+=CLfP
+-----END PGP SIGNATURE-----
+
+--y0ulUmNC+osPPQO6--
