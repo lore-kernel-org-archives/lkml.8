@@ -2,115 +2,157 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E11C18E7A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2229AC18E5F
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53542206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:17:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583648247;
-	bh=9ame7aB+gFjGXSnQ7vpAtpsVY6w+4/FfqozW1g4Cd+8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dbNmI01ltS7aIf3wCdtl99VPwpFkGTrQAE7d0eQ37CuuQWcl+89fOE3NffkbLiNJw
-	 5DGe4csYIZxB1RK7HN9+MW4WPxC7iUk8yA5yOz/rsEl0EfjhgjN3+4vOpPPN5LOn1U
-	 tvKGvfQqpolbF29uYsGaQWzF7WLW+pDTFUWJPiD4=
+	by mail.kernel.org (Postfix) with ESMTP id E369A2072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:49:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YytqQvTP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgCHGRZ (ORCPT
+        id S1726156AbgCHGnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 01:17:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgCHGRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 01:17:25 -0500
-Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3264E206D5;
-        Sun,  8 Mar 2020 06:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583648244;
-        bh=9ame7aB+gFjGXSnQ7vpAtpsVY6w+4/FfqozW1g4Cd+8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jpf30BGdmS+h5tKyDyU5YYG0AeLi7uZRjya69QEId/i/FFgx8lds/q+qxLi/uCXyU
-         cG6Hv4YpgVGuLvvhwSsygu893iLaDzZxS7+LfbEk2J4IxDWAjKg0+xfgGaVN7RXIWr
-         42DmzulKd0SkHRMWLYrtz4e+HPBv46g6MNMStg3Y=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-cifs@vger.kernel.org
-Cc:     linux-ext4@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        Sun, 8 Mar 2020 01:43:15 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.196]:38816 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725904AbgCHGnP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 01:43:15 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 42D46114CF
+        for <linux-kernel@vger.kernel.org>; Sun,  8 Mar 2020 00:43:14 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Apecjpds68vkBApecjin4k; Sun, 08 Mar 2020 00:43:14 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ktHGEyhcgp3aw4ArMPWHcrGw64bu26lB+fZatzZfI0c=; b=YytqQvTPRc9zUW6sl6ytNOeAgN
+        otRM7KLK9l9WclynU0J/5OyZp71isTnrQWG1NMuji8PC4l++7/chaSZOwM2I/NuybPlqNcUveYwlU
+        R4PPEqawCM6UWrwKn3etl6m7HoF+qTDqEJWZq8HkBm1JP6ri3Rgufvi9c4W/82XBz0NZegTrfyD0d
+        83SnVliH2fGDVwm6Bj2pAEt5KtqBWpNEwemsunh+ZkWpyYVeW0jK93zYkGJP0zn16JhrkpEPb1Xzg
+        A6mmYBMcXpNtAh1OYrYkzPM8mpd3QNLU5N1JqLZ3iqa+xq/IBK5BzRR+BHZXRxc5hB8UGDMLhdHHz
+        XMm0dHsw==;
+Received: from [201.162.167.15] (port=17590 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jApeb-002vxz-LH; Sun, 08 Mar 2020 00:43:14 -0600
+To:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2] cifs: clear PF_MEMALLOC before exiting demultiplex thread
-Date:   Sat,  7 Mar 2020 22:16:11 -0800
-Message-Id: <20200308061611.1185481-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200308043645.1034870-1-ebiggers@kernel.org>
-References: <20200308043645.1034870-1-ebiggers@kernel.org>
+Cc:     clang-built-linux@googlegroups.com
+References: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
+ <576fe2ab-7937-4698-b32a-8599813d6ad1@embeddedor.com>
+ <4304de54a44b7c8c22d8c2d9249d716664cf5ce8.camel@perches.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] cvt_fallthrough: A tool to convert /* fallthrough */
+ comments to fallthrough;
+Message-ID: <6773b7e3-8ce4-55d1-8bb7-bde6d9f6e887@embeddedor.com>
+Date:   Sun, 8 Mar 2020 00:46:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <4304de54a44b7c8c22d8c2d9249d716664cf5ce8.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.167.15
+X-Source-L: No
+X-Exim-ID: 1jApeb-002vxz-LH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.167.15]:17590
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
 
-Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-during do_exit().  That can confuse things.  For example, if BSD process
-accounting is enabled, then it's possible for do_exit() to end up
-calling ext4_write_inode().  That triggers the
-WARN_ON_ONCE(current->flags & PF_MEMALLOC) there, as it assumes
-(appropriately) that inodes aren't written when allocating memory.
 
-This case was reported by syzbot at
-https://lkml.kernel.org/r/0000000000000e7156059f751d7b@google.com.
+On 3/7/20 21:01, Joe Perches wrote:
+> On Sat, 2020-03-07 at 15:30 -0600, Gustavo A. R. Silva wrote:
+>> Some people consistently add blank lines as part of their code style,
+>> and if I were
+>> one of those people, I wouldn't like to have such lines removed.
+> 
+> It's a patch generator, it's not perfect.
+> Nothing is nor ever will be.
 
-Fix this in cifs_demultiplex_thread() by using the helper functions to
-save and restore PF_MEMALLOC.
+Wise words. The thing is that this is feedback over a proposed
+patch.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
+> It's quite simple to add blank lines if that's
+> what any maintainer desires.
+> 
 
-v2: added missing include of <linux/sched/mm.h>
-    (I missed that I didn't actually have CONFIG_CIFS set...)
+I'm not sure if you are saying that it's not a problem to
+update your proposed patch, or if you are suggesting that
+the maintainers will have the predisposition of applying
+patches that will modify their coding style and then go and
+willingly fix that. I doubt the latter, though.
 
- fs/cifs/connect.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 4804d1df8c1c..97b8eb585cf9 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -21,6 +21,7 @@
- #include <linux/fs.h>
- #include <linux/net.h>
- #include <linux/string.h>
-+#include <linux/sched/mm.h>
- #include <linux/sched/signal.h>
- #include <linux/list.h>
- #include <linux/wait.h>
-@@ -1164,8 +1165,9 @@ cifs_demultiplex_thread(void *p)
- 	struct task_struct *task_to_wake = NULL;
- 	struct mid_q_entry *mids[MAX_COMPOUND];
- 	char *bufs[MAX_COMPOUND];
-+	unsigned int noreclaim_flag;
- 
--	current->flags |= PF_MEMALLOC;
-+	noreclaim_flag = memalloc_noreclaim_save();
- 	cifs_dbg(FYI, "Demultiplex PID: %d\n", task_pid_nr(current));
- 
- 	length = atomic_inc_return(&tcpSesAllocCount);
-@@ -1320,6 +1322,7 @@ cifs_demultiplex_thread(void *p)
- 		set_current_state(TASK_RUNNING);
- 	}
- 
-+	memalloc_noreclaim_restore(noreclaim_flag);
- 	module_put_and_exit(0);
- }
- 
--- 
-2.25.1
-
+--
+Gustavo
