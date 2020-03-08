@@ -2,107 +2,139 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D003C10F27
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF30C10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000C420684
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC95206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="EygN2SjK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o8i/L3Rz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgCHVt7 (ORCPT
+        id S1726444AbgCHVvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 17:49:59 -0400
-Received: from mout.gmx.net ([212.227.17.21]:33383 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbgCHVt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 17:49:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583704176;
-        bh=uvTnr5QT5mOgGF73WARSWzpFJoFtVP4k+lkjGy7VaEE=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=EygN2SjKr6omx8QyzHBd3aD+c/3WnsdyRbRwwqN87qTpwotlDUm4oHZhcerMEVS9A
-         OKgWBdsvnPRdXX3iYab3IrKnn4Jp8rcWA8hQe85hp1849j2uHhJnznJ0nSQqqkA1jY
-         YiCpHQZTntXk0QbdadJu2mt8buClnbj2rwBVvCb4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.212]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N7R1J-1jP8If2jHx-017l3H; Sun, 08
- Mar 2020 22:49:36 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-clk@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: imx: gate2: Fix a few typos
-Date:   Sun,  8 Mar 2020 22:49:26 +0100
-Message-Id: <20200308214927.16688-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Sun, 8 Mar 2020 17:51:05 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:51486 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbgCHVvE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 17:51:04 -0400
+Received: by mail-pj1-f66.google.com with SMTP id y7so90475pjn.1
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 14:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/0umr1qG/qgpEFz5deDRXgTYtCKL5W9w5+Ev+GQb+Dg=;
+        b=o8i/L3RzqvaBlnfdNPvNBkov0CbZ1ev3aXO9OELC4EF6fIuiIT+5wosdkaM2+PZ3Fh
+         JT/oDPO4SPzaTCp5mhzvVtDl1d8XsQtAdmQP9d3030ErzHH/rZ9O8g6nE7H0X2eQpvQh
+         DR5nt4NL35U1p5PBkQE4vOYjrHpltQ4+WUNrEhY0j0TXN/du5AD4OONWZjpUyiY7xuMF
+         04wxOJct1+9W6EzedROi0pHgbTKzlMxWbxr/Xg+mXoVhxux29YGxEKS0x8t69kP1EVVx
+         nVry261wR5FtZyy+ASdSoLqjgZMM/FJVLo0ACyyGE0q7BeneVF6nygiqUC7sVLZin2hp
+         ZLbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/0umr1qG/qgpEFz5deDRXgTYtCKL5W9w5+Ev+GQb+Dg=;
+        b=sxlEebHLsRayNTE6TcfNYKiR1o3zWzxTs+w+yzK5eKSATMFOgeDfrV/P58mKidwDO+
+         ZaJhs01GyEArISocgGNmSG24JkZBGVs95csyORPYqEDbVGdWSA+JeenUhJJeqA5zCopW
+         vZ7qkUk2l76BqM9Dj9WmWlCCswTrscT6vDFkgF2lpJT9Vrohz1WBBoV2RNzm0E2wHqDo
+         U0bmGIQJC+vOxkUXfoOUzgNyFPZXQa1gfW3p5ikpKEKQXnfkGT6fG9R4nbmuAC3ei41T
+         nxmF+sM8/Qq2cEZIJOhfkmYM8X2+eJNHdfcoIN6TIbxcUvhY/xoYu+Hx7Wxk3/MlsNkR
+         oX5Q==
+X-Gm-Message-State: ANhLgQ1IUEC0KZj6Pc3/KueTFG9Q2WXTRHjnD7kwUWD0oKvKrezu0Svb
+        6cbplIdJO/09CHhVQzj/e6C+cw==
+X-Google-Smtp-Source: ADFU+vso95SaWak3tER3wqc75VRhPc5TbTb2THpk8dh/f8oHGiH8kxhVJ28evS719oogUmCiIiHFLg==
+X-Received: by 2002:a17:90a:c78b:: with SMTP id gn11mr13899610pjb.97.1583704263403;
+        Sun, 08 Mar 2020 14:51:03 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g18sm43038368pfi.80.2020.03.08.14.51.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 14:51:02 -0700 (PDT)
+Date:   Sun, 8 Mar 2020 14:51:00 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Pradeep P V K <ppvk@codeaurora.org>
+Cc:     adrian.hunter@intel.com, robh+dt@kernel.org,
+        ulf.hansson@linaro.org, asutoshd@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, mka@chromium.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, linux-mmc-owner@vger.kernel.org
+Subject: Re: [RFC v4 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW
+ scaling strings
+Message-ID: <20200308215100.GM1094083@builder>
+References: <1582030833-12964-1-git-send-email-ppvk@codeaurora.org>
+ <1582030833-12964-3-git-send-email-ppvk@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TR0iVzdX+30Zder+jNCdtNUVjBN6YV/5WNwW7AyqXPrAWGNQWUM
- /ysJa9gQ6nGCJJejBMJPcfDhNEroAVHxs7orNweEg97xgrHZ7gMuiDv2kitzBDaFuCD4FZ8
- /vJooFp24hWq+C1nZ+7r6yOZgoLW5JNsoO0sOW5PN/lj9TWLn9fPAHlq1tmOAtnRHhqxqZW
- xAytEn1376bJoGjKOW8xg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wwDlsyUpAjg=:MsBHMYfRXw/ljJvdaaAlmq
- Ww+UVemjqlWKGpGxwfYa92RtEtiLFydmZjBBoV1MSkRF2cuSEfWssEAIqQCkih0l5++voqsXs
- TFCvIB0749vQ859whrkJa8dgnBnuTvLcp8GPn2s30T6hy7zFefkzmPrsrBXkbiyxYcFbn0saZ
- XzxJ6tWvCFcAl7rbZb//OPVj6dhTrR6Id3T6NLH1pDrU6BZqD7B1ou4sl/QL2iVSSvNPioTNd
- sFNJJNkE2phGwkumMENE1B/tYjkXkH7L1rDa5JzquAMVPw0t6BfdLZmz+ZJyig7/5BBz+/7wZ
- cbSjed88LUtr/heJe3+ZgXaUa+5JeST/Z4VHmP6nOz2IVgZVlpYWqx+LtKIhKN6vnrKy8dUjh
- GUKm+bX5jyL8LQ58RjQuxWqv3j1NsctW0wSpOmPF7rlahfl0VxDMmG0OWE1JHK7Qlw0Or6Ibi
- zEAnX5NQ00Xe4bASKTZeVimgMsXdkH+W4dlZCLpLT6/9z/81XICttfd0lewWT59Qo2dBbO8wU
- E5bbcZi4hKE+pSili1XhX6+53rYkkl1Bj7KA7OjX0vi03wROQeLBNDzuYEW05Zx145w5w3Tjd
- dlSXuHKxnalLeSCkBCXndZNsssLxosM7jGGKtAfyCUQUJIqP6enfaUJ9BGxiYc44TtsAS3znE
- y88zwyQfk5h28t7lXsm95pMECsQFb3mQTiPoxVTW7WOdznOOADpmG9XGcayMyFPOQPIZVdEF2
- SuHfoAuVkiKOgjqIXvtdZuH163xbUizGs+WHTDVcc7S8BKFtYsu62ZCZytVthmrZfCH1A20EA
- fU1ol910Iz/lT6uHWSuLV21sI/Coswd0nK/iH1m0AlxeYDgysN3Gvq/MiD6VwAIQBXAp7VFD7
- LPE4xTY9DjJxHMD7fH/OPxEX2lWD75qQptWZY66Ieh2W2OqGiNiDVZMN5vkjo45qarGLWoBi4
- wMhNAWusjOOimBw91s6lQCTUuiwWbf/DGHSaVf7PGY+TLS1jxP410+GDuvgIsz5m85YG+oBWQ
- f3L1Ah5UlimAJStD7j0DtBFBbN4q/nOrQZjWq+XF0fXqfUklwdrM5Wq/kKxA6OmToqQCHT5kH
- HTNY25gCnQ8LS58lvxgiwm+lwqffE2/Y6L3252UKMET+S63TbIm6cXe89I+cGnuElGL0bBmvm
- +kMkhoxEAs4wAZnI3N5Z+FUJH9fxW8eS9HRpiuvw6/G+CkWGEXt+BEtcVj+3ZMgCEkq/tf08l
- KpD0SdgJuHLMmQTq4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582030833-12964-3-git-send-email-ppvk@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- drivers/clk/imx/clk-gate2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue 18 Feb 05:00 PST 2020, Pradeep P V K wrote:
 
-diff --git a/drivers/clk/imx/clk-gate2.c b/drivers/clk/imx/clk-gate2.c
-index 7d44ce814806..a1230cc215c4 100644
-=2D-- a/drivers/clk/imx/clk-gate2.c
-+++ b/drivers/clk/imx/clk-gate2.c
-@@ -15,7 +15,7 @@
- #include "clk.h"
+> Add interconnect bandwidth scaling supported strings for qcom-sdhci
+> controller.
+> 
+> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
 
- /**
-- * DOC: basic gatable clock which can gate and ungate it's ouput
-+ * DOC: basic gateable clock which can gate and ungate its output
-  *
-  * Traits of this clock:
-  * prepare - clk_(un)prepare only ensures parent is (un)prepared
-=2D-
-2.20.1
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+> ---
+> 
+> changes from RFC v3 -> v4:
+> - No changes.
+> 
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index 7ee639b..cbe97b8 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -40,6 +40,21 @@ Required properties:
+>  	"cal"	- reference clock for RCLK delay calibration (optional)
+>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>  
+> +Optional Properties:
+> +* Following bus parameters are required for interconnect bandwidth scaling:
+> +- interconnects: Pairs of phandles and interconnect provider specifier
+> +		 to denote the edge source and destination ports of
+> +		 the interconnect path.
+> +
+> +- interconnect-names: For sdhc, we have two main paths.
+> +		1. Data path : sdhc to ddr
+> +		2. Config path : cpu to sdhc
+> +		For Data interconnect path the name supposed to be
+> +		is "sdhc-ddr" and for config interconnect path it is
+> +		"cpu-sdhc".
+> +		Please refer to Documentation/devicetree/bindings/
+> +		interconnect/ for more details.
+> +
+>  Example:
+>  
+>  	sdhc_1: sdhci@f9824900 {
+> @@ -57,6 +72,9 @@ Example:
+>  
+>  		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+>  		clock-names = "core", "iface";
+> +		interconnects = <&qnoc MASTER_SDCC_ID &qnoc SLAVE_DDR_ID>,
+> +				<&qnoc MASTER_CPU_ID &qnoc SLAVE_SDCC_ID>;
+> +		interconnect-names = "sdhc-ddr","cpu-sdhc";
+>  	};
+>  
+>  	sdhc_2: sdhci@f98a4900 {
+> -- 
+> 1.9.1
+> 
