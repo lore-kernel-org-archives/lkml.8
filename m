@@ -2,170 +2,161 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D354C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8FFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADCC206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C28B8206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXKCEnly"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="a+U0hdLO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgCHTH6 (ORCPT
+        id S1726368AbgCHTLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 15:07:58 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33242 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgCHTH6 (ORCPT
+        Sun, 8 Mar 2020 15:11:43 -0400
+Received: from gateway30.websitewelcome.com ([192.185.179.30]:16656 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726318AbgCHTLm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 15:07:58 -0400
-Received: by mail-qt1-f196.google.com with SMTP id d22so5559532qtn.0;
-        Sun, 08 Mar 2020 12:07:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=q9gIS4U5Axb2UV/TlkmoKYkwkraygD1wbePWfXVPOcw=;
-        b=TXKCEnlyU80n3IUULzxYxQ2QaUidkrNMG/2yUohwmHP1jwU6PTB0LHc5q4Zl3UHH9z
-         QX7NilsZjqIK0N/bUVHtKQG/GmA20luiyPSe0MWh9cfPjS0702OICJQCHhKPe0aHL88C
-         IzJDs6BqN/SiyMYk5F+3JdV+GZ2DiWtcgmKQErxNJ/27daMjFZ9BtJbM6hs0ug5UgGxV
-         9qcCRsIzI4k2umhRSrZOIjMSzQpy8w2ukAZBxqYb+1H0X+7qNODMxTVR4ah2TjETANVr
-         WOKvssAWJVwWvRzNsRmX3+IswTN4jqW+Tp1vTUnED9Gavt8stfaSz1TRgFXf4uCtDVMH
-         Ip5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=q9gIS4U5Axb2UV/TlkmoKYkwkraygD1wbePWfXVPOcw=;
-        b=Sw0cA4cIJaH9wk11r5nlOu/qUC5nOA5W15KaMPxpvnflKWJYoDAoRRnf2p3sab0U2J
-         3V+OxOnfS/KKffwpJd1GRu+RlsRfeRUGmy5FUgVfqixvOuPUJWhvZak4IcenfJtnGq2i
-         kpAQooHW1M9wmrRyoysYYhat0P4XBWibhhhWz2vCBklOuu/sLY9P5Xb747tTLa7oBcIL
-         4cXHuc8Pdvrp/qO2wTKQJAn+nkZVa85T4W/nekyacuiY4b3TF7Ej4RmmIsFCpqk9TZKV
-         AWDfxLZbO2e+UdNcWuUBcxmXO4Bq0+Wi5yt51Sgo5y7mFrMeDGShsbJ1VBlNW4jZ6m10
-         KT1w==
-X-Gm-Message-State: ANhLgQ16OS8pRY2NeI5TmectKonLny+cWwZ45S6M8Lk036B7F45WdxVK
-        cEdV9m73kS9AupGR1GAx2EpiNJ5cQQRshAq20UM=
-X-Google-Smtp-Source: ADFU+vsOimvYnlJjSAb5ewq/pe6fyi+A4Mpsw3y4Aue/tx3nJ9/UVmpbzyx/MsAJ8RLOIQMsslyv/pKarL3MxmoRH1I=
-X-Received: by 2002:ac8:4d1c:: with SMTP id w28mr12051926qtv.48.1583694476930;
- Sun, 08 Mar 2020 12:07:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <CA+4pmEueEiz0Act8X6t4y3+4LOaOh_-ZfzScH0CbOKT99x91NA@mail.gmail.com>
- <87wo7una02.fsf@miraculix.mork.no>
-In-Reply-To: <87wo7una02.fsf@miraculix.mork.no>
-From:   Daniele Palmas <dnlplm@gmail.com>
-Date:   Sun, 8 Mar 2020 20:07:46 +0100
-Message-ID: <CAGRyCJE-VYRthco5=rZ_PX0hkzhXmQ45yGJe_Gm1UvYJBKYQvQ@mail.gmail.com>
-Subject: Re: [PATCH] net: usb: qmi_wwan: Fix for packets being rejected in the
- ring buffer used by the xHCI controller.
-To:     =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-Cc:     Paul Gildea <paul.gildea@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Sun, 8 Mar 2020 15:11:42 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 1AED53CB1
+        for <linux-kernel@vger.kernel.org>; Sun,  8 Mar 2020 14:11:41 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id B1KvjgNXYSl8qB1KvjHu15; Sun, 08 Mar 2020 14:11:41 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=w0GiLmOLbA5HCQnuH94dMDibvP+0nV1CMPbAZeilLyQ=; b=a+U0hdLO+N+j/NsSklNMl+ms/s
+        QC884KeHxaoUuX3jjy5bjO9GZp9Dc3/V3XkLEwA7NwGNhUOXz1DMZZ1v5QQ7ycS4W0xGx7CqTKJ1z
+        ZM89vnW0GlWyBVO8pfVcfxLY94oLa39vG+oMpvnaj0l4rC/rY2s3oykq2y+N5tqESY8f2CIksr4La
+        dvjH3/30FYqD/W3SiewjMe6ELkjw9Q/BTefFziczKVxaq/dbYmCa4AavsTCEB0I68kWhe6ZqMta9v
+        SEWGCeRUgOab4k7ouY4Bgt+ODMnnk++bYyQAqMkZPV4MYGmbunEO4ZxBSRtMVAf/iIXI5OSUewIrf
+        /Y+AHecQ==;
+Received: from [201.162.167.15] (port=23945 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jB1Kt-000hNa-LH; Sun, 08 Mar 2020 14:11:40 -0500
+To:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     clang-built-linux@googlegroups.com
+References: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
+ <576fe2ab-7937-4698-b32a-8599813d6ad1@embeddedor.com>
+ <4304de54a44b7c8c22d8c2d9249d716664cf5ce8.camel@perches.com>
+ <6773b7e3-8ce4-55d1-8bb7-bde6d9f6e887@embeddedor.com>
+ <259f405155a948f90229d3fc8cad928d434b46f9.camel@perches.com>
+ <1f71509d-6c58-412d-a817-45b1cc78c06e@embeddedor.com>
+ <18d7df753cb90d6c6f5a6b5e2a12b4c102ac8749.camel@perches.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] cvt_fallthrough: A tool to convert /* fallthrough */
+ comments to fallthrough;
+Message-ID: <7a0a3e7b-9c76-22f8-8dbf-acd9960d7950@embeddedor.com>
+Date:   Sun, 8 Mar 2020 14:14:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <18d7df753cb90d6c6f5a6b5e2a12b4c102ac8749.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.167.15
+X-Source-L: No
+X-Exim-ID: 1jB1Kt-000hNa-LH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.167.15]:23945
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bj=C3=B8rn and Paul,
 
-Il giorno dom 8 mar 2020 alle ore 16:28 Bj=C3=B8rn Mork <bjorn@mork.no> ha =
-scritto:
->
-> Paul Gildea <paul.gildea@gmail.com> writes:
->
-> > When MTU of modem is set to less than 1500 and a packet larger than MTU
-> > arrives in Linux from a modem, it is discarded with -EOVERFLOW error
-> > (Babble error). This is seen on USB3.0 and USB2.0 busses. This is
-> > essentially because the MRU (Max Receive Size) is not a separate entity=
- to
-> > the MTU (Max Transmit Size) and the received packets can be larger than
-> > those transmitted. Following the babble error there were an endless sup=
-ply
-> > of zero-length URBs which are rejected with -EPROTO (increasing the rx
-> > input error counter each time). This is only seen on USB3.0. These cont=
-inue
-> > to come ad infinitum until the modem is shutdown, rendering the modem
-> > unusable. There is a bug in the core USB handling code in Linux that
-> > doesn't deal well with network MTUs smaller than 1500 bytes. By default=
- the
-> > dev->hard_mtu (the "real" MTU) is in lockstep with dev->rx_urb_size
-> > (essentially an MRU), and it's the latter that is causing trouble. This=
- has
-> > nothing to do with the modems; the issue can be reproduced by getting a
-> > USB-Ethernet dongle, setting the MTU to 1430, and pinging with size gre=
-ater
-> > than 1406.
-> >
-> > Signed-off-by: Paul Gildea <Paul.Gildea@gmail.com>
-> > ---
-> > drivers/net/usb/qmi_wwan.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-> > index 5754bb6..545c772 100644
-> > --- a/drivers/net/usb/qmi_wwan.c
-> > +++ b/drivers/net/usb/qmi_wwan.c
-> > @@ -815,6 +815,13 @@ static int qmi_wwan_bind(struct usbnet *dev, struc=
-t
-> > usb_interface *intf)
-> >     }
-> >     dev->net->netdev_ops =3D &qmi_wwan_netdev_ops;
-> >     dev->net->sysfs_groups[0] =3D &qmi_wwan_sysfs_attr_group;
-> > +    /* LTE Networks don't always respect their own MTU on receive side=
-;
-> > +    * e.g. AT&T pushes 1430 MTU but still allows 1500 byte packets fro=
-m
-> > +    * far-end network. Make receive buffer large enough to accommodate
-> > +    * them, and add four bytes so MTU does not equal MRU on network
-> > +    * with 1500 MTU otherwise usbnet_change_mtu() will change both.
-> > +    */
-> > +   dev->rx_urb_size =3D ETH_DATA_LEN + 4;
 
-Isn't this going to break the change MTU workaround for dl data
-aggregation when using qmap?
+On 3/8/20 03:58, Joe Perches wrote:
+> On Sun, 2020-03-08 at 01:11 -0600, Gustavo A. R. Silva wrote:
+>> On 3/8/20 01:02, Joe Perches wrote:
+>>>> or if you are suggesting that
+>>>> the maintainers will have the predisposition of applying
+>>>> patches that will modify their coding style and then go and
+>>>> willingly fix that. I doubt the latter, though.
+>>>
+>>> If any do actually use the script, I guess we'll see.
+>>>
+>> Yep. In the meantime is a NACK from me for this version
+>> of your patch.
+> 
+> Generic code reformatters of comments to code are not
+> particularly common.
+> 
 
-Regards,
-Daniele
+I might not be getting my point across. It's no a matter of
+reformatting something. It's the opposite, it's a matter of
+not messing (removing existing blank lines) with the current
+format and merely focusing on replacing comments.
 
-> >  err:
-> >     return status;
-> >  }
-> > --
-> > 1.9.1
->
->
-> This is fine as a first step towards saner buffer handling in qmi_wwan.
-> If real world devices use asymmetric MTUs, then we should just deal with
-> that.
->
-> So I was going to add my ack.  But the patch does not apply:
->
->
->  bjorn@miraculix:/usr/local/src/git/linux$ git am /tmp/l
->  Applying: net: usb: qmi_wwan: Fix for packets being rejected in the ring=
- buffer used by the xHCI controller.
->  error: corrupt patch at line 10
->
-> and checkpatch says why:
->
->  bjorn@miraculix:/usr/local/src/git/linux$ scripts/checkpatch.pl /tmp/l
->  ERROR: patch seems to be corrupt (line wrapped?)
->  #34: FILE: drivers/net/usb/qmi_wwan.c:814:
->  usb_interface *intf)
->
->
-> Could you fix up and resend? You might have to use a different email
-> client.  See
-> https://www.kernel.org/doc/html/latest/process/email-clients.html#email-c=
-lients
->
->
-> Bj=C3=B8rn
+--
+Gustavo
