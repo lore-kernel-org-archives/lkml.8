@@ -2,144 +2,293 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE33C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 17:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02A7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 17:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9464220828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 17:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B703020880
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 17:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RO5mJqse"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MV4/0JIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCHRVJ (ORCPT
+        id S1726415AbgCHRVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 13:21:09 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45694 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgCHRVJ (ORCPT
+        Sun, 8 Mar 2020 13:21:15 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35857 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbgCHRVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 13:21:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f21so7273600otp.12
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 10:21:08 -0700 (PDT)
+        Sun, 8 Mar 2020 13:21:14 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g62so2840716wme.1;
+        Sun, 08 Mar 2020 10:21:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PtEA2mm9l96k+awFlKZr4TJ6AG/v1NHyD+CFP5x3VFo=;
-        b=RO5mJqseeWny+mX27K2lObhmY6I9DyzMDNKtt5MNZhWmD7Zb2rB6mqSS0zdoWAY+/H
-         0mMp5KoxajOn1PqQxzaKCRpYT3JM/bgzhvyGg2PbYEqPFfBYIBWmBzTrTwj5rjoMVCnY
-         /5rgQVAYTyE5zFpliUAACSusk4VqRQ3qW521OgyD8QtUvVUUdPBkcngTAHCNQmUxHEtG
-         UT8OYUmsaBcZdufjl0ASi5XOCy9PtAS4gQ7IdJn3T7enLeJFA26vpwVOk0q7uPtxrL/Z
-         ESPszquBVoN5feDMYDraRkd5DdhasbUp35lz4gJb4t203Hn/GHjax8/2GUcCghLtwntQ
-         LSoA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qzsxqhegd7VOxV+LmHb3kKEhWvUPEvJLG/AsAJYRHG0=;
+        b=MV4/0JIsQpDgpy+PUteYVcjSySw1KR1NEm/7AjMjS4OQbwYHuP1H3dk+pb4jHc/rhL
+         97rXzp+XrLrHY1sQOy28bqRCq8QbgA1EIhmZUEzQ11ORTwLQRvSu8DAY1IDJVJ2MtRGM
+         N/Hzm+l3NyyPs3TUH16sVL+UtkvyHmCNPh+BxJRBhxziiGetAb/cdmFh3ExgNe+od7VV
+         ukxjAakNqSyFWWZZQKiwed8B7p9pItKORr3+Of4n3FAF//LfTG0zJ5VPq9uR5YYt5SYR
+         Ed70cCuJOXCKofwP8w+IDNgjl3OY0iJIPltU66PgjQBreCtCtZy7WxdR9yaSbjSyLujr
+         goCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PtEA2mm9l96k+awFlKZr4TJ6AG/v1NHyD+CFP5x3VFo=;
-        b=WwhI9jflhGJ9e52cxUe0m3kUIV6K0ZW3eUKptFsWYDgHlV7mFceqUhPLJXGD+lxFWU
-         I2vWlvYf3vZWgm7bbTcEa+CwbPwchhcSOT+/upGgUgoKhsisBnaPRXt5pYMJ2CBFfUJf
-         4hMnJgX/t79YzAhU2/oF7wl1qdpo2s2CiBS7xDAxuj/z1pjy/71O2M0UyXfqmdN5/SVZ
-         ae25CZUDOG4tLsN01eMnfcqmCYS5k5bLBuIsG6vYP1qf+fD/QvBP5DteqWYmgj5pwXEH
-         rLRypc6W/UAaE2EYS+kdPk00nDxBJOoHhpgZeaLgfvHYu9Iwt1vaTkOOjcAbqshXDQoI
-         MeRA==
-X-Gm-Message-State: ANhLgQ0kf1Q+Slf1Lddxt128ze0BjWeMYjSFfsuX0gcdu0WJlatIay28
-        oteBcnyhG0z8xVulEqzPko6hL7Xyp/xKfEdNjvaLmg==
-X-Google-Smtp-Source: ADFU+vtF5TJlIqrVcenBMU6JyY5M1kfMbKiy8HlmWV4Ir0C0GIPoIDpylFMIwcKl0vlvlXiADHlQtx1402OgMdb55cE=
-X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr10073990oti.32.1583688067980;
- Sun, 08 Mar 2020 10:21:07 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=qzsxqhegd7VOxV+LmHb3kKEhWvUPEvJLG/AsAJYRHG0=;
+        b=rUGto0bqyaJd20y3KXh1uqTaNRLWkmiUoYs95rPg1uqm44W/JckWDuqRGGuPnWVx6O
+         yGTrNPUR/wUFoE7cJouUbfUPkeFk/zgBI5SFbbIbKAsq2pmKcToK27xm/vGDiPNrwttR
+         bMu5GW/ce0wNvtgyCmoLCWKJcXki4ZOHWV5SqkiHmmzWXuzE8ofzxaJ5WmLSWRGMce/O
+         sNv3Wf27d5043tn8/sL87wzIcJtNU2gsX5Bi/qeTBAS82y5toKYR8ZcHZGM3IBZsS7kP
+         wT6xpnhJ50vH238O3PJlc57ZEwhyxQp6kUW6+ldupgBq2EXOiVaWSQI2EK80qBNlPtN/
+         RgLA==
+X-Gm-Message-State: ANhLgQ3MnQKxCBeN7qWsYJbFmjmwk84Qoc/nK0riEXDsjpZhDUVGAbGQ
+        lRxsnzodkIr3ZuerrjC2vKIvsIEq
+X-Google-Smtp-Source: ADFU+vsFOzHmtglSWZ/5yvy4V6BOFlaguplG7NARDOQxwykN/6G8AS2hZ/udz7bG9BXy1ZlIt8so1g==
+X-Received: by 2002:a1c:5457:: with SMTP id p23mr16141965wmi.45.1583688071539;
+        Sun, 08 Mar 2020 10:21:11 -0700 (PDT)
+Received: from [192.168.1.23] (affz13.neoplus.adsl.tpnet.pl. [95.49.155.13])
+        by smtp.gmail.com with ESMTPSA id x9sm17472030wrx.0.2020.03.08.10.21.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Mar 2020 10:21:10 -0700 (PDT)
+Subject: Re: [RFC PATCH] leds: add sgm3140 driver
+To:     Luca Weiss <luca@z3ntu.xyz>, linux-leds@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org
+References: <20200227185015.212479-1-luca@z3ntu.xyz>
+ <4539487.31r3eYUQgx@g550jk> <b58ddefc-b282-5a85-9dca-824e513705de@gmail.com>
+ <1832610.usQuhbGJ8B@g550jk>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <568b079a-0a42-4eed-d2d7-12f0feef35e6@gmail.com>
+Date:   Sun, 8 Mar 2020 18:21:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <000000000000ff323f05a053100c@google.com>
-In-Reply-To: <000000000000ff323f05a053100c@google.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Sun, 8 Mar 2020 18:20:41 +0100
-Message-ID: <CAG48ez2TnPppWonr8K3POyg3hGosgNXU2-ZMjyaYN4tLYRiJiQ@mail.gmail.com>
-Subject: Re: general protection fault in syscall_return_slowpath
-To:     syzbot <syzbot+cd66e43794b178bb5cd6@syzkaller.appspotmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000ba975805a05b1c90"
+In-Reply-To: <1832610.usQuhbGJ8B@g550jk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000ba975805a05b1c90
-Content-Type: text/plain; charset="UTF-8"
+On 3/8/20 5:55 PM, Luca Weiss wrote:
+> Hi Jacek,
+> 
+> On Sonntag, 8. März 2020 17:47:17 CET Jacek Anaszewski wrote:
+>> Hi Luca,
+>>
+>> On 3/8/20 12:32 PM, Luca Weiss wrote:
+>>> Hi Jacek,
+>>>
+>>> Thanks for your review! Replies are inline below.
+>>>
+>>> I'm wondering if I should implement support for the flash-max-timeout-us
+>>> dt
+>>> property ("Maximum timeout in microseconds after which the flash LED is
+>>> turned off.") to configure the timeout to turn the flash off as I've
+>>> currently hardcoded 250ms but this might not be ideal for all uses of the
+>>> sgm3140. The datasheet> 
+>>> states:
+>>>> Flash mode is usually used with a pulse of about 200 to 300 milliseconds
+>>>> to
+>>>> generate a high intensity Flash.
+>>>
+>>> so it might be useful to have this configurable in the devicetree. The
+>>> value of 250ms works fine for my use case.
+>>
+>> Yeah, I was to mentioned that.
+>>
+>>> Theoretically also the .timeout_set op could be implemented but I'm not
+>>> sure if this fits nicely into the existing "timeout" API and if it even
+>>> makes sense to implement that.
+>>
+>> Why wouldn't it fit? You can implement timeout_set op and cache flash
+>> timeout value in it. Then that cached value would be passed in
+>> strobe_set to mod_timer() in place of currently hard coded 250.
+>>
+> 
+> I'll implement that then.
+> 
+>>> Regards,
+>>> Luca
+>>>
+>>> On Donnerstag, 5. März 2020 22:09:16 CET Jacek Anaszewski wrote:
+>>>> Hi Luca,
+>>>>
+>>>> Thank you for the patch.
+>>>>
+>>>> On 2/27/20 7:50 PM, Luca Weiss wrote:
+>>>>> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+>>>>>
+>>>>> This device is controller by two GPIO lines, one for enabling the LED
+>>>>> and the second one for switching between torch and flash mode.
+>>>>>
+>>>>> The device will automatically switch to torch mode after being in flash
+>>>>> mode for about 250-300ms, so after that time the driver will turn the
+>>>>> LED off again automatically.
+>>>>>
+>>>>> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+>>>>> ---
+>>>>> Hi, this driver is controllable via sysfs and v4l2 APIs (as documented
+>>>>> in Documentation/leds/leds-class-flash.rst).
+>>>>>
+>>>>> The following is possible:
+>>>>>
+>>>>> # Torch on
+>>>>> echo 1 > /sys/class/leds/white\:flash/brightness
+>>>>> # Torch off
+>>>>> echo 0 > /sys/class/leds/white\:flash/brightness
+>>>>> # Activate flash
+>>>>> echo 1 > /sys/class/leds/white\:flash/flash_strobe
+>>>>>
+>>>>> # Torch on
+>>>>> v4l2-ctl -d /dev/video1 -c led_mode=2
+>>>>> # Torch off
+>>>>> v4l2-ctl -d /dev/video1 -c led_mode=0
+>>>>> # Activate flash
+>>>>> v4l2-ctl -d /dev/video1 -c strobe=1
+>>>>
+>>>> What is /dev/video1 ? Did you register vl42 flash subdev
+>>>> in some v4l2 media controller device?
+>>>
+>>> On the Allwinner A64 SoC /dev/video0 is the node for cedrus (video
+>>> encoder/
+>>> decoder), so the sun6i-csi driver gets to be /dev/video1
+>>>
+>>> # v4l2-ctl --list-devices
+>>>
+>>> cedrus (platform:cedrus):
+>>>         /dev/video0
+>>>         /dev/media0
+>>>
+>>> sun6i-csi (platform:csi):
+>>>         /dev/video1
+>>>
+>>> Allwinner Video Capture Device (platform:sun6i-csi):
+>>>         /dev/media1
+>>>
+>>> Here's the relevant part from my dts:
+>>>
+>>> sgm3140 {
+>>>
+>>>     compatible = "sgmicro,sgm3140";
+>>>     flash-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* FLASH_TRIGOUT: PD24 */
+>>>     enable-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* FLASH_EN: PC3 */
+>>>     
+>>>     sgm3140_flash: led {
+>>>     
+>>>         function = LED_FUNCTION_FLASH;
+>>>         color = <LED_COLOR_ID_WHITE>;
+>>>     
+>>>     };
+>>>
+>>> };
+>>
+>> This needs to be documented in DT bindings for this driver.
+>>
+> 
+> I have already written some yesterday, will post them with my v1 :)
 
-On Sun, Mar 8, 2020 at 5:40 PM syzbot
-<syzbot+cd66e43794b178bb5cd6@syzkaller.appspotmail.com> wrote:
-> syzbot found the following crash on:
->
-> HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16cfeac3e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=cd66e43794b178bb5cd6
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a42329e00000
-[...]
-> general protection fault, probably for non-canonical address 0x1ffffffff1255a6b: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 8742 Comm: syz-executor.2 Not tainted 5.6.0-rc3-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:arch_local_irq_disable arch/x86/include/asm/paravirt.h:757 [inline]
-> RIP: 0010:syscall_return_slowpath+0xeb/0x4a0 arch/x86/entry/common.c:277
-> Code: 00 10 0f 85 de 00 00 00 e8 b2 a3 76 00 48 c7 c0 58 d3 2a 89 48 c1 e8 03 80 3c 18 00 74 0c 48 c7 c7 58 d3 2a 89 e8 05 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> RSP: 0018:ffffc900020a7ed0 EFLAGS: 00010246
-> RAX: 1ffffffff1255a6b RBX: dffffc0000000000 RCX: ffff88808c512380
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: ffffc900020a7f10 R08: ffffffff810075bb R09: fffffbfff14d9182
-> R10: fffffbfff14d9182 R11: 0000000000000000 R12: 1ffff110118a2470
-> R13: 0000000000004000 R14: ffff88808c512380 R15: ffff88808c512380
-> FS:  000000000154f940(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000076c000 CR3: 00000000a6b05000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Good :-)
 
-Let's see if we can get syzkaller to tell us which fbcon
-implementation it's hitting...
+> 
+>>> /* as subnode of csi (compatible: allwinner,sun50i-a64-csi) */
+>>> ov5640: rear-camera@4c {
+>>>
+>>>     compatible = "ovti,ov5640";
+>>>     <snip>
+>>>     flash-leds = <&sgm3140_flash>;
+>>>
+>>> };
+>>
+>> And this in camera bindings.
+> 
+> This is documented at 
+> Documentation/devicetree/bindings/media/video-interfaces.txt:
+> 
+> - flash-leds: An array of phandles, each referring to a flash LED, a sub-node
+>   of the LED driver device node.
+> 
+> Without referencing the flash device in a camera node, the v4l2 controls won't 
+> even show up from what I saw.
+> The binding is apparently only used in omap3-n9 and omap3-n950 currently; only 
+> phones have flash leds normally and the phones that are currently in mainline 
+> Linux don't have camera support yet.
 
-#syz test: https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
-63623fd44972d1ed2bfb6e0fb631dfcf547fd1e7
+I was rather thinking of mentioning this e.g. in
+Documentation/devicetree/bindings/media/i2c/ov5640.txt in the form like
+below (copied other occurrences thereof):
 
---000000000000ba975805a05b1c90
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-FOR-TESTING-ONLY-tell-us-which-fbcon-implementation-.patch"
-Content-Disposition: attachment; 
-	filename="0001-FOR-TESTING-ONLY-tell-us-which-fbcon-implementation-.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k7jayolu0>
-X-Attachment-Id: f_k7jayolu0
+- flash-leds: See ../video-interfaces.txt
 
-RnJvbSA4NDQyMTQ0ZmU1ODJhYjM4OTg1Mzc4Y2YyMWNhODhkZTE1OTRiNWRmIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBKYW5uIEhvcm4gPGphbm5oQGdvb2dsZS5jb20+CkRhdGU6IFN1
-biwgOCBNYXIgMjAyMCAxODoxNToxMSArMDEwMApTdWJqZWN0OiBbUEFUQ0hdIEZPUiBURVNUSU5H
-IE9OTFk6IHRlbGwgdXMgd2hpY2ggZmJjb24gaW1wbGVtZW50YXRpb24gaXMgdXNlZAoKLS0tCiBk
-cml2ZXJzL3R0eS92dC92dC5jIHwgMTAgKysrKysrKystLQogMSBmaWxlIGNoYW5nZWQsIDggaW5z
-ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3R0eS92dC92
-dC5jIGIvZHJpdmVycy90dHkvdnQvdnQuYwppbmRleCAwY2ZiYjcxODJiNWEuLmIzZGQ0NDgwMjIw
-OCAxMDA2NDQKLS0tIGEvZHJpdmVycy90dHkvdnQvdnQuYworKysgYi9kcml2ZXJzL3R0eS92dC92
-dC5jCkBAIC00NTkwLDcgKzQ1OTAsNyBAQCBzdGF0aWMgaW50IGNvbl9mb250X2NvcHkoc3RydWN0
-IHZjX2RhdGEgKnZjLCBzdHJ1Y3QgY29uc29sZV9mb250X29wICpvcCkKIHsKIAlpbnQgY29uID0g
-b3AtPmhlaWdodDsKIAlpbnQgcmM7Ci0KKwlzdGF0aWMgdm9pZCAqTEFTVDsKIAogCWNvbnNvbGVf
-bG9jaygpOwogCWlmICh2Yy0+dmNfbW9kZSAhPSBLRF9URVhUKQpAQCAtNDYwMSw4ICs0NjAxLDE0
-IEBAIHN0YXRpYyBpbnQgY29uX2ZvbnRfY29weShzdHJ1Y3QgdmNfZGF0YSAqdmMsIHN0cnVjdCBj
-b25zb2xlX2ZvbnRfb3AgKm9wKQogCQlyYyA9IC1FTk9UVFk7CiAJZWxzZSBpZiAoY29uID09IHZj
-LT52Y19udW0pCS8qIG5vdGhpbmcgdG8gZG8gKi8KIAkJcmMgPSAwOwotCWVsc2UKKwllbHNlIHsK
-KwkJaWYgKExBU1QgIT0gdmMtPnZjX3N3KSB7CisJCQlwcl93YXJuKCJjb25fZm9udF9jb3B5KCk6
-IHZjX3N3PSVwUywgdmNfc3ctPmNvbl9mb250X2NvcHk9JXBTXG4iLAorCQkJCXZjLT52Y19zdywg
-dmMtPnZjX3N3LT5jb25fZm9udF9jb3B5KTsKKwkJCUxBU1QgPSB2Yy0+dmNfc3c7CisJCX0KIAkJ
-cmMgPSB2Yy0+dmNfc3ctPmNvbl9mb250X2NvcHkodmMsIGNvbik7CisJfQogCWNvbnNvbGVfdW5s
-b2NrKCk7CiAJcmV0dXJuIHJjOwogfQoKYmFzZS1jb21taXQ6IDYzNjIzZmQ0NDk3MmQxZWQyYmZi
-NmUwZmI2MzFkZmNmNTQ3ZmQxZTcKLS0gCjIuMjUuMS40ODEuZ2ZiY2UwZWI4MDEtZ29vZwoK
---000000000000ba975805a05b1c90--
+-- 
+Best regards,
+Jacek Anaszewski
