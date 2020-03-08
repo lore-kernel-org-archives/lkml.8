@@ -2,219 +2,107 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F282C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EA7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B0E2084E
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC0F2084E
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583675977;
+	bh=0i5E1+7qOjaVYmSole07kk9HeR7FiaaKRB5ktGbe5Yg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VwXbGkWfwzRl9ZegnwFTFcHBr52L6CWEpTY1opZnukF5SBrGlD7Dtr5Rd/5kiZPV6
+	 vbjhOI9A9kR3XRmNBDH3VA/UL9/yGIOniRKOCw/e2Shdl4lfoEcBhpkWiU4mi34ckv
+	 5gPBS4+OerzWFbeZaLiGosNUuHc1jsHUqmlgSDJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgCHN7P (ORCPT
+        id S1726422AbgCHN7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 09:59:15 -0400
-Received: from mailoutvs59.siol.net ([185.57.226.250]:40402 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726259AbgCHN7O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 09:59:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 29082521EBB;
-        Sun,  8 Mar 2020 14:59:11 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id s-tZO1LaIv49; Sun,  8 Mar 2020 14:59:10 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id ACA8F521DED;
-        Sun,  8 Mar 2020 14:59:10 +0100 (CET)
-Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 0F5D2521EBB;
-        Sun,  8 Mar 2020 14:59:08 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     robh+dt@kernel.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v2 2/2] arm64: dts: allwinner: h6: Move ext. oscillator to board DTs
-Date:   Sun,  8 Mar 2020 14:58:49 +0100
-Message-Id: <20200308135849.106333-3-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200308135849.106333-1-jernej.skrabec@siol.net>
-References: <20200308135849.106333-1-jernej.skrabec@siol.net>
+        Sun, 8 Mar 2020 09:59:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbgCHN7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 09:59:35 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ED2B206D7;
+        Sun,  8 Mar 2020 13:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583675975;
+        bh=0i5E1+7qOjaVYmSole07kk9HeR7FiaaKRB5ktGbe5Yg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BXqNv88mZHtri4Ucddv3jFGd4GBjlGH80ugf1qToiHrGx+fqNeeXR3WK3AcnuJhJg
+         FlOkPEEUt7qjSOBlo+VLTAlja1dXtIA2hAtdH3k13gJerWGaWfYNYOtJbFN7nqZcoG
+         yU10gC12p7X9We8Y61AmHLmd3K16OrJZ8M6S7ft4=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jAwSr-00B2jV-Jn; Sun, 08 Mar 2020 13:59:33 +0000
+Date:   Sun, 8 Mar 2020 13:59:31 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Anup Patel <anup.patel@wdc.com>, Borislav Petkov <bp@suse.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        James Morse <james.morse@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Steven Price <steven.price@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vincent Chen <vincent.chen@sifive.com>
+Subject: Re: [PATCH v3 1/2] irqchip/sifive-plic: Enable/Disable external
+ interrupts upon cpu online/offline
+Message-ID: <20200308135931.331f9be4@why>
+In-Reply-To: <20200302231146.15530-2-atish.patra@wdc.com>
+References: <20200302231146.15530-1-atish.patra@wdc.com>
+        <20200302231146.15530-2-atish.patra@wdc.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: atish.patra@wdc.com, linux-kernel@vger.kernel.org, anup@brainfault.org, aou@eecs.berkeley.edu, anju@linux.vnet.ibm.com, anup.patel@wdc.com, bp@suse.de, ebiederm@xmission.com, james.morse@arm.com, jason@lakedaemon.net, linux-riscv@lists.infradead.org, palmer@dabbelt.com, paul.walmsley@sifive.com, rafael.j.wysocki@intel.com, steven.price@arm.com, tglx@linutronix.de, ulf.hansson@linaro.org, vincent.chen@sifive.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It turns out that not all H6 boards have external 32kHz oscillator.
-Currently the only one known such H6 board is Tanix TX6.
+On Mon,  2 Mar 2020 15:11:45 -0800
+Atish Patra <atish.patra@wdc.com> wrote:
 
-Move external oscillator node from common H6 dtsi to board specific dts
-files where present.
+> Currently, PLIC threshold is only initialized once in the beginning.
+> However, threshold can be set to disabled if a CPU is marked offline with
+> CPU hotplug feature. This will not allow to change the irq affinity to a
+> CPU that just came online.
+> 
+> Add PLIC specific CPU hotplug callbacks and enable the threshold when a CPU
+> comes online. Take this opportunity to move the external interrupt enable
+> code from trap init to PLIC driver as well. On cpu offline path, the driver
+> performs the exact opposite operations i.e. disable the interrupt and
+> the threshold.
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- .../boot/dts/allwinner/sun50i-h6-beelink-gs1.dts      | 11 +++++++++++
- .../arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 11 +++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi | 11 +++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts  | 11 +++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi          |  8 --------
- 5 files changed, 44 insertions(+), 8 deletions(-)
+Both patches queued for 5.7 (please add a cover letter when sending a
+patch series).
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/ar=
-ch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index df6d872c34e2..8f09d209359b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -32,6 +32,13 @@ hdmi_con_in: endpoint {
- 		};
- 	};
-=20
-+	ext_osc32k: ext_osc32k_clk {
-+		#clock-cells =3D <0>;
-+		compatible =3D "fixed-clock";
-+		clock-frequency =3D <32768>;
-+		clock-output-names =3D "ext_osc32k";
-+	};
-+
- 	leds {
- 		compatible =3D "gpio-leds";
-=20
-@@ -275,6 +282,10 @@ &r_pio {
- 	vcc-pm-supply =3D <&reg_aldo1>;
- };
-=20
-+&rtc {
-+	clocks =3D <&ext_osc32k>;
-+};
-+
- &spdif {
- 	status =3D "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arc=
-h/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 1e0abd9d047f..47f579610dcc 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -32,6 +32,13 @@ hdmi_con_in: endpoint {
- 		};
- 	};
-=20
-+	ext_osc32k: ext_osc32k_clk {
-+		#clock-cells =3D <0>;
-+		compatible =3D "fixed-clock";
-+		clock-frequency =3D <32768>;
-+		clock-output-names =3D "ext_osc32k";
-+	};
-+
- 	leds {
- 		compatible =3D "gpio-leds";
-=20
-@@ -285,6 +292,10 @@ &r_ir {
- 	status =3D "okay";
- };
-=20
-+&rtc {
-+	clocks =3D <&ext_osc32k>;
-+};
-+
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_ph_pins>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch=
-/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index 37f4c57597d4..37fc3f3697f7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -20,6 +20,13 @@ chosen {
- 		stdout-path =3D "serial0:115200n8";
- 	};
-=20
-+	ext_osc32k: ext_osc32k_clk {
-+		#clock-cells =3D <0>;
-+		compatible =3D "fixed-clock";
-+		clock-frequency =3D <32768>;
-+		clock-output-names =3D "ext_osc32k";
-+	};
-+
- 	leds {
- 		compatible =3D "gpio-leds";
-=20
-@@ -197,6 +204,10 @@ &r_ir {
- 	status =3D "okay";
- };
-=20
-+&rtc {
-+	clocks =3D <&ext_osc32k>;
-+};
-+
- &uart0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart0_ph_pins>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/=
-arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 3c9dd0d69754..b0642d841933 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -21,6 +21,13 @@ chosen {
- 		stdout-path =3D "serial0:115200n8";
- 	};
-=20
-+	ext_osc32k: ext_osc32k_clk {
-+		#clock-cells =3D <0>;
-+		compatible =3D "fixed-clock";
-+		clock-frequency =3D <32768>;
-+		clock-output-names =3D "ext_osc32k";
-+	};
-+
- 	hdmi_connector: connector {
- 		compatible =3D "hdmi-connector";
- 		type =3D "a";
-@@ -279,6 +286,10 @@ &r_pio {
- 	vcc-pm-supply =3D <&reg_aldo1>;
- };
-=20
-+&rtc {
-+	clocks =3D <&ext_osc32k>;
-+};
-+
- /*
-  * The CS pin is shared with the MMC2 CMD pin, so we cannot have the SPI
-  * flash and eMMC at the same time, as one of them would fail probing.
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
-ot/dts/allwinner/sun50i-h6.dtsi
-index 967249e58811..b9ab7d8fa8af 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -62,13 +62,6 @@ osc24M: osc24M_clk {
- 		clock-output-names =3D "osc24M";
- 	};
-=20
--	ext_osc32k: ext_osc32k_clk {
--		#clock-cells =3D <0>;
--		compatible =3D "fixed-clock";
--		clock-frequency =3D <32768>;
--		clock-output-names =3D "ext_osc32k";
--	};
--
- 	pmu {
- 		compatible =3D "arm,cortex-a53-pmu";
- 		interrupts =3D <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
-@@ -854,7 +847,6 @@ rtc: rtc@7000000 {
- 			interrupts =3D <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-output-names =3D "osc32k", "osc32k-out", "iosc";
--			clocks =3D <&ext_osc32k>;
- 			#clock-cells =3D <1>;
- 		};
-=20
---=20
-2.25.1
+Thanks,
 
+	M.
+-- 
+Jazz is not dead. It just smells funny...
