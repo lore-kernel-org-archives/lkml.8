@@ -2,183 +2,117 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7982AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 22:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E9DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 22:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1002083E
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 22:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6420D206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 22:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgCHWv7 (ORCPT
+        id S1726498AbgCHW4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 18:51:59 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:57128 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbgCHWv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 18:51:59 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EDA48200430;
-        Sun,  8 Mar 2020 23:51:57 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DFA4A20020F;
-        Sun,  8 Mar 2020 23:51:57 +0100 (CET)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 5135C204CC;
-        Sun,  8 Mar 2020 23:51:57 +0100 (CET)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <mripard@kernel.org>
-Cc:     Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v4 2/2] crypto: engine - support for batch requests
-Date:   Mon,  9 Mar 2020 00:51:33 +0200
-Message-Id: <1583707893-23699-3-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1583707893-23699-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1583707893-23699-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 8 Mar 2020 18:56:30 -0400
+Received: from smtprelay0176.hostedemail.com ([216.40.44.176]:40520 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726352AbgCHW43 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 18:56:29 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 9795F101D66B3;
+        Sun,  8 Mar 2020 22:56:28 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: art56_1b3ccfb8be443
+X-Filterd-Recvd-Size: 3075
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  8 Mar 2020 22:56:27 +0000 (UTC)
+Message-ID: <5129f7dbd8506cc9fd5a8f76dc993d789566af6c.camel@perches.com>
+Subject: Re: [PATCH RFC] MAINTAINERS: include GOOGLE FIRMWARE entry
+From:   Joe Perches <joe@perches.com>
+To:     Guenter Roeck <groeck@google.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Julius Werner <jwerner@chromium.org>,
+        kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sun, 08 Mar 2020 15:54:47 -0700
+In-Reply-To: <CABXOdTcrxoBCz24Ap=YJYZnr+oLAmaR10xZ9ar2mYbE1=RAoug@mail.gmail.com>
+References: <20200308195116.12836-1-lukas.bulwahn@gmail.com>
+         <CABXOdTcrxoBCz24Ap=YJYZnr+oLAmaR10xZ9ar2mYbE1=RAoug@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added support for batch requests, per crypto engine.
-A new callback is added, do_batch_requests, which executes a
-batch of requests. This has the crypto_engine structure as argument
-(for cases when more than one crypto-engine is used).
-The crypto_engine_alloc_init_and_set function, initializes
-crypto-engine, but also, sets the do_batch_requests callback.
-On crypto_pump_requests, if do_batch_requests callback is
-implemented in a driver, this will be executed. The link between
-the requests will be done in driver, if possible.
-do_batch_requests is available only if the hardware has support
-for multiple request.
+On Sun, 2020-03-08 at 15:32 -0700, Guenter Roeck wrote:
+> On Sun, Mar 8, 2020 at 12:51 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> > All files in drivers/firmware/google/ are identified as part of THE REST
+> > according to MAINTAINERS, but they are really maintained by others.
+[]
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> > @@ -7111,6 +7111,14 @@ S:       Supported
+> >  F:     Documentation/networking/device_drivers/google/gve.rst
+> >  F:     drivers/net/ethernet/google
+> > 
+> > +GOOGLE FIRMWARE
+> > +M:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > +M:     Stephen Boyd <swboyd@chromium.org>
+> > +R:     Guenter Roeck <groeck@chromium.org>
+> > +R:     Julius Werner <jwerner@chromium.org>
+> > +S:     Maintained
+> > +F:     drivers/firmware/google/
+> > +
+> 
+> FWIW, I would not mind stepping up as maintainer if needed, but I
+> think we should strongly discourage this kind of auto-assignment of
+> maintainers and/or reviewers.
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
----
- crypto/crypto_engine.c  | 30 +++++++++++++++++++++++++++---
- include/crypto/engine.h |  4 ++++
- 2 files changed, 31 insertions(+), 3 deletions(-)
+Auto assignment should definitely _not_ be done.
 
-diff --git a/crypto/crypto_engine.c b/crypto/crypto_engine.c
-index dbfd53c2..80723ad 100644
---- a/crypto/crypto_engine.c
-+++ b/crypto/crypto_engine.c
-@@ -116,8 +116,10 @@ static void crypto_pump_requests(struct crypto_engine *engine,
- 	/* Get the fist request from the engine queue to handle */
- 	backlog = crypto_get_backlog(&engine->queue);
- 	async_req = crypto_dequeue_request(&engine->queue);
--	if (!async_req)
--		goto out;
-+	if (!async_req) {
-+		spin_unlock_irqrestore(&engine->queue_lock, flags);
-+		goto batch;
-+	}
- 
- 	if (backlog)
- 		backlog->complete(backlog, -EINPROGRESS);
-@@ -195,6 +197,19 @@ static void crypto_pump_requests(struct crypto_engine *engine,
- 
- out:
- 	spin_unlock_irqrestore(&engine->queue_lock, flags);
-+
-+batch:
-+	/*
-+	 * Batch requests is possible only if
-+	 * hardware can enqueue multiple requests
-+	 */
-+	if (engine->do_batch_requests) {
-+		ret = engine->do_batch_requests(engine);
-+		if (ret)
-+			dev_err(engine->dev, "failed to do batch requests: %d\n",
-+				ret);
-+	}
-+	return;
- }
- 
- static void crypto_pump_work(struct kthread_work *work)
-@@ -422,6 +437,12 @@ EXPORT_SYMBOL_GPL(crypto_engine_stop);
-  * and initialize it by setting the maximum number of entries in the software
-  * crypto-engine queue.
-  * @dev: the device attached with one hardware engine
-+ * @cbk_do_batch: pointer to a callback function to be invoked when executing a
-+ *                a batch of requests.
-+ *                This has the form:
-+ *                callback(struct crypto_engine *engine)
-+ *                where:
-+ *                @engine: the crypto engine structure.
-  * @rt: whether this queue is set to run as a realtime task
-  * @qlen: maximum size of the crypto-engine queue
-  *
-@@ -429,6 +450,7 @@ EXPORT_SYMBOL_GPL(crypto_engine_stop);
-  * Return: the crypto engine structure on success, else NULL.
-  */
- struct crypto_engine *crypto_engine_alloc_init_and_set(struct device *dev,
-+						       int (*cbk_do_batch)(struct crypto_engine *engine),
- 						       bool rt, int qlen)
- {
- 	struct sched_param param = { .sched_priority = MAX_RT_PRIO / 2 };
-@@ -449,6 +471,8 @@ struct crypto_engine *crypto_engine_alloc_init_and_set(struct device *dev,
- 	engine->cnt_do_req = 0;
- 	engine->cnt_finalize = 0;
- 	engine->priv_data = dev;
-+	engine->do_batch_requests = cbk_do_batch;
-+
- 	snprintf(engine->name, sizeof(engine->name),
- 		 "%s-engine", dev_name(dev));
- 
-@@ -482,7 +506,7 @@ EXPORT_SYMBOL_GPL(crypto_engine_alloc_init_and_set);
-  */
- struct crypto_engine *crypto_engine_alloc_init(struct device *dev, bool rt)
- {
--	return crypto_engine_alloc_init_and_set(dev, rt,
-+	return crypto_engine_alloc_init_and_set(dev, NULL, rt,
- 						CRYPTO_ENGINE_MAX_QLEN);
- }
- EXPORT_SYMBOL_GPL(crypto_engine_alloc_init);
-diff --git a/include/crypto/engine.h b/include/crypto/engine.h
-index 33a5be2..c64d942 100644
---- a/include/crypto/engine.h
-+++ b/include/crypto/engine.h
-@@ -36,6 +36,7 @@
-  * @unprepare_crypt_hardware: there are currently no more requests on the
-  * queue so the subsystem notifies the driver that it may relax the
-  * hardware by issuing this call
-+ * @do_batch_requests: execute a batch of requests
-  * @kworker: kthread worker struct for request pump
-  * @pump_requests: work struct for scheduling work to the request pump
-  * @priv_data: the engine private data
-@@ -58,6 +59,8 @@ struct crypto_engine {
- 
- 	int (*prepare_crypt_hardware)(struct crypto_engine *engine);
- 	int (*unprepare_crypt_hardware)(struct crypto_engine *engine);
-+	int (*do_batch_requests)(struct crypto_engine *engine);
-+
- 
- 	struct kthread_worker           *kworker;
- 	struct kthread_work             pump_requests;
-@@ -104,6 +107,7 @@ int crypto_engine_start(struct crypto_engine *engine);
- int crypto_engine_stop(struct crypto_engine *engine);
- struct crypto_engine *crypto_engine_alloc_init(struct device *dev, bool rt);
- struct crypto_engine *crypto_engine_alloc_init_and_set(struct device *dev,
-+						       int (*cbk_do_batch)(struct crypto_engine *engine),
- 						       bool rt, int qlen);
- int crypto_engine_exit(struct crypto_engine *engine);
- 
--- 
-2.1.0
+This is an RFC proposal though.
+
+Sometimes it's better to not produce an RFC as
+a patch, but maybe just show a proposed section
+and ask if is appropriate may be a better style
+going forward.
+
+Maybe just emailing Greg, Stephen, Guenter and
+Julius (cc'ing LKML) asking something like the
+below would be better:
+
+----------------------------------------------------
+
+Hey all.
+
+Files in drivers/firmware/google/ do not seem to
+have a listed MAINTAINER.
+
+Would a section entry in MAINTAINERS like this be
+appropriate?
+
+GOOGLE FIRMWARE
+M:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+M:     Stephen Boyd <swboyd@chromium.org>
+R:     Guenter Roeck <groeck@chromium.org>
+R:     Julius Werner <jwerner@chromium.org>
+S:     Maintained
+F:     drivers/firmware/google/
+
+Is there a git tree somewhere that should be added?
+What would be the
+status of this proposed section?
+Does someone really look after it at
+all?
+
 
