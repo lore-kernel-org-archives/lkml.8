@@ -2,131 +2,103 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61246C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E4CC10F26
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C632075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583633975;
-	bh=lYOUYS198D1/0Gr+1+Ic9jjMBLUGg7SoAMQZAnwkh/E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YW0grSbVCcdxfWBW+Z/nlZXJnFuSB2wTCPVxb+yMQjaFQT8ycRw0R5yrq4mZoFlz8
-	 Jo0JyUt2fVWB7vNiebPN1juqjmjHsLk+o06/8jJQLbejG18x5qIB/4g4eBuuaDzt6f
-	 llvCRSeZVJi71amrxVfqXkbD2QCTtqZDWIR8ec7A=
+	by mail.kernel.org (Postfix) with ESMTP id BB511206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgCHCTd (ORCPT
+        id S1726298AbgCHCXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 21:19:33 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:33242 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgCHCTd (ORCPT
+        Sat, 7 Mar 2020 21:23:40 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40876 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgCHCXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 21:19:33 -0500
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 0282JHfY013317;
-        Sun, 8 Mar 2020 11:19:18 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 0282JHfY013317
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583633958;
-        bh=MRiJFfd4XzN50K790XI9lYLTj9Bp98INNHajUe+6r64=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CSRFkM+LvCiVVJMAKnKNKED4Bi4v4qwdh2AY46W/45w1GrIJCABBjXmRPJpRlubT4
-         5LkpYPXWSOt9KidwivW0GffaSyEIXPlEnHTdmkZMqwkSh9P6Ng2HxSW/dDpC+gUoJu
-         OPUcVZ7eT/w7xr+LfEQeUImZYeIW61Na3duvbr/2WPXq+SdpZGjMHp+yv6kDAFbM/X
-         tYWdiDJ0oKEAOSGUOcJeLbPF+8tlv7CcGsNZnGgWc0+xl0bMVsLhxcbEF9nyVB9uUW
-         mZWWvqJhTsGOCT/DFHdlTbevxIuXMKrHBPjXg732gEXEeIp/WRmvn2NoevmfntXoqw
-         pHZN1cO87Y7YQ==
-X-Nifty-SrcIP: [209.85.222.51]
-Received: by mail-ua1-f51.google.com with SMTP id h22so2095172uap.13;
-        Sat, 07 Mar 2020 18:19:18 -0800 (PST)
-X-Gm-Message-State: ANhLgQ1uyaO9WHt4NMEtb8H3CMtmOJuq0dxbz6KgpUuz1U/WFgHhfECC
-        5Clg2NYtgWBXWhjvPnN3MfTC9SlnCOMn8uvifdY=
-X-Google-Smtp-Source: ADFU+vsU5zfX/fbI+PZJ18ZCecEFu4G8aaymDTDagTkIOLYMu7EWSvEB1LjcowfG/2EWb+GKR6g/DiftGunXkHPiUTY=
-X-Received: by 2002:a9f:2828:: with SMTP id c37mr5344910uac.25.1583633957239;
- Sat, 07 Mar 2020 18:19:17 -0800 (PST)
+        Sat, 7 Mar 2020 21:23:40 -0500
+Received: by mail-pg1-f195.google.com with SMTP id t24so3042551pgj.7;
+        Sat, 07 Mar 2020 18:23:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=prRadkOgljmcVFZ0EQ43osDjYhqzZ8ylMyUcgnXfTLI=;
+        b=t+PyG7exAmaLMMrfercqQWvZ3tnDuEiKKh/KGEBxXuJOGbZGnWhE7PpOHipdbHHNxU
+         fZ/CqgNTLSO2RAP5OfK2KXlLcK7xJ7TJ8ZmAmoHW+zkAemmUAHb+7iLh368g9gXc4CEQ
+         bckl9jc2wXTP31Y1WnRiRUFvAebv41YxUoo4ra04eXuRxov4x9uRllu2184woQQseinr
+         27gYbI5Vo6N5me5EV8RIaNzv08YVyLHXVLieQARZ+kCmTIEQN4IuVZI378V47+BAsW8j
+         jQqRVBF+dfan88uzvIdBIoyb/TwnuQW3yDE8ezIUueEYfD43OQSviRHaLYwrnFnLkQH6
+         oS8g==
+X-Gm-Message-State: ANhLgQ0eA16H5TI5QKNZK/TxABZ0EN3qIvZz3uMpOCy6Z+rhr6EYRiJM
+        3N1/6r9PRx9ZHpA3Mn9nKR0=
+X-Google-Smtp-Source: ADFU+vvnClbMcuiLeqrDI5Lh99HdoJJA21S7J1NbeCWVEL9gbVNgSRgtAtCfZna2aKWto3/j77Rs5w==
+X-Received: by 2002:a63:fc1c:: with SMTP id j28mr10281377pgi.289.1583634219265;
+        Sat, 07 Mar 2020 18:23:39 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:d7:b9ba:8890:46d5:d60d? ([2601:647:4000:d7:b9ba:8890:46d5:d60d])
+        by smtp.gmail.com with ESMTPSA id ay10sm13897002pjb.37.2020.03.07.18.23.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Mar 2020 18:23:38 -0800 (PST)
+Subject: Re: [PATCH v2] scsi: aacraid: fix -Wcast-function-type
+To:     Phong Tran <tranmanphong@gmail.com>, aacraid@microsemi.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keescook@chromium.org
+References: <20200307132103.4687-1-tranmanphong@gmail.com>
+ <20200308020143.9351-1-tranmanphong@gmail.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <d18e3d83-d1b5-5979-c2ec-235e4f5095a3@acm.org>
+Date:   Sat, 7 Mar 2020 18:23:37 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200304032038.14424-1-masahiroy@kernel.org> <20200304032038.14424-3-masahiroy@kernel.org>
- <20200304055520.GA28911@ravnborg.org> <CAL_JsqLA7yq8rnVhM210sLt788yeu2xxFd94Fe0K_CGZw-mqSA@mail.gmail.com>
-In-Reply-To: <CAL_JsqLA7yq8rnVhM210sLt788yeu2xxFd94Fe0K_CGZw-mqSA@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 8 Mar 2020 11:18:41 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATmnfjo2A0x6ytLNeo_rjv1_e9RFyxCnB-K1E1O=fw9jQ@mail.gmail.com>
-Message-ID: <CAK7LNATmnfjo2A0x6ytLNeo_rjv1_e9RFyxCnB-K1E1O=fw9jQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] kbuild: allow to run dt_binding_check and dtbs_check
- in a single command
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, DTML <devicetree@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200308020143.9351-1-tranmanphong@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam, Rob,
+On 2020-03-07 18:01, Phong Tran wrote:
+> correct usage prototype of callback scsi_cmnd.scsi_done()
+> Report by: https://github.com/KSPP/linux/issues/20
 
-On Thu, Mar 5, 2020 at 12:19 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, Mar 3, 2020 at 11:55 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > Hi Masahiro
-> >
-> > Thanks for the nice improvements to the dt infrastructure.
-> >
-> > Stealing a thread here..
-> >
-> > >  It is also possible to run checks with a single schema file by setting the
-> > >  ``DT_SCHEMA_FILES`` variable to a specific schema file.
-> > Would it be simple to enable the use of dirs for DT_SCHEMA_FILES?
->
-> I did name that with the intent of supporting more than one file.
->
-> > So I for example could do:
-> >
-> > make dt_bindings_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
->
-> Does this work?:
->
-> make dt_bindings_check DT_SCHEMA_FILES="$(find
-> Documentation/devicetree/bindings/display/panel/ -name '*.yaml' |
-> xargs)"
->
-> Rob
+This description is confusing. I think a better description would have
+been "Make the aacraid driver -Wcast-function-type clean."
 
+Anyway:
 
-Rob proposed a solution, so
-I do not think we should extend this too much.
-
-
-BTW, there is a limitation that
-DT_SCHEMA_FILES must point to file(s)
-in Documentation/devicetree/bindings/.
-
-
-$ cp  Documentation/devicetree/bindings/arm/psci.yaml   ./
-$ make  dt_binding_check  DT_SCHEMA_FILES=psci.yaml
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-make[1]: *** No rule to make target
-'Documentation/devicetree/bindings/psci.yaml', needed by '__build'.
-Stop.
-make: *** [Makefile:1278: dt_binding_check] Error 2
+Reviewed-by: Bart van Assche <bvanassche@acm.org>
 
 
 
-$(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
-does not work if DT_SCHEMA_FILES is outside of
-Documentation/devicetree/bindings/, but I have no
-solution for this.
 
---
-Best Regards
-Masahiro Yamada
