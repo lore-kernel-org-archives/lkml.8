@@ -2,52 +2,46 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46378C10F25
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 03:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21C2C10F25
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 03:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D4020656
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 03:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F6420656
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 03:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgCHDAq (ORCPT
+        id S1726359AbgCHDDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 22:00:46 -0500
-Received: from smtprelay0028.hostedemail.com ([216.40.44.28]:38834 "EHLO
+        Sat, 7 Mar 2020 22:03:31 -0500
+Received: from smtprelay0161.hostedemail.com ([216.40.44.161]:39111 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726269AbgCHDAq (ORCPT
+        by vger.kernel.org with ESMTP id S1726269AbgCHDDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 22:00:46 -0500
+        Sat, 7 Mar 2020 22:03:31 -0500
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 96753181D3417;
-        Sun,  8 Mar 2020 03:00:44 +0000 (UTC)
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 22264180A884B;
+        Sun,  8 Mar 2020 03:03:30 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: worm58_407ce0f971c3f
-X-Filterd-Recvd-Size: 4583
+X-HE-Tag: paste19_58aa84c038c29
+X-Filterd-Recvd-Size: 1337
 Received: from XPS-9350.home (unknown [47.151.143.254])
         (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Sun,  8 Mar 2020 03:00:43 +0000 (UTC)
-Message-ID: <4d5291fa3fb4962b1fa55e8fd9ef421ef0c1b1e5.camel@perches.com>
-Subject: [PATCH] parse-maintainers: Do not sort section content by default
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  8 Mar 2020 03:03:29 +0000 (UTC)
+Message-ID: <4304de54a44b7c8c22d8c2d9249d716664cf5ce8.camel@perches.com>
+Subject: Re: [PATCH] cvt_fallthrough: A tool to convert /* fallthrough */
+ comments to fallthrough;
 From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org
-Date:   Sat, 07 Mar 2020 18:59:05 -0800
-In-Reply-To: <0d5503e1d864f2588e756ae590ff8935e11bf9d6.camel@perches.com>
-References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
-         <20200304131035.731a3947@lwn.net>
-         <alpine.DEB.2.21.2003042145340.2698@felia>
-         <e43f0cf0117fbfa8fe8c7e62538fd47a24b4657a.camel@perches.com>
-         <alpine.DEB.2.21.2003062214500.5521@felia>
-         <20200307110154.719572e4@onda.lan>
-         <0d5503e1d864f2588e756ae590ff8935e11bf9d6.camel@perches.com>
+Cc:     clang-built-linux@googlegroups.com
+Date:   Sat, 07 Mar 2020 19:01:52 -0800
+In-Reply-To: <576fe2ab-7937-4698-b32a-8599813d6ad1@embeddedor.com>
+References: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
+         <576fe2ab-7937-4698-b32a-8599813d6ad1@embeddedor.com>
 Content-Type: text/plain; charset="ISO-8859-1"
 User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
@@ -57,99 +51,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an --order switch to control section reordering.
-Default for --order is off.
+On Sat, 2020-03-07 at 15:30 -0600, Gustavo A. R. Silva wrote:
+> Some people consistently add blank lines as part of their code style,
+> and if I were
+> one of those people, I wouldn't like to have such lines removed.
 
-Change the default ordering to a slightly more sensible:
-
-M:  Person acting as a maintainer
-R:  Person acting as a patch reviewer
-L:  Mailing list where patches should be sent
-S:  Maintenance status
-W:  URI for general information
-Q:  URI for patchwork tracking
-B:  URI for bug tracking/submission
-C:  URI for chat
-P:  URI or file for subsystem specific coding styles
-T:  SCM tree type and location
-F:  File and directory pattern
-X:  File and directory exclusion pattern
-N:  File glob
-K:  Keyword - patch content regex
-
-Signed-off-by: Joe Perches <joe@perches.com>
----
- scripts/parse-maintainers.pl | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
-
-diff --git a/scripts/parse-maintainers.pl b/scripts/parse-maintainers.pl
-index 255cef1..2ca4eb3 100644
---- a/scripts/parse-maintainers.pl
-+++ b/scripts/parse-maintainers.pl
-@@ -8,13 +8,14 @@ my $input_file = "MAINTAINERS";
- my $output_file = "MAINTAINERS.new";
- my $output_section = "SECTION.new";
- my $help = 0;
--
-+my $order = 0;
- my $P = $0;
- 
- if (!GetOptions(
- 		'input=s' => \$input_file,
- 		'output=s' => \$output_file,
- 		'section=s' => \$output_section,
-+		'order!' => \$order,
- 		'h|help|usage' => \$help,
- 	    )) {
-     die "$P: invalid argument - use --help if necessary\n";
-@@ -32,6 +33,22 @@ usage: $P [options] <pattern matching regexes>
-   --input => MAINTAINERS file to read (default: MAINTAINERS)
-   --output => sorted MAINTAINERS file to write (default: MAINTAINERS.new)
-   --section => new sorted MAINTAINERS file to write to (default: SECTION.new)
-+  --order => Use the preferred section content output ordering (default: 0)
-+    Preferred ordering of section output is:
-+      M:  Person acting as a maintainer
-+      R:  Person acting as a patch reviewer
-+      L:  Mailing list where patches should be sent
-+      S:  Maintenance status
-+      W:  URI for general information
-+      Q:  URI for patchwork tracking
-+      B:  URI for bug tracking/submission
-+      C:  URI for chat
-+      P:  URI or file for subsystem specific coding styles
-+      T:  SCM tree type and location
-+      F:  File and directory pattern
-+      X:  File and directory exclusion pattern
-+      N:  File glob
-+      K:  Keyword - patch content regex
- 
- If <pattern match regexes> exist, then the sections that match the
- regexes are not written to the output file but are written to the
-@@ -56,7 +73,7 @@ sub by_category($$) {
- 
- sub by_pattern($$) {
-     my ($a, $b) = @_;
--    my $preferred_order = 'MRPLSWTQBCFXNK';
-+    my $preferred_order = 'MRLSWQBCPTFXNK';
- 
-     my $a1 = uc(substr($a, 0, 1));
-     my $b1 = uc(substr($b, 0, 1));
-@@ -105,8 +122,14 @@ sub alpha_output {
- 		print $file $separator;
- 	    }
- 	    print $file $key . "\n";
--	    foreach my $pattern (sort by_pattern split('\n', %$hashref{$key})) {
--		print $file ($pattern . "\n");
-+	    if ($order) {
-+		foreach my $pattern (sort by_pattern split('\n', %$hashref{$key})) {
-+		    print $file ($pattern . "\n");
-+		}
-+	    } else {
-+		foreach my $pattern (split('\n', %$hashref{$key})) {
-+		    print $file ($pattern . "\n");
-+		}
- 	    }
- 	}
-     }
+It's a patch generator, it's not perfect.
+Nothing is nor ever will be.
+It's quite simple to add blank lines if that's
+what any maintainer desires.
 
 
