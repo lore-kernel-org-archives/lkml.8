@@ -2,139 +2,112 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21416C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474D7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8AC1206D7
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208C120848
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="DAa3yPIS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0CbxtqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgCHPkO (ORCPT
+        id S1726446AbgCHPxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 11:40:14 -0400
-Received: from canardo.mork.no ([148.122.252.1]:58085 "EHLO canardo.mork.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgCHPkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 11:40:14 -0400
-X-Greylist: delayed 824 seconds by postgrey-1.27 at vger.kernel.org; Sun, 08 Mar 2020 11:40:13 EDT
-Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id 028FQM2j015815
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 8 Mar 2020 16:26:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1583681182; bh=ScndAKvQHtkoAKJHKcvCgojYNjZdn3MZ2jAOKVkeCi8=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=DAa3yPISwfc5HFbHxC4Eqrr99/KfNjwMIpo46lz5BuhenW6xjgocpIO6VT8ZQVpGk
-         eIzuHguRgLLTVA7sHrWpgaKgTccjU5C1ad+b3pGQs6G5D5I1vlainOvt+g0fThSEkM
-         azEPJVSsnNKZu7GwEMoSCCiLJKbn5hidZQjuBcxg=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
-        (envelope-from <bjorn@mork.no>)
-        id 1jAxor-0000VM-QV; Sun, 08 Mar 2020 16:26:21 +0100
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     Paul Gildea <paul.gildea@gmail.com>
-Cc:     "davem\@davemloft.net" <davem@davemloft.net>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: usb: qmi_wwan: Fix for packets being rejected in the ring buffer used by the xHCI controller.
-Organization: m
-References: <CA+4pmEueEiz0Act8X6t4y3+4LOaOh_-ZfzScH0CbOKT99x91NA@mail.gmail.com>
-Date:   Sun, 08 Mar 2020 16:26:21 +0100
-In-Reply-To: <CA+4pmEueEiz0Act8X6t4y3+4LOaOh_-ZfzScH0CbOKT99x91NA@mail.gmail.com>
-        (Paul Gildea's message of "Wed, 4 Mar 2020 14:20:28 +0000")
-Message-ID: <87wo7una02.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sun, 8 Mar 2020 11:53:30 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46718 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgCHPxa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 11:53:30 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w12so2963363pll.13
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 08:53:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z5IVpkp+fyASro0E/9D83qXZo66KVoFohVNxfCekD1g=;
+        b=D0CbxtqWFEDzUvuVzCtLmKBd3z4BY5IxuTmcAB81Cxub4VTxOMgiRgc/MNKE/xkQyb
+         W7jhAB46LnnVDDUhAKN0wH8ZS+ESCUR4+RzyETnDHpHwnIA+sSPFQFqz4qHvh5eQMnCa
+         FQI+g6O95nfQsLnz4pCDChSdLjotmBqYROhX9bp3Sq39SPvuWrhSOPiWIuhfx+9yv4OB
+         mfO9QcKRNJhSa+riMcDObo/bAaN3GDT+7vhM+K97Ord0SPFgdmdjEGTVYMIxbdUwyIjV
+         MDCZPGp4Z5WrSc0fL7QveflKNkkaQriWgHuSTYjrLD9O8ksp+F3g77wsN+N9RqFchk4z
+         gLBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z5IVpkp+fyASro0E/9D83qXZo66KVoFohVNxfCekD1g=;
+        b=CfI/L6wHnnORhSIiXRLxM3OjW/oC4wXXPVfTxvYWqZBftOuD+vBt56EKJ0s4BBXse3
+         pqwqYhn7e+ncCjEEEzbgYuyvqhALFTQoSDbNzUjliKJf1SiXCpzI0EdQgwSVk8l9mKGN
+         eXSf4DU2GLECvvHbBLav6FyFl46ba8R/ND5oVhENw88ZtBKRu3/a+XvG9lDFSwygzHB+
+         m9L9FuEDjHusFmeJINLglST1s3zlTTmFzALD3rdIEA8Fv8Ip1kvL8qzB3rTlG1tlxl5a
+         Q8MP5ykf0mR4cXLBX77Pi6kOx2FdUB9nJs8iYYaXpymgBzZA4GvXSnxkXHAl+3Uij3zQ
+         oKGw==
+X-Gm-Message-State: ANhLgQ0eGrxRVB3VJvIEcHzkpUpxMXmmBegmFf60mEDkJ7CbTeYeZ1rH
+        mcvK+gSTn9K8DDipj9G/Sc8=
+X-Google-Smtp-Source: ADFU+vsU1/L6T5B9WflOtlOlbFdYDGaAiZhTbvUqpIMov96u75fCDz7NoaUVPqjtzNgp9T3pkCrGqg==
+X-Received: by 2002:a17:90a:d80c:: with SMTP id a12mr8221590pjv.13.1583682808932;
+        Sun, 08 Mar 2020 08:53:28 -0700 (PDT)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id y9sm15729461pjj.17.2020.03.08.08.53.27
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sun, 08 Mar 2020 08:53:28 -0700 (PDT)
+From:   qiwuchen55@gmail.com
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
+Subject: [PATCH] sched/fair: fix build warning about undefined test_idle_cores()
+Date:   Sun,  8 Mar 2020 23:53:12 +0800
+Message-Id: <1583682792-30844-1-git-send-email-qiwuchen55@gmail.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.102.1 at canardo
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paul Gildea <paul.gildea@gmail.com> writes:
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-> When MTU of modem is set to less than 1500 and a packet larger than MTU
-> arrives in Linux from a modem, it is discarded with -EOVERFLOW error
-> (Babble error). This is seen on USB3.0 and USB2.0 busses. This is
-> essentially because the MRU (Max Receive Size) is not a separate entity to
-> the MTU (Max Transmit Size) and the received packets can be larger than
-> those transmitted. Following the babble error there were an endless supply
-> of zero-length URBs which are rejected with -EPROTO (increasing the rx
-> input error counter each time). This is only seen on USB3.0. These contin=
-ue
-> to come ad infinitum until the modem is shutdown, rendering the modem
-> unusable. There is a bug in the core USB handling code in Linux that
-> doesn't deal well with network MTUs smaller than 1500 bytes. By default t=
-he
-> dev->hard_mtu (the "real" MTU) is in lockstep with dev->rx_urb_size
-> (essentially an MRU), and it's the latter that is causing trouble. This h=
-as
-> nothing to do with the modems; the issue can be reproduced by getting a
-> USB-Ethernet dongle, setting the MTU to 1430, and pinging with size great=
-er
-> than 1406.
->
-> Signed-off-by: Paul Gildea <Paul.Gildea@gmail.com>
-> ---
-> drivers/net/usb/qmi_wwan.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-> index 5754bb6..545c772 100644
-> --- a/drivers/net/usb/qmi_wwan.c
-> +++ b/drivers/net/usb/qmi_wwan.c
-> @@ -815,6 +815,13 @@ static int qmi_wwan_bind(struct usbnet *dev, struct
-> usb_interface *intf)
->     }
->     dev->net->netdev_ops =3D &qmi_wwan_netdev_ops;
->     dev->net->sysfs_groups[0] =3D &qmi_wwan_sysfs_attr_group;
-> +    /* LTE Networks don't always respect their own MTU on receive side;
-> +    * e.g. AT&T pushes 1430 MTU but still allows 1500 byte packets from
-> +    * far-end network. Make receive buffer large enough to accommodate
-> +    * them, and add four bytes so MTU does not equal MRU on network
-> +    * with 1500 MTU otherwise usbnet_change_mtu() will change both.
-> +    */
-> +   dev->rx_urb_size =3D ETH_DATA_LEN + 4;
->  err:
->     return status;
->  }
-> --
-> 1.9.1
+The build with arm64's defconfig:
+CONFIG_SCHED_MC=y
+# CONFIG_SCHED_SMT is not set
 
+Trigger the following warning due to test_idle_cores()'s definition
+missing:
+kernel/sched/fair.c:1524:20: warning: ‘test_idle_cores’ declared ‘static’
+	but never defined [-Wunused-function]
 
-This is fine as a first step towards saner buffer handling in qmi_wwan.
-If real world devices use asymmetric MTUs, then we should just deal with
-that.
+Move the CONFIG_SCHED_SMT ifdeffery around test_idle_cores()'s declaration
+to fix it.
 
-So I was going to add my ack.  But the patch does not apply:
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+---
+ kernel/sched/fair.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 84594f8..d11d965 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1520,8 +1520,10 @@ static inline bool is_core_idle(int cpu)
+ 	return true;
+ }
+ 
++#ifdef CONFIG_SCHED_SMT
+ /* Forward declarations of select_idle_sibling helpers */
+ static inline bool test_idle_cores(int cpu, bool def);
++#endif
+ 
+ struct task_numa_env {
+ 	struct task_struct *p;
+-- 
+1.9.1
 
- bjorn@miraculix:/usr/local/src/git/linux$ git am /tmp/l
- Applying: net: usb: qmi_wwan: Fix for packets being rejected in the ring b=
-uffer used by the xHCI controller.
- error: corrupt patch at line 10
-
-and checkpatch says why:
-
- bjorn@miraculix:/usr/local/src/git/linux$ scripts/checkpatch.pl /tmp/l
- ERROR: patch seems to be corrupt (line wrapped?)
- #34: FILE: drivers/net/usb/qmi_wwan.c:814:
- usb_interface *intf)
-
-
-Could you fix up and resend? You might have to use a different email
-client.  See
-https://www.kernel.org/doc/html/latest/process/email-clients.html#email-cli=
-ents
-
-
-Bj=C3=B8rn
