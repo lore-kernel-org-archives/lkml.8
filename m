@@ -2,130 +2,151 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D816DC18E5F
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 07:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD8DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 07:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE1F020828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 07:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC28D2051A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 07:08:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ITeB/bPP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgCHHGI convert rfc822-to-8bit (ORCPT
+        id S1726156AbgCHHIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 03:06:08 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:39797 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgCHHGH (ORCPT
+        Sun, 8 Mar 2020 03:08:50 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.113]:20981 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725854AbgCHHIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 03:06:07 -0400
-Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 2B390CED14;
-        Sun,  8 Mar 2020 08:15:34 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: WARNING: ODEBUG bug in rfcomm_dev_ioctl
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200308013838.10144-1-hdanton@sina.com>
-Date:   Sun, 8 Mar 2020 08:06:05 +0100
-Cc:     syzbot <syzbot+4496e82090657320efc6@syzkaller.appspotmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <EDEE42AF-02A8-4FC9-A07E-2489BCCF64E8@holtmann.org>
-References: <20200308013838.10144-1-hdanton@sina.com>
-To:     Hillf Danton <hdanton@sina.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Sun, 8 Mar 2020 03:08:50 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id A079110C402D
+        for <linux-kernel@vger.kernel.org>; Sun,  8 Mar 2020 01:08:48 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Aq3MjSwpuEfyqAq3MjVyfR; Sun, 08 Mar 2020 01:08:48 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=IAgpkP6acU0qXJjRHhctRd6OvDzpVmjXQmT9YBJtSK0=; b=ITeB/bPP5qOcCJuAFdSUGJ/ANi
+        Xt/nzwcOwAQ3d063dbZxUzfraSS+ya6uPuBbXOts00hNq+JXw32UvfF3RcQrSigo/v/DgVg0xSlSq
+        44BqbZgb7GPhP9/2WPzK8Jr7AQRBc0fnMzMXsni6YSHCE0Ixkow6pO8yShwSmieoZAn97OQdlcL43
+        BY37Gy+sYZTJ7yHePNJiydcyzHG7iA4lUnFz4wtSodi3gfNHzdEVXwvfscyULx/DyRhlNufaDjG+7
+        AbYmpON8yzU84wIX3QGxVO0xO8+U24Jwmbc2MT3SJw3gyRYjW9BZsOAfdxfTzDdpIc7UUBpt/nbvC
+        W8rU2FGQ==;
+Received: from [201.162.167.15] (port=3102 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jAq3M-003CWv-45; Sun, 08 Mar 2020 01:08:48 -0600
+Subject: Re: [PATCH] cvt_fallthrough: A tool to convert /* fallthrough */
+ comments to fallthrough;
+To:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     clang-built-linux@googlegroups.com
+References: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
+ <576fe2ab-7937-4698-b32a-8599813d6ad1@embeddedor.com>
+ <4304de54a44b7c8c22d8c2d9249d716664cf5ce8.camel@perches.com>
+ <6773b7e3-8ce4-55d1-8bb7-bde6d9f6e887@embeddedor.com>
+ <259f405155a948f90229d3fc8cad928d434b46f9.camel@perches.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <1f71509d-6c58-412d-a817-45b1cc78c06e@embeddedor.com>
+Date:   Sun, 8 Mar 2020 01:11:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <259f405155a948f90229d3fc8cad928d434b46f9.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.167.15
+X-Source-L: No
+X-Exim-ID: 1jAq3M-003CWv-45
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.167.15]:3102
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hillf,
 
->> syzbot found the following crash on:
->> 
->> HEAD commit:    fb279f4e Merge branch 'i2c/for-current-fixed' of git://git..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=168c481de00000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=8b13b05f0e61d957
->> dashboard link: https://syzkaller.appspot.com/bug?extid=4496e82090657320efc6
->> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->> 
->> Unfortunately, I don't have any reproducer for this crash yet.
->> 
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+4496e82090657320efc6@syzkaller.appspotmail.com
->> 
->> ------------[ cut here ]------------
->> ODEBUG: free active (active state 0) object type: timer_list hint: rfcomm_dlc_timeout+0x0/0xc0 net/bluetooth/rfcomm/core.c:300
->> WARNING: CPU: 0 PID: 9181 at lib/debugobjects.c:488 debug_print_object lib/debugobjects.c:485 [inline]
->> WARNING: CPU: 0 PID: 9181 at lib/debugobjects.c:488 __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
->> WARNING: CPU: 0 PID: 9181 at lib/debugobjects.c:488 debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
->> Kernel panic - not syncing: panic_on_warn set ...
->> CPU: 0 PID: 9181 Comm: syz-executor.3 Not tainted 5.6.0-rc3-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->> Call Trace:
->> __dump_stack lib/dump_stack.c:77 [inline]
->> dump_stack+0x1e9/0x30e lib/dump_stack.c:118
->> panic+0x264/0x7a0 kernel/panic.c:221
->> __warn+0x209/0x210 kernel/panic.c:582
->> report_bug+0x1ac/0x2d0 lib/bug.c:195
->> fixup_bug arch/x86/kernel/traps.c:174 [inline]
->> do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
->> do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
->> invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
->> RIP: 0010:debug_print_object lib/debugobjects.c:485 [inline]
->> RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
->> RIP: 0010:debug_check_no_obj_freed+0x45c/0x640 lib/debugobjects.c:998
->> Code: 74 08 4c 89 f7 e8 64 2d 18 fe 4d 8b 06 48 c7 c7 53 10 d1 88 48 c7 c6 0f 01 cf 88 48 89 da 89 e9 4d 89 f9 31 c0 e8 c4 cd ae fd <0f> 0b 48 ba 00 00 00 00 00 fc ff df ff 05 c6 39 b1 05 48 8b 5c 24
->> RSP: 0018:ffffc90001907c88 EFLAGS: 00010046
->> RAX: 72f8f847df918a00 RBX: ffffffff88d4edca RCX: 0000000000040000
->> RDX: ffffc90011373000 RSI: 0000000000013ee9 RDI: 0000000000013eea
->> RBP: 0000000000000000 R08: ffffffff815e1276 R09: ffffed1015d04592
->> R10: ffffed1015d04592 R11: 0000000000000000 R12: ffff88808ea6fbac
->> R13: ffffffff8b592e40 R14: ffffffff890ddc78 R15: ffffffff873dcc50
->> kfree+0xfc/0x220 mm/slab.c:3756
->> rfcomm_dlc_put include/net/bluetooth/rfcomm.h:258 [inline]
->> __rfcomm_create_dev net/bluetooth/rfcomm/tty.c:417 [inline]
->> rfcomm_create_dev net/bluetooth/rfcomm/tty.c:486 [inline]
->> rfcomm_dev_ioctl+0xe37/0x2340 net/bluetooth/rfcomm/tty.c:588
->> rfcomm_sock_ioctl+0x79/0xa0 net/bluetooth/rfcomm/sock.c:902
->> sock_do_ioctl+0x7b/0x260 net/socket.c:1053
->> sock_ioctl+0x4aa/0x690 net/socket.c:1204
->> vfs_ioctl fs/ioctl.c:47 [inline]
->> ksys_ioctl fs/ioctl.c:763 [inline]
->> __do_sys_ioctl fs/ioctl.c:772 [inline]
->> __se_sys_ioctl+0xf9/0x160 fs/ioctl.c:770
->> do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
->> entry_SYSCALL_64_after_hwframe+0x49/0xbe
->> 
+
+On 3/8/20 01:02, Joe Perches wrote:
+
+>> or if you are suggesting that
+>> the maintainers will have the predisposition of applying
+>> patches that will modify their coding style and then go and
+>> willingly fix that. I doubt the latter, though.
 > 
-> No need to put dlc as it's not held in rfcomm_dlc_exists().
-> 
-> --- a/net/bluetooth/rfcomm/tty.c
-> +++ b/net/bluetooth/rfcomm/tty.c
-> @@ -413,10 +413,8 @@ static int __rfcomm_create_dev(struct so
-> 		dlc = rfcomm_dlc_exists(&req.src, &req.dst, req.channel);
-> 		if (IS_ERR(dlc))
-> 			return PTR_ERR(dlc);
-> -		else if (dlc) {
-> -			rfcomm_dlc_put(dlc);
-> +		if (dlc)
-> 			return -EBUSY;
-> -		}
-> 		dlc = rfcomm_dlc_alloc(GFP_KERNEL);
-> 		if (!dlc)
-> 			return -ENOMEM;
+> If any do actually use the script, I guess we'll see.
 > 
 
-looks like this has been there since 2014 and nobody trigged it yet. Care to send a patch that I can apply.
+Yep. In the meantime is a NACK from me for this version
+of your patch.
 
-Regards
-
-Marcel
-
+Thanks
+--
+Gustavo
