@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E71C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC991C10F29
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B50412086A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFF32086A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgCHXYC (ORCPT
+        id S1726899AbgCHXYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 19:24:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57247 "EHLO
+        Sun, 8 Mar 2020 19:24:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57295 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgCHXX6 (ORCPT
+        with ESMTP id S1726846AbgCHXYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 19:23:58 -0400
+        Sun, 8 Mar 2020 19:24:06 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jB5Gl-00036O-7x; Mon, 09 Mar 2020 00:23:40 +0100
+        id 1jB5Gt-00039s-Or; Mon, 09 Mar 2020 00:23:48 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id AD5EA1040B3;
-        Mon,  9 Mar 2020 00:23:30 +0100 (CET)
-Message-Id: <20200308222610.150951641@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 6EA471040A7;
+        Mon,  9 Mar 2020 00:23:36 +0100 (CET)
+Message-Id: <20200308231719.023170971@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 08 Mar 2020 23:24:11 +0100
+Date:   Mon, 09 Mar 2020 00:14:16 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,8 +38,8 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Frederic Weisbecker <frederic@kernel.org>,
         Alexandre Chartre <alexandre.chartre@oracle.com>
-Subject: [patch part-II V2 12/13] x86/entry: Move irq flags tracing to prepare_exit_to_usermode()
-References: <20200308222359.370649591@linutronix.de>
+Subject: [patch part-III V2 06/23] x86/idtentry: Provide macros to define/declare IDT entry points
+References: <20200308231410.905396057@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-Linutronix-Spam-Score: -1.0
@@ -50,145 +50,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is another step towards more C-code and less convoluted ASM.
+Provide DECLARE/DEFINE_IDTENTRY() macros.
 
-Note, that trace_hardirqs_on() is still incorrect vs. RCU idle when the
-tracepoint is used by e.g. BPF. Will be addressed in the next step.
+DEFINE_IDTENTRY() provides a wrapper which acts as the function
+definition. The exception handler body is just appended to it with curly
+brackets. The entry point is marked notrace/noprobe so that irq tracing and
+the enter_from_user_mode() can be moved into the C-entry point. As all
+C-entries use the same macro (or a later variant) the necessary entry
+handling can be implemented at one central place.
+
+DECLARE_IDTENTRY() provides the function prototypes:
+  - The C entry point 	    	cfunc
+  - The ASM entry point		asm_cfunc
+  - The XEN/PV entry point	xen_asm_cfunc
+
+They all follow the same naming convention.
+
+When included from ASM code DECLARE_IDTENTRY() is a macro which emits the
+low level entry point in assembly by instantiating idtentry.
+
+IDTENTRY is the simplest variant which just has a pt_regs argument. It's
+going to be used for all exceptions which have no error code.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
-
-V2: New patch simplifying the conversion and addressing Alex' review
-    comment of redundant tracing.
+V2: Add comments to explain the C vs. ASM variants
 ---
- arch/x86/entry/common.c          |    1 +
- arch/x86/entry/entry_32.S        |   12 ++++--------
- arch/x86/entry/entry_64.S        |    4 ----
- arch/x86/entry/entry_64_compat.S |   14 +++++---------
- 4 files changed, 10 insertions(+), 21 deletions(-)
+ arch/x86/entry/entry_32.S       |    6 ++
+ arch/x86/entry/entry_64.S       |    6 ++
+ arch/x86/include/asm/idtentry.h |   85 ++++++++++++++++++++++++++++++++++++++++
+ arch/x86/include/asm/traps.h    |    2 
+ 4 files changed, 98 insertions(+), 1 deletion(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -253,6 +253,7 @@ static noinline void __prepare_exit_to_u
- 
- 	user_enter_irqoff();
- 	mds_user_clear_cpu_buffers();
-+	trace_hardirqs_on();
- }
- NOKPROBE_SYMBOL(prepare_exit_to_usermode);
- 
 --- a/arch/x86/entry/entry_32.S
 +++ b/arch/x86/entry/entry_32.S
-@@ -811,8 +811,7 @@ SYM_CODE_START(ret_from_fork)
- 	/* When we fork, we trace the syscall return in the child, too. */
- 	movl    %esp, %eax
- 	call    syscall_return_slowpath
--	STACKLEAK_ERASE
--	jmp     restore_all
-+	jmp     .Lsyscall_32_done
+@@ -769,6 +769,12 @@ SYM_CODE_END(\asmsym)
+ .endm
  
- 	/* kernel thread */
- 1:	movl	%edi, %eax
-@@ -855,7 +854,7 @@ SYM_CODE_START_LOCAL(ret_from_exception)
- 	TRACE_IRQS_OFF
- 	movl	%esp, %eax
- 	call	prepare_exit_to_usermode
--	jmp	restore_all
-+	jmp	restore_all_switch_stack
- SYM_CODE_END(ret_from_exception)
- 
- SYM_ENTRY(__begin_SYSENTER_singlestep_region, SYM_L_GLOBAL, SYM_A_NONE)
-@@ -968,8 +967,7 @@ SYM_FUNC_START(entry_SYSENTER_32)
- 
- 	STACKLEAK_ERASE
- 
--/* Opportunistic SYSEXIT */
--	TRACE_IRQS_ON			/* User mode traces as IRQs on. */
-+	/* Opportunistic SYSEXIT */
- 
- 	/*
- 	 * Setup entry stack - we keep the pointer in %eax and do the
-@@ -1072,11 +1070,9 @@ SYM_FUNC_START(entry_INT80_32)
- 	movl	%esp, %eax
- 	call	do_int80_syscall_32
- .Lsyscall_32_done:
--
- 	STACKLEAK_ERASE
- 
--restore_all:
--	TRACE_IRQS_ON
-+restore_all_switch_stack:
- 	SWITCH_TO_ENTRY_STACK
- 	CHECK_AND_APPLY_ESPFIX
- 
+ /*
++ * Include the defines which emit the idt entries which are shared
++ * shared between 32 and 64 bit.
++ */
++#include <asm/idtentry.h>
++
++/*
+  * %eax: prev task
+  * %edx: next task
+  */
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -172,8 +172,6 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_h
- 	movq	%rsp, %rsi
- 	call	do_syscall_64		/* returns with IRQs disabled */
+@@ -688,6 +688,12 @@ SYM_CODE_END(\asmsym)
+ .endm
  
--	TRACE_IRQS_ON			/* return enables interrupts */
--
- 	/*
- 	 * Try to use SYSRET instead of IRET if we're returning to
- 	 * a completely clean 64-bit userspace context.  If we're not,
-@@ -340,7 +338,6 @@ SYM_CODE_START(ret_from_fork)
- 	UNWIND_HINT_REGS
- 	movq	%rsp, %rdi
- 	call	syscall_return_slowpath	/* returns with IRQs disabled */
--	TRACE_IRQS_ON			/* user mode is traced as IRQS on */
- 	jmp	swapgs_restore_regs_and_return_to_usermode
- 
- 1:
-@@ -617,7 +614,6 @@ SYM_CODE_START_LOCAL(common_interrupt)
- .Lretint_user:
- 	mov	%rsp,%rdi
- 	call	prepare_exit_to_usermode
--	TRACE_IRQS_ON
- 
- SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
- #ifdef CONFIG_DEBUG_ENTRY
---- a/arch/x86/entry/entry_64_compat.S
-+++ b/arch/x86/entry/entry_64_compat.S
-@@ -132,8 +132,8 @@ SYM_FUNC_START(entry_SYSENTER_compat)
- 	movq	%rsp, %rdi
- 	call	do_fast_syscall_32
- 	/* XEN PV guests always use IRET path */
--	ALTERNATIVE "testl %eax, %eax; jz .Lsyscall_32_done", \
--		    "jmp .Lsyscall_32_done", X86_FEATURE_XENPV
-+	ALTERNATIVE "testl %eax, %eax; jz swapgs_restore_regs_and_return_to_usermode", \
-+		    "jmp swapgs_restore_regs_and_return_to_usermode", X86_FEATURE_XENPV
- 	jmp	sysret32_from_system_call
- 
- .Lsysenter_fix_flags:
-@@ -244,8 +244,8 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
- 	movq	%rsp, %rdi
- 	call	do_fast_syscall_32
- 	/* XEN PV guests always use IRET path */
--	ALTERNATIVE "testl %eax, %eax; jz .Lsyscall_32_done", \
--		    "jmp .Lsyscall_32_done", X86_FEATURE_XENPV
-+	ALTERNATIVE "testl %eax, %eax; jz swapgs_restore_regs_and_return_to_usermode", \
-+		    "jmp swapgs_restore_regs_and_return_to_usermode", X86_FEATURE_XENPV
- 
- 	/* Opportunistic SYSRET */
- sysret32_from_system_call:
-@@ -254,7 +254,7 @@ SYM_INNER_LABEL(entry_SYSCALL_compat_aft
- 	 * stack. So let's erase the thread stack right now.
- 	 */
- 	STACKLEAK_ERASE
--	TRACE_IRQS_ON			/* User mode traces as IRQs on. */
+ /*
++ * Include the defines which emit the idt entries which are shared
++ * shared between 32 and 64 bit.
++ */
++#include <asm/idtentry.h>
 +
- 	movq	RBX(%rsp), %rbx		/* pt_regs->rbx */
- 	movq	RBP(%rsp), %rbp		/* pt_regs->rbp */
- 	movq	EFLAGS(%rsp), %r11	/* pt_regs->flags (in r11) */
-@@ -393,9 +393,5 @@ SYM_CODE_START(entry_INT80_compat)
++/*
+  * Interrupt entry helper function.
+  *
+  * Entry runs with interrupts off. Stack layout at entry:
+--- /dev/null
++++ b/arch/x86/include/asm/idtentry.h
+@@ -0,0 +1,85 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_IDTENTRY_H
++#define _ASM_X86_IDTENTRY_H
++
++/* Interrupts/Exceptions */
++#include <asm/trapnr.h>
++
++#ifndef __ASSEMBLY__
++
++/**
++ * idtentry_enter - Handle state tracking on idtentry
++ * @regs:	Pointer to pt_regs of interrupted context
++ *
++ * Place holder for now.
++ */
++static __always_inline void idtentry_enter(struct pt_regs *regs)
++{
++}
++
++/**
++ * idtentry_exit - Prepare returning to low level ASM code
++ *
++ * Place holder for now.
++ */
++static __always_inline void idtentry_exit(struct pt_regs *regs)
++{
++}
++
++/**
++ * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
++ *		      No error code pushed by hardware
++ * @vector:	Vector number (ignored for C)
++ * @func:	Function name of the entry point
++ *
++ * Declares three functions:
++ * - The ASM entry point: asm_##func
++ * - The XEN PV trap entry point: xen_##func (maybe unused)
++ * - The C handler called from the ASM entry point
++ *
++ * Note: This is the C variant of DECLARE_IDTENTRY(). As the name says it
++ * declares the entry points for usage in C code. There is an ASM variant
++ * as well which is used to emit the entry stubs in entry_32/64.S.
++ */
++#define DECLARE_IDTENTRY(vector, func)					\
++	asmlinkage void asm_##func(void);				\
++	asmlinkage void xen_asm_##func(void);				\
++	__visible void func(struct pt_regs *regs)
++
++/**
++ * DEFINE_IDTENTRY - Emit code for simple IDT entry points
++ * @func:	Function name of the entry point
++ *
++ * @func is called from ASM entry code with interrupts disabled.
++ *
++ * The macro is written so it acts as function definition. Append the
++ * body with a pair of curly brackets.
++ *
++ * idtentry_enter() contains common code which has to be invoked before
++ * arbitrary code in the body. idtentry_exit() contains common code
++ * which has to run before returning to the low level assembly code.
++ */
++#define DEFINE_IDTENTRY(func)						\
++static __always_inline void __##func(struct pt_regs *regs);		\
++									\
++__visible notrace void func(struct pt_regs *regs)			\
++{									\
++	idtentry_enter(regs);						\
++	__##func (regs);						\
++	idtentry_exit(regs);						\
++}									\
++NOKPROBE_SYMBOL(func);							\
++									\
++static __always_inline void __##func(struct pt_regs *regs)
++
++#else /* !__ASSEMBLY__ */
++
++/*
++ * The ASM variants for DECLARE_IDTENTRY*() which emit the ASM entry stubs.
++ */
++#define DECLARE_IDTENTRY(vector, func)					\
++	idtentry vector asm_##func func has_error_code=0
++
++#endif /* __ASSEMBLY__ */
++
++#endif
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -6,8 +6,8 @@
+ #include <linux/kprobes.h>
  
- 	movq	%rsp, %rdi
- 	call	do_int80_syscall_32
--.Lsyscall_32_done:
--
--	/* Go back to user mode. */
--	TRACE_IRQS_ON
- 	jmp	swapgs_restore_regs_and_return_to_usermode
- SYM_CODE_END(entry_INT80_compat)
+ #include <asm/debugreg.h>
++#include <asm/idtentry.h>
+ #include <asm/siginfo.h>			/* TRAP_TRACE, ... */
+-#include <asm/trapnr.h>
+ 
+ #define dotraplinkage __visible
+ 
 
