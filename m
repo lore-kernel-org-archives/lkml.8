@@ -6,101 +6,106 @@ X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D16C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F64C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D8F20714
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90A220714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgC1REl (ORCPT
+        id S1726445AbgC1RHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 13:04:41 -0400
-Received: from mx.sdf.org ([205.166.94.20]:63281 "EHLO mx.sdf.org"
+        Sat, 28 Mar 2020 13:07:15 -0400
+Received: from mx.sdf.org ([205.166.94.20]:62766 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgC1REk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 13:04:40 -0400
+        id S1725807AbgC1RHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 13:07:15 -0400
 Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SH47cb023288
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SH7E98002914
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sat, 28 Mar 2020 17:04:08 GMT
+        Sat, 28 Mar 2020 17:07:15 GMT
 Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02SH4767016334;
-        Sat, 28 Mar 2020 17:04:07 GMT
-Message-Id: <202003281704.02SH4767016334@sdf.org>
+        by sdf.org (8.15.2/8.12.8/Submit) id 02SH7EEB025951;
+        Sat, 28 Mar 2020 17:07:14 GMT
+Message-Id: <202003281707.02SH7EEB025951@sdf.org>
 From:   George Spelvin <lkml@sdf.org>
-Date:   Wed, 21 Aug 2019 20:30:18 -0400
-Subject: [RFC PATCH v1 18/50] net/ipv6/addrconf.c: Use prandom_u32_max for
- rfc3315 backoff time computation
+Date:   Sun, 8 Mar 2020 09:44:59 -0400
+Subject: [RFC PATCH v1 04/50] batman-adv: fix batadv_nc_random_weight_tq
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 To:     linux-kernel@vger.kernel.org, lkml@sdf.org
-Cc:     Maciej Zenczykowski <maze@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org
+Cc:     Martin Hundeboll <martin@hundeboll.net>,
+        Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antonio Quartulli <a@unstable.cc>,
+        Sven Eckelmann <sven@narfation.org>,
+        b.a.t.m.a.n@diktynna.open-mesh.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no need for 64-bit intermediate values and do_div.
+and change to pseudorandom numbers, as this is a traffic
+dithering operation that doesn't need crypto-grade.
 
-(Actually, the algorithm isn't changing much, except that the old
-code used a scaling factor of 1 million.  prandom_u32_max uses
-a factor of 2^32, making the final division more efficient.)
+The previous code operated in 4 steps:
+1) Generate a random byte 0 <= rand_tq <= 255
+2) Multiply it by BATADV_TQ_MAX_VALUE - tq
+3) Divide by 255 (= BATADV_TQ_MAX_VALUE)
+4) Return BATADV_TQ_MAX_VALUE - rand_tq
 
-One thing that concerns me a bit is that the data types are all
-signed.  The old code cast the inputs to unsigned and produced
-strange overflowed results if they were negative, so presumably
-that never happens in practice.
+This would apperar to scale (BATADV_TQ_MAX_VALUE - tq) by a random
+value between 0/255 and 255/255.
 
-The new code works the same for positive inputs, but produces
-different strange overflowed results if fed negative inputs.
+But!  The intermediate value between steps 3 and 4 is stored in a u8
+variable.  So it's truncated, and most of the time, is less than
+255, after which the division produces 0.  Specifically, if tq is
+odd, the product is always even, and can never be 255.  If tq is
+even, there's exactly one random byte value that will produce
+a product byte of 255.
+
+Thus, the return value is 255 (511/512 of the time) or 254 (1/512
+of the time).
+
+If we assume that the truncation is a bug, and the code is meant to
+scale the input, a simpler way of looking at it is that it's
+returning a random value between tq and BATADV_TQ_MAX_VALUE,
+inclusive.
+
+Well, we have an optimized function for doing just that.
 
 Signed-off-by: George Spelvin <lkml@sdf.org>
-Cc: Maciej Żenczykowski <maze@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc: netdev@vger.kernel.org
+Cc: Martin Hundebøll <martin@hundeboll.net>
+Cc: Marek Lindner <mareklindner@neomailbox.ch>
+Cc: Simon Wunderlich <sw@simonwunderlich.de>
+Cc: Antonio Quartulli <a@unstable.cc>
+Cc: Sven Eckelmann <sven@narfation.org>
+Cc: b.a.t.m.a.n@lists.open-mesh.org
 ---
- net/ipv6/addrconf.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ net/batman-adv/network-coding.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index ec3f472bc5a8f..5172f1f874363 100644
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -103,20 +103,19 @@ static inline u32 cstamp_delta(unsigned long cstamp)
- static inline s32 rfc3315_s14_backoff_init(s32 irt)
+diff --git a/net/batman-adv/network-coding.c b/net/batman-adv/network-coding.c
+index 580609389f0f7..70e3b161c6635 100644
+--- a/net/batman-adv/network-coding.c
++++ b/net/batman-adv/network-coding.c
+@@ -1009,15 +1009,8 @@ static struct batadv_nc_path *batadv_nc_get_path(struct batadv_priv *bat_priv,
+  */
+ static u8 batadv_nc_random_weight_tq(u8 tq)
  {
- 	/* multiply 'initial retransmission time' by 0.9 .. 1.1 */
--	u64 tmp = (900000 + prandom_u32() % 200001) * (u64)irt;
--	do_div(tmp, 1000000);
--	return (s32)tmp;
-+	s32 range = irt / 5;
-+	return irt - (s32)(range/2) + (s32)prandom_u32_max(range);
- }
+-	u8 rand_val, rand_tq;
+-
+-	get_random_bytes(&rand_val, sizeof(rand_val));
+-
+ 	/* randomize the estimated packet loss (max TQ - estimated TQ) */
+-	rand_tq = rand_val * (BATADV_TQ_MAX_VALUE - tq);
+-
+-	/* normalize the randomized packet loss */
+-	rand_tq /= BATADV_TQ_MAX_VALUE;
++	u8 rand_tq = prandom_u32_max(BATADV_TQ_MAX_VALUE + 1 - tq);
  
- static inline s32 rfc3315_s14_backoff_update(s32 rt, s32 mrt)
- {
- 	/* multiply 'retransmission timeout' by 1.9 .. 2.1 */
--	u64 tmp = (1900000 + prandom_u32() % 200001) * (u64)rt;
--	do_div(tmp, 1000000);
--	if ((s32)tmp > mrt) {
-+	s32 range = rt / 5;
-+	s32 tmp = 2*rt - (s32)(range/2) + (s32)prandom_u32_max(range);
-+	if (tmp > mrt) {
- 		/* multiply 'maximum retransmission time' by 0.9 .. 1.1 */
--		tmp = (900000 + prandom_u32() % 200001) * (u64)mrt;
--		do_div(tmp, 1000000);
-+		range = mrt / 5;
-+		tmp = mrt - (s32)(range/2) + (s32)prandom_u32_max(range);
- 	}
- 	return (s32)tmp;
- }
+ 	/* convert to (randomized) estimated tq again */
+ 	return BATADV_TQ_MAX_VALUE - rand_tq;
 -- 
 2.26.0
 
