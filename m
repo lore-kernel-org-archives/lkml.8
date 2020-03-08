@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB4CC10F28
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AE0C10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4365D2146E
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141D02146E
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583655043;
-	bh=bzyWUzT+NhCF+bkKOqxl9ChyduAJx/5Wzt4n9ZAB888=;
+	s=default; t=1583655047;
+	bh=SOr81exaFY7eTtkz9t/BsF2BMpxMMKz/aNikSfIVNJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PQCmDBQOLVZicUwJ33FYEpCeFRDAoP5h96U0MPcNmBCQrt4p31hXXCJjEXe/rZ8zt
-	 wwsk9ko8E3g9mv7kXIVSOSBW/MEbeJZO5IpVFeAay20hfY/wypbbcnaOyRUNLx9H16
-	 JC3qYf54A4iJDKrinvRfTApYYlNZQVd6DmNTurSw=
+	b=HvEHoBSJWcZcztnRWs6ylBfB2jGKIWDVsPJfVjHVyGkUBG+H6aMebq0mLVAN/E3Rb
+	 5iTDOp+LrkgvmTCDIqstyI0YKr0z7GK39XkpVK7EAjCELkkPEYnto7yZAaUjfUKvi4
+	 68S9V0ht+hhNaHR7+BE0wbAmOwwFxwbp07IX3sIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgCHIKm (ORCPT
+        id S1727030AbgCHIKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 04:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38728 "EHLO mail.kernel.org"
+        Sun, 8 Mar 2020 04:10:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbgCHIKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 04:10:39 -0400
+        id S1726973AbgCHIKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 04:10:43 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F3B5208C3;
-        Sun,  8 Mar 2020 08:10:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A05A72072A;
+        Sun,  8 Mar 2020 08:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583655039;
-        bh=bzyWUzT+NhCF+bkKOqxl9ChyduAJx/5Wzt4n9ZAB888=;
+        s=default; t=1583655042;
+        bh=SOr81exaFY7eTtkz9t/BsF2BMpxMMKz/aNikSfIVNJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KBmoj0G4tMEy9XZYE/D8Vs2w0yHvBLQf2yB3wg7kqf1LTCX4cIHPgpSg951WA89gz
-         Gzfz8YjDEPyr4zOWEbvMDq833ojDFBKfrh4d0OdTgoLamsplwVXTVppEKVClPJUdtF
-         5iJJGQiCPevix2+Zm4IAdWO94QZ3RQj3Gg/6uZp8=
+        b=zijrPhfNxfCUy3WFuieJtCC9zc568fih/UG9rx/TnoYb4iSQ3irmiBgfDnfqyeSya
+         HVKsqriQ7Euah81h9N8aj5L3dnqbUp30iUALNyZAYScmwWeGYzw3Xy8SQ/h84HsQR5
+         AekRCsHEM0Ae02fPIR4r3r+XCOrNJ69tLswDX6ds=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -55,9 +55,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Nikolai Merinov <n.merinov@inango-systems.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Vladis Dronov <vdronov@redhat.com>
-Subject: [PATCH 26/28] efi/libstub/x86: use ULONG_MAX as upper bound for all allocations
-Date:   Sun,  8 Mar 2020 09:08:57 +0100
-Message-Id: <20200308080859.21568-27-ardb@kernel.org>
+Subject: [PATCH 27/28] efi/x86: Fix cast of image argument
+Date:   Sun,  8 Mar 2020 09:08:58 +0100
+Message-Id: <20200308080859.21568-28-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200308080859.21568-1-ardb@kernel.org>
 References: <20200308080859.21568-1-ardb@kernel.org>
@@ -66,82 +66,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The header flag XLF_CAN_BE_LOADED_ABOVE_4G will inform us whether
-allocations above 4 GiB for kernel, command line, etc are permitted,
-so we take it into account when calling efi_allocate_pages() etc.
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-However, CONFIG_EFI_STUB implies CONFIG_RELOCATABLE, and so the flag
-is guaranteed to be set on x86_64 builds, whereas i386 builds are
-guaranteed to run under firmware that will not allocate above 4 GB
-in the first place.
+handle_protocol expects void **, not void *.
 
-So drop the check, and just pass ULONG_MAX as the upper bound for
-all allocations.
-
-Link: https://lore.kernel.org/r/20200303225054.28741-1-ardb@kernel.org
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Link: https://lore.kernel.org/r/20200305143642.820865-1-nivedita@alum.mit.edu
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/libstub/x86-stub.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+ drivers/firmware/efi/libstub/x86-stub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 064941ecc36f..bf0c3f60762a 100644
+index bf0c3f60762a..e61782849ebd 100644
 --- a/drivers/firmware/efi/libstub/x86-stub.c
 +++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -376,7 +376,6 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 	char *cmdline_ptr;
- 	unsigned long ramdisk_addr;
- 	unsigned long ramdisk_size;
--	bool above4g;
+@@ -383,7 +383,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 	if (sys_table->hdr.signature != EFI_SYSTEM_TABLE_SIGNATURE)
+ 		efi_exit(handle, EFI_INVALID_PARAMETER);
  
- 	sys_table = sys_table_arg;
- 
-@@ -394,10 +393,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 	image_offset = (void *)startup_32 - image_base;
- 
- 	hdr = &((struct boot_params *)image_base)->hdr;
--	above4g = hdr->xloadflags & XLF_CAN_BE_LOADED_ABOVE_4G;
- 
--	status = efi_allocate_pages(0x4000, (unsigned long *)&boot_params,
--				    above4g ? ULONG_MAX : UINT_MAX);
-+	status = efi_allocate_pages(0x4000, (unsigned long *)&boot_params, ULONG_MAX);
+-	status = efi_bs_call(handle_protocol, handle, &proto, (void *)&image);
++	status = efi_bs_call(handle_protocol, handle, &proto, (void **)&image);
  	if (status != EFI_SUCCESS) {
- 		efi_printk("Failed to allocate lowmem for boot params\n");
+ 		efi_printk("Failed to get handle for LOADED_IMAGE_PROTOCOL\n");
  		efi_exit(handle, status);
-@@ -421,8 +418,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 	hdr->type_of_loader = 0x21;
- 
- 	/* Convert unicode cmdline to ascii */
--	cmdline_ptr = efi_convert_cmdline(image, &options_size,
--					  above4g ? ULONG_MAX : UINT_MAX);
-+	cmdline_ptr = efi_convert_cmdline(image, &options_size, ULONG_MAX);
- 	if (!cmdline_ptr)
- 		goto fail;
- 
-@@ -442,8 +438,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 			status = efi_load_initrd(image, &ramdisk_addr,
- 						 &ramdisk_size,
- 						 hdr->initrd_addr_max,
--						 above4g ? ULONG_MAX
--							 : hdr->initrd_addr_max);
-+						 ULONG_MAX);
- 			if (status != EFI_SUCCESS)
- 				goto fail2;
- 			hdr->ramdisk_image = ramdisk_addr & 0xffffffff;
-@@ -795,12 +790,8 @@ unsigned long efi_main(efi_handle_t handle,
- 	 */
- 	if (!noinitrd()) {
- 		unsigned long addr, size;
--		unsigned long max_addr = hdr->initrd_addr_max;
- 
--		if (hdr->xloadflags & XLF_CAN_BE_LOADED_ABOVE_4G)
--			max_addr = ULONG_MAX;
--
--		status = efi_load_initrd_dev_path(&addr, &size, max_addr);
-+		status = efi_load_initrd_dev_path(&addr, &size, ULONG_MAX);
- 		if (status == EFI_SUCCESS) {
- 			hdr->ramdisk_image		= (u32)addr;
- 			hdr->ramdisk_size 		= (u32)size;
 -- 
 2.17.1
 
