@@ -2,42 +2,48 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA63C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4345C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E325B2067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A242067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgCHTb5 (ORCPT
+        id S1726368AbgCHTeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 15:31:57 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:58572 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726318AbgCHTb4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 15:31:56 -0400
-X-IronPort-AV: E=Sophos;i="5.70,530,1574118000"; 
-   d="scan'208";a="439382032"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2020 20:31:54 +0100
-Date:   Sun, 8 Mar 2020 20:31:53 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Shreeya Patel <shreeya.patel23498@gmail.com>
-cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com, sbrivio@redhat.com,
-        daniel.baluta@gmail.com, nramas@linux.microsoft.com,
-        hverkuil@xs4all.nl
-Subject: Re: [Outreachy kernel] [PATCH] Staging: rtl8188eu: Add space around
- operator
-In-Reply-To: <20200308192152.26403-1-shreeya.patel23498@gmail.com>
-Message-ID: <alpine.DEB.2.21.2003082030310.2400@hadrien>
-References: <20200308192152.26403-1-shreeya.patel23498@gmail.com>
+        Sun, 8 Mar 2020 15:34:25 -0400
+Received: from gentwo.org ([3.19.106.255]:43440 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726322AbgCHTeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 15:34:25 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 8A8C03F1C0; Sun,  8 Mar 2020 19:34:24 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 8845B3E998;
+        Sun,  8 Mar 2020 19:34:24 +0000 (UTC)
+Date:   Sun, 8 Mar 2020 19:34:24 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     David Rientjes <rientjes@google.com>
+cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Vijayanand Jitta <vjitta@codeaurora.org>
+Subject: Re: SLUB: sysfs lets root force slab order below required minimum,
+ causing memory corruption
+In-Reply-To: <alpine.DEB.2.21.2003041231020.260792@chino.kir.corp.google.com>
+Message-ID: <alpine.DEB.2.21.2003081929460.14266@www.lameter.com>
+References: <CAG48ez31PP--h6_FzVyfJ4H86QYczAFPdxtJHUEEan+7VJETAQ@mail.gmail.com> <alpine.DEB.2.21.2003031724400.77561@chino.kir.corp.google.com> <202003031820.7A0C4FF302@keescook> <beb7abda-2648-aae7-31c5-51da6f02380a@suse.cz>
+ <alpine.DEB.2.21.2003041231020.260792@chino.kir.corp.google.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -46,40 +52,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Mar 2020, Shreeya Patel wrote:
+On Wed, 4 Mar 2020, David Rientjes wrote:
 
-> Add space around & operator for improving the code
-> readability.
+> I'm not sure how dependent the CONFIG_SLUB_DEBUG users are on being able
+> to modify these are runtime (they've been around for 12+ years) but I
+> agree that it seems particularly dangerous.
 
-I guess you found this with checkpatch.  If so, it could be nice to add
-"Reported by checkpatch." to the log message.  OK otherwise.
+The order of each individual slab page is stored in struct page. That is
+why every slub slab page can have a different order. This enabled fallback
+to order 0 allocations and also allows a dynamic configuration of the
+order at runtime.
 
-Acked-by: Julia Lawall <julia.lawall@inria.fr>
+> The slub_debug kernel command line options are already pretty
+> comprehensive as described by Documentation/vm/slub.rst.  I *think* these
+> tunables were primarily introduced for kernel debugging and not general
+> purpose, perhaps with the exception of "order".
 
->
-> Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
-> ---
->  drivers/staging/rtl8188eu/core/rtw_mlme.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-> index e764436e120f..8da955e8343b 100644
-> --- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
-> +++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-> @@ -924,7 +924,7 @@ static void rtw_joinbss_update_network(struct adapter *padapter, struct wlan_net
->  	/* update fw_state will clr _FW_UNDER_LINKING here indirectly */
->  	switch (pnetwork->network.InfrastructureMode) {
->  	case Ndis802_11Infrastructure:
-> -		if (pmlmepriv->fw_state&WIFI_UNDER_WPS)
-> +		if (pmlmepriv->fw_state & WIFI_UNDER_WPS)
->  			pmlmepriv->fw_state = WIFI_STATION_STATE|WIFI_UNDER_WPS;
->  		else
->  			pmlmepriv->fw_state = WIFI_STATION_STATE;
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20200308192152.26403-1-shreeya.patel23498%40gmail.com.
->
+What do you mean by "general purpose? Certainly the allocator should not
+blow up when forcing zero order allocations.
+
+> So I think we may be able to fix "order" with a combination of my patch as
+> well as a fix to the freelist randomization and that the others should
+> likely be made read only.
+
+Hmmm. races increases as more metadata is added that is depending on the
+size of the slab page and the number of objects in it.
+
