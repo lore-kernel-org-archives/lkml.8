@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58317C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D72C10F27
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32AD420838
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59B320838
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583661234;
-	bh=vOPL8owgSgHX9PhVmLyiyNWhrKKGWBWr9Xmd6jc428Q=;
+	s=default; t=1583661238;
+	bh=+Qr7yNC094fLdfxvNgJepSw3Yh+DG6Bi7TV/2dy3vos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EAmqXTEs1VP1FLPC0IiSkWoJCSAZLOswLi1oGBzGTCsploe/fRgdu1i6sQ/z8atWG
-	 ovfoaqefK1RhG0wX9o3EEaqa2sFNcnTdYczJ0ECH294DaaAWZEvOYfz3OXQpPjO7pi
-	 UR6jdjpM7MSkwKiSMPWL4Q7IvXr62l95Yicn3hLc=
+	b=ZCxRf9kguLAuxIGoIdoN59UodhYumNvXZ3Z5I7JT92FWGhdm0c12jnrnKxAkTPDIq
+	 iMzHLzfK0CLybQw3crxZigweyqQT3Es4v9XCPYgtQKRkKau4hp52Hc+u8gNnIsQlgF
+	 SmG3moi3fWdRZMe2s7jwjw2+9dzsa+YqOgNo7jmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgCHJxw (ORCPT
+        id S1726595AbgCHJxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 05:53:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38182 "EHLO mail.kernel.org"
+        Sun, 8 Mar 2020 05:53:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbgCHJxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 05:53:49 -0400
+        id S1726548AbgCHJxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 05:53:38 -0400
 Received: from localhost.localdomain (unknown [89.208.247.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98AFD2084E;
-        Sun,  8 Mar 2020 09:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58CF120880;
+        Sun,  8 Mar 2020 09:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583661228;
-        bh=vOPL8owgSgHX9PhVmLyiyNWhrKKGWBWr9Xmd6jc428Q=;
+        s=default; t=1583661217;
+        bh=+Qr7yNC094fLdfxvNgJepSw3Yh+DG6Bi7TV/2dy3vos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILwKeyhsd6982qjaUQJRvl39FmYnrOLOuWH1SlhJ59HzVUtZHnuy6I0NtkIEOY4lf
-         iVTai79VidqtS7UMB2Zyi7M4n9NYwRYygwzj+eQOFfqCdD4I+himIPosKG8D2XwBiz
-         hd8KYJJxgSShjgWRn+8BwX2MjB3PNCgz0xugvjfY=
+        b=q1/n5tHIv3ZL9rfSU6sl+A2Gv8WdjWhEcZrexYOmlBaff1LPJgpTspF/kB5ksPnzG
+         kE0D6jTCxj216LcamNz7af0mYnb4v/+w4O5ajRgLAaDDWhxeiAkjAsbJ3nPkJtKcU/
+         fZXggSrRww8paZZipAIYraWOgr2fne8eAI/3fQTI=
 From:   guoren@kernel.org
 To:     paul.walmsley@sifive.com, palmer@dabbelt.com, Anup.Patel@wdc.com,
         greentime.hu@sifive.com
@@ -47,9 +47,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         linux-riscv@lists.infradead.org,
         Guo Ren <guoren@linux.alibaba.com>,
         Dave Martin <Dave.Martin@arm.com>
-Subject: [RFC PATCH V3 11/11] riscv: Add sigcontext save/restore
-Date:   Sun,  8 Mar 2020 17:49:54 +0800
-Message-Id: <20200308094954.13258-12-guoren@kernel.org>
+Subject: [RFC PATCH V3 07/11] riscv: Reset vector register
+Date:   Sun,  8 Mar 2020 17:49:50 +0800
+Message-Id: <20200308094954.13258-8-guoren@kernel.org>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20200308094954.13258-1-guoren@kernel.org>
 References: <20200308094954.13258-1-guoren@kernel.org>
@@ -60,92 +60,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <guoren@linux.alibaba.com>
 
-This patch add sigcontext save/restore and it's very similar to
-fpu.
+Reset vector registers at boot-time and disable vector instructions
+execution for kernel mode.
 
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 ---
- arch/riscv/include/uapi/asm/sigcontext.h |  1 +
- arch/riscv/kernel/signal.c               | 40 ++++++++++++++++++++++++
- 2 files changed, 41 insertions(+)
+ arch/riscv/kernel/entry.S |  2 +-
+ arch/riscv/kernel/head.S  | 49 +++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 48 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/include/uapi/asm/sigcontext.h b/arch/riscv/include/uapi/asm/sigcontext.h
-index 84f2dfcfdbce..f74b3c814423 100644
---- a/arch/riscv/include/uapi/asm/sigcontext.h
-+++ b/arch/riscv/include/uapi/asm/sigcontext.h
-@@ -17,6 +17,7 @@
- struct sigcontext {
- 	struct user_regs_struct sc_regs;
- 	union __riscv_fp_state sc_fpregs;
-+	struct __riscv_v_state sc_vregs;
- };
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index bad4d85b5e91..449e0a7ef115 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -76,7 +76,7 @@ _save_context:
+ 	 * Disable the FPU to detect illegal usage of floating point in kernel
+ 	 * space.
+ 	 */
+-	li t0, SR_SUM | SR_FS
++	li t0, SR_SUM | SR_FS | SR_VS
  
- #endif /* _UAPI_ASM_RISCV_SIGCONTEXT_H */
-diff --git a/arch/riscv/kernel/signal.c b/arch/riscv/kernel/signal.c
-index 17ba190e84a5..4295c00e8934 100644
---- a/arch/riscv/kernel/signal.c
-+++ b/arch/riscv/kernel/signal.c
-@@ -83,6 +83,40 @@ static long save_fp_state(struct pt_regs *regs,
- #define restore_fp_state(task, regs) (0)
- #endif
+ 	REG_L s0, TASK_TI_USER_SP(tp)
+ 	csrrc s1, CSR_STATUS, t0
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index 271860fc2c3f..b40d8ec7ad5d 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -72,10 +72,10 @@ _start_kernel:
+ .option pop
  
+ 	/*
+-	 * Disable FPU to detect illegal usage of
++	 * Disable FPU & VECTOR to detect illegal usage of
+ 	 * floating point in kernel space
+ 	 */
+-	li t0, SR_FS
++	li t0, SR_FS | SR_VS
+ 	csrc CSR_STATUS, t0
+ 
+ #ifdef CONFIG_SMP
+@@ -290,6 +290,51 @@ ENTRY(reset_regs)
+ 	csrw	fcsr, 0
+ 	/* note that the caller must clear SR_FS */
+ #endif /* CONFIG_FPU */
++
 +#ifdef CONFIG_VECTOR
-+static long restore_v_state(struct pt_regs *regs,
-+			    struct __riscv_v_state *sc_vregs)
-+{
-+	long err;
-+	struct __riscv_v_state __user *state = sc_vregs;
++	csrr	t0, CSR_MISA
++	li	t1, (COMPAT_HWCAP_ISA_V >> 16)
++	slli	t1, t1, 16
++	and	t0, t0, t1
++	beqz	t0, .Lreset_regs_done
 +
-+	err = __copy_from_user(&current->thread.vstate, state, sizeof(*state));
-+	if (unlikely(err))
-+		return err;
++	li	t1, SR_VS
++	csrs	CSR_STATUS, t1
++	vmv.v.i v0, 0
++	vmv.v.i v1, 0
++	vmv.v.i v2, 0
++	vmv.v.i v3, 0
++	vmv.v.i v4, 0
++	vmv.v.i v5, 0
++	vmv.v.i v6, 0
++	vmv.v.i v7, 0
++	vmv.v.i v8, 0
++	vmv.v.i v9, 0
++	vmv.v.i v10, 0
++	vmv.v.i v11, 0
++	vmv.v.i v12, 0
++	vmv.v.i v13, 0
++	vmv.v.i v14, 0
++	vmv.v.i v15, 0
++	vmv.v.i v16, 0
++	vmv.v.i v17, 0
++	vmv.v.i v18, 0
++	vmv.v.i v19, 0
++	vmv.v.i v20, 0
++	vmv.v.i v21, 0
++	vmv.v.i v22, 0
++	vmv.v.i v23, 0
++	vmv.v.i v24, 0
++	vmv.v.i v25, 0
++	vmv.v.i v26, 0
++	vmv.v.i v27, 0
++	vmv.v.i v28, 0
++	vmv.v.i v29, 0
++	vmv.v.i v30, 0
++	vmv.v.i v31, 0
++	/* note that the caller must clear SR_VS */
++#endif /* CONFIG_VECTOR */
 +
-+	vstate_restore(current, regs);
-+
-+	return err;
-+}
-+
-+static long save_v_state(struct pt_regs *regs,
-+			 struct __riscv_v_state *sc_vregs)
-+{
-+	long err;
-+	struct __riscv_v_state __user *state = sc_vregs;
-+
-+	vstate_save(current, regs);
-+	err = __copy_to_user(state, &current->thread.vstate, sizeof(*state));
-+	if (unlikely(err))
-+		return err;
-+
-+	return err;
-+}
-+#else
-+#define save_v_state(task, regs) (0)
-+#define restore_v_state(task, regs) (0)
-+#endif
-+
- static long restore_sigcontext(struct pt_regs *regs,
- 	struct sigcontext __user *sc)
- {
-@@ -92,6 +126,9 @@ static long restore_sigcontext(struct pt_regs *regs,
- 	/* Restore the floating-point state. */
- 	if (has_fpu)
- 		err |= restore_fp_state(regs, &sc->sc_fpregs);
-+	/* Restore the vector state. */
-+	if (has_vector)
-+		err |= restore_v_state(regs, &sc->sc_vregs);
- 	return err;
- }
- 
-@@ -145,6 +182,9 @@ static long setup_sigcontext(struct rt_sigframe __user *frame,
- 	/* Save the floating-point state. */
- 	if (has_fpu)
- 		err |= save_fp_state(regs, &sc->sc_fpregs);
-+	/* Save the vector state. */
-+	if (has_vector)
-+		err |= save_v_state(regs, &sc->sc_vregs);
- 	return err;
- }
- 
+ .Lreset_regs_done:
+ 	ret
+ END(reset_regs)
 -- 
 2.17.0
 
