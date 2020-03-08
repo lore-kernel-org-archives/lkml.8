@@ -2,117 +2,143 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E9DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 22:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B7CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6420D206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 22:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB95206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCHW4a (ORCPT
+        id S1726463AbgCHXDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 18:56:30 -0400
-Received: from smtprelay0176.hostedemail.com ([216.40.44.176]:40520 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726352AbgCHW43 (ORCPT
+        Sun, 8 Mar 2020 19:03:13 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:39855 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726332AbgCHXDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 18:56:29 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 9795F101D66B3;
-        Sun,  8 Mar 2020 22:56:28 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: art56_1b3ccfb8be443
-X-Filterd-Recvd-Size: 3075
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Sun,  8 Mar 2020 22:56:27 +0000 (UTC)
-Message-ID: <5129f7dbd8506cc9fd5a8f76dc993d789566af6c.camel@perches.com>
-Subject: Re: [PATCH RFC] MAINTAINERS: include GOOGLE FIRMWARE entry
-From:   Joe Perches <joe@perches.com>
-To:     Guenter Roeck <groeck@google.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Julius Werner <jwerner@chromium.org>,
-        kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Sun, 08 Mar 2020 15:54:47 -0700
-In-Reply-To: <CABXOdTcrxoBCz24Ap=YJYZnr+oLAmaR10xZ9ar2mYbE1=RAoug@mail.gmail.com>
-References: <20200308195116.12836-1-lukas.bulwahn@gmail.com>
-         <CABXOdTcrxoBCz24Ap=YJYZnr+oLAmaR10xZ9ar2mYbE1=RAoug@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sun, 8 Mar 2020 19:03:13 -0400
+Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id C32917E9739;
+        Mon,  9 Mar 2020 10:03:09 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jB4wt-0004sr-3Z; Mon, 09 Mar 2020 10:03:07 +1100
+Date:   Mon, 9 Mar 2020 10:03:07 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: clear PF_MEMALLOC before exiting xfsaild thread
+Message-ID: <20200308230307.GM10776@dread.disaster.area>
+References: <0000000000000e7156059f751d7b@google.com>
+ <20200308043540.1034779-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200308043540.1034779-1-ebiggers@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
+        a=1XWaLZrsAAAA:8 a=VwQbUJbxAAAA:8 a=eJfxgxciAAAA:8 a=hSkVLCK3AAAA:8
+        a=7-415B0cAAAA:8 a=dLdYvm8lChJJgMaHoBcA:9 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=xM9caqqi1sUkTy8OJ5Uh:22
+        a=cQPPKAXgyycSBL8etih5:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-03-08 at 15:32 -0700, Guenter Roeck wrote:
-> On Sun, Mar 8, 2020 at 12:51 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> > All files in drivers/firmware/google/ are identified as part of THE REST
-> > according to MAINTAINERS, but they are really maintained by others.
-[]
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> > @@ -7111,6 +7111,14 @@ S:       Supported
-> >  F:     Documentation/networking/device_drivers/google/gve.rst
-> >  F:     drivers/net/ethernet/google
-> > 
-> > +GOOGLE FIRMWARE
-> > +M:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > +M:     Stephen Boyd <swboyd@chromium.org>
-> > +R:     Guenter Roeck <groeck@chromium.org>
-> > +R:     Julius Werner <jwerner@chromium.org>
-> > +S:     Maintained
-> > +F:     drivers/firmware/google/
-> > +
+On Sat, Mar 07, 2020 at 08:35:40PM -0800, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
 > 
-> FWIW, I would not mind stepping up as maintainer if needed, but I
-> think we should strongly discourage this kind of auto-assignment of
-> maintainers and/or reviewers.
+> Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
+> during do_exit().  That can confuse things.  For example, if BSD process
+> accounting is enabled, then it's possible for do_exit() to end up
+> calling ext4_write_inode().  That triggers the
+> WARN_ON_ONCE(current->flags & PF_MEMALLOC) there, as it assumes
+> (appropriately) that inodes aren't written when allocating memory.
 
-Auto assignment should definitely _not_ be done.
+And just how the hell does and XFS kernel thread end up calling
+ext4_write_inode()? That's kinda a key factor in all this, and
+it's not explained here.
 
-This is an RFC proposal though.
+> This case was reported by syzbot at
+> https://lkml.kernel.org/r/0000000000000e7156059f751d7b@google.com.
 
-Sometimes it's better to not produce an RFC as
-a patch, but maybe just show a proposed section
-and ask if is appropriate may be a better style
-going forward.
+Which doesn't really explain it, either.
 
-Maybe just emailing Greg, Stephen, Guenter and
-Julius (cc'ing LKML) asking something like the
-below would be better:
+What is the configuration conditions under which this triggers? It
+looks like some weird combination of a no-journal ext4 root
+filesystem and the audit subsystem being configured with O_SYNC
+files?
 
-----------------------------------------------------
+People trying to decide if this is something that needs to be
+backported to stable kernels need to be able to unerstand how this
+bug is actually triggered so they can make sane decisions about
+it...
 
-Hey all.
+/me tracks the PF_MEMALLOC flag back to commit 43ff2122e649 ("xfs:
+on-stack delayed write buffer lists") where is was inherited here
+from the buffer flush daemon that xfsaild took over from. Which also
+never cleared the PF_MEMALLOC flag. That goes back to 2002:
 
-Files in drivers/firmware/google/ do not seem to
-have a listed MAINTAINER.
+commit d676c94914eb97d72061aff69c99406df4f395e9
+Author: Steve Lord <lord@sgi.com>
+Date:   Fri Jan 11 23:31:51 2002 +0000
 
-Would a section entry in MAINTAINERS like this be
-appropriate?
+    Merge pagebuf module into XFS
 
-GOOGLE FIRMWARE
-M:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-M:     Stephen Boyd <swboyd@chromium.org>
-R:     Guenter Roeck <groeck@chromium.org>
-R:     Julius Werner <jwerner@chromium.org>
-S:     Maintained
-F:     drivers/firmware/google/
+So this issue of calling do_exit() with PF_MEMALLOC set has been
+around for 18+ years without anyone noticing it.
 
-Is there a git tree somewhere that should be added?
-What would be the
-status of this proposed section?
-Does someone really look after it at
-all?
+I also note that cifs_demultiplex_thread() has the same problem -
+can you please do a complete audit of all the users of PF_MEMALLOC
+and fix all of them?
 
+> Fix this in xfsaild() by using the helper functions to save and restore
+> PF_MEMALLOC.
+> 
+> Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  fs/xfs/xfs_trans_ail.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+> index 00cc5b8734be..3bc570c90ad9 100644
+> --- a/fs/xfs/xfs_trans_ail.c
+> +++ b/fs/xfs/xfs_trans_ail.c
+> @@ -529,8 +529,9 @@ xfsaild(
+>  {
+>  	struct xfs_ail	*ailp = data;
+>  	long		tout = 0;	/* milliseconds */
+> +	unsigned int	noreclaim_flag;
+>  
+> -	current->flags |= PF_MEMALLOC;
+> +	noreclaim_flag = memalloc_noreclaim_save();
+>  	set_freezable();
+>  
+>  	while (1) {
+> @@ -601,6 +602,7 @@ xfsaild(
+>  		tout = xfsaild_push(ailp);
+>  	}
+>  
+> +	memalloc_noreclaim_restore(noreclaim_flag);
+>  	return 0;
+>  }
 
+The code looks fine - I considered doing this a couple of weeks ago
+just for cleaniness reasons - but the commit message needs work to
+explain the context of the bug...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
