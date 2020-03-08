@@ -2,121 +2,72 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB25C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBFEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62E120828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B32020866
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgCHQdf (ORCPT
+        id S1726487AbgCHQeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 12:33:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45330 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbgCHQde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 12:33:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A70BCAFF7;
-        Sun,  8 Mar 2020 16:33:32 +0000 (UTC)
-Date:   Sun, 8 Mar 2020 17:33:35 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] EDAC urgent fix for 5.6
-Message-ID: <20200308163335.GC12445@zn.tnic>
+        Sun, 8 Mar 2020 12:34:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56789 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgCHQeD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 12:34:03 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jAysH-0007T0-Fc; Sun, 08 Mar 2020 17:33:57 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 99600104096; Sun,  8 Mar 2020 17:33:56 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     luanshi <zhangliguang@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] irqdomain: Fix function documentation of __irq_domain_alloc_fwnode
+In-Reply-To: <20200308145045.20ff820d@why>
+References: <1583200125-58806-1-git-send-email-zhangliguang@linux.alibaba.com> <20200308135610.379db6da@why> <87o8t69agn.fsf@nanos.tec.linutronix.de> <20200308145045.20ff820d@why>
+Date:   Sun, 08 Mar 2020 17:33:56 +0100
+Message-ID: <87k13u956z.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Marc Zyngier <maz@kernel.org> writes:
 
-please pull the error reporting fix for synopsys_edac below. (Btw, doing
-signed tags only from now on.)
+> On Sun, 08 Mar 2020 15:40:08 +0100
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>> Marc Zyngier <maz@kernel.org> writes:
+>> 
+>> > On Tue,  3 Mar 2020 09:48:45 +0800
+>> > luanshi <zhangliguang@linux.alibaba.com> wrote:
+>> >  
+>> >> The function got renamed at some point, but the kernel-doc was not
+>> >> updated.
+>> >> 
+>> >> Signed-off-by: luanshi <zhangliguang@linux.alibaba.com>  
+>> >
+>> > Queued for 5.7.  
+>> 
+>> It's already in tip. You got a tip-bot mail telling you :)
+>
+> That's the problem, I don't. Somehow, tip-bot dropped me from the cc
+> list (see [1]). How sad! ;-)
 
-Thx.
+Tip-bot didn't. I stripped the cc list when applying the patch and
+tip-bot only sees the git commit....
 
----
-The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
-
-  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent-2020-03-08
-
-for you to fetch changes up to dfc6014e3b60713f375d0601d7549eed224c4615:
-
-  EDAC/synopsys: Do not print an error with back-to-back snprintf() calls (2020-02-27 16:44:25 +0100)
-
-----------------------------------------------------------------
-* Do not overwrite partial decoded error message in synopsys_edac (Sherry Sun)
-
-----------------------------------------------------------------
-Sherry Sun (1):
-      EDAC/synopsys: Do not print an error with back-to-back snprintf() calls
-
- drivers/edac/synopsys_edac.c | 22 +++++++---------------
- 1 file changed, 7 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 2d263382d797..880ffd833718 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -479,20 +479,14 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- 		pinf = &p->ceinfo;
- 		if (!priv->p_data->quirks) {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "DDR ECC error type:%s Row %d Bank %d Col %d ",
--				  "CE", pinf->row, pinf->bank, pinf->col);
--			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "Bit Position: %d Data: 0x%08x\n",
-+				 "DDR ECC error type:%s Row %d Bank %d Col %d Bit Position: %d Data: 0x%08x",
-+				 "CE", pinf->row, pinf->bank, pinf->col,
- 				 pinf->bitpos, pinf->data);
- 		} else {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "DDR ECC error type:%s Row %d Bank %d Col %d ",
--				  "CE", pinf->row, pinf->bank, pinf->col);
--			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "BankGroup Number %d Block Number %d ",
--				 pinf->bankgrpnr, pinf->blknr);
--			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "Bit Position: %d Data: 0x%08x\n",
-+				 "DDR ECC error type:%s Row %d Bank %d Col %d BankGroup Number %d Block Number %d Bit Position: %d Data: 0x%08x",
-+				 "CE", pinf->row, pinf->bank, pinf->col,
-+				 pinf->bankgrpnr, pinf->blknr,
- 				 pinf->bitpos, pinf->data);
- 		}
- 
-@@ -509,10 +503,8 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- 				"UE", pinf->row, pinf->bank, pinf->col);
- 		} else {
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "DDR ECC error type :%s Row %d Bank %d Col %d ",
--				 "UE", pinf->row, pinf->bank, pinf->col);
--			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "BankGroup Number %d Block Number %d",
-+				 "DDR ECC error type :%s Row %d Bank %d Col %d BankGroup Number %d Block Number %d",
-+				 "UE", pinf->row, pinf->bank, pinf->col,
- 				 pinf->bankgrpnr, pinf->blknr);
- 		}
- 
-
--- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
