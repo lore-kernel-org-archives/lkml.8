@@ -2,131 +2,102 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6263C10F28
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BEDC10F27
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF9520663
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VbEOItHQ"
+	by mail.kernel.org (Postfix) with ESMTP id 68467206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgCHV0N (ORCPT
+        id S1726446AbgCHV0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 17:26:13 -0400
-Received: from mout.gmx.net ([212.227.15.19]:37857 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726332AbgCHV0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 17:26:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583702751;
-        bh=Yi7lbxUNXC68w1fVUFuEzq9bidnvSVyt1lzmxMiOzYc=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=VbEOItHQu99JI/WzUZwH4KNKfLIGNQQo2W+hUBjr77xN8WogyXp5Ug5C3a0bz0NwN
-         b5fBorNHMlKX/+XS4Ajy7dL/YbeGuqAAZHMGnNqqkTrdCJa3zbNmN+tuiTd4gBkXan
-         cLUQCWrOSACXwBp4aLWfbxpUeAoXN+xnSGebWwy8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.212]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mr9Fs-1jfQN71rvS-00oCaB; Sun, 08
- Mar 2020 22:25:51 +0100
-Date:   Sun, 8 Mar 2020 22:25:49 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-doc@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH 3/3] docs: atomic_ops: Steer readers towards using
- refcount_t for reference counts
-Message-ID: <20200308212549.GD2376@latitude>
-References: <20200308195618.22768-1-j.neuschaefer@gmx.net>
- <20200308200007.23314-1-j.neuschaefer@gmx.net>
- <7ff7dc4e-d606-e2a1-edce-a0485e948e48@infradead.org>
+        Sun, 8 Mar 2020 17:26:52 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:45244 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgCHV0w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 17:26:52 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 59F571C0317; Sun,  8 Mar 2020 22:26:50 +0100 (CET)
+Date:   Sun, 8 Mar 2020 22:26:49 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/1] Add generic inverted led triggers
+Message-ID: <20200308212649.GA31247@amd>
+References: <20200308142722.1199260-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UFHRwCdBEJvubb2X"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
 Content-Disposition: inline
-In-Reply-To: <7ff7dc4e-d606-e2a1-edce-a0485e948e48@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:31tpsmX2Gc4XHZFgNmUMGC4L5JPVlXItfoeYC+QBaOB0PGXoDMW
- 708cPNcULQJEhwOBvM51ZAWsUOMfQS9O79xlO8u+k3fZMpS1F6PrEPhJFYJq0e25VsnqMbc
- eMjaOiHfO6IPe+F655FQdWYCls5tcxh8a/I+NNhR2aOM15YhHEAZRb/abow40xJ5ALSvKyq
- IZW3bFVWGBSeqpfSB3B/A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2qhi7sL3Vwc=:PiVsK3k6q8txHd14E9zckk
- txZhgvCNtdiRzdTqbhZwg1VN31OGFDhA/7O8UGauSKjiMqD3FTl8eF0E+SRgM7mQO0RCzauXs
- 0uMv1JgExncQVJ1grsElV1a2OGqC2sBVOy590+NWg8OAdHpqRhWQ3uIqtqWcPX2D2Hf2JAAeM
- XpbOfr5FP++G21SBRNeJ6laa5N9qfetcFTyhv1OXoghYinWyXrL013XgDtddICiZJ9e1iaUQz
- AAscmPj5D2sWCWOgi5CowZcG2WaS7EhCoUx7oK+nEfJ9tLFyBXnxS8+xWzvoQOFsP1lV/Wmd4
- hW4tyCJ/hMy5PxL1JG8cqnTOZS5Y/nuohcxoMAEZRhlItLjtN9tgblututVw6XnqV/AN2qIr6
- hAyHEi6XyF8r2qxalAUDfoUUj7PFbitfnsQZ4GRcDKRr9XljdT793ebMp3Kb4KEVQlWYStdO4
- j99c95PRpFVZrq19LwFRDgTsSrZ3PGFGmFNEK4ApkgU5lF3CF8hAjYyXnj2ku/L/nNWqElItT
- hhgKSjCfOFKuto22TEyKBx8QqQUqOFv4sHNZw0Nzh1rUNh2ODwai8Rsw9Ntcdrw+bCMOVO8Ae
- ZWTZMOW1HKu+MO5Qemv7zdl+DuQXd1Vz9VwnXXhmX/yqa49f081z37jTGO0QVITM18+3YKdnM
- vhcO44rZRVSuLz2+hP9Yh+6IMKDQ29dqhx39jtuSPWcCwj+CFNGDHQhwv3srKKZEPDiFWlGep
- jxA58RYcmcPUugoQm6VKiAG7X9qb1w8z7fZwQnOzc1Hh517T0N4+Lj74BZQRpUDtS/o1DuWUw
- brMtnlE1TWeXAV04DasHXAvnVMGp4esM3xrP4p5FLY1RP9ijx/FluJlU2Y3u/3F/gN/R3gRd3
- 1EPCZmxFJmGu3lmFmzS16pv2nJTQJ88nyqocjDhlAXYUoSnh+QkVZYI375coifhiwXkw0QduC
- Zf8Md1T5ZGPfWVxebmpCqjiiZATv+hXhMH5Bx1VHITBTiYcS0Ls54CLEkhQnkFjUBjv3TkNaF
- /Mmk4tyIDtQjje31PNk2cFa1rgatVSYr18nvtXdEiJqX8wNHYExcO7hJULuGH3W9BLql0RSGZ
- kjOclGnCFeIaMUbwBgFMEs0AlxTy3T1UqrD9SrkiaouvDrw32VNKZvzViS5yhGd5+bArc7Uxb
- HMILb2m0xZruyEx163z5f1A/kbaBNqj6txR3vzs3mtpe+J8iSHDtxyBOE0KbNetGGMJlOBnmD
- +boFJYrtTsP5cRjo7
+In-Reply-To: <20200308142722.1199260-1-t.schramm@manjaro.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---UFHRwCdBEJvubb2X
-Content-Type: text/plain; charset=utf-8
+--fUYQa+Pmc3FrFX/N
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 08, 2020 at 02:07:46PM -0700, Randy Dunlap wrote:
-> On 3/8/20 1:00 PM, Jonathan Neusch=C3=A4fer wrote:
-[...]
-> > +        More recently, reference counts are implement using the
->=20
->                                                implemented
+Hi!
 
-Indeed, good catch.
+> This patch adds generic inverted LED triggers. With this patch applied
+> any trigger can be used with inverted brightness levels by appending
+> "-inverted" to the name of a trigger.
 
-Thanks,
-Jonathan Neusch=C3=A4fer
+Not a big fan (sorry).
 
---UFHRwCdBEJvubb2X
+We have already _way_ too many triggers, we don't want to have twice
+that much.
+
+> This is can be useful for devices that do not have dedicated LEDs for e.g.
+> disk activity indication. With this patch applied the power led can be set
+>  to default-state =3D on and trigger =3D disk-activity-inverted. Then the=
+ led
+> will be on by default, indicating the power state of the device but it
+> will turn off briefly whenever there is disk activity.
+
+Better implementation might be to have a trigger attribute doing the
+inverting.
+
+> I think dual-use of LEDs might come in handy for quite a few devices since
+> a lot of embedded boards and upcoming ARM based notebooks do only have one
+> or two LEDs.
+
+Inverting really does not work with all the triggers; numlock-inverted
+will not get too many
+users. always-on-inverted... blink-inverted.... I guess it does make
+sense for disk activity (but be warned disk can be continuously active
+for quite a while).
+
+What triggers do you think make sense inverted?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--fUYQa+Pmc3FrFX/N
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl5lYtYACgkQCDBEmo7z
-X9sxeBAAoyLudMLbrFONlymj1JeXx3yBqw9ZfcOD64ryxfRRF2m1ubwkq6vR+prR
-YK0WpHHC9iG6gaW6cF0cZtyt+ees8p2KrOgrwVV9Zol8TRQjM9Y2MdOD6YO5+qQn
-AzzjKW6kA4F8la6p1YRXO5ZNZMfzZiJ+7/v7nPtsLzTPcU2TJsEgVGsyuLgh3uxd
-AyOtCQmzlQseb6F75DL4gz2gujhqp/UReekuSDrRpyeAHNs24z8ImDNm6CvLDGAH
-8bWD/XlopYXE50OalKh150cd1p6xlf8XO8fHIuUqhlJfb1caCBxLQy2Hsc13IyWR
-seT0BR+CCr219TO0K0fo2MMjK1gICUXpZqGH2q3Jv3Jbb77BDLsnugOyHQ2A7Bbr
-pb//s740vURsI3y3D0+GhttA6OuS5LY4RdmcRqcUDWdem5c4mEa//5F6C/d/vcV5
-9Wfuz7A7RAZJjW8RzY3d6G44GumNOaRav1CUm3z9Tuy7NHgzUP2KGxshZAT7pbRg
-JOUiNzwKjroh7+1qo6QB43p5q0SEt9WoiCNr6TItHRSaMTIKTWmk+t1MnQyJUwik
-AcgOcDfcvXhaGMMFHx9uweA9m7q9p6N+b2CD4KesE6PiYS3mU7lEBlTtBRBMZTMP
-w5AIXElmYgW3xubTKzsfe3Z8U2vCnEhIs/DWjBVc/36QJTWvhU4=
-=kF/P
+iEYEARECAAYFAl5lYxkACgkQMOfwapXb+vLCcQCdFXTGZclHREpMmf1wjB+Wzmt/
+4ecAoLyzF2muOElkuYhK0/xFDh6/XBA2
+=abBt
 -----END PGP SIGNATURE-----
 
---UFHRwCdBEJvubb2X--
+--fUYQa+Pmc3FrFX/N--
