@@ -2,70 +2,68 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62897C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA3C10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390CF20866
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583682917;
-	bh=5lw+Mm2TxOGqwFrV5NMFtQJacPD1be2WveH0rS3Wu/w=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=AZBzi+Ll7mMGMQlQcYA88GV20WIO1Npz/P4KMTEA0Bageg/DteaBH56fVjMIRHfdI
-	 crMKxTM2wiWoj+hCvGiHsX+fqJjfTyKvax3WSqlw3EsL85khxkTNDXA3J3PqAcys+i
-	 ZmiHKc54zitj3Y+ic2slAqDhb7gfGiErDSvvzG6I=
+	by mail.kernel.org (Postfix) with ESMTP id F32C320848
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgCHPzQ (ORCPT
+        id S1726353AbgCHP5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 11:55:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43568 "EHLO mail.kernel.org"
+        Sun, 8 Mar 2020 11:57:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:45732 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgCHPzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 11:55:05 -0400
-Subject: Re: [GIT PULL] TTY/Serial driver fixes for 5.6-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583682905;
-        bh=5lw+Mm2TxOGqwFrV5NMFtQJacPD1be2WveH0rS3Wu/w=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=HwChq2Z8tj9nf7GAp/IknsKF1bRyr09IJX8h/+bUPaQVAp2DyB0i3xL+T0Hkln5UQ
-         +EXtFkfQUZGLXMecD6jVWPAyKYaONb1I5iWFWUf3LU6vy5HeZ+rVgB1E5s15JfFe1u
-         5xg6GCvVZbUsWvKp/AIGIqiEjOjrRj09bPig8Kn8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200308095219.GA4026988@kroah.com>
-References: <20200308095219.GA4026988@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200308095219.GA4026988@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.6-rc5
-X-PR-Tracked-Commit-Id: 2b2e71fe657510a6f71aa16ef0309fa6bc20ab3d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cc432aee7d5a5cd6c8ae4dd9f5bae56428d1fca2
-Message-Id: <158368290556.12496.8721739619846796777.pr-tracker-bot@kernel.org>
-Date:   Sun, 08 Mar 2020 15:55:05 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+        id S1726270AbgCHP5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 11:57:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F1A51FB;
+        Sun,  8 Mar 2020 08:57:21 -0700 (PDT)
+Received: from e110176-lin.kfn.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34BB73F6CF;
+        Sun,  8 Mar 2020 08:57:20 -0700 (PDT)
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] crypto: ccree - cleanups
+Date:   Sun,  8 Mar 2020 17:57:03 +0200
+Message-Id: <20200308155710.14546-1-gilad@benyossef.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 8 Mar 2020 10:52:19 +0100:
+A bunch of code cleanups.
+No fixes or new features here.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.6-rc5
+Gilad Ben-Yossef (4):
+  crypto: ccree - remove ancient TODO remarks
+  crypto: ccree - only check condition if needed
+  crypto: ccree - use crypto_ipsec_check_assoclen()
+  crypto: ccree - refactor AEAD IV in AAD handling
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cc432aee7d5a5cd6c8ae4dd9f5bae56428d1fca2
+Hadar Gat (2):
+  crypto: ccree - update register handling macros
+  crypto: ccree - remove pointless comment
 
-Thank you!
+ drivers/crypto/ccree/cc_aead.c          | 113 +++++++-----------------
+ drivers/crypto/ccree/cc_aead.h          |   3 +-
+ drivers/crypto/ccree/cc_buffer_mgr.c    |  91 +++----------------
+ drivers/crypto/ccree/cc_cipher.c        |   1 -
+ drivers/crypto/ccree/cc_driver.h        |   5 +-
+ drivers/crypto/ccree/cc_hash.c          |   3 -
+ drivers/crypto/ccree/cc_hw_queue_defs.h |  77 ++++++++--------
+ drivers/crypto/ccree/cc_request_mgr.c   |   1 -
+ 8 files changed, 80 insertions(+), 214 deletions(-)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.25.1
+
