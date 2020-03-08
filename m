@@ -2,68 +2,88 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7868C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A453CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CFB20828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889DF20828
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgCHJRF (ORCPT
+        id S1726346AbgCHJRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 05:17:05 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:48155 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgCHJRF (ORCPT
+        Sun, 8 Mar 2020 05:17:22 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:46087 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgCHJRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 05:17:05 -0400
-X-Originating-IP: 37.167.192.10
+        Sun, 8 Mar 2020 05:17:22 -0400
 Received: from localhost (unknown [37.167.192.10])
         (Authenticated sender: repk@triplefau.lt)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id E877F1C0004;
-        Sun,  8 Mar 2020 09:16:50 +0000 (UTC)
-Date:   Sun, 8 Mar 2020 10:25:36 +0100
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 0965D200006;
+        Sun,  8 Mar 2020 09:17:17 +0000 (UTC)
 From:   Remi Pommarel <repk@triplefau.lt>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>
-Subject: Re: [PATCH] net: stmmac: dwmac1000: Disable ACS if enhanced descs
- are not used
-Message-ID: <20200308092536.GQ2248@voidbox>
-References: <20200306193036.18414-1-repk@triplefau.lt>
- <BYAPR12MB326999F850BD9BDD037D87CAD3E00@BYAPR12MB3269.namprd12.prod.outlook.com>
+        Jose Abreu <joabreu@synopsys.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Remi Pommarel <repk@triplefau.lt>, stable@vger.kernel.org
+Subject: [PATCH v2] net: stmmac: dwmac1000: Disable ACS if enhanced descs are not used
+Date:   Sun,  8 Mar 2020 10:25:56 +0100
+Message-Id: <20200308092556.23881-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR12MB326999F850BD9BDD037D87CAD3E00@BYAPR12MB3269.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 05:34:28PM +0000, Jose Abreu wrote:
-> From: Remi Pommarel <repk@triplefau.lt>
-> Date: Mar/06/2020, 19:30:36 (UTC+00:00)
-> 
-> >  	void __iomem *ioaddr = hw->pcsr;
-> > +	struct stmmac_priv *priv = netdev_priv(dev);
-> >  	u32 value = readl(ioaddr + GMAC_CONTROL);
-> >  	int mtu = dev->mtu;
-> 
-> Please use reverse Christmas tree order and also provide a Fixes tag.
+ACS (auto PAD/FCS stripping) removes FCS off 802.3 packets (LLC) so that
+there is no need to manually strip it for such packets. The enhanced DMA
+descriptors allow to flag LLC packets so that the receiving callback can
+use that to strip FCS manually or not. On the other hand, normal
+descriptors do not support that.
 
-Done in v2.
+Thus in order to not truncate LLC packet ACS should be disabled when
+using normal DMA descriptors.
 
-Thanks,
+Fixes: 47dd7a540b8a0 ("net: add support for STMicroelectronics Ethernet controllers.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+Changes since v1:
+  - Use reverse christmas tree like declaration
+  - Add Fixes tag
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index d0356fbd1e43..542784300620 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -24,6 +24,7 @@
+ static void dwmac1000_core_init(struct mac_device_info *hw,
+ 				struct net_device *dev)
+ {
++	struct stmmac_priv *priv = netdev_priv(dev);
+ 	void __iomem *ioaddr = hw->pcsr;
+ 	u32 value = readl(ioaddr + GMAC_CONTROL);
+ 	int mtu = dev->mtu;
+@@ -35,7 +36,7 @@ static void dwmac1000_core_init(struct mac_device_info *hw,
+ 	 * Broadcom tags can look like invalid LLC/SNAP packets and cause the
+ 	 * hardware to truncate packets on reception.
+ 	 */
+-	if (netdev_uses_dsa(dev))
++	if (netdev_uses_dsa(dev) || !priv->plat->enh_desc)
+ 		value &= ~GMAC_CONTROL_ACS;
+ 
+ 	if (mtu > 1500)
 -- 
-Remi
+2.25.0
+
