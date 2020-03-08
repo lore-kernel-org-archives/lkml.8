@@ -2,189 +2,120 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CD7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 22:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8050DC10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 22:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E5B20674
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 22:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B42206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 22:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgCHWoQ (ORCPT
+        id S1726427AbgCHWvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 18:44:16 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:50028 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgCHWoP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 18:44:15 -0400
-Received: by mail-il1-f197.google.com with SMTP id b72so6134520ilg.16
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 15:44:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=M0KtNvUI/mym2mipHOWfUV+46mfNylBTB0C7uyOuZNM=;
-        b=gtXMKAxqmB0DLaH8Oe31+cJLFnCpj1yUY6qZ1r/9gvaQ3BJU42yJOooWLM6LobFqfp
-         oCDe0gs8W+hijTOZHoYv5UWtyH1Kdq6Ao1YGTXpQKYVCXTLuHaem59aR0Xlc9jCA3kGY
-         JlK8PTZtC62mYpA2IfwK5W0MDkrBTFec/Awz5TuQZFQaQKtNjZB6mwv9IUu4LkEpkaYu
-         KhIgR2iplP0FvT1kYo1kdTl7yXa1z5DYZOTJQ4uOQg1uEgn4GBrRJhVkPi566pn7uZ66
-         hCeHxnxVl13cIqE6KJm5MQIlK75/qBAFH2/+JN/s5IA0YkxHKeUHDWbwyTmw5iqqlQgu
-         lnkg==
-X-Gm-Message-State: ANhLgQ0B1GKpF2B61ODwd2OqMCoKrikoKsFQaG6BqKW82Zu5GND1sNBe
-        HnjFLZknrGT7mKG7xfg7FzsTPYfYqnJCkNXxqCS1I+EBplf5
-X-Google-Smtp-Source: ADFU+vsjKB/0E9V38FTl0tyZTmWJnY66oMCgY/4yOHTZ52/uFcanPpzlCirAZdiS0apU2Q3/NW3dDy/VUFVvA7C24ChlFW91SWln
-MIME-Version: 1.0
-X-Received: by 2002:a92:216:: with SMTP id 22mr13058589ilc.53.1583707455029;
- Sun, 08 Mar 2020 15:44:15 -0700 (PDT)
-Date:   Sun, 08 Mar 2020 15:44:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000490abd05a05fa060@google.com>
-Subject: KASAN: slab-out-of-bounds Write in tcindex_set_parms
-From:   syzbot <syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 8 Mar 2020 18:51:47 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:57534 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726346AbgCHWvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 18:51:47 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9D90E1A1658;
+        Sun,  8 Mar 2020 23:51:44 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 90C7A1A1657;
+        Sun,  8 Mar 2020 23:51:44 +0100 (CET)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E4135204CC;
+        Sun,  8 Mar 2020 23:51:43 +0100 (CET)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Ripard <mripard@kernel.org>
+Cc:     Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>
+Subject: [PATCH v4 0/2] crypto: engine - support for parallel and batch requests
+Date:   Mon,  9 Mar 2020 00:51:31 +0200
+Message-Id: <1583707893-23699-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Added support for executing multiple, independent or not, requests
+for crypto engine. This is based on the return value of
+do_one_request(), which is expected to be:
+> 0: if hardware still has space in its queue. A driver can implement
+do_one_request() to return the number of free entries in
+hardware queue;
+0: if the request was accepted, by hardware, with success, but the
+hardware doesn't support multiple requests or there is no space
+left in the hardware queue.
+This is to keep the backward compatibility of crypto-engine.
+< 0: error.
 
-syzbot found the following crash on:
+If hardware supports batch requests, crypto-engine can handle this use-case
+through do_batch_requests callback.
 
-HEAD commit:    425c075d Merge branch 'tun-debug'
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=134d2ae3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=598678fc6e800071
-dashboard link: https://syzkaller.appspot.com/bug?extid=c72da7b9ed57cde6fca2
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=122ed70de00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=116689fde00000
-
-The bug was bisected to:
-
-commit 599be01ee567b61f4471ee8078870847d0a11e8e
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon Feb 3 05:14:35 2020 +0000
-
-    net_sched: fix an OOB access in cls_tcindex
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=150a7d53e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=170a7d53e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=130a7d53e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com
-Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
-
-IPVS: ftp: loaded support on port[0] = 21
-==================================================================
-BUG: KASAN: slab-out-of-bounds in tcindex_set_parms+0x17fd/0x1a00 net/sched/cls_tcindex.c:455
-Write of size 16 at addr ffff8880a219e6b8 by task syz-executor508/9705
-
-CPU: 1 PID: 9705 Comm: syz-executor508 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
- __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
- kasan_report+0xe/0x20 mm/kasan/common.c:641
- tcindex_set_parms+0x17fd/0x1a00 net/sched/cls_tcindex.c:455
- tcindex_change+0x203/0x2e0 net/sched/cls_tcindex.c:518
- tc_new_tfilter+0xa59/0x20b0 net/sched/cls_api.c:2103
- rtnetlink_rcv_msg+0x810/0xad0 net/core/rtnetlink.c:5431
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
- do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440eb9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffef61bf118 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004a2690 RCX: 0000000000440eb9
-RDX: 0000000000000000 RSI: 00000000200001c0 RDI: 0000000000000003
-RBP: 00000000004a2690 R08: 0000000120080522 R09: 0000000120080522
-R10: 0000000120080522 R11: 0000000000000246 R12: 00000000004023c0
-R13: 0000000000402450 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 9705:
- save_stack+0x1b/0x80 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:515 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
- kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- tcindex_set_parms+0x1f1/0x1a00 net/sched/cls_tcindex.c:325
- tcindex_change+0x203/0x2e0 net/sched/cls_tcindex.c:518
- tc_new_tfilter+0xa59/0x20b0 net/sched/cls_api.c:2103
- rtnetlink_rcv_msg+0x810/0xad0 net/core/rtnetlink.c:5431
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
- do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 2501:
- save_stack+0x1b/0x80 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:476
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x109/0x2b0 mm/slab.c:3757
- call_usermodehelper_freeinfo kernel/umh.c:48 [inline]
- umh_complete kernel/umh.c:62 [inline]
- umh_complete+0x81/0x90 kernel/umh.c:51
- call_usermodehelper_exec_async+0x459/0x710 kernel/umh.c:122
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8880a219e600
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 184 bytes inside of
- 192-byte region [ffff8880a219e600, ffff8880a219e6c0)
-The buggy address belongs to the page:
-page:ffffea0002886780 refcount:1 mapcount:0 mapping:ffff8880aa000000 index:0xffff8880a219ef00
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002882b88 ffff8880aa001138 ffff8880aa000000
-raw: ffff8880a219ef00 ffff8880a219e000 000000010000000b 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a219e580: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8880a219e600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff8880a219e680: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                                        ^
- ffff8880a219e700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a219e780: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-==================================================================
-
+Since, these new features, cannot be supported by all hardware,
+the crypto-engine framework is backward compatible:
+- by using the crypto_engine_alloc_init function, to initialize
+crypto-engine, the new callback is NULL and, if do_one_request()
+returns 0, crypto-engine will work as before these changes;
+- to support multiple requests, in parallel, do_one_request()
+needs to be updated to return > 0. 
+On crypto_pump_requests(), if do_one_request() returns > 0,
+a new request is send to hardware, until there is no space
+and do_one_request() returns 0.
+- to support batch requests, do_batch_requests callback must be
+implemented in driver, to execute a batch of requests. The link
+between the requests, is expected to be done in driver, in
+do_one_request(). 
 
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Changes since V3:
+- removed can_enqueue_hardware callback and added a start-stop
+mechanism based on the on the return value of do_one_request().
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Changes since V2:
+- readded cur_req in crypto-engine, to keep, the exact behavior as before
+these changes, if can_enqueue_more is not implemented: send requests
+to hardware, _one-by-one_, on crypto_pump_requests, and complete it,
+on crypto_finalize_request, and so on.
+- do_batch_requests is available only with can_enqueue_more.
+
+Changes since V1:
+- changed the name of can_enqueue_hardware callback to can_enqueue_more, and
+the argument of this callback to crypto_engine structure (for cases when more
+than ore crypto-engine is used).
+- added a new patch with support for batch requests.
+
+Changes since V0 (RFC):
+- removed max_no_req and no_req, as the number of request that can be
+processed in parallel;
+- added a new callback, can_enqueue_more, to check whether the hardware
+can process a new request.
+
+Iuliana Prodan (2):
+  crypto: engine - support for parallel requests
+  crypto: engine - support for batch requests
+
+ crypto/crypto_engine.c  | 150 ++++++++++++++++++++++++++++++++++++------------
+ include/crypto/engine.h |  15 +++--
+ 2 files changed, 124 insertions(+), 41 deletions(-)
+
+-- 
+2.1.0
+
