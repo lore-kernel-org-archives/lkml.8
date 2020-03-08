@@ -2,115 +2,187 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28514C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1BAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF51620675
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768AB206D7
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mw2CW8uP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mr+3eOtq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgCHTiZ (ORCPT
+        id S1726384AbgCHTkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 15:38:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52746 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726322AbgCHTiZ (ORCPT
+        Sun, 8 Mar 2020 15:40:15 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40910 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbgCHTkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 15:38:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583696303;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OhYbYf/ZU5BRDGgvDuE9sRmfmL1pRAe4uJZ1vmuPsdE=;
-        b=Mw2CW8uPESdm+24hiJ5jBGTDVtuuglxLKHXy/dclBdEQfNh4KtphJVgJuZv8XEAio0zu61
-        QXy3jT32eKsa6dxnILRlxPsYcRUgeWddB7+aXGEC//yigy9T5ZkUEnN+rcmLsHJTttY1ue
-        03i1nojHOJI34ij8vIQ+j41KGfxPWZ4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-21-Hayse1Q1Pz-d94qEpopruQ-1; Sun, 08 Mar 2020 15:38:21 -0400
-X-MC-Unique: Hayse1Q1Pz-d94qEpopruQ-1
-Received: by mail-wr1-f71.google.com with SMTP id 31so4126175wrq.0
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 12:38:21 -0700 (PDT)
+        Sun, 8 Mar 2020 15:40:14 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 19so4882893ljj.7
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 12:40:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3BeCbMDE5Qb36tzuFUmgLMq1+7o7hv+/kBaBt4+UcvY=;
+        b=Mr+3eOtqt4IUtQSURITcoqw2eSftZjOYJhg42ZKw4HGaIdHn64Q/j+n0GvOVwyfkZe
+         JCvZvO42LrD+KuYEoIHrgkW/bQa+YxBK1Miwy+PASUsEgdGYyRi3PyuH5Jj/FAqSBd4z
+         KICURKk7ex9+XUhhvp4XUVhXDXJoJUFkpcisuvg3Z87nD6Zihp2fVzGtAw+HwBoiVh64
+         NcFTqbPRTMY1pGmrb2PpD8i4y+8L3DHRgvYmnltZr5BXvASum7ftLGO2Jrw8tsXcvkGv
+         kzwYEUfa45bBG1Log1DbONfcy6M+q1iD4bsnXsqt2p8Tv1pSOSTB2dnwvpWvJpv8KoBF
+         vsow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=OhYbYf/ZU5BRDGgvDuE9sRmfmL1pRAe4uJZ1vmuPsdE=;
-        b=A49TPRIeIHx3a6Jlg5+6kU16ugq3mqGYFF5Hr8gjpMlcDna8Oq0Dyz6C9M91lNimnv
-         oPw6PNJZSxlsqrvsC0YoeA7CUiQlSo4xDiKwwCKj7bKcnslYMaVOOaUzqvXpeygePRmM
-         lWmBpSwqx/RoFGtVL9bkZpLwpXWyErp6yh7ClKtQmzRDpLe8S04N7gt2SUFW5xcaV9gJ
-         yPfBaS9YChldhdHfF6kpqE6RriFFumBSXBMpqXXtETXv0qZORmZN6GEb0gHDmwU/E8M5
-         SwWqXPJpfZzipVW4mps3/C0vHZQmnXQLB0NwmYBiIYi0RMP7NrGzY8XajXP88nWVGSNG
-         bMTQ==
-X-Gm-Message-State: ANhLgQ2eHs24vXYJKSkayNrQB+0L5Tbl8c15c8wOe6aZ3MRO9BYo0vG8
-        3AmNYApsHjNLNjVHf/gf7bSONfooApsLVl5zFl+COnmkmpgQT2DR3RFIXDRAIHN2y25pJDN3FRU
-        pzHaqnxEDEkgbeyN2BVvoT3nw
-X-Received: by 2002:a5d:4406:: with SMTP id z6mr11146782wrq.68.1583696300589;
-        Sun, 08 Mar 2020 12:38:20 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtR+roVGIB9QcNPPLe+Ab25Z1fyDczychjr0ciDJc5L01xETBP8QuMhOXXxwCs2SpRZL86VGg==
-X-Received: by 2002:a5d:4406:: with SMTP id z6mr11146771wrq.68.1583696300395;
-        Sun, 08 Mar 2020 12:38:20 -0700 (PDT)
-Received: from [192.168.3.122] (p5B0C674A.dip0.t-ipconnect.de. [91.12.103.74])
-        by smtp.gmail.com with ESMTPSA id o11sm48616184wrn.6.2020.03.08.12.38.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Mar 2020 12:38:19 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] drivers: virtio: Make out_del_vqs dependent on BALLOON_COMPACTION
-Date:   Sun, 8 Mar 2020 20:38:19 +0100
-Message-Id: <4AB99BBC-0EC7-40F0-96ED-04796A73CBA2@redhat.com>
-References: <20200306105528.5272-1-vincenzo.frascino@arm.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-In-Reply-To: <20200306105528.5272-1-vincenzo.frascino@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-X-Mailer: iPhone Mail (17D50)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3BeCbMDE5Qb36tzuFUmgLMq1+7o7hv+/kBaBt4+UcvY=;
+        b=ObPctYQybE0lFdUb/pJi1/VyDHGy2JVJK/Ka5KXGeUyoZ6eh4g145w7VbXXSyvruQw
+         FZx/O3oa5bsgpgNfltMUCYMupkJT1LUlQ7YBb/4JklEcrJL6bnNsmXd1dD7IDZqIKy/I
+         c4gEchFiC9Xj8uoGdxZHSRF7caLu3uaBlpmJ5Y0qHqvxvSw2IqijA18KhDxXAGX9gT4/
+         enIEFbgQlXd3YFvvLtjS+34hveOJPcqUa6zD+Q3sgfGdIxsv2XZBNkxPOfuxWihuZo5K
+         bJkrJpLO4w25XGPwVp/tVknwdm5wDBm2JHo9tOCy49eZxyV+l42Zh1kfoncIX6e36CTy
+         o1rA==
+X-Gm-Message-State: ANhLgQ32HTSfkL934j1/8lzKDG+OxKRRs3rI8iGh4H+Ftl5TMWMHLYNG
+        P+WAaZPNCREt+aGrOKU4GCg=
+X-Google-Smtp-Source: ADFU+vsznsV9+V5Tm89tkotEaM5hqPIi+Sz1w+UN5iiN1sqLMPDF+BaUw2iTKd9qTeGONkFKAu6ybA==
+X-Received: by 2002:a2e:9182:: with SMTP id f2mr7635048ljg.110.1583696410263;
+        Sun, 08 Mar 2020 12:40:10 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-186-78.NA.cust.bahnhof.se. [158.174.186.78])
+        by smtp.gmail.com with ESMTPSA id r21sm4911236ljp.29.2020.03.08.12.40.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 12:40:09 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     rikard.falkeborn@gmail.com
+Cc:     akpm@linux-foundation.org, bp@alien8.de, geert@linux-m68k.org,
+        haren@us.ibm.com, joe@perches.com, johannes@sipsolutions.net,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, tglx@linutronix.de, yamada.masahiro@socionext.com
+Subject: [PATCH v5] linux/bits.h: Add compile time sanity check of GENMASK inputs
+Date:   Sun,  8 Mar 2020 20:39:54 +0100
+Message-Id: <20200308193954.2372399-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20191101212857.GA889092@rikard>
+References: <20191101212857.GA889092@rikard>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+as the first argument and the low bit as the second argument. Mixing
+them will return a mask with zero bits set.
 
+Recent commits show getting this wrong is not uncommon, see e.g.
+commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+macro").
 
-> Am 06.03.2020 um 11:56 schrieb Vincenzo Frascino <vincenzo.frascino@arm.co=
-m>:
->=20
-> =EF=BB=BFout_del_vqs label is currently used only when BALLOON_COMPACTION
-> configuration option is enabled. Having it disabled triggers the
-> following warning at compile time:
->=20
-> drivers/virtio/virtio_balloon.c: In function =E2=80=98virtballoon_probe=E2=
-=80=99:
-> drivers/virtio/virtio_balloon.c:963:1: warning: label =E2=80=98out_del_vqs=
-=E2=80=99
-> defined but not used [-Wunused-label]
->  963 | out_del_vqs:
->      | ^~~~~~~~~~~
->=20
-> Make out_del_vqs dependent on BALLOON_COMPACTION to address the
-> issue.
->=20
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+To prevent such mistakes from appearing again, add compile time sanity
+checking to the arguments of GENMASK() and GENMASK_ULL(). If both
+arguments are known at compile time, and the low bit is higher than the
+high bit, break the build to detect the mistake immediately.
 
-I think this is now the third patch on the list that tries to fix this warni=
-ng.
+Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
+used instead of BUILD_BUG_ON().
 
-Michael, can we finally queue one of these (or is there one in -next already=
- - did not check)?
+__builtin_constant_p does not evaluate is argument, it only checks if it
+is a constant or not at compile time, and __builtin_choose_expr does not
+evaluate the expression that is not chosen. Therefore, GENMASK(x++, 0)
+does only evaluate x++ once.
 
-Thanks=
+Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+available in assembly") made the macros in linux/bits.h available in
+assembly. Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
+checks if the file is included in an asm file.
+
+Due to bugs in GCC versions before 4.9 [0], disable the check if
+building with a too old GCC compiler.
+
+[0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
+
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+Another attempt to get this merged. I've test built allmodconfig for
+i386, x86_64 and arm64 for linux-next 20200306 without issues. Also, the
+last known GENMASK issue was just merged into Linus tree [1].
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=96b4ea324ae92386db2b0c73ace597c80cde1ecb 
+
+Changes in v5:
+  - Added Masahiros Reviewed-by
+  - Waited for bugfixes to get merged
+
+Changes in v4:
+  - Disable the argument check for GCC < 4.9 due to a compiler bug.
+
+Changes in v3:
+  - Changed back to shorter macro argument names
+  - Remove casts and use 0 instead of UL(0) in GENMASK_INPUT_CHECK(),
+    since all results in GENMASK_INPUT_CHECK() are now ints. Update
+    commit message to reflect that.
+
+Changes in v2:
+  - Add comment about why inputs are not checked when used in asm file
+  - Use UL(0) instead of 0
+  - Extract mask creation in a separate macro to improve readability
+  - Use high and low instead of h and l (part of this was extracted to a
+    separate patch)
+  - Updated commit message
+
+Joe Perches sent a series to fix the existing misuses of GENMASK().
+Those patches have been merged into Linus tree except two places where
+the GENMASK misuse is in unused macros, which will not fail to build.
+There was also a patch by Nathan Chancellor that have now been merged.
+
+ include/linux/bits.h | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 669d69441a62..f108302a3121 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -18,12 +18,30 @@
+  * position @h. For example
+  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+  */
+-#define GENMASK(h, l) \
++#if !defined(__ASSEMBLY__) && \
++	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
++#include <linux/build_bug.h>
++#define GENMASK_INPUT_CHECK(h, l) \
++	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
++		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
++#else
++/*
++ * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
++ * disable the input check if that is the case.
++ */
++#define GENMASK_INPUT_CHECK(h, l) 0
++#endif
++
++#define __GENMASK(h, l) \
+ 	(((~UL(0)) - (UL(1) << (l)) + 1) & \
+ 	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
++#define GENMASK(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+ 
+-#define GENMASK_ULL(h, l) \
++#define __GENMASK_ULL(h, l) \
+ 	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+ 	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
++#define GENMASK_ULL(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+ 
+ #endif	/* __LINUX_BITS_H */
+-- 
+2.25.1
 
