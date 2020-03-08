@@ -2,38 +2,37 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F63C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12162C10F27
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6DD206D5
+	by mail.kernel.org (Postfix) with ESMTP id DFF0B21744
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:57:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XhvPeb8b"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dMwiXmLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgCHT5C (ORCPT
+        id S1726446AbgCHT5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 15:57:02 -0400
-Received: from mout.gmx.net ([212.227.17.22]:51669 "EHLO mout.gmx.net"
+        Sun, 8 Mar 2020 15:57:04 -0400
+Received: from mout.gmx.net ([212.227.15.19]:42973 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbgCHT5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 15:57:01 -0400
+        id S1726403AbgCHT5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 15:57:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583697399;
-        bh=swNXo8sf/A1Z5VWORhX8PS1wDsET0aIhHcJl33nMJa8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=XhvPeb8bgnV8/IAZQYhe/hBjChfjtsV2UMgFtqhaOL5BS/3xv4J3BpoI30BZZeYHj
-         WX5GGb2vn2CWJy0MbyesiPpMF5lu0tn2Uuk2tORAQ2OjYBbNqnBSrmsThmtLgO7fEY
-         dCWUb/M3NkEz8LeoFDl9XdlfbDqewIT7ZMX9UJOo=
+        s=badeba3b8450; t=1583697395;
+        bh=k4B7xsbQs+bGw1/7XAkvqtfIygtmmkN+AUAITvCNN/c=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=dMwiXmLYL52XV8WSu9yMkmq0S+luVbFbLbWoj+XuVizgA/OBMQV0RbyDYuLEUGNZZ
+         SPsT4HG1k8jfjcIT8p7uzvFbaTviNgXFMCYnzXoObQisd35cFvjWrNJqMPtQuclLc5
+         ED+DLfpxgPG084xMFFyObMRNHx8Lj33Qjt8ftcjE=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.214.212]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M2f5T-1jCOYC0l9b-0048U7; Sun, 08
- Mar 2020 20:56:39 +0100
+Received: from longitude ([37.201.214.212]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MfYLa-1jqyUd0tRo-00g3N3; Sun, 08
+ Mar 2020 20:56:35 +0100
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-doc@vger.kernel.org
 Cc:     Alan Stern <stern@rowland.harvard.edu>,
@@ -51,85 +50,56 @@ Cc:     Alan Stern <stern@rowland.harvard.edu>,
         Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org,
         =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH 2/3] docs: atomic_ops: Move two paragraphs into the warning block above
-Date:   Sun,  8 Mar 2020 20:56:17 +0100
-Message-Id: <20200308195618.22768-3-j.neuschaefer@gmx.net>
+Subject: [PATCH 0/3] docs: a few improvements for atomic_ops.rst
+Date:   Sun,  8 Mar 2020 20:56:15 +0100
+Message-Id: <20200308195618.22768-1-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200308195618.22768-1-j.neuschaefer@gmx.net>
-References: <20200308195618.22768-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eVTShVIjcqITjrjrt3hSHiQJv3jRqCqEsB/zW9mt8QRJpl3Bw/Q
- pgjPvWebRuAt+Z7AqwbkR0NHGm+Mm2cImwkAJHZPlOG6bAhuNsXQZDPRFuP8+dpaZyeDulG
- GaSr0Boj5Wr/mzdrrVZU2ADCOQkWfb+5VMomxXAp8wfAm3wPYWtn1JyxKGeHazSpBpa7+KJ
- 4xcal4jwbfV+a5j6sJ0vg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Nwpz9xQ4q4A=:n8BILpeGYEEWHtbCQXwwu6
- ZF3mJ/j8kyR9jC+o5rYWTLcG3m3qFTuPrIEhVJvSxusZgBTVxjoV1Jemr0r+kw5yAb+/cwBRi
- TTvKUE0H/6hw3WfDA9vMuPik2wLESjCyujVEa1bl8m4b7HfhJOma46u073lbk9D5BcBhedOQv
- 2GhbhMQoGrLSDZNroBSNqA8/QBqh2pDwOmXfvxm22XTCgkbr3OUiGpKqfxN5+M6azwSVQLwf/
- 0UQEu4WSQis8I4WX+EwK1V/daC6wAghUMUnGwzfv4USByXOTXJChv5Dwj9PzRitFfczN3iH5r
- yQBYHLzY6FBV+LdjfCm3PPXo5F5eqh5Lj736+xmeEp7LjsvfjJ5N4pdv+/JnOmOtdnpttnovZ
- a+5rmFBC6DRcdAROx+xgPbIUnRbByCsmweaIYKzRRagTMtizZoqwjR65G8PSqNFP6ATGzLY2B
- LDsyL0JOL3IF0fMqtFOUTZhInvKTACesFyHYoPkiB+nPwEHj4ZzhC1fSnLbYdQkJ03E+pXAOu
- xDzvd7MmB2pBoKiXXNkf99DTBonzN0u2F9UaoxQe4+JISTMXeEXo9tvD9eaZzdaFSEL1dvf4/
- owrTRjU30k45Oyj2G+bWS/KIQEMuZ0UVCg1cQor4BNNXDfUpJpqrRHT3qXJU/G5bJW5cDBwmQ
- DOdZjU06kg4okRjyfFDEpsA+rGYyCNh/8QxG2j9gcxksiWQdyetzDT0EoazA/OH3VaHpj2ren
- +qY0KUCRVkyy93WUzj7nxJLltLVPYYKcDbSKUaFpnclORKcDkj9/lEC53YVYz5aj3K/79yOg1
- 4wSK/2vVhBwY8rpC2IyN5Ze5+yItUvMbg1E9U/cWdKUjK59aU4QyE9f77sCKpDQtx/WZCrjwr
- cYQVC3UkHdnzypgOfuAWxGLBe02NAVdLZ3nd44aQOcgOAOeePtEl6q5axrTKDVJ2ZBSE2JRra
- +gOSjuD4Qt9bWtmGJTM71SEJlX6GUwBGWTNfykfBikhwRXyg5+GFuM5OGHNMOGdBMbLfF5aPf
- CzHC2kUOGcaPnsNyhAtnIpSuYCkdj8zBB08u1LeJ/mAvnEQSf0eO9tmzlXwU60bauy9PAX2Jb
- hJmJyjCQI6LtyiJ+FVcXql8IKI0wiu81DsKTBbbRAxfihou4QnA+3mbabgYfjVekV/wC+c8un
- Y8a0GR8/ouCsU9r26p4OtivdZxJyKGxpVCcT4D5GDljlnp9cEA44kXxWSXhxLV1+oyXIyEl2R
- mCewJvfEjAf1m1qEX
+X-Provags-ID: V03:K1:2bg8Bw8rRMj0oQrgWU3DtrKtOTVoYSHypqxza7mwLqSU6cjHy7t
+ HpxSsUXtJnGg4PJvcF/WuMzdv5v8zwtOzwku9Rz/GUDhwJ+Ncj5MS5AR4JFAzLSW7UMxmV9
+ DusUfn8Z3oUJcMmh5KpTEu2gTm0vilnq6GAKaHcvNnqbviO4D+NtGHomHRHTzCkYF/i7RSy
+ 15mW72yvO88kd2Q/ovVFg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2km+uksWJ5M=:+BGq6we/viAuTeermSySs0
+ aLE3qtDiTK2CsCUTKziii8WMqPYrX9qlgVC5/7Kf7msmsF1brw86mqPfSANg9ZsODcHJG9ZFS
+ 0UYafyIirulDcvowp2v5pmpst8NXYnO2lli3D7BZ0lUoOH87icTr2mG1T7ZH5evSbFoJRn1k2
+ blUTUACesrC1Qm04hBlGxMa9sRddrjLlQTdBjwXSEuqWInYBJtjaj8o6dF2CF1eceAvBfjvS6
+ 9/PpkOcto8SWPP/rLZQ+OA1fsKjefWyWSozV8SY0TzXLgqayKo6sSahIL2hiy4FlD6oclGLNI
+ 1Kh6VuBzM1+jPWKq+pJVDMdsmAXRVlHuSL3RokNGrWTo4/pctEA5XXoYWdvD0qfpOxhqExwKD
+ i9m/ezrJiYe0Z+kdJvvdilZcsRCwuSfLgbjLxFmCVvj1Yk6YE29qP5nDkg2tIzWEW/X9zF49n
+ uCbzKN9baKwOtLauSNyy350l2VUFfM0pc3KwoQThuNMWgQwwNQqCQf9oO//gcOsrYu2SobRVO
+ Q7nsxC8jpUcpFQf15SeWyCduIQoVizINptckXx70blOsnPHV8wp/unClL5/BPX3NQGXG/nP8R
+ GIL+SRa9BUs58lFPsIdve7mQtD8Kc60r3rAwKDl9ci6bviIpeRlAJTnXxKeyvf7JDndOb+YHB
+ lGrEIkRpy2YGsn7Tium/VdCKw6HVSgtAx5L1tRmVBxGJxocBurMT6/yOw9GQVvjjDZDP7ksgv
+ +tSPixnXDcJxXk2Z0X2yZPeKrXYOUdF8/JtmiOJ+Z/e0VNQYwLGPs92DOtiC4WVNFSgBziNoK
+ qddxZZ79JPicJEriHCiPDkcBD4g+uDhJF35L/OS8W0UM/SdtayeErP9O4UCXH9iHoYsCaGVOh
+ sn9wYrTyWtV21I5ZNyfIJiYDmN+R/HRj1a2KONb1oUVSN/PsmV0H/Wd8Gvvz8SoqZIHVS96oM
+ n8tlEhAYx7nSRKYi6rg+xsb+H6Sq6V4XGFmHnroFnMTUSR7g9xpwvHStrTZZ/uVDtonmVgfVl
+ eMW9aDb8htQ7ORFbXs7AVoQ6nrnYUH24RckMI5epo1S9nj5ikPnjNpaKOubMk0SMxuN4qfWKj
+ pOQa3LC0Y6LSZQs3KkmoRXTZJv9THA1tSAv53k8mpJlrn/yb8q++NFiuPyy652dB65LNgMasN
+ JOAArZV8CkS/a6FXdHA7/eYRTwPSDKue23/9nF7ShjhcX3bTJwHqneW2WcIGKuWQyFI84tOnM
+ flTRSV0JpZZtWF2HZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two paragraphs seem to be semantically part of the warning text,
-so let's adjust the formatting accordingly.
+Hi,
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/core-api/atomic_ops.rst | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+this is a short series of unrelated fixes that make the atomic
+operations documentation look and read a bit better.
 
-diff --git a/Documentation/core-api/atomic_ops.rst b/Documentation/core-ap=
-i/atomic_ops.rst
-index 650b9693469a..73033fc954ad 100644
-=2D-- a/Documentation/core-api/atomic_ops.rst
-+++ b/Documentation/core-api/atomic_ops.rst
-@@ -473,14 +473,14 @@ operation.
-         above to return "long" and just returning something like "old_val=
- &
-         mask" because that will not work.
+Jonathan Neusch=C3=A4fer (3):
+  docs: atomic_ops: Remove colons where they don't make sense
+  docs: atomic_ops: Move two paragraphs into the warning block above
+  docs: atomic_ops: Steer readers towards using refcount_t for reference
+    counts
 
--For one thing, this return value gets truncated to int in many code
--paths using these interfaces, so on 64-bit if the bit is set in the
--upper 32-bits then testers will never see that.
--
--One great example of where this problem crops up are the thread_info
--flag operations.  Routines such as test_and_set_ti_thread_flag() chop
--the return value into an int.  There are other places where things
--like this occur as well.
-+        For one thing, this return value gets truncated to int in many co=
-de
-+        paths using these interfaces, so on 64-bit if the bit is set in t=
-he
-+        upper 32-bits then testers will never see that.
-+
-+        One great example of where this problem crops up are the thread_i=
-nfo
-+        flag operations.  Routines such as test_and_set_ti_thread_flag() =
-chop
-+        the return value into an int.  There are other places where thing=
-s
-+        like this occur as well.
+ Documentation/core-api/atomic_ops.rst         | 24 ++++++++++++-------
+ Documentation/core-api/refcount-vs-atomic.rst |  2 ++
+ 2 files changed, 17 insertions(+), 9 deletions(-)
 
- These routines, like the atomic_t counter operations returning values,
- must provide explicit memory barrier semantics around their execution.
 =2D-
 2.20.1
 
