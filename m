@@ -2,163 +2,161 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD0DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A460FC10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A762080C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583694889;
-	bh=9qdy5RIOWebOniyIfKswarc6hNqqoEAjbTJFvBPRDGA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=g4VgYrc5doCqNyIlndP9OcxIUIwXd/+s9OUAeEPQOHSq+p7bbjpFjSUMMYWQu+bXA
-	 xmLZv9zhGDU7IlJgdWnOfq0hGlhRY8/3TE1shFwqI5RvuPLI15/oDhG47PXQ2bzYva
-	 qrYPFvmaoegjNSAyQ/DxPvls3TAbGH3PO6DZSBvE=
+	by mail.kernel.org (Postfix) with ESMTP id 80035206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:20:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuTzOrLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgCHTOr (ORCPT
+        id S1726368AbgCHTUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 15:14:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbgCHTOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 15:14:47 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9029B206D5;
-        Sun,  8 Mar 2020 19:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583694886;
-        bh=9qdy5RIOWebOniyIfKswarc6hNqqoEAjbTJFvBPRDGA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KybbOW2yu4lzLxdriSYezxxCBz0EqEKTL3kseV827LvPmiJ5nwUwFZCFTJRQGq8Px
-         LvSox0dvlkW4utxfuXjg5IFU/S4qdj4chiD4gteFzVEPhSc9uOZSQe3dlC9j4v8Jle
-         1ai+BgShmOlsT1kZY2WW0UPvDlKGbdyBYQbeZFhs=
-Date:   Sun, 8 Mar 2020 19:14:41 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Christopher S. Hall" <christopher.s.hall@intel.com>,
-        netdev <netdev@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        "maintainer\:X86 ARCHITECTURE \(32-BIT AND 64-BIT\)" <x86@kernel.org>,
-        jacob.e.keller@intel.com,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sean V Kelley <sean.v.kelley@intel.com>
-Subject: Re: [Intel PMC TGPIO Driver 0/5] Add support for Intel PMC Time
- GPIO Driver with PHC interface changes to support additional H/W Features
-Message-ID: <20200308191441.1eed786e@archlinux>
-In-Reply-To: <87wo81cvho.fsf@nanos.tec.linutronix.de>
-References: <20191211214852.26317-1-christopher.s.hall@intel.com>
-        <87eevf4hnq.fsf@nanos.tec.linutronix.de>
-        <20200224224059.GC1508@skl-build>
-        <87mu95ne3q.fsf@nanos.tec.linutronix.de>
-        <CACRpkdadbWvsnyrH_+sRha2C0fJU0EFEO9UyO7wHybZT-R1jzA@mail.gmail.com>
-        <87wo81cvho.fsf@nanos.tec.linutronix.de>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 8 Mar 2020 15:20:44 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43827 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgCHTUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 15:20:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v9so8395668wrf.10;
+        Sun, 08 Mar 2020 12:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qALcG3CGuBaboVD1Vu6sKa7UNKTJMIZmbr5ctcnIjvQ=;
+        b=KuTzOrLQIYKb2aSSDndfU+R4OkG8+39CunsygU0n4TfXkT3rs607w8JdEwc7EkhXsh
+         SUI5U4xuqaM9u2kio3yF8L+iH80FaSzYKojyVif5EOGrwXyEC0Gkbe8H9x+6I9uVWaUI
+         RT/td7r6E8m4X97pUhBUDriTf1zOhmskFBfaaLvSXV09uCRoeWeGCxvzjDVCvADrX0m4
+         OGajyiizFLDGpLeKePswPh2ZPdrG2VOjhvLszoQZn4RX7Ym4zRLpiXb393YGlng3qaUl
+         NNvgvs6yjZUeroVVwUj2aJvhGwQCRM6pQEpwXfS1MoFKGf14J3Kxm6LJzSHPh6b6Dsqc
+         HcAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qALcG3CGuBaboVD1Vu6sKa7UNKTJMIZmbr5ctcnIjvQ=;
+        b=sg/JXf+KfmImKXo5DzZnUEwJbgMHkwVBwlCxFmJrQu6qKTwd6zcdwwSzms6N1AR86d
+         7XxBFArRTkP++/lbi2PfrhzdGnA5A8MvW/XivXsiREDgfA+QdOAXzghYMsuoXxPw4QhM
+         RrJ6taRqva78EObGHG8Y3gaKPLVl0jMWrhL8GxURTWF/CfFDXzzIIJxNVqzVxzXlW5Dv
+         cXbkQPPA5bhbftZ3sfdDjjsTp/V8rlr23PKeKwwSnxJffsde8/f8ZDjv0ikEYBq9DGLD
+         qNFbT+RLJKpl1iRzGx9P+S920+KSZHay+zDYYpoVxz0nv6UJAzTGkLPP33yqwKxNqhZ1
+         lN+A==
+X-Gm-Message-State: ANhLgQ3OI0qcKFk+kp9WD9s2tAKpT+TCBx+cvxIZLmOJEEOPs4I+fdBf
+        HG5w2NWhOaG7z/ZF95s7mZk=
+X-Google-Smtp-Source: ADFU+vv3rcWG5MMYWXUHe4T6UqDBb1TBfzXy2V9IGq5bFXchWpdP6YGsyWHg0RWNUP8FI7gV+0nbcA==
+X-Received: by 2002:adf:e98f:: with SMTP id h15mr16675277wrm.263.1583695241942;
+        Sun, 08 Mar 2020 12:20:41 -0700 (PDT)
+Received: from supervisor.net28 ([46.53.253.27])
+        by smtp.gmail.com with ESMTPSA id f127sm23281865wma.4.2020.03.08.12.20.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 08 Mar 2020 12:20:41 -0700 (PDT)
+From:   Arthur Demchenkov <spinal.by@gmail.com>
+Cc:     Arthur Demchenkov <spinal.by@gmail.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: OMAP: DTS: N900: fix onenand timings
+Date:   Sun,  8 Mar 2020 22:19:33 +0300
+Message-Id: <20200308191934.8263-1-spinal.by@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 03 Mar 2020 16:24:03 +0100
-Thomas Gleixner <tglx@linutronix.de> wrote:
+Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+started using DT specified timings for GPMC, and as a result the
+OneNAND stopped working on N900 as we had wrong values in the DT.
+Fix by updating the values to bootloader timings that have been tested
+to be working on Nokia N900 with OneNAND manufacturers: Samsung,
+Numonyx.
 
-> Linus Walleij <linus.walleij@linaro.org> writes:
-> > On Thu, Feb 27, 2020 at 12:06 AM Thomas Gleixner <tglx@linutronix.de> wrote:  
-> >> "Christopher S. Hall" <christopher.s.hall@intel.com> writes:  
-> > IIO has a config file in sysfs that lets them select the source of the
-> > timestamp like so (drivers/iio/industrialio-core.c):
-> >
-> > s64 iio_get_time_ns(const struct iio_dev *indio_dev)
-> > {
-> >         struct timespec64 tp;
-> >
-> >         switch (iio_device_get_clock(indio_dev)) {
-> >         case CLOCK_REALTIME:
-> >                 return ktime_get_real_ns();
-> >         case CLOCK_MONOTONIC:
-> >                 return ktime_get_ns();
-> >         case CLOCK_MONOTONIC_RAW:
-> >                 return ktime_get_raw_ns();
-> >         case CLOCK_REALTIME_COARSE:
-> >                 return ktime_to_ns(ktime_get_coarse_real());
-> >         case CLOCK_MONOTONIC_COARSE:
-> >                 ktime_get_coarse_ts64(&tp);
-> >                 return timespec64_to_ns(&tp);
-> >         case CLOCK_BOOTTIME:
-> >                 return ktime_get_boottime_ns();
-> >         case CLOCK_TAI:
-> >                 return ktime_get_clocktai_ns();
-> >         default:
-> >                 BUG();
-> >         }
-> > }  
-> 
-> That's a nice example of overengineering :)
+Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
+---
+ arch/arm/boot/dts/omap3-n900.dts | 44 +++++++++++++++++++++++++---------------
+ 1 file changed, 28 insertions(+), 16 deletions(-)
 
-Yeah.  There was some ugly history behind that including some 'ancient'
-stupidity from me :(  I certainly don't recommend anyone copies it.
-
-We may have overcompensated for having an odd default by allowing
-lots of other odd choices.
-
-> 
-> > After discussion with Arnd we concluded the only timestamp that
-> > makes sense is ktime_get_ns(). So in GPIO we just use that, all the
-> > userspace I can think of certainly prefers monotonic time.
-> > (If tglx does not agree with that I stand corrected to whatever
-> > he says, I suppose.)  
-> 
-> In general, CLOCK_MONOTONIC is what makes most sense.
-> 
-> The only other interesting clock which makes sense from an application
-> POV is CLOCK_TAI which is becoming more popular in terms of network wide
-> time coordination and TSN.
-> 
-> CLOCK_REALTIME is a pain to deal with due to leap seconds, daylight
-> savings etc.
-> 
-> > Anyway in GPIO we could also make it configurable for users who
-> > know what they are doing.
-> >
-> > HW timestamps would be something more elaborate and
-> > nice CLOCK_HW_SPECIFIC or so. Some of the IIO sensors also
-> > have that, we just don't expose it as of now.  
-> 
-> HW timestamps are just more accurate than the software timestamps which
-> we have now and from a portability and interface POV they should just be
-> converted converted / mapped to clock MONOTONIC or clock TAI. So your
-> existing interface (maybe extended to TAI in the future) is just
-> working, but more accurate.
-> 
-> Exposing the HW timestamp itself based on some random and potentially
-> unknown clock might still be useful for some specialized applications,
-> but that want's to be through a distinct interface so there is no chance
-> to confuse it with something generally useful.
-
-Agreed, though it would be nice to actually have some hardware
-that supports sane synchronization between a hardware timestamp and
-sensible clocks in the system.   In IIO we have some nasty filtering in
-some drivers to attempt to align hardware timestamps and deal with
-jitter in interrupt handling.
-
-Good luck (or maybe you do have a rare sane system!)
-
-Jonathan
-
-> 
-> Thanks,
-> 
->         tglx
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index c3c6d7d04a76..4089d97405c9 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -854,34 +854,46 @@
+ 		compatible = "ti,omap2-onenand";
+ 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
+ 
++		/*
++		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
++		 * bootloader set values when booted with v5.1
++		 * (OneNAND Manufacturer: Samsung):
++		 *
++		 *   cs0 GPMC_CS_CONFIG1: 0xfb001202
++		 *   cs0 GPMC_CS_CONFIG2: 0x00111100
++		 *   cs0 GPMC_CS_CONFIG3: 0x00020200
++		 *   cs0 GPMC_CS_CONFIG4: 0x11001102
++		 *   cs0 GPMC_CS_CONFIG5: 0x03101616
++		 *   cs0 GPMC_CS_CONFIG6: 0x90060000
++		 */
+ 		gpmc,sync-read;
+ 		gpmc,sync-write;
+ 		gpmc,burst-length = <16>;
+ 		gpmc,burst-read;
+ 		gpmc,burst-wrap;
+ 		gpmc,burst-write;
+-		gpmc,device-width = <2>; /* GPMC_DEVWIDTH_16BIT */
+-		gpmc,mux-add-data = <2>; /* GPMC_MUX_AD */
++		gpmc,device-width = <2>;
++		gpmc,mux-add-data = <2>;
+ 		gpmc,cs-on-ns = <0>;
+-		gpmc,cs-rd-off-ns = <87>;
+-		gpmc,cs-wr-off-ns = <87>;
++		gpmc,cs-rd-off-ns = <102>;
++		gpmc,cs-wr-off-ns = <102>;
+ 		gpmc,adv-on-ns = <0>;
+-		gpmc,adv-rd-off-ns = <10>;
+-		gpmc,adv-wr-off-ns = <10>;
+-		gpmc,oe-on-ns = <15>;
+-		gpmc,oe-off-ns = <87>;
++		gpmc,adv-rd-off-ns = <12>;
++		gpmc,adv-wr-off-ns = <12>;
++		gpmc,oe-on-ns = <12>;
++		gpmc,oe-off-ns = <102>;
+ 		gpmc,we-on-ns = <0>;
+-		gpmc,we-off-ns = <87>;
+-		gpmc,rd-cycle-ns = <112>;
+-		gpmc,wr-cycle-ns = <112>;
+-		gpmc,access-ns = <81>;
+-		gpmc,page-burst-access-ns = <15>;
++		gpmc,we-off-ns = <102>;
++		gpmc,rd-cycle-ns = <132>;
++		gpmc,wr-cycle-ns = <132>;
++		gpmc,access-ns = <96>;
++		gpmc,page-burst-access-ns = <18>;
+ 		gpmc,bus-turnaround-ns = <0>;
+ 		gpmc,cycle2cycle-delay-ns = <0>;
+ 		gpmc,wait-monitoring-ns = <0>;
+-		gpmc,clk-activation-ns = <5>;
+-		gpmc,wr-data-mux-bus-ns = <30>;
+-		gpmc,wr-access-ns = <81>;
++		gpmc,clk-activation-ns = <6>;
++		gpmc,wr-data-mux-bus-ns = <36>;
++		gpmc,wr-access-ns = <96>;
+ 		gpmc,sync-clk-ps = <15000>;
+ 
+ 		/*
+-- 
+2.11.0
 
