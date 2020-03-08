@@ -2,284 +2,204 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB0CC18E5C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 05:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6C8C18E5C
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 05:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F932206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 05:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B57206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 05:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z58dESuz"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="xjb2sFGC";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="FiTgfSZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgCHFXK (ORCPT
+        id S1726175AbgCHFdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 00:23:10 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45837 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgCHFXK (ORCPT
+        Sun, 8 Mar 2020 00:33:16 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:31190 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725775AbgCHFdP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 00:23:10 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so3261974pfg.12
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 21:23:07 -0800 (PST)
+        Sun, 8 Mar 2020 00:33:15 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0285WOaP008199;
+        Sat, 7 Mar 2020 21:32:24 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=axcSiAurOmgpk6xOgVU5CnMXA0eIErwtCYrlNtJt6H0=;
+ b=xjb2sFGCLyuhBtKUfSDF+EDCsnYQEU3XFMtQlMA7+rJl4IIL8FBjq/sE+gCz150ZWfmS
+ awQQHPR6t5GT908YoPtoYg2wMLIwsnNxx4/2W8BIceKVnNnX3xpUBt4BLZZ/t1WbvBDE
+ 381kD0F7SPQJnK2nTxa60GeE9Pq3mtjMQCzX2Hjz8iPjAZi34Hkx2unuIUpE8uV7TErB
+ EPktM+n5oghJaMo4QpoPq/DJpnklj8Q+5LY3FXycqQe/Hja+y5KM/jA2V2tV0oEUqhi3
+ ojop15wKr8B9KKWp3835LmcfwI0rW9DkBXIhPJJAHHlIy3QGjz5XvDttiuAjeCVuzgbv WQ== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2ym9uwb2mq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sat, 07 Mar 2020 21:32:24 -0800
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 7 Mar
+ 2020 21:32:23 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
+ by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Sat, 7 Mar 2020 21:32:23 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LiidvnfpI6M1XUbZnDuUfCGZ9sgEN1T7LwQfR0d8RnZ7lun4iPq1d0+RdAgXRdXDp0rBEc5HtAxcMVBgDy0SEJJM3tLGJON9UXnc1xkxAiCMJaxgtbax8F4lgvIx3TECBvGQV2ZRq4OIUVELGCgSOo3W6bnv5dEJjUqDgJRX2dn+FpPA7MQ34Oa7Ewndopbl7pkYdRRuKTZcWZMO7oaz6xACeQ6oGDoijJw0YHiPBZzfIKuH+TfUk9KwBMyjUTnVFiX+y0gfkCGaxavjnAGe9lBNhWjLTxooZSablIZTLhpH8Ow9HwAlCDL5xbj9ZEXpUhPO9I9FByGhOZZvf0QmXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=axcSiAurOmgpk6xOgVU5CnMXA0eIErwtCYrlNtJt6H0=;
+ b=CvygJgZGgguKF+5sfIAY2LCJqX4C+01xMqxICAi5scWraRbbAYmKegVMUdjzHBiTKVIaJ5S5+a2U+iUEaNlCTuGPXiFwuz3rBYx+9JCqW0QpoLBceLsBofx1R33Flb/2g3IHwAqyJw6Hhk7jtOt+N5GCHjSvzn0iL8DnEtSxEeGNC6d71hhjiq71BxjqJrxwXDVU7ifjUvhZJ03iI3WdzMzKgBN68EbQKeoKd03W6tDNn+l4yrcMEAfsbqExsYK0MyQki8nqNN/DH3Or5QDEaZAURmeXf07xkbkX7LyUWC9D9pQ7x2LCPGYJe3lps2te8OiDPGPAg0guhlOUTzkziA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z9Kd9Lm6gpDhT8Bnn3cJ1NjmF5WgpV0EWh105H6P8Go=;
-        b=Z58dESuz0hlr6ntvhWwh0oX+IrEK629sbe5JtUIobZeCamdYshU3q3P24ulwJ6TDN2
-         5si6GiQt2oEwD2BbjzQO6x3VdIIRBs1GB/v2Ji1P0EdOqCWfNDR7BTSA2T5L5y3W+k+0
-         XHt1QS57L/cs2VH+BcdTs93eGRqcQJR+0gWfIhB4DKOcEak3TYB2DRIcNtAN9EMKq5aZ
-         ni5iMhpO8JuTGRiWNFTnJIH85mf92d59why24fRF1efmdVN/BGmqQq/gmUDO9YZKxW3p
-         G12wWb3K/uovIQIqqGwPG3RkeBr0B4FWfFoL7NCeSfQ4fTZ21Zqe3pAfMD2o3oMc6Kgi
-         hcZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z9Kd9Lm6gpDhT8Bnn3cJ1NjmF5WgpV0EWh105H6P8Go=;
-        b=QX1TlCqZsf9Asuzd3rl86bdnWpcOEbKQndjdU1Obtko2m7ODajTDujdDfwHRzoNhad
-         f55NSe4LbIkHVBP3d2/i9BkcKSBy/nJk6IrsH19YHOFxlNnPMKyKovOa5TLP1qqoJQu3
-         HHchCXSVN5kHfoFewQ/R6r49Ojos4ofFjse07aHaQvS4HAElZSmD+Z9x8aI4bNIJdhV8
-         SYmDIYEKef/lwRGIIODTEdMH+mbdlVw3Rm+ZbVMtqerWP2LQEo2aXJiRwya/nJRSeFOl
-         OgK+//C1G6PeScAoBdhcOs92Y8hIvnmBN8OngSmctqL3WU4mUoKmAM0SNjUU0XrlgN7b
-         DUKA==
-X-Gm-Message-State: ANhLgQ2waZSQioL2kM/VVO5S003JT1M4SjNoDAOS/we/Vpa7MmPiMS1a
-        KqhZmDrNHlKZfMQqrwFnCd/cIQ==
-X-Google-Smtp-Source: ADFU+vvihjh9X+vKjKXxBCznHuTDVVyqgcpWZgHVvURuVHh2KGvM7kgLvqVR1CktAeVM1ax3fU+9AA==
-X-Received: by 2002:a63:fc56:: with SMTP id r22mr10509778pgk.147.1583644986808;
-        Sat, 07 Mar 2020 21:23:06 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k24sm37842705pgm.61.2020.03.07.21.23.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 21:23:06 -0800 (PST)
-Date:   Sat, 7 Mar 2020 21:23:02 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        robh@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 00/18] Enable Qualcomm QCS 404 HS/SS USB
-Message-ID: <20200308052302.GJ1094083@builder>
-References: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=axcSiAurOmgpk6xOgVU5CnMXA0eIErwtCYrlNtJt6H0=;
+ b=FiTgfSZ4FXFtYUI3p1fWeWKd5/imAaY5ihxxEE5SfaqRu2IkDhTUoS4cbRmygKnPQ+XKd6NZj29r9Oedif7+m6ZsSaGKGdIpYE5qssMu8ECiYRceNbVzUpYBKA3ppEMzthLrIX/zspXU6WMLaO9T1DGrYpnfrIV1F6hxpQhDJgA=
+Received: from BYAPR18MB2535.namprd18.prod.outlook.com (2603:10b6:a03:137::17)
+ by BYAPR18MB2951.namprd18.prod.outlook.com (2603:10b6:a03:10c::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Sun, 8 Mar
+ 2020 05:32:20 +0000
+Received: from BYAPR18MB2535.namprd18.prod.outlook.com
+ ([fe80::8cd1:1741:8d2d:1c23]) by BYAPR18MB2535.namprd18.prod.outlook.com
+ ([fe80::8cd1:1741:8d2d:1c23%7]) with mapi id 15.20.2793.013; Sun, 8 Mar 2020
+ 05:32:19 +0000
+From:   Alex Belits <abelits@marvell.com>
+To:     "frederic@kernel.org" <frederic@kernel.org>
+CC:     "mingo@kernel.org" <mingo@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "Prasun Kapoor" <pkapoor@marvell.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "will@kernel.org" <will@kernel.org>
+Subject: Re: [EXT] Re: [PATCH 03/12] task_isolation: userspace hard isolation
+ from kernel
+Thread-Topic: [EXT] Re: [PATCH 03/12] task_isolation: userspace hard isolation
+ from kernel
+Thread-Index: AQHV8j73SZ7gA0FMRkuOSCw4mVFsAKg6VJCAgAPczwA=
+Date:   Sun, 8 Mar 2020 05:32:19 +0000
+Message-ID: <92135de5e710c3fddb7256259a759b20460e9052.camel@marvell.com>
+References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
+         <36d84b8dd168a38e6a56549dedc15dd6ebf8c09e.camel@marvell.com>
+         <20200305183313.GA29033@lenoir>
+In-Reply-To: <20200305183313.GA29033@lenoir>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [199.233.58.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 253cc83d-d1a9-4c6d-c5c4-08d7c322124c
+x-ms-traffictypediagnostic: BYAPR18MB2951:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR18MB2951F7FDB3A9AD62857A0B71BCE10@BYAPR18MB2951.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 03361FCC43
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(136003)(366004)(39840400004)(189003)(199004)(478600001)(316002)(54906003)(2906002)(71200400001)(81166006)(8936002)(81156014)(8676002)(6506007)(186003)(5660300002)(6916009)(6512007)(26005)(91956017)(66946007)(66556008)(64756008)(66476007)(66446008)(36756003)(86362001)(7416002)(6486002)(76116006)(2616005)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR18MB2951;H:BYAPR18MB2535.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SjOGt74X9REYppB6qEEpPHVGIYrh9EqWV42wirpiiJ2i5Rfb+uW3CiTXME7HgImEpXNsHmreXeS+CHCmu9rj9DpcPncwPQ4W4NuOzsBaR0N1HUdqFL80q1hrSMUnNyDvn2268DUJi42sOLg8fPscxFZmPGctz8duhiEb1x+3tu0VPFoNBLzF/25PpF4A3nYszgjAJNi4YzVyEntnw4lqnLDFmomdy/STjVMUyUo1aD2Z+00qSJ8tac3jzWQEqIFGZmbzK2IOUo/WEAd24A/6/k44Jmvu8jvAz4HKFhv/QqSNNMNsrE1kLZllxUgAZKKb2vz49vE24pvAZzIClEC+UswoE4jtr/h9dadlBFT6CHgaZBJxBQ6YImag/zjF7/mfYw6N4CLMABbv9W1aImfZFk6+Y42lyP2/D/QizfPtgxkuXXFIFTBg94LnVPdm3adz
+x-ms-exchange-antispam-messagedata: p+99BpVoiiu1zjgKN9iO34+GPQlI2/UwhDadIL/aqJuoxJjJ19amGTisGEjql4XlxURHCBuNOpNMgQR2x4IeY5WLU2rWXCMaa7bZvGtQ+LP+eILPGrWFAJiZ/CVv4oRt/rWUmG1N9a1PIXenFuh/6w==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <128976CACCE956469B6E5F7E2D72E66E@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 253cc83d-d1a9-4c6d-c5c4-08d7c322124c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2020 05:32:19.7191
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 61Bhl4P8mRmKHmG0w2Sh7RQNwx/+LoBndYHSjVEODIUXl7xaqMrQBxl+pZXJrZqKlP9upyY7wVMYJl9KBexCjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2951
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-08_01:2020-03-06,2020-03-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 03 Mar 09:11 PST 2020, Bryan O'Donoghue wrote:
-
-> V1:
-> This series enables the Primary and Secondary USB controllers on the
-> QCS404, associated PHYs, role-switching and DTS descriptions.
-> 
-
-Finally took the time to give this a spin on my QCS404 dev board.
-
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-
-As this touches three different subsystems, and doesn't have have
-compile time dependencies between the parts, I would suggest that as you
-fix up the build error I reported yesterday you send v8 as three
-different series - one per maintainer/subsystem. That way we avoid any
-questions about whom should merge what parts and in what order.
-
-Thanks,
-Bjorn
-
-> The series takes in a number of patches worked on by a number of people
-> over the past few years from downstream, through to previous upstream
-> submissions for both of these interfaces. Additional work has been done to
-> enable USB role-switching.
-> 
-> 1. USB SS
->    - extcon has been dropped in favour of gpio-usb-conn as discussed and
->      agreed previously by Jorge, Bjorn, Stephen Boyd and Jack Pham [1].
-> 
->    - Regulator API has been updated following suggestions from Bjorn.
->    
->    - Sanitzation of the DT compatible name - dropped "snps" entirely
->      from the name - it made almost no sense to me and doesn't appear
->      consistent with similar naming conventions for Snopsys based IP.
-> 
-> 2. USB HS
->    - Regulator API changes here.
->    - Dropped "snps" from the namespace for similar reasons as above.
->    - Dropped "28nm" from the namespace, looked superfluous.
->    - Changed "High-Speed" to "Hi-Speed".
->    - [2]
-> 
-> 3. DWC3 Role switching
->    - At the time usb-gpio-conn was discussed it was mentioned that
->      role-switching was absent from the DWC3 driver.
->    - John Stultz has some patches in-flight for that, that I've included in
->      this series for completeness.
->    - Adds my SoB to relevant patches.
->    - Drops gerrit ChangeId.
-> 
-> 4. DWC3 usb-gpio-conn
->    Needs to be a child node of the DWC3 driver so some code and DT binding
->    is required for that.
-> 
-> 5. QCOM-DWC3
->    Since we are role-switching with an external PMIC supplying VBUS we want
->    to skip past toggling VBUS from QCOM-DWC3 controlled registers, so a
->    patch is added to the qcom-dwc3 driver to do that.
-> 
-> References:
-> 
-> 1: USB SS PHY for Qualcomm's QCS404
-> https://lwn.net/ml/devicetree/20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org/
-> 
-> 2: Add Synopsys High-Speed USB PHY driver for Qualcomm SoCs
-> https://lore.kernel.org/linux-arm-msm/20181127100722.9993-3-shawn.guo@linaro.org/
-> 
-> https://www.spinics.net/lists/linux-usb/msg190003.html
-> 
-> V2:
-> - Fixes yaml error - Rob's YAML robot
-> - Exclusive control of reset in PHY drivers - Philipp Zabel
-> 
-> V3:
-> - Fixes typo generating YAML warning - Rob's YAML robot
-> 
-> V4:
-> 
-> https://lore.kernel.org/linux-arm-msm/20200122185610.131930-1-bryan.odonoghue@linaro.org/
-> 
-> - Churn names of PHYs - Rob Herring
->   Rob questioned the name of the SuperSpeed PHY in V3.
->   Looking at available data 
-> 
->   usb-hs-28nm - There are two possible PHYs on 28nm litho node
-> 		so it makes sense to name the PHY relating to its relevant
-> 		litho node.
-> 
->   usb-ss - This is not litho node dependent and is used on  multiple SoCs
-> 	   and litho nodes.
-> 
-> - Drop default mode for role switching - Felipe Balbi
->   Felipe asked if the default mode for role switching was
->   required and the answer is no. It makes no difference
->   becuase the USB ID pin ultimately dictates the mode of operation.
-> 
-> - Change "gpio_usb_connector" to "connector" - Rob
->   This was a minor change in terms of DTS but, means I need to look for the
->   DTS compatible string as opposed to a label given in the DTS.
->   No matter what the name of the label, this is he right thing to do.
-> 
-> - Used IS_ENABLED() - Felipe
->   The logic is the same but IS_ENABLED() is used now.
-> 
-> - Retained example of USB connector in dwc.txt - Rob, Felipe
->   Rob pointed out adding the connector was redundant as the documentation
->   already implies it.
->   Felipe seemed in favour of I think adding the example.
->   I've dropped the documentation of the connector and kept the example.
->   https://lore.kernel.org/linux-arm-msm/20200122185610.131930-7-bryan.odonoghue@linaro.org/
-> 
-> - Added example of usb-role-switch in dwc3.txt - BOD
->   
-> - Incorporated various inputs from Rob on DTS/YAML
->   - Added required:
->   - Added additionalProperties:
->   - Renamed "phy" clock to "ahb"
->   - maxItems dropped as indicated
-> 
-> V5:
-> - https://lkml.org/lkml/2020/2/6/913
-> 
-> - Adds a notifier to DWC3 - BOD
->   This is done in order to allow propagation of role-switch events from the
->   DWC3 core to an associated binding layer.
-> 
-> - Re-use the existent EXTCON VBUS power lane toggle logic - Jack Pham
->   Jack flagged this for inclusion and as a result we need to make a
->   small change to the qcom binding layer.
-> 
-> - Squash DTS changes - BOD
->   I've squashed down some of the DTS changes to stop the patch count in
->   this series going  up any further.
-> 
-> V6:
-> - https://lkml.org/lkml/2020/2/7/632
-> 
-> - Add RB Jack Pham patch # 11
-> 
-> - Fix a stale description in git log patch # 10
-> 
-> V7:
-> - https://lkml.org/lkml/2020/2/10/258
-> 
-> - Adds RB Rob Herring as indicated
-> 
-> - Updates the naming of the USB SS PHY for the particular SoC.
->   The name of the driver is maintained, as previously mentioned, this
->   IP appears to be in use on the 20nm and 28nm nodes. However taking
->   Rob's feedback on the naming of the SoC specific bit the code being added
->   is specified @ 28nm.
->   If/when we come to add in 20nm for this IP we can add a new compatible
->   for 20nm.
->   Rob Herring
-> 
-> Bjorn Andersson (1):
->   arm64: dts: qcom: qcs404: Add USB devices and PHYs
-> 
-> Bryan O'Donoghue (11):
->   dt-bindings: usb: dwc3: Add a gpio-usb-connector example
->   dt-bindings: usb: dwc3: Add a usb-role-switch to the example
->   usb: dwc3: qcom: Add support for usb-conn-gpio connectors
->   usb: dwc3: Add support for usb-conn-gpio connectors
->   usb: dwc3: Add support for a role-switch notifier
->   usb: dwc3: qcom: Enable gpio-usb-conn based role-switching
->   arm64: dts: qcom: qcs404-evb: Define VBUS pins
->   arm64: dts: qcom: qcs404-evb: Define USB ID pin
->   arm64: dts: qcom: qcs404-evb: Describe external VBUS regulator
->   arm64: dts: qcom: qcs404-evb: Raise vreg_l12_3p3 minimum voltage
->   arm64: dts: qcom: qcs404-evb: Enable USB controllers
-> 
-> Jorge Ramirez-Ortiz (3):
->   dt-bindings: phy: remove qcom-dwc3-usb-phy
->   dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
->   phy: qualcomm: usb: Add SuperSpeed PHY driver
-> 
-> Shawn Guo (1):
->   phy: qualcomm: Add Synopsys 28nm Hi-Speed USB PHY driver
-> 
-> Sriharsha Allenki (1):
->   dt-bindings: phy: Add Qualcomm Synopsys Hi-Speed USB PHY binding
-> 
-> Yu Chen (1):
->   usb: dwc3: Registering a role switch in the DRD code.
-> 
->  .../bindings/phy/qcom,usb-hs-28nm.yaml        |  90 ++++
->  .../devicetree/bindings/phy/qcom,usb-ss.yaml  |  83 ++++
->  .../bindings/phy/qcom-dwc3-usb-phy.txt        |  37 --
->  .../devicetree/bindings/usb/dwc3.txt          |   9 +
->  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |  90 +++-
->  arch/arm64/boot/dts/qcom/qcs404.dtsi          | 100 +++++
->  drivers/phy/qualcomm/Kconfig                  |  20 +
->  drivers/phy/qualcomm/Makefile                 |   2 +
->  drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c   | 415 ++++++++++++++++++
->  drivers/phy/qualcomm/phy-qcom-usb-ss.c        | 246 +++++++++++
->  drivers/usb/dwc3/core.h                       |  22 +
->  drivers/usb/dwc3/drd.c                        | 119 ++++-
->  drivers/usb/dwc3/dwc3-qcom.c                  |  31 +-
->  13 files changed, 1223 insertions(+), 41 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
->  create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
->  create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-ss.c
-> 
-> -- 
-> 2.25.1
-> 
+T24gVGh1LCAyMDIwLTAzLTA1IGF0IDE5OjMzICswMTAwLCBGcmVkZXJpYyBXZWlzYmVja2VyIHdy
+b3RlOg0KPiBPbiBXZWQsIE1hciAwNCwgMjAyMCBhdCAwNDowNzoxMlBNICswMDAwLCBBbGV4IEJl
+bGl0cyB3cm90ZToNCj4gPiANCj4gDQo+IEhpIEFsZXcsDQo+IA0KPiBJJ20gZ2xhZCB0aGlzIHBh
+dGNoc2V0IGlzIGJlaW5nIHJlc3VyZWN0ZWQuDQo+IFJlYWRpbmcgdGhhdCBjaGFuZ2Vsb2csIEkg
+bGlrZSB0aGUgZ2VuZXJhbCBpZGVhIGFuZCB0aGUgZGlyZWN0aW9uLg0KPiBUaGUgZGlmZiBpcyBh
+IGJpdCBzY2FyeSB0aG91Z2ggYnV0IEknbGwgY2hlY2sgdGhlIHBhdGNoZXMgaW4gZGV0YWlsDQo+
+IGluIHRoZSB1cGNvbWluZyBkYXlzLg0KPiANCg0KSSBtYWRlIHNvbWUgdXBkYXRlcyAtLSBhZGRl
+ZCBtaXNzaW5nIGNvZGUgZm9yIGFybSBhbmQgeDg2LCByZXN0b3JlZA0Kc2lnbi1vZmYgbGluZXMg
+YW5kIHVwZGF0ZWQgY29tbWl0IG1lc3NhZ2VzLg0KDQpUaGlzIGlzIHRoZSByZXN1bHQgb2Ygc29t
+ZSB3b3JrIHRoYXQgbW9zdGx5IGhhcHBlbmVkIG9uIGVhcmxpZXINCnZlcnNpb25zIGFuZCBoYWQg
+dG8gZGVhbCB3aXRoIHRoZSBmYWN0IHRoYXQgdGltZXJzIGFuZCBob3VzZWtlZXBpbmcNCndvcmsg
+b2Z0ZW4gYXBwZWFyZWQgb24gYWxsIENQVXMsIHNvIHNvbWUgc29sdXRpb25zIG1heSBsb29rIGxp
+a2UgYW4NCm92ZXJraWxsLiBOZXZlcnRoZWxlc3MgaXQgd2FzIHZlcnkgaGVscGZ1bCBmb3IgZmlu
+ZGluZyB0aGUgc291cmNlcyBvZg0KdW5leHBlY3RlZCBkaXN0dXJiYW5jZXMuDQoNCkFsc28gb3Jp
+Z2luYWxseSBzb21lIG9mIHRoZSByYWNlIGNvbmRpdGlvbnMgYW5kIHBvdGVudGlhbCBkZWxheWVk
+IHdvcmsNCmF0IHRoZSB0aW1lIHdoZW4gYSB0YXNrIGlzIGVudGVyaW5nIGlzb2xhdGVkIHN0YXRl
+IHdlcmUgY29uc2lkZXJlZA0KdW5hdm9pZGFibGUuIFNvIHRoZSBwYXJ0IGluIGtlcm5lbCB3YXMg
+Zm9jdXNlZCBvbiBjb3JyZWN0bmVzcyBvZg0KaGFuZGxpbmcgdGhvc2UgY29uZGl0aW9ucywgd2hp
+bGUgZGV0ZWN0aW9uIGFuZCBkZWFsaW5nIHdpdGggdGhlaXINCmNvbnNlcXVlbmNlcyB3YXMgZG9u
+ZSBpbiB1c2Vyc3BhY2UgKGluIGxpYnRtYykuIE5vdyBpdCBsb29rcyBsaWtlIHRoZXJlDQptYXkg
+YmUgbXVjaCBmZXdlciBzdWNoIHNpdHVhdGlvbnMsIGhvd2V2ZXIgSSBhbSBzdGlsbCBub3QgdmVy
+eSB0aHJpbGxlZA0Kd2l0aCB0aGUgaWRlYSBvZiBjb21wbGljYXRpbmcgdGhlIGtlcm5lbCBtb3Jl
+IHRoYW4gd2UgaGF2ZSB0by4NCkVzcGVjaWFsbHkgd2hlbiBpdCBjb21lcyB0byBjb2RlIHRoYXQg
+aXMgcmVsZXZhbnQgb25seSBvdmVyIGZldyBzZWNvbmRzDQp3aGVuIHRoZSB0YXNrIGlzIHN0YXJ0
+aW5nIGFuZCBlbnRlcmluZyBpc29sYXRlZCBtb2RlLiBTbyBJIGhhdmUgdG8NCmFkbWl0IHRoYXQg
+c29tZSBzb2x1dGlvbnMgbG9vayBsaWtlICJtb3JlIEVJTlRSIHRoYW4gRUlOVFIiLCBhbmQgSQ0K
+c3RpbGwgbGlrZSB0aGVtIG1vcmUgdGhhbiBtYWtpbmcga2VybmVsIHNpZGUgb2YgZW50ZXJpbmcv
+ZXhpdGluZw0KaXNvbGF0aW9uIGV2ZW4gbW9yZSBjb21wbGV4IHRoYW4gaXQgaXMgbm93Lg0KDQpJ
+IG1heSBiZSB3cm9uZywgYW5kIHRoZXJlIG1heSBiZSBzb21lIG1vcmUgZWxlZ2FudCBzb2x1dGlv
+biwgaG93ZXZlciBJDQpkb24ndCBzZWUgaXQgbm93LiBVc2Vyc3BhY2UtYXNzaXN0ZWQgaXNvbGF0
+aW9uIGVudGVyaW5nL2V4aXRpbmcNCnByb2NlZHVyZSB3b3JrZWQgdmVyeSB3ZWxsIGluIGEgc3lz
+dGVtIHdpdGggYSBodWdlIG51bWJlciBvZiBjb3JlcywNCnRocmVhZHMsIGRyaXZlcnMgd2l0aCB1
+bnVzdWFsIGZlYXR1cmVzLCBldGMuLCBzbyBhdCB2ZXJ5IGxlYXN0IHdlIGhhdmUNCnNvbWUgdXNh
+YmxlIHJlZmVyZW5jZSBwb2ludC4NCg0KPiA+IEluIGEgbnVtYmVyIG9mIGNhc2VzIHdlIGNhbiB0
+ZWxsIG9uIGEgcmVtb3RlIGNwdSB0aGF0IHdlIGFyZQ0KPiA+IGdvaW5nIHRvIGJlIGludGVycnVw
+dGluZyB0aGUgY3B1LCBlLmcuIHZpYSBhbiBJUEkgb3IgYSBUTEIgZmx1c2guDQo+ID4gSW4gdGhh
+dCBjYXNlIHdlIGdlbmVyYXRlIHRoZSBkaWFnbm9zdGljIChhbmQgb3B0aW9uYWwgc3RhY2sgZHVt
+cCkNCj4gPiBvbiB0aGUgcmVtb3RlIGNvcmUgdG8gYmUgYWJsZSB0byBkZWxpdmVyIGJldHRlciBk
+aWFnbm9zdGljcy4NCj4gPiBJZiB0aGUgaW50ZXJydXB0IGlzIG5vdCBzb21ldGhpbmcgY2F1Z2h0
+IGJ5IExpbnV4IChlLmcuIGENCj4gPiBoeXBlcnZpc29yIGludGVycnVwdCkgd2UgY2FuIGFsc28g
+cmVxdWVzdCBhIHJlc2NoZWR1bGUgSVBJIHRvDQo+ID4gYmUgc2VudCB0byB0aGUgcmVtb3RlIGNv
+cmUgc28gaXQgY2FuIGJlIHN1cmUgdG8gZ2VuZXJhdGUgYQ0KPiA+IHNpZ25hbCB0byBub3RpZnkg
+dGhlIHByb2Nlc3MuDQo+IA0KPiBJJ20gd29uZGVyaW5nIGlmIGl0J3Mgd2lzZSB0byBydW4gdGhh
+dCBvbiBhIGd1ZXN0IGF0IGFsbCA6LSkNCj4gT3Igd2Ugc2hvdWxkIGNvbnNpZGVyIGFueSBndWVz
+dCBleGl0IHRvIHRoZSBob3N0IGFzIGENCj4gZGlzdHVyYmFuY2UsIHdlIHdvdWxkIHRoZW4gbmVl
+ZCBzb21lIHNvcnQgb2YgcGFyYXZpcnQNCj4gZHJpdmVyIHRvIG5vdGlmeSB0aGF0LCBldGMuLi4g
+VGhhdCBkb2Vzbid0IHNvdW5kIGFwcGVhbGluZy4NCg0KV2h5IG5vdD8gSSBhbSBub3QgYSBiaWcg
+ZmFuIG9mIHZpcnR1YWxpemF0aW9uLCBob3dldmVyIHBlb3BsZSBzZWVtIHRvDQp1c2UgaXQgZm9y
+IGFsbCBraW5kcyBvZiBwdXJwb3NlcyBub3csIGFuZCB3ZSBvbmx5IGhhdmUgdG8gcHJvcGFnYXRl
+IChvcg0KcmVqZWN0KSBpc29sYXRpb24gcmVxdWVzdHMgZnJvbSBndWVzdCB0byBob3N0IChhcyBs
+b25nIGFzIHJlc291cmNlIGFuZA0KcGVybWlzc2lvbnMgcG9saWN5IGFsbG93IHRoYXQpLiBGb3Ig
+S1ZNIGl0IHdvdWxkIGJlIGxpdGVyYWxseQ0KcmVwbGljYXRpbmcgZ3Vlc3QgdGFzayBpc29sYXRp
+b24gc3RhdGUgb24gdGhlIGhvc3QsIGFuZCBhcyBsb25nIGFzIENQVQ0KY29yZSBpcyBpc29sYXRl
+ZCwgZG9lcyBpdCByZWFsbHkgbWF0dGVyIGlmIHRoZSB0YXNrIHdhcyBjcmVhdGVkIHdpdGgNCnR3
+byBsYXllcnMgb2YgdmlydHVhbGl6YXRpb24gaW5zdGVhZCBvZiBvbmU/DQoNCkZvciBpc29sYXRp
+b24gdG8gbWFrZSBzZW5zZSwgaXQncyBzdGlsbCBjb2RlIHJ1bm5pbmcgb24gYSBDUFUgd2l0aA0K
+Zml4ZWQgYWRkcmVzcyBtYXBwaW5nLiBJZiB0aGlzIGlzIHN0aWxsIHRoZSBjYXNlLCB2aXJ0dWFs
+aXphdGlvbiBvbmx5DQpkZXRlcm1pbmVzIHdoYXQgY2FuIGJlIGluIHRoYXQgc3BhY2UsIG5vdCBo
+b3cgaXQgYmVoYXZlcy4gSWYgdGhpcyBpcw0Kbm90IHRoZSBjYXNlLCBhbmQgdGFzayBjYXVzZXMg
+a2VybmVsIGNvZGUgdG8gcnVuLCBiZSBpdCBndWVzdCBvciBob3N0DQprZXJuZWwsIHRoZW4gc29t
+ZXRoaW5nIGlzIHdyb25nLCBhbmQgaXNvbGF0aW9uIGlzIGJyb2tlbi4gTm90IHZlcnkNCmRpZmZl
+cmVudCBmcm9tIGJlaGF2aW9yIHdpdGhvdXQgdmlydHVhbGl6YXRpb24uDQoNClRoaXMgd291bGQg
+YmUgdmVyeSBiYWQgZm9yIGVhcmx5IGRheXMgb2YgdmlydHVhbGl6YXRpb24gd2hlbiB2ZXJ5DQps
+aXR0bGUgY291bGQgYmUgZG9uZSBieSBhIGd1ZXN0IHdpdGhvdXQgaG9zdCBtZXNzaW5nIHdpdGgg
+aXQuIE5vdywgd2hlbg0KcGllY2VzIG9mIGhhcmR3YXJlIGNhbiBiZSAocmVsYXRpdmVseSkgc2Fm
+ZWx5IGdpdmVuIHRvIHRoZSBndWVzdA0KdXNlcnNwYWNlIHRvIHdvcmsgb24sIHdlIGNhbiBqdXN0
+IGFzIHdlbGwgbGV0IGl0IHJ1biBpc29sYXRlZC4NCg0KPiANCj4gVGhhbmtzLg0KDQpUaGFua3Mh
+DQoNCi0tIA0KQWxleA0K
