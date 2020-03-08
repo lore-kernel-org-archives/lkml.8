@@ -2,373 +2,556 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D18C10F27
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 11:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FB9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 11:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C484E20828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 11:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA5CB20663
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 11:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="S6p4GhGt";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="mLHymhrb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QzR5dB2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgCHLdT (ORCPT
+        id S1726322AbgCHLuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 07:33:19 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:58892 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbgCHLdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 07:33:19 -0400
-Received: by mail.z3ntu.xyz (Postfix, from userid 182)
-        id 15114C3FF6; Sun,  8 Mar 2020 11:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1583667196; bh=goway0Q14dDkQIPcxODmG5EN0REbxZfcvRQb+Nrn6DE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=S6p4GhGt7/R1OkAxC5y50+FVVeCZSLn7TLCgB5HRItwztvGTpCfI4Y25xUHOwHRqr
-         fUMM6cJLMOsup39MwRqFrolfYIG/QJOlLEmz6guxTrF6Y2XZI4ASFmVyQtWCbBK7eI
-         GHFJ7ZRotiExv3fHB8/vAaT92XFTPE8DWeAsk8Yg=
-Received: from g550jk.localnet (80-110-126-226.cgn.dynamic.surfer.at [80.110.126.226])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 252C3C3FEA;
-        Sun,  8 Mar 2020 11:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1583667192; bh=goway0Q14dDkQIPcxODmG5EN0REbxZfcvRQb+Nrn6DE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=mLHymhrbFWQthWcBCKZB44iViBJW2wRHN1OV5aPZLjLhkNVAIrmuugk8cH48XFdQV
-         mHOZiRu1NNl9hELhX9tXH3xixj6I0HS4K12ug9C7/lHJ8VgVk0Q/3/uepp8yfyZvH3
-         yvchCj3kjPMTgklLRrHo0RYlTYh/nqRpU+AsuIFc=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, Pavel Machek <pavel@ucw.cz>,
-        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] leds: add sgm3140 driver
-Date:   Sun, 08 Mar 2020 12:32:41 +0100
-Message-ID: <4539487.31r3eYUQgx@g550jk>
-In-Reply-To: <8d174b46-f7d0-119b-d8b0-ad89ecb1872f@gmail.com>
-References: <20200227185015.212479-1-luca@z3ntu.xyz> <8d174b46-f7d0-119b-d8b0-ad89ecb1872f@gmail.com>
+        Sun, 8 Mar 2020 07:50:06 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40238 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbgCHLuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 07:50:06 -0400
+Received: by mail-wm1-f67.google.com with SMTP id e26so6867241wme.5;
+        Sun, 08 Mar 2020 04:50:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uLPfdmiCJCNkfwgoL1UqjM9XOn/GWu7hWFo7xNez6sE=;
+        b=QzR5dB2mFGmlILPK44/+Zg8ZC5UL8+nio9Pba0acgCEUW9in2/mHSJgZyZZVMuYp4F
+         MvS4vXMafGbrHWWdIU6UwjA//0D2NZqvAI1vaysmzk3rRFNhBTPENmp362P1OEcLBahI
+         z8tcL5O1LtwT7H0TbQZijR7AfxNCyg0OAt1JgDdaNdXTVgYXUSgTjnuXy7H78XdiGNrJ
+         rPNacZ7Th4nFwdikl5lmIjQtIqtF+3Ux3DBL0VHf3Lp6RFNi3QnGfqQMhB7NIbest5ka
+         1d1EpIkFgwMQn9yf8Vtml5fvEQ15gJ5+5VbG6egNCt0DevhLxitTwdBA/vb/eHlBMTh3
+         5SmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uLPfdmiCJCNkfwgoL1UqjM9XOn/GWu7hWFo7xNez6sE=;
+        b=tFHBrNtR7tKkUWA7Ememo5YuKds0/MTUtrC8IcF3FuBGmhvKxksfXjmRhlf0EeCqTM
+         +eveEK5bDSFTbZwCfg9x0zcU0NVJSFvRGsn4jCz6Xs/MgY6SXKaoSLysvl/63GTMk0wR
+         dYPOfu72gs2AMBPVI/ePXU0Ch9FDHIjkWDcNOzUPW0WlI8gvO829ELRQlazRy6uIMsK2
+         OvOGHN2Rj0xyX496IGqSClbLOBUTsQsSl2gV3iqEMWxXe0fFT7RqZub0a+ihqXAVD0Xe
+         PjuLIveUZU561K3RpS2mmZTNzDrM6QzdAGNZ370dC7prL8Zd9LXmzfX0o/g3I65sojaQ
+         qTjw==
+X-Gm-Message-State: ANhLgQ0sl4y78NtUWjgnB/0E8bF83CRzeAyYnl8hRISnANvLTRPDeuxo
+        qB++RNFd3yE45ZpLi6Vx9IDrn2mpsd7L1Q==
+X-Google-Smtp-Source: ADFU+vv5112x2cTKitR106dcYD4nTMXubsPmZCkn/xX1aTIlXtdGSGFhjKlxydsgblXSkvbhkhBHJQ==
+X-Received: by 2002:a7b:c2a2:: with SMTP id c2mr14523673wmk.19.1583668200403;
+        Sun, 08 Mar 2020 04:50:00 -0700 (PDT)
+Received: from localhost (net-2-42-211-162.cust.vodafonedsl.it. [2.42.211.162])
+        by smtp.gmail.com with ESMTPSA id f8sm14079989wmf.20.2020.03.08.04.49.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 04:49:59 -0700 (PDT)
+From:   Era Mayflower <mayflowerera@gmail.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Era Mayflower <mayflowerera@gmail.com>
+Subject: [PATCH v2 1/2] macsec: Support XPN frame handling - IEEE 802.1AEbw
+Date:   Sun,  8 Mar 2020 20:49:22 +0000
+Message-Id: <20200308204923.130700-1-mayflowerera@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacek,
+Support extended packet number cipher suites (802.1AEbw) frames handling.
+This does not include the needed netlink patches.
 
-Thanks for your review! Replies are inline below.
+    * Added xpn boolean field to `struct macsec_secy`.
+    * Added ssci to `struct macsec_secy` (belongs to the txsc).
+    * Added salt to `struct macsec_secy` (belongs to the txsc).
+    * Added ssci to `struct macsec_rx_sc`.
+    * Created pn_t type for easy access to lower and upper halves.
+    * Created salt_t type for easy access to the "ssci" and "pn" halves.
+    * Created `macsec_fill_iv_xpn` function to create IV in XPN mode.
+    * Support in PN recovery and preliminary replay check in XPN mode.
 
-I'm wondering if I should implement support for the flash-max-timeout-us dt=
-=20
-property ("Maximum timeout in microseconds after which the flash LED is tur=
-ned=20
-off.") to configure the timeout to turn the flash off as I've currently har=
-dcoded=20
-250ms but this might not be ideal for all uses of the sgm3140. The datashee=
-t=20
-states:
+In addition, according to IEEE 802.1AEbw figure 10-5, the PN of incoming
+frame can be 0 when XPN cipher suite is used, so fixed the function
+`macsec_validate_skb` to fail on PN=0 only if XPN is off.
 
-> Flash mode is usually used with a pulse of about 200 to 300 milliseconds =
-to=20
-> generate a high intensity Flash.
+Signed-off-by: Era Mayflower <mayflowerera@gmail.com>
+---
+ drivers/net/macsec.c | 130 +++++++++++++++++++++++++++++++------------
+ include/net/macsec.h |  44 ++++++++++++++-
+ 2 files changed, 136 insertions(+), 38 deletions(-)
 
-so it might be useful to have this configurable in the devicetree. The valu=
-e of=20
-250ms works fine for my use case.
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 45bfd99f1..f6cf5c222 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -19,6 +19,7 @@
+ #include <net/gro_cells.h>
+ #include <net/macsec.h>
+ #include <linux/phy.h>
++#include <linux/byteorder/generic.h>
+ 
+ #include <uapi/linux/if_macsec.h>
+ 
+@@ -68,6 +69,16 @@ struct macsec_eth_header {
+ 	     sc;					\
+ 	     sc = rtnl_dereference(sc->next))
+ 
++#define pn_same_half(pn1, pn2) (!(((pn1) >> 31) ^ ((pn2) >> 31)))
++
++struct gcm_iv_xpn {
++	union {
++		u8 short_secure_channel_id[4];
++		ssci_t ssci;
++	};
++	__be64 pn;
++} __packed;
++
+ struct gcm_iv {
+ 	union {
+ 		u8 secure_channel_id[8];
+@@ -372,8 +383,8 @@ static const struct macsec_ops *macsec_get_ops(struct macsec_dev *macsec,
+ 	return __macsec_get_ops(macsec->offload, macsec, ctx);
+ }
+ 
+-/* validate MACsec packet according to IEEE 802.1AE-2006 9.12 */
+-static bool macsec_validate_skb(struct sk_buff *skb, u16 icv_len)
++/* validate MACsec packet according to IEEE 802.1AE-2018 9.12 */
++static bool macsec_validate_skb(struct sk_buff *skb, u16 icv_len, bool xpn)
+ {
+ 	struct macsec_eth_header *h = (struct macsec_eth_header *)skb->data;
+ 	int len = skb->len - 2 * ETH_ALEN;
+@@ -398,8 +409,8 @@ static bool macsec_validate_skb(struct sk_buff *skb, u16 icv_len)
+ 	if (h->unused)
+ 		return false;
+ 
+-	/* rx.pn != 0 (figure 10-5) */
+-	if (!h->packet_number)
++	/* rx.pn != 0 if not XPN (figure 10-5 with 802.11AEbw-2013 amendment) */
++	if (!h->packet_number && !xpn)
+ 		return false;
+ 
+ 	/* length check, f) g) h) i) */
+@@ -411,6 +422,15 @@ static bool macsec_validate_skb(struct sk_buff *skb, u16 icv_len)
+ #define MACSEC_NEEDED_HEADROOM (macsec_extra_len(true))
+ #define MACSEC_NEEDED_TAILROOM MACSEC_STD_ICV_LEN
+ 
++static void macsec_fill_iv_xpn(unsigned char *iv, ssci_t ssci, u64 pn,
++			       salt_t salt)
++{
++	struct gcm_iv_xpn *gcm_iv = (struct gcm_iv_xpn *)iv;
++
++	gcm_iv->ssci = ssci ^ salt.ssci;
++	gcm_iv->pn = cpu_to_be64(pn) ^ salt.pn;
++}
++
+ static void macsec_fill_iv(unsigned char *iv, sci_t sci, u32 pn)
+ {
+ 	struct gcm_iv *gcm_iv = (struct gcm_iv *)iv;
+@@ -441,14 +461,19 @@ void macsec_pn_wrapped(struct macsec_secy *secy, struct macsec_tx_sa *tx_sa)
+ }
+ EXPORT_SYMBOL_GPL(macsec_pn_wrapped);
+ 
+-static u32 tx_sa_update_pn(struct macsec_tx_sa *tx_sa, struct macsec_secy *secy)
++static pn_t tx_sa_update_pn(struct macsec_tx_sa *tx_sa,
++			    struct macsec_secy *secy)
+ {
+-	u32 pn;
++	pn_t pn;
+ 
+ 	spin_lock_bh(&tx_sa->lock);
+-	pn = tx_sa->next_pn;
+ 
+-	tx_sa->next_pn++;
++	pn = tx_sa->next_pn_halves;
++	if (secy->xpn)
++		tx_sa->next_pn++;
++	else
++		tx_sa->next_pn_halves.lower++;
++
+ 	if (tx_sa->next_pn == 0)
+ 		__macsec_pn_wrapped(secy, tx_sa);
+ 	spin_unlock_bh(&tx_sa->lock);
+@@ -563,7 +588,7 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
+ 	struct macsec_tx_sa *tx_sa;
+ 	struct macsec_dev *macsec = macsec_priv(dev);
+ 	bool sci_present;
+-	u32 pn;
++	pn_t pn;
+ 
+ 	secy = &macsec->secy;
+ 	tx_sc = &secy->tx_sc;
+@@ -605,12 +630,12 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
+ 	memmove(hh, eth, 2 * ETH_ALEN);
+ 
+ 	pn = tx_sa_update_pn(tx_sa, secy);
+-	if (pn == 0) {
++	if (pn.full64 == 0) {
+ 		macsec_txsa_put(tx_sa);
+ 		kfree_skb(skb);
+ 		return ERR_PTR(-ENOLINK);
+ 	}
+-	macsec_fill_sectag(hh, secy, pn, sci_present);
++	macsec_fill_sectag(hh, secy, pn.lower, sci_present);
+ 	macsec_set_shortlen(hh, unprotected_len - 2 * ETH_ALEN);
+ 
+ 	skb_put(skb, secy->icv_len);
+@@ -641,7 +666,10 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+-	macsec_fill_iv(iv, secy->sci, pn);
++	if (secy->xpn)
++		macsec_fill_iv_xpn(iv, secy->ssci, pn.full64, secy->salt);
++	else
++		macsec_fill_iv(iv, secy->sci, pn.lower);
+ 
+ 	sg_init_table(sg, ret);
+ 	ret = skb_to_sgvec(skb, sg, 0, skb->len);
+@@ -693,13 +721,14 @@ static bool macsec_post_decrypt(struct sk_buff *skb, struct macsec_secy *secy, u
+ 	u32 lowest_pn = 0;
+ 
+ 	spin_lock(&rx_sa->lock);
+-	if (rx_sa->next_pn >= secy->replay_window)
+-		lowest_pn = rx_sa->next_pn - secy->replay_window;
++	if (rx_sa->next_pn_halves.lower >= secy->replay_window)
++		lowest_pn = rx_sa->next_pn_halves.lower - secy->replay_window;
+ 
+ 	/* Now perform replay protection check again
+ 	 * (see IEEE 802.1AE-2006 figure 10-5)
+ 	 */
+-	if (secy->replay_protect && pn < lowest_pn) {
++	if (secy->replay_protect && pn < lowest_pn &&
++	    (!secy->xpn || pn_same_half(pn, lowest_pn))) {
+ 		spin_unlock(&rx_sa->lock);
+ 		u64_stats_update_begin(&rxsc_stats->syncp);
+ 		rxsc_stats->stats.InPktsLate++;
+@@ -748,8 +777,15 @@ static bool macsec_post_decrypt(struct sk_buff *skb, struct macsec_secy *secy, u
+ 		}
+ 		u64_stats_update_end(&rxsc_stats->syncp);
+ 
+-		if (pn >= rx_sa->next_pn)
+-			rx_sa->next_pn = pn + 1;
++		// Instead of "pn >=" - to support pn overflow in xpn
++		if (pn + 1 > rx_sa->next_pn_halves.lower) {
++			rx_sa->next_pn_halves.lower = pn + 1;
++		} else if (secy->xpn &&
++			   !pn_same_half(pn, rx_sa->next_pn_halves.lower)) {
++			rx_sa->next_pn_halves.upper++;
++			rx_sa->next_pn_halves.lower = pn + 1;
++		}
++
+ 		spin_unlock(&rx_sa->lock);
+ 	}
+ 
+@@ -836,6 +872,7 @@ static struct sk_buff *macsec_decrypt(struct sk_buff *skb,
+ 	unsigned char *iv;
+ 	struct aead_request *req;
+ 	struct macsec_eth_header *hdr;
++	u32 hdr_pn;
+ 	u16 icv_len = secy->icv_len;
+ 
+ 	macsec_skb_cb(skb)->valid = false;
+@@ -855,7 +892,21 @@ static struct sk_buff *macsec_decrypt(struct sk_buff *skb,
+ 	}
+ 
+ 	hdr = (struct macsec_eth_header *)skb->data;
+-	macsec_fill_iv(iv, sci, ntohl(hdr->packet_number));
++	hdr_pn = ntohl(hdr->packet_number);
++
++	if (secy->xpn) {
++		pn_t recovered_pn = rx_sa->next_pn_halves;
++
++		recovered_pn.lower = hdr_pn;
++		if (hdr_pn < rx_sa->next_pn_halves.lower &&
++		    !pn_same_half(hdr_pn, rx_sa->next_pn_halves.lower))
++			recovered_pn.upper++;
++
++		macsec_fill_iv_xpn(iv, rx_sa->sc->ssci, recovered_pn.full64,
++				   secy->salt);
++	} else {
++		macsec_fill_iv(iv, sci, hdr_pn);
++	}
+ 
+ 	sg_init_table(sg, ret);
+ 	ret = skb_to_sgvec(skb, sg, 0, skb->len);
+@@ -996,7 +1047,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 	struct macsec_rxh_data *rxd;
+ 	struct macsec_dev *macsec;
+ 	sci_t sci;
+-	u32 pn;
++	u32 hdr_pn;
+ 	bool cbit;
+ 	struct pcpu_rx_sc_stats *rxsc_stats;
+ 	struct pcpu_secy_stats *secy_stats;
+@@ -1067,7 +1118,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 	secy_stats = this_cpu_ptr(macsec->stats);
+ 	rxsc_stats = this_cpu_ptr(rx_sc->stats);
+ 
+-	if (!macsec_validate_skb(skb, secy->icv_len)) {
++	if (!macsec_validate_skb(skb, secy->icv_len, secy->xpn)) {
+ 		u64_stats_update_begin(&secy_stats->syncp);
+ 		secy_stats->stats.InPktsBadTag++;
+ 		u64_stats_update_end(&secy_stats->syncp);
+@@ -1099,13 +1150,16 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 	}
+ 
+ 	/* First, PN check to avoid decrypting obviously wrong packets */
+-	pn = ntohl(hdr->packet_number);
++	hdr_pn = ntohl(hdr->packet_number);
+ 	if (secy->replay_protect) {
+ 		bool late;
+ 
+ 		spin_lock(&rx_sa->lock);
+-		late = rx_sa->next_pn >= secy->replay_window &&
+-		       pn < (rx_sa->next_pn - secy->replay_window);
++		late = rx_sa->next_pn_halves.lower >= secy->replay_window &&
++		       hdr_pn < (rx_sa->next_pn_halves.lower - secy->replay_window);
++
++		if (secy->xpn)
++			late = late && pn_same_half(rx_sa->next_pn_halves.lower, hdr_pn);
+ 		spin_unlock(&rx_sa->lock);
+ 
+ 		if (late) {
+@@ -1134,7 +1188,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 		return RX_HANDLER_CONSUMED;
+ 	}
+ 
+-	if (!macsec_post_decrypt(skb, secy, pn))
++	if (!macsec_post_decrypt(skb, secy, hdr_pn))
+ 		goto drop;
+ 
+ deliver:
+@@ -1661,7 +1715,7 @@ static int macsec_add_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
+ 		spin_lock_bh(&rx_sa->lock);
+-		rx_sa->next_pn = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
++		rx_sa->next_pn_halves.lower = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
+ 		spin_unlock_bh(&rx_sa->lock);
+ 	}
+ 
+@@ -1868,7 +1922,7 @@ static int macsec_add_txsa(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
+ 	spin_lock_bh(&tx_sa->lock);
+-	tx_sa->next_pn = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
++	tx_sa->next_pn_halves.lower = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
+ 	spin_unlock_bh(&tx_sa->lock);
+ 
+ 	if (tb_sa[MACSEC_SA_ATTR_ACTIVE])
+@@ -2132,9 +2186,11 @@ static int macsec_upd_txsa(struct sk_buff *skb, struct genl_info *info)
+ 	u8 assoc_num;
+ 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
+ 	bool was_operational, was_active;
+-	u32 prev_pn = 0;
++	pn_t prev_pn;
+ 	int ret = 0;
+ 
++	prev_pn.full64 = 0;
++
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+ 		return -EINVAL;
+ 
+@@ -2154,8 +2210,8 @@ static int macsec_upd_txsa(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
+ 		spin_lock_bh(&tx_sa->lock);
+-		prev_pn = tx_sa->next_pn;
+-		tx_sa->next_pn = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
++		prev_pn = tx_sa->next_pn_halves;
++		tx_sa->next_pn_halves.lower = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
+ 		spin_unlock_bh(&tx_sa->lock);
+ 	}
+ 
+@@ -2193,7 +2249,7 @@ static int macsec_upd_txsa(struct sk_buff *skb, struct genl_info *info)
+ cleanup:
+ 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
+ 		spin_lock_bh(&tx_sa->lock);
+-		tx_sa->next_pn = prev_pn;
++		tx_sa->next_pn_halves = prev_pn;
+ 		spin_unlock_bh(&tx_sa->lock);
+ 	}
+ 	tx_sa->active = was_active;
+@@ -2213,9 +2269,11 @@ static int macsec_upd_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 	struct nlattr *tb_rxsc[MACSEC_RXSC_ATTR_MAX + 1];
+ 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
+ 	bool was_active;
+-	u32 prev_pn = 0;
++	pn_t prev_pn;
+ 	int ret = 0;
+ 
++	prev_pn.full64 = 0;
++
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+ 		return -EINVAL;
+ 
+@@ -2238,8 +2296,8 @@ static int macsec_upd_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
+ 		spin_lock_bh(&rx_sa->lock);
+-		prev_pn = rx_sa->next_pn;
+-		rx_sa->next_pn = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
++		prev_pn = rx_sa->next_pn_halves;
++		rx_sa->next_pn_halves.lower = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
+ 		spin_unlock_bh(&rx_sa->lock);
+ 	}
+ 
+@@ -2272,7 +2330,7 @@ static int macsec_upd_rxsa(struct sk_buff *skb, struct genl_info *info)
+ cleanup:
+ 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
+ 		spin_lock_bh(&rx_sa->lock);
+-		rx_sa->next_pn = prev_pn;
++		rx_sa->next_pn_halves = prev_pn;
+ 		spin_unlock_bh(&rx_sa->lock);
+ 	}
+ 	rx_sa->active = was_active;
+@@ -2791,7 +2849,7 @@ dump_secy(struct macsec_secy *secy, struct net_device *dev,
+ 		}
+ 
+ 		if (nla_put_u8(skb, MACSEC_SA_ATTR_AN, i) ||
+-		    nla_put_u32(skb, MACSEC_SA_ATTR_PN, tx_sa->next_pn) ||
++		    nla_put_u32(skb, MACSEC_SA_ATTR_PN, tx_sa->next_pn_halves.lower) ||
+ 		    nla_put(skb, MACSEC_SA_ATTR_KEYID, MACSEC_KEYID_LEN, tx_sa->key.id) ||
+ 		    nla_put_u8(skb, MACSEC_SA_ATTR_ACTIVE, tx_sa->active)) {
+ 			nla_nest_cancel(skb, txsa_nest);
+@@ -2895,7 +2953,7 @@ dump_secy(struct macsec_secy *secy, struct net_device *dev,
+ 			nla_nest_end(skb, attr);
+ 
+ 			if (nla_put_u8(skb, MACSEC_SA_ATTR_AN, i) ||
+-			    nla_put_u32(skb, MACSEC_SA_ATTR_PN, rx_sa->next_pn) ||
++			    nla_put_u32(skb, MACSEC_SA_ATTR_PN, rx_sa->next_pn_halves.lower) ||
+ 			    nla_put(skb, MACSEC_SA_ATTR_KEYID, MACSEC_KEYID_LEN, rx_sa->key.id) ||
+ 			    nla_put_u8(skb, MACSEC_SA_ATTR_ACTIVE, rx_sa->active)) {
+ 				nla_nest_cancel(skb, rxsa_nest);
+diff --git a/include/net/macsec.h b/include/net/macsec.h
+index 92e43db8b..a0b1d0b5c 100644
+--- a/include/net/macsec.h
++++ b/include/net/macsec.h
+@@ -11,7 +11,10 @@
+ #include <uapi/linux/if_link.h>
+ #include <uapi/linux/if_macsec.h>
+ 
++#define MACSEC_SALT_LEN 12
++
+ typedef u64 __bitwise sci_t;
++typedef u32 __bitwise ssci_t;
+ 
+ #define MACSEC_NUM_AN 4 /* 2 bits for the association number */
+ 
+@@ -58,6 +61,29 @@ struct macsec_tx_sc_stats {
+ 	__u64 OutOctetsEncrypted;
+ };
+ 
++typedef union salt {
++	struct {
++		u32 ssci;
++		u64 pn;
++	} __packed;
++	u8 bytes[MACSEC_SALT_LEN];
++} __packed salt_t;
++
++typedef union pn {
++	struct {
++#if defined(__LITTLE_ENDIAN_BITFIELD)
++		u32 lower;
++		u32 upper;
++#elif defined(__BIG_ENDIAN_BITFIELD)
++		u32 upper;
++		u32 lower;
++#else
++#error	"Please fix <asm/byteorder.h>"
++#endif
++	};
++	u64 full64;
++} pn_t;
++
+ /**
+  * struct macsec_rx_sa - receive secure association
+  * @active:
+@@ -69,7 +95,10 @@ struct macsec_tx_sc_stats {
+ struct macsec_rx_sa {
+ 	struct macsec_key key;
+ 	spinlock_t lock;
+-	u32 next_pn;
++	union {
++		pn_t next_pn_halves;
++		u64 next_pn;
++	};
+ 	refcount_t refcnt;
+ 	bool active;
+ 	struct macsec_rx_sa_stats __percpu *stats;
+@@ -90,6 +119,7 @@ struct pcpu_tx_sc_stats {
+ /**
+  * struct macsec_rx_sc - receive secure channel
+  * @sci: secure channel identifier for this SC
++ * @ssci: short secure channel identifier for this SC
+  * @active: channel is active
+  * @sa: array of secure associations
+  * @stats: per-SC stats
+@@ -97,6 +127,7 @@ struct pcpu_tx_sc_stats {
+ struct macsec_rx_sc {
+ 	struct macsec_rx_sc __rcu *next;
+ 	sci_t sci;
++	ssci_t ssci;
+ 	bool active;
+ 	struct macsec_rx_sa __rcu *sa[MACSEC_NUM_AN];
+ 	struct pcpu_rx_sc_stats __percpu *stats;
+@@ -115,7 +146,10 @@ struct macsec_rx_sc {
+ struct macsec_tx_sa {
+ 	struct macsec_key key;
+ 	spinlock_t lock;
+-	u32 next_pn;
++	union {
++		pn_t next_pn_halves;
++		u64 next_pn;
++	};
+ 	refcount_t refcnt;
+ 	bool active;
+ 	struct macsec_tx_sa_stats __percpu *stats;
+@@ -148,10 +182,13 @@ struct macsec_tx_sc {
+  * struct macsec_secy - MACsec Security Entity
+  * @netdev: netdevice for this SecY
+  * @n_rx_sc: number of receive secure channels configured on this SecY
++ * @salt: salt used to generate IV in XPN cipher suites
+  * @sci: secure channel identifier used for tx
++ * @ssci: short secure channel identifier used for tx
+  * @key_len: length of keys used by the cipher suite
+  * @icv_len: length of ICV used by the cipher suite
+  * @validate_frames: validation mode
++ * @xpn: enable XPN for this SecY
+  * @operational: MAC_Operational flag
+  * @protect_frames: enable protection for this SecY
+  * @replay_protect: enable packet number checks on receive
+@@ -162,10 +199,13 @@ struct macsec_tx_sc {
+ struct macsec_secy {
+ 	struct net_device *netdev;
+ 	unsigned int n_rx_sc;
++	salt_t salt;
+ 	sci_t sci;
++	ssci_t ssci;
+ 	u16 key_len;
+ 	u16 icv_len;
+ 	enum macsec_validation_type validate_frames;
++	bool xpn;
+ 	bool operational;
+ 	bool protect_frames;
+ 	bool replay_protect;
 
-Theoretically also the .timeout_set op could be implemented but I'm not sur=
-e=20
-if this fits nicely into the existing "timeout" API and if it even makes se=
-nse=20
-to implement that.
-
-Regards,
-Luca
-
-On Donnerstag, 5. M=E4rz 2020 22:09:16 CET Jacek Anaszewski wrote:
-> Hi Luca,
->=20
-> Thank you for the patch.
->=20
-> On 2/27/20 7:50 PM, Luca Weiss wrote:
-> > Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
-> >=20
-> > This device is controller by two GPIO lines, one for enabling the LED
-> > and the second one for switching between torch and flash mode.
-> >=20
-> > The device will automatically switch to torch mode after being in flash
-> > mode for about 250-300ms, so after that time the driver will turn the
-> > LED off again automatically.
-> >=20
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> > ---
-> > Hi, this driver is controllable via sysfs and v4l2 APIs (as documented
-> > in Documentation/leds/leds-class-flash.rst).
-> >=20
-> > The following is possible:
-> >=20
-> > # Torch on
-> > echo 1 > /sys/class/leds/white\:flash/brightness
-> > # Torch off
-> > echo 0 > /sys/class/leds/white\:flash/brightness
-> > # Activate flash
-> > echo 1 > /sys/class/leds/white\:flash/flash_strobe
-> >=20
-> > # Torch on
-> > v4l2-ctl -d /dev/video1 -c led_mode=3D2
-> > # Torch off
-> > v4l2-ctl -d /dev/video1 -c led_mode=3D0
-> > # Activate flash
-> > v4l2-ctl -d /dev/video1 -c strobe=3D1
->=20
-> What is /dev/video1 ? Did you register vl42 flash subdev
-> in some v4l2 media controller device?
-
-On the Allwinner A64 SoC /dev/video0 is the node for cedrus (video encoder/
-decoder), so the sun6i-csi driver gets to be /dev/video1
-
-# v4l2-ctl --list-devices
-cedrus (platform:cedrus):
-        /dev/video0
-        /dev/media0
-
-sun6i-csi (platform:csi):
-        /dev/video1
-
-Allwinner Video Capture Device (platform:sun6i-csi):
-        /dev/media1
-
-
-Here's the relevant part from my dts:
-
-sgm3140 {
-    compatible =3D "sgmicro,sgm3140";
-    flash-gpios =3D <&pio 3 24 GPIO_ACTIVE_HIGH>; /* FLASH_TRIGOUT: PD24 */
-    enable-gpios =3D <&pio 2 3 GPIO_ACTIVE_HIGH>; /* FLASH_EN: PC3 */
-
-    sgm3140_flash: led {
-        function =3D LED_FUNCTION_FLASH;
-        color =3D <LED_COLOR_ID_WHITE>;
-    };
-};
-
-/* as subnode of csi (compatible: allwinner,sun50i-a64-csi) */
-ov5640: rear-camera@4c {
-    compatible =3D "ovti,ov5640";
-    <snip>
-    flash-leds =3D <&sgm3140_flash>;
-};
-
->=20
-> > Unfortunately the last command (enabling the 'flash' via v4l2 results in
-> >=20
-> > the following being printed and nothing happening:
-> >   VIDIOC_S_EXT_CTRLS: failed: Resource busy
-> >   strobe: Resource busy
-> >=20
-> > Unfortunately I couldn't figure out the reason so I'm hoping to get some
-> > guidance for this. iirc it worked at some point but then stopped.
->=20
-> You have to be in flash mode to strobe i.e. led_mode=3D1.
-
-Of course..! Makes sense, I just never realized the v4l2 device had to be i=
-n=20
-this mode for the strobe button to work. It works nicely with that, thanks!
-
-> <<snip>>
-
-> > +static void sgm3140_powerdown_timer(struct timer_list *t)
-> > +{
-> > +	struct sgm3140 *priv =3D from_timer(priv, t, powerdown_timer);
-> > +
-> > +	gpiod_set_value_cansleep(priv->enable_gpio, 0);
-> > +	gpiod_set_value_cansleep(priv->flash_gpio, 0);
->=20
-> You could also implement strobe_get op and return from it a flag
-> indicating if LED is strobing.
-
-Makes sense.
-> > +}
-> > +
-> > +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-> > +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-> > +					   struct=20
-v4l2_flash_config *v4l2_sd_cfg)
-> > +{
-> > +	struct led_classdev *led_cdev =3D &priv->fled_cdev.led_cdev;
-> > +	struct led_flash_setting *s;
-> > +
-> > +	strlcpy(v4l2_sd_cfg->dev_name, led_cdev->dev->kobj.name,
-> > +		sizeof(v4l2_sd_cfg->dev_name));
-> > +
-> > +	s =3D &v4l2_sd_cfg->intensity;
-> > +	s->min =3D 0;
-> > +	s->max =3D 1;
-> > +	s->step =3D 1;
-> > +	s->val =3D 1;
-> > +}
-> > +
-> > +#else
-> > +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-> > +					   struct=20
-v4l2_flash_config *v4l2_sd_cfg)
-> > +{
-> > +}
-> > +#endif
-> > +
-> > +static int sgm3140_probe(struct platform_device *pdev)
-> > +{
-> > +	struct sgm3140 *priv;
-> > +	struct led_classdev *led_cdev;
-> > +	struct led_classdev_flash *fled_cdev;
-> > +	struct led_init_data init_data =3D {};
-> > +	struct device_node *child_node;
-> > +	struct v4l2_flash_config v4l2_sd_cfg;
->=20
-> s/v4l2_sd_cfg;/v4l2_sd_cfg =3D {};/
->=20
-> Otherwise it is possible that some controls would be initialized
-> to random values.
->=20
-
-Ack
-
-> > +	int ret;
-> > +
-> > +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	priv->flash_gpio =3D devm_gpiod_get(&pdev->dev, "flash",=20
-GPIOD_OUT_LOW);
-> > +	ret =3D PTR_ERR_OR_ZERO(priv->flash_gpio);
-> > +	if (ret) {
-> > +		if (ret !=3D -EPROBE_DEFER)
-> > +			dev_err(&pdev->dev, "Failed to request flash=20
-gpio: %d\n",
-> > +				ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	priv->enable_gpio =3D devm_gpiod_get(&pdev->dev, "enable",=20
-GPIOD_OUT_LOW);
-> > +	ret =3D PTR_ERR_OR_ZERO(priv->enable_gpio);
-> > +	if (ret) {
-> > +		if (ret !=3D -EPROBE_DEFER)
-> > +			dev_err(&pdev->dev, "Failed to request=20
-enable gpio: %d\n",
-> > +				ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	child_node =3D of_get_next_available_child(pdev->dev.of_node, NULL);
-> > +	if (!child_node) {
-> > +		dev_err(&pdev->dev, "No DT child node found for=20
-connected LED.\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	timer_setup(&priv->powerdown_timer, sgm3140_powerdown_timer, 0);
-> > +
-> > +	fled_cdev =3D &priv->fled_cdev;
-> > +	led_cdev =3D &fled_cdev->led_cdev;
-> > +
-> > +	fled_cdev->ops =3D &sgm3140_flash_ops;
-> > +
-> > +	led_cdev->brightness_set_blocking =3D sgm3140_brightness_set;
-> > +	led_cdev->max_brightness =3D LED_ON;
-> > +	led_cdev->flags |=3D LED_DEV_CAP_FLASH;
-> > +
-> > +	init_data.fwnode =3D of_fwnode_handle(child_node);
-> > +	init_data.devicename =3D SGM3140_NAME;
->=20
-> devicename should be skipped in new drivers.
->=20
-
-Ack
-
-> > +
-> > +	platform_set_drvdata(pdev, priv);
-> > +
-> > +	/* Register in the LED subsystem */
-> > +	ret =3D led_classdev_flash_register_ext(&pdev->dev, fled_cdev,
-> > &init_data);
->=20
-> We already have devm_* prefixed version thereof.
->=20
-
-Ack, switched to the devm_ variant
-
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "Failed to register flash device:=20
-%d\n",
-> > +			ret);
-> > +		goto err_flash_register;
-> > +	}
-> > +
-> > +	sgm3140_init_v4l2_flash_config(priv, &v4l2_sd_cfg);
-> > +
-> > +	/* Create V4L2 Flash subdev */
-> > +	priv->v4l2_flash =3D v4l2_flash_init(&pdev->dev,
-> > of_fwnode_handle(child_node), +				=09
-   fled_cdev, NULL,
-> > +					   &v4l2_sd_cfg);
-> > +	if (IS_ERR(priv->v4l2_flash)) {
-> > +		ret =3D PTR_ERR(priv->v4l2_flash);
-> > +		goto err_v4l2_flash_init;
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +err_v4l2_flash_init:
-> > +	led_classdev_flash_unregister(fled_cdev);
-> > +err_flash_register:
-> > +	of_node_put(child_node);
->=20
-> You need to relase of_node also in case of success.
->=20
-
-Done.
-
-> > +	return ret;
-> > +}
-> > +
-> > +static int sgm3140_remove(struct platform_device *pdev)
-> > +{
-> > +	struct sgm3140 *priv =3D platform_get_drvdata(pdev);
-> > +
-> > +	del_timer_sync(&priv->powerdown_timer);
-> > +
-> > +	v4l2_flash_release(priv->v4l2_flash);
-> > +	led_classdev_flash_unregister(&priv->fled_cdev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id sgm3140_dt_match[] =3D {
-> > +	{ .compatible =3D "sgmicro,sgm3140" },
-> > +	{ /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, sgm3140_dt_match);
-> > +
-> > +static struct platform_driver sgm3140_driver =3D {
-> > +	.probe	=3D sgm3140_probe,
-> > +	.remove	=3D sgm3140_remove,
-> > +	.driver	=3D {
-> > +		.name	=3D "sgm3140",
-> > +		.of_match_table =3D sgm3140_dt_match,
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver(sgm3140_driver);
-> > +
-> > +MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xyz>");
-> > +MODULE_DESCRIPTION("SG Micro SGM3140 charge pump led driver");
-> > +MODULE_LICENSE("GPL v2");
-
-
-
+base-commit: dca132a60f226f4cbaa98807518a5ca6cff112ce
+-- 
+2.20.1
 
