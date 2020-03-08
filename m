@@ -2,120 +2,143 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607D3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB2FC10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336AC20828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644D72166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 13:31:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Vc/4k9oN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgCHNXO (ORCPT
+        id S1726333AbgCHNbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 09:23:14 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:45650 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgCHNXO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 09:23:14 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1jAvtb-00042O-AD; Sun, 08 Mar 2020 09:23:07 -0400
-Message-ID: <2f3e2cde7b94dfdb8e1f0532d1074e07ef675bc4.camel@surriel.com>
-Subject: Re: [PATCH]  mm,page_alloc,cma: conditionally prefer cma pageblocks
- for movable allocations
-From:   Rik van Riel <riel@surriel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Roman Gushchin <guro@fb.com>,
-        Qian Cai <cai@lca.pw>, Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Date:   Sun, 08 Mar 2020 09:23:06 -0400
-In-Reply-To: <20200307143849.a2fcb81a9626dad3ee46471f@linux-foundation.org>
-References: <20200306150102.3e77354b@imladris.surriel.com>
-         <20200307143849.a2fcb81a9626dad3ee46471f@linux-foundation.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Zfoz2TVd9hG/2oLi3xrD"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Sun, 8 Mar 2020 09:31:07 -0400
+Received: from mail-eopbgr40089.outbound.protection.outlook.com ([40.107.4.89]:52159
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726271AbgCHNbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 09:31:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aOWzq0YnFFCjSqkrf+Pxurf1eNdMMfiDnYfxAOH/li2vAQpyLNY7ifYt/DX5GKj3KNjTBJbJ5D9cD7V3FrxGLK9H5PbxyXNZYA3BxEEZfQ98fxQEJM4DtNUUVdGm1S9yYDdvRRGjf5w1gOpXyGD8HudGs/Xp7ZWlMdNJrwCXkNv1/R+0DXaazcFb9WfEayVaIcMxfZnt+7kxrj79F+TgI56EHZFkMq9WF9RU6+9BKVDuQHkHQ/a9mbLHTKHFsVa0Ocyb5MeWo/UrEXlcnnttqYyycgpml9tveR34fwgNrf4gC52uwPxrvIphvgCxFproxJa5kRqi8NWrMg+caHc6xQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KPvGEoa3xXvTsw2glntuKyytxDx+FWSDma8CeW3Y3Lg=;
+ b=QsIwbdmOSruEfHZUOmHCWg+F31aQu7TWXhscSngzfzPWldNYkGrEjjlmF9Q3f9fEorvn94WnthVEf/KxtTT14o+LsNro3Dl6JccX2yZRFYDnoW37gubcdLojPf7wAKpHxeuUbA7vYbJV5HBRtOt+sVqWyMumSu/rXF5j5P8a6Te1oM1eEFiuVkQi3k7VimAhZu+2AbkqPsET2ANLIqCR9JTdAiioOgBUw0z35tguFIWIKSOabHY/E0WVCDIcPBm4yCn03lpzigW4oZkFaN4WhXYS9zQsCb5iPBENYjLEhbkcNkk6Zxho5LRQcCtMNmSd0LqbVKqfFmiHGckjy+lIcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KPvGEoa3xXvTsw2glntuKyytxDx+FWSDma8CeW3Y3Lg=;
+ b=Vc/4k9oNAXXCQ0FIdpxudsj5Qj88SPPfanra6eOlmfiyu9abmc2LOV1nGXaf6iJbznRylF7Uyxyqf4FBfcoH84UAHrtpUtMLdwPz1XYoswmlvxjnEDEoJohKONMuF8ETDH5CPzBgBXKkCXLpVQs6hwl7xjNMtT0SWi4OH4btwB0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6275.eurprd04.prod.outlook.com (20.179.36.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.15; Sun, 8 Mar 2020 13:31:03 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.013; Sun, 8 Mar 2020
+ 13:31:03 +0000
+From:   peng.fan@nxp.com
+To:     sudeep.holla@arm.com, robh+dt@kernel.org
+Cc:     viresh.kumar@linaro.org, f.fainelli@gmail.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V5 0/2] firmware: arm_scmi: add smc/hvc transports support
+Date:   Sun,  8 Mar 2020 21:24:37 +0800
+Message-Id: <1583673879-20714-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0116.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:40::20) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR01CA0116.apcprd01.prod.exchangelabs.com (2603:1096:4:40::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.14 via Frontend Transport; Sun, 8 Mar 2020 13:31:00 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c40ecc2d-67bb-46d5-14bd-08d7c364f286
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6275:|AM0PR04MB6275:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB62759973706A8568B31416B188E10@AM0PR04MB6275.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 03361FCC43
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(366004)(346002)(376002)(136003)(199004)(189003)(5660300002)(16526019)(186003)(2616005)(956004)(2906002)(4326008)(6506007)(6512007)(6666004)(9686003)(52116002)(66556008)(966005)(6486002)(81156014)(81166006)(86362001)(478600001)(8676002)(316002)(66946007)(66476007)(26005)(36756003)(69590400007)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6275;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pjyNX7P1BekYFjENP723m1xtSKhfFwcZFajoNuUeBZIqDvgGOTV4SirkSA5bvrwue2cs3wcDL+9C3YrUcRh41lRB0z/n95INEDpjP3/fYMwkb7WkWD8t/2oXB0GpZi/BNx8jJPi7aVF0M6y9728XX7GICU0+VfKGd2+1y9oIQDA35znr9/yXAmv2BGeRZy/OY+PXhN3bcPhM2KvO1jfhxfUQ8ya/tVtBN4iI/QU4ZGhAgei7u9z3D6L048AQxkTePRmt426HSsrtOg2vG+w2+qizC/jKrRlUpFRRvIxUzHBk6EVmN+4awuuwkhA2O9XFFvTc0AWteTYYIwwMQWOqkVz0zgD2+6hVfwvgWe3NJHHoVInppJXvbghcaCz+fOkRe54s9mWJJSTG0rIYtzypVUod4GO9KM6nVnwnu/3EAHGExyMpSQiQK9e0/z2Fa5U6pvt1M9Rcu1fWPL5Ax4LNnYm+EKtfCiGhCC3/YxO61l92R4arj193KtAPewkTSbQMsPBkT8XbnReGtr8DjxotGSXRqyxYbPzjSg6COyN21uJoRTKC5pjoM6XsVDYIhmFy9kvrJfMe83gfKT1L3mF0lQ==
+X-MS-Exchange-AntiSpam-MessageData: IFqQYgmjgJu/k7E2chCjj57YIMCZ4xJEba16pid4JCONmirIX9uFD+CP05YzVcRaBEBaF7DVBw8Kj7NeZW+2RswQ3Xg7rHRa+ykHeVPgX804dS/9q5/vwI9IJc0XaZxzOQ4g9+xpgpbvcuWohYepCQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c40ecc2d-67bb-46d5-14bd-08d7c364f286
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2020 13:31:03.3771
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IWixPaeQeBstrkZwSIBl1GD8nSG0SAEVgfCQqh13PWXmU/EWqsFeX28wbmhrTzG3Kaj4Vmq9GeukqX46jZdmDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6275
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Peng Fan <peng.fan@nxp.com>
 
---=-Zfoz2TVd9hG/2oLi3xrD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+V5:
+ Add Rob's R-b tag for patch 1
+ Add mutex for patch 2
 
-On Sat, 2020-03-07 at 14:38 -0800, Andrew Morton wrote:
-> On Fri, 6 Mar 2020 15:01:02 -0500 Rik van Riel <riel@surriel.com>
-> wrote:
+V4:
+ Drop prot_id in scmi_chan_info, since not used for now.
 
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -2711,6 +2711,18 @@ __rmqueue(struct zone *zone, unsigned int
-> > order, int migratetype,
-> >  {
-> >  	struct page *page;
-> > =20
-> > +	/*
-> > +	 * Balance movable allocations between regular and CMA areas by
-> > +	 * allocating from CMA when over half of the zone's free memory
-> > +	 * is in the CMA area.
-> > +	 */
-> > +	if (migratetype =3D=3D MIGRATE_MOVABLE &&
-> > +	    zone_page_state(zone, NR_FREE_CMA_PAGES) >
-> > +	    zone_page_state(zone, NR_FREE_PAGES) / 2) {
-> > +		page =3D __rmqueue_cma_fallback(zone, order);
-> > +		if (page)
-> > +			return page;
-> > +	}
-> >  retry:
-> >  	page =3D __rmqueue_smallest(zone, order, migratetype);
-> >  	if (unlikely(!page)) {
->=20
-> __rmqueue() is a hot path (as much as any per-page operation can be a
-> hot path).  What is the impact here?
+V3:
+ Add back arm,scmi-smc compatible string
+ Change smc-id to arm,smc-id
+ Directly use arm_smccc_1_1_invoke
+ Add prot_id in scmi_chan_info for per protocol shmem usage.
 
-That is a good question. For MIGRATE_MOVABLE allocations,
-most allocations seem to be order 0, which go through the
-per cpu pages array, and rmqueue_pcplist, or be order 9.
+V2:
+ patch 1/2: only add smc-id property
+ patch 2/2: Parse smc/hvc from psci node
+	    Use prot_id as 2nd arg when issue smc/hvc
+	    Differentiate tranports using mboxes or smc-id property
+https://lore.kernel.org/patchwork/cover/1193435/
 
-For order 9 allocations, other things seem likely to dominate
-the allocation anyway, while for order 0 allocations the
-pcp list should take away the sting?
+This is to add smc/hvc transports support, based on Viresh's v6.
+SCMI firmware could be implemented in EL3, S-EL1, NS-EL2 or other
+A core exception level. Then smc/hvc could be used. And for vendor
+specific firmware, a wrapper layer could added in EL3, S-EL1,
+NS-EL2 and etc to translate SCMI calls to vendor specific firmware calls.
 
-What I do not know is how much impact this change would
-have on other allocations, like order 3 or order 4 network
-buffer allocations from irq context...
+A new compatible string arm,scmi-smc is added. arm,scmi is still for
+mailbox transports.
 
-Are there cases in particular that we should be testing?
+Per smc/hvc, only Tx supported.
 
---=20
-All Rights Reversed.
+Peng Fan (2):
+  dt-bindings: arm: arm,scmi: add smc/hvc transport
+  firmware: arm_scmi: add smc/hvc transport
 
---=-Zfoz2TVd9hG/2oLi3xrD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+ Documentation/devicetree/bindings/arm/arm,scmi.txt |   3 +-
+ drivers/firmware/arm_scmi/Makefile                 |   2 +-
+ drivers/firmware/arm_scmi/common.h                 |   1 +
+ drivers/firmware/arm_scmi/driver.c                 |   1 +
+ drivers/firmware/arm_scmi/smc.c                    | 152 +++++++++++++++++++++
+ 5 files changed, 157 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/smc.c
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5k8boACgkQznnekoTE
-3oNzDgf/b23t5rPuQYzgUxsXx9l2rT+R+nlh3KEN+PXzObY/1EEk69KwFipsvq63
-iNRVN55lIjGtBWyvwEbqh1ZLV1vO2k0uTfJ7z5HfVCJrlyyOdnMGZJcxE+9ifsSJ
-MKXMaXMy0U29MoqLFq/8Z1QizRRTk6/nr6X7mirpECfKqrCLTfg9Esixde9aIcQc
-vbIZDo9rwEvUG5Ig226VOLBO75mAOJrvXUUZ0ctrs51vnhjLYEhvNNhHIOP3Qlv2
-2bE0oXgRBvD29ka8CbjYrljeD8clZ2xKJ2DVb/ZZWUlqFV+vTGUnHuEE9lvIYD8D
-bYGt2r05+IMc7thEzDEqKa3QY8N87w==
-=HNtA
------END PGP SIGNATURE-----
-
---=-Zfoz2TVd9hG/2oLi3xrD--
+-- 
+2.16.4
 
