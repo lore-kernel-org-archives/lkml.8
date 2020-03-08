@@ -2,157 +2,176 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2229AC18E5F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673B3C3F2C6
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E369A2072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3962072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 06:49:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YytqQvTP"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="wcMMYbfT";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="O/rw3P28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgCHGnP (ORCPT
+        id S1726281AbgCHGtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 01:43:15 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.196]:38816 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbgCHGnP (ORCPT
+        Sun, 8 Mar 2020 01:49:33 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:40434 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726055AbgCHGtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 01:43:15 -0500
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 42D46114CF
-        for <linux-kernel@vger.kernel.org>; Sun,  8 Mar 2020 00:43:14 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Apecjpds68vkBApecjin4k; Sun, 08 Mar 2020 00:43:14 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ktHGEyhcgp3aw4ArMPWHcrGw64bu26lB+fZatzZfI0c=; b=YytqQvTPRc9zUW6sl6ytNOeAgN
-        otRM7KLK9l9WclynU0J/5OyZp71isTnrQWG1NMuji8PC4l++7/chaSZOwM2I/NuybPlqNcUveYwlU
-        R4PPEqawCM6UWrwKn3etl6m7HoF+qTDqEJWZq8HkBm1JP6ri3Rgufvi9c4W/82XBz0NZegTrfyD0d
-        83SnVliH2fGDVwm6Bj2pAEt5KtqBWpNEwemsunh+ZkWpyYVeW0jK93zYkGJP0zn16JhrkpEPb1Xzg
-        A6mmYBMcXpNtAh1OYrYkzPM8mpd3QNLU5N1JqLZ3iqa+xq/IBK5BzRR+BHZXRxc5hB8UGDMLhdHHz
-        XMm0dHsw==;
-Received: from [201.162.167.15] (port=17590 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jApeb-002vxz-LH; Sun, 08 Mar 2020 00:43:14 -0600
-To:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     clang-built-linux@googlegroups.com
-References: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
- <576fe2ab-7937-4698-b32a-8599813d6ad1@embeddedor.com>
- <4304de54a44b7c8c22d8c2d9249d716664cf5ce8.camel@perches.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] cvt_fallthrough: A tool to convert /* fallthrough */
- comments to fallthrough;
-Message-ID: <6773b7e3-8ce4-55d1-8bb7-bde6d9f6e887@embeddedor.com>
-Date:   Sun, 8 Mar 2020 00:46:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <4304de54a44b7c8c22d8c2d9249d716664cf5ce8.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
+        Sun, 8 Mar 2020 01:49:33 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0286m28Q007156;
+        Sat, 7 Mar 2020 22:48:47 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=s4z9kenL1VV3XzFpz/6OLODlErTPSoqQOqrlDcSRtMY=;
+ b=wcMMYbfTHUQsctV/iJzcRHYyogQR3npcLhIp51zQbes3Q8geQyZQ/tb9zBkNGnW+G9G+
+ FP38iJHSPxlnWyqRR/rTEeVvEtLENV/vbBSt+jDqTOb1esF2elvv5lDZIZnb3WV19+M+
+ d26K1OjPtpNAnee8134BR95OSimGGi1DZLrOjUnOQMFTXtGtGb7fIFKn2uM6YR2AihKP
+ RyePul2S+wT0LS/WU2xzQuue7UWVvshUfns1X+C0hgOPf1L6P+x7tPjp6s4Ir5fnlfdF
+ Ei7w9Zu226MeQuXo6ZPdwOuxuPcORnOIGU7dCcXp3Pe8/NX9qE9vD4SHFh31NukjTRcO PA== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2ym9uwb6qt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Sat, 07 Mar 2020 22:48:47 -0800
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 7 Mar
+ 2020 22:48:45 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.173)
+ by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Sat, 7 Mar 2020 22:48:45 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jp3McjKBtCiI3b5Qh08YTohlR+zqMeR8WhyCO1s+35n7v7z6VFaYgDQrGGKqVwfFj+IAkJ93r5bvI9bhd7yLn6xj0NQVU+KAANfM0eT6kUA5NWOiiQNqEBAi9FFFtpfjOkAO6fuV1a3BMhExW7E61mjW53XfW3WWyIyXTbfA4f6ekh88JoduU3WXi8cWMxz0R3z9uUc+jOymM8tegHOz2YZ+iF2mC6utLXchT2plSglid9FhKCs2xu5mkW9uiPSZYMduryGAYrQ5V6fypB/tBCyFAOOPAUqy8pRoMzCRo5rEWzy2fSYvyvFODVJTqqmLbUbrX3wGNudjKyXZBhuhfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s4z9kenL1VV3XzFpz/6OLODlErTPSoqQOqrlDcSRtMY=;
+ b=B7zBEMEBmLxjRgU22k07tNdUtVqzVSB5HCkggpczWzxsiBLdbbB5HZvMQPMSlkXHuKHAf0xe2uZXvk2z+WGER+nTLfmDn3stkrg4BgxLaKwCgJN9Gqj71A2Xt98qcpjiDMSFbE6GH1bKrSuA3aarBfMu55eveYeR6irW+cDA99QY5YQDli7USzziNongNxKLO0CG7iAEQ0LsnKohWJ8wMdv+p6M4hiInvbOkP2P3I0FyE8Z6INHoeYVc0aKEULcPdv7Io7BuVkPXOauylmQT1mWaAAHNhDU9fXpq7HJBrTaPdSrMS4zk6em79Nr36M1CQ4Fs1+PJPFu1MRLe+x4aUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s4z9kenL1VV3XzFpz/6OLODlErTPSoqQOqrlDcSRtMY=;
+ b=O/rw3P28RRLnlR6OWBVwgeA9mcltXiWahg0Dgl86koicRiYoDRVkCF1e4ws+8L/SDi+JC06TBirpqs52iVLdiZeZr353Zg7+YlTMyiI/CUDdZxf14AriEfZNKFWGuNwXzhbEdFGetUuzVXZMC22B2qpmOOqYAS4mmrP56qYvPko=
+Received: from BYAPR18MB2535.namprd18.prod.outlook.com (2603:10b6:a03:137::17)
+ by BYAPR18MB2613.namprd18.prod.outlook.com (2603:10b6:a03:135::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Sun, 8 Mar
+ 2020 06:48:43 +0000
+Received: from BYAPR18MB2535.namprd18.prod.outlook.com
+ ([fe80::8cd1:1741:8d2d:1c23]) by BYAPR18MB2535.namprd18.prod.outlook.com
+ ([fe80::8cd1:1741:8d2d:1c23%7]) with mapi id 15.20.2793.013; Sun, 8 Mar 2020
+ 06:48:43 +0000
+From:   Alex Belits <abelits@marvell.com>
+To:     "frederic@kernel.org" <frederic@kernel.org>
+CC:     "mingo@kernel.org" <mingo@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "Prasun Kapoor" <pkapoor@marvell.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "will@kernel.org" <will@kernel.org>
+Subject: Re: [EXT] Re: [PATCH 11/12] task_isolation: kick_all_cpus_sync: don't
+ kick isolated cpus
+Thread-Topic: [EXT] Re: [PATCH 11/12] task_isolation: kick_all_cpus_sync:
+ don't kick isolated cpus
+Thread-Index: AQHV8kAcdftBA0b3gky17yT7q2R3yKg7tQiAgAKRrQA=
+Date:   Sun, 8 Mar 2020 06:48:43 +0000
+Message-ID: <7e0ce8988f4811e7453859e22654d2618557d9ab.camel@marvell.com>
+References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
+         <dfa5e0e9f34e6ff0ef048c81bc70496354f31300.camel@marvell.com>
+         <20200306153446.GC8590@lenoir>
+In-Reply-To: <20200306153446.GC8590@lenoir>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.167.15
-X-Source-L: No
-X-Exim-ID: 1jApeb-002vxz-LH
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.167.15]:17590
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [199.233.58.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 57c1474a-4bd7-43da-2fbe-08d7c32cbe50
+x-ms-traffictypediagnostic: BYAPR18MB2613:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR18MB26139D4B383E9E6AB3DA9A4EBCE10@BYAPR18MB2613.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 03361FCC43
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(346002)(39840400004)(376002)(396003)(199004)(189003)(186003)(5660300002)(36756003)(2906002)(478600001)(4326008)(6486002)(8936002)(6506007)(26005)(316002)(8676002)(81166006)(81156014)(6916009)(6512007)(71200400001)(76116006)(2616005)(66446008)(64756008)(66476007)(86362001)(54906003)(66556008)(66946007)(7416002)(91956017);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR18MB2613;H:BYAPR18MB2535.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZcH71kvqcABkWLDgO1Dxs1vZBLODsHrycCAHVAJjyQJlD8p7BoHcbPPJsp2iIzBmtkO87GLL5uRxZHoRmr3gsHRlGxklSCoEGtjuGam5NpIMO3PdiQu2wiL28m4gyEfzIfEFSP5Tl0n2EV+t3kTsn5oDY2sWoEtctBAH4FHs79l7GlhMjnTLHL8VxlNyo0V1P/apPGB4SVt7UdSj+LLdqWe+nDyaxOAplfJ/fWiKVCEJvDOhhYRjqQJ/+fNxoeQ757Sny3TbCd5Q5L914Gfj5r3wOK3wOITCksxVcgkYE2XdVUtwt2WnU2eURiWlUNemUZwfn9U3y0RPDMYEz+32EMAfRSUHGhlYK2pIjXkzb0MBfhvJfi+x8SKIzugb3XSlSIvKuGocBWxngKffTodkj3E9N7GMtWOO1RuOjy08lKE4EvTFV98jbhkZbUvdmY6l
+x-ms-exchange-antispam-messagedata: p78Ku4XlFrN7TqILS4DhP94TlQMtu47F4hgrh2IDEyZRuWNxlz/qJs/VYfl7yBGkEMhQaEWak43j229GmpXK9Ep1RAMsVND/JTTd+r4i4X0JXpacvHnXYTYM5+h3jjxum5gLXbyeY6N3Bw7FHSfkyQ==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <22B91EB6759F5E429B9A26A5E13F7A1A@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57c1474a-4bd7-43da-2fbe-08d7c32cbe50
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2020 06:48:43.3319
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 21N+fSkdxORmQGT7Q4tZZfWOXRbt1wYHwM8F95LtV3wtC7dA63rIoIu6tX3un7yvV4NZbvcS/yOKzdubbFef0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2613
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-08_01:2020-03-06,2020-03-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/7/20 21:01, Joe Perches wrote:
-> On Sat, 2020-03-07 at 15:30 -0600, Gustavo A. R. Silva wrote:
->> Some people consistently add blank lines as part of their code style,
->> and if I were
->> one of those people, I wouldn't like to have such lines removed.
-> 
-> It's a patch generator, it's not perfect.
-> Nothing is nor ever will be.
-
-Wise words. The thing is that this is feedback over a proposed
-patch.
-
-> It's quite simple to add blank lines if that's
-> what any maintainer desires.
-> 
-
-I'm not sure if you are saying that it's not a problem to
-update your proposed patch, or if you are suggesting that
-the maintainers will have the predisposition of applying
-patches that will modify their coding style and then go and
-willingly fix that. I doubt the latter, though.
-
---
-Gustavo
+T24gRnJpLCAyMDIwLTAzLTA2IGF0IDE2OjM0ICswMTAwLCBGcmVkZXJpYyBXZWlzYmVja2VyIHdy
+b3RlOg0KPiBPbiBXZWQsIE1hciAwNCwgMjAyMCBhdCAwNDoxNToyNFBNICswMDAwLCBBbGV4IEJl
+bGl0cyB3cm90ZToNCj4gPiBGcm9tOiBZdXJpIE5vcm92IDx5bm9yb3ZAbWFydmVsbC5jb20+DQo+
+ID4gDQo+ID4gTWFrZSBzdXJlIHRoYXQga2lja19hbGxfY3B1c19zeW5jKCkgZG9lcyBub3QgY2Fs
+bCBDUFVzIHRoYXQgYXJlDQo+ID4gcnVubmluZw0KPiA+IGlzb2xhdGVkIHRhc2tzLg0KPiA+IA0K
+PiA+IFNpZ25lZC1vZmYtYnk6IEFsZXggQmVsaXRzIDxhYmVsaXRzQG1hcnZlbGwuY29tPg0KPiA+
+IC0tLQ0KPiA+ICBrZXJuZWwvc21wLmMgfCAxNCArKysrKysrKysrKysrLQ0KPiA+ICAxIGZpbGUg
+Y2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYg
+LS1naXQgYS9rZXJuZWwvc21wLmMgYi9rZXJuZWwvc21wLmMNCj4gPiBpbmRleCAzYThiY2JkZDRj
+ZTYuLmQ5YjRiMmZlZGZlZCAxMDA2NDQNCj4gPiAtLS0gYS9rZXJuZWwvc21wLmMNCj4gPiArKysg
+Yi9rZXJuZWwvc21wLmMNCj4gPiBAQCAtNzMxLDkgKzczMSwyMSBAQCBzdGF0aWMgdm9pZCBkb19u
+b3RoaW5nKHZvaWQgKnVudXNlZCkNCj4gPiAgICovDQo+ID4gIHZvaWQga2lja19hbGxfY3B1c19z
+eW5jKHZvaWQpDQo+ID4gIHsNCj4gPiArCXN0cnVjdCBjcHVtYXNrIG1hc2s7DQo+ID4gKw0KPiA+
+ICAJLyogTWFrZSBzdXJlIHRoZSBjaGFuZ2UgaXMgdmlzaWJsZSBiZWZvcmUgd2Uga2ljayB0aGUg
+Y3B1cyAqLw0KPiA+ICAJc21wX21iKCk7DQo+ID4gLQlzbXBfY2FsbF9mdW5jdGlvbihkb19ub3Ro
+aW5nLCBOVUxMLCAxKTsNCj4gPiArDQo+ID4gKwlwcmVlbXB0X2Rpc2FibGUoKTsNCj4gPiArI2lm
+ZGVmIENPTkZJR19UQVNLX0lTT0xBVElPTg0KPiA+ICsJY3B1bWFza19jbGVhcigmbWFzayk7DQo+
+ID4gKwl0YXNrX2lzb2xhdGlvbl9jcHVtYXNrKCZtYXNrKTsNCj4gPiArCWNwdW1hc2tfY29tcGxl
+bWVudCgmbWFzaywgJm1hc2spOw0KPiA+ICsjZWxzZQ0KPiA+ICsJY3B1bWFza19zZXRhbGwoJm1h
+c2spOw0KPiA+ICsjZW5kaWYNCj4gPiArCXNtcF9jYWxsX2Z1bmN0aW9uX21hbnkoJm1hc2ssIGRv
+X25vdGhpbmcsIE5VTEwsIDEpOw0KPiA+ICsJcHJlZW1wdF9lbmFibGUoKTsNCj4gPiAgfQ0KPiAN
+Cj4gVGhhdCBsb29rcyB2ZXJ5IGRhbmdlcm91cywgdGhlIGNhbGxlcnMgb2Yga2lja19hbGxfY3B1
+c19zeW5jKCkgd2FudA0KPiB0bw0KPiBzeW5jIGFsbCBDUFVzIGZvciBhIHJlYXNvbi4gWW91IHdp
+bGwgcmF0aGVyIG5lZWQgdG8gZml4IHRoZSBjYWxsZXJzLg0KDQpBbGwgY2FsbGVycyBvZiB0aGlz
+IHVzZSB0aGlzIGZ1bmN0aW9uIHRvIHN5bmNocm9uaXplIElQSXMgYW5kIGljYWNoZSwNCmFuZCB0
+aGV5IGhhdmUgbm8gaWRlYSBpZiB0aGVyZSBpcyBhbnl0aGluZyBzcGVjaWFsIGFib3V0IHRoZSBz
+dGF0ZSBvZg0KQ1BVcy4gSWYgYSB0YXNrIGlzIGlzb2xhdGVkLCB0aGlzIGNhbGwgd291bGQgbm90
+IGJlIG5lY2Vzc2FyeSBiZWNhdXNlDQp0aGUgdGFzayBpcyBpbiB1c2Vyc3BhY2UsIGFuZCBpdCB3
+b3VsZCBoYXZlIHRvIGVudGVyIGtlcm5lbCBmb3IgYW55IG9mDQp0aGF0IHRvIGJlY29tZSByZWxl
+dmFudCBidXQgdGhlbiBpdCB3aWxsIGhhdmUgdG8gc3dpdGNoIGZyb20gdXNlcnNwYWNlDQp0byBr
+ZXJuZWwuIEF0IHdvcnN0IGl0IGlzIHJldHVybmluZyB0byB1c2Vyc3BhY2UgYWZ0ZXIgZW50ZXJp
+bmcNCmlzb2xhdGlvbiBvciBiYWNrIGluIGtlcm5lbCBydW5uaW5nIGNsZWFudXAgYWZ0ZXIgaXNv
+bGF0aW9uIGlzIGJyb2tlbg0KYnV0IGJlZm9yZSB0c2tfdGhyZWFkX2ZsYWdzX2NhY2hlIGlzIHVw
+ZGF0ZWQuIFRoZXJlIHdpbGwgYmUgbm90aGluZyB0bw0KcnVuIG9uIHRoZSBzYW1lIENQVSBiZWNh
+dXNlIHdlIGhhdmUganVzdCBsZWZ0IGlzb2xhdGlvbiwgc28gdGFzayB3aWxsDQplaXRoZXIgZXhp
+dCBvciBnbyBiYWNrIHRvIHVzZXJzcGFjZS4NCg0KSXMgdGhlcmUgYW55IHJlYXNvbiBmb3IgYSBy
+YWNlIGF0IHRoYXQgcG9pbnQ/DQoNCj4gVGhhbmtzLg0KPiANCj4gPiAgRVhQT1JUX1NZTUJPTF9H
+UEwoa2lja19hbGxfY3B1c19zeW5jKTsNCj4gPiAgDQo+ID4gLS0gDQo+ID4gMi4yMC4xDQo+ID4g
+DQoNCi0tIA0KQWxleA0K
