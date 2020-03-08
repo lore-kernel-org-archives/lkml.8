@@ -2,116 +2,109 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EA7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 17:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A32DC10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 17:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB853206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 17:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED52C2080C
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 17:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLyPXV+b"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="OILKpkCV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgCHRto (ORCPT
+        id S1726347AbgCHR7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 13:49:44 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34307 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgCHRto (ORCPT
+        Sun, 8 Mar 2020 13:59:18 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33949 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgCHR7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 13:49:44 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x3so8046813wmj.1;
-        Sun, 08 Mar 2020 10:49:43 -0700 (PDT)
+        Sun, 8 Mar 2020 13:59:18 -0400
+Received: by mail-il1-f193.google.com with SMTP id c8so6236051ilm.1
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 10:59:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0QkyVCipab/iVvgADLKpSyucbBPGMCb4Gb3OlXlvpMc=;
-        b=bLyPXV+bJn7lRY0RoPCoSWMdmTrFH/0ZfiBKg38Xuin9CGUWm3FYZH/9++nJwq0nuq
-         5Xb07dyd6dSiklvOalw5Bl6iD6VIOfKzk8jBHVoXPt/qkfFOUj7SHtO09eTQpBV591SL
-         mEod4xQ8g6tlSgG+nrimT8mE37RgrcpJ0jn/abc4go9eDoYYABc6LhjhFz7oKNR+m5jh
-         gsioy+rMMvdS4+sAGV8w9u7bEts5As+xLKtUz+QGPfKXKsF9YkO75mTtNCnxli1khZm9
-         CDXn0sjhNZsu96lixM4+4mO7SsAtU/cWu7Y6oE565DTqPIOS5hsN+ZWu5HXgd0XTXk2y
-         YoKg==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CqnIXBKwcZ7eK7jSIB3TeSK6nKBkp//odaCbAVz4mrM=;
+        b=OILKpkCVdg8fJb0oDu2UMkd8DzkoYGlQE0ZHzfYXS+P/oDPCnEJWEOoQSpbQ/FZ1pU
+         s4w5LRDYWmrjH5UORCgcYMTdjCUFIipv44M0fIFyn8erlVwOT3VyLLqArSnayaUtbcZp
+         rmhPMOQOjLRjvFH/qWU6BNz6pUhgNl05tREKTjJPCIuhHRigsXiaU6ssD+EcOBnYt6Oi
+         /s9NNwUaOaPt2D2WVCIUk0FOKZqjwVyd7iR1wZ9GXPK3q5kRNyHREFc+o5LCABjrXODk
+         gexACTfnFUMKORrBh/NrthZHFd7el7fN7dSUYJEn7UC3GvWsRxkEHH0Ca1bGkdKBQVM2
+         tTAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0QkyVCipab/iVvgADLKpSyucbBPGMCb4Gb3OlXlvpMc=;
-        b=sePBizNgGY7JDG+d2y+8DZLO9XB5W+7Tdc4L/01PhME/cmNLaj10ipaEFHUNvMhGzC
-         pRVlXp539jvC3+gxKu0RCfp4h7+Q9ap/kZoH8ztbXVsnv/Fe10sJ3rCkUUhm0DdPxSst
-         5wwDJhR9zs9r99E/kiJlrXIFvTdt9jjZlEupHdVePWlCV4LbKAVBrcFiMAXAJUTYn1Bu
-         hlza6o7SCGcnyzD1PBV5a4HG2QGc2lZF/Vdssg7Wya5RD0eb4Oe/eF5hgojQW03lJaZn
-         uSHrSqfRq9trSjhfw7cm6LSktf5XGOW/zzA/plo0//zB44k/+CxNOQOMK62o6j4l0LWd
-         uX1Q==
-X-Gm-Message-State: ANhLgQ18mwKZ1XVxlIYkXHLY0rcwKqTWbzcIpF/1ZufJg3myRj4s/4XM
-        6RCnNPed3cS8p2/pZkb9i9o=
-X-Google-Smtp-Source: ADFU+vsX574pgK7YdEsgAtzH3+SYNKaMf+bVij+6RYE0MsNMilVRxowwmkNhTLouhGdvM3OtJRTwIQ==
-X-Received: by 2002:a05:600c:218d:: with SMTP id e13mr16103701wme.127.1583689782479;
-        Sun, 08 Mar 2020 10:49:42 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2dce:4a00:35ca:ddfb:aba3:f544])
-        by smtp.gmail.com with ESMTPSA id c5sm7386226wma.3.2020.03.08.10.49.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2020 10:49:41 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [RFC PATCH] MAINTAINERS: add headers and doc to SCHEDULER
-Date:   Sun,  8 Mar 2020 18:49:31 +0100
-Message-Id: <20200308174931.9118-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CqnIXBKwcZ7eK7jSIB3TeSK6nKBkp//odaCbAVz4mrM=;
+        b=ZNr3rIUxa/PY2acDVeByoMW9W88t3+rFD99rp1l7V8Vcx1dJNTPdLfdlyK6JmIyww4
+         vgAwUtbAEJRpFcpQghLVNkGWxw2TFdaR1o7B+dZfXumf/lsW6H/zhqgRXn2WJdYcTkVF
+         /QTKnL7B6sXFmU2F35IQZGlWl8PfQJ+4qz5MSaY66d8xAou5GR3GIB3bt5d0n1SI3M0v
+         Xdq1gyp7kWWXt97pDAQLPNYMf6DgpcoMaUy4PWiBZsGNiotYZ/4eGbWAA4LnMw0OPx4S
+         h5MUunR7Hq1wGjlaDtJj9wMIZCVZwDj1Qony+YS7i4I8JLff6K8l4nDMbTNYe7Ei+O/z
+         DXTw==
+X-Gm-Message-State: ANhLgQ0sWXctfP8YfJAgsGaiRSuwo6WDiJDT8mGBOeDNegCXbqjJV9PY
+        TdOlCm2iYX13xeP+7aIHm77JxLAoM2w3ADTvFztong==
+X-Google-Smtp-Source: ADFU+vv543P2xAwcLKM9MTNCTIo21RVeWOWTYLKYntTFO48vO1ITYvWyJde7QMpPjSisz2LnrlmQXZrwV8Sv8gT5JuI=
+X-Received: by 2002:a05:6e02:10d3:: with SMTP id s19mr5352844ilj.220.1583690357253;
+ Sun, 08 Mar 2020 10:59:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200211131240.15853-1-brgl@bgdev.pl> <20200211131240.15853-4-brgl@bgdev.pl>
+ <20200308135117.7c60c881@why>
+In-Reply-To: <20200308135117.7c60c881@why>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sun, 8 Mar 2020 18:59:06 +0100
+Message-ID: <CAMRc=Me0AE7OgEVjiUfRUNODYoGj+LYy+1zGsGkXKput9AeKrA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] irq/domain: add a new callback to domain ops
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Various files in include/linux/sched/ are identified as part of THE REST
-according to MAINTAINERS, but they are really belong to SCHEDULER.
+niedz., 8 mar 2020 o 14:51 Marc Zyngier <maz@kernel.org> napisa=C5=82(a):
+>
+> On Tue, 11 Feb 2020 14:12:37 +0100
+> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Add the remove() callback to irq_domain_ops which can be used to
+> > automatically dispose of any host data associated with the domain when
+> > irq_domain_remove() is called.
+>
+> I have a hard time buying this. Whatever data that is associated to the
+> domain is already owned known by whoever created the domain the first
+> place.
+>
+> Since the expected use case is that whoever created the domain also
+> destroys it, the caller is already in a position to do its own cleanup,
+> and we don't need any of this.
+>
+> So please explain what you are trying to achieve here.
+>
 
-Add include/linux/sched/, include/uapi/linux/sched/ and
-Documentation/scheduler/ to the SCHEDULER entry, and order the entry with
-parse-maintainers.pl.
+I'm mainly trying to remove irq_domain_remove_sim() and make it
+possible to destroy the interrupt simulator domain with regular
+irq_domain_remove(). If you prefer that we retain this routine as is,
+I can limit this series to the first two patches, but I assumed the
+fewer functions in the interface, the better. If you have a different
+idea on how to do this - please let me know too.
 
-This was identified with a small script that finds all files belonging to
-THE REST according to the current MAINTAINERS file, and I investigated
-upon its output.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
- MAINTAINERS | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4869bd91b6ff..3a0f8115c92c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14754,13 +14754,16 @@ R:	Steven Rostedt <rostedt@goodmis.org> (SCHED_FIFO/SCHED_RR)
- R:	Ben Segall <bsegall@google.com> (CONFIG_CFS_BANDWIDTH)
- R:	Mel Gorman <mgorman@suse.de> (CONFIG_NUMA_BALANCING)
- L:	linux-kernel@vger.kernel.org
--T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
- S:	Maintained
--F:	kernel/sched/
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
-+F:	Documentation/scheduler/
-+F:	include/linux/preempt.h
- F:	include/linux/sched.h
--F:	include/uapi/linux/sched.h
-+F:	include/linux/sched/
- F:	include/linux/wait.h
--F:	include/linux/preempt.h
-+F:	include/uapi/linux/sched.h
-+F:	include/uapi/linux/sched/
-+F:	kernel/sched/
- 
- SCR24X CHIP CARD INTERFACE DRIVER
- M:	Lubomir Rintel <lkundrak@v3.sk>
--- 
-2.17.1
-
+Bartosz
