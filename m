@@ -2,43 +2,43 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1F4C10F28
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139D3C10F29
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4322146E
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D322B2146E
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583654975;
-	bh=bemc6Y0qptmJiJAj2ALf99Zpw/1+L3qkVJoyD2rMNn8=;
+	s=default; t=1583654981;
+	bh=N3ykKbjmMsOgUT9bUNFOnZD9DZ8jRnIwNCMFWKhA1+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qqb+WWXQiz9LNSbIPOSpWwNH5kLZI2nF/KZt1nQUys9c74paWzTiVwOj2JEwjnddj
-	 i9CgLjtwtx52LaUNXrBnoEUY7ErpOcI5S9lwnoxW/rUvNxPlPYolJfyERDAuqp5XHR
-	 EfqOJtacYDC3HARq34wAbhsSSJcqOrBjUmOuEMNk=
+	b=sCOkree+gXzlWL0i3bKm4rXGzaZUAjjz/FQFlcbBueXoQbOqc7vwOMQ/Dml+m83v3
+	 3sp0rIT+Toe5mq2SvnB00oSxbliMYAotOCI7gbs5ZMOK17VoPEP6p22Ei/6wJ+H8Wq
+	 cjsrxXi2EoUJZdc1T8VUJOCIcXGqsP++sviLBGoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgCHIJe (ORCPT
+        id S1726495AbgCHIJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 04:09:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36756 "EHLO mail.kernel.org"
+        Sun, 8 Mar 2020 04:09:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgCHIJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 04:09:31 -0400
+        id S1726437AbgCHIJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 04:09:39 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 059EE20880;
-        Sun,  8 Mar 2020 08:09:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1451D2087F;
+        Sun,  8 Mar 2020 08:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583654971;
-        bh=bemc6Y0qptmJiJAj2ALf99Zpw/1+L3qkVJoyD2rMNn8=;
+        s=default; t=1583654978;
+        bh=N3ykKbjmMsOgUT9bUNFOnZD9DZ8jRnIwNCMFWKhA1+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C6Y4eCizWK8KT99pA9rIbDWu/7fBwKXxiKY6G0rSn7r48deu9TNKEjS97cmJF3Y3h
-         JSXOEe/qjz9j4X+7JK2/PA/YvwbRBtVyWEG21oqYLDU5nicKukPQOisdAkGXOqY9/T
-         aJ1o96veqJXRnEqY7g03YWDkGSrIO5+B6Ozz5XPc=
+        b=YZ/OF78HpwSHJhCutWsZY9f4M1ABm3OaBGeDFRvFKRS4Tbb24LXxLYEGJufbZJwSv
+         98fTWUys7Ev4R7MgWwYtkn8QKW6ZpYp9miqFNjCq9DPoSLvxU9LYz5J7rCZq4N+Ypt
+         dyosg9KrQF4SD3h0iZUx1GT9hJD3MA1p/JE2/JhY=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -55,9 +55,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Nikolai Merinov <n.merinov@inango-systems.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Vladis Dronov <vdronov@redhat.com>
-Subject: [PATCH 07/28] MAINTAINERS: adjust EFI entry to removing eboot.c
-Date:   Sun,  8 Mar 2020 09:08:38 +0100
-Message-Id: <20200308080859.21568-8-ardb@kernel.org>
+Subject: [PATCH 09/28] efi/x86: Annotate the LOADED_IMAGE_PROTOCOL_GUID with SYM_DATA
+Date:   Sun,  8 Mar 2020 09:08:40 +0100
+Message-Id: <20200308080859.21568-10-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200308080859.21568-1-ardb@kernel.org>
 References: <20200308080859.21568-1-ardb@kernel.org>
@@ -66,37 +66,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-Commit c2d0b470154c ("efi/libstub/x86: Incorporate eboot.c into libstub")
-removed arch/x86/boot/compressed/eboot.[ch], but missed to adjust the
-MAINTAINERS entry.
+Use SYM_DATA* macro to annotate this constant, and explicitly align it
+to 4-byte boundary. Use lower-case for hexadecimal data.
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
-
-  warning: no file matches F: arch/x86/boot/compressed/eboot.[ch]
-
-Rectify EXTENSIBLE FIRMWARE INTERFACE (EFI) entry in MAINTAINERS.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Link: https://lore.kernel.org/r/20200301155748.4788-1-lukas.bulwahn@gmail.com
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Link: https://lore.kernel.org/r/20200301230436.2246909-2-nivedita@alum.mit.edu
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/boot/compressed/head_64.S | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8f27f40d22bb..5df99dab099f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6344,7 +6344,6 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
- S:	Maintained
- F:	Documentation/admin-guide/efi-stub.rst
- F:	arch/*/kernel/efi.c
--F:	arch/x86/boot/compressed/eboot.[ch]
- F:	arch/*/include/asm/efi.h
- F:	arch/x86/platform/efi/
- F:	drivers/firmware/efi/
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index f7bacc4c1494..86c97797bf78 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -672,7 +672,7 @@ SYM_FUNC_START(efi32_pe_entry)
+ 	/* Get the loaded image protocol pointer from the image handle */
+ 	subl	$12, %esp			// space for the loaded image pointer
+ 	pushl	%esp				// pass its address
+-	leal	4f(%ebp), %eax
++	leal	loaded_image_proto(%ebp), %eax
+ 	pushl	%eax				// pass the GUID address
+ 	pushl	28(%esp)			// pass the image handle
+ 
+@@ -695,9 +695,12 @@ SYM_FUNC_END(efi32_pe_entry)
+ 
+ 	.section ".rodata"
+ 	/* EFI loaded image protocol GUID */
+-4:	.long	0x5B1B31A1
++	.balign 4
++SYM_DATA_START_LOCAL(loaded_image_proto)
++	.long	0x5b1b31a1
+ 	.word	0x9562, 0x11d2
+-	.byte	0x8E, 0x3F, 0x00, 0xA0, 0xC9, 0x69, 0x72, 0x3B
++	.byte	0x8e, 0x3f, 0x00, 0xa0, 0xc9, 0x69, 0x72, 0x3b
++SYM_DATA_END(loaded_image_proto)
+ #endif
+ 
+ /*
 -- 
 2.17.1
 
