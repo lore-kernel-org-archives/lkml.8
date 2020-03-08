@@ -2,153 +2,431 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D88BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 14:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9783C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 14:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197EB20637
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 14:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CABC20637
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 14:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="K5AdU8Ce"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7ivLGK0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgCHOTz (ORCPT
+        id S1726373AbgCHOUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 10:19:55 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33316 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgCHOTz (ORCPT
+        Sun, 8 Mar 2020 10:20:23 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:40989 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgCHOUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 10:19:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IVcvIDGwJZYeIvUKfXFgN/rhffyZlyGXJDMHZ+yeVcA=; b=K5AdU8Ceyd0YtsCSwH4Hj1L38
-        t2ufNPUr4XC7GAFtajzsm47ier9yjsvWFQFWu0mCa1G7QppuiMbitZqbvPb4aJTWZ6pJLLx5Vshe/
-        v2GvvL//7hb/7KOIAClcoZKG+252QJOCA2dceM7z7uL5PQHeC+XBtuH35BLfESIsNh8UZSSXotv36
-        IcQJ6QRe3rswhZLX5YD26pP6u/QHUOsyEf8Nxkcs4Mw2s76sw15OdagnLghnPml3AGrTEiVnAoOe0
-        DrgNb5R9cwFl1AYqDm4dBYoVPLxS++dlkn7dtqHabMQYYxUTAnLekyjyDyNA/t5H9PRrwV9RJoYw7
-        I5Ik0L//Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33732)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jAwmE-0000p8-0s; Sun, 08 Mar 2020 14:19:34 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jAwm3-0002Se-Bj; Sun, 08 Mar 2020 14:19:23 +0000
-Date:   Sun, 8 Mar 2020 14:19:23 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200308141923.GI25745@shell.armlinux.org.uk>
-References: <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
- <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
- <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
- <20200212085004.GL25745@shell.armlinux.org.uk>
- <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
- <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
- <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
- <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
- <20200306203439.peytghdqragjfhdx@kahuna>
- <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
+        Sun, 8 Mar 2020 10:20:22 -0400
+Received: by mail-yw1-f66.google.com with SMTP id p124so7382327ywc.8;
+        Sun, 08 Mar 2020 07:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rAsLHqPreOnhAfPS+oKwEvJYPIKXeMjXEPoenF6HAzI=;
+        b=g7ivLGK0lHANApPHXOvWxqrQOw2et5PWP7YXzEMay81Zixnhp4j0AOWV257b26jX/L
+         pBJZs7lf8F04VdoLJ43yKYw3vurpjJ7IFhNPDOWRob7hzEjNibYAXXJku0zLkVOuHATn
+         Iw9dqVykpvB/PB/KeJHeRBgkU9Zs76PblAo9Negew8h3RzhJAy6BKV1iwPIsHF2A1uUp
+         FUYb+Kzsdyjf9VaCsugMUCizfU4kpDABK/kjxS/TN5nwVgtwd18ZWEEC6qQi76LkTU+l
+         SJKhxk2yoGn9Z7OadT9GFlFRlZNwhGmECkWaEr9Dnn6KTQ4yiJfx1R7Cjml+VStmLJ84
+         W9GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rAsLHqPreOnhAfPS+oKwEvJYPIKXeMjXEPoenF6HAzI=;
+        b=DzVbRFvpuBAjUgqxuDtVLzjB1h8iXisvUho1GCaSMnC9wDDQezV++Wy7AnEgnnQSHw
+         CLiIrkYXlAJNsi59Xg9NZS0x/nHvFDCT1227YJ+YDLGWZYCTmHavPSQD9Rm6GhBPs+CE
+         bxnMIdj9CZbDQgT65lmA644UBADKJfgFktdTop5xtoZYRjVQat7Tk7kmDUKjbcm11ecL
+         FRvnvZ50YO86TcKM2msDZlH9i+zKALDwDmALs23gF1N3soKW0aWfjtFvaDV87YaZw8Tq
+         xlfiZ1gvz+jJXddBnIPN2LQtuLJPn/eOT3YRiaCKw8bZ6xLPcE5G31x/QnfEu95quzh0
+         6avw==
+X-Gm-Message-State: ANhLgQ1otkqVOC4lpRExX5rHaJsVj6dPnWrg4BtrRxVX53fiuG/OGwdS
+        tKoWzP6QE5RzYpr7CspTG90=
+X-Google-Smtp-Source: ADFU+vv2TwPyBA5D5RbQUrD6fN2bkxVR8ml5wiEuvKaG6AfU5e4W3M/Ggch6lQsTKkQscyWY06Yq2Q==
+X-Received: by 2002:a81:a045:: with SMTP id x66mr13278536ywg.45.1583677220301;
+        Sun, 08 Mar 2020 07:20:20 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id h139sm16343194ywa.35.2020.03.08.07.20.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 07:20:19 -0700 (PDT)
+Date:   Sun, 8 Mar 2020 10:20:17 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Syed Waris <syednwaris@gmail.com>
+Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Testing: counter: 104-quad-8.c: Added lock protection
+Message-ID: <20200308142017.GB3400@icarus>
+References: <20200308104101.GA18548@syed.domain.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pAwQNkOnpTn9IO2O"
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200308104101.GA18548@syed.domain.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 11:58:52AM +0100, Arnd Bergmann wrote:
-> On Fri, Mar 6, 2020 at 9:36 PM Nishanth Menon <nm@ti.com> wrote:
-> > On 13:11-20200226, santosh.shilimkar@oracle.com wrote:
-> 
-> >
-> > ~few 1000s still relevant spread between 4G and 8G (confirmed that both
-> > are present, relevant and in use).
-> >
-> > I wish we could sunset, but unfortunately, I am told(and agree)
-> > that we should'nt just leave products (and these are long term
-> > products stuck in critical parts in our world) hanging in the air, and
-> > migrations to newer kernel do still take place periodically (the best
-> > I can talk in public forum at least).
-> 
-> Thank you for the clear answer!
-> 
-> I agree we should certainly not break any such use cases, and for the
-> 8GB case there is not really a good replacement (using zram/zswap
-> instead of highmem could work for some new workloads, but would be a
-> rather risky change for an upgrade on already deployed systems).
-> 
-> I hope it's ok to ask the same question every few years until you are
-> reasonably sure that the users are ready to stop upgrading kernels
-> beyond the following LTS kernel version. We can also do the same
-> thing for the other 32-bit platforms that exceed the maximum amount
-> of lowmem, and document which ones are known.
-> 
-> In the meantime, it would seem useful to increase the amount of
-> lowmem that can be used by default, using a combination of some
-> of the changes mentioned earlier
-> 
-> - add a VMSPLIT_2G_OPT config option for non-LPAE ARM kernels
->   to handle the common i.MX6 case with 2GB of RAM without highmem
-> 
-> - make VMSPLIT_2G_OPT (without LPAE) or VMSPLIT_2G (with
->   LPAE) the default in most ARM defconfig files as well as distros,
->   and disable highmem where possible, to see what breaks.
-> 
-> - extend zswap to use all the available high memory for swap space
->   when highmem is disabled.
 
-I don't think that's a good idea.  Running debian stable kernels on my
-8GB laptop, I have problems when leaving firefox running long before
-even half the 16GB of swap gets consumed - the entire machine slows
-down very quickly when it starts swapping more than about 2 or so GB.
-It seems either the kernel has become quite bad at selecting pages to
-evict.
+--pAwQNkOnpTn9IO2O
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It gets to the point where any git operation has a battle to fight
-for RAM, despite not touching anything else other than git.
+On Sun, Mar 08, 2020 at 04:11:01PM +0530, Syed Waris wrote:
+> Added protection for quad8_iio configurations from race conditions in
+> the 104-quad-8 counter driver. There are no IRQs, used spin-locks for
+> protection.
+>=20
+> Signed-off-by: Syed Waris <syednwaris@gmail.com>
 
-The behaviour is much like firefox is locking memory into core, but
-that doesn't seem to be what's actually going on.  I've never really
-got to the bottom of it though.
+Hi Syed,
 
-This is with 64-bit kernel and userspace.
+Thank you for your submission. I have some changes that should be made
+to this patch before we accept it.
 
-So, I'd suggest that trading off RAM available through highmem for VM
-space available through zswap is likely a bad idea if you have a
-workload that requires 4GB of RAM on a 32-bit machine.
+When you write a commit message and title, keep it in the present tense;
+you can also remove the "Testing: " portion of the title since it's not
+needed:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+	counter: 104-quad-8: Add lock protection
+=09
+	Add protection for quad8_iio configurations from race conditions
+	in the 104-quad-8 counter driver. There is no IRQ handling so
+	spin_lock calls are used for protection.
+
+As for the code changes in this patch, it will be good to protect all
+the port I/O calls (outb/inb) in this driver in addition to the
+quad8_iio configurations. The reason is that ACCES 104-QUAD-8 devices
+use a byte pointer register to coordinate access to the data registers,
+so these register states should be kept locked so that they are not
+corrupted while accessing and modifying data on the device.
+
+William Breathitt Gray
+
+> ---
+>  drivers/counter/104-quad-8.c | 61 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 61 insertions(+)
+>=20
+> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+> index 0cfc813..cd8e09f 100644
+> --- a/drivers/counter/104-quad-8.c
+> +++ b/drivers/counter/104-quad-8.c
+> @@ -43,6 +43,7 @@ MODULE_PARM_DESC(base, "ACCES 104-QUAD-8 base addresses=
+");
+>   */
+>  struct quad8_iio {
+>  	struct counter_device counter;
+> +	spinlock_t lock;
+>  	unsigned int fck_prescaler[QUAD8_NUM_COUNTERS];
+>  	unsigned int preset[QUAD8_NUM_COUNTERS];
+>  	unsigned int count_mode[QUAD8_NUM_COUNTERS];
+> @@ -185,6 +186,8 @@ static int quad8_write_raw(struct iio_dev *indio_dev,
+>  		if (val < 0 || val > 1)
+>  			return -EINVAL;
+> =20
+> +		spin_lock(&priv->lock);
+> +
+>  		priv->ab_enable[chan->channel] =3D val;
+> =20
+>  		ior_cfg =3D val | priv->preset_enable[chan->channel] << 1;
+> @@ -192,6 +195,8 @@ static int quad8_write_raw(struct iio_dev *indio_dev,
+>  		/* Load I/O control configuration */
+>  		outb(QUAD8_CTR_IOR | ior_cfg, base_offset + 1);
+> =20
+> +		spin_unlock(&priv->lock);
+> +
+>  		return 0;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		/* Quadrature scaling only available in quadrature mode */
+> @@ -251,6 +256,8 @@ static ssize_t quad8_write_preset(struct iio_dev *ind=
+io_dev, uintptr_t private,
+>  	if (preset > 0xFFFFFF)
+>  		return -EINVAL;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->preset[chan->channel] =3D preset;
+> =20
+>  	/* Reset Byte Pointer */
+> @@ -260,6 +267,8 @@ static ssize_t quad8_write_preset(struct iio_dev *ind=
+io_dev, uintptr_t private,
+>  	for (i =3D 0; i < 3; i++)
+>  		outb(preset >> (8 * i), base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return len;
+>  }
+> =20
+> @@ -289,6 +298,8 @@ static ssize_t quad8_write_set_to_preset_on_index(str=
+uct iio_dev *indio_dev,
+>  	/* Preset enable is active low in Input/Output Control register */
+>  	preset_enable =3D !preset_enable;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->preset_enable[chan->channel] =3D preset_enable;
+> =20
+>  	ior_cfg =3D priv->ab_enable[chan->channel] |
+> @@ -297,6 +308,8 @@ static ssize_t quad8_write_set_to_preset_on_index(str=
+uct iio_dev *indio_dev,
+>  	/* Load I/O control configuration to Input / Output Control Register */
+>  	outb(QUAD8_CTR_IOR | ior_cfg, base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return len;
+>  }
+> =20
+> @@ -354,6 +367,8 @@ static int quad8_set_count_mode(struct iio_dev *indio=
+_dev,
+>  	unsigned int mode_cfg =3D cnt_mode << 1;
+>  	const int base_offset =3D priv->base + 2 * chan->channel + 1;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->count_mode[chan->channel] =3D cnt_mode;
+> =20
+>  	/* Add quadrature mode configuration */
+> @@ -363,6 +378,8 @@ static int quad8_set_count_mode(struct iio_dev *indio=
+_dev,
+>  	/* Load mode configuration to Counter Mode Register */
+>  	outb(QUAD8_CTR_CMR | mode_cfg, base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -398,11 +415,15 @@ static int quad8_set_synchronous_mode(struct iio_de=
+v *indio_dev,
+>  	if (synchronous_mode && !priv->quadrature_mode[chan->channel])
+>  		return -EINVAL;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->synchronous_mode[chan->channel] =3D synchronous_mode;
+> =20
+>  	/* Load Index Control configuration to Index Control Register */
+>  	outb(QUAD8_CTR_IDR | idr_cfg, base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -444,11 +465,15 @@ static int quad8_set_quadrature_mode(struct iio_dev=
+ *indio_dev,
+>  			quad8_set_synchronous_mode(indio_dev, chan, 0);
+>  	}
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->quadrature_mode[chan->channel] =3D quadrature_mode;
+> =20
+>  	/* Load mode configuration to Counter Mode Register */
+>  	outb(QUAD8_CTR_CMR | mode_cfg, base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -480,11 +505,15 @@ static int quad8_set_index_polarity(struct iio_dev =
+*indio_dev,
+>  		index_polarity << 1;
+>  	const int base_offset =3D priv->base + 2 * chan->channel + 1;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->index_polarity[chan->channel] =3D index_polarity;
+> =20
+>  	/* Load Index Control configuration to Index Control Register */
+>  	outb(QUAD8_CTR_IDR | idr_cfg, base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -852,11 +881,15 @@ static int quad8_index_polarity_set(struct counter_=
+device *counter,
+>  		index_polarity << 1;
+>  	const int base_offset =3D priv->base + 2 * channel_id + 1;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->index_polarity[channel_id] =3D index_polarity;
+> =20
+>  	/* Load Index Control configuration to Index Control Register */
+>  	outb(QUAD8_CTR_IDR | idr_cfg, base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -891,11 +924,15 @@ static int quad8_synchronous_mode_set(struct counte=
+r_device *counter,
+>  	if (synchronous_mode && !priv->quadrature_mode[channel_id])
+>  		return -EINVAL;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->synchronous_mode[channel_id] =3D synchronous_mode;
+> =20
+>  	/* Load Index Control configuration to Index Control Register */
+>  	outb(QUAD8_CTR_IDR | idr_cfg, base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -960,6 +997,8 @@ static int quad8_count_mode_set(struct counter_device=
+ *counter,
+>  		break;
+>  	}
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->count_mode[count->id] =3D cnt_mode;
+> =20
+>  	/* Set count mode configuration value */
+> @@ -972,6 +1011,8 @@ static int quad8_count_mode_set(struct counter_devic=
+e *counter,
+>  	/* Load mode configuration to Counter Mode Register */
+>  	outb(QUAD8_CTR_CMR | mode_cfg, base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -1013,6 +1054,8 @@ static ssize_t quad8_count_enable_write(struct coun=
+ter_device *counter,
+>  	if (err)
+>  		return err;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->ab_enable[count->id] =3D ab_enable;
+> =20
+>  	ior_cfg =3D ab_enable | priv->preset_enable[count->id] << 1;
+> @@ -1020,6 +1063,8 @@ static ssize_t quad8_count_enable_write(struct coun=
+ter_device *counter,
+>  	/* Load I/O control configuration */
+>  	outb(QUAD8_CTR_IOR | ior_cfg, base_offset + 1);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return len;
+>  }
+> =20
+> @@ -1065,6 +1110,8 @@ static ssize_t quad8_count_preset_write(struct coun=
+ter_device *counter,
+>  	if (preset > 0xFFFFFF)
+>  		return -EINVAL;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->preset[count->id] =3D preset;
+> =20
+>  	/* Reset Byte Pointer */
+> @@ -1074,6 +1121,8 @@ static ssize_t quad8_count_preset_write(struct coun=
+ter_device *counter,
+>  	for (i =3D 0; i < 3; i++)
+>  		outb(preset >> (8 * i), base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return len;
+>  }
+> =20
+> @@ -1133,6 +1182,8 @@ static ssize_t quad8_count_preset_enable_write(stru=
+ct counter_device *counter,
+>  	/* Preset enable is active low in Input/Output Control register */
+>  	preset_enable =3D !preset_enable;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->preset_enable[count->id] =3D preset_enable;
+> =20
+>  	ior_cfg =3D priv->ab_enable[count->id] | (unsigned int)preset_enable <<=
+ 1;
+> @@ -1140,6 +1191,8 @@ static ssize_t quad8_count_preset_enable_write(stru=
+ct counter_device *counter,
+>  	/* Load I/O control configuration to Input / Output Control Register */
+>  	outb(QUAD8_CTR_IOR | ior_cfg, base_offset);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return len;
+>  }
+> =20
+> @@ -1166,6 +1219,8 @@ static ssize_t quad8_signal_fck_prescaler_write(str=
+uct counter_device *counter,
+>  	if (ret)
+>  		return ret;
+> =20
+> +	spin_lock(&priv->lock);
+> +
+>  	priv->fck_prescaler[channel_id] =3D prescaler;
+> =20
+>  	/* Reset Byte Pointer */
+> @@ -1176,6 +1231,8 @@ static ssize_t quad8_signal_fck_prescaler_write(str=
+uct counter_device *counter,
+>  	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_PRESET_PSC,
+>  	     base_offset + 1);
+> =20
+> +	spin_unlock(&priv->lock);
+> +
+>  	return len;
+>  }
+> =20
+> @@ -1383,6 +1440,10 @@ static int quad8_probe(struct device *dev, unsigne=
+d int id)
+>  		/* Disable index function; negative index polarity */
+>  		outb(QUAD8_CTR_IDR, base_offset + 1);
+>  	}
+> +
+> +	/* Initialize the spin lock */
+> +	spin_lock_init(&quad8iio->lock);
+> +
+>  	/* Enable all counters */
+>  	outb(QUAD8_CHAN_OP_ENABLE_COUNTERS, base[id] + QUAD8_REG_CHAN_OP);
+> =20
+> --=20
+> 2.7.4
+>=20
+
+--pAwQNkOnpTn9IO2O
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl5k/yEACgkQhvpINdm7
+VJJ2ehAAn835tYYdn8UdnBX8emAOErlT08y3AgLsUEmM9KaojRCEDqkWOm/9tHd2
+LjgCukWdQW/QG4Rk2ydihGzZ90Xhou3pB+HAkllEyipsweDxkwQ2ijwYd1k1Wmzi
+u7cHO8Eti9YzKXdFj9OgnCnN99LROb2JZ5kS8jZfwtaHaIKietU4PvIPjZOqNZN7
+hKjae5G/n0N+gFMtnavDX/wJIsb7bFQIf6puZ3e2V3IBqQktcWxH5WM8k0vzUR2T
+4AMxBumS1pdUZp+rJJVb1P0xm2xgXTrA+OKnZjy47WAf9GPRvfxOQAu3xMFYZTFN
+/RSTTy+/84yKBuXZBs6JvSaaA2GdMvTB6iF71efJ9e9qcH75PJMgjPPjftRG/+g/
+23Rl8KKx038Mc7ZD+sXcvl50ZPk0eWcXn/AU+bCpt/6ClJ4Qs25lqcj4tTpbWf1M
+uzB1oUgQNzbIQU88BeP7yeJJme2CC1n2KD0y4vEIxEMJoY1650AREVt9rkbm+EzF
+deXOvGCGb0/aCyw0z7MuAUUxO9gRhyZCFaTDxpHEKgMw4nfuQwArS+Uw4T/S+C90
+0sOjGHA2poMy1V4mtn8uq9uPSd4cC+ETK/yjImUk5UsR8NcGasnAuLBE+7/JKQQP
+Pcj9NiwZ0QE8L4zvZEUOVgITga6E824vdA2bgSH+gkFw7qCVy4E=
+=05tD
+-----END PGP SIGNATURE-----
+
+--pAwQNkOnpTn9IO2O--
