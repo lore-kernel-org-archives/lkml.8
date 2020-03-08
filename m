@@ -2,224 +2,103 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B10DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BA5C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABEA20684
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2AC320684
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 21:42:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="LpbH/bwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgCHVlI (ORCPT
+        id S1726422AbgCHVmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 17:41:08 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:38304 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbgCHVlH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 17:41:07 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jB3fV-0006Qr-9X; Sun, 08 Mar 2020 15:41:05 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jB3fU-0006bj-Fr; Sun, 08 Mar 2020 15:41:05 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87k142lpfz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <875zfmloir.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nmjulm.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <202003021531.C77EF10@keescook>
-        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
-        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-Date:   Sun, 08 Mar 2020 16:38:48 -0500
-In-Reply-To: <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Sun, 08 Mar 2020 16:34:37 -0500")
-Message-ID: <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sun, 8 Mar 2020 17:42:51 -0400
+Received: from mout.gmx.net ([212.227.17.21]:39283 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726346AbgCHVmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 17:42:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1583703755;
+        bh=QhIwll7TLH2Jreh1ADKlC/MVozajL5VA7trTAIMDJTY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=LpbH/bwl7AT5TCEiuJ0PCG4rj6Y7/aiCe964zWNDaCL8Z9RzUloJpxT55O9oHi8T9
+         n1M1ylgMwtWFGF7Bo3f/0ZMsCzgP2PskpgVJqyU5pGAmgX5SuxUTgK6yI/g2pdxkUh
+         +d2O5dovMoDTDstPiM2/JZAHe7frsoMWS052kq5s=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([37.201.214.212]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mwwdf-1jZcn33e5T-00yMza; Sun, 08
+ Mar 2020 22:42:34 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-gpio@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pinctrl: at91: Fix a typo ("descibe")
+Date:   Sun,  8 Mar 2020 22:42:30 +0100
+Message-Id: <20200308214230.15193-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jB3fU-0006bj-Fr;;;mid=<87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18BoLeVKTmhJXInoxrgoo4cUvE+MboM0ho=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Dc3j1YLbf/2HoLi7BPlskXwPB9N0VyEc0ekYYBJEurrvN//f1T9
+ lJvedlkrjf1u735amuVjLky9ZkeqHLDHCsORuzaTG7N84iPrIvUBx7jY0rsNcHVLQtSmq88
+ w9KzLIlQLKBM5/9lyR0CcMtEuEO3+iLyF0mP4VxMu2f6AYFYjErCE1BZTB7eOltLnTdb7PT
+ vABU67GshUVIOGnCKfQ1g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FTtg1mIMvkg=:/p2vluF2sfmKFocK6e5e1q
+ Ih1hIAQhIJKqqZTYQzIxJ70JgO+5D0z2Gzjl7qgn9it8bbaI7pxSna1Rzz7GL7eE06X5KKC/6
+ rF53tH7K1cS3lmcXoU2z1Tvq70kuseK2g9VEzYq5xHZo4oumGrybMAXUg4VluZNH8kBlMNPmp
+ x1aDCogXkxbDxpaltnQXlWxQMX6ozzhp7EACadjbk1ZLtR91Wd8JZV1s0eSGWhK2QU2Jjfkwg
+ MqBs+7kCTrSF472zrXu8uLVqNDsCV9S23czq8Es4fgz0QFKet1EaQkWmY5/dWS2ytpaX9Io3y
+ wwV8fR87f1laD/Nc/I1zzB9JQpOCq9W6Kd/5bfPEd0zT+6iEuEa48raeadDBJJ8lops8f9cHn
+ 5MHhQFPTRMcq8cd2HU1tbwdnCGXaqfuU8ts3a9umUzjpDTyit9UndMZGD66+zWxDOuC6u7HLE
+ rk+gG9L+qB/I+QH0GWi8bHPBoJbABYqZ+PJKw0LK1mXYvmDvjnMqtLpR77wEd4Cu2H7u/e5zf
+ E79ozeweIaWAz2oawmiVhpb85uwq+9teOzW+v1Pzh2k2n2jv+MCUVIMCTMsiPJw9199gJA3c9
+ OWEaRI61wZ3gu/HeDakj4cNlo6B4jPrQFCE284cxDLxCX/myCjY0cTuf+/d4257naDGoyrOnk
+ l/deWxOolusgIUn/Ge4eePpWCPD0s2MrJK/d7KHckvUFfoYUeDq24skyd0OqPtK8uypFV4wb9
+ wcOrs1bOeioJqsussWY9Srgi1rrhaTq7v+cCaCgYERCrSEslLH7cVX5KOJ1vC7hQR1B/PlkZz
+ i3xcrvRmbdwwKh6WfDSbtqt6DdCvEsxLvB5504mhGTqyQlgicoXgcFo9vYkzwwnSDqjQAeVgo
+ 2HyDtl88vk6qKzZXijoxpb+syL36rlEwnfueUJnHZg2F3/x8FHEsiJogzWHl6wPhfIqD6k+Gt
+ 141xK1V+WbLpFzl2fmjJ0ALP2ilr+yfYQ3RbMaYXrKIro/zJpL+e1CEmVzU3LZDGcgnofWG+Z
+ YmI7mdKbJItJ6gNiChdQuH6m0YCnZlVdt64zSK/xSjKL2ka6I5IC0DbcWNBT8RVecKA3rzaTf
+ sTq+/sh4TWiR0YMCo9ZX2PCsf+tg8xc/TqWFE/ZzxqX/Twvkwrn+F6WlDDCmUA4q/8dHgveRW
+ ymOEhH87NNPHL8IJ9jQ4mfqFwJNIizoykNDQyEfEL7mJWYBFVnkmha+nnSuQAXD45lKArZMT3
+ Yz372AYkA9UuPe8ka
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ .../devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt          | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The cred_guard_mutex is problematic.  The cred_guard_mutex is held
-over the userspace accesses as the arguments from userspace are read.
-The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
-threads are killed.  The cred_guard_mutex is held over
-"put_user(0, tsk->clear_child_tid)" in exit_mm().
+diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.=
+txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+index eb39f5051159..e8abbdad7b5d 100644
+=2D-- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+@@ -38,7 +38,7 @@ Bank: 3 (A, B and C)
+   0xffffffff 0x7fff3ccf  /* pioB */
+   0xffffffff 0x007fffff  /* pioC */
 
-Any of those can result in deadlock, as the cred_guard_mutex is held
-over a possible indefinite userspace waits for userspace.
+-For each peripheral/bank we will descibe in a u32 if a pin can be
++For each peripheral/bank we will describe in a u32 if a pin can be
+ configured in it by putting 1 to the pin bit (1 << pin)
 
-Add exec_update_mutex that is only held over exec updating process
-with the new contents of exec, so that code that needs not to be
-confused by exec changing the mm and the cred in ways that can not
-happen during ordinary execution of a process.
-
-The plan is to switch the users of cred_guard_mutex to
-exec_udpate_mutex one by one.  This lets us move forward while still
-being careful and not introducing any regressions.
-
-Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
-Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
-Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
-Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
-Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
-Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
-Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/exec.c                    | 9 +++++++++
- include/linux/sched/signal.h | 9 ++++++++-
- init/init_task.c             | 1 +
- kernel/fork.c                | 1 +
- 4 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index d820a7272a76..ffeebb1f167b 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1014,6 +1014,7 @@ static int exec_mmap(struct mm_struct *mm)
- {
- 	struct task_struct *tsk;
- 	struct mm_struct *old_mm, *active_mm;
-+	int ret;
- 
- 	/* Notify parent that we're no longer interested in the old VM */
- 	tsk = current;
-@@ -1034,6 +1035,11 @@ static int exec_mmap(struct mm_struct *mm)
- 			return -EINTR;
- 		}
- 	}
-+
-+	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
-+	if (ret)
-+		return ret;
-+
- 	task_lock(tsk);
- 	active_mm = tsk->active_mm;
- 	membarrier_exec_mmap(mm);
-@@ -1438,6 +1444,8 @@ static void free_bprm(struct linux_binprm *bprm)
- {
- 	free_arg_pages(bprm);
- 	if (bprm->cred) {
-+		if (!bprm->mm)
-+			mutex_unlock(&current->signal->exec_update_mutex);
- 		mutex_unlock(&current->signal->cred_guard_mutex);
- 		abort_creds(bprm->cred);
- 	}
-@@ -1487,6 +1495,7 @@ void install_exec_creds(struct linux_binprm *bprm)
- 	 * credentials; any time after this it may be unlocked.
- 	 */
- 	security_bprm_committed_creds(bprm);
-+	mutex_unlock(&current->signal->exec_update_mutex);
- 	mutex_unlock(&current->signal->cred_guard_mutex);
- }
- EXPORT_SYMBOL(install_exec_creds);
-diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-index 88050259c466..a29df79540ce 100644
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -224,7 +224,14 @@ struct signal_struct {
- 
- 	struct mutex cred_guard_mutex;	/* guard against foreign influences on
- 					 * credential calculations
--					 * (notably. ptrace) */
-+					 * (notably. ptrace)
-+					 * Deprecated do not use in new code.
-+					 * Use exec_update_mutex instead.
-+					 */
-+	struct mutex exec_update_mutex;	/* Held while task_struct is being
-+					 * updated during exec, and may have
-+					 * inconsistent permissions.
-+					 */
- } __randomize_layout;
- 
- /*
-diff --git a/init/init_task.c b/init/init_task.c
-index 9e5cbe5eab7b..bd403ed3e418 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -26,6 +26,7 @@ static struct signal_struct init_signals = {
- 	.multiprocess	= HLIST_HEAD_INIT,
- 	.rlim		= INIT_RLIMITS,
- 	.cred_guard_mutex = __MUTEX_INITIALIZER(init_signals.cred_guard_mutex),
-+	.exec_update_mutex = __MUTEX_INITIALIZER(init_signals.exec_update_mutex),
- #ifdef CONFIG_POSIX_TIMERS
- 	.posix_timers = LIST_HEAD_INIT(init_signals.posix_timers),
- 	.cputimer	= {
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 60a1295f4384..12896a6ecee6 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1594,6 +1594,7 @@ static int copy_signal(unsigned long clone_flags, struct task_struct *tsk)
- 	sig->oom_score_adj_min = current->signal->oom_score_adj_min;
- 
- 	mutex_init(&sig->cred_guard_mutex);
-+	mutex_init(&sig->exec_update_mutex);
- 
- 	return 0;
- }
--- 
-2.25.0
+ Let's take the pioA on peripheral B
+=2D-
+2.20.1
 
