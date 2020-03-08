@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A08C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A42C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837EF222C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FA120866
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:25:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgCHXZp (ORCPT
+        id S1726617AbgCHXXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 19:25:45 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57239 "EHLO
+        Sun, 8 Mar 2020 19:23:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57213 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbgCHXXz (ORCPT
+        with ESMTP id S1726518AbgCHXXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 19:23:55 -0400
+        Sun, 8 Mar 2020 19:23:50 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jB5Gg-00035I-LO; Mon, 09 Mar 2020 00:23:35 +0100
+        id 1jB5Gf-00033c-5F; Mon, 09 Mar 2020 00:23:33 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 05C631040AD;
-        Mon,  9 Mar 2020 00:23:30 +0100 (CET)
-Message-Id: <20200308222609.825111830@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4DF891040A7;
+        Mon,  9 Mar 2020 00:23:29 +0100 (CET)
+Message-Id: <20200308222609.522613084@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 08 Mar 2020 23:24:08 +0100
+Date:   Sun, 08 Mar 2020 23:24:05 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,7 +38,7 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Frederic Weisbecker <frederic@kernel.org>,
         Alexandre Chartre <alexandre.chartre@oracle.com>
-Subject: [patch part-II V2 09/13] x86/entry/common: Split hardirq tracing into lockdep and ftrace parts
+Subject: [patch part-II V2 06/13] x86/entry/common: Mark syscall entry points notrace and NOKPROBE
 References: <20200308222359.370649591@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -50,60 +50,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-trace_hardirqs_off() is in fact a tracepoint which can be utilized by BPF,
-which is unsafe before calling enter_from_user_mode(), which in turn
-invokes context tracking. trace_hardirqs_off() also invokes
-lockdep_hardirqs_off() under the hood.
+The entry code has some limitations for instrumentation. Anything before
+invoking enter_from_user_mode() cannot be probed because kprobes depend on
+RCU and with NOHZ_FULL user mode can be accounted similar to idle from a
+RCU point of view. enter_from_user_mode() calls into context tracking which
+adjusts the RCU state.
 
-OTOH lockdep needs to know about the interrupts disabled state before
-enter_from_user_mode(). lockdep_hardirqs_off() is safe to call at this
-point.
+A similar problem exists vs. function tracing. The function entry/exit
+points can be used by BPF which again is not safe before CONTEXT_KERNEL has
+been reached.
 
-Split it so lockdep knows about the state and invoke the tracepoint after
-the context is set straight.
+Mark the C-entry points for the various syscalls with notrace and
+NOKPROBE_SYMBOL().
 
-Even if the functions attached to a tracepoint would all be safe to be
-called in rcuidle having it split up is still giving a performance
-advantage because rcu_read_lock_sched() is avoiding the whole dance of:
-
-   scru_read_lock();
-   rcu_irq_enter_irqson();
-   ...
-   rcu_irq_exit_irqson();
-   scru_read_unlock();
-   
-around the tracepoint function invocation just to have the C entry points
-of syscalls call enter_from_user_mode() right after the above dance.
+Note, that this still leaves the ASM invocations of trace_hardirqs_off()
+unprotected. While this is safe vs. RCU at least from the ftrace POV, these
+are trace points which can be utilized by BPF... This will be addressed in
+later patches.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
-V2: New patch
+V2: Amend changelog
 ---
- arch/x86/entry/common.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/x86/entry/common.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 --- a/arch/x86/entry/common.c
 +++ b/arch/x86/entry/common.c
-@@ -60,10 +60,19 @@ static __always_inline void syscall_entr
- {
- 	/*
- 	 * Usermode is traced as interrupts enabled, but the syscall entry
--	 * mechanisms disable interrupts. Tell the tracer.
-+	 * mechanisms disable interrupts. Tell lockdep before calling
-+	 * enter_from_user_mode(). This is safe vs. RCU while the
-+	 * tracepoint is not.
- 	 */
--	trace_hardirqs_off();
-+	lockdep_hardirqs_on(CALLER_ADDR0);
-+
- 	enter_from_user_mode();
-+
-+	/*
-+	 * Tell the tracer about the irq state as well before enabling
-+	 * interrupts.
-+	 */
-+	__trace_hardirqs_off();
- 	local_irq_enable();
+@@ -315,11 +315,12 @@ void do_syscall_64_irqs_on(unsigned long
+ 	syscall_return_slowpath(regs);
  }
  
+-__visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
++__visible notrace void do_syscall_64(unsigned long nr, struct pt_regs *regs)
+ {
+ 	syscall_entry_apply_fixups();
+ 	do_syscall_64_irqs_on(nr, regs);
+ }
++NOKPROBE_SYMBOL(do_syscall_64);
+ #endif
+ 
+ #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
+@@ -370,11 +371,12 @@ static __always_inline void do_syscall_3
+ }
+ 
+ /* Handles int $0x80 */
+-__visible void do_int80_syscall_32(struct pt_regs *regs)
++__visible notrace void do_int80_syscall_32(struct pt_regs *regs)
+ {
+ 	syscall_entry_apply_fixups();
+ 	do_syscall_32_irqs_on(regs);
+ }
++NOKPROBE_SYMBOL(do_int80_syscall_32);
+ 
+ /* Fast syscall 32bit variant */
+ static __always_inline long do_fast_syscall_32_irqs_on(struct pt_regs *regs)
+@@ -450,10 +452,11 @@ static __always_inline long do_fast_sysc
+ }
+ 
+ /* Returns 0 to return using IRET or 1 to return using SYSEXIT/SYSRETL. */
+-__visible long do_fast_syscall_32(struct pt_regs *regs)
++__visible notrace long do_fast_syscall_32(struct pt_regs *regs)
+ {
+ 	syscall_entry_apply_fixups();
+ 	return do_fast_syscall_32_irqs_on(regs);
+ }
++NOKPROBE_SYMBOL(do_fast_syscall_32);
+ 
+ #endif /* CONFIG_X86_32 || CONFIG_IA32_EMULATION */
 
