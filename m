@@ -2,134 +2,83 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FFAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 10:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8881C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 10:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C8120838
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 10:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ABC3206D7
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 10:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgCHK7N (ORCPT
+        id S1726380AbgCHK7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 06:59:13 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:39477 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgCHK7M (ORCPT
+        Sun, 8 Mar 2020 06:59:34 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:51181 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbgCHK7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 06:59:12 -0400
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mbj3e-1jlai033hm-00dEKm; Sun, 08 Mar 2020 11:59:10 +0100
-Received: by mail-qk1-f174.google.com with SMTP id e16so6627426qkl.6;
-        Sun, 08 Mar 2020 03:59:10 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2tx6nBbu9BZm/VaD/fTr4TtFrqC3GIVOZxN7EMTYWXNWntJKQZ
-        zc+o8+fAWYojr+gWZYmaEcXHUZ3BLPyvp3okdOI=
-X-Google-Smtp-Source: ADFU+vtLZCrqsvoVRLgLjaKncW5qncKt1oeFxxk4ajRHsCJw8gSTZvblgXUZetJgeQGkfwQsqjkOMZPRrTin3JkbS24=
-X-Received: by 2002:a37:b984:: with SMTP id j126mr10069404qkf.3.1583665149525;
- Sun, 08 Mar 2020 03:59:09 -0700 (PDT)
+        Sun, 8 Mar 2020 06:59:34 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 028AxKml005931
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Sun, 8 Mar 2020 03:59:20 -0700 (PDT)
+Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.487.0; Sun, 8 Mar 2020 03:59:19 -0700
+From:   <zhe.he@windriver.com>
+To:     <acme@redhat.com>, <jolsa@kernel.org>, <ak@linux.intel.com>,
+        <meyerk@hpe.com>, <linux-kernel@vger.kernel.org>,
+        <zhe.he@windriver.com>
+Subject: [PATCH] perf: Add NULL pointer check for cpu_map iteration and NULL assignment for all_cpus.
+Date:   Sun, 8 Mar 2020 18:59:17 +0800
+Message-ID: <1583665157-349023-1-git-send-email-zhe.he@windriver.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20200211193101.GA178975@cmpxchg.org> <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
- <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
- <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
- <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
- <20200212085004.GL25745@shell.armlinux.org.uk> <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
- <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com> <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
- <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com> <20200306203439.peytghdqragjfhdx@kahuna>
-In-Reply-To: <20200306203439.peytghdqragjfhdx@kahuna>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 8 Mar 2020 11:58:52 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
-Message-ID: <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
-To:     Nishanth Menon <nm@ti.com>
-Cc:     Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:DheoUgROyUqGqcI4pA5GCMcqVMpjZnw/PkO7ntC55mREQOoV9L4
- WBFLPxlDsBzM+eNxaHnH9mbPs4MvCWGAN4dTsJqJ4gGPYS0YCQHu+LCqgRBVPwJmEAAhcQq
- 0+j6SLlqfFXktNJQY1+F5SVRW2yRUVUklyXLqA2CO+C/fEXCdia+ytDo2EMv+8X/u9bL1aQ
- yfyzwT91oiDBce55wyAkw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kpVgpSBnjp0=:P9TLuf2nR248rJ8L86D9iP
- +RrntFKmM6RoDUEE4PdJKFAY+Qm/Kl4/s1ujBSLuXSQKmDltLoJETpzA6Feiv+bqUo6UyE4Yg
- +h2xCM/v37Wo9EYGuIhRPU3AwXiPUBscwjZ0xFTNOnUYU9/Xyl/jeZkEIa5Hm3d3lZQYWWd4I
- mKPwi9CStKxjxjLBvU1aacACOT0RpAhhItc3/szQ9+SRbw4nzZP2u2TIWCl+9g9tXDekDwfbH
- QGZo627rcEMyqVgEVOtsUvhS4afpjf/r5l936nlFTLsQA0nkTlqME1J4fRhw7X1P+DewPL9xg
- H9p8B3IUNgBS9vULYmhCJsjKRb4v1VY7KouLymIWxwRiNXp92QM0J2TpRwyyWD5JN85y9xRuJ
- EiLBsumJ42Y9AfWHrdIWUOFSFb9pTnWCcRdl6vDI4TgyqGyVmOVtIl1vxPqih1seaxtsj+CXm
- 1gcT6jaXgZnt2r23ZlHAttrLLJc+RsRnbR7bToQF9uZ+62+T23cL7zkQgv49oI42MSB9PFLW2
- dRzThnm0+JiGvyb6t/L+BXVwdklJqPcNAeumOHv0uum/NKJzCJJFilHwv4ldrojcv8cywbpGz
- L4XjxQVyDCtgZOdffNhu26UiznP5wFp2BiT1p/pVahnXBwDba3gnrtc2NI4OmRHJyFBhR/EY1
- GUyR0LWLci5rXjAlUYXfsxwJXt+Mgk8I3aooMw/oiqz6V6e47oMKjY6CxK0EgkCWA6vULoR/l
- wz9tODNKHpvug0cMqo9uzvdZpZAiwhBfJj8Lard3xYfEivXT67lVQczgvXMFExXVDPEVl1YfR
- FyjXlq039IuAs3Q0gsFs3O7Sac6QRjgaJRgJRgH0MzLgVk2c5c=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 9:36 PM Nishanth Menon <nm@ti.com> wrote:
-> On 13:11-20200226, santosh.shilimkar@oracle.com wrote:
+From: He Zhe <zhe.he@windriver.com>
 
->
-> ~few 1000s still relevant spread between 4G and 8G (confirmed that both
-> are present, relevant and in use).
->
-> I wish we could sunset, but unfortunately, I am told(and agree)
-> that we should'nt just leave products (and these are long term
-> products stuck in critical parts in our world) hanging in the air, and
-> migrations to newer kernel do still take place periodically (the best
-> I can talk in public forum at least).
+NULL pointer may be passed to perf_cpu_map__cpu and then cause crash,
+such as the one commit cb71f7d43ece ("libperf: Setup initial evlist::all_cpus value")
+fix.
 
-Thank you for the clear answer!
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+ tools/perf/lib/cpumap.c | 2 +-
+ tools/perf/lib/evlist.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-I agree we should certainly not break any such use cases, and for the
-8GB case there is not really a good replacement (using zram/zswap
-instead of highmem could work for some new workloads, but would be a
-rather risky change for an upgrade on already deployed systems).
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+index f93f4e7..ca02150 100644
+--- a/tools/perf/lib/cpumap.c
++++ b/tools/perf/lib/cpumap.c
+@@ -247,7 +247,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+ 
+ int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
+ {
+-	if (idx < cpus->nr)
++	if (cpus && idx < cpus->nr)
+ 		return cpus->map[idx];
+ 
+ 	return -1;
+diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+index 5b9f2ca..f87a239 100644
+--- a/tools/perf/lib/evlist.c
++++ b/tools/perf/lib/evlist.c
+@@ -127,6 +127,7 @@ void perf_evlist__exit(struct perf_evlist *evlist)
+ 	perf_cpu_map__put(evlist->cpus);
+ 	perf_thread_map__put(evlist->threads);
+ 	evlist->cpus = NULL;
++	evlist->all_cpus = NULL;
+ 	evlist->threads = NULL;
+ 	fdarray__exit(&evlist->pollfd);
+ }
+-- 
+2.7.4
 
-I hope it's ok to ask the same question every few years until you are
-reasonably sure that the users are ready to stop upgrading kernels
-beyond the following LTS kernel version. We can also do the same
-thing for the other 32-bit platforms that exceed the maximum amount
-of lowmem, and document which ones are known.
-
-In the meantime, it would seem useful to increase the amount of
-lowmem that can be used by default, using a combination of some
-of the changes mentioned earlier
-
-- add a VMSPLIT_2G_OPT config option for non-LPAE ARM kernels
-  to handle the common i.MX6 case with 2GB of RAM without highmem
-
-- make VMSPLIT_2G_OPT (without LPAE) or VMSPLIT_2G (with
-  LPAE) the default in most ARM defconfig files as well as distros,
-  and disable highmem where possible, to see what breaks.
-
-- extend zswap to use all the available high memory for swap space
-  when highmem is disabled.
-
-- revisit CONFIG_VMSPLIT_4G_4G for arm32 (and maybe mips32)
-  to see if it can be done, and what the overhead is. This is probably
-  more work than the others combined, but also the most promising
-  as it allows the most user address space and physical ram to be used.
-
-       Arnd
