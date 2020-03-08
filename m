@@ -2,161 +2,171 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A29C18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 07:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD59C10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C5620663
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 07:58:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="epTEvCJ+"
+	by mail.kernel.org (Postfix) with ESMTP id 5434220848
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583654951;
+	bh=hLJ9CFsbuXNnSzqxjOWOGdWMTLJvW1pCNuIWPtWSRSA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hb3VPUxdPL05fRrM7c59Bb3epv1V6jgj26TrNTbqErF7+/1KCZIkAMFsX6R5GlQiP
+	 foOO0XJGgxJOuHLw/E9BA+wO0IPmvVUvhGTtgFe+R+brpEMHrhpPtlYdkSQKDDXXlb
+	 YA2/j2LEbS+BCcRSFMkJk5Cz2LL5N0edJYhoC0to=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgCHH6O (ORCPT
+        id S1726169AbgCHIJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 03:58:14 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39198 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725904AbgCHH6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 03:58:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583654293;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/iQ3FcNLQi6DjD/zqwYipJZvlLCEPpHUkTbLpJbck20=;
-        b=epTEvCJ+aneXSiVlVbGQ849E1QJeGlzYPTRzxYVUQz1VULvtHylB0W8hXzDxaak+Y/9HTQ
-        II6HbsbvMnGcsztRfuj6K0xQPvF1E6+Wu9m1g1tofS8iPWufJNQBcJvQua7xBOPbpvY3ZM
-        RLdM/bDH51PrQvMjiRr5sR1GEHGPmRI=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-186-unkFEO4OPzClP2pYeqgl8Q-1; Sun, 08 Mar 2020 03:58:11 -0400
-X-MC-Unique: unkFEO4OPzClP2pYeqgl8Q-1
-Received: by mail-qk1-f199.google.com with SMTP id z124so4962349qkd.20
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 23:58:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/iQ3FcNLQi6DjD/zqwYipJZvlLCEPpHUkTbLpJbck20=;
-        b=DCrOEkGGXkmEHRi5sWZ1KC4IZTB81+OscsLiSGR4koO2xzOl80vPIhp44WvEOPoxEJ
-         LjbVP51WNtbkIxpTqSOtnCN8VeubIjyks/q1v7WCDolUshbOkkOi91MmfS2ME6RcpHHK
-         dQ5g86YNdZiKbn/bULvpc4AzXsQMXeIOuRs/TerNWq4baLokNqPd++idKBhOMttMjMEE
-         UpF26skXyTRA1GbFZUrBFhNXyy7WxzvHwub2sKLwd/LXoTJY1TH6QDkA+xXPNIVJDn0t
-         jn+tig0yGy6Jje8Lwl5OGTdpFBuEFH2t+3rHvqy4PLSWHUYTjBjt29igNqAPm/xddejb
-         R5ZQ==
-X-Gm-Message-State: ANhLgQ0Ujgs9J3Wrg3E9qjABD2JkeTmrEtt64G8suFFlTXts1mlRTESg
-        CmndWSL95Dy/4GmMTYgELuTu+qajfAPJCejnBAU6lnOS8dSteHF8TYeOtderFRJVOzGr8GZv6NQ
-        1z5RF3BH4wh7/D9/t69e5/XSA
-X-Received: by 2002:a0c:fc46:: with SMTP id w6mr10078462qvp.46.1583654290653;
-        Sat, 07 Mar 2020 23:58:10 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vvvApe3sCEXq2f20G7j5KtC2UjY5EK9LLdWQ6XZXZsCsV5yGgnxLOyL/CYD4IMH7RPUgWBaWA==
-X-Received: by 2002:a0c:fc46:: with SMTP id w6mr10078456qvp.46.1583654290419;
-        Sat, 07 Mar 2020 23:58:10 -0800 (PST)
-Received: from redhat.com (bzq-79-178-2-19.red.bezeqint.net. [79.178.2.19])
-        by smtp.gmail.com with ESMTPSA id f128sm20670117qke.54.2020.03.07.23.58.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Mar 2020 23:58:09 -0800 (PST)
-Date:   Sun, 8 Mar 2020 03:58:05 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Jason Wang <jasowang@redhat.com>, Tiwei Bie <tiwei.bie@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
-Subject: Re: [PATCH] virtio_ring: Fix mem leak with vring_new_virtqueue()
-Message-ID: <20200308035751-mutt-send-email-mst@kernel.org>
-References: <20200224212643.30672-1-s-anna@ti.com>
- <b622c831-9adb-b9af-dd4a-21605bc124a8@redhat.com>
- <0ace3a3b-cf2f-7977-5337-f74f530afbe1@ti.com>
- <1ce2bee4-64ed-f630-2695-8e8b9b8e27c1@redhat.com>
- <a4335428-e29e-d567-b18b-3c144020a726@ti.com>
+        Sun, 8 Mar 2020 04:09:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgCHIJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 04:09:07 -0400
+Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 876482072A;
+        Sun,  8 Mar 2020 08:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583654946;
+        bh=hLJ9CFsbuXNnSzqxjOWOGdWMTLJvW1pCNuIWPtWSRSA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Tryqldz5P1wtvDZjuO4CPKkvwUQ2KYptlEuE3dGD6KtQO1AeLzkCSLO4OzFMoxml/
+         RoPLH9wUPHz2ucP1VUNv/VmE8EgMXc5I2zlXIYsnCEBzE6GFcgFwOf79Dyov1XFKWw
+         t1h5SsKdmeccIxBaHfaTNyeDM0z8zsbTvCw+OxG8=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Christoph Hellwig <hch@lst.de>,
+        David Hildenbrand <david@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nikolai Merinov <n.merinov@inango-systems.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Vladis Dronov <vdronov@redhat.com>
+Subject: [GIT PULL 00/28] More EFI fixes for v5.7
+Date:   Sun,  8 Mar 2020 09:08:31 +0100
+Message-Id: <20200308080859.21568-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a4335428-e29e-d567-b18b-3c144020a726@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 06:27:53PM -0600, Suman Anna wrote:
-> On 2/25/20 9:13 PM, Jason Wang wrote:
-> > 
-> > On 2020/2/26 上午12:51, Suman Anna wrote:
-> >> Hi Jason,
-> >>
-> >> On 2/24/20 11:39 PM, Jason Wang wrote:
-> >>> On 2020/2/25 上午5:26, Suman Anna wrote:
-> >>>> The functions vring_new_virtqueue() and __vring_new_virtqueue() are
-> >>>> used
-> >>>> with split rings, and any allocations within these functions are
-> >>>> managed
-> >>>> outside of the .we_own_ring flag. The commit cbeedb72b97a
-> >>>> ("virtio_ring:
-> >>>> allocate desc state for split ring separately") allocates the desc
-> >>>> state
-> >>>> within the __vring_new_virtqueue() but frees it only when the
-> >>>> .we_own_ring
-> >>>> flag is set. This leads to a memory leak when freeing such allocated
-> >>>> virtqueues with the vring_del_virtqueue() function.
-> >>>>
-> >>>> Fix this by moving the desc_state free code outside the flag and only
-> >>>> for split rings. Issue was discovered during testing with remoteproc
-> >>>> and virtio_rpmsg.
-> >>>>
-> >>>> Fixes: cbeedb72b97a ("virtio_ring: allocate desc state for split ring
-> >>>> separately")
-> >>>> Signed-off-by: Suman Anna<s-anna@ti.com>
-> >>>> ---
-> >>>>    drivers/virtio/virtio_ring.c | 4 ++--
-> >>>>    1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/virtio/virtio_ring.c
-> >>>> b/drivers/virtio/virtio_ring.c
-> >>>> index 867c7ebd3f10..58b96baa8d48 100644
-> >>>> --- a/drivers/virtio/virtio_ring.c
-> >>>> +++ b/drivers/virtio/virtio_ring.c
-> >>>> @@ -2203,10 +2203,10 @@ void vring_del_virtqueue(struct virtqueue *_vq)
-> >>>>                         vq->split.queue_size_in_bytes,
-> >>>>                         vq->split.vring.desc,
-> >>>>                         vq->split.queue_dma_addr);
-> >>>> -
-> >>>> -            kfree(vq->split.desc_state);
-> >>>>            }
-> >>>>        }
-> >>>> +    if (!vq->packed_ring)
-> >>>> +        kfree(vq->split.desc_state);
-> >>> Nitpick, it looks to me it would be more clear if we just free
-> >>> desc_state unconditionally here (and remove the kfree for packed above).
-> >> OK, are you sure you want that to be folded into this patch? It looks to
-> >> me a separate cleanup/consolidation patch, and packed desc_state does
-> >> not suffer this memleak, and need not be backported into stable kernels.
-> >>
-> >> regards
-> >> Suman
-> > 
-> > 
-> > Though it's just a small tweak, I'm fine for leaving it for future.
-> > 
-> > So
-> > 
-> > Acked-by: Jason Wang <jasowang@redhat.com>
-> > 
-> 
-> Mike,
-> Ping on this. I don't see the patch in -next yet. Can we get this into
-> the current -rc please?
-> 
-> regards
-> Suman
+The following changes since commit b9d8b63e340392d7f3ad79881f36a550566cbbbe:
 
-Yes will queue it shortly, thanks!
+  Merge tag 'stable-shared-branch-for-driver-tree' into HEAD (2020-03-05 09:58:20 +0100)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
+
+for you to fetch changes up to dfb2a1c61fcdc8be5dd74608c411c78008a0f078:
+
+  partitions/efi: Fix partition name parsing in GUID partition entry (2020-03-06 11:17:42 +0100)
+
+----------------------------------------------------------------
+More EFI updates for v5.7
+
+- a fix for a boot regression in the IMA code on x86 booting without UEFI
+- memory encryption fixes for x86, so that the TPM tables and the RNG
+  config table created by the stub are correctly identified as living in
+  unencrypted memory
+- style tweak and doc update from Heinrich
+- followup to the ARM EFI entry code simplifications to ensure that we
+  don't rely on EFI_LOADER_DATA memory being RWX
+- fixes from Arvind to ensure that the new mixed mode approach works as
+  expected regardless of where the image is loaded in memory by the UEFI
+  PE/COFF loader
+- more fixes from Arvind to make it more likely that the image can be
+  decompressed in place, regardless of where it was loaded in memory
+- efivars bugfix and some cleanup from Vladis
+- incorporate a stable branch with the EFI pieces of Hans's work on
+  loading device firmware from EFI boot service memory regions
+- some followup fixes for the EFI stub changes that are queued for
+  v5.7 already
+- an endianness fix for the EFI GPT partition table driver
+
+----------------------------------------------------------------
+Ard Biesheuvel (7):
+      efi/arm: clean EFI stub exit code from cache instead of avoiding it
+      efi/arm64: clean EFI stub exit code from cache instead of avoiding it
+      efi: mark all EFI runtime services as unsupported on non-EFI boot
+      efi/libstub/x86: deal with exit() boot service returning
+      efi/x86: ignore memory attributes table on i386
+      efi/x86: preserve %ebx correctly in efi_set_virtual_address_map()
+      efi/libstub/x86: use ULONG_MAX as upper bound for all allocations
+
+Arvind Sankar (11):
+      efi/x86: Annotate the LOADED_IMAGE_PROTOCOL_GUID with SYM_DATA
+      efi/x86: Respect 32-bit ABI in efi32_pe_entry
+      efi/x86: Make efi32_pe_entry more readable
+      efi/x86: Avoid using code32_start
+      x86/boot: Use unsigned comparison for addresses
+      x86/boot/compressed/32: Save the output address instead of recalculating it
+      efi/x86: Decompress at start of PE image load address
+      efi/x86: Add kernel preferred address to PE header
+      efi/x86: Remove extra headroom for setup block
+      efi/x86: Don't relocate the kernel unless necessary
+      efi/x86: Fix cast of image argument
+
+Heinrich Schuchardt (2):
+      efi: don't shadow i in efi_config_parse_tables()
+      efi/libstub: add libstub/mem.c to documentation tree
+
+Lukas Bulwahn (1):
+      MAINTAINERS: adjust EFI entry to removing eboot.c
+
+Masahiro Yamada (1):
+      efi/libstub: avoid linking libstub/lib-ksyms.o into vmlinux
+
+Nikolai Merinov (1):
+      partitions/efi: Fix partition name parsing in GUID partition entry
+
+Tom Lendacky (2):
+      efi/x86: Add TPM related EFI tables to unencrypted mapping checks
+      efi/x86: Add RNG seed EFI table to unencrypted mapping check
+
+Vladis Dronov (3):
+      efi: fix a race and a buffer overflow while reading efivars via sysfs
+      efi: add a sanity check to efivar_store_raw()
+      efi: fix a mistype in comments mentioning efivar_entry_iter_begin()
+
+ Documentation/driver-api/firmware/efi/index.rst |  11 +++
+ Documentation/driver-api/firmware/index.rst     |   1 +
+ MAINTAINERS                                     |   1 -
+ arch/arm/boot/compressed/head.S                 |  18 ++--
+ arch/arm64/kernel/efi-entry.S                   |  26 +++---
+ arch/arm64/kernel/image-vars.h                  |   4 +-
+ arch/x86/boot/compressed/head_32.S              |  47 ++++++----
+ arch/x86/boot/compressed/head_64.S              | 112 +++++++++++++++++++-----
+ arch/x86/boot/header.S                          |   6 +-
+ arch/x86/boot/tools/build.c                     |  44 +++++++---
+ arch/x86/kernel/asm-offsets.c                   |   1 -
+ arch/x86/platform/efi/efi.c                     |   3 +
+ arch/x86/platform/efi/efi_stub_32.S             |   2 +-
+ block/partitions/efi.c                          |  35 ++++++--
+ block/partitions/efi.h                          |   2 +-
+ drivers/firmware/efi/Makefile                   |   2 +-
+ drivers/firmware/efi/efi-pstore.c               |   2 +-
+ drivers/firmware/efi/efi.c                      |  27 +++---
+ drivers/firmware/efi/efivars.c                  |  32 +++++--
+ drivers/firmware/efi/libstub/x86-stub.c         |  80 +++++++++++------
+ drivers/firmware/efi/vars.c                     |   2 +-
+ include/linux/efi.h                             |   2 +
+ 22 files changed, 319 insertions(+), 141 deletions(-)
+ create mode 100644 Documentation/driver-api/firmware/efi/index.rst
