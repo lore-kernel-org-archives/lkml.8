@@ -6,89 +6,82 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CBFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5002C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81ABB206D7
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 907E420663
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 12:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgCHMOO (ORCPT
+        id S1726296AbgCHMZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 08:14:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56572 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgCHMOO (ORCPT
+        Sun, 8 Mar 2020 08:25:34 -0400
+Received: from sg2plout10-02.prod.sin2.secureserver.net ([182.50.145.5]:60616
+        "EHLO sg2plout10-02.prod.sin2.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726213AbgCHMZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 08:14:14 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jAuor-0005jp-I8; Sun, 08 Mar 2020 13:14:09 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 0841F104096; Sun,  8 Mar 2020 13:14:09 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Joe Jin <joe.jin@oracle.com>, Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] genirq/debugfs: add new config option for trigger interrupt from userspace
-In-Reply-To: <84d0b879-cd4b-57c4-5ad3-57eab7694d45@oracle.com>
-References: <44a7007d-9624-8ac7-e0ab-fab8bdd39848@oracle.com> <006a08b8bfb991853ede8c9d1e29d6a7@kernel.org> <a4b3b41b-b0b9-03cd-c394-05d8f0bfc5f4@oracle.com> <bd3f06814b4319ddaaee2bf142aaf465@kernel.org> <84d0b879-cd4b-57c4-5ad3-57eab7694d45@oracle.com>
-Date:   Sun, 08 Mar 2020 13:14:08 +0100
-Message-ID: <87r1y382nj.fsf@nanos.tec.linutronix.de>
+        Sun, 8 Mar 2020 08:25:33 -0400
+X-Greylist: delayed 440 seconds by postgrey-1.27 at vger.kernel.org; Sun, 08 Mar 2020 08:25:33 EDT
+Received: from mail-oi1-f172.google.com ([209.85.167.172])
+        by :SMTPAUTH: with ESMTPSA
+        id AushjL9TYO6ZBAuskjSSOO; Sun, 08 Mar 2020 05:18:11 -0700
+X-CMAE-Analysis: v=2.3 cv=BaWmLYl2 c=1 sm=1 tr=0
+ a=Y+b99WSDUBXwRGtcog24Ag==:117 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=SS2py6AdgQ4A:10 a=1_j9CwCaYTysT8vyirYA:9 a=QEXdDO2ut3YA:10
+X-SECURESERVER-ACCT: kaiwan@kaiwantech.com
+Received: by mail-oi1-f172.google.com with SMTP id l12so7374731oil.9;
+        Sun, 08 Mar 2020 05:18:10 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0qMGNtbgT0CLSw7vFCRkXqWhn8Tv1o7mrYdIm0JByBZM66CeVW
+        aBi5pUB+1C3DzKJxidAisBPB2IvvO2FEX6njS90=
+X-Google-Smtp-Source: ADFU+vtZnWMkbiL1bXf+FNyxSs2l/kh0C8lBmhrcLdSBCJkRlC3KOJuhCbp7XEyp4s5Om4jf+N/09525fkXc4ZKhqvc=
+X-Received: by 2002:aca:5044:: with SMTP id e65mr8541289oib.28.1583669887378;
+ Sun, 08 Mar 2020 05:18:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <202003021038.8F0369D907@keescook> <20200305151010.835954-1-nivedita@alum.mit.edu>
+ <f672417e-1323-4ef2-58a1-1158c482d569@physik.fu-berlin.de>
+In-Reply-To: <f672417e-1323-4ef2-58a1-1158c482d569@physik.fu-berlin.de>
+From:   Kaiwan N Billimoria <kaiwan@kaiwantech.com>
+Date:   Sun, 8 Mar 2020 17:47:50 +0530
+X-Gmail-Original-Message-ID: <CAPDLWs-b0NjDx4A=wdd6aJu84Wrc2wk6QZAf6EYGbqWyy-4ZFw@mail.gmail.com>
+Message-ID: <CAPDLWs-b0NjDx4A=wdd6aJu84Wrc2wk6QZAf6EYGbqWyy-4ZFw@mail.gmail.com>
+Subject: Re: [PATCH] sh: Stop printing the virtual memory layout
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-CMAE-Envelope: MS4wfA50qyIlkVVHqwvhiVy51LCaeXikHE5ZfTHtJvQTeBKBpAxc3GA5+SHnjOiUpG4oZ00GXu12yjgqmiWDaw2sy0G1CK2UJ6H2oPsgrMOQUtKUF4nr+Pcf
+ fN+MoFxTSylJOAo3i4JthnH6SMKgdVx3I5bgd4i9ByHqA7m2lT/3ZZp22V4ZBXChA36IplHl/lTN5ge6JRvBTfU8sB8dwBuUr5weO7herzpDdEttfo/bp+3m
+ i+drPBLWNmwItSVko4UtZQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe,
-
-Joe Jin <joe.jin@oracle.com> writes:
-> On 2/28/20 11:54 AM, Marc Zyngier wrote:
->> On 2020-02-28 19:13, Joe Jin wrote:
->>>> On 2020-02-28 05:42, Joe Jin wrote:
->>>>> commit 536e2e34bd00 ("genirq/debugfs: Triggering of interrupts from
->>>>> userspace") is allowed developer inject interrupts via irq debugfs, which
->>>>> is very useful during development phase, but on a production system, this
->>>>> is very dangerous, add new config option, developers can enable it as
->>>>> needed instead of enabling it by default when irq debugfs is enabled.
->>>>
->>>> I don't really mind the patch (although it could be more elegant), but in
->>>> general I object to most debugfs options being set on a production kernel.
->>>> There is way too much information in most debugfs backends to be comfortable
->>>> with it, and you can find things like page table dumps, for example...
->>>
->>> We should not enable any debug option on production system, actual customer
->>> want to resize their BM or VM, cpu offline may lead system not works properly,
->>> and if we knew more details of IRQ info it will be very help to identify
->>> if it caused by IRQ/vectors, this is the motivation of we want to enable it
->>> on production kernel.
->> 
->> If something doesn't work properly, then you are still debugging, AFAICT.
+On Thu, Mar 5, 2020 at 8:48 PM John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
 >
-> Yes you're right, there are various reasons to led the problem such like
-> bad mapping, interrupts lost, vectors used up .... irq debugfs is help to
-> identify which part caused the problem, and it help to save troubleshooting
-> time :-)
+> On 3/5/20 4:10 PM, Arvind Sankar wrote:
+> > For security, don't display the kernel's virtual memory layout.
+> >
+> > Kees Cook points out:
+> > "These have been entirely removed on other architectures, so let's
+> > just do the same for ia32 and remove it unconditionally."
+> >
+> > 071929dbdd86 ("arm64: Stop printing the virtual memory layout")
+> > 1c31d4e96b8c ("ARM: 8820/1: mm: Stop printing the virtual memory layout")
+> > 31833332f798 ("m68k/mm: Stop printing the virtual memory layout")
+> > fd8d0ca25631 ("parisc: Hide virtual kernel memory layout")
+> > adb1fe9ae2ee ("mm/page_alloc: Remove kernel address exposure in free_reserved_area()")
+> Aww, why wasn't this made configurable? I found these memory map printouts
+> very useful for development.
 
-Just picking out individual interfaces is going to create a whack a mole
-game and a boat load of config options to disable these. That's really
-not the way to go.
-
-The right thing to do is to have ONE config switch which disables all
-write interfaces at once by refusing the write right in the debugfs
-entry point. 
-
-Of course there might be a few debugfs files which need write access
-even in that case, but that's easy enough to fix by marking them as
-explicitely allowed.
-
-Thanks,
-
-        tglx
-
-
+Same here! IMO, the kernel segment layout is useful for devs/debug purposes.
+Perhaps:
+a) all these printk's could be gathered into one function and invoked
+only when DEBUG (or equivalent) is defined?
+b) else, the s/pr_info/pr_devel approach with %pK should be good?
+-Kaiwan.
