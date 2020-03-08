@@ -2,176 +2,139 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECC7C10F28
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21416C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 330F12072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8AC1206D7
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 15:40:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="DAa3yPIS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgCHPd4 (ORCPT
+        id S1726346AbgCHPkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 11:33:56 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49978 "EHLO inva020.nxp.com"
+        Sun, 8 Mar 2020 11:40:14 -0400
+Received: from canardo.mork.no ([148.122.252.1]:58085 "EHLO canardo.mork.no"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgCHPdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 11:33:53 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9A3A61A1523;
-        Sun,  8 Mar 2020 16:33:50 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8D3F21A151C;
-        Sun,  8 Mar 2020 16:33:43 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EFF94402DA;
-        Sun,  8 Mar 2020 23:33:34 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] arm64: dts: imx8mp: Add thermal zones support
-Date:   Sun,  8 Mar 2020 23:27:20 +0800
-Message-Id: <1583681240-14782-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583681240-14782-1-git-send-email-Anson.Huang@nxp.com>
-References: <1583681240-14782-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726260AbgCHPkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 11:40:14 -0400
+X-Greylist: delayed 824 seconds by postgrey-1.27 at vger.kernel.org; Sun, 08 Mar 2020 11:40:13 EDT
+Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id 028FQM2j015815
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sun, 8 Mar 2020 16:26:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1583681182; bh=ScndAKvQHtkoAKJHKcvCgojYNjZdn3MZ2jAOKVkeCi8=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=DAa3yPISwfc5HFbHxC4Eqrr99/KfNjwMIpo46lz5BuhenW6xjgocpIO6VT8ZQVpGk
+         eIzuHguRgLLTVA7sHrWpgaKgTccjU5C1ad+b3pGQs6G5D5I1vlainOvt+g0fThSEkM
+         azEPJVSsnNKZu7GwEMoSCCiLJKbn5hidZQjuBcxg=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
+        (envelope-from <bjorn@mork.no>)
+        id 1jAxor-0000VM-QV; Sun, 08 Mar 2020 16:26:21 +0100
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     Paul Gildea <paul.gildea@gmail.com>
+Cc:     "davem\@davemloft.net" <davem@davemloft.net>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: usb: qmi_wwan: Fix for packets being rejected in the ring buffer used by the xHCI controller.
+Organization: m
+References: <CA+4pmEueEiz0Act8X6t4y3+4LOaOh_-ZfzScH0CbOKT99x91NA@mail.gmail.com>
+Date:   Sun, 08 Mar 2020 16:26:21 +0100
+In-Reply-To: <CA+4pmEueEiz0Act8X6t4y3+4LOaOh_-ZfzScH0CbOKT99x91NA@mail.gmail.com>
+        (Paul Gildea's message of "Wed, 4 Mar 2020 14:20:28 +0000")
+Message-ID: <87wo7una02.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.1 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX8MP has a TMU inside which supports two thermal zones, add support
-for them.
+Paul Gildea <paul.gildea@gmail.com> writes:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 63 +++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+> When MTU of modem is set to less than 1500 and a packet larger than MTU
+> arrives in Linux from a modem, it is discarded with -EOVERFLOW error
+> (Babble error). This is seen on USB3.0 and USB2.0 busses. This is
+> essentially because the MRU (Max Receive Size) is not a separate entity to
+> the MTU (Max Transmit Size) and the received packets can be larger than
+> those transmitted. Following the babble error there were an endless supply
+> of zero-length URBs which are rejected with -EPROTO (increasing the rx
+> input error counter each time). This is only seen on USB3.0. These contin=
+ue
+> to come ad infinitum until the modem is shutdown, rendering the modem
+> unusable. There is a bug in the core USB handling code in Linux that
+> doesn't deal well with network MTUs smaller than 1500 bytes. By default t=
+he
+> dev->hard_mtu (the "real" MTU) is in lockstep with dev->rx_urb_size
+> (essentially an MRU), and it's the latter that is causing trouble. This h=
+as
+> nothing to do with the modems; the issue can be reproduced by getting a
+> USB-Ethernet dongle, setting the MTU to 1430, and pinging with size great=
+er
+> than 1406.
+>
+> Signed-off-by: Paul Gildea <Paul.Gildea@gmail.com>
+> ---
+> drivers/net/usb/qmi_wwan.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+> index 5754bb6..545c772 100644
+> --- a/drivers/net/usb/qmi_wwan.c
+> +++ b/drivers/net/usb/qmi_wwan.c
+> @@ -815,6 +815,13 @@ static int qmi_wwan_bind(struct usbnet *dev, struct
+> usb_interface *intf)
+>     }
+>     dev->net->netdev_ops =3D &qmi_wwan_netdev_ops;
+>     dev->net->sysfs_groups[0] =3D &qmi_wwan_sysfs_attr_group;
+> +    /* LTE Networks don't always respect their own MTU on receive side;
+> +    * e.g. AT&T pushes 1430 MTU but still allows 1500 byte packets from
+> +    * far-end network. Make receive buffer large enough to accommodate
+> +    * them, and add four bytes so MTU does not equal MRU on network
+> +    * with 1500 MTU otherwise usbnet_change_mtu() will change both.
+> +    */
+> +   dev->rx_urb_size =3D ETH_DATA_LEN + 4;
+>  err:
+>     return status;
+>  }
+> --
+> 1.9.1
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index a253c3f..c621988 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- #include "imx8mp-pinfunc.h"
- 
-@@ -43,6 +44,7 @@
- 			clocks = <&clk IMX8MP_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_1: cpu@1 {
-@@ -53,6 +55,7 @@
- 			clocks = <&clk IMX8MP_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_2: cpu@2 {
-@@ -63,6 +66,7 @@
- 			clocks = <&clk IMX8MP_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_3: cpu@3 {
-@@ -73,6 +77,7 @@
- 			clocks = <&clk IMX8MP_CLK_ARM>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_L2: l2-cache0 {
-@@ -127,6 +132,57 @@
- 		method = "smc";
- 	};
- 
-+	thermal-zones {
-+		cpu-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <2000>;
-+			thermal-sensors = <&tmu 0x0>;
-+			trips {
-+				cpu_alert0: trip0 {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu_crit0: trip1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert0>;
-+					cooling-device =
-+						<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		soc-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <2000>;
-+			thermal-sensors = <&tmu 0x1>;
-+			trips {
-+				soc_alert0: trip0 {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				soc_crit0: trip1 {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -215,6 +271,13 @@
- 				gpio-ranges = <&iomuxc 0 114 30>;
- 			};
- 
-+			tmu: tmu@30260000 {
-+				compatible = "fsl,imx8mp-tmu";
-+				reg = <0x30260000 0x10000>;
-+				clocks = <&clk IMX8MP_CLK_TSENSOR_ROOT>;
-+				#thermal-sensor-cells = <1>;
-+			};
-+
- 			wdog1: watchdog@30280000 {
- 				compatible = "fsl,imx8mp-wdt", "fsl,imx21-wdt";
- 				reg = <0x30280000 0x10000>;
--- 
-2.7.4
 
+This is fine as a first step towards saner buffer handling in qmi_wwan.
+If real world devices use asymmetric MTUs, then we should just deal with
+that.
+
+So I was going to add my ack.  But the patch does not apply:
+
+
+ bjorn@miraculix:/usr/local/src/git/linux$ git am /tmp/l
+ Applying: net: usb: qmi_wwan: Fix for packets being rejected in the ring b=
+uffer used by the xHCI controller.
+ error: corrupt patch at line 10
+
+and checkpatch says why:
+
+ bjorn@miraculix:/usr/local/src/git/linux$ scripts/checkpatch.pl /tmp/l
+ ERROR: patch seems to be corrupt (line wrapped?)
+ #34: FILE: drivers/net/usb/qmi_wwan.c:814:
+ usb_interface *intf)
+
+
+Could you fix up and resend? You might have to use a different email
+client.  See
+https://www.kernel.org/doc/html/latest/process/email-clients.html#email-cli=
+ents
+
+
+Bj=C3=B8rn
