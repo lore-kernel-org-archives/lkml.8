@@ -2,79 +2,284 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED45C18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 04:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB0CC18E5C
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 05:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C5B2072C
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 04:52:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583643175;
-	bh=07rLvQ0WqPhuHx8qZF5jp9yGE4CzHoiFnGAEnIVs0gk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=WD0SIwG1BNF42ertlhinRKNEhY0kvQhn2pl4xwupv0mNs5VvzaFHk3l2H5Qj1h2lN
-	 pPOHbthPdRtAc7JklTFlAtVt9Pd0ubcxqq4klxryNvOR9xf4kUPEFtWhJi6METU3e0
-	 AudjNnBWVbKUOc6qbLHfmCJwDIEXRMnMw39EcoaI=
+	by mail.kernel.org (Postfix) with ESMTP id 6F932206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 05:23:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z58dESuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgCHEwr (ORCPT
+        id S1726121AbgCHFXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 23:52:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbgCHEwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 23:52:46 -0500
-Received: from DESKTOP-GFFITBK.localdomain (220-133-90-194.HINET-IP.hinet.net [220.133.90.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D34712072C;
-        Sun,  8 Mar 2020 04:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583643166;
-        bh=07rLvQ0WqPhuHx8qZF5jp9yGE4CzHoiFnGAEnIVs0gk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=m4Zj2xDSjTGoaTSoUSQs6A03ymGE8HVvObv62K525CY3HmsFNgl4Z5A1Z3iGevjsT
-         3cvQw3NuBTLUhe8anoVra/G9i1NlTCFUwY9+9+xVVh5i7vPTNKqVNP1fNodUqNOee3
-         YH8pFI7s90dQVQ01uqGxnnsCIIQp1kE86Fvz59fk=
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-To:     CK Hu <ck.hu@mediatek.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Subject: [PATCH] MAINTAINERS: Update Chun-Kuang Hu's email address
-Date:   Sun,  8 Mar 2020 12:52:01 +0800
-Message-Id: <20200308045201.3163-1-chunkuang.hu@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Sun, 8 Mar 2020 00:23:10 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45837 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgCHFXK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 00:23:10 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 2so3261974pfg.12
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Mar 2020 21:23:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=z9Kd9Lm6gpDhT8Bnn3cJ1NjmF5WgpV0EWh105H6P8Go=;
+        b=Z58dESuz0hlr6ntvhWwh0oX+IrEK629sbe5JtUIobZeCamdYshU3q3P24ulwJ6TDN2
+         5si6GiQt2oEwD2BbjzQO6x3VdIIRBs1GB/v2Ji1P0EdOqCWfNDR7BTSA2T5L5y3W+k+0
+         XHt1QS57L/cs2VH+BcdTs93eGRqcQJR+0gWfIhB4DKOcEak3TYB2DRIcNtAN9EMKq5aZ
+         ni5iMhpO8JuTGRiWNFTnJIH85mf92d59why24fRF1efmdVN/BGmqQq/gmUDO9YZKxW3p
+         G12wWb3K/uovIQIqqGwPG3RkeBr0B4FWfFoL7NCeSfQ4fTZ21Zqe3pAfMD2o3oMc6Kgi
+         hcZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z9Kd9Lm6gpDhT8Bnn3cJ1NjmF5WgpV0EWh105H6P8Go=;
+        b=QX1TlCqZsf9Asuzd3rl86bdnWpcOEbKQndjdU1Obtko2m7ODajTDujdDfwHRzoNhad
+         f55NSe4LbIkHVBP3d2/i9BkcKSBy/nJk6IrsH19YHOFxlNnPMKyKovOa5TLP1qqoJQu3
+         HHchCXSVN5kHfoFewQ/R6r49Ojos4ofFjse07aHaQvS4HAElZSmD+Z9x8aI4bNIJdhV8
+         SYmDIYEKef/lwRGIIODTEdMH+mbdlVw3Rm+ZbVMtqerWP2LQEo2aXJiRwya/nJRSeFOl
+         OgK+//C1G6PeScAoBdhcOs92Y8hIvnmBN8OngSmctqL3WU4mUoKmAM0SNjUU0XrlgN7b
+         DUKA==
+X-Gm-Message-State: ANhLgQ2waZSQioL2kM/VVO5S003JT1M4SjNoDAOS/we/Vpa7MmPiMS1a
+        KqhZmDrNHlKZfMQqrwFnCd/cIQ==
+X-Google-Smtp-Source: ADFU+vvihjh9X+vKjKXxBCznHuTDVVyqgcpWZgHVvURuVHh2KGvM7kgLvqVR1CktAeVM1ax3fU+9AA==
+X-Received: by 2002:a63:fc56:: with SMTP id r22mr10509778pgk.147.1583644986808;
+        Sat, 07 Mar 2020 21:23:06 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k24sm37842705pgm.61.2020.03.07.21.23.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Mar 2020 21:23:06 -0800 (PST)
+Date:   Sat, 7 Mar 2020 21:23:02 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        robh@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/18] Enable Qualcomm QCS 404 HS/SS USB
+Message-ID: <20200308052302.GJ1094083@builder>
+References: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update my email address to @kernel.org
+On Tue 03 Mar 09:11 PST 2020, Bryan O'Donoghue wrote:
 
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> V1:
+> This series enables the Primary and Secondary USB controllers on the
+> QCS404, associated PHYs, role-switching and DTS descriptions.
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 38fe2f3f7b6f..dceaeebce52a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5607,7 +5607,7 @@ F:	include/uapi/drm/lima_drm.h
- T:	git git://anongit.freedesktop.org/drm/drm-misc
- 
- DRM DRIVERS FOR MEDIATEK
--M:	CK Hu <ck.hu@mediatek.com>
-+M:	Chun-Kuang Hu <chunkuang.hu@kernel.org>
- M:	Philipp Zabel <p.zabel@pengutronix.de>
- L:	dri-devel@lists.freedesktop.org
- S:	Supported
--- 
-2.17.1
+Finally took the time to give this a spin on my QCS404 dev board.
 
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+
+As this touches three different subsystems, and doesn't have have
+compile time dependencies between the parts, I would suggest that as you
+fix up the build error I reported yesterday you send v8 as three
+different series - one per maintainer/subsystem. That way we avoid any
+questions about whom should merge what parts and in what order.
+
+Thanks,
+Bjorn
+
+> The series takes in a number of patches worked on by a number of people
+> over the past few years from downstream, through to previous upstream
+> submissions for both of these interfaces. Additional work has been done to
+> enable USB role-switching.
+> 
+> 1. USB SS
+>    - extcon has been dropped in favour of gpio-usb-conn as discussed and
+>      agreed previously by Jorge, Bjorn, Stephen Boyd and Jack Pham [1].
+> 
+>    - Regulator API has been updated following suggestions from Bjorn.
+>    
+>    - Sanitzation of the DT compatible name - dropped "snps" entirely
+>      from the name - it made almost no sense to me and doesn't appear
+>      consistent with similar naming conventions for Snopsys based IP.
+> 
+> 2. USB HS
+>    - Regulator API changes here.
+>    - Dropped "snps" from the namespace for similar reasons as above.
+>    - Dropped "28nm" from the namespace, looked superfluous.
+>    - Changed "High-Speed" to "Hi-Speed".
+>    - [2]
+> 
+> 3. DWC3 Role switching
+>    - At the time usb-gpio-conn was discussed it was mentioned that
+>      role-switching was absent from the DWC3 driver.
+>    - John Stultz has some patches in-flight for that, that I've included in
+>      this series for completeness.
+>    - Adds my SoB to relevant patches.
+>    - Drops gerrit ChangeId.
+> 
+> 4. DWC3 usb-gpio-conn
+>    Needs to be a child node of the DWC3 driver so some code and DT binding
+>    is required for that.
+> 
+> 5. QCOM-DWC3
+>    Since we are role-switching with an external PMIC supplying VBUS we want
+>    to skip past toggling VBUS from QCOM-DWC3 controlled registers, so a
+>    patch is added to the qcom-dwc3 driver to do that.
+> 
+> References:
+> 
+> 1: USB SS PHY for Qualcomm's QCS404
+> https://lwn.net/ml/devicetree/20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org/
+> 
+> 2: Add Synopsys High-Speed USB PHY driver for Qualcomm SoCs
+> https://lore.kernel.org/linux-arm-msm/20181127100722.9993-3-shawn.guo@linaro.org/
+> 
+> https://www.spinics.net/lists/linux-usb/msg190003.html
+> 
+> V2:
+> - Fixes yaml error - Rob's YAML robot
+> - Exclusive control of reset in PHY drivers - Philipp Zabel
+> 
+> V3:
+> - Fixes typo generating YAML warning - Rob's YAML robot
+> 
+> V4:
+> 
+> https://lore.kernel.org/linux-arm-msm/20200122185610.131930-1-bryan.odonoghue@linaro.org/
+> 
+> - Churn names of PHYs - Rob Herring
+>   Rob questioned the name of the SuperSpeed PHY in V3.
+>   Looking at available data 
+> 
+>   usb-hs-28nm - There are two possible PHYs on 28nm litho node
+> 		so it makes sense to name the PHY relating to its relevant
+> 		litho node.
+> 
+>   usb-ss - This is not litho node dependent and is used on  multiple SoCs
+> 	   and litho nodes.
+> 
+> - Drop default mode for role switching - Felipe Balbi
+>   Felipe asked if the default mode for role switching was
+>   required and the answer is no. It makes no difference
+>   becuase the USB ID pin ultimately dictates the mode of operation.
+> 
+> - Change "gpio_usb_connector" to "connector" - Rob
+>   This was a minor change in terms of DTS but, means I need to look for the
+>   DTS compatible string as opposed to a label given in the DTS.
+>   No matter what the name of the label, this is he right thing to do.
+> 
+> - Used IS_ENABLED() - Felipe
+>   The logic is the same but IS_ENABLED() is used now.
+> 
+> - Retained example of USB connector in dwc.txt - Rob, Felipe
+>   Rob pointed out adding the connector was redundant as the documentation
+>   already implies it.
+>   Felipe seemed in favour of I think adding the example.
+>   I've dropped the documentation of the connector and kept the example.
+>   https://lore.kernel.org/linux-arm-msm/20200122185610.131930-7-bryan.odonoghue@linaro.org/
+> 
+> - Added example of usb-role-switch in dwc3.txt - BOD
+>   
+> - Incorporated various inputs from Rob on DTS/YAML
+>   - Added required:
+>   - Added additionalProperties:
+>   - Renamed "phy" clock to "ahb"
+>   - maxItems dropped as indicated
+> 
+> V5:
+> - https://lkml.org/lkml/2020/2/6/913
+> 
+> - Adds a notifier to DWC3 - BOD
+>   This is done in order to allow propagation of role-switch events from the
+>   DWC3 core to an associated binding layer.
+> 
+> - Re-use the existent EXTCON VBUS power lane toggle logic - Jack Pham
+>   Jack flagged this for inclusion and as a result we need to make a
+>   small change to the qcom binding layer.
+> 
+> - Squash DTS changes - BOD
+>   I've squashed down some of the DTS changes to stop the patch count in
+>   this series going  up any further.
+> 
+> V6:
+> - https://lkml.org/lkml/2020/2/7/632
+> 
+> - Add RB Jack Pham patch # 11
+> 
+> - Fix a stale description in git log patch # 10
+> 
+> V7:
+> - https://lkml.org/lkml/2020/2/10/258
+> 
+> - Adds RB Rob Herring as indicated
+> 
+> - Updates the naming of the USB SS PHY for the particular SoC.
+>   The name of the driver is maintained, as previously mentioned, this
+>   IP appears to be in use on the 20nm and 28nm nodes. However taking
+>   Rob's feedback on the naming of the SoC specific bit the code being added
+>   is specified @ 28nm.
+>   If/when we come to add in 20nm for this IP we can add a new compatible
+>   for 20nm.
+>   Rob Herring
+> 
+> Bjorn Andersson (1):
+>   arm64: dts: qcom: qcs404: Add USB devices and PHYs
+> 
+> Bryan O'Donoghue (11):
+>   dt-bindings: usb: dwc3: Add a gpio-usb-connector example
+>   dt-bindings: usb: dwc3: Add a usb-role-switch to the example
+>   usb: dwc3: qcom: Add support for usb-conn-gpio connectors
+>   usb: dwc3: Add support for usb-conn-gpio connectors
+>   usb: dwc3: Add support for a role-switch notifier
+>   usb: dwc3: qcom: Enable gpio-usb-conn based role-switching
+>   arm64: dts: qcom: qcs404-evb: Define VBUS pins
+>   arm64: dts: qcom: qcs404-evb: Define USB ID pin
+>   arm64: dts: qcom: qcs404-evb: Describe external VBUS regulator
+>   arm64: dts: qcom: qcs404-evb: Raise vreg_l12_3p3 minimum voltage
+>   arm64: dts: qcom: qcs404-evb: Enable USB controllers
+> 
+> Jorge Ramirez-Ortiz (3):
+>   dt-bindings: phy: remove qcom-dwc3-usb-phy
+>   dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
+>   phy: qualcomm: usb: Add SuperSpeed PHY driver
+> 
+> Shawn Guo (1):
+>   phy: qualcomm: Add Synopsys 28nm Hi-Speed USB PHY driver
+> 
+> Sriharsha Allenki (1):
+>   dt-bindings: phy: Add Qualcomm Synopsys Hi-Speed USB PHY binding
+> 
+> Yu Chen (1):
+>   usb: dwc3: Registering a role switch in the DRD code.
+> 
+>  .../bindings/phy/qcom,usb-hs-28nm.yaml        |  90 ++++
+>  .../devicetree/bindings/phy/qcom,usb-ss.yaml  |  83 ++++
+>  .../bindings/phy/qcom-dwc3-usb-phy.txt        |  37 --
+>  .../devicetree/bindings/usb/dwc3.txt          |   9 +
+>  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |  90 +++-
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi          | 100 +++++
+>  drivers/phy/qualcomm/Kconfig                  |  20 +
+>  drivers/phy/qualcomm/Makefile                 |   2 +
+>  drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c   | 415 ++++++++++++++++++
+>  drivers/phy/qualcomm/phy-qcom-usb-ss.c        | 246 +++++++++++
+>  drivers/usb/dwc3/core.h                       |  22 +
+>  drivers/usb/dwc3/drd.c                        | 119 ++++-
+>  drivers/usb/dwc3/dwc3-qcom.c                  |  31 +-
+>  13 files changed, 1223 insertions(+), 41 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-ss.c
+> 
+> -- 
+> 2.25.1
+> 
