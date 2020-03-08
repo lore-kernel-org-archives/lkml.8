@@ -2,83 +2,121 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7483C10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB25C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E6C20828
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62E120828
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 16:33:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgCHQd0 (ORCPT
+        id S1726692AbgCHQdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 12:33:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44840 "EHLO mx2.suse.de"
+        Sun, 8 Mar 2020 12:33:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45330 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbgCHQcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 12:32:47 -0400
+        id S1726292AbgCHQde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 12:33:34 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A1AD1AFF7;
-        Sun,  8 Mar 2020 16:32:45 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     =?UTF-8?q?Wells=20Lu=20=E5=91=82=E8=8A=B3=E9=A8=B0?= 
-        <wells.lu@sunplus.com>, Dvorkin Dmitry <dvorkin@tibbo.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [RFC 02/11] dt-bindings: arm: Add Sunplus SP7021 and Banana Pi BPI-F2S
-Date:   Sun,  8 Mar 2020 17:32:20 +0100
-Message-Id: <20200308163230.4002-3-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200308163230.4002-1-afaerber@suse.de>
-References: <20200308163230.4002-1-afaerber@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id A70BCAFF7;
+        Sun,  8 Mar 2020 16:33:32 +0000 (UTC)
+Date:   Sun, 8 Mar 2020 17:33:35 +0100
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-edac <linux-edac@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] EDAC urgent fix for 5.6
+Message-ID: <20200308163335.GC12445@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Wells Lu 呂芳騰 <wells.lu@sunplus.com>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
+Hi Linus,
+
+please pull the error reporting fix for synopsys_edac below. (Btw, doing
+signed tags only from now on.)
+
+Thx.
+
 ---
- Documentation/devicetree/bindings/arm/sunplus.yaml | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/sunplus.yaml
+The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
 
-diff --git a/Documentation/devicetree/bindings/arm/sunplus.yaml b/Documentation/devicetree/bindings/arm/sunplus.yaml
-new file mode 100644
-index 000000000000..c88856a00983
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/sunplus.yaml
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/sunplus.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sunplus platforms device tree bindings
-+
-+maintainers:
-+  - Andreas Färber <afaerber@suse.de>
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+      # SP7021 SoC based boards
-+      - items:
-+          - enum:
-+              - bananapi,bpi-f2s # Banana Pi BPI-F2S
-+          - const: sunplus,sp7021
-+...
+  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent-2020-03-08
+
+for you to fetch changes up to dfc6014e3b60713f375d0601d7549eed224c4615:
+
+  EDAC/synopsys: Do not print an error with back-to-back snprintf() calls (2020-02-27 16:44:25 +0100)
+
+----------------------------------------------------------------
+* Do not overwrite partial decoded error message in synopsys_edac (Sherry Sun)
+
+----------------------------------------------------------------
+Sherry Sun (1):
+      EDAC/synopsys: Do not print an error with back-to-back snprintf() calls
+
+ drivers/edac/synopsys_edac.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index 2d263382d797..880ffd833718 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -479,20 +479,14 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+ 		pinf = &p->ceinfo;
+ 		if (!priv->p_data->quirks) {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type:%s Row %d Bank %d Col %d ",
+-				  "CE", pinf->row, pinf->bank, pinf->col);
+-			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "Bit Position: %d Data: 0x%08x\n",
++				 "DDR ECC error type:%s Row %d Bank %d Col %d Bit Position: %d Data: 0x%08x",
++				 "CE", pinf->row, pinf->bank, pinf->col,
+ 				 pinf->bitpos, pinf->data);
+ 		} else {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type:%s Row %d Bank %d Col %d ",
+-				  "CE", pinf->row, pinf->bank, pinf->col);
+-			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "BankGroup Number %d Block Number %d ",
+-				 pinf->bankgrpnr, pinf->blknr);
+-			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "Bit Position: %d Data: 0x%08x\n",
++				 "DDR ECC error type:%s Row %d Bank %d Col %d BankGroup Number %d Block Number %d Bit Position: %d Data: 0x%08x",
++				 "CE", pinf->row, pinf->bank, pinf->col,
++				 pinf->bankgrpnr, pinf->blknr,
+ 				 pinf->bitpos, pinf->data);
+ 		}
+ 
+@@ -509,10 +503,8 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
+ 				"UE", pinf->row, pinf->bank, pinf->col);
+ 		} else {
+ 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "DDR ECC error type :%s Row %d Bank %d Col %d ",
+-				 "UE", pinf->row, pinf->bank, pinf->col);
+-			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
+-				 "BankGroup Number %d Block Number %d",
++				 "DDR ECC error type :%s Row %d Bank %d Col %d BankGroup Number %d Block Number %d",
++				 "UE", pinf->row, pinf->bank, pinf->col,
+ 				 pinf->bankgrpnr, pinf->blknr);
+ 		}
+ 
+
 -- 
-2.16.4
+Regards/Gruss,
+    Boris.
 
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
