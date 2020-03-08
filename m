@@ -2,161 +2,64 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A460FC10F28
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF23DC10F28
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80035206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:20:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuTzOrLQ"
+	by mail.kernel.org (Postfix) with ESMTP id A7C7F2086A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 19:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgCHTUo (ORCPT
+        id S1726397AbgCHTVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 15:20:44 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43827 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgCHTUo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 15:20:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v9so8395668wrf.10;
-        Sun, 08 Mar 2020 12:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qALcG3CGuBaboVD1Vu6sKa7UNKTJMIZmbr5ctcnIjvQ=;
-        b=KuTzOrLQIYKb2aSSDndfU+R4OkG8+39CunsygU0n4TfXkT3rs607w8JdEwc7EkhXsh
-         SUI5U4xuqaM9u2kio3yF8L+iH80FaSzYKojyVif5EOGrwXyEC0Gkbe8H9x+6I9uVWaUI
-         RT/td7r6E8m4X97pUhBUDriTf1zOhmskFBfaaLvSXV09uCRoeWeGCxvzjDVCvADrX0m4
-         OGajyiizFLDGpLeKePswPh2ZPdrG2VOjhvLszoQZn4RX7Ym4zRLpiXb393YGlng3qaUl
-         NNvgvs6yjZUeroVVwUj2aJvhGwQCRM6pQEpwXfS1MoFKGf14J3Kxm6LJzSHPh6b6Dsqc
-         HcAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qALcG3CGuBaboVD1Vu6sKa7UNKTJMIZmbr5ctcnIjvQ=;
-        b=sg/JXf+KfmImKXo5DzZnUEwJbgMHkwVBwlCxFmJrQu6qKTwd6zcdwwSzms6N1AR86d
-         7XxBFArRTkP++/lbi2PfrhzdGnA5A8MvW/XivXsiREDgfA+QdOAXzghYMsuoXxPw4QhM
-         RrJ6taRqva78EObGHG8Y3gaKPLVl0jMWrhL8GxURTWF/CfFDXzzIIJxNVqzVxzXlW5Dv
-         cXbkQPPA5bhbftZ3sfdDjjsTp/V8rlr23PKeKwwSnxJffsde8/f8ZDjv0ikEYBq9DGLD
-         qNFbT+RLJKpl1iRzGx9P+S920+KSZHay+zDYYpoVxz0nv6UJAzTGkLPP33yqwKxNqhZ1
-         lN+A==
-X-Gm-Message-State: ANhLgQ3OI0qcKFk+kp9WD9s2tAKpT+TCBx+cvxIZLmOJEEOPs4I+fdBf
-        HG5w2NWhOaG7z/ZF95s7mZk=
-X-Google-Smtp-Source: ADFU+vv3rcWG5MMYWXUHe4T6UqDBb1TBfzXy2V9IGq5bFXchWpdP6YGsyWHg0RWNUP8FI7gV+0nbcA==
-X-Received: by 2002:adf:e98f:: with SMTP id h15mr16675277wrm.263.1583695241942;
-        Sun, 08 Mar 2020 12:20:41 -0700 (PDT)
-Received: from supervisor.net28 ([46.53.253.27])
-        by smtp.gmail.com with ESMTPSA id f127sm23281865wma.4.2020.03.08.12.20.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Mar 2020 12:20:41 -0700 (PDT)
-From:   Arthur Demchenkov <spinal.by@gmail.com>
-Cc:     Arthur Demchenkov <spinal.by@gmail.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        Sun, 8 Mar 2020 15:21:10 -0400
+Received: from gentwo.org ([3.19.106.255]:43428 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbgCHTVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 15:21:10 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 5D6383F1C0; Sun,  8 Mar 2020 19:21:09 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 5A5433E998;
+        Sun,  8 Mar 2020 19:21:09 +0000 (UTC)
+Date:   Sun, 8 Mar 2020 19:21:09 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Kees Cook <keescook@chromium.org>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Vitaly Nikolenko <vnik@duasynt.com>,
+        Silvio Cesare <silvio.cesare@gmail.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: OMAP: DTS: N900: fix onenand timings
-Date:   Sun,  8 Mar 2020 22:19:33 +0300
-Message-Id: <20200308191934.8263-1-spinal.by@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+Subject: Re: [PATCH] slub: Relocate freelist pointer to middle of object
+In-Reply-To: <202003051624.AAAC9AECC@keescook>
+Message-ID: <alpine.DEB.2.21.2003081919290.14266@www.lameter.com>
+References: <202003051624.AAAC9AECC@keescook>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-started using DT specified timings for GPMC, and as a result the
-OneNAND stopped working on N900 as we had wrong values in the DT.
-Fix by updating the values to bootloader timings that have been tested
-to be working on Nokia N900 with OneNAND manufacturers: Samsung,
-Numonyx.
+On Thu, 5 Mar 2020, Kees Cook wrote:
 
-Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
----
- arch/arm/boot/dts/omap3-n900.dts | 44 +++++++++++++++++++++++++---------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+> Instead of having the freelist pointer at the very beginning of an
+> allocation (offset 0) or at the very end of an allocation (effectively
+> offset -sizeof(void *) from the next allocation), move it away from
+> the edges of the allocation and into the middle. This provides some
+> protection against small-sized neighboring overflows (or underflows),
+> for which the freelist pointer is commonly the target. (Large or well
+> controlled overwrites are much more likely to attack live object contents,
+> instead of attempting freelist corruption.)
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index c3c6d7d04a76..4089d97405c9 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -854,34 +854,46 @@
- 		compatible = "ti,omap2-onenand";
- 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
- 
-+		/*
-+		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
-+		 * bootloader set values when booted with v5.1
-+		 * (OneNAND Manufacturer: Samsung):
-+		 *
-+		 *   cs0 GPMC_CS_CONFIG1: 0xfb001202
-+		 *   cs0 GPMC_CS_CONFIG2: 0x00111100
-+		 *   cs0 GPMC_CS_CONFIG3: 0x00020200
-+		 *   cs0 GPMC_CS_CONFIG4: 0x11001102
-+		 *   cs0 GPMC_CS_CONFIG5: 0x03101616
-+		 *   cs0 GPMC_CS_CONFIG6: 0x90060000
-+		 */
- 		gpmc,sync-read;
- 		gpmc,sync-write;
- 		gpmc,burst-length = <16>;
- 		gpmc,burst-read;
- 		gpmc,burst-wrap;
- 		gpmc,burst-write;
--		gpmc,device-width = <2>; /* GPMC_DEVWIDTH_16BIT */
--		gpmc,mux-add-data = <2>; /* GPMC_MUX_AD */
-+		gpmc,device-width = <2>;
-+		gpmc,mux-add-data = <2>;
- 		gpmc,cs-on-ns = <0>;
--		gpmc,cs-rd-off-ns = <87>;
--		gpmc,cs-wr-off-ns = <87>;
-+		gpmc,cs-rd-off-ns = <102>;
-+		gpmc,cs-wr-off-ns = <102>;
- 		gpmc,adv-on-ns = <0>;
--		gpmc,adv-rd-off-ns = <10>;
--		gpmc,adv-wr-off-ns = <10>;
--		gpmc,oe-on-ns = <15>;
--		gpmc,oe-off-ns = <87>;
-+		gpmc,adv-rd-off-ns = <12>;
-+		gpmc,adv-wr-off-ns = <12>;
-+		gpmc,oe-on-ns = <12>;
-+		gpmc,oe-off-ns = <102>;
- 		gpmc,we-on-ns = <0>;
--		gpmc,we-off-ns = <87>;
--		gpmc,rd-cycle-ns = <112>;
--		gpmc,wr-cycle-ns = <112>;
--		gpmc,access-ns = <81>;
--		gpmc,page-burst-access-ns = <15>;
-+		gpmc,we-off-ns = <102>;
-+		gpmc,rd-cycle-ns = <132>;
-+		gpmc,wr-cycle-ns = <132>;
-+		gpmc,access-ns = <96>;
-+		gpmc,page-burst-access-ns = <18>;
- 		gpmc,bus-turnaround-ns = <0>;
- 		gpmc,cycle2cycle-delay-ns = <0>;
- 		gpmc,wait-monitoring-ns = <0>;
--		gpmc,clk-activation-ns = <5>;
--		gpmc,wr-data-mux-bus-ns = <30>;
--		gpmc,wr-access-ns = <81>;
-+		gpmc,clk-activation-ns = <6>;
-+		gpmc,wr-data-mux-bus-ns = <36>;
-+		gpmc,wr-access-ns = <96>;
- 		gpmc,sync-clk-ps = <15000>;
- 
- 		/*
--- 
-2.11.0
+Sounds good. You could even randomize the position to avoid attacks on via
+the freelist pointer.
 
+Acked-by: Christoph Lameter <cl@linux.com>
