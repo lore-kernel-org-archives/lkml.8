@@ -2,134 +2,68 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1839C18E5B
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7868C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D68E21739
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583658051;
-	bh=K7KOu9n69DKIQVTs+dfX7VaCxSrfxXP+vl9sGJqMUIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ifg+6ebJ2q8y7u1z2sy5x2zl7nOmJ7RI1lEKNcQbhYywJQw7jnW9VRCxVpuGgMXLs
-	 mrbbiy7hMZtBAz0dKmBo8E3dx9bG+TOaBUrwRzVH7R3/f3eDmg2nENDRYwreL7LpWG
-	 8WHhmxdLLq0TZ+nBcbyJSbN4aV/61ecKgfWOnYzQ=
+	by mail.kernel.org (Postfix) with ESMTP id B0CFB20828
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgCHJAu (ORCPT
+        id S1726289AbgCHJRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 05:00:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54565 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgCHJAu (ORCPT
+        Sun, 8 Mar 2020 05:17:05 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:48155 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgCHJRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 05:00:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n8so2780541wmc.4;
-        Sun, 08 Mar 2020 01:00:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZbPsq1rZ+x/H5maMlysEeMg2kNODV83Sx1BWK6bggxY=;
-        b=i0X7UqA9rF0hRyuyjOE+QnDFd+vWZTWCc0hfa4PhOYElxE3tSx8L/kKTtuI6wgQwIg
-         R7p/BwH3P1lR6EMDFCy2DGRRJJGBqtlq8XpHcA3D9OVf0ExvmRMogTiM0yTR8V0O0d4I
-         Cdl1j7J1ynlGm/T2c7cQY7SvRc5af0BHUy+VCpwJQa/2z2qMvyoQ38TiM9DaHvI2X/OI
-         Hvh/X6jqadxAIVLMxc0aVwqaYykotgIzW0amm84+eljwjACC/gZ7jFb6b14zuxt9WoSc
-         GlAMtTbRl4cskUDoo7oZttZNnBdGd0mR4XJHLNFehQOe1BRVQwHSZUdUeNuJJeN9Tno2
-         n56A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZbPsq1rZ+x/H5maMlysEeMg2kNODV83Sx1BWK6bggxY=;
-        b=X4SmTVoxLv8N68wh8Wi8RoidJdGmS0kMzfZyKYWyc7+YJgEx8Q9w0zH7qhhLJ0q4Hd
-         gFJFw/z1jOFX0C+pMQAPLKjPC4iIJjUgwL8Nql/Cg+WQwQ+XUZhjqLJk2z+rn1Z8Dkir
-         YP0ccwJG3n48hrUDfwpuMeE6UkL6de1CS/p0Q7YWyIo6vB+ajCGhwCNq6RY8dcbioijS
-         RVy6x8V1rkcUwEGeWmjmDkX1ucyy23KSk/mmQVLOx+p/U9azcIhklLYRVrbWsR7ZkqqO
-         jbYjE6Ixprl7BsWBnZ1hNOJB+6O7wGpy7bXmbiBNHh7Md53GQnBd75ddvC0LDAt47viw
-         6Sag==
-X-Gm-Message-State: ANhLgQ2jVOddA2P/ZAl3shjvLLVr5VjYoImolOw/nx91cwFTImNFHH24
-        sP1vko55ifOxKQ93aholPRM=
-X-Google-Smtp-Source: ADFU+vvbnTnfLH/nBqVRzrfodbRG0G1WHC8PrDA/ZE2QJk4lCIVG0YbZst1d5XrdR0jnTzW5HYKrZg==
-X-Received: by 2002:a7b:cc8a:: with SMTP id p10mr3646380wma.10.1583658048246;
-        Sun, 08 Mar 2020 01:00:48 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id a7sm943674wrn.25.2020.03.08.01.00.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2020 01:00:47 -0800 (PST)
-Date:   Sun, 8 Mar 2020 10:00:45 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Christoph Hellwig <hch@lst.de>,
-        David Hildenbrand <david@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nikolai Merinov <n.merinov@inango-systems.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Vladis Dronov <vdronov@redhat.com>
-Subject: Re: [GIT PULL 00/28] More EFI fixes for v5.7
-Message-ID: <20200308090045.GH32920@gmail.com>
-References: <20200308080859.21568-1-ardb@kernel.org>
+        Sun, 8 Mar 2020 05:17:05 -0400
+X-Originating-IP: 37.167.192.10
+Received: from localhost (unknown [37.167.192.10])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id E877F1C0004;
+        Sun,  8 Mar 2020 09:16:50 +0000 (UTC)
+Date:   Sun, 8 Mar 2020 10:25:36 +0100
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>
+Subject: Re: [PATCH] net: stmmac: dwmac1000: Disable ACS if enhanced descs
+ are not used
+Message-ID: <20200308092536.GQ2248@voidbox>
+References: <20200306193036.18414-1-repk@triplefau.lt>
+ <BYAPR12MB326999F850BD9BDD037D87CAD3E00@BYAPR12MB3269.namprd12.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200308080859.21568-1-ardb@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <BYAPR12MB326999F850BD9BDD037D87CAD3E00@BYAPR12MB3269.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Mar 07, 2020 at 05:34:28PM +0000, Jose Abreu wrote:
+> From: Remi Pommarel <repk@triplefau.lt>
+> Date: Mar/06/2020, 19:30:36 (UTC+00:00)
+> 
+> >  	void __iomem *ioaddr = hw->pcsr;
+> > +	struct stmmac_priv *priv = netdev_priv(dev);
+> >  	u32 value = readl(ioaddr + GMAC_CONTROL);
+> >  	int mtu = dev->mtu;
+> 
+> Please use reverse Christmas tree order and also provide a Fixes tag.
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
+Done in v2.
 
-> The following changes since commit b9d8b63e340392d7f3ad79881f36a550566cbbbe:
-> 
->   Merge tag 'stable-shared-branch-for-driver-tree' into HEAD (2020-03-05 09:58:20 +0100)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
-> 
-> for you to fetch changes up to dfb2a1c61fcdc8be5dd74608c411c78008a0f078:
-> 
->   partitions/efi: Fix partition name parsing in GUID partition entry (2020-03-06 11:17:42 +0100)
-> 
-> ----------------------------------------------------------------
-> More EFI updates for v5.7
-> 
-> - a fix for a boot regression in the IMA code on x86 booting without UEFI
-> - memory encryption fixes for x86, so that the TPM tables and the RNG
->   config table created by the stub are correctly identified as living in
->   unencrypted memory
-> - style tweak and doc update from Heinrich
-> - followup to the ARM EFI entry code simplifications to ensure that we
->   don't rely on EFI_LOADER_DATA memory being RWX
-> - fixes from Arvind to ensure that the new mixed mode approach works as
->   expected regardless of where the image is loaded in memory by the UEFI
->   PE/COFF loader
-> - more fixes from Arvind to make it more likely that the image can be
->   decompressed in place, regardless of where it was loaded in memory
-> - efivars bugfix and some cleanup from Vladis
-> - incorporate a stable branch with the EFI pieces of Hans's work on
->   loading device firmware from EFI boot service memory regions
-> - some followup fixes for the EFI stub changes that are queued for
->   v5.7 already
-> - an endianness fix for the EFI GPT partition table driver
-
->  22 files changed, 319 insertions(+), 141 deletions(-)
-
-Applied, thanks Ard!
-
-	Ingo
+Thanks,
+-- 
+Remi
