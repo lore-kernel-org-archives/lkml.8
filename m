@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5463C10F28
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171A7C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DB6208CD
+	by mail.kernel.org (Postfix) with ESMTP id DD3C3208C3
 	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 23:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgCHXXt (ORCPT
+        id S1726704AbgCHXXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 19:23:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57201 "EHLO
+        Sun, 8 Mar 2020 19:23:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57238 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgCHXXt (ORCPT
+        with ESMTP id S1726674AbgCHXXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 19:23:49 -0400
+        Sun, 8 Mar 2020 19:23:54 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jB5Ge-00033b-4F; Mon, 09 Mar 2020 00:23:32 +0100
+        id 1jB5Gd-00033W-RH; Mon, 09 Mar 2020 00:23:32 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 16CDB1040A5;
-        Mon,  9 Mar 2020 00:23:29 +0100 (CET)
-Message-Id: <20200308222609.411187252@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id D309910409D;
+        Mon,  9 Mar 2020 00:23:28 +0100 (CET)
+Message-Id: <20200308222609.314596327@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 08 Mar 2020 23:24:04 +0100
+Date:   Sun, 08 Mar 2020 23:24:03 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -38,7 +38,7 @@ Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Juergen Gross <jgross@suse.com>,
         Frederic Weisbecker <frederic@kernel.org>,
         Alexandre Chartre <alexandre.chartre@oracle.com>
-Subject: [patch part-II V2 05/13] x86/entry/common: Consolidate syscall entry code
+Subject: [patch part-II V2 04/13] x86/entry/64: Trace irqflags unconditionally as ON when returning to user space
 References: <20200308222359.370649591@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -50,117 +50,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All syscall entry points call enter_from_user_mode() and local_irq_enable().
-
-Move that into an inline helper so the interrupt tracing can be moved into
-that helper later instead of sprinkling it all over the place.
+User space cannot longer disable interrupts so trace return to user space
+unconditionally as IRQS_ON.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
-V2: Rename helper to syscall_entry_apply_fixups()
+V2: Cover 32bit as well
 ---
- arch/x86/entry/common.c |   48 +++++++++++++++++++++++++++++++++---------------
- 1 file changed, 33 insertions(+), 15 deletions(-)
+ arch/x86/entry/entry_32.S |    2 +-
+ arch/x86/entry/entry_64.S |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -50,6 +50,18 @@ NOKPROBE_SYMBOL(enter_from_user_mode);
- static inline void enter_from_user_mode(void) {}
- #endif
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1088,7 +1088,7 @@ SYM_FUNC_START(entry_INT80_32)
+ 	STACKLEAK_ERASE
  
-+/*
-+ * All syscall entry variants call with interrupts disabled.
-+ *
-+ * Invoke context tracking if enabled and enable interrupts for further
-+ * processing.
-+ */
-+static __always_inline void syscall_entry_apply_fixups(void)
-+{
-+	enter_from_user_mode();
-+	local_irq_enable();
-+}
-+
- static void do_audit_syscall_entry(struct pt_regs *regs, u32 arch)
- {
- #ifdef CONFIG_X86_64
-@@ -280,13 +292,11 @@ static void syscall_slow_exit_work(struc
- }
+ restore_all:
+-	TRACE_IRQS_IRET
++	TRACE_IRQS_ON
+ 	SWITCH_TO_ENTRY_STACK
+ 	CHECK_AND_APPLY_ESPFIX
  
- #ifdef CONFIG_X86_64
--__visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
-+static __always_inline
-+void do_syscall_64_irqs_on(unsigned long nr, struct pt_regs *regs)
- {
--	struct thread_info *ti;
-+	struct thread_info *ti = current_thread_info();
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -174,7 +174,7 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_h
+ 	movq	%rsp, %rsi
+ 	call	do_syscall_64		/* returns with IRQs disabled */
  
--	enter_from_user_mode();
--	local_irq_enable();
--	ti = current_thread_info();
- 	if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY)
- 		nr = syscall_trace_enter(regs);
+-	TRACE_IRQS_IRETQ		/* we're about to change IF */
++	TRACE_IRQS_ON			/* return enables interrupts */
  
-@@ -304,6 +314,12 @@ static void syscall_slow_exit_work(struc
- 
- 	syscall_return_slowpath(regs);
- }
-+
-+__visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
-+{
-+	syscall_entry_apply_fixups();
-+	do_syscall_64_irqs_on(nr, regs);
-+}
- #endif
- 
- #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
-@@ -356,19 +372,17 @@ static __always_inline void do_syscall_3
- /* Handles int $0x80 */
- __visible void do_int80_syscall_32(struct pt_regs *regs)
- {
--	enter_from_user_mode();
--	local_irq_enable();
-+	syscall_entry_apply_fixups();
- 	do_syscall_32_irqs_on(regs);
- }
- 
--/* Returns 0 to return using IRET or 1 to return using SYSEXIT/SYSRETL. */
--__visible long do_fast_syscall_32(struct pt_regs *regs)
-+/* Fast syscall 32bit variant */
-+static __always_inline long do_fast_syscall_32_irqs_on(struct pt_regs *regs)
- {
  	/*
- 	 * Called using the internal vDSO SYSENTER/SYSCALL32 calling
- 	 * convention.  Adjust regs so it looks like we entered using int80.
- 	 */
--
- 	unsigned long landing_pad = (unsigned long)current->mm->context.vdso +
- 		vdso_image_32.sym_int80_landing_pad;
+ 	 * Try to use SYSRET instead of IRET if we're returning to
+@@ -619,7 +619,7 @@ SYM_CODE_START_LOCAL(common_interrupt)
+ .Lretint_user:
+ 	mov	%rsp,%rdi
+ 	call	prepare_exit_to_usermode
+-	TRACE_IRQS_IRETQ
++	TRACE_IRQS_ON
  
-@@ -379,10 +393,6 @@ static __always_inline void do_syscall_3
- 	 */
- 	regs->ip = landing_pad;
- 
--	enter_from_user_mode();
--
--	local_irq_enable();
--
- 	/* Fetch EBP from where the vDSO stashed it. */
- 	if (
- #ifdef CONFIG_X86_64
-@@ -438,4 +448,12 @@ static __always_inline void do_syscall_3
- 		(regs->flags & (X86_EFLAGS_RF | X86_EFLAGS_TF | X86_EFLAGS_VM)) == 0;
- #endif
- }
--#endif
-+
-+/* Returns 0 to return using IRET or 1 to return using SYSEXIT/SYSRETL. */
-+__visible long do_fast_syscall_32(struct pt_regs *regs)
-+{
-+	syscall_entry_apply_fixups();
-+	return do_fast_syscall_32_irqs_on(regs);
-+}
-+
-+#endif /* CONFIG_X86_32 || CONFIG_IA32_EMULATION */
+ SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
+ #ifdef CONFIG_DEBUG_ENTRY
 
