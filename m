@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E60C2BB8A
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8A3C2BB58
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02AA52146E
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34342146E
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 08:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583654972;
-	bh=m6+HzzP8EIGLHVP73RWu+8Lj4q7KWGfvDJgTN6bylFs=;
+	s=default; t=1583654978;
+	bh=v/U4OkqxqRWTdenDwIzfbVlCTaQKqrUR3iIvfWvw9xw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jr2kZpOW3E3eyhRM7Yu92RiS94Hh0hT7lp6wDv7NF/VAjhCXURGvfZc8ULkoatOxL
-	 jcipcMHcWmfUrwvaC0RLWIpHLiX5rhgppcs2nCFjBQQoNpIsDwDTUeOG7zDX+LmD6/
-	 BgGjoN/+5ngm9jZTNduG4rv6AFwg1vArZNbiJJTs=
+	b=b7zPzr6BNlYHFZtsJSwsAAQCKxqi6YpNiWz8tEoh5embBk8TK/S1Om7WHVbfcjaSr
+	 +BWJxC5xH4Ot0a1eOr8hsQDmMIqOr0X/eUtmyf/Eru4J8fVniiBZ16iVnaSNATsef4
+	 w+j5zLV7rg/MdUnQYHDF81lRqWYNdRx9AVOyYS9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgCHIJa (ORCPT
+        id S1726478AbgCHIJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 04:09:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36638 "EHLO mail.kernel.org"
+        Sun, 8 Mar 2020 04:09:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgCHIJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 04:09:27 -0400
+        id S1726437AbgCHIJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 04:09:35 -0400
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8267D2072A;
-        Sun,  8 Mar 2020 08:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E1E220866;
+        Sun,  8 Mar 2020 08:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583654967;
-        bh=m6+HzzP8EIGLHVP73RWu+8Lj4q7KWGfvDJgTN6bylFs=;
+        s=default; t=1583654974;
+        bh=v/U4OkqxqRWTdenDwIzfbVlCTaQKqrUR3iIvfWvw9xw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QU3TTxxN+yfK3Zm8Yc4NUQStEXcBTx9v8Xdvt3/7Cvl1o1HQ79NsJacPiZi25DdxE
-         glHNxoroVMSQtXFWfw2TxQ0Ob0oSTKcOondgwTz2cJjniifwvhX89ltoiqSKc6Tf0t
-         jgKN8PhWDiw9xev7g+LFExlkOWwQIgBEM2I8FvZc=
+        b=ILIPEOPW/3A2F7Xa/1PxE9iA76qsSGdayrtwU0wqAypZfJjT5zjayK/yp93AHoLWX
+         okoYKGdlxprle4Fxm384zWqydDptxOjSvwGsc1OgHLVUywY6zK0Y+yXo2fZCKDzkEK
+         cH4j1vtBwnUg11V9+DbHNDjWrg/KP+mYorE7Mj5s=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -55,61 +55,69 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Nikolai Merinov <n.merinov@inango-systems.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Vladis Dronov <vdronov@redhat.com>
-Subject: [PATCH 06/28] efi: mark all EFI runtime services as unsupported on non-EFI boot
-Date:   Sun,  8 Mar 2020 09:08:37 +0100
-Message-Id: <20200308080859.21568-7-ardb@kernel.org>
+Subject: [PATCH 08/28] efi/libstub: add libstub/mem.c to documentation tree
+Date:   Sun,  8 Mar 2020 09:08:39 +0100
+Message-Id: <20200308080859.21568-9-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200308080859.21568-1-ardb@kernel.org>
 References: <20200308080859.21568-1-ardb@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recent changes to the way we deal with EFI runtime services that
-are marked as unsupported by the firmware resulted in a regression
-for non-EFI boot. The problem is that all EFI runtime services are
-marked as available by default, and any non-NULL checks on the EFI
-service function pointers (which will be non-NULL even for runtime
-services that are unsupported on an EFI boot) were replaced with
-checks against the mask stored in efi.runtime_supported_mask.
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
 
-When doing a non-EFI boot, this check against the mask will return
-a false positive, given the fact that all runtime services are
-marked as enabled by default. Since we dropped the non-NULL check
-of the runtime service function pointer in favor of the mask check,
-we will now unconditionally dereference the function pointer, even
-if it is NULL, and go boom.
+Let the description of the efi/libstub/mem.c functions appear in the Kernel
+API documentation in chapter
 
-So let's ensure that the mask reflects reality on a non-EFI boot,
-which is that all EFI runtime services are unsupported.
+    The Linux driver implementer’s API guide
+        Linux Firmware API
+            UEFI Support
+                UEFI stub library functions
 
-Reported-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Acked-by: Jonathan Corbet <corbet@lwn.net>
+Link: https://lore.kernel.org/r/20200221035832.144960-1-xypron.glpk@gmx.de
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/efi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/driver-api/firmware/efi/index.rst | 11 +++++++++++
+ Documentation/driver-api/firmware/index.rst     |  1 +
+ 2 files changed, 12 insertions(+)
+ create mode 100644 Documentation/driver-api/firmware/efi/index.rst
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 91f546dc13d4..1d5e9a030cb1 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -354,12 +354,12 @@ static int __init efisubsys_init(void)
- {
- 	int error;
- 
--	if (!efi_enabled(EFI_BOOT))
--		return 0;
--
- 	if (!efi_enabled(EFI_RUNTIME_SERVICES))
- 		efi.runtime_supported_mask = 0;
- 
-+	if (!efi_enabled(EFI_BOOT))
-+		return 0;
+diff --git a/Documentation/driver-api/firmware/efi/index.rst b/Documentation/driver-api/firmware/efi/index.rst
+new file mode 100644
+index 000000000000..4fe8abba9fc6
+--- /dev/null
++++ b/Documentation/driver-api/firmware/efi/index.rst
+@@ -0,0 +1,11 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- 	if (efi.runtime_supported_mask) {
- 		/*
- 		 * Since we process only one efi_runtime_service() at a time, an
++============
++UEFI Support
++============
++
++UEFI stub library functions
++===========================
++
++.. kernel-doc:: drivers/firmware/efi/libstub/mem.c
++   :internal:
+diff --git a/Documentation/driver-api/firmware/index.rst b/Documentation/driver-api/firmware/index.rst
+index 29da39ec4b8a..57415d657173 100644
+--- a/Documentation/driver-api/firmware/index.rst
++++ b/Documentation/driver-api/firmware/index.rst
+@@ -6,6 +6,7 @@ Linux Firmware API
+ 
+    introduction
+    core
++   efi/index
+    request_firmware
+    other_interfaces
+ 
 -- 
 2.17.1
 
