@@ -2,104 +2,131 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED45BC10F25
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61246C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4BAA20409
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C632075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 02:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583633975;
+	bh=lYOUYS198D1/0Gr+1+Ic9jjMBLUGg7SoAMQZAnwkh/E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YW0grSbVCcdxfWBW+Z/nlZXJnFuSB2wTCPVxb+yMQjaFQT8ycRw0R5yrq4mZoFlz8
+	 Jo0JyUt2fVWB7vNiebPN1juqjmjHsLk+o06/8jJQLbejG18x5qIB/4g4eBuuaDzt6f
+	 llvCRSeZVJi71amrxVfqXkbD2QCTtqZDWIR8ec7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgCHCPy (ORCPT
+        id S1726303AbgCHCTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 7 Mar 2020 21:15:54 -0500
-Received: from mga12.intel.com ([192.55.52.136]:34693 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgCHCPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 7 Mar 2020 21:15:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Mar 2020 18:15:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,528,1574150400"; 
-   d="scan'208";a="414404843"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.211.93]) ([10.254.211.93])
-  by orsmga005.jf.intel.com with ESMTP; 07 Mar 2020 18:15:49 -0800
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
-        kevin.tian@intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        Derrick Jonathan <jonathan.derrick@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 3/6] iommu/vt-d: Don't force 32bit devices to uses DMA
- domain
-To:     Christoph Hellwig <hch@lst.de>
-References: <20200307062014.3288-1-baolu.lu@linux.intel.com>
- <20200307062014.3288-4-baolu.lu@linux.intel.com>
- <20200307142144.GB26190@lst.de>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <b86e2bce-9907-05d0-b937-4b120797ba06@linux.intel.com>
-Date:   Sun, 8 Mar 2020 10:15:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sat, 7 Mar 2020 21:19:33 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:33242 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgCHCTd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 7 Mar 2020 21:19:33 -0500
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 0282JHfY013317;
+        Sun, 8 Mar 2020 11:19:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 0282JHfY013317
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583633958;
+        bh=MRiJFfd4XzN50K790XI9lYLTj9Bp98INNHajUe+6r64=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CSRFkM+LvCiVVJMAKnKNKED4Bi4v4qwdh2AY46W/45w1GrIJCABBjXmRPJpRlubT4
+         5LkpYPXWSOt9KidwivW0GffaSyEIXPlEnHTdmkZMqwkSh9P6Ng2HxSW/dDpC+gUoJu
+         OPUcVZ7eT/w7xr+LfEQeUImZYeIW61Na3duvbr/2WPXq+SdpZGjMHp+yv6kDAFbM/X
+         tYWdiDJ0oKEAOSGUOcJeLbPF+8tlv7CcGsNZnGgWc0+xl0bMVsLhxcbEF9nyVB9uUW
+         mZWWvqJhTsGOCT/DFHdlTbevxIuXMKrHBPjXg732gEXEeIp/WRmvn2NoevmfntXoqw
+         pHZN1cO87Y7YQ==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id h22so2095172uap.13;
+        Sat, 07 Mar 2020 18:19:18 -0800 (PST)
+X-Gm-Message-State: ANhLgQ1uyaO9WHt4NMEtb8H3CMtmOJuq0dxbz6KgpUuz1U/WFgHhfECC
+        5Clg2NYtgWBXWhjvPnN3MfTC9SlnCOMn8uvifdY=
+X-Google-Smtp-Source: ADFU+vsU5zfX/fbI+PZJ18ZCecEFu4G8aaymDTDagTkIOLYMu7EWSvEB1LjcowfG/2EWb+GKR6g/DiftGunXkHPiUTY=
+X-Received: by 2002:a9f:2828:: with SMTP id c37mr5344910uac.25.1583633957239;
+ Sat, 07 Mar 2020 18:19:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200307142144.GB26190@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200304032038.14424-1-masahiroy@kernel.org> <20200304032038.14424-3-masahiroy@kernel.org>
+ <20200304055520.GA28911@ravnborg.org> <CAL_JsqLA7yq8rnVhM210sLt788yeu2xxFd94Fe0K_CGZw-mqSA@mail.gmail.com>
+In-Reply-To: <CAL_JsqLA7yq8rnVhM210sLt788yeu2xxFd94Fe0K_CGZw-mqSA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 8 Mar 2020 11:18:41 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATmnfjo2A0x6ytLNeo_rjv1_e9RFyxCnB-K1E1O=fw9jQ@mail.gmail.com>
+Message-ID: <CAK7LNATmnfjo2A0x6ytLNeo_rjv1_e9RFyxCnB-K1E1O=fw9jQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] kbuild: allow to run dt_binding_check and dtbs_check
+ in a single command
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, DTML <devicetree@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Hi Sam, Rob,
 
-On 2020/3/7 22:21, Christoph Hellwig wrote:
-> On Sat, Mar 07, 2020 at 02:20:11PM +0800, Lu Baolu wrote:
->> Currently, if a 32bit device initially uses an identity domain,
->> Intel IOMMU driver will convert it forcibly to a DMA one if its
->> address capability is not enough for the whole system memory.
->> The motivation was to overcome the overhead caused by possible
->> bounced buffer.
->>
->> Unfortunately, this improvement has led to many problems. For
->> example, some 32bit devices are required to use an identity
->> domain, forcing them to use DMA domain will cause the device
->> not to work anymore. On the other hand, the VMD sub-devices
->> share a domain but each sub-device might have different address
->> capability. Forcing a VMD sub-device to use DMA domain blindly
->> will impact the operation of other sub-devices without any
->> notification. Further more, PCI aliased devices (PCI bridge
->> and all devices beneath it, VMD devices and various devices
->> quirked with pci_add_dma_alias()) must use the same domain.
->> Forcing one device to switch to DMA domain during runtime
->> will cause in-fligh DMAs for other devices to abort or target
->> to other memory which might cause undefind system behavior.
-> 
-> I still don't like the idea to enforce either a strict dynamic
-> IOMMU mapping or an identify mapping mode.
-> 
-> Can we add a new AUTO domain which will allow using the identity
-> mapping when available?  That somewhat matches the existing x86
-> default, and also what powerpc does.
+On Thu, Mar 5, 2020 at 12:19 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Mar 3, 2020 at 11:55 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > Hi Masahiro
+> >
+> > Thanks for the nice improvements to the dt infrastructure.
+> >
+> > Stealing a thread here..
+> >
+> > >  It is also possible to run checks with a single schema file by setting the
+> > >  ``DT_SCHEMA_FILES`` variable to a specific schema file.
+> > Would it be simple to enable the use of dirs for DT_SCHEMA_FILES?
+>
+> I did name that with the intent of supporting more than one file.
+>
+> > So I for example could do:
+> >
+> > make dt_bindings_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
+>
+> Does this work?:
+>
+> make dt_bindings_check DT_SCHEMA_FILES="$(find
+> Documentation/devicetree/bindings/display/panel/ -name '*.yaml' |
+> xargs)"
+>
+> Rob
 
-Sai is proposing a series to change the default domain through sysfs
-during runtime.
 
-https://lore.kernel.org/linux-iommu/FFF73D592F13FD46B8700F0A279B802F4FBF7E4B@ORSMSX114.amr.corp.intel.com/T/#mb919da5567da7692ee7058a00a137145adf950a1
+Rob proposed a solution, so
+I do not think we should extend this too much.
 
-It has evolved into v2. Not sure whether it's what you want.
 
-> I have a series to lift
-> that bypass mode into the core dma-mapping code that I need
-> to repost, which I think would be suitable for intel-iommu as well.
-> 
+BTW, there is a limitation that
+DT_SCHEMA_FILES must point to file(s)
+in Documentation/devicetree/bindings/.
 
-Looking forward to your repost.
 
-Best regards,
-baolu
+$ cp  Documentation/devicetree/bindings/arm/psci.yaml   ./
+$ make  dt_binding_check  DT_SCHEMA_FILES=psci.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+make[1]: *** No rule to make target
+'Documentation/devicetree/bindings/psci.yaml', needed by '__build'.
+Stop.
+make: *** [Makefile:1278: dt_binding_check] Error 2
+
+
+
+$(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+does not work if DT_SCHEMA_FILES is outside of
+Documentation/devicetree/bindings/, but I have no
+solution for this.
+
+--
+Best Regards
+Masahiro Yamada
