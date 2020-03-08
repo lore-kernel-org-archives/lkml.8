@@ -2,127 +2,138 @@ Return-Path: <SRS0=tZRF=4Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBDFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BC5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B311D20848
-	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591372072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  8 Mar 2020 09:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583661035;
-	bh=5RwqW1sdWVKit0aXrD2fYj6d889HCKwGTAToICtI/cU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cbDeeY4iYfdy7QfwF37NC3ULsWZvR8/oTQdvscF9+s36VUtJYh7W1KthbSBpbxQzi
-	 eOTivCVTcVjQc/3JUUFTh5+Mno8s+yBPYLsM4N8Er5tXS+O7W+eHsYul1UcZKUfeeq
-	 DcF/BaFpV6NBsQJuhq9ykwwZrrnDvgEUuGiNrlHE=
+	s=default; t=1583661085;
+	bh=/4yYO4GgZbxmA0zei073nwkDkE9sDQW5NYyQ+MEZxFs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=AlRTlPhwAmFO3wo3X7l9j2lsO9stmqSJ3XiGIt55lQHluj9RmoHgJtFk6ryJ33tcr
+	 Npk/L8EMRDi1pg5LtgBpbNIAtE24rLf18RTzK6ivIhueuqa2ryNOfMPEioxvu9R30j
+	 FK4DLl4zK/p/Y6P1DEqe3gvfgp8SHQ1B7gOUk2aI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgCHJuc (ORCPT
+        id S1726333AbgCHJvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 05:50:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34876 "EHLO mail.kernel.org"
+        Sun, 8 Mar 2020 05:51:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgCHJub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 05:50:31 -0400
-Received: from localhost.localdomain (unknown [89.208.247.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726038AbgCHJvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 05:51:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 362952072A;
-        Sun,  8 Mar 2020 09:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE63B2072A;
+        Sun,  8 Mar 2020 09:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583661031;
-        bh=5RwqW1sdWVKit0aXrD2fYj6d889HCKwGTAToICtI/cU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bNPFQIsbGwzZjFXOnMz0WfJoe038y2t6dNdQ3/6fVXTJIReihMud53NhB7mNOaV4J
-         //HVZI6Szshsam4mwuePwr5Y1TL0WN5cSoDy/oTCik7yplvl0ODNYuEFMZe2lyLwoy
-         J2qzV8HfoJL0YyBMETsIjyAB1bx7bI+Kci50OpE4=
-From:   guoren@kernel.org
-To:     paul.walmsley@sifive.com, palmer@dabbelt.com, Anup.Patel@wdc.com,
-        greentime.hu@sifive.com
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        arnd@arndb.de, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Liu Zhiwei <zhiwei_liu@c-sky.com>
-Subject: [RFC PATCH V3 00/11] riscv: Add vector ISA support
-Date:   Sun,  8 Mar 2020 17:49:43 +0800
-Message-Id: <20200308094954.13258-1-guoren@kernel.org>
-X-Mailer: git-send-email 2.17.0
+        s=default; t=1583661080;
+        bh=/4yYO4GgZbxmA0zei073nwkDkE9sDQW5NYyQ+MEZxFs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Q244NCGRIsDq5YUL2s33zrUFkb7EzboKf7F2rI9VgH4mPMpFsTmKqy4xOmYZou0jO
+         UJEw5COrQnRlchYdMEi8Xo1aNjUekFU/0uU6wUhjb3Te0NdP6NmYSb3T9OEReNKpZH
+         05+lS5rNAvBdKpD1yQ2kZV55+1oCB94tVSjlArRM=
+Date:   Sun, 8 Mar 2020 10:51:18 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [GIT PULL] USB/PHY fixes for 5.6-rc6
+Message-ID: <20200308095118.GA4026918@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
 
-The implementation follow the RISC-V "V" Vector Extension draft v0.8 with
-128bit-vlen and it's based on linux-5.6-rc3 and tested with qemu [1].
+  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
 
-The patch implement basic context switch, sigcontext save/restore and
-ptrace interface with a new regset NT_RISCV_VECTOR. Only fixed 128bit-vlen
-is implemented. We need to discuss about vlen-size for libc sigcontext and
-ptrace (the maximum size of vlen is unlimited in spec).
+are available in the Git repository at:
 
-Puzzle:
-Dave Martin has talked "Growing CPU register state without breaking ABI" [2]
-before, and riscv also met vlen size problem. Let's discuss the common issue
-for all architectures and we need a better solution for unlimited vlen.
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.6-rc5
 
-Any help are welcomed :)
+for you to fetch changes up to 19f3c1e98bd1704fe22e5f8105c0677a1332cdef:
 
- 1: https://github.com/romanheros/qemu.git branch:vector-upstream-v3
- 2: https://blog.linuxplumbersconf.org/2017/ocw/sessions/4671.html
+  Merge tag 'phy-for-5.6-rc_v2' of git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy into usb-linus (2020-03-04 13:28:52 +0100)
 
----
-Changelog V3
- - Rebase linux-5.6-rc3 and tested with qemu
- - Seperate patches with Anup's advice
- - Give out a ABI puzzle with unlimited vlen
+----------------------------------------------------------------
+USB/PHY fixes for 5.6-rc5
 
-Changelog V2
- - Fixup typo "vecotr, fstate_save->vstate_save".
- - Fixup wrong saved registers' length in vector.S.
- - Seperate unrelated patches from this one.
+Here are some small USB and PHY driver fixes for reported issues for
+5.6-rc5.
 
-Guo Ren (11):
-  riscv: Separate patch for cflags and aflags
-  riscv: Rename __switch_to_aux -> fpu
-  riscv: Extending cpufeature.c to detect V-extension
-  riscv: Add CSR defines related to VECTOR extension
-  riscv: Add vector feature to compile
-  riscv: Add has_vector detect
-  riscv: Reset vector register
-  riscv: Add vector struct and assembler definitions
-  riscv: Add task switch support for VECTOR
-  riscv: Add ptrace support
-  riscv: Add sigcontext save/restore
+Included in here are:
+	- phy driver fixes
+	- new USB quirks
+	- USB cdns3 gadget driver fixes
+	- USB hub core fixes
 
- arch/riscv/Kconfig                       |   9 ++
- arch/riscv/Makefile                      |  19 ++-
- arch/riscv/include/asm/csr.h             |  17 ++-
- arch/riscv/include/asm/processor.h       |   1 +
- arch/riscv/include/asm/switch_to.h       |  54 ++++++-
- arch/riscv/include/uapi/asm/elf.h        |   1 +
- arch/riscv/include/uapi/asm/hwcap.h      |   1 +
- arch/riscv/include/uapi/asm/ptrace.h     |   9 ++
- arch/riscv/include/uapi/asm/sigcontext.h |   1 +
- arch/riscv/kernel/Makefile               |   1 +
- arch/riscv/kernel/asm-offsets.c          | 187 +++++++++++++++++++++++
- arch/riscv/kernel/cpufeature.c           |  12 +-
- arch/riscv/kernel/entry.S                |   2 +-
- arch/riscv/kernel/head.S                 |  49 +++++-
- arch/riscv/kernel/process.c              |  10 ++
- arch/riscv/kernel/ptrace.c               |  41 +++++
- arch/riscv/kernel/signal.c               |  40 +++++
- arch/riscv/kernel/vector.S               |  84 ++++++++++
- include/uapi/linux/elf.h                 |   1 +
- 19 files changed, 524 insertions(+), 15 deletions(-)
- create mode 100644 arch/riscv/kernel/vector.S
+All of these have been in linux-next with no reported issues.
 
--- 
-2.17.0
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+----------------------------------------------------------------
+Dan Lazewatsky (1):
+      usb: quirks: add NO_LPM quirk for Logitech Screen Share
+
+Eugeniu Rosca (3):
+      usb: core: hub: fix unhandled return by employing a void function
+      usb: core: hub: do error out if usb_autopm_get_interface() fails
+      usb: core: port: do error out if usb_autopm_get_interface() fails
+
+Florian Fainelli (1):
+      phy: brcm-sata: Correct MDIO operations for 40nm platforms
+
+Greg Kroah-Hartman (1):
+      Merge tag 'phy-for-5.6-rc_v2' of git://git.kernel.org/.../kishon/linux-phy into usb-linus
+
+Grygorii Strashko (2):
+      phy: ti: gmii-sel: fix set of copy-paste errors
+      phy: ti: gmii-sel: do not fail in case of gmii
+
+Jim Lin (1):
+      usb: storage: Add quirk for Samsung Fit flash
+
+Kishon Vijay Abraham I (1):
+      phy: core: Fix phy_get() to not return error on link creation failure
+
+Marco Felsch (1):
+      usb: usb251xb: fix regulator probe and error handling
+
+Peter Chen (2):
+      usb: cdns3: gadget: link trb should point to next request
+      usb: cdns3: gadget: toggle cycle bit before reset endpoint
+
+Pratham Pratap (1):
+      usb: dwc3: gadget: Update chain bit correctly when using sg list
+
+Rikard Falkeborn (1):
+      phy: allwinner: Fix GENMASK misuse
+
+Tony Lindgren (2):
+      phy: mapphone-mdm6600: Fix write timeouts with shorter GPIO toggle interval
+      phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling
+
+ drivers/phy/allwinner/phy-sun50i-usb3.c     |   2 +-
+ drivers/phy/broadcom/phy-brcm-sata.c        | 148 ++++++++++++----------------
+ drivers/phy/motorola/phy-mapphone-mdm6600.c |  27 ++++-
+ drivers/phy/phy-core.c                      |  18 ++--
+ drivers/phy/ti/phy-gmii-sel.c               |  10 +-
+ drivers/usb/cdns3/gadget.c                  |  19 +++-
+ drivers/usb/core/hub.c                      |   8 +-
+ drivers/usb/core/port.c                     |  10 +-
+ drivers/usb/core/quirks.c                   |   3 +
+ drivers/usb/dwc3/gadget.c                   |   9 +-
+ drivers/usb/misc/usb251xb.c                 |  20 +++-
+ drivers/usb/storage/unusual_devs.h          |   6 ++
+ 12 files changed, 163 insertions(+), 117 deletions(-)
