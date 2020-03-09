@@ -2,188 +2,85 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A96C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC25C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D278520578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:24:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W6Q0SiZe"
+	by mail.kernel.org (Postfix) with ESMTP id 10E8F20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgCIQYp (ORCPT
+        id S1727193AbgCIQZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:24:45 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33918 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgCIQYp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:24:45 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 029GNNwD101380;
-        Mon, 9 Mar 2020 16:24:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=IG8LvxfBY1OrePUu9eNqEJdMLNEqViWjxSiyKEsDlc8=;
- b=W6Q0SiZek17CEMk08wEXIEihM4/z+9h/6sIqwi2h0Us6Cxh3P43dAPaMu6rL/cvyRXAt
- Li4H3XeZTbQ1S5qbTJaIRsTNkWGpaXIEGQilezs8Lcn6WPh9fdcvwls9xCibCKFCzReP
- YiggLeibhnzuYlCo0L9z3hWb+r/Vm0PDGi6Ll0wUl4TfSNimQb5TYxrH2ws5F36vJmNF
- vHwVbKPacu/xEtG896Wtqqi7eEVwqI280WLy2JCCRsdk4i4mOa4t76nc8cQNaUB32XjE
- n+NL4yLpiIQcl1WqtkQEPxNZTYwZ+Y+JfD9b0O6yf2i9KTVT6SVwajkjRuzg2npRHbOm +w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2ym48sqya1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 09 Mar 2020 16:24:42 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 029GHI5O151727;
-        Mon, 9 Mar 2020 16:24:41 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2ymnb09uks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 09 Mar 2020 16:24:41 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 029GOeB6004199;
-        Mon, 9 Mar 2020 16:24:40 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 09 Mar 2020 09:24:40 -0700
-Date:   Mon, 9 Mar 2020 09:24:39 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xfs: clear PF_MEMALLOC before exiting xfsaild thread
-Message-ID: <20200309162439.GB8045@magnolia>
-References: <20200309010410.GA371527@sol.localdomain>
- <20200309043430.143206-1-ebiggers@kernel.org>
+        Mon, 9 Mar 2020 12:25:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38732 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727071AbgCIQZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 12:25:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A08EEB3A7;
+        Mon,  9 Mar 2020 16:25:32 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id CC547DA7A7; Mon,  9 Mar 2020 17:25:07 +0100 (CET)
+Date:   Mon, 9 Mar 2020 17:25:07 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] btrfs: scrub: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200309162507.GN2902@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200306221333.GA31084@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309043430.143206-1-ebiggers@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 adultscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003090107
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 priorityscore=1501 lowpriorityscore=0
- phishscore=0 adultscore=0 spamscore=0 mlxscore=0 clxscore=1011
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003090107
+In-Reply-To: <20200306221333.GA31084@embeddedor>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 09:34:30PM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On Fri, Mar 06, 2020 at 04:13:33PM -0600, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-> during do_exit().  That can confuse things.  For example, if BSD process
-> accounting is enabled and the accounting file has FS_SYNC_FL set and is
-> located on an ext4 filesystem without a journal, then do_exit() ends up
-> calling ext4_write_inode().  That triggers the
-> WARN_ON_ONCE(current->flags & PF_MEMALLOC) there, as it assumes
-> (appropriately) that inodes aren't written when allocating memory.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> Fix this in xfsaild() by using the helper functions to save and restore
-> PF_MEMALLOC.
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
 > 
-> This can be reproduced as follows in the kvm-xfstests test appliance
-> modified to add the 'acct' Debian package, and with kvm-xfstests's
-> recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
 > 
-> 	mkfs.ext2 -F /dev/vdb
-> 	mount /vdb -t ext4
-> 	touch /vdb/file
-> 	chattr +S /vdb/file
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Does this trip if the process accounting file is also on an xfs
-filesystem?
-
-> 	accton /vdb/file
-> 	mkfs.xfs -f /dev/vdc
-> 	mount /vdc
-> 	umount /vdc
-
-...and if so, can this be turned into an fstests case, please?
-
-
-> 
-> It causes:
-> 	WARNING: CPU: 0 PID: 332 at fs/ext4/inode.c:5097 ext4_write_inode+0x140/0x1a0
-> 	CPU: 0 PID: 332 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #5
-> 	[...]
-> 	RIP: 0010:ext4_write_inode+0x140/0x1a0 fs/ext4/inode.c:5097
-> 	[...]
-> 	Call Trace:
-> 	 write_inode fs/fs-writeback.c:1312 [inline]
-> 	 __writeback_single_inode+0x465/0x5f0 fs/fs-writeback.c:1511
-> 	 writeback_single_inode+0xad/0x120 fs/fs-writeback.c:1565
-> 	 sync_inode fs/fs-writeback.c:2602 [inline]
-> 	 sync_inode_metadata+0x3d/0x57 fs/fs-writeback.c:2622
-> 	 ext4_fsync_nojournal fs/ext4/fsync.c:94 [inline]
-> 	 ext4_sync_file+0x243/0x4b0 fs/ext4/fsync.c:172
-> 	 generic_write_sync include/linux/fs.h:2867 [inline]
-> 	 ext4_buffered_write_iter+0xe1/0x130 fs/ext4/file.c:277
-> 	 call_write_iter include/linux/fs.h:1901 [inline]
-> 	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
-> 	 __kernel_write+0x54/0xe0 fs/read_write.c:515
-> 	 do_acct_process+0x122/0x170 kernel/acct.c:522
-> 	 slow_acct_process kernel/acct.c:581 [inline]
-> 	 acct_process+0x1d4/0x27c kernel/acct.c:607
-> 	 do_exit+0x83d/0xbc0 kernel/exit.c:791
-> 	 kthread+0xf1/0x140 kernel/kthread.c:257
-> 	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
-> 
-> This case was originally reported by syzbot at
-> https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
-> 
-> Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-
-Looks ok,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-> ---
-> 
-> v2: include more details in the commit message.
-> 
->  fs/xfs/xfs_trans_ail.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-> index 00cc5b8734be8..3bc570c90ad97 100644
-> --- a/fs/xfs/xfs_trans_ail.c
-> +++ b/fs/xfs/xfs_trans_ail.c
-> @@ -529,8 +529,9 @@ xfsaild(
->  {
->  	struct xfs_ail	*ailp = data;
->  	long		tout = 0;	/* milliseconds */
-> +	unsigned int	noreclaim_flag;
->  
-> -	current->flags |= PF_MEMALLOC;
-> +	noreclaim_flag = memalloc_noreclaim_save();
->  	set_freezable();
->  
->  	while (1) {
-> @@ -601,6 +602,7 @@ xfsaild(
->  		tout = xfsaild_push(ailp);
->  	}
->  
-> +	memalloc_noreclaim_restore(noreclaim_flag);
->  	return 0;
->  }
->  
-> -- 
-> 2.25.1
-> 
+Added to devel queue, thanks.
