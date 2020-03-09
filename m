@@ -2,169 +2,129 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55D0C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07445C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848E4205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E96205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:27:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tx4O/611"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbgCIS0x (ORCPT
+        id S1727458AbgCIS1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:26:53 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:36482 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbgCIS0x (ORCPT
+        Mon, 9 Mar 2020 14:27:13 -0400
+Received: from mail-wm1-f73.google.com ([209.85.128.73]:50398 "EHLO
+        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbgCIS1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:26:53 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBN72-0001Yq-SW; Mon, 09 Mar 2020 12:26:48 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBN71-00066p-Tz; Mon, 09 Mar 2020 12:26:48 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mon, 9 Mar 2020 14:27:12 -0400
+Received: by mail-wm1-f73.google.com with SMTP id p186so179257wmp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:27:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=GdJNQzOJFOqKdISqoHHBK9SjrIVmjZPZx9ZPz8U0D/Q=;
+        b=tx4O/611hF+ZbF+8vaJD7WcRX5OInMP1WOHxCQKUTa3W3rIUCRRa0Pzbr2+XXke4id
+         5pD1evIXnvUfJCRQ4zZRPlUQrDTBGifP7DgXKYQ3Xr3ykk4OFLIswSR8dh27YXgoZyCs
+         DSYuLjTZ19uExvo6oR6613S3ecWt2O3GfpS4SenptNGaGjDx9K8a+HlI2DPoaXUCVPLl
+         3NYtdjengW8w0REmafpeMt+Qvvbgfo85IXnOV1QeKWOwiNWBnbq/2yqY7yNiQ1XuQFcx
+         Z2XLT+PVGoezeoLE7YBEHdzmh9liPSInWDvD+3EvfyuhJ6IeGb7AhroMscta9qfmBAzP
+         bPiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=GdJNQzOJFOqKdISqoHHBK9SjrIVmjZPZx9ZPz8U0D/Q=;
+        b=X1PUaZksauDkrQFJxV1MkRdYn6CT6eyRKCsFKFM+p9A9s+aTqnenGxNs+SqLmPAmwv
+         Qyh5MB9EPMocNudISQLRcUpmxCHsUe8Yxmk5vQlZAg0rmRZtFPNhusLxFrzK5b4KYQ0n
+         ISNYdHrHPxua2Sq8tMANgMbZtu6esBhKW2AcT0Bh8LPnbPgeq6FAOuGf4WTM2pBd2aiF
+         mowynIHoAsyO3Ty6QZKvEFPhCh5UmA0+p/Bu5Q4f4l1pMMEHVtZafdBje2hMv6JFzct3
+         LeM0KIvh2RJMKlu0lTSWiKph1VzgH+Op2BeL7H+sSQiUPsFh3espznBIxgCY8y8QPFrs
+         XJSQ==
+X-Gm-Message-State: ANhLgQ0Mjekc9ilM6pDpXM49J7MxqLS04Q/gYu+QYFN65gyiyY1Ujk4k
+        duzBOAYxYXjOY5jhVzW988N55KXZYs4zqdjp
+X-Google-Smtp-Source: ADFU+vtkEwBY/nTScyMNiVe58Ykd9fd07sDOnDWHkswsdgdjfDTZhoICv/rUfDfy4cqiqZpt6pB6VdIckbeAF6Aw
+X-Received: by 2002:adf:ea42:: with SMTP id j2mr21611992wrn.377.1583778429837;
+ Mon, 09 Mar 2020 11:27:09 -0700 (PDT)
+Date:   Mon,  9 Mar 2020 19:27:03 +0100
+Message-Id: <cover.1583778264.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v2 0/3] kcov: collect coverage from usb soft interrupts
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <202003021531.C77EF10@keescook>
-        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
-        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
-        <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <878sk94eay.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y12yc7.fsf@x220.int.ebiederm.org>
-Date:   Mon, 09 Mar 2020 13:24:30 -0500
-In-Reply-To: <87r1y12yc7.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Mon, 09 Mar 2020 13:10:48 -0500")
-Message-ID: <87k13t2xpd.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jBN71-00066p-Tz;;;mid=<87k13t2xpd.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/WnV4wYiwwbgU9GE0A9FUPBqxzJcDuRb4=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ebiederm@xmission.com (Eric W. Biederman) writes:
+This patchset extends kcov to allow collecting coverage from soft
+interrupts and then uses the new functionality to collect coverage from
+USB code.
 
-> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
->
->> On 3/9/20 6:40 PM, Eric W. Biederman wrote:
->>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
->>> 
->>>> On 3/8/20 10:38 PM, Eric W. Biederman wrote:
->>>>>
->>>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
->>>>> over the userspace accesses as the arguments from userspace are read.
->>>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
->>>                                 ^ over
->>>>
->>>> ... is held while waiting for the trace parent to handle PTRACE_EVENT_EXIT
->>>> or something?
->>> 
->>> Yes.  Let me see if I can phrase that better.
->>> 
->>>> I wonder if we also should mention that
->>>> it is held while waiting for the trace parent to
->>>> receive the exit code with "wait"?
->>> 
->>> I don't think we have to spell out the details of how it all works,
->>> unless that makes things clearer.  Kernel developers can be expected
->>> to figure out how the kernel works.  The critical thing is that it is
->>> an indefinite wait for userspace to take action.
->>> 
->>> But I will look.
->>> 
->>>>> threads are killed.  The cred_guard_mutex is held over
->>>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
->>>>>
->>>>> Any of those can result in deadlock, as the cred_guard_mutex is held
->>>>> over a possible indefinite userspace waits for userspace.
->>>>>
->>>>> Add exec_update_mutex that is only held over exec updating process
->>>>
->>>> Add ?
->>> 
->>> Yes.  That is what the change does: add exec_update_mutex.
->>> 
->>
->> I just kind of missed the "subject" in this sentence,
->> like "This patch adds an exec_update_mutex that is ..."
->> but english is a foreign language for me, so may be okay as is.
->
-> English has a lot of options.  I think this is a stylistic difference.
->
-> Instead of being an observer and describing what the change does:
-> "This patch adds exec_update_mutex ..."  
->
-> I was being there in the moment and saying/commading what is happening:
-> "Add exec_update_mutex ..."
->
-> Using the more immdediate form ends up with more concise and clearer
-> sentences.
->
-> Every one of my writing teachers in school emphasized that point
-> and I see the who it works when I write things.  But writing is hard and
-> I still tend toward long rambling sentences with many qualifiers that
-> confuse and detract from the point rather than make it clear what is
-> happening.
+This has allowed to find at least one new HID bug [1], which was recently
+fixed by Alan [2].
 
-And reading through it all now I can see your confusion.  That
-description of my changes was not well done.  Reworking it now.
+[1] https://syzkaller.appspot.com/bug?extid=09ef48aa58261464b621
+[2] https://patchwork.kernel.org/patch/11283319/
 
-Eric
+Any subsystem that uses softirqs (e.g. timers) can make use of this in
+the future. Looking at the recent syzbot reports, an obvious candidate
+is the networking subsystem [3, 4, 5 and many more].
+
+[3] https://syzkaller.appspot.com/bug?extid=522ab502c69badc66ab7
+[4] https://syzkaller.appspot.com/bug?extid=57f89d05946c53dbbb31
+[5] https://syzkaller.appspot.com/bug?extid=df358e65d9c1b9d3f5f4
+
+This patchset has been pushed to the public Linux kernel Gerrit instance:
+
+https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2225
+
+Changes v1 -> v2:
+- Add local_irq_save/restore() critical sections to simplify dealing with
+  softirqs happening during kcov_remote_start/stop().
+- Set kcov_softirq after flag kcov_start() in kcov_remote_start().
+
+Changes RFC -> v1:
+- Don't support hardirq or nmi, only softirq, to avoid issues with nested
+  interrupts.
+- Combined multiple per-cpu variables into one.
+- Used plain accesses and kcov_start/stop() instead of xchg()'s.
+- Simplified handling of per-cpu variables.
+- Avoid disabling interrupts for the whole kcov_remote_start/stop()
+  region.
+- Avoid overwriting t->kcov_sequence when saving/restoring state.
+- Move kcov_remote_start/stop_usb() annotations into
+  __usb_hcd_giveback_urb() to cover all urb complete() callbacks at once.
+- Drop unneeded Dummy HCD changes.
+- Split out a patch that removed debug messages.
+
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+
+Andrey Konovalov (3):
+  kcov: cleanup debug messages
+  kcov: collect coverage from interrupts
+  usb: core: kcov: collect coverage from usb complete callback
+
+ Documentation/dev-tools/kcov.rst |  17 +--
+ drivers/usb/core/hcd.c           |   3 +
+ include/linux/sched.h            |   3 +
+ kernel/kcov.c                    | 221 +++++++++++++++++++++----------
+ lib/Kconfig.debug                |   9 ++
+ 5 files changed, 178 insertions(+), 75 deletions(-)
+
+-- 
+2.25.1.481.gfbce0eb801-goog
+
