@@ -2,219 +2,186 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBBBC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F02C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A17724654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9574024654
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgCITwd (ORCPT
+        id S1726477AbgCITwo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:52:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60155 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgCITwd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:52:33 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jBORp-0006n7-VS; Mon, 09 Mar 2020 20:52:22 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 1F1F510409D; Mon,  9 Mar 2020 20:52:21 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        paulmck <paulmck@kernel.org>,
-        "Joel Fernandes\, Google" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: Instrumentation and RCU
-In-Reply-To: <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com>
-References: <87mu8p797b.fsf@nanos.tec.linutronix.de> <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com>
-Date:   Mon, 09 Mar 2020 20:52:21 +0100
-Message-ID: <871rq171ca.fsf@nanos.tec.linutronix.de>
+        Mon, 9 Mar 2020 15:52:44 -0400
+Received: from mail-vi1eur05olkn2104.outbound.protection.outlook.com ([40.92.90.104]:7584
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725992AbgCITwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:52:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LR5UP4nTXlbz2VSPanyoMb4DvKn1Zoud47dOxIaTPqOmya0bjr/Q7M0UmZ3duUxb7iIiJ752I8jrw3FT9bM7mbFRjXEvNWidhhf6CbC4OdTfsGVE5WCWUvrTPzx6YVZ2H7XJH8hw7yIzb/AsH/MDl3a9SPwLVfklYkwBNNFBlfINBDQ5JJhGZMEP66B5QPEvJ9pg7NmhL2fdIgvrta6oEkuFvdleekdsCMoIGhQHRGoqqA7uaNZimXeVnO85kfaK7Ls/dzB+uSsD5M5dcgAsRNIvvz8zn1JkWNivg8l/dlxmdTPgCOMa47hV50Vq5E79nS1a0Vw1VlsUs9vgvbJAPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=us7arMLgUlBinqeZu1Mkp+JM24VyW/yqREJVsjdZp6Q=;
+ b=HISgO7i7QNl/28ZDpwnSD97ugP9S+2K0ywa/zRvyRPExtckec02LRwxwv2GE2m5ueG4tU28fYA4heLDKAdl5/aocPkjiJyyVsdx//zHueICENyl42lb3sKhYsMLiTpQ4+Y25yiakqZFs83mvmFpk9gxuV12uc+WeZ6iuLmCb/QGS2VkrtfS6y9LeuLRasKapyHKHNEbiDBsiWgxN0cEiAikLI/ivy8KZNuU+ewhP7s4l5wfB4J237zonZCFzj4TZr0eB8E8cKkVDJ6iFIoIQgYBga3hin6kFzUG967cCUPCFCIKgiJaZSiv9wwa2bbxfzK3+bGcVUPWG74dBtY+GWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from DB8EUR05FT061.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc0f::37) by
+ DB8EUR05HT254.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc0f::480)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 9 Mar
+ 2020 19:52:38 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.233.238.56) by
+ DB8EUR05FT061.mail.protection.outlook.com (10.233.238.67) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 19:52:38 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 9 Mar 2020
+ 19:52:38 +0000
+Received: from [192.168.1.101] (92.77.140.102) by AM0PR06CA0073.eurprd06.prod.outlook.com (2603:10a6:208:fa::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14 via Frontend Transport; Mon, 9 Mar 2020 19:52:37 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v2 4/5] exec: Move exec_mmap right after de_thread in
+ flush_old_exec
+Thread-Topic: [PATCH v2 4/5] exec: Move exec_mmap right after de_thread in
+ flush_old_exec
+Thread-Index: AQHV9ZIq8LqSeoOzkk+o9CTpCnOInKhAqHsAgAADjVGAAAFjAA==
+Date:   Mon, 9 Mar 2020 19:52:38 +0000
+Message-ID: <AM6PR03MB51709D441EE6830DC8CE3090E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003021531.C77EF10@keescook>
+ <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <875zfe5xzb.fsf_-_@x220.int.ebiederm.org>
+ <AM6PR03MB5170C3A4319BA6A057C3CCACE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv2xz510.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87tv2xz510.fsf@x220.int.ebiederm.org>
+Accept-Language: en-US, en-GB, de-DE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR06CA0073.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::14) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+x-incomingtopheadermarker: OriginalChecksum:E052DB8E0D4BE9F52D3BB250C54FCE66C8E08203BC122772396A1B3B47280602;UpperCasedChecksum:D2B8584132588694E957B129C60342ECF08B154AE93F08996C18C724C5FD4F63;SizeAsReceived:9906;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [gg8QiKW80X8x8ER3daN6HWEBHHRMradi]
+x-microsoft-original-message-id: <bd039513-aafc-8200-d63c-e4d345c35c21@hotmail.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 6e585488-bf69-4a39-5fc5-08d7c4636b81
+x-ms-traffictypediagnostic: DB8EUR05HT254:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6QJ1WYrUSrzeSIAWhwAyprirzoT32kImPYMAY4VcRk/gMufeUzP38OS8sB6tdYzIP0Vd9PdZx+HIAmEvqO3Wl+d5tadaQfufGZQ/qT2Ulyop8XKQzmpkuZtpstmzlcwyQiHCpQ1Db3hSO99znan8QWpT+EEv51ww56Bf00vCAlfyVkc3CCmcOZ5um5PtVQnC
+x-ms-exchange-antispam-messagedata: Su4XjFp3ZwTE/nkD8ppkkZwR3LyyEtggQmpSHLQVK3qnGjUZ1inFOMYGLWZxZ2cUK/joDA9TWF+yHb2TQgFQZlksSqBtLNGZ4eadbSEm6cuci6FQqO9QlzbMMBowfGCGM7uQwLG36QbPG0atzhVLUw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <3D428C8F34AC3245A2ECA39F23444B91@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e585488-bf69-4a39-5fc5-08d7c4636b81
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 19:52:38.3929
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8EUR05HT254
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> writes:
-> ----- On Mar 9, 2020, at 1:02 PM, Thomas Gleixner tglx@linutronix.de wrote:
->> #1 Fragile low level entry code
->> 
->>   While I understand the desire of instrumentation to observe
->>   everything we really have to ask the question whether it is worth the
->>   trouble especially with entry trainwrecks like x86, PTI and other
->>   horrors in that area.
->> 
->>   I don't think so and we really should just bite the bullet and forbid
->>   any instrumentation in that code unless it is explicitly designed
->>   for that case, makes sense and has a real value from an observation
->>   perspective.
->> 
->>   This is very much related to #3..
->
-> Do I understand correctly that you intend on moving all kernel low level
-> entry/exit code into sections which cannot be instrumented by kprobes nor
-> the function tracer, and require explicit whitelisting, either through
-> annotations or use of explicit tracepoints ?
-
-Pretty much so.
-
->> #2) Breakpoint utilization
->> 
->>    As recent findings have shown, breakpoint utilization needs to be
->>    extremly careful about not creating infinite breakpoint recursions.
->> 
->>    I think that's pretty much obvious, but falls into the overall
->>    question of how to protect callchains.
->
-> I think there is another question that arises here: the lack of automated
-> continuous testing of the kprobes coverage. We have performed some testing of
-> various random permutations of kprobes instrumentation, and have succeeded in
-> crashing the kernel in various ways. Unfortunately, that testing is not done
-> on a continuous basis, and maintainers understandably have little spare time
-> to play the whack-a-mole game of adding missing nokprobes annotations as
-> the kernel code evolves.
-
-That's why I think a section approach is more practicable.
- 
->> #3) RCU idle
->>    are really more than questionable. For 99.9999% of instrumentation
->>    users it's absolutely irrelevant whether this traces the interrupt
->>    disabled time of user_exit_irqsoff() or rcu_irq_enter() or not.
->> 
->>    But what's relevant is the tracer overhead which is e.g. inflicted
->>    with todays trace_hardirqs_off/on() implementation because that
->>    unconditionally uses the rcuidle variant with the scru/rcu_irq dance
->>    around every tracepoint.
->
-> I think one of the big issues here is that most of the uses of
-> trace_hardirqs_off() are from sites which already have RCU watching,
-> so we are doing heavy-weight operations for nothing.
-
-That and in some places in the entry code we do the heavy weight
-operations to cover 100 instructions which turn on RCU anyway. That does
-not make any sense at all.
-
-> I strongly suspect that most of the overhead we've been trying to avoid when
-> introducing use of SRCU in rcuidle tracepoints was actually caused by callsites
-> which use rcuidle tracepoints while having RCU watching, just because there is a
-> handful of callsites which don't have RCU watching. This is confirmed
-> by the commit message of commit e6753f23d9 "tracepoint: Make rcuidle
-> tracepoint callers use SRCU":
->
->    "In recent tests with IRQ on/off tracepoints, a large performance
->     overhead ~10% is noticed when running hackbench. This is root caused to
->     calls to rcu_irq_enter_irqson and rcu_irq_exit_irqson from the
->     tracepoint code. Following a long discussion on the list [1] about this,
->     we concluded that srcu is a better alternative for use during rcu idle.
->     Although it does involve extra barriers, its lighter than the sched-rcu
->     version which has to do additional RCU calls to notify RCU idle about
->     entry into RCU sections.
-> [...]
->     Test: Tested idle and preempt/irq tracepoints."
-
-In a quick test I did with a invalid syscall number with profiling the
-trace_hardirqs_off() is pretty prominent and goes down by roughly a
-factor of 2 when I move it past enter_from_user_mode() and use just the
-non RCU idle variant.
-
-> So I think we could go back to plain RCU for rcuidle tracepoints if we do
-> the cheaper "rcu_is_watching()" check rather than invoking
-> rcu_irq_{enter,exit}_irqson() unconditionally.
-
-Haven't tried that yet for the overall usage of trace_hardirqs_off(),
-but yes, it's going to be a measurable difference.
-
->>    Even if the tracepoint sits in the ASM code it just covers about ~20
->>    low level ASM instructions more. The tracer invocation, which is
->>    even done twice when coming from user space on x86 (the second call
->>    is optimized in the tracer C-code), costs definitely way more
->>    cycles. When you take the scru/rcu_irq dance into account it's a
->>    complete disaster performance wise.
->
-> Part of the issue here is the current overhead of SRCU read-side lock,
-> which contains memory barriers. The other part of the issue is the fact that
-> rcu_irq_{enter,exit}_irqson() contains an atomic_add_return atomic instruction.
->
-> We could use the approach proposed by Peterz's and Steven's patches to basically
-> do a lightweight "is_rcu_watching()" check for rcuidle tracepoint, and only enable
-> RCU for those cases. We could then simply go back on using regular RCU
-> like so:
-
-Right, but that still does the whole rcu_irq dance especially in the
-entry code just to trace 50 or 100 instructions which are turning on RCU
-anyway.
-
->> #4 Protecting call chains
->> 
->>   Our current approach of annotating functions with notrace/noprobe is
->>   pretty much broken.
->> 
->>   Functions which are marked NOPROBE or notrace call out into functions
->>   which are not marked and while this might be ok, there are enough
->>   places where it is not. But we have no way to verify that.
->> 
->>   That's just a recipe for disaster. We really cannot request from
->>   sysadmins who want to use instrumentation to stare at the code first
->>   whether they can place/enable an instrumentation point somewhere.
->>   That'd be just a bad joke.
->> 
->>   I really think we need to have proper text sections which are off
->>   limit for any form of instrumentation and have tooling to analyze the
->>   calls into other sections. These calls need to be annotated as safe
->>   and intentional.
->
-> If we go all the way into that direction, I suspect it might even make sense
-> to duplicate some kernel functions so they can still be part of the code which
-> can be instrumented, but provide tracing-specific copy which would be hidden
-> from instrumentation. I wonder what would be the size cost of this
-> duplication.
-
-That might happen, but we'll see how much of that is truly
-requried. It's not horrible large. For the int3 isolation most of it was
-fixing up code which should have been protected in the first place and
-the only copied code was bsearch which is tiny.
-
-> In addition to splitting tracing code into a separate section, which I think
-> makes sense, I can think of another alternative way to provide call chains
-> protection: adding a "in_tracing" flag somewhere alongside each kernel stack.
-> Each thread and interrupt stack would have its own flag. However, trap handlers
-> should share the "in_tracing" flag with the context which triggers the trap.
->
-> If a tracer recurses, or if a tracer attempts to trace another tracer, the
-> instrumentation would break the recursion chain by preventing instrumentation
-> from firing. If we end up caring about tracers tracing other tracers, we could
-> have one distinct flag per tracer and let each tracer break the recursion chain.
->
-> Having this flag per kernel stack rather than per CPU or per thread would
-> allow tracing of nested interrupt handlers (and NMIs), but would break
-> call chains both within the same stack or going through a trap. I think
-> it could be a nice complementary safety net to handle mishaps in a non-fatal
-> way.
-
-That works as long as none of this uses breakpoint based patching to
-dynamically disable/enable stuff.
-
-Thanks,
-
-        tglx
 
 
+On 3/9/20 8:45 PM, Eric W. Biederman wrote:
+> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+> 
+>> On 3/8/20 10:38 PM, Eric W. Biederman wrote:
+>>>
+>>> This consolidation allows the creation of a mutex to replace
+>>> cred_guard_mutex that is not held of possible indefinite userspace
+>>
+>> can you also reword this "held of" thing here as well?
+> 
+> Done:
+> 
+>     exec: Move exec_mmap right after de_thread in flush_old_exec
+>     
+>     I have read through the code in exec_mmap and I do not see anything
+>     that depends on sighand or the sighand lock, or on signals in anyway
+>     so this should be safe.
+>     
+>     This rearrangement of code has two siginficant benefits.  It makes
 
+watch out: sig_i_nificant
 
+>     the determination of passing the point of no return by testing bprm->mm
+>     accurate.  All failures prior to that point in flush_old_exec are
+>     either truly recoverable or they are fatal.
+>     
+>     Futher this consolidates all of the possible indefinite waits for
+
+Add some r to "Futher", please?
+
+>     userspace together at the top of flush_old_exec.  The possible wait
+>     for a ptracer on PTRACE_EVENT_EXIT, the possible wait for a page fault
+>     to be resolved in clear_child_tid, and the possible wait for a page
+>     fault in exit_robust_list.
+>     
+>     This consolidation allows the creation of a mutex to replace
+>     cred_guard_mutex that is not held over possible indefinite userspace
+>     waits.  Which will allow removing deadlock scenarios from the kernel.
+>     
+>     Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+>     Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> 
+> Eric
+> 
