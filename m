@@ -2,95 +2,180 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEEAC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D72C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D69208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A2B20866
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:28:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Z1I5JDhf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="r8XGzBVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbgCIRYd (ORCPT
+        id S1727279AbgCIR2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:24:33 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37690 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgCIRYd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:24:33 -0400
-Received: by mail-qt1-f193.google.com with SMTP id l20so5944432qtp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:24:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Dks3i5CkPUQ+F21OaKeehSuQxnIMN5i6J4CZW2sJwAg=;
-        b=Z1I5JDhf6JPhDANs9LT2Z75zZ40ZGN96qONEEs10yb0Ydwt4AEpMbjVOaeuaW34y7k
-         GqOkGV45kEzToTEqCGNkwEq1QeOqi4dDDHah5nA8iyUC2ScAqMAxnaqVdHOdMN3hZPxG
-         2Qsf+M/UTcKvSIQpHYPmEus0QOM0y8nEFk8Dlm5gkRlNndfHf4+9j0vmSAS9Lu2A+2XL
-         tvhnWXmeyf/OCf9e6X86IoH8nbboyUD9rOmHnXF+d4NpKsKX2A43AOMnvSj6In7BZ03g
-         a1/4l1wDim/oN+5Wy9N2OFsrPVofgre+pPaJv+6WtYFsn2Qx1tXEdZAX1g0wnAK/lCmd
-         zHwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Dks3i5CkPUQ+F21OaKeehSuQxnIMN5i6J4CZW2sJwAg=;
-        b=TR38MsTAc8xT3YJAgm9I9Twzr7zAcPQkbhnwamoYiZLgMI7fl7gyeGyJATrNIm/4Of
-         ES9prtPxetXyDV4JT07Ys9ap/jTPuE9XbMsU6w1jT5fxazPQ3grD6UMr6ErYlW5N+LH5
-         KaNDqx1nMpE50Xc1Qwjf+7EaTFji/B+808z365BXPJ9VpffeTGjrm4tIkBtrED7DhzHP
-         cACyim8/M9MRonEPjLQjWJDYLjaxAeWIgDCLDemUNIkOxFmCadVizmmJdIgsf3dHnnid
-         RFHQZpvfgOy9fnMns498LC/i2JaDWvM+8EC30C92rWx9MtvK59Pr9mJPts4fDYdaT3SC
-         4+NA==
-X-Gm-Message-State: ANhLgQ2rQ0JLq/pKVaeq/sj++eoMeJFaO1mKlgfeuU0Ma7WuaM3VYDKJ
-        1zY4rr3S9FPVfqCmsOxNuuJMYQ==
-X-Google-Smtp-Source: ADFU+vupi9qtS7gHPWD88xYrZVl3D06G7ygMTFq1jcL4wqzVIfcwn3v7Dhs/5Q1X9cbt2cRgCDPPNw==
-X-Received: by 2002:ac8:2bcd:: with SMTP id n13mr15638628qtn.21.1583774672271;
-        Mon, 09 Mar 2020 10:24:32 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id 65sm22838452qtf.95.2020.03.09.10.24.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Mar 2020 10:24:31 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jBM8k-0003l3-Um; Mon, 09 Mar 2020 14:24:30 -0300
-Date:   Mon, 9 Mar 2020 14:24:30 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     syzbot <syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com>
-Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        parav@mellanox.com, syzkaller-bugs@googlegroups.com,
-        willy@infradead.org
-Subject: Re: BUG: corrupted list in _cma_attach_to_dev
-Message-ID: <20200309172430.GV31668@ziepe.ca>
-References: <000000000000cfed90059fcfdccb@google.com>
+        Mon, 9 Mar 2020 13:28:04 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53580 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgCIR2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 13:28:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=M72E2o99IqXg1pKNMHqXaeZhwNtYb1p0j/z4ztyLjpQ=; b=r8XGzBVZHLiIiTD6e/9vHi6C0E
+        JoosDRtVY+1L6ClMron84A8N3lezwjsnzE0uF6P8UOzEf6HsU7lKncJLluLCCU5Upq6VXNcBP6lyr
+        IpQADcDR1VN11GXEQSziYD0E+lRLG+Eu5Rg2l3wfjbb5BgvYYOaXAD9+4Zf9cXAHOrl4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jBMC8-0003or-14; Mon, 09 Mar 2020 18:28:00 +0100
+Date:   Mon, 9 Mar 2020 18:28:00 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>
+Subject: Re: [PATCH v2 2/2] net: phy: tja11xx: add delayed registration of
+ TJA1102 PHY1
+Message-ID: <20200309172800.GB14181@lunn.ch>
+References: <20200309074044.21399-1-o.rempel@pengutronix.de>
+ <20200309074044.21399-3-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000cfed90059fcfdccb@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200309074044.21399-3-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 01, 2020 at 11:13:15AM -0800, syzbot wrote:
-> Hello,
+On Mon, Mar 09, 2020 at 08:40:44AM +0100, Oleksij Rempel wrote:
+> TJA1102 is a dual PHY package with PHY0 having proper PHYID and PHY1
+> having no ID. On one hand it is possible to for PHY detection by
+> compatible, on other hand we should be able to reset complete chip
+> before PHY1 configured it, and we need to define dependencies for proper
+> power management.
 > 
-> syzbot found the following crash on:
+> We can solve it by defining PHY1 as child of PHY0:
+> 	tja1102_phy0: ethernet-phy@4 {
+> 		reg = <0x4>;
 > 
-> HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16a8fa81e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-> dashboard link: https://syzkaller.appspot.com/bug?extid=06b50ee4a9bd73e8b89f
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e804f9e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d6fd29e00000
+> 		interrupts-extended = <&gpio5 8 IRQ_TYPE_LEVEL_LOW>;
+> 
+> 		reset-gpios = <&gpio5 9 GPIO_ACTIVE_LOW>;
+> 		reset-assert-us = <20>;
+> 		reset-deassert-us = <2000>;
+> 
+> 		tja1102_phy1: ethernet-phy@5 {
+> 			reg = <0x5>;
+> 
+> 			interrupts-extended = <&gpio5 8 IRQ_TYPE_LEVEL_LOW>;
+> 		};
+> 	};
+> 
+> The PHY1 should be a subnode of PHY0 and registered only after PHY0 was
+> completely reset and initialized.
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
+Hi Oleksij
+
+Please add a binding document for this.
+
+> +static void tja1102_p1_register(struct work_struct *work)
+> +{
+> +	struct tja11xx_priv *priv = container_of(work, struct tja11xx_priv,
+> +						 phy_register_work);
+> +
+> +	struct phy_device *phydev_phy0 = priv->phydev;
+> +        struct mii_bus *bus = phydev_phy0->mdio.bus;
+> +	struct device *dev = &phydev_phy0->mdio.dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct device_node *child;
+> +	int ret;
+> +
+> +	for_each_available_child_of_node(np, child) {
+> +		struct phy_device *phy;
+> +		int addr;
+> +
+> +		addr = of_mdio_parse_addr(dev, child);
+> +		if (addr < 0) {
+> +			dev_err(dev, "Can't parse addr\n");
+> +			continue;
+> +		}
+
+It would also be good to check that addr is one more than the parent
+device. That seems to be a silicon constraint.
+
+> +
+> +		/* skip already registered PHYs */
+> +		if (mdiobus_is_registered_device(bus, addr)) {
+> +			dev_err(dev, "device is already registred \n");
+> +			continue;
+> +		}
+> +
+> +		phy = phy_device_create(bus, addr, PHY_ID_TJA1102,
+> +						false, NULL);
+> +		if (IS_ERR(phy)) {
+> +			dev_err(dev, "Can't register Port : %i\n", addr);
+
+You are not registering at this step, just allocating.
+
+> +			continue;
+> +		}
+> +
+> +		ret = of_irq_get(child, 0);
+> +		/* can we be deferred here? */
+
+Yes.
+
+commit 66bdede495c71da9c5ce18542976fae53642880b
+Author: Geert Uytterhoeven <geert+renesas@glider.be>
+Date:   Wed Oct 18 13:54:03 2017 +0200
+
+    of_mdio: Fix broken PHY IRQ in case of probe deferral
+    
+    If an Ethernet PHY is initialized before the interrupt controller it is
+    connected to, a message like the following is printed:
+    
+        irq: no irq domain found for /interrupt-controller@e61c0000 !
+
+
+> +		if (ret > 0) {
+> +			phy->irq = ret;
+> +			bus->irq[addr] = ret;
+> +		} else {
+> +			phy->irq = bus->irq[addr];
+> +		}
+> +
+> +		/* overwrite parent phy_device_create() set parent to the
+> +		 * mii_bus->dev
+> +		 */
+> +		phy->mdio.dev.parent = dev;
+> +
+> +		/* Associate the OF node with the device structure so it
+> +		 * can be looked up later */
+> +		of_node_get(child);
+> +		phy->mdio.dev.of_node = child;
+> +		phy->mdio.dev.fwnode = of_fwnode_handle(child);
+> +
+> +		/* All data is now stored in the phy struct;
+> +		 * register it */
+> +		ret = phy_device_register(phy);
+> +		if (ret) {
+> +			phy_device_free(phy);
+> +			of_node_put(child);
+> +		}
+> +	}
+> +}
+
+This is a lot of of_mdiobus_register_phy(). I think it would be better
+to refactor this code a bit, maybe make a helper out of
+of_mdiobus_register_phy() for all the shared code.
+
+	  Andrew
