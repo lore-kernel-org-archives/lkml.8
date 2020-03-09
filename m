@@ -2,274 +2,146 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DD8C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601A3C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744C22465A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583782583;
-	bh=Q/Y8XhuVS8zV0t8K+w7GOL7XmCYXcjEqC5LXm81Ug0I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hpdbbA5PjmusoEJ7F/T6Sk2pB/90SHcqMMIuiOdFi+12KjcnD4NvNPH57Bs7eK7Le
-	 aTxQ82RjsZH+T/7Lh1w7mXfxk7faI6WNuVROYwfo4aLPyFN1rR7EgfwEdLqTxkpgAZ
-	 4iv9SDsfZPG+A90q/RqEgPYL7ULI/HMZBEoLYRLQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2E30220727
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:37:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O4ebsCY+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgCITgW (ORCPT
+        id S1726621AbgCIThC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:36:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgCITgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:36:21 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45EAF2465A;
-        Mon,  9 Mar 2020 19:36:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583782580;
-        bh=Q/Y8XhuVS8zV0t8K+w7GOL7XmCYXcjEqC5LXm81Ug0I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wA10nR8ux8Vp3EKnyUgW6pGIWE22tSfpPpMB6XIIaGnSn6bro1BIr8WBipP5NmJSs
-         IZK3OlycwPDU7+ecw1VROEbWe61AfYtEdiecWm6r2hY8v0Dzuh0FBW3BgnqK53QGRM
-         YYahJYXTRIylzGAqDJy1vTAnxN3L7rwFk/5imxKM=
-Date:   Mon, 9 Mar 2020 12:36:18 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 5/9] net: ethernet: ti: introduce
- am65x/j721e gigabit eth subsystem driver
-Message-ID: <20200309123618.5e9bfd30@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <76009b01-2f02-41e8-aea2-16dd1cbddd93@ti.com>
-References: <20200306234734.15014-1-grygorii.strashko@ti.com>
-        <20200306234734.15014-6-grygorii.strashko@ti.com>
-        <20200306172027.18d88fb0@kicinski-fedora-PC1C0HJN>
-        <76009b01-2f02-41e8-aea2-16dd1cbddd93@ti.com>
+        Mon, 9 Mar 2020 15:37:02 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35359 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbgCIThB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:37:01 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u68so4577384pfb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 12:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rITjmflNY+bq50oaknXGIP+wYS1ykHN9pumCvBYNG4g=;
+        b=O4ebsCY+7YUPuxBh2Atk8v7bx3ueAt2d+7HKZyAJCvWiXWfgJWGtKs5KWerDRnzNry
+         +fdChmcSEb+N0WcaPi8F41uvPNsHiH0uTaiV8I0dNZwo8qKaCBNC2hPBwXUGqd7DvSHS
+         dEyvRiPKT7czcOnqu/CN/Wx9ctdn/ttvP8wSGwRk540gD4270ktraUZ7NgT2oSpsWLDS
+         GcQSv0rvX7jmq2s269TwVlCyuxpcbMeZ9NoPeHIt/CpZDJOkXebTj/LN0jMj9nihRU7A
+         cnjEbKmn1OUsJ4I9T8bTp/hr8ovWonGGHFGMzB8NwxwQOxS9EahykA2shaF21e2ZEJrC
+         KIVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rITjmflNY+bq50oaknXGIP+wYS1ykHN9pumCvBYNG4g=;
+        b=n7wwWMwmMfvTEAaPi2GnYnYASQNX0Oo/bg5m5ySCLRVFoOlLHpt2Frb2XC2qJjUy1k
+         XcBND0w+P2UXK73EdS24wSZnaANoFyL1LBZGkJHV3EDOxUmBi3KVVjEC2iAQwKsde54H
+         BjBjsE/kJPujvhPkTc1tcr/etGQJC4exmfdr5sUTkh30TzfE9nVGQe2r2PkimGD6JF7Y
+         EYXYqFBQYi8CE6N7fMOYWLWJ3gtQ9Cr97bNtehEnxlVIHqrv+Ef/gVQmKvgr831O8lza
+         f4M/mk2WXv3izOvLMiu5zBZcMooADbsbVfNBgR+Oie24WG6+n1zE+0HPzQnA13974o1c
+         MzKA==
+X-Gm-Message-State: ANhLgQ0HIsTmbBS+RT31xuRKSv4apgSuD5hof60H5J9UHVuX5jiMMAiK
+        63kkjAx9vcbl1p6TvhfNnRrn/GMbCtAyp0COMkG20Q==
+X-Google-Smtp-Source: ADFU+vvWy2Q4moyksCTcMsym0aCPmtdYAZ1mOx2+sL1mCELnyal5EoixDESIO8hyXX6y5vMzqcirCbvjbmNznpfKvjQ=
+X-Received: by 2002:a62:37c7:: with SMTP id e190mr18266676pfa.165.1583782619765;
+ Mon, 09 Mar 2020 12:36:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
+ <20200220162114.138f976ae16a5e58e13a51ae@linux-foundation.org>
+In-Reply-To: <20200220162114.138f976ae16a5e58e13a51ae@linux-foundation.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 9 Mar 2020 12:36:47 -0700
+Message-ID: <CAKwvOdkzc3AtpkRcZU06yvAEzp_bjw55HkpGui6RsAcy=FhnJw@mail.gmail.com>
+Subject: Re: [PATCH] cvt_fallthrough: A tool to convert /* fallthrough */
+ comments to fallthrough;
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Joe Perches <joe@perches.com>, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 7 Mar 2020 07:19:17 +0200 Grygorii Strashko wrote:
-> Hi Jakub,
-> 
-> Thank you for your review.
-> 
-> On 07/03/2020 03:20, Jakub Kicinski wrote:
-> >> +static void am65_cpsw_get_drvinfo(struct net_device *ndev,
-> >> +				  struct ethtool_drvinfo *info)
-> >> +{
-> >> +	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
-> >> +
-> >> +	strlcpy(info->driver, dev_driver_string(common->dev),
-> >> +		sizeof(info->driver));
-> >> +	strlcpy(info->version, AM65_CPSW_DRV_VER, sizeof(info->version));  
-> > 
-> > Please remove the driver version, use of driver versions is being deprecated upstream.  
-> 
-> Hm. I can remove it np. But how do I or anybody else can know that it's deprecated
-> 
->   * @get_drvinfo: Report driver/device information.  Should only set the
->   *	@driver, @version, @fw_version and @bus_info fields.  If not
->   *	implemented, the @driver and @bus_info fields will be filled in
->   *	according to the netdev's parent device.
-> 
->   * struct ethtool_drvinfo - general driver and device information
-> ..
->   * @version: Driver version string; may be an empty string
-> 
-> It seems not marked as deprecated.
-
-Thanks, it's _being_ deprecated, by which I mean we are slowly removing
-the use, and will mark it as deprecated afterwards. I take your point
-that we should have started with marking..
-
-> >> +	psdata = cppi5_hdesc_get_psdata(desc_rx);
-> >> +	csum_info = psdata[2];
-> >> +	dev_dbg(dev, "%s rx csum_info:%#x\n", __func__, csum_info);
-> >> +
-> >> +	dma_unmap_single(dev, buf_dma, buf_dma_len, DMA_FROM_DEVICE);
-> >> +
-> >> +	k3_udma_desc_pool_free(rx_chn->desc_pool, desc_rx);
-> >> +
-> >> +	if (unlikely(!netif_running(skb->dev))) {  
-> > 
-> > This is strange, does am65_cpsw_nuss_ndo_slave_stop() not stop RX?  
-> 
-> Net core will set __LINK_STATE_START = 0 before calling .ndo_stop() and there could some time gap
-> between clearing __LINK_STATE_START and actually disabling RX.
-> if NAPI is in progress it will just allow to complete current NAPI cycle by discarding unwanted packets
-> and without statistic update.
-
-That's fine, let the core discard those packets if it wants to.
-Disabling the interface while the traffic is flowing is a rare
-occurrence, it's a waste of cycles to check for every packet.
-
-> >> +		dev_kfree_skb_any(skb);
-> >> +		return 0;
-> >> +	}
-> >> +
-> >> +	new_skb = netdev_alloc_skb_ip_align(ndev, AM65_CPSW_MAX_PACKET_SIZE);
-> >> +	if (new_skb) {
-> >> +		skb_put(skb, pkt_len);
-> >> +		skb->protocol = eth_type_trans(skb, ndev);
-> >> +		am65_cpsw_nuss_rx_csum(skb, csum_info);
-> >> +		napi_gro_receive(&common->napi_rx, skb);
-> >> +
-> >> +		ndev_priv = netdev_priv(ndev);
-> >> +		stats = this_cpu_ptr(ndev_priv->stats);
-> >> +
-> >> +		u64_stats_update_begin(&stats->syncp);
-> >> +		stats->rx_packets++;
-> >> +		stats->rx_bytes += pkt_len;
-> >> +		u64_stats_update_end(&stats->syncp);
-> >> +		kmemleak_not_leak(new_skb);
-> >> +	} else {
-> >> +		ndev->stats.rx_dropped++;
-> >> +		new_skb = skb;
-> >> +	}  
-> >   
-> >> +static int am65_cpsw_nuss_tx_poll(struct napi_struct *napi_tx, int budget)
-> >> +{
-> >> +	struct am65_cpsw_tx_chn *tx_chn = am65_cpsw_napi_to_tx_chn(napi_tx);
-> >> +	int num_tx;
-> >> +
-> >> +	num_tx = am65_cpsw_nuss_tx_compl_packets(tx_chn->common, tx_chn->id,
-> >> +						 budget);
-> >> +	if (num_tx < budget) {  
-> > 
-> > The budget is for RX, you can just complete all TX on a NAPI poll.  
-> 
-> Then TX will block RX. Right? this is soft IRQs which are executed one by one.
-
-If anything completing all TX frames makes it more likely RX will have
-another memory to allocate from. AFAIK live lock by TX completions is
-unheard of.
-> >> +	tx_chn = &common->tx_chns[q_idx];
-> >> +	netif_txq = netdev_get_tx_queue(ndev, q_idx);
-> >> +
-> >> +	/* Map the linear buffer */
-> >> +	buf_dma = dma_map_single(dev, skb->data, pkt_len,
-> >> +				 DMA_TO_DEVICE);
-> >> +	if (unlikely(dma_mapping_error(dev, buf_dma))) {
-> >> +		dev_err(dev, "Failed to map tx skb buffer\n");  
-> > 
-> > You probably don't want to print errors when memory gets depleted.
-> > Counter is enough  
-> 
-> Could you please help me understand what is the relation between "memory depletion"
-> and dma_mapping_error()?
-
-I don't know your platform, so the comment may not be accurate, but
-usually DMA mappings fail if the device has some memory addressing
-constraints, and all memory which can satisfy those is used. Or the
-memory situation is extremely dire and IOMMU driver can't allocate
-meta data.
-
-> >> +		ret = -EINVAL;  
-> > 
-> > EINVAL is not a valid netdev_tx_t..  
-> 
-> Considering dev_xmit_complete() - this part was always "black magic" to me :(
-> Will fix.
-> 
-> >> +		ndev->stats.tx_errors++;
-> >> +		goto drop_stop_q;  
-> > 
-> > Why stop queue on memory mapping error? What will re-enable it?  
-> 
-> it will not. I'm considering it as critical - no recovery.
-
-Oh, I see. If you're sure this can never happen (tm) on your platfrom
-I'd throw in a WARN_ON_ONCE() in this path so users know what's going
-on. That said it doesn't seem too hard to recover from, so normal error
-handling would be best.
-
-> >> +	}
-> >> +
-> >> +	first_desc = k3_udma_desc_pool_alloc(tx_chn->desc_pool);
-> >> +	if (!first_desc) {
-> >> +		dev_dbg(dev, "Failed to allocate descriptor\n");  
-> > 
-> > ret not set  
-> 
-> It will return NETDEV_TX_BUSY in this  case - below.
+On Thu, Feb 20, 2020 at 4:21 PM Andrew Morton <akpm@linux-foundation.org> wrote:
 >
-> >> +		dma_unmap_single(dev, buf_dma, pkt_len, DMA_TO_DEVICE);
-> >> +		goto drop_stop_q_busy;
-> >> +	}  
+> On Thu, 20 Feb 2020 12:30:21 -0800 Joe Perches <joe@perches.com> wrote:
+>
+> > Convert /* fallthrough */ style comments to the pseudo-keyword fallthrough
+> > to allow clang 10 and higher to work at finding missing fallthroughs too.
+> >
+> > Requires a git repository and overwrites the input files.
+> >
+> > Typical command use:
+> >     ./scripts/cvt_fallthrough.pl <path|file>
+> >
+> > i.e.:
+> >
+> >    $ ./scripts/cvt_fallthrough.pl block
+> >      converts all files in block and its subdirectories
+> >    $ ./scripts/cvt_fallthrough.pl drivers/net/wireless/zydas/zd1201.c
+> >      converts a single file
+> >
+> > A fallthrough comment with additional comments is converted akin to:
+> >
+> > -             /* fall through - maybe userspace knows this conn_id. */
+> > +             fallthrough;    /* maybe userspace knows this conn_id */
+> >
+> > A fallthrough comment or fallthrough; between successive case statements
+> > is deleted.
+> >
+> > e.g.:
+> >
+> >     case FOO:
+> >       /* fallthrough */ (or fallthrough;)
+> >     case BAR:
+> >
+> > is converted to:
+> >
+> >     case FOO:
+> >     case BAR:
+> >
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> > ---
+> >  scripts/cvt_fallthrough.pl | 215 +++++++++++++++++++++++++++++++++++++
+>
+> Do we need this in the tree long-term?  Or is it a matters of "hey
+> Linus, please run this" then something like add a checkpatch rule to
+> catch future slipups?
 
-> >> +		}
-> >> +	}
-> >> +
-> >> +err:
-> >> +	return ret;
-> >> +}  
-> >   
-> >> +	/* register devres action here, so dev will be disabled
-> >> +	 * at right moment. The dev will be enabled in .remove() callback
-> >> +	 * unconditionally.
-> >> +	 */
-> >> +	ret = devm_add_action_or_reset(dev, am65_cpsw_pm_runtime_free, dev);
-> >> +	if (ret) {
-> >> +		dev_err(dev, "failed to add pm put reset action %d", ret);
-> >> +		return ret;
-> >> +	}  
-> > 
-> > Could you explain why you need this? Why can't remove disable PM?
-> > 
-> > In general looks to me like this driver abuses devm_ infra in ways
-> > which make it more complex than it needs to be :(  
-> 
-> Sry, can't agree here. This allows me to keep release sequence in sane way and get
-> rid of mostly all goto for fail cases (which are constant source of errors for complex
-> initialization sequences) by using standard framework.
+Just for some added context, please see
+https://reviews.llvm.org/D73852, where support for parsing some forms
+of fallthrough statements was added to Clang in a broken state by a
+contributor, but then ripped out by the code owner (of the clang front
+end to LLVM, and also happens to be the C++ ISO spec editor).  He
+provides further clarification
+https://bugs.llvm.org/show_bug.cgi?id=43465#c37.
 
-As a reviewer I can tell you with absolute certainty that using devm
-anywhere but in the probe function makes the driver a lot harder to
-review.
+I'm inclined to agree with him; to implement this, we need to keep
+around comments for semantic analyses, a later phase of compilation
+than preprocessing.  It feels like a layering violation to either not
+discard comments as soon as possible, or emit diagnostics from the
+preprocessor.  And as Joe's data shows, there's the classic issue
+faced when using regexes to solve a problem; suddenly you now have two
+problems.
+https://xkcd.com/1171/
 
-IMHO the API to remove registered callbacks should be avoided like 
-the plague.
+I would like to see this patch landed, though I am curious as toward's
+Andrew's question ('Or is it a matters of "hey Linus, please run
+this"') of what's the imagined workflow here, since it seems like the
+script needs to be run per file. I suppose you could still do that
+treewide, but is that the intention, or is it to do so on a per
+subsystem level?
 
-> Regarding PM runtime
->   -  many Linux core framework provide devm_ APIs this and other
-> drivers are happy to use them.
->   - but, there is the problem: DD release sequence is
-> 
-> 	drv->remove(dev);
-> 
-> 	devres_release_all(dev);
-> 
-> and there is no devm_ API for PM runtime. So, if some initialization step is done with devm_ API and
-> It depends on device to be active - no way to solve it in .remove() callback easily.
-> For example, devm_of_platform_populate().
-> 
-> With above code I ensure that:
-> 
-> drv->remove(dev);
->   |- pm_runtime_get()
-> 
-> devres_release_all(dev);
->   |- devm_of_platform_populate_release()
->   |- pm_runtime_put()
->   |- pm_runtime_disable()
 
-Add devm_pm_* helpers for PM then?  That'd the preferred solution
-upstream.
+
+--
+Thanks,
+~Nick Desaulniers
