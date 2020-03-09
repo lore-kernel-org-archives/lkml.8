@@ -2,131 +2,161 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1247C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDB4C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75EEA20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DC824671
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZKT+L6CE"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="ZRaiCHGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgCIUP7 (ORCPT
+        id S1726461AbgCIUQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:15:59 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.28]:33129 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725992AbgCIUP6 (ORCPT
+        Mon, 9 Mar 2020 16:16:18 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53216 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgCIUQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:15:58 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 92343EB2E
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 15:15:57 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BOofjZSOdAGTXBOofj1Dcl; Mon, 09 Mar 2020 15:15:57 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=OFpxczpL0H3aEgaNATlcxEMIIo0HVwgN3oSVFlbxZBI=; b=ZKT+L6CED+NjpnzpUqDXl5oPHQ
-        7YMU7lCzhF5runUpXT3E/p0B9v0oQxYHcXfJ0Br0P78crQti/wvqbVAcL98uzQRyKp6UL85v20xmm
-        Ch0hqqszcYf0FGI2Obk8+8qYCZFnMmvGu8N+TlVIKunpa09rGiS6JQEIVXY7Iq8uXNYOMQTllovwx
-        L35FyWVvnY2CthbDgeqkQtwz6sWjNE4pCSLBWqr++3X8gWMjwpfsKq6Hy3PHcHB3p4PRprYPvXvI2
-        tuYGyK0wI71DmbcXZhvtnvbEDfTclMrEnJTaG/cWtDg7vgjnC6g59719Nm9kUHB6VidY0sJsHTCzc
-        7mKVfe+A==;
-Received: from [201.162.168.201] (port=12179 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBOod-000wWi-Jr; Mon, 09 Mar 2020 15:15:56 -0500
-Date:   Mon, 9 Mar 2020 15:19:07 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] ocfs2: cluster: Replace zero-length array with
- flexible-array member
-Message-ID: <20200309201907.GA8005@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.168.201
-X-Source-L: No
-X-Exim-ID: 1jBOod-000wWi-Jr
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.168.201]:12179
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Mon, 9 Mar 2020 16:16:18 -0400
+Received: by mail-pj1-f65.google.com with SMTP id f15so373414pjq.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 13:16:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=hmz7wPe81dzHCyk8vtSMtwBBBBwZYq3jRplov8Ww+C4=;
+        b=ZRaiCHGEl38L7KRBnErstw4bimBDz87AHqw51Xkkbqe8mwiwaum46PZHXbMEgOOA0j
+         Mwyf6ObvRwr7G2hs8Uj+hpnHhTmm/J8upQOk3D/fFQm05iw67GgRr+tyo+BLdhHy5nB5
+         Lwwt/y/AF+8OL42TzE087xDA1gbjLJ4boZbPZTHMsE3SeiOU9i8j90C6EyxoOBaxPp5A
+         wprxkqzTwjQRhbgX5n/yY6UyfpmWQRavyv88zmVrNjeeHEmd2qDUM+SZ7oWZZscU3Kii
+         PPT1iRwszjNEqvOJzEFaD43kNCwMl9myIn1ub/f1VW1KDm9Dn4q/kySbYkWX0GbNjPwC
+         7XmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=hmz7wPe81dzHCyk8vtSMtwBBBBwZYq3jRplov8Ww+C4=;
+        b=sMJDI/aBNYjKulX7bGgjEe6l3kTWrspJ5OJSsujS1aKGSINLk9SZ72cR/JKlFxDMNG
+         OjcpmeAYYAj/j0viR4pOZfwTUPodKLJJwnI8nv3S/hSFGPr4XN2wsvyYOGSlhC0lfUy1
+         nYscSyX8u7ekL7IjiwAI0OA/5kHhLtsD+ahhc8ED8ZcU/pamG578YAm/3Io+FS4MS0EC
+         QQEu2uzSeo0/LXkzvyk+l1Fi7GdhCtsrfgOlny3oneH2eaQr5Whl8DN70iGqhXTPtFnk
+         JydU7vgE4WADki9nvTYeJd9QE98JwzI49UyvMiBsg4BxnCoWVxL+r98cAwsQvsFLlxdH
+         6cCA==
+X-Gm-Message-State: ANhLgQ0tObB/iFwqtqAugD4GiVqhit9Qn3VQAcyWLDZj0uw+2m7VAH9k
+        LlP/Yugc/4qIpx0doac3bSkExA==
+X-Google-Smtp-Source: ADFU+vufTMP65N8WnOzHoWZtLu1mlwMdUeuo8lDWUX7ChArVxhlmQwIZxREHkmUUUFy0pcgRqvHV6A==
+X-Received: by 2002:a17:902:7607:: with SMTP id k7mr17287063pll.175.1583784976613;
+        Mon, 09 Mar 2020 13:16:16 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:61f8:fe1:ddbe:5c19? ([2601:646:c200:1ef2:61f8:fe1:ddbe:5c19])
+        by smtp.gmail.com with ESMTPSA id h2sm44306210pgv.40.2020.03.09.13.16.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Mar 2020 13:16:15 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
+Date:   Mon, 9 Mar 2020 13:16:14 -0700
+Message-Id: <AE81FEF5-ECC5-46AA-804D-9D64E656D16E@amacapital.net>
+References: <CAMe9rOoRTVUzNC88Ho2XTTNJCymrd3L=XdB9xFcgxPVwAZ0FWA@mail.gmail.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+In-Reply-To: <CAMe9rOoRTVUzNC88Ho2XTTNJCymrd3L=XdB9xFcgxPVwAZ0FWA@mail.gmail.com>
+To:     "H.J. Lu" <hjl.tools@gmail.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+> On Mar 9, 2020, at 12:50 PM, H.J. Lu <hjl.tools@gmail.com> wrote:
+>=20
+> =EF=BB=BFOn Mon, Mar 9, 2020 at 12:35 PM Dave Hansen <dave.hansen@intel.co=
+m> wrote:
+>>=20
+>>> On 3/9/20 12:27 PM, Yu-cheng Yu wrote:
+>>> On Mon, 2020-03-09 at 10:21 -0700, Dave Hansen wrote:
+>>>> On 3/9/20 10:00 AM, Yu-cheng Yu wrote:
+>>>>> On Wed, 2020-02-26 at 09:57 -0800, Dave Hansen wrote>>>>> +Note:
+>>>>>>> +  There is no CET-enabling arch_prctl function.  By design, CET is
+>>>>>>> +  enabled automatically if the binary and the system can support it=
+.
+>>>>>>=20
+>>>>>> This is kinda interesting.  It means that a JIT couldn't choose to
+>>>>>> protect the code it generates and have different rules from itself?
+>>>>>=20
+>>>>> JIT needs to be updated for CET first.  Once that is done, it runs wit=
+h CET
+>>>>> enabled.  It can use the NOTRACK prefix, for example.
+>>>>=20
+>>>> Am I missing something?
+>>>>=20
+>>>> What's the direct connection between shadow stacks and Indirect Branch
+>>>> Tracking other than Intel marketing umbrellas?
+>>>=20
+>>> What I meant is that JIT code needs to be updated first; if it skips RET=
+s,
+>>> it needs to unwind the stack, and if it does indirect JMPs somewhere it
+>>> needs to fix up the branch target or use NOTRACK.
+>>=20
+>> I'm totally lost.  I think we have very different models of how a JIT
+>> might generate and run code.
+>>=20
+>> I can totally see a scenario where a JIT goes and generates a bunch of
+>> code, then forks a new thread to go run that code.  The control flow of
+>> the JIT thread itself *NEVER* interacts with the control flow of the
+>> program it writes.  They never share a stack and nothing ever jumps or
+>> rets between the two worlds.
+>>=20
+>> Does anything actually do that?  I've got no idea.  But, I can clearly
+>> see a world where the entirety of Chrome and Firefox and the entire rust
+>> runtime might not be fully recompiled and CET-enabled for a while.  But,
+>> we still want the JIT-generated code to be CET-protected since it has
+>> the most exposed attack surface.
+>>=20
+>> I don't think that's too far-fetched.
+>=20
+> CET support is all or nothing.   You can mix and match, but you will get
+> no CET protection, similar to NX feature.
+>=20
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Can you explain?
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+If a program with the magic ELF CET flags missing can=E2=80=99t make a threa=
+d with IBT and/or SHSTK enabled, then I think we=E2=80=99ve made an error an=
+d should fix it.
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/ocfs2/cluster/tcp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ocfs2/cluster/tcp.h b/fs/ocfs2/cluster/tcp.h
-index de87cbffd175..736338f45c59 100644
---- a/fs/ocfs2/cluster/tcp.h
-+++ b/fs/ocfs2/cluster/tcp.h
-@@ -32,7 +32,7 @@ struct o2net_msg
- 	__be32 status;
- 	__be32 key;
- 	__be32 msg_num;
--	__u8  buf[0];
-+	__u8  buf[];
- };
- 
- typedef int (o2net_msg_handler_func)(struct o2net_msg *msg, u32 len, void *data,
--- 
-2.25.0
-
+> --=20
+> H.J.
