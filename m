@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C70C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB88AC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A321A21739
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CAAC21739
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:00:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dAxOi7yQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fSvjJy/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgCIJAL (ORCPT
+        id S1726523AbgCIJAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:00:11 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31596 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726464AbgCIJAK (ORCPT
+        Mon, 9 Mar 2020 05:00:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51529 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726027AbgCIJAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:00:10 -0400
+        Mon, 9 Mar 2020 05:00:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583744408;
+        s=mimecast20190719; t=1583744448;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=q8Pqq1U3DNOSEmLFKWQ8ORhFiEwVUYYs4KSZXLmofx4=;
-        b=dAxOi7yQvm6fQCxWEagiI7eDLSKp2f3D+yRci5Eppnv63ZEE4OdRopG7LUuCiiUQtxqXI4
-        7eunUSanBHB2LvIeyPeqNGjrBtnkoyB8/1584R+2F0QHTGF3jpiG+sdsaP9KyJRAuOurNW
-        jxeOq2WtKwwpq4cuwi1Pe5SRT0YYIfY=
+        bh=Ol0a10fhXS7pBH4kUfBRUpwmxg7Xm0ZhyzgQDM9wbok=;
+        b=fSvjJy/V50helgmqLpVbEhfQt0apeKQjxWQhdOWjV2ehpvD1d9gcHbqZ6psyQZjN4Yc+A6
+        7xFbvAsg3nnjt3XMaYSo2f0ghbtywtqJVhhW7y8V+7p1QRC4u/+yqIaYGaWHxabQSoTfzi
+        LTM2DBmuXSkYoQBcWeKMB/eSKOG+2bA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-2fOWrhqOMIeQyhBt2LPMpA-1; Mon, 09 Mar 2020 05:00:06 -0400
-X-MC-Unique: 2fOWrhqOMIeQyhBt2LPMpA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-189--AK_XTlCO_ushKVhLG7THA-1; Mon, 09 Mar 2020 05:00:44 -0400
+X-MC-Unique: -AK_XTlCO_ushKVhLG7THA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31105107ACC9;
-        Mon,  9 Mar 2020 09:00:05 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B82B78010E7;
+        Mon,  9 Mar 2020 09:00:42 +0000 (UTC)
 Received: from [10.36.118.32] (unknown [10.36.118.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CFAE819C58;
-        Mon,  9 Mar 2020 08:59:59 +0000 (UTC)
-Subject: Re: [PATCH v3 3/7] mm/sparse.c: introduce a new function
- clear_subsection_map()
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 467B362667;
+        Mon,  9 Mar 2020 09:00:39 +0000 (UTC)
+Subject: Re: [PATCH v3 4/7] mm/sparse.c: only use subsection map in VMEMMAP
+ case
 To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@suse.com,
         richardw.yang@linux.intel.com, dan.j.williams@intel.com,
         osalvador@suse.de, rppt@linux.ibm.com
 References: <20200307084229.28251-1-bhe@redhat.com>
- <20200307084229.28251-4-bhe@redhat.com>
+ <20200307084229.28251-5-bhe@redhat.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -98,104 +98,128 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <d09c9598-4fbf-71c8-151f-f34921ed565b@redhat.com>
-Date:   Mon, 9 Mar 2020 09:59:57 +0100
+Message-ID: <b62c23fe-e137-db65-8818-2b8f5013ef74@redhat.com>
+Date:   Mon, 9 Mar 2020 10:00:37 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200307084229.28251-4-bhe@redhat.com>
+In-Reply-To: <20200307084229.28251-5-bhe@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 07.03.20 09:42, Baoquan He wrote:
-> Factor out the code which clear subsection map of one memory region from
-> section_deactivate() into clear_subsection_map().
+> Currently, to support subsection aligned memory region adding for pmem,
+> subsection map is added to track which subsection is present.
+> 
+> However, config ZONE_DEVICE depends on SPARSEMEM_VMEMMAP. It means
+> subsection map only makes sense when SPARSEMEM_VMEMMAP enabled. For the
+> classic sparse, subsection map is meaningless and confusing.
+> 
+> About the classic sparse which doesn't support subsection hotplug, Dan
+> said it's more because the effort and maintenance burden outweighs the
+> benefit. Besides, the current 64 bit ARCHes all enable
+> SPARSEMEM_VMEMMAP_ENABLE by default.
+> 
+> Combining the above reasons, no need to provide subsection map and the
+> relevant handling for the classic sparse. Handle it with this patch.
 > 
 > Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
->  mm/sparse.c | 31 ++++++++++++++++++++++++-------
->  1 file changed, 24 insertions(+), 7 deletions(-)
+>  include/linux/mmzone.h |  2 ++
+>  mm/sparse.c            | 25 +++++++++++++++++++++++++
+>  2 files changed, 27 insertions(+)
 > 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 42b77d3b68e8..f3f264826423 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -1143,7 +1143,9 @@ static inline unsigned long section_nr_to_pfn(unsigned long sec)
+>  #define SUBSECTION_ALIGN_DOWN(pfn) ((pfn) & PAGE_SUBSECTION_MASK)
+>  
+>  struct mem_section_usage {
+> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
+>  	DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
+> +#endif
+>  	/* See declaration of similar field in struct zone */
+>  	unsigned long pageblock_flags[0];
+>  };
 > diff --git a/mm/sparse.c b/mm/sparse.c
-> index e37c0abcdc89..d9dcd58d5c1d 100644
+> index d9dcd58d5c1d..2142045ab5c5 100644
 > --- a/mm/sparse.c
 > +++ b/mm/sparse.c
-> @@ -726,15 +726,11 @@ static void free_map_bootmem(struct page *memmap)
+> @@ -209,6 +209,7 @@ static inline unsigned long first_present_section_nr(void)
+>  	return next_present_section_nr(-1);
+>  }
+>  
+> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
+>  static void subsection_mask_set(unsigned long *map, unsigned long pfn,
+>  		unsigned long nr_pages)
+>  {
+> @@ -243,6 +244,11 @@ void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+>  		nr_pages -= pfns;
+>  	}
+>  }
+> +#else
+> +void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+> +{
+> +}
+> +#endif
+>  
+>  /* Record a memory area against a node. */
+>  void __init memory_present(int nid, unsigned long start, unsigned long end)
+> @@ -726,6 +732,7 @@ static void free_map_bootmem(struct page *memmap)
 >  }
 >  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
 >  
-> -static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
-> -		struct vmem_altmap *altmap)
-> +static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
+>  static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
 >  {
 >  	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
->  	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
->  	struct mem_section *ms = __pfn_to_section(pfn);
-> -	bool section_is_early = early_section(ms);
-> -	struct page *memmap = NULL;
-> -	bool empty = false;
->  	unsigned long *subsection_map = ms->usage
->  		? &ms->usage->subsection_map[0] : NULL;
->  
-> @@ -745,8 +741,31 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
->  				"section already deactivated (%#lx + %ld)\n",
->  				pfn, nr_pages))
-> +		return -EINVAL;
-> +
-> +	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
-> +
-
-Nit: I'd drop this line.
-
+> @@ -753,6 +760,17 @@ static bool is_subsection_map_empty(struct mem_section *ms)
+>  	return bitmap_empty(&ms->usage->subsection_map[0],
+>  			    SUBSECTIONS_PER_SECTION);
+>  }
+> +#else
+> +static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> +{
 > +	return 0;
 > +}
 > +
 > +static bool is_subsection_map_empty(struct mem_section *ms)
 > +{
-> +	return bitmap_empty(&ms->usage->subsection_map[0],
-> +			    SUBSECTIONS_PER_SECTION);
+> +	return true;
 > +}
-> +
-> +static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
-> +		struct vmem_altmap *altmap)
+> +#endif
+>  
+>  static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  		struct vmem_altmap *altmap)
+> @@ -809,6 +827,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  		ms->section_mem_map = (unsigned long)NULL;
+>  }
+>  
+> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
+>  static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>  {
+>  	struct mem_section *ms = __pfn_to_section(pfn);
+> @@ -830,6 +849,12 @@ static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>  
+>  	return rc;
+>  }
+> +#else
+> +static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
 > +{
-> +	struct mem_section *ms = __pfn_to_section(pfn);
-> +	bool section_is_early = early_section(ms);
-> +	struct page *memmap = NULL;
-> +	bool empty = false;
-
-Nit: No need to initialize empty.
-
-> +
-> +	if (clear_subsection_map(pfn, nr_pages))
->  		return;
+> +	return 0;
+> +}
+> +#endif
 >  
-
-Nit: I'd drop this empty line.
-
-> +	empty = is_subsection_map_empty(ms);
->  	/*
->  	 * There are 3 cases to handle across two configurations
->  	 * (SPARSEMEM_VMEMMAP={y,n}):
-> @@ -764,8 +783,6 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  	 *
->  	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
->  	 */
-> -	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
-> -	empty = bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION);
-
-I do wonder why you moved this up the comment?
-
->  	if (empty) {
->  		unsigned long section_nr = pfn_to_section_nr(pfn);
->  
+>  static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>  		unsigned long nr_pages, struct vmem_altmap *altmap)
 > 
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
