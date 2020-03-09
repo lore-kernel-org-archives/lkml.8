@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE861C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0F1C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86971208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A754208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:52:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dDUWyFjq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GNGEwCDk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbgCIPwk (ORCPT
+        id S1727242AbgCIPwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:52:40 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36939 "EHLO
+        Mon, 9 Mar 2020 11:52:49 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20041 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727224AbgCIPwi (ORCPT
+        by vger.kernel.org with ESMTP id S1727178AbgCIPwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:52:38 -0400
+        Mon, 9 Mar 2020 11:52:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583769157;
+        s=mimecast20190719; t=1583769152;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=gpdJ6Cg1tIsPQIU8l639Qlh3t2/IFpSBkTvWUWG8TI0=;
-        b=dDUWyFjq4MA3tZETP9GPTkN7Oi3RXHahq/Ccz1Y4rc9ushbBA3KAo/SV9/dGGRZ83oe4D3
-        XZtRVKRf0PUYUMPsf4rzIOS4CB/aTHEh7sU/zelIpSHG/IkJQ3dfb1Aebzrvz4n4/2w3aW
-        raDa21RqJut1sEQDXYsfLTk2cO06950=
+        bh=x4pW19833p+fXxfsFrvmy67Ky5HT38eac4OMiKrYje0=;
+        b=GNGEwCDkqyMJTEsy4OasSV6g2ugCYJHbvCBxmesyXBRhruQIjuGx6Q0gOGchq5LXmYZ84u
+        WIHfQJmRXNdzUaXifmd78w8eMyS4e3WSG32xdLufkzbjMAiVZyXOkobGXTwNX/d3m4sU5P
+        d1fW0xeNQRGgApkxQmwTYdXGUcNIKuw=
 Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
  [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-131-U5FZplORPxWqBrA9hfwPFg-1; Mon, 09 Mar 2020 11:52:35 -0400
-X-MC-Unique: U5FZplORPxWqBrA9hfwPFg-1
-Received: by mail-wr1-f70.google.com with SMTP id c6so5365135wrm.18
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:52:35 -0700 (PDT)
+ us-mta-154-sf5GRUvdOMiemnBjk6C13Q-1; Mon, 09 Mar 2020 11:52:31 -0400
+X-MC-Unique: sf5GRUvdOMiemnBjk6C13Q-1
+Received: by mail-wr1-f70.google.com with SMTP id z13so511028wrv.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:52:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gpdJ6Cg1tIsPQIU8l639Qlh3t2/IFpSBkTvWUWG8TI0=;
-        b=AzLsCWKYIqOmUENlGIKF+R6C+8zBkchkQ/ug3AzK9BaDur2ViCRpQlSUOqgAyefx7i
-         C5E1DvBqvVhKhDIC5xvnEc5yz8ioqA9Dff/xhGgIK2MyFKrxYj6p23eI5VhSxDArC7dr
-         giohMRGsq7lEPVHyxlBuyTrS7h08xzWC8KUsJAiQjeXYlP7R0I4A3U50/IWaRKLd5EEz
-         Ldd+O0SYAYZamz9Hjjr96+Z5TXWiBjj7awUN49DwjZBfceZSy1A0gf57ImPW2BBQKgxx
-         vacMBW2SavMvpsxPsTDwX3gg8IYs2nZtlCTfVWA5OKSSwwZEmoTcJn0pRyvwYtqykpg5
-         HwBQ==
-X-Gm-Message-State: ANhLgQ0h5/xSKTEU1aY6WmmLC1LSKNdB2ei798krsE1mQYoJDacExwmZ
-        cYUkuV8UaMoL8kEiGLDy/BaT+B66CUHs31R1BjmtgPfep/uEzzV7Qej9BpQrCocnaauW2yZDBTC
-        jAG7CF2npMq2CcBSBfBwhSGNd
-X-Received: by 2002:a1c:9d41:: with SMTP id g62mr19391301wme.131.1583769154409;
-        Mon, 09 Mar 2020 08:52:34 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vucLw7YOCnn8HRRRJAIb3+rjAedSA1dvQR96Or6tajfe9jl5CymLzC/u8rLXBoNjwCxXzD9vw==
-X-Received: by 2002:a1c:9d41:: with SMTP id g62mr19391282wme.131.1583769154229;
-        Mon, 09 Mar 2020 08:52:34 -0700 (PDT)
+        bh=x4pW19833p+fXxfsFrvmy67Ky5HT38eac4OMiKrYje0=;
+        b=IWoYQaUPjxG6YFW9+mn3lY+wxJDXfh/RdhUm0YWhbWotkX7YPFcgJf5ayDnljX+IhO
+         TAZUjkqIT+kNtjcm2RtNG0CoFjpQKGxMm9+gjgpT+A0UpCgnZeJHGFxR+ATi0FAEOhu3
+         JCAGgLqOur7LCejTAkcav1yL8C/RAVat2uurfN4vCqM2UbHClJmnp9NGlUdbDJo2FPJp
+         vg2+KzKMxt0Mh+d2Xk8R5FEJjfaZEYLmXYsLJIqvW3PALI8DuHyegGSPn0Xkftge67vB
+         oWGu78r2edfoKA+l1XVof4M0UTCBdADE7P/ygCRIx7o6ct90rWKh75skEoCpcYricUJy
+         Oc1w==
+X-Gm-Message-State: ANhLgQ3NO4VLHXLWgxGCrK1kw8fdk5rTy3LjKoU9pAAgnETMeEbKJgnJ
+        QJ39ZfJzgHI23Jcme9/CDIkY7t9b64xRU/PdYK4ZUGgOUzSenMQZ3ApXp11IBXdX1SKIogW9kTq
+        Wp9HQYJ0S17xMN4XsoEvyAzdp
+X-Received: by 2002:adf:ed86:: with SMTP id c6mr18930575wro.53.1583769149845;
+        Mon, 09 Mar 2020 08:52:29 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtNpfvkJjRTfTeKbLF72oykUGIlVbTuKMnR5vx+0KBXL7IxXEBsEWk1uSdTmYa4hf4LFzVGKg==
+X-Received: by 2002:adf:ed86:: with SMTP id c6mr18930552wro.53.1583769149663;
+        Mon, 09 Mar 2020 08:52:29 -0700 (PDT)
 Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id q4sm17294521wro.56.2020.03.09.08.52.32
+        by smtp.gmail.com with ESMTPSA id q4sm17294521wro.56.2020.03.09.08.52.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 08:52:32 -0700 (PDT)
+        Mon, 09 Mar 2020 08:52:28 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Jim Mattson <jmattson@google.com>,
@@ -69,9 +69,9 @@ Cc:     Jim Mattson <jmattson@google.com>,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Liran Alon <liran.alon@oracle.com>,
         Miaohe Lin <linmiaohe@huawei.com>
-Subject: [PATCH 6/6] KVM: selftests: enlightened VMPTRLD with an incorrect GPA
-Date:   Mon,  9 Mar 2020 16:52:16 +0100
-Message-Id: <20200309155216.204752-7-vkuznets@redhat.com>
+Subject: [PATCH 4/6] KVM: selftests: define and use EVMCS_VERSION
+Date:   Mon,  9 Mar 2020 16:52:14 +0100
+Message-Id: <20200309155216.204752-5-vkuznets@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200309155216.204752-1-vkuznets@redhat.com>
 References: <20200309155216.204752-1-vkuznets@redhat.com>
@@ -82,51 +82,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check that guest doesn't hang when an invalid eVMCS GPA is specified.
-Testing that #UD is injected would probably be better but selftests lack
-the infrastructure currently.
+KVM allows to use revision_id from MSR_IA32_VMX_BASIC as eVMCS revision_id
+to workaround a bug in genuine Hyper-V (see the comment in
+nested_vmx_handle_enlightened_vmptrld()), this shouldn't be used by
+default. Switch to using KVM_EVMCS_VERSION(1).
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- tools/testing/selftests/kvm/x86_64/evmcs_test.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/testing/selftests/kvm/include/evmcs.h  | 2 ++
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-index 10e9c158dc96..fed8f933748b 100644
---- a/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-@@ -72,6 +72,10 @@ void guest_code(struct vmx_pages *vmx_pages)
- 		l1_guest_code(vmx_pages);
+diff --git a/tools/testing/selftests/kvm/include/evmcs.h b/tools/testing/selftests/kvm/include/evmcs.h
+index 4912d23844bc..d8f4d6bfe05d 100644
+--- a/tools/testing/selftests/kvm/include/evmcs.h
++++ b/tools/testing/selftests/kvm/include/evmcs.h
+@@ -16,6 +16,8 @@
+ #define u32 uint32_t
+ #define u64 uint64_t
  
- 	GUEST_DONE();
++#define EVMCS_VERSION 1
 +
-+	/* Try enlightened vmptrld with an incorrect GPA */
-+	evmcs_vmptrld(0xdeadbeef, vmx_pages->enlightened_vmcs);
-+	GUEST_ASSERT(vmlaunch());
- }
+ extern bool enable_evmcs;
  
- int main(int argc, char *argv[])
-@@ -120,7 +124,7 @@ int main(int argc, char *argv[])
- 		case UCALL_SYNC:
- 			break;
- 		case UCALL_DONE:
--			goto done;
-+			goto part1_done;
- 		default:
- 			TEST_ASSERT(false, "Unknown ucall 0x%x.", uc.cmd);
- 		}
-@@ -152,6 +156,10 @@ int main(int argc, char *argv[])
- 			    (ulong) regs2.rdi, (ulong) regs2.rsi);
+ struct hv_vp_assist_page {
+diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+index 7aaa99ca4dbc..1efbfa18f184 100644
+--- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
++++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
+@@ -191,7 +191,7 @@ bool load_vmcs(struct vmx_pages *vmx)
+ 		if (evmcs_vmptrld(vmx->enlightened_vmcs_gpa,
+ 				  vmx->enlightened_vmcs))
+ 			return false;
+-		current_evmcs->revision_id = vmcs_revision();
++		current_evmcs->revision_id = EVMCS_VERSION;
  	}
  
--done:
-+part1_done:
-+	_vcpu_run(vm, VCPU_ID);
-+	TEST_ASSERT(run->exit_reason == KVM_EXIT_SHUTDOWN,
-+		    "Unexpected successful VMEnter with invalid eVMCS pointer!");
-+
- 	kvm_vm_free(vm);
- }
+ 	return true;
 -- 
 2.24.1
 
