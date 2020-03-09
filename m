@@ -2,130 +2,151 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C105C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35448C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85B524649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:47:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="WvolgZSK"
+	by mail.kernel.org (Postfix) with ESMTP id 143DE24649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:51:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgCIUrt (ORCPT
+        id S1726521AbgCIUvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:47:49 -0400
-Received: from gateway36.websitewelcome.com ([192.185.186.5]:32179 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726096AbgCIUrt (ORCPT
+        Mon, 9 Mar 2020 16:51:18 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:55926 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgCIUvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:47:49 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 4F5164021A4AA
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 14:39:41 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BOwcjU3OJRP4zBOwcjqWht; Mon, 09 Mar 2020 15:24:10 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YCXQ7OaaKLESdOaDDCU6a1klTVbkOknb68ZAoamQmf0=; b=WvolgZSKdUZWjFcwdheL1u1uWA
-        RwAiT+PW2jhOuQp5b3cgLPqq0sP5yoRtRwoZwerHE5Dx+cRzpXcvttMgbnqlg+6LMGi+J8jSrxnGk
-        CQb9vrA44jwZlB11OFXYCUevHnKesl6XNkIesU/vkxkPLxLJzUyuSZnsd4vF/hZHKZAxwtVy1moVE
-        z4I7bD/eaEDcFLf2ciTvvyzIvj+w22QfQMEDFqUDSDKPPZvv8aHvRyJFPvpdWnowXuyWzfCP+MHO7
-        hIcvQiRk0lwmNtD0TnYoTr16t2Qx3+0roent0V2kLTlJG1FSKEdE4SPKcMGlh554yMmChAemWIZ67
-        X3h99PRg==;
-Received: from [201.162.168.201] (port=17137 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBOwW-0010y3-R5; Mon, 09 Mar 2020 15:24:05 -0500
-Date:   Mon, 9 Mar 2020 15:27:15 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jan Kara <jack@suse.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] udf: udf_sb.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200309202715.GA9428@embeddedor>
+        Mon, 9 Mar 2020 16:51:17 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBPMp-00009J-3W; Mon, 09 Mar 2020 14:51:15 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBPMn-00036L-Ir; Mon, 09 Mar 2020 14:51:14 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <87a74xi4kz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
+        <20200309195909.h2lv5uawce5wgryx@wittgenstein>
+        <877dztz415.fsf@x220.int.ebiederm.org>
+        <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
+Date:   Mon, 09 Mar 2020 15:48:55 -0500
+In-Reply-To: <20200309201729.yk5sd26v4bz4gtou@wittgenstein> (Christian
+        Brauner's message of "Mon, 9 Mar 2020 21:17:29 +0100")
+Message-ID: <87k13txnig.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.168.201
-X-Source-L: No
-X-Exim-ID: 1jBOwW-0010y3-R5
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.168.201]:17137
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 30
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
+X-XM-SPF: eid=1jBPMn-00036L-Ir;;;mid=<87k13txnig.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1++cg/1/LEU7AeNulDU9zu2Fhhs7DPCMnA=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 3/5] exec: Move cleanup of posix timers on exec out of de_thread
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Christian Brauner <christian.brauner@ubuntu.com> writes:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+> On Mon, Mar 09, 2020 at 03:06:46PM -0500, Eric W. Biederman wrote:
+>> Christian Brauner <christian.brauner@ubuntu.com> writes:
+>> 
+>> > On Sun, Mar 08, 2020 at 04:36:55PM -0500, Eric W. Biederman wrote:
+>> >> 
+>> >> These functions have very little to do with de_thread move them out
+>> >> of de_thread an into flush_old_exec proper so it can be more clearly
+>> >> seen what flush_old_exec is doing.
+>> >> 
+>> >> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> >> ---
+>> >>  fs/exec.c | 10 +++++-----
+>> >>  1 file changed, 5 insertions(+), 5 deletions(-)
+>> >> 
+>> >> diff --git a/fs/exec.c b/fs/exec.c
+>> >> index ff74b9a74d34..215d86f77b63 100644
+>> >> --- a/fs/exec.c
+>> >> +++ b/fs/exec.c
+>> >> @@ -1189,11 +1189,6 @@ static int de_thread(struct task_struct *tsk)
+>> >
+>> > While you're cleaning up de_thread() wouldn't it be good to also take
+>> > the opportunity and remove the task argument from de_thread(). It's only
+>> > ever used with current. Could be done in one of your patches or as a
+>> > separate patch.
+>> 
+>> How does that affect the code generation?
+>
+> The same way renaming "tsk" to "me" does.
+>
+>> 
+>> My sense is that computing current once in flush_old_exec is much
+>> better than computing it in each function flush_old_exec calls.
+>> I remember that computing current used to be not expensive but
+>> noticable.
+>> 
+>> For clarity I can see renaming tsk to me.  So that it is clear we are
+>> talking about the current process, and not some arbitrary process.
+>
+> For clarity since de_thread() uses "tsk" giving the impression that any
+> task can be dethreaded while it's only ever used with current. It's just
+> a suggestion since you're doing the rename tsk->me anyway it would fit
+> with the series. You do whatever you want though.
+> (I just remember that the same request was made once to changes I did:
+> Don't pass current as arg when it's the only task passed.)
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+That's fair.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+And I completely agree that we should at least rename tsk to me.
+Just for clarity.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+My apologies if I am a little short.  My little son has been an extra
+handful lately.
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/udf/udf_sb.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/udf/udf_sb.h b/fs/udf/udf_sb.h
-index 3d83be54c474..65280ae009e0 100644
---- a/fs/udf/udf_sb.h
-+++ b/fs/udf/udf_sb.h
-@@ -83,7 +83,7 @@ struct udf_virtual_data {
- struct udf_bitmap {
- 	__u32			s_extPosition;
- 	int			s_nr_groups;
--	struct buffer_head 	*s_block_bitmap[0];
-+	struct buffer_head	*s_block_bitmap[];
- };
- 
- struct udf_part_map {
--- 
-2.25.0
+Eric
 
