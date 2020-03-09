@@ -2,130 +2,136 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E9AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AA9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F41120675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3885B20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgCIBKZ (ORCPT
+        id S1726704AbgCIBRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 21:10:25 -0400
-Received: from mga07.intel.com ([134.134.136.100]:42111 "EHLO mga07.intel.com"
+        Sun, 8 Mar 2020 21:17:06 -0400
+Received: from mga01.intel.com ([192.55.52.88]:17101 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726622AbgCIBKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 21:10:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726346AbgCIBRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 21:17:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2020 18:10:24 -0700
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2020 18:17:05 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,530,1574150400"; 
-   d="scan'208";a="414640640"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by orsmga005.jf.intel.com with ESMTP; 08 Mar 2020 18:10:22 -0700
-Date:   Sun, 8 Mar 2020 21:00:56 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>
-Subject: Re: [PATCH v3 2/7] vfio: introduce vfio_dma_rw to read/write a range
- of IOVAs
-Message-ID: <20200309010055.GA18137@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20200224084350.31574-1-yan.y.zhao@intel.com>
- <20200224084715.31753-1-yan.y.zhao@intel.com>
- <20200306012148.GB1530@joy-OptiPlex-7040>
- <20200306092746.088a01a3@x1.home>
+   d="scan'208";a="235513376"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga008.jf.intel.com with ESMTP; 08 Mar 2020 18:17:02 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Rong Chen <rong.a.chen@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list\:ACPI COMPONENT ARCHITECTURE \(ACPICA\)" 
+        <devel@acpica.org>, Linux PM <linux-pm@vger.kernel.org>,
+        <lkp@lists.01.org>, Andi Kleen <andi.kleen@intel.com>
+Subject: Re: [LKP] Re: [cpufreq] 909c0e9cc1: fwq.fwq.med 210.0% improvement
+References: <20200305013509.GF5972@shao2-debian>
+        <951b0986-bb35-d9a5-1639-0a8cdb3dcd04@intel.com>
+        <cbe4887c-d54a-c4aa-e4bf-981b5fcc291d@intel.com>
+        <CAJZ5v0g2vzYQ04GyrpubLx2+B0O4SDbqoTDCvhnSyaj1j1xswA@mail.gmail.com>
+        <87zhcuyxce.fsf@yhuang-dev.intel.com>
+        <CAJZ5v0g3f1Rf0HFLH+hWkbW6q0_E1RjhX2AeUxa_DHfJRQj7Qw@mail.gmail.com>
+Date:   Mon, 09 Mar 2020 09:17:02 +0800
+In-Reply-To: <CAJZ5v0g3f1Rf0HFLH+hWkbW6q0_E1RjhX2AeUxa_DHfJRQj7Qw@mail.gmail.com>
+        (Rafael J. Wysocki's message of "Fri, 6 Mar 2020 10:54:42 +0100")
+Message-ID: <87imjez5rl.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306092746.088a01a3@x1.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 12:27:46AM +0800, Alex Williamson wrote:
-> On Thu, 5 Mar 2020 20:21:48 -0500
-> Yan Zhao <yan.y.zhao@intel.com> wrote:
-> 
-> > On Mon, Feb 24, 2020 at 04:47:15PM +0800, Zhao, Yan Y wrote:
-> > > vfio_dma_rw will read/write a range of user space memory pointed to by
-> > > IOVA into/from a kernel buffer without enforcing pinning the user space
-> > > memory.
-> > > 
-> > > TODO: mark the IOVAs to user space memory dirty if they are written in
-> > > vfio_dma_rw().
-> > > 
-> > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > > ---
-> > >  drivers/vfio/vfio.c             | 49 +++++++++++++++++++++
-> > >  drivers/vfio/vfio_iommu_type1.c | 77 +++++++++++++++++++++++++++++++++
-> > >  include/linux/vfio.h            |  5 +++
-> > >  3 files changed, 131 insertions(+)
-> > > 
-> > > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> > > index 914bdf4b9d73..902867627cbf 100644
-> > > --- a/drivers/vfio/vfio.c
-> > > +++ b/drivers/vfio/vfio.c
-> > > @@ -1998,6 +1998,55 @@ int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn, int npage)
-> > >  }
-> > >  EXPORT_SYMBOL(vfio_unpin_pages);
-> > >  
-> > > +
-> > > +/*
-> > > + * This interface allows the CPUs to perform some sort of virtual DMA on
-> > > + * behalf of the device.
-> > > + *
-> > > + * CPUs read/write a range of IOVAs pointing to user space memory into/from
-> > > + * a kernel buffer.
-> > > + *
-> > > + * As the read/write of user space memory is conducted via the CPUs and is
-> > > + * not a real device DMA, it is not necessary to pin the user space memory.
-> > > + *
-> > > + * The caller needs to call vfio_group_get_external_user() or
-> > > + * vfio_group_get_external_user_from_dev() prior to calling this interface,
-> > > + * so as to prevent the VFIO group from disposal in the middle of the call.
-> > > + * But it can keep the reference to the VFIO group for several calls into
-> > > + * this interface.
-> > > + * After finishing using of the VFIO group, the caller needs to release the
-> > > + * VFIO group by calling vfio_group_put_external_user().
-> > > + *
-> > > + * @group [in]: vfio group of a device
-> > > + * @iova [in] : base IOVA of a user space buffer
-> > > + * @data [in] : pointer to kernel buffer
-> > > + * @len [in]  : kernel buffer length
-> > > + * @write     : indicate read or write
-> > > + * Return error code on failure or 0 on success.
-> > > + */
-> > > +int vfio_dma_rw(struct vfio_group *group, dma_addr_t iova,
-> > > +		void *data, size_t len, bool write)  
-> > hi Alex
-> > May I rename this interface to vfio_dma_rw_from_group() that takes
-> > VFIO group as arg and add another interface vfio_dma_rw(struct device *dev...) ?
-> > That might be easier for a driver to use the second one if it does not care about
-> > performance much.
-> 
-> Perhaps vfio_group_dma_rw() and vfio_dev_dma_rw()?  I'd be reluctant to
-> add the latter, if a caller doesn't care about performance then they
-> won't mind making a couple calls to get and release the group reference.
-> Thanks,
->
-yes, it makes sense. Then I withdraw this request :)
+"Rafael J. Wysocki" <rafael@kernel.org> writes:
 
-Thanks
-Yan
+> On Fri, Mar 6, 2020 at 4:29 AM Huang, Ying <ying.huang@intel.com> wrote:
+>>
+>> Hi, Rafael,
+>>
+>> "Rafael J. Wysocki" <rafael@kernel.org> writes:
+>>
+>> > On Thu, Mar 5, 2020 at 9:18 AM Rong Chen <rong.a.chen@intel.com> wrote:
+>> >>
+>> >>
+>> >>
+>> >> On 3/5/20 3:50 PM, Rafael J. Wysocki wrote:
+>> >> > On 3/5/2020 2:35 AM, kernel test robot wrote:
+>> >> >> Greeting,
+>> >> >>
+>> >> >> FYI, we noticed a 210.0% improvement of fwq.fwq.med due to commit:
+>> >> >
+>> >> > Well, that sounds impressive. :-)
+>> >> >
+>> >> >
+>> >> >>
+>> >> >> commit: 909c0e9cc11ba39fa5a660583b25c2431cf54deb ("cpufreq:
+>> >> >> intel_pstate: Use passive mode by default without HWP")
+>> >> >> https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git
+>> >> >> intel_pstate-passive
+>> >> >>
+>> >> >> in testcase: fwq
+>> >> >> on test machine: 16 threads Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz
+>> >> >> with 48G memory
+>> >> >> with following parameters:
+>> >> >>
+>> >> >>     nr_task: 100%
+>> >> >>     samples: 100000ss
+>> >> >>     iterations: 18x
+>> >> >>     cpufreq_governor: powersave
+>> >> >
+>> >> > The governor should be schedutil, though, unless it is explicitly set
+>> >> > to powersave in the test environment.
+>> >> >
+>> >> > Is that the case?
+>> >> >
+>> >> >
+>> >>
+>> >> Hi Rafael,
+>> >>
+>> >> Yes, we set to powersave for this test.
+>> >
+>> > I wonder why this is done?  Is there any particular technical reason
+>> > for doing that?
+>>
+>> fwq is a noise benchmark to measure the hardware and software noise
+>> level.  More information could be found in the following document.
+>>
+>> https://asc.llnl.gov/sequoia/benchmarks/FTQ_summary_v1.1.pdf
+>>
+>> In 0day, to measure the noise introduced by power management, we will
+>> run fwq with the performance and powersave governors.  Do you think this
+>> is reasonable?  Or we should use some other governors?
+>
+> I think that the schedutil governor should be tested too if present.
+>
+> Also note that for the intel_pstate driver "powersave" may mean
+> different things depending on the current operation mode of the
+> driver.  If scaling_driver is "intel_pstate", then "powersave" is the
+> driver's built-in algorithm.  If scaling_driver is "intel_cpufreq",
+> though, "powersave" means running at the minimum frequency all the
+> time.
+
+Thanks for your guidance.  We will test schedutil governor in the future
+too.
+
+As for powersave, should we stop testing it?  Or just pay attention to
+the possible issue you pointed out?
+
+Should we add ondemand governor?
+
+Best Regards,
+Huang, Ying
