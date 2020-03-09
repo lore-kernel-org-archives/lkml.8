@@ -2,134 +2,160 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56591C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4909EC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238C82146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:07:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XEMMVrYM"
+	by mail.kernel.org (Postfix) with ESMTP id 267B12146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgCIUHE (ORCPT
+        id S1726545AbgCIUJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:07:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36530 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726384AbgCIUHD (ORCPT
+        Mon, 9 Mar 2020 16:09:08 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:37580 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbgCIUJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:07:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583784422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ftWHEpSAUbk0eoJjmPg+C+QzhYo5sgkwqXSro3PQIsQ=;
-        b=XEMMVrYMaZc+g9NvBN6kVZQXlFP2SPCMPESWlTn2YSGZMLgX0obSMrpCUyzxdTAu31RZ1I
-        fu3cRyyCG4Z5UBqgYbFX4osHOkIWcgh0DrB4WbiuxhVO78LHGwMLUZ7/inSuik/J93Hu8q
-        pDgOUPlXyIuDHA1LKD6mBcfPiyUYlFw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-ikgYpv8ZNqKPibZ96WJ9dA-1; Mon, 09 Mar 2020 16:07:00 -0400
-X-MC-Unique: ikgYpv8ZNqKPibZ96WJ9dA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 131001005509;
-        Mon,  9 Mar 2020 20:06:57 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 730E35D9CA;
-        Mon,  9 Mar 2020 20:06:56 +0000 (UTC)
-Received: from zmail19.collab.prod.int.phx2.redhat.com (zmail19.collab.prod.int.phx2.redhat.com [10.5.83.22])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 53F4486A04;
-        Mon,  9 Mar 2020 20:06:54 +0000 (UTC)
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: base64
-From:   David Hildenbrand <dhildenb@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH RESEND v6 00/16] mm: Page fault enhancements
-Date:   Mon, 9 Mar 2020 16:06:54 -0400 (EDT)
-Message-Id: <FD483CC3-26F1-4CEE-899E-7EB77C4D3277@redhat.com>
-References: <20200309195100.GD4206@xz-x1>
-Cc:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
+        Mon, 9 Mar 2020 16:09:08 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBOi1-0004Kc-Kg; Mon, 09 Mar 2020 14:09:05 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBOi0-0003E4-PF; Mon, 09 Mar 2020 14:09:05 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
         Andrea Arcangeli <aarcange@redhat.com>,
-        Martin Cracauer <cracauer@cons.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Bobby Powers <bobbypowers@gmail.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Mel Gorman <mgorman@suse.de>, Hugh Dickins <hughd@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>
-In-Reply-To: <20200309195100.GD4206@xz-x1>
-To:     Peter Xu <peterx@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Thread-Topic: Page fault enhancements
-Thread-Index: VkIGmTyFztzfGbEHyyEMiVtHfLEZng==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <87v9nlii0b.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87a74xi4kz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
+        <20200309195909.h2lv5uawce5wgryx@wittgenstein>
+Date:   Mon, 09 Mar 2020 15:06:46 -0500
+In-Reply-To: <20200309195909.h2lv5uawce5wgryx@wittgenstein> (Christian
+        Brauner's message of "Mon, 9 Mar 2020 20:59:09 +0100")
+Message-ID: <877dztz415.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1jBOi0-0003E4-PF;;;mid=<877dztz415.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+JmhoWzou28F0cqQMkczpEMh7LfXR8OL4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 3/5] exec: Move cleanup of posix timers on exec out of de_thread
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gQW0gMDkuMDMuMjAyMCB1bSAyMDo1MSBzY2hyaWViIFBldGVyIFh1IDxwZXRlcnhAcmVk
-aGF0LmNvbT46DQo+IA0KPiDvu79PbiBTdW4sIE1hciAwOCwgMjAyMCBhdCAwMToxMjozNFBNICsw
-MTAwLCBEYXZpZCBIaWxkZW5icmFuZCB3cm90ZToNCj4+IFsuLi5dDQo+PiANCj4+PiBZZXMsIElJ
-VUMgdGhlIHJhY2UgY2FuIGhhcHBlbiBsaWtlIHRoaXMgaW4geW91ciBiZWxvdyB0ZXN0Og0KPj4+
-IA0KPj4+ICAgICBtYWluIHRocmVhZCAgICAgICAgICB1ZmZkIHRocmVhZCAgICAgICAgICAgICBk
-aXNnYXJkIHRocmVhZA0KPj4+ICAgICA9PT09PT09PT09PSAgICAgICAgICA9PT09PT09PT09PSAg
-ICAgICAgICAgICA9PT09PT09PT09PT09PQ0KPj4+ICAgICBhY2Nlc3MgcGFnZQ0KPj4+ICAgICAg
-IHVmZmQgcGFnZSBmYXVsdA0KPj4+ICAgICAgICAgd2FpdCBmb3IgcGFnZQ0KPj4+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICBVRkZESU9fWkVST0NPUFkNCj4+PiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBwdXQgYSBwYWdlIFAgdGhlcmUNCj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgTUFEVl9ET05UTkVFRCBvbiBQDQo+Pj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgd2FrZXVwIG1haW4gdGhyZWFkDQo+Pj4gICAgICAgICByZXR1cm4g
-ZnJvbSBmYXVsdA0KPj4+ICAgICAgIHBhZ2Ugc3RpbGwgbWlzc2luZw0KPj4+ICAgICAgIHVmZmQg
-cGFnZSBmYXVsdCBhZ2Fpbg0KPj4+ICAgICAgICh3aXRob3V0IEFMTE9XX1JFVFJZKQ0KPj4+ICAg
-ICAgIC0tPiBTSUdCVVMuDQo+PiANCj4+IEV4YWN0bHkhDQo+PiANCj4+Pj4gQ2FuIHdlIHBsZWFz
-ZSBoYXZlIGEgd2F5IHRvIGlkZW50aWZ5IHRoYXQgdGhpcyAiZmVhdHVyZSIgaXMgYXZhaWxhYmxl
-Pw0KPj4+PiBJJ2QgYXBwcmVjaWF0ZSBhIG5ldyByZWFkLW9ubHkgVUZGRF9GRUFUXyAsIHNvIHdl
-IGNhbiBkZXRlY3QgdGhpcyBmcm9tDQo+Pj4+IHVzZXIgc3BhY2UgZWFzaWx5IGFuZCB1c2UgY29u
-Y3VycmVudCBkaXNjYXJkcyB3aXRob3V0IGNyYXNoaW5nIG91ciBhcHBsaWNhdGlvbnMuDQo+Pj4g
-DQo+Pj4gSSdtIG5vdCBzdXJlIGhvdyBvdGhlcnMgdGhpbmsgYWJvdXQgaXQsIGJ1dCB0byBtZSB0
-aGlzIHN0aWxsIGZlbGxzDQo+Pj4gaW50byB0aGUgYnVja2V0IG9mICJzb2x2aW5nIGFuIGV4aXN0
-aW5nIHByb2JsZW0iIHJhdGhlciB0aGFuIGENCj4+PiBmZWF0dXJlLiAgQWxzbyBub3RlIHRoYXQg
-dGhpcyBzaG91bGQgY2hhbmdlIHRoZSBiZWhhdmlvciBmb3IgdGhlIHBhZ2UNCj4+PiBmYXVsdCBs
-b2dpYyBpbiBnZW5lcmFsLCByYXRoZXIgdGhhbiBhbiB1ZmZkLW9ubHkgY2hhbmdlLiBTbyBJJ20g
-YWxzbw0KPj4+IG5vdCBzdXJlIHdoZXRoZXIgVUZGRF9GRUFUXyogc3VpdGVzIGhlcmUgZXZlbiBp
-ZiB3ZSB3YW50IGl0Lg0KPj4gDQo+PiBTbywgYXJlIHdlIHBsYW5uaW5nIG9uIGJhY2twb3J0aW5n
-IHRoaXMgdG8gc3RhYmxlIGtlcm5lbHM/DQo+IA0KPiBJIGRvbid0IGhhdmUgYSBwbGFuIHNvIGZh
-ci4gIEknbSBzdGlsbCBhdCB0aGUgcGhhc2UgdG8gb25seSB3b3JyeQ0KPiBhYm91dCB3aGV0aGVy
-IGl0IGNhbiBiZSBhdCBsZWFzdCBtZXJnZWQgaW4gbWFzdGVyLi4gOikNCj4gDQo+IEkgd291bGQg
-dGhpbmsgaXQgd29uJ3Qgd29ydGggaXQgdG8gYmFja3BvcnQgdGhpcyB0byBzdGFibGVzIHRob3Vn
-aCwNCj4gY29uc2lkZXJpbmcgdGhhdCBpdCBjb3VsZCBwb3RlbnRpYWxseSBjaGFuZ2UgcXVpdGUg
-YSBiaXQgZm9yIGZhdWx0aW5nDQo+IHByb2NlZHVyZXMsIGFuZCBhZnRlciBhbGwgdGhlIGlzc3Vl
-cyB3ZSdyZSBmaXhpbmcgc2hvdWxkbid0IGJlIGNvbW1vbg0KPiB0byBnZW5lcmFsIHVzZXJzLg0K
-PiANCj4+IA0KPj4gSW1hZ2luZSB1c2luZyB0aGlzIGluIFFFTVUvS1ZNIHRvIGFsbG93IGRpc2Nh
-cmRzIChlLmcuLCBiYWxsb29uDQo+PiBpbmZsYXRpb24pIHdoaWxlIHBvc3Rjb3B5IGlzIGFjdGl2
-ZSAuIFlvdSBjZXJ0YWlubHkgZG9uJ3Qgd2FudCByYW5kb20NCj4+IGd1ZXN0IGNyYXNoZXMuIFNv
-IGVpdGhlciwgd2UgdHJlYXQgdGhpcyBhcyBhIGZpeCAoYW5kIGJhY2twb3J0KSBvciBhcyBhDQo+
-PiBjaGFuZ2UgaW4gYmVoYXZpb3IvZmVhdHVyZS4NCj4gDQo+IEkgdGhpbmsgd2UgZG9uJ3QgbmVl
-ZCB0byB3b3JyeSBvbiB0aGF0IC0gUUVNVSB3aWxsIHByb2hpYml0IGJhbGxvb25pbmcNCj4gZHVy
-aW5nIHBvc3Rjb3B5IHN0YXJ0aW5nIGZyb20gdGhlIGZpcnN0IGRheS4gIEZlZWwgZnJlZSB0byBz
-ZWUgUUVNVQ0KPiBjb21taXQgMzcxZmY1YTNmMDRjZDcgKCJJbmhpYml0IGJhbGxvb25pbmcgZHVy
-aW5nIHBvc3Rjb3B5IikuDQoNCkltYWdpbmUgSSB3YW50IHRvIGNoYW5nZSB0aGF0IG9yIGltYWdp
-bmUgSSBoYXZlIGFub3RoZXIgdXNlciB0aGF0IGhlYXZpbHkgZGVwZW5kcyBvbiBzdWNoIHJhY2Vz
-IHRvIG5ldmVyIGhhcHBlbi4NCg0KSU9XIEkgd2FudCB0byBrbm93IGZvciBzdXJlIGlmIG15IGFw
-cGxpY2F0aW9uIGNhbiBjcmFzaCBvciBub3QuDQoNCkBBbmRyZWEgd2hhdCBhcmUgeW91ciB0aG91
-Z2h0cyBvbiBhIG5ldyBmZWF0dXJlIGZsYWcgdG8gaWRlbnRpZnkgdGhpcyBiZWhhdmlvcj8NCg0K
+Christian Brauner <christian.brauner@ubuntu.com> writes:
 
+> On Sun, Mar 08, 2020 at 04:36:55PM -0500, Eric W. Biederman wrote:
+>> 
+>> These functions have very little to do with de_thread move them out
+>> of de_thread an into flush_old_exec proper so it can be more clearly
+>> seen what flush_old_exec is doing.
+>> 
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>  fs/exec.c | 10 +++++-----
+>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index ff74b9a74d34..215d86f77b63 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1189,11 +1189,6 @@ static int de_thread(struct task_struct *tsk)
+>
+> While you're cleaning up de_thread() wouldn't it be good to also take
+> the opportunity and remove the task argument from de_thread(). It's only
+> ever used with current. Could be done in one of your patches or as a
+> separate patch.
+
+How does that affect the code generation?
+
+My sense is that computing current once in flush_old_exec is much
+better than computing it in each function flush_old_exec calls.
+I remember that computing current used to be not expensive but
+noticable.
+
+For clarity I can see renaming tsk to me.  So that it is clear we are
+talking about the current process, and not some arbitrary process.
+
+And for clarity my goal here is not to clean up de_thread.  Though
+I don't mind that result.  My goal is to get the extra work out of
+de_thread so we can do process tear down cleanups that are safe
+according to the ordinary process rules, before taking a mutex that
+protects exec mucking with all of the state in exec.
+
+Eric
+
+
+> diff --git a/fs/exec.c b/fs/exec.c
+> index db17be51b112..ee108707e4b0 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1061,8 +1061,9 @@ static int exec_mmap(struct mm_struct *mm)
+>   * disturbing other processes.  (Other processes might share the signal
+>   * table via the CLONE_SIGHAND option to clone().)
+>   */
+> -static int de_thread(struct task_struct *tsk)
+> +static int de_thread(void)
+>  {
+> +       struct task_struct *tsk = current;
+>         struct signal_struct *sig = tsk->signal;
+>         struct sighand_struct *oldsighand = tsk->sighand;
+>         spinlock_t *lock = &oldsighand->siglock;
+> @@ -1266,7 +1267,7 @@ int flush_old_exec(struct linux_binprm * bprm)
+>          * Make sure we have a private signal table and that
+>          * we are unassociated from the previous thread group.
+>          */
+> -       retval = de_thread(current);
+> +       retval = de_thread();
+>         if (retval)
+>                 goto out;
