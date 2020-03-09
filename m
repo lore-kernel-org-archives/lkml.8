@@ -2,119 +2,95 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDABC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEEAC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3009D208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D69208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:24:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Z1I5JDhf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbgCIRWn (ORCPT
+        id S1727270AbgCIRYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:22:43 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34115 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbgCIRWn (ORCPT
+        Mon, 9 Mar 2020 13:24:33 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37690 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgCIRYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:22:43 -0400
-Received: from mail-wr1-f71.google.com ([209.85.221.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1jBM6z-0000ke-0a
-        for linux-kernel@vger.kernel.org; Mon, 09 Mar 2020 17:22:41 +0000
-Received: by mail-wr1-f71.google.com with SMTP id n7so5509964wro.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:22:41 -0700 (PDT)
+        Mon, 9 Mar 2020 13:24:33 -0400
+Received: by mail-qt1-f193.google.com with SMTP id l20so5944432qtp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Dks3i5CkPUQ+F21OaKeehSuQxnIMN5i6J4CZW2sJwAg=;
+        b=Z1I5JDhf6JPhDANs9LT2Z75zZ40ZGN96qONEEs10yb0Ydwt4AEpMbjVOaeuaW34y7k
+         GqOkGV45kEzToTEqCGNkwEq1QeOqi4dDDHah5nA8iyUC2ScAqMAxnaqVdHOdMN3hZPxG
+         2Qsf+M/UTcKvSIQpHYPmEus0QOM0y8nEFk8Dlm5gkRlNndfHf4+9j0vmSAS9Lu2A+2XL
+         tvhnWXmeyf/OCf9e6X86IoH8nbboyUD9rOmHnXF+d4NpKsKX2A43AOMnvSj6In7BZ03g
+         a1/4l1wDim/oN+5Wy9N2OFsrPVofgre+pPaJv+6WtYFsn2Qx1tXEdZAX1g0wnAK/lCmd
+         zHwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=RpSrK82GO+XpUM86Hc84ckqih+54BcF5pmkDsAsQd94=;
-        b=tM7EK9CwULG7xZEdqBODzT6JU+ALJp7DCbPpQyQrj60BEJYSWeTCA2JEtSDq9JGgL0
-         e2u7HR9IOZcwQAQFHBsqTpVBMfWAEjFV33OHD/Gbfv8pZeV9fojBUnridhR1XLFc9ILr
-         2QCbdBPjBlz0qgZEOXA6EuAC4KQGGJyOylimrLt1Fj2nGslaXYFFg5jkxSV9D7ep5Mxf
-         vqNovIdeqbH6Y7sGUuHYovZ8sUilfLe58NALdcvllY3/fqBKpy42Rxy8rRBGEg21a1Qo
-         KUvNXBO9hHcBiGjI5Qf6D45GVWl9ar9pTaApbdPEpKw31r3pNljnIrZCaB8jTSJ8lTMG
-         o8xQ==
-X-Gm-Message-State: ANhLgQ1Dg+Qgt+zx3YFUofBWJdCmjmABDf2WaYm3a2EAwcWu+pzGYH63
-        wHCp1q9JZvufNfZFsHFMcCH7H2BNmSZnGbgZiwgn0xPnSM3yS16qwzU9KG+rR59hoCYmiztsZA3
-        ZbHc3CfYf0PFHwdhYj7rqngnMioNKwpuy1dBEe1Y1zg==
-X-Received: by 2002:a05:6000:120e:: with SMTP id e14mr1259387wrx.182.1583774560365;
-        Mon, 09 Mar 2020 10:22:40 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vv8sQL3WWVTi+4BELgM2W/7njbFPyjSiHW1ToTXk7sW2lk01O+Ey4fXnfe0i9+DFCXBS6PtsA==
-X-Received: by 2002:a05:6000:120e:: with SMTP id e14mr1259366wrx.182.1583774560108;
-        Mon, 09 Mar 2020 10:22:40 -0700 (PDT)
-Received: from localhost (host96-127-dynamic.32-79-r.retail.telecomitalia.it. [79.32.127.96])
-        by smtp.gmail.com with ESMTPSA id y189sm286063wmb.26.2020.03.09.10.22.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 10:22:39 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 18:22:38 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Richard Cochran <richardcochran@gmail.com>,
-        Vladis Dronov <vdronov@redhat.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ptp: free ptp clock properly
-Message-ID: <20200309172238.GJ267906@xps-13>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Dks3i5CkPUQ+F21OaKeehSuQxnIMN5i6J4CZW2sJwAg=;
+        b=TR38MsTAc8xT3YJAgm9I9Twzr7zAcPQkbhnwamoYiZLgMI7fl7gyeGyJATrNIm/4Of
+         ES9prtPxetXyDV4JT07Ys9ap/jTPuE9XbMsU6w1jT5fxazPQ3grD6UMr6ErYlW5N+LH5
+         KaNDqx1nMpE50Xc1Qwjf+7EaTFji/B+808z365BXPJ9VpffeTGjrm4tIkBtrED7DhzHP
+         cACyim8/M9MRonEPjLQjWJDYLjaxAeWIgDCLDemUNIkOxFmCadVizmmJdIgsf3dHnnid
+         RFHQZpvfgOy9fnMns498LC/i2JaDWvM+8EC30C92rWx9MtvK59Pr9mJPts4fDYdaT3SC
+         4+NA==
+X-Gm-Message-State: ANhLgQ2rQ0JLq/pKVaeq/sj++eoMeJFaO1mKlgfeuU0Ma7WuaM3VYDKJ
+        1zY4rr3S9FPVfqCmsOxNuuJMYQ==
+X-Google-Smtp-Source: ADFU+vupi9qtS7gHPWD88xYrZVl3D06G7ygMTFq1jcL4wqzVIfcwn3v7Dhs/5Q1X9cbt2cRgCDPPNw==
+X-Received: by 2002:ac8:2bcd:: with SMTP id n13mr15638628qtn.21.1583774672271;
+        Mon, 09 Mar 2020 10:24:32 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id 65sm22838452qtf.95.2020.03.09.10.24.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Mar 2020 10:24:31 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jBM8k-0003l3-Um; Mon, 09 Mar 2020 14:24:30 -0300
+Date:   Mon, 9 Mar 2020 14:24:30 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     syzbot <syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com>
+Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        parav@mellanox.com, syzkaller-bugs@googlegroups.com,
+        willy@infradead.org
+Subject: Re: BUG: corrupted list in _cma_attach_to_dev
+Message-ID: <20200309172430.GV31668@ziepe.ca>
+References: <000000000000cfed90059fcfdccb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <000000000000cfed90059fcfdccb@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a bug in ptp_clock_unregister() where pps_unregister_source()
-can free up resources needed by posix_clock_unregister() to properly
-destroy a related sysfs device.
+On Sun, Mar 01, 2020 at 11:13:15AM -0800, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16a8fa81e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+> dashboard link: https://syzkaller.appspot.com/bug?extid=06b50ee4a9bd73e8b89f
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e804f9e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d6fd29e00000
 
-Fix this by calling pps_unregister_source() in ptp_clock_release().
-
-See also:
-commit 75718584cb3c ("ptp: free ptp device pin descriptors properly").
-
-BugLink: https://bugs.launchpad.net/bugs/1864754
-Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
-Tested-by: Piotr Morgwai Kotarbiński <foss@morgwai.pl>
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
-
-v2: move pps_unregister_source() to ptp_clock_release(), instead of
-    posix_clock_unregister(), that would just introduce a resource leak
-
- drivers/ptp/ptp_clock.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index ac1f2bf9e888..468286ef61ad 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -170,6 +170,9 @@ static void ptp_clock_release(struct device *dev)
- {
- 	struct ptp_clock *ptp = container_of(dev, struct ptp_clock, dev);
- 
-+	/* Release the clock's resources. */
-+	if (ptp->pps_source)
-+		pps_unregister_source(ptp->pps_source);
- 	ptp_cleanup_pin_groups(ptp);
- 	mutex_destroy(&ptp->tsevq_mux);
- 	mutex_destroy(&ptp->pincfg_mux);
-@@ -298,11 +301,6 @@ int ptp_clock_unregister(struct ptp_clock *ptp)
- 		kthread_cancel_delayed_work_sync(&ptp->aux_work);
- 		kthread_destroy_worker(ptp->kworker);
- 	}
--
--	/* Release the clock's resources. */
--	if (ptp->pps_source)
--		pps_unregister_source(ptp->pps_source);
--
- 	posix_clock_unregister(&ptp->clock);
- 
- 	return 0;
--- 
-2.25.0
-
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
