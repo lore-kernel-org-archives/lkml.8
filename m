@@ -2,157 +2,155 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AF7C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856FEC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D8F20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEA020828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:38:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lS9XfaG7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgCIRgs (ORCPT
+        id S1727369AbgCIRiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:36:48 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:60476 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbgCIRgr (ORCPT
+        Mon, 9 Mar 2020 13:38:09 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33649 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgCIRiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:36:47 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBMKZ-00016U-Gy; Mon, 09 Mar 2020 11:36:43 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBMKY-0007sX-Iu; Mon, 09 Mar 2020 11:36:43 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nmjulm.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <202003021531.C77EF10@keescook>
-        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
-        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-        <87pndm5y3l.fsf_-_@x220.int.ebiederm.org>
-        <AM6PR03MB5170FBDA2F0F19ECF2906703E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Mon, 09 Mar 2020 12:34:24 -0500
-In-Reply-To: <AM6PR03MB5170FBDA2F0F19ECF2906703E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        (Bernd Edlinger's message of "Mon, 9 Mar 2020 13:56:54 +0000")
-Message-ID: <87mu8p4elb.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 9 Mar 2020 13:38:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a25so8530610wrd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lrRaa2oLGASoVUcKPYHBNJIYaKUXkZG1vLWKS/FETTM=;
+        b=lS9XfaG7i9K70Uz52uiZGAJLSYBH0BwEbvNfFeQPbZAYCDFVg/xbQB9QBhNNzCmUyu
+         DSQtXZF5lXClDT+BykDCQ2AGOlo462xlHcjCAYxutGzmYVVxvY818q8mgVTL0c3xe9jd
+         nHq2G1WLeBJcFdqMJGKQoqGRS+nlOJRam4fIRajkKbQSsWSgEsQ3fDmFNr1jza1SUgXK
+         0jlAlAvCH3dDmuuOLqZ9nOw144R77rwiOEgB5X9fyhumtQT8mEqQwci9ICaPRF1IcE97
+         j+No9luh0JXOFwjkH4uzLsGXk5GHgIcUbVZUmc9/uVIaPjq31qJzhZmQK0A8hB7wSBuB
+         rz6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lrRaa2oLGASoVUcKPYHBNJIYaKUXkZG1vLWKS/FETTM=;
+        b=VEryOYRBLPy8UxSAX+hZ39oUtyBvdUF28/c2LJ7bbW22/42wCSUYUGShC3w94dtuNH
+         rD+ccO57kg6ysT3TEunjMHuUI8NdUXjG43uLiCg5fuFFtOFP3iu7VsCOT4JR32NcyBR5
+         4YR+8USxogenFBIy7Gt1pbOd99lv2kqm8knHI9f4nkJKl1VFxlnvzuY+aAxtWbfzkAVO
+         WwyIUEB9TUc/qfkCjX0eCF+Ve9NNv81J/tnwbNO9XpbnmYreuyv3wvrOv81jRiNokMzP
+         wRAEB+Qt2jjyBOnejGONabHMabL5iPC8nOgEG+fz2XbRUJYwCG6JH5OIpuoQ3uSThBZQ
+         UdQg==
+X-Gm-Message-State: ANhLgQ1J/zJbdGNczGxxVi52POiNzCrp/eSUwlgDbNWDm/UxLfRq3R07
+        fGLYsgVPeV3yYInL7O3mZ1DPJA==
+X-Google-Smtp-Source: ADFU+vvLfd/MwARBYr7I+uIlvy/rGZiD/jQkUZifoVZVosaPYiFgIKPRqE2d04DkNXkKUpUoZ7WeAQ==
+X-Received: by 2002:a5d:514a:: with SMTP id u10mr2144282wrt.360.1583775485460;
+        Mon, 09 Mar 2020 10:38:05 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id w81sm321838wmg.19.2020.03.09.10.38.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 10:38:04 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     vkoul@kernel.org
+Cc:     pierre-louis.bossart@linux.intel.com, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [RFC PATCH] soundwire: bus: Add flag to mark DPN_BlockCtrl1 as readonly
+Date:   Mon,  9 Mar 2020 17:37:55 +0000
+Message-Id: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jBMKY-0007sX-Iu;;;mid=<87mu8p4elb.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/gNgifOiuTUXAnVHdP8jsGgkYYuPh4Nbk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 1/5] exec: Only compute current once in flush_old_exec
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+According to SoundWire Specification Version 1.2.
+"A Data Port number X (in the range 0-14) which supports only one
+value of WordLength may implement the WordLength field in the
+DPX_BlockCtrl1 Register as Read-Only, returning the fixed value of
+WordLength in response to reads."
 
-> On 3/8/20 10:35 PM, Eric W. Biederman wrote:
->> 
->> Make it clear that current only needs to be computed once in
->> flush_old_exec.  This may have some efficiency improvements and it
->> makes the code easier to change.
->> 
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> ---
->>  fs/exec.c | 9 +++++----
->>  1 file changed, 5 insertions(+), 4 deletions(-)
->> 
->> diff --git a/fs/exec.c b/fs/exec.c
->> index db17be51b112..c3f34791f2f0 100644
->> --- a/fs/exec.c
->> +++ b/fs/exec.c
->> @@ -1260,13 +1260,14 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
->>   */
->>  int flush_old_exec(struct linux_binprm * bprm)
->>  {
->> +	struct task_struct *me = current;
->>  	int retval;
->>  
->>  	/*
->>  	 * Make sure we have a private signal table and that
->>  	 * we are unassociated from the previous thread group.
->>  	 */
->> -	retval = de_thread(current);
->> +	retval = de_thread(me);
->>  	if (retval)
->>  		goto out;
->>  
->> @@ -1294,10 +1295,10 @@ int flush_old_exec(struct linux_binprm * bprm)
->>  	bprm->mm = NULL;
->>  
->>  	set_fs(USER_DS);
->> -	current->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
->> +	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
->>  					PF_NOFREEZE | PF_NO_SETAFFINITY);
->
-> I wonder if this line should be aligned with the previous?
+As WSA881x interfaces in PDM mode making the only field "WordLength"
+in DPX_BlockCtrl1" fixed and read-only. Behaviour of writing to this
+register on WSA881x soundwire slave with Qualcomm Soundwire Controller
+is throwing up an error. Not sure how other controllers deal with
+writing to readonly registers, but this patch provides a way to avoid
+writes to DPN_BlockCtrl1 register by providing a ro_blockctrl1_reg
+flag in struct sdw_port_runtime.
 
-In this case I don't think so.  The style used for second line is indent
-with tabs as much as possible to the right.  I haven't changed that.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
 
-Further mixing a change in indentation style with just a variable rename
-will make the patch confusing to read because two things have to be
-verified at the same time.
+I will send patch for WSA881x to include this change once this patch
+is accepted.
 
-So while I see why you ask I think this bit needs to stay as is.
+ drivers/soundwire/bus.h    |  2 ++
+ drivers/soundwire/stream.c | 17 ++++++++++-------
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
-Eric
-
-
-
+diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
+index 204204a26db8..791e8d14093e 100644
+--- a/drivers/soundwire/bus.h
++++ b/drivers/soundwire/bus.h
+@@ -79,6 +79,7 @@ int sdw_find_col_index(int col);
+  * @num: Port number. For audio streams, valid port number ranges from
+  * [1,14]
+  * @ch_mask: Channel mask
++ * @ro_blockctrl1_reg: Read Only flag for DPN_BlockCtrl1 register
+  * @transport_params: Transport parameters
+  * @port_params: Port parameters
+  * @port_node: List node for Master or Slave port_list
+@@ -89,6 +90,7 @@ int sdw_find_col_index(int col);
+ struct sdw_port_runtime {
+ 	int num;
+ 	int ch_mask;
++	bool ro_blockctrl1_reg;
+ 	struct sdw_transport_params transport_params;
+ 	struct sdw_port_params port_params;
+ 	struct list_head port_node;
+diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+index 00348d1fc606..4491643aeb4a 100644
+--- a/drivers/soundwire/stream.c
++++ b/drivers/soundwire/stream.c
+@@ -167,13 +167,15 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
+ 		return ret;
+ 	}
+ 
+-	/* Program DPN_BlockCtrl1 register */
+-	ret = sdw_write(s_rt->slave, addr2, (p_params->bps - 1));
+-	if (ret < 0) {
+-		dev_err(&s_rt->slave->dev,
+-			"DPN_BlockCtrl1 register write failed for port %d\n",
+-			t_params->port_num);
+-		return ret;
++	if (!p_rt->ro_blockctrl1_reg) {
++		/* Program DPN_BlockCtrl1 register */
++		ret = sdw_write(s_rt->slave, addr2, (p_params->bps - 1));
++		if (ret < 0) {
++			dev_err(&s_rt->slave->dev,
++				"DPN_BlockCtrl1 register write failed for port %d\n",
++				t_params->port_num);
++			return ret;
++		}
+ 	}
+ 
+ 	/* Program DPN_SampleCtrl1 register */
+@@ -1195,6 +1197,7 @@ static struct sdw_port_runtime
+ 
+ 	p_rt->ch_mask = port_config[port_index].ch_mask;
+ 	p_rt->num = port_config[port_index].num;
++	p_rt->ro_blockctrl1_reg = port_config[port_index].ro_blockctrl1_reg;
+ 
+ 	return p_rt;
+ }
+-- 
+2.21.0
 
