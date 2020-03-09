@@ -2,43 +2,44 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D3DC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35082C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673C620409
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114832072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgCINFx (ORCPT
+        id S1726480AbgCINI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:05:53 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:42623 "EHLO
+        Mon, 9 Mar 2020 09:08:28 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:33067 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgCINFx (ORCPT
+        with ESMTP id S1726368AbgCINI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:05:53 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MRVy9-1ixJUY13Q5-00NSSj for <linux-kernel@vger.kernel.org>; Mon, 09 Mar
- 2020 14:05:51 +0100
-Received: by mail-qk1-f182.google.com with SMTP id c145so3271186qke.12
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 06:05:51 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ30hWPltkBf/JKMqcl8sPzwoYniPGsCeGg27imZhUNwDBdHahgv
-        0FvoXTLVm0PoEaYPYOxp0elHrC84G1W+eYC9+cs=
-X-Google-Smtp-Source: ADFU+vtKzupDHpOeiejLxcFh2ypl0Td2zi1xavQ2PAx24dswZB9rq0oq6sEWdwnizi3Q7uRb9a3xj1ELIIT8TZrqRaY=
-X-Received: by 2002:a37:b984:: with SMTP id j126mr14102418qkf.3.1583759150182;
- Mon, 09 Mar 2020 06:05:50 -0700 (PDT)
+        Mon, 9 Mar 2020 09:08:28 -0400
+Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M42b8-1jBI8w3bhQ-0000JJ for <linux-kernel@vger.kernel.org>; Mon, 09 Mar
+ 2020 14:08:27 +0100
+Received: by mail-qv1-f46.google.com with SMTP id r15so4300710qve.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 06:08:26 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1bn4muvpBdN/Lc2/GNDVjjMRgaailQZ7QzC6/6c9CgkrQDpm0i
+        msZBeBzPcxgpf30v4/klqOKhrcP6uhPRNR9muZw=
+X-Google-Smtp-Source: ADFU+vsZVVxYtB5oOB/iT8z19DtQWfGLEvcD/gO3C+R7aL9FH0z4WwozrZopkY4ufFbIIUjV9ApWazHzYlIPZftXiDA=
+X-Received: by 2002:a0c:ba29:: with SMTP id w41mr5046678qvf.210.1583759305767;
+ Mon, 09 Mar 2020 06:08:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200309021747.626-1-zhenzhong.duan@gmail.com> <20200309021747.626-3-zhenzhong.duan@gmail.com>
-In-Reply-To: <20200309021747.626-3-zhenzhong.duan@gmail.com>
+References: <20200309021747.626-1-zhenzhong.duan@gmail.com> <20200309021747.626-2-zhenzhong.duan@gmail.com>
+In-Reply-To: <20200309021747.626-2-zhenzhong.duan@gmail.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 9 Mar 2020 14:05:32 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1L=ko-SenBq0_nFtpqz1PFiZCsr7tX=9sH01X+J2wZSQ@mail.gmail.com>
-Message-ID: <CAK8P3a1L=ko-SenBq0_nFtpqz1PFiZCsr7tX=9sH01X+J2wZSQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/3] misc: move FLASH_MINOR into miscdevice.h and fix conflicts
+Date:   Mon, 9 Mar 2020 14:08:09 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2jy3+7tPFPjN5pfrQdfkhReCdPFjAnw144pXzpHCGDdQ@mail.gmail.com>
+Message-ID: <CAK8P3a2jy3+7tPFPjN5pfrQdfkhReCdPFjAnw144pXzpHCGDdQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/3] misc: cleanup minor number definitions in c file
+ into miscdevice.h
 To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Jeff Dike <jdike@addtoit.com>,
@@ -55,26 +56,25 @@ Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         David Miller <davem@davemloft.net>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Russell King <linux@armlinux.org.uk>
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:5oUyQq4QGXxHLknlf/mvjL5SrKY3VM+Zeixn1MOogqfxwaNo+/5
- JvynEShxlLH0F7tuS+BFb2CfGmTgsl/M6m9p7uqgclxL9Qs1/F3oA/xsQhYTmrV4ztOVr7p
- +ETze/wPhnG6xcBxFDoZl7ehvcKpw9Rqie4KeqS6yB9HqaCc1V1g6gL8ggdPsv+I8ERqb1f
- MwLExDZ6jjigIWtwJ/t0Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XFB/xOTdfmk=:/FfJgJ+ccl0I4KDNY0OICn
- DjAccIup4WTt/IaKJAXjSis8eU678qMYeAW2gaICDK9b/wC+9qqRGvIeo5qZxNPE7VbG3dhSc
- 60zEtcq55cNYiIFH8M16/v2OQx9VIFT1bKl9X+NE6GnxdDJizn26Ua4r1KZA0Wf86vOznSELZ
- TLZivWtgBKsXXdru4bs+/qWLdm77GS1I6JoTgoI26kRQUau4YE+tqlYWfd+iWqdaGK2tRex59
- Tb5pxYUbM0PVHkI2t7VPOgqbBNzRww8KvAA9cz01KP2Km05p9CK6TPLADLc0YzNg0pMlw0nNA
- 1fAD9W6W87vh6s4mshpgXmocCSjWhfYeTqf1UvJd5K8lscXVwu/3KAGajBmwpHcLsBSAYeTEj
- BXsnU4jEnARlioomQv175sjzzOlNY8sia4Z4B9FWJ7n8vY1es53DmOCIXUatSRBzax5W9OfMC
- GqOcYV5HJMBuXiXPGuxKATMv98cfFSyt7AdgfRO184XJ8uLoMWXCZ2xILBVHj895gdNZzMMpR
- HxbHKCfBqlxgKrMBxYjWBR6dSHotErdcZK5Q//RqKzlM/5uib4F12W+ysSoyrwX+UG07vZxga
- QW214vwwYq86W/sKi+Yxpu/y+j3qPRD2ojOLu1PWQ7Ipkmabq4JRu10ibOhPh5rvfoHF+5MTB
- AaB4LM5DS+6g13b3mxyIfYeZwzmnDezdHdrVXMOF4xHv8k0UhIjAmWspi7muElMnK5YaNRvQE
- Su+EvHAMyFeU0kIQHj3c6HS7pXESmSyUhuRR9ptr8jMRzhxxqGB861qfGae1gMTyySsDJUYS6
- 3wry44pZEsVe0Rl+5KAu6atu1b7MUPYMMuB6bt52+2OLkgkuKY=
+X-Provags-ID: V03:K1:tv/wz6BNk560l8t603+lUotwIMsT34r6XJrY7MyqxmaJFpeM9As
+ gEoMKaGohGws54wwYynU0I8gbleHbkW8Fv9/wn9S0+I2we7Ck+fAhoz9Yi9/dSQfz9U4gdu
+ R0FcnIS8Ga1NpMtB8krXZCDzxYv5bEbiZI8QlDsBEJr3frV9dm99eQn38g+JPN1lz9ytPSE
+ 2hJ+W91LnNO9gHNYjlUxg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tanUV2AwG54=:nfI0LZioL47jingywni/EM
+ iUZ4+6M1QhnY0xuDwTo7a8hh6duJ+t0xlJp5QrZzJmIeCqhBvDBcsyAP1IfyDsei4hvg/XbPg
+ puTyKRKcE2aa0392PSM95SdG9Jxri/AfmJD+2IKjb6l4TUEFlrJLc9fcwE9NKahYR0InRpK8O
+ put+8cj6JE9j17oIDGGNAkSCUJgcBBQz6Zo6B0Eu4CIzSq80QOEtiRGItyRwJtBidv8KJe4xG
+ RwN1n4oyhq1fX1vNNCO6J5MbYsBgD+fhqdbZ9e/J1BHI7KEwViM1Cfs5VkmFkDIXz+pRlZ/s9
+ TNAQokenQSN/vS/dvSzBZ1zZluzLw9nODtesB/rHlfOlHi+htOPKHN2z4J11X27CqAihSvqGH
+ KbQXDxuY8+2sc5NoMQ3ZIQqoeOD6sZr0F5rn6zNXLaTZvCITpVQel6f9bf9J0rI6R0TvRyWBu
+ jJHKGzb2iYs5ntnqJp74ZJGMxb1//9dxLXlhoYIGSTEo3tImO5HxR1MGTjKoaaqXsB/mxUXWW
+ wawK4MwZOt+MxmaXLuU/fc3HD4aBGKUm4QW/pWjpjeXDKccwMR/o/VqBei+AplEXYw1XLmcAo
+ FOVPbLURWQrOGZX3zEn697wCtVYnSvLL+lwnaKeb9WqP5GnILzGbFmqFJ0RVcilp6Xhp4cgn7
+ JkEa09BTkemYGuGkpkfqRvY0+whO6E5GKdMVGUpNXuxbG96iOt+tx/hkXUlHglhdwLuDHXBJ5
+ AuMId9Ao9ENlPvJjI4h55wOj8kWnqn93LoRaaRUqsZABbH/fGD/nMuMcn8MHC0Rw1ggaDq9bZ
+ rF3lzpKIXl0fw8insEP83cd4CFdbN5mGZMPj7mG1oHkacUSeX4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -82,19 +82,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, Mar 9, 2020 at 3:18 AM Zhenzhong Duan <zhenzhong.duan@gmail.com> wrote:
 >
-> FLASH_MINOR is used in both drivers/char/nwflash.c and
-> drivers/sbus/char/flash.c with conflict minor numbers.
+> HWRNG_MINOR and RNG_MISCDEV_MINOR are duplicate definitions, use
+> unified RNG_MINOR instead and moved into miscdevice.h
 >
-> Move all the definitions of FLASH_MINOR into miscdevice.h.
-> Rename FLASH_MINOR for drivers/char/nwflash.c to NWFLASH_MINOR
-> and FLASH_MINOR for drivers/sbus/char/flash.c to SBUS_FLASH_MINOR.
+> ANSLCD_MINOR and LCD_MINOR are duplicate definitions, use unified
+> LCD_MINOR instead and moved into miscdevice.h
 >
-> Link: https://lore.kernel.org/lkml/20200120221323.GJ15860@mit.edu/t/
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: "David S. Miller" <davem@davemloft.net>
+> MISCDEV_MINOR is renamed to PXA3XXX_GCU_MINOR and moved into
+> miscdevice.h
+
+This should be PXA3XX_GCU_MINOR (with 2 X, not 3).
+
+With that (and the other comments) addressed
 
 Acked-by: Arnd Bergmann <arnd@arndb.de>
