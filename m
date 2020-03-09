@@ -2,84 +2,92 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8B0C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35AFC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD8324649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A0F24655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgCIWdf (ORCPT
+        id S1727399AbgCIWeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:33:35 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36784 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgCIWde (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:33:34 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id A331D1C0317; Mon,  9 Mar 2020 23:33:32 +0100 (CET)
-Date:   Mon, 9 Mar 2020 23:33:32 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     corbet@lwn.net, gregkh@linuxfoundation.org,
-        linux-doc@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] devices.txt: document minor for rfkill
-Message-ID: <20200309223332.GB1634@duo.ucw.cz>
+        Mon, 9 Mar 2020 18:34:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:49129 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727143AbgCIWeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 18:34:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 15:33:59 -0700
+X-IronPort-AV: E=Sophos;i="5.70,534,1574150400"; 
+   d="scan'208";a="245491074"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.21.24]) ([10.251.21.24])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 09 Mar 2020 15:33:58 -0700
+Subject: Re: [PATCH V1 01/13] selftests/resctrl: Fix feature detection
+To:     "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
+        "babu.moger@amd.com" <babu.moger@amd.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <7e3e4b91f5786a489e68eecda21e1d8049b60181.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <a7407b0d-4e4d-d0cf-621c-769d218fdace@intel.com>
+ <FFF73D592F13FD46B8700F0A279B802F57307F89@ORSMSX114.amr.corp.intel.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <d0409729-b546-f0b9-4944-cbe5c9a74f76@intel.com>
+Date:   Mon, 9 Mar 2020 15:33:57 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="aM3YZ0Iwxop3KEKx"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <FFF73D592F13FD46B8700F0A279B802F57307F89@ORSMSX114.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sai,
 
---aM3YZ0Iwxop3KEKx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 3/9/2020 3:22 PM, Prakhya, Sai Praneeth wrote:
+> Hi Reinette,
+> 
+>> -----Original Message-----
+>> From: Reinette Chatre <reinette.chatre@intel.com>
+>> Sent: Monday, March 9, 2020 2:45 PM
+>> On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
 
-Rfkill is using	minor 242, document that.
+[SNIP]
 
-Signed-off-by: Pavel Machek <pavel@denx.de>
-Fixes: 8670b2b8b029a6650d133486be9d2ace146fd29a
+>> Please note that this is only a partial fix. The current feature detection relies on
+>> the feature flags found in /proc/cpuinfo. Quirks and kernel boot parameters are
+>> not taken into account. This fix only addresses the parsing of feature flags. If a
+>> feature has been disabled via kernel boot parameter or quirk then the resctrl
+>> tests would still attempt to run the test for it.
+> 
+> That's a good point and makes sense to me. I think we could fix it in two ways
+> 1. grep for strings in dmesg but that will still leave ambiguity in deciding b/w mbm and cqm because kernel prints "resctrl: L3 monitoring detected" for both the features
+> 2. Check in "info" directory
+> 	a. For cat_l3, we could search for info/L3
+> 	b. For mba, we could search for info/MB
+> 	c. For cqm and mbm, we could search for specified string in info/L3_MON/mon_features
+> 
+> I think option 2 might be better because it can handle all cases, please let me know what you think.
 
-diff --git a/Documentation/admin-guide/devices.txt b/Documentation/admin-gu=
-ide/devices.txt
-index 2a97aaec8b12..763fedd94d7d 100644
---- a/Documentation/admin-guide/devices.txt
-+++ b/Documentation/admin-guide/devices.txt
-@@ -375,8 +375,9 @@
- 		239 =3D /dev/uhid		User-space I/O driver support for HID subsystem
- 		240 =3D /dev/userio	Serio driver testing device
- 		241 =3D /dev/vhost-vsock	Host kernel driver for virtio vsock
-+		242 =3D /dev/rfkill	Turning off radio transmissions (rfkill)
-=20
--		242-254			Reserved for local use
-+		243-254			Reserved for local use
- 		255			Reserved for MISC_DYNAMIC_MINOR
-=20
-   11 char	Raw keyboard device	(Linux/SPARC only)
+I agree. For the reasons you mention and also that (1) may not be
+possible if the loglevel prevents those lines from being printed.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Reinette
 
---aM3YZ0Iwxop3KEKx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXmbEPAAKCRAw5/Bqldv6
-8iODAJ0cDBIMIY4P9rxntVrVJoo5oGDgLACgmrqACb8bNq5HOe5cFdn4GoiZIX4=
-=OEcN
------END PGP SIGNATURE-----
-
---aM3YZ0Iwxop3KEKx--
