@@ -2,149 +2,162 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D243AC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5747C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A98FC208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="zlBTN05m"
+	by mail.kernel.org (Postfix) with ESMTP id 904EF208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:53:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583769185;
+	bh=gMmrwKuiiPSrE5zFSZjJ3AXpeMxjqa2zX8pRsdKTGR8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zu9pNFJvIQZpz1HyZ66Adp9kMinqlkNNaXtLZ653Wzg8oMRzLoo/L26KKhfvCPMxc
+	 UIxba4WYygWlorJ0k5ewgw9brYObzBTs7IX3INNWGXSiovvHgUhKHE1EvLykThpcw4
+	 nKSMip1I6KUK6CRYMRRnRcmuA7ZIDQ4nkJEpIePU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbgCIPw7 (ORCPT
+        id S1727286AbgCIPxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:52:59 -0400
-Received: from gateway22.websitewelcome.com ([192.185.46.152]:20685 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726703AbgCIPw6 (ORCPT
+        Mon, 9 Mar 2020 11:53:04 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34510 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727196AbgCIPxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:52:58 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 9558F23661
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 10:52:57 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BKi9jO1DmRP4zBKi9jkWhj; Mon, 09 Mar 2020 10:52:57 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0JMHXTq/G0YoEBdhsaZPfnkbHay+4mmZgJTTUG0Tcqk=; b=zlBTN05mgAOfMHn+HaCObwNdic
-        u1VY7Z26OOm0w8w9O0mso6XzIBKwBuD1g055X9zHi9zpTBOnoJIj9ydI79sxTvik1oHAsU2VApGxu
-        HgkIBGuGMzN3ybE13N+5GrxXqhgQKk275fdEHPr/x3qi2aI6JLh2Bvc5US9n93SvHwzxNYpUrY0yf
-        XhqNaWpKWBlXr8DzbX1F1WaViPjgOdWtnge3KIYqtOris9Q77gLBUY7OOt+pAOUupJzPtInTPFblF
-        ARwPXCpko1RVaoXUs3N25jCl5Ryc1VODvgywnNKx/1UH0a18OYXOLkf9wL2CpeKnuwa/32M+tztaB
-        rXnaBYVQ==;
-Received: from [201.162.240.150] (port=28052 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBKi7-00302e-Nn; Mon, 09 Mar 2020 10:52:56 -0500
-Date:   Mon, 9 Mar 2020 10:56:08 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>
-Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] dlm: dlm_internal: Replace zero-length array with
- flexible-array member
-Message-ID: <20200309155608.GA31883@embeddedor>
+        Mon, 9 Mar 2020 11:53:03 -0400
+Received: by mail-lj1-f195.google.com with SMTP id s13so1274550ljm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EXfBgHukxBvsUIUUHVjFpSxz9MtCVwuKfkDGjmbjA74=;
+        b=TUfdKwyMIdzZABuGfaz29jdL4jBWhfe9EDROAoWo7k6cs3dhd+ODiA8Fuv0zwjS7aR
+         kaKK1YDIK5c5LCpnpOC9idRXWgQRLP0+CSXvTrz1Mfum6aCAyVhgPh163mCqXrvVGstE
+         th+lI57YSlrxDwtOGDYLNp/qugF7/3vQm9KV4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EXfBgHukxBvsUIUUHVjFpSxz9MtCVwuKfkDGjmbjA74=;
+        b=kES7Fojmeejgjo3DA5xAGThAHj7XsYN5WezM7MSvNSv9+TMYznfuHaOmMHTHUkT8wg
+         WpSY90VJwE7jFdxNG95csqEkIXYkRI384CwconONcky7IuJFdamfVHWsyE/4MeLggGZX
+         J6WQgiYc6a6CdmjAZsVKJ8c5yYaH4/p9lZ9AzmZd+DiYTa+Iwg2r/liZUYsJY+6A644/
+         YsAPNgzrasPoY/+uAuD9f81ejM2y2z93/UcFz2LFCG3+/uEhlMYWpEc7Q0v2rJhcMSNP
+         NDLsC5ts8/X1jc6+ZQnLXrxcBbauh3TGhNR7rtenNcRc0a3qILUCj1NKgkYVTdqRRZf7
+         jM+A==
+X-Gm-Message-State: ANhLgQ3+AGM0+SjU5L6E7mmAHLxie7Hx+kwU3KgzhtnsywxUA0134LtH
+        mF6iVPkrp6X+fgL9w4yGBwp4mOstP48=
+X-Google-Smtp-Source: ADFU+vskVYLFU7Qg5OXkUaOT5v4RyS6fAybzsvJ+Geg2dA6Tu9qGP8tYovZI5rIhPvlYZZaD0N16zQ==
+X-Received: by 2002:a05:651c:201d:: with SMTP id s29mr4035841ljo.240.1583769180356;
+        Mon, 09 Mar 2020 08:53:00 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id x23sm8433088ljj.8.2020.03.09.08.52.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Mar 2020 08:52:58 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id w1so10495106ljh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:52:57 -0700 (PDT)
+X-Received: by 2002:a2e:5850:: with SMTP id x16mr9457422ljd.209.1583769177624;
+ Mon, 09 Mar 2020 08:52:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.150
-X-Source-L: No
-X-Exim-ID: 1jBKi7-00302e-Nn
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.240.150]:28052
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200308140314.GQ5972@shao2-debian> <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+In-Reply-To: <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 9 Mar 2020 08:52:41 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+Message-ID: <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        yangerkun <yangerkun@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Neil Brown <neilb@suse.de>,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: multipart/mixed; boundary="0000000000003d346305a06dff90"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+--0000000000003d346305a06dff90
+Content-Type: text/plain; charset="UTF-8"
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+On Mon, Mar 9, 2020 at 7:36 AM Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Sun, 2020-03-08 at 22:03 +0800, kernel test robot wrote:
+> >
+> > FYI, we noticed a -96.6% regression of will-it-scale.per_process_ops due to commit:
+>
+> This is not completely unexpected as we're banging on the global
+> blocked_lock_lock now for every unlock. This test just thrashes file
+> locks and unlocks without doing anything in between, so the workload
+> looks pretty artificial [1].
+>
+> It would be nice to avoid the global lock in this codepath, but it
+> doesn't look simple to do. I'll keep thinking about it, but for now I'm
+> inclined to ignore this result unless we see a problem in more realistic
+> workloads.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+That is a _huge_ regression, though.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+What about something like the attached? Wouldn't that work? And make
+the code actually match the old comment about wow "fl_blocker" being
+NULL being special.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+The old code seemed to not know about things like memory ordering either.
 
-This issue was found with the help of Coccinelle.
+Patch is entirely untested, but aims to have that "smp_store_release()
+means I'm done and not going to touch it any more", making that
+smp_load_acquire() test hopefully be valid as per the comment..
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+Hmm?
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/dlm/dlm_internal.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+                    Linus
 
-diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
-index 416d9de35679..d231ae5d2c65 100644
---- a/fs/dlm/dlm_internal.h
-+++ b/fs/dlm/dlm_internal.h
-@@ -421,7 +421,7 @@ struct dlm_message {
- 	int			m_bastmode;
- 	int			m_asts;
- 	int			m_result;	/* 0 or -EXXX */
--	char			m_extra[0];	/* name or lvb */
-+	char			m_extra[];	/* name or lvb */
- };
- 
- 
-@@ -450,7 +450,7 @@ struct dlm_rcom {
- 	uint64_t		rc_id;		/* match reply with request */
- 	uint64_t		rc_seq;		/* sender's ls_recover_seq */
- 	uint64_t		rc_seq_reply;	/* remote ls_recover_seq */
--	char			rc_buf[0];
-+	char			rc_buf[];
- };
- 
- union dlm_packet {
-@@ -506,7 +506,7 @@ struct rcom_lock {
- 	__le16			rl_wait_type;
- 	__le16			rl_namelen;
- 	char			rl_name[DLM_RESNAME_MAXLEN];
--	char			rl_lvb[0];
-+	char			rl_lvb[];
- };
- 
- /*
--- 
-2.25.0
+--0000000000003d346305a06dff90
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k7kn615a0>
+X-Attachment-Id: f_k7kn615a0
 
+IGZzL2xvY2tzLmMgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrLQogMSBmaWxlIGNo
+YW5nZWQsIDI4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9mcy9s
+b2Nrcy5jIGIvZnMvbG9ja3MuYwppbmRleCA0MjZiNTVkMzMzZDUuLmJjNWNhNTRhMDc0OSAxMDA2
+NDQKLS0tIGEvZnMvbG9ja3MuYworKysgYi9mcy9sb2Nrcy5jCkBAIC03MjUsNyArNzI1LDYgQEAg
+c3RhdGljIHZvaWQgX19sb2Nrc19kZWxldGVfYmxvY2soc3RydWN0IGZpbGVfbG9jayAqd2FpdGVy
+KQogewogCWxvY2tzX2RlbGV0ZV9nbG9iYWxfYmxvY2tlZCh3YWl0ZXIpOwogCWxpc3RfZGVsX2lu
+aXQoJndhaXRlci0+ZmxfYmxvY2tlZF9tZW1iZXIpOwotCXdhaXRlci0+ZmxfYmxvY2tlciA9IE5V
+TEw7CiB9CiAKIHN0YXRpYyB2b2lkIF9fbG9ja3Nfd2FrZV91cF9ibG9ja3Moc3RydWN0IGZpbGVf
+bG9jayAqYmxvY2tlcikKQEAgLTc0MCw2ICs3MzksMTIgQEAgc3RhdGljIHZvaWQgX19sb2Nrc193
+YWtlX3VwX2Jsb2NrcyhzdHJ1Y3QgZmlsZV9sb2NrICpibG9ja2VyKQogCQkJd2FpdGVyLT5mbF9s
+bW9wcy0+bG1fbm90aWZ5KHdhaXRlcik7CiAJCWVsc2UKIAkJCXdha2VfdXAoJndhaXRlci0+Zmxf
+d2FpdCk7CisKKwkJLyoKKwkJICogVGVsbCB0aGUgd29ybGQgd2UncmUgZG9uZSB3aXRoIGl0IC0g
+c2VlIGNvbW1lbnQgYXQKKwkJICogdG9wIG9mIGxvY2tzX2RlbGV0ZV9ibG9jaygpLgorCQkgKi8K
+KwkJc21wX3N0b3JlX3JlbGVhc2UoJndhaXRlci0+ZmxfYmxvY2tlciwgTlVMTCk7CiAJfQogfQog
+CkBAIC03NTMsMTEgKzc1OCwzMyBAQCBpbnQgbG9ja3NfZGVsZXRlX2Jsb2NrKHN0cnVjdCBmaWxl
+X2xvY2sgKndhaXRlcikKIHsKIAlpbnQgc3RhdHVzID0gLUVOT0VOVDsKIAorCS8qCisJICogSWYg
+ZmxfYmxvY2tlciBpcyBOVUxMLCBpdCB3b24ndCBiZSBzZXQgYWdhaW4gYXMgdGhpcyB0aHJlYWQK
+KwkgKiAib3ducyIgdGhlIGxvY2sgYW5kIGlzIHRoZSBvbmx5IG9uZSB0aGF0IG1pZ2h0IHRyeSB0
+byBjbGFpbQorCSAqIHRoZSBsb2NrLiAgU28gaXQgaXMgc2FmZSB0byB0ZXN0IGZsX2Jsb2NrZXIg
+bG9ja2xlc3NseS4KKwkgKiBBbHNvIGlmIGZsX2Jsb2NrZXIgaXMgTlVMTCwgdGhpcyB3YWl0ZXIg
+aXMgbm90IGxpc3RlZCBvbgorCSAqIGZsX2Jsb2NrZWRfcmVxdWVzdHMgZm9yIHNvbWUgbG9jaywg
+c28gbm8gb3RoZXIgcmVxdWVzdCBjYW4KKwkgKiBiZSBhZGRlZCB0byB0aGUgbGlzdCBvZiBmbF9i
+bG9ja2VkX3JlcXVlc3RzIGZvciB0aGlzCisJICogcmVxdWVzdC4gIFNvIGlmIGZsX2Jsb2NrZXIg
+aXMgTlVMTCwgaXQgaXMgc2FmZSB0bworCSAqIGxvY2tsZXNzbHkgY2hlY2sgaWYgZmxfYmxvY2tl
+ZF9yZXF1ZXN0cyBpcyBlbXB0eS4gIElmIGJvdGgKKwkgKiBvZiB0aGVzZSBjaGVja3Mgc3VjY2Vl
+ZCwgdGhlcmUgaXMgbm8gbmVlZCB0byB0YWtlIHRoZSBsb2NrLgorCSAqLworCWlmICghc21wX2xv
+YWRfYWNxdWlyZSgmd2FpdGVyLT5mbF9ibG9ja2VyKSkgeworCQlpZiAobGlzdF9lbXB0eSgmd2Fp
+dGVyLT5mbF9ibG9ja2VkX3JlcXVlc3RzKSkKKwkJICAgICAgICByZXR1cm4gc3RhdHVzOworCX0K
+KwogCXNwaW5fbG9jaygmYmxvY2tlZF9sb2NrX2xvY2spOwogCWlmICh3YWl0ZXItPmZsX2Jsb2Nr
+ZXIpCiAJCXN0YXR1cyA9IDA7CiAJX19sb2Nrc193YWtlX3VwX2Jsb2Nrcyh3YWl0ZXIpOwogCV9f
+bG9ja3NfZGVsZXRlX2Jsb2NrKHdhaXRlcik7CisKKwkvKgorCSAqIFRlbGwgdGhlIHdvcmxkIHdl
+J3JlIGRvbmUgd2l0aCBpdCAtIHNlZSBjb21taXQgYXQgdG9wCisJICogb2YgdGhpcyBmdW5jdGlv
+bgorCSAqLworCXNtcF9zdG9yZV9yZWxlYXNlKCZ3YWl0ZXItPmZsX2Jsb2NrZXIsIE5VTEwpOwog
+CXNwaW5fdW5sb2NrKCZibG9ja2VkX2xvY2tfbG9jayk7CiAJcmV0dXJuIHN0YXR1czsKIH0K
+--0000000000003d346305a06dff90--
