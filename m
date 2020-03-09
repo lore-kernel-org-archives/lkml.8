@@ -2,276 +2,154 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346CAC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843F0C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CE720873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:58:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jsEuVziw"
+	by mail.kernel.org (Postfix) with ESMTP id 6166120873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583780332;
+	bh=B1UyNcxLW8PyJe3Q75G0rqEkEz05Wmj5+QamNjOuhpE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pcenrn4kmaTV7qfhiU3IFD/v8WQZ7unnZcF9Dal8qp154lSXWvBW4h7m6XIh0lKdx
+	 7nmmKPN4AQMShcygQjhl/YQg0t/3YeK7Wv+eyrQGMpIlYfWNn1OMAukkpXay4kFfv8
+	 YhAKKJixuAiArWlXW1d81J3hms+stoSOWhQDAJZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbgCIS6r (ORCPT
+        id S1727511AbgCIS6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:58:47 -0400
-Received: from mail-pj1-f53.google.com ([209.85.216.53]:51579 "EHLO
-        mail-pj1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbgCIS6r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:58:47 -0400
-Received: by mail-pj1-f53.google.com with SMTP id y7so282929pjn.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:58:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=g6iYxVU3My4ig01uS18gVLiejHZEikDEh+euLkI/Qd4=;
-        b=jsEuVziw9GIgUegVRXMVforeGGJDSln2f8oMzMHnAT1Z1d2tbM7zvDWO6VlnivAUJe
-         u31Q8lI3oqrETge8R0aakX7netqlfgvDJi4U96aTXvcN9ATxUkh/AGWFR1idVEbjI0pE
-         osjRL3r6qsKUr5rY3o89oOd2J69/5t506FUjLa47FjDKQRNq3yoVP11actCJa3UCJAf1
-         myL6LNBpVj3xFdQAM5RXW0gEc2cd5C/Fz0DxiOOBz/O76LuTfZieXafuP1M538v3Mmzy
-         HLoShct5BjPhETX8vcpLkxVK1P3ENh9ryKe/lFOeTQhWmUKGs3pj6kXPeRDKUIrpUXeo
-         x/rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=g6iYxVU3My4ig01uS18gVLiejHZEikDEh+euLkI/Qd4=;
-        b=GZWCetP7OTT9uJuLoD7IWRDGjZKV0UAnI1ARLvMb97ZdX/1N6+r2IR11y0k1NStqkX
-         YntGS3UD9Ybax+V33Ym8KaGRgz5kJBWCgs7otkcR9RPigJRBG39su9G0iZsUqFuvCqHm
-         1t2Zj49kpi9QOeZMoXbQEk0htl0mbUSIV1sDa1jf+B07c51rk6jXE+Vr2w0QVEWxo0WD
-         C5kskyndV4qjLivtx6YYmkMD0zuVZgX2jKgZIj8iZlQYkw3CtHkGND8UspgNLk6opbzZ
-         lJ/kTE7XW1NAvJbr4/s7nn5c1BJRAb++WiLYOA2+CKMVjdopa3qR8rLdTcFWLyfIcFGV
-         If8w==
-X-Gm-Message-State: ANhLgQ2XViOM99OWEU2Jkvw2gZNHMpuSCojYX85d3gb7nU4LJYq2C1cY
-        dD/+OVE86g/TXneRlUm/ouQcwsUPdRLkUdjhKGtx8A==
-X-Google-Smtp-Source: ADFU+vu6YZK7a3w2hMP4UcpF7fUZMCsWGZYqJmfs6gXoYhnr+pfeGq/G0fVYBDxAiDojmMDGmCnkAc3i6LMOyHkLysE=
-X-Received: by 2002:a17:90a:1f8d:: with SMTP id x13mr749235pja.27.1583780325479;
- Mon, 09 Mar 2020 11:58:45 -0700 (PDT)
+        Mon, 9 Mar 2020 14:58:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727387AbgCIS6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:58:50 -0400
+Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C906820866;
+        Mon,  9 Mar 2020 18:58:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583780330;
+        bh=B1UyNcxLW8PyJe3Q75G0rqEkEz05Wmj5+QamNjOuhpE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=T7PsOBZw10bgq729PHYbEjWzwCGV7EzrsIszS8j0MmdQNps/ZBwz1vdlaqCCZT5TV
+         kYdLL1f3WRO8gXYwXh2WInGSNQZKlkEw/OwvgL8V95Zex7gvHoHc+q1daW5TZ5fXwS
+         nQgFwKiYLC9xg3s7LNqzl4cHDR7qK93ab5NWmqnQ=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-xfs@vger.kernel.org
+Cc:     linux-ext4@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] xfs: clear PF_MEMALLOC before exiting xfsaild thread
+Date:   Mon,  9 Mar 2020 11:57:14 -0700
+Message-Id: <20200309185714.42850-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200309181332.GJ1752567@magnolia>
+References: <20200309181332.GJ1752567@magnolia>
 MIME-Version: 1.0
-References: <20200309185323.22583-1-acme@kernel.org> <20200309185323.22583-4-acme@kernel.org>
-In-Reply-To: <20200309185323.22583-4-acme@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 9 Mar 2020 11:58:33 -0700
-Message-ID: <CAKwvOdm5RrdpOCMgRezLeHJ9GuocVoKqSUQGHjaCEcZdSr4AwA@mail.gmail.com>
-Subject: Re: [PATCH 3/6] perf python: Fix clang detection when using CC=clang-version
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 11:53 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> From: Ilie Halip <ilie.halip@gmail.com>
->
-> Currently, the setup.py script detects the clang compiler only when invok=
-ed
-> with CC=3Dclang. But when using a specific version (e.g. CC=3Dclang-11), =
-this
-> doesn't work correctly and wrong compiler flags are set, leading to build
-> errors.
->
-> To properly detect clang, invoke the compiler with -v and check the outpu=
-t.
-> The first line should start with "clang version ...".
->
-> Committer testing:
->
->   $ make CC=3Dclang-9 O=3D/tmp/build/perf -C tools/perf install-bin
->   <SNIP>
->   $ readelf -wi /tmp/build/perf/python/perf.cpython-37m-x86_64-linux-gnu.=
-so | grep DW_AT_producer | head -1
->     <c>   DW_AT_producer    : (indirect string, offset: 0x0): clang versi=
-on 9.0.1 (Fedora 9.0.1-2.fc31) /usr/bin/clang-9 -Wno-unused-result -Wsign-c=
-ompare -D DYNAMIC_ANNOTATIONS_ENABLED=3D1 -D NDEBUG -O2 -g -pipe -Wall -Wer=
-ror=3Dformat-security -Wp,-D_FORTIFY_SOURCE=3D2 -Wp,-D_GLIBCXX_ASSERTIONS -=
-fexceptions -fstack-protector-strong -grecord-command-line -m64 -mtune=3Dge=
-neric -fasynchronous-unwind-tables -fcf-protection=3Dfull -D _GNU_SOURCE -f=
-PIC -fwrapv -Wbad-function-cast -Wdeclaration-after-statement -Wformat-secu=
-rity -Wformat-y2k -Winit-self -Wmissing-declarations -Wmissing-prototypes -=
-Wnested-externs -Wno-system-headers -Wold-style-definition -Wpacked -Wredun=
-dant-decls -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wwri=
-te-strings -Wformat -Wshadow -D HAVE_ARCH_X86_64_SUPPORT -I /tmp/build/perf=
-/arch/x86/include/generated -D HAVE_SYSCALL_TABLE_SUPPORT -D HAVE_PERF_REGS=
-_SUPPORT -D HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -Werror -O3 -fno-omit-fram=
-e-pointer -ggdb3 -funwind-tables -Wall -Wextra -std=3Dgnu99 -fstack-protect=
-or-all -D _FORTIFY_SOURCE=3D2 -D _LARGEFILE64_SOURCE -D _FILE_OFFSET_BITS=
-=3D64 -D _GNU_SOURCE -I /home/acme/git/perf/tools/lib/perf/include -I /home=
-/acme/git/perf/tools/perf/util/include -I /home/acme/git/perf/tools/perf/ar=
-ch/x86/include -I /home/acme/git/perf/tools/include/ -I /home/acme/git/perf=
-/tools/arch/x86/include/uapi -I /home/acme/git/perf/tools/include/uapi -I /=
-home/acme/git/perf/tools/arch/x86/include/ -I /home/acme/git/perf/tools/arc=
-h/x86/ -I /tmp/build/perf//util -I /tmp/build/perf/ -I /home/acme/git/perf/=
-tools/perf/util -I /home/acme/git/perf/tools/perf -I /home/acme/git/perf/to=
-ols/lib/ -D HAVE_PTHREAD_ATTR_SETAFFINITY_NP -D HAVE_PTHREAD_BARRIER -D HAV=
-E_EVENTFD -D HAVE_GET_CURRENT_DIR_NAME -D HAVE_GETTID -D HAVE_DWARF_GETLOCA=
-TIONS_SUPPORT -D HAVE_GLIBC_SUPPORT -D HAVE_AIO_SUPPORT -D HAVE_SCHED_GETCP=
-U_SUPPORT -D HAVE_SETNS_SUPPORT -D HAVE_LIBELF_SUPPORT -D HAVE_LIBELF_MMAP_=
-SUPPORT -D HAVE_ELF_GETPHDRNUM_SUPPORT -D HAVE_GELF_GETNOTE_SUPPORT -D HAVE=
-_ELF_GETSHDRSTRNDX_SUPPORT -D HAVE_DWARF_SUPPORT -D HAVE_LIBBPF_SUPPORT -D =
-HAVE_BPF_PROLOGUE -D HAVE_SDT_EVENT -D HAVE_JITDUMP -D HAVE_DWARF_UNWIND_SU=
-PPORT -D NO_LIBUNWIND_DEBUG_FRAME -D HAVE_LIBUNWIND_SUPPORT -D HAVE_LIBCRYP=
-TO_SUPPORT -D HAVE_SLANG_SUPPORT -D HAVE_GTK2_SUPPORT -D NO_LIBPERL -D HAVE=
-_TIMERFD_SUPPORT -D HAVE_LIBPYTHON_SUPPORT -D HAVE_CPLUS_DEMANGLE_SUPPORT -=
-D HAVE_LIBBFD_SUPPORT -D HAVE_ZLIB_SUPPORT -D HAVE_LZMA_SUPPORT -D HAVE_ZST=
-D_SUPPORT -D HAVE_LIBCAP_SUPPORT -D HAVE_BACKTRACE_SUPPORT -D HAVE_LIBNUMA_=
-SUPPORT -D HAVE_KVM_STAT_SUPPORT -D DISASM_FOUR_ARGS_SIGNATURE -D HAVE_LIBB=
-ABELTRACE_SUPPORT -D HAVE_AUXTRACE_SUPPORT -D HAVE_JVMTI_CMLR -I /tmp/build=
-/perf/ -fPIC -I util/include -I /usr/include/python3.7m -c /home/acme/git/p=
-erf/tools/perf/util/python.c -o /tmp/build/perf/python_ext_build/tmp/home/a=
-cme/git/perf/tools/perf/util/python.o -Wbad-function-cast -Wdeclaration-aft=
-er-statement -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarati=
-ons -Wmissing-prototypes -Wnested-externs -Wno-system-headers -Wold-style-d=
-efinition -Wpacked -Wredundant-decls -Wstrict-prototypes -Wswitch-default -=
-Wswitch-enum -Wundef -Wwrite-strings -Wformat -Wshadow -D HAVE_ARCH_X86_64_=
-SUPPORT -I /tmp/build/perf/arch/x86/include/generated -D HAVE_SYSCALL_TABLE=
-_SUPPORT -D HAVE_PERF_REGS_SUPPORT -D HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET =
--Werror -O3 -fno-omit-frame-pointer -ggdb3 -funwind-tables -Wall -Wextra -s=
-td=3Dgnu99 -fstack-protector-all -D _FORTIFY_SOURCE=3D2 -D _LARGEFILE64_SOU=
-RCE -D _FILE_OFFSET_BITS=3D64 -D _GNU_SOURCE -I /home/acme/git/perf/tools/l=
-ib/perf/include -I /home/acme/git/perf/tools/perf/util/include -I /home/acm=
-e/git/perf/tools/perf/arch/x86/include -I /home/acme/git/perf/tools/include=
-/ -I /home/acme/git/perf/tools/arch/x86/include/uapi -I /home/acme/git/perf=
-/tools/include/uapi -I /home/acme/git/perf/tools/arch/x86/include/ -I /home=
-/acme/git/perf/tools/arch/x86/ -I /tmp/build/perf//util -I /tmp/build/perf/=
- -I /home/acme/git/perf/tools/perf/util -I /home/acme/git/perf/tools/perf -=
-I /home/acme/git/perf/tools/lib/ -D HAVE_PTHREAD_ATTR_SETAFFINITY_NP -D HAV=
-E_PTHREAD_BARRIER -D HAVE_EVENTFD -D HAVE_GET_CURRENT_DIR_NAME -D HAVE_GETT=
-ID -D HAVE_DWARF_GETLOCATIONS_SUPPORT -D HAVE_GLIBC_SUPPORT -D HAVE_AIO_SUP=
-PORT -D HAVE_SCHED_GETCPU_SUPPORT -D HAVE_SETNS_SUPPORT -D HAVE_LIBELF_SUPP=
-ORT -D HAVE_LIBELF_MMAP_SUPPORT -D HAVE_ELF_GETPHDRNUM_SUPPORT -D HAVE_GELF=
-_GETNOTE_SUPPORT -D HAVE_ELF_GETSHDRSTRNDX_SUPPORT -D HAVE_DWARF_SUPPORT -D=
- HAVE_LIBBPF_SUPPORT -D HAVE_BPF_PROLOGUE -D HAVE_SDT_EVENT -D HAVE_JITDUMP=
- -D HAVE_DWARF_UNWIND_SUPPORT -D NO_LIBUNWIND_DEBUG_FRAME -D HAVE_LIBUNWIND=
-_SUPPORT -D HAVE_LIBCRYPTO_SUPPORT -D HAVE_SLANG_SUPPORT -D HAVE_GTK2_SUPPO=
-RT -D NO_LIBPERL -D HAVE_TIMERFD_SUPPORT -D HAVE_LIBPYTHON_SUPPORT -D HAVE_=
-CPLUS_DEMANGLE_SUPPORT -D HAVE_LIBBFD_SUPPORT -D HAVE_ZLIB_SUPPORT -D HAVE_=
-LZMA_SUPPORT -D HAVE_ZSTD_SUPPORT -D HAVE_LIBCAP_SUPPORT -D HAVE_BACKTRACE_=
-SUPPORT -D HAVE_LIBNUMA_SUPPORT -D HAVE_KVM_STAT_SUPPORT -D DISASM_FOUR_ARG=
-S_SIGNATURE -D HAVE_LIBBABELTRACE_SUPPORT -D HAVE_AUXTRACE_SUPPORT -D HAVE_=
-JVMTI_CMLR -I /tmp/build/perf/ -fno-strict-aliasing -Wno-write-strings -Wno=
--unused-parameter -Wno-redundant-decls
+From: Eric Biggers <ebiggers@google.com>
 
-Sorry for not speaking up sooner, but if you don't want to include
-that mass of command line options above, I generally check which
-toolchain has been used to produce a binary via:
-$ readelf --string-dump=3D.comment <foo>
-which may be more concise, but sometimes we strip out the `.comment`
-section from binaries.
+Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
+during do_exit().  That can confuse things.  In particular, if BSD
+process accounting is enabled, then do_exit() writes data to an
+accounting file.  If that file has FS_SYNC_FL set, then this write
+occurs synchronously and can misbehave if PF_MEMALLOC is set.
 
->   $
->
-> And here is how tools/perf/util/setup.py checks if the used clang has
-> options that the distro specific python extension building compiler
-> defaults:
->
->   if cc_is_clang:
->       from distutils.sysconfig import get_config_vars
->       vars =3D get_config_vars()
->       for var in ('CFLAGS', 'OPT'):
->           vars[var] =3D sub("-specs=3D[^ ]+", "", vars[var])
->           if not clang_has_option("-mcet"):
->               vars[var] =3D sub("-mcet", "", vars[var])
->           if not clang_has_option("-fcf-protection"):
->               vars[var] =3D sub("-fcf-protection", "", vars[var])
->           if not clang_has_option("-fstack-clash-protection"):
->               vars[var] =3D sub("-fstack-clash-protection", "", vars[var]=
-)
->           if not clang_has_option("-fstack-protector-strong"):
->               vars[var] =3D sub("-fstack-protector-strong", "", vars[var]=
-)
->
-> So "-fcf-protection=3Dfull" is used, clang-9 has this option and thus it
-> was kept, the perf python extension was built with it and the build
-> completed successfully.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/903
-> Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Igor Lubashev <ilubashe@akamai.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: clang-built-linux@googlegroups.com
-> Link: http://lore.kernel.org/lkml/20200309085618.14307-1-ilie.halip@gmail=
-.com
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/setup.py | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-> index aa344a163eaf..8a065a6f9713 100644
-> --- a/tools/perf/util/setup.py
-> +++ b/tools/perf/util/setup.py
-> @@ -2,11 +2,13 @@ from os import getenv
->  from subprocess import Popen, PIPE
->  from re import sub
->
-> +cc =3D getenv("CC")
-> +cc_is_clang =3D b"clang version" in Popen([cc, "-v"], stderr=3DPIPE).std=
-err.readline()
-> +
->  def clang_has_option(option):
-> -    return [o for o in Popen(['clang', option], stderr=3DPIPE).stderr.re=
-adlines() if b"unknown argument" in o] =3D=3D [ ]
-> +    return [o for o in Popen([cc, option], stderr=3DPIPE).stderr.readlin=
-es() if b"unknown argument" in o] =3D=3D [ ]
->
-> -cc =3D getenv("CC")
-> -if cc =3D=3D "clang":
-> +if cc_is_clang:
->      from distutils.sysconfig import get_config_vars
->      vars =3D get_config_vars()
->      for var in ('CFLAGS', 'OPT'):
-> @@ -40,7 +42,7 @@ class install_lib(_install_lib):
->  cflags =3D getenv('CFLAGS', '').split()
->  # switch off several checks (need to be at the end of cflags list)
->  cflags +=3D ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-=
-parameter', '-Wno-redundant-decls' ]
-> -if cc !=3D "clang":
-> +if not cc_is_clang:
->      cflags +=3D ['-Wno-cast-function-type' ]
->
->  src_perf  =3D getenv('srctree') + '/tools/perf'
-> --
-> 2.21.1
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/clang-built-linux/20200309185323.22583-4-acme%40kernel.org.
+For example, if the accounting file is located on an XFS filesystem,
+then a WARN_ON_ONCE() in iomap_do_writepage() is triggered and the data
+doesn't get written when it should.  Or if the accounting file is
+located on an ext4 filesystem without a journal, then a WARN_ON_ONCE()
+in ext4_write_inode() is triggered and the inode doesn't get written.
 
+Fix this in xfsaild() by using the helper functions to save and restore
+PF_MEMALLOC.
 
+This can be reproduced as follows in the kvm-xfstests test appliance
+modified to add the 'acct' Debian package, and with kvm-xfstests's
+recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
 
---=20
-Thanks,
-~Nick Desaulniers
+        mkfs.xfs -f /dev/vdb
+        mount /vdb
+        touch /vdb/file
+        chattr +S /vdb/file
+        accton /vdb/file
+        mkfs.xfs -f /dev/vdc
+        mount /vdc
+        umount /vdc
+
+It causes:
+	WARNING: CPU: 1 PID: 336 at fs/iomap/buffered-io.c:1534
+	CPU: 1 PID: 336 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #3
+	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
+	RIP: 0010:iomap_do_writepage+0x16b/0x1f0 fs/iomap/buffered-io.c:1534
+	[...]
+	Call Trace:
+	 write_cache_pages+0x189/0x4d0 mm/page-writeback.c:2238
+	 iomap_writepages+0x1c/0x33 fs/iomap/buffered-io.c:1642
+	 xfs_vm_writepages+0x65/0x90 fs/xfs/xfs_aops.c:578
+	 do_writepages+0x41/0xe0 mm/page-writeback.c:2344
+	 __filemap_fdatawrite_range+0xd2/0x120 mm/filemap.c:421
+	 file_write_and_wait_range+0x71/0xc0 mm/filemap.c:760
+	 xfs_file_fsync+0x7a/0x2b0 fs/xfs/xfs_file.c:114
+	 generic_write_sync include/linux/fs.h:2867 [inline]
+	 xfs_file_buffered_aio_write+0x379/0x3b0 fs/xfs/xfs_file.c:691
+	 call_write_iter include/linux/fs.h:1901 [inline]
+	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
+	 __kernel_write+0x54/0xe0 fs/read_write.c:515
+	 do_acct_process+0x122/0x170 kernel/acct.c:522
+	 slow_acct_process kernel/acct.c:581 [inline]
+	 acct_process+0x1d4/0x27c kernel/acct.c:607
+	 do_exit+0x83d/0xbc0 kernel/exit.c:791
+	 kthread+0xf1/0x140 kernel/kthread.c:257
+	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
+
+This bug was originally reported by syzbot at
+https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
+
+Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+
+v3: updated commit message again, this time to take into account the bug
+    also being reproducible when the accounting file is located on XFS.
+
+v2: include more details in the commit message.
+
+ fs/xfs/xfs_trans_ail.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+index 00cc5b8734be8..3bc570c90ad97 100644
+--- a/fs/xfs/xfs_trans_ail.c
++++ b/fs/xfs/xfs_trans_ail.c
+@@ -529,8 +529,9 @@ xfsaild(
+ {
+ 	struct xfs_ail	*ailp = data;
+ 	long		tout = 0;	/* milliseconds */
++	unsigned int	noreclaim_flag;
+ 
+-	current->flags |= PF_MEMALLOC;
++	noreclaim_flag = memalloc_noreclaim_save();
+ 	set_freezable();
+ 
+ 	while (1) {
+@@ -601,6 +602,7 @@ xfsaild(
+ 		tout = xfsaild_push(ailp);
+ 	}
+ 
++	memalloc_noreclaim_restore(noreclaim_flag);
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
+
