@@ -2,306 +2,198 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MALFORMED_FREEMAIL,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31952C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86170C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0237D2464B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FD924654
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXCpXtym"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="goS5J7Vm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgCIVBo (ORCPT
+        id S1726712AbgCIVD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:01:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24017 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726096AbgCIVBn (ORCPT
+        Mon, 9 Mar 2020 17:03:27 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42958 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgCIVD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:01:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583787701;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D1RxqWrKO438vkGEbZpjxhyrkCxLkS0aydXYxGr+6zQ=;
-        b=NXCpXtyml9uun1BUQrQIfZYKhfWfOXiHKdj0ChtOGcRqvVFHwOfszlCNPHPBldaRFKKa1P
-        diKzr0B04b92t8rCHcjmLHFRuvNOkzTG22BoUSLCSXyP59u9cAOSJx1zRPzNJPAwa+P6X7
-        mCI0QTtNYe99d8H6LGoq6EbbulynEHM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-306-CLCY5D2iNIO5QGTkLhSluw-1; Mon, 09 Mar 2020 17:01:40 -0400
-X-MC-Unique: CLCY5D2iNIO5QGTkLhSluw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA3B713E2;
-        Mon,  9 Mar 2020 21:01:37 +0000 (UTC)
-Received: from Ruby.bss.redhat.com (dhcp-10-20-1-196.bss.redhat.com [10.20.1.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 69AAF26370;
-        Mon,  9 Mar 2020 21:01:34 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Mikita Lipski <mikita.lipski@amd.com>,
-        Sean Paul <seanpaul@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] drm/dp_mst: Rewrite and fix bandwidth limit checks
-Date:   Mon,  9 Mar 2020 17:01:31 -0400
-Message-Id: <20200309210131.1497545-1-lyude@redhat.com>
-In-Reply-To: <20200306234623.547525-5-lyude@redhat.com>
-References: <20200306234623.547525-5-lyude@redhat.com>
+        Mon, 9 Mar 2020 17:03:26 -0400
+Received: by mail-ed1-f66.google.com with SMTP id n18so13660003edw.9;
+        Mon, 09 Mar 2020 14:03:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=eZb/ccWF/TYgzZwF8bq0wQ21E8YiX1Lv6rhiRU3sLvI=;
+        b=goS5J7VmVbkvDvbEQV6GkyBXUPCK0sJnXnfnqgSImAnaB8dX0ZFuteJVGoXK7EdyXj
+         rrofxMS+vaSPq24mYxh54ByhZrqo3uuTuxctLh8TikQQKWO8wnNpR/6TM8zHsLthPgQK
+         CvR/EumTUYJ93sdRKuRqZk7lJ9UW0q2nvyG5GKm62nDDLh9Gbwc1DuRVbNqlBQDWt16d
+         7ZMzlX7yFZPsI3sdOqus0hkdPuM9MUS3WkbDVQHanH960VNhidABw+FM7mIaEeuy2d/f
+         +JH4tcAyoiPYnX9iKyUDXQz2GOiiEOuhup0xjxRxb5V0jrMjKVL4OKj5aTYhNBGpYWPT
+         m/SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=eZb/ccWF/TYgzZwF8bq0wQ21E8YiX1Lv6rhiRU3sLvI=;
+        b=DK2OPYGrydVBqx/t6U8gJbc1HKrJopm/eMLSZVQHL46peuY//Z2TpxFO7X/EyAXz73
+         aplvgZDEHmMBmZ1U/5namuZme/mBAUg60tJMfV5/amb4Fy2fE8zD/RaiKiOrjKeZd1/B
+         4ZLN2ql50tSe6cooVrBU27S03y8Sx1J3jqoALvmkUr2ikhOmtlG3XKcPRaGzz0tge/bg
+         dmS7J4A+4EbeeSzOLsZQ6RkO3+vwir42PR9g+WfrI5PC8dSTr8yDRfR6luAa6Wnh4EKa
+         y2t+P+Zzuz9a+uKAYYV/zCTj162DXSsoWzwpCvhZy4tXXab6F5GTqapjjFOn1ZXC6y14
+         /eTw==
+X-Gm-Message-State: ANhLgQ315X44ype7bOSpGliBKJAHVT+H8NAArsG/XDcVnRWx+wNSMe9d
+        zS9y4EUau2RI4hX+mXp1Nug=
+X-Google-Smtp-Source: ADFU+vtqGrkvVmh1GC+ULjDDZ1JCr9MbKQsSl6NHYia2CcMULubhu1YtnuQwENam4NvycYCwEwhX/A==
+X-Received: by 2002:aa7:d6c4:: with SMTP id x4mr17787093edr.135.1583787803950;
+        Mon, 09 Mar 2020 14:03:23 -0700 (PDT)
+Received: from felia ([2001:16b8:2d7b:9300:1c7c:448d:5c83:1391])
+        by smtp.gmail.com with ESMTPSA id ck21sm1059104ejb.51.2020.03.09.14.03.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 14:03:23 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Mon, 9 Mar 2020 22:03:14 +0100 (CET)
+X-X-Sender: lukas@felia
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Guenter Roeck <groeck@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Julius Werner <jwerner@chromium.org>,
+        kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] MAINTAINERS: include GOOGLE FIRMWARE entry
+In-Reply-To: <20200309070534.GA4093795@kroah.com>
+Message-ID: <alpine.DEB.2.21.2003092035300.2953@felia>
+References: <20200308195116.12836-1-lukas.bulwahn@gmail.com> <CABXOdTcrxoBCz24Ap=YJYZnr+oLAmaR10xZ9ar2mYbE1=RAoug@mail.gmail.com> <5129f7dbd8506cc9fd5a8f76dc993d789566af6c.camel@perches.com> <alpine.DEB.2.21.2003090702440.3325@felia>
+ <20200309070534.GA4093795@kroah.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sigh, this is mostly my fault for not giving commit cd82d82cbc04
-("drm/dp_mst: Add branch bandwidth validation to MST atomic check")
-enough scrutiny during review. The way we're checking bandwidth
-limitations here is mostly wrong:
 
-For starters, drm_dp_mst_atomic_check_bw_limit() determines the
-pbn_limit of a branch by simply scanning each port on the current branch
-device, then uses the last non-zero full_pbn value that it finds. It
-then counts the sum of the PBN used on each branch device for that
-level, and compares against the full_pbn value it found before.
 
-This is wrong because ports can and will have different PBN limitations
-on many hubs, especially since a number of DisplayPort hubs out there
-will be clever and only use the smallest link rate required for each
-downstream sink - potentially giving every port a different full_pbn
-value depending on what link rate it's trained at. This means with our
-current code, which max PBN value we end up with is not well defined.
+On Mon, 9 Mar 2020, Greg Kroah-Hartman wrote:
 
-Additionally, we also need to remember when checking bandwidth
-limitations that the top-most device in any MST topology is a branch
-device, not a port. This means that the first level of a topology
-doesn't technically have a full_pbn value that needs to be checked.
-Instead, we should assume that so long as our VCPI allocations fit we're
-within the bandwidth limitations of the primary MSTB.
+> On Mon, Mar 09, 2020 at 07:32:10AM +0100, Lukas Bulwahn wrote:
+> > 
+> > 
+> > On Sun, 8 Mar 2020, Joe Perches wrote:
+> > 
+> > > On Sun, 2020-03-08 at 15:32 -0700, Guenter Roeck wrote:
+> > > > On Sun, Mar 8, 2020 at 12:51 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> > > > > All files in drivers/firmware/google/ are identified as part of THE REST
+> > > > > according to MAINTAINERS, but they are really maintained by others.
+> > > []
+> > > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > []
+> > > > > @@ -7111,6 +7111,14 @@ S:       Supported
+> > > > >  F:     Documentation/networking/device_drivers/google/gve.rst
+> > > > >  F:     drivers/net/ethernet/google
+> > > > > 
+> > > > > +GOOGLE FIRMWARE
+> > > > > +M:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > +M:     Stephen Boyd <swboyd@chromium.org>
+> > > > > +R:     Guenter Roeck <groeck@chromium.org>
+> > > > > +R:     Julius Werner <jwerner@chromium.org>
+> > > > > +S:     Maintained
+> > > > > +F:     drivers/firmware/google/
+> > > > > +
+> > > > 
+> > > > FWIW, I would not mind stepping up as maintainer if needed, but I
+> > > > think we should strongly discourage this kind of auto-assignment of
+> > > > maintainers and/or reviewers.
+> > > 
+> > > Auto assignment should definitely _not_ be done.
+> > > 
+> > > This is an RFC proposal though.
+> > > 
+> > > Sometimes it's better to not produce an RFC as
+> > > a patch, but maybe just show a proposed section
+> > > and ask if is appropriate may be a better style
+> > > going forward.
+> > >
+> > 
+> > Please interpret the RFC patch similar to an email as Joe wrote below, 
+> > simply reaching out to you.
+> > 
+> > There is no auto-assignment intended, nor did I expect the patch to be 
+> > picked up on the first attempt of uneducated guessing.
+> > 
+> > There are currently around 3,000 files identified being part of THE REST;
+> > so they are all assigned to Linus and LKML.
+> > 
+> > To confirm that they actually are maintained by someone else and reflect 
+> > that in MAINTAINERS, a bit of educated guessing who to contact and to 
+> > which entry to add the files to is required.
+> > 
+> > I am starting with the "bigger" clustered files in drivers, and then try 
+> > to look at files in include and Documentation/ABI/.
+> > 
+> > Here is a rough statistics on how many files from each directory are in
+> > THE REST:
+> > 
+> >    1368 include
+> >     566 tools
+> >     327 lib
+> >     321 Documentation
+> >     100 drivers
+> >      91 kernel
+> >      84 scripts
+> >      75 samples
+> >      13 ipc
+> >      13 init
+> >       8 usr
+> >       2 arch
+> >       1 virt
+> 
+> When you use the get_maintainer.pl script, it should find reasonable
+> people/lists for those files, so why not just stick with that?  Trying
+> to classify all of the kernel files to have MAINTAINERS entries seems
+> like a loosing proposition as there are file that no one has touched in
+> years.
 
-We do however, want to check full_pbn on every port including those of
-the primary MSTB. However, it's important to keep in mind that this
-value represents the minimum link rate /between a port's sink or mstb,
-and the mstb itself/. A quick diagram to explain:
+I would at least hope that there are some quick wins with some cases that 
+are pretty obvious to be added to existing entries. A first scan suggested 
+that it should not take too much detective work to figure it out for some 
+of those files.
 
-                                MSTB #1
-                               /       \
-                              /         \
-                           Port #1    Port #2
-       full_pbn for Port #1 =E2=86=92 |          | =E2=86=90 full_pbn for=
- Port #2
-                           Sink #1    MSTB #2
-                                         |
-                                       etc...
+For files that have not been touched in years---which I hope are not the 
+majority of the cases---it would be nice to see if I can find out that 
+these files are part of a entry/subsystem that actually maintains them, 
+but did not need to touch them in years, or if these files are orphaned 
+(or even meaningless left-overs) but nobody noticed because it was never 
+made explicit in the MAINTAINERS file.
 
-Note that in the above diagram, the combined PBN from all VCPI
-allocations on said hub should not exceed the full_pbn value of port #2,
-and the display configuration on sink #1 should not exceed the full_pbn
-value of port #1. However, port #1 and port #2 can otherwise consume as
-much bandwidth as they want so long as their VCPI allocations still fit.
+After those quick wins, getting this done for ALL files could turn out to 
+be impossible, and just checking for future changes and reacting to those 
+is the better approach to ensure that new files have an entry in  
+MAINTAINERS, but I guess I will find out how much is quickly and easily 
+allocated to a MAINTAINERS entry and what cannot be determined as outsider 
+and relying on get_maintainer.pl is more reliable than getting a 
+confirmation for a dedicated entry in MAINTAINERS.
 
-And finally - our current bandwidth checking code also makes the mistake
-of not checking whether something is an end device or not before trying
-to traverse down it.
+If the feedback is consistently discouraging to update existing entries 
+with additions for currently non-assigned files, I will stop figuring out 
+the changes and relying on get_maintainers.pl without making use of any 
+data from the MAINTAINERS file for those cases remains the best option, 
+just as it is today.
 
-So, let's fix it by rewriting our bandwidth checking helpers. We split
-the function into one part for handling branches which simply adds up
-the total PBN on each branch and returns it, and one for checking each
-port to ensure we're not going over its PBN limit. Phew.
+I am willing to investigate if this point can be improved in the 
+MAINTAINERS file. If it is all good, as it is right now, or it simply 
+cannot be improved without a lot of attention from many developers, 
+everything can stay as-is and I will look into other topics.
 
-This should fix regressions seen, where we erroneously reject display
-configurations due to thinking they're going over our bandwidth limits
-when they're not.
-
-Changes since v1:
-* Took an even closer look at how PBN limitations are supposed to be
-  handled, and did some experimenting with Sean Paul. Ended up rewriting
-  these helpers again, but this time they should actually be correct!
-Changes since v2:
-* Small indenting fix
-* Fix pbn_used check in drm_dp_mst_atomic_check_port_bw_limit()
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to MST =
-atomic check")
-Cc: Mikita Lipski <mikita.lipski@amd.com>
-Cc: Sean Paul <seanpaul@google.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpu/drm/drm_dp_mst_topology.c | 119 ++++++++++++++++++++------
- 1 file changed, 93 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
-dp_mst_topology.c
-index b81ad444c24f..d2f464bdcfff 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -4841,41 +4841,102 @@ static bool drm_dp_mst_port_downstream_of_branch=
-(struct drm_dp_mst_port *port,
- 	return false;
- }
-=20
--static inline
--int drm_dp_mst_atomic_check_bw_limit(struct drm_dp_mst_branch *branch,
--				     struct drm_dp_mst_topology_state *mst_state)
-+static int
-+drm_dp_mst_atomic_check_port_bw_limit(struct drm_dp_mst_port *port,
-+				      struct drm_dp_mst_topology_state *state);
-+
-+static int
-+drm_dp_mst_atomic_check_mstb_bw_limit(struct drm_dp_mst_branch *mstb,
-+				      struct drm_dp_mst_topology_state *state)
- {
--	struct drm_dp_mst_port *port;
- 	struct drm_dp_vcpi_allocation *vcpi;
--	int pbn_limit =3D 0, pbn_used =3D 0;
-+	struct drm_dp_mst_port *port;
-+	int pbn_used =3D 0, ret;
-+	bool found =3D false;
-=20
--	list_for_each_entry(port, &branch->ports, next) {
--		if (port->mstb)
--			if (drm_dp_mst_atomic_check_bw_limit(port->mstb, mst_state))
--				return -ENOSPC;
-+	/* Check that we have at least one port in our state that's downstream
-+	 * of this branch, otherwise we can skip this branch
-+	 */
-+	list_for_each_entry(vcpi, &state->vcpis, next) {
-+		if (!vcpi->pbn ||
-+		    !drm_dp_mst_port_downstream_of_branch(vcpi->port, mstb))
-+			continue;
-=20
--		if (port->full_pbn > 0)
--			pbn_limit =3D port->full_pbn;
-+		found =3D true;
-+		break;
- 	}
--	DRM_DEBUG_ATOMIC("[MST BRANCH:%p] branch has %d PBN available\n",
--			 branch, pbn_limit);
-+	if (!found)
-+		return 0;
-=20
--	list_for_each_entry(vcpi, &mst_state->vcpis, next) {
--		if (!vcpi->pbn)
--			continue;
-+	if (mstb->port_parent)
-+		DRM_DEBUG_ATOMIC("[MSTB:%p] [MST PORT:%p] Checking bandwidth limits on=
- [MSTB:%p]\n",
-+				 mstb->port_parent->parent, mstb->port_parent,
-+				 mstb);
-+	else
-+		DRM_DEBUG_ATOMIC("[MSTB:%p] Checking bandwidth limits\n",
-+				 mstb);
-=20
--		if (drm_dp_mst_port_downstream_of_branch(vcpi->port, branch))
--			pbn_used +=3D vcpi->pbn;
-+	list_for_each_entry(port, &mstb->ports, next) {
-+		ret =3D drm_dp_mst_atomic_check_port_bw_limit(port, state);
-+		if (ret < 0)
-+			return ret;
-+
-+		pbn_used +=3D ret;
- 	}
--	DRM_DEBUG_ATOMIC("[MST BRANCH:%p] branch used %d PBN\n",
--			 branch, pbn_used);
-=20
--	if (pbn_used > pbn_limit) {
--		DRM_DEBUG_ATOMIC("[MST BRANCH:%p] No available bandwidth\n",
--				 branch);
-+	return pbn_used;
-+}
-+
-+static int
-+drm_dp_mst_atomic_check_port_bw_limit(struct drm_dp_mst_port *port,
-+				      struct drm_dp_mst_topology_state *state)
-+{
-+	struct drm_dp_vcpi_allocation *vcpi;
-+	int pbn_used =3D 0;
-+
-+	if (port->pdt =3D=3D DP_PEER_DEVICE_NONE)
-+		return 0;
-+
-+	if (drm_dp_mst_is_end_device(port->pdt, port->mcs)) {
-+		bool found =3D false;
-+
-+		list_for_each_entry(vcpi, &state->vcpis, next) {
-+			if (vcpi->port !=3D port)
-+				continue;
-+			if (!vcpi->pbn)
-+				return 0;
-+
-+			found =3D true;
-+			break;
-+		}
-+		if (!found)
-+			return 0;
-+
-+		/* This should never happen, as it means we tried to
-+		 * set a mode before querying the full_pbn
-+		 */
-+		if (WARN_ON(!port->full_pbn))
-+			return -EINVAL;
-+
-+		pbn_used =3D vcpi->pbn;
-+	} else {
-+		pbn_used =3D drm_dp_mst_atomic_check_mstb_bw_limit(port->mstb,
-+								 state);
-+		if (pbn_used <=3D 0)
-+			return pbn_used;
-+	}
-+
-+	if (pbn_used > port->full_pbn) {
-+		DRM_DEBUG_ATOMIC("[MSTB:%p] [MST PORT:%p] required PBN of %d exceeds p=
-ort limit of %d\n",
-+				 port->parent, port, pbn_used,
-+				 port->full_pbn);
- 		return -ENOSPC;
- 	}
--	return 0;
-+
-+	DRM_DEBUG_ATOMIC("[MSTB:%p] [MST PORT:%p] uses %d out of %d PBN\n",
-+			 port->parent, port, pbn_used, port->full_pbn);
-+
-+	return pbn_used;
- }
-=20
- static inline int
-@@ -5073,9 +5134,15 @@ int drm_dp_mst_atomic_check(struct drm_atomic_stat=
-e *state)
- 		ret =3D drm_dp_mst_atomic_check_vcpi_alloc_limit(mgr, mst_state);
- 		if (ret)
- 			break;
--		ret =3D drm_dp_mst_atomic_check_bw_limit(mgr->mst_primary, mst_state);
--		if (ret)
-+
-+		mutex_lock(&mgr->lock);
-+		ret =3D drm_dp_mst_atomic_check_mstb_bw_limit(mgr->mst_primary,
-+							    mst_state);
-+		mutex_unlock(&mgr->lock);
-+		if (ret < 0)
- 			break;
-+		else
-+			ret =3D 0;
- 	}
-=20
- 	return ret;
---=20
-2.24.1
-
+Lukas
