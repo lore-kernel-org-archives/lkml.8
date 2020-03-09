@@ -2,309 +2,145 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BB6C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D2BC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D344215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF50620873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:49:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgCIRsA (ORCPT
+        id S1727364AbgCIRtO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:48:00 -0400
-Received: from mga14.intel.com ([192.55.52.115]:12899 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbgCIRrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:47:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 10:47:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="260490320"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by orsmga002.jf.intel.com with ESMTP; 09 Mar 2020 10:47:35 -0700
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org
-Cc:     namhyung@kernel.org, adrian.hunter@intel.com,
-        mathieu.poirier@linaro.org, ravi.bangoria@linux.ibm.com,
-        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
-        pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
-        ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 2/9] perf header: Support CPU PMU capabilities
-Date:   Mon,  9 Mar 2020 10:46:32 -0700
-Message-Id: <20200309174639.4594-3-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200309174639.4594-1-kan.liang@linux.intel.com>
-References: <20200309174639.4594-1-kan.liang@linux.intel.com>
+        Mon, 9 Mar 2020 13:49:14 -0400
+Received: from mail-oln040092253105.outbound.protection.outlook.com ([40.92.253.105]:6098
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726096AbgCIRtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 13:49:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zrc91E9iWp6/X08RfIZc8ee9pFJK5i2GfKi5J6MYgKmemp5LhupAjjcV6wTxJ/cCrREvX+Mn9weOYC7TdeCF7tu6PUzieEETrhMIZuACJ8pMpiaAaTnYe9ifOeb1mAKerk8fwAxLtquGhCNrF71ZHG5Vveezak20OORJBO5MwgBmcn1iH4fzzzCVEqYlDDRgNa9hWpmVjCJmFcGzdgnzQtxgSjChRxDhjPp1idHqPshhyYKXcST4COlLJssq8aLZLrIvPwFuWgRI8jBq/Ey5U5DQVL229WCkSUqCLcXL9bJ5vKACHNPnaFKN0QeFfrTbE2YiLiyOWuTA/czXu9U5kg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RIDkSRkmjcwLgl9W/QQuRCOAqcvjbsDB0jpbuzxb/fw=;
+ b=LlqLhDTXIFErVslpqf0hDDfL6295vdtJpuwmjZn+JQtao3qBe+o/RFyd87rFdmZlwKwMyt8DAMiahrwHvZAWz7l3qmOVn6gpXLMyxPuG7gcg8n6sXl7LxNpSiJle9bOZ5cX/bd8qgrgjhLlPheKdwgNQdVzE4igqkNM0R485SbWPu8PR+n7Dv156X+09BAfR8D7MK8AoTqXI3qGjHSlEultx+c6ziNYFnT8rLncNW7f1OKSxTQmdl5VbDNpyZ/nmIvzPX8TsQAx4guUDAuoRjAteP8ztf343Q4hLDEPa25RfNa+KJ7Yj7/qn+XC4og/jZq9HLejoOqt9zqKScCxczw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HK2APC01FT045.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebc::37) by
+ HK2APC01HT118.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebc::338)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 9 Mar
+ 2020 17:49:08 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.57) by
+ HK2APC01FT045.mail.protection.outlook.com (10.152.249.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 17:49:08 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 17:49:08 +0000
+Received: from nicholas-dell-linux (2001:44b8:605f:11:6375:33df:328c:d925) by MEAPR01CA0029.ausprd01.prod.outlook.com (2603:10c6:201::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14 via Frontend Transport; Mon, 9 Mar 2020 17:49:06 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v3 0/2] nvmem: Add support for write-only instances, and
+ clean-up
+Thread-Topic: [PATCH v3 0/2] nvmem: Add support for write-only instances, and
+ clean-up
+Thread-Index: AQHV9jsIrwS6KhTqfEeGzuGXh51Jbw==
+Date:   Mon, 9 Mar 2020 17:49:08 +0000
+Message-ID: <PSXP216MB0438614877E3559E155F12AF80FE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MEAPR01CA0029.ausprd01.prod.outlook.com (2603:10c6:201::17)
+ To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:D72E65D032AB40DC6C58283FDB8E17632F3CE7DFD012717B3770DFD5F10D2147;UpperCasedChecksum:DD327475E681C02463FA0139663305666F425200C5F86A92F260531124A0CAA1;SizeAsReceived:7722;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [TmusDcVuF0IrG326Pb3R99Pd9tiHnqjX10MKKPR1A0RxoR+Xq+jUAuOiH0DIKtj5]
+x-microsoft-original-message-id: <20200309174901.GA1830@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 0fb723e0-cbae-4a3b-a092-08d7c4522ac1
+x-ms-exchange-slblob-mailprops: =?us-ascii?Q?rO8E+RXTnU/cEBXoKIq/8aFxnq9tHOwUXOjWzzghlKIS1cAfIWnNyZPqMm7j?=
+ =?us-ascii?Q?gJpGyBtbbkTH+YzAbDZIRY45VowEq+9R1CPHoRsePHF4qpkwMNT+3sUggBj1?=
+ =?us-ascii?Q?E98Gc2Sdi4yfkh4frzVeFcPmF946upkRc/sWhJytCoZgYbL9wWMbT/6MlmTy?=
+ =?us-ascii?Q?O/de/Qj3mxEEjSXGs4qCjrwKSt52WrJLpEz4tNjg5loiZFAgDntLiSduNfQQ?=
+ =?us-ascii?Q?6PExJ6ZnteTVyL6YY+eNIA4WT+b5G6cSVhUiX/O0Hn/FT/qHbIprMDiRuyJc?=
+ =?us-ascii?Q?jpKlBlCnkQjRYvygE1YeD5Tduq9p4qRrVw75BIYwF5USE8EJa8t0oyFFk4uo?=
+ =?us-ascii?Q?P5kCYOh0BAcghHZIrADVNTZQmbCLSKbBxdws6Kt6FLnYdJA9bLyPES315Sz1?=
+ =?us-ascii?Q?V+3lgiO0jaaqQar3OOAb3deT+gF23VbtEH9+4Y6ifyz64riOU9+mnDg78GTh?=
+ =?us-ascii?Q?g30dIWpPWx6GknBvEGXoCZZp25YiS7ZKYBAoBDKadJzdQx4rLTtNQk3o+eyD?=
+ =?us-ascii?Q?5YHY2ifMWJ9CcuosBRNoruHRexPtD97EUhsnNSYLkkCAHn7CjfMsF+DYr0Xr?=
+ =?us-ascii?Q?v3TNZFjUNN1cpTr5ZUg04YHdapD5ZKEEZQnJa9AO8E5UA6HWKY29yCmOmZ6q?=
+ =?us-ascii?Q?x0zRZXOg5JnhEfTiAvKkf1inAgdYOUwDrigumhuBh9avm5KViMKbDX80MLig?=
+ =?us-ascii?Q?NbLKA919bYh1kLJTfdsYZTDWJTVD8noS+riSUq88X+BYW8V2tftjvBXetcaZ?=
+ =?us-ascii?Q?t+AS6uZJhbvpfc8v8KEd6jXqVL93OBvXEvS3dzhmpqfuMCi6MxIbVE078uJF?=
+ =?us-ascii?Q?BqqTHtHmhqM89TbRwlbxGquIs0evEDJIN5TpczMXeYwlJXvmlWH8SyazBcII?=
+ =?us-ascii?Q?xfJP1PvG8gHQfh1YyxY2zToPVij81wCA0/TPPAen9t5eVkm3hPM105koFrnH?=
+ =?us-ascii?Q?Kr2wmfiblTAvBDvAxEFnBXJ/DpIAUksaCYa/mW1gasG82H5G9paUF4TuJMlU?=
+ =?us-ascii?Q?/P7atDAz8L58kzU54n//o6hPb6ZyOTpdJkcZhbB187zRrBEe2/6O9/GuCMvW?=
+ =?us-ascii?Q?eu3kRhylozz7JGuLKn29K4rIdds/eg=3D=3D?=
+x-ms-traffictypediagnostic: HK2APC01HT118:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Hl92k0Er96lN1QZfklXedpxpAno6zd9Qh/1HkuISTMNYcB3M76skezcvq6k/QurnD2y2shlb7U1wrSlPP+mYSVxxNmuWCcG/FfpFRveDrCNEqL2RenBYOJee09OCA1M5v80jLUnKSiVxvjGeghObhlh39XdQPySUl3FO2p8m6x0EdezZN0yMOhVAYf8TJKhTitI8ynW4xWhDDmWUZOMwxUoMUp3rINsIeatl9DSTPOc=
+x-ms-exchange-antispam-messagedata: rKfofwDVCs43RYS1vT0HTdRBjux66MeDDxfjdPcJ/daIlH2oEJ78Jzg/znes04JRA8Jy4g3cIo8JJV9uOTYHgyQQU6wsWKqTBi/DAR25CFswRikx12sj9IrBmxO/yLUlAISxrccF9UHwNyT8QzKhE9KYSDR3vjjFtSI1LaLNqQuGr4l8BYS0Jd9k2cl2Qdhh05kGTCzwSqSTmKkBCuwITQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D8BEAC0524B7BA4DB6B595EAD0A8EE67@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fb723e0-cbae-4a3b-a092-08d7c4522ac1
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 17:49:08.6436
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Hello all,
 
-To stitch LBR call stack, the max LBR information is required. So the
-CPU PMU capabilities information has to be stored in perf header.
+Previous version: https://lkml.org/lkml/2020/3/2/693
 
-Add a new feature HEADER_CPU_PMU_CAPS for CPU PMU capabilities.
-Retrieve all CPU PMU capabilities, not just max LBR information.
+Changed since previous version:
 
-Add variable max_branches to facilitate future usage.
+- Fixed memory leak when returning from nvmem_register().
 
-The CPU PMU capabilities information is only useful for LBR call stack
-mode. Clear the feature for perf stat and other perf record mode.
+- The patch 2/3 from last time was applied by Srinivas, so dropping it: 
+  https://lkml.org/lkml/2020/3/5/616
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- .../Documentation/perf.data-file-format.txt   |  16 +++
- tools/perf/builtin-record.c                   |   3 +
- tools/perf/builtin-stat.c                     |   1 +
- tools/perf/util/env.h                         |   3 +
- tools/perf/util/header.c                      | 110 ++++++++++++++++++
- tools/perf/util/header.h                      |   1 +
- 6 files changed, 134 insertions(+)
+- I split the patches into two as I said I would.
 
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index b0152e1095c5..b6472e463284 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -373,6 +373,22 @@ struct {
- Indicates that trace contains records of PERF_RECORD_COMPRESSED type
- that have perf_events records in compressed form.
- 
-+	HEADER_CPU_PMU_CAPS = 28,
-+
-+	A list of cpu PMU capabilities. The format of data is as below.
-+
-+struct {
-+	u32 nr_cpu_pmu_caps;
-+	{
-+		char	name[];
-+		char	value[];
-+	} [nr_cpu_pmu_caps]
-+};
-+
-+
-+Example:
-+ cpu pmu capabilities: branches=32, max_precise=3, pmu_name=icelake
-+
- 	other bits are reserved and should ignored for now
- 	HEADER_FEAT_BITS	= 256,
- 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 4c301466101b..428f7f5b8e48 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1120,6 +1120,9 @@ static void record__init_features(struct record *rec)
- 	if (!record__comp_enabled(rec))
- 		perf_header__clear_feat(&session->header, HEADER_COMPRESSED);
- 
-+	if (!callchain_param.enabled || (callchain_param.record_mode != CALLCHAIN_LBR))
-+		perf_header__clear_feat(&session->header, HEADER_CPU_PMU_CAPS);
-+
- 	perf_header__clear_feat(&session->header, HEADER_STAT);
- }
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index ec053dc1e35c..b5c8a5ab5e75 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1595,6 +1595,7 @@ static void init_features(struct perf_session *session)
- 	perf_header__clear_feat(&session->header, HEADER_TRACING_DATA);
- 	perf_header__clear_feat(&session->header, HEADER_BRANCH_STACK);
- 	perf_header__clear_feat(&session->header, HEADER_AUXTRACE);
-+	perf_header__clear_feat(&session->header, HEADER_CPU_PMU_CAPS);
- }
- 
- static int __cmd_record(int argc, const char **argv)
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 11d05ae3606a..d286d478b4d8 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -48,6 +48,7 @@ struct perf_env {
- 	char			*cpuid;
- 	unsigned long long	total_mem;
- 	unsigned int		msr_pmu_type;
-+	unsigned int		max_branches;
- 
- 	int			nr_cmdline;
- 	int			nr_sibling_cores;
-@@ -57,12 +58,14 @@ struct perf_env {
- 	int			nr_memory_nodes;
- 	int			nr_pmu_mappings;
- 	int			nr_groups;
-+	int			nr_cpu_pmu_caps;
- 	char			*cmdline;
- 	const char		**cmdline_argv;
- 	char			*sibling_cores;
- 	char			*sibling_dies;
- 	char			*sibling_threads;
- 	char			*pmu_mappings;
-+	char			*cpu_pmu_caps;
- 	struct cpu_topology_map	*cpu;
- 	struct cpu_cache_level	*caches;
- 	int			 caches_cnt;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index acbd046bf95c..ce29321a4e1d 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1395,6 +1395,39 @@ static int write_compressed(struct feat_fd *ff __maybe_unused,
- 	return do_write(ff, &(ff->ph->env.comp_mmap_len), sizeof(ff->ph->env.comp_mmap_len));
- }
- 
-+static int write_cpu_pmu_caps(struct feat_fd *ff,
-+			      struct evlist *evlist __maybe_unused)
-+{
-+	struct perf_pmu_caps *caps = NULL;
-+	struct perf_pmu *cpu_pmu;
-+	int nr_caps;
-+	int ret;
-+
-+	cpu_pmu = perf_pmu__find("cpu");
-+	if (!cpu_pmu)
-+		return -ENOENT;
-+
-+	nr_caps = perf_pmu__caps_parse(cpu_pmu);
-+	if (nr_caps < 0)
-+		return nr_caps;
-+
-+	ret = do_write(ff, &nr_caps, sizeof(nr_caps));
-+	if (ret < 0)
-+		return ret;
-+
-+	while ((caps = perf_pmu__scan_caps(cpu_pmu, caps))) {
-+		ret = do_write_string(ff, caps->name);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = do_write_string(ff, caps->value);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return ret;
-+}
-+
- static void print_hostname(struct feat_fd *ff, FILE *fp)
- {
- 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
-@@ -1809,6 +1842,28 @@ static void print_compressed(struct feat_fd *ff, FILE *fp)
- 		ff->ph->env.comp_level, ff->ph->env.comp_ratio);
- }
- 
-+static void print_cpu_pmu_caps(struct feat_fd *ff, FILE *fp)
-+{
-+	const char *delimiter = "# cpu pmu capabilities: ";
-+	char *str;
-+	u32 nr_caps;
-+
-+	nr_caps = ff->ph->env.nr_cpu_pmu_caps;
-+	if (!nr_caps) {
-+		fprintf(fp, "# cpu pmu capabilities: not available\n");
-+		return;
-+	}
-+
-+	str = ff->ph->env.cpu_pmu_caps;
-+	while (nr_caps--) {
-+		fprintf(fp, "%s%s", delimiter, str);
-+		delimiter = ", ";
-+		str += strlen(str) + 1;
-+	}
-+
-+	fprintf(fp, "\n");
-+}
-+
- static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
- {
- 	const char *delimiter = "# pmu mappings: ";
-@@ -2846,6 +2901,60 @@ static int process_compressed(struct feat_fd *ff,
- 	return 0;
- }
- 
-+static int process_cpu_pmu_caps(struct feat_fd *ff,
-+				void *data __maybe_unused)
-+{
-+	char *name, *value;
-+	struct strbuf sb;
-+	u32 nr_caps;
-+
-+	if (do_read_u32(ff, &nr_caps))
-+		return -1;
-+
-+	if (!nr_caps) {
-+		pr_debug("cpu pmu capabilities not available\n");
-+		return 0;
-+	}
-+
-+	ff->ph->env.nr_cpu_pmu_caps = nr_caps;
-+
-+	if (strbuf_init(&sb, 128) < 0)
-+		return -1;
-+
-+	while (nr_caps--) {
-+		name = do_read_string(ff);
-+		if (!name)
-+			goto error;
-+
-+		value = do_read_string(ff);
-+		if (!value)
-+			goto free_name;
-+
-+		if (strbuf_addf(&sb, "%s=%s", name, value) < 0)
-+			goto free_value;
-+
-+		/* include a NULL character at the end */
-+		if (strbuf_add(&sb, "", 1) < 0)
-+			goto free_value;
-+
-+		if (!strcmp(name, "branches"))
-+			ff->ph->env.max_branches = atoi(value);
-+
-+		free(value);
-+		free(name);
-+	}
-+	ff->ph->env.cpu_pmu_caps = strbuf_detach(&sb, NULL);
-+	return 0;
-+
-+free_value:
-+	free(value);
-+free_name:
-+	free(name);
-+error:
-+	strbuf_release(&sb);
-+	return -1;
-+}
-+
- #define FEAT_OPR(n, func, __full_only) \
- 	[HEADER_##n] = {					\
- 		.name	    = __stringify(n),			\
-@@ -2903,6 +3012,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
- 	FEAT_OPR(BPF_PROG_INFO, bpf_prog_info,  false),
- 	FEAT_OPR(BPF_BTF,       bpf_btf,        false),
- 	FEAT_OPR(COMPRESSED,	compressed,	false),
-+	FEAT_OPR(CPU_PMU_CAPS,	cpu_pmu_caps,	false),
- };
- 
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 840f95cee349..650bd1c7a99b 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -43,6 +43,7 @@ enum {
- 	HEADER_BPF_PROG_INFO,
- 	HEADER_BPF_BTF,
- 	HEADER_COMPRESSED,
-+	HEADER_CPU_PMU_CAPS,
- 	HEADER_LAST_FEATURE,
- 	HEADER_FEAT_BITS	= 256,
- };
+- Mika Westerberg asked me to send patch 3/3 to him again after v5.7-rc1 
+  is released, so drop it for now:
+  https://lore.kernel.org/lkml/20200306053455.GY2540@lahna.fi.intel.com/
+
+- Removed comment from last return in nvmem_sysfs_get_groups() to avoid 
+  confusion.
+
+Nicholas Johnson (2):
+  nvmem: Allow nvmem_sysfs_get_groups() to return NULL as error
+    condition
+  nvmem: Add support for write-only instances
+
+ drivers/nvmem/core.c        |  4 +++
+ drivers/nvmem/nvmem-sysfs.c | 56 +++++++++++++++++++++++++++++++------
+ 2 files changed, 52 insertions(+), 8 deletions(-)
+
 -- 
-2.17.1
+2.25.1
 
