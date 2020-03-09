@@ -2,722 +2,649 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2245C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA11C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2FF20675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C79820675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="IaXEFncK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgCILdb (ORCPT
+        id S1726466AbgCILfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:33:31 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2521 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725942AbgCILda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:33:30 -0400
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 9ED78656F0983B34BB11;
-        Mon,  9 Mar 2020 11:33:28 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 9 Mar 2020 11:33:28 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Mon, 9 Mar 2020
- 11:33:27 +0000
-Date:   Mon, 9 Mar 2020 11:33:25 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sudeep.holla@arm.com>,
-        <lukasz.luba@arm.com>, <james.quinlan@broadcom.com>
-Subject: Re: [PATCH v4 05/13] firmware: arm_scmi: Add notification
- protocol-registration
-Message-ID: <20200309113325.0000108c@Huawei.com>
-In-Reply-To: <20200304162558.48836-6-cristian.marussi@arm.com>
-References: <20200304162558.48836-1-cristian.marussi@arm.com>
-        <20200304162558.48836-6-cristian.marussi@arm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 9 Mar 2020 07:35:15 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:44902 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725956AbgCILfP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 07:35:15 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029BTqOo027799;
+        Mon, 9 Mar 2020 07:34:56 -0400
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2106.outbound.protection.outlook.com [104.47.58.106])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2ym94cmgnf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Mar 2020 07:34:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ex9Y5cXOn7uttMWlj9oBVSJ+DezdrjRPv5YmW7Yfgd6FKnOkvPtXriIsRu8GELQNwqEvQbC2KDH04maceYNFUJ/3PNthDiL5JPaz9qzx7RqjDd5mmaIHuflavxEF8ALjTxX9mqMleLKCfWXZ7A5wCruQ6xs+MCx7DVVFBvnXc1D7+CClEwcnkwnvdf7g29SXc9z/NNHDJjyEGotzeSR7gR+JMgKCyPI+UFZA6r9B2GMqywUa6f17/1NRjV7t5cww7gceP1AK3AbXm++hu4WxPgZBzsSLGX60VmIg0n7zzScFPMtquuhnKKc4OvWvxudI+CyMMAw0R9PS7+TY6JlL3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vDL8Pt9McI7TZV64QbVCrNrVijRXgMX/6Djk3Go8fIs=;
+ b=H5atViN0yqJZaGwUqexCF0J6xgU8kwP2i0WzQDxsA3YaC87zUwH0yJnQqka9Bp2Vw+gViZzr3jDk9uHWGIoaByOkPFJ0oP8WJISf1t4tPoGcSMvf69kSqgWNdl9BjfUlWWXDLI+c1KYy1i1LYsEaDYw70Zny0K/zGJla+yiY3AP7tl/0o6cOTx19mfaqI2a9RZ6Y9j0NmbAlkDyd58lUe+AcJSxt4VPwQCGiBpjqfnEq9+EQLKm6zJhWZuSWyVnkXZwtdivENhRLBpxMfJKRzAkkDksqDQBJ6dGgRuQAMQvffQxbmhvRNToj2OT75MHyOsZpBD/zG+9mX7aOV/JwDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vDL8Pt9McI7TZV64QbVCrNrVijRXgMX/6Djk3Go8fIs=;
+ b=IaXEFncKbEbz6in5AY+LXA0/oDsoyx6zfutPklb2njzLbtaVPtqkenE3a0qPYLC223ttc15G4ivguEMFK26Yilouvvmgt/k0bWZtJjbDF+jSsEJEpBfq5tiWScZczceVkVsVykHJBVz2oo/cTevRkpxjbg0kHcTiwva0R4BF7nw=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB4570.namprd03.prod.outlook.com (2603:10b6:5:112::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14; Mon, 9 Mar
+ 2020 11:34:53 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::f8c4:f7f2:c7a0:cc19]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::f8c4:f7f2:c7a0:cc19%6]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 11:34:53 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>
+CC:     "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH v8 5/8] iio: adc: adi-axi-adc: add support for AXI ADC IP
+ core
+Thread-Topic: [PATCH v8 5/8] iio: adc: adi-axi-adc: add support for AXI ADC IP
+ core
+Thread-Index: AQHV86YgniFm2MljBEqiZRZlPH8gqqg9OTmAgALs+QA=
+Date:   Mon, 9 Mar 2020 11:34:53 +0000
+Message-ID: <e59eeceb0b1a27c3920e0bcc42bcba20bdfa9ec7.camel@analog.com>
+References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
+         <20200306110100.22092-6-alexandru.ardelean@analog.com>
+         <20200307145411.720a680d@archlinux>
+In-Reply-To: <20200307145411.720a680d@archlinux>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6f1bf820-b8fa-43dc-fa0e-08d7c41de2c6
+x-ms-traffictypediagnostic: DM6PR03MB4570:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR03MB4570A398B72BABE4C9538742F9FE0@DM6PR03MB4570.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:506;
+x-forefront-prvs: 0337AFFE9A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(396003)(346002)(376002)(366004)(199004)(189003)(8676002)(5660300002)(81166006)(81156014)(54906003)(71200400001)(316002)(4326008)(2616005)(186003)(26005)(8936002)(966005)(86362001)(6512007)(6486002)(36756003)(478600001)(2906002)(30864003)(6916009)(76116006)(66446008)(64756008)(66476007)(66946007)(66556008)(6506007)(91956017)(559001)(579004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4570;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7xgBvCSILlVbEmsP7AJU7/BeRcWxk8YzxRwCESjxHnxRcUzFkBaf7+yogfZJrka3RDh8aUtxoiZAxhCJ3xNlgGBvrwazE6prxpMAKsQRDmLO3jfz87I/UXhDxW2gk1+aRAL0bLtpZUdFjpkuRjLzpMbLt5ywmStEfrii3Ktf5ve2YzFSlVEQSd0tTmxal9WsRWcy/P1DTrrcjShJPZ8KdQiWQjPGt0W9gaFGL/v4DE5x6aC/l2hLVmp25/b5BOSiq7qxuQvhyaHaoiAL+4uhI77XfWzOtx99spDA442VK5CZrCr4Pf/9vb3NuQThu3yGNEo4FFPWZiM3VVfShjyKjNWrcwsOTIXVyHQo/Lgz7dLjN4LdB1A64HufQZmKgv+Gkdnp3SpO4Fg69WQqOktdufySC/g3eifg2Zi21FPRSRmxE/OJ3WXespS3pHeB79EgV+hVfVVE2qP+2PQ53SixerWlcaa/G4OxcFyExlxpPhaezamRl9ldmu/QappEs17DCQ/SSmbxiz8osUuCvVlHjg==
+x-ms-exchange-antispam-messagedata: h+vzngyfDElC+sZOVNr4Qvd0uhbZ9y9VX4wtkRSbmhaB04h2Rxf2/XSbDx71bySfAf4Bb0uOGeK54tN8aL9HUBaUzuzHgkryd5PUOC+94woJvSaTS6YVFi05GzfSU1soruXuE81R+JW02GVo5bHR9Q==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B21BCA6E33528A4F9B4A11585BB2FE29@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f1bf820-b8fa-43dc-fa0e-08d7c41de2c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 11:34:53.2312
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: t1TnNMl7g1ybl68Vaea8f9ZP7uYXEitvKPvFpV4SfxjSLfC0NSGuN6+EaQKw2VccsYgIe5XkP7lfccBtICoCYy6sYqif3x3EUB93zm1KgTc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4570
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-09_02:2020-03-08,2020-03-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1015 adultscore=0 phishscore=0 impostorscore=0
+ suspectscore=0 priorityscore=1501 mlxscore=0 spamscore=0 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003090081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 16:25:50 +0000
-Cristian Marussi <cristian.marussi@arm.com> wrote:
-
-> Add core SCMI Notifications protocol-registration support: allow protocols
-> to register their own set of supported events, during their initialization
-> phase. Notification core can track multiple platform instances by their
-> handles.
-> 
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-
-Hi.
-
-A few minor things inline.  Fairly sure kernel-doc needs
-struct before the heading for each structure comment block.
-
-Also, the events queue init looks like it could just be done with
-a kfifo_alloc call.  Perhaps that makes sense given later patches...
-
-Thanks,
-
-Jonathan
-
-> ---
-> V3 --> V4
-> - removed scratch ISR buffer, move scratch BH buffer into protocol
->   descriptor
-> - converted registered_protocols and registered_events from hashtables
->   into bare fixed-sized arrays
-> - removed unregister protocols' routines (never called really)
-> V2 --> V3
-> - added scmi_notify_instance to track target platform instance
-> V1 --> V2
-> - splitted out of V1 patch 04
-> - moved from IDR maps to real HashTables to store events
-> - scmi_notifications_initialized is now an atomic_t
-> - reviewed protocol registration/unregistration to use devres
-> - fixed:
->   drivers/firmware/arm_scmi/notify.c:483:18-23: ERROR:
->   	reference preceded by free on line 482
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-> ---
->  drivers/firmware/arm_scmi/Makefile |   2 +-
->  drivers/firmware/arm_scmi/common.h |   4 +
->  drivers/firmware/arm_scmi/notify.c | 439 +++++++++++++++++++++++++++++
->  drivers/firmware/arm_scmi/notify.h |  57 ++++
->  include/linux/scmi_protocol.h      |   9 +
->  5 files changed, 510 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/firmware/arm_scmi/notify.c
->  create mode 100644 drivers/firmware/arm_scmi/notify.h
-> 
-> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-> index 6694d0d908d6..24a03a36aee4 100644
-> --- a/drivers/firmware/arm_scmi/Makefile
-> +++ b/drivers/firmware/arm_scmi/Makefile
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o scmi-transport.o
->  scmi-bus-y = bus.o
-> -scmi-driver-y = driver.o
-> +scmi-driver-y = driver.o notify.o
->  scmi-transport-y = mailbox.o shmem.o
->  scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
->  obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
-> diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-> index 3c2e5d0d7b68..2106c35195ce 100644
-> --- a/drivers/firmware/arm_scmi/common.h
-> +++ b/drivers/firmware/arm_scmi/common.h
-> @@ -6,6 +6,8 @@
->   *
->   * Copyright (C) 2018 ARM Ltd.
->   */
-> +#ifndef _SCMI_COMMON_H
-> +#define _SCMI_COMMON_H
->  
->  #include <linux/bitfield.h>
->  #include <linux/completion.h>
-> @@ -232,3 +234,5 @@ void shmem_fetch_notification(struct scmi_shared_mem __iomem *shmem,
->  void shmem_clear_notification(struct scmi_shared_mem __iomem *shmem);
->  bool shmem_poll_done(struct scmi_shared_mem __iomem *shmem,
->  		     struct scmi_xfer *xfer);
-> +
-> +#endif /* _SCMI_COMMON_H */
-> diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-> new file mode 100644
-> index 000000000000..31e49cb7d88e
-> --- /dev/null
-> +++ b/drivers/firmware/arm_scmi/notify.c
-> @@ -0,0 +1,439 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * System Control and Management Interface (SCMI) Notification support
-> + *
-> + * Copyright (C) 2020 ARM Ltd.
-> + *
-> + * SCMI Protocol specification allows the platform to signal events to
-> + * interested agents via notification messages: this is an implementation
-> + * of the dispatch and delivery of such notifications to the interested users
-> + * inside the Linux kernel.
-> + *
-> + * An SCMI Notification core instance is initialized for each active platform
-> + * instance identified by the means of the usual @scmi_handle.
-> + *
-> + * Each SCMI Protocol implementation, during its initialization, registers with
-> + * this core its set of supported events using @scmi_register_protocol_events():
-> + * all the needed descriptors are stored in the @registered_protocols and
-> + * @registered_events arrays.
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/atomic.h>
-> +#include <linux/bug.h>
-> +#include <linux/compiler.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kfifo.h>
-> +#include <linux/mutex.h>
-> +#include <linux/refcount.h>
-> +#include <linux/scmi_protocol.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#include "notify.h"
-> +
-> +#define	SCMI_MAX_PROTO			256
-> +#define	SCMI_ALL_SRC_IDS		0xffffUL
-> +/*
-> + * Builds an unsigned 32bit key from the given input tuple to be used
-> + * as a key in hashtables.
-> + */
-> +#define MAKE_HASH_KEY(p, e, s)			\
-> +	((u32)(((p) << 24) | ((e) << 16) | ((s) & SCMI_ALL_SRC_IDS)))
-> +
-> +#define MAKE_ALL_SRCS_KEY(p, e)			\
-> +	MAKE_HASH_KEY((p), (e), SCMI_ALL_SRC_IDS)
-> +
-> +struct scmi_registered_protocol_events_desc;
-> +
-> +/**
-> + * scmi_notify_instance  - Represents an instance of the notification core
-> + *
-> + * Each platform instance, represented by a handle, has its own instance of
-> + * the notification subsystem represented by this structure.
-> + *
-> + * @gid: GroupID used for devres
-> + * @handle: A reference to the platform instance
-> + * @initialized: A flag that indicates if the core resources have been allocated
-> + *		 and protocols are allowed to register their supported events
-> + * @enabled: A flag to indicate events can be enabled and start flowing
-> + * @registered_protocols: An statically allocated array containing pointers to
-> + *			  all the registered protocol-level specific information
-> + *			  related to events' handling
-> + */
-> +struct scmi_notify_instance {
-> +	void						*gid;
-> +	struct scmi_handle				*handle;
-> +	atomic_t					initialized;
-> +	atomic_t					enabled;
-> +	struct scmi_registered_protocol_events_desc	**registered_protocols;
-> +};
-> +
-> +/**
-> + * events_queue  - Describes a queue and its associated worker
-
-I guess this might become clear later, but right now this just looks like
-we are open code what could be handled automatically by just using
-kfifo_alloc
-
-> + *
-> + * Each protocol has its own dedicated events_queue descriptor.
-> + *
-> + * @sz: Size in bytes of the related kfifo
-> + * @qbuf: Pre-allocated buffer of @sz bytes to be used by the kfifo
-> + * @kfifo: A dedicated Kernel kfifo descriptor
-> + */
-> +struct events_queue {
-> +	size_t				sz;
-> +	u8				*qbuf;
-> +	struct kfifo			kfifo;
-> +};
-> +
-> +/**
-> + * scmi_event_header  - A utility header
-
-struct scmi...
-
-> + *
-> + * This header is prepended to each received event message payload before
-> + * queueing it on the related events_queue.
-> + *
-> + * @timestamp: The timestamp, in nanoseconds (boottime), which was associated
-> + *	       to this event as soon as it entered the SCMI RX ISR
-> + * @evt_id: Event ID (corresponds to the Event MsgID for this Protocol)
-> + * @payld_sz: Effective size of the embedded message payload which follows
-> + * @payld: A reference to the embedded event payload
-> + */
-> +struct scmi_event_header {
-> +	u64	timestamp;
-> +	u8	evt_id;
-> +	size_t	payld_sz;
-> +	u8	payld[];
-> +} __packed;
-> +
-> +struct scmi_registered_event;
-> +
-> +/**
-> + * scmi_registered_protocol_events_desc  - Protocol Specific information
-> + *
-> + * All protocols that registers at least one event have their protocol-specific
-> + * information stored here, together with the embedded allocated events_queue.
-> + * These descriptors are stored in the @registered_protocols array at protocol
-> + * registration time.
-> + *
-> + * Once these descriptors are successfully registered, they are NEVER again
-> + * removed or modified since protocols do not unregister ever, so that once we
-> + * safely grab a NON-NULL reference from the array we can keep it and use it.
-> + *
-> + * @id: Protocol ID
-> + * @ops: Protocol specific and event-related operations
-> + * @equeue: The embedded per-protocol events_queue
-> + * @ni: A reference to the initialized instance descriptor
-> + * @eh: A reference to pre-allocated buffer to be used as a scratch area by the
-> + *	deferred worker when fetching data from the kfifo
-> + * @eh_sz: Size of the pre-allocated buffer @eh
-> + * @in_flight: A reference to an in flight @scmi_registered_event
-> + * @num_events: Number of events in @registered_events
-> + * @registered_events: A dynamically allocated array holding all the registered
-> + *		       events' descriptors, whose fixed-size is determined at
-> + *		       compile time.
-> + */
-> +struct scmi_registered_protocol_events_desc {
-> +	u8					id;
-> +	const struct scmi_protocol_event_ops	*ops;
-> +	struct events_queue			equeue;
-> +	struct scmi_notify_instance		*ni;
-> +	struct scmi_event_header		*eh;
-> +	size_t					eh_sz;
-> +	void					*in_flight;
-> +	int					num_events;
-> +	struct scmi_registered_event		**registered_events;
-> +};
-> +
-> +/**
-> + * scmi_registered_event  - Event Specific Information
-
-struct scmi_registered_event - Event...
-
-> + *
-> + * All registered events are represented by one of these structures that are
-> + * stored in the @registered_events array at protocol registration time.
-> + *
-> + * Once these descriptors are successfully registered, they are NEVER again
-> + * removed or modified since protocols do not unregister ever, so that once we
-> + * safely grab a NON-NULL reference from the table we can keep it and use it.
-> + *
-> + * @proto: A reference to the associated protocol descriptor
-> + * @evt: A reference to the associated event descriptor (as provided at
-> + *       registration time)
-> + * @report: A pre-allocated buffer used by the deferred worker to fill a
-> + *	    customized event report
-> + * @num_sources: The number of possible sources for this event as stated at
-> + *		 events' registration time
-> + * @sources: A reference to a dynamically allocated array used to refcount the
-> + *	     events' enable requests for all the existing sources
-> + * @sources_mtx: A mutex to serialize the access to @sources
-> + */
-> +struct scmi_registered_event {
-> +	struct scmi_registered_protocol_events_desc	*proto;
-> +	const struct scmi_event				*evt;
-> +	void						*report;
-> +	u32						num_sources;
-> +	refcount_t					*sources;
-> +	struct mutex					sources_mtx;
-> +};
-> +
-> +/**
-> + * scmi_initialize_events_queue  - Allocate/Initialize a kfifo buffer
-> + *
-> + * Allocate a buffer for the kfifo and initialize it.
-> + *
-> + * @ni: A reference to the notification instance to use
-> + * @equeue: The events_queue to initialize
-> + * @sz: Size of the kfifo buffer to allocate
-> + *
-> + * Return: 0 on Success
-> + */
-> +static int scmi_initialize_events_queue(struct scmi_notify_instance *ni,
-> +					struct events_queue *equeue, size_t sz)
-> +{
-> +	equeue->qbuf = devm_kzalloc(ni->handle->dev, sz, GFP_KERNEL);
-> +	if (!equeue->qbuf)
-> +		return -ENOMEM;
-> +	equeue->sz = sz;
-> +
-> +	return kfifo_init(&equeue->kfifo, equeue->qbuf, equeue->sz);
-
-This seems like a slightly odd dance.  Why not use kfifo_alloc?
-
-If it's because of the lack of devm_kfifo_alloc, maybe use a devm_add_action_or_reset
-to handle that.
-
-> +}
-> +
-> +/**
-> + * scmi_allocate_registered_protocol_desc  - Allocate a registered protocol
-> + * events' descriptor
-> + *
-> + * It is supposed to be called only once for each protocol at protocol
-> + * initialization time, so it warns if the requested protocol is found
-> + * already registered.
-> + *
-> + * @ni: A reference to the notification instance to use
-> + * @proto_id: Protocol ID
-> + * @queue_sz: Size of the associated queue to allocate
-> + * @eh_sz: Size of the event header scratch area to pre-allocate
-> + * @num_events: Number of events to support (size of @registered_events)
-> + * @ops: Pointer to a struct holding references to protocol specific helpers
-> + *	 needed during events handling
-> + *
-> + * Returns the allocated and registered descriptor on Success
-> + */
-> +static struct scmi_registered_protocol_events_desc *
-> +scmi_allocate_registered_protocol_desc(struct scmi_notify_instance *ni,
-> +				       u8 proto_id, size_t queue_sz,
-> +				       size_t eh_sz, int num_events,
-> +				const struct scmi_protocol_event_ops *ops)
-> +{
-> +	int ret;
-> +	struct scmi_registered_protocol_events_desc *pd;
-> +
-> +	pd = READ_ONCE(ni->registered_protocols[proto_id]);
-> +	if (pd) {
-> +		WARN_ON(1);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	pd = devm_kzalloc(ni->handle->dev, sizeof(*pd), GFP_KERNEL);
-> +	if (!pd)
-> +		return ERR_PTR(-ENOMEM);
-> +	pd->id = proto_id;
-> +	pd->ops = ops;
-> +	pd->ni = ni;
-> +
-> +	ret = scmi_initialize_events_queue(ni, &pd->equeue, queue_sz);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	pd->eh = devm_kzalloc(ni->handle->dev, eh_sz, GFP_KERNEL);
-> +	if (!pd->eh)
-> +		return ERR_PTR(-ENOMEM);
-> +	pd->eh_sz = eh_sz;
-> +
-> +	pd->registered_events = devm_kcalloc(ni->handle->dev, num_events,
-> +					     sizeof(char *), GFP_KERNEL);
-> +	if (!pd->registered_events)
-> +		return ERR_PTR(-ENOMEM);
-> +	pd->num_events = num_events;
-> +
-> +	return pd;
-> +}
-> +
-> +/**
-> + * scmi_register_protocol_events  - Register Protocol Events with the core
-> + *
-> + * Used by SCMI Protocols initialization code to register with the notification
-> + * core the list of supported events and their descriptors: takes care to
-> + * pre-allocate and store all needed descriptors, scratch buffers and event
-> + * queues.
-> + *
-> + * @handle: The handle identifying the platform instance against which the
-> + *	    the protocol's events are registered
-> + * @proto_id: Protocol ID
-> + * @queue_sz: Size in bytes of the associated queue to be allocated
-> + * @ops: Protocol specific event-related operations
-> + * @evt: Event descriptor array
-> + * @num_events: Number of events in @evt array
-> + * @num_sources: Number of possible sources for this protocol on this
-> + *		 platform.
-> + *
-> + * Return: 0 on Success
-> + */
-> +int scmi_register_protocol_events(const struct scmi_handle *handle,
-> +				  u8 proto_id, size_t queue_sz,
-> +				  const struct scmi_protocol_event_ops *ops,
-> +				  const struct scmi_event *evt, int num_events,
-> +				  int num_sources)
-> +{
-> +	int i;
-> +	size_t payld_sz = 0;
-> +	struct scmi_registered_protocol_events_desc *pd;
-> +	struct scmi_notify_instance *ni = handle->notify_priv;
-> +
-> +	if (!ops || !evt || proto_id >= SCMI_MAX_PROTO)
-> +		return -EINVAL;
-> +
-> +	/* Ensure atomic value is updated */
-> +	smp_mb__before_atomic();
-> +	if (unlikely(!ni || !atomic_read(&ni->initialized)))
-> +		return -EAGAIN;
-> +
-> +	/* Attach to the notification main devres group */
-> +	if (!devres_open_group(ni->handle->dev, ni->gid, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < num_events; i++)
-> +		payld_sz = max_t(size_t, payld_sz, evt[i].max_payld_sz);
-> +	pd = scmi_allocate_registered_protocol_desc(ni, proto_id, queue_sz,
-> +				    sizeof(struct scmi_event_header) + payld_sz,
-> +						    num_events, ops);
-> +	if (IS_ERR(pd))
-> +		goto err;
-> +
-> +	for (i = 0; i < num_events; i++, evt++) {
-> +		struct scmi_registered_event *r_evt;
-> +
-> +		r_evt = devm_kzalloc(ni->handle->dev, sizeof(*r_evt),
-> +				     GFP_KERNEL);
-> +		if (!r_evt)
-> +			goto err;
-> +		r_evt->proto = pd;
-> +		r_evt->evt = evt;
-> +
-> +		r_evt->sources = devm_kcalloc(ni->handle->dev, num_sources,
-> +					      sizeof(refcount_t), GFP_KERNEL);
-> +		if (!r_evt->sources)
-> +			goto err;
-> +		r_evt->num_sources = num_sources;
-> +		mutex_init(&r_evt->sources_mtx);
-> +
-> +		r_evt->report = devm_kzalloc(ni->handle->dev,
-> +					     evt->max_report_sz, GFP_KERNEL);
-> +		if (!r_evt->report)
-> +			goto err;
-> +
-> +		WRITE_ONCE(pd->registered_events[i], r_evt);
-> +		pr_info("SCMI Notifications: registered event - %X\n",
-> +			MAKE_ALL_SRCS_KEY(r_evt->proto->id, r_evt->evt->id));
-> +	}
-> +
-> +	/* Register protocol and events...it will never be removed */
-> +	WRITE_ONCE(ni->registered_protocols[proto_id], pd);
-> +
-> +	devres_close_group(ni->handle->dev, ni->gid);
-> +
-> +	return 0;
-> +
-> +err:
-> +	pr_warn("SCMI Notifications - Proto:%X - Registration Failed !\n",
-> +		proto_id);
-> +	/* A failing protocol registration does not trigger full failure */
-> +	devres_close_group(ni->handle->dev, ni->gid);
-> +
-> +	return -ENOMEM;
-> +}
-> +
-> +/**
-> + * scmi_notification_init  - Initializes Notification Core Support
-> + *
-> + * This function lays out all the basic resources needed by the notification
-> + * core instance identified by the provided handle: once done, all of the
-> + * SCMI Protocols can register their events with the core during their own
-> + * initializations.
-> + *
-> + * Note that failing to initialize the core notifications support does not
-> + * cause the whole SCMI Protocols stack to fail its initialization.
-> + *
-> + * SCMI Notification Initialization happens in 2 steps:
-> + *
-> + *  - initialization: basic common allocations (this function) -> .initialized
-> + *  - registration: protocols asynchronously come into life and registers their
-> + *		    own supported list of events with the core; this causes
-> + *		    further per-protocol allocations.
-> + *
-> + * Any user's callback registration attempt, referring a still not registered
-> + * event, will be registered as pending and finalized later (if possible)
-> + * by @scmi_protocols_late_init work.
-> + * This allows for lazy initialization of SCMI Protocols due to late (or
-> + * missing) SCMI drivers' modules loading.
-> + *
-> + * @handle: The handle identifying the platform instance to initialize
-> + *
-> + * Return: 0 on Success
-> + */
-> +int scmi_notification_init(struct scmi_handle *handle)
-> +{
-> +	void *gid;
-> +	struct scmi_notify_instance *ni;
-> +
-> +	gid = devres_open_group(handle->dev, NULL, GFP_KERNEL);
-> +	if (!gid)
-> +		return -ENOMEM;
-> +
-> +	ni = devm_kzalloc(handle->dev, sizeof(*ni), GFP_KERNEL);
-> +	if (!ni)
-> +		goto err;
-> +
-> +	ni->gid = gid;
-> +	ni->handle = handle;
-> +
-> +	ni->registered_protocols = devm_kcalloc(handle->dev, SCMI_MAX_PROTO,
-> +						sizeof(char *), GFP_KERNEL);
-> +	if (!ni->registered_protocols)
-> +		goto err;
-> +
-> +	handle->notify_priv = ni;
-> +
-> +	atomic_set(&ni->initialized, 1);
-> +	atomic_set(&ni->enabled, 1);
-> +	/* Ensure atomic values are updated */
-> +	smp_mb__after_atomic();
-> +
-> +	pr_info("SCMI Notifications Core Initialized.\n");
-> +
-> +	devres_close_group(handle->dev, ni->gid);
-> +
-> +	return 0;
-> +
-> +err:
-> +	pr_warn("SCMI Notifications - Initialization Failed.\n");
-> +	devres_release_group(handle->dev, NULL);
-> +	return -ENOMEM;
-> +}
-> +
-> +/**
-> + * scmi_notification_exit  - Shutdown and clean Notification core
-> + *
-> + * @handle: The handle identifying the platform instance to shutdown
-> + */
-> +void scmi_notification_exit(struct scmi_handle *handle)
-> +{
-> +	struct scmi_notify_instance *ni = handle->notify_priv;
-> +
-> +	if (unlikely(!ni || !atomic_read(&ni->initialized)))
-> +		return;
-> +
-> +	atomic_set(&ni->enabled, 0);
-> +	/* Ensure atomic values are updated */
-> +	smp_mb__after_atomic();
-> +
-> +	devres_release_group(ni->handle->dev, ni->gid);
-> +
-> +	pr_info("SCMI Notifications Core Shutdown.\n");
-
-Is this actually useful?  Seems like noise to me, maybe pr_debug is more appopriate.
-
-> +}
-> diff --git a/drivers/firmware/arm_scmi/notify.h b/drivers/firmware/arm_scmi/notify.h
-> new file mode 100644
-> index 000000000000..a7ece64e8842
-> --- /dev/null
-> +++ b/drivers/firmware/arm_scmi/notify.h
-> @@ -0,0 +1,57 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * System Control and Management Interface (SCMI) Message Protocol
-> + * notification header file containing some definitions, structures
-> + * and function prototypes related to SCMI Notification handling.
-> + *
-> + * Copyright (C) 2019 ARM Ltd.
-
-Update the dates given you are still changing this stuff?
-
-> + */
-> +#ifndef _SCMI_NOTIFY_H
-> +#define _SCMI_NOTIFY_H
-> +
-> +#include <linux/device.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * scmi_event  - Describes an event to be supported
-
-Fairly sure this isn't valid kernel-doc.
-
-   * struct scmi_event - ...
-
-Make sure to run the kernel-doc scripts over any files you've added kernel-doc to
-and tidy up the warnings.
-
-> + *
-> + * Each SCMI protocol, during its initialization phase, can describe the events
-> + * it wishes to support in a few struct scmi_event and pass them to the core
-> + * using scmi_register_protocol_events().
-> + *
-> + * @id: Event ID
-> + * @max_payld_sz: Max possible size for the payload of a notif msg of this kind
-> + * @max_report_sz: Max possible size for the report of a notif msg of this kind
-> + */
-> +struct scmi_event {
-> +	u8	id;
-> +	size_t	max_payld_sz;
-> +	size_t	max_report_sz;
-> +
-
-Nitpick: Blank line isn't adding anything
-
-> +};
-> +
-> +/**
-> + * scmi_protocol_event_ops  - Helpers called by notification core.
-> + *
-> + * These are called only in process context.
-> + *
-> + * @set_notify_enabled: Enable/disable the required evt_id/src_id notifications
-> + *			using the proper custom protocol commands.
-> + *			Return true if at least one the required src_id
-> + *			has been successfully enabled/disabled
-> + */
-> +struct scmi_protocol_event_ops {
-> +	bool (*set_notify_enabled)(const struct scmi_handle *handle,
-> +				   u8 evt_id, u32 src_id, bool enabled);
-> +};
-> +
-> +int scmi_notification_init(struct scmi_handle *handle);
-> +void scmi_notification_exit(struct scmi_handle *handle);
-> +
-> +int scmi_register_protocol_events(const struct scmi_handle *handle,
-> +				  u8 proto_id, size_t queue_sz,
-> +				  const struct scmi_protocol_event_ops *ops,
-> +				  const struct scmi_event *evt, int num_events,
-> +				  int num_sources);
-> +
-> +#endif /* _SCMI_NOTIFY_H */
-> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-> index 5c873a59b387..0679f10ab05e 100644
-> --- a/include/linux/scmi_protocol.h
-> +++ b/include/linux/scmi_protocol.h
-> @@ -4,6 +4,10 @@
->   *
->   * Copyright (C) 2018 ARM Ltd.
->   */
-> +
-> +#ifndef _LINUX_SCMI_PROTOCOL_H
-> +#define _LINUX_SCMI_PROTOCOL_H
-> +
->  #include <linux/device.h>
->  #include <linux/types.h>
->  
-> @@ -227,6 +231,8 @@ struct scmi_reset_ops {
->   *	protocol(for internal use only)
->   * @reset_priv: pointer to private data structure specific to reset
->   *	protocol(for internal use only)
-> + * @notify_priv: pointer to private data structure specific to notifications
-> + *	(for internal use only)
->   */
->  struct scmi_handle {
->  	struct device *dev;
-> @@ -242,6 +248,7 @@ struct scmi_handle {
->  	void *power_priv;
->  	void *sensor_priv;
->  	void *reset_priv;
-> +	void *notify_priv;
->  };
->  
->  enum scmi_std_protocol {
-> @@ -319,3 +326,5 @@ static inline void scmi_driver_unregister(struct scmi_driver *driver) {}
->  typedef int (*scmi_prot_init_fn_t)(struct scmi_handle *);
->  int scmi_protocol_register(int protocol_id, scmi_prot_init_fn_t fn);
->  void scmi_protocol_unregister(int protocol_id);
-> +
-> +#endif /* _LINUX_SCMI_PROTOCOL_H */
-
-
+T24gU2F0LCAyMDIwLTAzLTA3IGF0IDE0OjU0ICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBGcmksIDYgTWFyIDIwMjAgMTM6MDA6NTcgKzAyMDAN
+Cj4gQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4gd3Jv
+dGU6DQo+IA0KPiA+IEZyb206IE1pY2hhZWwgSGVubmVyaWNoIDxtaWNoYWVsLmhlbm5lcmljaEBh
+bmFsb2cuY29tPg0KPiA+IA0KPiA+IFRoaXMgY2hhbmdlIGFkZHMgc3VwcG9ydCBmb3IgdGhlIEFu
+YWxvZyBEZXZpY2VzIEdlbmVyaWMgQVhJIEFEQyBJUCBjb3JlLg0KPiA+IFRoZSBJUCBjb3JlIGlz
+IHVzZWQgZm9yIGludGVyZmFjaW5nIHdpdGggYW5hbG9nLXRvLWRpZ2l0YWwgKEFEQykgY29udmVy
+dGVycw0KPiA+IHRoYXQgcmVxdWlyZSBlaXRoZXIgYSBoaWdoLXNwZWVkIHNlcmlhbCBpbnRlcmZh
+Y2UgKEpFU0QyMDRCL0MpIG9yIGEgc291cmNlDQo+ID4gc3luY2hyb25vdXMgcGFyYWxsZWwgaW50
+ZXJmYWNlIChMVkRTL0NNT1MpLg0KPiA+IA0KPiA+IFVzdWFsbHksIHNvbWUgb3RoZXIgaW50ZXJm
+YWNlIHR5cGUgKGkuZSBTUEkpIGlzIHVzZWQgYXMgYSBjb250cm9sIGludGVyZmFjZQ0KPiA+IGZv
+ciB0aGUgYWN0dWFsIEFEQywgd2hpbGUgdGhlIElQIGNvcmUgKGNvbnRyb2xsZWQgdmlhIHRoaXMg
+ZHJpdmVyKSwgd2lsbA0KPiA+IGludGVyZmFjZSB0byB0aGUgZGF0YS1saW5lcyBvZiB0aGUgQURD
+IGFuZCBoYW5kbGUgIHRoZSBzdHJlYW1pbmcgb2YgZGF0YQ0KPiA+IGludG8gbWVtb3J5IHZpYSBE
+TUEuDQo+ID4gDQo+ID4gQmVjYXVzZSBvZiB0aGlzLCB0aGUgQVhJIEFEQyBkcml2ZXIgbmVlZHMg
+dGhlIG90aGVyIFNQSS1BREMgZHJpdmVyIHRvDQo+ID4gcmVnaXN0ZXIgd2l0aCBpdC4gVGhlIFNQ
+SS1BREMgbmVlZHMgdG8gYmUgcmVnaXN0ZXIgdmlhIHRoZSBTUEkgZnJhbWV3b3JrLA0KPiA+IHdo
+aWxlIHRoZSBBWEkgQURDIHJlZ2lzdGVycyBhcyBhIHBsYXRmb3JtIGRyaXZlci4gVGhlIHR3byBj
+YW5ub3QgYmUgb3JkZXJlZA0KPiA+IGluIGEgaGllcmFyY2h5IGFzIGJvdGggZHJpdmVycyBoYXZl
+IHRoZWlyIG93biByZWdpc3RlcnMsIGFuZCB0cnlpbmcgdG8NCj4gPiBvcmdhbml6ZSB0aGlzIFtp
+biBhIGhpZXJhcmNoeSBiZWNvbWVzXSBwcm9ibGVtYXRpYyB3aGVuIHRyeWluZyB0byBtYXANCj4g
+PiBtZW1vcnkvcmVnaXN0ZXJzLg0KPiA+IA0KPiA+IFRoZXJlIGFyZSBzb21lIG1vZGVzIHdoZXJl
+IHRoZSBBWEkgQURDIGNhbiBvcGVyYXRlIGFzIHN0YW5kYWxvbmUgQURDLCBidXQNCj4gPiB0aG9z
+ZSB3aWxsIGJlIGltcGxlbWVudGVkIGF0IGEgbGF0ZXIgcG9pbnQgaW4gdGltZS4NCj4gPiANCj4g
+PiBMaW5rOiBodHRwczovL3dpa2kuYW5hbG9nLmNvbS9yZXNvdXJjZXMvZnBnYS9kb2NzL2F4aV9h
+ZGNfaXANCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaWNoYWVsIEhlbm5lcmljaCA8bWljaGFl
+bC5oZW5uZXJpY2hAYW5hbG9nLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMYXJzLVBldGVyIENs
+YXVzZW4gPGxhcnNAbWV0YWZvby5kZT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJk
+ZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiBNb3N0bHkgbG9va3MgZmlu
+ZSwgYnV0IGEgZmV3IG5pdHBpY2tzIGZyb20gcmVyZWFkaW5nIGl0Lg0KPiANCj4gVGhhbmtzLA0K
+PiANCj4gSm9uYXRoYW4NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvaWlvL2FkYy9LY29uZmln
+ICAgICAgICAgICAgIHwgIDIwICsNCj4gPiAgZHJpdmVycy9paW8vYWRjL01ha2VmaWxlICAgICAg
+ICAgICAgfCAgIDEgKw0KPiA+ICBkcml2ZXJzL2lpby9hZGMvYWRpLWF4aS1hZGMuYyAgICAgICB8
+IDYxOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGluY2x1ZGUvbGludXgvaWlv
+L2FkYy9hZGktYXhpLWFkYy5oIHwgIDYzICsrKw0KPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDcwMiBp
+bnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2lpby9hZGMvYWRp
+LWF4aS1hZGMuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC9paW8vYWRj
+L2FkaS1heGktYWRjLmgNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYWRjL0tj
+b25maWcgYi9kcml2ZXJzL2lpby9hZGMvS2NvbmZpZw0KPiA+IGluZGV4IGY0ZGE4MjFjNDAyMi4u
+NDQ1MDcwYWJmMzc2IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaWlvL2FkYy9LY29uZmlnDQo+
+ID4gKysrIGIvZHJpdmVycy9paW8vYWRjL0tjb25maWcNCj4gPiBAQCAtMjQ2LDYgKzI0NiwyNiBA
+QCBjb25maWcgQUQ3OTlYDQo+ID4gIAkgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1
+bGUsIGNob29zZSBNIGhlcmU6IHRoZSBtb2R1bGUgd2lsbCBiZQ0KPiA+ICAJICBjYWxsZWQgYWQ3
+OTl4Lg0KPiA+ICANCj4gPiArY29uZmlnIEFESV9BWElfQURDDQo+ID4gKwl0cmlzdGF0ZSAiQW5h
+bG9nIERldmljZXMgR2VuZXJpYyBBWEkgQURDIElQIGNvcmUgZHJpdmVyIg0KPiA+ICsJc2VsZWN0
+IElJT19CVUZGRVINCj4gPiArCXNlbGVjdCBJSU9fQlVGRkVSX0hXX0NPTlNVTUVSDQo+ID4gKwlz
+ZWxlY3QgSUlPX0JVRkZFUl9ETUFFTkdJTkUNCj4gPiArCWhlbHANCj4gPiArCSAgU2F5IHllcyBo
+ZXJlIHRvIGJ1aWxkIHN1cHBvcnQgZm9yIEFuYWxvZyBEZXZpY2VzIEdlbmVyaWMNCj4gPiArCSAg
+QVhJIEFEQyBJUCBjb3JlLiBUaGUgSVAgY29yZSBpcyB1c2VkIGZvciBpbnRlcmZhY2luZyB3aXRo
+DQo+ID4gKwkgIGFuYWxvZy10by1kaWdpdGFsIChBREMpIGNvbnZlcnRlcnMgdGhhdCByZXF1aXJl
+IGVpdGhlciBhIGhpZ2gtc3BlZWQNCj4gPiArCSAgc2VyaWFsIGludGVyZmFjZSAoSkVTRDIwNEIv
+Qykgb3IgYSBzb3VyY2Ugc3luY2hyb25vdXMgcGFyYWxsZWwNCj4gPiArCSAgaW50ZXJmYWNlIChM
+VkRTL0NNT1MpLg0KPiA+ICsJICBUeXBpY2FsbHkgKGZvciBzdWNoIGRldmljZXMpIFNQSSB3aWxs
+IGJlIHVzZWQgZm9yIGNvbmZpZ3VyYXRpb24gb25seSwNCj4gPiArCSAgd2hpbGUgdGhpcyBJUCBj
+b3JlIGhhbmRsZXMgdGhlIHN0cmVhbWluZyBvZiBkYXRhIGludG8gbWVtb3J5IHZpYSBETUEuDQo+
+ID4gKw0KPiA+ICsJICBMaW5rOiBodHRwczovL3dpa2kuYW5hbG9nLmNvbS9yZXNvdXJjZXMvZnBn
+YS9kb2NzL2F4aV9hZGNfaXANCj4gPiArCSAgSWYgdW5zdXJlLCBzYXkgTiAoYnV0IGl0J3Mgc2Fm
+ZSB0byBzYXkgIlkiKS4NCj4gPiArDQo+ID4gKwkgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMg
+YSBtb2R1bGUsIGNob29zZSBNIGhlcmU6IHRoZQ0KPiA+ICsJICBtb2R1bGUgd2lsbCBiZSBjYWxs
+ZWQgYWRpLWF4aS1hZGMuDQo+ID4gKw0KPiA+ICBjb25maWcgQVNQRUVEX0FEQw0KPiA+ICAJdHJp
+c3RhdGUgIkFzcGVlZCBBREMiDQo+ID4gIAlkZXBlbmRzIG9uIEFSQ0hfQVNQRUVEIHx8IENPTVBJ
+TEVfVEVTVA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9hZGMvTWFrZWZpbGUgYi9kcml2
+ZXJzL2lpby9hZGMvTWFrZWZpbGUNCj4gPiBpbmRleCA4NDYyNDU1YjQyMjguLjdjNjU5NGQwNDlm
+OSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2lpby9hZGMvTWFrZWZpbGUNCj4gPiArKysgYi9k
+cml2ZXJzL2lpby9hZGMvTWFrZWZpbGUNCj4gPiBAQCAtMjYsNiArMjYsNyBAQCBvYmotJChDT05G
+SUdfQUQ3NzkzKSArPSBhZDc3OTMubw0KPiA+ICBvYmotJChDT05GSUdfQUQ3ODg3KSArPSBhZDc4
+ODcubw0KPiA+ICBvYmotJChDT05GSUdfQUQ3OTQ5KSArPSBhZDc5NDkubw0KPiA+ICBvYmotJChD
+T05GSUdfQUQ3OTlYKSArPSBhZDc5OXgubw0KPiA+ICtvYmotJChDT05GSUdfQURJX0FYSV9BREMp
+ICs9IGFkaS1heGktYWRjLm8NCj4gPiAgb2JqLSQoQ09ORklHX0FTUEVFRF9BREMpICs9IGFzcGVl
+ZF9hZGMubw0KPiA+ICBvYmotJChDT05GSUdfQVQ5MV9BREMpICs9IGF0OTFfYWRjLm8NCj4gPiAg
+b2JqLSQoQ09ORklHX0FUOTFfU0FNQTVEMl9BREMpICs9IGF0OTEtc2FtYTVkMl9hZGMubw0KPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9hZGMvYWRpLWF4aS1hZGMuYyBiL2RyaXZlcnMvaWlv
+L2FkYy9hZGktYXhpLWFkYy5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAw
+MDAwMDAwMDAwMDAuLjE3ZWUyMDAxNWQ3MQ0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9k
+cml2ZXJzL2lpby9hZGMvYWRpLWF4aS1hZGMuYw0KPiA+IEBAIC0wLDAgKzEsNjE4IEBADQo+ID4g
+Ky8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9ubHkNCj4gPiArLyoNCj4gPiAr
+ICogQW5hbG9nIERldmljZXMgR2VuZXJpYyBBWEkgQURDIElQIGNvcmUNCj4gPiArICogTGluazog
+aHR0cHM6Ly93aWtpLmFuYWxvZy5jb20vcmVzb3VyY2VzL2ZwZ2EvZG9jcy9heGlfYWRjX2lwDQo+
+ID4gKyAqDQo+ID4gKyAqIENvcHlyaWdodCAyMDEyLTIwMjAgQW5hbG9nIERldmljZXMgSW5jLg0K
+PiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9iaXRmaWVsZC5oPg0KPiA+ICsj
+aW5jbHVkZSA8bGludXgvY2xrLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiA+ICsj
+aW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0K
+PiA+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ID4gKyNpbmNsdWRlIDxs
+aW51eC9zbGFiLmg+DQo+ID4gKw0KPiA+ICsjaW5jbHVkZSA8bGludXgvaWlvL2lpby5oPg0KPiA+
+ICsjaW5jbHVkZSA8bGludXgvaWlvL3N5c2ZzLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9paW8v
+YnVmZmVyLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9paW8vYnVmZmVyLWRtYWVuZ2luZS5oPg0K
+PiA+ICsNCj4gPiArI2luY2x1ZGUgPGxpbnV4L2ZwZ2EvYWRpLWF4aS1jb21tb24uaD4NCj4gPiAr
+I2luY2x1ZGUgPGxpbnV4L2lpby9hZGMvYWRpLWF4aS1hZGMuaD4NCj4gPiArDQo+ID4gKy8qKg0K
+PiA+ICsgKiBSZWdpc3RlciBkZWZpbml0aW9uczoNCj4gPiArICogICBodHRwczovL3dpa2kuYW5h
+bG9nLmNvbS9yZXNvdXJjZXMvZnBnYS9kb2NzL2F4aV9hZGNfaXAjcmVnaXN0ZXJfbWFwDQo+ID4g
+KyAqLw0KPiA+ICsNCj4gPiArI2RlZmluZSBMT1dFUjVfTVNLCQkJR0VOTUFTSyg0LCAwKQ0KPiA+
+ICsjZGVmaW5lIExPV0VSNV9TRVQoeCkJCQlGSUVMRF9QUkVQKExPV0VSNV9NU0ssIHgpDQo+ID4g
+KyNkZWZpbmUgTE9XRVI1X0dFVCh4KQkJCUZJRUxEX0dFVChMT1dFUjVfTVNLLCB4KQ0KPiANCj4g
+V2hpbHN0IGl0IG1heSBjYXVzZSBtb3JlIHJlcGV0aXRpb24sIEknZCByYXRoZXIganVzdCBzZWUg
+dGhlc2UgdXNlZCB3aGVyZQ0KPiByZWxldmFudCBpbmxpbmUuICBUaGF0IHdpbGwgYmUgc2xpZ2h0
+bHkgZWFzaWVyIHRvIHJldmlldy4NCg0KYWNrDQppIHdhc24ndCB0b28gZGVjaWRlZCBvbiB3aGV0
+aGVyIHRoZXNlIG5lZWQgdG8gYmUgZGVmaW5lZCB5ZXQNCg0KPiANCj4gPiArDQo+ID4gKyNkZWZp
+bmUgTE9XRVI4X01TSwkJCUdFTk1BU0soNywgMCkNCj4gPiArI2RlZmluZSBMT1dFUjhfU0VUKHgp
+CQkJRklFTERfUFJFUChMT1dFUjhfTVNLLCB4KQ0KPiA+ICsjZGVmaW5lIExPV0VSOF9HRVQoeCkJ
+CQlGSUVMRF9HRVQoTE9XRVI4X01TSywgeCkNCj4gPiArDQo+ID4gKyNkZWZpbmUgVVBQRVIxNl9N
+U0sJCQlHRU5NQVNLKDMxLCAxNikNCj4gPiArI2RlZmluZSBVUFBFUjE2X1NFVCh4KQkJCUZJRUxE
+X1BSRVAoVVBQRVIxNl9NU0ssIHgpDQo+ID4gKyNkZWZpbmUgVVBQRVIxNl9HRVQoeCkJCQlGSUVM
+RF9HRVQoVVBQRVIxNl9NU0ssIHgpDQo+ID4gKw0KPiA+ICsjZGVmaW5lIExPV0VSMTZfTVNLCQkJ
+R0VOTUFTSygxNSwgMCkNCj4gPiArI2RlZmluZSBMT1dFUjE2X1NFVCh4KQkJCUZJRUxEX1BSRVAo
+TE9XRVIxNl9NU0ssIHgpDQo+ID4gKyNkZWZpbmUgTE9XRVIxNl9HRVQoeCkJCQlGSUVMRF9HRVQo
+TE9XRVIxNl9NU0ssIHgpDQo+ID4gKw0KPiA+ICsvKiBBREMgY29udHJvbHMgKi8NCj4gPiArDQo+
+ID4gKyNkZWZpbmUgUkVHX1JTVE4JCQkJMHgwMDQwDQo+IA0KPiBVc3VhbCBzdHVmZjogVGhlc2Ug
+c2hvdWxkIGJlIHByZWZpeGVkIHdpdGggZHJpdmVyIHJlbGV2YW50IHByZWZpeA0KPiBtYXliZSBB
+RElfQVhJXw0KDQpteSBvbmx5IGNvbmNlcm4gW2Fib3V0IHRoZSBwcmVmaXhdIGlzIHRoYXQgaXQg
+bWFrZXMgdGhlIG1hY3JvLW5hbWVzIHRvbyBsb25nOw0KYWZ0ZXIgcmUtbG9va2luZyBhdCB0aGVz
+ZSByZWcgZGVmaW5pdGlvbnMsIHdoYXQgYm90aGVyZWQgbWUgaXMgdGhhdCBzb21lIG9mIHRoZQ0K
+Yml0LWZpZWxkLW5hbWVzIGNvbGxpZGU7IHNvIGkgd2VudCB3aXRoIGNvbmNhdGVuYW50aW5nIHJl
+Zy1uYW1lcyArIHJlZy1iaXRuYW1lcywgDQp3aGljaCBtYWRlIHRoZW0gbG9vayB0b28gbG9uZyBb
+c28gaSByZW1vdmVkIHRoZSBwcmVmaXhdDQoNCnRoZXJlJ3MgYWxzbyB0aGUgcG9zc2liaWxpdHkg
+b2YgZ29pbmcgYmFjayB0byB0aGUgcmVnbWFwLWRvYyBhbmQgc2hvcnRlbmluZw0KdGhlc2UgcmVn
+LW5hbWUvYml0bmFtZXM7DQpidXQgdGhleSd2ZSBiZWVuIGxpa2UgdGhpcyBmb3IgYSB3aGlsZSwg
+YW5kIGkgYWRtaXQgZ29pbmcgdG8gdGhlIEhETCB0ZWFtIG1ha2VzDQptZSBzb21ldGltZXMgbGF6
+eTsNCg0KaSdsbCByZS1hZGQgdGVoIEFESV9BWEkgcHJlZml4OyBhbmQgd2lsbCBzZWUgaG93IHRo
+ZXNlIGxvb2sNCg0KPiANCj4gPiArI2RlZmluZSAgIFJFR19SU1ROX0NFX04JCQkJQklUKDIpDQo+
+ID4gKyNkZWZpbmUgICBSRUdfUlNUTl9NTUNNX1JTVE4JCQlCSVQoMSkNCj4gPiArI2RlZmluZSAg
+IFJFR19SU1ROX1JTVE4JCQkJQklUKDApDQo+ID4gKw0KPiA+ICsjZGVmaW5lIFJFR19DTlRSTAkJ
+CQkweDAwNDQNCj4gPiArI2RlZmluZSAgIFJFR19DTlRSTF9TWU5DCQkJQklUKDMpDQo+ID4gKyNk
+ZWZpbmUgICBSRUdfQ05UUkxfUjFfTU9ERQkJCUJJVCgyKQ0KPiA+ICsjZGVmaW5lICAgUkVHX0NO
+VFJMX0REUl9FREdFU0VMCQkJQklUKDEpDQo+ID4gKyNkZWZpbmUgICBSRUdfQ05UUkxfUElOX01P
+REUJCQlCSVQoMCkNCj4gPiArDQo+ID4gKyNkZWZpbmUgUkVHX0NMS19GUkVRCQkJCTB4MDA1NA0K
+PiA+ICsjZGVmaW5lIFJFR19DTEtfUkFUSU8JCQkJMHgwMDU4DQo+ID4gKw0KPiA+ICsjZGVmaW5l
+IFJFR19TVEFUVVMJCQkJMHgwMDVDDQo+ID4gKyNkZWZpbmUgICBSRUdfU1RBVFVTX1BOX0VSUgkJ
+CUJJVCgzKQ0KPiA+ICsjZGVmaW5lICAgUkVHX1NUQVRVU19QTl9PT1MJCQlCSVQoMikNCj4gPiAr
+I2RlZmluZSAgIFJFR19TVEFUVVNfT1ZFUl9SQU5HRQkJCUJJVCgxKQ0KPiA+ICsjZGVmaW5lICAg
+UkVHX1NUQVRVU19TVEFUVVMJCQlCSVQoMCkNCj4gPiArDQo+ID4gKyNkZWZpbmUgUkVHX1NZTkNf
+U1RBVFVTCQkJCTB4MDA2OA0KPiA+ICsjZGVmaW5lICAgUkVHX1NZTkNfU1RBVFVTX1NZTkMJCQlC
+SVQoMCkNCj4gPiArDQo+ID4gKyNkZWZpbmUgUkVHX0RSUF9DTlRSTAkJCQkweDAwNzANCj4gPiAr
+I2RlZmluZSAgIFJFR19EUlBfQ05UUkxfRFJQX1JXTgkJCUJJVCgyOCkNCj4gPiArI2RlZmluZSAg
+IFJFR19EUlBfQ05UUkxfRFJQX0FERFJFU1NfTVNLCQlHRU5NQVNLKDI3LCAxNikNCj4gPiArI2Rl
+ZmluZSAgIFJFR19EUlBfQ05UUkxfRFJQX0FERFJFU1NfU0VUKHgpCVwNCj4gPiArCQlGSUVMRF9Q
+UkVQKFJFR19EUlBfQ05UUkxfRFJQX0FERFJFU1NfTVNLLCB4KQ0KPiA+ICsjZGVmaW5lICAgUkVH
+X0RSUF9DTlRSTF9EUlBfQUREUkVTU19HRVQoeCkJXA0KPiA+ICsJCUZJRUxEX0dFVChSRUdfRFJQ
+X0NOVFJMX0RSUF9BRERSRVNTX01TSywgeCkNCj4gPiArDQo+ID4gKyNkZWZpbmUgUkVHX0RSUF9T
+VEFUVVMJCQkJMHgwMDc0DQo+ID4gKyNkZWZpbmUgICBSRUdfRFJQX1NUQVRVU19EUlBfTE9DS0VE
+CQlCSVQoMTcpDQo+ID4gKyNkZWZpbmUgICBSRUdfRFJQX1NUQVRVU19EUlBfU1RBVFVTCQlCSVQo
+MTYpDQo+ID4gKw0KPiA+ICsjZGVmaW5lIFJFR19EUlBfV0RBVEEJCQkJMHgwMDc4DQo+ID4gKyNk
+ZWZpbmUgICBSRUdfRFJQX1dEQVRBX1NFVAkJCUxPV0VSMTZfU0VUDQo+ID4gKyNkZWZpbmUgICBS
+RUdfRFJQX1dEQVRBX0dFVAkJCUxPV0VSMTZfR0VUDQo+IA0KPiBBcyBtZW50aW9uZWQgYWJvdmUs
+IEknZCByYXRoZXIgc2VlIHRoZSBtYXNrIGhlcmUuICBVbmxlc3MgdXNlZA0KPiBhbiBhd2Z1bCBs
+b3QsIEknZCByYXRoZXIganVzdCBzZWUgdGhlIEZJRUxEX1BSRVAgYW5kIEZJRUxEX0dFVA0KPiB1
+c2VkIGlubGluZSByYXRoZXIgdGhhbiBkZWZpbmluZyBhIGJ1bmNoIG9mIF9TRVQvX0dFVCBvbmx5
+IHNvbWUNCj4gb2Ygd2hpY2ggc2VlbSB0byBiZSB1c2VkIHNvIGZhci4NCj4gDQoNCnN1cmU7DQp3
+aWxsIHJlbW92ZSBhbGwgdGhlc2UgX1NFVC9fR0VUIHNob3J0aGFuZHMNCg0KYSBsb3Qgb2YgdGhl
+bSB3aWxsIGJlIHVzZWQ7DQphbmQgd2UgbWF5IGltcGxlbWVudCBhbGwgcmVnLWRlZmluaXRpb25z
+IGF0IHNvbWUgcG9pbnQ7DQoNCnRoaXMgZHJpdmVyIGlzIGEgcmUtd3JpdGUvYWRhcHRhdGlvbiBv
+ZiB0aGlzIG9uZToNCmh0dHBzOi8vZ2l0aHViLmNvbS9hbmFsb2dkZXZpY2VzaW5jL2xpbnV4L2Js
+b2IvbWFzdGVyL2RyaXZlcnMvaWlvL2FkYy9jZl9heGlfYWRjX2NvcmUuYw0KDQp3aGljaCBoYXMg
+Z3Jvd24gcXVpdGUgYSBsb3QgYW5kIHRyeWluZyB0byBjbGVhbiBpdCB1cCBpcy4uLiDCr1xfKOOD
+hClfL8KvDQoNCg0KPiA+ICsNCj4gPiArI2RlZmluZSBSRUdfRFJQX1JEQVRBCQkJCTB4MDA3Qw0K
+PiA+ICsjZGVmaW5lICAgUkVHX0RSUF9SREFUQV9TRVQJCQlMT1dFUjE2X1NFVA0KPiA+ICsjZGVm
+aW5lICAgUkVHX0RSUF9SREFUQV9HRVQJCQlMT1dFUjE2X0dFVA0KPiA+ICsNCj4gPiArI2RlZmlu
+ZSBSRUdfVUlfU1RBVFVTCQkJCTB4MDA4OA0KPiA+ICsjZGVmaW5lICAgUkVHX1VJX1NUQVRVU19P
+VkYJCQlCSVQoMikNCj4gPiArI2RlZmluZSAgIFJFR19VSV9TVEFUVVNfVU5GCQkJQklUKDEpDQo+
+ID4gKw0KPiA+ICsjZGVmaW5lIFJFR19VU1JfQ05UUkxfMQkJCQkweDAwQTANCj4gPiArI2RlZmlu
+ZSAgIFJFR19VU1JfQ05UUkxfMV9VU1JfQ0hBTk1BWF9NU0sJTE9XRVI4X01TSw0KPiA+ICsjZGVm
+aW5lICAgUkVHX1VTUl9DTlRSTF8xX1VTUl9DSEFOTUFYX1NFVAlMT1dFUjhfU0VUDQo+ID4gKyNk
+ZWZpbmUgICBSRUdfVVNSX0NOVFJMXzFfVVNSX0NIQU5NQVhfR0VUCUxPV0VSOF9HRVQNCj4gPiAr
+DQo+ID4gKyNkZWZpbmUgUkVHX0FEQ19TVEFSVF9DT0RFCQkJMHgwMEE0DQo+ID4gKyNkZWZpbmUg
+UkVHX0FEQ19HUElPX0lOCQkJCTB4MDBCOA0KPiA+ICsjZGVmaW5lIFJFR19BRENfR1BJT19PVVQJ
+CQkweDAwQkMNCj4gPiArDQo+ID4gKyNkZWZpbmUgUkVHX1BQU19DT1VOVEVSCQkJCTB4MDBDMA0K
+PiA+ICsNCj4gPiArI2RlZmluZSBSRUdfUFBTX1NUQVRVUwkJCQkweDAwQzQNCj4gPiArI2RlZmlu
+ZSAgIFJFR19QUFNfU1RBVFVTX1BQU19TVEFUVVMJCUJJVCgwKQ0KPiA+ICsNCj4gPiArLyogQURD
+IENoYW5uZWwgY29udHJvbHMgKi8NCj4gPiArDQo+ID4gKyNkZWZpbmUgUkVHX0NIQU5fQ05UUkwo
+YykJCQkoMHgwNDAwICsgKGMpICogMHg0MCkNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX0NOVFJM
+X0xCX09XUgkJCUJJVCgxMSkNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX0NOVFJMX1BOX1NFTF9P
+V1IJCUJJVCgxMCkNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX0NOVFJMX0lRQ09SX0VOQgkJQklU
+KDkpDQo+ID4gKyNkZWZpbmUgICBSRUdfQ0hBTl9DTlRSTF9EQ0ZJTFRfRU5CCQlCSVQoOCkNCj4g
+PiArI2RlZmluZSAgIFJFR19DSEFOX0NOVFJMX0ZPUk1BVF9TSUdORVhUCQlCSVQoNikNCj4gPiAr
+I2RlZmluZSAgIFJFR19DSEFOX0NOVFJMX0ZPUk1BVF9UWVBFCQlCSVQoNSkNCj4gPiArI2RlZmlu
+ZSAgIFJFR19DSEFOX0NOVFJMX0ZPUk1BVF9FTkFCTEUJCUJJVCg0KQ0KPiA+ICsjZGVmaW5lICAg
+UkVHX0NIQU5fQ05UUkxfQURDX1BOX1RZUEVfT1dSCUJJVCgxKQ0KPiA+ICsjZGVmaW5lICAgUkVH
+X0NIQU5fQ05UUkxfRU5BQkxFCQkJQklUKDApDQo+ID4gKw0KPiA+ICsjZGVmaW5lIFJFR19DSEFO
+X0NOVFJMX0RFRkFVTFRTCQlcDQo+ID4gKwkoUkVHX0NIQU5fQ05UUkxfRk9STUFUX1NJR05FWFQg
+fCBSRUdfQ0hBTl9DTlRSTF9GT1JNQVRfRU5BQkxFIHwJXA0KPiA+ICsJIFJFR19DSEFOX0NOVFJM
+X0lRQ09SX0VOQiB8IFJFR19DSEFOX0NOVFJMX0VOQUJMRSkNCj4gPiArDQo+ID4gKyNkZWZpbmUg
+UkVHX0NIQU5fU1RBVFVTKGMpCQkJKDB4MDQwNCArIChjKSAqIDB4NDApDQo+ID4gKyNkZWZpbmUg
+ICBSRUdfQ0hBTl9TVEFUVVNfUE5fRVJSCQlCSVQoMikNCj4gPiArI2RlZmluZSAgIFJFR19DSEFO
+X1NUQVRVU19QTl9PT1MJCUJJVCgxKQ0KPiA+ICsjZGVmaW5lICAgUkVHX0NIQU5fU1RBVFVTX09W
+RVJfUkFOR0UJCUJJVCgwKQ0KPiA+ICsNCj4gPiArI2RlZmluZSBSRUdfQ0hBTl9DTlRSTF8xKGMp
+CQkJKDB4MDQxMCArIChjKSAqIDB4NDApDQo+ID4gKyNkZWZpbmUgICBSRUdfQ0hBTl9DTlRSTF8x
+X0RDRklMVF9PRkZTRVRfTVNLCVVQUEVSMTZfTVNLDQo+ID4gKyNkZWZpbmUgICBSRUdfQ0hBTl9D
+TlRSTF8xX0RDRklMVF9PRkZTRVRfU0VUCVVQUEVSMTZfU0VUDQo+ID4gKyNkZWZpbmUgICBSRUdf
+Q0hBTl9DTlRSTF8xX0RDRklMVF9PRkZTRVRfR0VUCVVQUEVSMTZfR0VUDQo+ID4gKyNkZWZpbmUg
+ICBSRUdfQ0hBTl9DTlRSTF8xX0RDRklMVF9DT0VGRl9NU0sJTE9XRVIxNl9NU0sNCj4gPiArI2Rl
+ZmluZSAgIFJFR19DSEFOX0NOVFJMXzFfRENGSUxUX0NPRUZGX1NFVAlMT1dFUjE2X1NFVA0KPiA+
+ICsjZGVmaW5lICAgUkVHX0NIQU5fQ05UUkxfMV9EQ0ZJTFRfQ09FRkZfR0VUCUxPV0VSMTZfR0VU
+DQo+ID4gKw0KPiA+ICsjZGVmaW5lIFJFR19DSEFOX0NOVFJMXzIoYykJCQkoMHgwNDE0ICsgKGMp
+ICogMHg0MCkNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX0NOVFJMXzJfSVFDT1JfQ09FRkZfMV9N
+U0sJVVBQRVIxNl9NU0sNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX0NOVFJMXzJfSVFDT1JfQ09F
+RkZfMV9TRVQJVVBQRVIxNl9TRVQNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX0NOVFJMXzJfSVFD
+T1JfQ09FRkZfMV9HRVQJVVBQRVIxNl9HRVQNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX0NOVFJM
+XzJfSVFDT1JfQ09FRkZfMl9NU0sJTE9XRVIxNl9NU0sNCj4gPiArI2RlZmluZSAgIFJFR19DSEFO
+X0NOVFJMXzJfSVFDT1JfQ09FRkZfMl9TRVQJTE9XRVIxNl9TRVQNCj4gPiArI2RlZmluZSAgIFJF
+R19DSEFOX0NOVFJMXzJfSVFDT1JfQ09FRkZfMl9HRVQJTE9XRVIxNl9HRVQNCj4gPiArDQo+ID4g
+Ky8qICBmb3JtYXQgaXMgMS4xLjE0IChzaWduLCBpbnRlZ2VyIGFuZCBmcmFjdGlvbmFsIGJpdHMp
+ICovDQo+ID4gKyNkZWZpbmUgSVFDT1JfSU5UXzEJCQkJMHg0MDAwVUwNCj4gPiArI2RlZmluZSBJ
+UUNPUl9TSUdOX0JJVAkJCQlCSVQoMTUpDQo+ID4gKw0KPiA+ICsjZGVmaW5lIFJFR19DSEFOX0NO
+VFJMXzMoYykJCQkoMHgwNDE4ICsgKGMpICogMHg0MCkNCj4gPiArI2RlZmluZSAgIFJFR19DSEFO
+X0NOVFJMXzNfQURDX1BOX1NFTF9NU0sJVVBQRVIxNl9NU0sNCj4gPiArI2RlZmluZSAgIFJFR19D
+SEFOX0NOVFJMXzNfQURDX1BOX1NFTF9TRVQJVVBQRVIxNl9TRVQNCj4gPiArI2RlZmluZSAgIFJF
+R19DSEFOX0NOVFJMXzNfQURDX1BOX1NFTF9HRVQJVVBQRVIxNl9HRVQNCj4gPiArI2RlZmluZSAg
+IFJFR19DSEFOX0NOVFJMXzNfQURDX0RBVEFfU0VMX01TSwlMT1dFUjE2X01TSw0KPiA+ICsjZGVm
+aW5lICAgUkVHX0NIQU5fQ05UUkxfM19BRENfREFUQV9TRUxfU0VUCUxPV0VSMTZfU0VUDQo+ID4g
+KyNkZWZpbmUgICBSRUdfQ0hBTl9DTlRSTF8zX0FEQ19EQVRBX1NFTF9HRVQJTE9XRVIxNl9HRVQN
+Cj4gPiArDQo+ID4gKyNkZWZpbmUgUkVHX0NIQU5fVVNSX0NOVFJMXzEoYykJCQkJCSgweDA0MjAN
+Cj4gPiArIChjKSAqIDB4NDApDQo+ID4gKyNkZWZpbmUgICBSRUdfQ0hBTl9VU1JfQ05UUkxfMV9V
+U1JfREFUQVRZUEVfQkUJCQlCSVQoMjUpDQo+ID4gKyNkZWZpbmUgICBSRUdfQ0hBTl9VU1JfQ05U
+UkxfMV9VU1JfREFUQVRZUEVfU0lHTkVECQlCSVQoMjQpDQo+ID4gKyNkZWZpbmUgICBSRUdfQ0hB
+Tl9VU1JfQ05UUkxfMV9VU1JfREFUQVRZUEVfU0hJRlRfTVNLCQlHRU5NQVNLKA0KPiA+IDIzLCAx
+NikNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX1VTUl9DTlRSTF8xX1VTUl9EQVRBVFlQRV9TSElG
+VF9TRVQoeCkJXA0KPiA+ICsJCUZJRUxEX1BSRVAoUkVHX0NIQU5fVVNSX0NOVFJMXzFfVVNSX0RB
+VEFUWVBFX1NISUZUX01TSywgeCkNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX1VTUl9DTlRSTF8x
+X1VTUl9EQVRBVFlQRV9TSElGVF9HRVQJCVwNCj4gPiArCQlGSUVMRF9HRVQoUkVHX0NIQU5fVVNS
+X0NOVFJMXzFfVVNSX0RBVEFUWVBFX1NISUZUX01TSywgeCkNCj4gPiArI2RlZmluZSAgIFJFR19D
+SEFOX1VTUl9DTlRSTF8xX1VTUl9EQVRBVFlQRV9UT1RBTF9CSVRTX01TSwlHRU5NQVNLKDE1LCA4
+KQ0KPiA+ICsjZGVmaW5lICAgUkVHX0NIQU5fVVNSX0NOVFJMXzFfVVNSX0RBVEFUWVBFX1RPVEFM
+X0JJVFNfU0VUKHgpCVwNCj4gPiArCQlGSUVMRF9QUkVQKFJFR19DSEFOX1VTUl9DTlRSTF8xX1VT
+Ul9EQVRBVFlQRV9UT1RBTF9CSVRTX01TSywgeCkNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX1VT
+Ul9DTlRSTF8xX1VTUl9EQVRBVFlQRV9UT1RBTF9CSVRTX0dFVCh4KQlcDQo+ID4gKwkJRklFTERf
+R0VUKFJFR19DSEFOX1VTUl9DTlRSTF8xX1VTUl9EQVRBVFlQRV9UT1RBTF9CSVRTX01TSywgeCkN
+Cj4gPiArI2RlZmluZSAgIFJFR19DSEFOX1VTUl9DTlRSTF8xX1VTUl9EQVRBVFlQRV9CSVRTX01T
+SwkJTE9XRVI4X00NCj4gPiBTSw0KPiA+ICsjZGVmaW5lICAgUkVHX0NIQU5fVVNSX0NOVFJMXzFf
+VVNSX0RBVEFUWVBFX0JJVFNfU0VUCQlMT1dFUjhfUw0KPiA+IEVUDQo+ID4gKyNkZWZpbmUgICBS
+RUdfQ0hBTl9VU1JfQ05UUkxfMV9VU1JfREFUQVRZUEVfQklUU19HRVQJCUxPV0VSOF9HDQo+ID4g
+RVQNCj4gPiArDQo+ID4gKyNkZWZpbmUgUkVHX0NIQU5fVVNSX0NOVFJMXzIoYykJCQkJKDB4MDQy
+NCArIChjKSAqDQo+ID4gMHg0MCkNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX1VTUl9DTlRSTF8y
+X1VTUl9ERUNJTUFUSU9OX01fTVNLCVVQUEVSMTZfTVNLDQo+ID4gKyNkZWZpbmUgICBSRUdfQ0hB
+Tl9VU1JfQ05UUkxfMl9VU1JfREVDSU1BVElPTl9NX1NFVAlVUFBFUjE2X1NFVA0KPiA+ICsjZGVm
+aW5lICAgUkVHX0NIQU5fVVNSX0NOVFJMXzJfVVNSX0RFQ0lNQVRJT05fTV9HRVQJVVBQRVIxNl9H
+RVQNCj4gPiArI2RlZmluZSAgIFJFR19DSEFOX1VTUl9DTlRSTF8yX1VTUl9ERUNJTUFUSU9OX05f
+TVNLCUxPV0VSMTZfTVNLDQo+ID4gKyNkZWZpbmUgICBSRUdfQ0hBTl9VU1JfQ05UUkxfMl9VU1Jf
+REVDSU1BVElPTl9OX1NFVAlMT1dFUjE2X1NFVA0KPiA+ICsjZGVmaW5lICAgUkVHX0NIQU5fVVNS
+X0NOVFJMXzJfVVNSX0RFQ0lNQVRJT05fTl9HRVQJTE9XRVIxNl9HRVQNCj4gPiArDQo+ID4gKy8q
+IElPIERlbGF5IGNvbnRyb2xzICovDQo+ID4gKyNkZWZpbmUgX19SRUdfREVMQVlfQ09OVFJPTChi
+YXNlLCBsYW5lKQkJKChiYXNlKSArICgobGFuZSkgKg0KPiA+IDB4MDQpKQ0KPiA+ICsNCj4gPiAr
+I2RlZmluZSBSRUdfREVMQVlfQ09OVFJPTChsYW5lKQkJCVwNCj4gPiArCQkJX19SRUdfREVMQVlf
+Q09OVFJPTCgweDA4MDAsIGxhbmUpDQo+ID4gKyNkZWZpbmUgICAgUkVHX0RFTEFZX0NPTlRST0xf
+TVNLCQlMT1dFUjVfTVNLDQo+ID4gKyNkZWZpbmUgICAgUkVHX0RFTEFZX0NPTlRST0xfU0VUCQlM
+T1dFUjVfU0VUDQo+ID4gKyNkZWZpbmUgICAgUkVHX0RFTEFZX0NPTlRST0xfR0VUCQlMT1dFUjVf
+R0VUDQo+ID4gKw0KPiA+ICtzdHJ1Y3QgYWRpX2F4aV9hZGNfY29yZV9pbmZvIHsNCj4gPiArCXVu
+c2lnbmVkIGludAkJCQl2ZXJzaW9uOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RydWN0IGFkaV9h
+eGlfYWRjX3N0YXRlIHsNCj4gPiArCXN0cnVjdCBtdXRleAkJCQlsb2NrOw0KPiA+ICsNCj4gPiAr
+CXN0cnVjdCBhZGlfYXhpX2FkY19jbGllbnQJCSpjbGllbnQ7DQo+ID4gKwl2b2lkIF9faW9tZW0J
+CQkJKnJlZ3M7DQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgYWRpX2F4aV9hZGNfY2xpZW50
+IHsNCj4gPiArCXN0cnVjdCBsaXN0X2hlYWQJCQllbnRyeTsNCj4gPiArCXN0cnVjdCBhZGlfYXhp
+X2FkY19jb252CQkJY29udjsNCj4gPiArCXN0cnVjdCBhZGlfYXhpX2FkY19zdGF0ZQkJKnN0YXRl
+Ow0KPiA+ICsJc3RydWN0IGRldmljZQkJCQkqZGV2Ow0KPiA+ICsJY29uc3Qgc3RydWN0IGFkaV9h
+eGlfYWRjX2NvcmVfaW5mbwkqaW5mbzsNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBMSVNU
+X0hFQUQocmVnaXN0ZXJlZF9jbGllbnRzKTsNCj4gPiArc3RhdGljIERFRklORV9NVVRFWChyZWdp
+c3RlcmVkX2NsaWVudHNfbG9jayk7DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IGFkaV9heGlf
+YWRjX2NsaWVudCAqY29udl90b19jbGllbnQoc3RydWN0IGFkaV9heGlfYWRjX2NvbnYNCj4gPiAq
+Y29udikNCj4gPiArew0KPiA+ICsJaWYgKCFjb252KQ0KPiA+ICsJCXJldHVybiBOVUxMOw0KPiA+
+ICsJcmV0dXJuIGNvbnRhaW5lcl9vZihjb252LCBzdHJ1Y3QgYWRpX2F4aV9hZGNfY2xpZW50LCBj
+b252KTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArdm9pZCAqYWRpX2F4aV9hZGNfY29udl9wcml2KHN0
+cnVjdCBhZGlfYXhpX2FkY19jb252ICpjb252KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgYWRpX2F4
+aV9hZGNfY2xpZW50ICpjbCA9IGNvbnZfdG9fY2xpZW50KGNvbnYpOw0KPiA+ICsNCj4gPiArCWlm
+ICghY2wpDQo+ID4gKwkJcmV0dXJuIE5VTEw7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIChjaGFyICop
+Y2wgKyBBTElHTihzaXplb2Yoc3RydWN0IGFkaV9heGlfYWRjX2NsaWVudCksIElJT19BTElHTik7
+DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwoYWRpX2F4aV9hZGNfY29udl9wcml2KTsN
+Cj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIGFkaV9heGlfYWRjX3dyaXRlKHN0cnVjdCBhZGlfYXhp
+X2FkY19zdGF0ZSAqc3QsDQo+ID4gKwkJCSAgICAgIHVuc2lnbmVkIGludCByZWcsDQo+ID4gKwkJ
+CSAgICAgIHVuc2lnbmVkIGludCB2YWwpDQo+ID4gK3sNCj4gPiArCWlvd3JpdGUzMih2YWwsIHN0
+LT5yZWdzICsgcmVnKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHVuc2lnbmVkIGludCBh
+ZGlfYXhpX2FkY19yZWFkKHN0cnVjdCBhZGlfYXhpX2FkY19zdGF0ZSAqc3QsDQo+ID4gKwkJCQkg
+ICAgIHVuc2lnbmVkIGludCByZWcpDQo+ID4gK3sNCj4gPiArCXJldHVybiBpb3JlYWQzMihzdC0+
+cmVncyArIHJlZyk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgYWRpX2F4aV9hZGNf
+Y29uZmlnX2RtYV9idWZmZXIoc3RydWN0IGRldmljZSAqZGV2LA0KPiA+ICsJCQkJCSBzdHJ1Y3Qg
+aWlvX2RldiAqaW5kaW9fZGV2KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgaWlvX2J1ZmZlciAqYnVm
+ZmVyOw0KPiA+ICsJY29uc3QgY2hhciAqZG1hX25hbWU7DQo+ID4gKw0KPiA+ICsJaWYgKCFkZXZp
+Y2VfcHJvcGVydHlfcHJlc2VudChkZXYsICJkbWFzIikpDQo+ID4gKwkJcmV0dXJuIDA7DQo+ID4g
+Kw0KPiA+ICsJaWYgKGRldmljZV9wcm9wZXJ0eV9yZWFkX3N0cmluZyhkZXYsICJkbWEtbmFtZXMi
+LCAmZG1hX25hbWUpKQ0KPiA+ICsJCWRtYV9uYW1lID0gInJ4IjsNCj4gPiArDQo+ID4gKwlidWZm
+ZXIgPSBkZXZtX2lpb19kbWFlbmdpbmVfYnVmZmVyX2FsbG9jKGluZGlvX2Rldi0+ZGV2LnBhcmVu
+dCwNCj4gPiArCQkJCQkJIGRtYV9uYW1lKTsNCj4gPiArCWlmIChJU19FUlIoYnVmZmVyKSkNCj4g
+PiArCQlyZXR1cm4gUFRSX0VSUihidWZmZXIpOw0KPiA+ICsNCj4gPiArCWluZGlvX2Rldi0+bW9k
+ZXMgfD0gSU5ESU9fQlVGRkVSX0hBUkRXQVJFOw0KPiA+ICsJaWlvX2RldmljZV9hdHRhY2hfYnVm
+ZmVyKGluZGlvX2RldiwgYnVmZmVyKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0K
+PiA+ICsNCj4gPiArc3RhdGljIGludCBhZGlfYXhpX2FkY19yZWFkX3JhdyhzdHJ1Y3QgaWlvX2Rl
+diAqaW5kaW9fZGV2LA0KPiA+ICsJCQkJc3RydWN0IGlpb19jaGFuX3NwZWMgY29uc3QgKmNoYW4s
+DQo+ID4gKwkJCQlpbnQgKnZhbCwgaW50ICp2YWwyLCBsb25nIG1hc2spDQo+ID4gK3sNCj4gPiAr
+CXN0cnVjdCBhZGlfYXhpX2FkY19zdGF0ZSAqc3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOw0KPiA+
+ICsJc3RydWN0IGFkaV9heGlfYWRjX2NvbnYgKmNvbnYgPSAmc3QtPmNsaWVudC0+Y29udjsNCj4g
+PiArDQo+ID4gKwlpZiAoIWNvbnYtPnJlYWRfcmF3KQ0KPiA+ICsJCXJldHVybiAtRU9QTk9UU1VQ
+UDsNCj4gPiArDQo+ID4gKwlyZXR1cm4gY29udi0+cmVhZF9yYXcoY29udiwgY2hhbiwgdmFsLCB2
+YWwyLCBtYXNrKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBhZGlfYXhpX2FkY193
+cml0ZV9yYXcoc3RydWN0IGlpb19kZXYgKmluZGlvX2RldiwNCj4gPiArCQkJCSBzdHJ1Y3QgaWlv
+X2NoYW5fc3BlYyBjb25zdCAqY2hhbiwNCj4gPiArCQkJCSBpbnQgdmFsLCBpbnQgdmFsMiwgbG9u
+ZyBtYXNrKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgYWRpX2F4aV9hZGNfc3RhdGUgKnN0ID0gaWlv
+X3ByaXYoaW5kaW9fZGV2KTsNCj4gPiArCXN0cnVjdCBhZGlfYXhpX2FkY19jb252ICpjb252ID0g
+JnN0LT5jbGllbnQtPmNvbnY7DQo+ID4gKw0KPiA+ICsJaWYgKCFjb252LT53cml0ZV9yYXcpDQo+
+ID4gKwkJcmV0dXJuIC1FT1BOT1RTVVBQOw0KPiA+ICsNCj4gPiArCXJldHVybiBjb252LT53cml0
+ZV9yYXcoY29udiwgY2hhbiwgdmFsLCB2YWwyLCBtYXNrKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiAr
+c3RhdGljIGludCBhZGlfYXhpX2FkY191cGRhdGVfc2Nhbl9tb2RlKHN0cnVjdCBpaW9fZGV2ICpp
+bmRpb19kZXYsDQo+ID4gKwkJCQkJY29uc3QgdW5zaWduZWQgbG9uZyAqc2Nhbl9tYXNrKQ0KPiA+
+ICt7DQo+ID4gKwlzdHJ1Y3QgYWRpX2F4aV9hZGNfc3RhdGUgKnN0ID0gaWlvX3ByaXYoaW5kaW9f
+ZGV2KTsNCj4gPiArCXN0cnVjdCBhZGlfYXhpX2FkY19jb252ICpjb252ID0gJnN0LT5jbGllbnQt
+PmNvbnY7DQo+ID4gKwl1bnNpZ25lZCBpbnQgaSwgY3RybDsNCj4gPiArDQo+ID4gKwlmb3IgKGkg
+PSAwOyBpIDwgY29udi0+Y2hpcF9pbmZvLT5udW1fY2hhbm5lbHM7IGkrKykgew0KPiA+ICsJCWN0
+cmwgPSBhZGlfYXhpX2FkY19yZWFkKHN0LCBSRUdfQ0hBTl9DTlRSTChpKSk7DQo+ID4gKw0KPiA+
+ICsJCWlmICh0ZXN0X2JpdChpLCBzY2FuX21hc2spKQ0KPiA+ICsJCQljdHJsIHw9IFJFR19DSEFO
+X0NOVFJMX0VOQUJMRTsNCj4gPiArCQllbHNlDQo+ID4gKwkJCWN0cmwgJj0gflJFR19DSEFOX0NO
+VFJMX0VOQUJMRTsNCj4gPiArDQo+ID4gKwkJYWRpX2F4aV9hZGNfd3JpdGUoc3QsIFJFR19DSEFO
+X0NOVFJMKGkpLCBjdHJsKTsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiAr
+fQ0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCBhZGlfYXhpX2FkY19jb252ICphZGlfYXhpX2Fk
+Y19jb252X3JlZ2lzdGVyKHN0cnVjdCBkZXZpY2UNCj4gPiAqZGV2LA0KPiA+ICsJCQkJCQkJICBp
+bnQgc2l6ZW9mX3ByaXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBhZGlfYXhpX2FkY19jbGllbnQg
+KmNsOw0KPiA+ICsJc2l6ZV90IGFsbG9jX3NpemU7DQo+ID4gKw0KPiA+ICsJYWxsb2Nfc2l6ZSA9
+IHNpemVvZihzdHJ1Y3QgYWRpX2F4aV9hZGNfY2xpZW50KTsNCj4gPiArCWlmIChzaXplb2ZfcHJp
+dikgew0KPiA+ICsJCWFsbG9jX3NpemUgPSBBTElHTihhbGxvY19zaXplLCBJSU9fQUxJR04pOw0K
+PiA+ICsJCWFsbG9jX3NpemUgKz0gc2l6ZW9mX3ByaXY7DQo+ID4gKwl9DQo+ID4gKwlhbGxvY19z
+aXplICs9IElJT19BTElHTiAtIDE7DQo+ID4gKw0KPiA+ICsJY2wgPSBremFsbG9jKGFsbG9jX3Np
+emUsIEdGUF9LRVJORUwpOw0KPiA+ICsJaWYgKCFjbCkNCj4gPiArCQlyZXR1cm4gRVJSX1BUUigt
+RU5PTUVNKTsNCj4gPiArDQo+ID4gKwltdXRleF9sb2NrKCZyZWdpc3RlcmVkX2NsaWVudHNfbG9j
+ayk7DQo+ID4gKw0KPiA+ICsJZ2V0X2RldmljZShkZXYpOw0KPiA+ICsJY2wtPmRldiA9IGRldjsN
+Cj4gPiArDQo+ID4gKwlsaXN0X2FkZF90YWlsKCZjbC0+ZW50cnksICZyZWdpc3RlcmVkX2NsaWVu
+dHMpOw0KPiA+ICsNCj4gPiArCW11dGV4X3VubG9jaygmcmVnaXN0ZXJlZF9jbGllbnRzX2xvY2sp
+Ow0KPiA+ICsNCj4gPiArCXJldHVybiAmY2wtPmNvbnY7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0
+YXRpYyB2b2lkIGFkaV9heGlfYWRjX2NvbnZfdW5yZWdpc3RlcihzdHJ1Y3QgYWRpX2F4aV9hZGNf
+Y29udiAqY29udikNCj4gPiArew0KPiA+ICsJc3RydWN0IGFkaV9heGlfYWRjX2NsaWVudCAqY2wg
+PSBjb252X3RvX2NsaWVudChjb252KTsNCj4gPiArDQo+ID4gKwlpZiAoIWNsKQ0KPiA+ICsJCXJl
+dHVybjsNCj4gPiArDQo+ID4gKwltdXRleF9sb2NrKCZyZWdpc3RlcmVkX2NsaWVudHNfbG9jayk7
+DQo+ID4gKw0KPiA+ICsJcHV0X2RldmljZShjbC0+ZGV2KTsNCj4gPiArCWxpc3RfZGVsKCZjbC0+
+ZW50cnkpOw0KPiBUaGlzIGlzbid0IHJldmVyc2Ugb2YgcmVnaXN0ZXIuICBXaHk/DQo+IFNob3Vs
+ZCBiZSBsaXN0X2RlbCB0aGVuIHB1dF9kZXZpY2UuDQo+IA0KPiA+ICsJa2ZyZWUoY2wpOw0KPiAN
+Cj4gVG8gcmV2ZXJzZSB0aGUgcmVnaXN0ZXIgcHJlY2lzZWx5IHRoZSBrZnJlZShjbCkgc2hvdWxk
+IGJlIG91dHNpZGUNCj4gdGhlIGxvY2suLi4NCg0KeWVhaDsgaSB3YXMgYSBiaXQgY2FyZWxlc3Mv
+cmVsYXhlZCB3aGVuIHdyaXRpbmcgdGhpcyBiaXQgb2YgY29kZTsNCndpbGwgdXBkYXRlOw0KDQo+
+IA0KPiA+ICsNCj4gPiArCW11dGV4X3VubG9jaygmcmVnaXN0ZXJlZF9jbGllbnRzX2xvY2spOw0K
+PiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBkZXZtX2FkaV9heGlfYWRjX2NvbnZfcmVs
+ZWFzZShzdHJ1Y3QgZGV2aWNlICpkZXYsIHZvaWQgKnJlcykNCj4gPiArew0KPiA+ICsJYWRpX2F4
+aV9hZGNfY29udl91bnJlZ2lzdGVyKCooc3RydWN0IGFkaV9heGlfYWRjX2NvbnYgKiopcmVzKTsN
+Cj4gPiArfQ0KPiA+ICsNCj4gPiArc3RydWN0IGFkaV9heGlfYWRjX2NvbnYgKmRldm1fYWRpX2F4
+aV9hZGNfY29udl9yZWdpc3RlcihzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ID4gKwkJCQkJCQlpbnQg
+c2l6ZW9mX3ByaXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBhZGlfYXhpX2FkY19jb252ICoqcHRy
+LCAqY29udjsNCj4gPiArDQo+ID4gKwlwdHIgPSBkZXZyZXNfYWxsb2MoZGV2bV9hZGlfYXhpX2Fk
+Y19jb252X3JlbGVhc2UsIHNpemVvZigqcHRyKSwNCj4gPiArCQkJICAgR0ZQX0tFUk5FTCk7DQo+
+ID4gKwlpZiAoIXB0cikNCj4gPiArCQlyZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsNCj4gPiArDQo+
+ID4gKwljb252ID0gYWRpX2F4aV9hZGNfY29udl9yZWdpc3RlcihkZXYsIHNpemVvZl9wcml2KTsN
+Cj4gPiArCWlmIChJU19FUlIoY29udikpIHsNCj4gPiArCQlkZXZyZXNfZnJlZShwdHIpOw0KPiA+
+ICsJCXJldHVybiBFUlJfQ0FTVChjb252KTsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwkqcHRyID0g
+Y29udjsNCj4gPiArCWRldnJlc19hZGQoZGV2LCBwdHIpOw0KPiA+ICsNCj4gPiArCXJldHVybiBj
+b252Ow0KPiA+ICt9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGRldm1fYWRpX2F4aV9hZGNfY29u
+dl9yZWdpc3Rlcik7DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3NpemVfdCBpbl92b2x0YWdlX3NjYWxl
+X2F2YWlsYWJsZV9zaG93KHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiArCQkJCQkgICAgICAgc3Ry
+dWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIsDQo+ID4gKwkJCQkJICAgICAgIGNoYXIgKmJ1ZikN
+Cj4gPiArew0KPiA+ICsJc3RydWN0IGlpb19kZXYgKmluZGlvX2RldiA9IGRldl90b19paW9fZGV2
+KGRldik7DQo+ID4gKwlzdHJ1Y3QgYWRpX2F4aV9hZGNfc3RhdGUgKnN0ID0gaWlvX3ByaXYoaW5k
+aW9fZGV2KTsNCj4gPiArCXN0cnVjdCBhZGlfYXhpX2FkY19jb252ICpjb252ID0gJnN0LT5jbGll
+bnQtPmNvbnY7DQo+ID4gKwlzaXplX3QgbGVuID0gMDsNCj4gPiArCWludCBpOw0KPiA+ICsNCj4g
+PiArCWlmICghY29udi0+Y2hpcF9pbmZvLT5udW1fc2NhbGVzKSB7DQo+ID4gKwkJYnVmWzBdID0g
+J1xuJzsNCj4gPiArCQlyZXR1cm4gMTsNCj4gDQo+IEknZCBwcmVmZXIgdG8gc2VlIHRoaXMgZG9u
+ZSB1c2luZyB0aGUgY29yZSBhdmFpbGFibGUgaGFuZGxpbmcuDQo+IFRoYXQgd2F5IGRyaXZlcnMg
+dGhhdCBkb24ndCBwcm92aWRlIHRoaXMgd291bGQganVzdCBub3QgcmVnaXN0ZXINCj4gaXQgaW4g
+dGhlIGZpcnN0IHBsYWNlLiBJdCB3aWxsIGJlIGEgY2hhcmFjdGVyaXN0aWMgb2YgdGhlIGNoYW5u
+ZWxzLg0KDQphY2sNCndpbGwgdGFrZSBhIGxvb2sgY2xvc2VyIGhlcmU7DQppIGFtIGEgYml0IHZh
+Z3VlIFthdCB0aGlzIHBvaW50XSBvbiBob3cgdG8gZG8gaXQ7IGJ1dCBpJ2xsIGZpZ3VyZSBpdCBv
+dXQNCg0KPiANCj4gPiArCX0NCj4gPiArDQo+ID4gKwlmb3IgKGkgPSAwOyBpIDwgY29udi0+Y2hp
+cF9pbmZvLT5udW1fc2NhbGVzOyBpKyspIHsNCj4gPiArCQljb25zdCB1bnNpZ25lZCBpbnQgKnMg
+PSBjb252LT5jaGlwX2luZm8tPnNjYWxlX3RhYmxlW2ldOw0KPiA+ICsNCj4gPiArCQlsZW4gKz0g
+c2NucHJpbnRmKGJ1ZiArIGxlbiwgUEFHRV9TSVpFIC0gbGVuLA0KPiA+ICsJCQkJICIldS4lMDZ1
+ICIsIHNbMF0sIHNbMV0pOw0KPiA+ICsJfQ0KPiA+ICsJYnVmW2xlbiAtIDFdID0gJ1xuJzsNCj4g
+PiArDQo+ID4gKwlyZXR1cm4gbGVuOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgSUlPX0RF
+VklDRV9BVFRSX1JPKGluX3ZvbHRhZ2Vfc2NhbGVfYXZhaWxhYmxlLCAwKTsNCj4gPiArDQo+ID4g
+K3N0YXRpYyBzdHJ1Y3QgYXR0cmlidXRlICphZGlfYXhpX2FkY19hdHRyaWJ1dGVzW10gPSB7DQo+
+ID4gKwkmaWlvX2Rldl9hdHRyX2luX3ZvbHRhZ2Vfc2NhbGVfYXZhaWxhYmxlLmRldl9hdHRyLmF0
+dHIsDQo+ID4gKwlOVUxMLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVj
+dCBhdHRyaWJ1dGVfZ3JvdXAgYWRpX2F4aV9hZGNfYXR0cmlidXRlX2dyb3VwID0gew0KPiA+ICsJ
+LmF0dHJzID0gYWRpX2F4aV9hZGNfYXR0cmlidXRlcywNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0
+YXRpYyBjb25zdCBzdHJ1Y3QgaWlvX2luZm8gYWRpX2F4aV9hZGNfaW5mbyA9IHsNCj4gPiArCS5y
+ZWFkX3JhdyA9ICZhZGlfYXhpX2FkY19yZWFkX3JhdywNCj4gPiArCS53cml0ZV9yYXcgPSAmYWRp
+X2F4aV9hZGNfd3JpdGVfcmF3LA0KPiA+ICsJLmF0dHJzID0gJmFkaV9heGlfYWRjX2F0dHJpYnV0
+ZV9ncm91cCwNCj4gPiArCS51cGRhdGVfc2Nhbl9tb2RlID0gJmFkaV9heGlfYWRjX3VwZGF0ZV9z
+Y2FuX21vZGUsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGFkaV9h
+eGlfYWRjX2NvcmVfaW5mbyBhZGlfYXhpX2FkY18xMF8wX2FfaW5mbyA9IHsNCj4gPiArCS52ZXJz
+aW9uID0gQURJX0FYSV9QQ09SRV9WRVIoMTAsIDAsICdhJyksDQo+ID4gK307DQo+ID4gKw0KPiA+
+ICsvKiBNYXRjaCB0YWJsZSBmb3Igb2ZfcGxhdGZvcm0gYmluZGluZyAqLw0KPiA+ICtzdGF0aWMg
+Y29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhZGlfYXhpX2FkY19vZl9tYXRjaFtdID0gew0KPiA+
+ICsJeyAuY29tcGF0aWJsZSA9ICJhZGksYXhpLWFkYy0xMC4wLmEiLCAuZGF0YSA9ICZhZGlfYXhp
+X2FkY18xMF8wX2FfaW5mbw0KPiA+IH0sDQo+ID4gKwl7IC8qIGVuZCBvZiBsaXN0ICovIH0sDQo+
+ID4gK307DQo+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGFkaV9heGlfYWRjX29mX21hdGNo
+KTsNCj4gPiArDQo+ID4gK3N0cnVjdCBhZGlfYXhpX2FkY19jbGllbnQgKmFkaV9heGlfYWRjX2F0
+dGFjaF9jbGllbnQoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ICt7DQo+ID4gKwljb25zdCBzdHJ1
+Y3Qgb2ZfZGV2aWNlX2lkICppZDsNCj4gPiArCXN0cnVjdCBhZGlfYXhpX2FkY19jbGllbnQgKmNs
+Ow0KPiA+ICsJc3RydWN0IGRldmljZV9ub2RlICpjbG47DQo+ID4gKw0KPiA+ICsJaWYgKCFkZXYt
+Pm9mX25vZGUpIHsNCj4gPiArCQlkZXZfZXJyKGRldiwgIkRUIG5vZGUgaXMgbnVsbFxuIik7DQo+
+ID4gKwkJcmV0dXJuIEVSUl9QVFIoLUVOT0RFVik7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJaWQg
+PSBvZl9tYXRjaF9ub2RlKGFkaV9heGlfYWRjX29mX21hdGNoLCBkZXYtPm9mX25vZGUpOw0KPiA+
+ICsJaWYgKCFpZCkNCj4gPiArCQlyZXR1cm4gRVJSX1BUUigtRU5PREVWKTsNCj4gPiArDQo+ID4g
+KwljbG4gPSBvZl9wYXJzZV9waGFuZGxlKGRldi0+b2Zfbm9kZSwgImFkaSxhZGMtZGV2IiwgMCk7
+DQo+ID4gKwlpZiAoIWNsbikgew0KPiA+ICsJCWRldl9lcnIoZGV2LCAiTm8gJ2FkaSxhZGMtZGV2
+JyBub2RlIGRlZmluZWRcbiIpOw0KPiA+ICsJCXJldHVybiBFUlJfUFRSKC1FTk9ERVYpOw0KPiA+
+ICsJfQ0KPiA+ICsNCj4gPiArCW11dGV4X2xvY2soJnJlZ2lzdGVyZWRfY2xpZW50c19sb2NrKTsN
+Cj4gPiArDQo+ID4gKwlsaXN0X2Zvcl9lYWNoX2VudHJ5KGNsLCAmcmVnaXN0ZXJlZF9jbGllbnRz
+LCBlbnRyeSkgew0KPiA+ICsJCWlmICghY2wtPmRldikNCj4gPiArCQkJY29udGludWU7DQo+ID4g
+KwkJaWYgKGNsLT5kZXYtPm9mX25vZGUgPT0gY2xuKSB7DQo+ID4gKwkJCWlmICghdHJ5X21vZHVs
+ZV9nZXQoZGV2LT5kcml2ZXItPm93bmVyKSkgew0KPiA+ICsJCQkJbXV0ZXhfdW5sb2NrKCZyZWdp
+c3RlcmVkX2NsaWVudHNfbG9jayk7DQo+ID4gKwkJCQlyZXR1cm4gRVJSX1BUUigtRU5PREVWKTsN
+Cj4gPiArCQkJfQ0KPiA+ICsJCQlnZXRfZGV2aWNlKGRldik7DQo+ID4gKwkJCWNsLT5pbmZvID0g
+aWQtPmRhdGE7DQo+ID4gKwkJCW11dGV4X3VubG9jaygmcmVnaXN0ZXJlZF9jbGllbnRzX2xvY2sp
+Ow0KPiA+ICsJCQlyZXR1cm4gY2w7DQo+ID4gKwkJfQ0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCW11
+dGV4X3VubG9jaygmcmVnaXN0ZXJlZF9jbGllbnRzX2xvY2spOw0KPiA+ICsNCj4gPiArCXJldHVy
+biBFUlJfUFRSKC1FUFJPQkVfREVGRVIpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50
+IGFkaV9heGlfYWRjX3NldHVwX2NoYW5uZWxzKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiArCQkJ
+CSAgICAgIHN0cnVjdCBhZGlfYXhpX2FkY19zdGF0ZSAqc3QpDQo+ID4gK3sNCj4gPiArCXN0cnVj
+dCBhZGlfYXhpX2FkY19jb252ICpjb252ID0gY29udiA9ICZzdC0+Y2xpZW50LT5jb252Ow0KPiA+
+ICsJdW5zaWduZWQgaW50IHZhbDsNCj4gPiArCWludCBpLCByZXQ7DQo+ID4gKw0KPiA+ICsJaWYg
+KGNvbnYtPnByZWVuYWJsZV9zZXR1cCkgew0KPiA+ICsJCXJldCA9IGNvbnYtPnByZWVuYWJsZV9z
+ZXR1cChjb252KTsNCj4gPiArCQlpZiAocmV0KQ0KPiA+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ICsJ
+fQ0KPiA+ICsNCj4gPiArCWZvciAoaSA9IDA7IGkgPCBjb252LT5jaGlwX2luZm8tPm51bV9jaGFu
+bmVsczsgaSsrKSB7DQo+ID4gKwkJaWYgKGkgJiAxKQ0KPiA+ICsJCQl2YWwgPSBSRUdfQ0hBTl9D
+TlRSTF8yX0lRQ09SX0NPRUZGXzJfU0VUKElRQ09SX0lOVF8xKTsNCj4gPiArCQllbHNlDQo+ID4g
+KwkJCXZhbCA9IFJFR19DSEFOX0NOVFJMXzJfSVFDT1JfQ09FRkZfMV9TRVQoSVFDT1JfSU5UXzEp
+Ow0KPiA+ICsJCWFkaV9heGlfYWRjX3dyaXRlKHN0LCBSRUdfQ0hBTl9DTlRSTF8yKGkpLCB2YWwp
+Ow0KPiA+ICsNCj4gPiArCQlhZGlfYXhpX2FkY193cml0ZShzdCwgUkVHX0NIQU5fQ05UUkwoaSks
+DQo+ID4gKwkJCVJFR19DSEFOX0NOVFJMX0RFRkFVTFRTKTsNCj4gPiArCX0NCj4gPiArDQo+ID4g
+KwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgYXhpX2FkY19yZXNl
+dChzdHJ1Y3QgYWRpX2F4aV9hZGNfc3RhdGUgKnN0KQ0KPiA+ICt7DQo+ID4gKwlhZGlfYXhpX2Fk
+Y193cml0ZShzdCwgUkVHX1JTVE4sIDApOw0KPiA+ICsJbWRlbGF5KDEwKTsNCj4gPiArCWFkaV9h
+eGlfYWRjX3dyaXRlKHN0LCBSRUdfUlNUTiwgUkVHX1JTVE5fTU1DTV9SU1ROKTsNCj4gPiArCW1k
+ZWxheSgxMCk7DQo+ID4gKwlhZGlfYXhpX2FkY193cml0ZShzdCwgUkVHX1JTVE4sDQo+ID4gKwkJ
+CSAgUkVHX1JTVE5fUlNUTiB8IFJFR19SU1ROX01NQ01fUlNUTik7DQo+ID4gK30NCj4gPiArDQo+
+ID4gK3N0YXRpYyB2b2lkIGFkaV9heGlfYWRjX2NsZWFudXAodm9pZCAqZGF0YSkNCj4gPiArew0K
+PiA+ICsJc3RydWN0IGFkaV9heGlfYWRjX2NsaWVudCAqY2wgPSBkYXRhOw0KPiA+ICsNCj4gPiAr
+CXB1dF9kZXZpY2UoY2wtPmRldik7DQo+ID4gKwltb2R1bGVfcHV0KGNsLT5kZXYtPmRyaXZlci0+
+b3duZXIpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGFkaV9heGlfYWRjX3Byb2Jl
+KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBhZGlf
+YXhpX2FkY19jb252ICpjb252Ow0KPiA+ICsJc3RydWN0IGlpb19kZXYgKmluZGlvX2RldjsNCj4g
+PiArCXN0cnVjdCBhZGlfYXhpX2FkY19jbGllbnQgKmNsOw0KPiA+ICsJc3RydWN0IGFkaV9heGlf
+YWRjX3N0YXRlICpzdDsNCj4gPiArCXVuc2lnbmVkIGludCB2ZXI7DQo+ID4gKwlpbnQgcmV0Ow0K
+PiA+ICsNCj4gPiArCWNsID0gYWRpX2F4aV9hZGNfYXR0YWNoX2NsaWVudCgmcGRldi0+ZGV2KTsN
+Cj4gPiArCWlmIChJU19FUlIoY2wpKQ0KPiA+ICsJCXJldHVybiBQVFJfRVJSKGNsKTsNCj4gPiAr
+DQo+ID4gKwlyZXQgPSBkZXZtX2FkZF9hY3Rpb25fb3JfcmVzZXQoJnBkZXYtPmRldiwgYWRpX2F4
+aV9hZGNfY2xlYW51cCwgY2wpOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0K
+PiA+ICsNCj4gPiArCWluZGlvX2RldiA9IGRldm1faWlvX2RldmljZV9hbGxvYygmcGRldi0+ZGV2
+LCBzaXplb2YoKnN0KSk7DQo+ID4gKwlpZiAoaW5kaW9fZGV2ID09IE5VTEwpDQo+ID4gKwkJcmV0
+dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsJc3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOw0KPiA+
+ICsJc3QtPmNsaWVudCA9IGNsOw0KPiA+ICsJY2wtPnN0YXRlID0gc3Q7DQo+ID4gKwltdXRleF9p
+bml0KCZzdC0+bG9jayk7DQo+ID4gKw0KPiA+ICsJc3QtPnJlZ3MgPSBkZXZtX3BsYXRmb3JtX2lv
+cmVtYXBfcmVzb3VyY2UocGRldiwgMCk7DQo+ID4gKwlpZiAoSVNfRVJSKHN0LT5yZWdzKSkNCj4g
+PiArCQlyZXR1cm4gUFRSX0VSUihzdC0+cmVncyk7DQo+ID4gKw0KPiA+ICsJY29udiA9ICZzdC0+
+Y2xpZW50LT5jb252Ow0KPiA+ICsNCj4gPiArCWF4aV9hZGNfcmVzZXQoc3QpOw0KPiA+ICsNCj4g
+PiArCXZlciA9IGFkaV9heGlfYWRjX3JlYWQoc3QsIEFESV9BWElfUkVHX1ZFUlNJT04pOw0KPiA+
+ICsNCj4gPiArCWlmIChjbC0+aW5mby0+dmVyc2lvbiA+IHZlcikgew0KPiA+ICsJCWRldl9lcnIo
+JnBkZXYtPmRldiwNCj4gPiArCQkJIklQIGNvcmUgdmVyc2lvbiBpcyB0b28gb2xkLiBFeHBlY3Rl
+ZCAlZC4lLjJkLiVjLA0KPiA+IFJlcG9ydGVkICVkLiUuMmQuJWNcbiIsDQo+ID4gKwkJCUFESV9B
+WElfUENPUkVfVkVSX01BSk9SKGNsLT5pbmZvLT52ZXJzaW9uKSwNCj4gPiArCQkJQURJX0FYSV9Q
+Q09SRV9WRVJfTUlOT1IoY2wtPmluZm8tPnZlcnNpb24pLA0KPiA+ICsJCQlBRElfQVhJX1BDT1JF
+X1ZFUl9QQVRDSChjbC0+aW5mby0+dmVyc2lvbiksDQo+ID4gKwkJCUFESV9BWElfUENPUkVfVkVS
+X01BSk9SKHZlciksDQo+ID4gKwkJCUFESV9BWElfUENPUkVfVkVSX01JTk9SKHZlciksDQo+ID4g
+KwkJCUFESV9BWElfUENPUkVfVkVSX1BBVENIKHZlcikpOw0KPiA+ICsJCXJldHVybiAtRU5PREVW
+Ow0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWluZGlvX2Rldi0+aW5mbyA9ICZhZGlfYXhpX2FkY19p
+bmZvOw0KPiA+ICsJaW5kaW9fZGV2LT5kZXYucGFyZW50ID0gJnBkZXYtPmRldjsNCj4gPiArCWlu
+ZGlvX2Rldi0+bmFtZSA9IGRldl9uYW1lKCZwZGV2LT5kZXYpOw0KPiANCj4gV2hhdCBkb2VzIHRo
+aXMgcmVzdWx0IGluPyAgR2l2ZW4gdGhpcyBpcyBzdXBwb3NlZCB0byBiZSBhIHBhcnQgbnVtYmVy
+DQo+IEkga2luZCBvZiBleHBlY3RlZCB0aGlzIHRvIGJlIGhhcmRjb2RlZCB0byAiYWRpLWF4aS1h
+ZGMiIG9yIHNpbWlsYXIuDQoNCmFjazsNCiJhZGktYXhpLWFkYyIgaXQgaXMNCg0KDQo+IA0KPiA+
+ICsJaW5kaW9fZGV2LT5tb2RlcyA9IElORElPX0RJUkVDVF9NT0RFOw0KPiA+ICsJaW5kaW9fZGV2
+LT5udW1fY2hhbm5lbHMgPSBjb252LT5jaGlwX2luZm8tPm51bV9jaGFubmVsczsNCj4gPiArCWlu
+ZGlvX2Rldi0+Y2hhbm5lbHMgPSBjb252LT5jaGlwX2luZm8tPmNoYW5uZWxzOw0KPiA+ICsNCj4g
+PiArCXJldCA9IGFkaV9heGlfYWRjX2NvbmZpZ19kbWFfYnVmZmVyKCZwZGV2LT5kZXYsIGluZGlv
+X2Rldik7DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJ
+cmV0ID0gYWRpX2F4aV9hZGNfc2V0dXBfY2hhbm5lbHMoJnBkZXYtPmRldiwgc3QpOw0KPiA+ICsJ
+aWYgKHJldCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IGRldm1faWlv
+X2RldmljZV9yZWdpc3RlcigmcGRldi0+ZGV2LCBpbmRpb19kZXYpOw0KPiA+ICsJaWYgKHJldCkN
+Cj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCWRldl9pbmZvKCZwZGV2LT5kZXYsICJB
+WEkgQURDIElQIGNvcmUgKCVkLiUuMmQuJWMpIHByb2JlZFxuIiwNCj4gPiArCQlBRElfQVhJX1BD
+T1JFX1ZFUl9NQUpPUih2ZXIpLA0KPiA+ICsJCUFESV9BWElfUENPUkVfVkVSX01JTk9SKHZlciks
+DQo+ID4gKwkJQURJX0FYSV9QQ09SRV9WRVJfUEFUQ0godmVyKSk7DQo+ID4gKw0KPiA+ICsJcmV0
+dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
+IGFkaV9heGlfYWRjX2RyaXZlciA9IHsNCj4gPiArCS5kcml2ZXIgPSB7DQo+ID4gKwkJLm5hbWUg
+PSBLQlVJTERfTU9ETkFNRSwNCj4gPiArCQkub2ZfbWF0Y2hfdGFibGUgPSBhZGlfYXhpX2FkY19v
+Zl9tYXRjaCwNCj4gPiArCX0sDQo+ID4gKwkucHJvYmUgPSBhZGlfYXhpX2FkY19wcm9iZSwNCj4g
+PiArfTsNCj4gPiArbW9kdWxlX3BsYXRmb3JtX2RyaXZlcihhZGlfYXhpX2FkY19kcml2ZXIpOw0K
+PiA+ICsNCj4gPiArTU9EVUxFX0FVVEhPUigiTWljaGFlbCBIZW5uZXJpY2ggPG1pY2hhZWwuaGVu
+bmVyaWNoQGFuYWxvZy5jb20+Iik7DQo+ID4gK01PRFVMRV9ERVNDUklQVElPTigiQW5hbG9nIERl
+dmljZXMgR2VuZXJpYyBBWEkgQURDIElQIGNvcmUgZHJpdmVyIik7DQo+ID4gK01PRFVMRV9MSUNF
+TlNFKCJHUEwgdjIiKTsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9paW8vYWRjL2Fk
+aS1heGktYWRjLmgNCj4gPiBiL2luY2x1ZGUvbGludXgvaWlvL2FkYy9hZGktYXhpLWFkYy5oDQo+
+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjU3OTc0OTQ0
+YjMwYg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2lpby9hZGMv
+YWRpLWF4aS1hZGMuaA0KPiA+IEBAIC0wLDAgKzEsNjMgQEANCj4gPiArLyogU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IEdQTC0yLjAgKi8NCj4gPiArLyoNCj4gPiArICogQW5hbG9nIERldmljZXMg
+R2VuZXJpYyBBWEkgQURDIElQIGNvcmUgZHJpdmVyL2xpYnJhcnkNCj4gPiArICogTGluazogaHR0
+cHM6Ly93aWtpLmFuYWxvZy5jb20vcmVzb3VyY2VzL2ZwZ2EvZG9jcy9heGlfYWRjX2lwDQo+ID4g
+KyAqDQo+ID4gKyAqIENvcHlyaWdodCAyMDEyLTIwMjAgQW5hbG9nIERldmljZXMgSW5jLg0KPiA+
+ICsgKi8NCj4gPiArI2lmbmRlZiBfX0FESV9BWElfQURDX0hfXw0KPiA+ICsjZGVmaW5lIF9fQURJ
+X0FYSV9BRENfSF9fDQo+ID4gKw0KPiA+ICtzdHJ1Y3QgZGV2aWNlOw0KPiA+ICtzdHJ1Y3QgaWlv
+X2NoYW5fc3BlYzsNCj4gPiArDQo+ID4gKy8qKg0KPiA+ICsgKiBzdHJ1Y3QgYWRpX2F4aV9hZGNf
+Y2hpcF9pbmZvIC0gQ2hpcCBzcGVjaWZpYyBpbmZvcm1hdGlvbg0KPiA+ICsgKiBAbmFtZQkJQ2hp
+cCBuYW1lDQo+ID4gKyAqIEBpZAkJCUNoaXAgSUQgKHVzdWFsbHkgcHJvZHVjdCBJRCkNCj4gPiAr
+ICogQGNoYW5uZWxzCQlDaGFubmVsIHNwZWNpZmljYXRpb25zIG9mIHR5cGUgQHN0cnVjdA0KPiA+
+IGF4aV9hZGNfY2hhbl9zcGVjDQo+ID4gKyAqIEBudW1fY2hhbm5lbHMJTnVtYmVyIG9mIEBjaGFu
+bmVscw0KPiA+ICsgKiBAc2NhbGVfdGFibGUJCVN1cHBvcnRlZCBzY2FsZXMgYnkgdGhlIGNoaXA7
+IHR1cGxlcyBvZiAyIGludHMNCj4gPiArICogQG51bV9zY2FsZXMJCU51bWJlciBvZiBzY2FsZXMg
+aW4gdGhlIHRhYmxlDQo+ID4gKyAqIEBtYXhfcmF0ZQkJTWF4aW11bSBzYW1wbGluZyByYXRlIHN1
+cHBvcnRlZCBieSB0aGUgZGV2aWNlDQo+ID4gKyAqLw0KPiA+ICtzdHJ1Y3QgYWRpX2F4aV9hZGNf
+Y2hpcF9pbmZvIHsNCj4gPiArCWNvbnN0IGNoYXIJCQkqbmFtZTsNCj4gPiArCXVuc2lnbmVkIGlu
+dAkJCWlkOw0KPiA+ICsNCj4gPiArCWNvbnN0IHN0cnVjdCBpaW9fY2hhbl9zcGVjCSpjaGFubmVs
+czsNCj4gPiArCXVuc2lnbmVkIGludAkJCW51bV9jaGFubmVsczsNCj4gPiArDQo+ID4gKwljb25z
+dCB1bnNpZ25lZCBpbnQJCSgqc2NhbGVfdGFibGUpWzJdOw0KPiA+ICsJaW50CQkJCW51bV9zY2Fs
+ZXM7DQo+ID4gKw0KPiA+ICsJdW5zaWduZWQgbG9uZwkJCW1heF9yYXRlOw0KPiA+ICt9Ow0KPiA+
+ICsNCj4gPiArLyoqDQo+ID4gKyAqIHN0cnVjdCBhZGlfYXhpX2FkY19jb252IC0gZGF0YSBvZiB0
+aGUgQURDIGF0dGFjaGVkIHRvIHRoZSBBWEkgQURDDQo+ID4gKyAqIEBjaGlwX2luZm8JCWNoaXAg
+aW5mbyBkZXRhaWxzIGZvciB0aGUgY2xpZW50IEFEQw0KPiA+ICsgKiBAcHJlZW5hYmxlX3NldHVw
+CW9wIHRvIHJ1biBpbiB0aGUgY2xpZW50IGJlZm9yZSBlbmFibGluZyB0aGUgQVhJDQo+ID4gQURD
+DQo+IA0KPiBSdW4gdGhlIGtlcm5lbCBkb2Mgc2NyaXB0IG92ZXIgdGhpcyBhbmQgaXQgd291bGQg
+aGF2ZSBtb2FuZWQuLi4NCj4gDQo+IE5vIHJlZ19hY2Nlc3MuDQoNCmFjazsNCmknbGwgbmVlZCB0
+byBzdGFydCBhZGFwdGluZyB0aGF0IHNjcmlwdCB0byBzb21lIENJDQppdCdzIG9uIG15IHRvZG8t
+bGlzdA0KDQo+IA0KPiA+ICsgKiBAcmVhZF9yYXcJCUlJTyByZWFkX3JhdyBob29rIGZvciB0aGUg
+Y2xpZW50IEFEQw0KPiA+ICsgKiBAd3JpdGVfcmF3CQlJSU8gd3JpdGVfcmF3IGhvb2sgZm9yIHRo
+ZSBjbGllbnQgQURDDQo+ID4gKyAqLw0KPiA+ICtzdHJ1Y3QgYWRpX2F4aV9hZGNfY29udiB7DQo+
+ID4gKwljb25zdCBzdHJ1Y3QgYWRpX2F4aV9hZGNfY2hpcF9pbmZvCQkqY2hpcF9pbmZvOw0KPiA+
+ICsNCj4gPiArCWludCAoKnByZWVuYWJsZV9zZXR1cCkoc3RydWN0IGFkaV9heGlfYWRjX2NvbnYg
+KmNvbnYpOw0KPiA+ICsJaW50ICgqcmVnX2FjY2Vzcykoc3RydWN0IGFkaV9heGlfYWRjX2NvbnYg
+KmNvbnYsIHVuc2lnbmVkIGludCByZWcsDQo+ID4gKwkJCSAgdW5zaWduZWQgaW50IHdyaXRldmFs
+LCB1bnNpZ25lZCBpbnQgKnJlYWR2YWwpOw0KPiA+ICsJaW50ICgqcmVhZF9yYXcpKHN0cnVjdCBh
+ZGlfYXhpX2FkY19jb252ICpjb252LA0KPiA+ICsJCQlzdHJ1Y3QgaWlvX2NoYW5fc3BlYyBjb25z
+dCAqY2hhbiwNCj4gPiArCQkJaW50ICp2YWwsIGludCAqdmFsMiwgbG9uZyBtYXNrKTsNCj4gPiAr
+CWludCAoKndyaXRlX3Jhdykoc3RydWN0IGFkaV9heGlfYWRjX2NvbnYgKmNvbnYsDQo+ID4gKwkJ
+CSBzdHJ1Y3QgaWlvX2NoYW5fc3BlYyBjb25zdCAqY2hhbiwNCj4gPiArCQkJIGludCB2YWwsIGlu
+dCB2YWwyLCBsb25nIG1hc2spOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RydWN0IGFkaV9heGlf
+YWRjX2NvbnYgKmRldm1fYWRpX2F4aV9hZGNfY29udl9yZWdpc3RlcihzdHJ1Y3QgZGV2aWNlICpk
+ZXYsDQo+ID4gKwkJCQkJCQlpbnQgc2l6ZW9mX3ByaXYpOw0KPiA+ICsNCj4gPiArdm9pZCAqYWRp
+X2F4aV9hZGNfY29udl9wcml2KHN0cnVjdCBhZGlfYXhpX2FkY19jb252ICpjb252KTsNCj4gPiAr
+DQo+ID4gKyNlbmRpZg0K
