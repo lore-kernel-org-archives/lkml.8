@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14319C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB76BC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD38F20674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8A620674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWFO1xvX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8JfBJxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgCIITK (ORCPT
+        id S1726545AbgCIITR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:19:10 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55154 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgCIITJ (ORCPT
+        Mon, 9 Mar 2020 04:19:17 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53958 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgCIITO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:19:09 -0400
-Received: by mail-pj1-f68.google.com with SMTP id np16so4035990pjb.4;
-        Mon, 09 Mar 2020 01:19:08 -0700 (PDT)
+        Mon, 9 Mar 2020 04:19:14 -0400
+Received: by mail-pj1-f66.google.com with SMTP id l36so1266317pjb.3;
+        Mon, 09 Mar 2020 01:19:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=0dwzfZBdNlOZMuJhJ5m0U1KGetNN67/bhUzuOF6YkZk=;
-        b=GWFO1xvXViZGSxx6IuIEj+83xa59xbFeYUTUPtEHlRzAfU1UOsdwdT36XBZpifD1Ek
-         uRA7Pu4Q7O7JQk8rg0Gfv2dtrJJfI9QGZHBVa23IeE24HZbestU81oNR8PDB32/XUpxV
-         AHp+8QlixL3ZNiiVGTDngidzn3OupWGCCm2KxTlTJMB3MA8Hhc7W1McqxaRaBJCCPQhb
-         2C8e1tHhcQ1IWZi7MeCdhCvDpoWuposU7gDauj9lf7F3QvJTuo8TaGAqPgF+Aeflv69m
-         O5QHU0TfnyN7GOM4v8Q2bLz7SU2Ib6IsQoM+mkGTodq93blD9E6s7CbZWPpAO5Ngiqgb
-         Q2hQ==
+        bh=IVmmUD2LX/XKO2jYcRB3hPlqs1LzccGE0vVFCynCeIQ=;
+        b=T8JfBJxZhiNslsh1cb88g0iyg5Q3MO7I8FbcK7sDEiY+HOhUV1r6ZjD9yFzTbVowZ0
+         yhAajULCJsCJDzfGvl+IBZr6CtwW3P/vDya2QGwsZl1NF2F1md+R00gz2G1sV3wveeu0
+         x2SBI3zwsF+yTfEYUWs+tT3vEc1gSGt5QmTjJKd8N+ru3PyGRjN/MbLvZ9n0J21vVUeG
+         hcTgpMqNnN2CBhlHVmfFEj0QazxS8MKT9jlUu6yFmorOjrjF3huvF+DZowAJJbuS/Nuo
+         fi5+0k4GUR7ZA6XKv+Gaw79IVQfaAZKO/Xi5HGTszOZ2Bn8o1AfrGkb0p6IDqROi2kXq
+         VKmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=0dwzfZBdNlOZMuJhJ5m0U1KGetNN67/bhUzuOF6YkZk=;
-        b=S79e7G35jCZdxoV4vjMVm7kUdp1w7DdB4Fa01wj9VxvkT0kk+puop6jEbt4muX5+P3
-         lGeKJg1DBv+mL7szpyAveFUfj2HY8uZgMC2S5+fBR28B0xfgQXa8oSU3N7pAVDKnNWoz
-         PWTjXN8rIusZJNy/hn7kyXFSWb5ps/JaTpZXUD1wJEm5jOThzKhtaASDSgwQADcR2Xj0
-         8l1Hd6412o4uNuglbfjjS2iVabwr0qOWT9P+1BilTcnK6KT4FeVz3lvfLfL1JFwl8cLP
-         lbD2c72qkIPxRPWEOF5NslnuwHi3V8l6JP8lBxNYEbUD19LhHqJ2nGP2lFVVhI7fy8TU
-         49hA==
-X-Gm-Message-State: ANhLgQ0q2AwMYSZUed2aHuPU2LVpFDZ0GjAPUiZFDEUCvtXbj8eQanKV
-        1ozMz1ruc1zyKddkNQu87uQ=
-X-Google-Smtp-Source: ADFU+vuoXTBMNKKmBuHT08cyyk8tD50wxzgrbD0pn0R1YewfUM/GY4EexBDxX8A+R5gg6rHwNlGIEA==
-X-Received: by 2002:a17:90a:a786:: with SMTP id f6mr1883293pjq.169.1583741947919;
-        Mon, 09 Mar 2020 01:19:07 -0700 (PDT)
+        bh=IVmmUD2LX/XKO2jYcRB3hPlqs1LzccGE0vVFCynCeIQ=;
+        b=AJTENxVKyBBjCeUHowjqkWQwkUAY3IUx72kJvZ2l+4g6cavPydrp0mA7UXALB0kqbJ
+         Y+NMNOhTrX78rF6lniwgqFsH4SsGjH6932Rq2SbB5Ut/7LDiMyEFEXNqEaEGA1eQAmrB
+         u46C41fdDZRSbBuJ/tis54IrqTSSNsjd5SjUed6oTB8FZV82moFsmnSbAg27Mtcirpb+
+         vB3S/bvTUXaN5RhCGW7uNjJscNpqulT21J3jJFRsAHvS85R0gDYjkp1JbB7z0KNoK3ow
+         Waa0hh7yJuXmBioI+yxfe+QnhiflVZXLLRis9ATv8m2qsWog2HGT8WQg573btzK9Li0E
+         mm4g==
+X-Gm-Message-State: ANhLgQ364kVCp02gs5Tq7dVC0gBUSxma5B7rOU3Ll1wIO7L0vPChA5+4
+        XHhE61iEDNOJmQOgCwkJ2kUZ0MGM
+X-Google-Smtp-Source: ADFU+vt07ko5Ux+nhpJGcf/tTP4BM2pXWm5admO9dpIzsxJRVA5Fr5ezWQDfTL6XroDkJdOu+BrHvg==
+X-Received: by 2002:a17:90a:a483:: with SMTP id z3mr12870263pjp.43.1583741952723;
+        Mon, 09 Mar 2020 01:19:12 -0700 (PDT)
 Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 193sm21862277pfu.181.2020.03.09.01.19.05
+        by smtp.gmail.com with ESMTPSA id 193sm21862277pfu.181.2020.03.09.01.19.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 09 Mar 2020 01:19:07 -0700 (PDT)
+        Mon, 09 Mar 2020 01:19:12 -0700 (PDT)
 From:   Baolin Wang <baolin.wang7@gmail.com>
 To:     sre@kernel.org
 Cc:     baolin.wang7@gmail.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
         kernel-team@android.com, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] power: reset: sc27xx: Power off the external subsystems' connection
-Date:   Mon,  9 Mar 2020 16:18:44 +0800
-Message-Id: <eae00dced755376239401b18b38e4553200dc517.1583740881.git.baolin.wang7@gmail.com>
+Subject: [PATCH 3/3] power: reset: sc27xx: Allow the SC27XX poweroff driver building into a module
+Date:   Mon,  9 Mar 2020 16:18:46 +0800
+Message-Id: <12b6c11ec62956173fcd84581720b4e0aed54a11.1583740881.git.baolin.wang7@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1583740881.git.baolin.wang7@gmail.com>
 References: <cover.1583740881.git.baolin.wang7@gmail.com>
@@ -75,41 +75,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sherry Zong <sherry.zong@unisoc.com>
+Change the config to 'tristate' and use module_platform_driver() to
+allow the SC27XX poweroff driver building into a module, as well as
+adding some mudule information.
 
-When powering off the whole system, we should power off some external
-subsystems' connection firstly, otherwise some external subsystems
-will hold some power and result in powering down abnormally.
-
-Signed-off-by: Sherry Zong <sherry.zong@unisoc.com>
 Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
- drivers/power/reset/sc27xx-poweroff.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/power/reset/Kconfig           | 2 +-
+ drivers/power/reset/sc27xx-poweroff.c | 7 ++++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index 513efe8..8903803 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -248,7 +248,7 @@ config SYSCON_REBOOT_MODE
+ 	  action according to the mode.
+ 
+ config POWER_RESET_SC27XX
+-	bool "Spreadtrum SC27xx PMIC power-off driver"
++	tristate "Spreadtrum SC27xx PMIC power-off driver"
+ 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
+ 	help
+ 	  This driver supports powering off a system through
 diff --git a/drivers/power/reset/sc27xx-poweroff.c b/drivers/power/reset/sc27xx-poweroff.c
-index 29fb08b..2bedd4c 100644
+index 91b5ece..6986307 100644
 --- a/drivers/power/reset/sc27xx-poweroff.c
 +++ b/drivers/power/reset/sc27xx-poweroff.c
-@@ -13,6 +13,8 @@
+@@ -6,6 +6,7 @@
  
- #define SC27XX_PWR_PD_HW	0xc2c
- #define SC27XX_PWR_OFF_EN	BIT(0)
-+#define SC27XX_SLP_CTRL		0xdf0
-+#define SC27XX_LDO_XTL_EN	BIT(3)
- 
- static struct regmap *regmap;
- 
-@@ -40,6 +42,9 @@ static void sc27xx_poweroff_shutdown(void)
- 
- static void sc27xx_poweroff_do_poweroff(void)
- {
-+	/* Disable the external subsys connection's power firstly */
-+	regmap_write(regmap, SC27XX_SLP_CTRL, SC27XX_LDO_XTL_EN);
+ #include <linux/cpu.h>
+ #include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
+ #include <linux/regmap.h>
+@@ -71,4 +72,8 @@ static int sc27xx_poweroff_probe(struct platform_device *pdev)
+ 		.name = "sc27xx-poweroff",
+ 	},
+ };
+-builtin_platform_driver(sc27xx_poweroff_driver);
++module_platform_driver(sc27xx_poweroff_driver);
 +
- 	regmap_write(regmap, SC27XX_PWR_PD_HW, SC27XX_PWR_OFF_EN);
- }
- 
++MODULE_DESCRIPTION("Power off driver for SC27XX PMIC Device");
++MODULE_AUTHOR("Baolin Wang <baolin.wang@unisoc.com>");
++MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
 
