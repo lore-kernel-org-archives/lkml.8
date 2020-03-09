@@ -2,84 +2,78 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD52C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C49C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE351222C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27BD21D7E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgCIOLF (ORCPT
+        id S1726902AbgCIOLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:11:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:52940 "EHLO foss.arm.com"
+        Mon, 9 Mar 2020 10:11:14 -0400
+Received: from mga11.intel.com ([192.55.52.93]:42087 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgCIOLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:11:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C1F830E;
-        Mon,  9 Mar 2020 07:11:03 -0700 (PDT)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C8F53F67D;
-        Mon,  9 Mar 2020 07:11:03 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 14:11:01 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        suzuki.poulose@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, dietmar.eggemann@arm.com,
-        rjw@rjwysocki.net, pkondeti@codeaurora.org,
-        linux-doc@vger.kernel.org, peterz@infradead.org,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 0/7] arm64: ARMv8.4 Activity Monitors support
-Message-ID: <20200309141101.GA13343@arm.com>
-References: <20200305090627.31908-1-ionela.voinescu@arm.com>
- <20200306112134.GD2503422@arrakis.emea.arm.com>
+        id S1726233AbgCIOLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 10:11:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 07:11:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,533,1574150400"; 
+   d="scan'208";a="234022108"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Mar 2020 07:11:12 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 1566DBD; Mon,  9 Mar 2020 16:11:12 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/3] driver core: Read atomic counter once in driver_probe_done()
+Date:   Mon,  9 Mar 2020 16:11:10 +0200
+Message-Id: <20200309141111.40576-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200309141111.40576-1-andriy.shevchenko@linux.intel.com>
+References: <20200309141111.40576-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306112134.GD2503422@arrakis.emea.arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin, Sudeep,
+Between printing the debug message and actual check atomic counter can be
+altered. For better debugging experience read atomic counter value only once.
 
-On Friday 06 Mar 2020 at 11:21:34 (+0000), Catalin Marinas wrote:
-> Hi Ionela,
-> 
-> On Thu, Mar 05, 2020 at 09:06:20AM +0000, Ionela Voinescu wrote:
-> > v5 -> v6
-> >  - v5 can be found at [7]
-> >  - The current series is based on arm64/master [8].
-> 
-> arm64/master is just some random point in the Linus tree, I didn't
-> realise people are using it. I moved it to v5.6-rc3 as that's the base
-> for the final arm64 for-next/core.
-> 
-> >  - [1/7] kernel parameter removed as Catalin recommended
-> >  - [2/7, 4/7] changelog and documentation changed to remove information
-> >    about the removed kernel parameter
-> >  - [2/7, 3/7, 6/7] collected reviewed-by and acked-by from James,
-> >    Marc and Lukasz.
-> 
-> The series looks fine. Once Sudeep reviews/acks the arch topology patch,
-> I'll queue the patches.
->
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/base/dd.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Thank you both!
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 43720beb5300..efd0e4c16ba5 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -669,9 +669,10 @@ static int really_probe_debug(struct device *dev, struct device_driver *drv)
+  */
+ int driver_probe_done(void)
+ {
+-	pr_debug("%s: probe_count = %d\n", __func__,
+-		 atomic_read(&probe_count));
+-	if (atomic_read(&probe_count))
++	int local_probe_count = atomic_read(&probe_count);
++
++	pr_debug("%s: probe_count = %d\n", __func__, local_probe_count);
++	if (local_probe_count)
+ 		return -EBUSY;
+ 	return 0;
+ }
+-- 
+2.25.1
 
-Ionela.
-
-> Thanks.
-> 
-> -- 
-> Catalin
