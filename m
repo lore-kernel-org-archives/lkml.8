@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B7EC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ED0C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CA0215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32EF9215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583780710;
-	bh=nvxvgWdtEgnDRqamc2GBWCsWAoOX94Fj8G+9vEM+csI=;
+	s=default; t=1583780713;
+	bh=h8NlL0BNWOOzGjbattsQHdPTR/D98Gipr0p/Cf1gauo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y5B2SmN7m8vxVa32yYGF24kxutPzVP1oh+P+hpf9IOq9akXPaVbJlLG3Zpb4Yj9Zg
-	 1w/s+kbRRJZhhHuih4QkEUSXDLe1Xj1l3T5k5pFvIG9gc/oXeS6Avgy8HpeIgYwdKO
-	 5XcuVJynu323bJkDRuqzqfEdyJfSM81MCTiWq+xw=
+	b=a+XvVHyUyOFajQR6rAj11o0JszK3dQA++BGZjhwTuCrDiHLt3rjTqKf8oZYI5u4P9
+	 ehE0htTu27klUlN4YFWblnuWySoOP/MIR57+UgUhSG0vkn4nRqK4J8hMhuua+t+QTj
+	 YG26NZ/UNNhiF7vpbTQcD98yRvEn0cZk0zzeGBDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgCITE2 (ORCPT
+        id S1727789AbgCITFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:04:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47610 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 15:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727579AbgCITEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:04:25 -0400
+        id S1727562AbgCITE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:04:27 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A46F2465A;
-        Mon,  9 Mar 2020 19:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF29021655;
+        Mon,  9 Mar 2020 19:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583780665;
-        bh=nvxvgWdtEgnDRqamc2GBWCsWAoOX94Fj8G+9vEM+csI=;
+        s=default; t=1583780667;
+        bh=h8NlL0BNWOOzGjbattsQHdPTR/D98Gipr0p/Cf1gauo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LLCKQzKRVJcFGcG2+Cl2hY/Ds3fWou+kMjKhrUohcvjKDlTjTBrJbD9UkbnYsLqbb
-         HRG/MRLvhE9k0yKiz5ntxrnmi1Kalh0ACqKg/GNHX1mL2x3z2vGGpsMpas+7QANJkT
-         fc58l1eCTQmkC9OXQHFog4dXzz6JXlaWYiTtqzJ4=
+        b=IAd2hde4Obj2yUyEKiuD+RNlHhu9QkfyY8Nth3FZj/IclaMTSj/ebOWqxlv45Y85D
+         blN8y9OUDB9g57RMkn0YUQDlHK1g1sl0hr/mMJJvzeclAp/H4QLxlLtmjsd2ivSoIL
+         mZcz2bxPEMPjZJcSyDIdXq+KYMU3BAEG+l6rCRes=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
         dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH kcsan 12/32] kcsan: Add option to assume plain aligned writes up to word size are atomic
-Date:   Mon,  9 Mar 2020 12:04:00 -0700
-Message-Id: <20200309190420.6100-12-paulmck@kernel.org>
+Subject: [PATCH kcsan 19/32] kcsan: Expose core configuration parameters as module params
+Date:   Mon,  9 Mar 2020 12:04:07 -0700
+Message-Id: <20200309190420.6100-19-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200309190359.GA5822@paulmck-ThinkPad-P72>
 References: <20200309190359.GA5822@paulmck-ThinkPad-P72>
@@ -58,128 +58,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marco Elver <elver@google.com>
 
-This adds option KCSAN_ASSUME_PLAIN_WRITES_ATOMIC. If enabled, plain
-aligned writes up to word size are assumed to be atomic, and also not
-subject to other unsafe compiler optimizations resulting in data races.
+This adds early_boot, udelay_{task,interrupt}, and skip_watch as module
+params. The latter parameters are useful to modify at runtime to tune
+KCSAN's performance on new systems. This will also permit auto-tuning
+these parameters to maximize overall system performance and KCSAN's race
+detection ability.
 
-This option has been enabled by default to reflect current kernel-wide
-preferences.
+None of the parameters are used in the fast-path and referring to them
+via static variables instead of CONFIG constants will not affect
+performance.
 
 Signed-off-by: Marco Elver <elver@google.com>
+Cc: Qian Cai <cai@lca.pw>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/kcsan/core.c | 22 +++++++++++++++++-----
- lib/Kconfig.kcsan   | 27 ++++++++++++++++++++-------
- 2 files changed, 37 insertions(+), 12 deletions(-)
+ kernel/kcsan/core.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 64b30f7..e3c7d8f 100644
+index 87ef01e..498b1eb 100644
 --- a/kernel/kcsan/core.c
 +++ b/kernel/kcsan/core.c
-@@ -5,6 +5,7 @@
- #include <linux/delay.h>
+@@ -6,6 +6,7 @@
  #include <linux/export.h>
  #include <linux/init.h>
-+#include <linux/kernel.h>
+ #include <linux/kernel.h>
++#include <linux/moduleparam.h>
  #include <linux/percpu.h>
  #include <linux/preempt.h>
  #include <linux/random.h>
-@@ -169,10 +170,20 @@ static __always_inline struct kcsan_ctx *get_ctx(void)
- 	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
- }
+@@ -16,6 +17,20 @@
+ #include "encoding.h"
+ #include "kcsan.h"
  
--static __always_inline bool is_atomic(const volatile void *ptr)
-+static __always_inline bool
-+is_atomic(const volatile void *ptr, size_t size, int type)
- {
--	struct kcsan_ctx *ctx = get_ctx();
-+	struct kcsan_ctx *ctx;
++static bool kcsan_early_enable = IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE);
++static unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
++static unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
++static long kcsan_skip_watch = CONFIG_KCSAN_SKIP_WATCH;
 +
-+	if ((type & KCSAN_ACCESS_ATOMIC) != 0)
-+		return true;
- 
-+	if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC) &&
-+	    (type & KCSAN_ACCESS_WRITE) != 0 && size <= sizeof(long) &&
-+	    IS_ALIGNED((unsigned long)ptr, size))
-+		return true; /* Assume aligned writes up to word size are atomic. */
++#ifdef MODULE_PARAM_PREFIX
++#undef MODULE_PARAM_PREFIX
++#endif
++#define MODULE_PARAM_PREFIX "kcsan."
++module_param_named(early_enable, kcsan_early_enable, bool, 0);
++module_param_named(udelay_task, kcsan_udelay_task, uint, 0644);
++module_param_named(udelay_interrupt, kcsan_udelay_interrupt, uint, 0644);
++module_param_named(skip_watch, kcsan_skip_watch, long, 0644);
 +
-+	ctx = get_ctx();
- 	if (unlikely(ctx->atomic_next > 0)) {
- 		/*
- 		 * Because we do not have separate contexts for nested
-@@ -193,7 +204,8 @@ static __always_inline bool is_atomic(const volatile void *ptr)
- 	return kcsan_is_atomic(ptr);
- }
+ bool kcsan_enabled;
  
--static __always_inline bool should_watch(const volatile void *ptr, int type)
-+static __always_inline bool
-+should_watch(const volatile void *ptr, size_t size, int type)
+ /* Per-CPU kcsan_ctx for interrupts */
+@@ -239,9 +254,9 @@ should_watch(const volatile void *ptr, size_t size, int type)
+ 
+ static inline void reset_kcsan_skip(void)
  {
- 	/*
- 	 * Never set up watchpoints when memory operations are atomic.
-@@ -202,7 +214,7 @@ static __always_inline bool should_watch(const volatile void *ptr, int type)
- 	 * should not count towards skipped instructions, and (2) to actually
- 	 * decrement kcsan_atomic_next for consecutive instruction stream.
+-	long skip_count = CONFIG_KCSAN_SKIP_WATCH -
++	long skip_count = kcsan_skip_watch -
+ 			  (IS_ENABLED(CONFIG_KCSAN_SKIP_WATCH_RANDOMIZE) ?
+-				   prandom_u32_max(CONFIG_KCSAN_SKIP_WATCH) :
++				   prandom_u32_max(kcsan_skip_watch) :
+ 				   0);
+ 	this_cpu_write(kcsan_skip, skip_count);
+ }
+@@ -253,8 +268,7 @@ static __always_inline bool kcsan_is_enabled(void)
+ 
+ static inline unsigned int get_delay(void)
+ {
+-	unsigned int delay = in_task() ? CONFIG_KCSAN_UDELAY_TASK :
+-					 CONFIG_KCSAN_UDELAY_INTERRUPT;
++	unsigned int delay = in_task() ? kcsan_udelay_task : kcsan_udelay_interrupt;
+ 	return delay - (IS_ENABLED(CONFIG_KCSAN_DELAY_RANDOMIZE) ?
+ 				prandom_u32_max(delay) :
+ 				0);
+@@ -527,7 +541,7 @@ void __init kcsan_init(void)
+ 	 * We are in the init task, and no other tasks should be running;
+ 	 * WRITE_ONCE without memory barrier is sufficient.
  	 */
--	if ((type & KCSAN_ACCESS_ATOMIC) != 0 || is_atomic(ptr))
-+	if (is_atomic(ptr, size, type))
- 		return false;
- 
- 	if (this_cpu_dec_return(kcsan_skip) >= 0)
-@@ -460,7 +472,7 @@ static __always_inline void check_access(const volatile void *ptr, size_t size,
- 	if (unlikely(watchpoint != NULL))
- 		kcsan_found_watchpoint(ptr, size, type, watchpoint,
- 				       encoded_watchpoint);
--	else if (unlikely(should_watch(ptr, type)))
-+	else if (unlikely(should_watch(ptr, size, type)))
- 		kcsan_setup_watchpoint(ptr, size, type);
+-	if (IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE))
++	if (kcsan_early_enable)
+ 		WRITE_ONCE(kcsan_enabled, true);
  }
  
-diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-index 3552990..6612685 100644
---- a/lib/Kconfig.kcsan
-+++ b/lib/Kconfig.kcsan
-@@ -91,13 +91,13 @@ config KCSAN_REPORT_ONCE_IN_MS
- 	  limiting reporting to avoid flooding the console with reports.
- 	  Setting this to 0 disables rate limiting.
- 
--# Note that, while some of the below options could be turned into boot
--# parameters, to optimize for the common use-case, we avoid this because: (a)
--# it would impact performance (and we want to avoid static branch for all
--# {READ,WRITE}_ONCE, atomic_*, bitops, etc.), and (b) complicate the design
--# without real benefit. The main purpose of the below options is for use in
--# fuzzer configs to control reported data races, and they are not expected
--# to be switched frequently by a user.
-+# The main purpose of the below options is to control reported data races (e.g.
-+# in fuzzer configs), and are not expected to be switched frequently by other
-+# users. We could turn some of them into boot parameters, but given they should
-+# not be switched normally, let's keep them here to simplify configuration.
-+#
-+# The defaults below are chosen to be very conservative, and may miss certain
-+# bugs.
- 
- config KCSAN_REPORT_RACE_UNKNOWN_ORIGIN
- 	bool "Report races of unknown origin"
-@@ -116,6 +116,19 @@ config KCSAN_REPORT_VALUE_CHANGE_ONLY
- 	  the data value of the memory location was observed to remain
- 	  unchanged, do not report the data race.
- 
-+config KCSAN_ASSUME_PLAIN_WRITES_ATOMIC
-+	bool "Assume that plain aligned writes up to word size are atomic"
-+	default y
-+	help
-+	  Assume that plain aligned writes up to word size are atomic by
-+	  default, and also not subject to other unsafe compiler optimizations
-+	  resulting in data races. This will cause KCSAN to not report data
-+	  races due to conflicts where the only plain accesses are aligned
-+	  writes up to word size: conflicts between marked reads and plain
-+	  aligned writes up to word size will not be reported as data races;
-+	  notice that data races between two conflicting plain aligned writes
-+	  will also not be reported.
-+
- config KCSAN_IGNORE_ATOMICS
- 	bool "Do not instrument marked atomic accesses"
- 	help
 -- 
 2.9.5
 
