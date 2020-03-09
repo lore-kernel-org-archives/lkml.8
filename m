@@ -2,245 +2,115 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFA1C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CA9C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0342051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E9AD2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="lsDFCtzX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="naGY4lcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgCILOO (ORCPT
+        id S1726871AbgCILOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:14:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42105 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgCILNR (ORCPT
+        Mon, 9 Mar 2020 07:14:31 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:54874 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726215AbgCILOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:13:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v11so10494826wrm.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:13:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l0ktpDWRQDpySqc55O3ycjYmqR9R3A/TAGAj92uhxn4=;
-        b=lsDFCtzXoGyzp8BojMVT0mpbNB9e5AzYEbZF7+Vflwqw/Yu6HaPKpfJFS9jfR4DUrx
-         s3AkLVbeMXqYviEixKJlNtUkFGZM5yHLT8Kd1JBBB6bUoEzRvqGHLAKzSlNRxq0hiN3C
-         RdVOYhNPXTEh3G0Qe0Y4eiC61rnfsrHOsYpyY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l0ktpDWRQDpySqc55O3ycjYmqR9R3A/TAGAj92uhxn4=;
-        b=Z7JDhbK6tj0Pcp124FlVMaIjqtQ7cBemJ66DBbBl3oeZhWJPpCTFwrXSml0z/vdugW
-         KHkZdDW3kEyLJYfOAK0UX/SGdT34SG6tG0ISt7kE01OARFmhqeVnQ6otP4ohpG8Jeb8W
-         grJdXrW1YT5nCLO7cMCswiDJNwf+/4eRT5e9Zesy+4sskWnLlXDpXL0Dfc/1h8cqAzTn
-         rrcXVQhyLM/yF2lavcrYKEY/5I2Te3l04mLvjXnMUI59dste0BfV4SoUAW0o7aa+3UGO
-         hoiRVAutpE9NK1XRMwbtOGGldIwIJmHskjhlafKKXdMkyGNj0ymfywTpKwI4Ou9obW5z
-         S+Ug==
-X-Gm-Message-State: ANhLgQ3QFcy8eInOwhYF9ImlvnAyscdQDnayMolAH33Ei12K7y6s7Y1q
-        R1gkfzTYuWxQScUKK+g7YqjS9Q==
-X-Google-Smtp-Source: ADFU+vuZLy9l5fDEExjlVjYsQqqtTJX6BELy9Vyk7fsm0xfvThaVLXjqvV3FD10xTBBoJsm1XPY6hA==
-X-Received: by 2002:a5d:550f:: with SMTP id b15mr20607372wrv.19.1583752394074;
-        Mon, 09 Mar 2020 04:13:14 -0700 (PDT)
-Received: from localhost.localdomain ([2a06:98c0:1000:8250:3dcc:c1d:7f05:4873])
-        by smtp.gmail.com with ESMTPSA id a5sm25732846wmb.37.2020.03.09.04.13.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 04:13:13 -0700 (PDT)
-From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH bpf-next v4 03/12] bpf: tcp: move assertions into tcp_bpf_get_proto
-Date:   Mon,  9 Mar 2020 11:12:34 +0000
-Message-Id: <20200309111243.6982-4-lmb@cloudflare.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200309111243.6982-1-lmb@cloudflare.com>
-References: <20200309111243.6982-1-lmb@cloudflare.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 9 Mar 2020 07:14:30 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583752470; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=W9V6Jvf8Nv7owF8TF5GKbqjgK7vv05rxHi1O+GD3BRE=; b=naGY4lcZFbiurE+13F5IA/y8mqj1XmYH21YXkGON0VhX5tSezX/07qpfgUgSR0n4iY8gRLlj
+ YLEnX6s93HaYHc15kjuJxlIqIHBllibipLK7UH0ECvREi6l55N9mg8Ajzt5wy0L0cXpr5KwB
+ Q+oEPq2m0ciNfNEKNoWlXuPqQ3k=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e662513.7f63e9336500-smtp-out-n01;
+ Mon, 09 Mar 2020 11:14:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CDDBEC433CB; Mon,  9 Mar 2020 11:14:27 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 72D59C433D2;
+        Mon,  9 Mar 2020 11:14:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 72D59C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v4 0/4] Introduce SoC sleep stats driver
+Date:   Mon,  9 Mar 2020 16:44:13 +0530
+Message-Id: <1583752457-21159-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to ensure that sk->sk_prot uses certain callbacks, so that
-code that directly calls e.g. tcp_sendmsg in certain corner cases
-works. To avoid spurious asserts, we must to do this only if
-sk_psock_update_proto has not yet been called. The same invariants
-apply for tcp_bpf_check_v6_needs_rebuild, so move the call as well.
+Changes in v4:
+- Address bjorn's comments from v3 on change 2.
+- Add bjorn's Reviewed-by on change 3 and 4.
 
-Doing so allows us to merge tcp_bpf_init and tcp_bpf_reinit.
+Changes in v3:
+- Address stephen's comments from v2 in change 1 and 2.
+- Address bjorn's comments from v2 in change 3 and 4.
+- Add Rob and bjorn's Reviewed-by on YAML change.
 
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
----
- include/net/tcp.h   |  1 -
- net/core/sock_map.c | 25 +++++++++----------------
- net/ipv4/tcp_bpf.c  | 42 ++++++++++++++++++++++--------------------
- 3 files changed, 31 insertions(+), 37 deletions(-)
+Changes in v2:
+- Convert Documentation to YAML.
+- Address stephen's comments from v1.
+- Use debugfs instead of sysfs.
+- Add sc7180 dts changes for sleep stats
+- Add defconfig changes to enable driver
+- Include subsystem stats from [1] in this single stats driver.
+- Address stephen's comments from [1]
+- Update cover letter inline to mention [1]
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 07f947cc80e6..ccf39d80b695 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -2196,7 +2196,6 @@ struct sk_msg;
- struct sk_psock;
- 
- int tcp_bpf_init(struct sock *sk);
--void tcp_bpf_reinit(struct sock *sk);
- int tcp_bpf_sendmsg_redir(struct sock *sk, struct sk_msg *msg, u32 bytes,
- 			  int flags);
- int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index cb8f740f7949..fafcbd22ecba 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -145,8 +145,8 @@ static int sock_map_link(struct bpf_map *map, struct sk_psock_progs *progs,
- 			 struct sock *sk)
- {
- 	struct bpf_prog *msg_parser, *skb_parser, *skb_verdict;
--	bool skb_progs, sk_psock_is_new = false;
- 	struct sk_psock *psock;
-+	bool skb_progs;
- 	int ret;
- 
- 	skb_verdict = READ_ONCE(progs->skb_verdict);
-@@ -191,18 +191,14 @@ static int sock_map_link(struct bpf_map *map, struct sk_psock_progs *progs,
- 			ret = -ENOMEM;
- 			goto out_progs;
- 		}
--		sk_psock_is_new = true;
- 	}
- 
- 	if (msg_parser)
- 		psock_set_prog(&psock->progs.msg_parser, msg_parser);
--	if (sk_psock_is_new) {
--		ret = tcp_bpf_init(sk);
--		if (ret < 0)
--			goto out_drop;
--	} else {
--		tcp_bpf_reinit(sk);
--	}
-+
-+	ret = tcp_bpf_init(sk);
-+	if (ret < 0)
-+		goto out_drop;
- 
- 	write_lock_bh(&sk->sk_callback_lock);
- 	if (skb_progs && !psock->parser.enabled) {
-@@ -239,15 +235,12 @@ static int sock_map_link_no_progs(struct bpf_map *map, struct sock *sk)
- 	if (IS_ERR(psock))
- 		return PTR_ERR(psock);
- 
--	if (psock) {
--		tcp_bpf_reinit(sk);
--		return 0;
-+	if (!psock) {
-+		psock = sk_psock_init(sk, map->numa_node);
-+		if (!psock)
-+			return -ENOMEM;
- 	}
- 
--	psock = sk_psock_init(sk, map->numa_node);
--	if (!psock)
--		return -ENOMEM;
--
- 	ret = tcp_bpf_init(sk);
- 	if (ret < 0)
- 		sk_psock_put(sk, psock);
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 3327afa05c3d..ed8a8f3c9afe 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -629,14 +629,6 @@ static int __init tcp_bpf_v4_build_proto(void)
- }
- core_initcall(tcp_bpf_v4_build_proto);
- 
--static void tcp_bpf_update_sk_prot(struct sock *sk, struct sk_psock *psock)
--{
--	int family = sk->sk_family == AF_INET6 ? TCP_BPF_IPV6 : TCP_BPF_IPV4;
--	int config = psock->progs.msg_parser   ? TCP_BPF_TX   : TCP_BPF_BASE;
--
--	sk_psock_update_proto(sk, psock, &tcp_bpf_prots[family][config]);
--}
--
- static int tcp_bpf_assert_proto_ops(struct proto *ops)
- {
- 	/* In order to avoid retpoline, we make assumptions when we call
-@@ -648,34 +640,44 @@ static int tcp_bpf_assert_proto_ops(struct proto *ops)
- 	       ops->sendpage == tcp_sendpage ? 0 : -ENOTSUPP;
- }
- 
--void tcp_bpf_reinit(struct sock *sk)
-+static struct proto *tcp_bpf_get_proto(struct sock *sk, struct sk_psock *psock)
- {
--	struct sk_psock *psock;
-+	int family = sk->sk_family == AF_INET6 ? TCP_BPF_IPV6 : TCP_BPF_IPV4;
-+	int config = psock->progs.msg_parser   ? TCP_BPF_TX   : TCP_BPF_BASE;
- 
--	sock_owned_by_me(sk);
-+	if (!psock->sk_proto) {
-+		struct proto *ops = READ_ONCE(sk->sk_prot);
- 
--	rcu_read_lock();
--	psock = sk_psock(sk);
--	tcp_bpf_update_sk_prot(sk, psock);
--	rcu_read_unlock();
-+		if (tcp_bpf_assert_proto_ops(ops))
-+			return ERR_PTR(-EINVAL);
-+
-+		tcp_bpf_check_v6_needs_rebuild(sk, ops);
-+	}
-+
-+	return &tcp_bpf_prots[family][config];
- }
- 
- int tcp_bpf_init(struct sock *sk)
- {
--	struct proto *ops = READ_ONCE(sk->sk_prot);
- 	struct sk_psock *psock;
-+	struct proto *prot;
- 
- 	sock_owned_by_me(sk);
- 
- 	rcu_read_lock();
- 	psock = sk_psock(sk);
--	if (unlikely(!psock || psock->sk_proto ||
--		     tcp_bpf_assert_proto_ops(ops))) {
-+	if (unlikely(!psock)) {
- 		rcu_read_unlock();
- 		return -EINVAL;
- 	}
--	tcp_bpf_check_v6_needs_rebuild(sk, ops);
--	tcp_bpf_update_sk_prot(sk, psock);
-+
-+	prot = tcp_bpf_get_proto(sk, psock);
-+	if (IS_ERR(prot)) {
-+		rcu_read_unlock();
-+		return PTR_ERR(prot);
-+	}
-+
-+	sk_psock_update_proto(sk, psock, prot);
- 	rcu_read_unlock();
- 	return 0;
- }
+Qualcomm Technologies, Inc. (QTI)'s chipsets support SoC level low power
+modes. SoCs Always On Processor/Resource Power Manager produces statistics
+of the SoC sleep modes involving lowering or powering down of the rails and
+the oscillator clock.
+
+Additionally multiple subsystems present on SoC like modem, spss, adsp,
+cdsp maintains their low power mode statistics in shared memory (SMEM).
+
+Statistics includes SoC sleep mode type, number of times LPM entered, time
+of last entry, exit, and accumulated sleep duration in seconds.
+
+This series adds a driver to read the stats and export to debugfs.
+
+[1] https://lore.kernel.org/patchwork/patch/1149381/
+
+Mahesh Sivasubramanian (2):
+  dt-bindings: Introduce soc sleep stats bindings for Qualcomm SoCs
+  soc: qcom: Add SoC sleep stats driver
+
+Maulik Shah (2):
+  arm64: dts: qcom: sc7180: Enable soc sleep stats
+  arm64: defconfig: Enable SoC sleep stats driver for Qualcomm
+
+ .../bindings/soc/qcom/soc-sleep-stats.yaml         |  47 ++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               |   5 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/soc/qcom/Kconfig                           |  10 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/soc_sleep_stats.c                 | 279 +++++++++++++++++++++
+ 6 files changed, 343 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+ create mode 100644 drivers/soc/qcom/soc_sleep_stats.c
+
 -- 
-2.20.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
