@@ -2,79 +2,150 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123C9C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541B4C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94DE2465A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583792482;
-	bh=eQAbDt0tiqfOkJwm9FprozG0zwkYFRbFRzXIAKrmXOs=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=KoCOgD406Ebe0v/GeHWGjVoVxajDIne21oI64SUaP76uHVZnroClZDvDEvib4sh1L
-	 dFHgMQ1B5D/xJxNhXjvjEyZCIPO1xZvZdLh6W4uxYWh+G8UiCNaecr7lTWhItpcvXo
-	 vPa70fp3uCC0ZyLCc60JXzxNugg4nSqYJGeEs9Nc=
+	by mail.kernel.org (Postfix) with ESMTP id 3A82F24649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbgCIWVU (ORCPT
+        id S1727174AbgCIWWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:21:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgCIWVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:21:20 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 9 Mar 2020 18:22:48 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:51732 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726536AbgCIWWr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 18:22:47 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4B8E24654;
-        Mon,  9 Mar 2020 22:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583792479;
-        bh=eQAbDt0tiqfOkJwm9FprozG0zwkYFRbFRzXIAKrmXOs=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=CXnhLbOWX9BCunAnfZ3MHDxyyKAapVztspXGjxXkHgfxRyD/cfBp6b10lpua8aP1T
-         WdO04U0uokeqzEKl7ZdcmXNCUP4gIPPLapatKpKvgTT0BKZAQsfx8jImyJ5n7qjvWW
-         ENnuz2DuSB3AkJrYhQGWJfUcHrhn0J0gbvBlF5Ks=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200224045003.3783838-6-vkoul@kernel.org>
-References: <20200224045003.3783838-1-vkoul@kernel.org> <20200224045003.3783838-6-vkoul@kernel.org>
-Subject: Re: [PATCH v4 5/5] clk: qcom: gcc: Add global clock controller driver for SM8250
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 1EEAE634C87;
+        Tue, 10 Mar 2020 00:22:00 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jBQme-0001Fq-BM; Tue, 10 Mar 2020 00:22:00 +0200
+Date:   Tue, 10 Mar 2020 00:22:00 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org, vnkgutta@codeaurora.org,
-        Vinod Koul <vkoul@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Date:   Mon, 09 Mar 2020 15:21:18 -0700
-Message-ID: <158379247896.66766.8303109383349493440@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Maxime Ripard <mripard@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 2/3] dt-bindings: leds: Add binding for sgm3140
+Message-ID: <20200309222200.GE2619@valkosipuli.retiisi.org.uk>
+References: <20200309203558.305725-1-luca@z3ntu.xyz>
+ <20200309203558.305725-3-luca@z3ntu.xyz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309203558.305725-3-luca@z3ntu.xyz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2020-02-23 20:50:03)
-> From: Taniya Das <tdas@codeaurora.org>
->=20
-> Add the clocks supported in global clock controller, which clock the
-> peripherals like BLSPs, SDCC, USB, MDSS etc. Register all the clocks
-> to the clock framework for the clients to be able to request for them.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
+Hi Luca,
 
-Applied to clk-next
+On Mon, Mar 09, 2020 at 09:35:57PM +0100, Luca Weiss wrote:
+> Add YAML devicetree binding for SGMICRO SGM3140 charge pump used for
+> camera flash LEDs.
+> 
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+> Changes since RFC:
+> - new patch
+> 
+> I'm not sure about the completeness of this binding as it doesn't
+> mention the led subnode at all.
+
+I guess you'll need one --- the driver expects it as well.
+
+> The only existing led yaml binding is leds/leds-max77650.yaml which
+> mentions the subnode but duplicates properties from documented in 
+> leds/common.txt.
+> 
+>  .../bindings/leds/leds-sgm3140.yaml           | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
+> new file mode 100644
+> index 000000000000..be9384573d02
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-sgm3140.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SGMICRO SGM3140 500mA Buck/Boost Charge Pump LED Driver
+> +
+> +maintainers:
+> +  - Luca Weiss <luca@z3ntu.xyz>
+> +
+> +description: |
+> +  The SGM3140 is a current-regulated charge pump which can regulate two current
+> +  levels for Flash and Torch modes.
+> +
+> +  It is controlled with two GPIO pins.
+> +
+> +  The data sheet can be found at:
+> +    http://www.sg-micro.com/uploads/soft/20190626/1561535688.pdf
+> +
+> +properties:
+> +  compatible:
+> +    const: sgmicro,sgm3140
+> +
+> +  enable-gpios:
+> +    maxItems: 1
+> +    description: A connection to the 'EN' pin.
+> +
+> +  flash-gpios:
+> +    maxItems: 1
+> +    description: A connection to the 'FLASH' pin.
+
+How about a regulator supply?
+
+I guess the chip is meant to be connected to a li-ion cell but still...
+
+> +
+> +required:
+> +  - compatible
+> +  - flash-gpios
+> +  - enable-gpios
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/leds/common.h>
+> +
+> +    sgm3140 {
+> +        compatible = "sgmicro,sgm3140";
+> +        flash-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
+> +        enable-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
+> +
+> +        sgm3140_flash: led {
+> +            function = LED_FUNCTION_FLASH;
+> +            color = <LED_COLOR_ID_WHITE>;
+> +            flash-max-timeout-us = <250000>;
+> +        };
+> +    };
+
+-- 
+Regards,
+
+Sakari Ailus
