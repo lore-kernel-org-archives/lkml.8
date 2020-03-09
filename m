@@ -2,187 +2,142 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C021C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F01C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601A9208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hh+5JS6k"
+	by mail.kernel.org (Postfix) with ESMTP id C2D6C208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:26:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583778371;
+	bh=eT0kOzEakczMXlQYl1J8bn5DoxtQ2UnGAnmkEdwTmgk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q3pkEKfZxPno/qLWPoe6OGHzr9ekednlg6VRLZIahx2IjZfWHf/SLCF3tQyGNMggd
+	 DCJXvbKYwxz/BB3PSZ/K/JaWkjDsDnX1ZpNZJ0rvnItHXkg2kgUPikOJT/1Ig25M43
+	 SVkcPPeHrldblLSf+tsuFUrJgCGl9BW9KwkOR6cY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbgCISXi (ORCPT
+        id S1727389AbgCIS0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:23:38 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:57235 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727483AbgCISXf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:23:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583778214; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=oXtyD64Mkp4ykU5HU0PK0xoug9dx6XnlZHC0tqZFXR8=; b=hh+5JS6kJOjUneOL+wmOuJWsuf+H16IaoitIO7aIfto9Y0+Ueh4ZOjndg2ipQd3GlQNVpybc
- s9fETMBDECDcPyvnyk2aQRcRHVNOAJn8BwLW6GSSMI6tr3kDCj2x2d8kV9tHlhm6BIR3eTuO
- uR5Q5a69KwqMiNSy8xQUlUsDsWc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6689a6.7f2cf01a2180-smtp-out-n02;
- Mon, 09 Mar 2020 18:23:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B6A80C433D2; Mon,  9 Mar 2020 18:23:33 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 9 Mar 2020 14:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727263AbgCIS0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:26:10 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4282BC43636;
-        Mon,  9 Mar 2020 18:23:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4282BC43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, joro@8bytes.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-remoteproc@vger.kernel.org, ohad@wizery.com,
-        agross@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 3/3] remoteproc: qcom_q6v5_mss: Request direct mapping for firmware subdevice
-Date:   Mon,  9 Mar 2020 23:52:55 +0530
-Message-Id: <20200309182255.20142-4-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200309182255.20142-1-sibis@codeaurora.org>
-References: <20200309182255.20142-1-sibis@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BD39205F4;
+        Mon,  9 Mar 2020 18:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583778369;
+        bh=eT0kOzEakczMXlQYl1J8bn5DoxtQ2UnGAnmkEdwTmgk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uPDGYdnddJT0uTL17VGEK3PrRwbbVptbQmCBeHhmxmOEDzXlabplCxwWejYRzDz2F
+         YjHeHWZtvooRfv3hThH8oM4cid//RR4ZQzbALsq5XpN7WZIQHOqNvZCaNepFmNvVCr
+         cMqY0Ywiyk3ra0gJHqQYK+EjW/QCJhUQ4sgOsxOg=
+Date:   Mon, 9 Mar 2020 11:26:08 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: general protection fault in syscall_return_slowpath
+Message-ID: <20200309182608.GC1073@sol.localdomain>
+References: <000000000000ff323f05a053100c@google.com>
+ <CALCETrV7JcVt3ejMbHxTs4-CFmKjcmSbW2eMmmMZUM7dg2mBuA@mail.gmail.com>
+ <87eeu28zzl.fsf@nanos.tec.linutronix.de>
+ <CACT4Y+YX72sz2LsqQOTQ=TdDK_f7zURjA9j9VyYwj7GgLrajkQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+YX72sz2LsqQOTQ=TdDK_f7zURjA9j9VyYwj7GgLrajkQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Q6 modem sub-system has direct access to DDR through memnoc and
-an indirect access routed through a SMMU which MSS CE (crypto engine
-sub-component of MSS) uses during out of reset sequence. Request direct
-mapping for the modem-firmware subdevice since smmu is not expected
-to provide access control/translation for these SIDs (sandboxing of the
-modem is achieved through XPUs engaged using SMC calls).
+On Mon, Mar 09, 2020 at 09:34:25AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
+> 
+> I see the repro opens /dev/fb0, so this may be related to the exact
+> type of framebuffer on the machine. That's what Jann tried to figure
+> out.
+> 
+> There is a plenty of open bugs on dashboard related to fb/tty, just
+> doing a quick grep based on titles:
+> 
+> https://syzkaller.appspot.com/upstream
+> BUG: unable to handle kernel paging request in
+> drm_fb_helper_dirty_work 7 4d20h 90d
+> BUG: unable to handle kernel paging request in vga16fb_imageblit 1 74d 73d
+> divide error in fbcon_switch C cause 141 3d15h 96d
+> general protection fault in fbcon_cursor C cause 12 13h48m 87d
+> general protection fault in fbcon_fb_blanked 3 88d 90d
+> general protection fault in fbcon_invert_region 1 49d 48d
+> general protection fault in fbcon_modechanged 3 89d 90d
+> INFO: task hung in do_fb_ioctl 6 36d 57d
+> INFO: task hung in fb_compat_ioctl 1 87d 87d
+> INFO: task hung in fb_open C cause 171 1h06m 96d
+> INFO: task hung in fb_release C cause 23 2d12h 77d
+> INFO: task hung in release_tty 3 6d16h 62d
+> INFO: task hung in tty_ldisc_hangup C cause 15 17d 92d
+> INFO: trying to register non-static key in hci_uart_tty_receive (2) 1 103d 99d
+> KASAN: global-out-of-bounds Read in fbcon_get_font C cause 19 7d06h 90d
+> KASAN: global-out-of-bounds Read in fb_pad_aligned_buffer C cause 5 4d22h 92d
+> KASAN: global-out-of-bounds Read in vga16fb_imageblit C cause 225 1d11h 96d
+> KASAN: slab-out-of-bounds Read in fbcon_get_font C cause 42 5d04h 96d
+> KASAN: slab-out-of-bounds Read in fb_pad_aligned_buffer 4 9d00h 48d
+> KASAN: slab-out-of-bounds Write in fbcon_scroll 1 75d 73d
+> KASAN: use-after-free Read in fbcon_cursor syz cause 3 41d 84d
+> KASAN: use-after-free Read in fb_mode_is_equal syz cause 70 5h49m 92d
+> KASAN: use-after-free Read in tty_open C cause 7 42d 96d
+> KASAN: use-after-free Write in release_tty C cause 544 4h01m 96d
+> KASAN: vmalloc-out-of-bounds Read in drm_fb_helper_dirty_work 1 80d 80d
+> KASAN: vmalloc-out-of-bounds Write in drm_fb_helper_dirty_work 2 64d 76d
+> KCSAN: data-race in echo_char / n_tty_receive_buf_common 11 21d 125d
+> KMSAN: kernel-infoleak in tty_compat_ioctl C 81 2h17m 14d
+> memory leak in tty_init_dev C 3 121d 192d
+> possible deadlock in n_tty_receive_buf_common C cause 585 1h18m 23d
+> possible deadlock in tty_port_close_start C cause 4 9d18h 25d
+> WARNING in dlfb_submit_urb/usb_submit_urb C 190 8d23h 251d
+> 
+> So if you don't see something obvious here, it may be not worth
+> spending more time until these, more obvious ones are fixed. This may
+> be a previous silent memory corruption that wasn't caught by KASAN.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_mss.c | 68 ++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+Yesterday I was looking at a similar bug
+"general protection fault in do_con_write"
+(https://syzkaller.appspot.com/bug?id=f82ab89451323208e343f4a8632014ef12b1252d).
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index d7667418a62f4..ceb7f71dd17df 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -10,6 +10,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/dma-mapping.h>
-+#include <linux/iommu.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
-@@ -202,6 +203,7 @@ struct q6v5 {
- 	struct qcom_rproc_subdev smd_subdev;
- 	struct qcom_rproc_ssr ssr_subdev;
- 	struct qcom_sysmon *sysmon;
-+	struct device *fw_subdev;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
- 	bool has_halt_nav;
-@@ -378,6 +380,67 @@ static void q6v5_pds_disable(struct q6v5 *qproc, struct device **pds,
- 	}
- }
- 
-+static int qcom_init_firmware(struct q6v5 *qproc)
-+{
-+	struct platform_device_info info;
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+	int ret;
-+
-+	np = of_get_child_by_name(qproc->dev->of_node, "modem-firmware");
-+	if (!np)
-+		return 0;
-+
-+	memset(&info, 0, sizeof(info));
-+	info.fwnode = &np->fwnode;
-+	info.parent = qproc->dev;
-+	info.name = np->name;
-+
-+	pdev = platform_device_register_full(&info);
-+	if (IS_ERR(pdev)) {
-+		of_node_put(np);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	pdev->dev.of_node = np;
-+	ret = of_dma_configure(&pdev->dev, np, true);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to configure DMA\n");
-+		goto err_unregister;
-+	}
-+
-+	ret = iommu_request_dm_for_dev(&pdev->dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to request direct mapping\n");
-+		goto err_unregister;
-+	}
-+
-+	qproc->fw_subdev = &pdev->dev;
-+	of_node_put(np);
-+	return 0;
-+
-+err_unregister:
-+	platform_device_unregister(pdev);
-+	of_node_put(np);
-+	return ret;
-+}
-+
-+static void qcom_remove_firmware(struct q6v5 *qproc)
-+{
-+	struct iommu_domain *iommu;
-+
-+	if (!qproc->fw_subdev)
-+		return;
-+
-+	iommu = iommu_get_domain_for_dev(qproc->fw_subdev);
-+	if (!iommu)
-+		return;
-+
-+	iommu_detach_device(iommu, qproc->fw_subdev);
-+	iommu_domain_free(iommu);
-+	platform_device_unregister(to_platform_device(qproc->fw_subdev));
-+}
-+
- static int q6v5_xfer_mem_ownership(struct q6v5 *qproc, int *current_perm,
- 				   bool local, bool remote, phys_addr_t addr,
- 				   size_t size)
-@@ -1722,6 +1785,10 @@ static int q6v5_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto detach_proxy_pds;
- 
-+	ret = qcom_init_firmware(qproc);
-+	if (ret)
-+		goto detach_proxy_pds;
-+
- 	qproc->mpss_perm = BIT(QCOM_SCM_VMID_HLOS);
- 	qproc->mba_perm = BIT(QCOM_SCM_VMID_HLOS);
- 	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
-@@ -1759,6 +1826,7 @@ static int q6v5_remove(struct platform_device *pdev)
- 	qcom_remove_glink_subdev(qproc->rproc, &qproc->glink_subdev);
- 	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
- 	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
-+	qcom_remove_firmware(qproc);
- 
- 	q6v5_pds_detach(qproc, qproc->active_pds, qproc->active_pd_count);
- 	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+It has a simple single-threaded reproducer at
+https://syzkaller.appspot.com/text?tag=ReproC&x=169c4c81e00000 that just:
+
+	1. Calls FBIOPUT_VSCREENINFO on /dev/fb0
+	2. Opens /dev/tty20 and writes something to it
+
+Presumably, to reproduce this you at least need some graphics hardware with a
+corresponding framebuffer driver (to get /dev/fb0), as well as
+CONFIG_FRAMEBUFFER_CONSOLE=y (so that the virtual console /dev/tty20 uses a
+framebuffer console and not something else like a VGA text mode console).
+
+However, when I tried to reproduce this locally in QEMU with the same kconfig
+(https://syzkaller.appspot.com/text?tag=KernelConfig&x=31018567b8f0fc70) and
+with graphics enabled (-vga std), it didn't work.
+
+I then tried to reproduce on a Google Compute Engine VM with the exact same
+kconfig, and it worked.  I think the framebuffer driver in use was vga16fb.c.
+It's odd because the same driver seems to be used in the QEMU case, and in both
+cases the virtual consoles were bound to the framebuffer console.
+
+I need to double-check all this though.
+
+And yes, probably many of the above bugs have the same cause.
+
+- Eric
