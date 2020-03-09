@@ -2,53 +2,78 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0AEC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B582C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5DB20873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4568C222C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:29:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SAn3421T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCIOZb (ORCPT
+        id S1726779AbgCIO3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:25:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:53196 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726703AbgCIOZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:25:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C805B11D4;
-        Mon,  9 Mar 2020 07:25:30 -0700 (PDT)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AC3C3F67D;
-        Mon,  9 Mar 2020 07:25:30 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 14:25:29 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, dietmar.eggemann@arm.com,
-        rjw@rjwysocki.net, pkondeti@codeaurora.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-Subject: Re: [PATCH v5 3/7] arm64/kvm: disable access to AMU registers from
- kvm guests
-Message-ID: <20200309142529.GB13343@arm.com>
-References: <20200226132947.29738-1-ionela.voinescu@arm.com>
- <20200226132947.29738-4-ionela.voinescu@arm.com>
- <46b89d0c9704e0a0fb7a4ac2a1fb5b7a@kernel.org>
+        Mon, 9 Mar 2020 10:29:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49386 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgCIO3L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 10:29:11 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 029ESbNs038839;
+        Mon, 9 Mar 2020 09:28:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583764118;
+        bh=PK9HkNhFkjhSgbGPGf8aZjBq6q1NmO8OJkQ0UtLLUrY=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=SAn3421TiO84EvcU9BpsikWSA7JcG9TeTbS74dJ9CuUaj/W4qCxM8fB1bLvYwzywm
+         IZI88wB5cUFyHKslgUJH4OPJ2CNLN+wQQYzklbnNR3RrJTP3/Sd/ftkFhxU0EArGqX
+         tGaKORIcLhVvGK4/hxqc3NAglL8E/IP3Jvk8WNy8=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029ESbBw082094;
+        Mon, 9 Mar 2020 09:28:37 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
+ 2020 09:28:37 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Mar 2020 09:28:37 -0500
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029ESXq0049548;
+        Mon, 9 Mar 2020 09:28:34 -0500
+Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
+ transceiver regulator
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Rob Herring <robh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>
+References: <20200217142836.23702-1-faiz_abbas@ti.com>
+ <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
+ <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
+ <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
+ <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
+ <679bdfd3-5325-b903-de5f-1beb5b577d73@ti.com>
+Message-ID: <8400282d-8003-549b-3560-5b55b318e57a@ti.com>
+Date:   Mon, 9 Mar 2020 20:00:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <46b89d0c9704e0a0fb7a4ac2a1fb5b7a@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <679bdfd3-5325-b903-de5f-1beb5b577d73@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -56,69 +81,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Marc,
 
-On Thursday 27 Feb 2020 at 19:58:32 (+0000), Marc Zyngier wrote:
-[..]
-> > diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> > index 3e909b117f0c..44354c812783 100644
-> > --- a/arch/arm64/kvm/sys_regs.c
-> > +++ b/arch/arm64/kvm/sys_regs.c
-> > @@ -1003,6 +1003,20 @@ static bool access_pmuserenr(struct kvm_vcpu
-> > *vcpu, struct sys_reg_params *p,
-> >  	{ SYS_DESC(SYS_PMEVTYPERn_EL0(n)),					\
-> >  	  access_pmu_evtyper, reset_unknown, (PMEVTYPER0_EL0 + n), }
-> > 
-> > +static bool access_amu(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
-> > +			     const struct sys_reg_desc *r)
-> > +{
-> > +	kvm_inject_undefined(vcpu);
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +/* Macro to expand the AMU counter and type registers*/
-> > +#define AMU_AMEVCNTR0_EL0(n) { SYS_DESC(SYS_AMEVCNTR0_EL0(n)),
-> > access_amu }
-> > +#define AMU_AMEVTYPE0_EL0(n) { SYS_DESC(SYS_AMEVTYPE0_EL0(n)),
-> > access_amu }
-> > +#define AMU_AMEVCNTR1_EL0(n) { SYS_DESC(SYS_AMEVCNTR1_EL0(n)),
-> > access_amu }
-> > +#define AMU_AMEVTYPE1_EL0(n) { SYS_DESC(SYS_AMEVTYPE1_EL0(n)),
-> > access_amu }
-> > +
-> >  static bool trap_ptrauth(struct kvm_vcpu *vcpu,
-> >  			 struct sys_reg_params *p,
-> >  			 const struct sys_reg_desc *rd)
-> > @@ -1078,8 +1092,10 @@ static u64 read_id_reg(const struct kvm_vcpu
-> > *vcpu,
-> >  			 (u32)r->CRn, (u32)r->CRm, (u32)r->Op2);
-> >  	u64 val = raz ? 0 : read_sanitised_ftr_reg(id);
-> > 
-> > -	if (id == SYS_ID_AA64PFR0_EL1 && !vcpu_has_sve(vcpu)) {
-> > -		val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-> > +	if (id == SYS_ID_AA64PFR0_EL1) {
-> > +		if (!vcpu_has_sve(vcpu))
-> > +			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-> > +		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
+On 02/03/20 1:46 pm, Faiz Abbas wrote:
+> Marc,
 > 
-> This will definitely conflict with some of the ongoing rework I have[1].
-> I'm happy to provide this as a stable branch for you to rebase on top,
-> or use an arm64 provided branch to rebase my stoff on top.
+> On 26/02/20 2:40 pm, Faiz Abbas wrote:
+>> Hi Marc,
+>>
+>> On 21/02/20 2:01 pm, Marc Kleine-Budde wrote:
+>>> On 2/21/20 9:31 AM, Faiz Abbas wrote:
+>>>> Hi Rob,
+>>>>
+>>>> On 20/02/20 2:05 am, Rob Herring wrote:
+>>>>> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
+>>>>>> Some CAN transceivers have a standby line that needs to be asserted
+>>>>>> before they can be used. Model this GPIO lines as an optional
+>>>>>> fixed-regulator node. Document bindings for the same.
+>>>>>>
+>>>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
+>>>>>>  1 file changed, 3 insertions(+)
+>>>>>
+>>>>> This has moved to DT schema in my tree, so please adjust it and resend.
+>>>>
+>>>> Ok.
+>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>>> index ed614383af9c..f17e2a5207dc 100644
+>>>>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+>>>>>> @@ -48,6 +48,9 @@ Optional Subnode:
+>>>>>>  			  that can be used for CAN/CAN-FD modes. See
+>>>>>>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>>>>>>  			  for details.
+>>>>>> +
+>>>>>> +- xceiver-supply: Regulator that powers the CAN transceiver.
+>>>>>
+>>>>> The supply for a transceiver should go in the transceiver node.
+>>>>>
+>>>>
+>>>> Marc, while I have you here, do you agree with this?
+>>>
+>>> I'll look into the details later today.
+>>>
+>>
+>> Sure. Be sure to take another look at my attempt to use the transceiver
+>> with a phy driver some time ago.
+>>
+>> https://lore.kernel.org/patchwork/patch/1006238/
+>>
 > 
-> Just let me know how you want to proceed.
->
+> Do you have any comments?
+> 
 
-Catalin added the AMU patches on top of 5.6-rc3 at [1].
-Is this okay as a base branch for your patches?
+Gentle ping.
 
 Thanks,
-Ionela.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/amu
-
-> Thanks,
-> 
->         M.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=kvm-arm64/debug-fixes-5.6&id=454fb7398d3626328f7f771c07d21e894e4e1a3b
-> -- 
-> Jazz is not dead. It just smells funny...
+Faiz
