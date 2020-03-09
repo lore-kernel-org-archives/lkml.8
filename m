@@ -2,89 +2,124 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D090C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E34C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AA020828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:47:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQ6d4P7G"
+	by mail.kernel.org (Postfix) with ESMTP id CD0022146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:48:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583783296;
+	bh=jkfB9NPaUoTZdcxqmU3FXV9oQzJGdB+CktplixLqUn0=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=0gg+vBgz+f5tm7U3zPOdiTE0yPA8ZWrATFQOd1G+uIwAeQGs9TzaIITDOzkcuUvX4
+	 78lbWBDe3PLqpuqRXx42EcX58G18GLa2pDEXL5uKYeyb224aTq63fo4KItjmQU963w
+	 DkszEtfnkmc07YIDGY9iikLAYQadrotIdL24idEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgCITrw (ORCPT
+        id S1726643AbgCITsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:47:52 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39769 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgCITrv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:47:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id f21so6247274iol.6;
-        Mon, 09 Mar 2020 12:47:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QKbim7kyHkrPMGudkJ1vg0pEcBDWWCn0qINKqdVbA5w=;
-        b=aQ6d4P7G+51cW8y0i8NEFCtsKyBIAmDQUSzYlkLtf9MQzoqQGdQwySUYgdQkPk65et
-         BmWWjn2rjrHZIQjLlcNULODk5WgZGKexl56EwBzIjXJ2GiyoEJSk5cDo2hgN9YpBNIb8
-         i2sMa23eSaQbyjhj2W3NPQDmtj26SJ/U1V3VzobgYIPUdOS2Cbpck23EfWzcEQdEyVTI
-         /fcFr/U2P/oupRc223/fzVPBB+C5DOCFR1akIOVvpeXO5nsVE3EHbFMmaQpwIwPDAlTj
-         smSK6qzxupxo+4IFoT6Bdzhxc4oyqdojunjeJjFrBJ6Bbs8sw1Ie34TVuOangoKlhGCz
-         UXiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QKbim7kyHkrPMGudkJ1vg0pEcBDWWCn0qINKqdVbA5w=;
-        b=KrF24B0nuBYnro1LPewWqK+aSWt2nDjXZWLjRNM9G2boLLbiciI4KMLzPojQiDvUgJ
-         kpq61GGhTxq5EsZE2tV7VzvsJcdAHaSv5qDGcfSrOnZtb2uL17Qihg/PjGGFF+ndiQ+K
-         Jli5L3dLEqSG/ap0irg1KeZdpxOFhAFwpNYTYmT3cYDSXhaSN6FPIQ3X6mvrG5UNTj5Y
-         8CLkQXaDipbt/l0jbcUHy8CA8AZbGqn+KgM0W4BGwzH4U5obRR8O+Jj29WdGjNAM+xKV
-         ByYUCX4bcoWoW6IgAMDe/AVELbpwMTFPpJUyWYcNmJ2jauDzfKMwE7c/46x1LchTyYH/
-         kW5A==
-X-Gm-Message-State: ANhLgQ1ICCLoeTeuSQlCW2ZAENMl/T7VtpEI9pD4DjoVo036tHL3tLZw
-        IH6WcooghTtg+R3Y4+HkzZyYlzb05jvGZeTKZamVyBic
-X-Google-Smtp-Source: ADFU+vu0kdCSLs3bzWD+F6sDXLWQMKarERkN7jRfqXBo+1Uyqq+GkdyoCW1iIkJTYgvcqSWEJbTCkD7eLiN5QW2hczI=
-X-Received: by 2002:a6b:2c52:: with SMTP id s79mr14709222ios.160.1583783270045;
- Mon, 09 Mar 2020 12:47:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200308055445.1992189-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20200308055445.1992189-1-bjorn.andersson@linaro.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 9 Mar 2020 13:47:38 -0600
-Message-ID: <CAOCk7NrYxPRsT+wqgW=ShkYNnkuLfuzzVACDL7Zn-phKSgqvfw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8998-mtp: Disable funnel 4 and 5
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 9 Mar 2020 15:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbgCITsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:48:15 -0400
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F247420828;
+        Mon,  9 Mar 2020 19:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583783294;
+        bh=jkfB9NPaUoTZdcxqmU3FXV9oQzJGdB+CktplixLqUn0=;
+        h=From:To:Subject:Date:From;
+        b=EPx3cJuDZgFXVT/4XKvnEAY7Qu7neXFRXmp0rq5aCcB9KLzavlQNjCCdMH0xD/8D2
+         DVH/1S4TMklpDtPhSE5bC2wEg2Iu196aQd5JZYPFvjnISlBCFYLh7GLe13I3TtCjHQ
+         tICvbiHXyjU5PKjNJkIrFbRsEjPFDXKzcJI4gV4g=
+From:   zanussi@kernel.org
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH RT 0/8] Linux v4.14.172-rt78-rc1
+Date:   Mon,  9 Mar 2020 14:47:45 -0500
+Message-Id: <cover.1583783251.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 7, 2020 at 10:58 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> Disable Coresight funnel 4 and 5, for now, as these causes the MTP to
-> crash when clock late_initcall disables unused clocks.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Tom Zanussi <zanussi@kernel.org>
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Dear RT Folks,
 
-I'm guessing that these are accessed by something else in the system,
-without properly putting its own vote or something.  Similar to
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.6-rc5&id=12eced09cd301aa7b1868a67c50a651c2aacd363
+This is the RT stable review cycle of patch 4.14.172-rt78-rc1.
 
-If I get some time, I'll try to repro and hopefully identify what is
-exactly going wrong.
+Please scream at me if I messed something up. Please test the patches
+too.
+
+The -rc release will be uploaded to kernel.org and will be deleted
+when the final release is out. This is just a review release (or
+release candidate).
+
+The pre-releases will not be pushed to the git repository, only the
+final release is.
+
+If all goes well, this patch will be converted to the next main
+release on 2020-03-16.
+
+To build 4.14.172-rt78-rc1 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.172.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.172-rt78-rc1.patch.xz
+
+You can also build from 4.14.172-rt77 by applying the incremental patch:
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/incr/patch-4.14.172-rt77-rt78-rc1.patch.xz
+
+
+Enjoy,
+
+-- Tom
+
+
+Matt Fleming (1):
+  mm/memcontrol: Move misplaced local_unlock_irqrestore()
+
+Scott Wood (2):
+  sched: migrate_enable: Use per-cpu cpu_stop_work
+  sched: migrate_enable: Remove __schedule() call
+
+Sebastian Andrzej Siewior (4):
+  userfaultfd: Use a seqlock instead of seqcount
+  locallock: Include header for the `current' macro
+  drm/vmwgfx: Drop preempt_disable() in vmw_fifo_ping_host()
+  tracing: make preempt_lazy and migrate_disable counter smaller
+
+Tom Zanussi (1):
+  Linux 4.14.172-rt78-rc1
+
+ drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c |  2 --
+ fs/userfaultfd.c                     | 12 ++++++------
+ include/linux/locallock.h            |  1 +
+ include/linux/trace_events.h         |  3 +--
+ kernel/sched/core.c                  | 23 ++++++++++++++---------
+ kernel/trace/trace_events.c          |  4 ++--
+ localversion-rt                      |  2 +-
+ mm/memcontrol.c                      |  2 +-
+ 8 files changed, 26 insertions(+), 23 deletions(-)
+
+-- 
+2.14.1
+
