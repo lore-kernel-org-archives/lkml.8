@@ -2,118 +2,136 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F34C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5C2C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E3B20674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:58:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="rhP8IqmZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MalW71/b"
+	by mail.kernel.org (Postfix) with ESMTP id 64EFB2084E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:59:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583747960;
+	bh=0sP2HCSbp1hFImJrXuJEJrwE1KAk2T96fyJpUDGb184=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0AyCdLzSyRzRubYYxPnEuWUoXMYyZhzbjWxZyk2jlHXAnoj+trLxYAPuxuDHVGEOi
+	 Iqus0qmikZ7iQmshi9VEvxDaeUKZXNk5AgUuRknfKF0LvXY3Fby6KCCTlmNJoIaERb
+	 9AOWDjWxcKYSwo4CSRqLXmxIb5fAABUk7p/O3yGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCIJ6R (ORCPT
+        id S1726492AbgCIJ7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:58:17 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:40091 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725796AbgCIJ6Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:58:16 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BA7F52616;
-        Mon,  9 Mar 2020 05:58:14 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 09 Mar 2020 05:58:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=x843TymkohDL0CNnlBbHCXKt7Ii
-        gsbMrdZT6H6SSLmM=; b=rhP8IqmZ+jnmVnsMHlCOIX+LbZ63kU8RwEc3J0svGNY
-        6l8keSJodZj1KEAzWpHFBUVsnNW/4Hoc5BNgfSJx1dlqwpUOnP6llj1JLVytgp8n
-        G1VcpWl/HmiI62RepxfoKu4dquSqAHs+Yz2NPjR98pBIxB6DvTh0Oe7zzXa4V2io
-        bzkne9Fd1SjR1ug31fLXuWQM62HVBP5MBI0uuZDcCSzNA9ForGP2B3w+r3lSMXGc
-        Uaml2qVaTO/vYNR1e5lJAGzgiN6rewod4YdnLGuTyoNiwxk4k/H9Sd1Ox4uG0vX7
-        8GALFXpaZxngop8xIjwSQ+ObinvCPW7UGMToYY+QvEw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=x843Ty
-        mkohDL0CNnlBbHCXKt7IigsbMrdZT6H6SSLmM=; b=MalW71/b0+98hpXSkEDGTd
-        vItpnoXZ67gxttvgn8L//69iT2ScZYAkAXmTTi686fLpmjy6KIfpyTygbxyjv2gu
-        NHiCm6ALZHS2jrMN4UW0bUHTyOJB4wgSaiuosEQwG3fqjuFm8t6MeuFNiPQbtBov
-        H28FF+AvM84P6KVV/DHjHXvXL300JIBQWkkTqg4qxh7Nv8b9Oqhc4qaygrsNWMBe
-        Yjr7emvKu9pF2YVO/Cf1pnTTr/WCYh/BplhCbQIgkVvWzJWyws+sPlDOVkQ8mUD5
-        zRvHUEB5Efx+n/zMaqbn+U2GTLEJMZDUFhMIZcC8TL+lDH+hKe/OC2IfF60iJJUg
-        ==
-X-ME-Sender: <xms:NRNmXpJ642poT0Dt5Kmbum1UY08WvQ2u-9noaK5LPgiEhXZ_Q_8JcA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddukedgudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:NRNmXvJKMpM5sDIjsIbInMlrLqbf8VAmWT6jQzFtiXrlhS7-654RDg>
-    <xmx:NRNmXrxTqXFf5uSjuEE01s01PFt-cmZKHMZHD60E7njKY7Tmp-clFA>
-    <xmx:NRNmXsJk5dlb4qXdDhwjsS0WwflSz1y6CIusJe9p-qL30nODKfJnfw>
-    <xmx:NhNmXjlWHrL3bFOKqIfhkg4kI_jidnrmXT-SZ4RyTgi6r-VKZPseCg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0A780328005D;
-        Mon,  9 Mar 2020 05:58:12 -0400 (EDT)
-Date:   Mon, 9 Mar 2020 10:58:11 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     vigneshr@ti.com, miquel.raynal@bootlin.com, han.xu@nxp.com,
-        richard@nod.at, wens@csie.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        vkoul@kernel.org
-Subject: Re: [PATCH 4/7] mtd: rawnand: sunxi: Use dma_request_chan() instead
- dma_request_slave_channel()
-Message-ID: <20200309095811.hg4maq663eaj3opz@gilmour.lan>
-References: <20200227123749.24064-1-peter.ujfalusi@ti.com>
- <20200227123749.24064-5-peter.ujfalusi@ti.com>
+        Mon, 9 Mar 2020 05:59:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbgCIJ7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 05:59:19 -0400
+Received: from linux-8ccs.fritz.box (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F53520828;
+        Mon,  9 Mar 2020 09:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583747958;
+        bh=0sP2HCSbp1hFImJrXuJEJrwE1KAk2T96fyJpUDGb184=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OUOHarpJ+5l89Tl4H9ZQXsnTA9Cq9db0NMUv+pLczhyDmAQYbCHG7gQ7XMjDnOv00
+         rUn4p/fprUebD3XQEH3j0o9636RzTEF5MKGI4NBOq/ApZfYIfepJ/5ENlTHVWjieQx
+         6agd6fm4ZcO++X+FNseKsoVxjpN1ukLKeY0rKoes=
+Date:   Mon, 9 Mar 2020 10:59:14 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] modpost: rework and consolidate logging interface
+Message-ID: <20200309095914.GA18870@linux-8ccs.fritz.box>
+References: <20200306160206.5609-1-jeyu@kernel.org>
+ <CAK7LNARZ4VgaCa_TiDBG-99amBGTTXTQMs9LsK3nO4k+y-5KDQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ghgfzfwbprbf3thj"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200227123749.24064-5-peter.ujfalusi@ti.com>
+In-Reply-To: <CAK7LNARZ4VgaCa_TiDBG-99amBGTTXTQMs9LsK3nO4k+y-5KDQ@mail.gmail.com>
+X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ghgfzfwbprbf3thj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Feb 27, 2020 at 02:37:46PM +0200, Peter Ujfalusi wrote:
-> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-> eating up the error code.
++++ Masahiro Yamada [09/03/20 09:40 +0900]:
+>Hi Jessica,
 >
-> By using dma_request_chan() directly the driver can support deferred
-> probing against DMA.
 >
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>
+>On Sat, Mar 7, 2020 at 1:02 AM Jessica Yu <jeyu@kernel.org> wrote:
+>>
+>> Rework modpost's logging interface by consolidating merror(), warn(), and
+>> fatal() to use a single function, modpost_log(). Introduce different
+>> logging levels (WARN, ERROR, FATAL) as well. The purpose of this cleanup is
+>> to reduce code duplication when deciding whether or not to warn or error
+>> out based on a condition.
+>>
+>> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>> ---
+>> v3:
+>>         - remove level variable from modpost_log and just call fprintf in each
+>>           case
+>>         - remove warn_unless and just call modpost_log() directly
+>>         - fix checkpatch error:
+>>                 ERROR: space required before the open parenthesis '('
+>>         #102: FILE: scripts/mod/modpost.c:61:
+>>         + switch(loglevel) {
+>>
+>>  scripts/mod/modpost.c | 68 ++++++++++++++++++++++-----------------------------
+>>  scripts/mod/modpost.h | 14 ++++++++---
+>>  2 files changed, 40 insertions(+), 42 deletions(-)
+>>
+>> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>> index 7edfdb2f4497..a2329235a6db 100644
+>> --- a/scripts/mod/modpost.c
+>> +++ b/scripts/mod/modpost.c
+>> @@ -51,41 +51,34 @@ enum export {
+>>
+>>  #define MODULE_NAME_LEN (64 - sizeof(Elf_Addr))
+>>
+>> -#define PRINTF __attribute__ ((format (printf, 1, 2)))
+>> +#define PRINTF __attribute__ ((format (printf, 2, 3)))
+>>
+>> -PRINTF void fatal(const char *fmt, ...)
+>> +PRINTF void modpost_log(enum loglevel loglevel, const char *fmt, ...)
+>>  {
+>
+>
+>This series looks good to me.
+>
+>I can queue it up to kbuild tree
+>if there is no objection.
+>
+>
+>I just noticed one nit.
+>
+>Now that modpost_log() is the only user of PRINTF,
+>we can delete PRITNF, and directly add the attribute
+>to modpost_log(), like this:
+>
+>
+>void __attribute__((format(printf, 2, 3)))
+>modpost_log(enum loglevel loglevel, const char *fmt, ...)
+>{
+>       ...
+>}
+>
+>
+>If you agree, I can modify it when I apply it.
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+Yes, I agree with this change. Thank you!
 
-Thanks!
-Maxime
+One more thing, it's not immediately obvious to me why the first patch
+would cause those kbuild warnings :-/ I'll see if I have any luck
+reproducing them locally..
 
---ghgfzfwbprbf3thj
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
+Jessica
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXmYTMwAKCRDj7w1vZxhR
-xUqpAP9DxNAJ2AawCZ9Jr/Mw8AxjK5nNtLKe6A6jtOsi8iEfGAD/ScHhr9eJJULD
-Ty0cjoA0+ExrVGQk6FoSzvrsIHJ3BwE=
-=BoAI
------END PGP SIGNATURE-----
-
---ghgfzfwbprbf3thj--
