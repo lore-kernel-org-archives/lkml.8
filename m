@@ -2,98 +2,96 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B68CAC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B298C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F9D20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8F120828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="EYIG8iOV"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lkN3y01M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbgCIRSD (ORCPT
+        id S1727225AbgCIRU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:18:03 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40581 "EHLO
+        Mon, 9 Mar 2020 13:20:26 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43156 "EHLO
         mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbgCIRSD (ORCPT
+        with ESMTP id S1727101AbgCIRUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:18:03 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m2so9975142qka.7
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:18:02 -0700 (PDT)
+        Mon, 9 Mar 2020 13:20:25 -0400
+Received: by mail-qk1-f196.google.com with SMTP id q18so9970691qki.10
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:20:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=nToBEoh6tfWiB/VJHVs7IOJAt3gO0xfBje1E0nagTRA=;
-        b=EYIG8iOVqclVWrFhVXS1LbD/gapSJHWQ4ayOkaZRvtQTKYr9UK2xUdoVgszQXVi90e
-         WBLg3xg6U5d26DF8nXf2sbwTapCDa5WqkHNXpS23HjSN/yWegSvMmt9iN+EAm7VKpD+n
-         xuWVOXMWpnL9U5AIgybU2Si9GazQKQ5UwuXJq7sowl2MDIOOi5Gp7S3EJIO9pMFlnO+z
-         YB0v3nTcMjiHCaAD/Vj3AUr2JmzafkrCV5xKgtjvxFwqlhGyza05NZs7t/9PvJFq7mpf
-         a+e7jOKOflfAqFj+glsfCycp/G6HepllRX5gvbSOthVUilBdnmNIQ3RDDzr2hgSSY5IR
-         3hwA==
+        bh=/ltngBYRTq01VJ1mavtyfY7YquNSfQ240OOdDMNjEPw=;
+        b=lkN3y01M+jRbyXcB2PTb34TCdZkzqNCpr3kKRGVsbTTkmQCpclvMil0PXwAnoS7hXJ
+         IHgdcbnWhm53FlGQg+nw2uV+Uv8AN36EuGK2iJ2reiBH2vBPtIYTShFayJ/hGx6U1LR2
+         nsxMOTTqqYuosJEz6PJ/49jXPJ/EtVbUp1IBJo1y0BWpDSMGvwGHvMIQcYtc1Iiz71K7
+         cEvrkldGv792Wd+HiWmspFBhqY2pMPueB54emrTEyyDmQfgjxjrn21aEG/z5/tdiQ+5o
+         xSyBwtLHD3ajRg8UVKDvavghCUhfG9ljykYwmIoITTQABBWIc6DRgHqHa/DPRqWX54vu
+         68kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nToBEoh6tfWiB/VJHVs7IOJAt3gO0xfBje1E0nagTRA=;
-        b=DiDzLejX8LVgBhu3SSHW5+6DD54iI5kZ4ywFyRd8oOSM6I7612lxrLPqoobzNCUZkq
-         I0e6uSjlANcSohxc/UL+NnfGlEnuFbpc26vmKr0ivugUByxJ1afMm8tcf5Zv3hXyMFoL
-         jLl4p4ED/MLbfQjNg98bbH2TaKNF4CMy2RhnPboIum63g5B+V6chH54KnBfvfVL3+Y0u
-         9D3SHPM0rnspACxGp3eVVrSvQcIPTafKOMtSupgQqhFykvJ23mPjqnis3xT2TnzWtbg7
-         dpm4sNJokCI2e8X+lRPhQswLsF0/sbIvqKliOrFoEH670Pyb/Wc6RY951dQmp1OSFh4e
-         E37Q==
-X-Gm-Message-State: ANhLgQ2c0d0hYbL9VJn+28DtLT92xpJ9zvYNwCGbnJgXufj6fTchlk/g
-        3fQD6P3ZTkLZ6D19F98Fs62VfA==
-X-Google-Smtp-Source: ADFU+vvWwdJIJlZ9GMGzucSugkOew68wrWEBXrrrFGFgTMIv3CcZ/+wvcwW3CEBRD6Lvq5mqU8qN5Q==
-X-Received: by 2002:a37:b042:: with SMTP id z63mr10282439qke.269.1583774281941;
-        Mon, 09 Mar 2020 10:18:01 -0700 (PDT)
+        bh=/ltngBYRTq01VJ1mavtyfY7YquNSfQ240OOdDMNjEPw=;
+        b=C3OlzbBxhSs69W7Dnsbt+JNvhS+6v+S2ILo2bqvH1cNn0H2lKjkwAl5Fze9yggCnNd
+         JjYKeU8YdZz6ho4jZOZAxmONcau1oM6YvDehNDHo0UTxHfr6Yq8s3xcmFUJrBKaYywZb
+         1wJyc03CPCqFf87kVgCBQjoDzbcQH8H3W2mRKWCW/SjGFDRHQ+UEn6ld9wwhmTnSFyqk
+         ElbfUxBdtVutWGK/07zYWLxJamkddPVT+85WZTohVK3D/Wydkozu2cmYjMCT4eB1+iVL
+         ooYZWD4SFvB44mpfEUlvUtKUxo5V/eawXZB5iPJ8k9E2LV5YATPlr7nz9x4JULoT3Ebi
+         5Ltw==
+X-Gm-Message-State: ANhLgQ1moTbURP2qMycha98soNr23S2eT6Vpewj5ioM/cF4Rjl8uPa1C
+        wx1OLiHa9VIOgawcySMRK72qMQ==
+X-Google-Smtp-Source: ADFU+vuon4UvVQ0IcBAxERt2kYVbP0L54kTICvX/0VCM97k+xQUtNluXnTuD0CRyl2AanS/HYCF5Pg==
+X-Received: by 2002:a37:7744:: with SMTP id s65mr14967669qkc.405.1583774424715;
+        Mon, 09 Mar 2020 10:20:24 -0700 (PDT)
 Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id z11sm4966506qti.23.2020.03.09.10.18.01
+        by smtp.gmail.com with ESMTPSA id d1sm22308790qkj.29.2020.03.09.10.20.24
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Mar 2020 10:18:01 -0700 (PDT)
+        Mon, 09 Mar 2020 10:20:24 -0700 (PDT)
 Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
         (envelope-from <jgg@ziepe.ca>)
-        id 1jBM2S-0003az-R2; Mon, 09 Mar 2020 14:18:00 -0300
-Date:   Mon, 9 Mar 2020 14:18:00 -0300
+        id 1jBM4l-0003gE-Je; Mon, 09 Mar 2020 14:20:23 -0300
+Date:   Mon, 9 Mar 2020 14:20:23 -0300
 From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     syzbot <syzbot+2b10b240fbbed30f10fb@syzkaller.appspotmail.com>
-Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+To:     syzbot <syzbot+3fbea977bd382a4e6140@syzkaller.appspotmail.com>
+Cc:     bmt@zurich.ibm.com, dledford@redhat.com,
         linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        parav@mellanox.com, syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: corrupted list in cma_listen_on_dev
-Message-ID: <20200309171800.GR31668@ziepe.ca>
-References: <20200304135649.GE31668@ziepe.ca>
- <0000000000003406b805a0378b77@google.com>
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: possible deadlock in siw_create_listen
+Message-ID: <20200309172023.GS31668@ziepe.ca>
+References: <000000000000161ee805a039a49e@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0000000000003406b805a0378b77@google.com>
+In-Reply-To: <000000000000161ee805a039a49e@google.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 02:55:02PM -0800, syzbot wrote:
+On Fri, Mar 06, 2020 at 05:25:10PM -0800, syzbot wrote:
 > Hello,
 > 
-> syzbot has tested the proposed patch and the reproducer did not trigger crash:
+> syzbot found the following crash on:
 > 
-> Reported-and-tested-by: syzbot+2b10b240fbbed30f10fb@syzkaller.appspotmail.com
+> HEAD commit:    68e2c376 Merge branch 'hsr-several-code-cleanup-for-hsr-mo..
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10c92e91e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=7e519c35f474a428
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3fbea977bd382a4e6140
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 > 
-> Tested on:
+> Unfortunately, I don't have any reproducer for this crash yet.
 > 
-> commit:         5e29d144 RDMA/mlx5: Prevent UMR usage with RO only when we..
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6d613b606deeaad7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2b10b240fbbed30f10fb
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> 
-> Note: testing is done by a robot and is best-effort only.
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+3fbea977bd382a4e6140@syzkaller.appspotmail.com
 
-#syz dup KASAN: use-after-free Read in rdma_listen (2)
+#syz dup: possible deadlock in cma_netdev_callback
