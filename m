@@ -2,91 +2,108 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E385C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D87C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A87A21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D3321927
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:31:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDvak1Mf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/TrsNVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgCISbg (ORCPT
+        id S1727510AbgCISbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:31:36 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43291 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727468AbgCISbg (ORCPT
+        Mon, 9 Mar 2020 14:31:40 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33851 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727467AbgCISbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:31:36 -0400
-Received: by mail-ed1-f65.google.com with SMTP id dc19so13164492edb.10;
-        Mon, 09 Mar 2020 11:31:34 -0700 (PDT)
+        Mon, 9 Mar 2020 14:31:40 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t3so5110591pgn.1;
+        Mon, 09 Mar 2020 11:31:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AQBQVzvdlwXN9vrpi/RnrrU9UTxK/Wco2Vk/EQR1DlA=;
-        b=bDvak1MfyWU3fu2fK4+sOjHaqNuqCfAYCEpo25Yi2xgrft9SZGtp08cJmXLZbOrJy+
-         iEOi0R/4PFbcWcGj/Cc7q6WU1ZVkD8LeYIelydQo6f8cAPODVySFo6lHYrrmfAKWSrTU
-         p/e8lZ+pAbI8NEbqOh93YU/rxVjNWfNp57gYjpOwhdydadgSmtv63qJ+69l/tBEDXy7C
-         QZlAWp4HeFar4ApF99o2dogfNBm84gF9HRUMVAeDXtlpU/3IQmBdY+P1EWu6ardHp7jH
-         LSNumM1ZyigqLFvANj4KFll2roG+Ve/eL4WlZ0qyrNVM+jvA8GpWPxeQu+h0x6FGoIuS
-         mx/w==
+        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
+         :user-agent;
+        bh=yraj5Tql8oxf5l1BCisk3gPL3avSiKpNGBiD85oy6HA=;
+        b=M/TrsNVgPNpqgyAPSWaNXD5hrsdsZxFeSdnV64e+3tLbA1TWaTVO5EJoIkxWXIz4KE
+         +o4+T96PihjHLUpyj7w4RAV6dlqc2FPV1pTlUZUbpbm38h4silLYEMqkqz58WHbzVK6f
+         K8Pv2bGCfUj4MRvy1w9MuBNt23qpm+cd+14rII5BK8OxLizOqca2C2p2eZeAQwYpmS1d
+         ECCKz4lagim+MXgx5CDw3Il8D2F/87olefzBymt3/Dk3sraVsQJkgEdLYeC/fXUt7RBt
+         r6OduFNhJrUXvV5SjVqP48ec+qxFHK2S1x404YQ4R6GbBpA9YLPoN2rDy8Xab++A0rM0
+         9HMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AQBQVzvdlwXN9vrpi/RnrrU9UTxK/Wco2Vk/EQR1DlA=;
-        b=JDTd+LOFUzf6fZDoLG5oOsVKzgbuY5S+5dN7D2UXiTCCBf6nXJKgGO9PCTtt4FFxDw
-         +m0TvkzbO0lx+kSMZW6CRBPlnafLJuc58uIyi5JNzOPYbZyNGfbQXVsWOsIO2MUPO5J9
-         qiOyR7JReTu3iLjFnaa3HD2ni/dGlleou0C0JooC6gMDLRB46+MbGlNokJKi82DcFGZO
-         2WmvODvJtUaxoMbGCW/3AP/QK6M2BVm5m3MItJrqvA2TfdHs7HMxjz3wwbigfueh0kci
-         AFYgRCs/B9B98r5C0nzdpwjvbc6KsHkggPUCwaPJeXW9YFcrSjIHwIuLe+URoKZyIBnF
-         lfcg==
-X-Gm-Message-State: ANhLgQ3dUvzKuNtiz7nVSNgNyEQKnP0lFbNiIE+yCGjBsn+FMu8UwS3k
-        paFRfKDIdN9gEtEeVrxkUzqxclbQL63qYpJ9gXc=
-X-Google-Smtp-Source: ADFU+vsvahqTTbRVTo+rXvRbRch6Hm9UF2s1HMnYN2jVbP5JOl8ilePH2rluLrl1BfWrHYZfM0DtuDcQZfZSp3ImGeM=
-X-Received: by 2002:a17:906:4089:: with SMTP id u9mr16031550ejj.184.1583778693969;
- Mon, 09 Mar 2020 11:31:33 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
+         :content-disposition:user-agent;
+        bh=yraj5Tql8oxf5l1BCisk3gPL3avSiKpNGBiD85oy6HA=;
+        b=NTtUIgjwpezZQnCd4atRXY+I6DuFX3bfMgiEVq1CviG8RQ1EHpCz/8L6c0Y1zQ2z00
+         gWPNiXRuQgyDsLD41hKLX9PSuSWz0WpyABOekN5I2YMp7MrYnrpTFMdnIUxTLN1tuJ40
+         wXG3eOQt99V17ncQ8BkJaoDdjmLCisw5k0U+8rNli/O83oqw2lGKAkvvPimfdKDkPElT
+         fLckJiQKPP/oohjEMP+mVL+F+Sjrj3TLRMKpLuuC0gqFT/gavzh3LpBZaU1hG4JJGvPg
+         QdCgDHHXFg6dYNG3kIm5MHLOnPnFY38zQxPnXdkO81sd7TbMmrJJvqPC10TRYwKBDPp/
+         pCBw==
+X-Gm-Message-State: ANhLgQ1wTq9c7yT32Zz9K1v4RoaWlY/3ql/a3wYOqCEzztI6SwVe5ahe
+        GDRwN7ncjBU+SNMahkLYaHL9aTG1gB6sqA==
+X-Google-Smtp-Source: ADFU+vugVGkRBGTZ4VQ53YA3Ds23WcnxrMGybWKnDU78AmFeAvxhZZWq+awgdEndikah94nMvfDGiQ==
+X-Received: by 2002:a62:f84e:: with SMTP id c14mr18455462pfm.6.1583778698671;
+        Mon, 09 Mar 2020 11:31:38 -0700 (PDT)
+Received: from SARKAR ([2401:4900:330b:b8fc:399a:a833:fab3:83b])
+        by smtp.gmail.com with ESMTPSA id mr7sm246643pjb.12.2020.03.09.11.31.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 11:31:37 -0700 (PDT)
+Message-ID: <5e668b89.1c69fb81.d7e4f.0f61@mx.google.com>
+X-Google-Original-Message-ID: <20200309183128.GA21734@rohitsarkar5398@gmail.com>
+Date:   Tue, 10 Mar 2020 00:01:28 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jic23@kernel.org, matt.ranostay@konsulko.com
+Subject: [PATCH] iio: health: max30100: remove mlock usage
 MIME-Version: 1.0
-References: <20200309145624.10026-1-olteanv@gmail.com> <20200309145624.10026-3-olteanv@gmail.com>
- <d8e39e402328b962cdbc25316a27eac8@walle.cc> <CA+h21hp4vC1c00rCgZo_hwQz3cE4dLBHjcgTHvf-+fS9a9VfxQ@mail.gmail.com>
- <a709dc91aac9124ed37ac1e7fcb7e105@walle.cc>
-In-Reply-To: <a709dc91aac9124ed37ac1e7fcb7e105@walle.cc>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 9 Mar 2020 20:31:22 +0200
-Message-ID: <CA+h21hodaPyY54fwRFNhmksg+9ugVvW7hndMCCc=cBG39D7jdQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] spi: spi-fsl-dspi: Fix little endian access to PUSHR
- CMD and TXDATA
-To:     Michael Walle <michael@walle.cc>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Mar 2020 at 20:19, Michael Walle <michael@walle.cc> wrote:
->
+Use local lock instead of indio_dev's mlock.
+The mlock was being used to protect local driver state thus using the
+local lock is a better option here.
 
-> Eg. is it big-endian or little-endian if there is no property at all?
->
+Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+---
+ drivers/iio/health/max30100.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I think it is "native endianness" in that case, i.e. big endian on big
-endian CPU and little endian on little endian CPU.
+diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
+index 84010501762d..8ddc4649547d 100644
+--- a/drivers/iio/health/max30100.c
++++ b/drivers/iio/health/max30100.c
+@@ -388,7 +388,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
+ 		 * Temperature reading can only be acquired while engine
+ 		 * is running
+ 		 */
+-		mutex_lock(&indio_dev->mlock);
++		mutex_lock(&data->lock);
+ 
+ 		if (!iio_buffer_enabled(indio_dev))
+ 			ret = -EAGAIN;
+@@ -399,7 +399,7 @@ static int max30100_read_raw(struct iio_dev *indio_dev,
+ 
+ 		}
+ 
+-		mutex_unlock(&indio_dev->mlock);
++		mutex_unlock(&data->lock);
+ 		break;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = 1;  /* 0.0625 */
+-- 
+2.23.0.385.gbc12974a89
 
-Thanks,
--Vladimir
