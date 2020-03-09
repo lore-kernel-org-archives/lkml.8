@@ -2,175 +2,216 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75DFC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3757CC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DBF24654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 087BB24655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583791916;
+	bh=IhytbqESjkqEv46s87AyhRaJEI5OmblKW1qPStjbZ3g=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=L9NgdLYVL1MS9uLYOV+rmLRMersiA7k0vB0KmCZCkecquCDSlN3a5NrUNgQephpNN
+	 YxjifuNH4Nr+PMBSme8ztEwvXkoIj2SXaJfR/h5l4/arXUTvyqCvPp9Td4A8tQmrm8
+	 lPO7EnMQPAEkqKqeoxKYQQ58BREkWi5puRG0GM/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbgCIWI4 (ORCPT
+        id S1727088AbgCIWLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:08:56 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43922 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgCIWI4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:08:56 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E3E7880307C8;
-        Mon,  9 Mar 2020 22:08:53 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Mhon-ZlolZyP; Tue, 10 Mar 2020 01:08:53 +0300 (MSK)
-Date:   Tue, 10 Mar 2020 01:08:02 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200306132912.GA1748204@smile.fi.intel.com>
- <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
- <20200306134829.342F4803087C@mail.baikalelectronics.ru>
- <20200306141135.9C4F380307C2@mail.baikalelectronics.ru>
+        Mon, 9 Mar 2020 18:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726454AbgCIWLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 18:11:54 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 952F724654;
+        Mon,  9 Mar 2020 22:11:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583791913;
+        bh=IhytbqESjkqEv46s87AyhRaJEI5OmblKW1qPStjbZ3g=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Rf06Ip2bidwHQ/n0DQiB0x7Mg+Kb4JOtTQPT3/kVgoN9UjHHvZBJ7zjg7OW7p0G7T
+         u0XxYdSLwUXXLBA7TZtTWzlUtFWfcj9Mpfm9f2qdQilLVuW9ITwVCE2yUM3AQ6oVIZ
+         lOSObtbzh4KaUsSVQgtULjr3ScIfSpUGCNkIramc=
+Message-ID: <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
+ regression
+From:   Jeff Layton <jlayton@kernel.org>
+To:     NeilBrown <neilb@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        yangerkun <yangerkun@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Mon, 09 Mar 2020 18:11:51 -0400
+In-Reply-To: <87blp5urwq.fsf@notabene.neil.brown.name>
+References: <20200308140314.GQ5972@shao2-debian>
+         <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+         <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+         <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
+         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
+         <87blp5urwq.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200306141135.9C4F380307C2@mail.baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200309220853.E3E7880307C8@mail.baikalelectronics.ru>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:11:28PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 06, 2020 at 04:47:20PM +0300, Sergey Semin wrote:
-> > On Fri, Mar 06, 2020 at 03:30:35PM +0200, Andy Shevchenko wrote:
-> > > On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
-> > > > On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > > From: Serge Semin <fancer.lancer@gmail.com>
+On Tue, 2020-03-10 at 08:42 +1100, NeilBrown wrote:
+> On Mon, Mar 09 2020, Jeff Layton wrote:
+> 
+> > On Mon, 2020-03-09 at 13:22 -0400, Jeff Layton wrote:
+> > > On Mon, 2020-03-09 at 08:52 -0700, Linus Torvalds wrote:
+> > > > On Mon, Mar 9, 2020 at 7:36 AM Jeff Layton <jlayton@kernel.org> wrote:
+> > > > > On Sun, 2020-03-08 at 22:03 +0800, kernel test robot wrote:
+> > > > > > FYI, we noticed a -96.6% regression of will-it-scale.per_process_ops due to commit:
 > > > > > 
-> > > > > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
-> > > > > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
-> > > > > with currently implemented in the kernel DW DMAC driver, but there are some
-> > > > > peculiarities which must be taken into account in order to have the device
-> > > > > fully supported.
+> > > > > This is not completely unexpected as we're banging on the global
+> > > > > blocked_lock_lock now for every unlock. This test just thrashes file
+> > > > > locks and unlocks without doing anything in between, so the workload
+> > > > > looks pretty artificial [1].
 > > > > > 
-> > > > > First of all traditionally we replaced the legacy plain text-based dt-binding
-> > > > > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-> > > > > channels, which alas have different max burst length configuration.
-> > > > > In particular first two channels may burst up to 128 bits (16 bytes) at a time
-> > > > > while the rest of them just up to 32 bits. We must make sure that the DMA
-> > > > > subsystem doesn't set values exceeding these limitations otherwise the
-> > > > > controller will hang up. In third currently we discovered the problem in using
-> > > > > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-> > > > > natively implemented multi-block LLP transfers support and the SPI-transfer
-> > > > > length exceeds the max lock size. In this case due to asynchronous handling of
-> > > > > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
-> > > > > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-> > > > > the DMAC to asynchronously execute the transfers we'd have to at least warn
-> > > > > the user of the possible errors.
-> > > > > 
-> > > > > Finally there is a bug in the algorithm of the nollp flag detection.
-> > > > > In particular even if DW DMAC parameters state the multi-block transfers
-> > > > > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-> > > > > by the driver true multi-block LLP functionality unusable. This happens cause'
-> > > > > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-> > > > > contiguous multi-block transfers will be only supported. We must take the
-> > > > > flag into account when detecting the LLP support otherwise the driver just
-> > > > > won't work correctly.
-> > > > > 
-> > > > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > > > > commit 98d54f81e36b ("Linux 5.6-rc4").
+> > > > > It would be nice to avoid the global lock in this codepath, but it
+> > > > > doesn't look simple to do. I'll keep thinking about it, but for now I'm
+> > > > > inclined to ignore this result unless we see a problem in more realistic
+> > > > > workloads.
 > > > > 
-> > > > Thank you for your series!
+> > > > That is a _huge_ regression, though.
 > > > > 
-> > > > I'll definitely review it, but it will take time. So, I think due to late
-> > > > submission this is material at least for v5.8.
+> > > > What about something like the attached? Wouldn't that work? And make
+> > > > the code actually match the old comment about wow "fl_blocker" being
+> > > > NULL being special.
+> > > > 
+> > > > The old code seemed to not know about things like memory ordering either.
+> > > > 
+> > > > Patch is entirely untested, but aims to have that "smp_store_release()
+> > > > means I'm done and not going to touch it any more", making that
+> > > > smp_load_acquire() test hopefully be valid as per the comment..
 > > > 
-> > 
-> > Hello Andy,
-> > Thanks for the quick response. Looking forward to get the patches
-> > reviewed and move on with the next patchset I'll send after this. It concerns
-> > DW APB SSI driver, which uses the changes introduced by this one.
-> 
-> > So the
-> > sooner we finished with this patchset the better.
-> 
-> Everybody will win, but review will take as long as it take. And for sure it
-> will miss v5.7 release cycle. Because too many patch sets sent at once
-> followed by schedule, we almost at v5.6-rc5.
-> 
-
-Yeah. 13 patchsets is a lot of work to review. I was just saying, that
-even though there are many patches sent, there are even more being
-scheduled for submission after that, which rely on the alterations
-provided by these patches. Though the pacthes dependency may change
-seeing you have issues regarding some of them.)
-
-> > Although I understand
-> > that it may take some time. I've just sent over 12 patchset, which have a lot
-> > of fixups and new drivers.)
-> > 
-> > > One thing that I can tell immediately is the broken email thread in this series.
-> > > Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
-> > > so, it will link the mail properly.
+> > > Yeah, something along those lines maybe. I don't think we can use
+> > > fl_blocker that way though, as the wait_event_interruptible is waiting
+> > > on it to go to NULL, and the wake_up happens before fl_blocker is
+> > > cleared.
 > > > 
+> > > Maybe we need to mix in some sort of FL_BLOCK_ACTIVE flag and use that
+> > > instead of testing for !fl_blocker to see whether we can avoid the
+> > > blocked_lock_lock?
+> > >   
 > > 
-> > I've got thread=true in my gitconfig file, so each email should have
-> > the proper reference and in-reply-to to the cover-letter (I see it from
-> > the log). The problem popped up from a different place. For some reason the
-> > automatic CC/To list extraction command didn't do the job right, so we ended
-> > up with lacking of mailing lists in Cc's in this patchset. The command look like
-> > this:
+> > How about something like this instead? (untested other than for
+> > compilation)
 > > 
-> > git send-email --cc-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nom" \
-> >                    --to-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nol" \
-> >                    --from "Serge Semin <Sergey.Semin at baikalelectronics.ru>" \
-> >                    --smtp-server-option="-abaikal" --cover-letter -5
+> > Basically, this just switches the waiters over to wait for
+> > fl_blocked_member to go empty. That still happens before the wakeup, so
+> > it should be ok to wait on that.
+> > 
+> > I think we can also eliminate the lockless list_empty check in
+> > locks_delete_block, as the fl_blocker check should be sufficient now.
+> > -- 
+> > Jeff Layton <jlayton@kernel.org>
+> > From c179d779c9b72838ed9996a65d686d86679d1639 Mon Sep 17 00:00:00 2001
+> > From: Linus Torvalds <torvalds@linux-foundation.org>
+> > Date: Mon, 9 Mar 2020 14:35:43 -0400
+> > Subject: [PATCH] locks: reinstate locks_delete_lock optimization
+> > 
+> > ...by using smp_load_acquire and smp_store_release to close the race
+> > window.
+> > 
+> > [ jlayton: wait on the fl_blocked_requests list to go empty instead of
+> > 	   the fl_blocker pointer to clear. Remove the list_empty check
+> > 	   from locks_delete_lock shortcut. ]
 > 
-> I'm talking about one which makes your Message-Id/Reference headers broken
-> between cover letter and the rest of the series. It might be because of missed
-> patches in the chain.
+> Why do you think it is OK to remove that list_empty check?  I don't
+> think it is.  There might be locked requests that need to be woken up.
+> 
+> As the problem here is a use-after-free due to a race, one option would
+> be to use rcu_free() on the file_lock, and hold rcu_read_lock() around
+> test/use.
+> 
+> Another option is to use a different lock.  The fl_wait contains a
+> spinlock, and we have wake_up_locked() which is provided for exactly
+> these sorts of situations where the wake_up call can race with a thread
+> waking up.
+> 
+> So my compile-tested-only proposal is below.
+> I can probably a proper change-log entry if you think the patch is a
+> good way to go.
+> 
+> NeilBrown
+> 
+> 
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 426b55d333d5..8aa04d5ac8b3 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -735,11 +735,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
+>  
+>  		waiter = list_first_entry(&blocker->fl_blocked_requests,
+>  					  struct file_lock, fl_blocked_member);
+> +		spin_lock(&waiter->fl_wait.lock);
+>  		__locks_delete_block(waiter);
+>  		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
+>  			waiter->fl_lmops->lm_notify(waiter);
+>  		else
+> -			wake_up(&waiter->fl_wait);
+> +			wake_up_locked(&waiter->fl_wait);
+> +		spin_unlock(&waiter->fl_wait.lock);
+>  	}
+>  }
+>  
+> @@ -753,6 +755,31 @@ int locks_delete_block(struct file_lock *waiter)
+>  {
+>  	int status = -ENOENT;
+>  
+> +	/*
+> +	 * If fl_blocker is NULL, it won't be set again as this thread
+> +	 * "owns" the lock and is the only one that might try to claim
+> +	 * the lock.  So it is safe to test fl_blocker locklessly.
+> +	 * Also if fl_blocker is NULL, this waiter is not listed on
+> +	 * fl_blocked_requests for some lock, so no other request can
+> +	 * be added to the list of fl_blocked_requests for this
+> +	 * request.  So if fl_blocker is NULL, it is safe to
+> +	 * locklessly check if fl_blocked_requests is empty.  If both
+> +	 * of these checks succeed, there is no need to take the lock.
+> +	 * However, some other thread might have only *just* set
+> +	 * fl_blocker to NULL and it about to send a wakeup on
+> +	 * fl_wait, so we mustn't return too soon or we might free waiter
+> +	 * before that wakeup can be sent.  So take the fl_wait.lock
+> +	 * to serialize with the wakeup in __locks_wake_up_blocks().
+> +	 */
+> +	if (waiter->fl_blocker == NULL) {
+> +		spin_lock(&waiter->fl_wait.lock);
+> +		if (waiter->fl_blocker == NULL &&
+> +		    list_empty(&waiter->fl_blocked_requests)) {
+> +			spin_unlock(&waiter->fl_wait.lock);
+> +			return status;
+> +		}
+> +		spin_unlock(&waiter->fl_wait.lock);
+> +	}
+>  	spin_lock(&blocked_lock_lock);
+>  	if (waiter->fl_blocker)
+>  		status = 0;
 > 
 
-Ok. Now I see what you meant. First I had a thought there was some
-misunderstanding on your or my side, because my neomutt client didn't
-show any Ids confusion. But after another maintainer complained about
-the same problem I realized that the issue must be at someplace I
-couldn't have noticed. Then I thought that the outgoing email server
-could have changed the order of the sent emails. But it turned out the
-problem was in the message Ids replacement performed by our corporate
-exchange server. Please see the email I've sent in reply to the Vinod
-comment regarding the emailing list Ccing. It describes what was really
-wrong with the threading config.
+Looks good on a cursory check, and I'm inclined to go with this since
+it's less fiddly for people to backport.
 
-Regards,
--Segey
+One other difference to note -- we are holding the fl_wait lock when
+calling lm_notify, but I don't think it will matter to any of the
+existing lm_notify functions.
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+If you want to clean up the changelog and resend that would be great.
+
+Thanks,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
