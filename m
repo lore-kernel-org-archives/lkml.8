@@ -2,163 +2,104 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5480CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CD3C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A6A20674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="a2U6IkVK"
+	by mail.kernel.org (Postfix) with ESMTP id 7729820863
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgCIJyW (ORCPT
+        id S1726770AbgCIJyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:54:22 -0400
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:26457 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgCIJyR (ORCPT
+        Mon, 9 Mar 2020 05:54:31 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:36868 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726567AbgCIJyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:54:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1583747657;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=zNNy4OU4z799DFnGrpM43KDZz+dFPqGX2kfMxUq+JC4=;
-  b=a2U6IkVKlgzZQeI6bAG58NAgwPUmz/xvCmc2INJPLS9UORxO3QzZDiBG
-   KLP7WfyJgOmS66F3vi6G/gqoMZnZKlwHodzzE+yPIIOEdv8D72JoewyEo
-   8i6ZnSn/POJvtcsdu5/lpLwucrzK/k9tdP1RtDxpcXKQybT7df0qLASaT
-   U=;
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: do3ZdpTCHyvaP5/SysNyQ6OvX1Aj0Ge4f7a/KYeItfaoREnOoclQ+3UyK3UmAERmfHfgoT/FiQ
- LR9MObLUIfhV2BPRhBPXshsMWzuwO3v4tN81Aoi937geQXN+15Jjn0MKQSjxZacs9yopW4nPAZ
- uDUMrTz2AwTvII9JUzZilZZKcERwlF4UumWQAdnHNAvCe+/bSVdDDablLPGbDI7n3on4l9R4+J
- +es1+SHgHi13FosRMxuLOY1+8VoFhR3maY5sz1tdbvfoZ26Su//Y7lr5QmSGj1zs92DuWGF43J
- BJY=
-X-SBRS: 2.7
-X-MesageID: 13805261
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,532,1574139600"; 
-   d="scan'208";a="13805261"
-Date:   Mon, 9 Mar 2020 10:54:07 +0100
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Anchal Agarwal <anchalag@amazon.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
-        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
-        <eduval@amazon.com>, <sblbir@amazon.com>,
-        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <fllinden@amaozn.com>,
-        <benh@kernel.crashing.org>
-Subject: Re: [RFC PATCH v3 06/12] xen-blkfront: add callbacks for PM suspend
- and hibernation
-Message-ID: <20200309095245.GY24458@Air-de-Roger.citrite.net>
-References: <cover.1581721799.git.anchalag@amazon.com>
- <890c404c585d7790514527f0c021056a7be6e748.1581721799.git.anchalag@amazon.com>
- <20200221142445.GZ4679@Air-de-Roger>
- <20200306184033.GA25358@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200306184033.GA25358@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL01.citrite.net (10.69.22.125)
+        Mon, 9 Mar 2020 05:54:12 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:03 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:41 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 3AE86230B; Mon,  9 Mar 2020 15:23:40 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v5 0/9] Add QUSB2 PHY support for SC7180
+Date:   Mon,  9 Mar 2020 15:23:00 +0530
+Message-Id: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 06:40:33PM +0000, Anchal Agarwal wrote:
-> On Fri, Feb 21, 2020 at 03:24:45PM +0100, Roger Pau Monné wrote:
-> > On Fri, Feb 14, 2020 at 11:25:34PM +0000, Anchal Agarwal wrote:
-> > >  	blkfront_gather_backend_features(info);
-> > >  	/* Reset limits changed by blk_mq_update_nr_hw_queues(). */
-> > >  	blkif_set_queue_limits(info);
-> > > @@ -2046,6 +2063,9 @@ static int blkif_recover(struct blkfront_info *info)
-> > >  		kick_pending_request_queues(rinfo);
-> > >  	}
-> > >  
-> > > +	if (frozen)
-> > > +		return 0;
-> > 
-> > I have to admit my memory is fuzzy here, but don't you need to
-> > re-queue requests in case the backend has different limits of indirect
-> > descriptors per request for example?
-> > 
-> > Or do we expect that the frontend is always going to be resumed on the
-> > same backend, and thus features won't change?
-> > 
-> So to understand your question better here, AFAIU the  maximum number of indirect 
-> grefs is fixed by the backend, but the frontend can issue requests with any 
-> number of indirect segments as long as it's less than the number provided by 
-> the backend. So by your question you mean this max number of MAX_INDIRECT_SEGMENTS 
-> 256 on backend can change ?
+Converting dt binding to yaml.
+Adding compatible for SC7180 in dt bindings.
+Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
 
-Yes, number of indirect descriptors supported by the backend can
-change, because you moved to a different backend, or because the
-maximum supported by the backend has changed. It's also possible to
-resume on a backend that has no indirect descriptors support at all.
+Changes in v5:
+*Added the dt bindings which are applicable only to QUSB2 V2 PHY in 
+ separate block as per comments from Matthias in patch 1/9 and patch 4/9
+ and addressed Rob's comment in patch 1/9.
+*Separated the patch for new override params and added a local variable
+ to access overrides as per comments from Matthias patch 5/9 and 6/9.
 
-> > > @@ -2625,6 +2671,62 @@ static void blkif_release(struct gendisk *disk, fmode_t mode)
-> > >  	mutex_unlock(&blkfront_mutex);
-> > >  }
-> > >  
-> > > +static int blkfront_freeze(struct xenbus_device *dev)
-> > > +{
-> > > +	unsigned int i;
-> > > +	struct blkfront_info *info = dev_get_drvdata(&dev->dev);
-> > > +	struct blkfront_ring_info *rinfo;
-> > > +	/* This would be reasonable timeout as used in xenbus_dev_shutdown() */
-> > > +	unsigned int timeout = 5 * HZ;
-> > > +	int err = 0;
-> > > +
-> > > +	info->connected = BLKIF_STATE_FREEZING;
-> > > +
-> > > +	blk_mq_freeze_queue(info->rq);
-> > > +	blk_mq_quiesce_queue(info->rq);
-> > 
-> > Don't you need to also drain the queue and make sure it's empty?
-> > 
-> blk_mq_freeze_queue and blk_mq_quiesce_queue should take care of running HW queues synchronously
-> and making sure all the ongoing dispatches have finished. Did I understand your question right?
+Changes in v4:
+*Addressed Rob Herrings comments in dt bindings.
+*Added new structure for all the overriding tuning params.
+*Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy. 
+*Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845. 
 
-Can you please add some check to that end? (ie: that there are no
-pending requests on any queue?)
+Changes in v3:
+*Using the generic phy cfg table for QUSB2 V2 phy.
+*Added support for overriding tuning parameters in QUSB2 V2 PHY
+from device tree.
 
-Thanks, Roger.
+Changes in v2:
+Sorted the compatible in driver.
+Converted dt binding to yaml.
+Added compatible in yaml.
+
+Sandeep Maheswaram (9):
+  dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
+  dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
+    SC7180
+  phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
+  dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
+    parameters
+  phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
+    V2 PHY
+  phy: qcom-qusb2: Add new overriding tuning parameters in QUSB2 V2 PHY
+  arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
+  arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
+  arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
+    device
+
+ .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 187 +++++++++++++++++++++
+ .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
+ drivers/phy/qualcomm/phy-qcom-qusb2.c              | 144 +++++++++++-----
+ 6 files changed, 297 insertions(+), 114 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
