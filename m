@@ -2,88 +2,190 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361EEC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5598EC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7152146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDEE20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nI31IECV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="g8S7dm5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgCIUWT (ORCPT
+        id S1726492AbgCIUWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:22:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44906 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgCIUWT (ORCPT
+        Mon, 9 Mar 2020 16:22:53 -0400
+Received: from gateway34.websitewelcome.com ([192.185.149.72]:29439 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726096AbgCIUWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:22:19 -0400
+        Mon, 9 Mar 2020 16:22:52 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id E4CEBEC12
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 15:22:51 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BOvLj5XlDSl8qBOvLjgmcP; Mon, 09 Mar 2020 15:22:51 -0500
+X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1IPYKY5i0WcOP6+Mj4yJxK/haVfh2zKAl1BsGlfBYoo=; b=nI31IECVSTE8x6hUOJdpZRMUn8
-        PMBZ94A1ZJeMRVcmZcKK1/D7DCQn+99kHR7UoTYlAQQInp/PWot3vgF/mIBFNR8sBOZtyp/hzOqfh
-        uRlbmZpJL9fTmFixakxdQ7VCkcuI9tQhFxhQnK2Pun61Cc6eNKcsgNppD2DMOO1QWgcMNiiSFtNZI
-        opI3w1chWcm6Uh5Fz/iWXBFjxLbLQ+dmQqb+qbtWRgO+/n2bZcV0MioIGAbt3y0QHD5JAzBU+RtJT
-        5ilbIDNGF566RvgE1KB1VyzJku4UxZm1i8gTMArg6REiAGEXcgKHQ4r+atYTD1DCq8M2ckTByzowl
-        w0DD3IVw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jBOum-0003m4-OA; Mon, 09 Mar 2020 20:22:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 35E553011E0;
-        Mon,  9 Mar 2020 21:22:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1EF51214344E6; Mon,  9 Mar 2020 21:22:15 +0100 (CET)
-Date:   Mon, 9 Mar 2020 21:22:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-Message-ID: <20200309202215.GM12561@hirez.programming.kicks-ass.net>
-References: <CALCETrVmsF9JSMLSd44-3GGWEz6siJQxudeaYiVnvv__YDT1BQ@mail.gmail.com>
- <87ftek9ngq.fsf@nanos.tec.linutronix.de>
- <CALCETrVsc-t=tDRPbCg5dWHDY0NFv2zjz12ahD-vnGPn8T+RXA@mail.gmail.com>
- <87a74s9ehb.fsf@nanos.tec.linutronix.de>
- <87wo7v8g4j.fsf@nanos.tec.linutronix.de>
- <877dzu8178.fsf@nanos.tec.linutronix.de>
- <37440ade-1657-648b-bf72-2b8ca4ac21ce@redhat.com>
- <871rq199oz.fsf@nanos.tec.linutronix.de>
- <CALCETrUHwd8pNr_ZdFqY8vMjJeMdNyw2C+FL6uOUM98SEE9rNQ@mail.gmail.com>
- <87d09l73ip.fsf@nanos.tec.linutronix.de>
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jMunP9V0d2u36jTKl+ej5qOp8rIOFeGZYKT65z+gTFU=; b=g8S7dm5B0nbkMWqRAFALSxChfs
+        RqzmZHbK/ljT7/LfvfOZKT8f166SHIXM/44h2aI2ypZXsCqaT3plrohRWk4KXZSl8y9Titmf5D09W
+        fKfF067lg03NkOI3OYfOD0O6bPgRooJGpqbpk+76c6eG1B2L86Nwx8JskhzSKckOKL+xZWGzcmDFy
+        wdj5+4Vgcpmbi8J3+6eczzV5iDRyEG9iZxLpjQnsBXY0oA1S9hbidLRcUGmpI77bXysNSG7XNlxBc
+        xguXuLrjYTOjL0nZiTfgkZiTyLAL4yLqt2R74UYEx1gbycvN5jgR37b4j5/W2KZEu6WXKZqaMvkXR
+        Wd9G8ljw==;
+Received: from [201.162.168.201] (port=4007 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBOvJ-0010Ml-SA; Mon, 09 Mar 2020 15:22:50 -0500
+Date:   Mon, 9 Mar 2020 15:26:02 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Phillip Lougher <phillip@squashfs.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] squashfs: squashfs_fs.h: Replace zero-length array
+ with flexible-array member
+Message-ID: <20200309202602.GA9219@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87d09l73ip.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.168.201
+X-Source-L: No
+X-Exim-ID: 1jBOvJ-0010Ml-SA
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.168.201]:4007
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 28
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 08:05:18PM +0100, Thomas Gleixner wrote:
-> Andy Lutomirski <luto@kernel.org> writes:
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-> > I'm okay with the save/restore dance, I guess.  It's just yet more
-> > entry crud to deal with architecture nastiness, except that this
-> > nastiness is 100% software and isn't Intel/AMD's fault.
-> 
-> And we can do it in C and don't have to fiddle with it in the ASM
-> maze.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Right; I'd still love to kill KVM_ASYNC_PF_SEND_ALWAYS though, even if
-we do the save/restore in do_nmi(). That is some wild brain melt. Also,
-AFAIK none of the distros are actually shipping a PREEMPT=y kernel
-anyway, so killing it shouldn't matter much.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-If people want to recover that, I'd suggest they sit down and create a
-sane paravirt interface for this.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/squashfs/squashfs_fs.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/fs/squashfs/squashfs_fs.h b/fs/squashfs/squashfs_fs.h
+index 7187bd1a30ea..8d64edb80ebf 100644
+--- a/fs/squashfs/squashfs_fs.h
++++ b/fs/squashfs/squashfs_fs.h
+@@ -262,7 +262,7 @@ struct squashfs_dir_index {
+ 	__le32			index;
+ 	__le32			start_block;
+ 	__le32			size;
+-	unsigned char		name[0];
++	unsigned char		name[];
+ };
+ 
+ struct squashfs_base_inode {
+@@ -327,7 +327,7 @@ struct squashfs_symlink_inode {
+ 	__le32			inode_number;
+ 	__le32			nlink;
+ 	__le32			symlink_size;
+-	char			symlink[0];
++	char			symlink[];
+ };
+ 
+ struct squashfs_reg_inode {
+@@ -341,7 +341,7 @@ struct squashfs_reg_inode {
+ 	__le32			fragment;
+ 	__le32			offset;
+ 	__le32			file_size;
+-	__le16			block_list[0];
++	__le16			block_list[];
+ };
+ 
+ struct squashfs_lreg_inode {
+@@ -358,7 +358,7 @@ struct squashfs_lreg_inode {
+ 	__le32			fragment;
+ 	__le32			offset;
+ 	__le32			xattr;
+-	__le16			block_list[0];
++	__le16			block_list[];
+ };
+ 
+ struct squashfs_dir_inode {
+@@ -389,7 +389,7 @@ struct squashfs_ldir_inode {
+ 	__le16			i_count;
+ 	__le16			offset;
+ 	__le32			xattr;
+-	struct squashfs_dir_index	index[0];
++	struct squashfs_dir_index	index[];
+ };
+ 
+ union squashfs_inode {
+@@ -410,7 +410,7 @@ struct squashfs_dir_entry {
+ 	__le16			inode_number;
+ 	__le16			type;
+ 	__le16			size;
+-	char			name[0];
++	char			name[];
+ };
+ 
+ struct squashfs_dir_header {
+@@ -428,12 +428,12 @@ struct squashfs_fragment_entry {
+ struct squashfs_xattr_entry {
+ 	__le16			type;
+ 	__le16			size;
+-	char			data[0];
++	char			data[];
+ };
+ 
+ struct squashfs_xattr_val {
+ 	__le32			vsize;
+-	char			value[0];
++	char			value[];
+ };
+ 
+ struct squashfs_xattr_id {
+-- 
+2.25.0
+
