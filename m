@@ -2,161 +2,84 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA2CC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A69C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41FE20578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:36:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMpJ5aMp"
+	by mail.kernel.org (Postfix) with ESMTP id C709B21D7E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgCIPgx (ORCPT
+        id S1727111AbgCIPid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:36:53 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34341 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgCIPgx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:36:53 -0400
-Received: by mail-qt1-f193.google.com with SMTP id 59so7311987qtb.1;
-        Mon, 09 Mar 2020 08:36:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=R3DooPh2yevxib7OX0+4fWi6Vz6O2eWxJlitrIuPivY=;
-        b=rMpJ5aMp+4Fa8AOYiMvodgd1VykYZ9T2AW/DfwPBNMuWHqP4j+pyl598fx/hyebENv
-         WhGgCFfNNZFmKMuONOG9MkxdhkyuIfhUfP6N7jmb28FUzsYFbqk20HylZk+dbdiOP3Q2
-         O8NNIijLVC5RpH8fSiFxqaRsBAeNKvihx6xetMfpdoR1O1Z6Xwl9xPfdpLzyfXg9B+Qn
-         J7SsgUztlu0at0XSFSFIXsmCe0UqK7VsDZ2yBt3eLNzEf7jcfBu5xP5fk3tgqJd6Rp94
-         The+jdOviCUfI76JYGcaHEq/91ivkgJgR2kxDClLiIyiC9zOxz/CvPjIjVOw1DO9CHjV
-         SilA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=R3DooPh2yevxib7OX0+4fWi6Vz6O2eWxJlitrIuPivY=;
-        b=DMBWqHuxsRDV9QJp93hs5+eJR04CsP/KsRKdjEocx9J8JSJgvVpwE62Li1kknMCmqv
-         7kLVZhXHuJzZtREGAV9L0qqdBvyzIa8OpkJKsppYJe9ahEXgRPkIpnodFfRDuC+kbtg1
-         4CBIl/6k5+hGnSBCaGPvYP0FCj4s2rhUQ2TYyeF/hTED+53+iEVlUyv2WlD8w+wgQ1hi
-         kF9cXVD6IAd4IYTWt/8MC4ttzKPKTNU+mWffk/ZlohCIm940iiqlPVfpxZO3j3ZIzJbN
-         UFYWUUNhi7BdIMBB/23nwzffLhrcfnm4PCRkWnDQ74/IR9RzKI0Sc2Wct9mUIIFmzN0M
-         ZO7g==
-X-Gm-Message-State: ANhLgQ3A3+VWTJc/bG+JxBVHklQWyXtT1u4kV24rEyTtSaWwvJgjV9iG
-        bEQDEu1/PLt8tZafoW/D1qY=
-X-Google-Smtp-Source: ADFU+vtJmE2sKPK9aljbzaPahTAvZa53+alfdl67ij/4w48I/IA1HKHuON8PnhjDekW1t6yERJtnXw==
-X-Received: by 2002:ac8:6b44:: with SMTP id x4mr3818509qts.186.1583768211793;
-        Mon, 09 Mar 2020 08:36:51 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:c8c4:d4d8:cd2d:6f68? ([2601:282:803:7700:c8c4:d4d8:cd2d:6f68])
-        by smtp.googlemail.com with ESMTPSA id c12sm1210884qtb.49.2020.03.09.08.36.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 08:36:50 -0700 (PDT)
-Subject: Re: [net-next 1/2] Perform IPv4 FIB lookup in a predefined FIB table
-To:     Ahmed Abdelsalam <ahmed.abdelsalam@gssi.it>,
-        Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dav.lebrun@gmail.com,
-        andrea.mayer@uniroma2.it, paolo.lungaroni@cnit.it,
-        hiroki.shirokura@linecorp.com
-References: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
- <20200213010932.11817-2-carmine.scarpitta@uniroma2.it>
- <7302c1f7-b6d1-90b7-5df1-3e5e0ba98f53@gmail.com>
- <20200219005007.23d724b7f717ef89ad3d75e5@uniroma2.it>
- <cd18410f-7065-ebea-74c5-4c016a3f1436@gmail.com>
- <20200219034924.272d991505ee68d95566ff8d@uniroma2.it>
- <a39867b0-c40f-e588-6cf9-1524581bb145@gmail.com>
- <4ed5aff3-43e8-0138-1848-22a3a1176e46@gssi.it>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <d458b4c0-963e-d9bc-c4bb-ab689edd7686@gmail.com>
-Date:   Mon, 9 Mar 2020 09:36:48 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        Mon, 9 Mar 2020 11:38:33 -0400
+Received: from mga07.intel.com ([134.134.136.100]:36195 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726899AbgCIPid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 11:38:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 08:38:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,533,1574150400"; 
+   d="scan'208";a="440958564"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Mar 2020 08:38:31 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 764EA301BCC; Mon,  9 Mar 2020 08:38:31 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 08:38:31 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Salman Qazi <sqazi@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] mm: clear 1G pages with streaming stores on x86
+Message-ID: <20200309153831.GK1454533@tassilo.jf.intel.com>
+References: <20200307010353.172991-1-cannonmatthews@google.com>
+ <20200309000820.f37opzmppm67g6et@box>
+ <20200309090630.GC8447@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <4ed5aff3-43e8-0138-1848-22a3a1176e46@gssi.it>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309090630.GC8447@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/6/20 9:45 AM, Ahmed Abdelsalam wrote:
-> 
-> However, in the SRv6 we don’t really need a VRF device. The SRv6
-> functions (the already supported ones as well as the End.DT4 submitted
-> here) resides in the IPv6 FIB table.
-> 
-> The way it works is as follows:
-> 1) create a table for the tenant
-> $ echo 100 tenant1 >> /etc/iproute2/rt_tables
-> 
-> You instantiate an SRv6 End.DT4 function at the Egress PE to decapsulate
-> the SRv6 encapsulation and lookup the inner packet in the tenant1 table.
-> The example iproute2 command to do so is as below.
-> 
-> $ ip -6 route add A::B encap seg6local action End.DT4 table tenant1 dev
-> enp0s8
-> 
-> This installs an IPv6 FIB entry as shown below.
-> $ ip -6 r
-> a::b  encap seg6local action End.DT4 table 100 dev enp0s8 metric 1024
-> pref medium
-> 
-> Then the BGP routing daemon at the Egress PE is used to advertise this
-> VPN service. The BGP sub-TLV to support SRv6 IPv4 L3VPN is defined in [2].
-> 
-> The SRv6 BGP extensions to support IPv4/IPv6 L3VPN are now merged in in
-> FRRouting/frr [3][4][5][6].
-> 
-> There is also a pull request for the CLI to configure SRv6-locator on
-> zebra [7].
-> 
-> The BGP daemon at the Ingress PE receives the BGP update and installs an
-> a FIB entry that this bound to SRv6 encapsulation.
-> 
-> $ ip r
-> 30.0.0.0/24  encap seg6 mode encap segs 1 [ a::b ] dev enp0s9
-> 
-> Traffic destined to that tenant will get encapsulated at the ingress
-> node and forwarded to the egress node on the IPv6 fabric.
-> 
-> The encapsulation is in the form of outer IPv6 header that has the
-> destination address equal to the VPN service A::B instantiated at the
-> Egress PE.
-> 
-> When the packet arrives at the Egress PE, the destination address
-> matches the FIB entry associated with the End.DT4 function which does
-> the decapsulation and the lookup inside the tenant table associated with
-> it (tenant1).
 
-And that is exactly how MPLS works. At ingress, a label is pushed to the
-front of the packet encapping the original packet at the network header.
-It traverses the label switched path and at egress the label is popped
-and tenant table can be consulted.
+> Gigantic huge pages are a bit different. They are much less dynamic from
+> the usage POV in my experience. Micro-optimizations for the first access
+> tends to not matter at all as it is usually pre-allocation scenario. On
+> the other hand, speeding up the initialization sounds like a good thing
+> in general. It will be a single time benefit but if the additional code
+> is not hard to maintain then I would be inclined to take it even with
+> "artificial" numbers state above. There really shouldn't be other downsides
+> except for the code maintenance, right?
 
-IPv6 SR is not special with any of these steps. If you used a VRF device
-and used syntax that mirrors MPLS, you would not need a kernel change.
-The infrastructure to do what you need already exists, you are just
-trying to go around and special case the code.
+There's a cautious tale of the old crappy RAID5 XOR assembler functions which
+were optimized a long time ago for the Pentium1, and stayed around,
+even though the compiler could actually do a better job.
 
-SR for IPv6 packets really should have been done this way already; the
-implementation is leveraging a code path that should not exist.
+String instructions are constantly improving in performance (Broadwell is
+very old at this point) Most likely over time (and maybe even today
+on newer CPUs) you would need much more sophisticated unrolled MOVNTI variants
+(or maybe even AVX-*) to be competitive.
 
-> 
-> Everything I explained is in the Linux kernel since a while. End.DT4 was
-> missing and this the reason we submitted this patch.
-> 
-> In this multi-tenant DC fabric we leverage the IPv6 forwarding. No need
-> for MPLS dataplane in the fabric.
+The best clear functions may also be different for different CPU
+generations.
 
-My MPLS comment was only point out that MPLS encap and IPv6 SR encap is
-doing the exact same thing.
+Using the string instructions has the advantage that all of this is abstracted
+from the kernel.
 
+-Andi
