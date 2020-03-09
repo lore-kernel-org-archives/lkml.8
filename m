@@ -2,99 +2,96 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAEFC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0287AC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F0624654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:03:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gyPUS950"
+	by mail.kernel.org (Postfix) with ESMTP id BF72024670
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583795172;
+	bh=9BVVycSfpPDRZx0dw2o2wut/V1EucDmySGq7rPC2jrk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ca2IfsHBYtfLTlnOTtSt1vgWUfbgZmy/RUFTbyGR3rF/ViiWb3aciVlywks8knJlt
+	 fvmoKOINPNqh1/TfK3eSTqn/x+KR3utDcePgFLstnndvOZErMWxiuD4/VT68eog5wz
+	 ulvPzvbZjDOKlWqti8DjZOP1aTNhG0orYB7eb8V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbgCIXDu (ORCPT
+        id S1727387AbgCIXGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:03:50 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45448 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgCIXDt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 19:03:49 -0400
-Received: by mail-qk1-f195.google.com with SMTP id c145so5220893qke.12
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:03:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DG5Pmu1RlQqHBWl+2qUX5CoGznFuBPO5I6Xwyxwb+Cs=;
-        b=gyPUS950qwVdh0+braV/e3jgiwyl9rKeMblixJMxHnbVM14lXi0z+IVb1BLL5qohGB
-         Oj1x2W/5X1R4dMQUKlvVgKlRrgpGVWXRJjsDvt3nI/eDWNEzJI1ZBLb/1mFdGII05Qoa
-         N6kOMSXBHafiqYJKag3k4o3UIJsI6B4CPraCKX7ZqIN4Wz3SC4XboMQKljz2gZmSWZ/h
-         Va11KdhuaGezvM3vV1fmFfxIL4z+Y+2FMtXNgTHiMocYpIZ8u2JaFHLbKqSh/gMI0CS2
-         oLVN2kEAVhszQoBMkC693ll3B6py0pMcBDAOepqOVTDEEhPXsNbxXH6mBTI4ddpE5gAP
-         LnvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DG5Pmu1RlQqHBWl+2qUX5CoGznFuBPO5I6Xwyxwb+Cs=;
-        b=Xe5NA7VUMf/znMRCrWAQYfhGAsYcOZCRIWpsUrvYO1sWd4Uc+ZA7uVTe/Flv2t3swy
-         GhHVjheVL71dHFBj9iigVXqplPUJmn8MygmJTlVfNJIONQYeLXZYvk9evFs8WGJt+TFI
-         CSKZtwYcUmyGqaF0yAeaWvHdFFVdI9SV80RCrYur0FWTETMJ8f7qPMtnpZsUpxhB/E7Z
-         7+wIdBBpMMC8Ud6t0DMYqw57qy9P8qBDciWIww+5zGCuNBtq8PcC4gxqPq1QF/HlXbKg
-         aJPqSB886Y0GSBYIpqyjHXiVRLYPYpVWCTWWlWhVSTy80iNRSS9CRm+J+lRWLtvb53iu
-         wX1w==
-X-Gm-Message-State: ANhLgQ2rvk6jAh8RPiVZi0NxS/3lCl6wj/5Rs7a6EtN1vuH+VNeg/EJa
-        LW3GFbbbILBn6/j0iJkBvg4DCw==
-X-Google-Smtp-Source: ADFU+vsVuThcYSPMT2Kil8KJF1J3XD2L42eeVKLwA6rk3nlN3INK1pTC1Eso1Jbfa3D4sIWSdor1Jg==
-X-Received: by 2002:a37:664d:: with SMTP id a74mr16712041qkc.256.1583795028784;
-        Mon, 09 Mar 2020 16:03:48 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id q142sm3151748qke.45.2020.03.09.16.03.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Mar 2020 16:03:48 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jBRR5-0004ho-F5; Mon, 09 Mar 2020 20:03:47 -0300
-Date:   Mon, 9 Mar 2020 20:03:47 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     syzbot <syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com>
-Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        parav@mellanox.com, syzkaller-bugs@googlegroups.com,
-        willy@infradead.org
-Subject: Re: BUG: corrupted list in _cma_attach_to_dev
-Message-ID: <20200309230347.GY31668@ziepe.ca>
-References: <20200309172430.GV31668@ziepe.ca>
- <0000000000007dfeb705a071ba51@google.com>
+        Mon, 9 Mar 2020 19:06:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbgCIXGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 19:06:11 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF0D92146E;
+        Mon,  9 Mar 2020 23:06:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583795170;
+        bh=9BVVycSfpPDRZx0dw2o2wut/V1EucDmySGq7rPC2jrk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DnVMp4ASBSODGCmZ3WK2Rz1kanMf4TsjqcusgAggwMPCM65hs7a9vmbTHzeiwRR60
+         IO4SMdCaP78MKOwgQrNqijBzP+7jOH4ZASuSI7d2vXvY2pFa8X5yvHltXnbpHHj3jq
+         pmyUi0LTrsFrdTJ4oXi32RATyuPzI4w6xVrWPyRo=
+Received: by pali.im (Postfix)
+        id 67F9BBE0; Tue, 10 Mar 2020 00:06:08 +0100 (CET)
+Date:   Tue, 10 Mar 2020 00:06:08 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     "Andrew F. Davis" <afd@ti.com>, Sebastian Reichel <sre@kernel.org>,
+        David Heidelberg <david@ixit.cz>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] power: supply: bq27xxx_battery: Silence
+ deferred-probe error
+Message-ID: <20200309230608.aur2iddomzrdw4pq@pali>
+References: <20200308215143.27823-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0000000000007dfeb705a071ba51@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200308215143.27823-1-digetx@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 01:20:04PM -0700, syzbot wrote:
-> Hello,
+On Monday 09 March 2020 00:51:43 Dmitry Osipenko wrote:
+> The driver fails to probe with -EPROBE_DEFER if battery's power supply
+> (charger driver) isn't ready yet and this results in a bit noisy error
+> message in KMSG during kernel's boot up. Let's silence the harmless
+> error message.
 > 
-> syzbot has tested the proposed patch and the reproducer did not trigger crash:
-> 
-> Reported-and-tested-by: syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         0aeb3622 RDMA/hns: fix spelling mistake "attatch" -> "atta..
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b58f96e9824c82cb
-> dashboard link: https://syzkaller.appspot.com/bug?extid=06b50ee4a9bd73e8b89f
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Note: testing is done by a robot and is best-effort only.
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-#syz dup: KASAN: use-after-free Read in rdma_listen (2)
+Hello Dmitry! This change make sense, it is really not an error when
+bq27k device registration is deferred. You can add my:
+
+Reviewed-by: Pali Rohár <pali@kernel.org>
+
+> ---
+>  drivers/power/supply/bq27xxx_battery.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+> index 195c18c2f426..664e50103eaa 100644
+> --- a/drivers/power/supply/bq27xxx_battery.c
+> +++ b/drivers/power/supply/bq27xxx_battery.c
+> @@ -1885,7 +1885,10 @@ int bq27xxx_battery_setup(struct bq27xxx_device_info *di)
+>  
+>  	di->bat = power_supply_register_no_ws(di->dev, psy_desc, &psy_cfg);
+>  	if (IS_ERR(di->bat)) {
+> -		dev_err(di->dev, "failed to register battery\n");
+> +		if (PTR_ERR(di->bat) == -EPROBE_DEFER)
+> +			dev_dbg(di->dev, "failed to register battery, deferring probe\n");
+> +		else
+> +			dev_err(di->dev, "failed to register battery\n");
+>  		return PTR_ERR(di->bat);
+>  	}
+>  
