@@ -2,145 +2,199 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD6EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C411CC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D429D20675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E0B20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:37:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AtqoN+FX"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="O23TVgK5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgCINhN (ORCPT
+        id S1726669AbgCINhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:37:13 -0400
-Received: from mail-eopbgr60055.outbound.protection.outlook.com ([40.107.6.55]:64514
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726427AbgCINhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:37:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nw9yB7A08OHbVPwGalgIY9UeK57fLLjwXkuVkuS0Cfz+GIYmDeRV0m+VHmcr3cFzHUn+yOBWfAZ7cm9F+MRvaSU1APj9fyqycwHKLdKygi4PWf43W4nOzx1DREm+7c7aU7PUrVp5+t6MX1i/CTbUo8v/qFiG2Aqp8Y7AoTxxCnT4qT+q3T9F3LpVIZwLUTwBk+C8IIggho+eLWXmb8ftzpaUIL8D9akwpXKokmD/8zS2g0fno33+1jC0gz8QkfE/xQUiOegVVt4VW7xMuOBqRmhk/WjuDI/kl/kUI/76xF8f87AXTmqoZIuPISGAW1yJCKzuDrNCGUf/J7F1wb0OpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4zaGIN+vMn6CQ7AMDzBnDfmCSotkEzqv3Hb3T2hzfRY=;
- b=AfZ0Fl9hWYpIZI+PIjjbncfrJDQy9hpgpctxvysDiH/8dYtXkeNB6tz+okk60l1GSgxkE1aYog/Ct/btbZ+f4qYGCZ5puLo0Ue/KTSqX78mqWurDMu2BrBzOReDjsggmMAkFhtR095X0ybo3HfS1oknWJ9bFnn7HUYcGj6ADdq9EDOkYrOJ62LZmBTtPoXgynyInztXtzT4yJt4r6OsjDSpz7Y0pyWI3BZlUdXw3JPPuDGRLvq/FxIDOVBjTJAmaEvGryX+ltLxoyV7QorQdKtRzeZ0SlHOowMHdpjIz+IJvlc6kAzrmGr3qxurQILj+L+JJldIJlEOy38cgZtkYfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4zaGIN+vMn6CQ7AMDzBnDfmCSotkEzqv3Hb3T2hzfRY=;
- b=AtqoN+FX+0p35to28knoJpw9BjEWjaz+6DjbBqGPttFnK1KDA54ttvQ5TdVRasw+Sl9sLgfLyC9d5ccqlaJYVVEuSV/LYMDCEOdb5CbpvUzw7dPB4AIVfg+lNIuuXXIq7W42emN5RcD/DbutqOkUjBbxoAja1KcfNIgJ9BgdJoo=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3898.eurprd04.prod.outlook.com (52.134.65.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Mon, 9 Mar 2020 13:37:09 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 13:37:09 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "ronald@innovation.ch" <ronald@innovation.ch>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Thread-Topic: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Thread-Index: AQHV9av62LAReQhoZkKZ9LnT5dFdbahAGiGAgAAnYQCAAAHeEA==
-Date:   Mon, 9 Mar 2020 13:37:09 +0000
-Message-ID: <DB3PR0402MB3916AE9BA2DEDA066DF0FCCDF5FE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
- <20200309110609.GE3563@piout.net>
- <1ad38cdb-bf0d-1c19-b233-15a5857bd6fa@roeck-us.net>
-In-Reply-To: <1ad38cdb-bf0d-1c19-b233-15a5857bd6fa@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2d9fe1ca-2e10-4ffc-34f0-08d7c42ef78f
-x-ms-traffictypediagnostic: DB3PR0402MB3898:|DB3PR0402MB3898:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3898C32BB528FB881D7C4C80F5FE0@DB3PR0402MB3898.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0337AFFE9A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(346002)(376002)(39860400002)(199004)(189003)(52536014)(8936002)(478600001)(33656002)(44832011)(7416002)(2906002)(81166006)(81156014)(8676002)(4744005)(316002)(71200400001)(7696005)(86362001)(110136005)(66446008)(54906003)(66476007)(26005)(5660300002)(6506007)(53546011)(66946007)(66556008)(76116006)(55016002)(4326008)(64756008)(186003)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3898;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uVrf0xUjhbn7vMkpRw8Z0QweYAFgF2reVg3oEcpwRIBP4zbXCvO3V9q77eR/d93a7DHafwgjV8cpMR6mAWPp4QrReVuVc90R9NMXtmMI8KOkBnBV3wkLU7OkzxA52b0oSi6j42QuuqdfPNykD7rC+J69mFrRlzRsxe7lGWiXQHUpgUvQ89OlBHEbQ2jBbTO1BxhIqFUOOVt54wczZkA8Fqk6T00I8Qvw3T5nOsEN49N26AwhSq+T/fO8A9meKdt6ED86UHpXwrqC/9UB/d4YxeRozMan9gLMTI0pdC9xyfmsdZXIqgn51o054+ranTSt9hHeMZHHKatNYH3dupIV+OeCtgCqTvJLI9L3H1aIZ7JgHhbVGji7abIKDkoHcRouW5xzHphssB1zHCigZHc1yKR6IPt0Qp37HVSkBOsbCUF5KrsUdTO+8ctDIR7eZo56
-x-ms-exchange-antispam-messagedata: C05c6USiZ6HarBI6x/Y6/GM1g+6pqn3jMIxG7faApeoC4m2toOZej+Lx4M1V615ls/O+QTXS0y/nbKt4NSOZ9mTmDKSVt6NgRFgynE2H+64A0aiyjsrW4EEhmghiaWznIBFpTmBBz1QH1eDyD8T8+w==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 9 Mar 2020 09:37:34 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45367 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbgCINhd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:37:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m9so2171348wro.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 06:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=Z0uGJRtiQ5x2RUu2c6a7xHUJiq4fbinHdchbXf0aZqc=;
+        b=O23TVgK5S4u6/XMoM9nK3ERSPCUbAZEExdd2OO1mquPTM4LYOUgmx4Pf1EBj5tZqkh
+         nCLnVjyF0upaPjnRp6Q3r3taj864V9Ug10lZOlQQlGx3fhlCUDoFELPKp6ExSP/czlGt
+         8L/s0aIQKvm27kxNJbDqPyX949OHKP/MmZabsxtfhGDBzzDEvVLGe/Ma4vuB4nRJXJLd
+         gkvp5/4+oEFRyfid+r1BiR0S/+5JkqUQ1rPi+heZ8JC+gjuOg+FaSvdrTTMakKKK4GSR
+         ReoNQMCvj/bQ6FBUImzAAlIQZR2NLxVYa6fVh4/bZYwpfOBaSOF7xbZHt6z78UPJIXEj
+         7NEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=Z0uGJRtiQ5x2RUu2c6a7xHUJiq4fbinHdchbXf0aZqc=;
+        b=CVq7CAbxniyTQlhTthVtvfw7WMvyq2OQ8HaUKtVNop5E56XbSYqiyiKE3n5UNpCdQQ
+         NDTcj5mgthVSsb2ApspKWtUaZ0hAxYrRYHm+gpPpTv1oTREGLRiA237GKxXziORteQPp
+         Gcsibs3HpsnIsyc+fb3NgxA0jiV3LSWqcvezBxDvSbG+2Up033lEk9u6zP4VazC6yETV
+         zRlobrLDT27m25zqvRnOnG9wNqyiE/j85BDslmH5Qenz81H2LroxUEyRwL7ojoa17vIj
+         YAvvcxngDqIY5RwCyRfzwFsiL99N6JYYjKx/YtgKAsVBL6QF+/XhYpikxvnwW/vxgHRp
+         BPlA==
+X-Gm-Message-State: ANhLgQ0gYwasV9aPOFyPqUzNRRrjt7dIM8HfuQvP1ZRVhhtHmvAc8sws
+        oGEaVMPNBH1JyCgj41LEEvcZtA3UMgRbAg==
+X-Google-Smtp-Source: ADFU+vuYpUpZTaqqaV3EQTiglnb5KEd4ZnEArM4RAEKw35+LA6JzprgdjPxRo3uFOLf7qXt+l4peYw==
+X-Received: by 2002:adf:f5cb:: with SMTP id k11mr14331870wrp.214.1583761050853;
+        Mon, 09 Mar 2020 06:37:30 -0700 (PDT)
+Received: from [66.102.1.108] ([149.199.62.131])
+        by smtp.gmail.com with ESMTPSA id r19sm24648658wmh.26.2020.03.09.06.37.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Mar 2020 06:37:29 -0700 (PDT)
+Subject: Re: linux-next: Signed-off-by missing for commit in the microblaze
+ tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200310003444.50d98639@canb.auug.org.au>
+From:   Michal Simek <monstr@monstr.eu>
+Autocrypt: addr=monstr@monstr.eu; keydata=
+ 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
+ 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
+Message-ID: <8c59af56-fdd6-ac42-d50a-47951eee5672@monstr.eu>
+Date:   Mon, 9 Mar 2020 14:37:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d9fe1ca-2e10-4ffc-34f0-08d7c42ef78f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 13:37:09.6332
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mgvCLy9koV3zP3CA0mJu7Lb30m0hlz/ghnlMCLYEEfxPPgtJQ7qWShxoh7gbIlIDQbaggqw97cowwO5NxMlRNQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3898
+In-Reply-To: <20200310003444.50d98639@canb.auug.org.au>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="6ymyKO2Jh2PqTNHEEiplDsk1sP3bR5sY8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAxLzddIGZpcm13YXJlOiBpbXg6IEFkZCBzdHVi
-cyBmb3IgIUNPTkZJR19JTVhfU0NVDQo+IGNhc2UNCj4gDQo+IE9uIDMvOS8yMCA0OjA2IEFNLCBB
-bGV4YW5kcmUgQmVsbG9uaSB3cm90ZToNCj4gPiBPbiAwOS8wMy8yMDIwIDA4OjM4OjE0KzA4MDAs
-IEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+PiBBZGQgc3R1YnMgZm9yIHRob3NlIGkuTVggU0NVIEFQ
-SXMgdG8gbWFrZSB0aG9zZSBtb2R1bGVzIGRlcGVuZGluZyBvbg0KPiA+PiBJTVhfU0NVIGNhbiBw
-YXNzIGJ1aWxkIHdoZW4gQ09NUElMRV9URVNUIGlzIGVuYWJsZWQuDQo+ID4+DQo+ID4+IFNpZ25l
-ZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+PiAtLS0NCj4g
-Pj4gQ2hhbmdlcyBzaW5jZSBWMjoNCj4gPj4gCS0gcmV0dXJuIGVycm9yIGZvciBzdHVicy4NCj4g
-Pg0KPiA+IEknbSBub3Qgc3VyZSB3aHkgeW91IGFyZSBzZW5kaW5nIHYzIHdpdGggdGhlIHN0dWJz
-IGFzIHdlIGRldGVybWluZWQNCj4gPiB0aGF0DQo+ID4gMi83IGlzIGVub3VnaCB0byBjb21waWxl
-IGFsbCB0aGUgZHJpdmVycyB3aXRoIENPTVBJTEVfVEVTVC4NCj4gPg0KPiA+DQo+IDIvNyBhbG9u
-ZSBpcyBub3Qgc3VmZmljaWVudC4gV2l0aCBvbmx5IDIvNywgb25lIGNhbiBleHBsaWNpdGx5IGNv
-bmZpZ3VyZQ0KPiBJTVhfU0NVPW4sIENPTVBJTEVfVEVTVD15LCBhbmQgZ2V0IGxvdHMgb2YgY29t
-cGlsZSBmYWlsdXJlcy4gR3JhbnRlZCwgb25lDQo+IHNob3VsZCBub3QgZG8gdGhhdCwgYnV0IDBk
-YXkgZG9lcyAoSSBkb24ndCBrbm93IGlmIHRoYXQgaXMgdGhlIHJlc3VsdCBvZg0KPiBSQU5EQ09O
-RklHKSwgYW5kIEkgYW0gbm90IGxvb2tpbmcgZm9yd2FyZCBoYXZpbmcgdG8gZGVhbCB3aXRoIHRo
-ZSBmYWxsb3V0Lg0KDQpTbyB0aGUgVjMgcGF0Y2ggc2VyaWVzIGxvb2tzIGJldHRlciwgYWRkaW5n
-IHN0dWJzIGNhbiBjb3ZlciB2YXJpb3VzIGNvcm5lciBjYXNlcy4NCg0KQW5zb24NCg==
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--6ymyKO2Jh2PqTNHEEiplDsk1sP3bR5sY8
+Content-Type: multipart/mixed; boundary="WyQL3qpuyAXzcUxXFtdPKMIo5O2ozTNKR";
+ protected-headers="v1"
+From: Michal Simek <monstr@monstr.eu>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <8c59af56-fdd6-ac42-d50a-47951eee5672@monstr.eu>
+Subject: Re: linux-next: Signed-off-by missing for commit in the microblaze
+ tree
+References: <20200310003444.50d98639@canb.auug.org.au>
+In-Reply-To: <20200310003444.50d98639@canb.auug.org.au>
+
+--WyQL3qpuyAXzcUxXFtdPKMIo5O2ozTNKR
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On 09. 03. 20 14:34, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> Commit
+>=20
+>   299c61cb37fb ("microblaze: Replace setup_irq() by request_irq()")
+>=20
+> is missing a Signed-off-by from its committer.
+>=20
+
+my fault. I have fixed it.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+
+
+
+--WyQL3qpuyAXzcUxXFtdPKMIo5O2ozTNKR--
+
+--6ymyKO2Jh2PqTNHEEiplDsk1sP3bR5sY8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXmZGkgAKCRDKSWXLKUoM
+IeP1AJ9kHk9FczaY/pnZu4pxB5tiXf4lAQCePlNz3kgr0zWeG/R7bFpfCjdLy1g=
+=w5bD
+-----END PGP SIGNATURE-----
+
+--6ymyKO2Jh2PqTNHEEiplDsk1sP3bR5sY8--
