@@ -2,76 +2,76 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF98C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67478C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEBF02072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3C120828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UY4QIiFZ";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="UwD7ktSW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="J5Zce0rs";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="WrwCwye5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgCILCt (ORCPT
+        id S1726643AbgCILCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:02:49 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:59095 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgCILCt (ORCPT
+        Mon, 9 Mar 2020 07:02:54 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:8759 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgCILCx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:02:49 -0400
+        Mon, 9 Mar 2020 07:02:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1583751769; x=1615287769;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=wCcLcuE+2nS2H/HLQ/3IzI8Yp3Nu8DKv6sZOIdeteGY=;
-  b=UY4QIiFZiK/UauA1tz6lUX9xYFEWGF5JIo1cP+OR10De/oiuVO4DE8GJ
-   aq4iX/677pu1+IfHJlQa1nIH5FkmYujYQi9BcTGz5v4M4v8EBFzo7ZHHi
-   Rk+QrutktAxRXW/I8QO7qYcdE20Zh5F4zE1xtzJExYMhIeRhMpc0aRC8S
-   JiAUDDJOCYLRSxwC4X5Kh/iJRr1/wC+GgZsnIw4gjA+MtbeNTk+UR3Ndx
-   cgzJEcWGafzCsZpR7hGmryrb5BdV7OG6pYw6jkBn8PAQ36J7I49I1PNwx
-   2cdKVbFSfTEZO2wpCVd6xF5i71FDB9H2aLMBwsbqFun9MTQD4Nzy0/UmH
-   A==;
-IronPort-SDR: M4BkTxj10tFmtgKFxchSF6ktnYgtKAoVHNCCIaTus3diu1On3qRcR0RDiwj9lqxvUNx7OX77k1
- Y5U7iqNxQ/NIvGz1s+eVQjP4CL1Le6C1rkOb/lWmRzLM4WL8gYXFlXyrzZLykzcGreRChzt6JE
- A4x/I3cOVjpP8YSgH9Xt1n92w+jQVv68dVoVo/LV6D4Ojbc50OhCxCtU0oWChW7jlN5xP3bvRO
- x+2zqV0wTAsimSihtPyoCsQ7AlfPf0rv1x3NumUf670GFICNlWqkoB6VolYs7mYDUJnx+e9Kuo
- YNY=
-X-URL-LookUp-ScanningError: 1
+  t=1583751773; x=1615287773;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=h1cEbyV0igHGedrNhr5cFEV/AfRFtx2s28Gj68T1cNE=;
+  b=J5Zce0rsTIobO3QYUL8Ppf8Ib9pT9Sz/g7hH6WwH47nUsNnaMk67/IsI
+   oJJholCc8hdiCNtpStXRtqjoVGiVGZT85DrN6mySKcOc9a6MzGzomoRMe
+   MEb8RahYqeX8XUw1Uv+1zyL1YrCeUXEouGJJhqtdzhTKRfYqE51VMYAoa
+   kzZPQ1XEKkf4WX/BMC1TkTnGyj1qnPaBLZVZdwnTh+dMDmaQYrkOxwEVI
+   AKrOFYGS7pNAs2u/9JEU1hSFE6c3vL2R6kV5aGWn+/3YE7uKt1pt8TkKs
+   X1rd7npkZjBjbRqmlnm+2OmhwtU226kAGlqrz+kypZVS6Mmv60fREoNfB
+   w==;
+IronPort-SDR: HRozAmFiV/7Gzc7ZPJJ0YxLbB6LZFQ+tz+7aHvI3pHzEAu5KhKJPPYhWPLifMo6RVWvsBYog6d
+ 5ZDhOGuJgUXzBR1BkPSyx8PDzo1W1mhOUe1Xb15Wr2YDJjDUPcTNay2Xl9ELynzWifFdvGU5xy
+ U3NEePKAe8oXRPjwWwulqgptc0FRm0lXcIfvcnGrw2ILSAz/9JDlIRu7Q2Wmpg/PA5mwh4U0R7
+ TN6iKImALwa/h788kBNYfOyHTx85aBQrz3L38/juAICQaHxa/oqTDhZL/x5B8zlR+R25aNr6Z8
+ UBk=
 X-IronPort-AV: E=Sophos;i="5.70,533,1574092800"; 
-   d="scan'208";a="132431307"
-Received: from mail-mw2nam12lp2043.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.43])
-  by ob1.hgst.iphmx.com with ESMTP; 09 Mar 2020 19:02:43 +0800
+   d="scan'208";a="136341843"
+Received: from mail-co1nam11lp2173.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.173])
+  by ob1.hgst.iphmx.com with ESMTP; 09 Mar 2020 19:02:52 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VE26+YdQH+JYkSB9LTJdrHJnf1AgojVHkfpff6Bam3AFwtGq+EnmeOM3vmRQ0WA+TkRW4Vm11m0BRUvDqRoYfiIhoRQmK5YZrKPI+S3Y/Ay7F+nN/yw5fckVVuAJe60fXVvwFOxbWV3CN6athfIowJjpM+FNfIuEC337fDBcTnFJivTvjBryGndP3rq7fqvMiOtsNpaZx9j0WVnGV5SgSM7FkhnOWMll3IBfxeGcJps0sHagv9ymkomnwuDUfi6aK055Yk1ByjiKy14QMNwN6tzS3BRdEMxd9ZDnFuMhXo4ucVp8F2fXq/pXPSYRmaIBGmrkiC18qnnUEY7FXlt9CQ==
+ b=dktlHiZcT/2cgzC+RrpC4v3lQSCqYMKecpX/tZnmb7IuQJ5yBIgaU9iYNEAeK+XmPZru+DQZFwhzE8dLCqX9qeB0y5wYPvh5rXME453r61Kr5buWuZ0SdB4sJ0zgt96FujnqfV8UoZOjdorJvUBRlzknJTmwriCFxCcjCiGHqNofNs3LgAm9JJbNMQjKSmeCD0QdzjhpJ6MSd8SCya9atj26pAHXXMX5ROBmqKB1VvyK9jIVQHPIej/WoB9wC1P0NaHa4hCtqOOIwlJXxMzIKj8wS7Xgbt3PpPbru0YFNdH3yRgWxVTLzkiUuiTXRs1dB5MJTsblp9r+Bi3pq8uAdw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A/hFe8VzQ+WAZFLAlQOc+1ctZ4qDLYi2vjRGrBJnth0=;
- b=kIHqGUxZgA3yUzL8rqUUtSIDgBETE4D9oea7kE81KFZVY2wNSdJ4e6ZldmwzVo3xrY5DplFlnRHOO9fQWlXnLjn0U60KGkgRIgACAPkFYaQw4NV0YdZv/s8FHl1yzxZN151tyEjM0Vn3y9wjQzJ3oiAahegszqEuDTfK9YXCCEREis/IIfy/WeirqvkYUBg1WSfjHCGqAUlHiVFiD+qBQwmC8hE3CIflIx76cIZgNN1WzLUfA/aO3FlHJsPDW8iJDJOK1l+7sTzjzengAiSRXE0Y+lwSIo+8UejDxBCc9IocDNtB7SC2Zyn2XiA1Occ/Fuiaoq6vQBd5XhALzfn0Ow==
+ bh=WAE9FhPfiDLwl5CifCcOXcb/G9XDijP21CskKpdaI8E=;
+ b=IaqpWhHnhMvbHVf2MnzXfa8NcB0Nj1vxB/ebn21L2WZDd1ms46PPHmBnpRrdKBWaC1coHia59mFMy37lz8H1NaCqn/FmMJiw88QrKklO/EgTx1Mu46nfFbk1U2f+iFuSe5diRfPfE/s/Rcdn4AsTg3GoLm3XXcYLYi5mzviMXI1u6v8rbPLuOPM3cCK/w7ZO6iw2XvxebAukAfB+f1U3soKvspVFlEycyrzV6dSi/kUdXSh+EYCSvMHHdXzbKbsGwNwUty3yhLJfdXf0qBydWgJ8r7falMdT62/oGwGb0fuPredRVzOZzP9HtxPx1GkQi54wDc4YVmeTWn51Xleu1g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
  header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A/hFe8VzQ+WAZFLAlQOc+1ctZ4qDLYi2vjRGrBJnth0=;
- b=UwD7ktSWICI9bxe82wbAtvdi6HJcDNaOAd7S7LcaWJQiehZi5qLBxgK9rNZdqUDFTaifcIlLIPM3YrSbBCMCOaQWvrHszBWYyJTASbBDP8czKKyqz6Vfj3FN49mh0oBSHoHIYUxQ0ylAZMxcsWd4T75hBA/OdJY+okgyeSnqPxY=
+ bh=WAE9FhPfiDLwl5CifCcOXcb/G9XDijP21CskKpdaI8E=;
+ b=WrwCwye5ia5htYUoO8POYHNTyjiN6l7+vixs2V7NcIunmCIzc0HQOMyBQG/sj6TuouO0+iBMpXaWsi2RrYveXUG/9065tQf1R2cxcazhVS/r1btOf0bGyLqOWGrcBxQH/W8xTUsQDTQp/k+9I8U+9Jsf7Nw5eVJYaW5Ov6U54fY=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=Anup.Patel@wdc.com; 
 Received: from MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
- by MN2PR04MB5517.namprd04.prod.outlook.com (2603:10b6:208:d6::31) with
+ by MN2PR04MB6685.namprd04.prod.outlook.com (2603:10b6:208:1ec::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Mon, 9 Mar
- 2020 11:02:42 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Mon, 9 Mar
+ 2020 11:02:50 +0000
 Received: from MN2PR04MB6061.namprd04.prod.outlook.com
  ([fe80::159d:10c9:f6df:64c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
  ([fe80::159d:10c9:f6df:64c8%6]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 11:02:42 +0000
+ 11:02:50 +0000
 From:   Anup Patel <anup.patel@wdc.com>
 To:     Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
@@ -85,115 +85,183 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Anup Patel <anup@brainfault.org>,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
         Anup Patel <anup.patel@wdc.com>
-Subject: [PATCH v4 0/5] New RISC-V Local Interrupt Controller Driver
-Date:   Mon,  9 Mar 2020 16:32:06 +0530
-Message-Id: <20200309110211.91130-1-anup.patel@wdc.com>
+Subject: [PATCH v4 1/5] RISC-V: self-contained IPI handling routine
+Date:   Mon,  9 Mar 2020 16:32:07 +0530
+Message-Id: <20200309110211.91130-2-anup.patel@wdc.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200309110211.91130-1-anup.patel@wdc.com>
+References: <20200309110211.91130-1-anup.patel@wdc.com>
 Content-Type: text/plain
 X-ClientProxiedBy: MAXPR01CA0071.INDPRD01.PROD.OUTLOOK.COM
  (2603:1096:a00:49::13) To MN2PR04MB6061.namprd04.prod.outlook.com
  (2603:10b6:208:d8::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from wdc.com (106.51.22.61) by MAXPR01CA0071.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:49::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 11:02:36 +0000
+Received: from wdc.com (106.51.22.61) by MAXPR01CA0071.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:49::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 11:02:45 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [106.51.22.61]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 139dcd0a-ac2f-4989-d3e7-08d7c419638e
-X-MS-TrafficTypeDiagnostic: MN2PR04MB5517:
+X-MS-Office365-Filtering-Correlation-Id: ea943b68-7003-4f44-43dd-08d7c4196823
+X-MS-TrafficTypeDiagnostic: MN2PR04MB6685:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR04MB55172C0D98FD53F071FC30748DFE0@MN2PR04MB5517.namprd04.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <MN2PR04MB6685D41F37303A9C83678C698DFE0@MN2PR04MB6685.namprd04.prod.outlook.com>
 WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-Forefront-PRVS: 0337AFFE9A
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(136003)(396003)(366004)(346002)(189003)(199004)(8886007)(86362001)(26005)(1076003)(55236004)(1006002)(6666004)(5660300002)(44832011)(4326008)(966005)(55016002)(478600001)(36756003)(54906003)(110136005)(81156014)(186003)(8676002)(81166006)(16526019)(7416002)(8936002)(7696005)(316002)(66556008)(956004)(66946007)(66476007)(2616005)(2906002)(52116002)(32040200004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5517;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(366004)(39860400002)(376002)(396003)(199004)(189003)(16526019)(5660300002)(186003)(1076003)(36756003)(2906002)(478600001)(26005)(8886007)(4326008)(55236004)(7696005)(52116002)(8936002)(316002)(81156014)(8676002)(44832011)(81166006)(55016002)(956004)(1006002)(110136005)(86362001)(54906003)(66556008)(66476007)(2616005)(66946007)(6666004)(7416002)(32040200004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6685;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +gkPnxeXMtvAI74km+LNuwm/WA5FN9uRYAoC9RXi5vttoqRL5WIAhr21dtu9Mi8Z+i8I6RN40TYhnwdEBT/1s1AYs6r/+8niNwvq+pO3OFpnw9yEAmi4P54CTTy3b0ukJqgDBdeiYj1L6cuf9zpIkp2IRUk86TxiStthXPxmT0pu2NTlzKGbWbLGzE+bdoLVUH36jqsXi+33tqzfXwso5r8bep+75WqzIdzeNt+H0S3RXBnqK4BNElVdreRpXfPeo+QfjapCpTtPv2FYFLhoZdjIQpYHNqm1oa+zc7fb3lw/tJDdrXfT6PpDnzRDtLq2TMLlBEgkywQLx7FEaBkU4RU3xSvOXY3A9SQHiKg6oPxFo/WR9zxbfBdcECuJNWZ5hr8L2NwUw++1K6SywMIF1XqaIjLF7BFyxGXSDckfLNzaL3EoEPSfGO6mYDdZ2uTXeJxsC0gT///catWzjNlQ2vW9QXwhF++4TaMfmZPcCXtfOfjYalUcSDllJ5aBvyPf5dHoqCRpagsnBOxjFOGmFuop++/rs3NpH6nbCPvKlAeG0G8q81oVXTmOOJJG7q1ifN3h7uhUXIsv2ItnHMdGQw==
-X-MS-Exchange-AntiSpam-MessageData: uvTnbZiho9UFjB+Z5qkqfgHBX1cc98PhczvC3JDas54XBN09nKfU189UUGVKYhnEStdldxovtIcuOOxM1H4CizTjFAnyaRAkiwLOxIDrsgmU8a80mEHGPIeG1qNEn2ISQkGpT+GQUVuECVXhYUdFug==
+X-Microsoft-Antispam-Message-Info: 78Uvk1jzGZF2Vmy3tLFDFzI19PH0GsNfeAHBbRdqnMy1DYeHHlRyatB9ebEGESlNT37oODJQtJ7VBPcy/hB04xck4ybhvxjcRyQBAv8cF5o7fIKG18jkpxza5HIQ5C1cNX+4aM0Ciiknn7z+dNEkZtiCyBwyBUhXTFr5z0flGjz07X5vWPHlIi7oKO7dHlj7TWIoA390vPRnYvmKlOXVPlpP/vcCUy99dfNnRYs96u5+P3tcVNhRNnbOsWAI5jODGy+G0aTnQ1BSeT50VOMVAdfNI3TjRULhdtlQwlgIR3jT+I5DUe1WixGxyl+GR31aDXD0NwHD99iTOgnGzR2iKMMQZP6fMNaMPfHZh+X74pzEfiFVjxyOo4C4IVM3tzNS6HNtyHGD97/Jkjmr0Fi8ON6DvGidHn4yKs5AktdUlrpvD4fWYINIMquCXR2tbyZW5f94eA5LLeSgPlZ3kG6zD+xxLW0+tZC5C5GUTwERYBPXCqh6z+FNdY4+JyGUeGQm
+X-MS-Exchange-AntiSpam-MessageData: dndXmUsYdWzDsyOW+yWNx8kUoviYrLyD4T3zMaLhURgdhKessTpBQtp0WN82kuN9kCoALtYeI8VZPfZNF6RpcMzFhwO6i+UgEWLCCtZw7C6rnEatOE8rKjAAeklr69VmW20jqpZB8rUXN56okwTt2w==
 X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 139dcd0a-ac2f-4989-d3e7-08d7c419638e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 11:02:42.1984
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea943b68-7003-4f44-43dd-08d7c4196823
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 11:02:49.9570
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5x2GosQ3B/mYkWiBFomDCMUJmD8YgqsrSFHZMLamd9uoktaV8xv/tO6iPJbD+nNee3VgCaYq19VF95GUWgOeUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5517
+X-MS-Exchange-CrossTenant-UserPrincipalName: U4gkWY9QzLfC7TRJt4haYOCDcsWNBQXuxawMYrTu+G6zKIrj4YCEpvYsCPpKXZ63AlgE+DnXDFItPmd++8GSbQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6685
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset provides a new RISC-V Local Interrupt Controller Driver
-for managing per-CPU local interrupts. The overall approach is inspired
-from the way per-CPU local interrupts are handled by Linux ARM64 and
-ARM GICv3 driver.
+Currently, the IPI handling routine riscv_software_interrupt() does
+not take any argument and also does not perform irq_enter()/irq_exit().
 
-Few advantages of this new driver over previous one are:
-1. It registers all local interrupts as per-CPU interrupts
-2. The KVM RISC-V can use this driver to implement interrupt
-   handler for per-HART guest external interrupt defined by
-   the RISC-V H-Extension
-3. In future, we can develop drivers for devices with per-HART
-   interrupts without changing arch code or this driver
+This patch makes IPI handling routine more self-contained by:
+1. Passing "pt_regs *" argument
+2. Explicitly doing irq_enter()/irq_exit()
+3. Explicitly save/restore "pt_regs *" using set_irq_regs()
 
-With this patchset, output of "cat /proc/interrupts" looks as follows:
-           CPU0       CPU1       CPU2       CPU3       
-  2:        379          0          0          0  SiFive PLIC  10  ttyS0
-  3:        591          0          0          0  SiFive PLIC   8  virtio0
-  5:       5079      10821       8435      12984  RISC-V INTC   5  riscv-timer
-IPI0:      2045       2537        891        870  Rescheduling interrupts
-IPI1:         9        269         91        168  Function call interrupts
-IPI2:         0          0          0          0  CPU stop interrupts
+With above changes, IPI handling routine does not depend on caller
+function to perform irq_enter()/irq_exit() and save/restore of
+"pt_regs *" hence its more self-contained. This also enables us
+to call IPI handling routine from IRQCHIP drivers.
 
-The patchset is based up Linux-5.6-rc5 and can be found at riscv_intc_v4
-branch of: https://github.com/avpatel/linux.git
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+---
+ arch/riscv/include/asm/irq.h |  1 -
+ arch/riscv/include/asm/smp.h |  3 +++
+ arch/riscv/kernel/irq.c      | 16 ++++++++++------
+ arch/riscv/kernel/smp.c      | 11 +++++++++--
+ 4 files changed, 22 insertions(+), 9 deletions(-)
 
-Changes since v3:
- - Rebased to Linux-5.6-rc5 and Atish's PLIC patches
- - Added separate patch to rename and move plic_find_hart_id()
-   to arch directory
- - Use riscv_of_parent_hartid() in riscv_intc_init() instead of
-   atomic counter
-
-Changes since v2:
- - Dropped PATCH2 since it was merged long-time back
- - Rebased series from Linux-4.19-rc2 to Linux-5.6-rc2
-
-Changes since v1:
- - Removed changes related to puggable IPI triggering
- - Separate patch for self-contained IPI handling routine
- - Removed patch for GENERIC_IRQ kconfig options
- - Added patch to remove do_IRQ() function
- - Rebased upon Atish's SMP patches
-
-Anup Patel (5):
-  RISC-V: self-contained IPI handling routine
-  RISC-V: Rename and move plic_find_hart_id() to arch directory
-  irqchip: RISC-V Per-HART Local Interrupt Controller Driver
-  clocksource: timer-riscv: Make timer interrupt as a per-CPU interrupt
-  RISC-V: Remove do_IRQ() function
-
- arch/riscv/Kconfig                 |   1 +
- arch/riscv/include/asm/irq.h       |   5 --
- arch/riscv/include/asm/processor.h |   1 +
- arch/riscv/include/asm/smp.h       |   3 +
- arch/riscv/kernel/cpu.c            |  16 ++++
- arch/riscv/kernel/entry.S          |   4 +-
- arch/riscv/kernel/irq.c            |  33 +------
- arch/riscv/kernel/smp.c            |  11 ++-
- arch/riscv/kernel/traps.c          |   2 -
- drivers/clocksource/timer-riscv.c  |  79 +++++++++++------
- drivers/irqchip/Kconfig            |  13 +++
- drivers/irqchip/Makefile           |   1 +
- drivers/irqchip/irq-riscv-intc.c   | 134 +++++++++++++++++++++++++++++
- drivers/irqchip/irq-sifive-plic.c  |  40 ++++-----
- include/linux/cpuhotplug.h         |   1 +
- 15 files changed, 256 insertions(+), 88 deletions(-)
- create mode 100644 drivers/irqchip/irq-riscv-intc.c
-
+diff --git a/arch/riscv/include/asm/irq.h b/arch/riscv/include/asm/irq.h
+index 6e1b0e0325eb..0183e15ace66 100644
+--- a/arch/riscv/include/asm/irq.h
++++ b/arch/riscv/include/asm/irq.h
+@@ -13,7 +13,6 @@
+ #define NR_IRQS         0
+ 
+ void riscv_timer_interrupt(void);
+-void riscv_software_interrupt(void);
+ 
+ #include <asm-generic/irq.h>
+ 
+diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
+index f4c7cfda6b7f..40bb1c15a731 100644
+--- a/arch/riscv/include/asm/smp.h
++++ b/arch/riscv/include/asm/smp.h
+@@ -28,6 +28,9 @@ void show_ipi_stats(struct seq_file *p, int prec);
+ /* SMP initialization hook for setup_arch */
+ void __init setup_smp(void);
+ 
++/* Called from C code, this handles an IPI. */
++void handle_IPI(struct pt_regs *regs);
++
+ /* Hook for the generic smp_call_function_many() routine. */
+ void arch_send_call_function_ipi_mask(struct cpumask *mask);
+ 
+diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
+index 345c4f2eba13..bb0bfcd537e7 100644
+--- a/arch/riscv/kernel/irq.c
++++ b/arch/riscv/kernel/irq.c
+@@ -19,12 +19,15 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+ 
+ asmlinkage __visible void __irq_entry do_IRQ(struct pt_regs *regs)
+ {
+-	struct pt_regs *old_regs = set_irq_regs(regs);
++	struct pt_regs *old_regs;
+ 
+-	irq_enter();
+ 	switch (regs->cause & ~CAUSE_IRQ_FLAG) {
+ 	case RV_IRQ_TIMER:
++		old_regs = set_irq_regs(regs);
++		irq_enter();
+ 		riscv_timer_interrupt();
++		irq_exit();
++		set_irq_regs(old_regs);
+ 		break;
+ #ifdef CONFIG_SMP
+ 	case RV_IRQ_SOFT:
+@@ -32,19 +35,20 @@ asmlinkage __visible void __irq_entry do_IRQ(struct pt_regs *regs)
+ 		 * We only use software interrupts to pass IPIs, so if a non-SMP
+ 		 * system gets one, then we don't know what to do.
+ 		 */
+-		riscv_software_interrupt();
++		handle_IPI(regs);
+ 		break;
+ #endif
+ 	case RV_IRQ_EXT:
++		old_regs = set_irq_regs(regs);
++		irq_enter();
+ 		handle_arch_irq(regs);
++		irq_exit();
++		set_irq_regs(old_regs);
+ 		break;
+ 	default:
+ 		pr_alert("unexpected interrupt cause 0x%lx", regs->cause);
+ 		BUG();
+ 	}
+-	irq_exit();
+-
+-	set_irq_regs(old_regs);
+ }
+ 
+ void __init init_IRQ(void)
+diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+index eb878abcaaf8..1e8f44a47e14 100644
+--- a/arch/riscv/kernel/smp.c
++++ b/arch/riscv/kernel/smp.c
+@@ -121,11 +121,14 @@ static inline void clear_ipi(void)
+ 		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
+ }
+ 
+-void riscv_software_interrupt(void)
++void handle_IPI(struct pt_regs *regs)
+ {
++	struct pt_regs *old_regs = set_irq_regs(regs);
+ 	unsigned long *pending_ipis = &ipi_data[smp_processor_id()].bits;
+ 	unsigned long *stats = ipi_data[smp_processor_id()].stats;
+ 
++	irq_enter();
++
+ 	clear_ipi();
+ 
+ 	while (true) {
+@@ -136,7 +139,7 @@ void riscv_software_interrupt(void)
+ 
+ 		ops = xchg(pending_ipis, 0);
+ 		if (ops == 0)
+-			return;
++			goto done;
+ 
+ 		if (ops & (1 << IPI_RESCHEDULE)) {
+ 			stats[IPI_RESCHEDULE]++;
+@@ -158,6 +161,10 @@ void riscv_software_interrupt(void)
+ 		/* Order data access and bit testing. */
+ 		mb();
+ 	}
++
++done:
++	irq_exit();
++	set_irq_regs(old_regs);
+ }
+ 
+ static const char * const ipi_names[] = {
 -- 
 2.17.1
 
