@@ -2,178 +2,95 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 074B4C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07DBC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D649220578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFF120578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583784339;
+	bh=ymRWKB+26CFZU1JNg2j1Izb2hnPnkicTx+3xkEFFhks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oZwJcWXRsTmu98dZbWd1sUmvVck/EY6rtXRGrnEl3nVZujdAb+h9FVl3IsqgEgqiL
+	 AITO49IdgyYvNjgxbePjWh0Vyq0ZBdPsi0VpxifUFTzi4bIiQ0FiRkfznrsCIOsrOb
+	 H+BcZSipSf9ZpVPyl0QsjugYMbg4xyM+qU4ODTmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgCIUDu convert rfc822-to-8bit (ORCPT
+        id S1726385AbgCIUFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:03:50 -0400
-Received: from mail-oln040092074088.outbound.protection.outlook.com ([40.92.74.88]:32348
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726118AbgCIUDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:03:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YwJRRzsPfDV6pw8niLXxxARaTQceSzf26gAUJk+Q78sCHOeQiKb9mPTblS6lLAjyAjhuCsOE52US5s8KlGozy6rNitynrMwamzYu7hE0DWbVOc1pR1OMRL/A0VRQ/yO/dTsyLdfRuniCNwDfFQJRDoUDcFdTwtCWUhdQrJJm8svKp5ktcjmcTHEXIfhbhcn7bAhbp2wsJdy90Lr7xcpCpLXgWqQxHVf8tn+FszIbobP6f8AkBTLl2eVRF58Qet/sRA7reEBPdcJQopU14yeOWxtdqw16peAkqFBXNyz6iNzktn66qqnLGL7VGY2DoCaiXTVjixogE1nROF7GeVU6vg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oSMJLLgDr15D4VLWggN8xRkZ4pGZITaT8VMWQQSmgvk=;
- b=P11a1awaQcx8v8tqSj4tpN/xb2Zq/j9cS2gbUD/Vmxp/qkC713N7XeCrgrkyNgcKkcBWBWaOidWl98BnrzIw5qOdhFJCsCS4fF6yQ4PI6MiUor65ji7Fcu3RLhRkavQoEO6KTt4Jx2vmL63GCapKoERe3RioVEbhGFKS+5HFxXrrcyJWAvka9eT5CMshAak82+UQOgLjltMQ+Fxj6oV3BzTP8S9+8MrVc7IN6BSbt/rXGMKmOLDBbcnlDxKtIOixoYLGHCog+cetgoDq7iO4sa2M4VUcK+dn9oS9zLburSV+4/kKoiHa9CNB2kgfM6oU/YAQ1Uh3CWaaJa4eND1+1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DB3EUR04FT034.eop-eur04.prod.protection.outlook.com
- (2a01:111:e400:7e0c::39) by
- DB3EUR04HT009.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0c::302)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 9 Mar
- 2020 20:03:46 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.24.55) by
- DB3EUR04FT034.mail.protection.outlook.com (10.152.24.199) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 20:03:46 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 9 Mar 2020
- 20:03:46 +0000
-Received: from [192.168.1.101] (92.77.140.102) by ZR0P278CA0042.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:1d::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Mon, 9 Mar 2020 20:03:44 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-CC:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v2 4/5] exec: Move exec_mmap right after de_thread in
- flush_old_exec
-Thread-Topic: [PATCH v2 4/5] exec: Move exec_mmap right after de_thread in
- flush_old_exec
-Thread-Index: AQHV9ZIq8LqSeoOzkk+o9CTpCnOInKhAqHsAgAADjVGAAAFjAIAAAk+agAAAywA=
-Date:   Mon, 9 Mar 2020 20:03:46 +0000
-Message-ID: <AM6PR03MB5170E548767878B3E454756AE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nlii0b.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74xi4kz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <875zfe5xzb.fsf_-_@x220.int.ebiederm.org>
- <AM6PR03MB5170C3A4319BA6A057C3CCACE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv2xz510.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51709D441EE6830DC8CE3090E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87mu8pz4ex.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87mu8pz4ex.fsf@x220.int.ebiederm.org>
-Accept-Language: en-US, en-GB, de-DE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ZR0P278CA0042.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:1d::11) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-x-incomingtopheadermarker: OriginalChecksum:ED1668ACE5B6F42E2EC0B7404924F25A11196849EC0806CBF5A7AE4B20F63F3D;UpperCasedChecksum:15FACC825918DCFFC11AB2907EBB8D4EBF54753EBDBAA58E0FAE0DD48575A447;SizeAsReceived:9985;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [jGD4KHCtwYTsvQc4p0+xqjqsU8Uw45SI]
-x-microsoft-original-message-id: <587348ba-6a01-2413-9b4b-f64a1f514ea7@hotmail.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: e27f1dd5-758e-4932-b244-08d7c464f9af
-x-ms-traffictypediagnostic: DB3EUR04HT009:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZpR1yFOseKEmusWU5hW+o9s3YD1lY24qlFYfaX4n5cad/edVd3Jk/8j2cTT06ky0eYQppZ15v0/scxurFQlhToh9G0Qmm8yH2sI3Y77QG/V9dcmsJE6TybdsWxIH8+y60Crwti0Q1xgXYwgnuYfEhAc2uqdEqg+d6mAhDh8TGX5mg+yvrQ3GdKnp22s3ewpi
-x-ms-exchange-antispam-messagedata: r+bk0gUHakTOjL4n7/G/RzRY/5nUmQupLsoUnZYPNhIIVPCfppSindQ/bjdMmmRdMtZ8iOzWSQVv6IQzclqXFpaYHpFy6GhHxJsy6dSLN8yMXzNE6hGiT4wgYRGAQWVUEFBn9zG4ZAYtiMTYiguJdA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <100A2EDE7978314BBD2FF1EBC3B5B866@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 8BIT
+        Mon, 9 Mar 2020 16:05:38 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:45317 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgCIUFi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 16:05:38 -0400
+Received: by mail-qv1-f68.google.com with SMTP id du17so4407562qvb.12;
+        Mon, 09 Mar 2020 13:05:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+ZjW9cfDpa/bATgR4gQIdFs9uH7Dsn2IXM1Pc8dEvAU=;
+        b=Jl5GP4mafSZXODnON2fziI+zRq75X3kZPaB00uliiygLfB+5WbqPjzKgph4Taznw+F
+         El6NAvSi9cgaXMa70CWtVT6bzlSKRFYEWOqw1KD9r4khD3tNh2kjs1jW/67LEeS2Kd3P
+         wp7d9Pyj5Z8ESZLUcDLqZ1dB9LELTPTC7Zv7hrFWiCsxu/mVToq8pTVPLa9bJx5Jx6ZT
+         BJrINld4wiMNzV3pbhwgcl5OnzQJvyI0b3iUiUl7Hcq900ZzQ635ANXTUo6t55i0dVc1
+         EcKWNkBKANRaCHXbD41dacsGCSusl4myYtRNnZrDFFCDtT20rkXucetpXPMD/4NJrkHy
+         Trww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=+ZjW9cfDpa/bATgR4gQIdFs9uH7Dsn2IXM1Pc8dEvAU=;
+        b=Wkhlaf3CNSkPm/FHele/Z29dTeGb4QhRiEiHI8IZZmNIzSTtG6A3ZaS2iH83W4z+PJ
+         xNBJN2CxO/LivR9uai/bWcASauxrL4qShZKLEdqdZLO5NKnr2cZbbGsWhMy4SIjiE8sg
+         BrdzdyKePqrYkUEtlVgtyWth/ynlHqqIHuntjWReG4jeOwYT7MJSucSYRKNvlwIqvS3D
+         4efkztvlAtLBCPhzT1Y2gCPomyjxFMBDsshzvkE1wYJayD6oddmJFSywxzvTP6KTYEPb
+         bqpHkPUvgyX2+EfO5gBbG1hJiprptz9x5XVgbfauI4zGP5kJegUZ6k7ApKbE1i4CDhR3
+         ky/g==
+X-Gm-Message-State: ANhLgQ0RxnclkWZK9nQhyq6TaJ8Z0AOp0SD8NMruNN9m/idPW5C4gnsR
+        Pevo6t3VfXU0Ecm+3Dg7FRU=
+X-Google-Smtp-Source: ADFU+vuN3NVu9VJSb5ZE+9k6NR0Pu+aOSiopLLM82qWJxwelhUJ9LL6sbw1/V0dXcFFDEjrDm6J1Uw==
+X-Received: by 2002:a0c:f905:: with SMTP id v5mr15442081qvn.174.1583784336439;
+        Mon, 09 Mar 2020 13:05:36 -0700 (PDT)
+Received: from localhost ([71.172.127.161])
+        by smtp.gmail.com with ESMTPSA id w204sm10323488qkb.133.2020.03.09.13.05.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 13:05:35 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 16:05:34 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, cgroups@vger.kernel.org,
+        lizefan@huawei.com, hannes@cmpxchg.org, shakeelb@google.com,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 1/4] kernfs: kvmalloc xattr value instead of kmalloc
+Message-ID: <20200309200534.GA79873@mtj.duckdns.org>
+References: <C16IH7NEXW4J.440OGTNY7CWX@dlxu-fedora-R90QNFJV>
+ <6bbfc8b8c9c206d80de43a64bfe4b8083cc2c02f.camel@perches.com>
+ <20200309195104.GA77841@mtj.thefacebook.com>
+ <84ef5548ee27e7150d0b7a5702ce50536cea975a.camel@perches.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: e27f1dd5-758e-4932-b244-08d7c464f9af
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 20:03:46.4347
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3EUR04HT009
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84ef5548ee27e7150d0b7a5702ce50536cea975a.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/9/20 8:58 PM, Eric W. Biederman wrote:
+On Mon, Mar 09, 2020 at 12:58:49PM -0700, Joe Perches wrote:
+> This feels like driving spikes into a living thing
+> more than into a
+> corpse.
 > 
-> Ok.  I think this has it sorted:
-> 
->     exec: Move exec_mmap right after de_thread in flush_old_exec
->     
->     I have read through the code in exec_mmap and I do not see anything
->     that depends on sighand or the sighand lock, or on signals in anyway
->     so this should be safe.
->     
->     This rearrangement of code has two significant benefits.  It makes
->     the determination of passing the point of no return by testing bprm->mm
->     accurate.  All failures prior to that point in flush_old_exec are
->     either truly recoverable or they are fatal.
->     
->     Further this consolidates all of the possible indefinite waits for
->     userspace together at the top of flush_old_exec.  The possible wait
->     for a ptracer on PTRACE_EVENT_EXIT, the possible wait for a page fault
->     to be resolved in clear_child_tid, and the possible wait for a page
->     fault in exit_robust_list.
->     
->     This consolidation allows the creation of a mutex to replace
->     cred_guard_mutex that is not held over possible indefinite userspace
->     waits.  Which will allow removing deadlock scenarios from the kernel.
->     
->     Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
->     Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> 
-> 
-> I don't think I usually have this many typos.  Sigh.
-> 
+> I've still got more than a few 32-bit devices around.
 
-OK.
+Unless you're suggesting we stop using vmallocs altogether, I don't
+see how your objection makes sense here.
 
-never mind,
-Bernd.
-
- 
+-- 
+tejun
