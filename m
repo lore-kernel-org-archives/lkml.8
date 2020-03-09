@@ -2,81 +2,129 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47EBC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD4AC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90C224655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583788371;
-	bh=Y0kKsp4ZEnxt99dXihUsJMZ1guyBaJ+F1Weo+/PYGs4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=NZHRsgd6J9wDBmJa/GKuC1TrS/+ThmrklpFtp9Xx00zxN0qnhuaYSRu24ckpMWafJ
-	 nDmsGSINpy/v6CQxWWGvelVnLdppQSFr+swUxpsCok/Wss5EpfYO9t7KdylcA53Nv6
-	 qMGuri7UobcysyKKdI8AszGUxqrnkuOX1OfzhI1E=
+	by mail.kernel.org (Postfix) with ESMTP id 2A56724656
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:13:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uo33X2KR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgCIVMu (ORCPT
+        id S1726820AbgCIVNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:12:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgCIVMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:12:50 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14F442146E;
-        Mon,  9 Mar 2020 21:12:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583788370;
-        bh=Y0kKsp4ZEnxt99dXihUsJMZ1guyBaJ+F1Weo+/PYGs4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=eXK8cNmTVPNbMfKh1qidZ8533eaE3KDpSjdbGaYWWzBy4J+Pb6z9aV9HLtXAGYDfW
-         zWoimguT592f2yFQ5JzeBA1p/Ajuscu8Sm4TzNK6Xckm8l17MeWzVd3M2mzjOei7cq
-         bEfy/NqQ0126Uw366gzm+AiB/+mpU0G+1qbrzJu0=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 9 Mar 2020 17:13:10 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36337 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgCIVNK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 17:13:10 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t24so11715073oij.3;
+        Mon, 09 Mar 2020 14:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3z8EHLpMCQvcYpt6UukodjjMPaKQSfJoSvh+H1FwXpE=;
+        b=Uo33X2KRJb36R+pDGYk+8RIeN85dKzwpgdLbDUPr+9B9BMZ85RveP6Gg4P9oyZxbm4
+         2K3e4tdKvGoGtgRpjcwgMiWQZt8UJb/UFNJHw5tLF0NOWHFrNFdyRXTkFSbkf5H4tsc6
+         IcpYpKYWqffJV6s2v90EZdhLsDqIKsO+RfndJ8vdAPvApbSRQC+o9evQVkA1fncfVn94
+         /r1A5ShhXUejgZgxKKIPCMr3s+3DprNyhVawLwBIFSWp9lSWYYnxpaTqXttawWDI94Z0
+         rwKxBj33qEtxur5xqGdRtakBXCrM+5cjMBQn/XmEncvVst15+znYnLuBqtLxKgb9OaTt
+         ARPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3z8EHLpMCQvcYpt6UukodjjMPaKQSfJoSvh+H1FwXpE=;
+        b=XaRcRA0nnFmk6hUImivNgx9D/4/iz6PE4iE+71d3TjFW9RVjTA2V2/+5wjvWgMBhBm
+         XNclZSpwrGhfWJ8JL/Nwc6u+duX3OLhmim5PkI3qae1HbRus1MGcpGjMu0j2pt8ytvJI
+         YLPlcXa7Lolo6e1mUbj1GkTBR+4zmpzr+A/0pu68C6C9nEpLYVsZEOIh5rS2Jr7KO/Ub
+         P7JozaSqeZ9SfzuNVOWa4IrZsVMr77HR03H5Fq8JSHN51EANQ1n8FzPrGmpC+D61y0u7
+         mSPH65yPrq9PfxKCFkdiLTlK3PM7tlbciDKtKIMvEtZyBVNVIpqiCAgufA8YCxnAeOHN
+         MfXQ==
+X-Gm-Message-State: ANhLgQ2vVITex+zonIROH+r5Hv99/GsMYcyolwHIvlO9BfOSB3U7Fi5W
+        y0bz+nEgO9yO6/QhMgOhE7flTErhC4mO8WOUCP8=
+X-Google-Smtp-Source: ADFU+vuIWAeuG6fp3KaR1L5/2IvghcQfrXPwsJh/m5EVZSNOWjVc3Evh0yp9ILZ/129trtK5JRkTF3lPbT5uuTXehkU=
+X-Received: by 2002:aca:aa12:: with SMTP id t18mr853523oie.95.1583788387706;
+ Mon, 09 Mar 2020 14:13:07 -0700 (PDT)
 MIME-Version: 1.0
+References: <CAMe9rOoRTVUzNC88Ho2XTTNJCymrd3L=XdB9xFcgxPVwAZ0FWA@mail.gmail.com>
+ <AE81FEF5-ECC5-46AA-804D-9D64E656D16E@amacapital.net> <CAMe9rOoDMenvD9XRL1szR5yLQEwv9Q6f4O7CtwbdZ-cJqzezKA@mail.gmail.com>
+ <0088001c-0b12-a7dc-ff2a-9d5c282fa36b@intel.com>
+In-Reply-To: <0088001c-0b12-a7dc-ff2a-9d5c282fa36b@intel.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Mon, 9 Mar 2020 14:12:31 -0700
+Message-ID: <CAMe9rOqf0OHL9397Vikgb=UWhRMf+FmGq-9VAJNmfmzNMMDkCw@mail.gmail.com>
+Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200303145920.GA32328@bogus>
-References: <robh@kernel.org> <20200226214812.390-1-ansuelsmth@gmail.com> <20200303145920.GA32328@bogus>
-Subject: Re: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>
-Date:   Mon, 09 Mar 2020 14:12:49 -0700
-Message-ID: <158378836931.66766.851774184706134250@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Herring (2020-03-03 06:59:20)
-> On Wed, 26 Feb 2020 22:48:12 +0100, Ansuel Smith wrote:
-> > Add missing definition of rpm clk for ipq806x soc
-> >=20
-> > Signed-off-by: John Crispin <john@phrozen.org>
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > Acked-by: John Crispin <john@phrozen.org>
-> > ---
-> >  .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
-> >  drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
-> >  include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
-> >  3 files changed, 40 insertions(+)
-> >=20
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
+On Mon, Mar 9, 2020 at 1:59 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 3/9/20 1:54 PM, H.J. Lu wrote:
+> >> If a program with the magic ELF CET flags missing can=E2=80=99t make a
+> >> thread with IBT and/or SHSTK enabled, then I think we=E2=80=99ve made =
+an
+> >> error and should fix it.
+> >>
+> > A non-CET program can start a CET program and vice versa.
+>
+> Could we be specific here, please?
+>
+> HJ are you saying that:
+> * CET program can execve() a non-CET program, and
+> * a non-CET program can execve() a CET program
+>
+> ?
 
-Ansuel, can you send this again and address it To: somebody like me? My
-MUA fails at getting emails when they're addressed to nobody.
+Yes.
+
+> That's obvious.
+>
+> But what are the rules for clone()?  Should there be rules for
+> mismatches for CET enabling between threads if a process (not child
+> processes)?
+
+What did you mean? A threaded application is either CET enabled or not
+CET enabled.   A new thread from clone makes no difference.
+
+--=20
+H.J.
