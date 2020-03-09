@@ -2,142 +2,131 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E8CC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313F1C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D098C24649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08EA224649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:46:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gRvj0NRM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCIVql (ORCPT
+        id S1727095AbgCIVq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:46:41 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43830 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgCIVql (ORCPT
+        Mon, 9 Mar 2020 17:46:58 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42926 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgCIVq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:46:41 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8150B803087C;
-        Mon,  9 Mar 2020 21:46:36 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id EgbOXeQlax4M; Tue, 10 Mar 2020 00:46:35 +0300 (MSK)
-Date:   Tue, 10 Mar 2020 00:45:38 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200306132912.GA1748204@smile.fi.intel.com>
- <20200306133035.GB1748204@smile.fi.intel.com>
- <20200306135050.40094803087C@mail.baikalelectronics.ru>
+        Mon, 9 Mar 2020 17:46:57 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h8so5315352pgs.9
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 14:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aK0b3s9O+q+fcz6y0aBgSyJD8LLmxkLGUIQTTCdGXtc=;
+        b=gRvj0NRMPhKrp2Gc0dBU+uUOJMZL7fyba9kKQA6pDLzhyIoQkOOaCPEj0EgF2LsIUl
+         +IjCgYM6dqpLXmCDMsxrcW85UArKpWTvf62ZbHNsY3JHfDEhl44DRUA7F3vJzs9u3btq
+         QzCExt7t1AadKp/6NQKmsrvu9IFWk6727RLQE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aK0b3s9O+q+fcz6y0aBgSyJD8LLmxkLGUIQTTCdGXtc=;
+        b=qYpAv4OaoH/otxXVEmNjYIMw5IzrKy1e+qSXHa9KcPn9NKdn53SPRMyLQxDO3tO7sS
+         EJLmLLJRrw/0TxcjC/P7Dy9n+kqm29Zrtw0EXkx6C3nER4FmY+880MPZWrB3F4zOYUnF
+         hvLN5CrNO6flfJBooRhvvioZHMGmVUrKd6yePFYDvi7PlAg/rF21Sexc3RlPZg6KoFqE
+         sSHLpOlFCDyddCij3smXF+3ZVXrTpA2gb1msYuvUmYrXpiMeMyF3wcau8khD2Z2VyW4C
+         FKCAHb7KkkoRC2HswQjCsQgFlAI5ye8RbJSST7NOuhbwHbzqd1L1Q76eluAxOXFKXhZO
+         RLmg==
+X-Gm-Message-State: ANhLgQ3SGUuIRtbSxpjFUraNMt1ydZXR6+vyF9jz1UGPGZcs22YYG9GU
+        Uh/ySfT+cPZE1HQo6bzIIiSD9dECgvA=
+X-Google-Smtp-Source: ADFU+vui2PI+tPodi/gDbzk8X20qrEXcMZQPJQIwcrACiLNCMDWQhdCq0KjUZHMyl/l+jXRhgPt+fA==
+X-Received: by 2002:a63:5546:: with SMTP id f6mr18423923pgm.260.1583790416271;
+        Mon, 09 Mar 2020 14:46:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 9sm41081010pge.65.2020.03.09.14.46.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 14:46:55 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 14:46:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] pstore: ram_core: Replace zero-length array with
+ flexible-array member
+Message-ID: <202003091446.6B5E42EF@keescook>
+References: <20200309202327.GA8813@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306135050.40094803087C@mail.baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200309214636.8150B803087C@mail.baikalelectronics.ru>
+In-Reply-To: <20200309202327.GA8813@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 07:13:12PM +0530, Vinod Koul wrote:
-> On 06-03-20, 15:30, Andy Shevchenko wrote:
-> > On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
-> > > On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > From: Serge Semin <fancer.lancer@gmail.com>
-> > > > 
-> > > > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
-> > > > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
-> > > > with currently implemented in the kernel DW DMAC driver, but there are some
-> > > > peculiarities which must be taken into account in order to have the device
-> > > > fully supported.
-> > > > 
-> > > > First of all traditionally we replaced the legacy plain text-based dt-binding
-> > > > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-> > > > channels, which alas have different max burst length configuration.
-> > > > In particular first two channels may burst up to 128 bits (16 bytes) at a time
-> > > > while the rest of them just up to 32 bits. We must make sure that the DMA
-> > > > subsystem doesn't set values exceeding these limitations otherwise the
-> > > > controller will hang up. In third currently we discovered the problem in using
-> > > > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-> > > > natively implemented multi-block LLP transfers support and the SPI-transfer
-> > > > length exceeds the max lock size. In this case due to asynchronous handling of
-> > > > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
-> > > > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-> > > > the DMAC to asynchronously execute the transfers we'd have to at least warn
-> > > > the user of the possible errors.
-> > > > 
-> > > > Finally there is a bug in the algorithm of the nollp flag detection.
-> > > > In particular even if DW DMAC parameters state the multi-block transfers
-> > > > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-> > > > by the driver true multi-block LLP functionality unusable. This happens cause'
-> > > > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-> > > > contiguous multi-block transfers will be only supported. We must take the
-> > > > flag into account when detecting the LLP support otherwise the driver just
-> > > > won't work correctly.
-> > > > 
-> > > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > > > commit 98d54f81e36b ("Linux 5.6-rc4").
-> > > 
-> > > Thank you for your series!
-> > > 
-> > > I'll definitely review it, but it will take time. So, I think due to late
-> > > submission this is material at least for v5.8.
-> > 
-> > One thing that I can tell immediately is the broken email thread in this series.
-> > Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
-> > so, it will link the mail properly.
+On Mon, Mar 09, 2020 at 03:23:27PM -0500, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> And all the dmaengine specific patches should be sent to dmaengine list,
-> I see only few of them on the list.. that confuses tools like
-> patchwork..
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> Pls fix these and resubmit
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
 > 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Folks. I've found out what was wrong with the emails threading. As I
-said my gitconfig had the next settings set: chainreplyto = false,
-thread = true. So the emails should have been formatted as expected by
-the requirements. And they were on my emails client side, so I didn't see
-the problem you've got.
+Thanks! Applied to for-next/pstore.
 
-It wasn't a first time I was submitting patches to the kernel, but it was
-a first time of me using the corporate exchange server for it. It turned out
-the damn server changed the Message-Id field of the emails header on the
-way of transmitting the messages. If you take a look at the non-cover-letter
-emails you've got from me you'll see that they actually have the In-Reply-To
-and References fields with Id's referring to the original Message-Id. After
-our system administrator fixes that problem and we come up with solutions
-for the issues you've found in the patches I'll definitely resend the
-patchset. This time I'll also make sure the emailing lists are also included
-in Cc. Sorry for the inconvenience.
+-Kees
 
-Regards,
--Sergey
-
-> Thanks
+> ---
+>  fs/pstore/ram_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+> index 1f4d8c06f9be..c917c191e78c 100644
+> --- a/fs/pstore/ram_core.c
+> +++ b/fs/pstore/ram_core.c
+> @@ -34,7 +34,7 @@ struct persistent_ram_buffer {
+>  	uint32_t    sig;
+>  	atomic_t    start;
+>  	atomic_t    size;
+> -	uint8_t     data[0];
+> +	uint8_t     data[];
+>  };
+>  
+>  #define PERSISTENT_RAM_SIG (0x43474244) /* DBGC */
 > -- 
-> ~Vinod
+> 2.25.0
+> 
+
+-- 
+Kees Cook
