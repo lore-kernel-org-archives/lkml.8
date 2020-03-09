@@ -2,104 +2,93 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C42FC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80051C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C27F2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4831220828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:09:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583752146;
+	bh=xeVZYWJE37/+2qxtaIzD+1Mnqj/kL4iSm38yjyMa79Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cy4CKehfyyu4e3Q10uMngSBPHdaLmE0pDcm9WvhSjxhaWWbp03yS1YSYZ+CNGG9Im
+	 iABmdbsBFRx3OBW7C1id3CTzx+6rGyszTYDzlEyFbbLvMf9jQngDKq4add+fYdGuEE
+	 f2uJirSMGgT/ZzyBlxzgktxNQhCKY6Y2eKNKpWuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgCILGu (ORCPT
+        id S1726582AbgCILJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:06:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:50600 "EHLO foss.arm.com"
+        Mon, 9 Mar 2020 07:09:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbgCILGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:06:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 648701FB;
-        Mon,  9 Mar 2020 04:06:49 -0700 (PDT)
-Received: from [10.37.12.115] (unknown [10.37.12.115])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BCE13F6CF;
-        Mon,  9 Mar 2020 04:06:44 -0700 (PDT)
-Subject: Re: [PATCH v2 00/20] Introduce common headers
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-References: <20200306133242.26279-1-vincenzo.frascino@arm.com>
- <3278D604-28F1-47A1-BAB8-D8EB439995E8@amacapital.net>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <b18c7ce1-0948-a9e2-2d7e-d019669a71e1@arm.com>
-Date:   Mon, 9 Mar 2020 11:07:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726217AbgCILJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 07:09:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4244D2051A;
+        Mon,  9 Mar 2020 11:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583752143;
+        bh=xeVZYWJE37/+2qxtaIzD+1Mnqj/kL4iSm38yjyMa79Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jRcg39Xl3X9VgRSwUKqtV08Kn14AAr5t7Ak7jX+1fFGZGLXGl5NSUg5rcUmX8mDpT
+         Gh066Zt1E8ORO4VVRuoo/R4nqYuXS45StHTNHMtwkXUJj6vI4Aanea0pAEuSFXR6xh
+         ys+1Ymq+k9AAI4LwM1c3azhfv5O1bj0CG1+NwxwQ=
+Date:   Mon, 9 Mar 2020 12:09:01 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Cc:     devel@driverdev.osuosl.org, Oscar Carter <oscar.carter@gmx.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Forest Bond <forest@alittletooquiet.net>,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: Re: [PATCH] staging: vt6656: Declare a few variables as __read_mostly
+Message-ID: <20200309110901.GB183429@kroah.com>
+References: <20200301112620.7892-1-oscar.carter@gmx.com>
+ <20200301122514.GA1461917@kroah.com>
+ <20200301131701.GA7487@ubuntu>
+ <20200301150913.GA1470815@kroah.com>
+ <20200307082906.GA2948@ubuntu>
+ <20200309093210.GA7693@qd-ubuntu>
+ <20200309103407.GB180589@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <3278D604-28F1-47A1-BAB8-D8EB439995E8@amacapital.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309103407.GB180589@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-
-On 3/6/20 4:04 PM, Andy Lutomirski wrote:
-
-[...]
-
->>
->> To solve the problem, I decided to use the approach below:
->>  * Extract from include/linux/ the vDSO required kernel interface
->>    and place it in include/common/
+On Mon, Mar 09, 2020 at 11:34:07AM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Mar 09, 2020 at 09:32:10AM +0000, Quentin Deslandes wrote:
+> > On Sat, Mar 07, 2020 at 09:29:06AM +0100, Oscar Carter wrote:
+> > > On Sun, Mar 01, 2020 at 04:09:13PM +0100, Greg Kroah-Hartman wrote:
+> > > > On Sun, Mar 01, 2020 at 02:17:01PM +0100, Oscar Carter wrote:
+> > > > This is a USB driver, performance is always limited to the hardware, not
+> > > > the CPU location of variables.
+> > > 
+> > > Thank you for the explanation.
+> > > 
+> > > >
+> > > > Please always benchmark things to see if it actually makes sense to make
+> > > > changes like this, before proposing them.
+> > > 
+> > > I'm sorry.
+> > > 
+> > 
+> > I've been removed from CC list on Greg's answer, so I haven't seen the
+> > explanation earlier and reviewed the patch the next day. I should have
+> > know better, won't happen again.
 > 
-> I really like the approach, but I’m wondering if “common” is the right name. This directory is headers that aren’t stable ABI like uapi but are shared between the kernel and the vDSO. Regular user code should *not* include these, right?
-> 
-> Would “vdso” or perhaps “private-abi” be clearer?
-> 
+> You weren't on the original list of people on the patch, so I didn't
+> remove anything here that I can tell.
 
-Thanks! These headers are definitely not "uapi" like and they are meant to
-evolve in future like any other kernel header. We have just to make sure that
-the evolution does not break what we are trying to achieve with this series.
+Turns out you were, on the lkml one, but not the one that went through
+the driver-devel list.  odd...
 
-I have to admit that I spent quite some time in choosing the name and I am not
-completely satisfied with "common" either. The reason why I ended up with this
-is that the headers are common in between the kernel and the vdso (userspace)
-but I agree that it does not make completely self explanatory.
-
-Using "vdso" would mean according to me that those are vdso only headers,
-probably "private-abi" is the best choice here. If there is enough consensus, I
-am happy to rework my patches accordingly. What do you think?
-
->>  * Make sure that where meaningful the kernel includes "common"
->>  * Limit the vDSO library to include headers coming only from UAPI
->>    and "common" (with 2 exceptions compiler.h for barriers and
->>    param.h for HZ).
->>  * Adapt all the architectures that support the unified vDSO library
->>    to use "common" headers.
-> 
-[...]
-
--- 
-Regards,
-Vincenzo
