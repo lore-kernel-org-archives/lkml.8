@@ -2,142 +2,382 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000A0C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC6FC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6AE520674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D0820828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:17:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XvcMB/Lx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgCIMRV (ORCPT
+        id S1726498AbgCIMR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 08:17:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:51340 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgCIMRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 08:17:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9EC030E;
-        Mon,  9 Mar 2020 05:17:20 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19ABF3F6CF;
-        Mon,  9 Mar 2020 05:17:18 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 12:17:14 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, alexios.zavras@intel.com,
-        tglx@linutronix.de, akpm@linux-foundation.org,
-        steven.price@arm.com, steve.capper@arm.com, broonie@kernel.org,
-        keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH] arm64: add check_wx_pages debugfs for CHECK_WX
-Message-ID: <20200309121713.GA26309@lakrids.cambridge.arm.com>
-References: <20200307093926.27145-1-tranmanphong@gmail.com>
+        Mon, 9 Mar 2020 08:17:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46143 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726465AbgCIMR2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 08:17:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583756245;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=SEQ6uct5tI15AYQ4SaQAQ4DERyocB1GIPl4gaR9IcIk=;
+        b=XvcMB/LxOMQgnevkD8xOT9xiiYfiL33Rdv1thPeC8PvYQ7k4H7t5HwbC75RVoNWSfUQ7Ew
+        r6+qKini4D94nJ1IN4+eML0qidutcgVWSFisjRgoN3T8IN5sIniKfBQp2AjrgJZdLdGIYZ
+        GUYURuZKf9Gd1kl2rYgOVXM4imsrjYs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-Maxk_8jbMJemu9sRXx1MOg-1; Mon, 09 Mar 2020 08:17:18 -0400
+X-MC-Unique: Maxk_8jbMJemu9sRXx1MOg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD24818A5511;
+        Mon,  9 Mar 2020 12:17:15 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CC7421001DC0;
+        Mon,  9 Mar 2020 12:17:11 +0000 (UTC)
+Subject: [RFC PATCH 00/17] pipe: Keyrings,
+ mount and superblock notifications [ver #4]
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        dhowells@redhat.com, casey@schaufler-ca.com, sds@tycho.nsa.gov,
+        nicolas.dichtel@6wind.com, raven@themaw.net, christian@brauner.io,
+        andres@anarazel.de, jlayton@redhat.com, dray@redhat.com,
+        kzak@redhat.com, keyrings@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 09 Mar 2020 12:17:11 +0000
+Message-ID: <158375623086.334846.16121725232323108842.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200307093926.27145-1-tranmanphong@gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 04:39:26PM +0700, Phong Tran wrote:
-> follow the suggestion from
-> https://github.com/KSPP/linux/issues/35
 
-That says:
+Here's a set of patches to add a general notification queue concept and to
+add event sources such as:
 
-| This should be implemented for all architectures
+ (1) Keys/keyrings, such as linking and unlinking keys and changing their
+     attributes.
 
-... so surely this should be in generic code, rahter than being
-arm64-specific?
+ (2) Mount topology events, such as mounting, unmounting, mount expiry,
+     mount reconfiguration.
 
-Thanks,
-Mark.
+ (3) Superblock events, such as R/W<->R/O changes, quota overrun and I/O
+     errors (not complete yet).
 
-> 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> ---
->  arch/arm64/Kconfig.debug        |  3 ++-
->  arch/arm64/include/asm/ptdump.h |  2 ++
->  arch/arm64/mm/dump.c            |  1 +
->  arch/arm64/mm/ptdump_debugfs.c  | 18 ++++++++++++++++++
->  4 files changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
-> index 1c906d932d6b..be552fa351e2 100644
-> --- a/arch/arm64/Kconfig.debug
-> +++ b/arch/arm64/Kconfig.debug
-> @@ -48,7 +48,8 @@ config DEBUG_WX
->  	  of other unfixed kernel bugs easier.
->  
->  	  There is no runtime or memory usage effect of this option
-> -	  once the kernel has booted up - it's a one time check.
-> +	  once the kernel has booted up - it's a one time check and
-> +	  can be checked by echo "1" to "check_wx_pages" debugfs in runtime.
->  
->  	  If in doubt, say "Y".
->  
-> diff --git a/arch/arm64/include/asm/ptdump.h b/arch/arm64/include/asm/ptdump.h
-> index 38187f74e089..b80d6b4fc508 100644
-> --- a/arch/arm64/include/asm/ptdump.h
-> +++ b/arch/arm64/include/asm/ptdump.h
-> @@ -24,9 +24,11 @@ struct ptdump_info {
->  void ptdump_walk(struct seq_file *s, struct ptdump_info *info);
->  #ifdef CONFIG_PTDUMP_DEBUGFS
->  void ptdump_debugfs_register(struct ptdump_info *info, const char *name);
-> +int ptdump_check_wx_init(void);
->  #else
->  static inline void ptdump_debugfs_register(struct ptdump_info *info,
->  					   const char *name) { }
-> +static inline int ptdump_check_wx_init(void) { return 0; }
->  #endif
->  void ptdump_check_wx(void);
->  #endif /* CONFIG_PTDUMP_CORE */
-> diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
-> index 860c00ec8bd3..60c99a047763 100644
-> --- a/arch/arm64/mm/dump.c
-> +++ b/arch/arm64/mm/dump.c
-> @@ -378,6 +378,7 @@ static int ptdump_init(void)
->  #endif
->  	ptdump_initialize();
->  	ptdump_debugfs_register(&kernel_ptdump_info, "kernel_page_tables");
-> +	ptdump_check_wx_init();
->  	return 0;
->  }
->  device_initcall(ptdump_init);
-> diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
-> index 1f2eae3e988b..73cddc12c3c2 100644
-> --- a/arch/arm64/mm/ptdump_debugfs.c
-> +++ b/arch/arm64/mm/ptdump_debugfs.c
-> @@ -16,3 +16,21 @@ void ptdump_debugfs_register(struct ptdump_info *info, const char *name)
->  {
->  	debugfs_create_file(name, 0400, NULL, info, &ptdump_fops);
->  }
-> +
-> +static int check_wx_debugfs_set(void *data, u64 val)
-> +{
-> +	if (val != 1ULL)
-> +		return -EINVAL;
-> +
-> +	ptdump_check_wx();
-> +
-> +	return 0;
-> +}
-> +
-> +DEFINE_SIMPLE_ATTRIBUTE(check_wx_fops, NULL, check_wx_debugfs_set, "%llu\n");
-> +
-> +int ptdump_check_wx_init(void)
-> +{
-> +	return debugfs_create_file("check_wx_pages", 0200, NULL,
-> +				   NULL, &check_wx_fops) ? 0 : -ENOMEM;
-> +}
-> -- 
-> 2.20.1
-> 
+LSM hooks are included:
+
+ (1) A set of hooks are provided that allow an LSM to rule on whether or
+     not a watch may be set.  Each of these hooks takes a different
+     "watched object" parameter, so they're not really shareable.  The LSM
+     should use current's credentials.  [Wanted by SELinux & Smack]
+
+ (2) A hook is provided to allow an LSM to rule on whether or not a
+     particular message may be posted to a particular queue.  This is given
+     the credentials from the event generator (which may be the system) and
+     the watch setter.  [Wanted by Smack]
+
+I've provided SELinux and Smack with implementations of some of these hooks.
+
+
+WHY
+===
+
+ (1) Key/keyring notifications.
+
+     If you have your kerberos tickets in a file/directory, your gnome
+     desktop will monitor that using something like fanotify and tell you
+     if your credentials cache changes.
+
+     We also have the ability to cache your kerberos tickets in the
+     session, user or persistent keyring so that it isn't left around on
+     disk across a reboot or logout.  Keyrings, however, cannot currently
+     be monitored asynchronously, so the desktop has to poll for it - not
+     so good on a laptop.
+
+     This source will allow the desktop to avoid the need to poll.  Here's
+     a pull request for usage by gnome-online-accounts:
+
+	https://gitlab.gnome.org/GNOME/gnome-online-accounts/merge_requests/47
+
+ (2) Mount notifications.
+
+     This one is wanted to avoid repeated trawling of /proc/mounts or
+     similar to work out changes to the mount object attributes and mount
+     topology.  I'm told that the proc file holding the namespace_sem is a
+     point of contention, especially as the process of generating the text
+     descriptions of the mounts/superblocks can be quite involved.
+
+     Whilst you can use poll() on /proc/mounts, it doesn't give you any
+     clues as to what changed.  The notification generated here directly
+     indicates the mounts involved in any particular event and gives an
+     idea of what the change was.
+
+     This is combined with a new fsinfo() system call that allows, amongst
+     other things, the ability to retrieve in one go an { id,
+     change_counter } tuple from all the children of a specified mount,
+     allowing buffer overruns to be dealt with quickly.
+
+     This is of use to systemd to improve efficiency:
+
+	https://lore.kernel.org/linux-fsdevel/20200227151421.3u74ijhqt6ekbiss@ws.net.home/
+
+     And it's not just Red Hat that's potentially interested in this:
+
+	https://lore.kernel.org/linux-fsdevel/293c9bd3-f530-d75e-c353-ddeabac27cf6@6wind.com/
+
+ (3) Superblock notifications.
+
+     This one is provided to allow systemd or the desktop to more easily
+     detect events such as I/O errors and EDQUOT/ENOSPC.  This would be of
+     interest to Postgres:
+
+	https://lore.kernel.org/linux-fsdevel/20200211005626.7yqjf5rbs3vbwagd@alap3.anarazel.de/
+
+Design decisions:
+
+ (1) The notification queue is built on top of a standard pipe.  Messages
+     are effectively spliced in.  The pipe is opened with a special flag:
+
+	pipe2(fds, O_NOTIFICATION_PIPE);
+
+     The special flag has the same value as O_EXCL (which doesn't seem like
+     it will ever be applicable in this context)[?].  It is given up front
+     to make it a lot easier to prohibit splice and co. from accessing the
+     pipe.
+
+     [?] Should this be done some other way?  I'd rather not use up a new
+     	 O_* flag if I can avoid it - should I add a pipe3() system call
+     	 instead?
+
+     The pipe is then configured::
+
+	ioctl(fds[1], IOC_WATCH_QUEUE_SET_SIZE, queue_depth);
+	ioctl(fds[1], IOC_WATCH_QUEUE_SET_FILTER, &filter);
+
+     Messages are then read out of the pipe using read().
+
+ (2) It should be possible to allow write() to insert data into the
+     notification pipes too, but this is currently disabled as the kernel
+     has to be able to insert messages into the pipe *without* holding
+     pipe->mutex and the code to make this work needs careful auditing.
+
+ (3) sendfile(), splice() and vmsplice() are disabled on notification pipes
+     because of the pipe->mutex issue and also because they sometimes want
+     to revert what they just did - but one or more notification messages
+     might've been interleaved in the ring.
+
+ (4) The kernel inserts messages with the wait queue spinlock held.  This
+     means that pipe_read() and pipe_write() have to take the spinlock to
+     update the queue pointers.
+
+ (5) Records in the buffer are binary, typed and have a length so that they
+     can be of varying size.
+
+     This allows multiple heterogeneous sources to share a common buffer;
+     there are 16 million types available, of which I've used just a few,
+     so there is scope for others to be used.  Tags may be specified when a
+     watchpoint is created to help distinguish the sources.
+
+ (6) Records are filterable as types have up to 256 subtypes that can be
+     individually filtered.  Other filtration is also available.
+
+ (7) Notification pipes don't interfere with each other; each may be bound
+     to a different set of watches.  Any particular notification will be
+     copied to all the queues that are currently watching for it - and only
+     those that are watching for it.
+
+ (8) When recording a notification, the kernel will not sleep, but will
+     rather mark a queue as having lost a message if there's insufficient
+     space.  read() will fabricate a loss notification message at an
+     appropriate point later.
+
+ (9) The notification pipe is created and then watchpoints are attached to
+     it, using one of:
+
+	keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fds[1], 0x01);
+	watch_mount(AT_FDCWD, "/", 0, fd, 0x02);
+	watch_sb(AT_FDCWD, "/mnt", 0, fd, 0x03);
+
+     where in both cases, fd indicates the queue and the number after is a
+     tag between 0 and 255.
+
+(10) Watches are removed if either the notification pipe is destroyed or
+     the watched object is destroyed.  In the latter case, a message will
+     be generated indicating the enforced watch removal.
+
+
+Things I want to avoid:
+
+ (1) Introducing features that make the core VFS dependent on the network
+     stack or networking namespaces (ie. usage of netlink).
+
+ (2) Dumping all this stuff into dmesg and having a daemon that sits there
+     parsing the output and distributing it as this then puts the
+     responsibility for security into userspace and makes handling
+     namespaces tricky.  Further, dmesg might not exist or might be
+     inaccessible inside a container.
+
+ (3) Letting users see events they shouldn't be able to see.
+
+
+Testing and manpages:
+
+ (*) The keyutils tree has a pipe-watch branch that has keyctl commands for
+     making use of notifications.  Proposed manual pages can also be found
+     on this branch, though a couple of them really need to go to the main
+     manpages repository instead.
+
+     If the kernel supports the watching of keys, then running "make test"
+     on that branch will cause the testing infrastructure to spawn a
+     monitoring process on the side that monitors a notifications pipe for
+     all the key/keyring changes induced by the tests and they'll all be
+     checked off to make sure they happened.
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/log/?h=pipe-watch
+
+ (*) A test program is provided (samples/watch_queue/watch_test) that can
+     be used to monitor for keyrings, mount and superblock events.
+     Information on the notifications is simply logged to stdout.
+
+The kernel patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications-pipe-core
+
+Changes:
+
+ ver #4:
+
+ (*) Dropped USB and device notifications for the moment as there's some
+     dispute over whether another avenue should be used for USB
+     notifications.
+
+ (*) Include mount and superblock event sources in the patchset.
+
+     - These now increment event counters that fsinfo() will be able to
+       retrieve (separate patch set).
+
+ ver #3:
+
+ (*) Rebase to after latest upstream pipe patches.
+ (*) Fix a missing ref get in add_watch_to_object().
+
+ ver #2:
+
+ (*) Declare O_NOTIFICATION_PIPE to use and switch it to be the same value
+     as O_EXCL rather then O_TMPFILE (the latter is a bit nasty in its
+     implementation).
+
+ ver #1:
+
+ (*) Build on top of standard pipes instead of having a driver.
+
+David
+---
+David Howells (17):
+      uapi: General notification queue definitions
+      security: Add hooks to rule on setting a watch
+      security: Add a hook for the point of notification insertion
+      pipe: Add O_NOTIFICATION_PIPE
+      pipe: Add general notification queue support
+      watch_queue: Add a key/keyring notification facility
+      Add sample notification program
+      pipe: Allow buffers to be marked read-whole-or-error for notifications
+      pipe: Add notification lossage handling
+      selinux: Implement the watch_key security hook
+      smack: Implement the watch_key and post_notification hooks
+      watch_queue: Add security hooks to rule on setting mount and sb watches
+      watch_queue: Implement mount topology and attribute change notifications
+      watch_queue: sample: Display mount tree change notifications
+      watch_queue: Introduce a non-repeating system-unique superblock ID
+      watch_queue: Add superblock notifications
+      watch_queue: sample: Display superblock notifications
+
+
+ Documentation/security/keys/core.rst               |   58 ++
+ Documentation/userspace-api/ioctl/ioctl-number.rst |    1 
+ Documentation/watch_queue.rst                      |  354 +++++++++++
+ arch/alpha/kernel/syscalls/syscall.tbl             |    2 
+ arch/arm/tools/syscall.tbl                         |    2 
+ arch/arm64/include/asm/unistd.h                    |    2 
+ arch/ia64/kernel/syscalls/syscall.tbl              |    2 
+ arch/m68k/kernel/syscalls/syscall.tbl              |    2 
+ arch/microblaze/kernel/syscalls/syscall.tbl        |    2 
+ arch/mips/kernel/syscalls/syscall_n32.tbl          |    2 
+ arch/mips/kernel/syscalls/syscall_n64.tbl          |    2 
+ arch/mips/kernel/syscalls/syscall_o32.tbl          |    2 
+ arch/parisc/kernel/syscalls/syscall.tbl            |    2 
+ arch/powerpc/kernel/syscalls/syscall.tbl           |    2 
+ arch/s390/kernel/syscalls/syscall.tbl              |    2 
+ arch/sh/kernel/syscalls/syscall.tbl                |    2 
+ arch/sparc/kernel/syscalls/syscall.tbl             |    2 
+ arch/x86/entry/syscalls/syscall_32.tbl             |    2 
+ arch/x86/entry/syscalls/syscall_64.tbl             |    2 
+ arch/xtensa/kernel/syscalls/syscall.tbl            |    2 
+ fs/Kconfig                                         |   21 +
+ fs/Makefile                                        |    1 
+ fs/internal.h                                      |    1 
+ fs/mount.h                                         |   35 +
+ fs/mount_notify.c                                  |  186 ++++++
+ fs/namespace.c                                     |   22 +
+ fs/pipe.c                                          |  242 +++++--
+ fs/splice.c                                        |   12 
+ fs/super.c                                         |  156 +++++
+ include/linux/dcache.h                             |    1 
+ include/linux/fs.h                                 |   84 +++
+ include/linux/key.h                                |    3 
+ include/linux/lsm_audit.h                          |    1 
+ include/linux/lsm_hooks.h                          |   62 ++
+ include/linux/pipe_fs_i.h                          |   27 +
+ include/linux/security.h                           |   47 +
+ include/linux/syscalls.h                           |    4 
+ include/linux/watch_queue.h                        |  127 ++++
+ include/uapi/asm-generic/unistd.h                  |    6 
+ include/uapi/linux/keyctl.h                        |    2 
+ include/uapi/linux/watch_queue.h                   |  163 +++++
+ init/Kconfig                                       |   12 
+ kernel/Makefile                                    |    1 
+ kernel/sys_ni.c                                    |    6 
+ kernel/watch_queue.c                               |  659 ++++++++++++++++++++
+ samples/Kconfig                                    |    6 
+ samples/Makefile                                   |    1 
+ samples/watch_queue/Makefile                       |    7 
+ samples/watch_queue/watch_test.c                   |  260 ++++++++
+ security/keys/Kconfig                              |    9 
+ security/keys/compat.c                             |    3 
+ security/keys/gc.c                                 |    5 
+ security/keys/internal.h                           |   30 +
+ security/keys/key.c                                |   38 +
+ security/keys/keyctl.c                             |   99 +++
+ security/keys/keyring.c                            |   20 -
+ security/keys/request_key.c                        |    4 
+ security/security.c                                |   37 +
+ security/selinux/hooks.c                           |   14 
+ security/smack/smack_lsm.c                         |   83 ++-
+ 60 files changed, 2837 insertions(+), 107 deletions(-)
+ create mode 100644 Documentation/watch_queue.rst
+ create mode 100644 fs/mount_notify.c
+ create mode 100644 include/linux/watch_queue.h
+ create mode 100644 include/uapi/linux/watch_queue.h
+ create mode 100644 kernel/watch_queue.c
+ create mode 100644 samples/watch_queue/Makefile
+ create mode 100644 samples/watch_queue/watch_test.c
+
+
