@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794D6C2BB58
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C92C2BB8A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5268C20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E9120828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:56:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="REj3KT9K"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZYOiXfiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgCIQ4K (ORCPT
+        id S1727388AbgCIQ4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:56:10 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45395 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbgCIQ4G (ORCPT
+        Mon, 9 Mar 2020 12:56:13 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39577 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727360AbgCIQ4J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:56:06 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 2so5063067pfg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:56:04 -0700 (PDT)
+        Mon, 9 Mar 2020 12:56:09 -0400
+Received: by mail-pj1-f66.google.com with SMTP id d8so108633pje.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:56:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DKBW8Eyy8NVtYJgHutHlswaK8NeRD9IAyJm/+12aBBY=;
-        b=REj3KT9KCk7pmUAzQenlRZ2UdxDM55l7D4o43L3PCGSAW2igoKTdhOdGSHha/5ZV0k
-         PWnirmLcaBYdBy+ACtOq048Ky2eKNeoaSFswZk4gUbnNj2EpUH3DERiyVDErdUcN5bL4
-         f7rGeupxtqCtvj2wmTCxeWyv/EgbYZAPatwSOsy69GjDytGquusfnE5lStT5PC2n+LB0
-         +deFikDuHSYPI2k3e8zYswywhoFtwypPlee3loaubnkMY59DP6jyRznBAFNfCb2Z4d3x
-         94ITFyNP6J5LaBX+WtURnXC0csngUwZMMW6VnLjRJqEnlG9otg0Wqxcm4esJikPDD970
-         cB4Q==
+        bh=seWJfto8ScXH/WTie1kGmp0AZpPcjTPuoxrfVsKEou8=;
+        b=ZYOiXfiY0tuckfLvllImLc1PbkvyeyMedOVlEVYN8R2vuqmWY3Pk58X31O6HtH1cMQ
+         F4wo1cSGiZlx5pD2FM2mTALZXAGQH8b7G9UU8YcW1TVdW8l9z+94mEs2fqOCJ8XnGhxX
+         oGfN+MV06tnAAhEY1DcVv6yHEnbmLysfoigH9gIClmGeVe7y4ctJGqO4ScJCk8JPIEP3
+         3y92APRfOMk/ipYJEKKDf6HnMqwP1duhPyvlvgAYg2cl4CwZ0yLqOMoYxRm7EI33JsG/
+         Wq4+HmnQATpQgd0JT1TJVWY1eznEda9oruz+3TYhG8zlO01YOkECSxW8VWmkyPYZDujq
+         evlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DKBW8Eyy8NVtYJgHutHlswaK8NeRD9IAyJm/+12aBBY=;
-        b=cSecfLF/TEkoCi+yjbvgaaLeA8bIl4EpLAE9wshZKD98a0lRGFbiVFQmxLo9uMHBpL
-         XERRPDlvCTVAVeNhQ0uYKgiwgPc8cMI1feKoy5JWQ4rg3/CA6lED+9X4KPLzavEeSPE1
-         pMrrwx1LLYP3rJzFVUEoCGFsKVnMFPg/oO9VdQWMthKFSE0VYAuAmDJMjrEF/IEGErKA
-         HKjlYutmkaHoR6mkWEP7bdp6knZOPjHJ7uYXiLQ1buZw7Cpy/Uhop8zQ7vMb4SNBq1l7
-         9Epyz3q/l6XKRIlR7aFJbov+FXxYVyyUYqSRezquVWRMODNdR4BUKpEl78f6cViQq2aV
-         AB/g==
-X-Gm-Message-State: ANhLgQ1sRYtN2I/916cLGtlP9e8OZF0vw4WwFQmo0yxyz7CYSl4bKNwB
-        hf7cNEm/VS4AeZ+eD9lFt+sLag==
-X-Google-Smtp-Source: ADFU+vuSU8d2YJr+UbuHwypGjfeETIP0OFkmwem67CPnKwSBb/4lKf72zr3M4nrZ00SVq1HLPFHWlQ==
-X-Received: by 2002:a63:348b:: with SMTP id b133mr17387820pga.372.1583772964283;
-        Mon, 09 Mar 2020 09:56:04 -0700 (PDT)
+        bh=seWJfto8ScXH/WTie1kGmp0AZpPcjTPuoxrfVsKEou8=;
+        b=TtfE0KbpCpiLZo18Xo9noSLD+iTeu7VZZsWd/e6whw/NEZICZDYoyHwtlXHtOluBxR
+         zibGs9f2TuBio8KniS0ld9TbpUlDBAsBW1pidzQzOKsL830/eGBifPvTDUs9i9sCTRTL
+         z774AoD+ZGBcINFTRVtTVDAHscJR5JvXLWftEU5f9Wxo+k2UXMr9OiHsETjQgENtpGTm
+         lNtOj35tGuJoJAGB+HTDhIry5OEYeFdPc1vlCspaVnVAf2FUR8FyLYiFdyD0TGaAS9jf
+         l5apWTISCbdE6LaollvqDotRCmvT7qF6WkXzOev5Yvc6HyoDUmCshpA3GmRtYBb7I4xK
+         IDhQ==
+X-Gm-Message-State: ANhLgQ1mm/OSz40u8ooY1XRPWoQjzQJZMjNPtHO1HLQg6GDZyfCCRBuJ
+        Pkd1Wifjlh/HenGtoc9qpyu3Ag==
+X-Google-Smtp-Source: ADFU+vsyfd5fnD7Id1YJ9cBBLv47NvOkkKzY+u5QBKpwxGSA2UnrFBvvrspWMG1D+5N/ft+289Ji3g==
+X-Received: by 2002:a17:90a:202f:: with SMTP id n44mr255862pjc.150.1583772967759;
+        Mon, 09 Mar 2020 09:56:07 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id cm2sm104013pjb.23.2020.03.09.09.56.02
+        by smtp.gmail.com with ESMTPSA id cm2sm104013pjb.23.2020.03.09.09.56.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 09:56:03 -0700 (PDT)
+        Mon, 09 Mar 2020 09:56:07 -0700 (PDT)
 From:   Zong Li <zong.li@sifive.com>
 To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
         aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH v3 7/9] riscv: add macro to get instruction length
-Date:   Tue, 10 Mar 2020 00:55:42 +0800
-Message-Id: <8f933bed0478a1b4029447e1f8eef2ce0aefed4b.1583772574.git.zong.li@sifive.com>
+Subject: [PATCH v3 9/9] riscv: patch code by fixmap mapping
+Date:   Tue, 10 Mar 2020 00:55:44 +0800
+Message-Id: <b414b96a2d9b2d2837550306a4c71b8b0f2e6c7e.1583772574.git.zong.li@sifive.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1583772574.git.zong.li@sifive.com>
 References: <cover.1583772574.git.zong.li@sifive.com>
@@ -74,47 +74,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extract the calculation of instruction length for common use.
+On strict kernel memory permission, the ftrace have to change the
+permission of text for dynamic patching the intructions. Use
+riscv_patch_text_nosync() to patch code instead of probe_kernel_write.
 
 Signed-off-by: Zong Li <zong.li@sifive.com>
 ---
- arch/riscv/include/asm/bug.h | 8 ++++++++
- arch/riscv/kernel/traps.c    | 3 ++-
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/ftrace.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/arch/riscv/include/asm/bug.h b/arch/riscv/include/asm/bug.h
-index 75604fec1b1b..d6f1ec08d97b 100644
---- a/arch/riscv/include/asm/bug.h
-+++ b/arch/riscv/include/asm/bug.h
-@@ -19,6 +19,14 @@
- #define __BUG_INSN_32	_UL(0x00100073) /* ebreak */
- #define __BUG_INSN_16	_UL(0x9002) /* c.ebreak */
+diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+index c40fdcdeb950..ce69b34ff55d 100644
+--- a/arch/riscv/kernel/ftrace.c
++++ b/arch/riscv/kernel/ftrace.c
+@@ -8,6 +8,7 @@
+ #include <linux/ftrace.h>
+ #include <linux/uaccess.h>
+ #include <asm/cacheflush.h>
++#include <asm/patch.h>
  
-+#define GET_INSN_LENGTH(insn)						\
-+({									\
-+	unsigned long __len;						\
-+	__len = ((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32) ?	\
-+		4UL : 2UL;						\
-+	__len;								\
-+})
-+
- typedef u32 bug_insn_t;
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ static int ftrace_check_current_call(unsigned long hook_pos,
+@@ -46,20 +47,14 @@ static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
+ {
+ 	unsigned int call[2];
+ 	unsigned int nops[2] = {NOP4, NOP4};
+-	int ret = 0;
  
- #ifdef CONFIG_GENERIC_BUG_RELATIVE_POINTERS
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index ffb3d94bf0cc..a4d136355f78 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -118,7 +118,8 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
+ 	make_call(hook_pos, target, call);
  
- 	if (probe_kernel_address((bug_insn_t *)pc, insn))
- 		return 0;
--	return (((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32) ? 4UL : 2UL);
-+
-+	return GET_INSN_LENGTH(insn);
+-	/* replace the auipc-jalr pair at once */
+-	ret = probe_kernel_write((void *)hook_pos, enable ? call : nops,
+-				 MCOUNT_INSN_SIZE);
+-	/* return must be -EPERM on write error */
+-	if (ret)
++	/* Replace the auipc-jalr pair at once. Return -EPERM on write error. */
++	if (riscv_patch_text_nosync
++	    ((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
+ 		return -EPERM;
+ 
+-	smp_mb();
+-	flush_icache_range((void *)hook_pos, (void *)hook_pos + MCOUNT_INSN_SIZE);
+-
+ 	return 0;
  }
  
- asmlinkage __visible void do_trap_break(struct pt_regs *regs)
 -- 
 2.25.1
 
