@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C32C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510E3C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A46320637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C73D20637
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583780768;
-	bh=I804D6YeTMRsH5LhBhkAVlRExqjQXEXDuOOvt4CWa38=;
+	s=default; t=1583780771;
+	bh=f6MknPqTnSgqIQA4Ugas/2n0Z0E4QRssBfssOC191vc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hKdQPmor+oVYjICt8ao8S83uMsEIYfuk3NepaDoG5yqf7e7QqQqpF1BiP//wTpwDq
-	 MjDdrMhNx0JBt02uCs16z3u4ZTl0N533VLgE5f6zmiwanZRBFW6djsKZa0Oiot+JoQ
-	 oRW8G3xHfQHwfh7g9eidHnRhVdMeWoJwoFMm62TM=
+	b=sWTozAiganGX4MNj/IpRYhuUWAWWxYOi8MjzHRp8o9Ui/VClSN8fkhb8EBwbqFfPx
+	 RxwwIlq5b5zDfJQ9iIIf00jA/gZ7n9C0e/+QmT8dqLDVVgHa9gR85NygV7O2+gqafR
+	 MSsGDv9F+vzoHx2lGMqi9W6/Fa23HWSJl/0vDqCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgCITEY (ORCPT
+        id S1727921AbgCITGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:04:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 15:06:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727439AbgCITEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:04:23 -0400
+        id S1727466AbgCITEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:04:24 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC5B222D9;
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A0A227BF;
         Mon,  9 Mar 2020 19:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583780662;
-        bh=I804D6YeTMRsH5LhBhkAVlRExqjQXEXDuOOvt4CWa38=;
+        s=default; t=1583780663;
+        bh=f6MknPqTnSgqIQA4Ugas/2n0Z0E4QRssBfssOC191vc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D/XKQ7Z0IYG4rJkvjl9tt9z1wfEkB0YUH1+QsTHywdCp5nce6/hj18ToKB53PTab2
-         QLEzf70d1a1bz6QAw3zEGugx35tFn5XBEiaz661t+emOEnL98amKJOA5q7IkBrSCx2
-         nEnNRZQNKJJnMHtFYJGXsgF2gcBrFq4LR7HJGh34=
+        b=n1FhMvHwY4JXV5uPFobiBB7+prpPnm4k+S3qGgGNPMSn07goyLj8sNhpJNytIQ233
+         1RIU1t9HyGblBzRz83xM0T3B5p4iv2AO1V/dJMT7EoMdY96sU9lVjhX4Nh375nIQoe
+         fHzcbcr3dx1YR5sdGfTcDi2O1aNbcuipm9GQRxvI=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
         dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH kcsan 02/32] kcsan: Show full access type in report
-Date:   Mon,  9 Mar 2020 12:03:50 -0700
-Message-Id: <20200309190420.6100-2-paulmck@kernel.org>
+Subject: [PATCH kcsan 04/32] kcsan: Make KCSAN compatible with lockdep
+Date:   Mon,  9 Mar 2020 12:03:52 -0700
+Message-Id: <20200309190420.6100-4-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200309190359.GA5822@paulmck-ThinkPad-P72>
 References: <20200309190359.GA5822@paulmck-ThinkPad-P72>
@@ -58,230 +58,132 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marco Elver <elver@google.com>
 
-This commit adds access-type information to KCSAN's reports as follows:
-"read", "read (marked)", "write", and "write (marked)".
+We must avoid any recursion into lockdep if KCSAN is enabled on utilities
+used by lockdep. One manifestation of this is corruption of lockdep's
+IRQ trace state (if TRACE_IRQFLAGS), resulting in spurious warnings
+(see below).  This commit fixes this by:
 
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+1. Using raw_local_irq{save,restore} in kcsan_setup_watchpoint().
+2. Disabling lockdep in kcsan_report().
+
+Tested with:
+
+  CONFIG_LOCKDEP=y
+  CONFIG_DEBUG_LOCKDEP=y
+  CONFIG_TRACE_IRQFLAGS=y
+
+This fix eliminates spurious warnings such as the following one:
+
+    WARNING: CPU: 0 PID: 2 at kernel/locking/lockdep.c:4406 check_flags.part.0+0x101/0x220
+    Modules linked in:
+    CPU: 0 PID: 2 Comm: kthreadd Not tainted 5.5.0-rc1+ #11
+    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+    RIP: 0010:check_flags.part.0+0x101/0x220
+    <snip>
+    Call Trace:
+     lock_is_held_type+0x69/0x150
+     freezer_fork+0x20b/0x370
+     cgroup_post_fork+0x2c9/0x5c0
+     copy_process+0x2675/0x3b40
+     _do_fork+0xbe/0xa30
+     ? _raw_spin_unlock_irqrestore+0x40/0x50
+     ? match_held_lock+0x56/0x250
+     ? kthread_park+0xf0/0xf0
+     kernel_thread+0xa6/0xd0
+     ? kthread_park+0xf0/0xf0
+     kthreadd+0x321/0x3d0
+     ? kthread_create_on_cpu+0x130/0x130
+     ret_from_fork+0x3a/0x50
+    irq event stamp: 64
+    hardirqs last  enabled at (63): [<ffffffff9a7995d0>] _raw_spin_unlock_irqrestore+0x40/0x50
+    hardirqs last disabled at (64): [<ffffffff992a96d2>] kcsan_setup_watchpoint+0x92/0x460
+    softirqs last  enabled at (32): [<ffffffff990489b8>] fpu__copy+0xe8/0x470
+    softirqs last disabled at (30): [<ffffffff99048939>] fpu__copy+0x69/0x470
+
+Reported-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Marco Elver <elver@google.com>
+Acked-by: Alexander Potapenko <glider@google.com>
+Tested-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/kcsan/core.c   | 15 ++++++++-------
- kernel/kcsan/kcsan.h  |  2 +-
- kernel/kcsan/report.c | 43 ++++++++++++++++++++++++++++---------------
- 3 files changed, 37 insertions(+), 23 deletions(-)
+ kernel/kcsan/core.c     |  6 ++++--
+ kernel/kcsan/report.c   | 11 +++++++++++
+ kernel/locking/Makefile |  3 +++
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 4d4ab5c..87bf857 100644
+index 87bf857..64b30f7 100644
 --- a/kernel/kcsan/core.c
 +++ b/kernel/kcsan/core.c
-@@ -255,7 +255,7 @@ static inline unsigned int get_delay(void)
- 
- static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- 					    size_t size,
--					    bool is_write,
-+					    int type,
- 					    atomic_long_t *watchpoint,
- 					    long encoded_watchpoint)
- {
-@@ -276,7 +276,7 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- 	flags = user_access_save();
- 
- 	if (consumed) {
--		kcsan_report(ptr, size, is_write, true, raw_smp_processor_id(),
-+		kcsan_report(ptr, size, type, true, raw_smp_processor_id(),
- 			     KCSAN_REPORT_CONSUMED_WATCHPOINT);
- 	} else {
- 		/*
-@@ -292,8 +292,9 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- }
- 
- static noinline void
--kcsan_setup_watchpoint(const volatile void *ptr, size_t size, bool is_write)
-+kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- {
-+	const bool is_write = (type & KCSAN_ACCESS_WRITE) != 0;
- 	atomic_long_t *watchpoint;
- 	union {
- 		u8 _1;
-@@ -415,13 +416,13 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, bool is_write)
- 		 * No need to increment 'data_races' counter, as the racing
- 		 * thread already did.
- 		 */
--		kcsan_report(ptr, size, is_write, size > 8 || value_change,
-+		kcsan_report(ptr, size, type, size > 8 || value_change,
- 			     smp_processor_id(), KCSAN_REPORT_RACE_SIGNAL);
- 	} else if (value_change) {
- 		/* Inferring a race, since the value should not have changed. */
- 		kcsan_counter_inc(KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN);
- 		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN))
--			kcsan_report(ptr, size, is_write, true,
-+			kcsan_report(ptr, size, type, true,
- 				     smp_processor_id(),
- 				     KCSAN_REPORT_RACE_UNKNOWN_ORIGIN);
- 	}
-@@ -455,10 +456,10 @@ static __always_inline void check_access(const volatile void *ptr, size_t size,
+@@ -336,8 +336,10 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 	 *      CPU-local data accesses), it makes more sense (from a data race
+ 	 *      detection point of view) to simply disable preemptions to ensure
+ 	 *      as many tasks as possible run on other CPUs.
++	 *
++	 * Use raw versions, to avoid lockdep recursion via IRQ flags tracing.
  	 */
+-	local_irq_save(irq_flags);
++	raw_local_irq_save(irq_flags);
  
- 	if (unlikely(watchpoint != NULL))
--		kcsan_found_watchpoint(ptr, size, is_write, watchpoint,
-+		kcsan_found_watchpoint(ptr, size, type, watchpoint,
- 				       encoded_watchpoint);
- 	else if (unlikely(should_watch(ptr, type)))
--		kcsan_setup_watchpoint(ptr, size, is_write);
-+		kcsan_setup_watchpoint(ptr, size, type);
+ 	watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
+ 	if (watchpoint == NULL) {
+@@ -429,7 +431,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 
+ 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
+ out_unlock:
+-	local_irq_restore(irq_flags);
++	raw_local_irq_restore(irq_flags);
+ out:
+ 	user_access_restore(ua_flags);
  }
- 
- /* === Public interface ===================================================== */
-diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-index d3b9a96..8492da4 100644
---- a/kernel/kcsan/kcsan.h
-+++ b/kernel/kcsan/kcsan.h
-@@ -103,7 +103,7 @@ enum kcsan_report_type {
- /*
-  * Print a race report from thread that encountered the race.
-  */
--extern void kcsan_report(const volatile void *ptr, size_t size, bool is_write,
-+extern void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 			 bool value_change, int cpu_id, enum kcsan_report_type type);
- 
- #endif /* _KERNEL_KCSAN_KCSAN_H */
 diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 0eea05a..9f503ca 100644
+index b5b4fee..33bdf8b 100644
 --- a/kernel/kcsan/report.c
 +++ b/kernel/kcsan/report.c
-@@ -24,7 +24,7 @@
- static struct {
- 	const volatile void	*ptr;
- 	size_t			size;
--	bool			is_write;
-+	int			access_type;
- 	int			task_pid;
- 	int			cpu_id;
- 	unsigned long		stack_entries[NUM_STACK_ENTRIES];
-@@ -41,8 +41,10 @@ static DEFINE_SPINLOCK(report_lock);
-  * Special rules to skip reporting.
-  */
- static bool
--skip_report(bool is_write, bool value_change, unsigned long top_frame)
-+skip_report(int access_type, bool value_change, unsigned long top_frame)
- {
-+	const bool is_write = (access_type & KCSAN_ACCESS_WRITE) != 0;
-+
- 	if (IS_ENABLED(CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY) && is_write &&
- 	    !value_change) {
- 		/*
-@@ -63,9 +65,20 @@ skip_report(bool is_write, bool value_change, unsigned long top_frame)
- 	return kcsan_skip_report_debugfs(top_frame);
- }
+@@ -2,6 +2,7 @@
  
--static inline const char *get_access_type(bool is_write)
-+static const char *get_access_type(int type)
- {
--	return is_write ? "write" : "read";
-+	switch (type) {
-+	case 0:
-+		return "read";
-+	case KCSAN_ACCESS_ATOMIC:
-+		return "read (marked)";
-+	case KCSAN_ACCESS_WRITE:
-+		return "write";
-+	case KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC:
-+		return "write (marked)";
-+	default:
-+		BUG();
-+	}
- }
- 
- /* Return thread description: in task or interrupt. */
-@@ -112,7 +125,7 @@ static int sym_strcmp(void *addr1, void *addr2)
- /*
-  * Returns true if a report was generated, false otherwise.
-  */
--static bool print_report(const volatile void *ptr, size_t size, bool is_write,
-+static bool print_report(const volatile void *ptr, size_t size, int access_type,
- 			 bool value_change, int cpu_id,
- 			 enum kcsan_report_type type)
- {
-@@ -124,7 +137,7 @@ static bool print_report(const volatile void *ptr, size_t size, bool is_write,
- 	/*
- 	 * Must check report filter rules before starting to print.
- 	 */
--	if (skip_report(is_write, true, stack_entries[skipnr]))
-+	if (skip_report(access_type, true, stack_entries[skipnr]))
- 		return false;
- 
- 	if (type == KCSAN_REPORT_RACE_SIGNAL) {
-@@ -132,7 +145,7 @@ static bool print_report(const volatile void *ptr, size_t size, bool is_write,
- 						other_info.num_stack_entries);
- 
- 		/* @value_change is only known for the other thread */
--		if (skip_report(other_info.is_write, value_change,
-+		if (skip_report(other_info.access_type, value_change,
- 				other_info.stack_entries[other_skipnr]))
- 			return false;
- 	}
-@@ -170,7 +183,7 @@ static bool print_report(const volatile void *ptr, size_t size, bool is_write,
- 	switch (type) {
- 	case KCSAN_REPORT_RACE_SIGNAL:
- 		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
--		       get_access_type(other_info.is_write), other_info.ptr,
-+		       get_access_type(other_info.access_type), other_info.ptr,
- 		       other_info.size, get_thread_desc(other_info.task_pid),
- 		       other_info.cpu_id);
- 
-@@ -181,14 +194,14 @@ static bool print_report(const volatile void *ptr, size_t size, bool is_write,
- 
- 		pr_err("\n");
- 		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
--		       get_access_type(is_write), ptr, size,
-+		       get_access_type(access_type), ptr, size,
- 		       get_thread_desc(in_task() ? task_pid_nr(current) : -1),
- 		       cpu_id);
- 		break;
- 
- 	case KCSAN_REPORT_RACE_UNKNOWN_ORIGIN:
- 		pr_err("race at unknown origin, with %s to 0x%px of %zu bytes by %s on cpu %i:\n",
--		       get_access_type(is_write), ptr, size,
-+		       get_access_type(access_type), ptr, size,
- 		       get_thread_desc(in_task() ? task_pid_nr(current) : -1),
- 		       cpu_id);
- 		break;
-@@ -223,7 +236,7 @@ static void release_report(unsigned long *flags, enum kcsan_report_type type)
-  * required for the report type, simply acquires report_lock and returns true.
-  */
- static bool prepare_report(unsigned long *flags, const volatile void *ptr,
--			   size_t size, bool is_write, int cpu_id,
-+			   size_t size, int access_type, int cpu_id,
- 			   enum kcsan_report_type type)
- {
- 	if (type != KCSAN_REPORT_CONSUMED_WATCHPOINT &&
-@@ -243,7 +256,7 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
- 
- 		other_info.ptr			= ptr;
- 		other_info.size			= size;
--		other_info.is_write		= is_write;
-+		other_info.access_type		= access_type;
- 		other_info.task_pid		= in_task() ? task_pid_nr(current) : -1;
- 		other_info.cpu_id		= cpu_id;
- 		other_info.num_stack_entries	= stack_trace_save(other_info.stack_entries, NUM_STACK_ENTRIES, 1);
-@@ -302,14 +315,14 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
- 	goto retry;
- }
- 
--void kcsan_report(const volatile void *ptr, size_t size, bool is_write,
-+void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 		  bool value_change, int cpu_id, enum kcsan_report_type type)
+ #include <linux/jiffies.h>
+ #include <linux/kernel.h>
++#include <linux/lockdep.h>
+ #include <linux/preempt.h>
+ #include <linux/printk.h>
+ #include <linux/sched.h>
+@@ -410,6 +411,14 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
  {
  	unsigned long flags = 0;
  
++	/*
++	 * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
++	 * we do not turn off lockdep here; this could happen due to recursion
++	 * into lockdep via KCSAN if we detect a data race in utilities used by
++	 * lockdep.
++	 */
++	lockdep_off();
++
  	kcsan_disable_current();
--	if (prepare_report(&flags, ptr, size, is_write, cpu_id, type)) {
--		if (print_report(ptr, size, is_write, value_change, cpu_id, type) && panic_on_warn)
-+	if (prepare_report(&flags, ptr, size, access_type, cpu_id, type)) {
-+		if (print_report(ptr, size, access_type, value_change, cpu_id, type) && panic_on_warn)
- 			panic("panic_on_warn set ...\n");
- 
+ 	if (prepare_report(&flags, ptr, size, access_type, cpu_id, type)) {
+ 		if (print_report(ptr, size, access_type, value_change, cpu_id, type) && panic_on_warn)
+@@ -418,4 +427,6 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
  		release_report(&flags, type);
+ 	}
+ 	kcsan_enable_current();
++
++	lockdep_on();
+ }
+diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
+index 45452fa..6d11cfb 100644
+--- a/kernel/locking/Makefile
++++ b/kernel/locking/Makefile
+@@ -5,6 +5,9 @@ KCOV_INSTRUMENT		:= n
+ 
+ obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
+ 
++# Avoid recursion lockdep -> KCSAN -> ... -> lockdep.
++KCSAN_SANITIZE_lockdep.o := n
++
+ ifdef CONFIG_FUNCTION_TRACER
+ CFLAGS_REMOVE_lockdep.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_lockdep_proc.o = $(CC_FLAGS_FTRACE)
 -- 
 2.9.5
 
