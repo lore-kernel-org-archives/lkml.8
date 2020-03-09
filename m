@@ -2,148 +2,131 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84417C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CA5C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A08921D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B98E20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:07:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="OR94NR7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCISFY (ORCPT
+        id S1727334AbgCISHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:05:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:59940 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbgCISFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:05:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 11:05:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,534,1574150400"; 
-   d="scan'208";a="231020439"
-Received: from jdbostic-mobl1.amr.corp.intel.com (HELO [10.251.152.35]) ([10.251.152.35])
-  by orsmga007.jf.intel.com with ESMTP; 09 Mar 2020 11:05:22 -0700
-Subject: Re: [RFC PATCH] soundwire: bus: Add flag to mark DPN_BlockCtrl1 as
- readonly
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        vkoul@kernel.org
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <d94fca16-ed61-632a-6f8c-84e3a97869c7@linux.intel.com>
-Date:   Mon, 9 Mar 2020 13:05:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 9 Mar 2020 14:07:00 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.196]:47911 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726269AbgCISHA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:07:00 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id C366C3D08FD
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 13:06:58 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BMnqjWd4gAGTXBMnqjyPKX; Mon, 09 Mar 2020 13:06:58 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Vb54cLSvPsXKWYl9Uu3Xdo1u6mHlzTCiMBQVMibC31E=; b=OR94NR7dX+CIJD1BT73j8FaZBI
+        779HwshMroI13BfyDG1CDrPKpJGHNVVxElzNT6EaqFafdoIpTzZT4yqL2jQ+MMJ3Nb3IE0uUAwCQF
+        NvicACmxb7YKu6WO3nh76UfqPc5D9iZcRQss2vn/rqNFqqqcVWBWujx7krXRwmXWs/K4s7qZryNNf
+        eKVzeATxW/YPwheUvb4uM+QEO9u14nTrMDwrN4S+UPfe7TSurbFrMVIJfScPsXqvmw88CWbeRiXeZ
+        V8i5j5U8QaRJFnuHiWCk7WZupg4HnJ8TSnefMlmOwRuYBvnlDwJyQbNqKCDOyIneYfshz5PCSz1Xk
+        u5RWEgvA==;
+Received: from [201.162.240.150] (port=23942 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBMno-004DyT-8u; Mon, 09 Mar 2020 13:06:56 -0500
+Date:   Mon, 9 Mar 2020 13:10:08 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] f2fs: xattr.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200309181008.GA3537@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.150
+X-Source-L: No
+X-Exim-ID: 1jBMno-004DyT-8u
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.150]:23942
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-On 3/9/20 12:37 PM, Srinivas Kandagatla wrote:
-> According to SoundWire Specification Version 1.2.
-> "A Data Port number X (in the range 0-14) which supports only one
-> value of WordLength may implement the WordLength field in the
-> DPX_BlockCtrl1 Register as Read-Only, returning the fixed value of
-> WordLength in response to reads."
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Interesting.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-I think it's a spec issue that you want to bring to the MIPI Audio WG 
-attention.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-The note below says 'the DPx_BlockCtrl1 Register remains as Read-Write, 
-but the value written to the Read-Only field is not used'
+This issue was found with the help of Coccinelle.
 
-Ignoring a value and returning an error are two different behaviors indeed.
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-My recommendation would be to add a DisCo property stating the 
-WordLength value can be used by the bus code but not written to the 
-Slave device registers.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/f2fs/xattr.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> As WSA881x interfaces in PDM mode making the only field "WordLength"
-> in DPX_BlockCtrl1" fixed and read-only. Behaviour of writing to this
-> register on WSA881x soundwire slave with Qualcomm Soundwire Controller
-> is throwing up an error. Not sure how other controllers deal with
-> writing to readonly registers, but this patch provides a way to avoid
-> writes to DPN_BlockCtrl1 register by providing a ro_blockctrl1_reg
-> flag in struct sdw_port_runtime.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-> 
-> I will send patch for WSA881x to include this change once this patch
-> is accepted.
-> 
->   drivers/soundwire/bus.h    |  2 ++
->   drivers/soundwire/stream.c | 17 ++++++++++-------
->   2 files changed, 12 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-> index 204204a26db8..791e8d14093e 100644
-> --- a/drivers/soundwire/bus.h
-> +++ b/drivers/soundwire/bus.h
-> @@ -79,6 +79,7 @@ int sdw_find_col_index(int col);
->    * @num: Port number. For audio streams, valid port number ranges from
->    * [1,14]
->    * @ch_mask: Channel mask
-> + * @ro_blockctrl1_reg: Read Only flag for DPN_BlockCtrl1 register
->    * @transport_params: Transport parameters
->    * @port_params: Port parameters
->    * @port_node: List node for Master or Slave port_list
-> @@ -89,6 +90,7 @@ int sdw_find_col_index(int col);
->   struct sdw_port_runtime {
->   	int num;
->   	int ch_mask;
-> +	bool ro_blockctrl1_reg;
->   	struct sdw_transport_params transport_params;
->   	struct sdw_port_params port_params;
->   	struct list_head port_node;
-> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-> index 00348d1fc606..4491643aeb4a 100644
-> --- a/drivers/soundwire/stream.c
-> +++ b/drivers/soundwire/stream.c
-> @@ -167,13 +167,15 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
->   		return ret;
->   	}
->   
-> -	/* Program DPN_BlockCtrl1 register */
-> -	ret = sdw_write(s_rt->slave, addr2, (p_params->bps - 1));
-> -	if (ret < 0) {
-> -		dev_err(&s_rt->slave->dev,
-> -			"DPN_BlockCtrl1 register write failed for port %d\n",
-> -			t_params->port_num);
-> -		return ret;
-> +	if (!p_rt->ro_blockctrl1_reg) {
-> +		/* Program DPN_BlockCtrl1 register */
-> +		ret = sdw_write(s_rt->slave, addr2, (p_params->bps - 1));
-> +		if (ret < 0) {
-> +			dev_err(&s_rt->slave->dev,
-> +				"DPN_BlockCtrl1 register write failed for port %d\n",
-> +				t_params->port_num);
-> +			return ret;
-> +		}
->   	}
->   
->   	/* Program DPN_SampleCtrl1 register */
-> @@ -1195,6 +1197,7 @@ static struct sdw_port_runtime
->   
->   	p_rt->ch_mask = port_config[port_index].ch_mask;
->   	p_rt->num = port_config[port_index].num;
-> +	p_rt->ro_blockctrl1_reg = port_config[port_index].ro_blockctrl1_reg;
->   
->   	return p_rt;
->   }
-> 
+diff --git a/fs/f2fs/xattr.h b/fs/f2fs/xattr.h
+index de0c600b9cab..95d589bf8e22 100644
+--- a/fs/f2fs/xattr.h
++++ b/fs/f2fs/xattr.h
+@@ -49,7 +49,7 @@ struct f2fs_xattr_entry {
+ 	__u8    e_name_index;
+ 	__u8    e_name_len;
+ 	__le16  e_value_size;   /* size of attribute value */
+-	char    e_name[0];      /* attribute name */
++	char    e_name[];      /* attribute name */
+ };
+ 
+ #define XATTR_HDR(ptr)		((struct f2fs_xattr_header *)(ptr))
+-- 
+2.25.0
+
