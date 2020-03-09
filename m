@@ -2,195 +2,127 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADAEC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8ACC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 882EF21927
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714DB20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgCISPu (ORCPT
+        id S1727406AbgCISTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:15:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59544 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 14:19:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:55612 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgCISPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:15:50 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7427020578;
-        Mon,  9 Mar 2020 18:15:48 +0000 (UTC)
-Date:   Mon, 9 Mar 2020 14:15:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: Instrumentation and RCU
-Message-ID: <20200309141546.5b574908@gandalf.local.home>
-In-Reply-To: <87mu8p797b.fsf@nanos.tec.linutronix.de>
-References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726437AbgCISTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:19:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F32031FB;
+        Mon,  9 Mar 2020 11:19:02 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A35A23F67D;
+        Mon,  9 Mar 2020 11:19:01 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        rmk+kernel@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v2 00/14] net: axienet: Update error handling and add 64-bit DMA support
+Date:   Mon,  9 Mar 2020 18:18:37 +0000
+Message-Id: <20200309181851.190164-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 09 Mar 2020 18:02:32 +0100
-Thomas Gleixner <tglx@linutronix.de> wrote:
+Hi,
 
-> Folks,
-> 
-> I'm starting a new conversation because there are about 20 different
-> threads which look at that problem in various ways and the information
-> is so scattered that creating a coherent picture is pretty much
-> impossible.
-> 
-> There are several problems to solve:
-> 
->    1) Fragile low level entry code
-> 
->    2) Breakpoint utilization
-> 
->    3) RCU idle
-> 
->    4) Callchain protection
-> 
-> #1 Fragile low level entry code
-> 
->    While I understand the desire of instrumentation to observe
->    everything we really have to ask the question whether it is worth the
->    trouble especially with entry trainwrecks like x86, PTI and other
->    horrors in that area.
-> 
->    I don't think so and we really should just bite the bullet and forbid
->    any instrumentation in that code unless it is explicitly designed
->    for that case, makes sense and has a real value from an observation
->    perspective.
-> 
->    This is very much related to #3..
+this is an update to the axienet improvement/64-bit support series.
+Compared to v1 I fixed the issues mentioned in the reviews, removed
+the hackish and wrong SGMII fix (there is now a much better solution
+by Russell), and reworked the 64-bit DMA detection. We get away without
+a DT property now: the MSB registers are autodetected, and the full
+64 bit DMA mask is used when they are available.
+Also I fixed two additional existing bugs/issues in the driver.
 
-Now for just entry portions (entering into interrupt context or
-coming from userspace into normal kernel code) I agree, and I'm fine if we
-can move things around and not trace these entry points if possible.
+This series is based on net-next as of today (e2f5cb7280f8), which
+includes Russell's fixes [1].
 
-> 
-> #2) Breakpoint utilization
-> 
->     As recent findings have shown, breakpoint utilization needs to be
->     extremly careful about not creating infinite breakpoint recursions.
-> 
->     I think that's pretty much obvious, but falls into the overall
->     question of how to protect callchains.
+A git branch is available at:
+http://www.linux-arm.org/git?p=linux-ap.git;a=shortlog;h=refs/heads/axienet/v2
+git://linux-arm.org/linux-ap.git branch axienet/v2
 
-This is rather unique, and I agree that its best to at least get to a point
-where we limit the tracing within breakpoint code. I'm fine with making
-rcu_nmi_exit() nokprobe too.
+Thanks,
+Andre
 
+[1] https://lore.kernel.org/netdev/E1j6trA-0003GY-N1@rmk-PC.armlinux.org.uk/
 
-> 
-> #3) RCU idle
-> 
->     Being able to trace code inside RCU idle sections is very similar to
->     the question raised in #1.
-> 
->     Assume all of the instrumentation would be doing conditional RCU
->     schemes, i.e.:
-> 
->     if (rcuidle)
->     	....
->     else
->         rcu_read_lock_sched()
-> 
->     before invoking the actual instrumentation functions and of course
->     undoing that right after it, that really begs the question whether
->     it's worth it.
-> 
->     Especially constructs like:
-> 
->     trace_hardirqs_off()
->        idx = srcu_read_lock()
->        rcu_irq_enter_irqson();
->        ...
->        rcu_irq_exit_irqson();
->        srcu_read_unlock(idx);
-> 
->     if (user_mode)
->        user_exit_irqsoff();
->     else
->        rcu_irq_enter();
-> 
->     are really more than questionable. For 99.9999% of instrumentation
->     users it's absolutely irrelevant whether this traces the interrupt
->     disabled time of user_exit_irqsoff() or rcu_irq_enter() or not.
-> 
->     But what's relevant is the tracer overhead which is e.g. inflicted
->     with todays trace_hardirqs_off/on() implementation because that
->     unconditionally uses the rcuidle variant with the scru/rcu_irq dance
->     around every tracepoint.
-> 
->     Even if the tracepoint sits in the ASM code it just covers about ~20
->     low level ASM instructions more. The tracer invocation, which is
->     even done twice when coming from user space on x86 (the second call
->     is optimized in the tracer C-code), costs definitely way more
->     cycles. When you take the scru/rcu_irq dance into account it's a
->     complete disaster performance wise.
+Changelog v1 .. v2:
+- Add Reviewed-by: tags from Radhey
+- Extend kerndoc documentation
+- Convert DMA error handler tasklet to work queue
+- log DMA mapping errors
+- mark DMA mapping error checks as unlikely (in "hot" paths)
+- return NETDEV_TX_OK on TX DMA mapping error (increasing TX drop counter)
+- Request eth IRQ as an optional IRQ
+- Remove no longer needed MDIO IRQ register names
+- Drop DT propery check for address width, assume full 64 bit
 
-Is this specifically to do with the kernel/trace/trace_preemptirqs.c code
-that was added by Joel?
+===============
+This series updates the Xilinx Axienet driver to work on our board
+here. One big issue was broken SGMII support, which Russell fixed already
+(in net-next).
+While debugging and understanding the driver, I found several problems
+in the error handling and cleanup paths, which patches 2-7 address.
+Patch 8 removes a annoying error message, patch 9 paves the way for newer
+revisions of the IP. The next patch adds mii-tool support, just for good
+measure.
 
-> 
-> #4 Protecting call chains
-> 
->    Our current approach of annotating functions with notrace/noprobe is
->    pretty much broken.
-> 
->    Functions which are marked NOPROBE or notrace call out into functions
->    which are not marked and while this might be ok, there are enough
->    places where it is not. But we have no way to verify that.
+The next four patches add support for 64-bit DMA. This is an integration
+option on newer IP revisions (>= v7.1), and expects MSB bits in formerly
+reserved registers. Without writing to those MSB registers, the state
+machine won't trigger, so it's mandatory to access them, even if they
+are zero. Patches 11 and 12 prepare the code by adding accessors, to
+wrap this properly and keep it working on older IP revisions.
+Patch 13 enables access to the MSB registers, by trying to write a
+non-zero value to them and checking if that sticks. Older IP revisions
+always read those registers as zero.
+Patch 14 then adjusts the DMA mask, based on the autodetected MSB
+feature. It uses the full 64 bits in this case, the rest of the system
+(actual physical addresses in use) should provide a natural limit if the
+chip has connected fewer address lines. If not, the parent DT node can
+use a dma-range property.
 
-Note, if notrace is an issue it shows up pretty quickly, as just enabling
-function tracing will enable all non notrace locations, and if something
-shouldn't be traced, it will crash immediately.
+The Xilinx PG138 and PG021 documents (in versions 7.1 in both cases)
+were used for this series.
 
-I have a RCU option for ftrace ops to set, if it requires RCU to be
-watching, and in that case, it wont call the callback if RCU is not
-watching.
+Andre Przywara (14):
+  net: xilinx: temac: Relax Kconfig dependencies
+  net: axienet: Convert DMA error handler to a work queue
+  net: axienet: Propagate failure of DMA descriptor setup
+  net: axienet: Fix DMA descriptor cleanup path
+  net: axienet: Improve DMA error handling
+  net: axienet: Factor out TX descriptor chain cleanup
+  net: axienet: Check for DMA mapping errors
+  net: axienet: Mark eth_irq as optional
+  net: axienet: Drop MDIO interrupt registers from ethtools dump
+  net: axienet: Add mii-tool support
+  net: axienet: Wrap DMA pointer writes to prepare for 64 bit
+  net: axienet: Upgrade descriptors to hold 64-bit addresses
+  net: axienet: Autodetect 64-bit DMA capability
+  net: axienet: Allow DMA to beyond 4GB
 
+ drivers/net/ethernet/xilinx/Kconfig           |   1 -
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |  19 +-
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 378 +++++++++++++-----
+ 3 files changed, 284 insertions(+), 114 deletions(-)
 
-> 
->    That's just a recipe for disaster. We really cannot request from
->    sysadmins who want to use instrumentation to stare at the code first
->    whether they can place/enable an instrumentation point somewhere.
->    That'd be just a bad joke.
-> 
->    I really think we need to have proper text sections which are off
->    limit for any form of instrumentation and have tooling to analyze the
->    calls into other sections. These calls need to be annotated as safe
->    and intentional.
-> 
-> Thoughts?
+-- 
+2.17.1
 
-This can expand quite a bit. At least when I did something similar with
-NMIs, as there was a time I wanted to flag all places that could be called
-from NMI, and found that there's a lot of code that can be.
-
-I can imagine the same for marking nokprobes as well. And I really don't
-want to make all notrace stop tracing the entire function and all that it
-can call, as that will go back to removing all callers from NMIs as
-do_nmi() itself is notrace.
-
-
--- Steve
