@@ -2,296 +2,163 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165C2C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5480CC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E541C2083E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A6A20674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="a2U6IkVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgCIJyS (ORCPT
+        id S1726744AbgCIJyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:54:18 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55522 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726609AbgCIJyN (ORCPT
+        Mon, 9 Mar 2020 05:54:22 -0400
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:26457 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbgCIJyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:54:13 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:02 +0530
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:42 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 246562418; Mon,  9 Mar 2020 15:23:41 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v5 1/9] dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
-Date:   Mon,  9 Mar 2020 15:23:01 +0530
-Message-Id: <1583747589-17267-2-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
-References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+        Mon, 9 Mar 2020 05:54:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1583747657;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=zNNy4OU4z799DFnGrpM43KDZz+dFPqGX2kfMxUq+JC4=;
+  b=a2U6IkVKlgzZQeI6bAG58NAgwPUmz/xvCmc2INJPLS9UORxO3QzZDiBG
+   KLP7WfyJgOmS66F3vi6G/gqoMZnZKlwHodzzE+yPIIOEdv8D72JoewyEo
+   8i6ZnSn/POJvtcsdu5/lpLwucrzK/k9tdP1RtDxpcXKQybT7df0qLASaT
+   U=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: do3ZdpTCHyvaP5/SysNyQ6OvX1Aj0Ge4f7a/KYeItfaoREnOoclQ+3UyK3UmAERmfHfgoT/FiQ
+ LR9MObLUIfhV2BPRhBPXshsMWzuwO3v4tN81Aoi937geQXN+15Jjn0MKQSjxZacs9yopW4nPAZ
+ uDUMrTz2AwTvII9JUzZilZZKcERwlF4UumWQAdnHNAvCe+/bSVdDDablLPGbDI7n3on4l9R4+J
+ +es1+SHgHi13FosRMxuLOY1+8VoFhR3maY5sz1tdbvfoZ26Su//Y7lr5QmSGj1zs92DuWGF43J
+ BJY=
+X-SBRS: 2.7
+X-MesageID: 13805261
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.70,532,1574139600"; 
+   d="scan'208";a="13805261"
+Date:   Mon, 9 Mar 2020 10:54:07 +0100
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Anchal Agarwal <anchalag@amazon.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
+        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
+        <eduval@amazon.com>, <sblbir@amazon.com>,
+        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <fllinden@amaozn.com>,
+        <benh@kernel.crashing.org>
+Subject: Re: [RFC PATCH v3 06/12] xen-blkfront: add callbacks for PM suspend
+ and hibernation
+Message-ID: <20200309095245.GY24458@Air-de-Roger.citrite.net>
+References: <cover.1581721799.git.anchalag@amazon.com>
+ <890c404c585d7790514527f0c021056a7be6e748.1581721799.git.anchalag@amazon.com>
+ <20200221142445.GZ4679@Air-de-Roger>
+ <20200306184033.GA25358@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200306184033.GA25358@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL01.citrite.net (10.69.22.125)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert QUSB2 phy  bindings to DT schema format using json-schema.
+On Fri, Mar 06, 2020 at 06:40:33PM +0000, Anchal Agarwal wrote:
+> On Fri, Feb 21, 2020 at 03:24:45PM +0100, Roger Pau Monné wrote:
+> > On Fri, Feb 14, 2020 at 11:25:34PM +0000, Anchal Agarwal wrote:
+> > >  	blkfront_gather_backend_features(info);
+> > >  	/* Reset limits changed by blk_mq_update_nr_hw_queues(). */
+> > >  	blkif_set_queue_limits(info);
+> > > @@ -2046,6 +2063,9 @@ static int blkif_recover(struct blkfront_info *info)
+> > >  		kick_pending_request_queues(rinfo);
+> > >  	}
+> > >  
+> > > +	if (frozen)
+> > > +		return 0;
+> > 
+> > I have to admit my memory is fuzzy here, but don't you need to
+> > re-queue requests in case the backend has different limits of indirect
+> > descriptors per request for example?
+> > 
+> > Or do we expect that the frontend is always going to be resumed on the
+> > same backend, and thus features won't change?
+> > 
+> So to understand your question better here, AFAIU the  maximum number of indirect 
+> grefs is fixed by the backend, but the frontend can issue requests with any 
+> number of indirect segments as long as it's less than the number provided by 
+> the backend. So by your question you mean this max number of MAX_INDIRECT_SEGMENTS 
+> 256 on backend can change ?
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 149 +++++++++++++++++++++
- .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 ----------
- 2 files changed, 149 insertions(+), 68 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+Yes, number of indirect descriptors supported by the backend can
+change, because you moved to a different backend, or because the
+maximum supported by the backend has changed. It's also possible to
+resume on a backend that has no indirect descriptors support at all.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-new file mode 100644
-index 0000000..2342cd0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
-@@ -0,0 +1,149 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/qcom,qusb2-phy.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Qualcomm QUSB2 phy controller
-+
-+maintainers:
-+  - Manu Gautam <mgautam@codeaurora.org>
-+
-+description:
-+  QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,msm8996-qusb2-phy
-+      - qcom,msm8998-qusb2-phy
-+      - qcom,sdm845-qusb2-phy
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 3
-+    items:
-+      - description: phy config clock
-+      - description: 19.2 MHz ref clk
-+      - description: phy interface clock (Optional)
-+
-+  clock-names:
-+    minItems: 2
-+    maxItems: 3
-+    items:
-+      - const: cfg_ahb
-+      - const: ref
-+      - const: iface
-+
-+  vdda-pll-supply:
-+     description:
-+       Phandle to 1.8V regulator supply to PHY refclk pll block.
-+
-+  vdda-phy-dpdm-supply:
-+     description:
-+       Phandle to 3.1V regulator supply to Dp/Dm port signals.
-+
-+  resets:
-+    maxItems: 1
-+    description:
-+      Phandle to reset to phy block.
-+
-+  nvmem-cells:
-+    maxItems: 1
-+    description:
-+        Phandle to nvmem cell that contains 'HS Tx trim'
-+        tuning parameter value for qusb2 phy.
-+
-+  qcom,tcsr-syscon:
-+    description:
-+        Phandle to TCSR syscon register region.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: qcom,sdm845-qusb2-phy
-+then:
-+  properties:
-+    qcom,imp-res-offset-value:
-+      description:
-+        It is a 6 bit value that specifies offset to be
-+        added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
-+        tuning parameter that may vary for different boards of same SOC.
-+      allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        - minimum: 0
-+          maximum: 63
-+          default: 0
-+
-+    qcom,hstx-trim-value:
-+      description:
-+        It is a 4 bit value that specifies tuning for HSTX
-+        output current.
-+        Possible range is - 15mA to 24mA (stepsize of 600 uA).
-+        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-+      allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        - minimum: 0
-+          maximum: 15
-+          default: 3
-+
-+    qcom,preemphasis-level:
-+      description:
-+        It is a 2 bit value that specifies pre-emphasis level.
-+        Possible range is 0 to 15% (stepsize of 5%).
-+        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-+      allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        - minimum: 0
-+          maximum: 3
-+          default: 2
-+
-+    qcom,preemphasis-width:
-+      description:
-+        It is a 1 bit value that specifies how long the HSTX
-+        pre-emphasis (specified using qcom,preemphasis-level) must be in
-+        effect. Duration could be half-bit of full-bit.
-+        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-+      allOf:
-+        - $ref: /schemas/types.yaml#/definitions/uint32
-+        - minimum: 0
-+          maximum: 1
-+          default: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - vdda-pll-supply
-+  - vdda-phy-dpdm-supply
-+  - resets
-+
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-msm8996.h>
-+    hsusb_phy: phy@7411000 {
-+        compatible = "qcom,msm8996-qusb2-phy";
-+        reg = <0x7411000 0x180>;
-+        #phy-cells = <0>;
-+
-+        clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+                 <&gcc GCC_RX1_USB2_CLKREF_CLK>;
-+        clock-names = "cfg_ahb", "ref";
-+
-+        vdda-pll-supply = <&pm8994_l12>;
-+        vdda-phy-dpdm-supply = <&pm8994_l24>;
-+
-+        resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+        nvmem-cells = <&qusb2p_hstx_trim>;
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-deleted file mode 100644
-index fe29f9e..0000000
---- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-+++ /dev/null
-@@ -1,68 +0,0 @@
--Qualcomm QUSB2 phy controller
--=============================
--
--QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
--
--Required properties:
-- - compatible: compatible list, contains
--	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
--	       "qcom,msm8998-qusb2-phy" for 10nm PHY on msm8998,
--	       "qcom,sdm845-qusb2-phy" for 10nm PHY on sdm845.
--
-- - reg: offset and length of the PHY register set.
-- - #phy-cells: must be 0.
--
-- - clocks: a list of phandles and clock-specifier pairs,
--	   one for each entry in clock-names.
-- - clock-names: must be "cfg_ahb" for phy config clock,
--			"ref" for 19.2 MHz ref clk,
--			"iface" for phy interface clock (Optional).
--
-- - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-- - vdda-phy-dpdm-supply: Phandle to 3.1V regulator supply to Dp/Dm port signals.
--
-- - resets: Phandle to reset to phy block.
--
--Optional properties:
-- - nvmem-cells: Phandle to nvmem cell that contains 'HS Tx trim'
--		tuning parameter value for qusb2 phy.
--
-- - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
-- - qcom,imp-res-offset-value: It is a 6 bit value that specifies offset to be
--		added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
--		tuning parameter that may vary for different boards of same SOC.
--		This property is applicable to only QUSB2 v2 PHY (sdm845).
-- - qcom,hstx-trim-value: It is a 4 bit value that specifies tuning for HSTX
--		output current.
--		Possible range is - 15mA to 24mA (stepsize of 600 uA).
--		See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
--		This property is applicable to only QUSB2 v2 PHY (sdm845).
--		Default value is 22.2mA for sdm845.
-- - qcom,preemphasis-level: It is a 2 bit value that specifies pre-emphasis level.
--		Possible range is 0 to 15% (stepsize of 5%).
--		See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
--		This property is applicable to only QUSB2 v2 PHY (sdm845).
--		Default value is 10% for sdm845.
--- qcom,preemphasis-width: It is a 1 bit value that specifies how long the HSTX
--		pre-emphasis (specified using qcom,preemphasis-level) must be in
--		effect. Duration could be half-bit of full-bit.
--		See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
--		This property is applicable to only QUSB2 v2 PHY (sdm845).
--		Default value is full-bit width for sdm845.
--
--Example:
--	hsusb_phy: phy@7411000 {
--		compatible = "qcom,msm8996-qusb2-phy";
--		reg = <0x7411000 0x180>;
--		#phy-cells = <0>;
--
--		clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
--			<&gcc GCC_RX1_USB2_CLKREF_CLK>,
--		clock-names = "cfg_ahb", "ref";
--
--		vdda-pll-supply = <&pm8994_l12>;
--		vdda-phy-dpdm-supply = <&pm8994_l24>;
--
--		resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
--		nvmem-cells = <&qusb2p_hstx_trim>;
--        };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> > > @@ -2625,6 +2671,62 @@ static void blkif_release(struct gendisk *disk, fmode_t mode)
+> > >  	mutex_unlock(&blkfront_mutex);
+> > >  }
+> > >  
+> > > +static int blkfront_freeze(struct xenbus_device *dev)
+> > > +{
+> > > +	unsigned int i;
+> > > +	struct blkfront_info *info = dev_get_drvdata(&dev->dev);
+> > > +	struct blkfront_ring_info *rinfo;
+> > > +	/* This would be reasonable timeout as used in xenbus_dev_shutdown() */
+> > > +	unsigned int timeout = 5 * HZ;
+> > > +	int err = 0;
+> > > +
+> > > +	info->connected = BLKIF_STATE_FREEZING;
+> > > +
+> > > +	blk_mq_freeze_queue(info->rq);
+> > > +	blk_mq_quiesce_queue(info->rq);
+> > 
+> > Don't you need to also drain the queue and make sure it's empty?
+> > 
+> blk_mq_freeze_queue and blk_mq_quiesce_queue should take care of running HW queues synchronously
+> and making sure all the ongoing dispatches have finished. Did I understand your question right?
 
+Can you please add some check to that end? (ie: that there are no
+pending requests on any queue?)
+
+Thanks, Roger.
