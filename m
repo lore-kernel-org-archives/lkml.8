@@ -2,124 +2,100 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5765AC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B395FC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B4220828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED0520409
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgCIKcT (ORCPT
+        id S1726803AbgCIKc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 06:32:19 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46846 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgCIKcS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 06:32:18 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 111so4671253oth.13;
-        Mon, 09 Mar 2020 03:32:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pN1NhwV5FZU7mvbB/Fyos9y0uYvy+acNwUtvUwLUiRQ=;
-        b=XaEw1XPNkCWpXCIrYhb8n9WMjq3gpxMNPICsgt0nJJcLRh9wf7y3cC8T100TasrsDU
-         boWrnxRUfzkG3J97SSWVkq2SfAnAkkNjuV+pgfpik4uAT+kKsVN2EJl7DcETEUr4BibK
-         BdaJqva7UgM1YyyNN0Tk1l/EAu7HhKCcpqSA9aRNSS7jAR/ptv9krG0MxUEC9Dj4pCfy
-         t5TK1+okij+Sx8bnaJuJ74B7Z4deRg8yy/b1m1Xv8I4b5a2TLIZTa2pW7wtXNmbOqDq8
-         bv+IvzQsGD68A0Ik9sbVmHPSauNix0a1fau3k+/MeeG6n0dV+iojLybkL62mKAWSyO1f
-         AWgg==
-X-Gm-Message-State: ANhLgQ0g2yYfskHAZZ7SY2s7EEvLymXnooZMLGWcCSTc49MezVxvJRdd
-        f6ezOPn8FQF8OxIcZCY02LUSz3DYZCMBmnzDC3g=
-X-Google-Smtp-Source: ADFU+vvWEUII/TFq+DBVwE8+/gWKHsyLSflVItjuPLkHr74fKp/RQBIfJzV4NZ2ge/14b9Bn2Mfny2XLzY2FCAHqPAU=
-X-Received: by 2002:a9d:b89:: with SMTP id 9mr12586549oth.297.1583749937349;
- Mon, 09 Mar 2020 03:32:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200305103228.9686-1-zhang.lyra@gmail.com> <CAMuHMdVyy3v24zBxJFe5hYdnzdj80dvE2Z9GO4=AC1N8fD64pw@mail.gmail.com>
- <CAAfSe-spu2oNmfEYt+WQvRQy1bCC0e1MFjbUyBAFzghd5XNBfw@mail.gmail.com>
-In-Reply-To: <CAAfSe-spu2oNmfEYt+WQvRQy1bCC0e1MFjbUyBAFzghd5XNBfw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 9 Mar 2020 11:32:06 +0100
-Message-ID: <CAMuHMdV1qQZF-kAwbcxhHQZZ9hs0dG-OTZ2NcB25Jtra6ii5iA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: change ARCH_SPRD Kconfig to tristate
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 9 Mar 2020 06:32:28 -0400
+Received: from mga01.intel.com ([192.55.52.88]:46817 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbgCIKc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 06:32:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 03:32:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,532,1574150400"; 
+   d="scan'208";a="288655083"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Mar 2020 03:32:14 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Xu Yilun <yilun.xu@intel.com>, Luwei Kang <luwei.kang@intel.com>,
+        Wu Hao <hao.wu@intel.com>
+Subject: [PATCH 7/7] Documentation: fpga: dfl: add descriptions for interrupt related interfaces.
+Date:   Mon,  9 Mar 2020 18:29:50 +0800
+Message-Id: <1583749790-10837-8-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
+References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chunyan,
+This patch adds introductions of interrupt related interfaces for FME
+error reporting, port error reporting and AFU user interrupts features.
 
-On Mon, Mar 9, 2020 at 9:32 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> On Mon, 9 Mar 2020 at 16:03, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Mar 5, 2020 at 11:33 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > >
-> > > The default value of Kconfig for almost all sprd drivers are the same with
-> > > ARCH_SPRD, making these drivers built as modules as default would be easier
-> > > if we can set ARCH_SPRD as 'm', so this patch change ARCH_SPRD to tristate.
-> > >
-> > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> >
-> > Can you actually boot a kernel on a Spreadtrum platform when all platform
-> > and driver support is modular?
->
-> Yes, even if all drivers are modular.
+Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+Signed-off-by: Wu Hao <hao.wu@intel.com>
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+---
+ Documentation/fpga/dfl.rst | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Cool. No hard dependencies on e.g. regulators that are turned off when
-unused?
-
-> But I hope serial can be builtin, then I can have a console to see
-> kernel output before loading modules.
-
-No dependency on the clock driver?
-Oh, I see you have a hack in the serial driver, to assume default
-values when the serial port's parent clock is not found.  That may
-limit use of the other serial ports, depending on the actual serial
-hardware.
-And on Sharkl64, the serial port's clock is a fixed-clock anyway, so
-you don't even need the hack.
-
-But in general you cannot rely on that, especially if your SoC has clock
-and/or power domains.
-
-BTW, what about the watchdog driver? That one does need a clock, and
-loading it too late will reboot your system.
-
-> Also, this's what Google GKI [1] asked :)
->
-> Regards,
-> Chunyan
->
-> [1] https://arstechnica.com/gadgets/2019/11/google-outlines-plans-for-mainline-linux-kernel-support-in-android/
-
-Let's see how having everything modular works out on an SoC where all
-hardware is part of a clock and power domain.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
+index 094fc8a..3c4e150 100644
+--- a/Documentation/fpga/dfl.rst
++++ b/Documentation/fpga/dfl.rst
+@@ -89,6 +89,8 @@ The following functions are exposed through ioctls:
+ - Program bitstream (DFL_FPGA_FME_PORT_PR)
+ - Assign port to PF (DFL_FPGA_FME_PORT_ASSIGN)
+ - Release port from PF (DFL_FPGA_FME_PORT_RELEASE)
++- Get FME global error info (DFL_FPGA_FME_ERR_GET_INFO)
++- Set interrupt trigger for FME error (DFL_FPGA_FME_ERR_SET_IRQ)
+ 
+ More functions are exposed through sysfs
+ (/sys/class/fpga_region/regionX/dfl-fme.n/):
+@@ -144,6 +146,10 @@ The following functions are exposed through ioctls:
+ - Map DMA buffer (DFL_FPGA_PORT_DMA_MAP)
+ - Unmap DMA buffer (DFL_FPGA_PORT_DMA_UNMAP)
+ - Reset AFU (DFL_FPGA_PORT_RESET)
++- Get port error info (DFL_FPGA_PORT_ERR_GET_INFO)
++- Set interrupt trigger for port error(DFL_FPGA_PORT_ERR_SET_IRQ)
++- Get User AFU interrupt(UINT) info (DFL_FPGA_PORT_UINT_GET_INFO)
++- Set interrupt trigger for UINT (DFL_FPGA_PORT_UINT_SET_IRQ)
+ 
+ DFL_FPGA_PORT_RESET:
+   reset the FPGA Port and its AFU. Userspace can do Port
+@@ -378,6 +384,17 @@ The device nodes used for ioctl() or mmap() can be referenced through::
+ 	/sys/class/fpga_region/<regionX>/<dfl-port.n>/dev
+ 
+ 
++Interrupt support
++=================
++Some FME and AFU private features are able to generate interrupts. As mentioned
++above, users could call ioctl (DFL_FPGA_*_GET_INFO), query the nr_irqs field to
++know whether or how many interrupts are supported for this private feature.
++Drivers also implement an eventfd based interrupt handling mechanism for users
++to get notified when interrupt happens. Users could set eventfds to driver via
++ioctl (DFL_FPGA_*_SET_IRQ), and then poll/select on these eventfds waiting for
++notification.
++
++
+ Add new FIUs support
+ ====================
+ It's possible that developers made some new function blocks (FIUs) under this
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
