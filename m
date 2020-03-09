@@ -2,114 +2,193 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A29AC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CC3C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D842087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC30920727
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:28:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eXakfa4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgCII1E (ORCPT
+        id S1726463AbgCII2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:27:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:63271 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbgCII1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:27:04 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 01:27:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,532,1574150400"; 
-   d="scan'208";a="230851565"
-Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
-  by orsmga007.jf.intel.com with ESMTP; 09 Mar 2020 01:27:00 -0700
-Date:   Mon, 9 Mar 2020 16:26:49 +0800
-From:   kernel test robot <rong.a.chen@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86-ml <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        lkp@lists.01.org
-Subject: Re: [futex] 8019ad13ef: will-it-scale.per_process_ops -97.8%
- regression
-Message-ID: <20200309082649.GT5972@shao2-debian>
-References: <20200308140200.GO5972@shao2-debian>
- <CAHk-=wgJV7xrxsTkOG203huPShzZBEC6N_BG0KGwHBmEq4yqWg@mail.gmail.com>
- <CAHk-=whrpL8pbKLg3_s3+bxv6kbPnzbSP8dQkZ+Rv=jAT3aoKw@mail.gmail.com>
- <87h7yy90ve.fsf@nanos.tec.linutronix.de>
+        Mon, 9 Mar 2020 04:28:08 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:11058 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726215AbgCII2I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:28:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583742487; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=58JtApA+lyK7XUPWALxooOmt+v/+AZS/J6UTqVCMFcI=; b=eXakfa4AXdu5IDVGw9pKkwzkZY1Uc7p6KNtxQt29k2RXq3op+cR8iwOayzjR6y6nWr3JyJH2
+ qju+bNoyCMde8QqrNa5CuSdCrERNfQewdBxq/H9qX83d0SqT/nKQdrZ3YtDaRiE9nEugM3EO
+ dl3X9Yz3MwGnMfGAJpDC7zxQDxY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e65fe0f.7f59f1c80998-smtp-out-n02;
+ Mon, 09 Mar 2020 08:27:59 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A0CA3C433BA; Mon,  9 Mar 2020 08:27:59 +0000 (UTC)
+Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 48966C433D2;
+        Mon,  9 Mar 2020 08:27:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 48966C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v12 0/4] Invoke rpmh_flush for non OSI targets
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1583428023-19559-1-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=XwGR+3n__q=ojz7fV3EOSzLYCUdvcsCDY=uLo+eRvUMw@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <8ddfd8a9-7bb3-6107-c7d4-4a552272acfa@codeaurora.org>
+Date:   Mon, 9 Mar 2020 13:57:51 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <CAD=FV=XwGR+3n__q=ojz7fV3EOSzLYCUdvcsCDY=uLo+eRvUMw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87h7yy90ve.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 07:07:17PM +0100, Thomas Gleixner wrote:
-> Linus Torvalds <torvalds@linux-foundation.org> writes:
-> 
-> > [ Just a re-send without html crud that makes all the lists unhappy.
-> > I'm still on the road, the flight I was supposed to be on yesterday
-> > got cancelled.. ]
-> >
-> > I do note that the futex hashing seems to be broken by that commit. Or
-> > at least it's questionable.  It keeps hashing on "both.word",  and
-> > doesn't use the u64 field at all for hashing.
-> >
-> > Maybe I'm mis-reading it - I didn't apply the patch, I just looked at
-> > the patch and my source base separately.
-> >
-> > But the 98% regression sure says something went wrong ;)
-> 
-> Right you are. The pointer needs to be the starting point as it moved
-> ahead of word, which means it starts at word and hashes word and
-> offset and an extra u32 beyond the end of the key.
-> 
-> Thanks,
-> 
->         tglx
-> ----
-> diff --git a/kernel/futex.c b/kernel/futex.c
-> index e14f7cd45dbd..9f3251349f65 100644
-> --- a/kernel/futex.c
-> +++ b/kernel/futex.c
-> @@ -385,8 +385,8 @@ static inline int hb_waiters_pending(struct futex_hash_bucket *hb)
->   */
->  static struct futex_hash_bucket *hash_futex(union futex_key *key)
->  {
-> -	u32 hash = jhash2((u32*)&key->both.word,
-> -			  (sizeof(key->both.word)+sizeof(key->both.ptr))/4,
-> +	u32 hash = jhash2((u32*)&key->both.ptr,
-> +			  (sizeof(key->both.ptr) + sizeof(key->both.word)) / 4,
->  			  key->both.offset);
->  	return &futex_queues[hash & (futex_hashsize - 1)];
->  }
 
-Hi Thomas,
+On 3/6/2020 3:52 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Thu, Mar 5, 2020 at 9:07 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>> Changes in v12:
+>> - Kconfig change to remove COMPILE_TEST was dropped in v11, reinclude it.
+>>
+>> Changes in v11:
+>> - Address Doug's comments on change 2 and 3
+>> - Include change to invalidate TCSes before flush from [4]
+>>
+>> Changes in v10:
+>> - Address Evan's comments to update commit message on change 2
+>> - Add Evan's Reviewed by on change 2
+>> - Remove comment from rpmh_flush() related to last CPU invoking it
+>> - Rebase all changes on top of next-20200302
+>>
+>> Changes in v9:
+>> - Keep rpmh_flush() to invoke from within cache_lock
+>> - Remove comments related to only last cpu invoking rpmh_flush()
+>>
+>> Changes in v8:
+>> - Address Stephen's comments on changes 2 and 3
+>> - Add Reviewed by from Stephen on change 1
+>>
+>> Changes in v7:
+>> - Address Srinivas's comments to update commit text
+>> - Add Reviewed by from Srinivas
+>>
+>> Changes in v6:
+>> - Drop 1 & 2 changes from v5 as they already landed in maintainer tree
+>> - Drop 3 & 4 changes from v5 as no user at present for power domain in rsc
+>> - Rename subject to appropriate since power domain changes are dropped
+>> - Rebase other changes on top of next-20200221
+>>
+>> Changes in v5:
+>> - Add Rob's Acked by on dt-bindings change
+>> - Drop firmware psci change
+>> - Update cpuidle stats in dtsi to follow PC mode
+>> - Include change to update dirty flag when data is updated from [4]
+>> - Add change to invoke rpmh_flush when caches are dirty
+>>
+>> Changes in v4:
+>> - Add change to allow hierarchical topology in PC mode
+>> - Drop hierarchical domain idle states converter from v3
+>> - Address Merge sc7180 dtsi change to add low power modes
+>>
+>> Changes in v3:
+>> - Address Rob's comment on dt property value
+>> - Address Stephen's comments on rpmh-rsc driver change
+>> - Include sc7180 cpuidle low power mode changes from [1]
+>> - Include hierarchical domain idle states converter change from [2]
+>>
+>> Changes in v2:
+>> - Add Stephen's Reviewed-By to the first three patches
+>> - Addressed Stephen's comments on fourth patch
+>> - Include changes to connect rpmh domain to cpuidle and genpds
+>>
+>> Resource State Coordinator (RSC) is responsible for powering off/lowering
+>> the requirements from CPU subsystem for the associated hardware like buses,
+>> clocks, and regulators when all CPUs and cluster is powered down.
+>>
+>> RSC power domain uses last-man activities provided by genpd framework based
+>> on Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest
+>> idle states. As a part of domain poweroff, RSC can lower resource state
+>> requirements by flushing the cached sleep and wake state votes for various
+>> resources.
+>>
+>> [1] https://patchwork.kernel.org/patch/11218965
+>> [2] https://patchwork.kernel.org/patch/10941671
+>> [3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
+>> [4] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=236503
+>>
+>> Maulik Shah (3):
+>>   arm64: dts: qcom: sc7180: Add cpuidle low power states
+>>   soc: qcom: rpmh: Update dirty flag only when data changes
+>>   soc: qcom: rpmh: Invoke rpmh_flush for dirty caches
+>>
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+>>  drivers/soc/qcom/rpmh.c              | 27 ++++++++++---
+>>  2 files changed, 100 insertions(+), 5 deletions(-)
+> One overall optimization idea?
+>
+> Should we add two API calls:
+>
+> rpmh_start_operations()
+> rpmh_end_operations()
+>
+> These optional API calls would be an optimization a client could use.
+> When rpmh_start_operations() is called then RPMH code will inhibit
+> flushing (but will still update the "dirty" flag).  When
+> rpmh_end_operations() is called then the RPMH will flush if the dirty
+> flag is set.
+>
+> This is a pretty simple concept but should have a huge impact in the
+> number of times we program hardware in non-OSI mode.  Specifically, if
+> we don't do that and we look at what happens in the interconnect code:
+>
+> 1. We "invalidate" the batch.  We have to flush the non-batch commands
+> back into the hardware.
+>
+> 2. We program the "wake only" commands.  We have to flush the batch
+> wake-only commands and also the non-batch commands back into the
+> hardware.
+>
+> 3. We program the "sleep only" commands.  We have to flush yet again
+> with everything.
+>
+>
+>
+> -Doug
 
-I have tested the above patch, and the patch can fix the regression.
+Implemented in v13.
 
-commit:
-  v5.6-rc4
-  8019ad13ef ("futex: Fix inode life-time issue")
-  8eb641cbc3 ("the fix patch")
+Thanks,
+Maulik
 
-        v5.6-rc4  8019ad13ef7f64be44d4f892af  8eb641cbc397e3bbea2a9974e0  testcase/testparams/testbox
-----------------  --------------------------  --------------------------  ---------------------------
-         %stddev      change         %stddev      change         %stddev
-             \          |                \          |                \  
-   1083510             -98%      23904                     1078868        will-it-scale/performance-process-100%-futex2-ucode=0x2000065/lkp-skl-fpga01
-   1083510             -98%      23904                     1078868        GEO-MEAN will-it-scale.per_process_ops
-
-Best Regards,
-Rong Chen
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
