@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83157C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616B0C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1AF2465A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DB924670
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgCITfX (ORCPT
+        id S1726863AbgCITfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:35:23 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22361 "EHLO
+        Mon, 9 Mar 2020 15:35:53 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22384 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726461AbgCITfW (ORCPT
+        by vger.kernel.org with ESMTP id S1726521AbgCITfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:35:22 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+        Mon, 9 Mar 2020 15:35:23 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
   by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
+  by ironmsg05-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:20 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id F3EF04973; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
+        id CA6D54973; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -33,10 +33,14 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v7 09/13] pwm: sti: Use 64-bit division macros for period and duty cycle
-Date:   Mon,  9 Mar 2020 12:35:12 -0700
-Message-Id: <c3e233828023833744a69c75eb03f72885ee59d5.1583782035.git.gurus@codeaurora.org>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH v7 06/13] pwm: pwm-imx-tpm: Use 64-bit division macros for period and duty cycle
+Date:   Mon,  9 Mar 2020 12:35:09 -0700
+Message-Id: <e429fdb80dd6a77c57798a9c317c2206f37bc01f.1583782035.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1583782035.git.gurus@codeaurora.org>
 References: <cover.1583782035.git.gurus@codeaurora.org>
@@ -68,31 +72,30 @@ DIV64_* macros:
 - DIV64_U64_ROUND_CLOSEST
 - div64_u64
 
-Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/pwm/pwm-sti.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-imx-tpm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index 1508616..5a7f337 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -371,10 +371,11 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
- 		effective_ticks = clk_get_rate(pc->cpt_clk);
+diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+index 9145f61..53bf364 100644
+--- a/drivers/pwm/pwm-imx-tpm.c
++++ b/drivers/pwm/pwm-imx-tpm.c
+@@ -126,7 +126,7 @@ static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
+ 		real_state->duty_cycle = state->duty_cycle;
  
- 		result->period = (high + low) * NSEC_PER_SEC;
--		result->period /= effective_ticks;
-+		result->period = div_u64(result->period, effective_ticks);
+ 	tmp = (u64)p->mod * real_state->duty_cycle;
+-	p->val = DIV_ROUND_CLOSEST_ULL(tmp, real_state->period);
++	p->val = DIV64_U64_ROUND_CLOSEST(tmp, real_state->period);
  
- 		result->duty_cycle = high * NSEC_PER_SEC;
--		result->duty_cycle /= effective_ticks;
-+		result->duty_cycle = div_u64(result->duty_cycle,
-+				effective_ticks);
- 
- 		break;
- 
+ 	real_state->polarity = state->polarity;
+ 	real_state->enabled = state->enabled;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
