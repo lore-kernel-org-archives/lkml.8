@@ -2,117 +2,178 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791C8C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E86C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB6524649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883BF24649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="YCKeCIdF";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="MWbyA1l+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E3NR8XNV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgCIWwQ (ORCPT
+        id S1726809AbgCIWxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:52:16 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:47360 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbgCIWwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:52:15 -0400
-Received: by mail.z3ntu.xyz (Postfix, from userid 182)
-        id E5BE3C3FAC; Mon,  9 Mar 2020 22:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1583794332; bh=gQwhg6Y3501OZkUxA6UXYJ1D5RqvkeFPm6/Cqf5YXUA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=YCKeCIdFS7oLDvN3u1GGs5WpVo2300tfLiL6UOsUoDcSVZH+/8TNRsIMdzGbNSsnI
-         2oSQAsC36AtVwVDhZBEivXV1n/r7udCF+9DtDu/7HINaEGQ1OZlEKLggI/fogXsZ7N
-         u+V9+zmcwwh+vVsXKqY/MqpQesZS1OWTBCg+TRRo=
-Received: from g550jk.localnet (80-110-126-226.cgn.dynamic.surfer.at [80.110.126.226])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id A5234C3FAC;
-        Mon,  9 Mar 2020 22:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1583794327; bh=gQwhg6Y3501OZkUxA6UXYJ1D5RqvkeFPm6/Cqf5YXUA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=MWbyA1l+96Lqvu6rN9XUN0a6ng9lpjIdsEQkZysaXBPY4zArOd5F34z/AukWmKY9o
-         6mQ9lUeVpk2raOj09KWarUmACYAVDPEQ7ovigM76FVny4eAs5itD+L+UH0+YRFbYK4
-         PCbNXI1Ok+BzV1vjL539vF+uwIw91rMcEOxbJPXQ=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     Sakari Ailus <sakari.ailus@iki.fi>, Pavel Machek <pavel@ucw.cz>
-Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 3/3] leds: add sgm3140 driver
-Date:   Mon, 09 Mar 2020 23:52:06 +0100
-Message-ID: <2804366.mvXUDI8C0e@g550jk>
-In-Reply-To: <20200309224926.GA2917@duo.ucw.cz>
-References: <20200309203558.305725-1-luca@z3ntu.xyz> <20200309221805.GD2619@valkosipuli.retiisi.org.uk> <20200309224926.GA2917@duo.ucw.cz>
+        Mon, 9 Mar 2020 18:53:06 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31502 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726656AbgCIWxG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 18:53:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583794384;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2rI8BG2LwE/WAlwyan0GLFodPzv/0iZV/5EOQthjqaU=;
+        b=E3NR8XNVDj8+psk8VMLCryHMH06Z9Qx6qTsH2koi0qF2TWGym9FnHf7fz2rrEKkIBFdpV8
+        i7mO4kT0E7Y7qj73iucFuXS7jj+jBUqIKyO9ELwCYSBauySz/NLqHhv7uJoWZPyCwkM2+k
+        w21uiQ7DA6l78Bj/H60ubDsee/7WFLw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-0io6CmWXN42H4XZTVuBR1g-1; Mon, 09 Mar 2020 18:53:02 -0400
+X-MC-Unique: 0io6CmWXN42H4XZTVuBR1g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C654107ACC7;
+        Mon,  9 Mar 2020 22:52:59 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 55D9673892;
+        Mon,  9 Mar 2020 22:52:54 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200309200238.GB28467@miu.piliscsaba.redhat.com>
+References: <20200309200238.GB28467@miu.piliscsaba.redhat.com> <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk, Theodore Ts'o <tytso@mit.edu>,
+        Stefan Metzmacher <metze@samba.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
+        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
+        jlayton@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/14] VFS: Filesystem information [ver #18]
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <537181.1583794373.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Date:   Mon, 09 Mar 2020 22:52:53 +0000
+Message-ID: <537182.1583794373@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-On Montag, 9. M=E4rz 2020 23:49:27 CET Pavel Machek wrote:
-> Hi!
->=20
-> > > +#define FLASH_TIMEOUT_DEFAULT		250000 /* 250ms */
-> > > +#define FLASH_MAX_TIMEOUT_DEFAULT	300000 /* 300ms */
-> >=20
-> > Add U, and you can remove the cast elsewhere.
->=20
-> I'll disagree here. Avoid U, avoid cast. Neither is needed.
+> >  (1) It can be targetted.  It makes it easy to query directly by path =
+or
+> >      fd, but can also query by mount ID or fscontext fd.  procfs and s=
+ysfs
+> >      cannot do three of these things easily.
+> =
 
-If neither cast to u32 nor the U suffix is used, then this warning will be=
-=20
-printed:
+> See above: with the addition of open(path, O_PATH) it can do all of thes=
+e.
 
-In file included from ./include/asm-generic/bug.h:19,
-                 from ./arch/arm64/include/asm/bug.h:26,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/gpio/consumer.h:5,
-                 from drivers/leds/leds-sgm3140.c:4:
-drivers/leds/leds-sgm3140.c: In function 'sgm3140_probe':
-=2E/include/linux/kernel.h:835:29: warning: comparison of distinct pointer =
-types=20
-lacks a cast
-  835 |   (!!(sizeof((typeof(x) *)1 =3D=3D (typeof(y) *)1)))
-      |                             ^~
-=2E/include/linux/kernel.h:849:4: note: in expansion of macro '__typecheck'
-  849 |   (__typecheck(x, y) && __no_side_effects(x, y))
-      |    ^~~~~~~~~~~
-=2E/include/linux/kernel.h:859:24: note: in expansion of macro '__safe_cmp'
-  859 |  __builtin_choose_expr(__safe_cmp(x, y), \
-      |                        ^~~~~~~~~~
-=2E/include/linux/kernel.h:868:19: note: in expansion of macro '__careful_c=
-mp'
-  868 | #define min(x, y) __careful_cmp(x, y, <)
-      |                   ^~~~~~~~~~~~~
-drivers/leds/leds-sgm3140.c:187:18: note: in expansion of macro 'min'
-  187 |  priv->timeout =3D min(priv->max_timeout, FLASH_TIMEOUT_DEFAULT);
-      |                  ^~~
+That's a horrible interface.  To query a file by path, you have to do:
 
-So one of both is needed.
+	fd =3D open(path, O_PATH);
+	sprintf(procpath, "/proc/self/fdmount/%u/<attr>");
+	fd2 =3D open(procpath, O_RDONLY);
+	read(fd2, ...);
+	close(fd2);
+	close(fd);
 
->=20
-> Best regards,
-> 							=09
-	Pavel
+See point (3) about efficiency also.  You're having to open *two* files.
 
-Regards
-Luca
+> >  (2) Easier to provide LSM oversight.  Is the accessing process allowe=
+d to
+> >      query information pertinent to a particular file?
+> =
 
+> Not quite sure why this would be easier for a new ad-hoc interface than =
+for
+> the well established filesystem API.
+
+You're right.  That's why fsinfo() uses standard pathwalk where possible,
+e.g.:
+
+	fsinfo(AT_FDCWD, "/path/to/file", ...);
+
+or a fairly standard fd-querying interface:
+
+	fsinfo(fd, "", { resolve_flags =3D RESOLVE_EMPTY_PATH },  ...);
+
+to query an open file descriptor.  These are well-established filesystem A=
+PIs.
+
+Where I vary from this is allowing direct specification of a mount ID also=
+,
+with a special flag to say that's what I'm doing:
+
+	fsinfo(AT_FDCWD, "23", { flags =3D FSINFO_QUERY_FLAGS_MOUNT },  ...);
+
+> >  (7) Don't have to create/delete a bunch of sysfs/procfs nodes each ti=
+me a
+> >      mount happens or is removed - and since systemd makes much use of
+> >      mount namespaces and mount propagation, this will create a lot of
+> >      nodes.
+> =
+
+> This patch creates a single struct mountfs_entry per mount, which is 48b=
+ytes.
+
+fsinfo() doesn't create any.  Furthermore, it seems that mounts get multip=
+lied
+8-10 times by systemd - though, as you say, it's not necessarily a great d=
+eal
+of memory.
+
+> Now onto the advantages of a filesystem based API:
+> =
+
+>  - immediately usable from all programming languages, including scripts
+
+This is not true.  You can't open O_PATH from shell scripts, so you can't
+query things by path that you can't or shouldn't open (dev file paths, for
+example; symlinks).
+
+I imagine you're thinking of something like:
+
+	{
+		id=3D`cat /proc/self/fdmount/5/parent_mount`
+	} 5</my/path/to/my/file
+
+but what if /my/path/to/my/file is actually /dev/foobar?
+
+I've had a grep through the bash sources, but can't seem to find anywhere =
+that
+uses O_PATH.
+
+>  - same goes for future extensions: no need to update libc, utils, langu=
+age
+>    bindings, strace, etc...
+
+Applications and libraries using these attributes would have to change any=
+way
+to make use of additional information.
+
+But it's not a good argument since you now have to have text parsers that
+change over time.
+
+David
 
