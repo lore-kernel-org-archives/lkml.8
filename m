@@ -2,153 +2,66 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F25C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E03C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD8620675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:44:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQx67vi8"
+	by mail.kernel.org (Postfix) with ESMTP id A42E820637
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgCINof (ORCPT
+        id S1726715AbgCINpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:44:35 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37144 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgCINof (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:44:35 -0400
-Received: by mail-qt1-f196.google.com with SMTP id l20so5324584qtp.4;
-        Mon, 09 Mar 2020 06:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=D6cXat42hj47od4O3YYRkfc6ydOCCt1WIPX2GeSiPA8=;
-        b=dQx67vi8EfXyUq0/64+oIGZy1P1ALvt/9kWj65TgZKzXxjwlrJS06mGtVtqi0bNUdx
-         m9dObpOjMO8fJZOkiURuyB6adPlF56NUdElmMnLryNrN3V+4klanIP6tGEvADSDk0x1t
-         sG2sWJDJ4zMIvesErqzpU+Xt+ZLQepyjR71GJ3DdRrWtyKuP/RDgBg4GHlVMG5WWuk66
-         tCTXsD5xv5hmR2GRpgW5AvuRnNGd/fUhzKupuyfLtupuHRdfcegA22F7+8PbIxQtHx6V
-         VHl2Lv2EZIDLbl2ct3/FblQOhYXfWgryPWh0dY04u5IKO9I3adQz//9XWlLyamoC5eFO
-         CCgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D6cXat42hj47od4O3YYRkfc6ydOCCt1WIPX2GeSiPA8=;
-        b=cI1S30es62037TwV0bjgv34f1tZss4oM4B1LHF/QY43cpw7qjmxDFJVour2glvFm7R
-         ghcLzaPlxbIwxdnQLb86jrmBDvmtVvtYyyWm+uOLNIxqIQwZvSnHsfXHzlG85ab3ZQ6x
-         TU74GYSo012xN5n5dcIfM1kq2l4tvtudfQlSRYrJdkQpGqjziNtDtQKNrsZBZyMxq+fv
-         D3y0zVqdU02d8lgvAHovuLMqMu3wiQn4mCNGXNgB3PHUryEZWbvdvM1C1FwUOKk3xlvD
-         B40euHDNxLacpcFfgsKtm0FFccnQEd/q1e5P5GcvAeX4hESbxiPPaQWtfMHbvQe2NX2M
-         UPTQ==
-X-Gm-Message-State: ANhLgQ0hmp19kXLVgn7MjZreGfsqcAqulsv+TC8+ykdrti1WNGdtmxyd
-        +DI9WC4LnCL0wJfdD1CjwhQ=
-X-Google-Smtp-Source: ADFU+vvJLunTyPwIkpuxQglgVQSjM8WsdfHHO4oWoKh+k9FOa6zpm2+G2He/3R9IklZN3wpAHqotxQ==
-X-Received: by 2002:ac8:4e2e:: with SMTP id d14mr11937429qtw.179.1583761474284;
-        Mon, 09 Mar 2020 06:44:34 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id m65sm2098791qke.109.2020.03.09.06.44.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 06:44:33 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F3CEC40009; Mon,  9 Mar 2020 10:44:30 -0300 (-03)
-Date:   Mon, 9 Mar 2020 10:44:30 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Alexandre Ghiti <alex@ghiti.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [BUGFIX PATCH] perf probe: Do not depend on dwfl_module_addrsym()
-Message-ID: <20200309134430.GE477@kernel.org>
-References: <20200228002553.31b82876b705aaabbd717131@kernel.org>
- <158281812176.476.14164573830975116234.stgit@devnote2>
- <787c2915-c868-358a-481d-1ffd355d92db@ghiti.fr>
- <20200228085238.84d53d6b753efb4cc18d20cb@kernel.org>
+        Mon, 9 Mar 2020 09:45:52 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:58810 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbgCINpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:45:52 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id C3A963701AC9;
+        Mon,  9 Mar 2020 14:45:50 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oXfIn-hvP3mj; Mon,  9 Mar 2020 14:45:48 +0100 (CET)
+Subject: Re: [RFC PATCH 1/1] leds: add generic inverted led trigger support
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Tobias Schramm <t.schramm@manjaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200308142722.1199260-1-t.schramm@manjaro.org>
+ <20200308142722.1199260-2-t.schramm@manjaro.org>
+ <057e4efd-30a1-20df-d990-d11ef2573a3e@gmail.com>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Message-ID: <c799f3b7-2b55-0d8f-c54d-38b525d67e9c@manjaro.org>
+Date:   Mon, 9 Mar 2020 14:46:52 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228085238.84d53d6b753efb4cc18d20cb@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <057e4efd-30a1-20df-d990-d11ef2573a3e@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Feb 28, 2020 at 08:52:38AM +0900, Masami Hiramatsu escreveu:
-> On Thu, 27 Feb 2020 17:20:39 +0100
-> Alexandre Ghiti <alex@ghiti.fr> wrote:
-> 
-> > On 2/27/20 4:42 PM, Masami Hiramatsu wrote:
-> > > Do not depend on dwfl_module_addrsym() because it can fail
-> > > on user-space shared libraries.
-> > > 
-> > > Actually, same bug was fixed by commit 664fee3dc379 ("perf
-> > > probe: Do not use dwfl_module_addrsym if dwarf_diename finds
-> > > symbol name"), but commit 07d369857808 ("perf probe: Fix
-> > > wrong address verification) reverted to get actual symbol
-> > > address from symtab.
-> > > 
-> > > This fixes it again by getting symbol address from DIE,
-> > > and only if the DIE has only address range, it uses
-> > > dwfl_module_addrsym().
-> > > 
-> > > Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
-> > > Reported-by: Alexandre Ghiti <alex@ghiti.fr>
-> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > > ---
-> > >   tools/perf/util/probe-finder.c |   11 ++++++++---
-> > >   1 file changed, 8 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> > > index 1c817add6ca4..e4cff49384f4 100644
-> > > --- a/tools/perf/util/probe-finder.c
-> > > +++ b/tools/perf/util/probe-finder.c
-> > > @@ -637,14 +637,19 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
-> > >   		return -EINVAL;
-> > >   	}
-> > >   
-> > > -	/* Try to get actual symbol name from symtab */
-> > > -	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-> > > +	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
-> > > +		/* If the DIE has entrypc, use it. */
-> > > +		symbol = dwarf_diename(sp_die);
-> > > +	} else {
-> > > +		/* Try to get actual symbol name and address from symtab */
-> > > +		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-> > > +		eaddr = sym.st_value;
-> > > +	}
-> > >   	if (!symbol) {
-> > >   		pr_warning("Failed to find symbol at 0x%lx\n",
-> > >   			   (unsigned long)paddr);
-> > >   		return -ENOENT;
-> > >   	}
-> > > -	eaddr = sym.st_value;
-> > >   
-> > >   	tp->offset = (unsigned long)(paddr - eaddr);
-> > >   	tp->address = (unsigned long)paddr;
-> > > 
-> > 
-> > I have just tested your patch, that fixes the issue, so you can add:
-> > 
-> > Tested-by: Alexandre Ghiti <alex@ghiti.fr>
-> 
-> Thanks Alexandre,
-> Arnaldo, could you also pick this for fix?
+Hi Jacek,
+
+thanks dor the feedback.
+
+> We have already some triggers that accomplish that by introducing
+> a custom sysfs file.
+[...]
+> You could also try to make this a generic feature
+> for all LED triggers.
+
+Based on the other feedback I got I will do just that. Pavel is right,
+we do already have a lot of triggers, doubling the number of triggers is
+probably not the best idea.
+
+Tobias
 
 
-Thanks, applied.
 
-- Arnaldo
