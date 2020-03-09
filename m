@@ -2,343 +2,123 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A985EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D805C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840D320866
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C02621927
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgCINmC (ORCPT
+        id S1726825AbgCINmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:42:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:52444 "EHLO foss.arm.com"
+        Mon, 9 Mar 2020 09:42:12 -0400
+Received: from mga17.intel.com ([192.55.52.151]:17848 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbgCINmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:42:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A809C101E;
-        Mon,  9 Mar 2020 06:42:00 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.37.12.74])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 733E83F67D;
-        Mon,  9 Mar 2020 06:41:50 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
-        javi.merino@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
-        patrick.bellasi@matbug.net, orjan.eide@arm.com,
-        rdunlap@infradead.org
-Subject: [PATCH v4 2/4] OPP: change parameter to device pointer in dev_pm_opp_of_register_em()
-Date:   Mon,  9 Mar 2020 13:41:15 +0000
-Message-Id: <20200309134117.2331-3-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200309134117.2331-1-lukasz.luba@arm.com>
-References: <20200309134117.2331-1-lukasz.luba@arm.com>
+        id S1726610AbgCINmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:42:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 06:42:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,533,1574150400"; 
+   d="scan'208";a="276520286"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Mar 2020 06:42:09 -0700
+Received: from [10.251.21.146] (kliang2-mobl.ccr.corp.intel.com [10.251.21.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 527205802A3;
+        Mon,  9 Mar 2020 06:42:08 -0700 (PDT)
+Subject: Re: [PATCH 00/12] Stitch LBR call stack (Perf Tools)
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, peterz@infradead.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        namhyung@kernel.org, adrian.hunter@intel.com,
+        mathieu.poirier@linaro.org, ravi.bangoria@linux.ibm.com,
+        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
+        pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
+        ak@linux.intel.com
+References: <20200228163011.19358-1-kan.liang@linux.intel.com>
+ <20200306093940.GD281906@krava>
+ <243484a9-5d64-707e-4abb-dd8813a8755e@linux.intel.com>
+ <20200309132710.GA477@kernel.org>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <4b484d13-427e-1faa-a553-86a8cc3e5a30@linux.intel.com>
+Date:   Mon, 9 Mar 2020 09:42:06 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200309132710.GA477@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the CPU specific interface with cpumask and switch to struct device.
-The Energy Model framework supports both: CPUs and devfreq devices. The new
-interface provides easy way to create a Energy Model (EM), which then might
-be used in i.e. thermal subsystem.
 
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- drivers/cpufreq/cpufreq-dt.c           |  4 +-
- drivers/cpufreq/imx6q-cpufreq.c        |  7 +++-
- drivers/cpufreq/mediatek-cpufreq.c     |  5 ++-
- drivers/cpufreq/omap-cpufreq.c         |  6 ++-
- drivers/cpufreq/qcom-cpufreq-hw.c      |  4 +-
- drivers/cpufreq/scpi-cpufreq.c         |  4 +-
- drivers/cpufreq/vexpress-spc-cpufreq.c |  4 +-
- drivers/opp/of.c                       | 52 ++++++++++++++------------
- include/linux/pm_opp.h                 | 15 +++++++-
- 9 files changed, 68 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
-index d2b5f062a07b..676b56424886 100644
---- a/drivers/cpufreq/cpufreq-dt.c
-+++ b/drivers/cpufreq/cpufreq-dt.c
-@@ -275,7 +275,9 @@ static int cpufreq_init(struct cpufreq_policy *policy)
- 	policy->cpuinfo.transition_latency = transition_latency;
- 	policy->dvfs_possible_from_any_cpu = true;
- 
--	dev_pm_opp_of_register_em(policy->cpus);
-+	ret = dev_pm_opp_of_register_em(cpu_dev, policy->cpus);
-+	if (ret)
-+		dev_dbg(cpu_dev, "Couldn't register Energy Model %d\n", ret);
- 
- 	return 0;
- 
-diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
-index 285b8e9aa185..e315f33db248 100644
---- a/drivers/cpufreq/imx6q-cpufreq.c
-+++ b/drivers/cpufreq/imx6q-cpufreq.c
-@@ -190,10 +190,15 @@ static int imx6q_set_target(struct cpufreq_policy *policy, unsigned int index)
- 
- static int imx6q_cpufreq_init(struct cpufreq_policy *policy)
- {
-+	int ret;
-+
- 	policy->clk = clks[ARM].clk;
- 	cpufreq_generic_init(policy, freq_table, transition_latency);
- 	policy->suspend_freq = max_freq;
--	dev_pm_opp_of_register_em(policy->cpus);
-+
-+	ret = dev_pm_opp_of_register_em(cpu_dev, policy->cpus);
-+	if (ret)
-+		dev_dbg(cpu_dev, "Couldn't register Energy Model %d\n", ret);
- 
- 	return 0;
- }
-diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-index 0c98dd08273d..4aaa2211632f 100644
---- a/drivers/cpufreq/mediatek-cpufreq.c
-+++ b/drivers/cpufreq/mediatek-cpufreq.c
-@@ -448,7 +448,10 @@ static int mtk_cpufreq_init(struct cpufreq_policy *policy)
- 	policy->driver_data = info;
- 	policy->clk = info->cpu_clk;
- 
--	dev_pm_opp_of_register_em(policy->cpus);
-+	ret = dev_pm_opp_of_register_em(info->cpu_dev, policy->cpus);
-+	if (ret)
-+		dev_dbg(info->cpu_dev, "Couldn't register Energy Model %d\n",
-+			ret);
- 
- 	return 0;
- }
-diff --git a/drivers/cpufreq/omap-cpufreq.c b/drivers/cpufreq/omap-cpufreq.c
-index 8d14b42a8c6f..27eefe47aa82 100644
---- a/drivers/cpufreq/omap-cpufreq.c
-+++ b/drivers/cpufreq/omap-cpufreq.c
-@@ -131,7 +131,11 @@ static int omap_cpu_init(struct cpufreq_policy *policy)
- 
- 	/* FIXME: what's the actual transition time? */
- 	cpufreq_generic_init(policy, freq_table, 300 * 1000);
--	dev_pm_opp_of_register_em(policy->cpus);
-+
-+	result = dev_pm_opp_of_register_em(mpu_dev, policy->cpus);
-+	if (result)
-+		dev_dbg(mpu_dev, "Couldn't register Energy Model %d\n",
-+			 result);
- 
- 	return 0;
- }
-diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-index fc92a8842e25..bb620bd5660f 100644
---- a/drivers/cpufreq/qcom-cpufreq-hw.c
-+++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-@@ -238,7 +238,9 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
- 		goto error;
- 	}
- 
--	dev_pm_opp_of_register_em(policy->cpus);
-+	ret = dev_pm_opp_of_register_em(cpu_dev, policy->cpus);
-+	if (ret)
-+		dev_dbg(cpu_dev, "Couldn't register Energy Model %d\n", ret);
- 
- 	policy->fast_switch_possible = true;
- 
-diff --git a/drivers/cpufreq/scpi-cpufreq.c b/drivers/cpufreq/scpi-cpufreq.c
-index 20d1f85d5f5a..e19252087b8e 100644
---- a/drivers/cpufreq/scpi-cpufreq.c
-+++ b/drivers/cpufreq/scpi-cpufreq.c
-@@ -167,7 +167,9 @@ static int scpi_cpufreq_init(struct cpufreq_policy *policy)
- 
- 	policy->fast_switch_possible = false;
- 
--	dev_pm_opp_of_register_em(policy->cpus);
-+	ret = dev_pm_opp_of_register_em(cpu_dev, policy->cpus);
-+	if (ret)
-+		dev_dbg(cpu_dev, "Couldn't register Energy Model %d\n", ret);
- 
- 	return 0;
- 
-diff --git a/drivers/cpufreq/vexpress-spc-cpufreq.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
-index 83c85d3d67e3..8e541b4c3c74 100644
---- a/drivers/cpufreq/vexpress-spc-cpufreq.c
-+++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
-@@ -450,7 +450,9 @@ static int ve_spc_cpufreq_init(struct cpufreq_policy *policy)
- 	policy->freq_table = freq_table[cur_cluster];
- 	policy->cpuinfo.transition_latency = 1000000; /* 1 ms */
- 
--	dev_pm_opp_of_register_em(policy->cpus);
-+	ret = dev_pm_opp_of_register_em(cpu_dev, policy->cpus);
-+	if (ret)
-+		dev_dbg(cpu_dev, "Couldn't register Energy Model %d\n", ret);
- 
- 	if (is_bL_switching_enabled())
- 		per_cpu(cpu_last_req_freq, policy->cpu) =
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 0efd6cf6d023..9998cf2bfef0 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -1036,18 +1036,18 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_get_of_node);
- 
- /*
-  * Callback function provided to the Energy Model framework upon registration.
-- * This computes the power estimated by @CPU at @kHz if it is the frequency
-+ * This computes the power estimated by @dev at @kHz if it is the frequency
-  * of an existing OPP, or at the frequency of the first OPP above @kHz otherwise
-  * (see dev_pm_opp_find_freq_ceil()). This function updates @kHz to the ceiled
-  * frequency and @mW to the associated power. The power is estimated as
-- * P = C * V^2 * f with C being the CPU's capacitance and V and f respectively
-- * the voltage and frequency of the OPP.
-+ * P = C * V^2 * f with C being the device's capacitance and V and f
-+ * respectively the voltage and frequency of the OPP.
-  *
-- * Returns -ENODEV if the CPU device cannot be found, -EINVAL if the power
-- * calculation failed because of missing parameters, 0 otherwise.
-+ * Returns -EINVAL if the power calculation failed because of missing
-+ * parameters, 0 otherwise.
-  */
--static int __maybe_unused _get_cpu_power(unsigned long *mW, unsigned long *kHz,
--					 struct device *cpu_dev)
-+static int __maybe_unused _get_power(unsigned long *mW, unsigned long *kHz,
-+				     struct device *dev)
- {
- 	struct dev_pm_opp *opp;
- 	struct device_node *np;
-@@ -1056,7 +1056,7 @@ static int __maybe_unused _get_cpu_power(unsigned long *mW, unsigned long *kHz,
- 	u64 tmp;
- 	int ret;
- 
--	np = of_node_get(cpu_dev->of_node);
-+	np = of_node_get(dev->of_node);
- 	if (!np)
- 		return -EINVAL;
- 
-@@ -1066,7 +1066,7 @@ static int __maybe_unused _get_cpu_power(unsigned long *mW, unsigned long *kHz,
- 		return -EINVAL;
- 
- 	Hz = *kHz * 1000;
--	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &Hz);
-+	opp = dev_pm_opp_find_freq_ceil(dev, &Hz);
- 	if (IS_ERR(opp))
- 		return -EINVAL;
- 
-@@ -1086,30 +1086,32 @@ static int __maybe_unused _get_cpu_power(unsigned long *mW, unsigned long *kHz,
- 
- /**
-  * dev_pm_opp_of_register_em() - Attempt to register an Energy Model
-- * @cpus	: CPUs for which an Energy Model has to be registered
-+ * @dev		: Device for which an Energy Model has to be registered
-+ * @cpus	: CPUs for which an Energy Model has to be registered. For
-+ *		other type of devices it should be set to NULL.
-  *
-  * This checks whether the "dynamic-power-coefficient" devicetree property has
-  * been specified, and tries to register an Energy Model with it if it has.
-+ * Having this property means the voltages are known for OPPs and the EM
-+ * might be calculated.
-  */
--void dev_pm_opp_of_register_em(struct cpumask *cpus)
-+int dev_pm_opp_of_register_em(struct device *dev, struct cpumask *cpus)
- {
--	struct em_data_callback em_cb = EM_DATA_CB(_get_cpu_power);
--	int ret, nr_opp, cpu = cpumask_first(cpus);
--	struct device *cpu_dev;
-+	struct em_data_callback em_cb = EM_DATA_CB(_get_power);
- 	struct device_node *np;
-+	int ret, nr_opp;
- 	u32 cap;
- 
--	cpu_dev = get_cpu_device(cpu);
--	if (!cpu_dev)
--		return;
-+	if (IS_ERR_OR_NULL(dev))
-+		return -EINVAL;
- 
--	nr_opp = dev_pm_opp_get_opp_count(cpu_dev);
-+	nr_opp = dev_pm_opp_get_opp_count(dev);
- 	if (nr_opp <= 0)
--		return;
-+		return -EINVAL;
- 
--	np = of_node_get(cpu_dev->of_node);
-+	np = of_node_get(dev->of_node);
- 	if (!np)
--		return;
-+		return -EINVAL;
- 
- 	/*
- 	 * Register an EM only if the 'dynamic-power-coefficient' property is
-@@ -1120,9 +1122,11 @@ void dev_pm_opp_of_register_em(struct cpumask *cpus)
- 	 */
- 	ret = of_property_read_u32(np, "dynamic-power-coefficient", &cap);
- 	of_node_put(np);
--	if (ret || !cap)
--		return;
-+	if (ret || !cap) {
-+		dev_dbg(dev, "Couldn't find proper 'dynamic-power-coefficient' in DT\n");
-+		return -EINVAL;
-+	}
- 
--	em_register_perf_domain(cpu_dev, nr_opp, &em_cb, cpus);
-+	return em_register_perf_domain(dev, nr_opp, &em_cb, cpus);
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_of_register_em);
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index 747861816f4f..822ff9f52bf7 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -11,6 +11,7 @@
- #ifndef __LINUX_OPP_H__
- #define __LINUX_OPP_H__
- 
-+#include <linux/energy_model.h>
- #include <linux/err.h>
- #include <linux/notifier.h>
- 
-@@ -360,7 +361,11 @@ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpuma
- struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev);
- struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp);
- int of_get_required_opp_performance_state(struct device_node *np, int index);
--void dev_pm_opp_of_register_em(struct cpumask *cpus);
-+int dev_pm_opp_of_register_em(struct device *dev, struct cpumask *cpus);
-+static inline void dev_pm_opp_of_unregister_em(struct device *dev)
-+{
-+	em_unregister_perf_domain(dev);
-+}
- #else
- static inline int dev_pm_opp_of_add_table(struct device *dev)
- {
-@@ -400,7 +405,13 @@ static inline struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp)
- 	return NULL;
- }
- 
--static inline void dev_pm_opp_of_register_em(struct cpumask *cpus)
-+static inline int dev_pm_opp_of_register_em(struct device *dev,
-+					    struct cpumask *cpus)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline void dev_pm_opp_of_unregister_em(struct device *dev)
- {
- }
- 
--- 
-2.17.1
+On 3/9/2020 9:27 AM, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Mar 06, 2020 at 02:13:15PM -0500, Liang, Kan escreveu:
+>>
+>>
+>> On 3/6/2020 4:39 AM, Jiri Olsa wrote:
+>>> On Fri, Feb 28, 2020 at 08:29:59AM -0800, kan.liang@linux.intel.com wrote:
+>>>
+>>> SNIP
+>>>
+>>>> Kan Liang (12):
+>>>>     perf tools: Add hw_idx in struct branch_stack
+>>>>     perf tools: Support PERF_SAMPLE_BRANCH_HW_INDEX
+>>>>     perf header: Add check for event attr
+>>>>     perf pmu: Add support for PMU capabilities
+>>>
+>>> hi,
+>>> I'm getting compile error:
+>>>
+>>> 	util/pmu.c: In function ‘perf_pmu__caps_parse’:
+>>> 	util/pmu.c:1620:32: error: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size between 0 and 4095 [-Werror=format-truncation=]
+>>> 	 1620 |   snprintf(path, PATH_MAX, "%s/%s", caps_path, name);
+>>> 	      |                                ^~
+>>> 	In file included from /usr/include/stdio.h:867,
+>>> 			 from util/pmu.c:12:
+>>> 	/usr/include/bits/stdio2.h:67:10: note: ‘__builtin___snprintf_chk’ output between 2 and 4352 bytes into a destination of size 4096
+>>> 	   67 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+>>> 	      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>> 	   68 |        __bos (__s), __fmt, __va_arg_pack ());
+>>> 	      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>> 	cc1: all warnings being treated as errors
+>>>
+>>> 	[jolsa@krava perf]$ gcc --version
+>>> 	gcc (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1)
+>>
+>> My GCC version is too old. I will send V2 later to fix the error.
+> 
+> So I stopped at the patch just before the one introducing this problem,
+> i.e. now I have:
+> 
+> [acme@seventh perf]$ git log --oneline -10
+> 5100c2b77049 (HEAD -> perf/core, five/perf/core, acme/perf/core) perf header: Add check for unexpected use of reserved membrs in event attr
+> 1d2fc2bd7c1c perf evsel: Support PERF_SAMPLE_BRANCH_HW_INDEX
+> 1fa65c5092da perf tools: Add hw_idx in struct branch_stack
+> 6339998d22ec tools headers UAPI: Update tools's copy of linux/perf_event.h
+> 401d61cbd4d4 tools lib traceevent: Remove extra '\n' in print_event_time()
+> 76ce02651dab libperf: Add counting example
+> dabce16bd292 perf annotate: Get rid of annotation->nr_jumps
+> 357a5d24c471 perf llvm: Add debug hint message about missing kernel-devel package
+> 1af62ce61cd8 perf stat: Show percore counts in per CPU output
+> 7982a8985150 tools lib api fs: Move cgroupsfs_find_mountpoint()
+> [acme@seventh perf]$
+> 
+> Please continue from there, I'll process some other patchsets,
+> 
 
+Sure. I will re-base my patchset on top of it.
+
+Thanks,
+Kan
