@@ -2,64 +2,110 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162C5C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A439FC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB4AE21D7E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8305521D7E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgCIVjg (ORCPT
+        id S1727053AbgCIVlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:39:36 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:55317 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgCIVjf (ORCPT
+        Mon, 9 Mar 2020 17:41:04 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:41375 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgCIVlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:39:35 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 67158CECC4;
-        Mon,  9 Mar 2020 22:49:02 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [RFC PATCH v5 1/5] Bluetooth: Handle PM_SUSPEND_PREPARE and
- PM_POST_SUSPEND
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200308142005.RFC.v5.1.I62f17edc39370044c75ad43a55a7382b4b8a5ceb@changeid>
-Date:   Mon, 9 Mar 2020 22:39:33 +0100
-Cc:     Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Alain Michaud <alainm@chromium.org>,
-        linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
+        Mon, 9 Mar 2020 17:41:04 -0400
+Received: from webmail.gandi.net (webmail15.sd4.0x35.net [10.200.201.15])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay12.mail.gandi.net (Postfix) with ESMTPA id C1733200005;
+        Mon,  9 Mar 2020 21:41:00 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <A815D112-7B0B-47A2-9CD5-C0D2E2115F19@holtmann.org>
-References: <20200308212334.213841-1-abhishekpandit@chromium.org>
- <20200308142005.RFC.v5.1.I62f17edc39370044c75ad43a55a7382b4b8a5ceb@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+Date:   Mon, 09 Mar 2020 22:41:00 +0100
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] dt-bindings: input: Add docs for ADC driven
+ joystick.
+In-Reply-To: <20200309203814.GA29255@bogus>
+References: <20200307211412.44148-1-contact@artur-rojek.eu>
+ <20200307211412.44148-4-contact@artur-rojek.eu>
+ <20200309203814.GA29255@bogus>
+Message-ID: <bb188a58f29dfedcf56bb420f07a6813@artur-rojek.eu>
+X-Sender: contact@artur-rojek.eu
+User-Agent: Roundcube Webmail/1.3.8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+Hi Rob,
 
-> Register for PM_SUSPEND_PREPARE and PM_POST_SUSPEND to make sure the
-> Bluetooth controller is prepared correctly for suspend/resume. Implement
-> the registration, scheduling and task handling portions only in this
-> patch.
+On 2020-03-09 21:38, Rob Herring wrote:
+> On Sat,  7 Mar 2020 22:14:11 +0100, Artur Rojek wrote:
+>> Add documentation for the adc-joystick driver, used to provide support
+>> for joysticks connected over ADC.
+>> 
+>> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+>> Tested-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>> 
+>>  Changes:
+>> 
+>>  v2: - Add `reg` property to axis subnode in order to enumerate the 
+>> axes,
+>>      - rename `linux,abs-code` property to `linux,code`,
+>>      - drop `linux,` prefix from the remaining properties of axis 
+>> subnode
+>> 
+>>  v3: no change
+>> 
+>>  v4: - remove "bindings" from the unique identifier string,
+>>      - replace `|` with `>` for all description properties,
+>>      - specify the number of items for `io-channels`,
+>>      - correct the regex pattern of `axis` property,
+>>      - specify the value range of `reg` property for each axis,
+>>      - put `abs-range` properties under `allOf`
+>> 
+>>  .../bindings/input/adc-joystick.yaml          | 121 
+>> ++++++++++++++++++
+>>  1 file changed, 121 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/input/adc-joystick.yaml
+>> 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+Like with the previous versions of this patch set, the DTS example 
+requires that
+patch [2/5] is applied first. When that is done, the DT check does 
+succeed here.
 
-is the kernel test robot bug report that just has been posted still valid?
-
-Regards
-
-Marcel
-
+Regards,
+Artur
+> 
+> Error:
+> Documentation/devicetree/bindings/input/adc-joystick.example.dts:22.31-32
+> syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:311: recipe for target
+> 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml'
+> failed
+> make[1]: ***
+> [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml]
+> Error 1
+> Makefile:1262: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1250951
+> Please check and re-submit.
