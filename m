@@ -2,163 +2,115 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87112C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA0AC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0B421927
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C87CB2464B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:14:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583777659;
+	bh=GPOsnxPOWkitvcYLr873iWAuXAjAvRcZgDNyk1lxnSw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sj9vJ9lsZSB1UAaUrDVYdUMUtE5iLS8yDluH2JIKuHEVcImj5RNxyiEOtL7VFddna
+	 Cfhqv2jx1jO1gTPE8MfrDLbUpaliO/2AoxNmOmH9zK0FmXglt5ohOOYYUE7JenwwYr
+	 Ev7/XZ2nD9kloifwjztqzt/ADcrt5wtyLv/RbEX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgCISNQ (ORCPT
+        id S1727416AbgCISOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:13:16 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:58336 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgCISNQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:13:16 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBMtm-0006L5-Mh; Mon, 09 Mar 2020 12:13:06 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBMtl-0002m4-KU; Mon, 09 Mar 2020 12:13:06 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <202003021531.C77EF10@keescook>
-        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
-        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
-        <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <878sk94eay.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Mon, 09 Mar 2020 13:10:48 -0500
-In-Reply-To: <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        (Bernd Edlinger's message of "Mon, 9 Mar 2020 18:01:35 +0000")
-Message-ID: <87r1y12yc7.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 9 Mar 2020 14:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgCISOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:14:18 -0400
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B87622522
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 18:14:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583777657;
+        bh=GPOsnxPOWkitvcYLr873iWAuXAjAvRcZgDNyk1lxnSw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JpN6DgItReJj4bVteGdpRQHuRkryGz+QlPvJ+ob7GuABPmfHGSjjCZy1cIYhq+Ai5
+         v0XG8mBjVPqu3Hjl6uo0ho+Uy4cMuAjCdBYTAxLZjybdEMyNgzptrJ7CTEvDqQkCSp
+         Z3fv5bx2ECjIIOnCVyJCI6m5hBP+bSrROSa6TK7Q=
+Received: by mail-wm1-f41.google.com with SMTP id g62so415810wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:14:17 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1/+fvMT2sJa92fq0tOZbmls7IlE5Yx+L7O4goSV5fIVbnhm8vX
+        qJvkeYrULanMs4lR1bLF+GUQHWlesOlTyoi2aUYeMA==
+X-Google-Smtp-Source: ADFU+vu+3khw0mvyiOjN3S2PCh5Gg+ouhuqQbOo+d62XxOfUqKh9yBjB8oCXz6OL/+7A908PJLeZq8ErBSIsPMnDAQo=
+X-Received: by 2002:a7b:cd83:: with SMTP id y3mr480519wmj.176.1583777656050;
+ Mon, 09 Mar 2020 11:14:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jBMtl-0002m4-KU;;;mid=<87r1y12yc7.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18QzwMdGCf8P173K+LAq8xnIr+Kw2IIWJI=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <ed71d0967113a35f670a9625a058b8e6e0b2f104.1583547991.git.luto@kernel.org>
+ <CALCETrVmsF9JSMLSd44-3GGWEz6siJQxudeaYiVnvv__YDT1BQ@mail.gmail.com>
+ <87ftek9ngq.fsf@nanos.tec.linutronix.de> <CALCETrVsc-t=tDRPbCg5dWHDY0NFv2zjz12ahD-vnGPn8T+RXA@mail.gmail.com>
+ <87a74s9ehb.fsf@nanos.tec.linutronix.de> <87wo7v8g4j.fsf@nanos.tec.linutronix.de>
+ <877dzu8178.fsf@nanos.tec.linutronix.de> <37440ade-1657-648b-bf72-2b8ca4ac21ce@redhat.com>
+ <871rq199oz.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <871rq199oz.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 9 Mar 2020 11:14:04 -0700
+X-Gmail-Original-Message-ID: <CALCETrUHwd8pNr_ZdFqY8vMjJeMdNyw2C+FL6uOUM98SEE9rNQ@mail.gmail.com>
+Message-ID: <CALCETrUHwd8pNr_ZdFqY8vMjJeMdNyw2C+FL6uOUM98SEE9rNQ@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
-
-> On 3/9/20 6:40 PM, Eric W. Biederman wrote:
->> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
->> 
->>> On 3/8/20 10:38 PM, Eric W. Biederman wrote:
->>>>
->>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
->>>> over the userspace accesses as the arguments from userspace are read.
->>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
->>                                 ^ over
->>>
->>> ... is held while waiting for the trace parent to handle PTRACE_EVENT_EXIT
->>> or something?
->> 
->> Yes.  Let me see if I can phrase that better.
->> 
->>> I wonder if we also should mention that
->>> it is held while waiting for the trace parent to
->>> receive the exit code with "wait"?
->> 
->> I don't think we have to spell out the details of how it all works,
->> unless that makes things clearer.  Kernel developers can be expected
->> to figure out how the kernel works.  The critical thing is that it is
->> an indefinite wait for userspace to take action.
->> 
->> But I will look.
->> 
->>>> threads are killed.  The cred_guard_mutex is held over
->>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
->>>>
->>>> Any of those can result in deadlock, as the cred_guard_mutex is held
->>>> over a possible indefinite userspace waits for userspace.
->>>>
->>>> Add exec_update_mutex that is only held over exec updating process
->>>
->>> Add ?
->> 
->> Yes.  That is what the change does: add exec_update_mutex.
->> 
+On Mon, Mar 9, 2020 at 2:09 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> I just kind of missed the "subject" in this sentence,
-> like "This patch adds an exec_update_mutex that is ..."
-> but english is a foreign language for me, so may be okay as is.
+> Paolo Bonzini <pbonzini@redhat.com> writes:
+> > On 09/03/20 07:57, Thomas Gleixner wrote:
+> >> Thomas Gleixner <tglx@linutronix.de> writes:
+> >>
+> >> guest side:
+> >>
+> >>    nmi()/mce() ...
+> >>
+> >>         stash_crs();
+> >>
+> >> +       stash_and_clear_apf_reason();
+> >>
+> >>         ....
+> >>
+> >> +       restore_apf_reason();
+> >>
+> >>      restore_cr2();
+> >>
+> >> Too obvious, isn't it?
+> >
+> > Yes, this works but Andy was not happy about adding more
+> > save-and-restore to NMIs.  If you do not want to do that, I'm okay with
+> > disabling async page fault support for now.
+>
+> I'm fine with doing that save/restore dance, but I have no strong
+> opinion either.
+>
+> > Storing the page fault reason in memory was not a good idea.  Better
+> > options would be to co-opt the page fault error code (e.g. store the
+> > reason in bits 31:16, mark bits 15:0 with the invalid error code
+> > RSVD=1/P=0), or to use the virtualization exception area.
+>
+> Memory store is not the problem. The real problem is hijacking #PF.
+>
+> If you'd have just used a separate VECTOR_ASYNC_PF then none of these
+> problems would exist at all.
+>
 
-English has a lot of options.  I think this is a stylistic difference.
+I'm okay with the save/restore dance, I guess.  It's just yet more
+entry crud to deal with architecture nastiness, except that this
+nastiness is 100% software and isn't Intel/AMD's fault.
 
-Instead of being an observer and describing what the change does:
-"This patch adds exec_update_mutex ..."  
-
-I was being there in the moment and saying/commading what is happening:
-"Add exec_update_mutex ..."
-
-Using the more immdediate form ends up with more concise and clearer
-sentences.
-
-Every one of my writing teachers in school emphasized that point
-and I see the who it works when I write things.  But writing is hard and
-I still tend toward long rambling sentences with many qualifiers that
-confuse and detract from the point rather than make it clear what is
-happening.
-
-Eric
+At least until we get an async page fault due to apf_reason being paged out...
