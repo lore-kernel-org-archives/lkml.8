@@ -2,387 +2,88 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610A1C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D04C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5E820866
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8738520866
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:30:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U1DFSlHe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgCIG2v (ORCPT
+        id S1726383AbgCIGaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 02:28:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2210 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725962AbgCIG2u (ORCPT
+        Mon, 9 Mar 2020 02:30:55 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37276 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgCIGay (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 02:28:50 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0296Ki0j095303
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Mar 2020 02:28:48 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ynek9k6qn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:28:39 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
-        Mon, 9 Mar 2020 06:26:59 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 9 Mar 2020 06:26:53 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0296QqCB21430406
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Mar 2020 06:26:52 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0DEBEA4062;
-        Mon,  9 Mar 2020 06:26:52 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 432AAA4065;
-        Mon,  9 Mar 2020 06:26:46 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.44.242])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Mar 2020 06:26:46 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
-        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
-        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
-        kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de, kjain@linux.ibm.com
-Subject: [PATCH v4 6/8] perf/tools: Enhance JSON/metric infrastructure to handle "?"
-Date:   Mon,  9 Mar 2020 11:55:50 +0530
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200309062552.29911-1-kjain@linux.ibm.com>
-References: <20200309062552.29911-1-kjain@linux.ibm.com>
+        Mon, 9 Mar 2020 02:30:54 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p14so4365173pfn.4
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 23:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=yybJ1QzXrgkr7XDf2YoWtEBzCY5FqWK4MqdNg1pgXOc=;
+        b=U1DFSlHey9T/E8PLM4IJY/0dylRiAAHFvGZnWirUOQkMCY8N7t9/hLkzoLA31J5tvU
+         wQurPIFF50OYGWyuz7WmPY/CJpDaE1d6mhTr4OmHVUnC5CQF75QJktLdij+rhhEBU7dk
+         Orz8Jvlwf2lYSxGYjcGubpNoQwmyePVaOp8yE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=yybJ1QzXrgkr7XDf2YoWtEBzCY5FqWK4MqdNg1pgXOc=;
+        b=XhpDo3mB0Yj8TmuCMxXYgxCXSamw+xwOosnPVdHHKzEZ0WiN+lmjoR02fH/teBIQ3S
+         jEHSOewES7npxiEQsQxVNqo0gxNDG6KDJestdclelPMAXLEG86i0J0fc1udYye82Kj4V
+         jf9c4N1iFxxaYTMGl86j/MvNpwR6JpepyvpesVTjmHfE2WG5UI+TL6mmzs4ngGSOgxVR
+         Iu3Qkj8satDYjJZrHH2O+C4xlha7cy1xHQpD+5Xc1Ud4h76hk0LDPJKArBX/981B6dQi
+         tWvUqQDD7aIkG02Ax/ZHgvDLDtx8Jpm8E0C5B5/XGus+gRdPAfDJkqzo35B9gFZZ1H7K
+         Fiwg==
+X-Gm-Message-State: ANhLgQ2HhPhoPr528cY8pZa4p98kq4T4o9lEA2cHHxPGq9gDjgV1ttpB
+        Eha7n3IDfmJWeGLX93nqZCPGCA==
+X-Google-Smtp-Source: ADFU+vtMGikTNZyTdc745utw27/3Wxa63ffNlpXgbhf7KCsot2ygSMqQQuTnOhQAQ+qnFipibZK1sA==
+X-Received: by 2002:a62:760e:: with SMTP id r14mr8075667pfc.51.1583735452374;
+        Sun, 08 Mar 2020 23:30:52 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id h7sm45650104pfq.36.2020.03.08.23.30.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 23:30:51 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030906-0008-0000-0000-0000035A9AF2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030906-0009-0000-0000-00004A7BD9AF
-Message-Id: <20200309062552.29911-7-kjain@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_01:2020-03-06,2020-03-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 lowpriorityscore=0
- impostorscore=0 clxscore=1015 mlxlogscore=271 spamscore=0 mlxscore=0
- bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003090046
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200306092328.41253-1-ran.wang_1@nxp.com>
+References: <20200306092328.41253-1-ran.wang_1@nxp.com>
+Subject: Re: [PATCH] usb: host: xhci-plat: add a shutdown
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Chen <peter.chen@nxp.com>, Jun Li <jun.li@nxp.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ran Wang <ran.wang_1@nxp.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Ran Wang <ran.wang_1@nxp.com>
+Date:   Sun, 08 Mar 2020 23:30:50 -0700
+Message-ID: <158373545061.66766.10321933903764965708@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch enhances current metric infrastructure to handle "?" in the metric
-expression. The "?" can be use for parameters whose value not known while
-creating metric events and which can be replace later at runtime to
-the proper value. It also add flexibility to create multiple events out
-of single metric event added in json file.
+Quoting Ran Wang (2020-03-06 01:23:28)
+> When loading new kernel via kexec, we need to shutdown host controller to
+> avoid any un-expected memory accessing during new kernel boot.
+>=20
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> Reviewed-by: Peter Chen <peter.chen@nxp.com>
+> ---
 
-Patch adds function 'arch_get_runtimeparam' which is a arch specific
-function, returns the count of metric events need to be created.
-By default it return 1.
+Tested-by: Stephen Boyd <swboyd@chromium.org>
 
-One loop is added in function 'metricgroup__add_metric', which create
-multiple events at run time depend on return value of
-'arch_get_runtimeparam' and merge that event in 'group_list'.
-
-This infrastructure needed for hv_24x7 socket/chip level events.
-"hv_24x7" chip level events needs specific chip-id to which the
-data is requested. Function 'arch_get_runtimeparam' implemented
-in header.c which extract number of sockets from sysfs file
-"sockets" under "/sys/devices/hv_24x7/interface/".
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- tools/perf/arch/powerpc/util/header.c |  22 +++++
- tools/perf/util/expr.h                |   1 +
- tools/perf/util/expr.l                |  19 +++-
- tools/perf/util/metricgroup.c         | 124 ++++++++++++++++++++------
- tools/perf/util/metricgroup.h         |   1 +
- tools/perf/util/stat-shadow.c         |   8 ++
- 6 files changed, 148 insertions(+), 27 deletions(-)
-
-diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-index 3b4cdfc5efd6..036f6b2ce202 100644
---- a/tools/perf/arch/powerpc/util/header.c
-+++ b/tools/perf/arch/powerpc/util/header.c
-@@ -7,6 +7,11 @@
- #include <string.h>
- #include <linux/stringify.h>
- #include "header.h"
-+#include "metricgroup.h"
-+#include "evlist.h"
-+#include <dirent.h>
-+#include "pmu.h"
-+#include <api/fs/fs.h>
- 
- #define mfspr(rn)       ({unsigned long rval; \
- 			 asm volatile("mfspr %0," __stringify(rn) \
-@@ -16,6 +21,8 @@
- #define PVR_VER(pvr)    (((pvr) >>  16) & 0xFFFF) /* Version field */
- #define PVR_REV(pvr)    (((pvr) >>   0) & 0xFFFF) /* Revison field */
- 
-+#define SOCKETS_INFO_FILE_PATH "/devices/hv_24x7/interface/"
-+
- int
- get_cpuid(char *buffer, size_t sz)
- {
-@@ -44,3 +51,18 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
- 
- 	return bufp;
- }
-+
-+int arch_get_runtimeparam(void)
-+{
-+	int count;
-+	char path[PATH_MAX];
-+	char filename[] = "sockets";
-+
-+	snprintf(path, PATH_MAX,
-+		 SOCKETS_INFO_FILE_PATH "%s", filename);
-+
-+	if (sysfs__read_ull(path, (unsigned long long *)&count) < 0)
-+		return 1;
-+	else
-+		return count;
-+}
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index 9377538f4097..d17664e628db 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -15,6 +15,7 @@ struct parse_ctx {
- 	struct parse_id ids[MAX_PARSE_ID];
- };
- 
-+int expr__runtimeparam;
- void expr__ctx_init(struct parse_ctx *ctx);
- void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
- int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index 1928f2a3dddc..ec4b00671f67 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -45,6 +45,21 @@ static char *normalize(char *str)
- 			*dst++ = '/';
- 		else if (*str == '\\')
- 			*dst++ = *++str;
-+        else if (*str == '?') {
-+
-+			int size = snprintf(NULL, 0, "%d", expr__runtimeparam);
-+			char * paramval = (char *)malloc(size);
-+			int i = 0;
-+
-+			if(!paramval)
-+				*dst++ = '0';
-+			else {
-+				sprintf(paramval, "%d", expr__runtimeparam);
-+				while(i < size)
-+					*dst++ = paramval[i++];
-+				free(paramval);
-+			}
-+		}
- 		else
- 			*dst++ = *str;
- 		str++;
-@@ -72,8 +87,8 @@ number		[0-9]+
- 
- sch		[-,=]
- spec		\\{sch}
--sym		[0-9a-zA-Z_\.:@]+
--symbol		{spec}*{sym}*{spec}*{sym}*
-+sym		[0-9a-zA-Z_\.:@?]+
-+symbol		{spec}*{sym}*{spec}*{sym}*{spec}*{sym}
- 
- %%
- 	{
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index c3a8c701609a..11eeeb929b91 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -474,6 +474,98 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
- 	return false;
- }
- 
-+int __weak arch_get_runtimeparam(void)
-+{
-+	return 1;
-+}
-+
-+static int metricgroup__add_metric_runtime_param(struct strbuf *events,
-+			struct list_head *group_list, struct pmu_event *pe)
-+{
-+	int i, count;
-+	int ret = -EINVAL;
-+
-+	count = arch_get_runtimeparam();
-+
-+	/* This loop is added to create multiple
-+	 * events depend on count value and add
-+	 * those events to group_list.
-+	 */
-+
-+	for (i = 0; i < count; i++) {
-+		const char **ids;
-+		int idnum;
-+		struct egroup *eg;
-+		char value[PATH_MAX];
-+
-+		expr__runtimeparam = i;
-+
-+		if (expr__find_other(pe->metric_expr,
-+					NULL, &ids, &idnum) < 0)
-+			return ret;
-+
-+		if (events->len > 0)
-+			strbuf_addf(events, ",");
-+
-+		if (metricgroup__has_constraint(pe))
-+			metricgroup__add_metric_non_group(events, ids, idnum);
-+		else
-+			metricgroup__add_metric_weak_group(events, ids, idnum);
-+
-+		eg = malloc(sizeof(struct egroup));
-+		if (!eg) {
-+			ret = -ENOMEM;
-+			return ret;
-+		}
-+		sprintf(value, "%s%c%d", pe->metric_name, '_', i);
-+		eg->ids = ids;
-+		eg->idnum = idnum;
-+		eg->metric_name = strdup(value);
-+		eg->metric_expr = pe->metric_expr;
-+		eg->metric_unit = pe->unit;
-+		list_add_tail(&eg->nd, group_list);
-+		ret = 0;
-+
-+		if (ret != 0)
-+			break;
-+	}
-+	return ret;
-+}
-+static int metricgroup__add_metric_param(struct strbuf *events,
-+			struct list_head *group_list, struct pmu_event *pe)
-+{
-+
-+	const char **ids;
-+	int idnum;
-+	struct egroup *eg;
-+	int ret = -EINVAL;
-+
-+	if (expr__find_other(pe->metric_expr,
-+					     NULL, &ids, &idnum) < 0)
-+		return ret;
-+	if (events->len > 0)
-+		strbuf_addf(events, ",");
-+
-+	if (metricgroup__has_constraint(pe))
-+		metricgroup__add_metric_non_group(events, ids, idnum);
-+	else
-+		metricgroup__add_metric_weak_group(events, ids, idnum);
-+
-+	eg = malloc(sizeof(struct egroup));
-+	if (!eg)
-+		ret = -ENOMEM;
-+
-+	eg->ids = ids;
-+	eg->idnum = idnum;
-+	eg->metric_name = pe->metric_name;
-+	eg->metric_expr = pe->metric_expr;
-+	eg->metric_unit = pe->unit;
-+	list_add_tail(&eg->nd, group_list);
-+	ret = 0;
-+
-+	return ret;
-+}
-+
- static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 				   struct list_head *group_list)
- {
-@@ -493,35 +585,17 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 			continue;
- 		if (match_metric(pe->metric_group, metric) ||
- 		    match_metric(pe->metric_name, metric)) {
--			const char **ids;
--			int idnum;
--			struct egroup *eg;
- 
- 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
- 
--			if (expr__find_other(pe->metric_expr,
--					     NULL, &ids, &idnum) < 0)
--				continue;
--			if (events->len > 0)
--				strbuf_addf(events, ",");
--
--			if (metricgroup__has_constraint(pe))
--				metricgroup__add_metric_non_group(events, ids, idnum);
-+			if (strstr(pe->metric_expr, "?"))
-+				ret = metricgroup__add_metric_runtime_param(events,
-+							group_list, pe);
- 			else
--				metricgroup__add_metric_weak_group(events, ids, idnum);
--
--			eg = malloc(sizeof(struct egroup));
--			if (!eg) {
--				ret = -ENOMEM;
--				break;
--			}
--			eg->ids = ids;
--			eg->idnum = idnum;
--			eg->metric_name = pe->metric_name;
--			eg->metric_expr = pe->metric_expr;
--			eg->metric_unit = pe->unit;
--			list_add_tail(&eg->nd, group_list);
--			ret = 0;
-+				ret = metricgroup__add_metric_param(events,
-+							group_list, pe);
-+			if (ret == -EINVAL)
-+				continue;
- 		}
- 	}
- 	return ret;
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 475c7f912864..81224ba1270d 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -34,4 +34,5 @@ int metricgroup__parse_groups(const struct option *opt,
- void metricgroup__print(bool metrics, bool groups, char *filter,
- 			bool raw, bool details);
- bool metricgroup__has_metric(const char *metric);
-+int arch_get_runtimeparam(void);
- #endif
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 0fd713d3674f..92c4c9abbaa0 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -777,6 +777,14 @@ static void generic_metric(struct perf_stat_config *config,
- 	}
- 
- 	if (!metric_events[i]) {
-+
-+		if (strstr(metric_expr, "?")) {
-+			char *tmp = strrchr(metric_name, '_');
-+
-+			tmp++;
-+			expr__runtimeparam = strtol(tmp, &tmp, 10);
-+		}
-+
- 		if (expr__parse(&ratio, &pctx, metric_expr) == 0) {
- 			char *unit;
- 			char metric_bf[64];
--- 
-2.18.1
-
+This fixes a problem I see where USB is still active during an orderly
+reboot.
