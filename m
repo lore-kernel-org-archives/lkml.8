@@ -2,145 +2,173 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5865C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22421C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA7E20578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E719320578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:19:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BOih5r5m"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GY7opBl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgCIPTi (ORCPT
+        id S1727174AbgCIPTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:19:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58952 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726958AbgCIPTh (ORCPT
+        Mon, 9 Mar 2020 11:19:52 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36703 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgCIPTv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:19:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583767177;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=h/SV7acAIkFFySVIGC5SqbEA3QLMLQnR0tuQ2YopQFU=;
-        b=BOih5r5m6/VFe/HqI3k2xnN9ZbmVx9SLSnepGY430GBJHVkyYeBSqe04O8Praw3h20PFhr
-        bPVyT3ixfldrIZV45syxFcEaiwO73+2iZTJ/QvHuv5yQuPV9zZb+ZthwaEtvAHYz8lKF0R
-        CjZ+s5/BGhDA/mY+cvoBem9QPd0691g=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-458-7NrhzbGVMXKSdZMTxRwW7A-1; Mon, 09 Mar 2020 11:19:35 -0400
-X-MC-Unique: 7NrhzbGVMXKSdZMTxRwW7A-1
-Received: by mail-wm1-f71.google.com with SMTP id x7so923435wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:19:34 -0700 (PDT)
+        Mon, 9 Mar 2020 11:19:51 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g12so4102941plo.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:19:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Yf1WGNQKdnRTZYwPvg0rA3HnZDuK1fcilTtmCuMketA=;
+        b=GY7opBl7ePbTVvgJfuJPrfsd7FCf3C/mdyonAq9ETHocMFWmWPTiEVQ6c68qYUGoCk
+         MSVQT5KO9dvwlAxSB7ARyS9u2drJABMEHXUDVmqHN9ot50shp/fgwsUcXdwvJ6AFx1bH
+         kZuwizdhakLp8bz/TMcPBeoNKj8o/OF6T0qJQ6XRIvySWVZTD+Zck4VHOoC0INvV4N2M
+         BoPUsokO1YqZe7KR/Y+CoNR0uQSjXTy05RHaHSCR8qcbeR3Pt8Ie672pLQeIJuoZh4/Y
+         PPU7u5ngn0EypyRV/Cl89EdE5gl3ENnSYuP1MqgOo1XzwKYRfCgta+y1pgBvTzDX6r3H
+         axIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=h/SV7acAIkFFySVIGC5SqbEA3QLMLQnR0tuQ2YopQFU=;
-        b=hRzcqIs9GhVGoRiDOZNld4j7AhhA9ohn2PcHQCBPRyAlHbm9JbAxj+PDFh4gmVqcw5
-         5GqAUc8sik7gEAlVxU+FllS4hUnCScK/pMnqyGIbDudsn+YZqv3yLoNt1Dd8rugijSiV
-         hpt9egJiCcnKk8PxDgume9UPOrtkCGv30Wd/PJjthZJgT2o7A6wDLvh89JOX7xiJmXGW
-         4QBLGa7TUA1RrlA0YOlEUrlxMWRkd2hwUmy1PH4yIvZnjeYBY+DdjE4LakjIB1DKvsfZ
-         Gsuai2caQ8Q5NbLnWpUpMMo5dUpjU1FZQPGH+9bwrGv2fTQhNUC0oKoVC9AGbaYvXMTF
-         /bmA==
-X-Gm-Message-State: ANhLgQ0aZgJ4baW0WHFOPvyqhQheo43taEFfYYIVzL8fMp+9LrDFdLiF
-        XJUB1EBvbVlg2yI9gCekBJgkZcZmrBJD34oqrTCJEwLeNnQE7ZwAyhKlEhblVPFeKVRRuR6SyEu
-        X/uyMARoN81ZLeGKl2FiQFMLn
-X-Received: by 2002:adf:e98f:: with SMTP id h15mr22025414wrm.263.1583767174026;
-        Mon, 09 Mar 2020 08:19:34 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vupWYccqwQBjzSfnUgk4+BX0LlUz3VDK06jTEhXknfwI3x2Zp+MMN6uNViGZIUpuFxVlxzn9g==
-X-Received: by 2002:adf:e98f:: with SMTP id h15mr22025397wrm.263.1583767173814;
-        Mon, 09 Mar 2020 08:19:33 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id f127sm26539134wma.4.2020.03.09.08.19.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 08:19:33 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 16:19:32 +0100
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH v7 7/7] mm/madvise: allow KSM hints for remote API
-Message-ID: <20200309151932.6sjwq6bucbu6zsea@butterfly.localdomain>
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-8-minchan@kernel.org>
- <2a66abd8-4103-f11b-06d1-07762667eee6@suse.cz>
- <20200306134146.mqiyvsdnqty7so53@butterfly.localdomain>
- <a63768c1-3959-563b-376b-1d8d90d79b41@suse.cz>
- <20200309131117.anvyjszaigpoz2kp@butterfly.localdomain>
- <20200309150815.GR8447@dhcp22.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yf1WGNQKdnRTZYwPvg0rA3HnZDuK1fcilTtmCuMketA=;
+        b=bGDthR6goEeO6wotdLh00AjqhtJUf0gG6pwfww7OOAnTTPDOB0wu9NAnHXp5FFo5hU
+         pyLLjAFgwUN0NQN2aZJydXHt8Sqw/8aczGP/RjJjIVuHaaNtLjAL3ggdtzO2baganCeB
+         2msKngStVHqzKPf+heAs4V5oZM5lp8ZsoYu43E7UsIJaPZt0uNY47TyrlRFkcOz5jWEw
+         /MmiTLJMSop7IZkhHGPCkdwb8i8VvZP0B7344pEdgVXTBj3KjRUGN92uKcW7gVsAnzkB
+         cnHFdVJnMsKE1V5bpXPXyI//6qQEJRJV9YYLaA4RDabMuz0Tv8+FLMUh2JZScslaDL/n
+         nwAA==
+X-Gm-Message-State: ANhLgQ2OEmjgo8VlLk8U8KrLXLklzteiUSm8TGVJkE4D7GAzJqwisukk
+        9uXP+1yewq7RCTzM/G631HT87UnSYEZ2ePmIKoWmNMDq4hw=
+X-Google-Smtp-Source: ADFU+vtSZUdRh/Jr7H1YNyPpZcU23c20tbkfQtAqjKTaM4SU418MtRQmiQuOlFJko9yOD//ktSpgNnwj2uU0i0ROMCE=
+X-Received: by 2002:a17:90a:5218:: with SMTP id v24mr18709379pjh.90.1583767189741;
+ Mon, 09 Mar 2020 08:19:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309150815.GR8447@dhcp22.suse.cz>
+References: <000000000000d8e41d0590a01fc7@google.com>
+In-Reply-To: <000000000000d8e41d0590a01fc7@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 9 Mar 2020 16:19:38 +0100
+Message-ID: <CAAeHK+xEZo8WrdeOGcs8rJNUEE4tEGnT2S_-to=Zytg-7qNBSw@mail.gmail.com>
+Subject: Re: WARNING in flexcop_usb_probe/usb_submit_urb
+To:     syzbot <syzbot+26a8e8c838ca7937dc9e@syzkaller.appspotmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 04:08:15PM +0100, Michal Hocko wrote:
-> On Mon 09-03-20 14:11:17, Oleksandr Natalenko wrote:
-> > On Fri, Mar 06, 2020 at 05:08:18PM +0100, Vlastimil Babka wrote:
-> [...]
-> > > Dunno, it's nice to react to signals quickly, for any proces that gets them, no?
-> > 
-> > So, do you mean something like this?
-> > 
-> > ===
-> > diff --git a/mm/ksm.c b/mm/ksm.c
-> > index 363ec8189561..b39c237cfcf4 100644
-> > --- a/mm/ksm.c
-> > +++ b/mm/ksm.c
-> > @@ -849,7 +849,8 @@ static int unmerge_ksm_pages(struct vm_area_struct *vma,
-> >  	for (addr = start; addr < end && !err; addr += PAGE_SIZE) {
-> >  		if (ksm_test_exit(vma->vm_mm))
-> >  			break;
-> > -		if (signal_pending(current))
-> > +		if (signal_pending(current) ||
-> > +		    signal_pending(rcu_dereference(vma->vm_mm->owner)))
-> >  			err = -ERESTARTSYS;
-> >  		else
-> >  			err = break_ksm(vma, addr);
-> > ===
-> 
-> This is broken because mm might be attached to different tasks.
-> AFAIU this check is meant to allow quick backoff of the _calling_
-> process so that it doesn't waste time when the context is killed
-> already. I do not understand why should we care about any other context
-> here? What is the actual problem this would solve?
+On Wed, Aug 21, 2019 at 2:58 PM syzbot
+<syzbot+26a8e8c838ca7937dc9e@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=151c664c600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=26a8e8c838ca7937dc9e
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16c6042e600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14d8d64c600000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+26a8e8c838ca7937dc9e@syzkaller.appspotmail.com
+>
+> lgdt330x 0-0059: Demod loaded for LGDT3303 chip
+> tuner-simple 0-0061: creating new instance
+> tuner-simple 0-0061: type set to 64 (LG TDVS-H06xF)
+> b2c2-flexcop: found 'LG Electronics LGDT3303 VSB/QAM Frontend' .
+> usb 1-1: DVB: registering adapter 0 frontend 0 (LG Electronics LGDT3303
+> VSB/QAM Frontend)...
+> b2c2-flexcop: initialization of 'Air2PC/AirStar 2 ATSC 3rd generation
+> (HD5000)' at the 'USB' bus controlled by a 'FlexCopIII' complete
+> ------------[ cut here ]------------
+> usb 1-1: BOGUS urb xfer, pipe 0 != type 1
+> WARNING: CPU: 0 PID: 12 at drivers/usb/core/urb.c:477
+> usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc5+ #28
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   panic+0x2a3/0x6da kernel/panic.c:219
+>   __warn.cold+0x20/0x4a kernel/panic.c:576
+>   report_bug+0x262/0x2a0 lib/bug.c:186
+>   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+>   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+>   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+> RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+> Code: 4d 85 ed 74 2c e8 88 ba ef fd 4c 89 f7 e8 70 bf 1c ff 41 89 d8 44 89
+> e1 4c 89 ea 48 89 c6 48 c7 c7 00 69 18 86 e8 6d a0 c5 fd <0f> 0b e9 20 f4
+> ff ff e8 5c ba ef fd 4c 89 f2 48 b8 00 00 00 00 00
+> RSP: 0018:ffff8881da20f278 EFLAGS: 00010282
+> RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff81288cfd RDI: ffffed103b441e41
+> RBP: ffff8881d530c300 R08: ffff8881da1f9800 R09: ffffed103b645d58
+> R10: ffffed103b645d57 R11: ffff8881db22eabf R12: 0000000000000000
+> R13: ffff8881cf2f0930 R14: ffff8881d69791a0 R15: ffff8881d5f5f780
+>   flexcop_usb_transfer_init drivers/media/usb/b2c2/flexcop-usb.c:484 [inline]
+>   flexcop_usb_probe.cold+0x5c0/0x7bd drivers/media/usb/b2c2/flexcop-usb.c:575
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2165
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2165
+>   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
-I agree with you, but still trying to understand what does Vlastimil mean
-:).
-
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
-> 
-
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Principal Software Maintenance Engineer
-
+#syz fix: media: b2c2-flexcop-usb: add sanity checking
