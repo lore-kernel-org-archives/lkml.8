@@ -2,178 +2,188 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DF8C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A96C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62A2B22525
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D278520578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:24:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="i+wUak5k"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W6Q0SiZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgCIQVf (ORCPT
+        id S1727141AbgCIQYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:21:35 -0400
-Received: from mail-dm6nam12on2051.outbound.protection.outlook.com ([40.107.243.51]:6132
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726922AbgCIQVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:21:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ay8nhP5Emt/RBLmwFw51TdFmjv3AtCTqEVLdOCqEwqpye/AoCtiiyYs4hIHlgFU+H9BJcYFX6o8HsJYO8O9f44a3w2M1bXZ7gFNmGrNfdwEYSbal6106tHEfvVrj3eJgmwpxLjE1N7PVUCxGBjONE4s1zFyz7TMxAl1ipu/08hCpOPc22tZaO+PE0HxQ0SFE4RYsZQqz5iS6t8OcKZLhhFDr3/TXDHT749DVzgKrb65O2XQ04psO0rjkzZxjIRPCIVb/u/4Xszu/8Z9qw68M2otHwk+I0w+Q1kjgRDq9oKOe5Hp9gFqV1mGatgYlP28HvY9go0kG1/Byux+iMx//Fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sfdtfa45UOIUhzkdK6Y15K9szw4UTEq9EdA3bf2EmOQ=;
- b=oPOsvaCue2adp9q70uVOfte+ScOBdgu/feohR0kC+3Or1d7pz0PImnihdRq60X52a+3eIObbNI/f+GcswjEkEGXa4CVxz6bfTayffyAJF+B8IE9WgWgbvUmAkIXFwx5Dlgx0UVa2h7pXaSQ5fJCsyY78kmakZd8Kye/du5KNPgHrxmB3fsdMhFz/KhCI8coOWS4owlaCPCB8mU9MIOrBxc8bQz2E+rs4i7x7HKzKhlwrCTGxxSUKXumu8eNlz9IgNPC6HUFHWDN4TvcR6mGxUr1zlXK8HQ1hHmGTvnkss8Cd0E8Vzv0SDI9UQhqB6ZETupPI9LsBDhgewQK9gMaM1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sfdtfa45UOIUhzkdK6Y15K9szw4UTEq9EdA3bf2EmOQ=;
- b=i+wUak5kpUEeEwOm9pDFLXFDLTNEamPWKkzOl2Eaz5dRqVlcef9hUsuEI47omTmqWwL+bdVhh6S8uv+dA+kRnrXE2l/CQevmTqoj1MJLc4vo7M8WDtj8U5dKTwLp0DVv0WvWsGC0z5/qrkFWW3bm+TVLdMwkWWYGzh9dDCnyMVU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
- by DM5PR12MB1612.namprd12.prod.outlook.com (2603:10b6:4:a::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Mon, 9 Mar 2020 16:21:32 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::d40e:7339:8605:bc92]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::d40e:7339:8605:bc92%11]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 16:21:32 +0000
-Subject: Re: [PATCH] RFC: dma-buf: Add an API for importing and exporting sync
- files
-To:     Jason Ekstrand <jason@jlekstrand.net>
-Cc:     Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
-        Dave Airlie <airlied@redhat.com>,
-        Jesse Hall <jessehall@google.com>,
-        James Jones <jajones@nvidia.com>,
-        Daniel Stone <daniels@collabora.com>,
-        =?UTF-8?Q?Kristian_H=c3=b8gsberg?= <hoegsberg@google.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Chenbo Feng <fengc@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        linux-media@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-References: <20200225235856.975366-1-jason@jlekstrand.net>
- <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
- <20200226100523.GQ2363188@phenom.ffwll.local>
- <CAOFGe94O66HL212aXqhi9tdYqw---Xm-fwNSV4pxHyPmpSGpbg@mail.gmail.com>
- <CAP+8YyEUz29fXDW5kO_0ZG6c849=TuFWCK8ynT3LuM+Tn+rMzw@mail.gmail.com>
- <810a26e7-4294-a615-b7ee-18148ac70641@amd.com>
- <CAOFGe96namyeQXTvdrduM+=wkJuoWWx34CxcsJHS3fcCaKDadw@mail.gmail.com>
- <21aeacc0-f3ae-c5dd-66df-4d2f3d73f73e@amd.com>
- <CAOFGe95Gx=kX=sxwhx1FYmXQuPtGAKwt2V5YodQBwJXujE3WwA@mail.gmail.com>
- <CAOFGe97XSxgzCViOH=2+B2_d5P3vGifKmvAw-JrzRQbbRMRbcg@mail.gmail.com>
- <6fb8becf-9e6b-f59e-9c22-2b20069241a7@amd.com>
- <CAOFGe94gv9N+6n6oEC2aRtsmy7kBfx1D_R6WLQSGq7-8yUM_OQ@mail.gmail.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <203505dc-7b75-1135-587e-cc6e88ade8cd@amd.com>
-Date:   Mon, 9 Mar 2020 17:21:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <CAOFGe94gv9N+6n6oEC2aRtsmy7kBfx1D_R6WLQSGq7-8yUM_OQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: FR2P281CA0020.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:14::7) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
+        Mon, 9 Mar 2020 12:24:45 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33918 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgCIQYp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 12:24:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 029GNNwD101380;
+        Mon, 9 Mar 2020 16:24:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=IG8LvxfBY1OrePUu9eNqEJdMLNEqViWjxSiyKEsDlc8=;
+ b=W6Q0SiZek17CEMk08wEXIEihM4/z+9h/6sIqwi2h0Us6Cxh3P43dAPaMu6rL/cvyRXAt
+ Li4H3XeZTbQ1S5qbTJaIRsTNkWGpaXIEGQilezs8Lcn6WPh9fdcvwls9xCibCKFCzReP
+ YiggLeibhnzuYlCo0L9z3hWb+r/Vm0PDGi6Ll0wUl4TfSNimQb5TYxrH2ws5F36vJmNF
+ vHwVbKPacu/xEtG896Wtqqi7eEVwqI280WLy2JCCRsdk4i4mOa4t76nc8cQNaUB32XjE
+ n+NL4yLpiIQcl1WqtkQEPxNZTYwZ+Y+JfD9b0O6yf2i9KTVT6SVwajkjRuzg2npRHbOm +w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2ym48sqya1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Mar 2020 16:24:42 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 029GHI5O151727;
+        Mon, 9 Mar 2020 16:24:41 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2ymnb09uks-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Mar 2020 16:24:41 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 029GOeB6004199;
+        Mon, 9 Mar 2020 16:24:40 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 09 Mar 2020 09:24:40 -0700
+Date:   Mon, 9 Mar 2020 09:24:39 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] xfs: clear PF_MEMALLOC before exiting xfsaild thread
+Message-ID: <20200309162439.GB8045@magnolia>
+References: <20200309010410.GA371527@sol.localdomain>
+ <20200309043430.143206-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by FR2P281CA0020.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:14::7) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Mon, 9 Mar 2020 16:21:29 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7ca5cfad-ccd1-4b08-cd7b-08d7c445ee22
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1612:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB16121BAB8EC10FCF51EFAA5783FE0@DM5PR12MB1612.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3044;
-X-Forefront-PRVS: 0337AFFE9A
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(366004)(39860400002)(189003)(199004)(54906003)(316002)(66556008)(66476007)(86362001)(53546011)(4326008)(2616005)(186003)(16526019)(478600001)(8676002)(8936002)(81156014)(36756003)(81166006)(66946007)(31696002)(6916009)(6666004)(31686004)(7416002)(66574012)(52116002)(6486002)(2906002)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1612;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +/hJFmwB1HLZNQcNzv44PO6sa+6EGKRpf6XHMG43a0JcBbiiwWnf4PCAzSqJh2CbTPzho+hJwW/md6dJIPaGN4H0UOjGEAHx7DvR06J+TeY5QmEfAmJalNgQrslDJsdaSUJdvUQbLnkZ6t3lubq8a11XHmSMwQm9e71qLl2+iu2HIY2aiKi5JZY+YykPj5GYzTYUU9cJAGkEZqUgNWCkExb9cOYicMvgTJNRugqvvhUpPRZuO8ZEissNNQeXJfxLSQd+Lr2TF1j4qreMUR3vK+rVZgWr839ZbmeLG53SrfhQDqWVGz+86eM4W8gccc7pWKKtH4xnoGMR94Q0hajN2mVHtDSLPvNxX7Md3qmMAR2Ta9TFE1MbA4RV0z738D5EehNl4ou0TZh25qhT4ykc9emG2UX2fK22AsrSKqkpiM7XwjwGtE7mM08vucnbZSZs
-X-MS-Exchange-AntiSpam-MessageData: T9G+7euyMKv3bp/XmxiHvsMM7wknz1gyYHLaODAsiHJV1qZex9MB6HPYTHyl59SewsQAEX013vTR2pUdCLXmndvwSRkTjxdiaypriUPz5byAfzXQ5vXyp7ptDQ2/G60YWoY38jpivElZS1iUvkpXbSk43h1aN0pU1lOowfrWyuYgdPnn+C4JayxzExdSV402PdaQsZvTSEuzI+NW6pA2Xw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ca5cfad-ccd1-4b08-cd7b-08d7c445ee22
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 16:21:32.5689
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OCMqKJ8rt5KaAPNgxneLzSzDJTeTyeYZf4z2KXRVDpgxL9xo/f0RQQmiZb8YBUR9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1612
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309043430.143206-1-ebiggers@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 suspectscore=0 adultscore=0 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003090107
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 priorityscore=1501 lowpriorityscore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxscore=0 clxscore=1011
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003090107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 05.03.20 um 16:54 schrieb Jason Ekstrand:
-> On Thu, Mar 5, 2020 at 7:06 AM Christian König <christian.koenig@amd.com> wrote:
->> [SNIP]
->> Well as far as I can see this won't work because it would break the
->> semantics of the timeline sync.
-> I'm not 100% convinced it has to.  We already have support for the
-> seqno regressing and we ensure that we still wait for all the fences.
-> I thought maybe we could use that but I haven't spent enough time
-> looking at the details to be sure.  I may be missing something.
+On Sun, Mar 08, 2020 at 09:34:30PM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
+> during do_exit().  That can confuse things.  For example, if BSD process
+> accounting is enabled and the accounting file has FS_SYNC_FL set and is
+> located on an ext4 filesystem without a journal, then do_exit() ends up
+> calling ext4_write_inode().  That triggers the
+> WARN_ON_ONCE(current->flags & PF_MEMALLOC) there, as it assumes
+> (appropriately) that inodes aren't written when allocating memory.
+> 
+> Fix this in xfsaild() by using the helper functions to save and restore
+> PF_MEMALLOC.
+> 
+> This can be reproduced as follows in the kvm-xfstests test appliance
+> modified to add the 'acct' Debian package, and with kvm-xfstests's
+> recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
+> 
+> 	mkfs.ext2 -F /dev/vdb
+> 	mount /vdb -t ext4
+> 	touch /vdb/file
+> 	chattr +S /vdb/file
 
-That won't work. The seqno regression works by punishing userspace for 
-doing something stupid and undefined.
+Does this trip if the process accounting file is also on an xfs
+filesystem?
 
-Be we can't do that under normal circumstances.
+> 	accton /vdb/file
+> 	mkfs.xfs -f /dev/vdc
+> 	mount /vdc
+> 	umount /vdc
 
->> I can prototype that if you want, shouldn't be more than a few hours of
->> hacking anyway.
-> If you'd like to, go for it.  I'd be happy to give it a go as well but
-> if you already know what you want, it may be easier for you to just
-> write the patch for the cursor.
+...and if so, can this be turned into an fstests case, please?
 
-Send you two patches for that a few minutes ago. But keep in mind that 
-those are completely untested.
 
-> Two more questions:
->
->   1. Do you want this collapsing to happen every time we create a
-> dma_fence_array or should it be a special entrypoint?  Collapsing all
-> the time likely means doing extra array calculations instead of the
-> dma_fence_array taking ownership of the array that's passed in.  My
-> gut says that cost is ok; but my gut doesn't spend much time in kernel
-> space.
+> 
+> It causes:
+> 	WARNING: CPU: 0 PID: 332 at fs/ext4/inode.c:5097 ext4_write_inode+0x140/0x1a0
+> 	CPU: 0 PID: 332 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #5
+> 	[...]
+> 	RIP: 0010:ext4_write_inode+0x140/0x1a0 fs/ext4/inode.c:5097
+> 	[...]
+> 	Call Trace:
+> 	 write_inode fs/fs-writeback.c:1312 [inline]
+> 	 __writeback_single_inode+0x465/0x5f0 fs/fs-writeback.c:1511
+> 	 writeback_single_inode+0xad/0x120 fs/fs-writeback.c:1565
+> 	 sync_inode fs/fs-writeback.c:2602 [inline]
+> 	 sync_inode_metadata+0x3d/0x57 fs/fs-writeback.c:2622
+> 	 ext4_fsync_nojournal fs/ext4/fsync.c:94 [inline]
+> 	 ext4_sync_file+0x243/0x4b0 fs/ext4/fsync.c:172
+> 	 generic_write_sync include/linux/fs.h:2867 [inline]
+> 	 ext4_buffered_write_iter+0xe1/0x130 fs/ext4/file.c:277
+> 	 call_write_iter include/linux/fs.h:1901 [inline]
+> 	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
+> 	 __kernel_write+0x54/0xe0 fs/read_write.c:515
+> 	 do_acct_process+0x122/0x170 kernel/acct.c:522
+> 	 slow_acct_process kernel/acct.c:581 [inline]
+> 	 acct_process+0x1d4/0x27c kernel/acct.c:607
+> 	 do_exit+0x83d/0xbc0 kernel/exit.c:791
+> 	 kthread+0xf1/0x140 kernel/kthread.c:257
+> 	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
+> 
+> This case was originally reported by syzbot at
+> https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
+> 
+> Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-In my prototype implementation that is a dma_resv function you call and 
-get either a single fence or a dma_fence_array with the collapsed fences 
-in return.
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-But I wouldn't add that to the general dma_fence_array_init function 
-since this is still a rather special case. Well see the patches, they 
-should be pretty self explaining.
+--D
 
->   2. When we do the collapsing, should we call dma_fence_is_signaled()
-> to avoid adding signaled fences to the array?  It seems like avoiding
-> adding references to fences that are already signaled would let the
-> kernel clean them up faster and reduce the likelihood that a fence
-> will hang around forever because it keeps getting added to arrays with
-> other unsignaled fences.
-
-I think so. Can't think of a good reason why we would want to add 
-already signaled fences to the array.
-
-Christian.
-
->
-> --Jason
-
+> ---
+> 
+> v2: include more details in the commit message.
+> 
+>  fs/xfs/xfs_trans_ail.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+> index 00cc5b8734be8..3bc570c90ad97 100644
+> --- a/fs/xfs/xfs_trans_ail.c
+> +++ b/fs/xfs/xfs_trans_ail.c
+> @@ -529,8 +529,9 @@ xfsaild(
+>  {
+>  	struct xfs_ail	*ailp = data;
+>  	long		tout = 0;	/* milliseconds */
+> +	unsigned int	noreclaim_flag;
+>  
+> -	current->flags |= PF_MEMALLOC;
+> +	noreclaim_flag = memalloc_noreclaim_save();
+>  	set_freezable();
+>  
+>  	while (1) {
+> @@ -601,6 +602,7 @@ xfsaild(
+>  		tout = xfsaild_push(ailp);
+>  	}
+>  
+> +	memalloc_noreclaim_restore(noreclaim_flag);
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.25.1
+> 
