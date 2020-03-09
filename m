@@ -2,166 +2,99 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAB4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2042C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26AC920674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB61020674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="G6+lcIPL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slEGYIg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgCIKkB (ORCPT
+        id S1726508AbgCIKoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 06:40:01 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:45585 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726469AbgCIKkA (ORCPT
+        Mon, 9 Mar 2020 06:44:02 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39810 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgCIKoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 06:40:00 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029AScac025793;
-        Mon, 9 Mar 2020 11:39:37 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=iqtz+8jVUcIa98vBWaQrx9xYUGQQ4Q8iCdRJjvFbN7g=;
- b=G6+lcIPLfe/fl3LP3qkR7/r+NE9RTxcXW7XSciIUVUQSJK3eE9FScRHwmTpU5LH1/sVJ
- 2RyQ/++eefGINPkMcxZeB86JDPwRqhBF1jxYqFag5ePmd04XpK04F8pYOfiBqzAIei0h
- jr6i1PCprE/vHVfsajmuVXlb/lfOUiu18r7n0EEABc4zJp2WqPTCQhh5Z5Cv1g3drOwy
- VIXy8OkskezCz1fbFhoUJwp9FfOJ2eEWNvG3T1EilpM3tkGqnLZKpJYR+jxt0ySQjlXC
- FJEkVp1/YA15p8ghk3FyltBAr1//TZ7LGj06u/HP1/+BFfXg198qs6rQeO9koPoSgY0q IQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ym2923gbu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Mar 2020 11:39:37 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8235A100034;
-        Mon,  9 Mar 2020 11:39:33 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5112E2AE6B7;
-        Mon,  9 Mar 2020 11:39:33 +0100 (CET)
-Received: from [10.48.0.71] (10.75.127.46) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Mar
- 2020 11:39:32 +0100
-Subject: Re: [PATCH v2] iio: adc: stm32-adc: fix sleep in atomic context
-To:     Olivier Moysan <olivier.moysan@st.com>, <jic23@kernel.org>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <alexandre.torgue@st.com>, <benjamin.gaignard@st.com>
-CC:     <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200309100212.16499-1-olivier.moysan@st.com>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <288fb604-16c6-da52-533f-7f1440ed9daa@st.com>
-Date:   Mon, 9 Mar 2020 11:39:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Mar 2020 06:44:02 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w65so4098024pfb.6;
+        Mon, 09 Mar 2020 03:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c8Bp+nPwovSicihOby87B5XLTMrdw3sYjYxEEbv5wt8=;
+        b=slEGYIg59gh6ysTpgSZttggAxcCpjbi50lHHcbsbIvU2DKukrc3Q01mNHaf73uKUHZ
+         FLMlK1HQrX9d49sNjBYmr9ojzqBg50RXrzUiV46ls92cKW3m4Uga03vcJWYzEeGZPfl+
+         djqkwwCJ3/bWcEQi358FTnDB79G9mezvU5/ebwKPn9h7YRa7qxM7HGoip1Un+3+J8TGt
+         v5k07WOj7xS+V+jfX8mNVBfggRglrlkx7WsDUL1nqFb9Tc40jr4v9+7LqB6UEv1b0Lc/
+         o/sbT+7hqJWfAbS8Q0Y44pW7UbokiWk6cnykKsTGCvzC+j4weI9X7KTgdAxa+WnVlQnR
+         509A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c8Bp+nPwovSicihOby87B5XLTMrdw3sYjYxEEbv5wt8=;
+        b=R0uf4tOLOYsff7fdETvbEh2/+/ANaIUV205UFGTEiVlxC8pVWsVryxh/+czM5K6mGp
+         13hdfMCSB/P6NtaHPJG9QcGBXNEJxuMkr9zpKXzepxgRNypQM3lgWiZYqkyxGIlYy1cF
+         xOsgUAys8iIyk03Q8xoSi4/GPmgr/tdZPc3jTS9+HyiWLsK/5AiDr+K6MT+r0r0fU9Mg
+         y5eSdRxpWmW7DQInZwFXqJy9njXEtcguP3gRfO26EQshB6CsqWFVp9/k6H3SYLxyXQ+0
+         CS9yIfIsLpKZRG8+d214Ug2YMTPeQayi7Ufur9YWFtIkM25YvZ6q1jtExntJpCiEUdT5
+         LybQ==
+X-Gm-Message-State: ANhLgQ10FrGWWHnN325cco6ZqpJZe3Hzl4BQjVsBCDGUzt4dUmZA+XfL
+        qMoeu2EDtAZ/R7KbjsjF4Rw=
+X-Google-Smtp-Source: ADFU+vtRFX96zmPBwSppbimg+E/3Q+27jc5AiBLwDOEZdexKbH3UdJJl5iZcxnooBzPcmb+JPQQZtQ==
+X-Received: by 2002:a63:b34d:: with SMTP id x13mr15895811pgt.317.1583750640989;
+        Mon, 09 Mar 2020 03:44:00 -0700 (PDT)
+Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
+        by smtp.gmail.com with ESMTPSA id t17sm44323051pgn.94.2020.03.09.03.44.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 03:44:00 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id BF2902360374; Mon,  9 Mar 2020 19:43:58 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     linux-kernel@vger.kernel.org, davem@davemloft.net, corbet@lwn.net,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
+        linux-rdma@vger.kernel.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] linux-next: DOC: RDS: Fix a typo in rds.txt
+Date:   Mon,  9 Mar 2020 19:43:56 +0900
+Message-Id: <20200309104356.56267-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.26.0.rc0
 MIME-Version: 1.0
-In-Reply-To: <20200309100212.16499-1-olivier.moysan@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_02:2020-03-08,2020-03-09 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/9/20 11:02 AM, Olivier Moysan wrote:
-> This commit fixes the following error:
-> "BUG: sleeping function called from invalid context at kernel/irq/chip.c"
-> 
-> In DMA mode suppress the trigger irq handler, and make the buffer
-> transfers directly in DMA callback, instead.
-> 
-> Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+This patch fix a spelling typo in rds.txt
 
-Hi Olivier,
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+---
+ Documentation/networking/rds.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+diff --git a/Documentation/networking/rds.txt b/Documentation/networking/rds.txt
+index f2a0147c933d..eec61694e894 100644
+--- a/Documentation/networking/rds.txt
++++ b/Documentation/networking/rds.txt
+@@ -159,7 +159,7 @@ Socket Interface
+ 	set SO_RDS_TRANSPORT on a socket for which the transport has
+ 	been previously attached explicitly (by SO_RDS_TRANSPORT) or
+ 	implicitly (via bind(2)) will return an error of EOPNOTSUPP.
+-	An attempt to set SO_RDS_TRANSPPORT to RDS_TRANS_NONE will
++	An attempt to set SO_RDS_TRANSPORT to RDS_TRANS_NONE will
+ 	always return EINVAL.
+ 
+ RDMA for RDS
+-- 
+2.26.0.rc0
 
-Thanks,
-Fabrice
-
-> ---
-> Changes in v2:
-> - Add "Fixes" tag in commit message
-> 
-> This solution has been already discussed in the thread
-> https://lkml.org/lkml/2019/3/30/171, and applied in STM32 DFSDM driver:
-> e19ac9d9a978 ("iio: adc: stm32-dfsdm: fix sleep in atomic context")
-> ---
->  drivers/iio/adc/stm32-adc.c | 31 ++++++++++++++++++++++++++++---
->  1 file changed, 28 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> index 80c3f963527b..ae622ee6d08c 100644
-> --- a/drivers/iio/adc/stm32-adc.c
-> +++ b/drivers/iio/adc/stm32-adc.c
-> @@ -1418,8 +1418,30 @@ static unsigned int stm32_adc_dma_residue(struct stm32_adc *adc)
->  static void stm32_adc_dma_buffer_done(void *data)
->  {
->  	struct iio_dev *indio_dev = data;
-> +	struct stm32_adc *adc = iio_priv(indio_dev);
-> +	int residue = stm32_adc_dma_residue(adc);
-> +
-> +	/*
-> +	 * In DMA mode the trigger services of IIO are not used
-> +	 * (e.g. no call to iio_trigger_poll).
-> +	 * Calling irq handler associated to the hardware trigger is not
-> +	 * relevant as the conversions have already been done. Data
-> +	 * transfers are performed directly in DMA callback instead.
-> +	 * This implementation avoids to call trigger irq handler that
-> +	 * may sleep, in an atomic context (DMA irq handler context).
-> +	 */
-> +	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
->  
-> -	iio_trigger_poll_chained(indio_dev->trig);
-> +	while (residue >= indio_dev->scan_bytes) {
-> +		u16 *buffer = (u16 *)&adc->rx_buf[adc->bufi];
-> +
-> +		iio_push_to_buffers(indio_dev, buffer);
-> +
-> +		residue -= indio_dev->scan_bytes;
-> +		adc->bufi += indio_dev->scan_bytes;
-> +		if (adc->bufi >= adc->rx_buf_sz)
-> +			adc->bufi = 0;
-> +	}
->  }
->  
->  static int stm32_adc_dma_start(struct iio_dev *indio_dev)
-> @@ -1845,6 +1867,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
->  {
->  	struct iio_dev *indio_dev;
->  	struct device *dev = &pdev->dev;
-> +	irqreturn_t (*handler)(int irq, void *p) = NULL;
->  	struct stm32_adc *adc;
->  	int ret;
->  
-> @@ -1911,9 +1934,11 @@ static int stm32_adc_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		return ret;
->  
-> +	if (!adc->dma_chan)
-> +		handler = &stm32_adc_trigger_handler;
-> +
->  	ret = iio_triggered_buffer_setup(indio_dev,
-> -					 &iio_pollfunc_store_time,
-> -					 &stm32_adc_trigger_handler,
-> +					 &iio_pollfunc_store_time, handler,
->  					 &stm32_adc_buffer_setup_ops);
->  	if (ret) {
->  		dev_err(&pdev->dev, "buffer setup failed\n");
-> 
