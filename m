@@ -2,136 +2,215 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C5FC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B51FC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D2924654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDBC20866
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:56:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UBurujxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgCIT45 (ORCPT
+        id S1726353AbgCIT46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:56:57 -0400
-Received: from smtprelay0022.hostedemail.com ([216.40.44.22]:39101 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725992AbgCIT45 (ORCPT
+        Mon, 9 Mar 2020 15:56:58 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:56052 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgCIT45 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Mar 2020 15:56:57 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id BB3C3182CED2A;
-        Mon,  9 Mar 2020 19:56:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fork76_769655216b051
-X-Filterd-Recvd-Size: 4485
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  9 Mar 2020 19:56:54 +0000 (UTC)
-Message-ID: <e8db6d1a92001b02bbe2c2a1fc3413e1d44aa0a4.camel@perches.com>
-Subject: Re: [PATCH] cvt_fallthrough: A tool to convert /* fallthrough */
- comments to fallthrough;
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Date:   Mon, 09 Mar 2020 12:55:14 -0700
-In-Reply-To: <CAKwvOdkzc3AtpkRcZU06yvAEzp_bjw55HkpGui6RsAcy=FhnJw@mail.gmail.com>
-References: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
-         <20200220162114.138f976ae16a5e58e13a51ae@linux-foundation.org>
-         <CAKwvOdkzc3AtpkRcZU06yvAEzp_bjw55HkpGui6RsAcy=FhnJw@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+Received: by mail-pj1-f65.google.com with SMTP id a18so340805pjs.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 12:56:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+SZtf0M28Nv1QFHflR2s3hX23poufSUdY44oODK2BAY=;
+        b=UBurujxd1n8tmu1N5xcKWOKFdorVALZ/c8MK0DTzPfMHbrhfVl4E4YT2CXj9hbBurs
+         FVH34y5aIp7VS1UdCMP98Ok/V9bItureBV+jO+cgQ1JWcL/3AaXp/CFrfbIVkNFMRbxJ
+         0jGpxW12IoGYsaGH9bhcuad7QMZlJ1HzaThVqXdLeLSgJhyX9Wth5doveQr++PnwQXOG
+         5zwqUWf5gpUCgBnP/2QGeAnuKYkCrw4Cpr+0b3GQBK4kDyG4S8tXJt9Bvc8pJRXBDa0j
+         IaG9f0vQ2LDYiKUKJ9dxv3uBtDuLsmz8ba5nkESeuu4rknvxX6RfJTnFW3ALIXW2sQB1
+         +2FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+SZtf0M28Nv1QFHflR2s3hX23poufSUdY44oODK2BAY=;
+        b=kKL8lRGAGKKdq0EknmVsZZ5quomW/hYIG2MxMsOwR9AqWZeq4aRembnfYjkinfzHw6
+         AKSEXeowDgxqIZEOuPyDympUaXcOF7EZAZIbUD0hz1+nY0VXDYrXYliQMKJYGOeRUyBn
+         gnMu/GZNhYzhJoh5JXD9NrRTxN42Ot9xVnfXPjbEVG7ILWppHWJqGFKT13oeprqnzDce
+         CxqJLt+7fQ25IJK4MiuVO5Fhm+j4m9eB+tT54KM1blctag3ajbvR5G5PSoRqW/peTErN
+         z+mxTQeKqELNkAavQOotlLtd5hUkU2AxPWRFDE69KBffUqcAC9/eyQkYQFoKTlFo3iWL
+         IOTg==
+X-Gm-Message-State: ANhLgQ0d/YRQkSNvyhmn4Wh4AyV70Md4yrIuF+4uyFzTATTfb1filrmK
+        VJgFrw6rEajtEk1AntCTdnjhpg==
+X-Google-Smtp-Source: ADFU+vvR9cBt7tA3gwJF7m+Q3TQX3HEJMkR3tbnhc3eRv3NjmUZ9OXX8E469moyjW1ToKHn9huhxHw==
+X-Received: by 2002:a17:902:8b88:: with SMTP id ay8mr16941773plb.202.1583783815957;
+        Mon, 09 Mar 2020 12:56:55 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id x70sm36208373pgd.37.2020.03.09.12.56.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 12:56:55 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 13:56:53 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Clement Leger <cleger@kalray.eu>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-remoteproc@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>
+Subject: Re: [PATCH v5 4/8] remoteproc: Add elf helpers to access elf64 and
+ elf32 fields
+Message-ID: <20200309195653.GD1399@xps15>
+References: <20200210162209.23149-1-cleger@kalray.eu>
+ <20200302093902.27849-1-cleger@kalray.eu>
+ <20200302093902.27849-5-cleger@kalray.eu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302093902.27849-5-cleger@kalray.eu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-09 at 12:36 -0700, Nick Desaulniers wrote:
-> On Thu, Feb 20, 2020 at 4:21 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > On Thu, 20 Feb 2020 12:30:21 -0800 Joe Perches <joe@perches.com> wrote:
-> > 
-> > > Convert /* fallthrough */ style comments to the pseudo-keyword fallthrough
-> > > to allow clang 10 and higher to work at finding missing fallthroughs too.
-> > > 
-> > > Requires a git repository and overwrites the input files.
-> > > 
-> > > Typical command use:
-> > >     ./scripts/cvt_fallthrough.pl <path|file>
-> > > 
-> > > i.e.:
-> > > 
-> > >    $ ./scripts/cvt_fallthrough.pl block
-> > >      converts all files in block and its subdirectories
-> > >    $ ./scripts/cvt_fallthrough.pl drivers/net/wireless/zydas/zd1201.c
-> > >      converts a single file
-> > > 
-> > > A fallthrough comment with additional comments is converted akin to:
-> > > 
-> > > -             /* fall through - maybe userspace knows this conn_id. */
-> > > +             fallthrough;    /* maybe userspace knows this conn_id */
-> > > 
-> > > A fallthrough comment or fallthrough; between successive case statements
-> > > is deleted.
-> > > 
-> > > e.g.:
-> > > 
-> > >     case FOO:
-> > >       /* fallthrough */ (or fallthrough;)
-> > >     case BAR:
-> > > 
-> > > is converted to:
-> > > 
-> > >     case FOO:
-> > >     case BAR:
-> > > 
-> > > Signed-off-by: Joe Perches <joe@perches.com>
-> > > ---
-> > >  scripts/cvt_fallthrough.pl | 215 +++++++++++++++++++++++++++++++++++++
-> > 
-> > Do we need this in the tree long-term?  Or is it a matters of "hey
-> > Linus, please run this" then something like add a checkpatch rule to
-> > catch future slipups?
+On Mon, Mar 02, 2020 at 10:38:58AM +0100, Clement Leger wrote:
+> elf32 and elf64 mainly differ by their types. In order to avoid
+> copy/pasting the whole loader code, generate static inline functions
+> which will access values according to the elf class. It allows to
+> keep a common loader basis.
+> In order to accommodate both elf types sizes, the maximum size for a
+> elf header member is chosen using the maximum value of the field for
+> both elf class.
 > 
-> Just for some added context, please see
-> https://reviews.llvm.org/D73852, where support for parsing some forms
-> of fallthrough statements was added to Clang in a broken state by a
-> contributor, but then ripped out by the code owner (of the clang front
-> end to LLVM, and also happens to be the C++ ISO spec editor).  He
-> provides further clarification
-> https://bugs.llvm.org/show_bug.cgi?id=43465#c37.
+> Signed-off-by: Clement Leger <cleger@kalray.eu>
+
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+> ---
+>  drivers/remoteproc/remoteproc_elf_helpers.h | 96 +++++++++++++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>  create mode 100644 drivers/remoteproc/remoteproc_elf_helpers.h
 > 
-> I'm inclined to agree with him; to implement this, we need to keep
-> around comments for semantic analyses, a later phase of compilation
-> than preprocessing.  It feels like a layering violation to either not
-> discard comments as soon as possible, or emit diagnostics from the
-> preprocessor.  And as Joe's data shows, there's the classic issue
-> faced when using regexes to solve a problem; suddenly you now have two
-> problems.
-> https://xkcd.com/1171/
+> diff --git a/drivers/remoteproc/remoteproc_elf_helpers.h b/drivers/remoteproc/remoteproc_elf_helpers.h
+> new file mode 100644
+> index 000000000000..4b6be7b6bf4d
+> --- /dev/null
+> +++ b/drivers/remoteproc/remoteproc_elf_helpers.h
+> @@ -0,0 +1,96 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Remote processor elf helpers defines
+> + *
+> + * Copyright (C) 2020 Kalray, Inc.
+> + */
+> +
+> +#ifndef REMOTEPROC_ELF_LOADER_H
+> +#define REMOTEPROC_ELF_LOADER_H
+> +
+> +#include <linux/elf.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * fw_elf_get_class - Get elf class
+> + * @fw: the ELF firmware image
+> + *
+> + * Note that we use and elf32_hdr to access the class since the start of the
+> + * struct is the same for both elf class
+> + *
+> + * Return: elf class of the firmware
+> + */
+> +static inline u8 fw_elf_get_class(const struct firmware *fw)
+> +{
+> +	struct elf32_hdr *ehdr = (struct elf32_hdr *)fw->data;
+> +
+> +	return ehdr->e_ident[EI_CLASS];
+> +}
+> +
+> +static inline void elf_hdr_init_ident(struct elf32_hdr *hdr, u8 class)
+> +{
+> +	memcpy(hdr->e_ident, ELFMAG, SELFMAG);
+> +	hdr->e_ident[EI_CLASS] = class;
+> +	hdr->e_ident[EI_DATA] = ELFDATA2LSB;
+> +	hdr->e_ident[EI_VERSION] = EV_CURRENT;
+> +	hdr->e_ident[EI_OSABI] = ELFOSABI_NONE;
+> +}
+> +
+> +/* Generate getter and setter for a specific elf struct/field */
+> +#define ELF_GEN_FIELD_GET_SET(__s, __field, __type) \
+> +static inline __type elf_##__s##_get_##__field(u8 class, const void *arg) \
+> +{ \
+> +	if (class == ELFCLASS32) \
+> +		return (__type) ((const struct elf32_##__s *) arg)->__field; \
+> +	else \
+> +		return (__type) ((const struct elf64_##__s *) arg)->__field; \
+> +} \
+> +static inline void elf_##__s##_set_##__field(u8 class, void *arg, \
+> +					     __type value) \
+> +{ \
+> +	if (class == ELFCLASS32) \
+> +		((struct elf32_##__s *) arg)->__field = (__type) value; \
+> +	else \
+> +		((struct elf64_##__s *) arg)->__field = (__type) value; \
+> +}
+> +
+> +ELF_GEN_FIELD_GET_SET(hdr, e_entry, u64)
+> +ELF_GEN_FIELD_GET_SET(hdr, e_phnum, u16)
+> +ELF_GEN_FIELD_GET_SET(hdr, e_shnum, u16)
+> +ELF_GEN_FIELD_GET_SET(hdr, e_phoff, u64)
+> +ELF_GEN_FIELD_GET_SET(hdr, e_shoff, u64)
+> +ELF_GEN_FIELD_GET_SET(hdr, e_shstrndx, u16)
+> +ELF_GEN_FIELD_GET_SET(hdr, e_machine, u16)
+> +ELF_GEN_FIELD_GET_SET(hdr, e_type, u16)
+> +ELF_GEN_FIELD_GET_SET(hdr, e_version, u32)
+> +ELF_GEN_FIELD_GET_SET(hdr, e_ehsize, u32)
+> +ELF_GEN_FIELD_GET_SET(hdr, e_phentsize, u16)
+> +
+> +ELF_GEN_FIELD_GET_SET(phdr, p_paddr, u64)
+> +ELF_GEN_FIELD_GET_SET(phdr, p_vaddr, u64)
+> +ELF_GEN_FIELD_GET_SET(phdr, p_filesz, u64)
+> +ELF_GEN_FIELD_GET_SET(phdr, p_memsz, u64)
+> +ELF_GEN_FIELD_GET_SET(phdr, p_type, u32)
+> +ELF_GEN_FIELD_GET_SET(phdr, p_offset, u64)
+> +ELF_GEN_FIELD_GET_SET(phdr, p_flags, u32)
+> +ELF_GEN_FIELD_GET_SET(phdr, p_align, u64)
+> +
+> +ELF_GEN_FIELD_GET_SET(shdr, sh_size, u64)
+> +ELF_GEN_FIELD_GET_SET(shdr, sh_offset, u64)
+> +ELF_GEN_FIELD_GET_SET(shdr, sh_name, u32)
+> +ELF_GEN_FIELD_GET_SET(shdr, sh_addr, u64)
+> +
+> +#define ELF_STRUCT_SIZE(__s) \
+> +static inline unsigned long elf_size_of_##__s(u8 class) \
+> +{ \
+> +	if (class == ELFCLASS32)\
+> +		return sizeof(struct elf32_##__s); \
+> +	else \
+> +		return sizeof(struct elf64_##__s); \
+> +}
+> +
+> +ELF_STRUCT_SIZE(shdr)
+> +ELF_STRUCT_SIZE(phdr)
+> +ELF_STRUCT_SIZE(hdr)
+> +
+> +#endif /* REMOTEPROC_ELF_LOADER_H */
+> -- 
+> 2.15.0.276.g89ea799
 > 
-> I would like to see this patch landed, though I am curious as toward's
-> Andrew's question ('Or is it a matters of "hey Linus, please run
-> this"') of what's the imagined workflow here, since it seems like the
-> script needs to be run per file. I suppose you could still do that
-> treewide, but is that the intention, or is it to do so on a per
-> subsystem level?
-
-A single treewide run of a script like this really could make
-it quite hard to later backport various fixes to stable trees.
-
-A depth-first per-maintained subsystem run of the script with
-commits could be useful and would much more easily allow backports.
-
-Unfortunately there's no tool to apply such a script to the tree
-per subsystem as far as I know.
-
-Such a depth-first apply and commit tool could really be quite
-useful though.
-
-
