@@ -2,144 +2,142 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30893C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000A0C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B70205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:13:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583755985;
-	bh=CJ4cOSNiw9+8lA2WHDceh5TeqNHq/3gUmgmVDXVgwPg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vf9eVJQDTiKM6gn7Ynwjmk6+t+N3d5bpjm2YGJOw3467Cf24nzBDM9rz2KFTjt7Vb
-	 4bXC0agpbRAXG/qVl1RoVByIdfz25dHlHMfmsKDGpnyCx0ZfFxTbAv5q1YmiNqfTTm
-	 PkWUmLFnKByv1vVlVFb9yVrX82eEv5T3SDQqxoTA=
+	by mail.kernel.org (Postfix) with ESMTP id C6AE520674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgCIMND (ORCPT
+        id S1726463AbgCIMRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 08:13:03 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41492 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgCIMND (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 08:13:03 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v4so10783231wrs.8
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 05:13:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R/AnVazJT1to75hAodEIbyCnLvch4wjuOplZ+LEerA4=;
-        b=ht449RXlmZD7/HyUc9LXYztokupP7KLhPqMQt7M9nVprdvpe5T0Zqfcvv1osNYmPRT
-         Tlpr9Gu6pulAXJcljTKoJGT3CsXji4Jf+QiDnqfcwnHa1JzGvNoydtXkF3aKsZNNLP4P
-         MUhbLVMOJ08sf7GGk+v/BVW8m/1uzs86vm4wzDLG/x+qUX04rQRiv1Vf5gs1WihhbGc7
-         79cF8J+wgjrUaJux1c6FVTTRcJPSgMYQFpjre77phcTfgqe3Mq5saQr18A7CljTADS7Y
-         xr0FgM+jQPxbHVlMwxfgKjoQIfoLfFxZpu7PumnNlTFFmjD09xxoffkgZLZ+hM6os1w7
-         0ILg==
-X-Gm-Message-State: ANhLgQ1LYqrTGBILbR0WEMhPX8Kc2MeckEPbpJs5YAVzhVRHYkqNXjy2
-        wqCjSFeDHGJqa9riX1RYip0=
-X-Google-Smtp-Source: ADFU+vvEt/BD9szUjhMRtS2lUukGoSi4Lw3Gceek5PIb+EfOLdKzhiRXkB0oMfhypj8LsYWD0UjW+Q==
-X-Received: by 2002:adf:a2d9:: with SMTP id t25mr20488116wra.84.1583755981843;
-        Mon, 09 Mar 2020 05:13:01 -0700 (PDT)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id j205sm25147878wma.42.2020.03.09.05.13.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 05:13:01 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 13:13:00 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     "Huang, Ying" <ying.huang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH -V3] mm: Add PageLayzyFree() helper functions for
- MADV_FREE
-Message-ID: <20200309121300.GL8447@dhcp22.suse.cz>
-References: <20200309021744.1309482-1-ying.huang@intel.com>
- <68360241-eb18-b3d8-bf6f-4dbbed258ee6@redhat.com>
+        Mon, 9 Mar 2020 08:17:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:51340 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbgCIMRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 08:17:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9EC030E;
+        Mon,  9 Mar 2020 05:17:20 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19ABF3F6CF;
+        Mon,  9 Mar 2020 05:17:18 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 12:17:14 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, alexios.zavras@intel.com,
+        tglx@linutronix.de, akpm@linux-foundation.org,
+        steven.price@arm.com, steve.capper@arm.com, broonie@kernel.org,
+        keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH] arm64: add check_wx_pages debugfs for CHECK_WX
+Message-ID: <20200309121713.GA26309@lakrids.cambridge.arm.com>
+References: <20200307093926.27145-1-tranmanphong@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <68360241-eb18-b3d8-bf6f-4dbbed258ee6@redhat.com>
+In-Reply-To: <20200307093926.27145-1-tranmanphong@gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 09-03-20 09:55:38, David Hildenbrand wrote:
-> On 09.03.20 03:17, Huang, Ying wrote:
-[...]
-> > @@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
-> >  		 * Try to allocate it some swap space here.
-> >  		 * Lazyfree page could be freed directly
-> >  		 */
-> > -		if (PageAnon(page) && PageSwapBacked(page)) {
-> > +		if (PageAnon(page) && !__PageLazyFree(page)) {
-> >  			if (!PageSwapCache(page)) {
-> >  				if (!(sc->gfp_mask & __GFP_IO))
-> >  					goto keep_locked;
-> > @@ -1411,7 +1410,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
-> >  			}
-> >  		}
-> >  
-> > -		if (PageAnon(page) && !PageSwapBacked(page)) {
-> > +		if (PageLazyFree(page)) {
-> >  			/* follow __remove_mapping for reference */
-> >  			if (!page_ref_freeze(page, 1))
-> >  				goto keep_locked;
-> > 
+On Sat, Mar 07, 2020 at 04:39:26PM +0700, Phong Tran wrote:
+> follow the suggestion from
+> https://github.com/KSPP/linux/issues/35
+
+That says:
+
+| This should be implemented for all architectures
+
+... so surely this should be in generic code, rahter than being
+arm64-specific?
+
+Thanks,
+Mark.
+
 > 
-> I still prefer something like
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
+>  arch/arm64/Kconfig.debug        |  3 ++-
+>  arch/arm64/include/asm/ptdump.h |  2 ++
+>  arch/arm64/mm/dump.c            |  1 +
+>  arch/arm64/mm/ptdump_debugfs.c  | 18 ++++++++++++++++++
+>  4 files changed, 23 insertions(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index fd6d4670ccc3..7538501230bd 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -63,6 +63,10 @@
->   * page_waitqueue(page) is a wait queue of all tasks waiting for the page
->   * to become unlocked.
->   *
-> + * PG_swapbacked used with anonymous pages (PageAnon()) indicates that a
-> + * page is backed by swap. Anonymous pages without PG_swapbacked are
-> + * pages that can be lazily freed (e.g., MADV_FREE) on demand.
-> + *
->   * PG_uptodate tells whether the page's contents is valid.  When a read
->   * completes, the page becomes uptodate, unless a disk I/O error happened.
->   *
+> diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
+> index 1c906d932d6b..be552fa351e2 100644
+> --- a/arch/arm64/Kconfig.debug
+> +++ b/arch/arm64/Kconfig.debug
+> @@ -48,7 +48,8 @@ config DEBUG_WX
+>  	  of other unfixed kernel bugs easier.
+>  
+>  	  There is no runtime or memory usage effect of this option
+> -	  once the kernel has booted up - it's a one time check.
+> +	  once the kernel has booted up - it's a one time check and
+> +	  can be checked by echo "1" to "check_wx_pages" debugfs in runtime.
+>  
+>  	  If in doubt, say "Y".
+>  
+> diff --git a/arch/arm64/include/asm/ptdump.h b/arch/arm64/include/asm/ptdump.h
+> index 38187f74e089..b80d6b4fc508 100644
+> --- a/arch/arm64/include/asm/ptdump.h
+> +++ b/arch/arm64/include/asm/ptdump.h
+> @@ -24,9 +24,11 @@ struct ptdump_info {
+>  void ptdump_walk(struct seq_file *s, struct ptdump_info *info);
+>  #ifdef CONFIG_PTDUMP_DEBUGFS
+>  void ptdump_debugfs_register(struct ptdump_info *info, const char *name);
+> +int ptdump_check_wx_init(void);
+>  #else
+>  static inline void ptdump_debugfs_register(struct ptdump_info *info,
+>  					   const char *name) { }
+> +static inline int ptdump_check_wx_init(void) { return 0; }
+>  #endif
+>  void ptdump_check_wx(void);
+>  #endif /* CONFIG_PTDUMP_CORE */
+> diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
+> index 860c00ec8bd3..60c99a047763 100644
+> --- a/arch/arm64/mm/dump.c
+> +++ b/arch/arm64/mm/dump.c
+> @@ -378,6 +378,7 @@ static int ptdump_init(void)
+>  #endif
+>  	ptdump_initialize();
+>  	ptdump_debugfs_register(&kernel_ptdump_info, "kernel_page_tables");
+> +	ptdump_check_wx_init();
+>  	return 0;
+>  }
+>  device_initcall(ptdump_init);
+> diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
+> index 1f2eae3e988b..73cddc12c3c2 100644
+> --- a/arch/arm64/mm/ptdump_debugfs.c
+> +++ b/arch/arm64/mm/ptdump_debugfs.c
+> @@ -16,3 +16,21 @@ void ptdump_debugfs_register(struct ptdump_info *info, const char *name)
+>  {
+>  	debugfs_create_file(name, 0400, NULL, info, &ptdump_fops);
+>  }
+> +
+> +static int check_wx_debugfs_set(void *data, u64 val)
+> +{
+> +	if (val != 1ULL)
+> +		return -EINVAL;
+> +
+> +	ptdump_check_wx();
+> +
+> +	return 0;
+> +}
+> +
+> +DEFINE_SIMPLE_ATTRIBUTE(check_wx_fops, NULL, check_wx_debugfs_set, "%llu\n");
+> +
+> +int ptdump_check_wx_init(void)
+> +{
+> +	return debugfs_create_file("check_wx_pages", 0200, NULL,
+> +				   NULL, &check_wx_fops) ? 0 : -ENOMEM;
+> +}
+> -- 
+> 2.20.1
 > 
-> and really don't like the use of !__PageLazyFree() instead of PageSwapBacked().
-
-I have to say that I do not have a strong opinion about helper
-functions. In general I tend to be against adding them unless there is a
-very good reason for them. This particular patch is in a gray zone a bit.
-
-There are few places which are easier to follow but others sound like,
-we have a hammer let's use it. E.g. shrink_page_list path above. There
-is a clear comment explaining PageAnon && PageSwapBacked check being
-LazyFree related but do I have to know that this is LazyFree path? I
-believe that seeing PageSwapBacked has a more meaning to me because it
-tells me that anonymous pages without a backing store doesn't really
-need swap entry.  This happens to be Lazy free related today but with a
-heavy overloading of our flags this might differ in the future. You have
-effectively made a more generic description more specific without a very
-good reason.
-
-On the other hand having PG_swapbacked description in page-flags.h above
-gives a very useful information which was previously hidden at the
-definition so this is a clear improvement.
-
-That being said I think that the patch is not helpful enough. I would
-much rather see a simply documentation update.
-
--- 
-Michal Hocko
-SUSE Labs
