@@ -2,120 +2,105 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98AAC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7BEC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3AC208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:08:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583766500;
-	bh=zR+E5tYBttVPCcPbKOaXsvyQykM+ee/W658ZXR3Ckzs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kpWG5ucIQzLoI5C7WfGhx5SXKaWM9nKdvGLeQIjLH4g0ZhpuVY19hfNrp3jQ9IDAi
-	 DbTpjFrk+De4uKd+/RJUTOXv1b5SLFZFtTwpOiSPal5KZqQaoKuMphQlLk4ss6ToBi
-	 yJhWuRRNnThAyBg6nr2RZF7r75FnyR6lrmqhxcjI=
+	by mail.kernel.org (Postfix) with ESMTP id 1D48120873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:10:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZTrZa0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgCIPIT (ORCPT
+        id S1726905AbgCIPKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:08:19 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34807 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbgCIPIT (ORCPT
+        Mon, 9 Mar 2020 11:10:15 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33148 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgCIPKP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:08:19 -0400
-Received: by mail-wm1-f67.google.com with SMTP id x3so110852wmj.1;
-        Mon, 09 Mar 2020 08:08:18 -0700 (PDT)
+        Mon, 9 Mar 2020 11:10:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r7so229264wmg.0;
+        Mon, 09 Mar 2020 08:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=U+y57M/rwky9fHeiAUJqwYXLvMGk7Mr/fhYU7FCY2u8=;
+        b=tZTrZa0oNuLyQv11zAAcrtq0grxpPYhp1zxIKI4a0VIs8CL8ZLdsS3z8zCRsAnfvD1
+         Fh2B/GNWvhu4MK7xZI8iHZDz6EyMT2KsbATqZuuZEYSSzpf+uzf/dklsVS5ske/33bOU
+         n03FPaEswHbiQ3crXKvQh17YXognajHPvTACDe/zyzsiwRIvJYpYLGLak4KiYjvei8nN
+         89h4Gm7U67nwWgnmvW3mjBctNi2T6O5ECa+NfmmOZB+0QE4b+c3wLtyZ2uxUDNdHeZIl
+         hbgEyUUIElBp2CPNd9z8RJejneRPkAfWYQTXZeOzbv4Tq2GSt6ttGxVeng+g0GPVvlU2
+         gnpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CShDAEQjTdt9JIyUO7h956L1WdGExQd9LWldz9MJ2Cc=;
-        b=SuHErUd4hR54E0HKVLUY0MJqY/fPYTDEbVTlARgsm7ZfJqCPO8Fr0kHKxtKHriMOPK
-         2kX+ydjK6qTlAMPRKTDHc4qcvJuZy6TRqocNbt4XmmEcCbgaQeOxgefnygvx+FyTqEzl
-         KLPYs1X8zLCUyuMLbtueY8jIgzDAKW98CDMRcy5aV0QWCO9/Tdy/D0E7LNtkSMyjhj0v
-         Z4qecc5v2h3Xo6YNmJwecPSjdZFdVwp1zl4T7Ce4YIkE9BMIW7NgxBPTww6HScPXOXd0
-         FcYmltZMpSZZ1Jj4EF4hG4OPZ02p8kD9jHHRgZz3ufUYAgERtR1wKmlNuX8MjC3ru1qh
-         dnNg==
-X-Gm-Message-State: ANhLgQ1yexdspLM0Ht9//K1H0EJxt15+cpprGL7UH9bSoHYcFZ94m/nI
-        IQrvLMeQq9R5u4hyphsUygM=
-X-Google-Smtp-Source: ADFU+vsBff7aAfjr2pMkzUFLxVWiTLhnJal1XORsmcLHXYxZqGIQplNi2T24y04DsAq8kcJJvwWvfA==
-X-Received: by 2002:a7b:c082:: with SMTP id r2mr11039389wmh.177.1583766497622;
-        Mon, 09 Mar 2020 08:08:17 -0700 (PDT)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id s13sm10369659wrw.29.2020.03.09.08.08.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 08:08:16 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 16:08:15 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH v7 7/7] mm/madvise: allow KSM hints for remote API
-Message-ID: <20200309150815.GR8447@dhcp22.suse.cz>
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-8-minchan@kernel.org>
- <2a66abd8-4103-f11b-06d1-07762667eee6@suse.cz>
- <20200306134146.mqiyvsdnqty7so53@butterfly.localdomain>
- <a63768c1-3959-563b-376b-1d8d90d79b41@suse.cz>
- <20200309131117.anvyjszaigpoz2kp@butterfly.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309131117.anvyjszaigpoz2kp@butterfly.localdomain>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=U+y57M/rwky9fHeiAUJqwYXLvMGk7Mr/fhYU7FCY2u8=;
+        b=Fvwia3voDyRJL3jnRfcMfQ71KaVcnMqQoTfEair1gv5acR9YzZhMH1Z9BuR7y0K5Mc
+         S7kSNq6xNoGLtOBjn9XsWYVjzksMtEZpLBMMyND9JSsR2Dfntqc55skdz9RWNDR8XBGg
+         D857sPVn9RhABeJpNM5W6VN2auai48BtXU/eb3Y6gygbmCNTJGFS6SOsYGFsOjE6wVC1
+         kQ0GqtjPPlAOoRq518Yv60cxgVqzksmBfnXoQi+9f7luppHTamIDEHLBTcDfIZHGGgSv
+         n7jWsi3jU388PLCH74Vp7O6w45dkyzsZEEKKIQJGxKoUb1/JQBKj6npWNMQZDoRKAaTd
+         bO/Q==
+X-Gm-Message-State: ANhLgQ0S4M6LgmNOhzyDDryd7TFBucBCvdtkb2yAJcdxw3lGPygyPLRf
+        BjkTbZDazExSP5j5VCtLwaPGJ1lu
+X-Google-Smtp-Source: ADFU+vuIh8QwHVhJYbv7DsubaXn6DdBzZV5DDINm8Si5KimyjUsAHlSO6/pgcWLTb0gby2sl9svLyA==
+X-Received: by 2002:a1c:ba85:: with SMTP id k127mr18161799wmf.63.1583766612973;
+        Mon, 09 Mar 2020 08:10:12 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id q7sm7969813wrd.54.2020.03.09.08.10.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Mar 2020 08:10:12 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     broonie@kernel.org
+Cc:     heiko@sntech.de, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] spi: rockchip: add compatible string for px30 rk3308 rk3328
+Date:   Mon,  9 Mar 2020 16:10:03 +0100
+Message-Id: <20200309151004.7780-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 09-03-20 14:11:17, Oleksandr Natalenko wrote:
-> On Fri, Mar 06, 2020 at 05:08:18PM +0100, Vlastimil Babka wrote:
-[...]
-> > Dunno, it's nice to react to signals quickly, for any proces that gets them, no?
-> 
-> So, do you mean something like this?
-> 
-> ===
-> diff --git a/mm/ksm.c b/mm/ksm.c
-> index 363ec8189561..b39c237cfcf4 100644
-> --- a/mm/ksm.c
-> +++ b/mm/ksm.c
-> @@ -849,7 +849,8 @@ static int unmerge_ksm_pages(struct vm_area_struct *vma,
->  	for (addr = start; addr < end && !err; addr += PAGE_SIZE) {
->  		if (ksm_test_exit(vma->vm_mm))
->  			break;
-> -		if (signal_pending(current))
-> +		if (signal_pending(current) ||
-> +		    signal_pending(rcu_dereference(vma->vm_mm->owner)))
->  			err = -ERESTARTSYS;
->  		else
->  			err = break_ksm(vma, addr);
-> ===
+The Rockchip spi binding is updated to yaml and new models
+were added. The spi on px30,rk3308 and rk3328 are the same as
+other Rockchip based SoCs, so add compatible string for it.
 
-This is broken because mm might be attached to different tasks.
-AFAIU this check is meant to allow quick backoff of the _calling_
-process so that it doesn't waste time when the context is killed
-already. I do not understand why should we care about any other context
-here? What is the actual problem this would solve?
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ drivers/spi/spi-rockchip.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 2cc6d9951..70ef63e0b 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -843,14 +843,17 @@ static const struct dev_pm_ops rockchip_spi_pm = {
+ };
+ 
+ static const struct of_device_id rockchip_spi_dt_match[] = {
+-	{ .compatible = "rockchip,rv1108-spi", },
++	{ .compatible = "rockchip,px30-spi", },
+ 	{ .compatible = "rockchip,rk3036-spi", },
+ 	{ .compatible = "rockchip,rk3066-spi", },
+ 	{ .compatible = "rockchip,rk3188-spi", },
+ 	{ .compatible = "rockchip,rk3228-spi", },
+ 	{ .compatible = "rockchip,rk3288-spi", },
++	{ .compatible = "rockchip,rk3308-spi", },
++	{ .compatible = "rockchip,rk3328-spi", },
+ 	{ .compatible = "rockchip,rk3368-spi", },
+ 	{ .compatible = "rockchip,rk3399-spi", },
++	{ .compatible = "rockchip,rv1108-spi", },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, rockchip_spi_dt_match);
 -- 
-Michal Hocko
-SUSE Labs
+2.11.0
+
