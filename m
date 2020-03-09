@@ -2,101 +2,105 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FF9C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD25EC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5783020675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s3VbLfph"
+	by mail.kernel.org (Postfix) with ESMTP id 83CD420675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgCIGz3 (ORCPT
+        id S1726426AbgCIG5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 02:55:29 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40921 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgCIGz2 (ORCPT
+        Mon, 9 Mar 2020 02:57:53 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57846 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCIG5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 02:55:28 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p2so8750253wrw.7;
-        Sun, 08 Mar 2020 23:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dm/e7fVVkyUEJNRr/yTEUzT0xvOhNYWpgvQvhHUhF68=;
-        b=s3VbLfphTDUMOj5VgEB+bJaxg9XNGT89jpF7/fzn4h2lZjtBN2yMNm+e2Mk1q3vVbz
-         2hu8irwSULuWR6uM43Wv53RBYq6D8D2BBoG3YD6ovjl857cnhxhwjSTQ0PQTELIqogKQ
-         /yyn6SfIz769wKub7xSny0zSlNeUbAq7qpI5RPwFPuVZ4IGqm67Sdov8lAwKUL+koX53
-         5kYAbSbYqLJrm/u2YaUvrq24vjlONNNEgpvHIGRtuzx++/LgRQmjp0JJgmQAqtAdfLkJ
-         YpY1lGAWis9ADEi+SJCUaE0woOUY9hR3uXmr8drGmY4IegRi4kKBxCRU8B6pzqkrVbkY
-         uBmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dm/e7fVVkyUEJNRr/yTEUzT0xvOhNYWpgvQvhHUhF68=;
-        b=flupmVY/WlLFLVinH6cj+X5K7RqVOZGdU1noCvFgA23rs5k4ZQiKrwx3WO60xbuXKJ
-         wa9VCOkSSUH3YGBQAqcWDTZZb/137F/cCBlrZ0Z9LBbkw/ZqY/qcZ95WPxRSN7ISG1o5
-         287HbDYEfpbS9WfB34PXcRVERXuyA6xZxMUnK0mMGk9bJ+Fhd/l6ME09uqNnrBZNGvOA
-         t8MNqXktCUPYQnTIVtnqn7kJcP4AEW2O96JXIOMrIcb61FA9o97HSsbcthvXuawwWRtn
-         k/nmf+YrreANlmh2uMmz+DXjDQmue/8swH8V5xI8ju7XLsxNNXT6OJjMuOF2IHrwC0SP
-         I3qA==
-X-Gm-Message-State: ANhLgQ13NexyJXAnWbq1zqSzfuSffyOw6i2FwioJqwb+SnoFCdTNDUIb
-        HLoBSQv6xeymx8pRC6aV+8I=
-X-Google-Smtp-Source: ADFU+vuCkgUSr5KTXA5g4+RQ2G5B4vEX0HXc+ZOFzelH2n6p5QuIzylG840VCzpvNwVRkr+/89Abxw==
-X-Received: by 2002:adf:80af:: with SMTP id 44mr19311433wrl.241.1583736925115;
-        Sun, 08 Mar 2020 23:55:25 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id l5sm24320597wml.3.2020.03.08.23.55.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Mar 2020 23:55:24 -0700 (PDT)
-To:     jbx6244@gmail.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, heiko@sntech.de,
-        hjc@rock-chips.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        robh+dt@kernel.org
-References: <20200306170353.11393-1-jbx6244@gmail.com>
-Subject: Re: [PATCH v1] dt-bindings: display: rockchip: convert rockchip vop
- bindings to yaml
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <590762ab-db79-c8b1-7f0e-b653ed4b1721@gmail.com>
-Date:   Mon, 9 Mar 2020 07:55:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 9 Mar 2020 02:57:52 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jBCMG-00010u-G5; Mon, 09 Mar 2020 07:57:48 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id BEB1F10408A; Mon,  9 Mar 2020 07:57:47 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+In-Reply-To: <87wo7v8g4j.fsf@nanos.tec.linutronix.de>
+References: <ed71d0967113a35f670a9625a058b8e6e0b2f104.1583547991.git.luto@kernel.org> <CALCETrVmsF9JSMLSd44-3GGWEz6siJQxudeaYiVnvv__YDT1BQ@mail.gmail.com> <87ftek9ngq.fsf@nanos.tec.linutronix.de> <CALCETrVsc-t=tDRPbCg5dWHDY0NFv2zjz12ahD-vnGPn8T+RXA@mail.gmail.com> <87a74s9ehb.fsf@nanos.tec.linutronix.de> <87wo7v8g4j.fsf@nanos.tec.linutronix.de>
+Date:   Mon, 09 Mar 2020 07:57:47 +0100
+Message-ID: <877dzu8178.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200306170353.11393-1-jbx6244@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-Question for robh:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+>> Andy Lutomirski <luto@kernel.org> writes:
+>>> On Sat, Mar 7, 2020 at 7:47 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>>> The host knows exactly when it injects a async PF and it can store CR2
+>>>> and reason of that async PF in flight.
+>>>>
+>>>> On the next VMEXIT it checks whether apf_reason is 0. If apf_reason is 0
+>>>> then it knows that the guest has read CR2 and apf_reason. All good
+>>>> nothing to worry about.
+>>>>
+>>>> If not it needs to be careful.
+>>>>
+>>>> As long as the apf_reason of the last async #PF is not cleared by the
+>>>> guest no new async #PF can be injected. That's already correct because
+>>>> in that case IF==0 which prevents a nested async #PF.
+>>>>
+>>>> If MCE, NMI trigger a real pagefault then the #PF injection needs to
+>>>> clear apf_reason and set the correct CR2. When that #PF returns then the
+>>>> old CR2 and apf_reason need to be restored.
+>>>
+>>> How is the host supposed to know when the #PF returns?  Intercepting
+>>> IRET sounds like a bad idea and, in any case, is not actually a
+>>> reliable indication that #PF returned.
+>>
+>> The host does not care about the IRET. It solely has to check whether
+>> apf_reason is 0 or not. That way it knows that the guest has read CR2
+>> and apf_reason.
+>
+> Bah. I'm a moron. Of course it needs to trap the IRET of the #PF in
+> order to restore CR2 and apf_reason. Alternatively it could trap the CR2
+> read of #PF, but yes that's all nasty.
 
-In the old txt situation we add/describe only properties that are used
-by the driver/hardware itself. With yaml it also filters things in a
-node that are used by other drivers like:
+Some hours or sleep and not staring at this meess later and while
+reading the leaves of my morning tea:
 
-assigned-clocks:
-assigned-clock-rates:
-power-domains:
+guest side:
 
-Should we add or not?
+   nmi()/mce() ...
+   
+        stash_crs();
 
-Kind regards,
++       stash_and_clear_apf_reason();
 
-Johan
+        ....
 
-PS: Will drop 'rockchip,grf' in v2 for px30, not used in vop driver?
++       restore_apf_reason();
+
+	restore_cr2();
+
+Too obvious, isn't it?
+
+Thanks,
+
+        tglx
