@@ -2,147 +2,104 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6308C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B803FC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0CE2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583717068;
-	bh=72wt6abTXdZd2tpt0WJygez8l4q6+2mLPxpP0Bktgfg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gZ3qdEXXYseKLySrVYzhLCz4RLiJORAb/jPo5pzgpWGS0K7lGxLMXNISRK2ohVRTP
-	 /lC4t+tepHzdmBFfUOh5i3uw85YSX6BiQbRqFnI0P96sHAI/JE2lyDeCDD3OesLDl1
-	 RanKe6Vfe3DC+pkTDc0IcaxhmDZoo9AeZLQl2krI=
+	by mail.kernel.org (Postfix) with ESMTP id 9BB562064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgCIBY1 (ORCPT
+        id S1726610AbgCIBbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 21:24:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbgCIBY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 21:24:27 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D08D2064A;
-        Mon,  9 Mar 2020 01:24:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583717066;
-        bh=72wt6abTXdZd2tpt0WJygez8l4q6+2mLPxpP0Bktgfg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sY2+Le5tLiyDZnWmMEU3521ZHiJ+JtD4RRWsVmldqyDoY/2DSOYNmxBMMvOCWf1Qj
-         9SM2dDoueJkLxaSmrfFd/gv8Z7V1w8NlWeKluCtrMNhcPEKBuBijZd02ktJOV22lwl
-         xP1q+dVQRNJvGAEmWcHVA94mvngCpvMPsVu2Y83U=
-Date:   Sun, 8 Mar 2020 18:24:24 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] fs/direct-io.c: avoid workqueue allocation race
-Message-ID: <20200309012424.GB371527@sol.localdomain>
-References: <CACT4Y+Zt+fjBwJk-TcsccohBgxRNs37Hb4m6ZkZGy7u5P2+aaA@mail.gmail.com>
- <20200308055221.1088089-1-ebiggers@kernel.org>
- <20200308231253.GN10776@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200308231253.GN10776@dread.disaster.area>
+        Sun, 8 Mar 2020 21:31:04 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:24988 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726346AbgCIBbD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 21:31:03 -0400
+Date:   09 Mar 2020 10:31:01 +0900
+X-IronPort-AV: E=Sophos;i="5.70,530,1574089200"; 
+   d="scan'208";a="41113966"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 09 Mar 2020 10:31:01 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 76F41400857C;
+        Mon,  9 Mar 2020 10:31:01 +0900 (JST)
+Message-ID: <87r1y2wbze.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Driver Development <devel@driverdev.osuosl.org>,
+        Linux Media <linux-media@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Device Tree <devicetree@vger.kernel.org>,
+        Renesas SoC <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from adv748x codec (HDMI input) to the R-Car SoC
+In-Reply-To: <20200306134546.GE4878@pendragon.ideasonboard.com>
+References: <CAMuHMdV9urx-6N4tiaPdkssa6Wu-9HSB4VY-rvCu+8JpfZcBfA@mail.gmail.com>
+        <20200302134011.GA3717@pflmari>
+        <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
+        <20200302150706.GB3717@pflmari>
+        <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
+        <20200302160906.GC3717@pflmari>
+        <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
+        <20200305143628.GB25741@pflmari>
+        <20200306131632.GA4878@pendragon.ideasonboard.com>
+        <20200306134154.GD27714@pflmari>
+        <20200306134546.GE4878@pendragon.ideasonboard.com>
+User-Agent: Wanderlust/2.15.9 Emacs/25.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 10:12:53AM +1100, Dave Chinner wrote:
-> On Sat, Mar 07, 2020 at 09:52:21PM -0800, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
+
+Hi
+
+> > > Those clocks are part of the CSI-2 protocol and also don't need to be
+> > > explicitly controlled. As far as I can tell from a quick check of the
+> > > ADV7482 documentation, only the I2S MCLK is a general-purpose clock that
+> > > needs to be exposed.
+(snip)
+> > Do you know, by chance, which of the snd_soc* callbacks should be used to
+> > implement setting of the MCLK? The one in snd_soc_component_driver or
+> > snd_soc_dai_driver->ops (snd_soc_dai_ops)?
 > > 
-> > When a thread loses the workqueue allocation race in
-> > sb_init_dio_done_wq(), lockdep reports that the call to
-> > destroy_workqueue() can deadlock waiting for work to complete.  This is
-> > a false positive since the workqueue is empty.  But we shouldn't simply
-> > skip the lockdep check for empty workqueues for everyone.
+> > Or how the userspace interface looks like? Or, if there is no userspace
+> > interface for this, how the MCLK is supposed to be set? Through mclk-fs?
 > 
-> Why not? If the wq is empty, it can't deadlock, so this is a problem
-> with the workqueue lockdep annotations, not a problem with code that
-> is destroying an empty workqueue.
+> I'm afraid my knowledge of the sound subsystem is limited. Morimoto-san
+> is the main developer and maintainer of Renesas sound drivers.
+> Morimoto-sensei, would you have an answer to that question ? :-)
 
-Skipping the lockdep check when flushing an empty workqueue would reduce the
-ability of lockdep to detect deadlocks when flushing that workqueue.  I.e., it
-could cause lots of false negatives, since there are many cases where workqueues
-are *usually* empty when flushed/destroyed but it's still possible that they are
-nonempty.
+In my quick check, it goes to AUDIO_CLKC.
+If so, you can update rcar_sound::clocks.
 
-> 
-> > Just avoid this issue by using a mutex to serialize the workqueue
-> > allocation.  We still keep the preliminary check for ->s_dio_done_wq, so
-> > this doesn't affect direct I/O performance.
-> > 
-> > Also fix the preliminary check for ->s_dio_done_wq to use READ_ONCE(),
-> > since it's a data race.  (That part wasn't actually found by syzbot yet,
-> > but it could be detected by KCSAN in the future.)
-> > 
-> > Note: the lockdep false positive could alternatively be fixed by
-> > introducing a new function like "destroy_unused_workqueue()" to the
-> > workqueue API as previously suggested.  But I think it makes sense to
-> > avoid the double allocation anyway.
-> 
-> Fix the infrastructure, don't work around it be placing constraints
-> on how the callers can use the infrastructure to work around
-> problems internal to the infrastructure.
+	&rcar_sound {
+		...
+-		/* update <audio_clk_b> to <cs2000> */
++		/* update <audio_clk_b> to <cs2000>,
++		 *        <audio_clk_c> to <adv748x> */
+		clocks = <&cpg CPG_MOD 1005>,
+			...
+			 <&audio_clk_a>, <&cs2000>,
+-			 <&audio_clk_c>,
++			 <&adv748x>,
+			 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
 
-Well, it's also preferable not to make our debugging tools less effective to
-support people doing weird things that they shouldn't really be doing anyway.
+Thank you for your help !!
 
-(BTW, we need READ_ONCE() on ->sb_init_dio_done_wq anyway to properly annotate
-the data race.  That could be split into a separate patch though.)
-
-Another idea that came up is to make each workqueue_struct track whether work
-has been queued on it or not yet, and make flush_workqueue() skip the lockdep
-check if the workqueue has always been empty.  (That could still cause lockdep
-false negatives, but not as many as if we checked if the workqueue is
-*currently* empty.)  Would you prefer that solution?  Adding more overhead to
-workqueues would be undesirable though, so I think it would have to be
-conditional on CONFIG_LOCKDEP, like (untested):
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 301db4406bc37..72222c09bcaeb 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -263,6 +263,7 @@ struct workqueue_struct {
- 	char			*lock_name;
- 	struct lock_class_key	key;
- 	struct lockdep_map	lockdep_map;
-+	bool			used;
- #endif
- 	char			name[WQ_NAME_LEN]; /* I: workqueue name */
- 
-@@ -1404,6 +1405,9 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
- 	lockdep_assert_irqs_disabled();
- 
- 	debug_work_activate(work);
-+#ifdef CONFIG_LOCKDEP
-+	WRITE_ONCE(wq->used, true);
-+#endif
- 
- 	/* if draining, only works from the same workqueue are allowed */
- 	if (unlikely(wq->flags & __WQ_DRAINING) &&
-@@ -2772,8 +2776,12 @@ void flush_workqueue(struct workqueue_struct *wq)
- 	if (WARN_ON(!wq_online))
- 		return;
- 
--	lock_map_acquire(&wq->lockdep_map);
--	lock_map_release(&wq->lockdep_map);
-+#ifdef CONFIG_LOCKDEP
-+	if (READ_ONCE(wq->used)) {
-+		lock_map_acquire(&wq->lockdep_map);
-+		lock_map_release(&wq->lockdep_map);
-+	}
-+#endif
- 
- 	mutex_lock(&wq->mutex);
+Best regards
+---
+Kuninori Morimoto
