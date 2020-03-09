@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A0CC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CDEC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 619D221655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E9420873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:27:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uzkyexmd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="i10TwGh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgCIN07 (ORCPT
+        id S1726770AbgCIN1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:26:59 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:41055 "EHLO
+        Mon, 9 Mar 2020 09:27:13 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49129 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726647AbgCIN05 (ORCPT
+        by vger.kernel.org with ESMTP id S1726695AbgCIN1L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:26:57 -0400
+        Mon, 9 Mar 2020 09:27:11 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583760416; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1583760431; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=7L55UhBp8NoiwW5mryWe0UjdRPpLvwz9LZ3QBhRjMgg=; b=uzkyexmdtHpP6a77cOWBigPVWEflNiREm9jEZ5OdYtF8M++t5RtvuQegbCnbTCxPB7ztx3W6
- rm6Q2wvbbsOGbJw+YKz6Ul7trub+1Zmiv8sSHzt6sBilT3U/+pUoT8WhsZoB/UxDFdnEqWAJ
- +yNe+CUMYG5Tiz0tP0CW9H1f40k=
+ bh=68EsyXGUzdLIawLyIVCLBm8Bb1s9J5ol+wgvzvuPly0=; b=i10TwGh1dfBwi8/MulioWDoSuFuIM6jjcIAgSabXEzx/yOrw8lJ2yxsjyNeS90qIZkj6s2Xe
+ ufeWCT9vE7Gw/G2FS/Qbzi5v6SSYSH1o2+giAwVbOX8L9kU+isMIxP9h/NRng+p6wadW/Zs9
+ /Rs7iSa/xv9TMBEvYVGhGWRSAFM=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e664417.7fcf4f0aab20-smtp-out-n04;
- Mon, 09 Mar 2020 13:26:47 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e664426.7ff793b16618-smtp-out-n05;
+ Mon, 09 Mar 2020 13:27:02 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A6C96C44792; Mon,  9 Mar 2020 13:26:45 +0000 (UTC)
+        id 4085AC433CB; Mon,  9 Mar 2020 13:26:59 +0000 (UTC)
 Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C875CC43636;
-        Mon,  9 Mar 2020 13:26:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C875CC43636
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 91D1BC433CB;
+        Mon,  9 Mar 2020 13:26:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 91D1BC433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
 From:   Kiran Gunda <kgunda@codeaurora.org>
@@ -55,9 +55,9 @@ To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
         Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
         linux-fbdev@vger.kernel.org
 Cc:     Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V3 2/4] backlight: qcom-wled: Add callback functions
-Date:   Mon,  9 Mar 2020 18:56:00 +0530
-Message-Id: <1583760362-26978-3-git-send-email-kgunda@codeaurora.org>
+Subject: [PATCH V3 4/4] backlight: qcom-wled: Update auto calibration support for WLED5
+Date:   Mon,  9 Mar 2020 18:56:02 +0530
+Message-Id: <1583760362-26978-5-git-send-email-kgunda@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
 References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
@@ -66,61 +66,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add cabc_config, sync_toggle, wled_ovp_fault_status and wled_ovp_delay
-callback functions to prepare the driver for adding WLED5 support.
+Currently, auto calibration logic checks only for OVP_FAULT bit
+to be set in FAULT_STATUS register to detect OVP fault. This works
+well for WLED4 type. However, WLED5 type has OVP_PRE_ALARM bit
+which can indicate a potential OVP fault. Use that as well for
+detecting OVP fault and run auto calibration to fix the sink
+configuration.
 
 Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 ---
- drivers/video/backlight/qcom-wled.c | 196 +++++++++++++++++++++++-------------
- 1 file changed, 126 insertions(+), 70 deletions(-)
+ drivers/video/backlight/qcom-wled.c | 90 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 88 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-index 3d276b3..b73f273 100644
+index edbbcb2..5079f1f 100644
 --- a/drivers/video/backlight/qcom-wled.c
 +++ b/drivers/video/backlight/qcom-wled.c
-@@ -128,6 +128,7 @@ struct wled_config {
- 	bool cs_out_en;
- 	bool ext_gen;
- 	bool cabc;
-+	bool en_cabc;
- 	bool external_pfet;
- 	bool auto_detection_enabled;
- };
-@@ -147,14 +148,20 @@ struct wled {
- 	u32 max_brightness;
- 	u32 short_count;
- 	u32 auto_detect_count;
-+	u32 version;
- 	bool disabled_by_short;
- 	bool has_short_detect;
-+	bool cabc_disabled;
- 	int short_irq;
- 	int ovp_irq;
+@@ -27,6 +27,7 @@
+ #define  WLED3_CTRL_REG_ILIM_FAULT_BIT			BIT(0)
+ #define  WLED3_CTRL_REG_OVP_FAULT_BIT			BIT(1)
+ #define  WLED4_CTRL_REG_SC_FAULT_BIT			BIT(2)
++#define  WLED5_CTRL_REG_OVP_PRE_ALARM_BIT		BIT(4)
  
- 	struct wled_config cfg;
- 	struct delayed_work ovp_work;
- 	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
-+	int (*cabc_config)(struct wled *wled, bool enable);
-+	int (*wled_sync_toggle)(struct wled *wled);
-+	int (*wled_ovp_fault_status)(struct wled *wled, bool *fault_set);
-+	int (*wled_ovp_delay)(struct wled *wled);
- };
+ #define WLED3_CTRL_REG_INT_RT_STS			0x10
+ #define  WLED3_CTRL_REG_OVP_FAULT_STATUS		BIT(1)
+@@ -104,6 +105,10 @@
  
- static int wled3_set_brightness(struct wled *wled, u16 brightness)
-@@ -237,7 +244,7 @@ static int wled_module_enable(struct wled *wled, int val)
- 	return 0;
- }
+ #define WLED4_SINK_REG_BRIGHT(n)			(0x57 + (n * 0x10))
  
--static int wled_sync_toggle(struct wled *wled)
-+static int wled3_sync_toggle(struct wled *wled)
- {
- 	int rc;
- 	unsigned int mask = GENMASK(wled->max_string_count - 1, 0);
-@@ -255,6 +262,46 @@ static int wled_sync_toggle(struct wled *wled)
++/* WLED5 specific control registers */
++#define WLED5_CTRL_REG_OVP_INT_CTL			0x5f
++#define  WLED5_CTRL_REG_OVP_INT_TIMER_MASK		GENMASK(2, 0)
++
+ /* WLED5 specific sink registers */
+ #define WLED5_SINK_REG_MOD_A_EN				0x50
+ #define WLED5_SINK_REG_MOD_B_EN				0x60
+@@ -394,11 +399,67 @@ static int wled4_ovp_fault_status(struct wled *wled, bool *fault_set)
  	return rc;
  }
  
-+static int wled4_ovp_fault_status(struct wled *wled, bool *fault_set)
++static int wled5_ovp_fault_status(struct wled *wled, bool *fault_set)
 +{
 +	int rc;
 +	u32 int_rt_sts, fault_sts;
@@ -145,7 +130,8 @@ index 3d276b3..b73f273 100644
 +	if (int_rt_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
 +		*fault_set = true;
 +
-+	if (fault_sts & WLED3_CTRL_REG_OVP_FAULT_BIT)
++	if (fault_sts & (WLED3_CTRL_REG_OVP_FAULT_BIT |
++			       WLED5_CTRL_REG_OVP_PRE_ALARM_BIT))
 +		*fault_set = true;
 +
 +	if (*fault_set)
@@ -155,293 +141,78 @@ index 3d276b3..b73f273 100644
 +	return rc;
 +}
 +
-+static int wled4_ovp_delay(struct wled *wled)
+ static int wled4_ovp_delay(struct wled *wled)
+ {
+ 	return WLED_SOFT_START_DLY_US;
+ }
+ 
++static int wled5_ovp_delay(struct wled *wled)
 +{
-+	return WLED_SOFT_START_DLY_US;
++	int rc, delay_us;
++	u32 val;
++	u8 ovp_timer_ms[8] = {1, 2, 4, 8, 12, 16, 20, 24};
++
++	/* For WLED5, get the delay based on OVP timer */
++	rc = regmap_read(wled->regmap, wled->ctrl_addr +
++			 WLED5_CTRL_REG_OVP_INT_CTL, &val);
++	if (rc < 0)
++		delay_us =
++		ovp_timer_ms[val & WLED5_CTRL_REG_OVP_INT_TIMER_MASK] * 1000;
++	else
++		delay_us = 2 * WLED_SOFT_START_DLY_US;
++
++	dev_dbg(wled->dev, "delay_time_us: %d\n", *delay_us);
++
++	return delay_us;
 +}
 +
  static int wled_update_status(struct backlight_device *bl)
  {
  	struct wled *wled = bl_get_data(bl);
-@@ -275,7 +322,7 @@ static int wled_update_status(struct backlight_device *bl)
- 			goto unlock_mutex;
- 		}
- 
--		rc = wled_sync_toggle(wled);
-+		rc = wled->wled_sync_toggle(wled);
- 		if (rc < 0) {
- 			dev_err(wled->dev, "wled sync failed rc:%d\n", rc);
- 			goto unlock_mutex;
-@@ -298,6 +345,31 @@ static int wled_update_status(struct backlight_device *bl)
- 	return rc;
- }
- 
-+static int wled4_cabc_config(struct wled *wled, bool enable)
-+{
-+	int i, j, rc;
-+	u8 val;
-+
-+	if (wled->cabc_disabled)
-+		return 0;
-+
-+	for (i = 0; i < wled->cfg.num_strings; i++) {
-+		j = wled->cfg.enabled_strings[i];
-+
-+		val = enable ? WLED4_SINK_REG_STR_CABC_MASK : 0;
-+		rc = regmap_update_bits(wled->regmap, wled->sink_addr +
-+					WLED4_SINK_REG_STR_CABC(j),
-+					WLED4_SINK_REG_STR_CABC_MASK, val);
-+		if (rc < 0)
-+			return rc;
+@@ -736,9 +797,32 @@ static bool wled_auto_detection_required(struct wled *wled)
+ 	if (!wled->auto_detection_ovp_count) {
+ 		wled->start_ovp_fault_time = ktime_get();
+ 		wled->auto_detection_ovp_count++;
+-	} else {
++		return false;
 +	}
 +
-+	if (!wled->cfg.en_cabc)
-+		wled->cabc_disabled = true;
++	if (wled->version == 5) {
++		/*
++		 * WLED5 has OVP fault density interrupt configuration i.e. to
++		 * count the number of OVP alarms for a certain duration before
++		 * triggering OVP fault interrupt. By default, number of OVP
++		 * fault events counted before an interrupt is fired is 32 and
++		 * the time interval is 12 ms. If we see more than one OVP fault
++		 * interrupt, then that should qualify for a real OVP fault
++		 * condition to run auto calibration algorithm.
++		 */
 +
-+	return 0;
-+}
-+
- #define WLED_SHORT_DLY_MS			20
- #define WLED_SHORT_CNT_MAX			5
- #define WLED_SHORT_RESET_CNT_DLY_US		USEC_PER_SEC
-@@ -345,9 +417,10 @@ static irqreturn_t wled_short_irq_handler(int irq, void *_wled)
- 
- static void wled_auto_string_detection(struct wled *wled)
- {
--	int rc = 0, i;
--	u32 sink_config = 0, int_sts;
-+	int rc = 0, i, delay_time_us;
-+	u32 sink_config = 0;
- 	u8 sink_test = 0, sink_valid = 0, val;
-+	bool fault_set;
- 
- 	/* Read configured sink configuration */
- 	rc = regmap_read(wled->regmap, wled->sink_addr +
-@@ -376,14 +449,9 @@ static void wled_auto_string_detection(struct wled *wled)
- 	}
- 
- 	if (wled->cfg.cabc) {
--		for (i = 0; i < wled->cfg.num_strings; i++) {
--			rc = regmap_update_bits(wled->regmap, wled->sink_addr +
--						WLED4_SINK_REG_STR_CABC(i),
--						WLED4_SINK_REG_STR_CABC_MASK,
--						0);
--			if (rc < 0)
--				goto failed_detect;
--		}
-+		rc = wled->cabc_config(wled, 0);
-+		if (rc < 0)
-+			goto failed_detect;
- 	}
- 
- 	/* Disable all sinks */
-@@ -427,18 +495,17 @@ static void wled_auto_string_detection(struct wled *wled)
- 			goto failed_detect;
- 		}
- 
--		usleep_range(WLED_SOFT_START_DLY_US,
--			     WLED_SOFT_START_DLY_US + 1000);
-+		delay_time_us = wled->wled_ovp_delay(wled);
-+		usleep_range(delay_time_us, delay_time_us + 1000);
- 
--		rc = regmap_read(wled->regmap, wled->ctrl_addr +
--				 WLED3_CTRL_REG_INT_RT_STS, &int_sts);
-+		rc = wled->wled_ovp_fault_status(wled, &fault_set);
- 		if (rc < 0) {
--			dev_err(wled->dev, "Error in reading WLED3_CTRL_INT_RT_STS rc=%d\n",
-+			dev_err(wled->dev, "Error in getting OVP fault_sts, rc=%d\n",
- 				rc);
- 			goto failed_detect;
- 		}
- 
--		if (int_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
-+		if (fault_set)
- 			dev_dbg(wled->dev, "WLED OVP fault detected with SINK %d\n",
- 				i + 1);
++		if (wled->auto_detection_ovp_count > 1) {
++			elapsed_time_us = ktime_us_delta(ktime_get(),
++					wled->start_ovp_fault_time);
++			wled->auto_detection_ovp_count = 0;
++			dev_dbg(wled->dev, "Elapsed time: %lld us\n",
++				elapsed_time_us);
++			return true;
++		}
++		wled->auto_detection_ovp_count++;
++	} else if (wled->version == 4) {
+ 		elapsed_time_us = ktime_us_delta(ktime_get(),
+-						 wled->start_ovp_fault_time);
++					 wled->start_ovp_fault_time);
+ 		if (elapsed_time_us > WLED_AUTO_DETECT_CNT_DLY_US)
+ 			wled->auto_detection_ovp_count = 0;
  		else
-@@ -478,30 +545,30 @@ static void wled_auto_string_detection(struct wled *wled)
- 	}
- 
- 	/* Enable valid sinks */
--	for (i = 0; i < wled->cfg.num_strings; i++) {
--		if (wled->cfg.cabc) {
--			rc = regmap_update_bits(wled->regmap, wled->sink_addr +
--						WLED4_SINK_REG_STR_CABC(i),
--						WLED4_SINK_REG_STR_CABC_MASK,
--						WLED4_SINK_REG_STR_CABC_MASK);
--			if (rc < 0)
-+	if (wled->version == 4) {
-+		for (i = 0; i < wled->cfg.num_strings; i++) {
-+			if (sink_config &
-+			    BIT(WLED4_SINK_REG_CURR_SINK_SHFT + i))
-+				val = WLED4_SINK_REG_STR_MOD_MASK;
-+			else
-+				/* Disable modulator_en for unused sink */
-+				val = 0x0;
-+
-+			rc = regmap_write(wled->regmap, wled->sink_addr +
-+					  WLED4_SINK_REG_STR_MOD_EN(i), val);
-+			if (rc < 0) {
-+				dev_err(wled->dev, "Failed to configure MODULATOR_EN rc=%d\n",
-+					rc);
- 				goto failed_detect;
--		}
--
--		if (sink_config & BIT(WLED4_SINK_REG_CURR_SINK_SHFT + i))
--			val = WLED4_SINK_REG_STR_MOD_MASK;
--		else
--			val = 0x0; /* Disable modulator_en for unused sink */
--
--		rc = regmap_write(wled->regmap, wled->sink_addr +
--				  WLED4_SINK_REG_STR_MOD_EN(i), val);
--		if (rc < 0) {
--			dev_err(wled->dev, "Failed to configure MODULATOR_EN rc=%d\n",
--				rc);
--			goto failed_detect;
-+			}
- 		}
- 	}
- 
-+	/* Enable CABC if it needs to be enabled */
-+	rc = wled->cabc_config(wled, true);
-+	if (rc < 0)
-+		goto failed_detect;
-+
- 	/* Restore the feedback setting */
- 	rc = regmap_write(wled->regmap,
- 			  wled->ctrl_addr + WLED3_CTRL_REG_FEEDBACK_CONTROL, 0);
-@@ -570,29 +637,19 @@ static bool wled_auto_detection_required(struct wled *wled)
- static int wled_auto_detection_at_init(struct wled *wled)
- {
- 	int rc;
--	u32 fault_status, rt_status;
-+	bool fault_set;
- 
- 	if (!wled->cfg.auto_detection_enabled)
- 		return 0;
- 
--	rc = regmap_read(wled->regmap,
--			 wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS,
--			 &rt_status);
-+	rc = wled->wled_ovp_fault_status(wled, &fault_set);
- 	if (rc < 0) {
--		dev_err(wled->dev, "Failed to read RT status rc=%d\n", rc);
--		return rc;
--	}
--
--	rc = regmap_read(wled->regmap,
--			 wled->ctrl_addr + WLED3_CTRL_REG_FAULT_STATUS,
--			 &fault_status);
--	if (rc < 0) {
--		dev_err(wled->dev, "Failed to read fault status rc=%d\n", rc);
-+		dev_err(wled->dev, "Error in getting OVP fault_sts, rc=%d\n",
-+			rc);
- 		return rc;
- 	}
- 
--	if ((rt_status & WLED3_CTRL_REG_OVP_FAULT_STATUS) ||
--	    (fault_status & WLED3_CTRL_REG_OVP_FAULT_BIT)) {
-+	if (fault_set) {
- 		mutex_lock(&wled->lock);
- 		wled_auto_string_detection(wled);
- 		mutex_unlock(&wled->lock);
-@@ -811,17 +868,12 @@ static int wled4_setup(struct wled *wled)
- 					wled->cfg.string_i_limit);
- 		if (rc < 0)
- 			return rc;
--
--		addr = wled->sink_addr +
--				WLED4_SINK_REG_STR_CABC(j);
--		rc = regmap_update_bits(wled->regmap, addr,
--					WLED4_SINK_REG_STR_CABC_MASK,
--					wled->cfg.cabc ?
--					WLED4_SINK_REG_STR_CABC_MASK : 0);
--		if (rc < 0)
--			return rc;
- 	}
- 
-+	rc = wled4_cabc_config(wled, wled->cfg.en_cabc);
-+	if (rc < 0)
-+		return rc;
-+
- 	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
- 				WLED3_CTRL_REG_MOD_EN,
- 				WLED3_CTRL_REG_MOD_EN_MASK,
-@@ -835,7 +887,7 @@ static int wled4_setup(struct wled *wled)
- 	if (rc < 0)
- 		return rc;
- 
--	rc = wled_sync_toggle(wled);
-+	rc = wled->wled_sync_toggle(wled);
- 	if (rc < 0) {
- 		dev_err(wled->dev, "Failed to toggle sync reg rc:%d\n", rc);
- 		return rc;
-@@ -951,7 +1003,7 @@ static u32 wled_values(const struct wled_var_cfg *cfg, u32 idx)
- 	return idx;
- }
- 
--static int wled_configure(struct wled *wled, int version)
-+static int wled_configure(struct wled *wled)
- {
- 	struct wled_config *cfg = &wled->cfg;
- 	struct device *dev = wled->dev;
-@@ -1035,12 +1087,13 @@ static int wled_configure(struct wled *wled, int version)
- 	if (rc)
- 		wled->name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn", dev->of_node);
- 
--	switch (version) {
-+	switch (wled->version) {
- 	case 3:
- 		u32_opts = wled3_opts;
- 		size = ARRAY_SIZE(wled3_opts);
- 		*cfg = wled3_config_defaults;
- 		wled->wled_set_brightness = wled3_set_brightness;
-+		wled->wled_sync_toggle = wled3_sync_toggle;
- 		wled->max_string_count = 3;
- 		wled->sink_addr = wled->ctrl_addr;
- 		break;
-@@ -1050,6 +1103,10 @@ static int wled_configure(struct wled *wled, int version)
- 		size = ARRAY_SIZE(wled4_opts);
- 		*cfg = wled4_config_defaults;
- 		wled->wled_set_brightness = wled4_set_brightness;
-+		wled->wled_sync_toggle = wled3_sync_toggle;
-+		wled->cabc_config = wled4_cabc_config;
-+		wled->wled_ovp_fault_status = wled4_ovp_fault_status;
-+		wled->wled_ovp_delay = wled4_ovp_delay;
+@@ -1424,6 +1508,8 @@ static int wled_configure(struct wled *wled)
+ 		wled->wled_set_brightness = wled5_set_brightness;
+ 		wled->wled_sync_toggle = wled5_sync_toggle;
+ 		wled->cabc_config = wled5_cabc_config;
++		wled->wled_ovp_fault_status = wled5_ovp_fault_status;
++		wled->wled_ovp_delay = wled5_ovp_delay;
  		wled->max_string_count = 4;
  
  		prop_addr = of_get_address(dev->of_node, 1, NULL, NULL);
-@@ -1186,7 +1243,6 @@ static int wled_probe(struct platform_device *pdev)
- 	struct backlight_device *bl;
- 	struct wled *wled;
- 	struct regmap *regmap;
--	int version;
- 	u32 val;
- 	int rc;
- 
-@@ -1203,18 +1259,18 @@ static int wled_probe(struct platform_device *pdev)
- 	wled->regmap = regmap;
- 	wled->dev = &pdev->dev;
- 
--	version = (uintptr_t)of_device_get_match_data(&pdev->dev);
--	if (!version) {
-+	wled->version = (uintptr_t)of_device_get_match_data(&pdev->dev);
-+	if (!wled->version) {
- 		dev_err(&pdev->dev, "Unknown device version\n");
- 		return -ENODEV;
- 	}
- 
- 	mutex_init(&wled->lock);
--	rc = wled_configure(wled, version);
-+	rc = wled_configure(wled);
- 	if (rc)
- 		return rc;
- 
--	switch (version) {
-+	switch (wled->version) {
- 	case 3:
- 		wled->cfg.auto_detection_enabled = false;
- 		rc = wled3_setup(wled);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
  a Linux Foundation Collaborative Project
