@@ -2,181 +2,123 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD1BC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A79C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2E22067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0A72067C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vod/MyYb"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="BzhaLXqZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgCIOf5 (ORCPT
+        id S1726776AbgCIOgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:35:57 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39041 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgCIOf5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:35:57 -0400
-Received: by mail-qk1-f194.google.com with SMTP id e16so9396400qkl.6;
-        Mon, 09 Mar 2020 07:35:55 -0700 (PDT)
+        Mon, 9 Mar 2020 10:36:13 -0400
+Received: from mail-dm6nam12on2057.outbound.protection.outlook.com ([40.107.243.57]:27918
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726400AbgCIOgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 10:36:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cnigjiLEMboGCdT2uqW50C346Nj39btkGSwiZrFx/fYnxCYPR+xt77e+9oNFPTFb0jB9yH50PqqzgH5LWXq0yXOiJS3GnF1eHJB3yXnx81VYptvncXCpyp3V0q7GPWsVR2enWOooCG9LmEU0qK3FCJBOY1qdxdY/JP2lQOsFDBTxBmvxTwG1GcZS4v1aRTO5wMkvXhZhY94bAHtJuX5PrqzuxGL2TlU0cTbLGrUleOspuVdVR+CClCO3rDs8hGI0ZvFQKuVkV0X/YUmgILwpKficDu8FH4utspClydOpk7bNMyUCuVa9nlKv58J443EmZf98nHlU7xZMxaJcVhYz4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wq09/sQIiNENeUIMS+XUWlWvLaYLS4q0l2IQjh+cCZU=;
+ b=gj5BagGUDEGe8viBlH6Mbya+fRZ2zV7LgGd/KdgEXaOHi1kbZaPhlY1i+gG0/V4QvS7FB92KvKoj781DljcZtUUv3lAa/T59OmSSzymQne9+pBBYF/Ou8PWXS+G7Eqvqdd/jhqzqu4juDFcqZiNH2tQPnfjo9Wf5cy8QF96+sLFhMSC6cSK4qV3yLKc7aeZ9nnGW0yTAT20Aa3YTFzeTwvGenVFM1a1/6UZxljCsMN5pHMIudvzOvvAdsw16kzbaEU8D+ddE2UlYTV3k1nM7e7Jr2VcTkrb7iUe8PN7fv/+3s3x3pKW5AtcCxi6buqLIOoUTmv6ns52Oz5UeXeXa+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5jAy914ctIMdKta9JuUGrpnLf6WaH5WzoC+86aivxiI=;
-        b=Vod/MyYbR1Dx57lAsnEqZPeHZr9tyCwDnK+o0lvYZc/yGoeG5Zkw7CZ8kT5elNxeET
-         WCvV606gKdzZ5BaBqNV9kFav25u78hItE24J7zWedXDF9RiBY8mnR++LAPYyaSkj8Owm
-         TEfN4h6hoWcUKnepRRBhc70Fe1enkjr6IJ1fsj0egtXMsL7MkIWVIikXBhPbUg4DrHrm
-         hsLd40H7pWYfheUDbVLO4fds7pnLwPA7aqg0F8lg26nh7bKEjjk+mMAXgWg2T2QPo59U
-         T/9xWCGKnn1atfS4StLR0AU9yw+Y+9UfY48Htb8TtnC/IElGiSL6qMjKwcd+pOSrli9+
-         nGHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5jAy914ctIMdKta9JuUGrpnLf6WaH5WzoC+86aivxiI=;
-        b=luRhWHhY/C6X+ttPcHo8foyKeOMFsnxIH8Ov2rM2urvhezS7R/wTBdZaGcvLm0zzsX
-         LYp9b79ICKvcIJWmPwPXd5jjIhlovadjgagPBp/O7tyhjCqWdF0BrH0fgVoYk+B7qeOA
-         5T9Ic0wmm4ssT8QGcKpKyB9GmdQk7wQllb2Ibs9qpm51kcbbqvk5SJxhZ7PUlZRuE2/H
-         jJXcBnsvGtDgTI79k6BxMhd/zKbZ1TbfHscOmvMUX4rprokCURbHqOwzl81S+WsL8LIK
-         axyoYHDivqh8xt7p9VNl3sx9AH9ui7Rxg/NwK1LNjVKyQMl7GewMWvpPBWvFwgTboQ6E
-         dc/A==
-X-Gm-Message-State: ANhLgQ3Il4e82fYnUFXBasJsyMrx6zAdf0ffzxfJlj87R9872JmR9Et5
-        9izRLSerK5aJoIde2N/UtbY=
-X-Google-Smtp-Source: ADFU+vsKCcBzRKWf1W59h0lUF1gUHp4hBeMziSwnCnlwUZ3NK0Xa2PKr2UG9Epf8gMM6h0BqAQsmmg==
-X-Received: by 2002:a37:67c4:: with SMTP id b187mr7681788qkc.209.1583764555383;
-        Mon, 09 Mar 2020 07:35:55 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id p16sm22360496qkp.12.2020.03.09.07.35.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Mar 2020 07:35:53 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 0786022148;
-        Mon,  9 Mar 2020 10:35:52 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 09 Mar 2020 10:35:52 -0400
-X-ME-Sender: <xms:RlRmXh7AhVcgDalB_YgnDdCKIk9Cw4yFlgdun8y9ZgunLxIiENoeMg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddukedgieekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomhgrih
-    hnpehkvghrnhgvlhdrohhrghenucfkphephedvrdduheehrdduuddurdejudenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvg
-    hsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheeh
-    hedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:RlRmXvyESB274MuNPqwBvmeuuDIpkZZIsJKS-4GP_DH8P-fo2ApRSA>
-    <xmx:RlRmXpc0aLy-UzpXL4M6i3X152o-XVdssVXbhfZUsVQhyQv91Oasfw>
-    <xmx:RlRmXsGhCxIzUY-W_t-VC1u3qWDVLhAmhPBAvm0olHuhVrrPsd9iEw>
-    <xmx:SFRmXpuz8Gn8qa90c8fLB50qXqcHDDcwz4iSNzcJmKoyhwmQ5ZG-HmWSNEQ>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 03317306130A;
-        Mon,  9 Mar 2020 10:35:49 -0400 (EDT)
-Date:   Mon, 9 Mar 2020 22:35:48 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v3 0/3] PCI: hv: Generify pci-hyperv.c
-Message-ID: <20200309143548.GB118238@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200210033953.99692-1-boqun.feng@gmail.com>
- <20200221023344.GJ69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200221104454.GA8595@e121166-lin.cambridge.arm.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wq09/sQIiNENeUIMS+XUWlWvLaYLS4q0l2IQjh+cCZU=;
+ b=BzhaLXqZier+FhgRFArMoSsk8Np/pnNsDr3Cax8k4RvY4mApRk/yYOwiX62ASrG6TSPENVFS8B+MR+NyEIO4CfD4SrIy8JCApQ1yXdC1rL9vp80cdd5E4Z/F9I/d4nRr2tjUNPdrnwJdA/gYZCZYJVdNqG4Is8By0ZpPlZhA6ko=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Xinhui.Pan@amd.com; 
+Received: from SN6PR12MB2800.namprd12.prod.outlook.com (2603:10b6:805:6c::10)
+ by SN6PR12MB2800.namprd12.prod.outlook.com (2603:10b6:805:6c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Mon, 9 Mar
+ 2020 14:36:10 +0000
+Received: from SN6PR12MB2800.namprd12.prod.outlook.com
+ ([fe80::f458:67f4:2379:b6da]) by SN6PR12MB2800.namprd12.prod.outlook.com
+ ([fe80::f458:67f4:2379:b6da%5]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 14:36:10 +0000
+From:   xinhui pan <xinhui.pan@amd.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     nicholas.johnson-opensource@outlook.com.au, Felix.Kuehling@amd.com,
+        Christian.Koenig@amd.com, Alexander.Deucher@amd.com,
+        xinhui pan <xinhui.pan@amd.com>
+Subject: [PATCH] drm/amdgpu: Correct the condition of warning while bo release
+Date:   Mon,  9 Mar 2020 22:34:58 +0800
+Message-Id: <20200309143458.18411-1-xinhui.pan@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR02CA0196.apcprd02.prod.outlook.com
+ (2603:1096:201:21::32) To SN6PR12MB2800.namprd12.prod.outlook.com
+ (2603:10b6:805:6c::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221104454.GA8595@e121166-lin.cambridge.arm.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pp-server-two.amd.com (180.167.199.189) by HK2PR02CA0196.apcprd02.prod.outlook.com (2603:1096:201:21::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Mon, 9 Mar 2020 14:36:07 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [180.167.199.189]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 283322ba-d766-4778-2f25-08d7c43735b0
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2800:|SN6PR12MB2800:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB28009921CF2696EABD9F7DD187FE0@SN6PR12MB2800.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
+X-Forefront-PRVS: 0337AFFE9A
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(136003)(366004)(189003)(199004)(316002)(66476007)(66556008)(86362001)(4326008)(478600001)(2616005)(81166006)(16526019)(186003)(8676002)(26005)(81156014)(36756003)(8936002)(956004)(66946007)(6916009)(6666004)(4744005)(1076003)(7696005)(52116002)(6486002)(2906002)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2800;H:SN6PR12MB2800.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OunQ9Gs/Hx1Ghl6hW0osST0ipfgWJvINqT5tFmOc/rlh44khB3BfxxVSuW3ZPD+d5uzZbaqhovTWcC/uEZ/khMH/4QAYcH3WSVhD5z1sKwwmHA47JnuZO8BnA3uJ0aSZQdRP/6ZJ6WkrgYh48YPOrdwLRrRifWKTJ4zhTJCGk3RQflwDHVqE+uIAOTyMo0Q/z17dH2D9B4Th46FC8iVh8AWvNdSTTlR6aOa9GI8k9O5uKv2oHnsf6CXFpVDcyoPqZCBSzQjtDDK8pVixaAVrdpW8tbRaXcBkfindL3sXe56fjQGx2oyidNAqO+kR95mYyGbwSAwybW3FtypHLm7EWFPkR4rr8xGcsjwvzIYuCPP2fTq8VXzw+i9wyeDIWOD5KzzLZa7mK1rXhnS769HuDDYymfQndFIyw/xCgpXM33Imeq4U4MzfPC0QgH/5zUrm
+X-MS-Exchange-AntiSpam-MessageData: 8N+4LhsuNvKNMJwATqqVpBjOyZIuskc90cDw6xR9DS8MMpM4pWbNCLzR2f0mOPpj0tqMEajJq6Ei+7WksCtdRBRAAskI0w7ByqzPfcEmX0+EjtKGp/8chREFDuHjMlQ7LoMeXwh1sy426FsQqTHoPQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 283322ba-d766-4778-2f25-08d7c43735b0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 14:36:10.3256
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rbu+w5Tp8icZPINOVio4/EA8Z2U5zWa3rzcAuXspm98f8CTA+7hKRuRLbsm1jUAE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+Only kernel bo has kfd eviction fence.
+This warning is to give a notice that kfd only remove eviction fence on
+individual bos.
 
-On Fri, Feb 21, 2020 at 10:44:54AM +0000, Lorenzo Pieralisi wrote:
-> On Fri, Feb 21, 2020 at 10:33:44AM +0800, Boqun Feng wrote:
-> > Ping ;-)
-> > 
-> > Any suggestion or plan on this patchset?
-> 
-> Hi,
-> 
-> I shall have a look shortly, thanks.
-> 
+Signed-off-by: xinhui pan <xinhui.pan@amd.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Any chance you got some time to look into this?
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+index 5766d20f29d8..e99f68af2bf7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+@@ -1308,7 +1308,8 @@ void amdgpu_bo_release_notify(struct ttm_buffer_object *bo)
+ 		amdgpu_amdkfd_unreserve_memory_limit(abo);
+ 
+ 	/* We only remove the fence if the resv has individualized. */
+-	WARN_ON_ONCE(bo->base.resv != &bo->base._resv);
++	WARN_ON_ONCE(bo->type == ttm_bo_type_kernel
++			&& bo->base.resv != &bo->base._resv);
+ 	if (bo->base.resv == &bo->base._resv)
+ 		amdgpu_amdkfd_remove_fence_on_pt_pd_bos(abo);
+ 
+-- 
+2.17.1
 
-Regards,
-Boqun
-
-> Lorenzo
-> 
-> > Thanks and Regards,
-> > Boqun
-> > 
-> > On Mon, Feb 10, 2020 at 11:39:50AM +0800, Boqun Feng wrote:
-> > > Hi,
-> > > 
-> > > This is the first part for virtual PCI support of Hyper-V guest on
-> > > ARM64. The whole patchset doesn't have any functional change, but only
-> > > refactors the pci-hyperv.c code to make it more arch-independent.
-> > > 
-> > > Previous version:
-> > > v1: https://lore.kernel.org/lkml/20200121015713.69691-1-boqun.feng@gmail.com/
-> > > v2: https://lore.kernel.org/linux-arm-kernel/20200203050313.69247-1-boqun.feng@gmail.com/
-> > > 
-> > > Changes since v2:
-> > > 
-> > > *	Rebased on 5.6-rc1
-> > > 
-> > > *	Reword commit logs as per Andrew's suggestion.
-> > > 
-> > > *	It makes more sense to have a generic interface to set the whole
-> > > 	msi_entry rather than only the "address" field. So change
-> > > 	hv_set_msi_address_from_desc() to hv_set_msi_entry_from_desc().
-> > > 	Additionally, make it an inline function as per the suggestion
-> > > 	of Andrew and Thomas.
-> > > 
-> > > *	Add the missing comment saying the partition_id of
-> > > 	hv_retarget_device_interrupt must be self.
-> > > 
-> > > *	Add the explanation for why "__packed" is needed for TLFS
-> > > 	structures.
-> > > 
-> > > I've done compile and boot test of this patchset, also done some tests
-> > > with a pass-through NVMe device.
-> > > 
-> > > Suggestions and comments are welcome!
-> > > 
-> > > Regards,
-> > > Boqun
-> > > 
-> > > Boqun Feng (3):
-> > >   PCI: hv: Move hypercall related definitions into tlfs header
-> > >   PCI: hv: Move retarget related structures into tlfs header
-> > >   PCI: hv: Introduce hv_msi_entry
-> > > 
-> > >  arch/x86/include/asm/hyperv-tlfs.h  | 41 +++++++++++++++++++++++++++
-> > >  arch/x86/include/asm/mshyperv.h     |  8 ++++++
-> > >  drivers/pci/controller/pci-hyperv.c | 43 ++---------------------------
-> > >  3 files changed, 52 insertions(+), 40 deletions(-)
-> > > 
-> > > -- 
-> > > 2.24.1
-> > > 
