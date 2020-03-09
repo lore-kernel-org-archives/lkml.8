@@ -2,85 +2,101 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EB7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D38C10F28
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B318F20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:36:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sV0mNfSJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9BEA4206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgCIDfy (ORCPT
+        id S1726776AbgCIDg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 23:35:54 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:22526 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726352AbgCIDfy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 23:35:54 -0400
-X-UUID: 8e2c851f376f42a38f3789f6b06f7bf0-20200309
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=NPplXrKgtKtz1x0Ix8YmImoSvkv1+1IC9efSsIgz5rA=;
-        b=sV0mNfSJjS+svi/9q1NwYqHr4RZWLuxhCKB0eLroOX/wZXNm/TC6aZY/7H6MiaA1xGuyuxp7Dlk/OtE3hTAC/SZeNEaD36hd9l52IL5CPMdqHLjt/lB+40RlMcM5NECuZfPVN6nRL3/zUEDhTEMlsXZ8fsC2LeBNR7NRg+vU+JY=;
-X-UUID: 8e2c851f376f42a38f3789f6b06f7bf0-20200309
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1428586009; Mon, 09 Mar 2020 11:35:43 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 9 Mar 2020 11:35:41 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 9 Mar 2020 11:35:38 +0800
-Message-ID: <1583724941.15393.8.camel@mtksdccf07>
-Subject: Re: [PATCH v2 1/1] pwm: mediatek: add longer period support
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        "Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=" 
-        <u.kleine-koenig@pengutronix.de>
-CC:     <linux-pwm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-mediatek@lists.infradead.org>,
-        "John Crispin" <john@phrozen.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 9 Mar 2020 11:35:41 +0800
-In-Reply-To: <20200308201811.hlac57s3h4p4cgev@pengutronix.de>
-References: <1583230755-25986-1-git-send-email-sam.shih@mediatek.com>
-         <1583230755-25986-2-git-send-email-sam.shih@mediatek.com>
-         <1a3a523e-62ff-e380-c67b-12f742d348ea@gmail.com>
-         <20200308201811.hlac57s3h4p4cgev@pengutronix.de>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: BF9287628D924EBECDF23B1AA8716029622345E5AC47F06F0882C90E7795C30A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Sun, 8 Mar 2020 23:36:59 -0400
+Received: from mga11.intel.com ([192.55.52.93]:5773 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbgCIDg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 23:36:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2020 20:36:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,531,1574150400"; 
+   d="scan'208";a="414670446"
+Received: from pg-nxl3.altera.com ([10.142.129.93])
+  by orsmga005.jf.intel.com with ESMTP; 08 Mar 2020 20:36:56 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Dinh Nguyen <dinguyen@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Chee Hong Ang <chee.hong.ang@intel.com>
+Subject: [PATCH] arm64: dts: increase the QSPI reg address for Stratix10 and Agilex
+Date:   Mon,  9 Mar 2020 11:36:49 +0800
+Message-Id: <20200309033649.15208-1-joyce.ooi@intel.com>
+X-Mailer: git-send-email 2.13.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCk9uIFN1biwgMjAyMC0wMy0wOCBhdCAyMToxOCArMDEwMCwgVXdlIEtsZWluZS1L
-9m5pZyB3cm90ZToNCj4gSGVsbG8sDQo+IA0KPiBPbiBTYXQsIE1hciAwNywgMjAyMCBhdCAxMDoy
-ODozNlBNICswMTAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3RlOg0KPiA+IE9uIDAzLzAzLzIwMjAg
-MTE6MTksIFNhbSBTaGloIHdyb3RlOg0KPiA+ID4gVGhlIHB3bSBjbG9jayBzb3VyY2UgY291bGQg
-YmUgZGl2aWRlZCBieSAxNjI1IHdpdGggUFdNX0NPTg0KPiA+ID4gQklUKDMpIHNldHRpbmcgaW4g
-bWVkaWF0ZWsgaGFyZHdhcmUuDQo+ID4gPiANCj4gPiA+IFRoaXMgcGF0Y2ggYWRkIHN1cHBvcnQg
-Zm9yIGxvbmdlciBwd20gcGVyaW9kIGNvbmZpZ3VyYXRpb24sDQo+ID4gPiB3aGljaCBhbGxvd2lu
-ZyBibGlua2luZyBMRURzIHZpYSBwd20gaW50ZXJmYWNlLg0KPiA+IA0KPiA+IElzIHRoaXMgYSBm
-aXg/IEluIHRoaXMgY2FzZSBwbGVhc2UgcHJvdmlkZSBhIEZpeGVzIHRhZyB3aXRoIHRoZSBjb21t
-aXQgSUQgd2hpY2gNCj4gPiBpbnRyb2R1Y2VkIHRoZSBidWcuDQo+IA0KPiBJJ2Qgc2F5IGl0IHF1
-YWxpZmllcyBhcyBhIGZpeCBpZiB3aXRob3V0IGl0IGEgcmVxdWVzdCB3aXRoIGEgbG9uZyBwZXJp
-b2QNCj4gcmV0dXJucyBzdWNjZXNzIGJ1dCBpc24ndCBwcm9wZXJseSBpbXBsZW1lbnRlZC4gT3Ro
-ZXJ3aXNlIGl0J3Mgb25seSBhDQo+IG5ldyBmZWF0dXJlLg0KPiANCg0KSXQncyBvbmx5IGEgbmV3
-IGZlYXR1cmUuDQoNCldpdGhvdXQgdGhpcyBwYXRjaCwgcHdtX21lZGlhdGVrX2NvbmZpZyByZXR1
-cm4gLUVJTlZBTCB3aGVuIHJlY2VpdmUgYQ0KbG9uZyBwZXJpb2QgcmVxdWVzdC4NCg0KSSB3aWxs
-IHNlbmQgdjMgdG8gcmVwbHkgVXdlJ3MgY29tbWVudC4NCg0KDQpCZXN0IFJlZ2FyZHMsDQpTYW0g
-U2hpaA0KDQo=
+From: Joyce Ooi <joyce.ooi@intel.com>
+
+This patch increases the reg addresses for QSPI boot and QSPI rootfs for
+Stratix10 and Agilex to cater for the increased size of kernel Image.
+
+Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+---
+ .../boot/dts/altera/socfpga_stratix10_socdk.dts    |    6 +++---
+ arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts |    6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index fb11ef0..f6c4a15 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -178,12 +178,12 @@
+ 
+ 			qspi_boot: partition@0 {
+ 				label = "Boot and fpga data";
+-				reg = <0x0 0x034B0000>;
++				reg = <0x0 0x03FE0000>;
+ 			};
+ 
+-			qspi_rootfs: partition@4000000 {
++			qspi_rootfs: partition@3FE0000 {
+ 				label = "Root Filesystem - JFFS2";
+-				reg = <0x034B0000 0x0EB50000>;
++				reg = <0x03FE0000 0x0C020000>;
+ 			};
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+index 44d38af..ac6e51b 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
+@@ -129,12 +129,12 @@
+ 
+ 			qspi_boot: partition@0 {
+ 				label = "Boot and fpga data";
+-				reg = <0x0 0x034B0000>;
++				reg = <0x0 0x03FE0000>;
+ 			};
+ 
+-			qspi_rootfs: partition@34B0000 {
++			qspi_rootfs: partition@3FE0000 {
+ 				label = "Root Filesystem - JFFS2";
+-				reg = <0x034B0000 0x0EB50000>;
++				reg = <0x03FE0000 0x0C020000>;
+ 			};
+ 		};
+ 	};
+-- 
+1.7.1
 
