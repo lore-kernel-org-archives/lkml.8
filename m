@@ -2,87 +2,123 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FD8C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43DDC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A895820828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7FF20727
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ym7NgKj1"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mF9Mfr/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgCIQzY (ORCPT
+        id S1727261AbgCIQzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:55:24 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:50006 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbgCIQzY (ORCPT
+        Mon, 9 Mar 2020 12:55:54 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34463 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbgCIQzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:55:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=L9W0UbpChESWksr603x3b8JT+mm1g1y8Y901wxtJi4M=; b=Ym7NgKj1jFWdn31wAuHnFV3X2r
-        HWhZW+Z63SuobfGBtvlWZmQKHtJreCDPL9+dEoqzxfvhH8v3rj3Uo1ekDSMOFWaojYdVJioZ82ypC
-        ADAvUp6BPOENzzODXsu9jIm0hCHu0I7uIcyzp30B0+KBda0Vru52/uRrzlYKlzN1ew9koEND+BMUC
-        tYZyKvYBbdLIsEtAuAHlk65kSAgW4HjGNzgPFIlmGDQf8xt7uV1V9Ssv20AO55OXgrqTJOizdaDc+
-        vImXK2PqJg14h2hxa/0nWypiZmJZInVPBbCXsdLuBBAAq9UU4k62yndHnIPxn2qPO7OyQEopS/4vj
-        lWFVBUXA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jBLgQ-0000kn-Pa; Mon, 09 Mar 2020 16:55:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7EE8D300F7A;
-        Mon,  9 Mar 2020 17:55:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 680A1214344E9; Mon,  9 Mar 2020 17:55:11 +0100 (CET)
-Date:   Mon, 9 Mar 2020 17:55:11 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     qiwuchen55@gmail.com
-Cc:     akpm@linux-foundation.org, walken@google.com, rfontana@redhat.com,
-        dbueso@suse.de, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        chenqiwu <chenqiwu@xiaomi.com>
-Subject: Re: [PATCH] rbtree: introduce three helpers about sort-order
- iteration
-Message-ID: <20200309165511.GK12561@hirez.programming.kicks-ass.net>
-References: <1583769734-1311-1-git-send-email-qiwuchen55@gmail.com>
+        Mon, 9 Mar 2020 12:55:53 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a23so1515811plm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:55:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YKC9LNaZtyUY/Ff2305WgJwZtiH/JDgzAH1pAGoBoKg=;
+        b=mF9Mfr/83Mi60PJDifAAgN2akM9nEfNqk9CHt5jlMY4lyvbmaTza7qEmUrnkqWu/87
+         sdoudwgpopvaiVKUindhwzWAUUFvQrua85KAxeRhVvmHl1bvM4dQqqf50bCU50nQ6at+
+         Te7+0a/h9Pwf9iIdxhJPJvFd0U8Hpf01Z41NLsSlRvv+8P8FQ6xNa7lT+l0WlFh4XJbI
+         IyXTvv105PQQC8xZuBcKi20Y2rC0AY5y12jIoyR5SyiISQBWoQ1KLl4iqZ2WJOYI7iZ1
+         ZvVW1QUQiiV+piqh0Et7/UnA120i6gC0R2iNFkENXxIN1fRjl86xLib0acsjL1niES5X
+         5bJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YKC9LNaZtyUY/Ff2305WgJwZtiH/JDgzAH1pAGoBoKg=;
+        b=j6qqW2xCft8orACALyK8+Zs/SUfvqOQUc0JEe+ufFGCuSEoFPX1eHZCyPe/gWLwKE+
+         f58NPL0f3CUKX3dnR2oVM0fkXtFwegHMFPWOfFB63aIAF+KETlB/E0luBJQ29cq+RxJ0
+         r3A+oS9pnV9u2Q/E3Gl0ifj1NT8G1GVrFov8V8/ST54dn3XZwe1yjMM5qZAbsf1BGs79
+         +T57DcDSxam6pePlKt2c+YB7K/WNoH/jRUljUvZTx/jwmiGSgYa8z161Bthw3gyVMIzx
+         mXPvwu/A0S2tJEPM1k67biG/obNmoDewZyynz/unUYht4bm/wXdBWjsj5wMM105PRNl3
+         wcFQ==
+X-Gm-Message-State: ANhLgQ2r6o/k/YlYay8biAMpeW38LsifxNzzECHnnVN027XJqXyaQ4Z1
+        2I1kwB2lib6Mzj4mpjR6I77G6g==
+X-Google-Smtp-Source: ADFU+vtfAu9oURnvRZb4wdaOx8JAoyHiyo47BPzGc96sPN8/2lneZdc9XKADgW+HjDDeUytpou7qnA==
+X-Received: by 2002:a17:902:8d93:: with SMTP id v19mr16980723plo.327.1583772951184;
+        Mon, 09 Mar 2020 09:55:51 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id cm2sm104013pjb.23.2020.03.09.09.55.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 09:55:50 -0700 (PDT)
+From:   Zong Li <zong.li@sifive.com>
+To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
+        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH v3 0/9] Support strict kernel memory permissions for security
+Date:   Tue, 10 Mar 2020 00:55:35 +0800
+Message-Id: <cover.1583772574.git.zong.li@sifive.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583769734-1311-1-git-send-email-qiwuchen55@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 12:02:14AM +0800, qiwuchen55@gmail.com wrote:
-> +/**
-> + * rbtree_for_each_entry_safe - iterate in sort-order over of given type
-> + * allowing the backing memory of @pos to be invalidated.
-> + * @pos:	the 'type *' to use as a loop cursor.
-> + * @n:		another 'type *' to use as temporary storage.
-> + * @root:	'rb_root *' of the rbtree.
-> + * @field:	the name of the rb_node field within 'type'.
-> + *
-> + * rbtree_order_for_each_entry_safe() provides a similar guarantee as
-> + * list_for_each_entry_safe() and allows the sort-order iteration to
-> + * continue independent of changes to @pos by the body of the loop.
-> + *
-> + * Note, however, that it cannot handle other modifications that re-order the
-> + * rbtree it is iterating over. This includes calling rb_erase() on @pos, as
-> + * rb_erase() may rebalance the tree, causing us to miss some nodes.
-> + */
-> +#define rbtree_for_each_entry_safe(pos, n, root, field) \
-> +	for (pos = rb_entry_safe(rb_first(root), typeof(*pos), field); \
-> +	     pos && ({ n = rb_entry_safe(rb_next(&pos->field), \
-> +			typeof(*pos), field); 1; }); \
-> +	     pos = n)
+The main purpose of this patch series is changing the kernel mapping permission
+, make sure that code is not writeable, data is not executable, and read-only
+data is neither writable nor executable.
 
-Since this cannot deal with rb_erase(), what exactly is the purpose of
-this thing?
+This patch series also supports the relevant implementations such as
+ARCH_HAS_SET_MEMORY, ARCH_HAS_SET_DIRECT_MAP,
+ARCH_SUPPORTS_DEBUG_PAGEALLOC and DEBUG_WX.
+
+Changes in v3:
+ - Fix build error on nommu configuration. We already support nommu on
+   RISC-V, so we should consider nommu case and test not only rv32/64,
+   but also nommu.
+
+Changes in v2:
+ - Use _data to specify the start of data section with write permission.
+ - Change ftrace patch text implementaion.
+ - Separate DEBUG_WX patch to another patchset.
+
+Zong Li (9):
+  riscv: add ARCH_HAS_SET_MEMORY support
+  riscv: add ARCH_HAS_SET_DIRECT_MAP support
+  riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
+  riscv: move exception table immediately after RO_DATA
+  riscv: add alignment for text, rodata and data sections
+  riscv: add STRICT_KERNEL_RWX support
+  riscv: add macro to get instruction length
+  riscv: introduce interfaces to patch kernel code
+  riscv: patch code by fixmap mapping
+
+ arch/riscv/Kconfig                  |   6 +
+ arch/riscv/include/asm/bug.h        |   8 ++
+ arch/riscv/include/asm/fixmap.h     |   2 +
+ arch/riscv/include/asm/patch.h      |  12 ++
+ arch/riscv/include/asm/set_memory.h |  48 +++++++
+ arch/riscv/kernel/Makefile          |   4 +-
+ arch/riscv/kernel/ftrace.c          |  13 +-
+ arch/riscv/kernel/patch.c           | 120 ++++++++++++++++++
+ arch/riscv/kernel/traps.c           |   3 +-
+ arch/riscv/kernel/vmlinux.lds.S     |  11 +-
+ arch/riscv/mm/Makefile              |   2 +-
+ arch/riscv/mm/init.c                |  44 +++++++
+ arch/riscv/mm/pageattr.c            | 187 ++++++++++++++++++++++++++++
+ 13 files changed, 445 insertions(+), 15 deletions(-)
+ create mode 100644 arch/riscv/include/asm/patch.h
+ create mode 100644 arch/riscv/include/asm/set_memory.h
+ create mode 100644 arch/riscv/kernel/patch.c
+ create mode 100644 arch/riscv/mm/pageattr.c
+
+-- 
+2.25.1
+
