@@ -2,617 +2,143 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3630C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51724C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B19222C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B3E21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:27:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="E0ndF8DE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnWHnWr0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgCIN1R (ORCPT
+        id S1726804AbgCIN1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:27:17 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:49577 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726682AbgCIN1O (ORCPT
+        Mon, 9 Mar 2020 09:27:20 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33560 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbgCIN1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:27:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583760433; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=lxLnYOmMvUrcqbThx464z1K9eEP+ObKbjKctpD949EQ=; b=E0ndF8DEADVQY5VxM47PIqPfnGTELb2edfeUTsevy947abbJI9fcfi4ZHLrem3xI7xBqPdHH
- CUO6JMbENM9g/En9/ztftXjEEw+IX/rEQ6M1q4fzgPtiOGNnF0cDeDAn+2PltjE8GjfjFSfI
- pFKdDOcLUUlGi33nzOONFf1n910=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e66441f.7fa180a3ce68-smtp-out-n02;
- Mon, 09 Mar 2020 13:26:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2F718C447A1; Mon,  9 Mar 2020 13:26:53 +0000 (UTC)
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F0A49C43637;
-        Mon,  9 Mar 2020 13:26:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F0A49C43637
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
-Cc:     Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V3 3/4] backlight: qcom-wled: Add support for WLED5 peripheral in PM8150L
-Date:   Mon,  9 Mar 2020 18:56:01 +0530
-Message-Id: <1583760362-26978-4-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
-References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
+        Mon, 9 Mar 2020 09:27:16 -0400
+Received: by mail-qk1-f195.google.com with SMTP id p62so9173175qkb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 06:27:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=CkpyZVM4qc6rvH01h9mhJ0L3H6e6RlzQmeQDPa3isww=;
+        b=AnWHnWr0EAok5vbRz2SoOeI9TSqGkM8pEkD93/xilcV6hI+GMIY3bdM3dsBFKdldJQ
+         VwAS5HddBfQ1GeZCnHazjWY8pyR07sRfmBmtYOVpvXUJv+FsjFtlP1O7QSylm6hdeEYm
+         wRoJ2uz7lV2FEzC8Y4PWJmrL1ynJmBy3UGGjmz64y3jF1eAThLQLUsujbyJN+d6AQVpP
+         QAdUh518x2AQfN1lyvw788/izdM1SB3+MUM7scN9hjyQ7klP/pP1S2J46dAbwGnzO0uG
+         PezkK/sXX67W6DwGXaa51Kl39rLXfOS7C+PmguiZqnVnDR7gQ5OJq0O1/WbBYy+NM93+
+         wUbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=CkpyZVM4qc6rvH01h9mhJ0L3H6e6RlzQmeQDPa3isww=;
+        b=CuXZUZwuE5jntkebYK76jSsntYyQKsoA4a6aewgP4CpCwWw6m0krE/aeErG6pOwV+0
+         nubUfIX97et+dhy35kk8M0oZcpG72bynLM1DQL9UeSV6/ndvJE1ZeTSfqy1nLtFVn49T
+         77leJ3wPK7OLutTTXLOjpfkVBlJu72IOB4m7YhmVfRdglMjj0rKVIEfVvWUF9zfQDnXR
+         TrYoxNP/HlAmNjflOHfdchV88O8pXQWOrzbiEFByqTLjD91KvZKYNCEvOLgbHCh33ECg
+         JvJSx7GgQaYQJjiXoUdFUbwtbCSgX0o5fL/1jcOGuloC1j9Bympm3b2S4w210WGnfVMj
+         yBJA==
+X-Gm-Message-State: ANhLgQ3G9rhtM5ikeGRYMAgboQWeWixoFwFIffYe7A0QSD6UjIlcn+mN
+        +7m98Yc0lB8uyacVaQy1KZI=
+X-Google-Smtp-Source: ADFU+vtDstsbIVWiekKDZd3Y3iIJX218MsrMaPEEWaHYYtn159XRC1IwaraGjLAL7R0ZyT/WyYURSA==
+X-Received: by 2002:ae9:c10c:: with SMTP id z12mr14083265qki.56.1583760433882;
+        Mon, 09 Mar 2020 06:27:13 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id o14sm2655166qtq.12.2020.03.09.06.27.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 06:27:13 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 88F9E40009; Mon,  9 Mar 2020 10:27:10 -0300 (-03)
+Date:   Mon, 9 Mar 2020 10:27:10 -0300
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, peterz@infradead.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        namhyung@kernel.org, adrian.hunter@intel.com,
+        mathieu.poirier@linaro.org, ravi.bangoria@linux.ibm.com,
+        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
+        pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
+        ak@linux.intel.com
+Subject: Re: [PATCH 00/12] Stitch LBR call stack (Perf Tools)
+Message-ID: <20200309132710.GA477@kernel.org>
+References: <20200228163011.19358-1-kan.liang@linux.intel.com>
+ <20200306093940.GD281906@krava>
+ <243484a9-5d64-707e-4abb-dd8813a8755e@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <243484a9-5d64-707e-4abb-dd8813a8755e@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for WLED5 peripheral that is present on PM8150L PMICs.
+Em Fri, Mar 06, 2020 at 02:13:15PM -0500, Liang, Kan escreveu:
+> 
+> 
+> On 3/6/2020 4:39 AM, Jiri Olsa wrote:
+> > On Fri, Feb 28, 2020 at 08:29:59AM -0800, kan.liang@linux.intel.com wrote:
+> > 
+> > SNIP
+> > 
+> > > Kan Liang (12):
+> > >    perf tools: Add hw_idx in struct branch_stack
+> > >    perf tools: Support PERF_SAMPLE_BRANCH_HW_INDEX
+> > >    perf header: Add check for event attr
+> > >    perf pmu: Add support for PMU capabilities
+> > 
+> > hi,
+> > I'm getting compile error:
+> > 
+> > 	util/pmu.c: In function ‘perf_pmu__caps_parse’:
+> > 	util/pmu.c:1620:32: error: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size between 0 and 4095 [-Werror=format-truncation=]
+> > 	 1620 |   snprintf(path, PATH_MAX, "%s/%s", caps_path, name);
+> > 	      |                                ^~
+> > 	In file included from /usr/include/stdio.h:867,
+> > 			 from util/pmu.c:12:
+> > 	/usr/include/bits/stdio2.h:67:10: note: ‘__builtin___snprintf_chk’ output between 2 and 4352 bytes into a destination of size 4096
+> > 	   67 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+> > 	      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > 	   68 |        __bos (__s), __fmt, __va_arg_pack ());
+> > 	      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > 	cc1: all warnings being treated as errors
+> > 
+> > 	[jolsa@krava perf]$ gcc --version
+> > 	gcc (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1)
+> 
+> My GCC version is too old. I will send V2 later to fix the error.
 
-PM8150L WLED supports the following:
-    - Two modulators and each sink can use any of the modulator
-    - Multiple CABC selection options
-    - Multiple brightness width selection (12 bits to 15 bits)
+So I stopped at the patch just before the one introducing this problem,
+i.e. now I have:
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
----
- .../bindings/leds/backlight/qcom-wled.yaml         |  39 +++
- drivers/video/backlight/qcom-wled.c                | 336 ++++++++++++++++++++-
- 2 files changed, 374 insertions(+), 1 deletion(-)
+[acme@seventh perf]$ git log --oneline -10
+5100c2b77049 (HEAD -> perf/core, five/perf/core, acme/perf/core) perf header: Add check for unexpected use of reserved membrs in event attr
+1d2fc2bd7c1c perf evsel: Support PERF_SAMPLE_BRANCH_HW_INDEX
+1fa65c5092da perf tools: Add hw_idx in struct branch_stack
+6339998d22ec tools headers UAPI: Update tools's copy of linux/perf_event.h
+401d61cbd4d4 tools lib traceevent: Remove extra '\n' in print_event_time()
+76ce02651dab libperf: Add counting example
+dabce16bd292 perf annotate: Get rid of annotation->nr_jumps
+357a5d24c471 perf llvm: Add debug hint message about missing kernel-devel package
+1af62ce61cd8 perf stat: Show percore counts in per CPU output
+7982a8985150 tools lib api fs: Move cgroupsfs_find_mountpoint()
+[acme@seventh perf]$
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-index d334f81..e0dadc4 100644
---- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-+++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-@@ -20,6 +20,7 @@ properties:
-        - qcom,pm8941-wled
-        - qcom,pmi8998-wled
-        - qcom,pm660l-wled
-+       - qcom,pm8150l-wled
- 
-   reg:
-     maxItems: 1
-@@ -28,10 +29,23 @@ properties:
-     maxItems: 1
-     description:
-       brightness value on boot, value from 0-4095.
-+      For pm8150l this value vary from 0-4095 or 0-32767
-+      depending on the brightness control mode. If CABC is
-+      enabled 0-4095 range is used.
-     allOf:
-       - $ref: /schemas/types.yaml#/definitions/uint32
-         default: 2048
- 
-+  max-brightness:
-+    maxItems: 1
-+    description:
-+      Maximum brightness level. Allowed values are,
-+      for pmi8998 it is  0-4095.
-+      For pm8150l, this can be either 4095 or 32767.
-+      If CABC is enabled, this is capped to 4095.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+
-   label:
-     maxItems: 1
-     description:
-@@ -124,6 +138,31 @@ properties:
-       value for PM8941 from 1 to 3. Default 2
-       For PMI8998 from 1 to 4.
- 
-+  qcom,modulator-sel:
-+    maxItems: 1
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Selects the modulator used for brightness modulation.
-+      Allowed values are,
-+               0 - Modulator A
-+               1 - Modulator B
-+      If not specified, then modulator A will be used by default.
-+      This property is applicable only to WLED5 peripheral.
-+
-+  qcom,cabc-sel:
-+    maxItems: 1
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Selects the CABC pin signal used for brightness modulation.
-+      Allowed values are,
-+              0 - CABC disabled
-+              1 - CABC 1
-+              2 - CABC 2
-+              3 - External signal (e.g. LPG) is used for dimming
-+      This property is applicable only to WLED5 peripheral.
-+
-   interrupts:
-     maxItems: 2
-     description:
-diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-index b73f273..edbbcb2 100644
---- a/drivers/video/backlight/qcom-wled.c
-+++ b/drivers/video/backlight/qcom-wled.c
-@@ -19,6 +19,8 @@
- #define WLED_DEFAULT_BRIGHTNESS				2048
- #define WLED_SOFT_START_DLY_US				10000
- #define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
-+#define WLED5_SINK_REG_BRIGHT_MAX_12B			0xFFF
-+#define WLED5_SINK_REG_BRIGHT_MAX_15B			0x7FFF
- 
- /* WLED3/WLED4 control registers */
- #define WLED3_CTRL_REG_FAULT_STATUS			0x08
-@@ -40,6 +42,7 @@
- 
- #define WLED3_CTRL_REG_OVP				0x4d
- #define  WLED3_CTRL_REG_OVP_MASK			GENMASK(1, 0)
-+#define  WLED5_CTRL_REG_OVP_MASK			GENMASK(3, 0)
- 
- #define WLED3_CTRL_REG_ILIMIT				0x4e
- #define  WLED3_CTRL_REG_ILIMIT_MASK			GENMASK(2, 0)
-@@ -101,6 +104,40 @@
- 
- #define WLED4_SINK_REG_BRIGHT(n)			(0x57 + (n * 0x10))
- 
-+/* WLED5 specific sink registers */
-+#define WLED5_SINK_REG_MOD_A_EN				0x50
-+#define WLED5_SINK_REG_MOD_B_EN				0x60
-+#define  WLED5_SINK_REG_MOD_EN_MASK			BIT(7)
-+
-+#define WLED5_SINK_REG_MOD_A_SRC_SEL			0x51
-+#define WLED5_SINK_REG_MOD_B_SRC_SEL			0x61
-+#define  WLED5_SINK_REG_MOD_SRC_SEL_HIGH		0
-+#define  WLED5_SINK_REG_MOD_SRC_SEL_EXT			0x03
-+#define  WLED5_SINK_REG_MOD_SRC_SEL_MASK		GENMASK(1, 0)
-+
-+#define WLED5_SINK_REG_MOD_A_BRIGHTNESS_WIDTH_SEL	0x52
-+#define WLED5_SINK_REG_MOD_B_BRIGHTNESS_WIDTH_SEL	0x62
-+#define  WLED5_SINK_REG_BRIGHTNESS_WIDTH_12B		0
-+#define  WLED5_SINK_REG_BRIGHTNESS_WIDTH_15B		1
-+
-+#define WLED5_SINK_REG_MOD_A_BRIGHTNESS_LSB		0x53
-+#define WLED5_SINK_REG_MOD_A_BRIGHTNESS_MSB		0x54
-+#define WLED5_SINK_REG_MOD_B_BRIGHTNESS_LSB		0x63
-+#define WLED5_SINK_REG_MOD_B_BRIGHTNESS_MSB		0x64
-+
-+#define WLED5_SINK_REG_MOD_SYNC_BIT			0x65
-+#define  WLED5_SINK_REG_SYNC_MOD_A_BIT			BIT(0)
-+#define  WLED5_SINK_REG_SYNC_MOD_B_BIT			BIT(1)
-+#define  WLED5_SINK_REG_SYNC_MASK			GENMASK(1, 0)
-+
-+/* WLED5 specific per-'string' registers below */
-+#define WLED5_SINK_REG_STR_FULL_SCALE_CURR(n)		(0x72 + (n * 0x10))
-+
-+#define WLED5_SINK_REG_STR_SRC_SEL(n)			(0x73 + (n * 0x10))
-+#define  WLED5_SINK_REG_SRC_SEL_MOD_A			0
-+#define  WLED5_SINK_REG_SRC_SEL_MOD_B			1
-+#define  WLED5_SINK_REG_SRC_SEL_MASK			GENMASK(1, 0)
-+
- struct wled_var_cfg {
- 	const u32 *values;
- 	u32 (*fn)(u32);
-@@ -125,6 +162,8 @@ struct wled_config {
- 	u32 num_strings;
- 	u32 string_i_limit;
- 	u32 enabled_strings[WLED_MAX_STRINGS];
-+	u32 mod_sel;
-+	u32 cabc_sel;
- 	bool cs_out_en;
- 	bool ext_gen;
- 	bool cabc;
-@@ -164,6 +203,27 @@ struct wled {
- 	int (*wled_ovp_delay)(struct wled *wled);
- };
- 
-+enum wled5_mod_sel {
-+	MOD_A,
-+	MOD_B,
-+	MOD_MAX,
-+};
-+
-+static const u8 wled5_brightness_reg[MOD_MAX] = {
-+	[MOD_A] = WLED5_SINK_REG_MOD_A_BRIGHTNESS_LSB,
-+	[MOD_B] = WLED5_SINK_REG_MOD_B_BRIGHTNESS_LSB,
-+};
-+
-+static const u8 wled5_src_sel_reg[MOD_MAX] = {
-+	[MOD_A] = WLED5_SINK_REG_MOD_A_SRC_SEL,
-+	[MOD_B] = WLED5_SINK_REG_MOD_B_SRC_SEL,
-+};
-+
-+static const u8 wled5_brt_wid_sel_reg[MOD_MAX] = {
-+	[MOD_A] = WLED5_SINK_REG_MOD_A_BRIGHTNESS_WIDTH_SEL,
-+	[MOD_B] = WLED5_SINK_REG_MOD_B_BRIGHTNESS_WIDTH_SEL,
-+};
-+
- static int wled3_set_brightness(struct wled *wled, u16 brightness)
- {
- 	int rc, i;
-@@ -182,6 +242,25 @@ static int wled3_set_brightness(struct wled *wled, u16 brightness)
- 	return 0;
- }
- 
-+static int wled5_set_brightness(struct wled *wled, u16 brightness)
-+{
-+	int rc, offset;
-+	u16 low_limit = wled->max_brightness * 1 / 1000;
-+	u8 v[2];
-+
-+	/* WLED5's lower limit is 0.1% */
-+	if (brightness < low_limit)
-+		brightness = low_limit;
-+
-+	v[0] = brightness & 0xff;
-+	v[1] = (brightness >> 8) & 0x7f;
-+
-+	offset = wled5_brightness_reg[wled->cfg.mod_sel];
-+	rc = regmap_bulk_write(wled->regmap, wled->sink_addr + offset,
-+			       v, 2);
-+	return rc;
-+}
-+
- static int wled4_set_brightness(struct wled *wled, u16 brightness)
- {
- 	int rc, i;
-@@ -244,6 +323,24 @@ static int wled_module_enable(struct wled *wled, int val)
- 	return 0;
- }
- 
-+static int wled5_sync_toggle(struct wled *wled)
-+{
-+	int rc;
-+	u8 val;
-+
-+	val = (wled->cfg.mod_sel == MOD_A) ? WLED5_SINK_REG_SYNC_MOD_A_BIT :
-+					     WLED5_SINK_REG_SYNC_MOD_B_BIT;
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->sink_addr + WLED5_SINK_REG_MOD_SYNC_BIT,
-+				WLED5_SINK_REG_SYNC_MASK, val);
-+	if (rc < 0)
-+		return rc;
-+
-+	return regmap_update_bits(wled->regmap,
-+				  wled->sink_addr + WLED5_SINK_REG_MOD_SYNC_BIT,
-+				  WLED5_SINK_REG_SYNC_MASK, 0);
-+}
-+
- static int wled3_sync_toggle(struct wled *wled)
- {
- 	int rc;
-@@ -345,6 +442,29 @@ static int wled_update_status(struct backlight_device *bl)
- 	return rc;
- }
- 
-+static int wled5_cabc_config(struct wled *wled, bool enable)
-+{
-+	int rc, offset;
-+	u8 reg;
-+
-+	if (wled->cabc_disabled)
-+		return 0;
-+
-+	reg = enable ? wled->cfg.cabc_sel : 0;
-+	offset = wled5_src_sel_reg[wled->cfg.mod_sel];
-+	rc = regmap_update_bits(wled->regmap, wled->sink_addr + offset,
-+				WLED5_SINK_REG_MOD_SRC_SEL_MASK, reg);
-+	if (rc < 0) {
-+		pr_err("Error in configuring CABC rc=%d\n", rc);
-+		return rc;
-+	}
-+
-+	if (!wled->cfg.cabc_sel)
-+		wled->cabc_disabled = true;
-+
-+	return 0;
-+}
-+
- static int wled4_cabc_config(struct wled *wled, bool enable)
- {
- 	int i, j, rc;
-@@ -909,6 +1029,115 @@ static const struct wled_config wled4_config_defaults = {
- 	.auto_detection_enabled = false,
- };
- 
-+static int wled5_setup(struct wled *wled)
-+{
-+	int rc, temp, i, j;
-+	u8 sink_en = 0;
-+	u16 addr;
-+	u32 val;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_OVP,
-+				WLED5_CTRL_REG_OVP_MASK, wled->cfg.ovp);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_ILIMIT,
-+				WLED3_CTRL_REG_ILIMIT_MASK,
-+				wled->cfg.boost_i_limit);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_FREQ,
-+				WLED3_CTRL_REG_FREQ_MASK,
-+				wled->cfg.switch_freq);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* Per sink/string configuration */
-+	for (i = 0; i < wled->cfg.num_strings; ++i) {
-+		j = wled->cfg.enabled_strings[i];
-+		addr = wled->sink_addr +
-+				WLED4_SINK_REG_STR_FULL_SCALE_CURR(j);
-+		rc = regmap_update_bits(wled->regmap, addr,
-+					WLED4_SINK_REG_STR_FULL_SCALE_CURR_MASK,
-+					wled->cfg.string_i_limit);
-+		if (rc < 0)
-+			return rc;
-+
-+		addr = wled->sink_addr + WLED5_SINK_REG_STR_SRC_SEL(j);
-+		rc = regmap_update_bits(wled->regmap, addr,
-+					WLED5_SINK_REG_SRC_SEL_MASK,
-+					wled->cfg.mod_sel == MOD_A ?
-+					WLED5_SINK_REG_SRC_SEL_MOD_A :
-+					WLED5_SINK_REG_SRC_SEL_MOD_B);
-+
-+		temp = j + WLED4_SINK_REG_CURR_SINK_SHFT;
-+		sink_en |= 1 << temp;
-+	}
-+
-+	rc = wled5_cabc_config(wled, wled->cfg.cabc_sel ? true : false);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* Enable one of the modulators A or B based on mod_sel */
-+	addr = wled->sink_addr + WLED5_SINK_REG_MOD_A_EN;
-+	val = (wled->cfg.mod_sel == MOD_A) ? WLED5_SINK_REG_MOD_EN_MASK : 0;
-+	rc = regmap_update_bits(wled->regmap, addr,
-+				WLED5_SINK_REG_MOD_EN_MASK, val);
-+	if (rc < 0)
-+		return rc;
-+
-+	addr = wled->sink_addr + WLED5_SINK_REG_MOD_B_EN;
-+	val = (wled->cfg.mod_sel == MOD_B) ? WLED5_SINK_REG_MOD_EN_MASK : 0;
-+	rc = regmap_update_bits(wled->regmap, addr,
-+				WLED5_SINK_REG_MOD_EN_MASK, val);
-+	if (rc < 0)
-+		return rc;
-+
-+	addr = wled->sink_addr + wled5_brt_wid_sel_reg[wled->cfg.mod_sel];
-+	val = (wled->max_brightness == WLED5_SINK_REG_BRIGHT_MAX_15B) ?
-+		 WLED5_SINK_REG_BRIGHTNESS_WIDTH_15B :
-+		 WLED5_SINK_REG_BRIGHTNESS_WIDTH_12B;
-+	rc = regmap_write(wled->regmap, addr, val);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->sink_addr + WLED4_SINK_REG_CURR_SINK,
-+				WLED4_SINK_REG_CURR_SINK_MASK, sink_en);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* This updates only FSC configuration in WLED5 */
-+	rc = wled->wled_sync_toggle(wled);
-+	if (rc < 0) {
-+		pr_err("Failed to toggle sync reg rc:%d\n", rc);
-+		return rc;
-+	}
-+
-+	rc = wled_auto_detection_at_init(wled);
-+	if (rc < 0)
-+		return rc;
-+
-+	return 0;
-+}
-+
-+static const struct wled_config wled5_config_defaults = {
-+	.boost_i_limit = 5,
-+	.string_i_limit = 10,
-+	.ovp = 4,
-+	.num_strings = 4,
-+	.switch_freq = 11,
-+	.mod_sel = 0,
-+	.cabc_sel = 0,
-+	.cabc = false,
-+	.external_pfet = false,
-+	.auto_detection_enabled = false,
-+};
-+
- static const u32 wled3_boost_i_limit_values[] = {
- 	105, 385, 525, 805, 980, 1260, 1400, 1680,
- };
-@@ -927,6 +1156,16 @@ static const struct wled_var_cfg wled4_boost_i_limit_cfg = {
- 	.size = ARRAY_SIZE(wled4_boost_i_limit_values),
- };
- 
-+static inline u32 wled5_boost_i_limit_values_fn(u32 idx)
-+{
-+	return 525 + (idx * 175);
-+}
-+
-+static const struct wled_var_cfg wled5_boost_i_limit_cfg = {
-+	.fn = wled5_boost_i_limit_values_fn,
-+	.size = 8,
-+};
-+
- static const u32 wled3_ovp_values[] = {
- 	35, 32, 29, 27,
- };
-@@ -945,6 +1184,21 @@ static const struct wled_var_cfg wled4_ovp_cfg = {
- 	.size = ARRAY_SIZE(wled4_ovp_values),
- };
- 
-+static inline u32 wled5_ovp_values_fn(u32 idx)
-+{
-+	/*
-+	 * 0000 - 38.5 V
-+	 * 0001 - 37 V ..
-+	 * 1111 - 16 V
-+	 */
-+	return 38500 - (idx * 1500);
-+}
-+
-+static const struct wled_var_cfg wled5_ovp_cfg = {
-+	.fn = wled5_ovp_values_fn,
-+	.size = 16,
-+};
-+
- static u32 wled3_num_strings_values_fn(u32 idx)
- {
- 	return idx + 1;
-@@ -992,6 +1246,14 @@ static const struct wled_var_cfg wled4_string_cfg = {
- 	.size = 16,
- };
- 
-+static const struct wled_var_cfg wled5_mod_sel_cfg = {
-+	.size = 2,
-+};
-+
-+static const struct wled_var_cfg wled5_cabc_sel_cfg = {
-+	.size = 4,
-+};
-+
- static u32 wled_values(const struct wled_var_cfg *cfg, u32 idx)
- {
- 	if (idx >= cfg->size)
-@@ -1068,6 +1330,44 @@ static int wled_configure(struct wled *wled)
- 		},
- 	};
- 
-+	const struct wled_u32_opts wled5_opts[] = {
-+		{
-+			.name = "qcom,current-boost-limit",
-+			.val_ptr = &cfg->boost_i_limit,
-+			.cfg = &wled5_boost_i_limit_cfg,
-+		},
-+		{
-+			.name = "qcom,current-limit-microamp",
-+			.val_ptr = &cfg->string_i_limit,
-+			.cfg = &wled4_string_i_limit_cfg,
-+		},
-+		{
-+			.name = "qcom,ovp-millivolt",
-+			.val_ptr = &cfg->ovp,
-+			.cfg = &wled5_ovp_cfg,
-+		},
-+		{
-+			.name = "qcom,switching-freq",
-+			.val_ptr = &cfg->switch_freq,
-+			.cfg = &wled3_switch_freq_cfg,
-+		},
-+		{
-+			.name = "qcom,num-strings",
-+			.val_ptr = &cfg->num_strings,
-+			.cfg = &wled4_num_strings_cfg,
-+		},
-+		{
-+			.name = "qcom,modulator-sel",
-+			.val_ptr = &cfg->mod_sel,
-+			.cfg = &wled5_mod_sel_cfg,
-+		},
-+		{
-+			.name = "qcom,cabc-sel",
-+			.val_ptr = &cfg->cabc_sel,
-+			.cfg = &wled5_cabc_sel_cfg,
-+		},
-+	};
-+
- 	const struct wled_bool_opts bool_opts[] = {
- 		{ "qcom,cs-out", &cfg->cs_out_en, },
- 		{ "qcom,ext-gen", &cfg->ext_gen, },
-@@ -1117,6 +1417,23 @@ static int wled_configure(struct wled *wled)
- 		wled->sink_addr = be32_to_cpu(*prop_addr);
- 		break;
- 
-+	case 5:
-+		u32_opts = wled5_opts;
-+		size = ARRAY_SIZE(wled5_opts);
-+		*cfg = wled5_config_defaults;
-+		wled->wled_set_brightness = wled5_set_brightness;
-+		wled->wled_sync_toggle = wled5_sync_toggle;
-+		wled->cabc_config = wled5_cabc_config;
-+		wled->max_string_count = 4;
-+
-+		prop_addr = of_get_address(dev->of_node, 1, NULL, NULL);
-+		if (!prop_addr) {
-+			dev_err(wled->dev, "invalid IO resources\n");
-+			return -EINVAL;
-+		}
-+		wled->sink_addr = be32_to_cpu(*prop_addr);
-+		break;
-+
- 	default:
- 		dev_err(wled->dev, "Invalid WLED version\n");
- 		return -EINVAL;
-@@ -1270,6 +1587,10 @@ static int wled_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
-+	val = WLED3_SINK_REG_BRIGHT_MAX;
-+	of_property_read_u32(pdev->dev.of_node, "max-brightness", &val);
-+	wled->max_brightness = val;
-+
- 	switch (wled->version) {
- 	case 3:
- 		wled->cfg.auto_detection_enabled = false;
-@@ -1289,6 +1610,18 @@ static int wled_probe(struct platform_device *pdev)
- 		}
- 		break;
- 
-+	case 5:
-+		wled->has_short_detect = true;
-+		if (wled->cfg.cabc_sel)
-+			wled->max_brightness = WLED5_SINK_REG_BRIGHT_MAX_12B;
-+
-+		rc = wled5_setup(wled);
-+		if (rc) {
-+			dev_err(&pdev->dev, "wled5_setup failed\n");
-+			return rc;
-+		}
-+		break;
-+
- 	default:
- 		dev_err(wled->dev, "Invalid WLED version\n");
- 		break;
-@@ -1310,7 +1643,7 @@ static int wled_probe(struct platform_device *pdev)
- 	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
- 	props.brightness = val;
--	props.max_brightness = WLED3_SINK_REG_BRIGHT_MAX;
-+	props.max_brightness = wled->max_brightness;
- 	bl = devm_backlight_device_register(&pdev->dev, wled->name,
- 					    &pdev->dev, wled,
- 					    &wled_ops, &props);
-@@ -1333,6 +1666,7 @@ static const struct of_device_id wled_match_table[] = {
- 	{ .compatible = "qcom,pm8941-wled", .data = (void *)3 },
- 	{ .compatible = "qcom,pmi8998-wled", .data = (void *)4 },
- 	{ .compatible = "qcom,pm660l-wled", .data = (void *)4 },
-+	{ .compatible = "qcom,pm8150l-wled", .data = (void *)5 },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, wled_match_table);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+Please continue from there, I'll process some other patchsets,
+
+Thanks,
+
+- Arnaldo
