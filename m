@@ -2,263 +2,284 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E606C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C212FC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7A320675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:44:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="AqejYmMa"
+	by mail.kernel.org (Postfix) with ESMTP id 8DFAE2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583754343;
+	bh=PcfNfUAlnC8NHw7ToNItaeEPY13GO9PcdycnAWmwYng=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kBPuxu2Z9HERw8Cy5I+co2WmqntKgh0+5u4p70eGSZa6QiHE+QdT4IxbJFXUIOGPz
+	 MXZdhSEtwgdEPAD7YPZr6+ualjWEpHi3CFMctpL7O2Znm5LyuVTR32h8vfd4QBU4nS
+	 WP0kBdVWquKUmRf9n2Dx8zwjsq0loVLlbowOiT4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgCILoM (ORCPT
+        id S1726480AbgCILpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:44:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54878 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgCILoM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:44:12 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n8so5468166wmc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:44:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=J61S4igI7dpzhoY2RlAMjIDuMgx/6wd7UQAx9T95wvQ=;
-        b=AqejYmMaT/JJ/x5Q0Ejsgl5uCwCU824vTZPGVMyyshJxFYfwu6zJAfLiX84TgHoHNh
-         aV+c2SCl43KL7gvNEcH+xQCFVcQb2nkn4RqLnwGi0TjQUReTGYAoJJtE7QUEEqW3eBlP
-         bAkr/JMfS4SiKwSIwZRNR5Meq2Zw45v+WD0yQ+ks1XGnwB/XoJbcnOlMqdFm7IFtPU6W
-         HBgkmDJFNuduW49FIAJmRMCojc1R3bDdqS+9tM5lNgoZ97DaW8M+2SRJATJfTzONg3V6
-         ch972gtcZ8/JhuYv98WANprH2hN9XgUI2fMo414jiI8jOTTJXDgJt200EWGVUbiJTTe5
-         ex2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=J61S4igI7dpzhoY2RlAMjIDuMgx/6wd7UQAx9T95wvQ=;
-        b=GqOoGhrIf6dB+SjWJK+JZM+XpfofDmauCfJBs43Hh1if450aRh7HPUKJOCKAI8OId4
-         GmSe3oHf41cTjzbepHs2Dz1oXwFJLcWIrf4JYdN2CTLgGZhYFOrPcPRLd/GkQQcz9mch
-         KGs0k/4gH60lRgz9yD/jcVNjQJb/k2V7AgQYkZKChNqFs02peJyjxBxIC/Tgq49rCoyz
-         c4pDzyubw+Ma+Srgm/4O4+C+9f3lGFufQGEcHc0Ca0DLrZj/R821MlbE6KNJeRTaDw6q
-         VgD5VWGY9M1TVO2H46Cpr5psRPkMyhbNKsTRX0cudKuZEReKRf0rVatGOxHKuaU5stIF
-         iniQ==
-X-Gm-Message-State: ANhLgQ0eYHeKd+v5HKKDbPZhUTpqFAEfs2VjDYFf7A0X0qI7Jku1PXna
-        StJH4X3KfdUe9fHc1GaGbH/EVj5ej92n6w==
-X-Google-Smtp-Source: ADFU+vuq2EMtVgA1xyTk6Y4qaPOk8zLsbH3BNn8EYlCfx/AERwDVP6GRwAgM1yQMVXyVyfcnxbnM+A==
-X-Received: by 2002:a05:600c:2c06:: with SMTP id q6mr1098609wmg.69.1583754249142;
-        Mon, 09 Mar 2020 04:44:09 -0700 (PDT)
-Received: from [173.194.76.108] ([149.199.62.131])
-        by smtp.gmail.com with ESMTPSA id b16sm58127606wrq.14.2020.03.09.04.44.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 04:44:07 -0700 (PDT)
-Subject: Re: [PATCH v3] microblaze: Replace setup_irq() by request_irq()
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <20200304005000.5067-1-afzal.mohd.ma@gmail.com>
-From:   Michal Simek <monstr@monstr.eu>
-Autocrypt: addr=monstr@monstr.eu; keydata=
- xsFNBFFuvDEBEAC9Amu3nk79+J+4xBOuM5XmDmljuukOc6mKB5bBYOa4SrWJZTjeGRf52VMc
- howHe8Y9nSbG92obZMqsdt+d/hmRu3fgwRYiiU97YJjUkCN5paHXyBb+3IdrLNGt8I7C9RMy
- svSoH4WcApYNqvB3rcMtJIna+HUhx8xOk+XCfyKJDnrSuKgx0Svj446qgM5fe7RyFOlGX/wF
- Ae63Hs0RkFo3I/+hLLJP6kwPnOEo3lkvzm3FMMy0D9VxT9e6Y3afe1UTQuhkg8PbABxhowzj
- SEnl0ICoqpBqqROV/w1fOlPrm4WSNlZJunYV4gTEustZf8j9FWncn3QzRhnQOSuzTPFbsbH5
- WVxwDvgHLRTmBuMw1sqvCc7CofjsD1XM9bP3HOBwCxKaTyOxbPJh3D4AdD1u+cF/lj9Fj255
- Es9aATHPvoDQmOzyyRNTQzupN8UtZ+/tB4mhgxWzorpbdItaSXWgdDPDtssJIC+d5+hskys8
- B3jbv86lyM+4jh2URpnL1gqOPwnaf1zm/7sqoN3r64cml94q68jfY4lNTwjA/SnaS1DE9XXa
- XQlkhHgjSLyRjjsMsz+2A4otRLrBbumEUtSMlPfhTi8xUsj9ZfPIUz3fji8vmxZG/Da6jx/c
- a0UQdFFCL4Ay/EMSoGbQouzhC69OQLWNH3rMQbBvrRbiMJbEZwARAQABzR9NaWNoYWwgU2lt
- ZWsgPG1vbnN0ckBtb25zdHIuZXU+wsGBBBMBAgArAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIe
- AQIXgAIZAQUCWq+GEgUJDuRkWQAKCRA3fH8h/j0fkW9/D/9IBoykgOWah2BakL43PoHAyEKb
- Wt3QxWZSgQjeV3pBys08uQDxByChT1ZW3wsb30GIQSTlzQ7juacoUosje1ygaLHR4xoFMAT9
- L6F4YzZaPwW6aLI8pUJad63r50sWiGDN/UlhvPrHa3tinhReTEgSCoPCFg3TjjT4nI/NSxUS
- 5DAbL9qpJyr+dZNDUNX/WnPSqMc4q5R1JqVUxw2xuKPtH0KI2YMoMZ4BC+qfIM+hz+FTQAzk
- nAfA0/fbNi0gi4050wjouDJIN+EEtgqEewqXPxkJcFd3XHZAXcR7f5Q1oEm1fH3ecyiMJ3ye
- Paim7npOoIB5+wL24BQ7IrMn3NLeFLdFMYZQDSBIUMe4NNyTfvrHPiwZzg2+9Z+OHvR9hv+r
- +u/iQ5t5IJrnZQIHm4zEsW5TD7HaWLDx6Uq/DPUf2NjzKk8lPb1jgWbCUZ0ccecESwpgMg35
- jRxodat/+RkFYBqj7dpxQ91T37RyYgSqKV9EhkIL6F7Whrt9o1cFxhlmTL86hlflPuSs+/Em
- XwYVS+bO454yo7ksc54S+mKhyDQaBpLZBSh/soJTxB/nCOeJUji6HQBGXdWTPbnci1fnUhF0
- iRNmR5lfyrLYKp3CWUrpKmjbfePnUfQS+njvNjQG+gds5qnIk2glCvDsuAM1YXlM5mm5Yh+v
- z47oYKzXe87A4gRRb3+lEQQAsBOQdv8t1nkdEdIXWuD6NPpFewqhTpoFrxUtLnyTb6B+gQ1+
- /nXPT570UwNw58cXr3/HrDml3e3Iov9+SI771jZj9+wYoZiO2qop9xp0QyDNHMucNXiy265e
- OAPA0r2eEAfxZCi8i5D9v9EdKsoQ9jbII8HVnis1Qu4rpuZVjW8AoJ6xN76kn8yT225eRVly
- PnX9vTqjBACUlfoU6cvse3YMCsJuBnBenGYdxczU4WmNkiZ6R0MVYIeh9X0LqqbSPi0gF5/x
- D4azPL01d7tbxmJpwft3FO9gpvDqq6n5l+XHtSfzP7Wgooo2rkuRJBntMCwZdymPwMChiZgh
- kN/sEvsNnZcWyhw2dCcUekV/eu1CGq8+71bSFgP/WPaXAwXfYi541g8rLwBrgohJTE0AYbQD
- q5GNF6sDG/rNQeDMFmr05H+XEbV24zeHABrFpzWKSfVy3+J/hE5eWt9Nf4dyto/S55cS9qGB
- caiED4NXQouDXaSwcZ8hrT34xrf5PqEAW+3bn00RYPFNKzXRwZGQKRDte8aCds+GHufCwa0E
- GAECAA8CGwIFAlqvhnkFCQ7joU8AUgkQN3x/If49H5FHIAQZEQIABgUCUW9/pQAKCRDKSWXL
- KUoMITzqAJ9dDs41goPopjZu2Au7zcWRevKP9gCgjNkNe7MxC9OeNnup6zNeTF0up/nEYw/9
- Httigv2cYu0Q6jlftJ1zUAHadoqwChliMgsbJIQYvRpUYchv+11ZAjcWMlmW/QsS0arrkpA3
- RnXpWg3/Y0kbm9dgqX3edGlBvPsw3gY4HohkwptSTE/h3UHS0hQivelmf4+qUTJZzGuE8TUN
- obSIZOvB4meYv8z1CLy0EVsLIKrzC9N05gr+NP/6u2x0dw0WeLmVEZyTStExbYNiWSpp+SGh
- MTyqDR/lExaRHDCVaveuKRFHBnVf9M5m2O0oFlZefzG5okU3lAvEioNCd2MJQaFNrNn0b0zl
- SjbdfFQoc3m6e6bLtBPfgiA7jLuf5MdngdWaWGti9rfhVL/8FOjyG19agBKcnACYj3a3WCJS
- oi6fQuNboKdTATDMfk9P4lgL94FD/Y769RtIvMHDi6FInfAYJVS7L+BgwTHu6wlkGtO9ZWJj
- ktVy3CyxR0dycPwFPEwiRauKItv/AaYxf6hb5UKAPSE9kHGI4H1bK2R2k77gR2hR1jkooZxZ
- UjICk2bNosqJ4Hidew1mjR0rwTq05m7Z8e8Q0FEQNwuw/GrvSKfKmJ+xpv0rQHLj32/OAvfH
- L+sE5yV0kx0ZMMbEOl8LICs/PyNpx6SXnigRPNIUJH7Xd7LXQfRbSCb3BNRYpbey+zWqY2Wu
- LHR1TS1UI9Qzj0+nOrVqrbV48K4Y78sajt7OwU0EUW68MQEQAJeqJfmHggDTd8k7CH7zZpBZ
- 4dUAQOmMPMrmFJIlkMTnko/xuvUVmuCuO9D0xru2FK7WZuv7J14iqg7X+Ix9kD4MM+m+jqSx
- yN6nXVs2FVrQmkeHCcx8c1NIcMyr05cv1lmmS7/45e1qkhLMgfffqnhlRQHlqxp3xTHvSDiC
- Yj3Z4tYHMUV2XJHiDVWKznXU2fjzWWwM70tmErJZ6VuJ/sUoq/incVE9JsG8SCHvVXc0MI+U
- kmiIeJhpLwg3e5qxX9LX5zFVvDPZZxQRkKl4dxjaqxAASqngYzs8XYbqC3Mg4FQyTt+OS7Wb
- OXHjM/u6PzssYlM4DFBQnUceXHcuL7G7agX1W/XTX9+wKam0ABQyjsqImA8u7xOw/WaKCg6h
- JsZQxHSNClRwoXYvaNo1VLq6l282NtGYWiMrbLoD8FzpYAqG12/z97T9lvKJUDv8Q3mmFnUa
- 6AwnE4scnV6rDsNDkIdxJDls7HRiOaGDg9PqltbeYHXD4KUCfGEBvIyx8GdfG+9yNYg+cFWU
- HZnRgf+CLMwN0zRJr8cjP6rslHteQYvgxh4AzXmbo7uGQIlygVXsszOQ0qQ6IJncTQlgOwxe
- +aHdLgRVYAb5u4D71t4SUKZcNxc8jg+Kcw+qnCYs1wSE9UxB+8BhGpCnZ+DW9MTIrnwyz7Rr
- 0vWTky+9sWD1ABEBAAHCwWUEGAECAA8CGwwFAlqvhmUFCQ7kZLEACgkQN3x/If49H5H4OhAA
- o5VEKY7zv6zgEknm6cXcaARHGH33m0z1hwtjjLfVyLlazarD1VJ79RkKgqtALUd0n/T1Cwm+
- NMp929IsBPpC5Ql3FlgQQsvPL6Ss2BnghoDr4wHVq+0lsaPIRKcQUOOBKqKaagfG2L5zSr3w
- rl9lAZ5YZTQmI4hCyVaRp+x9/l3dma9G68zY5fw1aYuqpqSpV6+56QGpb+4WDMUb0A/o+Xnt
- R//PfnDsh1KH48AGfbdKSMI83IJd3V+N7FVR2BWU1rZ8CFDFAuWj374to8KinC7BsJnQlx7c
- 1CzxB6Ht93NvfLaMyRtqgc7Yvg2fKyO/+XzYPOHAwTPM4xrlOmCKZNI4zkPleVeXnrPuyaa8
- LMGqjA52gNsQ5g3rUkhp61Gw7g83rjDDZs5vgZ7Q2x3CdH0mLrQPw2u9QJ8K8OVnXFtiKt8Q
- L3FaukbCKIcP3ogCcTHJ3t75m4+pwH50MM1yQdFgqtLxPgrgn3U7fUVS9x4MPyO57JDFPOG4
- oa0OZXydlVP7wrnJdi3m8DnljxyInPxbxdKGN5XnMq/r9Y70uRVyeqwp97sKLXd9GsxuaSg7
- QJKUaltvN/i7ng1UOT/xsKeVdfXuqDIIElZ+dyEVTweDM011Zv0NN3OWFz6oD+GzyBetuBwD
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <955f28cf-f0b4-e616-1c95-23d157244fb5@monstr.eu>
-Date:   Mon, 9 Mar 2020 12:43:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 9 Mar 2020 07:45:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbgCILpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 07:45:42 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26F7F20675;
+        Mon,  9 Mar 2020 11:45:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583754341;
+        bh=PcfNfUAlnC8NHw7ToNItaeEPY13GO9PcdycnAWmwYng=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WzQ/rqpIMevdrzPCise56y+ZmhkTY1k8rn5glvbIgnjctpFnqFCifdDdu5oJgrGzK
+         9pxGnT88lMKbJpjdyTulXH5dqSb9jPpZyYhRVFq2cCddkDwA2BDCvUYnsbJJtCVeIX
+         RakR0HAZt5m2v+hgzcMjhAje5fVAtI9RMH7PeA8c=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jBGqp-00BEqC-4R; Mon, 09 Mar 2020 11:45:39 +0000
 MIME-Version: 1.0
-In-Reply-To: <20200304005000.5067-1-afzal.mohd.ma@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="yF8MbjTisWV0VXr2QPXGpvyzOhrkhDnhn"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Mar 2020 11:45:39 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Keqian Zhu <zhukeqian1@huawei.com>
+Cc:     kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jay Zhou <jianjay.zhou@huawei.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [RFC] KVM: arm64: support enabling dirty log graually in small
+ chunks
+In-Reply-To: <20200309085727.1106-1-zhukeqian1@huawei.com>
+References: <20200309085727.1106-1-zhukeqian1@huawei.com>
+Message-ID: <4b85699ec1d354cc73f5302560231f86@misterjones.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: zhukeqian1@huawei.com, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jianjay.zhou@huawei.com, sean.j.christopherson@intel.com, pbonzini@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---yF8MbjTisWV0VXr2QPXGpvyzOhrkhDnhn
-Content-Type: multipart/mixed; boundary="Nnq5kcNMPenQ7UNPLELRuIDCvo2c97uLF";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-To: afzal mohammed <afzal.mohd.ma@gmail.com>, linux-kernel@vger.kernel.org
-Message-ID: <955f28cf-f0b4-e616-1c95-23d157244fb5@monstr.eu>
-Subject: Re: [PATCH v3] microblaze: Replace setup_irq() by request_irq()
-References: <20200304005000.5067-1-afzal.mohd.ma@gmail.com>
-In-Reply-To: <20200304005000.5067-1-afzal.mohd.ma@gmail.com>
+Kegian,
 
---Nnq5kcNMPenQ7UNPLELRuIDCvo2c97uLF
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+In the future, please Cc me on  your KVM/arm64 patches, as well as
+all the reviewers mentioned in the MAINTAINERS file.
 
-On 04. 03. 20 1:49, afzal mohammed wrote:
-> request_irq() is preferred over setup_irq(). Invocations of setup_irq()=
+On 2020-03-09 08:57, Keqian Zhu wrote:
+> There is already support of enabling dirty log graually
 
-> occur after memory allocators are ready.
->=20
-> Per tglx[1], setup_irq() existed in olden days when allocators were not=
+gradually?
 
-> ready by the time early interrupts were initialized.
->=20
-> Hence replace setup_irq() by request_irq().
->=20
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
->=20
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+> in small chunks for x86. This adds support for arm64.
+> 
+> Under the Huawei Kunpeng 920 2.6GHz platform, I did some
+> tests with a 128G linux VM and counted the time taken of
+
+Linux
+
+> memory_global_dirty_log_start, here is the numbers:
+> 
+> VM Size        Before    After optimization
+> 128G           527ms     4ms
+
+What does this benchmark do? Can you please provide a pointer to it?
+
+> 
+> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
 > ---
-> Hi microblaze maintainers,
->=20
-> if okay w/ this change, please consider taking it thr' your tree, else =
-please
-> let me know.
->=20
-> Regards
-> afzal
->=20
-> Link to v2 & v1,
-> [v2] https://lkml.kernel.org/r/cover.1582471508.git.afzal.mohd.ma@gmail=
-=2Ecom
-> [v1] https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail=
-=2Ecom
->=20
-> v3:
->  * Split out from tree wide series, as Thomas suggested to get it thr'
-> 	respective maintainers
->  * Modify pr_err displayed in case of error
->  * Re-arrange code & choose pr_err args as required to improve readabil=
-ity
->  * Remove irrelevant parts from commit message & improve
-> =20
-> v2:
->  * Replace pr_err("request_irq() on %s failed" by
->            pr_err("%s: request_irq() failed"
->  * Commit message massage
->=20
->  arch/microblaze/kernel/timer.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
->=20
-> diff --git a/arch/microblaze/kernel/timer.c b/arch/microblaze/kernel/ti=
-mer.c
-> index a6683484b3a1..f8832cf49384 100644
-> --- a/arch/microblaze/kernel/timer.c
-> +++ b/arch/microblaze/kernel/timer.c
-> @@ -161,13 +161,6 @@ static irqreturn_t timer_interrupt(int irq, void *=
-dev_id)
->  	return IRQ_HANDLED;
->  }
-> =20
-> -static struct irqaction timer_irqaction =3D {
-> -	.handler =3D timer_interrupt,
-> -	.flags =3D IRQF_TIMER,
-> -	.name =3D "timer",
-> -	.dev_id =3D &clockevent_xilinx_timer,
-> -};
-> -
->  static __init int xilinx_clockevent_init(void)
+> Cc: Jay Zhou <jianjay.zhou@huawei.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Peter Xu <peterx@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  Documentation/virt/kvm/api.rst    |  2 +-
+>  arch/arm64/include/asm/kvm_host.h |  4 ++++
+>  virt/kvm/arm/mmu.c                | 30 ++++++++++++++++++++++--------
+>  3 files changed, 27 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst 
+> b/Documentation/virt/kvm/api.rst
+> index 0adef66585b1..89d4f2680af1 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -5735,7 +5735,7 @@ will be initialized to 1 when created.  This
+> also improves performance because
+>  dirty logging can be enabled gradually in small chunks on the first 
+> call
+>  to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
+>  KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
+> -x86 for now).
+> +x86 and arm64 for now).
+
+What is this based on? I can't find this in -next, and you provide no
+context whatsoever.
+
+I assume this is related to this:
+https://lore.kernel.org/kvm/20200227013227.1401-1-jianjay.zhou@huawei.com/
+
+Is there a userspace counterpart to it?
+
+>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the 
+> name
+>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that 
+> make
+> diff --git a/arch/arm64/include/asm/kvm_host.h
+> b/arch/arm64/include/asm/kvm_host.h
+> index d87aa609d2b6..0deb2ac7d091 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -16,6 +16,7 @@
+>  #include <linux/jump_label.h>
+>  #include <linux/kvm_types.h>
+>  #include <linux/percpu.h>
+> +#include <linux/kvm.h>
+>  #include <asm/arch_gicv3.h>
+>  #include <asm/barrier.h>
+>  #include <asm/cpufeature.h>
+> @@ -45,6 +46,9 @@
+>  #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
+>  #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
+> 
+> +#define KVM_DIRTY_LOG_MANUAL_CAPS   
+> (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
+> +					KVM_DIRTY_LOG_INITIALLY_SET)
+> +
+>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+> 
+>  extern unsigned int kvm_sve_max_vl;
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index e3b9ee268823..5c7ca84dec85 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -1438,9 +1438,11 @@ static void stage2_wp_ptes(pmd_t *pmd,
+> phys_addr_t addr, phys_addr_t end)
+>   * @pud:	pointer to pud entry
+>   * @addr:	range start address
+>   * @end:	range end address
+> + * @wp_ptes:	write protect ptes or not
+>   */
+>  static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
+> -			   phys_addr_t addr, phys_addr_t end)
+> +			   phys_addr_t addr, phys_addr_t end,
+> +			   bool wp_ptes)
+
+If you are going to pass extra parameters like this, make it at least
+extensible (unsigned long flags, for example).
+
 >  {
->  	clockevent_xilinx_timer.mult =3D
-> @@ -309,7 +302,8 @@ static int __init xilinx_timer_init(struct device_n=
-ode *timer)
-> =20
->  	freq_div_hz =3D timer_clock_freq / HZ;
-> =20
-> -	ret =3D setup_irq(irq, &timer_irqaction);
-> +	ret =3D request_irq(irq, timer_interrupt, IRQF_TIMER, "timer",
-> +			  &clockevent_xilinx_timer);
->  	if (ret) {
->  		pr_err("Failed to setup IRQ");
->  		return ret;
->=20
-
-
-Applied.
+>  	pmd_t *pmd;
+>  	phys_addr_t next;
+> @@ -1453,7 +1455,7 @@ static void stage2_wp_pmds(struct kvm *kvm, pud_t 
+> *pud,
+>  			if (pmd_thp_or_huge(*pmd)) {
+>  				if (!kvm_s2pmd_readonly(pmd))
+>  					kvm_set_s2pmd_readonly(pmd);
+> -			} else {
+> +			} else if (wp_ptes) {
+>  				stage2_wp_ptes(pmd, addr, next);
+>  			}
+>  		}
+> @@ -1465,9 +1467,11 @@ static void stage2_wp_pmds(struct kvm *kvm, 
+> pud_t *pud,
+>   * @pgd:	pointer to pgd entry
+>   * @addr:	range start address
+>   * @end:	range end address
+> + * @wp_ptes:	write protect ptes or not
+>   */
+>  static void  stage2_wp_puds(struct kvm *kvm, pgd_t *pgd,
+> -			    phys_addr_t addr, phys_addr_t end)
+> +			    phys_addr_t addr, phys_addr_t end,
+> +			    bool wp_ptes)
+>  {
+>  	pud_t *pud;
+>  	phys_addr_t next;
+> @@ -1480,7 +1484,7 @@ static void  stage2_wp_puds(struct kvm *kvm, 
+> pgd_t *pgd,
+>  				if (!kvm_s2pud_readonly(pud))
+>  					kvm_set_s2pud_readonly(pud);
+>  			} else {
+> -				stage2_wp_pmds(kvm, pud, addr, next);
+> +				stage2_wp_pmds(kvm, pud, addr, next, wp_ptes);
+>  			}
+>  		}
+>  	} while (pud++, addr = next, addr != end);
+> @@ -1491,8 +1495,10 @@ static void  stage2_wp_puds(struct kvm *kvm, 
+> pgd_t *pgd,
+>   * @kvm:	The KVM pointer
+>   * @addr:	Start address of range
+>   * @end:	End address of range
+> + * @wp_ptes:	Write protect ptes or not
+>   */
+> -static void stage2_wp_range(struct kvm *kvm, phys_addr_t addr, 
+> phys_addr_t end)
+> +static void stage2_wp_range(struct kvm *kvm, phys_addr_t addr,
+> +			    phys_addr_t end, bool wp_ptes)
+>  {
+>  	pgd_t *pgd;
+>  	phys_addr_t next;
+> @@ -1513,7 +1519,7 @@ static void stage2_wp_range(struct kvm *kvm,
+> phys_addr_t addr, phys_addr_t end)
+>  			break;
+>  		next = stage2_pgd_addr_end(kvm, addr, end);
+>  		if (stage2_pgd_present(kvm, *pgd))
+> -			stage2_wp_puds(kvm, pgd, addr, next);
+> +			stage2_wp_puds(kvm, pgd, addr, next, wp_ptes);
+>  	} while (pgd++, addr = next, addr != end);
+>  }
+> 
+> @@ -1535,6 +1541,7 @@ void kvm_mmu_wp_memory_region(struct kvm *kvm, 
+> int slot)
+>  	struct kvm_memslots *slots = kvm_memslots(kvm);
+>  	struct kvm_memory_slot *memslot = id_to_memslot(slots, slot);
+>  	phys_addr_t start, end;
+> +	bool wp_ptes;
+> 
+>  	if (WARN_ON_ONCE(!memslot))
+>  		return;
+> @@ -1543,7 +1550,14 @@ void kvm_mmu_wp_memory_region(struct kvm *kvm, 
+> int slot)
+>  	end = (memslot->base_gfn + memslot->npages) << PAGE_SHIFT;
+> 
+>  	spin_lock(&kvm->mmu_lock);
+> -	stage2_wp_range(kvm, start, end);
+> +	/*
+> +	 * If we're with initial-all-set, we don't need to write protect
+> +	 * any small page because they're reported as dirty already.
+> +	 * However we still need to write-protect huge pages so that the
+> +	 * page split can happen lazily on the first write to the huge page.
+> +	 */
+> +	wp_ptes = !kvm_dirty_log_manual_protect_and_init_set(kvm);
+> +	stage2_wp_range(kvm, start, end, wp_ptes);
+>  	spin_unlock(&kvm->mmu_lock);
+>  	kvm_flush_remote_tlbs(kvm);
+>  }
+> @@ -1567,7 +1581,7 @@ static void
+> kvm_mmu_write_protect_pt_masked(struct kvm *kvm,
+>  	phys_addr_t start = (base_gfn +  __ffs(mask)) << PAGE_SHIFT;
+>  	phys_addr_t end = (base_gfn + __fls(mask) + 1) << PAGE_SHIFT;
+> 
+> -	stage2_wp_range(kvm, start, end);
+> +	stage2_wp_range(kvm, start, end, true);
+>  }
+> 
+>  /*
 
 Thanks,
-Michal
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
-
-
-
---Nnq5kcNMPenQ7UNPLELRuIDCvo2c97uLF--
-
---yF8MbjTisWV0VXr2QPXGpvyzOhrkhDnhn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXmYr/wAKCRDKSWXLKUoM
-IdUOAJ9Ig3uKifVWRRJ+g9t15rFkDQe8ngCfRvh1t2m5Zmmeo9KRpiuH4Urnjhk=
-=M1dx
------END PGP SIGNATURE-----
-
---yF8MbjTisWV0VXr2QPXGpvyzOhrkhDnhn--
+         M.
+-- 
+Jazz is not dead. It just smells funny...
