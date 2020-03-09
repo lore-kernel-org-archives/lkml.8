@@ -2,138 +2,134 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AD5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7688CC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A392146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyg2S+K7"
+	by mail.kernel.org (Postfix) with ESMTP id 4A29324671
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583797936;
+	bh=rvLn+3KUM8jGGGocEPOPca2UYIRlF7YJljTxc4fs+9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wySZketYZcwr7vnukenXOGuUshoZPgRR0m4WsA6346lcIgIQySxQYOnyLqJsk7dZx
+	 5yTcfr4+qK9ARfwpJIUk0t54BQ0BDBwekwOrVaTTTqRfVkod6+a8o3TpXJ7I+PNEPm
+	 LX8VB/bISd8QyMjHrcIhUbTH5QbqTS+8IVUyInG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbgCIXwL (ORCPT
+        id S1727486AbgCIXwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:52:11 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:32795 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgCIXwK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 19:52:10 -0400
-Received: by mail-oi1-f196.google.com with SMTP id q81so12081256oig.0;
-        Mon, 09 Mar 2020 16:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o4lgiWH6eSguIJ+rpfWkJ3kTc3LqylAb1v0iFg82xVM=;
-        b=fyg2S+K7jn/qeT9SgWQmqN2geEgL65yx1H+rp5dCEV5PiPqK6ni9UqjEfhJfsgoYaW
-         OziD6jaWal/oW3ui7xlXuTch25yO5o22rGOlNiUK5YmTxJh5jehHuiLNSzBszIN6EtX3
-         FrTk+Aj1ToutZgYVqlzApuoQLjLKFsmKpz/w+eMQPBcLDX1pGXaQPDHRvWEAyPktuZVD
-         cmqOIzRYB0UeOH/pENt97g0eaUUAdFksLKMVrcnH4xtgwdC3a3f3j2xPzohJeWb/1dD6
-         rDcMDBEK3h/W2+BvLcnxPhuhQalhW+3B2lKG9z/3a0N/RsNgVuDjidisF35y5lXkfYMW
-         1loA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o4lgiWH6eSguIJ+rpfWkJ3kTc3LqylAb1v0iFg82xVM=;
-        b=K9inyATudbDqwinGIwiQDFqZtLorQK8jIOIyVeMJ6Higm2UkFcZKdLTKU7sZU7+LYO
-         iTGRrMPJZTdfEOFUHTaX3RR7iePHZDtuIQhO86APsOpXLPmsYzU1fvQ2SK3p0Gs1BD9l
-         WF+jtsvYS2AspvkYMzKv29mzXiL/NGspHalzgRASHWPcSD14lcQIp3yX2H8U4U8IiDHJ
-         bA7wogdbCri/dcD2KCTsSPjUvWGnq21WiyTFTjfOKI44epore8kBOIEgRHJGVhCWivLa
-         0LcmQe1zEmgHa8Am9juxnX139oeF6CJaPeGCpS1Nk6LCpXzBIOWomlg7wOw2P2bvmGII
-         YDkA==
-X-Gm-Message-State: ANhLgQ0pf8OnGdWNHasf4bVn8/RaPuCWQ+zOn5rsu3yxAhn7/zOOf1Me
-        A+LEeFCnrlfiTwljEWCni5LZWIn0/Z6wwv3GDbE=
-X-Google-Smtp-Source: ADFU+vtEjAEHBi2r0HOKp9WNI5n1E/YGOoHJGFBrfYB7gKDnfNXOVIOjv6F5WCNaeeh2EliI2CYabh3NkPzI97TzCXc=
-X-Received: by 2002:a05:6808:56:: with SMTP id v22mr1166010oic.116.1583797929940;
- Mon, 09 Mar 2020 16:52:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMe9rOoRTVUzNC88Ho2XTTNJCymrd3L=XdB9xFcgxPVwAZ0FWA@mail.gmail.com>
- <AE81FEF5-ECC5-46AA-804D-9D64E656D16E@amacapital.net> <CAMe9rOoDMenvD9XRL1szR5yLQEwv9Q6f4O7CtwbdZ-cJqzezKA@mail.gmail.com>
- <0088001c-0b12-a7dc-ff2a-9d5c282fa36b@intel.com> <CAMe9rOqf0OHL9397Vikgb=UWhRMf+FmGq-9VAJNmfmzNMMDkCw@mail.gmail.com>
- <56ab33ac-865b-b37e-75f2-a489424566c3@intel.com> <CAMe9rOrzrXORQgcAwzGn+=PBvxCEgc5Km_TQq+P7uoqwiacJSA@mail.gmail.com>
- <c06073a2-6858-d5dc-d74b-ef2568bd9423@intel.com>
-In-Reply-To: <c06073a2-6858-d5dc-d74b-ef2568bd9423@intel.com>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Mon, 9 Mar 2020 16:51:33 -0700
-Message-ID: <CAMe9rOrxM=RefftngNXhP906mrW1SMy7vp+O=yOj_WwcdQpGcg@mail.gmail.com>
-Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Mon, 9 Mar 2020 19:52:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgCIXwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 19:52:14 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90F7C2465A;
+        Mon,  9 Mar 2020 23:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583797934;
+        bh=rvLn+3KUM8jGGGocEPOPca2UYIRlF7YJljTxc4fs+9g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fx2UDdG+vMIy6ey0pt7L8jh8OsnEV5l2up0CVpWwMnKBvGPbOBMAp9vFvYAEHzjrl
+         5e0jUMwaU45rrKzdd+MbMRUFNfRTRwU274YBvDlTp/xgbfUBUNZdGeX8FChhXg9DGB
+         ISxjc+I1ZcTr/+OhHjk7TMMKGPoc/87EcGYDSanI=
+Date:   Tue, 10 Mar 2020 00:52:11 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: Instrumentation and RCU
+Message-ID: <20200309235210.GB20868@lenoir>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
+ <20200309204710.GU2935@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309204710.GU2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 4:21 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 3/9/20 4:11 PM, H.J. Lu wrote:
-> > A threaded application is loaded from disk.  The object file on disk is
-> > either CET enabled or not CET enabled.
->
-> Huh.  Are you saying that all instructions executed on userspace on
-> Linux come off of object files on the disk?  That's an interesting
-> assertion.  You might want to go take a look at the processes on your
-> systems.  Here's my browser for example:
->
-> # for p in $(ps aux | grep chromium | awk '{print $2}' ); do cat
-> /proc/$p/maps; done | grep ' r-xp 00000000 00:00 0'
-> ...
-> 202f00082000-202f000bf000 r-xp 00000000 00:00 0
-> 202f000c2000-202f000c3000 r-xp 00000000 00:00 0
-> 202f00102000-202f00103000 r-xp 00000000 00:00 0
-> 202f00142000-202f00143000 r-xp 00000000 00:00 0
-> 202f00182000-202f001bf000 r-xp 00000000 00:00 0
->
-> Lots of funny looking memory areas which are anonymous and executable!
-> Those didn't come off the disk.  Same thing in firefox.  Weird.  Any
-> idea what those are?
->
-> One guess: https://en.wikipedia.org/wiki/Just-in-time_compilation
+On Mon, Mar 09, 2020 at 01:47:10PM -0700, Paul E. McKenney wrote:
+> On Mon, Mar 09, 2020 at 06:02:32PM +0100, Thomas Gleixner wrote:
+> > #3) RCU idle
+> > 
+> >     Being able to trace code inside RCU idle sections is very similar to
+> >     the question raised in #1.
+> > 
+> >     Assume all of the instrumentation would be doing conditional RCU
+> >     schemes, i.e.:
+> > 
+> >     if (rcuidle)
+> >     	....
+> >     else
+> >         rcu_read_lock_sched()
+> > 
+> >     before invoking the actual instrumentation functions and of course
+> >     undoing that right after it, that really begs the question whether
+> >     it's worth it.
+> > 
+> >     Especially constructs like:
+> > 
+> >     trace_hardirqs_off()
+> >        idx = srcu_read_lock()
+> >        rcu_irq_enter_irqson();
+> >        ...
+> >        rcu_irq_exit_irqson();
+> >        srcu_read_unlock(idx);
+> > 
+> >     if (user_mode)
+> >        user_exit_irqsoff();
+> >     else
+> >        rcu_irq_enter();
+> > 
+> >     are really more than questionable. For 99.9999% of instrumentation
+> >     users it's absolutely irrelevant whether this traces the interrupt
+> >     disabled time of user_exit_irqsoff() or rcu_irq_enter() or not.
+> > 
+> >     But what's relevant is the tracer overhead which is e.g. inflicted
+> >     with todays trace_hardirqs_off/on() implementation because that
+> >     unconditionally uses the rcuidle variant with the scru/rcu_irq dance
+> >     around every tracepoint.
+> > 
+> >     Even if the tracepoint sits in the ASM code it just covers about ~20
+> >     low level ASM instructions more. The tracer invocation, which is
+> >     even done twice when coming from user space on x86 (the second call
+> >     is optimized in the tracer C-code), costs definitely way more
+> >     cycles. When you take the scru/rcu_irq dance into account it's a
+> >     complete disaster performance wise.
+> 
+> Suppose that we had a variant of RCU that had about the same read-side
+> overhead as Preempt-RCU, but which could be used from idle as well as
+> from CPUs in the process of coming online or going offline?  I have not
+> thought through the irq/NMI/exception entry/exit cases, but I don't see
+> why that would be problem.
+> 
+> This would have explicit critical-section entry/exit code, so it would
+> not be any help for trampolines.
+> 
+> Would such a variant of RCU help?
+> 
+> Yeah, I know.  Just what the kernel doesn't need, yet another variant
+> of RCU...
+> 
 
-jitted code belongs to a process loaded from disk.  Enable CET in
-an application which uses JIT engine means to also enable CET in
-JIT engine.  Take git as an example, "git grep" crashed for me on Tiger
-Lake.   It turned out that git itself was compiled with -fcf-protection and
-git was linked against libpcre2-8.so.0 also compiled with -fcf-protection,
-which has a JIT, sljit, which was not CET enabled.  git crashed in the
-jitted codes due to missing ENDBR.  I had to enable CET in sljit to make
-git working on CET enabled Tiger Lake.  So we need to enable CET in
-JIT engine before enabling CET in applications which use JIT engine.
-
-
--- 
-H.J.
+I was thinking about having a tracing-specific implementation of RCU.
+Last week Steve told me that the tracing ring buffer has its own ad-hoc
+RCU implementation which schedule a thread on each CPU to complete a grace
+period (did I understand it right?). Of course such a flavour of RCU wouldn't
+be nice to nohz_full but surely we can arrange some tweaks for those who
+require strong isolation. I'm sure you're having a much better idea though.
