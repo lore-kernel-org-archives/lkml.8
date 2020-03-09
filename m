@@ -2,159 +2,180 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA16CC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051C4C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56B1205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25EC24655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:37:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="f30bqAJt"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="HqINa9fE";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Z6utVYMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbgCIXgK (ORCPT
+        id S1727458AbgCIXhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:36:10 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:56886 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgCIXgK (ORCPT
+        Mon, 9 Mar 2020 19:37:48 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:39364 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726937AbgCIXhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 19:36:10 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200309233607epoutp01d8bc1602d7a15dbd9c2d17daeec52104~6xvNg5uX90639106391epoutp01L
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 23:36:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200309233607epoutp01d8bc1602d7a15dbd9c2d17daeec52104~6xvNg5uX90639106391epoutp01L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1583796967;
-        bh=SBRQkWad05dqzHnOR2IAhxtJj3eNNpvFOW3EZIyo7+8=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=f30bqAJtuUovurzPlILWDG3jQjqCuKD0YgCXyWqIII/UNGsOVpLwQO3HFpL5P7pcN
-         Q9sKZqDh1txWptglXKECv7voNbcOSC6/zzErWMFsrywOjXxsqlwfY/GRv9t8QgqD0T
-         GK1R6X72xYqDDzP1Ue1RZLkrs8WGpApV5opZh1Pw=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200309233607epcas1p36e73afbceb394c70dffbaf787f530a1f~6xvNBKfPb2658026580epcas1p3g;
-        Mon,  9 Mar 2020 23:36:07 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.164]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 48bvjx4pfwzMqYkf; Mon,  9 Mar
-        2020 23:36:05 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AE.8B.51241.5E2D66E5; Tue, 10 Mar 2020 08:36:05 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200309233604epcas1p38fa6c3d9bdba591598402c6808334b1b~6xvK2IKHM1438514385epcas1p3L;
-        Mon,  9 Mar 2020 23:36:04 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200309233604epsmtrp2bff4a8319f1732459e830a1c96b8c3e0~6xvK1Sti90692206922epsmtrp2g;
-        Mon,  9 Mar 2020 23:36:04 +0000 (GMT)
-X-AuditID: b6c32a39-14bff7000001c829-57-5e66d2e5eaaf
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9B.71.06569.4E2D66E5; Tue, 10 Mar 2020 08:36:04 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200309233604epsmtip13d6ce217c3a2b1d88ed793ed014cf45a~6xvKmGLvz2347423474epsmtip19;
-        Mon,  9 Mar 2020 23:36:04 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     =?iso-8859-1?Q?'Pali_Roh=E1r'?= <pali@kernel.org>,
-        "'Stephen Rothwell'" <sfr@canb.auug.org.au>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>
-Cc:     "'Al Viro'" <viro@ZenIV.linux.org.uk>,
-        "'Linux Next Mailing List'" <linux-next@vger.kernel.org>,
-        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        "'Christoph Hellwig'" <hch@lst.de>
-In-Reply-To: <20200309231739.2w45cleifsmwbfd6@pali>
-Subject: RE: linux-next: build warning after merge of the vfs tree
-Date:   Tue, 10 Mar 2020 08:36:04 +0900
-Message-ID: <003501d5f66b$7fe3b260$7fab1720$@samsung.com>
+        Mon, 9 Mar 2020 19:37:47 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 029NYPwK008127;
+        Mon, 9 Mar 2020 16:37:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=0lCMe3PD06ZzymTnDj7qnuVZoueBVfIjQ6ntSnGAZms=;
+ b=HqINa9fE5u7mYqGE/r87uLF9XXSPrhfy4TDlBQFu1N4oor45vKtpXW58pirucLWsfm7r
+ CPisSCruLr8wuCO9As72yj6a0o7sxIKJeB9lH1iAI/Vj/4zKT/6sw9UjXfdfsuaMEH+z
+ lMqaf6qlhdyLjzhLAm8sqXmNsB7Y+UEP11Y= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2ym806t7rt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 09 Mar 2020 16:37:40 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Mon, 9 Mar 2020 16:37:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GH1HRelMJ7t5dECpnZL4wp3LH6WiDM+tM9vaFRZBYRxPRFFK4NskHmpqvc7au6iKH3BuvPtCyuJBI+eWHZrqdThATsIOSx0yJ5pTKJpGmZlrWkFhxruiM7MPRng+bpb1whXjeqYjbnUV6IJ4kOaBsdE8wWC0jemSQ95hQZrRX3ZGyHXRjrCG4C9BJmAQ3m6/9w05FjareIUpOontfZo3cKn1UDsTKo6qDAX/GpRj+gVW+c4y7ysZwN1kWpyqTAQPfgTohXCy7TQk6DpLdYsQDRc25uX+e5yleznL4l+6/JAA1uZ8QSotwAcfck9XqUJ37i4mxOzg/5evy5cHeiDbrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0lCMe3PD06ZzymTnDj7qnuVZoueBVfIjQ6ntSnGAZms=;
+ b=TriZLXWO4oONQsNVi4xMIUxPuF/IPUE1SOZVGZMZ+MystyA1c+BPm/DcCUwqyRFdATGRqUeqFIz9eUF/nGxwu8JJk7PA+0R19wt1QxbfnJrUBnL3czWGCn5C2AEEf8JQTxHaVl+D4poMUapAbcGCW3m4UavH7fLxrnCUR4QaPwXXozq5ysKs3xO1DQbMC6yqpCXgjsh7pSFoe4Tuq0+EGupl/pfELUBeZNmOQdnWThhEsa1q4FDprU/y+GISAhOR6yc+92Fg44JTMwaLR2YJn/1hqA4KXDYqkGriBC6rHnQ7pyYOfxSAO8CKrsBVdh4isNZSQ+ro8JIB8c7Z9tXF2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0lCMe3PD06ZzymTnDj7qnuVZoueBVfIjQ6ntSnGAZms=;
+ b=Z6utVYMwOAc+ON1Tk+2nUA37nkJt1+guGi6hCfvfh1zLtqL126S8siNtu7q/2oY9JiWK8P+C3wKeU6Uk9SpUuvDVJAeJrctLuoVNR+qqQuoqS9hO4kavKE5V9vescQx6ZjhH3y6XbyL3grTlzFWUI/Eiqf8qAOkQo2A1KChJcUA=
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com (2603:10b6:300:124::23)
+ by MWHPR15MB1568.namprd15.prod.outlook.com (2603:10b6:300:bd::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14; Mon, 9 Mar
+ 2020 23:37:38 +0000
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef]) by MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef%8]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 23:37:38 +0000
+Date:   Mon, 9 Mar 2020 16:37:34 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH] mm: hugetlb: optionally allocate gigantic hugepages
+ using cma
+Message-ID: <20200309233734.GB66037@carbon.DHCP.thefacebook.com>
+References: <20200309223216.1974290-1-guro@fb.com>
+ <20200309162733.3e5488f0410bffd9a9461330@linux-foundation.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309162733.3e5488f0410bffd9a9461330@linux-foundation.org>
+X-ClientProxiedBy: CO1PR15CA0113.namprd15.prod.outlook.com
+ (2603:10b6:101:21::33) To MWHPR15MB1661.namprd15.prod.outlook.com
+ (2603:10b6:300:124::23)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: ko
-Thread-Index: AQLhnT+ZUEFtORUKwX4A79zpVs4A5gKBNZQWAseM+v6l/1Lw8A==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGJsWRmVeSWpSXmKPExsWy7bCmru7TS2lxBgeOqVs0L17PZrFy9VEm
-        i8u75rBZHFzYxmixYM9pNoute6+yW2z5d4TV4vzf46wOHB6NN26weWxa1cnmsX/uGnaP3Tcb
-        2Dz6tqxi9Pi8Sc5j05O3TAHsUTk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW5koK
-        eYm5qbZKLj4Bum6ZOUBXKSmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKDA0K9IoT
-        c4tL89L1kvNzrQwNDIxMgSoTcjJ2b73OVNDKWTG74SxbA+ME9i5GTg4JAROJWXfWMHYxcnEI
-        CexglLi44jkbhPOJUWJn7xk2kCohgW+MEitOO8J0TDzQwwpRtJdRYs6ST1DtLxklps46C9bB
-        JqAr8e/PfrBRIgIzGSXmr9rKDJJgBhm1q1UOxOYUMJb4suct2CHCAk4Sd85PYgSxWQRUJZ43
-        rgOL8wpYSrza3MMIYQtKnJz5hAVijp7EjalT2CBseYntb+cwQ5ynIPHz6TJWiLiIxOzONrC4
-        CND8W/92gR0kIdDMLvFy+WVoCLhIfLrQAGULS7w6vgXKlpL4/G4vUAMHkF0t8XE/1PwORokX
-        320hbGOJm+s3sELYihI7f89lhNjLJ/HuKyiIQFp5JTrahCBKVCX6Lh1mgrClJbraP7BPYFSa
-        heSzWUg+m4Xks1lIvlnAyLKKUSy1oDg3PbXYsMAUObo3MYLTrJblDsZj53wOMQpwMCrx8Gbo
-        psUJsSaWFVfmHmKU4GBWEuFt1EqOE+JNSaysSi3Kjy8qzUktPsRoCgz5icxSosn5wByQVxJv
-        aGpkbGxsYWJmbmZqrCTO+zBSM05IID2xJDU7NbUgtQimj4mDU6qB8bDepp3Lf2l/LTxx4/wG
-        HcYwkxbnH3IPntfUOhr+OnJ0RdpizUOXamwWCGzfvkwhUHDH0TsXK6YHtPP9fNSzzPu24cWm
-        5Nl3H1fea5qt//JT4awV03P3+8z4drjdeFqV6lq2yh7t0DlfhY7ua8k4t+xRpuad4qdaSzVP
-        pHLF3V6rEq09T+19+CQlluKMREMt5qLiRACj0fncyQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7bCSnO6TS2lxBp2XlS2aF69ns1i5+iiT
-        xeVdc9gsDi5sY7RYsOc0m8XWvVfZLbb8O8Jqcf7vcVYHDo/GGzfYPDat6mTz2D93DbvH7psN
-        bB59W1YxenzeJOex6clbpgD2KC6blNSczLLUIn27BK6M3VuvMxW0clbMbjjL1sA4gb2LkZND
-        QsBEYuKBHlYQW0hgN6PE6RXREHFpiWMnzjB3MXIA2cIShw8XQ5Q8Z5R41RgOYrMJ6Er8+7Of
-        rYuRi0NEYDajRFfXW3YQh1ngB6PEnWfrGSE61jNK/LuuAmJzChhLfNnzFmyxsICTxJ3zk8Bq
-        WARUJZ43rgOL8wpYSrza3MMIYQtKnJz5hAXEZhYwkLh/qIMVwpaX2P52DjPEoQoSP58ug4qL
-        SMzubAOLiwDNv/VvF9sERuFZSEbNQjJqFpJRs5C0L2BkWcUomVpQnJueW2xYYJSXWq5XnJhb
-        XJqXrpecn7uJERxrWlo7GE+ciD/EKMDBqMTDK6idFifEmlhWXJl7iFGCg1lJhLdRKzlOiDcl
-        sbIqtSg/vqg0J7X4EKM0B4uSOK98/rFIIYH0xJLU7NTUgtQimCwTB6dUA2N0+OpnZzJ2HBVX
-        YC64ePDmt9xPM3dK3dl/2XvTm+7b8XfmhG0uOPIzJawo0vHE7m9nJi8VypTm7Lsiu/CK8UWl
-        N0uz0xKk/thobV5ZVZuZfGRtYMj7zQuS3y3d7/n947eIkkOTpdfsWabr9ebQXPN+h4CWeRNZ
-        67eETJLYkVfirLhM1GDC7sXySizFGYmGWsxFxYkAoF7YXLECAAA=
-X-CMS-MailID: 20200309233604epcas1p38fa6c3d9bdba591598402c6808334b1b
-X-Msg-Generator: CA
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200309231744epcas1p3c0c6f455449fbcbb67df2fdcbe7ba351
-References: <20200310095918.3ea6432f@canb.auug.org.au>
-        <CGME20200309231744epcas1p3c0c6f455449fbcbb67df2fdcbe7ba351@epcas1p3.samsung.com>
-        <20200309231739.2w45cleifsmwbfd6@pali>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:71fd) by CO1PR15CA0113.namprd15.prod.outlook.com (2603:10b6:101:21::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Mon, 9 Mar 2020 23:37:37 +0000
+X-Originating-IP: [2620:10d:c090:400::5:71fd]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c67c46b1-996b-4075-7b35-08d7c482da0f
+X-MS-TrafficTypeDiagnostic: MWHPR15MB1568:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR15MB1568622451933E7A2A8C7402BEFE0@MWHPR15MB1568.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0337AFFE9A
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(346002)(366004)(136003)(376002)(199004)(189003)(81166006)(81156014)(1076003)(478600001)(8936002)(5660300002)(8676002)(9686003)(4326008)(33656002)(55016002)(52116002)(86362001)(6506007)(6666004)(316002)(66476007)(6916009)(66556008)(54906003)(2906002)(186003)(66946007)(7696005)(16526019);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1568;H:MWHPR15MB1661.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zerYz6F+RwPQLtOQblxtyEhwQFdxojKszgREsXkkHO3kuf+gRHgza1D7DS3xx5zNtkO2tK0BArXvwoGHxUnOJ88RYFZZ6e6xtZOt9fYZy5vYgLHArAMAGzROhTUjot2qa46XdiUkaX0JbJez/yTqJaqVm33KgXLcIKYjeYf0RLE+JAhRFo6kN3r3cLTd6KeEzY4EYVgvJnjTvEefQA6a4uSVPX0IpjdudvbUe+NcqeUTX3MaCK8P/wiSRRBSaiti/7kZv6aVmfGaAYwVH5FEJV6LrLVdPNOP/3T9xrXBRhWSQY1wAyrmsXHiIF+hXTYNi8FNcjABxKCfE0d+ZyjVfVUyDO4ZwOOxbSbm0avapoimthIG7WNj5zPeMqUw4yMSx9PjjImQrQaEpgNPvoRu4yxt0oMPRtyhUG1gg3f9Ztzkd1vzZv6fjuFEiNY30sCm
+X-MS-Exchange-AntiSpam-MessageData: ijgH8LQ9FVwtlIYSDnBhzPVtdiHWxIQFkYIvR10pH2REdegy9l2aPyyCZADqFpdTts54W/b1XoyPuT7DWuO9ZSsjXD5eH7pV8BsNt2CsWecdVPTaCEiIiWc9mi2902jCSLIqj3eS7waB0a6TOCid7IkMTS5kwC6R+weLagw8++kRPdC6D6cdrVewxWkQpQ4r
+X-MS-Exchange-CrossTenant-Network-Message-Id: c67c46b1-996b-4075-7b35-08d7c482da0f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 23:37:38.1014
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: d/GyLjdQ+N5Y3ykF2pv75yJqXuL/TQmx6LtHqRqNRhzJrYDTkBuDoMJoC0kV305t
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1568
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-09_13:2020-03-09,2020-03-09 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=1
+ mlxlogscore=999 spamscore=0 mlxscore=0 adultscore=0 bulkscore=0
+ malwarescore=0 clxscore=1015 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2003090142
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Tuesday 10 March 2020 09:59:18 Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > After merging the vfs tree, today's linux-next build (x86_64
-> > allmodconfig) produced this warning:
-> >
-> > warning: same module names found:
-> >   fs/exfat/exfat.ko
-> >   drivers/staging/exfat/exfat.ko
-> >
-> > Introduced by commit
-> >
-> >   b9d1e2e6265f ("exfat: add Kconfig and Makefile")
-> >
-> > and not fixed by commit
-> >
-> >   1a3c0509ce83 ("staging: exfat: make staging/exfat and fs/exfat
-> > mutually exclusive")
+On Mon, Mar 09, 2020 at 04:27:33PM -0700, Andrew Morton wrote:
+> On Mon, 9 Mar 2020 15:32:16 -0700 Roman Gushchin <guro@fb.com> wrote:
 > 
-> Hello Stephen!
+> > Commit 944d9fec8d7a ("hugetlb: add support for gigantic page allocation
+> > at runtime") has added the run-time allocation of gigantic pages. However
+> > it actually works only at early stages of the system loading, when
+> > the majority of memory is free. After some time the memory gets
+> > fragmented by non-movable pages, so the chances to find a contiguous
+> > 1 GB block are getting close to zero. Even dropping caches manually
+> > doesn't help a lot.
+> > 
+> > At large scale rebooting servers in order to allocate gigantic hugepages
+> > is quite expensive and complex. At the same time keeping some constant
+> > percentage of memory in reserved hugepages even if the workload isn't
+> > using it is a big waste: not all workloads can benefit from using 1 GB
+> > pages.
+> > 
+> > The following solution can solve the problem:
+> > 1) On boot time a dedicated cma area* is reserved. The size is passed
+> >    as a kernel argument.
+> > 2) Run-time allocations of gigantic hugepages are performed using the
+> >    cma allocator and the dedicated cma area
+> > 
+> > In this case gigantic hugepages can be allocated successfully with a
+> > high probability, however the memory isn't completely wasted if nobody
+> > is using 1GB hugepages: it can be used for pagecache, anon memory,
+> > THPs, etc.
+> > 
+> > * On a multi-node machine a per-node cma area is allocated on each node.
+> >   Following gigantic hugetlb allocation are using the first available
+> >   numa node if the mask isn't specified by a user.
+> > 
+> > Usage:
+> > 1) configure the kernel to allocate a cma area for hugetlb allocations:
+> >    pass hugetlb_cma=10G as a kernel argument
+> > 
+> > 2) allocate hugetlb pages as usual, e.g.
+> >    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+> > 
+> > If the option isn't enabled or the allocation of the cma area failed,
+> > the current behavior of the system is preserved.
+> > 
+> > Only x86 is covered by this patch, but it's trivial to extend it to
+> > cover other architectures as well.
+> > 
 > 
-> exfat.ko from fs/exfat subdirectory is a rewrite/cleanup of staging exfat
-> driver. It means that fs/exfat replaces staging/exfat and so after
-> fs/exfat is merged, the old staging/exfat code is not needed anymore.
+> Sounds promising.
 > 
-> Therefore I think that instead of hacking Kconfig/Makefile files to define
-> mutually exclusivity, it is better to remove staging/exfat code.
-> 
-> Removal of old staging code should be easy and should fix this problem.
-Agree.
-Greg, You told me to let me know when fs/exfat gets accepted. Now it's time
-to drop staging/exfat.
+> I'm not seeing any dependencies on CONFIG_CMA in there.  Does the code
+> actually compile if CONFIG_CMA=n?  If yes, then does it add unneeded
+> bloat?
+
+Good question. Let me double-check it.
 
 Thanks!
-> 
-> Any objections? Or other ideas?
-
