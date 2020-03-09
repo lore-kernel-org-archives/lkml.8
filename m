@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8E7C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEBAC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBDE20727
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86772072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:31:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AaMTXy1b"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HK9YgynQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgCIJb0 (ORCPT
+        id S1726595AbgCIJb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:31:26 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19384 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726475AbgCIJbZ (ORCPT
+        Mon, 9 Mar 2020 05:31:29 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:29325 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726467AbgCIJb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:31:25 -0400
+        Mon, 9 Mar 2020 05:31:28 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583746284; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1583746287; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=PAoNPVcXTrqPhTcM9ikOQwaGpe1OSq6wLsvaFY2qg6o=; b=AaMTXy1b29VvrpSIN3MgKXKfQ9Cmu/xPvLDlFmfWfQT8leBp8hkItoD+PFeHva29gfyxZVPm
- uP8DqbPUWNnRJ2QBYDBoyo+HBaPoOtX8ppMlcVxhwM1WxZoar1Io451cMRim5f7pOHIjRQlc
- 9RlvP0Pg5X+ux1KDxqFU3cJ/Brc=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=4jKVb0RH11oa+FT4XfeYYMCV12ybOqDO5l6dlM8M5qA=; b=HK9YgynQS5reBRWwVh1890eQ45mzaQlAuVmYCyocuCB1M9WPH/BpGXuNUd7YuF5v/X9ly2AU
+ J6yqWyu9E5CQPkoemu0GoeLygRudRwEU6HXBDpqTAOtB52yn4hBKNQrdieD9QoHXJZJyyefi
+ pe8Fqza9Cx5HrP/hpmq+9u5FwgY=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e660cea.7f14516b1228-smtp-out-n01;
- Mon, 09 Mar 2020 09:31:22 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e660cef.7f24afe68848-smtp-out-n02;
+ Mon, 09 Mar 2020 09:31:27 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BF488C433D2; Mon,  9 Mar 2020 09:31:22 +0000 (UTC)
+        id 84907C44788; Mon,  9 Mar 2020 09:31:27 +0000 (UTC)
 Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 42E05C43637;
-        Mon,  9 Mar 2020 09:31:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 42E05C43637
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F0AA5C432C2;
+        Mon,  9 Mar 2020 09:31:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F0AA5C432C2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
 From:   Maulik Shah <mkshah@codeaurora.org>
@@ -51,11 +51,10 @@ To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
         ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>,
-        devicetree@vger.kernel.orgi
-Subject: [PATCH v13 1/5] arm64: dts: qcom: sc7180: Add cpuidle low power states
-Date:   Mon,  9 Mar 2020 15:00:32 +0530
-Message-Id: <1583746236-13325-2-git-send-email-mkshah@codeaurora.org>
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v13 2/5] soc: qcom: rpmh: Update dirty flag only when data changes
+Date:   Mon,  9 Mar 2020 15:00:33 +0530
+Message-Id: <1583746236-13325-3-git-send-email-mkshah@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
 References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
@@ -64,161 +63,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device bindings for cpuidle states for cpu devices.
+Currently rpmh ctrlr dirty flag is set for all cases regardless of data
+is really changed or not. Add changes to update dirty flag when data is
+changed to newer values. Update dirty flag everytime when data in batch
+cache is updated since rpmh_flush() may get invoked from any CPU instead
+of only last CPU going to low power mode.
 
-Cc: devicetree@vger.kernel.orgi
+Also move dirty flag updates to happen from within cache_lock and remove
+unnecessary INIT_LIST_HEAD() call and a default case from switch.
+
+Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Evan Green <evgreen@chromium.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+ drivers/soc/qcom/rpmh.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 253274d..f5c08ce 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -94,6 +94,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_0>;
-@@ -113,6 +116,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_100>;
-@@ -129,6 +135,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_200>;
-@@ -145,6 +154,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_300>;
-@@ -161,6 +173,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_400>;
-@@ -177,6 +192,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
-+					   &LITTLE_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <100>;
- 			next-level-cache = <&L2_500>;
-@@ -193,6 +211,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&BIG_CPU_SLEEP_0
-+					   &BIG_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			capacity-dmips-mhz = <1740>;
- 			dynamic-power-coefficient = <405>;
- 			next-level-cache = <&L2_600>;
-@@ -209,6 +230,9 @@
- 			compatible = "arm,armv8";
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&BIG_CPU_SLEEP_0
-+					   &BIG_CPU_SLEEP_1
-+					   &CLUSTER_SLEEP_0>;
- 			capacity-dmips-mhz = <1740>;
- 			dynamic-power-coefficient = <405>;
- 			next-level-cache = <&L2_700>;
-@@ -255,6 +279,60 @@
- 				};
- 			};
- 		};
-+
-+		idle-states {
-+			entry-method = "psci";
-+
-+			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "little-power-down";
-+				arm,psci-suspend-param = <0x40000003>;
-+				entry-latency-us = <549>;
-+				exit-latency-us = <901>;
-+				min-residency-us = <1774>;
-+				local-timer-stop;
-+			};
-+
-+			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "little-rail-power-down";
-+				arm,psci-suspend-param = <0x40000004>;
-+				entry-latency-us = <702>;
-+				exit-latency-us = <915>;
-+				min-residency-us = <4001>;
-+				local-timer-stop;
-+			};
-+
-+			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "big-power-down";
-+				arm,psci-suspend-param = <0x40000003>;
-+				entry-latency-us = <523>;
-+				exit-latency-us = <1244>;
-+				min-residency-us = <2207>;
-+				local-timer-stop;
-+			};
-+
-+			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "big-rail-power-down";
-+				arm,psci-suspend-param = <0x40000004>;
-+				entry-latency-us = <526>;
-+				exit-latency-us = <1854>;
-+				min-residency-us = <5555>;
-+				local-timer-stop;
-+			};
-+
-+			CLUSTER_SLEEP_0: cluster-sleep-0 {
-+				compatible = "arm,idle-state";
-+				idle-state-name = "cluster-power-down";
-+				arm,psci-suspend-param = <0x40003444>;
-+				entry-latency-us = <3263>;
-+				exit-latency-us = <6562>;
-+				min-residency-us = <9926>;
-+				local-timer-stop;
-+			};
-+		};
- 	};
+diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+index eb0ded0..03630ae 100644
+--- a/drivers/soc/qcom/rpmh.c
++++ b/drivers/soc/qcom/rpmh.c
+@@ -119,6 +119,7 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
+ {
+ 	struct cache_req *req;
+ 	unsigned long flags;
++	u32 old_sleep_val, old_wake_val;
  
- 	memory@80000000 {
+ 	spin_lock_irqsave(&ctrlr->cache_lock, flags);
+ 	req = __find_req(ctrlr, cmd->addr);
+@@ -133,26 +134,27 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
+ 
+ 	req->addr = cmd->addr;
+ 	req->sleep_val = req->wake_val = UINT_MAX;
+-	INIT_LIST_HEAD(&req->list);
+ 	list_add_tail(&req->list, &ctrlr->cache);
+ 
+ existing:
++	old_sleep_val = req->sleep_val;
++	old_wake_val = req->wake_val;
++
+ 	switch (state) {
+ 	case RPMH_ACTIVE_ONLY_STATE:
+-		if (req->sleep_val != UINT_MAX)
+-			req->wake_val = cmd->data;
+-		break;
+ 	case RPMH_WAKE_ONLY_STATE:
+ 		req->wake_val = cmd->data;
+ 		break;
+ 	case RPMH_SLEEP_STATE:
+ 		req->sleep_val = cmd->data;
+ 		break;
+-	default:
+-		break;
+ 	}
+ 
+-	ctrlr->dirty = true;
++	ctrlr->dirty = (req->sleep_val != old_sleep_val ||
++			req->wake_val != old_wake_val) &&
++			req->sleep_val != UINT_MAX &&
++			req->wake_val != UINT_MAX;
++
+ unlock:
+ 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ 
+@@ -287,6 +289,7 @@ static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
+ 
+ 	spin_lock_irqsave(&ctrlr->cache_lock, flags);
+ 	list_add_tail(&req->list, &ctrlr->batch_cache);
++	ctrlr->dirty = true;
+ 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ }
+ 
+@@ -323,6 +326,7 @@ static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
+ 	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
+ 		kfree(req);
+ 	INIT_LIST_HEAD(&ctrlr->batch_cache);
++	ctrlr->dirty = true;
+ 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ }
+ 
+@@ -507,7 +511,6 @@ int rpmh_invalidate(const struct device *dev)
+ 	int ret;
+ 
+ 	invalidate_batch(ctrlr);
+-	ctrlr->dirty = true;
+ 
+ 	do {
+ 		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
