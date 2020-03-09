@@ -2,70 +2,84 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D434C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F775C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35AE420675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E12B520828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgCINAU (ORCPT
+        id S1726548AbgCINAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:00:20 -0400
-Received: from web2.default.djames.uk0.bigv.io ([213.138.101.246]:35650 "EHLO
-        web2.default.djames.uk0.bigv.io" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725956AbgCINAU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:00:20 -0400
-Received: from mail-il1-f171.google.com ([209.85.166.171])
-        by web2.default.djames.uk0.bigv.io with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <chris@64studio.com>)
-        id 1jBHTy-0001A8-De; Mon, 09 Mar 2020 12:26:06 +0000
-Received: by mail-il1-f171.google.com with SMTP id a6so8453772ilc.4;
-        Mon, 09 Mar 2020 05:26:06 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0vDjedDN3M86CIrGmIlQ4QoSFdaDnBCW2pCS1JdSLhS/zOKo+r
-        KN45Z2VLtmxrSGe3lC02//H8a2u7dOxZfdJzZNw=
-X-Google-Smtp-Source: ADFU+vu0JkvWQv5EfOULvX4ETtAzCphE8kDE54vgYQ6FBm1lZBWOUKLYrzMJm9pKlXxjBqR8DVxB8IQ0iajNwWwNeuQ=
-X-Received: by 2002:a05:6e02:e88:: with SMTP id t8mr15468197ilj.291.1583756765113;
- Mon, 09 Mar 2020 05:26:05 -0700 (PDT)
+        Mon, 9 Mar 2020 09:00:25 -0400
+Received: from v6.sk ([167.172.42.174]:34444 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgCINAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:00:25 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id A96E260EEE;
+        Mon,  9 Mar 2020 13:00:23 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 1/2] USB: EHCI: ehci-mv: switch the HSIC HCI to HSIC mode
+Date:   Mon,  9 Mar 2020 14:00:13 +0100
+Message-Id: <20200309130014.548168-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200308164840.110747-1-jernej.skrabec@siol.net> <20200308164840.110747-3-jernej.skrabec@siol.net>
-In-Reply-To: <20200308164840.110747-3-jernej.skrabec@siol.net>
-From:   Christopher Obbard <chris@64studio.com>
-Date:   Mon, 9 Mar 2020 12:25:53 +0000
-X-Gmail-Original-Message-ID: <CAP03XeoKo3+iQTPAeuUQ5WHCrS12VoPHymaFPok=-E5Tgzym6Q@mail.gmail.com>
-Message-ID: <CAP03XeoKo3+iQTPAeuUQ5WHCrS12VoPHymaFPok=-E5Tgzym6Q@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 2/2] arm64: dts: allwinner: h6: orangepi:
- Enable HDMI
-To:     jernej.skrabec@siol.net
-Cc:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        mailing list linux-sunxi <linux-sunxi@googlegroups.com>,
-        Marcus Cooper <codekipper@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jernej,
+Turns out the undocumented and reserved bits of port status/control
+register of the root port need to be set to use the HCI in HSIC mode.
 
-> From: Marcus Cooper <codekipper@gmail.com>
->
-> Both, OrangePi One Plus and OrangePi Lite 2 have HDMI output. Enable it
-> in common DTSI.
->
-> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> [patch split and commit message]
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
+Typically the firmware does this, but that is not always good enough,
+because the bits get lost if the HSIC clock is disabled (e.g. when
+ehci-mv is build as a module).
 
-Reviewed-by: Christopher Obbard <chris@64studio.com>
-Tested-by: Christopher Obbard <chris@64studio.com>
+This supplements commit 7b104f890ade ("USB: EHCI: ehci-mv: add HSIC
+support").
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/usb/host/ehci-mv.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/usb/host/ehci-mv.c b/drivers/usb/host/ehci-mv.c
+index bd4f6ef534d96..ddb668963955f 100644
+--- a/drivers/usb/host/ehci-mv.c
++++ b/drivers/usb/host/ehci-mv.c
+@@ -110,6 +110,7 @@ static int mv_ehci_probe(struct platform_device *pdev)
+ 	struct resource *r;
+ 	int retval = -ENODEV;
+ 	u32 offset;
++	u32 status;
+ 
+ 	if (usb_disabled())
+ 		return -ENODEV;
+@@ -213,6 +214,14 @@ static int mv_ehci_probe(struct platform_device *pdev)
+ 		device_wakeup_enable(hcd->self.controller);
+ 	}
+ 
++	if (of_usb_get_phy_mode(pdev->dev.of_node) == USBPHY_INTERFACE_MODE_HSIC) {
++		status = ehci_readl(ehci, &ehci->regs->port_status[0]);
++		/* These "reserved" bits actually enable HSIC mode. */
++		status |= BIT(25);
++		status &= ~GENMASK(31, 30);
++		ehci_writel(ehci, status, &ehci->regs->port_status[0]);
++	}
++
+ 	dev_info(&pdev->dev,
+ 		 "successful find EHCI device with regs 0x%p irq %d"
+ 		 " working in %s mode\n", hcd->regs, hcd->irq,
+-- 
+2.25.1
+
