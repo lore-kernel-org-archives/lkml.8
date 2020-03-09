@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FB5C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F1EC10F28
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7813D2072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA7E2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NT6VnCAC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sRH0acWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgCIJaW (ORCPT
+        id S1726501AbgCIJa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:30:22 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39828 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgCIJaW (ORCPT
+        Mon, 9 Mar 2020 05:30:57 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34873 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbgCIJa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:30:22 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j15so7073081lfk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:30:20 -0700 (PDT)
+        Mon, 9 Mar 2020 05:30:57 -0400
+Received: by mail-lj1-f195.google.com with SMTP id u12so4945874ljo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:30:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5BPdUCBHlhfxC1rf07ErhiV9Y3RjZ/uMH/FRYyL0Tdo=;
-        b=NT6VnCACPTlfQ6tWkirEMRPIFXPc5uK7jgSYi0wnLddxfiCCEj05iElpYaDaH3cZ75
-         LqklW21zdCUaNQtn3QFqKyHl0yqr3btYYcm5H6Ka7nVRYJi04kLWL8ehoZFX1T24ci5g
-         68/yypQ2HROcI28ReRXFtzEcA7Ukj6JPraEAdjarZILSamvIOefZJJWw3gLWYzIwGyGC
-         3rpk0OwRTmQqrGN3iAIz8L9gh1kwpAMa+0uGcPJsfKdGw3qvXLH5MFsbn2Q6I5rsamHy
-         i56/xRCkG/2LfWs+C5mD5MK4iVGp5H+Tq4JO1XVq4f0TI9JDDCKnLuIw71tA9Kuzi0/w
-         GcEA==
+        bh=TYcdgI6FvewhDZOpmZcO42Ni58JD8wtrbZBYBFXrvO0=;
+        b=sRH0acWgVBB+9NR/UF5Prr3uv/MZcxnZ+8nOsAZrAiX2cGHuBUSZGp5KF76D51wW5+
+         1vYXf1TBVeSiGoEsT2pmlwUhOuepbYKdlkjCPVCw4sBtFaOPwmOdSJI3sSaM7tq0uNG6
+         siccDlzUYxpVRNs2MaD9/nYbm8BWPBDdVmWXomSKG9mCt46XKyPZpSuLt8OvyB83k2mi
+         L2eZQBNi55o/zfEG7a/Zm0ke8ZxW9xPo8Hok6vXKrAiSYV7mXwPnnJRr6635mKt1SMGC
+         Dsrukcb2WSwlW6OQ5Ee68+LNBCmgcXiVt3Fhz4fwpJGbbJpPcJHgCykIMfdN9OKiFTGh
+         T/UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5BPdUCBHlhfxC1rf07ErhiV9Y3RjZ/uMH/FRYyL0Tdo=;
-        b=Ft/YAiUPwy7RSt3mtHaBDvmsBD+ndBGw+pB/t2Ns/gZSmG17cHVrtnxroG/rBTWIec
-         0sxbTSg8SH+Y3SaYKy0RqMH6CnjGkaSMu6/FI6akoKuBJzAzJ5zZG5A/PU+T0ntLt6Gv
-         gYEKqGLAIkDk5BblXNE46MPv6XEqR1ZPpUJgpVERE3BDzk4POzHCgSk6SsbccxZG/oqq
-         7JbQ3ThSWlS4hBYJd/K3gSV1J07ghQt6QzAwqzSKlfCFhzoQ/1c4v6WhUaSWr5ut43/O
-         8VWdJN+SaEpaGr44afwN92sNO3qLxGAp14CyBBVxHZsrqj4Zftq5ZDIi78thgZMoVOmw
-         Z4OA==
-X-Gm-Message-State: ANhLgQ1oifvdeLO3D1zJgLdePnZFwsyecUWlixy2tLPOyEzZzvtIhGRD
-        nevbgWv1q1neJoyltcH84tn5lt3SF7vfWJx1RBQ4hQ==
-X-Google-Smtp-Source: ADFU+vvOV5BngHUN/iOXkIp0aCZj3DO7RIX6/Jfe8ek7Mb4Q3qAwKJPpaPcDy0NqYQc1dT6I+NcBqHSrx9nC2FYST9M=
-X-Received: by 2002:ac2:5e6d:: with SMTP id a13mr9224214lfr.89.1583746219481;
- Mon, 09 Mar 2020 02:30:19 -0700 (PDT)
+        bh=TYcdgI6FvewhDZOpmZcO42Ni58JD8wtrbZBYBFXrvO0=;
+        b=THSBLNQ2Jo+4JO/hfBqPmdToyCWOBC/W+dOJAguWVAirYK0vdbOAhElrZBsn+0Cc2N
+         Wat7u46DeXNh0OgApyqXbnswExhFc4KTrROcaijLtuB8UWhCsnlQiWCbVtmaB86M6ste
+         M81YHerumaqYnki96QVHHdzPF/JIAwxq0wwxDadyBWAYpLL7RE79Swh8tuWgf+uw1xMz
+         RITRcesXtcKEPTWgOtBmyF1b90Vv/Nm8ya4lRVSmT+fJf9y9i4+UK6EvpdTQezDsWPPy
+         W5XKwixS/QHljlDyHtJyJpY/LCGx/sm2L2FtSPwsQOxZz727uxI/7vk4H9ocsTRJQzFb
+         CyAA==
+X-Gm-Message-State: ANhLgQ1toVuB+N2OiQzd58jhFIzLDDGBbTTp2/VPlBStmgJmoJV+2t58
+        RnlVB3SXh/vbP22kMucvZGPpLAwp9UlJ+gqW+gED6Q==
+X-Google-Smtp-Source: ADFU+vuye/I8arS2yl53n56BiFwgYP0noR11NDx+eCmf1Q8F7bLzVJ3uGQe5T1ymxPZxIR9TSkq+SUJBK9BAL8hqd5Y=
+X-Received: by 2002:a05:651c:1026:: with SMTP id w6mr908328ljm.168.1583746255448;
+ Mon, 09 Mar 2020 02:30:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200306005809.38530-1-alexandre.belloni@bootlin.com> <20200306005809.38530-2-alexandre.belloni@bootlin.com>
-In-Reply-To: <20200306005809.38530-2-alexandre.belloni@bootlin.com>
+References: <20200306005809.38530-1-alexandre.belloni@bootlin.com> <20200306005809.38530-3-alexandre.belloni@bootlin.com>
+In-Reply-To: <20200306005809.38530-3-alexandre.belloni@bootlin.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 9 Mar 2020 10:30:08 +0100
-Message-ID: <CACRpkdbs_wtyU5wjqFcdpYanA9ZMRczysw4kwkA7y+qeB0pHEw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] rtc: pl031: set range
+Date:   Mon, 9 Mar 2020 10:30:44 +0100
+Message-ID: <CACRpkdZxnkni+zjYn2vgPGVLDMDghzdu8U4Parp8MSQb6CycfA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rtc: pl031: switch to rtc_time64_to_tm/rtc_tm_to_time64
 To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     Alessandro Zummo <a.zummo@towertech.it>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
@@ -72,13 +72,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Fri, Mar 6, 2020 at 1:58 AM Alexandre Belloni
 <alexandre.belloni@bootlin.com> wrote:
 
-> The PL031 and ST v1 RTC are 32bit seconds counters. STv2 is a BCD RTC
-> apparently going from 0000 to 9999, hopefully handling the leap days
-> properly until then.
+> Call the 64bit versions of rtc_tm time conversion to allow extending
+> support after 2106 and properly supporting the STv2 range.
 >
 > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
