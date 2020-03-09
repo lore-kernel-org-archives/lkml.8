@@ -2,142 +2,126 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7627C10F28
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D912C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2F820674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4E020828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:48:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JIOsbo3o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6pVr9Ug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgCIGns (ORCPT
+        id S1726426AbgCIGsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 02:43:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42104 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgCIGns (ORCPT
+        Mon, 9 Mar 2020 02:48:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46733 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCIGsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 02:43:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f5so4368641pfk.9
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 23:43:46 -0700 (PDT)
+        Mon, 9 Mar 2020 02:48:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c19so2081350pfo.13;
+        Sun, 08 Mar 2020 23:48:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vLzrIJTiJKWG/umLvpXl6KYDmMyAdQ96Sz6v66POXZo=;
-        b=JIOsbo3oJ4xYG9s8Fr+jNcxbSeSP5nY8gr6LEmZwKl+1229/GElB1DADY0z9ZQYnxw
-         D9tjUxq6f5RfNEclWemi5X22nj6/kZR6Qhjs9cTH35ibT5TCbK38kF+EY8RTxyw0RXYc
-         Qe1P6wCYCTGIGeDFRSe0XBH1I2CKat+ocEQ6zYTOV9vPEWEUtwe0IV/3lHCusLMgYH1N
-         uqdHQPSUUCRj5dxnQlyvOUUVIvXyU0JHPuakCYzOWcYxBJimQril1q8H1lfaIZ6XZlg+
-         eU0lyE9iSpH+v6tqIp+F3RNBNQgDYAGRaWa/rLRF3MTZ1c7QIucsyLzIjqEiM8qyWHLp
-         w2NQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Y4UxGHAQZzEPyQy0KsfAI6f3ElLxET+uiuIqagGiKHY=;
+        b=B6pVr9UgIF/7hOkq20mC2Tt8jES/c+2rAZeqAcgLBjERCMe3+hq3EpMlarZK9XW4j2
+         7Z4TjxwS3LhKwveWSWHGBN9wdcb2nxb4Epj0ixu30KrLq+maqRWnbOMn4UcEr8Dg9ipz
+         yTnNGYdcXhxzg5vMpI9Oe2I+lC4Wq0sreAnJZMQqU7vBHps1ykJ26WyKrNCXxtN9hJ4N
+         uybpbMx7yoss9Xln3TAb7zP+3CmV8CCEvfro2zQCJ8uMjQqQ/QSbBRJnWl02a1YUZo+E
+         2PftO9hM/qgTcb5zBGVg/hAnXyOVtN46PMS7R8nTLJcl4/mIjWOK5T+VEKNLfzuCOW4c
+         pRjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vLzrIJTiJKWG/umLvpXl6KYDmMyAdQ96Sz6v66POXZo=;
-        b=cLhAxRbk2ZJ5nYv98wNXJEmNBSIDN6WUNnH9tEmJ9qZwOfbDh4E1O/H1LrGraFvIgi
-         l9yWmRcASemvBQ2ODxS/B8IwPgjebjLCtnJ0oekiByTIS1mZw5Rmjp4zWRZ1ZqCo5QM5
-         Aa9djrfwMItdLWx7V5ccJVS4npyamHccry1JveM1QM+Bu9rIj+cWHPZH4MMowbJzXrNk
-         QP2x4/0WY+EpTTkbE27fGoPLGvyGlzKl1v0j+ckQKpkHDlpFpEp/AF8ZC7pLiwLcNdk3
-         0cVSVSDbQttInonlR7oiLQb76kW1dNVlAlOeLD6ctvT2/W4K3xmkNWGP0wTr7jVOy4f4
-         GACw==
-X-Gm-Message-State: ANhLgQ0yHavrUfGOGBmDfCigoIZ7tT8tKuLY9VTbFa80y3s8Ptx6qwA8
-        zk35XW0viMa7+sMEHa3ODSQ=
-X-Google-Smtp-Source: ADFU+vu5alnH4WMHxnR00roXIgV1wZUcacmBPffsBDeWsRAHzzbVdNLdUE91+PSDWE5JkMsO2ZScGA==
-X-Received: by 2002:aa7:92da:: with SMTP id k26mr5983809pfa.139.1583736225415;
-        Sun, 08 Mar 2020 23:43:45 -0700 (PDT)
-Received: from Shreeya-Patel ([2405:204:2188:9cfe:18bc:a849:c699:3914])
-        by smtp.googlemail.com with ESMTPSA id m68sm6869638pjb.0.2020.03.08.23.43.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 08 Mar 2020 23:43:45 -0700 (PDT)
-Message-ID: <af1a27fb8c5f7efbaf99ce3055cf3801b366d627.camel@gmail.com>
-Subject: Re: [Outreachy kernel] [PATCH] Staging: rtl8188eu: Add space around
- operators
-From:   Shreeya Patel <shreeya.patel23498@gmail.com>
-To:     Joe Perches <joe@perches.com>,
-        outreachy-kernel <outreachy-kernel@googlegroups.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, sbrivio@redhat.com,
-        daniel.baluta@gmail.com, nramas@linux.microsoft.com,
-        hverkuil@xs4all.nl, Larry.Finger@lwfinger.net
-Date:   Mon, 09 Mar 2020 12:13:37 +0530
-In-Reply-To: <f1327099b774e141bbeaa8abc47f98b9c6d49264.camel@perches.com>
-References: <20200308220004.9960-1-shreeya.patel23498@gmail.com>
-         <f1327099b774e141bbeaa8abc47f98b9c6d49264.camel@perches.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Y4UxGHAQZzEPyQy0KsfAI6f3ElLxET+uiuIqagGiKHY=;
+        b=daywR3dx2gzbPtOZxn35s6hxxPmDFkVLx87pRuWhxiM0pmy3GQG0n+lG8JWQ/P2/uW
+         llCbGgpilz1tEe4qwdJrukedSUbygDc0WIm3OjKTgC398EmrON30Ms/90vBFQdSeQhap
+         +e4FyKceyGni9/hC9XlCzchtlc+Llc0+GvFQOHVpYUQxv7jY8WzbmLXFeCcX9kemFei2
+         0KwCHE4HCgBU4afw43TtTzWcmqJiMJ5zHGZxI4vW4b3Li7OtgYRlFqHarHtv5mJEaJOs
+         YfN+u8TUsrtUgF+jhPuSUYWCVnFpQmkYrXHUSIDpb9Dy135uGV5X/NwP4/BITAGRmyfQ
+         r7fQ==
+X-Gm-Message-State: ANhLgQ08UesGVhmrO8nttUlJwfZ8m6Xc+n2uKJEahauh/uA5SSaMU8mL
+        aAeDbfNqWVL4lMUV2Vi2MhM=
+X-Google-Smtp-Source: ADFU+vuVCZqOpqiIus66R6ENXtbIH475h/jg+dfhpjNike4CDEGgLvQhXhpPqwTpSWgWrxGZp+umNA==
+X-Received: by 2002:aa7:87ca:: with SMTP id i10mr15040880pfo.169.1583736489516;
+        Sun, 08 Mar 2020 23:48:09 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id g20sm17126776pjv.20.2020.03.08.23.48.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 23:48:08 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 15:48:06 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [PATCH] mm: Use fallthrough;
+Message-ID: <20200309064806.GB46830@google.com>
+References: <f62fea5d10eb0ccfc05d87c242a620c261219b66.camel@perches.com>
+ <20200308031825.GB1125@jagdpanzerIV.localdomain>
+ <5f297e8995b22c9ccf06d4d0a04f7d9a37d3cd77.camel@perches.com>
+ <20200309041551.GA1765@jagdpanzerIV.localdomain>
+ <84f3c9891d4e89909d5537f34ea9d75de339c415.camel@perches.com>
+ <20200309062046.GA46830@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309062046.GA46830@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-03-08 at 16:05 -0700, Joe Perches wrote:
-> On Mon, 2020-03-09 at 03:30 +0530, Shreeya Patel wrote:
-> > Add space around operators for improving the code
-> > readability.
-> 
-> Hello again Shreeya.
-> 
-I have some questions here...
-
-> The subject isn't really quite appropriate as you
-> are not doing this space around operator addition
-> for the entire subsystem.
-> 
-> IMO, the subject should be:
-> 
-> [PATCH] staging: rtl8188eu: rtw_mlme: Add spaces around operators
-> 
-> because you are only performing this change on this
-> single file.
-> 
-> If you were to do this for every single file in the
-> subsystem, you could have many individual patches with
-> the exact same subject line.
-> 
-> And it would be good to show in the changelog that you
-> have compiled the file pre and post patch without object
-> code change.
-> 
-I'm not sure how to show this. Do you mean to add the output of
-"make drivers/staging/rtl8188eu/core" before and after the changes?
-
-I also don't understand the meaning of no object code change. If we are
-making the changes to code and then compiling it using the make command
-then a new file with .o extension is created and replaced by the
-previous one isn't it?  
-
-> Also, it's good to show that git diff -w shows no source
-> file changes.
-> 
-
-And this has to be...
-git diff -w --shortstat drivers/staging/rtl8188eu/core/
-
-Am I correct?
-
-Thanks
-
-> > Reported by checkpatch.pl
+On (20/03/09 15:20), Sergey Senozhatsky wrote:
+[..]
+> > <shrug, maybe>  I've no real opinion about that necessity.
 > > 
-> > Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
-> > ---
-> >  drivers/staging/rtl8188eu/core/rtw_mlme.c | 40 +++++++++++------
-> > ------
-> >  1 file changed, 20 insertions(+), 20 deletions(-)
+> > fallthrough commments are relatively rarely used as a
+> > separating element between case labels.
+> > 
+> > It's by far most common to just have consecutive case labels
+> > without any other content.
+> > 
+> > It's somewhere between 500:1 to 1000:1 in the kernel.
 > 
-> When I try this using checkpatch --fix-inplace, I get
-> 21 changes against the latest -next tree.
-> 
-> What tree are you doing this against?
-> 
-> 
+> I thought that those labels were used by some static code analysis
+> tools, so that the removal of some labels raised questions. But I
+> don't think I have opinions otherwise.
 
+... I guess GCC counts as a static code analysis tool :)
+
+Looking at previous commits, people wanted to have proper 'fall through'
+
+
+    Replace "fallthru" with a proper "fall through" annotation.
+    This fix is part of the ongoing efforts to enabling
+    -Wimplicit-fallthrough
+
+---
+
+-       case ZPOOL_MM_RW: /* fallthru */
++       case ZPOOL_MM_RW: /* fall through */
+
+---
+
+
+> Consecutive case labels do not need an interleaving fallthrough;
+
+I suppose this means that GCC -Wimplicit-fallthrough handles it?
+
+	-ss
