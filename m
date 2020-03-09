@@ -2,151 +2,173 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A35AC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512AAC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64CFF20873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC4B20873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vpo8dbHL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JV96VDGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgCISvX (ORCPT
+        id S1727516AbgCISv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:51:23 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34439 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727391AbgCISvX (ORCPT
+        Mon, 9 Mar 2020 14:51:27 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54559 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727391AbgCISvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:51:23 -0400
-Received: by mail-ed1-f66.google.com with SMTP id c21so13277849edt.1;
-        Mon, 09 Mar 2020 11:51:20 -0700 (PDT)
+        Mon, 9 Mar 2020 14:51:25 -0400
+Received: by mail-pj1-f66.google.com with SMTP id np16so266277pjb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:51:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=clm3ma+lW+rgLiuhiXicUwTpVbExG2Z9wddCYQg0RBY=;
-        b=Vpo8dbHLf0dmQTuU1Izi7Z6u49fsMS0yQVI1374A8t4XxDNlmVMDZYhUwW5xS5OsSB
-         8KLBOE9JnnkURKRFwJHMqfOGlI3FEAUq95PWtNXM0m8W32pSqvOrjla7AAryTTkv6k4k
-         teEJf/R7lHiXON9br1q47+XiEyr1WWGqCN7NmsQ5ou0vbZXxMFOAOFPg6q24jeoSzMIi
-         Pp6610o1EOFE6YsoFC686/SnJVGCd06s6jvVOkbkuQU+kDV7jFid2eJD9SMo0x03TYjW
-         nNoJb9JGukxUTiwicGIHBhS5KbBzVQCNc1Yy2p54w9xEkScRJjk0LVPyFPo82fCGTrIs
-         PAMw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oMIq8nf8l37k+xc/nmQRiBDab2+u6nWIzujXfP0wRko=;
+        b=JV96VDGxym68PMmFm3L2QPWppkEBRoLWFyJsxYTYbr57gNjbFV2zyv/AkBOqsMyGy9
+         r0iFvkFMQeE1iVCbdPlAsHo7nOoL/b+J+ZsAbcq60L5jRRFD1dLywiruCX+c1n5vCdLv
+         uwbn4UDHIJcBwge6x4WpK/HFXyHFMtxXLgfeuFGQQvMZ6+TYutTzIfjJaC56Lj2iwZ0m
+         8SWywDabn5XrewHk4OBynpLwb1Cm2lJA5ues+0kgw9K64g+VnpdLa/2CwKkgSNAcFcs6
+         4GNniTIf+eViDzocUYFGtDP3OZkIK8sTucbJ+tbH9LKdArPqUiauS76qh8T+DAjNeWUj
+         bsaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=clm3ma+lW+rgLiuhiXicUwTpVbExG2Z9wddCYQg0RBY=;
-        b=dT7UC8EMAFUHmQViFXWNX8LQGBLQKZeP9ZfyuPRRGeUNn/82E2wrpVcCl3XPeU9TXo
-         39roGdEMT/bKoiMfJ3yD+t6rZbAHf4KXRBrrHHI0maqxy2WtR2WYBbB2pUCTPYuzuBNw
-         2jd+86EwiGMUAp3q8/cqX5ygXUgU5MWX6LFbaHxxTN8US7mGSvo2Qn7zPlJSoqXPrTfR
-         VCa+jsYiLITKuoSeTqAJtydEaPIwQNNIU98CwiGGCg1ngc/bWY8PFeRFfhacZkzHuoNl
-         oLpC0xaFZ8jjoyyAmPsNz/BJ0WSJP+xEmq2WKDBYTOdx9WiLqOrATrGo78X3Vlj1Mze1
-         R1hg==
-X-Gm-Message-State: ANhLgQ2zfJfISg9sCd+ZSQL7VY+L2QHJVNEJZU1UMTCzh/POLZJhkYWu
-        OPRc95HXcgblWr1jS+2LGeQWKeHSFkKkXrPsQJI=
-X-Google-Smtp-Source: ADFU+vuseX5BEjC97MIGq7PYnoQDZLuXCsj6A+R2Y/EAXARggxkZ+Xi6oBkK68P3pMQm94X2XgRZ0HRkKfEEO9QFY14=
-X-Received: by 2002:a17:906:76c6:: with SMTP id q6mr15722099ejn.176.1583779879971;
- Mon, 09 Mar 2020 11:51:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oMIq8nf8l37k+xc/nmQRiBDab2+u6nWIzujXfP0wRko=;
+        b=lqsM0//IelKICk2d1H7YELBySAUP8zPgRuEGOfqjyICaJpGD7Tec19eCfrXtsJA5dc
+         Si6bWtb/4DfmCKySs8DUFx/ABus+LHQXFoJoye7xUwG8oiH99zqvPEimLQz+11zrZMe1
+         WEXzUHSPjUfKyqs5fFUh61oyiGFNT8uvn/9Z0E3Md7LdX6QbndATSidYfNphx23qOJkq
+         jo5XKRPByE73E1VHp7fyOWOUmG78DxmCApLnq29i+5LOjX/sAQJmEVXfKj37KnU9PzMf
+         j6lmNhCtVK+qOFS/p29e+p2uE+/XVQxlW56gxZvcnfwA3C9G/a0NxvQvZFRnXRmPTECM
+         sdzA==
+X-Gm-Message-State: ANhLgQ2OG1+vKzaIDZt09yRQ0IFxQ6CDt+mxpdH65VtnT1qxTLBfNWMb
+        GNoDKOi5lKolMMVvEDI8peHyDw==
+X-Google-Smtp-Source: ADFU+vuTiXSQEWF3vDz7zbEWlep/T7QabW2QTc3JChjYyJnTWvNWTPcTOEkvT88T/e4nIeN9OV/Jyg==
+X-Received: by 2002:a17:902:9349:: with SMTP id g9mr17844084plp.16.1583779883026;
+        Mon, 09 Mar 2020 11:51:23 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id cm2sm277840pjb.23.2020.03.09.11.51.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 11:51:22 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 11:51:20 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Maulik Shah <mkshah@codeaurora.org>, evgreen@chromium.org,
+        mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, agross@kernel.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org,
+        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: Introduce SoC sleep stats bindings
+Message-ID: <20200309185120.GC1098305@builder>
+References: <1583752457-21159-1-git-send-email-mkshah@codeaurora.org>
+ <1583752457-21159-2-git-send-email-mkshah@codeaurora.org>
+ <158377818530.66766.4481786840843320343@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-References: <20200309145624.10026-1-olteanv@gmail.com> <20200309145624.10026-5-olteanv@gmail.com>
- <02a2816d2f39bf621dfee543ed612ae0@walle.cc>
-In-Reply-To: <02a2816d2f39bf621dfee543ed612ae0@walle.cc>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 9 Mar 2020 20:51:09 +0200
-Message-ID: <CA+h21hoqmXfBdhGBg6TLLqLeXJTE3wZKzQpsZJRsOhqWCO9gJQ@mail.gmail.com>
-Subject: Re: [PATCH 4/6] spi: spi-fsl-dspi: Add support for LS1028A
-To:     Michael Walle <michael@walle.cc>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158377818530.66766.4481786840843320343@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Mar 2020 at 20:38, Michael Walle <michael@walle.cc> wrote:
->
-> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
-> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> >
-> > This is similar to the DSPI instantiation on LS1028A, except that:
-> >  - The A-011218 erratum has been fixed, so DMA works
-> >  - The endianness is different, which has implications on XSPI mode
-> >
-> > Some benchmarking with the following command:
-> >
-> > spidev_test --device /dev/spidev2.0 --bpw 8 --size 256 --cpha --iter
-> > 10000000 --speed 20000000
-> >
-> > shows that in DMA mode, it can achieve around 2400 kbps, and in XSPI
-> > mode, the same command goes up to 4700 kbps. This is somewhat to be
-> > expected, since the DMA buffer size is extremely small at 8 bytes, the
-> > winner becomes whomever can prepare the buffers for transmission
-> > quicker, and DMA mode has higher overhead there. So XSPI FIFO mode has
-> > been chosen as the operating mode for this chip.
-> >
-> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Mon 09 Mar 11:23 PDT 2020, Stephen Boyd wrote:
+
+> Quoting Maulik Shah (2020-03-09 04:14:14)
+> > From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> > 
+> > Add device binding documentation for Qualcomm Technologies, Inc. (QTI)
+> > SoC sleep stats driver. The driver is used for displaying SoC sleep
+> > statistic maintained by Always On Processor or Resource Power Manager.
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> > Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > > ---
-> >  drivers/spi/spi-fsl-dspi.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >
-> > diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> > index 5624b9ee77db..264d184e7296 100644
-> > --- a/drivers/spi/spi-fsl-dspi.c
-> > +++ b/drivers/spi/spi-fsl-dspi.c
-> > @@ -131,6 +131,7 @@ struct fsl_dspi_devtype_data {
-> >  enum {
-> >       LS1021A,
-> >       LS1012A,
-> > +     LS1028A,
-> >       LS1043A,
-> >       LS1046A,
-> >       LS2080A,
-> > @@ -163,6 +164,14 @@ static const struct fsl_dspi_devtype_data
-> > devtype_data[] = {
-> >               .pushr_cmd              = 0,
-> >               .pushr_tx               = 2,
-> >       },
-> > +     [LS1028A] = {
-> > +             .trans_mode             = DSPI_DMA_MODE,
->
-> shouldn't this be DSPI_XSPI_MODE according to your cover letter?
->
-> -michael
->
+> >  .../bindings/soc/qcom/soc-sleep-stats.yaml         | 46 ++++++++++++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+> > new file mode 100644
+> > index 00000000..7c29c61
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+> > @@ -0,0 +1,46 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/soc/qcom/soc-sleep-stats.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm Technologies, Inc. (QTI) SoC sleep stats bindings
+> > +
+> > +maintainers:
+> > +  - Maulik Shah <mkshah@codeaurora.org>
+> > +  - Lina Iyer <ilina@codeaurora.org>
+> > +
+> > +description:
+> > +  Always On Processor/Resource Power Manager maintains statistics of the SoC
+> > +  sleep modes involving powering down of the rails and oscillator clock.
+> > +
+> > +  Statistics includes SoC sleep mode type, number of times low power mode were
+> > +  entered, time of last entry, time of last exit and accumulated sleep duration.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - qcom,rpmh-sleep-stats
+> > +      - qcom,rpm-sleep-stats
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  # Example of rpmh sleep stats
+> > +  - |
+> > +    rpmh_sleep_stats@c3f0000 {
+> > +      compatible = "qcom,rpmh-sleep-stats";
+> > +      reg = <0 0xc3f0000 0 0x400>;
+> > +    };
+> > +  # Example of rpm sleep stats
+> > +  - |
+> > +    rpm_sleep_stats@4690000 {
+> 
+> Node names don't have underscores. It really feels like we should be able
+> to get away with not having this device node at all. Why can't we have
+> the rpm message ram be a node that covers the entire range and then have
+> that either create a platform device for debugfs stats or just have it
+> register the stat information from whatever driver attaches to that
+> node?
+> 
+> Carving this up into multiple nodes and making compatible strings
+> doesn't seem very useful here because we're essentially making device
+> nodes in DT for logical software components that exist in the rpm
+> message ram.
 
-Yes, sorry, I forgot to change it back after testing it both ways.
+It's been a while since I discussed this with Lina, but iirc I opted for
+the model you suggest and we concluded that it wouldn't fit with the RPM
+case.
 
-> > +             .dma_bufsize            = 8,
-> > +             .max_clock_factor       = 8,
-> > +             .fifo_size              = 4,
-> > +             .pushr_cmd              = 2,
-> > +             .pushr_tx               = 0,
-> > +     },
-> >       [LS1043A] = {
-> >               /* Has A-011218 DMA erratum */
-> >               .trans_mode             = DSPI_XSPI_MODE,
-> > @@ -1113,6 +1122,9 @@ static const struct of_device_id
-> > fsl_dspi_dt_ids[] = {
-> >       }, {
-> >               .compatible = "fsl,ls1012a-dspi",
-> >               .data = &devtype_data[LS1012A],
-> > +     }, {
-> > +             .compatible = "fsl,ls1028a-dspi",
-> > +             .data = &devtype_data[LS1028A],
-> >       }, {
-> >               .compatible = "fsl,ls1043a-dspi",
-> >               .data = &devtype_data[LS1043A],
+And given that, for reasons unknown to me, msgram isn't a single region,
+but a set of adjacent memory regions, this does seem to represent
+hardware better.
+
+Regards,
+Bjorn
