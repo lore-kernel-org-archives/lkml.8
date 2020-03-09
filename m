@@ -2,130 +2,124 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A45C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9F4C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B7A21927
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sNlPIoM2"
+	by mail.kernel.org (Postfix) with ESMTP id 6FCD8222D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbgCISTb (ORCPT
+        id S1727589AbgCIST0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:19:31 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33991 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727604AbgCIST2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:19:28 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t3so5093953pgn.1;
-        Mon, 09 Mar 2020 11:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZUgRxVNWWI4/X6MpRA1miIl6BKxEX3f9Er1YPxkTvvw=;
-        b=sNlPIoM2gt3GGdSuObomrqoffsAtxhxZft2ETl+N3lZ3JSsCVtomAdJeaNPkTfheFa
-         dzxMu8ssE23gZE1OxWJNZ+9Hf25JLpasSBaBdGGq+lY4kZHw/HCniVudCE2Aaozjad7L
-         A8AQC+hDjh+vOvWgARydrt917tpg7seq13OcylBlfc0LT86PMepy+F+tkYc9mzbybEOn
-         S/jxBlUMHRG5Lu//z3iUZDoUrnAQtczHnWp8BBBzHs/avjK67sKc/0ROBmcZUg4IzzUx
-         2O0ctvHZor8KZ5oNC0Uxta9UOSkSJaY7BP1zdgX3G/b5qyfWyeLiYL9t5K4YNuB60gSk
-         vKtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZUgRxVNWWI4/X6MpRA1miIl6BKxEX3f9Er1YPxkTvvw=;
-        b=sbSThMvcRuPzgi5//HM3Y1XVqmAMxwttBRIUMTHkbgQNHEZ2yd9BXBsy0LIcSr5tPZ
-         w8/ln1HgYB5saCmtGge7Qfevf1f6g5QsisgWgifUsnP1MYq6M0x1nj4M6Dc3nvwIGW+o
-         0v6K9+aHQUPjFo9iEULC93mG8lZm1TOsrNakOcvGswN5uWMm++KLCqlBTTg5SoYzxXbx
-         KHmZ+L0aMUS/5q+2F69cdDGJ9RlUdayhUPra99wFGlscNw+3mLJ5965z/NYqxCxfiZuk
-         +xG1u9Z+dxaQ1xWlJvj/jGc2zIa2qL2pOsCnCCjQxcEnt+FkQ/UScwRYy7hulZwnzkve
-         riOw==
-X-Gm-Message-State: ANhLgQ3WzHe1AF+iE2Gx53KOHRe+Du2E+6wRUpt5bQfErSPncHi4f8Yi
-        RlZDGr0MBwaHUYkDXrZBlS0=
-X-Google-Smtp-Source: ADFU+vuOgWAHVSJ7870Wsdc6jp9jt1VM/hwbVvbgrPsGlhP3zO4qktaIEgcY6kj2q1SiRmCkNaL7zA==
-X-Received: by 2002:a63:6841:: with SMTP id d62mr16700934pgc.86.1583777967062;
-        Mon, 09 Mar 2020 11:19:27 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c190sm1023630pga.35.2020.03.09.11.19.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Mar 2020 11:19:25 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 11:19:24 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Anson Huang <Anson.Huang@nxp.com>, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        dmitry.torokhov@gmail.com, a.zummo@towertech.it,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, wim@linux-watchdog.org,
-        daniel.baluta@nxp.com, gregkh@linuxfoundation.org,
-        linux@rempel-privat.de, tglx@linutronix.de,
-        m.felsch@pengutronix.de, andriy.shevchenko@linux.intel.com,
-        arnd@arndb.de, ronald@innovation.ch, krzk@kernel.org,
-        robh@kernel.org, leonard.crestez@nxp.com, aisheng.dong@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Message-ID: <20200309181924.GA27218@roeck-us.net>
-References: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
- <20200309110609.GE3563@piout.net>
- <1ad38cdb-bf0d-1c19-b233-15a5857bd6fa@roeck-us.net>
- <20200309164705.GG3563@piout.net>
- <20200309171012.GA24802@roeck-us.net>
- <20200309171556.GH3563@piout.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309171556.GH3563@piout.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 9 Mar 2020 14:19:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:55816 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727565AbgCISTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:19:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AABE13FD;
+        Mon,  9 Mar 2020 11:19:23 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B020C3F67D;
+        Mon,  9 Mar 2020 11:19:21 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        rmk+kernel@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v2 13/14] net: axienet: Autodetect 64-bit DMA capability
+Date:   Mon,  9 Mar 2020 18:18:50 +0000
+Message-Id: <20200309181851.190164-14-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200309181851.190164-1-andre.przywara@arm.com>
+References: <20200309181851.190164-1-andre.przywara@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 06:30:54PM +0100, Alexandre Belloni wrote:
-> On 09/03/2020 10:10:12-0700, Guenter Roeck wrote:
-> > On Mon, Mar 09, 2020 at 05:47:05PM +0100, Alexandre Belloni wrote:
-> > > On 09/03/2020 06:27:06-0700, Guenter Roeck wrote:
-> > > > On 3/9/20 4:06 AM, Alexandre Belloni wrote:
-> > > > > On 09/03/2020 08:38:14+0800, Anson Huang wrote:
-> > > > >> Add stubs for those i.MX SCU APIs to make those modules depending
-> > > > >> on IMX_SCU can pass build when COMPILE_TEST is enabled.
-> > > > >>
-> > > > >> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > > >> ---
-> > > > >> Changes since V2:
-> > > > >> 	- return error for stubs.
-> > > > > 
-> > > > > I'm not sure why you are sending v3 with the stubs as we determined that
-> > > > > 2/7 is enough to compile all the drivers with COMPILE_TEST.
-> > > > > 
-> > > > > 
-> > > > 2/7 alone is not sufficient. With only 2/7, one can explicitly configure
-> > > > IMX_SCU=n, COMPILE_TEST=y, and get lots of compile failures. Granted,
-> > > > one should not do that, but 0day does (I don't know if that is the result
-> > > > of RANDCONFIG), and I am not looking forward having to deal with the
-> > > > fallout.
-> > > > 
-> > > 
-> > > How would that be possible if the drivers all depend on IMX_SCU?
-> > > 
-> > That dependency is being changed to IMX_SCU || COMPILE_TEST
-> > as part of the series.
-> > 
-> 
-> Yes, my point is that those patches should not be applied at all, only
-> 2/7.
+When newer revisions of the Axienet IP are configured for a 64-bit bus,
+we *need* to write to the MSB part of the an address registers,
+otherwise the IP won't recognise this as a DMA start condition.
+This is even true when the actual DMA address comes from the lower 4 GB.
 
-Ah, now I get it. Sorry, I missed that part. You are correct, that would
-be sufficient, and I would very much prefer that approach.
+To autodetect this configuration, at probe time we write all 1's to such
+an MSB register, and see if any bits stick. If this is configured for a
+32-bit bus, those MSB registers are RES0, so reading back 0 indicates
+that no MSB writes are necessary.
+On the other hands reading anything other than 0 indicated the need to
+write the MSB registers, so we set the respective flag.
 
-Thanks,
-Guenter
+The actual DMA mask stays at 32-bit for now. To help bisecting, a
+separate patch will enable allocations from higher addresses.
+
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+---
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |  1 +
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 26 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+index 84c4c3655516..fbaf3c987d9c 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+@@ -161,6 +161,7 @@
+ #define XAE_FCC_OFFSET		0x0000040C /* Flow Control Configuration */
+ #define XAE_EMMC_OFFSET		0x00000410 /* EMAC mode configuration */
+ #define XAE_PHYC_OFFSET		0x00000414 /* RGMII/SGMII configuration */
++#define XAE_ID_OFFSET		0x000004F8 /* Identification register */
+ #define XAE_MDIO_MC_OFFSET	0x00000500 /* MII Management Config */
+ #define XAE_MDIO_MCR_OFFSET	0x00000504 /* MII Management Control */
+ #define XAE_MDIO_MWD_OFFSET	0x00000508 /* MII Management Write Data */
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index edee0666d52c..8c0887b1c009 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -151,6 +151,9 @@ static void axienet_dma_out_addr(struct axienet_local *lp, off_t reg,
+ 				 dma_addr_t addr)
+ {
+ 	axienet_dma_out32(lp, reg, lower_32_bits(addr));
++
++	if (lp->features & XAE_FEATURE_DMA_64BIT)
++		axienet_dma_out32(lp, reg + 4, upper_32_bits(addr));
+ }
+ 
+ static void desc_set_phys_addr(struct axienet_local *lp, dma_addr_t addr,
+@@ -1945,6 +1948,29 @@ static int axienet_probe(struct platform_device *pdev)
+ 		goto free_netdev;
+ 	}
+ 
++	/* Autodetect the need for 64-bit DMA pointers.
++	 * When the IP is configured for a bus width bigger than 32 bits,
++	 * writing the MSB registers is mandatory, even if they are all 0.
++	 * We can detect this case by writing all 1's to one such register
++	 * and see if that sticks: when the IP is configured for 32 bits
++	 * only, those registers are RES0.
++	 * Those MSB registers were introduced in IP v7.1, which we check first.
++	 */
++	if ((axienet_ior(lp, XAE_ID_OFFSET) >> 24) >= 0x9) {
++		void __iomem *desc = lp->dma_regs + XAXIDMA_TX_CDESC_OFFSET + 4;
++
++		iowrite32(0x0, desc);
++		if (ioread32(desc) == 0) {	/* sanity check */
++			iowrite32(0xffffffff, desc);
++			if (ioread32(desc) > 0) {
++				lp->features |= XAE_FEATURE_DMA_64BIT;
++				dev_info(&pdev->dev,
++					 "autodetected 64-bit DMA range\n");
++			}
++			iowrite32(0x0, desc);
++		}
++	}
++
+ 	/* Check for Ethernet core IRQ (optional) */
+ 	if (lp->eth_irq <= 0)
+ 		dev_info(&pdev->dev, "Ethernet core IRQ not defined\n");
+-- 
+2.17.1
+
