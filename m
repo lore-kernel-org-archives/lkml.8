@@ -2,96 +2,89 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8DEC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7234CC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0300121D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C47A21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:32:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OyZJDsGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgCIQcG (ORCPT
+        id S1727217AbgCIQcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:32:06 -0400
-Received: from 8bytes.org ([81.169.241.247]:50386 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbgCIQcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:32:05 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 29E2E39B; Mon,  9 Mar 2020 17:32:04 +0100 (CET)
-Date:   Mon, 9 Mar 2020 17:32:02 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Hanjun Guo <guohanjun@huawei.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH 00/14] iommu: Move iommu_fwspec out of 'struct device'
-Message-ID: <20200309163202.nk7yotb7awzido7b@8bytes.org>
-References: <20200228150820.15340-1-joro@8bytes.org>
- <ea839f32-194a-29ea-57fc-22caea40b981@huawei.com>
- <20200306100955.GB50020@myrica>
+        Mon, 9 Mar 2020 12:32:35 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26310 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727032AbgCIQce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 12:32:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583771553;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DicN/KVmQyAyPa1SQbJC+P87YoIa/d9bIovLTJ1t7DI=;
+        b=OyZJDsGEH4YtsoDt8Y2a01SsI8oP+w26+j8gJGo04fsMdG5u89jblplsWUHcOK53Zw1tZt
+        LmI96th8kJFI0GvgZ8wHk/DylJvBAGitzXVs38reH/UPpQRAuAce9CkItSPDXxcpmuP5Ca
+        jT+M7WBEN7UaPNBGUnbAf3f5txoiSdM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-BiyeUVPKNm-Kw84GfhRoxQ-1; Mon, 09 Mar 2020 12:32:29 -0400
+X-MC-Unique: BiyeUVPKNm-Kw84GfhRoxQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97A051088384;
+        Mon,  9 Mar 2020 16:32:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E5A539051C;
+        Mon,  9 Mar 2020 16:32:20 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200308170410.14166-3-longman@redhat.com>
+References: <20200308170410.14166-3-longman@redhat.com> <20200308170410.14166-1-longman@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     dhowells@redhat.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v2 2/2] KEYS: Avoid false positive ENOMEM error on key read
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306100955.GB50020@myrica>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <416689.1583771540.1@warthog.procyon.org.uk>
+Date:   Mon, 09 Mar 2020 16:32:20 +0000
+Message-ID: <416690.1583771540@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean-Philippe,
+Waiman Long <longman@redhat.com> wrote:
 
-On Fri, Mar 06, 2020 at 11:09:55AM +0100, Jean-Philippe Brucker wrote:
-> I think that's because patch 01/14 move the fwspec access too early. In 
-> 
->                 err = pci_for_each_dma_alias(to_pci_dev(dev),
->                                              iort_pci_iommu_init, &info);
-> 
->                 if (!err && iort_pci_rc_supports_ats(node))
->                         dev->iommu_fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
-> 
-> the iommu_fwspec is only valid if iort_pci_iommu_init() initialized it
-> successfully, if err == 0. The following might fix it:
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 0e981d7f3c7d..7d04424189df 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -1015,7 +1015,7 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
->  		return ops;
-> 
->  	if (dev_is_pci(dev)) {
-> -		struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
-> +		struct iommu_fwspec *fwspec;
->  		struct pci_bus *bus = to_pci_dev(dev)->bus;
->  		struct iort_pci_alias_info info = { .dev = dev };
-> 
-> @@ -1028,7 +1028,8 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
->  		err = pci_for_each_dma_alias(to_pci_dev(dev),
->  					     iort_pci_iommu_init, &info);
-> 
-> -		if (!err && iort_pci_rc_supports_ats(node))
-> +		fwspec = dev_iommu_fwspec_get(dev);
-> +		if (fwspec && iort_pci_rc_supports_ats(node))
->  			fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
->  	} else {
->  		int i = 0;
+> +			tmpbuf = kmalloc(tbuflen, GFP_KERNEL);
 
-Thanks a lot for the fix! I added it to patch 1/14.
+This would probably be better off using kvmalloc() - otherwise big objects
+have to be constructed from runs of contiguous pages.  But since all we're
+doing is buffering for userspace, we don't care about that.
 
-Regards,
+If you agree, we can address it with an additional patch.
 
-	Joerg
+David
+
