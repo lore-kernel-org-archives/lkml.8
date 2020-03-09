@@ -2,177 +2,198 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EAAC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF98C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A00208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEBF02072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:02:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B2I+zVsd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UY4QIiFZ";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="UwD7ktSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgCILAI (ORCPT
+        id S1726523AbgCILCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:00:08 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46849 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgCILAI (ORCPT
+        Mon, 9 Mar 2020 07:02:49 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:59095 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgCILCt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:00:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583751606;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=8TeANQLSNm/5EfCGME3BFG09rYtXmGzlSuIybKupSXM=;
-        b=B2I+zVsdMzLO4Q5byEs7yu1/h9yy7W8Yi53xm+//dNY6PmUadtePrt9ttyt0kmbTh/A9B9
-        HcAGnRkAvklDeT/R6fTA2P0FGFPwLwBogK8/fh2Qz7uu5hkGPFaMY0w94pw/KOMFMQjYQk
-        d6xQ0lCaFUN0jtvX8qYgMiNTn1YTfVk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-293-9gCqZk_KOqS6M2GpdQ9gwQ-1; Mon, 09 Mar 2020 07:00:04 -0400
-X-MC-Unique: 9gCqZk_KOqS6M2GpdQ9gwQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2401F800D4E;
-        Mon,  9 Mar 2020 11:00:02 +0000 (UTC)
-Received: from [10.36.116.227] (ovpn-116-227.ams2.redhat.com [10.36.116.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD0015C13D;
-        Mon,  9 Mar 2020 10:59:55 +0000 (UTC)
-Subject: Re: [PATCH v1 3/3] virtio-balloon: Switch back to OOM handler for
- VIRTIO_BALLOON_F_DEFLATE_ON_OOM
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Tyler Sanderson <tysand@google.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
-        Wei Wang <wei.w.wang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Nadav Amit <namit@vmware.com>, Michal Hocko <mhocko@kernel.org>
-References: <20200205163402.42627-1-david@redhat.com>
- <20200205163402.42627-4-david@redhat.com>
- <f31eff75-b328-de41-c2cc-e55471aa27d8@redhat.com>
- <20200216044641-mutt-send-email-mst@kernel.org>
- <CAJuQAmqmOQMx3A8g81pnFLyTZ5E5joSCEGG5fBwPOBH7crdi2w@mail.gmail.com>
- <CAJuQAmphPcfew1v_EOgAdSFiprzjiZjmOf3iJDmFX0gD6b9TYQ@mail.gmail.com>
- <86453fed-1f39-dfcc-33c6-54241478e2ab@redhat.com>
- <20200309061403-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <a64d0414-652b-88c4-9155-014555a801a3@redhat.com>
-Date:   Mon, 9 Mar 2020 11:59:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 9 Mar 2020 07:02:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1583751769; x=1615287769;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=wCcLcuE+2nS2H/HLQ/3IzI8Yp3Nu8DKv6sZOIdeteGY=;
+  b=UY4QIiFZiK/UauA1tz6lUX9xYFEWGF5JIo1cP+OR10De/oiuVO4DE8GJ
+   aq4iX/677pu1+IfHJlQa1nIH5FkmYujYQi9BcTGz5v4M4v8EBFzo7ZHHi
+   Rk+QrutktAxRXW/I8QO7qYcdE20Zh5F4zE1xtzJExYMhIeRhMpc0aRC8S
+   JiAUDDJOCYLRSxwC4X5Kh/iJRr1/wC+GgZsnIw4gjA+MtbeNTk+UR3Ndx
+   cgzJEcWGafzCsZpR7hGmryrb5BdV7OG6pYw6jkBn8PAQ36J7I49I1PNwx
+   2cdKVbFSfTEZO2wpCVd6xF5i71FDB9H2aLMBwsbqFun9MTQD4Nzy0/UmH
+   A==;
+IronPort-SDR: M4BkTxj10tFmtgKFxchSF6ktnYgtKAoVHNCCIaTus3diu1On3qRcR0RDiwj9lqxvUNx7OX77k1
+ Y5U7iqNxQ/NIvGz1s+eVQjP4CL1Le6C1rkOb/lWmRzLM4WL8gYXFlXyrzZLykzcGreRChzt6JE
+ A4x/I3cOVjpP8YSgH9Xt1n92w+jQVv68dVoVo/LV6D4Ojbc50OhCxCtU0oWChW7jlN5xP3bvRO
+ x+2zqV0wTAsimSihtPyoCsQ7AlfPf0rv1x3NumUf670GFICNlWqkoB6VolYs7mYDUJnx+e9Kuo
+ YNY=
+X-URL-LookUp-ScanningError: 1
+X-IronPort-AV: E=Sophos;i="5.70,533,1574092800"; 
+   d="scan'208";a="132431307"
+Received: from mail-mw2nam12lp2043.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.43])
+  by ob1.hgst.iphmx.com with ESMTP; 09 Mar 2020 19:02:43 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VE26+YdQH+JYkSB9LTJdrHJnf1AgojVHkfpff6Bam3AFwtGq+EnmeOM3vmRQ0WA+TkRW4Vm11m0BRUvDqRoYfiIhoRQmK5YZrKPI+S3Y/Ay7F+nN/yw5fckVVuAJe60fXVvwFOxbWV3CN6athfIowJjpM+FNfIuEC337fDBcTnFJivTvjBryGndP3rq7fqvMiOtsNpaZx9j0WVnGV5SgSM7FkhnOWMll3IBfxeGcJps0sHagv9ymkomnwuDUfi6aK055Yk1ByjiKy14QMNwN6tzS3BRdEMxd9ZDnFuMhXo4ucVp8F2fXq/pXPSYRmaIBGmrkiC18qnnUEY7FXlt9CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A/hFe8VzQ+WAZFLAlQOc+1ctZ4qDLYi2vjRGrBJnth0=;
+ b=kIHqGUxZgA3yUzL8rqUUtSIDgBETE4D9oea7kE81KFZVY2wNSdJ4e6ZldmwzVo3xrY5DplFlnRHOO9fQWlXnLjn0U60KGkgRIgACAPkFYaQw4NV0YdZv/s8FHl1yzxZN151tyEjM0Vn3y9wjQzJ3oiAahegszqEuDTfK9YXCCEREis/IIfy/WeirqvkYUBg1WSfjHCGqAUlHiVFiD+qBQwmC8hE3CIflIx76cIZgNN1WzLUfA/aO3FlHJsPDW8iJDJOK1l+7sTzjzengAiSRXE0Y+lwSIo+8UejDxBCc9IocDNtB7SC2Zyn2XiA1Occ/Fuiaoq6vQBd5XhALzfn0Ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A/hFe8VzQ+WAZFLAlQOc+1ctZ4qDLYi2vjRGrBJnth0=;
+ b=UwD7ktSWICI9bxe82wbAtvdi6HJcDNaOAd7S7LcaWJQiehZi5qLBxgK9rNZdqUDFTaifcIlLIPM3YrSbBCMCOaQWvrHszBWYyJTASbBDP8czKKyqz6Vfj3FN49mh0oBSHoHIYUxQ0ylAZMxcsWd4T75hBA/OdJY+okgyeSnqPxY=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
+ by MN2PR04MB5517.namprd04.prod.outlook.com (2603:10b6:208:d6::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Mon, 9 Mar
+ 2020 11:02:42 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::159d:10c9:f6df:64c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::159d:10c9:f6df:64c8%6]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 11:02:42 +0000
+From:   Anup Patel <anup.patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anup Patel <anup.patel@wdc.com>
+Subject: [PATCH v4 0/5] New RISC-V Local Interrupt Controller Driver
+Date:   Mon,  9 Mar 2020 16:32:06 +0530
+Message-Id: <20200309110211.91130-1-anup.patel@wdc.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR01CA0071.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:49::13) To MN2PR04MB6061.namprd04.prod.outlook.com
+ (2603:10b6:208:d8::15)
 MIME-Version: 1.0
-In-Reply-To: <20200309061403-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from wdc.com (106.51.22.61) by MAXPR01CA0071.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:49::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 11:02:36 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [106.51.22.61]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 139dcd0a-ac2f-4989-d3e7-08d7c419638e
+X-MS-TrafficTypeDiagnostic: MN2PR04MB5517:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR04MB55172C0D98FD53F071FC30748DFE0@MN2PR04MB5517.namprd04.prod.outlook.com>
+WDCIPOUTBOUND: EOP-TRUE
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0337AFFE9A
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(136003)(396003)(366004)(346002)(189003)(199004)(8886007)(86362001)(26005)(1076003)(55236004)(1006002)(6666004)(5660300002)(44832011)(4326008)(966005)(55016002)(478600001)(36756003)(54906003)(110136005)(81156014)(186003)(8676002)(81166006)(16526019)(7416002)(8936002)(7696005)(316002)(66556008)(956004)(66946007)(66476007)(2616005)(2906002)(52116002)(32040200004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5517;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +gkPnxeXMtvAI74km+LNuwm/WA5FN9uRYAoC9RXi5vttoqRL5WIAhr21dtu9Mi8Z+i8I6RN40TYhnwdEBT/1s1AYs6r/+8niNwvq+pO3OFpnw9yEAmi4P54CTTy3b0ukJqgDBdeiYj1L6cuf9zpIkp2IRUk86TxiStthXPxmT0pu2NTlzKGbWbLGzE+bdoLVUH36jqsXi+33tqzfXwso5r8bep+75WqzIdzeNt+H0S3RXBnqK4BNElVdreRpXfPeo+QfjapCpTtPv2FYFLhoZdjIQpYHNqm1oa+zc7fb3lw/tJDdrXfT6PpDnzRDtLq2TMLlBEgkywQLx7FEaBkU4RU3xSvOXY3A9SQHiKg6oPxFo/WR9zxbfBdcECuJNWZ5hr8L2NwUw++1K6SywMIF1XqaIjLF7BFyxGXSDckfLNzaL3EoEPSfGO6mYDdZ2uTXeJxsC0gT///catWzjNlQ2vW9QXwhF++4TaMfmZPcCXtfOfjYalUcSDllJ5aBvyPf5dHoqCRpagsnBOxjFOGmFuop++/rs3NpH6nbCPvKlAeG0G8q81oVXTmOOJJG7q1ifN3h7uhUXIsv2ItnHMdGQw==
+X-MS-Exchange-AntiSpam-MessageData: uvTnbZiho9UFjB+Z5qkqfgHBX1cc98PhczvC3JDas54XBN09nKfU189UUGVKYhnEStdldxovtIcuOOxM1H4CizTjFAnyaRAkiwLOxIDrsgmU8a80mEHGPIeG1qNEn2ISQkGpT+GQUVuECVXhYUdFug==
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 139dcd0a-ac2f-4989-d3e7-08d7c419638e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 11:02:42.1984
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5x2GosQ3B/mYkWiBFomDCMUJmD8YgqsrSFHZMLamd9uoktaV8xv/tO6iPJbD+nNee3VgCaYq19VF95GUWgOeUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5517
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.03.20 11:14, Michael S. Tsirkin wrote:
-> On Mon, Mar 09, 2020 at 10:03:14AM +0100, David Hildenbrand wrote:
->> On 08.03.20 05:47, Tyler Sanderson wrote:
->>> Tested-by: Tyler Sanderson <tysand@google.com>
->>>
->>> Test setup: VM with 16 CPU, 64GB RAM. Running Debian 10. We have a 42
->>> GB file full of random bytes that we continually cat to /dev/null.
->>> This fills the page cache as the file is read. Meanwhile we trigger
->>> the balloon to inflate, with a target size of 53 GB. This setup causes
->>> the balloon inflation to pressure the page cache as the page cache is
->>> also trying to grow. Afterwards we shrink the balloon back to zero (so
->>> total deflate = total inflate).
->>>
->>> Without patch (kernel 4.19.0-5):
->>> Inflation never reaches the target until we stop the "cat file >
->>> /dev/null" process. Total inflation time was 542 seconds. The longest
->>> period that made no net forward progress was 315 seconds (see attached
->>> graph).
->>> Result of "grep balloon /proc/vmstat" after the test:
->>> balloon_inflate 154828377
->>> balloon_deflate 154828377
->>>
->>> With patch (kernel 5.6.0-rc4+):
->>> Total inflation duration was 63 seconds. No deflate-queue activity
->>> occurs when pressuring the page-cache.
->>> Result of "grep balloon /proc/vmstat" after the test:
->>> balloon_inflate 12968539
->>> balloon_deflate 12968539
->>>
->>> Conclusion: This patch fixes the issue. In the test it reduced
->>> inflate/deflate activity by 12x, and reduced inflation time by 8.6x.
->>> But more importantly, if we hadn't killed the "grep balloon
->>> /proc/vmstat" process then, without the patch, the inflation process
->>> would never reach the target.
->>>
->>> Attached is a png of a graph showing the problematic behavior without
->>> this patch. It shows deflate-queue activity increasing linearly while
->>> balloon size stays constant over the course of more than 8 minutes of
->>> the test.
->>
->> Thanks a lot for the extended test!
-> 
-> 
-> Given we shipped this for a long time, I think the best way
-> to make progress is to merge 1/3, 2/3 right now, and 3/3
-> in the next release.
+This patchset provides a new RISC-V Local Interrupt Controller Driver
+for managing per-CPU local interrupts. The overall approach is inspired
+from the way per-CPU local interrupts are handled by Linux ARM64 and
+ARM GICv3 driver.
 
-Agreed.
+Few advantages of this new driver over previous one are:
+1. It registers all local interrupts as per-CPU interrupts
+2. The KVM RISC-V can use this driver to implement interrupt
+   handler for per-HART guest external interrupt defined by
+   the RISC-V H-Extension
+3. In future, we can develop drivers for devices with per-HART
+   interrupts without changing arch code or this driver
+
+With this patchset, output of "cat /proc/interrupts" looks as follows:
+           CPU0       CPU1       CPU2       CPU3       
+  2:        379          0          0          0  SiFive PLIC  10  ttyS0
+  3:        591          0          0          0  SiFive PLIC   8  virtio0
+  5:       5079      10821       8435      12984  RISC-V INTC   5  riscv-timer
+IPI0:      2045       2537        891        870  Rescheduling interrupts
+IPI1:         9        269         91        168  Function call interrupts
+IPI2:         0          0          0          0  CPU stop interrupts
+
+The patchset is based up Linux-5.6-rc5 and can be found at riscv_intc_v4
+branch of: https://github.com/avpatel/linux.git
+
+Changes since v3:
+ - Rebased to Linux-5.6-rc5 and Atish's PLIC patches
+ - Added separate patch to rename and move plic_find_hart_id()
+   to arch directory
+ - Use riscv_of_parent_hartid() in riscv_intc_init() instead of
+   atomic counter
+
+Changes since v2:
+ - Dropped PATCH2 since it was merged long-time back
+ - Rebased series from Linux-4.19-rc2 to Linux-5.6-rc2
+
+Changes since v1:
+ - Removed changes related to puggable IPI triggering
+ - Separate patch for self-contained IPI handling routine
+ - Removed patch for GENERIC_IRQ kconfig options
+ - Added patch to remove do_IRQ() function
+ - Rebased upon Atish's SMP patches
+
+Anup Patel (5):
+  RISC-V: self-contained IPI handling routine
+  RISC-V: Rename and move plic_find_hart_id() to arch directory
+  irqchip: RISC-V Per-HART Local Interrupt Controller Driver
+  clocksource: timer-riscv: Make timer interrupt as a per-CPU interrupt
+  RISC-V: Remove do_IRQ() function
+
+ arch/riscv/Kconfig                 |   1 +
+ arch/riscv/include/asm/irq.h       |   5 --
+ arch/riscv/include/asm/processor.h |   1 +
+ arch/riscv/include/asm/smp.h       |   3 +
+ arch/riscv/kernel/cpu.c            |  16 ++++
+ arch/riscv/kernel/entry.S          |   4 +-
+ arch/riscv/kernel/irq.c            |  33 +------
+ arch/riscv/kernel/smp.c            |  11 ++-
+ arch/riscv/kernel/traps.c          |   2 -
+ drivers/clocksource/timer-riscv.c  |  79 +++++++++++------
+ drivers/irqchip/Kconfig            |  13 +++
+ drivers/irqchip/Makefile           |   1 +
+ drivers/irqchip/irq-riscv-intc.c   | 134 +++++++++++++++++++++++++++++
+ drivers/irqchip/irq-sifive-plic.c  |  40 ++++-----
+ include/linux/cpuhotplug.h         |   1 +
+ 15 files changed, 256 insertions(+), 88 deletions(-)
+ create mode 100644 drivers/irqchip/irq-riscv-intc.c
 
 -- 
-Thanks,
-
-David / dhildenb
+2.17.1
 
