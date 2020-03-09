@@ -2,147 +2,145 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441E2C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA815C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B07620578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C362120828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:21:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Kbde3Il7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbgCISUa (ORCPT
+        id S1727398AbgCISVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:20:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:55660 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727448AbgCISTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:19:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92D7411D4;
-        Mon,  9 Mar 2020 11:19:07 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44AC73F67D;
-        Mon,  9 Mar 2020 11:19:06 -0700 (PDT)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        rmk+kernel@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v2 03/14] net: axienet: Propagate failure of DMA descriptor setup
-Date:   Mon,  9 Mar 2020 18:18:40 +0000
-Message-Id: <20200309181851.190164-4-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200309181851.190164-1-andre.przywara@arm.com>
-References: <20200309181851.190164-1-andre.przywara@arm.com>
+        Mon, 9 Mar 2020 14:21:35 -0400
+Received: from gateway20.websitewelcome.com ([192.185.54.2]:46537 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727323AbgCISVf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:21:35 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id A7551400D5CCB
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 12:06:34 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BN1vjWxa6AGTXBN1vjyjj7; Mon, 09 Mar 2020 13:21:31 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=94Q67ojJZX0sr3cTE6wQF4GveZtQlKTfPuEaR91kEuo=; b=Kbde3Il7M3zJ70zSOwLiT3SbLZ
+        mOUvlifuwYuxtTck+M1RWB+lkNJJEFU7af6Oq6QHGgq2exvgq0Qq8rsMJrQbcasMUu6p7CRWqyl4N
+        JDRdNpcU6o42jPnrp0T1slNC4mQ8VjPGEakca1J1yXoJtP3IrUFerpTx9g8HvqP+dKLHiC349i5+4
+        jzYCdYD2ULtSM+xYKiWxxEbhkgcM0vpa7XOKcin3qL/3vXUzy+uLMnNVO+OB2B71He6FmLqwWcyJa
+        CFz2JOxoJ0tKhb/LILTOHHUaW1Zk3uK5PcHwjSPdX9re1qQX/i+3dT7o0mX+VTW7iY7JmdQ1ByONx
+        VUJB7tuA==;
+Received: from [201.162.240.150] (port=28860 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBN1u-004LTL-1r; Mon, 09 Mar 2020 13:21:30 -0500
+Date:   Mon, 9 Mar 2020 13:24:42 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] nfs: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200309182442.GA5422@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.150
+X-Source-L: No
+X-Exim-ID: 1jBN1u-004LTL-1r
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.150]:28860
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 31
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we fail allocating the DMA buffers in axienet_dma_bd_init(), we
-report this error, but carry on with initialisation nevertheless.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-This leads to a kernel panic when the driver later wants to send a
-packet, as it uses uninitialised data structures.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Make the axienet_device_reset() routine return an error value, as it
-contains the DMA buffer initialisation. Make sure we propagate the error
-up the chain and eventually fail the driver initialisation, to avoid
-relying on non-initialised buffers.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 26 ++++++++++++++-----
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ fs/nfs/dir.c      | 2 +-
+ fs/nfs/nfs4proc.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 6ebfd19097d2..64f73533cabe 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -437,9 +437,10 @@ static void axienet_setoptions(struct net_device *ndev, u32 options)
- 	lp->options |= options;
- }
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index d4b839b6cf89..a551a30047f9 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -141,7 +141,7 @@ struct nfs_cache_array {
+ 	int size;
+ 	int eof_index;
+ 	u64 last_cookie;
+-	struct nfs_cache_array_entry array[0];
++	struct nfs_cache_array_entry array[];
+ };
  
--static void __axienet_device_reset(struct axienet_local *lp)
-+static int __axienet_device_reset(struct axienet_local *lp)
- {
- 	u32 timeout;
-+
- 	/* Reset Axi DMA. This would reset Axi Ethernet core as well. The reset
- 	 * process of Axi DMA takes a while to complete as all pending
- 	 * commands/transfers will be flushed or completed during this
-@@ -455,9 +456,11 @@ static void __axienet_device_reset(struct axienet_local *lp)
- 		if (--timeout == 0) {
- 			netdev_err(lp->ndev, "%s: DMA reset timeout!\n",
- 				   __func__);
--			break;
-+			return -ETIMEDOUT;
- 		}
- 	}
-+
-+	return 0;
- }
+ typedef int (*decode_dirent_t)(struct xdr_stream *, struct nfs_entry *, bool);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 69b7ab7a5815..cc0960558284 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5550,7 +5550,7 @@ static int buf_to_pages_noslab(const void *buf, size_t buflen,
+ struct nfs4_cached_acl {
+ 	int cached;
+ 	size_t len;
+-	char data[0];
++	char data[];
+ };
  
- /**
-@@ -470,13 +473,17 @@ static void __axienet_device_reset(struct axienet_local *lp)
-  * areconnected to Axi Ethernet reset lines, this in turn resets the Axi
-  * Ethernet core. No separate hardware reset is done for the Axi Ethernet
-  * core.
-+ * Returns 0 on success or a negative error number otherwise.
-  */
--static void axienet_device_reset(struct net_device *ndev)
-+static int axienet_device_reset(struct net_device *ndev)
- {
- 	u32 axienet_status;
- 	struct axienet_local *lp = netdev_priv(ndev);
-+	int ret;
- 
--	__axienet_device_reset(lp);
-+	ret = __axienet_device_reset(lp);
-+	if (ret)
-+		return ret;
- 
- 	lp->max_frm_size = XAE_MAX_VLAN_FRAME_SIZE;
- 	lp->options |= XAE_OPTION_VLAN;
-@@ -491,9 +498,11 @@ static void axienet_device_reset(struct net_device *ndev)
- 			lp->options |= XAE_OPTION_JUMBO;
- 	}
- 
--	if (axienet_dma_bd_init(ndev)) {
-+	ret = axienet_dma_bd_init(ndev);
-+	if (ret) {
- 		netdev_err(ndev, "%s: descriptor allocation failed\n",
- 			   __func__);
-+		return ret;
- 	}
- 
- 	axienet_status = axienet_ior(lp, XAE_RCW1_OFFSET);
-@@ -518,6 +527,8 @@ static void axienet_device_reset(struct net_device *ndev)
- 	axienet_setoptions(ndev, lp->options);
- 
- 	netif_trans_update(ndev);
-+
-+	return 0;
- }
- 
- /**
-@@ -921,8 +932,9 @@ static int axienet_open(struct net_device *ndev)
- 	 */
- 	mutex_lock(&lp->mii_bus->mdio_lock);
- 	axienet_mdio_disable(lp);
--	axienet_device_reset(ndev);
--	ret = axienet_mdio_enable(lp);
-+	ret = axienet_device_reset(ndev);
-+	if (ret == 0)
-+		ret = axienet_mdio_enable(lp);
- 	mutex_unlock(&lp->mii_bus->mdio_lock);
- 	if (ret < 0)
- 		return ret;
+ static void nfs4_set_cached_acl(struct inode *inode, struct nfs4_cached_acl *acl)
 -- 
-2.17.1
+2.25.0
 
