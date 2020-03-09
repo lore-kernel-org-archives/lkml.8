@@ -3,85 +3,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44080C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0152C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB6324656
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D69324656
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgCITmt (ORCPT
+        id S1726533AbgCITnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:42:49 -0400
-Received: from smtprelay0204.hostedemail.com ([216.40.44.204]:45016 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725992AbgCITms (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:42:48 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 4FE3118224D82;
-        Mon,  9 Mar 2020 19:42:47 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: steel13_8c8a845334d15
-X-Filterd-Recvd-Size: 2076
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  9 Mar 2020 19:42:45 +0000 (UTC)
-Message-ID: <6bbfc8b8c9c206d80de43a64bfe4b8083cc2c02f.camel@perches.com>
-Subject: Re: [PATCH v2 1/4] kernfs: kvmalloc xattr value instead of kmalloc
-From:   Joe Perches <joe@perches.com>
-To:     Daniel Xu <dxu@dxuuu.xyz>, cgroups@vger.kernel.org, tj@kernel.org,
-        lizefan@huawei.com, hannes@cmpxchg.org
-Cc:     shakeelb@google.com, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, kernel-team@fb.com
-Date:   Mon, 09 Mar 2020 12:41:05 -0700
-In-Reply-To: <C16IH7NEXW4J.440OGTNY7CWX@dlxu-fedora-R90QNFJV>
-References: <C16IH7NEXW4J.440OGTNY7CWX@dlxu-fedora-R90QNFJV>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 9 Mar 2020 15:43:03 -0400
+Received: from v6.sk ([167.172.42.174]:34528 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbgCITnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:43:03 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id DBBDC60EEE;
+        Mon,  9 Mar 2020 19:43:00 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 00/17] clk: mmp2: MMP2 CLK Update
+Date:   Mon,  9 Mar 2020 20:42:37 +0100
+Message-Id: <20200309194254.29009-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-09 at 11:21 -0700, Daniel Xu wrote:
-> Hi Joe,
+Hi,
 
-Hello Daniel.
+please consider applying this patch series, that includes fixes and
+enhancements for the MMP2/MMP3 clock driver that I hope to get into 5.7.
+Compared to first submission, patches 11/17 to 17/17 were added.
+Details in changelogs of individual patches.
 
-> On Fri Mar 6, 2020 at 12:49 AM, Joe Perches wrote:
-> > On Thu, 2020-03-05 at 13:16 -0800, Daniel Xu wrote:
-> > > It's not really necessary to have contiguous physical memory for xattr
-> > > values. We no longer need to worry about higher order allocations
-> > > failing with kvmalloc, especially because the xattr size limit is at
-> > > 64K.
-> > 
-> > So why use vmalloc memory at all?
-> > 
-> > 
-> > > diff --git a/fs/xattr.c b/fs/xattr.c
-> > ']
-> > > @@ -817,7 +817,7 @@ struct simple_xattr *simple_xattr_alloc(const void *value, size_t size)
-> > >  	if (len < sizeof(*new_xattr))
-> > >  		return NULL;
-> > >  
-> > > -	new_xattr = kmalloc(len, GFP_KERNEL);
-> > > +	new_xattr = kvmalloc(len, GFP_KERNEL);
-> > 
-> > Why is this sensible?
-> > vmalloc memory is a much more limited resource.
-> 
-> What would be the alternative? As Greg said, contiguous memory should be
-> more scarce.
+It starts off with a handful of cleanups:
 
-If the need is to allocate from a single block of memory,
-perhaps you need a submemory allocator like gen_pool.
-(gennalloc.h)
+  [PATCH v2 01/17] clk: mmp2: Remove a unused prototype
+  [PATCH v2 02/17] clk: mmp2: Constify some strings
+  [PATCH v2 03/17] dt-bindings: clock: Convert marvell,mmp2-clock to
 
-Dunno.  Maybe i just don't quite understand your need.
+The next patch adds the logic for calculating the rate of clock signals
+coming from the PLLs dynamically. Currently they are hardcoded to more
+or less wrong values (how wrong it is depends on how did firmware set
+things up), which causes bad timings when they are used (e.g. to generate
+display clock).
+
+  [PATCH v2 04/17] clk: mmp2: Add support for PLL clock sources
+
+Then MMP2 is switched over to use it:
+
+  [PATCH v2 05/17] clk: mmp2: Stop pretending PLL outputs are constant
+
+Switching MMP3 requires some more work, because until now, the driver
+didn't distinguish between the versions of the SoC:
+
+  [PATCH v2 06/17] dt-bindings: clock: Add MMP3 compatible string
+  [PATCH v2 07/17] clk: mmp2: Check for MMP3
+  [PATCH v2 08/17] dt-bindings: marvell,mmp2: Add clock ids for MMP3 PLLs
+  [PATCH v2 09/17] clk: mmp2: Add PLLs that are available on MMP3
+  [PATCH v2 10/17] ARM: dts: mmp3: Use the MMP3 compatible string for
+
+Patches that follow add just add more clocks paired with DT bindings:
+
+  [PATCH v2 11/17] dt-bindings: marvell,mmp2: Add clock ids for the GPU
+  [PATCH v2 12/17] clk: mmp2: add the GPU clocks
+  [PATCH v2 13/17] dt-bindings: marvell,mmp2: Add clock ids for the
+  [PATCH v2 14/17] clk: mmp2: Add clocks for the thermal sensors
+  [PATCH v2 15/17] dt-bindings: marvell,mmp2: Add clock id for the fifth
+  [PATCH v2 16/17] clk: mmp2: Add clock for fifth SD HCI on MMP3
+
+The last one is a straightforward bug fix, independent of the rest of the
+patch set:
+
+  [PATCH v2 17/17] clk: mmp2: Fix bit masks for LCDC I/O and pixel clocks
+
+The hardware vendor doesn't supply documentation, so this is best-effort
+work based on the code dump from Marvell and OLPC Open Firmware.
+
+Tested on MMP2 and MMP3 based hardware I have; details in relevant
+commit messages.
+
+Thank you,
+Lubo
+
 
