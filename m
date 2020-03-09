@@ -2,130 +2,167 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D4FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E525C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0281D208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745DE215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EQLSmaWU"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PNNr+LHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgCISaw (ORCPT
+        id S1727462AbgCISbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:30:52 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34266 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgCISaw (ORCPT
+        Mon, 9 Mar 2020 14:31:07 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:53591 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727440AbgCISbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:30:52 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 23so3416670pfj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:30:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CgKKPr0xwtPbP32XtsKM4Pg2CezZujX8rIh5aLwqY9k=;
-        b=EQLSmaWU2q/bTK6Rz1P45GyBkBUFS3bk+2CbcMCpLyAq43eVc2WPreKL5a+i6z50IO
-         BR/zXDncKdn8muBymm9WU8GSDEM56XkkyORl7tIgBvKivwmAbhAmAHHB3ovqIRKKOshO
-         EtoXWfLN/L5BEe5k5H+RUPFvglpuGtZ1vk6/J0cJEcAdXRO6vZaJ+QrMbU10kyjDdDW+
-         ZuflQ1anPI1URnPeiwClBJyJKSLi8SWY4D4iX00Qp+5PLH7NZfgZtE7NdrBgxzhmmPr6
-         OLpFA3LMf/Q66PZmU+NuBJAXMbCJ40awnoImK4en1CTK0jPuUL/XqKcm0TVxut5RraVS
-         G69Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CgKKPr0xwtPbP32XtsKM4Pg2CezZujX8rIh5aLwqY9k=;
-        b=tCYJXwN8GF3nrYlwmgqHVTDymPspjw9v0gXSATXUkswkbfuPnbYjaCKWM+HkzzhBIM
-         ChWDneegApTB2NjnFrHfSdXBsKsYW5JHJyElOnIP4IJZBUjmT45WCgjyTOsUhTYt22Gt
-         ZzTWzw7Zjct1gstmfVnssn/PlrtjpNWuJ76+mVrS72UT9qUX3bbC5jOEgcaDqIjWMAeo
-         7qMOwjeQAhCWshwsYlCV/EF5Yq7gW1pYUWQcEn2D4K/1EsXWObzq18O4a+oR+60fgyjV
-         k6cr4Noqj7XJtek9R+gORH6N+f06rxbprxRlhvCAhbgbWLo6eTIiDS31XSRnhr/Xizmt
-         +dUA==
-X-Gm-Message-State: ANhLgQ0bmNFmkUcHYXXaoOmvvVHeVd0R2oqXchNUCU85Rrr74etpju2U
-        RwUO/yaXM/kiKPJHlGLZp6Iuiw==
-X-Google-Smtp-Source: ADFU+vtOyOd1fQy9lpTnW6EA7iLOMrbyb2Fi2EGCNHqKSXzU/O1QZSHNMGuRlAmRob7bmFMt7xi8cg==
-X-Received: by 2002:a63:7783:: with SMTP id s125mr17195558pgc.214.1583778651239;
-        Mon, 09 Mar 2020 11:30:51 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d22sm249134pja.14.2020.03.09.11.30.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 11:30:50 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 11:30:48 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dianders@google.com,
-        mka@chromium.org, Ritesh Harjani <riteshh@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>
-Subject: Re: [PATCH V2] mmc: cqhci: Update cqhci memory ioresource name
-Message-ID: <20200309183048.GB1098305@builder>
-References: <1583323250-23596-1-git-send-email-vbadigan@codeaurora.org>
- <1583328320-9981-1-git-send-email-vbadigan@codeaurora.org>
+        Mon, 9 Mar 2020 14:31:07 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 950EF23EDA;
+        Mon,  9 Mar 2020 19:31:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583778663;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QTIEtymJN3mVQ54qJYN3byp7OoTvsUhQ9JrnqEUValI=;
+        b=PNNr+LHBYW1ZjkiokZWQsE/7TysuCbOqXiWrlcsL/mWuhO952dMYkfliZ6C0+IdzPV2Gab
+        IU85F6BCB3j6/mAvgWXAROBo6EO5h4MWY1zl3nE7+WdlyoLZogZ1dg9rHSHTtOQyr15Ibt
+        Kgbc80Xj+2EuB/+YlSUWuxXMJAcRLuc=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583328320-9981-1-git-send-email-vbadigan@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Mar 2020 19:31:03 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Subject: Re: [PATCH 0/6] NXP DSPI bugfixes and support for LS1028A
+In-Reply-To: <CA+h21hrSezjwKJDCd1wN8qk5koWfPmwT0Mx+sR7fHxo1sCGcjw@mail.gmail.com>
+References: <20200309145624.10026-1-olteanv@gmail.com>
+ <f530a0740f34b2cf26a8055d4eae2527@walle.cc>
+ <CA+h21hrSezjwKJDCd1wN8qk5koWfPmwT0Mx+sR7fHxo1sCGcjw@mail.gmail.com>
+Message-ID: <6da04c9a17fa9e6259a462cb52312930@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 950EF23EDA
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         NEURAL_HAM(-0.00)[-0.536];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 04 Mar 05:25 PST 2020, Veerabhadrarao Badiganti wrote:
-
-> Update cqhci memory ioresource name from cqhci_mem to cqhci since
-> suffix _mem is redundant.
+Am 2020-03-09 19:14, schrieb Vladimir Oltean:
+> On Mon, 9 Mar 2020 at 20:03, Michael Walle <michael@walle.cc> wrote:
+>> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
+>> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+>> >
+>> > This series addresses a few issues that were missed during the previous
+>> > series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
+>> > SoCs other than LS1021A and LS1043A. DMA mode has been completely
+>> > broken
+>> > by that series, and XSPI mode never worked on little-endian
+>> > controllers.
+>> >
+>> > Then it introduces support for the LS1028A chip, whose compatible has
+>> > recently been documented here:
+>> >
+>> > https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
+>> 
+>> If it is not compatible with the LS1021A the second compatible string
+>> should be removed. Depending on the other remark about the endianess,
+>> it might still be compatible, though.
+>> 
 > 
-> Only sdhci-msm driver is making use of this resource as of now.
-> No other vendor's driver is using it. So this update shouldn't affect
-> any other vendor's cqhci functionality.
+> Please feel free to remove it. I wasn't actually planning to add it in
+> the first place, but now it that it's there it doesn't really bother
+> anybody either.
+
+But it won't work if the endianess depends on the compatible string ;)
+
+>> 
+>> > The device tree for the LS1028A SoC is extended with DMA channels
+>> > definition, such that even though the default operating mode is XSPI,
+>> > one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
+>> > devtype_data structure of the driver and use that instead.
+>> 
+>> wouldn't it make more sense, to use DMA is the dma node is present
+>> in the device tree? otherwise use XSPI mode? I don't think it is
+>> really handy to change the mode inside the driver.
+>> 
 > 
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> Let's keep it simple. The driver should configure the hardware in the
+> most efficient and least buggy mode available. Right now that is XSPI.
+> The hardware description (aka the device tree) is a separate topic. If
+> there ever arises any situation where there are corner cases with XSPI
+> mode, it's good to have a fallback in the form of DMA mode, and not
+> have to worry about yet another problem (which is that there are 2
+> sets of device tree blobs in deployment).
 
-I do favor using names without the "_mem" suffix and it seems like the
-existing code only acquire the first two regions by index. So this
-should be fine.
+Point taken. But this is not how other drivers behave, which uses the
+DMA if its given in the device node.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Btw. do other SoCs perform better with DMA?
 
+-michael
 
-But I do expect to see some patches fixing up the 8 dts files that now
-has invalid reg-names.
-
-Regards,
-Bjorn
-
-> ---
-> Corresponding binding change:
-> https://lore.kernel.org/linux-arm-msm/1582545470-11530-1-git-send-email-vbadigan@codeaurora.org/
+> TL;DR: These DMA channels don't really bother anybody but you never
+> know when they might come in handy.
 > 
-> Changes sicne V1:
-> 	- Updated commit text expalining this change affects *only*
-> 	  qcom cqhci functionality.
+>> -michael
+>> 
+>> >
+>> > For testing, benchmarking and debugging, the mikroBUS connector on the
+>> > LS1028A-RDB is made available via spidev.
+>> >
+>> > Vladimir Oltean (6):
+>> >   spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
+>> >   spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
+>> >   spi: spi-fsl-dspi: Fix oper_word_size of zero for DMA mode
+>> >   spi: spi-fsl-dspi: Add support for LS1028A
+>> >   arm64: dts: ls1028a: Specify the DMA channels for the DSPI
+>> > controllers
+>> >   arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
+>> >
+>> >  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 14 +++++
+>> >  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
+>> >  drivers/spi/spi-fsl-dspi.c                    | 54 +++++++++++++++----
+>> >  3 files changed, 64 insertions(+), 10 deletions(-)
 > 
-> ---
->  drivers/mmc/host/cqhci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-> index e2ea2c4..e24b8ff 100644
-> --- a/drivers/mmc/host/cqhci.c
-> +++ b/drivers/mmc/host/cqhci.c
-> @@ -1077,7 +1077,7 @@ struct cqhci_host *cqhci_pltfm_init(struct platform_device *pdev)
->  
->  	/* check and setup CMDQ interface */
->  	cqhci_memres = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> -						   "cqhci_mem");
-> +						   "cqhci");
->  	if (!cqhci_memres) {
->  		dev_dbg(&pdev->dev, "CMDQ not supported\n");
->  		return ERR_PTR(-EINVAL);
-> -- 
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+> Thanks,
+> -Vladimir
