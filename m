@@ -2,178 +2,114 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E86C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A87C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883BF24649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0EEF24649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E3NR8XNV"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KL0cHZS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCIWxG (ORCPT
+        id S1727364AbgCIW7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:53:06 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31502 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726656AbgCIWxG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:53:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583794384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2rI8BG2LwE/WAlwyan0GLFodPzv/0iZV/5EOQthjqaU=;
-        b=E3NR8XNVDj8+psk8VMLCryHMH06Z9Qx6qTsH2koi0qF2TWGym9FnHf7fz2rrEKkIBFdpV8
-        i7mO4kT0E7Y7qj73iucFuXS7jj+jBUqIKyO9ELwCYSBauySz/NLqHhv7uJoWZPyCwkM2+k
-        w21uiQ7DA6l78Bj/H60ubDsee/7WFLw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-341-0io6CmWXN42H4XZTVuBR1g-1; Mon, 09 Mar 2020 18:53:02 -0400
-X-MC-Unique: 0io6CmWXN42H4XZTVuBR1g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 9 Mar 2020 18:59:22 -0400
+Received: from ozlabs.org ([203.11.71.1]:36845 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbgCIW7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 18:59:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C654107ACC7;
-        Mon,  9 Mar 2020 22:52:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 55D9673892;
-        Mon,  9 Mar 2020 22:52:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200309200238.GB28467@miu.piliscsaba.redhat.com>
-References: <20200309200238.GB28467@miu.piliscsaba.redhat.com> <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk, Theodore Ts'o <tytso@mit.edu>,
-        Stefan Metzmacher <metze@samba.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
-        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
-        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
-        jlayton@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/14] VFS: Filesystem information [ver #18]
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48btvW4YyRz9sPJ;
+        Tue, 10 Mar 2020 09:59:19 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583794760;
+        bh=206rIbkp0C/1Ogfui2ffVjFpvbdu0zvMFzur9BTxmis=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KL0cHZS1CHJrnpydDUzSv+aZO234X7kPD9BBh4vKBn2nGlncweo5Fz0QTjScDjYnG
+         st6l0WXtJWNVQWk/ri+oWWAu9EJ0arvZopaua3/XRZQlMUlXT78VbEWph+hezrT1aA
+         byXy30GsiySgmsxBSwvRpyp2G6+IEqESd9Zfl/LF/+60ChIWPCb4Wk+vqwZfaeMYBB
+         sTLlTLXy499jrUmwMTp/9OpXmZSPk1gneV+Dkbkl2pdAFSZsM3746Cry9UmqIjMW60
+         5uze4UAw+ief5KjguJKTmG+J+DM5m7BljWLNrSlfMs+37/oqYuHtBh4qDP8h+Y1Odi
+         vWEpwy+XEvUlg==
+Date:   Tue, 10 Mar 2020 09:59:18 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: build warning after merge of the vfs tree
+Message-ID: <20200310095918.3ea6432f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <537181.1583794373.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 09 Mar 2020 22:52:53 +0000
-Message-ID: <537182.1583794373@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; boundary="Sig_/knfUsg6=EcD246GvZQuo23u";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
+--Sig_/knfUsg6=EcD246GvZQuo23u
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> >  (1) It can be targetted.  It makes it easy to query directly by path =
-or
-> >      fd, but can also query by mount ID or fscontext fd.  procfs and s=
-ysfs
-> >      cannot do three of these things easily.
-> =
+Hi all,
 
-> See above: with the addition of open(path, O_PATH) it can do all of thes=
-e.
+After merging the vfs tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
 
-That's a horrible interface.  To query a file by path, you have to do:
+warning: same module names found:
+  fs/exfat/exfat.ko
+  drivers/staging/exfat/exfat.ko
 
-	fd =3D open(path, O_PATH);
-	sprintf(procpath, "/proc/self/fdmount/%u/<attr>");
-	fd2 =3D open(procpath, O_RDONLY);
-	read(fd2, ...);
-	close(fd2);
-	close(fd);
+Introduced by commit
 
-See point (3) about efficiency also.  You're having to open *two* files.
+  b9d1e2e6265f ("exfat: add Kconfig and Makefile")
 
-> >  (2) Easier to provide LSM oversight.  Is the accessing process allowe=
-d to
-> >      query information pertinent to a particular file?
-> =
+and not fixed by commit
 
-> Not quite sure why this would be easier for a new ad-hoc interface than =
-for
-> the well established filesystem API.
+  1a3c0509ce83 ("staging: exfat: make staging/exfat and fs/exfat mutually e=
+xclusive")
 
-You're right.  That's why fsinfo() uses standard pathwalk where possible,
-e.g.:
+$ grep EXFAT .config
+CONFIG_STAGING_EXFAT_FS=3Dm
+CONFIG_STAGING_EXFAT_DISCARD=3Dy
+CONFIG_STAGING_EXFAT_DELAYED_SYNC=3Dy
+CONFIG_STAGING_EXFAT_KERNEL_DEBUG=3Dy
+CONFIG_STAGING_EXFAT_DEBUG_MSG=3Dy
+CONFIG_STAGING_EXFAT_DEFAULT_CODEPAGE=3D437
+CONFIG_STAGING_EXFAT_DEFAULT_IOCHARSET=3D"utf8"
+# DOS/FAT/EXFAT/NT Filesystems
+CONFIG_EXFAT_FS=3Dm
+CONFIG_EXFAT_DEFAULT_IOCHARSET=3D"utf8"
+# end of DOS/FAT/EXFAT/NT Filesystems
 
-	fsinfo(AT_FDCWD, "/path/to/file", ...);
+--=20
+Cheers,
+Stephen Rothwell
 
-or a fairly standard fd-querying interface:
+--Sig_/knfUsg6=EcD246GvZQuo23u
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-	fsinfo(fd, "", { resolve_flags =3D RESOLVE_EMPTY_PATH },  ...);
+-----BEGIN PGP SIGNATURE-----
 
-to query an open file descriptor.  These are well-established filesystem A=
-PIs.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5mykYACgkQAVBC80lX
+0GzkhQf/exGVw+61mho1oNpxk0lkPhRIPu1I+ySRrOBDnt9vf3ltuv3S1ZTyQiA/
+NAAp15Shp3oe99nvLX5Hr709QdTxdvjbEC74aekJtglpUNUfXyoP5fcwplGgAZ1Y
+W9rNhapWVjcIozUnVrynTgp4joVv1MzvmjXDKH+pPHA6ndYe/4dw+VoApupldasE
+08zMQ3wC7TWwjO7vjzp7L0M5Zkv2Mj9v2vX68ZErjGMkHDer2E46SIOXPu52lMhY
+e2zi2VQdG0/kq679dB0kdnsnStXzdO+NonbCKfuk8bxLpTCfeAwpCqTwvXIkDG1A
+54ax7ZOZ2c/L4EPt2GYbERvHeSEwmg==
+=e7uC
+-----END PGP SIGNATURE-----
 
-Where I vary from this is allowing direct specification of a mount ID also=
-,
-with a special flag to say that's what I'm doing:
-
-	fsinfo(AT_FDCWD, "23", { flags =3D FSINFO_QUERY_FLAGS_MOUNT },  ...);
-
-> >  (7) Don't have to create/delete a bunch of sysfs/procfs nodes each ti=
-me a
-> >      mount happens or is removed - and since systemd makes much use of
-> >      mount namespaces and mount propagation, this will create a lot of
-> >      nodes.
-> =
-
-> This patch creates a single struct mountfs_entry per mount, which is 48b=
-ytes.
-
-fsinfo() doesn't create any.  Furthermore, it seems that mounts get multip=
-lied
-8-10 times by systemd - though, as you say, it's not necessarily a great d=
-eal
-of memory.
-
-> Now onto the advantages of a filesystem based API:
-> =
-
->  - immediately usable from all programming languages, including scripts
-
-This is not true.  You can't open O_PATH from shell scripts, so you can't
-query things by path that you can't or shouldn't open (dev file paths, for
-example; symlinks).
-
-I imagine you're thinking of something like:
-
-	{
-		id=3D`cat /proc/self/fdmount/5/parent_mount`
-	} 5</my/path/to/my/file
-
-but what if /my/path/to/my/file is actually /dev/foobar?
-
-I've had a grep through the bash sources, but can't seem to find anywhere =
-that
-uses O_PATH.
-
->  - same goes for future extensions: no need to update libc, utils, langu=
-age
->    bindings, strace, etc...
-
-Applications and libraries using these attributes would have to change any=
-way
-to make use of additional information.
-
-But it's not a good argument since you now have to have text parsers that
-change over time.
-
-David
-
+--Sig_/knfUsg6=EcD246GvZQuo23u--
