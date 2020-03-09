@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32427C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B88C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18D782465A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0974A2467E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgCITgB (ORCPT
+        id S1726949AbgCITgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:36:01 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22361 "EHLO
+        Mon, 9 Mar 2020 15:36:06 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22379 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726462AbgCITfX (ORCPT
+        by vger.kernel.org with ESMTP id S1725992AbgCITfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:35:23 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
+        Mon, 9 Mar 2020 15:35:22 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:20 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:20 -0700
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 09 Mar 2020 12:35:20 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id D6E53463E; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
+        id B5D114973; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -33,14 +33,10 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v7 07/13] pwm: imx27: Use 64-bit division macros for period and duty cycle
-Date:   Mon,  9 Mar 2020 12:35:10 -0700
-Message-Id: <cc36c14cffe64d12897d4e7ad0de4c85ae9fbef0.1583782035.git.gurus@codeaurora.org>
+        Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH v7 05/13] pwm: clps711x: Use 64-bit division macros for period and duty cycle
+Date:   Mon,  9 Mar 2020 12:35:08 -0700
+Message-Id: <3c2c8d50bfba2555e3f94c6aa43ae0ac9a0d3d7d.1583782035.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1583782035.git.gurus@codeaurora.org>
 References: <cover.1583782035.git.gurus@codeaurora.org>
@@ -72,40 +68,26 @@ DIV64_* macros:
 - DIV64_U64_ROUND_CLOSEST
 - div64_u64
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Alexander Shiyan <shc_work@mail.ru>
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/pwm/pwm-imx27.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-clps711x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 35a7ac42..b7d38d0 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -208,7 +208,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 	sr = readl(imx->mmio_base + MX3_PWMSR);
- 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
- 	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
--		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
-+		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
- 					 NSEC_PER_MSEC);
- 		msleep(period_ms);
+diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+index 924d39a..ba9500a 100644
+--- a/drivers/pwm/pwm-clps711x.c
++++ b/drivers/pwm/pwm-clps711x.c
+@@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+ static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+ {
+ 	/* Duty cycle 0..15 max */
+-	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
++	return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+ }
  
-@@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	period_cycles /= prescale;
- 	c = (unsigned long long)period_cycles * state->duty_cycle;
--	do_div(c, state->period);
--	duty_cycles = c;
-+	duty_cycles = div64_u64(c, state->period);
- 
- 	/*
- 	 * according to imx pwm RM, the real period value should be PERIOD
+ static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
