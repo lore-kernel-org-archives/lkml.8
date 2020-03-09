@@ -2,130 +2,359 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EA4C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF58CC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA82424649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8B324649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:29:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="l5B230xH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YtYemB+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgCIV1G (ORCPT
+        id S1726760AbgCIV3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:27:06 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.154]:22945 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726118AbgCIV1G (ORCPT
+        Mon, 9 Mar 2020 17:29:22 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38458 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgCIV3W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:27:06 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 1136F402DE094
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 15:19:23 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BOrzjUi8LvBMdBOrzjOCoQ; Mon, 09 Mar 2020 15:19:23 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=m8oDU5ueC5bxEXfkGSmLSUMfp7+qqcDb0q84/pI1JLc=; b=l5B230xHG/u7HVjD2SufekiKFc
-        u2GhyZ7dECYq4OgNB626qmzcBk+oHhW96tGFm4IV/dQDWsrkUTQqzMesVCNAV2rfcKwyhueRQsr9j
-        UhyGkWl966uORuNfrqT6HhKVEUnmH0AGM8zsAuZirE5C7gOhAPNb8YIoHflPxnhDjM4nCnOrSbB7m
-        YY7hEG+KbLuJh0bU1HdTEwk2cNcHw7XgBgGBj5UVWGyZtSF4upZEc/iDlJa5o+ZYjs/BC6DCx65yj
-        VKxMZrbg6A6Oka/dTf0A3xK1aCIxyL6OOpqFC4/aahGjTfRBohWpSf/UednROC4Vvf9IQSQ1Gsz99
-        XMY28R/A==;
-Received: from [201.162.168.201] (port=22316 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBOrx-000yAk-51; Mon, 09 Mar 2020 15:19:21 -0500
-Date:   Mon, 9 Mar 2020 15:22:33 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] overlayfs: overlayfs.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200309202233.GA8631@embeddedor>
+        Mon, 9 Mar 2020 17:29:22 -0400
+Received: by mail-lj1-f195.google.com with SMTP id w1so11677174ljh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 14:29:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=T8M3/jbbXEQHhkWJ8fWBj3BkKaZr3EQT9pwrSQhYf0g=;
+        b=YtYemB+ouTty70S4QpIHG+myx29twDxqxnTZUJFvkofojfymPemyjqUNscIbOjQ1ud
+         HvA43i9pcGvF1SoXF6dG8+52fciUDqwcqhHZ0qyU1455qudRKPwBvrIjXeHEmQgWXJwI
+         7KYUGP18a1zI2UBYyYo4a0/DdMbiCgCZZurjom266NMXI8BreHiZZxpuF8L05uM/FEH1
+         c0oS18K3GvSpG6eOcAuyOrMpQXiYeqBx6vkCYIPHvR8MJKiHLzLOvCN4b9yXfH+0/aVo
+         dIMhU0Sjy+kgjVCHXDkr9AMC4WNtyaRzJtqDO1MLKD6zF3kzPTRCuhSqo8JbHm5KPuyk
+         Ty3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=T8M3/jbbXEQHhkWJ8fWBj3BkKaZr3EQT9pwrSQhYf0g=;
+        b=dcec6SCaMOQAPskQR2hPyZl4g1lX6QeXrUC1yQxBJculVchPn6sIEYCwiudA6IIHYZ
+         YdEFeYLvmyjThSNuI4u2UV9xkQt3zcMzjdokf8M+EAEOl1aOc2EV0ReKV9oi/mTmDO4z
+         cOcPIi69pWRA5evNYG+K5+99SJE5WagDzIOvW0lTHQwoDcTaEtllPcepCF46RQiU69uQ
+         ICxMrYPAc1kps8LpQJx1olpi0965nMsE98BD5kcUzMRXazbPFi4gtuXIPNDciOFpaeIa
+         teMvikhCxrSc+wJWhBS4byNwunw6IcRMGAANnfAkhtDA/nuqGWcEssDYZNHqdBsvrmRi
+         LtaA==
+X-Gm-Message-State: ANhLgQ3ulVwnlHRQA2vlTu6aM9L0XFRrtnNbNH7M+/dSgh6jZXUojopR
+        8KLL7dlh8k/7gnGoYrCu4qa6a8zxFzGeQvJMpgd3Qg==
+X-Google-Smtp-Source: ADFU+vtug0RGpWjSmMn7rkWSctbfENbtHS5jZ40tTWcWx3iW7hWtZ7iTTQvrB3BM+Yy3IMEIEKH5EU5T8wlDC+4kcwM=
+X-Received: by 2002:a2e:b008:: with SMTP id y8mr10897462ljk.35.1583789358675;
+ Mon, 09 Mar 2020 14:29:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.168.201
-X-Source-L: No
-X-Exim-ID: 1jBOrx-000yAk-51
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.168.201]:22316
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 18
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <cover.1581555616.git.ashish.kalra@amd.com> <59ca3ae4ac03c43751ce4af5119ede548bb9e8e4.1581555616.git.ashish.kalra@amd.com>
+In-Reply-To: <59ca3ae4ac03c43751ce4af5119ede548bb9e8e4.1581555616.git.ashish.kalra@amd.com>
+From:   Steve Rutherford <srutherford@google.com>
+Date:   Mon, 9 Mar 2020 14:28:42 -0700
+Message-ID: <CABayD+f1Vk1YfpkZ7XXBpw5Z_kxzg1xb3zxtQGYaF4MbEQCT3w@mail.gmail.com>
+Subject: Re: [PATCH 01/12] KVM: SVM: Add KVM_SEV SEND_START command
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Wed, Feb 12, 2020 at 5:15 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+>
+> From: Brijesh Singh <brijesh.singh@amd.com>
+>
+> The command is used to create an outgoing SEV guest encryption context.
+>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Kr=C4=8Dm=C3=A1=C5=99" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  .../virt/kvm/amd-memory-encryption.rst        |  27 ++++
+>  arch/x86/kvm/svm.c                            | 125 ++++++++++++++++++
+>  include/linux/psp-sev.h                       |   8 +-
+>  include/uapi/linux/kvm.h                      |  12 ++
+>  4 files changed, 168 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documenta=
+tion/virt/kvm/amd-memory-encryption.rst
+> index d18c97b4e140..826911f41f3b 100644
+> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+> @@ -238,6 +238,33 @@ Returns: 0 on success, -negative on error
+>                  __u32 trans_len;
+>          };
+>
+> +10. KVM_SEV_SEND_START
+> +----------------------
+> +
+> +The KVM_SEV_SEND_START command can be used by the hypervisor to create a=
+n
+> +outgoing guest encryption context.
+> +
+> +Parameters (in): struct kvm_sev_send_start
+> +
+> +Returns: 0 on success, -negative on error
+> +
+> +::
+> +        struct kvm_sev_send_start {
+> +                __u32 policy;                 /* guest policy */
+> +
+> +                __u64 pdh_cert_uaddr;         /* platform Diffie-Hellman=
+ certificate */
+> +                __u32 pdh_cert_len;
+> +
+> +                __u64 plat_certs_uadr;        /* platform certificate ch=
+ain */
+> +                __u32 plat_certs_len;
+> +
+> +                __u64 amd_certs_uaddr;        /* AMD certificate */
+> +                __u32 amd_cert_len;
+> +
+> +                __u64 session_uaddr;          /* Guest session informati=
+on */
+> +                __u32 session_len;
+> +        };
+> +
+>  References
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index a3e32d61d60c..3a7e2cac51de 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -7140,6 +7140,128 @@ static int sev_launch_secret(struct kvm *kvm, str=
+uct kvm_sev_cmd *argp)
+>         return ret;
+>  }
+>
+> +/* Userspace wants to query session length. */
+> +static int
+> +__sev_send_start_query_session_length(struct kvm *kvm, struct kvm_sev_cm=
+d *argp,
+> +                                     struct kvm_sev_send_start *params)
+> +{
+> +       struct kvm_sev_info *sev =3D &to_kvm_svm(kvm)->sev_info;
+> +       struct sev_data_send_start *data;
+> +       int ret;
+> +
+> +       data =3D kzalloc(sizeof(*data), GFP_KERNEL_ACCOUNT);
+> +       if (data =3D=3D NULL)
+> +               return -ENOMEM;
+> +
+> +       data->handle =3D sev->handle;
+> +       ret =3D sev_issue_cmd(kvm, SEV_CMD_SEND_START, data, &argp->error=
+);
+> +
+> +       params->session_len =3D data->session_len;
+> +       if (copy_to_user((void __user *)(uintptr_t)argp->data, params,
+> +                               sizeof(struct kvm_sev_send_start)))
+> +               ret =3D -EFAULT;
+> +
+> +       kfree(data);
+> +       return ret;
+> +}
+> +
+> +static int sev_send_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> +{
+> +       struct kvm_sev_info *sev =3D &to_kvm_svm(kvm)->sev_info;
+> +       struct sev_data_send_start *data;
+> +       struct kvm_sev_send_start params;
+> +       void *amd_certs, *session_data;
+> +       void *pdh_cert, *plat_certs;
+> +       int ret;
+> +
+> +       if (!sev_guest(kvm))
+> +               return -ENOTTY;
+> +
+> +       if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
+> +                               sizeof(struct kvm_sev_send_start)))
+> +               return -EFAULT;
+> +
+> +       /* if session_len is zero, userspace wants t query the session le=
+ngth */
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+/t/to/
+>
+> +       if (!params.session_len)
+> +               return __sev_send_start_query_session_length(kvm, argp,
+> +                               &params);
+Document this behavior with the command.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+> +
+> +       /* some sanity checks */
+> +       if (!params.pdh_cert_uaddr || !params.pdh_cert_len ||
+> +           !params.session_uaddr || params.session_len > SEV_FW_BLOB_MAX=
+_SIZE)
+> +               return -EINVAL;
+> +
+> +       /* allocate the memory to hold the session data blob */
+> +       session_data =3D kmalloc(params.session_len, GFP_KERNEL_ACCOUNT);
+> +       if (!session_data)
+> +               return -ENOMEM;
+> +
+> +       /* copy the certificate blobs from userspace */
+> +       pdh_cert =3D psp_copy_user_blob(params.pdh_cert_uaddr,
+> +                               params.pdh_cert_len);
+> +       if (IS_ERR(pdh_cert)) {
+> +               ret =3D PTR_ERR(pdh_cert);
+> +               goto e_free_session;
+> +       }
+> +
+> +       plat_certs =3D psp_copy_user_blob(params.plat_certs_uaddr,
+> +                               params.plat_certs_len);
+> +       if (IS_ERR(plat_certs)) {
+> +               ret =3D PTR_ERR(plat_certs);
+> +               goto e_free_pdh;
+> +       }
+> +
+> +       amd_certs =3D psp_copy_user_blob(params.amd_certs_uaddr,
+> +                               params.amd_certs_len);
+> +       if (IS_ERR(amd_certs)) {
+> +               ret =3D PTR_ERR(amd_certs);
+> +               goto e_free_plat_cert;
+> +       }
+> +
+> +       data =3D kzalloc(sizeof(*data), GFP_KERNEL_ACCOUNT);
+> +       if (data =3D=3D NULL) {
+> +               ret =3D -ENOMEM;
+> +               goto e_free_amd_cert;
+> +       }
+> +
+> +       /* populate the FW SEND_START field with system physical address =
+*/
+> +       data->pdh_cert_address =3D __psp_pa(pdh_cert);
+> +       data->pdh_cert_len =3D params.pdh_cert_len;
+> +       data->plat_certs_address =3D __psp_pa(plat_certs);
+> +       data->plat_certs_len =3D params.plat_certs_len;
+> +       data->amd_certs_address =3D __psp_pa(amd_certs);
+> +       data->amd_certs_len =3D params.amd_certs_len;
+> +       data->session_address =3D __psp_pa(session_data);
+> +       data->session_len =3D params.session_len;
+> +       data->handle =3D sev->handle;
+> +
+> +       ret =3D sev_issue_cmd(kvm, SEV_CMD_SEND_START, data, &argp->error=
+);
+sev_issue_cmd can fail. I think you want to handle those errors here
+(e.g. it can return -ebadf or a number of others). Right now they
+could get clobbered by a later copy_to_user error.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+It's also worth documenting what the error argp->error is filled in
+with. I didn't see anything in the docs mentioning the status codes
+(may have missed it).
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+> +
+> +       if (copy_to_user((void __user *)(uintptr_t) params.session_uaddr,
+> +                       session_data, params.session_len)) {
+> +               ret =3D -EFAULT;
+> +               goto e_free;
+> +       }
+> +
+> +       params.policy =3D data->policy;
+> +       params.session_len =3D data->session_len;
+> +       if (copy_to_user((void __user *)(uintptr_t)argp->data, &params,
+> +                               sizeof(struct kvm_sev_send_start)))
+> +               ret =3D -EFAULT;
+> +
+> +e_free:
+> +       kfree(data);
+> +e_free_amd_cert:
+> +       kfree(amd_certs);
+> +e_free_plat_cert:
+> +       kfree(plat_certs);
+> +e_free_pdh:
+> +       kfree(pdh_cert);
+> +e_free_session:
+> +       kfree(session_data);
+> +       return ret;
+> +}
+> +
+>  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>         struct kvm_sev_cmd sev_cmd;
+> @@ -7181,6 +7303,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __u=
+ser *argp)
+>         case KVM_SEV_LAUNCH_SECRET:
+>                 r =3D sev_launch_secret(kvm, &sev_cmd);
+>                 break;
+> +       case KVM_SEV_SEND_START:
+> +               r =3D sev_send_start(kvm, &sev_cmd);
+> +               break;
+>         default:
+>                 r =3D -EINVAL;
+>                 goto out;
+> diff --git a/include/linux/psp-sev.h b/include/linux/psp-sev.h
+> index 5167bf2bfc75..9f63b9d48b63 100644
+> --- a/include/linux/psp-sev.h
+> +++ b/include/linux/psp-sev.h
+> @@ -323,11 +323,11 @@ struct sev_data_send_start {
+>         u64 pdh_cert_address;                   /* In */
+>         u32 pdh_cert_len;                       /* In */
+>         u32 reserved1;
+> -       u64 plat_cert_address;                  /* In */
+> -       u32 plat_cert_len;                      /* In */
+> +       u64 plat_certs_address;                 /* In */
+> +       u32 plat_certs_len;                     /* In */
+>         u32 reserved2;
+> -       u64 amd_cert_address;                   /* In */
+> -       u32 amd_cert_len;                       /* In */
+> +       u64 amd_certs_address;                  /* In */
+> +       u32 amd_certs_len;                      /* In */
+>         u32 reserved3;
+>         u64 session_address;                    /* In */
+>         u32 session_len;                        /* In/Out */
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 4b95f9a31a2f..17bef4c245e1 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1558,6 +1558,18 @@ struct kvm_sev_dbg {
+>         __u32 len;
+>  };
+>
+> +struct kvm_sev_send_start {
+> +       __u32 policy;
+> +       __u64 pdh_cert_uaddr;
+> +       __u32 pdh_cert_len;
+> +       __u64 plat_certs_uaddr;
+> +       __u32 plat_certs_len;
+> +       __u64 amd_certs_uaddr;
+> +       __u32 amd_certs_len;
+> +       __u64 session_uaddr;
+> +       __u32 session_len;
+> +};
+> +
+>  #define KVM_DEV_ASSIGN_ENABLE_IOMMU    (1 << 0)
+>  #define KVM_DEV_ASSIGN_PCI_2_3         (1 << 1)
+>  #define KVM_DEV_ASSIGN_MASK_INTX       (1 << 2)
+> --
+> 2.17.1
+>
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/overlayfs/overlayfs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
-index 8db6cf3ffc46..37a04e742603 100644
---- a/fs/overlayfs/overlayfs.h
-+++ b/fs/overlayfs/overlayfs.h
-@@ -87,7 +87,7 @@ struct ovl_fb {
- 	u8 flags;	/* OVL_FH_FLAG_* */
- 	u8 type;	/* fid_type of fid */
- 	uuid_t uuid;	/* uuid of filesystem */
--	u32 fid[0];	/* file identifier should be 32bit aligned in-memory */
-+	u32 fid[];	/* file identifier should be 32bit aligned in-memory */
- } __packed;
- 
- /* In-memory and on-wire format for overlay file handle */
--- 
-2.25.0
-
+Looks pretty reasonable overall.
