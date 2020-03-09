@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C7AC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BA7C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6578724656
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0535E24656
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHEMPvbK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWCaCqSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgCIVIx (ORCPT
+        id S1727104AbgCIVI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:08:53 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40125 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbgCIVIt (ORCPT
+        Mon, 9 Mar 2020 17:08:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46611 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbgCIVIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:08:49 -0400
-Received: by mail-wm1-f68.google.com with SMTP id e26so183624wme.5;
-        Mon, 09 Mar 2020 14:08:48 -0700 (PDT)
+        Mon, 9 Mar 2020 17:08:53 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n15so13014312wrw.13;
+        Mon, 09 Mar 2020 14:08:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eLh2NjBBYW6TYqNhJcIQ0RQRuYbC50iGuec37O254s8=;
-        b=IHEMPvbKnUsleIzdoSoZFrMQWswYVIjuah/8IwTbpGVRMaPdwVtA1vqpDTEOcZ52fx
-         VTpyLmPsMZLJxwVCQkb+q/qLkSheGc2Cy0G6y0XwoZGtnx/92GThEN3hRdBTVQzTx2AA
-         tKEFpEj8F+v8Yvvurw68sHOtIuMEk2siC963UIHT8RDi19hRE+IvzT2H6nbqblk+enHR
-         aM5HkXZhhqAwgEsoHTlecpMuIpvTSs7bhmnuGOVECa9cvdQ/r4okEO/hDf1pfpehUoD2
-         AzUxydEC7h3QgB+aCJaEZCF4Quq34HK0Ke4OqOZUNU7xJ5Bo6LNI8ENC2fh8ZyGfoXrb
-         dsPQ==
+        bh=kAEXGIBTihs2aEXLy+/u0H3T9UnyJrJyBGNNvIDBqSQ=;
+        b=TWCaCqSPmiFJmxJN3aCnLwv2ssaFFm8FOa/wqZJCht7oJDCzhqWxWQvZMp+qr/Rait
+         dNI9vOe3IBXvfj9BbQnNrXiFwacEQB6Jr94SD7J8TABorbw9SlGzwCm/u2qEm7PCn+SV
+         hBfbwPfyNKANya8pIjT4oHQwV6zLNgRAcYdEOXxhqHsYoCVrtqDA7OvN4vgVyiFgj11o
+         nmDgdETMu6lU0pPbWSjP2XsXZhLR4bWHm+HTfEK7pg5yobgJ60pxu6BmfqiNB48T7/HU
+         WxJ8Fh3+szMQwrChXAfUwnH+XVZ0rglHvMIlgypPpn6KgqEuAnKCLedhqpntKQliZB6t
+         l3CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=eLh2NjBBYW6TYqNhJcIQ0RQRuYbC50iGuec37O254s8=;
-        b=m8WyWcaAiF1VcBVvaaEfMIe+u9BQCNFqnNJmSv2iD+rnB35SrVHPiKXVBpuYO8FK+Q
-         1NrFa2/HMLycyCaQGnyFdtEHdNoEgBxyVC740dLzgNibiDAqfI1icvJ5HRrQOOKnG9nU
-         enWRhGW2Bxo3UjRH0ixzfmYCbHonbZgKTC7+6ssJvVdSbUc7B4QqEDgE5FpP+127wxDT
-         WRbfHJPPrW9sASnt3Z+sRRDCwrY2fQaQKk/d7lzakhJwNyEdkWyGxGaUYQO+72CDkE84
-         TBYLYL4RUOFprS961B+JoAQhcUN+xfZtsGcjx/JvKTviTTFfohtelc8kYN0+Is1wM8ux
-         gaIg==
-X-Gm-Message-State: ANhLgQ3MoEt76awpSdbz+Bas/mlrfGf3B5HULkAk+9ULPasiphRK5yv1
-        KnODOhlDtiy87tYxfCnGOVM=
-X-Google-Smtp-Source: ADFU+vshM4FweUMxojHm86q+HJsdfR7vuFXRu8RG9OkcUeW+Bk5di7fPA1Gg4k2UsvTTLYsyzOOYfQ==
-X-Received: by 2002:a1c:1d15:: with SMTP id d21mr1054476wmd.101.1583788127416;
-        Mon, 09 Mar 2020 14:08:47 -0700 (PDT)
+        bh=kAEXGIBTihs2aEXLy+/u0H3T9UnyJrJyBGNNvIDBqSQ=;
+        b=KJSUv4mQ6KbTPlwF6w0hwcCrcJ6py//iztGo8G0ZM0OsJEN4r3QipoTE8gqg+sYwqG
+         xpQeISBzr3IlOPOQuAhrUTYk+sRMSrz2LZdTWM6A1X4n38hCqmZwENyTmLG9wtNLl17J
+         YkY5HiI6mHR3fDx8f5FpvpMnT5disEK4XCVjjeNCNCRK+b7XbpFs74eIRmswJeY719+X
+         7Gi6J7VLwS6CGi/4dq+n8Lm/5HLO/r41Y8ujHT94762SOaAmyhGoxeILhWlz4hEAtf3G
+         zyRGxux/dlhV8HX/9K1n+fh1Ou3LSzX9xRJq0lWCwe+ROLhfPuYAIf0S9/f9k2f3jpii
+         fn0A==
+X-Gm-Message-State: ANhLgQ1F3LGCbSjEsajtLiDjjj57odWpfgUEXulI0eUcdm5sUyvrXnaB
+        fg2X4rtssL0UwvR1Q89n0hw=
+X-Google-Smtp-Source: ADFU+vs65US5DrN5du6jklN9RnuRrgYN46Sddnjqilsx4BlpkM4+fIUcFKk+y5w0p/LeO6uK722rZQ==
+X-Received: by 2002:a5d:5090:: with SMTP id a16mr20484540wrt.191.1583788131502;
+        Mon, 09 Mar 2020 14:08:51 -0700 (PDT)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id j205sm1016275wma.42.2020.03.09.14.08.46
+        by smtp.gmail.com with ESMTPSA id j205sm1016275wma.42.2020.03.09.14.08.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 14:08:46 -0700 (PDT)
+        Mon, 09 Mar 2020 14:08:51 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
         andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
         mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v2 3/6] spi: spi-fsl-dspi: Fix oper_word_size of zero for DMA mode
-Date:   Mon,  9 Mar 2020 23:07:52 +0200
-Message-Id: <20200309210755.6759-4-olteanv@gmail.com>
+Subject: [PATCH v2 6/6] arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
+Date:   Mon,  9 Mar 2020 23:07:55 +0200
+Message-Id: <20200309210755.6759-7-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200309210755.6759-1-olteanv@gmail.com>
 References: <20200309210755.6759-1-olteanv@gmail.com>
@@ -76,52 +76,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-In DMA mode, dspi_setup_accel does not get called, which results in the
-dspi->oper_word_size variable (which is used by dspi_dma_xfer) to not be
-initialized properly.
+For debugging, it is useful to have access to the DSPI controller
+signals. On the reference design board, these are exported to either the
+mikroBUS1 or mikroBUS2 connector (according to the CPLD register
+BRDCFG3[SPI3]).
 
-Because oper_word_size is zero, a few calculations end up being
-incorrect, and the DMA transfer eventually times out instead of sending
-anything on the wire.
-
-Set up native transfers (or 8-on-16 acceleration) using dspi_setup_accel
-for DMA mode too.
-
-Fixes: 6c1c26ecd9a3 ("spi: spi-fsl-dspi: Accelerate transfers using larger word size if possible")
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 Changes in v2:
-None.
+Change compatible string for spidev node.
 
- drivers/spi/spi-fsl-dspi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 0483abd403a4..43d2d9fc8b92 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -359,6 +359,8 @@ static void dspi_rx_dma_callback(void *arg)
- 	complete(&dma->cmd_rx_complete);
- }
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index bb7ba3bcbe56..13555ed52b89 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -83,6 +83,20 @@
+ 	};
+ };
  
-+static void dspi_setup_accel(struct fsl_dspi *dspi);
++&dspi2 {
++	bus-num = <2>;
++	status = "okay";
 +
- static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
- {
- 	struct device *dev = &dspi->pdev->dev;
-@@ -446,9 +448,10 @@ static int dspi_dma_xfer(struct fsl_dspi *dspi)
- 	int bytes_per_buffer;
- 	int ret = 0;
- 
-+	dspi_setup_accel(dspi);
++	/* mikroBUS1 */
++	spidev@0 {
++		compatible = "rohm,dh2228fv";
++		spi-max-frequency = <20000000>;
++		fsl,spi-cs-sck-delay = <100>;
++		fsl,spi-sck-cs-delay = <100>;
++		reg = <0>;
++	};
++};
 +
- 	curr_remaining_bytes = dspi->len;
--	bytes_per_buffer = dspi->devtype_data->dma_bufsize /
--			   dspi->devtype_data->fifo_size;
-+	bytes_per_buffer = dspi->devtype_data->dma_bufsize;
- 	while (curr_remaining_bytes) {
- 		/* Check if current transfer fits the DMA buffer */
- 		dma->curr_xfer_len = curr_remaining_bytes /
+ &esdhc {
+ 	sd-uhs-sdr104;
+ 	sd-uhs-sdr50;
 -- 
 2.17.1
 
