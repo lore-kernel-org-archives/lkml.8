@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510E3C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548B5C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C73D20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313FB20873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583780771;
-	bh=f6MknPqTnSgqIQA4Ugas/2n0Z0E4QRssBfssOC191vc=;
+	s=default; t=1583780774;
+	bh=/oos8J+i3ntj+Txbc6emeywBYOSpUHXDIMWYTHNE8ZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sWTozAiganGX4MNj/IpRYhuUWAWWxYOi8MjzHRp8o9Ui/VClSN8fkhb8EBwbqFfPx
-	 RxwwIlq5b5zDfJQ9iIIf00jA/gZ7n9C0e/+QmT8dqLDVVgHa9gR85NygV7O2+gqafR
-	 MSsGDv9F+vzoHx2lGMqi9W6/Fa23HWSJl/0vDqCQ=
+	b=sSnLztykItlKxX6iW8cU+wOh/zR4ooBrRgm2QIEXnReJ6lGJgB+RF1TAqJMXPv1zf
+	 1qANOdHrszSEQN3aAX6fyLZWT/ak8HvXlp+dQxjwd6yIfww9vWW+QVaDm1F2821wQS
+	 hwoQLOwJ+cF9oAKomrK6s36HG0tVF05iTc/ZyiHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgCITGJ (ORCPT
+        id S1727536AbgCITEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:06:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727466AbgCITEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Mar 2020 15:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727380AbgCITEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:04:23 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3A0A227BF;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B40720873;
         Mon,  9 Mar 2020 19:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583780663;
-        bh=f6MknPqTnSgqIQA4Ugas/2n0Z0E4QRssBfssOC191vc=;
+        s=default; t=1583780662;
+        bh=/oos8J+i3ntj+Txbc6emeywBYOSpUHXDIMWYTHNE8ZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n1FhMvHwY4JXV5uPFobiBB7+prpPnm4k+S3qGgGNPMSn07goyLj8sNhpJNytIQ233
-         1RIU1t9HyGblBzRz83xM0T3B5p4iv2AO1V/dJMT7EoMdY96sU9lVjhX4Nh375nIQoe
-         fHzcbcr3dx1YR5sdGfTcDi2O1aNbcuipm9GQRxvI=
+        b=jocnfW4ZEKe4v6aH8Ypu1rve6o/P+ZYx15ebIrdG2y3w7yGivR8aYRMo5gYapI5aW
+         F28h6hbG8e3ICUKi2Ux7FQXR/sB8f3DgE6mN9IKdMkr0kjDhdKyGaFr1YqzRldX2TD
+         n6Kes/xh7WqzuiTJ1543FRwJZleAPuT86iYg/vdI=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
         dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH kcsan 04/32] kcsan: Make KCSAN compatible with lockdep
-Date:   Mon,  9 Mar 2020 12:03:52 -0700
-Message-Id: <20200309190420.6100-4-paulmck@kernel.org>
+Subject: [PATCH kcsan 01/32] kcsan: Prefer __always_inline for fast-path
+Date:   Mon,  9 Mar 2020 12:03:49 -0700
+Message-Id: <20200309190420.6100-1-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200309190359.GA5822@paulmck-ThinkPad-P72>
 References: <20200309190359.GA5822@paulmck-ThinkPad-P72>
@@ -58,132 +58,136 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marco Elver <elver@google.com>
 
-We must avoid any recursion into lockdep if KCSAN is enabled on utilities
-used by lockdep. One manifestation of this is corruption of lockdep's
-IRQ trace state (if TRACE_IRQFLAGS), resulting in spurious warnings
-(see below).  This commit fixes this by:
+Prefer __always_inline for fast-path functions that are called outside
+of user_access_save, to avoid generating UACCESS warnings when
+optimizing for size (CC_OPTIMIZE_FOR_SIZE). It will also avoid future
+surprises with compiler versions that change the inlining heuristic even
+when optimizing for performance.
 
-1. Using raw_local_irq{save,restore} in kcsan_setup_watchpoint().
-2. Disabling lockdep in kcsan_report().
-
-Tested with:
-
-  CONFIG_LOCKDEP=y
-  CONFIG_DEBUG_LOCKDEP=y
-  CONFIG_TRACE_IRQFLAGS=y
-
-This fix eliminates spurious warnings such as the following one:
-
-    WARNING: CPU: 0 PID: 2 at kernel/locking/lockdep.c:4406 check_flags.part.0+0x101/0x220
-    Modules linked in:
-    CPU: 0 PID: 2 Comm: kthreadd Not tainted 5.5.0-rc1+ #11
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-    RIP: 0010:check_flags.part.0+0x101/0x220
-    <snip>
-    Call Trace:
-     lock_is_held_type+0x69/0x150
-     freezer_fork+0x20b/0x370
-     cgroup_post_fork+0x2c9/0x5c0
-     copy_process+0x2675/0x3b40
-     _do_fork+0xbe/0xa30
-     ? _raw_spin_unlock_irqrestore+0x40/0x50
-     ? match_held_lock+0x56/0x250
-     ? kthread_park+0xf0/0xf0
-     kernel_thread+0xa6/0xd0
-     ? kthread_park+0xf0/0xf0
-     kthreadd+0x321/0x3d0
-     ? kthread_create_on_cpu+0x130/0x130
-     ret_from_fork+0x3a/0x50
-    irq event stamp: 64
-    hardirqs last  enabled at (63): [<ffffffff9a7995d0>] _raw_spin_unlock_irqrestore+0x40/0x50
-    hardirqs last disabled at (64): [<ffffffff992a96d2>] kcsan_setup_watchpoint+0x92/0x460
-    softirqs last  enabled at (32): [<ffffffff990489b8>] fpu__copy+0xe8/0x470
-    softirqs last disabled at (30): [<ffffffff99048939>] fpu__copy+0x69/0x470
-
-Reported-by: Qian Cai <cai@lca.pw>
+Report: http://lkml.kernel.org/r/58708908-84a0-0a81-a836-ad97e33dbb62@infradead.org
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 Signed-off-by: Marco Elver <elver@google.com>
-Acked-by: Alexander Potapenko <glider@google.com>
-Tested-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/kcsan/core.c     |  6 ++++--
- kernel/kcsan/report.c   | 11 +++++++++++
- kernel/locking/Makefile |  3 +++
- 3 files changed, 18 insertions(+), 2 deletions(-)
+ kernel/kcsan/atomic.h   |  2 +-
+ kernel/kcsan/core.c     | 18 +++++++++---------
+ kernel/kcsan/encoding.h | 14 +++++++-------
+ 3 files changed, 17 insertions(+), 17 deletions(-)
 
+diff --git a/kernel/kcsan/atomic.h b/kernel/kcsan/atomic.h
+index 576e03d..a9c1930 100644
+--- a/kernel/kcsan/atomic.h
++++ b/kernel/kcsan/atomic.h
+@@ -18,7 +18,7 @@
+  * than cast to volatile. Eventually, we hope to be able to remove this
+  * function.
+  */
+-static inline bool kcsan_is_atomic(const volatile void *ptr)
++static __always_inline bool kcsan_is_atomic(const volatile void *ptr)
+ {
+ 	/* only jiffies for now */
+ 	return ptr == &jiffies;
 diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 87bf857..64b30f7 100644
+index 3314fc2..4d4ab5c 100644
 --- a/kernel/kcsan/core.c
 +++ b/kernel/kcsan/core.c
-@@ -336,8 +336,10 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	 *      CPU-local data accesses), it makes more sense (from a data race
- 	 *      detection point of view) to simply disable preemptions to ensure
- 	 *      as many tasks as possible run on other CPUs.
-+	 *
-+	 * Use raw versions, to avoid lockdep recursion via IRQ flags tracing.
- 	 */
--	local_irq_save(irq_flags);
-+	raw_local_irq_save(irq_flags);
+@@ -78,10 +78,10 @@ static atomic_long_t watchpoints[CONFIG_KCSAN_NUM_WATCHPOINTS + NUM_SLOTS-1];
+  */
+ static DEFINE_PER_CPU(long, kcsan_skip);
  
- 	watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
- 	if (watchpoint == NULL) {
-@@ -429,7 +431,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 
- 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
- out_unlock:
--	local_irq_restore(irq_flags);
-+	raw_local_irq_restore(irq_flags);
- out:
- 	user_access_restore(ua_flags);
- }
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index b5b4fee..33bdf8b 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -2,6 +2,7 @@
- 
- #include <linux/jiffies.h>
- #include <linux/kernel.h>
-+#include <linux/lockdep.h>
- #include <linux/preempt.h>
- #include <linux/printk.h>
- #include <linux/sched.h>
-@@ -410,6 +411,14 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
+-static inline atomic_long_t *find_watchpoint(unsigned long addr,
+-					     size_t size,
+-					     bool expect_write,
+-					     long *encoded_watchpoint)
++static __always_inline atomic_long_t *find_watchpoint(unsigned long addr,
++						      size_t size,
++						      bool expect_write,
++						      long *encoded_watchpoint)
  {
- 	unsigned long flags = 0;
- 
-+	/*
-+	 * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
-+	 * we do not turn off lockdep here; this could happen due to recursion
-+	 * into lockdep via KCSAN if we detect a data race in utilities used by
-+	 * lockdep.
-+	 */
-+	lockdep_off();
-+
- 	kcsan_disable_current();
- 	if (prepare_report(&flags, ptr, size, access_type, cpu_id, type)) {
- 		if (print_report(ptr, size, access_type, value_change, cpu_id, type) && panic_on_warn)
-@@ -418,4 +427,6 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 		release_report(&flags, type);
- 	}
- 	kcsan_enable_current();
-+
-+	lockdep_on();
+ 	const int slot = watchpoint_slot(addr);
+ 	const unsigned long addr_masked = addr & WATCHPOINT_ADDR_MASK;
+@@ -146,7 +146,7 @@ insert_watchpoint(unsigned long addr, size_t size, bool is_write)
+  *	2. the thread that set up the watchpoint already removed it;
+  *	3. the watchpoint was removed and then re-used.
+  */
+-static inline bool
++static __always_inline bool
+ try_consume_watchpoint(atomic_long_t *watchpoint, long encoded_watchpoint)
+ {
+ 	return atomic_long_try_cmpxchg_relaxed(watchpoint, &encoded_watchpoint, CONSUMED_WATCHPOINT);
+@@ -160,7 +160,7 @@ static inline bool remove_watchpoint(atomic_long_t *watchpoint)
+ 	return atomic_long_xchg_relaxed(watchpoint, INVALID_WATCHPOINT) != CONSUMED_WATCHPOINT;
  }
-diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
-index 45452fa..6d11cfb 100644
---- a/kernel/locking/Makefile
-+++ b/kernel/locking/Makefile
-@@ -5,6 +5,9 @@ KCOV_INSTRUMENT		:= n
  
- obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
+-static inline struct kcsan_ctx *get_ctx(void)
++static __always_inline struct kcsan_ctx *get_ctx(void)
+ {
+ 	/*
+ 	 * In interrupts, use raw_cpu_ptr to avoid unnecessary checks, that would
+@@ -169,7 +169,7 @@ static inline struct kcsan_ctx *get_ctx(void)
+ 	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
+ }
  
-+# Avoid recursion lockdep -> KCSAN -> ... -> lockdep.
-+KCSAN_SANITIZE_lockdep.o := n
-+
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_lockdep.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_lockdep_proc.o = $(CC_FLAGS_FTRACE)
+-static inline bool is_atomic(const volatile void *ptr)
++static __always_inline bool is_atomic(const volatile void *ptr)
+ {
+ 	struct kcsan_ctx *ctx = get_ctx();
+ 
+@@ -193,7 +193,7 @@ static inline bool is_atomic(const volatile void *ptr)
+ 	return kcsan_is_atomic(ptr);
+ }
+ 
+-static inline bool should_watch(const volatile void *ptr, int type)
++static __always_inline bool should_watch(const volatile void *ptr, int type)
+ {
+ 	/*
+ 	 * Never set up watchpoints when memory operations are atomic.
+@@ -226,7 +226,7 @@ static inline void reset_kcsan_skip(void)
+ 	this_cpu_write(kcsan_skip, skip_count);
+ }
+ 
+-static inline bool kcsan_is_enabled(void)
++static __always_inline bool kcsan_is_enabled(void)
+ {
+ 	return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
+ }
+diff --git a/kernel/kcsan/encoding.h b/kernel/kcsan/encoding.h
+index b63890e8..f03562a 100644
+--- a/kernel/kcsan/encoding.h
++++ b/kernel/kcsan/encoding.h
+@@ -59,10 +59,10 @@ encode_watchpoint(unsigned long addr, size_t size, bool is_write)
+ 		      (addr & WATCHPOINT_ADDR_MASK));
+ }
+ 
+-static inline bool decode_watchpoint(long watchpoint,
+-				     unsigned long *addr_masked,
+-				     size_t *size,
+-				     bool *is_write)
++static __always_inline bool decode_watchpoint(long watchpoint,
++					      unsigned long *addr_masked,
++					      size_t *size,
++					      bool *is_write)
+ {
+ 	if (watchpoint == INVALID_WATCHPOINT ||
+ 	    watchpoint == CONSUMED_WATCHPOINT)
+@@ -78,13 +78,13 @@ static inline bool decode_watchpoint(long watchpoint,
+ /*
+  * Return watchpoint slot for an address.
+  */
+-static inline int watchpoint_slot(unsigned long addr)
++static __always_inline int watchpoint_slot(unsigned long addr)
+ {
+ 	return (addr / PAGE_SIZE) % CONFIG_KCSAN_NUM_WATCHPOINTS;
+ }
+ 
+-static inline bool matching_access(unsigned long addr1, size_t size1,
+-				   unsigned long addr2, size_t size2)
++static __always_inline bool matching_access(unsigned long addr1, size_t size1,
++					    unsigned long addr2, size_t size2)
+ {
+ 	unsigned long end_range1 = addr1 + size1 - 1;
+ 	unsigned long end_range2 = addr2 + size2 - 1;
 -- 
 2.9.5
 
