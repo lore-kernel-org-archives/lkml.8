@@ -2,69 +2,70 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A831C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D46C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A6D24654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65F0924655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:42:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GhoRijdR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EMrra8Ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgCIXmW (ORCPT
+        id S1727474AbgCIXma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:42:22 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:38935 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgCIXmW (ORCPT
+        Mon, 9 Mar 2020 19:42:30 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:38602 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbgCIXma (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 19:42:22 -0400
-Received: by mail-ua1-f66.google.com with SMTP id o16so1201014uap.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:42:20 -0700 (PDT)
+        Mon, 9 Mar 2020 19:42:30 -0400
+Received: by mail-ua1-f67.google.com with SMTP id y3so4012333uaq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:42:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cL60yvqP17+87Rab6fvAhdcpzTiQp9Hyy7OzdcPOYHM=;
-        b=GhoRijdRaItCIr5f5A+ZVc0Iiqe03XDUV1BOqHP+FAq9KrAxzS07U/WDD+UXQDiAQM
-         uhQUfvip86VgSl6LDWkiNDIvC+ThokPCOM7iauHtXgrs/G+7NgvZOo7d5bvCfMD9c0kk
-         UCvfmAhqwMJM47jGn681VBMy+caXQQVqXwFA0=
+        bh=HbFlXIeA0nZ82kqTFusW9Y5ddM630bUBZPbaTnSWK9Q=;
+        b=EMrra8TaXWr/XpsjFWwAXJ9M92aRqXDRr5qcC8JIRzVmcEK13C29b79SejteQwZFSv
+         KyRd3SxhqJinTM29vmxs9cL6TpTO+mZPsKy7TfCdcle2Ekttc3FrSeII9T2wZ6/knwXv
+         3y6ciY0SDUjk+wP55PranRh+l1WBiTPSuAscc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cL60yvqP17+87Rab6fvAhdcpzTiQp9Hyy7OzdcPOYHM=;
-        b=jICT07Zttt4wgBK2H44k/JItxKaJOKnnq/iyBYz/A92GKFc25dltuzOWtE/gM47Jls
-         /jn/OjaUlSUDWF4IJFe2dx/CIegWcbpIcd0iDM5pdhAMaAjY/Tjs+5/UHAMC+ijTNn1o
-         49ywl6GH/xxN53DskgLY1bnbt7bmn5JSjk1LO+7gCsq2X/RcNaS34r9m5UgO+u/Bx+5q
-         pqqD1oO9ydTZfIJIhtaxe+UosQtEcac9cGJMRoGtq5jQpiFtNbfAvbcCqvzVQMvQ2Dw5
-         D18DHsqljJkgee3R0rYvsKIe0LDBIoMHuhugoOS6EQr9XTlMKqshA2U8HxGp4cxWczI3
-         Qrlw==
-X-Gm-Message-State: ANhLgQ2U0f1MT0XozwVVWO8y5HzP7+kvlydnnc8RXBU0fiCksUUY5YKE
-        B712dt3IYs2D1Puq/y3he6QX4mbaBPg=
-X-Google-Smtp-Source: ADFU+vunLklMdJ0Kw/Sxpl0w441d+BNX/Jyhp0qxXcIgzqf0Kp1c7S7r7Af/LsevajzvtSDmDwiIig==
-X-Received: by 2002:ab0:2a1a:: with SMTP id o26mr10476401uar.62.1583797339987;
-        Mon, 09 Mar 2020 16:42:19 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id k6sm10643053vsc.26.2020.03.09.16.42.18
+        bh=HbFlXIeA0nZ82kqTFusW9Y5ddM630bUBZPbaTnSWK9Q=;
+        b=oJybNvM8uslhoribO5dqn9n2mPr7VcCKefH+urJayJLOqQblYMihzimeBkzSq0oD8k
+         XmQrdFzogWSIx23kAls8Y/CbNNeMMUeYI+A6IPqlC6mIBVpLpz0ABijH+70w0trpWW9p
+         k92w1DjK6SEy7sC9ctShYkDQ3w2PBdJ06KohQDv9oQ/8BpPFsi8bUD/m3rw2FU0UvkPc
+         iYEq5YOtZRK4OyqoQjyHZNXhQeEPAwFLPEiyN7KU9luCXeqvDwYFBfpnvaYaf07czuwq
+         icAu4vCyE74XzfqysIhIdZNcFy8Ee+hRT5jymouaEdbEjKsynH763P7unhjKXLmALP2U
+         hw/g==
+X-Gm-Message-State: ANhLgQ1wpllD7iL5mhU+5T9e4UwVpAEyhqMH48IUtIPtIxhGZ8clTT9H
+        r7XYpEGfzLMcqFlKOa3M7anPx6c/mwE=
+X-Google-Smtp-Source: ADFU+vsEGkj1yjCbmiBmxAV/bi0D1wjiSylajiryvsM3R5nHjDyfrrRzTtFyFpsGLjfvQ7scWCwx2Q==
+X-Received: by 2002:ab0:44e4:: with SMTP id n91mr4670593uan.88.1583797348257;
+        Mon, 09 Mar 2020 16:42:28 -0700 (PDT)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id m11sm12853911vkm.52.2020.03.09.16.42.27
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 16:42:18 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id g21so1633773uaj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:42:18 -0700 (PDT)
-X-Received: by 2002:ab0:a90:: with SMTP id d16mr6178141uak.22.1583797338104;
- Mon, 09 Mar 2020 16:42:18 -0700 (PDT)
+        Mon, 09 Mar 2020 16:42:27 -0700 (PDT)
+Received: by mail-ua1-f50.google.com with SMTP id d19so3997010uak.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:42:27 -0700 (PDT)
+X-Received: by 2002:a9f:2478:: with SMTP id 111mr3162014uaq.0.1583797346690;
+ Mon, 09 Mar 2020 16:42:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
+References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org> <1583746236-13325-3-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1583746236-13325-3-git-send-email-mkshah@codeaurora.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 9 Mar 2020 16:42:06 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WBCaRhnMenyxg3-j2G2xgB9jebhe2pyh=6pzrq=JCbMg@mail.gmail.com>
-Message-ID: <CAD=FV=WBCaRhnMenyxg3-j2G2xgB9jebhe2pyh=6pzrq=JCbMg@mail.gmail.com>
-Subject: Re: [PATCH v13 0/4] Invoke rpmh_flush for non OSI targets
+Date:   Mon, 9 Mar 2020 16:42:15 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X9BFJZtgmVeDpr1mCP1C5kg9+3gQo2i5RMfBuQOVMkDg@mail.gmail.com>
+Message-ID: <CAD=FV=X9BFJZtgmVeDpr1mCP1C5kg9+3gQo2i5RMfBuQOVMkDg@mail.gmail.com>
+Subject: Re: [PATCH v13 2/5] soc: qcom: rpmh: Update dirty flag only when data changes
 To:     Maulik Shah <mkshah@codeaurora.org>
 Cc:     Stephen Boyd <swboyd@chromium.org>,
         Matthias Kaehlcke <mka@chromium.org>,
@@ -85,91 +86,21 @@ Hi,
 
 On Mon, Mar 9, 2020 at 2:31 AM Maulik Shah <mkshah@codeaurora.org> wrote:
 >
-> Changes in v13:
-> - Address Stephen's comment to maintain COMPILE_TEST
-> - Address Doug's comments and add new APIs for start and end transaction
+> Currently rpmh ctrlr dirty flag is set for all cases regardless of data
+> is really changed or not. Add changes to update dirty flag when data is
+> changed to newer values. Update dirty flag everytime when data in batch
+> cache is updated since rpmh_flush() may get invoked from any CPU instead
+> of only last CPU going to low power mode.
 >
-> Changes in v12:
-> - Kconfig change to remove COMPILE_TEST was dropped in v11, reinclude it.
+> Also move dirty flag updates to happen from within cache_lock and remove
+> unnecessary INIT_LIST_HEAD() call and a default case from switch.
 >
-> Changes in v11:
-> - Address Doug's comments on change 2 and 3
-> - Include change to invalidate TCSes before flush from [4]
->
-> Changes in v10:
-> - Address Evan's comments to update commit message on change 2
-> - Add Evan's Reviewed by on change 2
-> - Remove comment from rpmh_flush() related to last CPU invoking it
-> - Rebase all changes on top of next-20200302
->
-> Changes in v9:
-> - Keep rpmh_flush() to invoke from within cache_lock
-> - Remove comments related to only last cpu invoking rpmh_flush()
->
-> Changes in v8:
-> - Address Stephen's comments on changes 2 and 3
-> - Add Reviewed by from Stephen on change 1
->
-> Changes in v7:
-> - Address Srinivas's comments to update commit text
-> - Add Reviewed by from Srinivas
->
-> Changes in v6:
-> - Drop 1 & 2 changes from v5 as they already landed in maintainer tree
-> - Drop 3 & 4 changes from v5 as no user at present for power domain in rsc
-> - Rename subject to appropriate since power domain changes are dropped
-> - Rebase other changes on top of next-20200221
->
-> Changes in v5:
-> - Add Rob's Acked by on dt-bindings change
-> - Drop firmware psci change
-> - Update cpuidle stats in dtsi to follow PC mode
-> - Include change to update dirty flag when data is updated from [4]
-> - Add change to invoke rpmh_flush when caches are dirty
->
-> Changes in v4:
-> - Add change to allow hierarchical topology in PC mode
-> - Drop hierarchical domain idle states converter from v3
-> - Address Merge sc7180 dtsi change to add low power modes
->
-> Changes in v3:
-> - Address Rob's comment on dt property value
-> - Address Stephen's comments on rpmh-rsc driver change
-> - Include sc7180 cpuidle low power mode changes from [1]
-> - Include hierarchical domain idle states converter change from [2]
->
-> Changes in v2:
-> - Add Stephen's Reviewed-By to the first three patches
-> - Addressed Stephen's comments on fourth patch
-> - Include changes to connect rpmh domain to cpuidle and genpds
->
-> Resource State Coordinator (RSC) is responsible for powering off/lowering
-> the requirements from CPU subsystem for the associated hardware like buses,
-> clocks, and regulators when all CPUs and cluster is powered down.
->
-> RSC power domain uses last-man activities provided by genpd framework based
-> on Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest
-> idle states. As a part of domain poweroff, RSC can lower resource state
-> requirements by flushing the cached sleep and wake state votes for various
-> resources.
->
-> [1] https://patchwork.kernel.org/patch/11218965
-> [2] https://patchwork.kernel.org/patch/10941671
-> [3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
-> [4] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=236503
->
-> Maulik Shah (3):
->   arm64: dts: qcom: sc7180: Add cpuidle low power states
->   soc: qcom: rpmh: Update dirty flag only when data changes
->   soc: qcom: rpmh: Invoke rpmh_flush for dirty caches
->
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
->  drivers/soc/qcom/rpmh.c              | 27 ++++++++++---
->  2 files changed, 100 insertions(+), 5 deletions(-)
+> Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+> ---
+>  drivers/soc/qcom/rpmh.c | 19 +++++++++++--------
+>  1 file changed, 11 insertions(+), 8 deletions(-)
 
-Did you happen to get a chance to test your patch against my cleanup /
-documentation patch?  AKA:
-
-https://lore.kernel.org/r/20200306235951.214678-1-dianders@chromium.org
-
--Doug
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
