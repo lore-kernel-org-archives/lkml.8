@@ -2,70 +2,88 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1469FC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03092C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E2F24649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:27:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583792859;
-	bh=SCrGQrtiQbHdndUvuWPRISRmR7N42dZ8DlMegyW5Wb0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=I9ysxlyOFfVR0BdbIJb9YQy5iFwMYCVaNT6USgAi73cF946aFq+z2mt4SR34Pwwlt
-	 z5cGGF15uCwbhzP67ibTv5ZUET/plMfikxeWirUjB+v5nlCuoBKZSwfkTgGoCizfdR
-	 A0Aog01uNDKZvpytoQmbAnHYIw2+ToXjGMkxMAvc=
+	by mail.kernel.org (Postfix) with ESMTP id B162C24649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:28:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HPwbrRK+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgCIW1i (ORCPT
+        id S1727317AbgCIW2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59482 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 18:28:14 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39791 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbgCIW1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:27:38 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727262AbgCIW2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 18:28:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B235024649;
-        Mon,  9 Mar 2020 22:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583792857;
-        bh=SCrGQrtiQbHdndUvuWPRISRmR7N42dZ8DlMegyW5Wb0=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=BACj3hfXpP29ednM4WvWuZsjYimfdeu/+LpcCFZUEi6sXMqZ0ACvFAVcUSp5EKgPY
-         t7DWiIAgQ3EnGzN62zJOmAEkygGXIPFq3ybmIEuZ1xSfPY5aMm6ROPBf1QlfvbhRjY
-         xcBY8ibee4+r8qYWlRYtvc4dR/F2+QggekF8a2fo=
-Content-Type: text/plain; charset="utf-8"
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48btCb69vsz9sPF;
+        Tue, 10 Mar 2020 09:28:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583792891;
+        bh=u1UxQdSuypNkAJOG3qMHitNN1nWBfFBDr66nW58kTKk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HPwbrRK+ZCIzra+AJhCvXD6vaAMFTuxfnTA1FLCPrdVE/ig3HH0OKxn2dezmlbT4P
+         FWqJmpSPq1KPOq8TZo0DILi8NR/itGFM3bxVuyRLEcvmIXPgVODxpJ5SYMbaZY87ue
+         nva/Cj9W0OQueN/qklNdIwmy9Phkpg9r16YEtJdvPCW+jWmeWtxb30PdB3/DhGZQLD
+         7FXr8kwWRDUaMFP8nIQRxcqZUf6nABp3YY78oP35KyupPnE8ND6BQV+4SitT/R+K7p
+         RxYlYpvcUZxcwsh4PEBpZAzpO15PE31ObYaB4yXrDsNzSjWlJOtKtEOc+3+e784aWJ
+         eD3u0SO32vgzA==
+Date:   Tue, 10 Mar 2020 09:28:05 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steve French <smfrench@gmail.com>,
+        CIFS <linux-cifs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the cifs tree
+Message-ID: <20200310092805.7c37c3c1@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200228203611.15507-1-dinguyen@kernel.org>
-References: <20200228203611.15507-1-dinguyen@kernel.org>
-Subject: Re: [PATCH] clk: socfpga: stratix10: use new parent data scheme
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     dinguyen@kernel.org, mturquette@baylibre.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Date:   Mon, 09 Mar 2020 15:27:36 -0700
-Message-ID: <158379285687.149997.12928033376494434912@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: multipart/signed; boundary="Sig_/GODDuKGEfgBSeGe8GXZWyCE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Dinh Nguyen (2020-02-28 12:36:11)
-> +
-> +static const struct clk_parent_data mpu_free_mux[] =3D {
-> +       { .name =3D "main_mpu_base_clk", },
-> +       { .name =3D "peri_mpu_base_clk", },
-> +       { .name =3D "osc1", },
-> +       { .name =3D "cb-intosc-hs-div2-clk", },
-> +       { .name =3D "f2s-free-clk", },
-> +};
+--Sig_/GODDuKGEfgBSeGe8GXZWyCE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-While this changes everything to use the new way it doesn't actually
-migrate anything over to using direct pointers or the .fw_name field.
-What's going on?
+Hi all,
+
+Commit
+
+  91737cf1a418 ("cifs: smb2pdu.h: Replace zero-length array with flexible-a=
+rray member")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/GODDuKGEfgBSeGe8GXZWyCE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5mwvUACgkQAVBC80lX
+0GzEuAf+LwplOvjSFlFkVRWU8Pn6GtgzZS8ccV4wtcZe70pUPRIuBYlFtXiPJWaH
+L2VAwH16LcOrlWPu9LF+5AacyRfeCwLetUcBL2HCD3QM4tyekhALpfFJrsnbferO
+My4IatYD3cRUkxakJF0A/UDyXR6UcgfI7Hye50ZP4IysLeBQoYLqS9Oo3D/T7V0E
+C3iaZR9SWu0dWwRTH9F2YhgZybaCPXHgy5mnv96cltnoI663O6hQfaUxmSOSgooq
+9U1c4f+EI18TBhsbTaVGrcPOLc1V/v6iPIjWYXe15bcWdp9fnwKyIou/ShlU8l2j
+XvxLlE0dLpxOnczswlgZo9NuboTi3w==
+=WmkY
+-----END PGP SIGNATURE-----
+
+--Sig_/GODDuKGEfgBSeGe8GXZWyCE--
