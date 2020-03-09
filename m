@@ -2,187 +2,129 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEAAC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91349C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03B320578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6913C20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iIu0nzZf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="buYf55WK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbgCISIO (ORCPT
+        id S1727323AbgCISJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:08:14 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44020 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgCISIN (ORCPT
+        Mon, 9 Mar 2020 14:09:09 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.5]:18642 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726169AbgCISJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:08:13 -0400
-Received: by mail-ed1-f68.google.com with SMTP id dc19so13082375edb.10;
-        Mon, 09 Mar 2020 11:08:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xAWa2cojuZkkGnmDvcA+gmAfwBz3OdVObOaJQDP8T4g=;
-        b=iIu0nzZfM3wH8tw+fsFro5LJ1HPa3xAzCcNtbj0mFuJVKTaEfOj8B5t9AXTp+LEW1d
-         tlke81LqfThGLCNhwGXS+KFgIiwv3tTyMzIhEBuuKH4F6HG0eGUNI89l/NZr1819sutd
-         Sbsk94FsIFXmen/0TsWOg4qbSxPaGXIOcwitspxSHXBaMRotdlcX5T66VRPHAI96iJif
-         NbM8UoVGVmsAGBvBzHdBiZWCZ9lrCOUxgnFbHxPHGZqP+vAu8IZ8A+iI8YhNkdaTDQqv
-         4TduZYrv8zf+AFMwtBiB0pJuRNPHvN03S1lcxxKySo4BQVPYU1qcYok1skIsajBEfqNJ
-         HwrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xAWa2cojuZkkGnmDvcA+gmAfwBz3OdVObOaJQDP8T4g=;
-        b=JNtsHOC0g8eEirRzu0XEJSKyKj/DRtXXpWoKZA6ZcwJ44uG7X2P/ahV1NkrUTH/uJc
-         /Dr1o792kd04davweeojZKKH524LNO6GgHi6Cqd03m61xLGyrgWED9G0KBlekV+mW+eS
-         La9r36qZYn3l2lBw+dkR0BR8PSd/E8uOiQ35GOjGeJbhZQ9DIVbXBPFpKUosAocYwHdA
-         MfXUlE8pBzVxPkMXgCJ7GVmOrDzsBoe9uId8trcvv64S138q05kbU2sAfRsK8xORvKhM
-         5jYTytukJUxHEwwylRg+ys+AZi5VmznByxxqHyUb2IqTwTwyENYpEXLRMs9XcPZU4vd6
-         DT3A==
-X-Gm-Message-State: ANhLgQ2jikGJd3iK1JqZW6YcJtjPJqpxWOzTmTjM//5DmNdyKXeoFw9d
-        Yvsef821JtSaHt5Ch9t2C73t4VlH7DqhE3AG1nM=
-X-Google-Smtp-Source: ADFU+vttptWy4cBLrBdcelMJhEwZiMA6bIS4p+vofMgcfm26uIq3xNqtOSz408lYuci0Vvqebjl057sw1BLGVTbBlQ8=
-X-Received: by 2002:a17:906:76c6:: with SMTP id q6mr15596211ejn.176.1583777289739;
- Mon, 09 Mar 2020 11:08:09 -0700 (PDT)
+        Mon, 9 Mar 2020 14:09:08 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 112A64A81D1
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 13:09:08 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BMpvjWgDWAGTXBMpwjySRv; Mon, 09 Mar 2020 13:09:08 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=VaFeJjrfVfGbP6nC6hR/+viONEvctW389EGllFCxNwA=; b=buYf55WK6wJoaFmjmzJEPQYS0e
+        K5qYs4LxuKVnFZ+Gew78N9Lk/o9q9ikGI1lvR+8mJmjrfV6aZ+rELNG2m4Ywf2HaF4P3iNrq3OS1U
+        KMd6f1Dg0UPjnWm9WKNkR00+f0RtetxV0Pdw4tdmirNNofrXvJe5lX0M0nLiVRLi0wmevsBeUWDaC
+        7rmpd1HdMxHgEvW6EMhzDpqHTXwvlDE+3khTn01oqOTBtJjnq4e72+GsL2bdO/yGVDZR0mKWeXG35
+        y13XWAyn616nmACgmDK7UXagQWiOmqWcOocLLr6uVatZlCYCrszASmVqoeM5X2AU27bOsR1XgtKGm
+        IveJNKRw==;
+Received: from [201.162.240.150] (port=6525 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBMpu-004F5Y-70; Mon, 09 Mar 2020 13:09:06 -0500
+Date:   Mon, 9 Mar 2020 13:12:18 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] hfs: btree.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200309181218.GA3726@embeddedor>
 MIME-Version: 1.0
-References: <20200309145624.10026-1-olteanv@gmail.com> <20200309145624.10026-3-olteanv@gmail.com>
- <d8e39e402328b962cdbc25316a27eac8@walle.cc>
-In-Reply-To: <d8e39e402328b962cdbc25316a27eac8@walle.cc>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 9 Mar 2020 20:07:58 +0200
-Message-ID: <CA+h21hp4vC1c00rCgZo_hwQz3cE4dLBHjcgTHvf-+fS9a9VfxQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] spi: spi-fsl-dspi: Fix little endian access to PUSHR
- CMD and TXDATA
-To:     Michael Walle <michael@walle.cc>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.150
+X-Source-L: No
+X-Exim-ID: 1jBMpu-004F5Y-70
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.150]:6525
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 13
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-On Mon, 9 Mar 2020 at 19:59, Michael Walle <michael@walle.cc> wrote:
->
-> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
-> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> >
-> > In XSPI mode, the 32-bit PUSHR register can be written to separately:
-> > the higher 16 bits are for commands and the lower 16 bits are for data.
-> >
-> > This has nicely been hacked around, by defining a second regmap with a
-> > width of 16 bits, and effectively splitting a 32-bit register into 2
-> > 16-bit ones, from the perspective of this regmap_pushr.
-> >
-> > The problem is the assumption about the controller's endianness. If the
-> > controller is little endian (such as anything post-LS1046A), then the
-> > first 2 bytes, in the order imposed by memory layout, will actually
-> > hold
-> > the TXDATA, and the last 2 bytes will hold the CMD.
-> >
-> > So take the controller's endianness into account when performing split
-> > writes to PUSHR. The obvious and simple solution would have been to
-> > call
-> > regmap_get_val_endian(), but that is an internal regmap function and we
-> > don't want to change regmap just for this. Therefore, we define the
-> > offsets per-instantiation, in the devtype_data structure. This means
-> > that we have to know from the driver which controllers are big- and
-> > which are little-endian (which is fine, we do, but it makes the device
-> > tree binding itself a little redundant except for regmap_config).
-> >
-> > This patch does not apply cleanly to stable trees, and a punctual fix
-> > to
-> > the commit cannot be provided given this constraint of lack of access
-> > to
-> > regmap_get_val_endian(). The per-SoC devtype_data structures (and
-> > therefore the premises to fix this bug) have been introduced only a few
-> > commits ago, in commit d35054010b57 ("spi: spi-fsl-dspi: Use specific
-> > compatible strings for all SoC instantiations")
-> >
-> > Fixes: 58ba07ec79e6 ("spi: spi-fsl-dspi: Add support for XSPI mode
-> > registers")
-> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> > ---
-> >  drivers/spi/spi-fsl-dspi.c | 28 ++++++++++++++++++++++------
-> >  1 file changed, 22 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> > index 0ce26c1cbf62..a8e56abe20ac 100644
-> > --- a/drivers/spi/spi-fsl-dspi.c
-> > +++ b/drivers/spi/spi-fsl-dspi.c
-> > @@ -103,10 +103,6 @@
-> >  #define SPI_FRAME_BITS(bits)         SPI_CTAR_FMSZ((bits) - 1)
-> >  #define SPI_FRAME_EBITS(bits)                SPI_CTARE_FMSZE(((bits) - 1) >> 4)
-> >
-> > -/* Register offsets for regmap_pushr */
-> > -#define PUSHR_CMD                    0x0
-> > -#define PUSHR_TX                     0x2
-> > -
-> >  #define DMA_COMPLETION_TIMEOUT               msecs_to_jiffies(3000)
-> >
-> >  struct chip_data {
-> > @@ -124,6 +120,12 @@ struct fsl_dspi_devtype_data {
-> >       u8                      max_clock_factor;
-> >       int                     fifo_size;
-> >       int                     dma_bufsize;
-> > +     /*
-> > +      * Offsets for CMD and TXDATA within SPI_PUSHR when accessed
-> > +      * individually (in XSPI mode)
-> > +      */
-> > +     int                     pushr_cmd;
-> > +     int                     pushr_tx;
-> >  };
->
-> Shouldn't this just read the "little-endian" property of the
-> device tree node?
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-This is exactly what the driver did prior to this commit from 2014:
-https://patchwork.kernel.org/patch/4732711/
-Since then, "little-endian" and "big-endian" became generic regmap properties.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-> Like it worked before with regmap, which takes
-> the little-endian/big-endian property into account.
->
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-So XSPI mode allows you, among other things, to send 32 bits words at a time.
-In my opinion this was tested only the big-endian DSPI controllers
-(LS1021A, LS1043A etc).
-On the little-endian controllers (LS2, LX2, LS1028A) I suspect this
-was actually never tested.
-The reason why we see it now is because we're "accelerating" even
-8-bit words to 32-bit.
-So it is incorrect to say "like it worked before": it never worked before.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-> If I understand this correctly, this solution would mix the methods
-> how the IP endianess is determined. Eg. regmap_xx uses the
-> little-endian property and this driver then also uses the compatible
-> string to also distinguish between the endianess.
->
+This issue was found with the help of Coccinelle.
 
-Yup. Otherwise we effectively have to duplicate the logic from the
-internal regmap_get_val_endian function. I found no other way to
-figure out what endianness the regmap_config has. Suggestions welcome.
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-> -michael
->
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/hfs/btree.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
--Vladimir
+diff --git a/fs/hfs/btree.h b/fs/hfs/btree.h
+index dcc2aab1b2c4..4ba45caf5939 100644
+--- a/fs/hfs/btree.h
++++ b/fs/hfs/btree.h
+@@ -60,7 +60,7 @@ struct hfs_bnode {
+ 	wait_queue_head_t lock_wq;
+ 	atomic_t refcnt;
+ 	unsigned int page_offset;
+-	struct page *page[0];
++	struct page *page[];
+ };
+ 
+ #define HFS_BNODE_ERROR		0
+-- 
+2.25.0
+
