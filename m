@@ -2,138 +2,83 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35DFC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C111C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA62205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90E921927
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KqHUijx7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cdjbkqx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbgCISfM (ORCPT
+        id S1727455AbgCIShV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:35:12 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:52419 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbgCISfM (ORCPT
+        Mon, 9 Mar 2020 14:37:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56394 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbgCIShV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:35:12 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 0187923EDA;
-        Mon,  9 Mar 2020 19:35:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583778909;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UKBQm/CELdZbYxZDawLpP5aml1WS/d0wkEXfjOmg9+8=;
-        b=KqHUijx7VNI9rkxedjbCgevBb5ZDckL6Uci7Et7zDL9mWzI7vBtPeeJh/8n9kA1oJGIOLy
-        I1De77amAgvB+bBBf+cDSdNjNlbaA279EmQqe2PyyFsgC2PChEgmG5YxP8/LbbxAkxSbAk
-        dc/eFs5+lh/mI3hvwsA4KlZ1E5jwaYE=
+        Mon, 9 Mar 2020 14:37:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KmL9v01Y7Y0oMfjm6X16Ug0l30XbHRppMW/KHHbJMNA=; b=Cdjbkqx2vXTi3NkkdkaOC1YdIk
+        BPAE2As3/CcJO/wmgya6KD8gYMvmqIYf8RlfVbPWhQ6gkulTDjhRac+kQXfPUQzHg6h07xNx18Cwk
+        vYlOdFuy96VGd6S9Co90qEWVQRskeKhUnjt+fuMUNEkbT7cbCfh6QWz/hWzHAW1M8BnD3F4YhnDpB
+        RHXdgRP1dYUgktpf0FbvcYrYIjYhtchjJoX93/AeoHH2Nr0d2ABpTsliJvd6xGWO+OIs93O51j31F
+        oI5wp0fN1Eo0r+heCYT+E2Wek2pLFYbl++PS5NaPKP3PgdWJy6Z29fiybxpSxVAOtp/pDPCtCy2XK
+        6sR7w3gQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jBNGy-0004vS-Qe; Mon, 09 Mar 2020 18:37:04 +0000
+Date:   Mon, 9 Mar 2020 11:37:04 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Salman Qazi <sqazi@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] mm: clear 1G pages with streaming stores on x86
+Message-ID: <20200309183704.GA1573@bombadil.infradead.org>
+References: <20200307010353.172991-1-cannonmatthews@google.com>
+ <20200309000820.f37opzmppm67g6et@box>
+ <20200309090630.GC8447@dhcp22.suse.cz>
+ <20200309153831.GK1454533@tassilo.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 19:35:08 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, peng.ma@nxp.com
-Subject: Re: [PATCH 6/6] arm64: dts: ls1028a-rdb: Add a spidev node for the
- mikroBUS
-In-Reply-To: <20200309145624.10026-7-olteanv@gmail.com>
-References: <20200309145624.10026-1-olteanv@gmail.com>
- <20200309145624.10026-7-olteanv@gmail.com>
-Message-ID: <f213388d924b63d0fe265a2d731647be@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 0187923EDA
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.0.0.0:email];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.371];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309153831.GK1454533@tassilo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-09 15:56, schrieb Vladimir Oltean:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Mon, Mar 09, 2020 at 08:38:31AM -0700, Andi Kleen wrote:
+> > Gigantic huge pages are a bit different. They are much less dynamic from
+> > the usage POV in my experience. Micro-optimizations for the first access
+> > tends to not matter at all as it is usually pre-allocation scenario. On
+> > the other hand, speeding up the initialization sounds like a good thing
+> > in general. It will be a single time benefit but if the additional code
+> > is not hard to maintain then I would be inclined to take it even with
+> > "artificial" numbers state above. There really shouldn't be other downsides
+> > except for the code maintenance, right?
 > 
-> For debugging, it is useful to have access to the DSPI controller
-> signals. On the reference design board, these are exported to either 
-> the
-> mikroBUS1 or mikroBUS2 connector (according to the CPLD register
-> BRDCFG3[SPI3]).
+> There's a cautious tale of the old crappy RAID5 XOR assembler functions which
+> were optimized a long time ago for the Pentium1, and stayed around,
+> even though the compiler could actually do a better job.
 > 
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> index bb7ba3bcbe56..43f403b30dae 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> @@ -83,6 +83,20 @@
->  	};
->  };
-> 
-> +&dspi2 {
-> +	bus-num = <2>;
-> +	status = "okay";
-> +
-> +	/* mikroBUS1 */
-> +	spidev@0 {
-> +		compatible = "spidev";
+> String instructions are constantly improving in performance (Broadwell is
+> very old at this point) Most likely over time (and maybe even today
+> on newer CPUs) you would need much more sophisticated unrolled MOVNTI variants
+> (or maybe even AVX-*) to be competitive.
 
-As far as I know this throws a warning at boot that you
-shouldn't use the compatible = "spidev", doesn't it?
-
-/*
-  * spidev should never be referenced in DT without a specific
-  * compatible string, it is a Linux implementation thing
-  * rather than a description of the hardware.
-  */
-
--michael
-
-> +		reg = <0>;
-> +		spi-max-frequency = <20000000>;
-> +		fsl,spi-cs-sck-delay = <100>;
-> +		fsl,spi-sck-cs-delay = <100>;
-> +	};
-> +};
-> +
->  &esdhc {
->  	sd-uhs-sdr104;
->  	sd-uhs-sdr50;
+Presumably you have access to current and maybe even some unreleased
+CPUs ... I mean, he's posted the patches, so you can test this hypothesis.
