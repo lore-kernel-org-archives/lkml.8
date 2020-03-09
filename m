@@ -6,24 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E276C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3CDC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA13120873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D456620873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:53:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgCIUxe (ORCPT
+        id S1726814AbgCIUxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:53:34 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57979 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgCIUxe (ORCPT
+        Mon, 9 Mar 2020 16:53:38 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:40519 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbgCIUxi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:53:34 -0400
+        Mon, 9 Mar 2020 16:53:38 -0400
+X-Originating-IP: 82.66.179.123
 Received: from localhost (unknown [82.66.179.123])
         (Authenticated sender: repk@triplefau.lt)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 44922240003;
-        Mon,  9 Mar 2020 20:53:29 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A0FC420007;
+        Mon,  9 Mar 2020 20:53:34 +0000 (UTC)
 From:   Remi Pommarel <repk@triplefau.lt>
 To:     Neil Armstrong <narmstrong@baylibre.com>,
         Jerome Brunet <jbrunet@baylibre.com>,
@@ -35,9 +36,9 @@ To:     Neil Armstrong <narmstrong@baylibre.com>,
 Cc:     linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH 1/2] clk: meson: axg: Remove MIPI enable clock gate
-Date:   Mon,  9 Mar 2020 22:01:56 +0100
-Message-Id: <20200309210157.29860-2-repk@triplefau.lt>
+Subject: [PATCH 2/2] clk: meson-axg: remove CLKID_MIPI_ENABLE
+Date:   Mon,  9 Mar 2020 22:01:57 +0100
+Message-Id: <20200309210157.29860-3-repk@triplefau.lt>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200309210157.29860-1-repk@triplefau.lt>
 References: <20200309210157.29860-1-repk@triplefau.lt>
@@ -48,55 +49,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On AXG platforms HHI_MIPI_CNTL0 is part of the MIPI/PCIe analog PHY
-region and is not related to clock one and can be removed from it.
+CLKID_MIPI_ENABLE is not handled by the AXG clock driver anymore but by
+the MIPI/PCIe PHY driver.
 
 Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 ---
- drivers/clk/meson/axg.c | 3 ---
- drivers/clk/meson/axg.h | 1 -
- 2 files changed, 4 deletions(-)
+ include/dt-bindings/clock/axg-clkc.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
-index 13fc0006f63d..870e90a863fa 100644
---- a/drivers/clk/meson/axg.c
-+++ b/drivers/clk/meson/axg.c
-@@ -1141,7 +1141,6 @@ static MESON_GATE(axg_mmc_pclk, HHI_GCLK_MPEG2, 11);
- static MESON_GATE(axg_vpu_intr, HHI_GCLK_MPEG2, 25);
- static MESON_GATE(axg_sec_ahb_ahb3_bridge, HHI_GCLK_MPEG2, 26);
- static MESON_GATE(axg_gic, HHI_GCLK_MPEG2, 30);
--static MESON_GATE(axg_mipi_enable, HHI_MIPI_CNTL0, 29);
+diff --git a/include/dt-bindings/clock/axg-clkc.h b/include/dt-bindings/clock/axg-clkc.h
+index fd1f938c38d1..ab04b3a94959 100644
+--- a/include/dt-bindings/clock/axg-clkc.h
++++ b/include/dt-bindings/clock/axg-clkc.h
+@@ -70,7 +70,6 @@
+ #define CLKID_HIFI_PLL				69
+ #define CLKID_PCIE_CML_EN0			79
+ #define CLKID_PCIE_CML_EN1			80
+-#define CLKID_MIPI_ENABLE			81
+ #define CLKID_GEN_CLK				84
  
- /* Always On (AO) domain gates */
- 
-@@ -1236,7 +1235,6 @@ static struct clk_hw_onecell_data axg_hw_onecell_data = {
- 		[CLKID_PCIE_REF]		= &axg_pcie_ref.hw,
- 		[CLKID_PCIE_CML_EN0]		= &axg_pcie_cml_en0.hw,
- 		[CLKID_PCIE_CML_EN1]		= &axg_pcie_cml_en1.hw,
--		[CLKID_MIPI_ENABLE]		= &axg_mipi_enable.hw,
- 		[CLKID_GEN_CLK_SEL]		= &axg_gen_clk_sel.hw,
- 		[CLKID_GEN_CLK_DIV]		= &axg_gen_clk_div.hw,
- 		[CLKID_GEN_CLK]			= &axg_gen_clk.hw,
-@@ -1331,7 +1329,6 @@ static struct clk_regmap *const axg_clk_regmaps[] = {
- 	&axg_pcie_ref,
- 	&axg_pcie_cml_en0,
- 	&axg_pcie_cml_en1,
--	&axg_mipi_enable,
- 	&axg_gen_clk_sel,
- 	&axg_gen_clk_div,
- 	&axg_gen_clk,
-diff --git a/drivers/clk/meson/axg.h b/drivers/clk/meson/axg.h
-index 0431dabac629..fafe31739d0d 100644
---- a/drivers/clk/meson/axg.h
-+++ b/drivers/clk/meson/axg.h
-@@ -16,7 +16,6 @@
-  * Register offsets from the data sheet must be multiplied by 4 before
-  * adding them to the base address to get the right value.
-  */
--#define HHI_MIPI_CNTL0			0x00
- #define HHI_GP0_PLL_CNTL		0x40
- #define HHI_GP0_PLL_CNTL2		0x44
- #define HHI_GP0_PLL_CNTL3		0x48
+ #endif /* __AXG_CLKC_H */
 -- 
 2.25.0
 
