@@ -2,160 +2,102 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4909EC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C9FC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267B12146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0592146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgCIUJI (ORCPT
+        id S1726466AbgCIULf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:09:08 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:37580 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbgCIUJI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:09:08 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBOi1-0004Kc-Kg; Mon, 09 Mar 2020 14:09:05 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBOi0-0003E4-PF; Mon, 09 Mar 2020 14:09:05 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-        <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
-        <20200309195909.h2lv5uawce5wgryx@wittgenstein>
-Date:   Mon, 09 Mar 2020 15:06:46 -0500
-In-Reply-To: <20200309195909.h2lv5uawce5wgryx@wittgenstein> (Christian
-        Brauner's message of "Mon, 9 Mar 2020 20:59:09 +0100")
-Message-ID: <877dztz415.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 9 Mar 2020 16:11:35 -0400
+Received: from mga18.intel.com ([134.134.136.126]:39979 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgCIULf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 16:11:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 13:11:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,534,1574150400"; 
+   d="scan'208";a="245452962"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 09 Mar 2020 13:11:34 -0700
+Date:   Mon, 9 Mar 2020 13:11:34 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH v2 00/66] KVM: x86: Introduce KVM cpu caps
+Message-ID: <20200309201134.GA10653@linux.intel.com>
+References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
+ <cd8eae75-b85b-59a9-24ea-c8bde7bd7cee@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jBOi0-0003E4-PF;;;mid=<877dztz415.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+JmhoWzou28F0cqQMkczpEMh7LfXR8OL4=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 3/5] exec: Move cleanup of posix timers on exec out of de_thread
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd8eae75-b85b-59a9-24ea-c8bde7bd7cee@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> writes:
+On Fri, Mar 06, 2020 at 09:27:48AM +0100, Paolo Bonzini wrote:
+> I put the complete series on the cpu-caps branch of kvm.git.
 
-> On Sun, Mar 08, 2020 at 04:36:55PM -0500, Eric W. Biederman wrote:
->> 
->> These functions have very little to do with de_thread move them out
->> of de_thread an into flush_old_exec proper so it can be more clearly
->> seen what flush_old_exec is doing.
->> 
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> ---
->>  fs/exec.c | 10 +++++-----
->>  1 file changed, 5 insertions(+), 5 deletions(-)
->> 
->> diff --git a/fs/exec.c b/fs/exec.c
->> index ff74b9a74d34..215d86f77b63 100644
->> --- a/fs/exec.c
->> +++ b/fs/exec.c
->> @@ -1189,11 +1189,6 @@ static int de_thread(struct task_struct *tsk)
->
-> While you're cleaning up de_thread() wouldn't it be good to also take
-> the opportunity and remove the task argument from de_thread(). It's only
-> ever used with current. Could be done in one of your patches or as a
-> separate patch.
+Looks good, arrived at more or less the same end result when rebasing my
+local branch to kvm/queue.  CPUID diff and smoke test on Icelake ran clean.
 
-How does that affect the code generation?
+For supported_xss, would it make sense to handle it purely in common x86
+code, e.g. stub in something similar to supported_xcr0?  KVM_SUPPORTED_XSS
+would be 0 for now.  I assume whatever XSAVES features are supported will
+be "supported" by both VMX and SVM, in the sense that VMX/SVM won't need
+to mask off features that can exist on their respective hardware but can't
+be exposed to the guest.
 
-My sense is that computing current once in flush_old_exec is much
-better than computing it in each function flush_old_exec calls.
-I remember that computing current used to be not expensive but
-noticable.
-
-For clarity I can see renaming tsk to me.  So that it is clear we are
-talking about the current process, and not some arbitrary process.
-
-And for clarity my goal here is not to clean up de_thread.  Though
-I don't mind that result.  My goal is to get the extra work out of
-de_thread so we can do process tear down cleanups that are safe
-according to the ordinary process rules, before taking a mutex that
-protects exec mucking with all of the state in exec.
-
-Eric
-
-
-> diff --git a/fs/exec.c b/fs/exec.c
-> index db17be51b112..ee108707e4b0 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1061,8 +1061,9 @@ static int exec_mmap(struct mm_struct *mm)
->   * disturbing other processes.  (Other processes might share the signal
->   * table via the CLONE_SIGHAND option to clone().)
->   */
-> -static int de_thread(struct task_struct *tsk)
-> +static int de_thread(void)
->  {
-> +       struct task_struct *tsk = current;
->         struct signal_struct *sig = tsk->signal;
->         struct sighand_struct *oldsighand = tsk->sighand;
->         spinlock_t *lock = &oldsighand->siglock;
-> @@ -1266,7 +1267,7 @@ int flush_old_exec(struct linux_binprm * bprm)
->          * Make sure we have a private signal table and that
->          * we are unassociated from the previous thread group.
->          */
-> -       retval = de_thread(current);
-> +       retval = de_thread();
->         if (retval)
->                 goto out;
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 4dca3579e740..c6e9910d1149 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1371,8 +1371,6 @@ static __init void svm_set_cpu_caps(void)
+ {
+        kvm_set_cpu_caps();
+ 
+-       supported_xss = 0;
+-
+        /* CPUID 0x80000001 and 0x8000000A (SVM features) */
+        if (nested) {
+                kvm_cpu_cap_set(X86_FEATURE_SVM);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 8001070b209c..e91a84bb251c 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7126,7 +7126,6 @@ static __init void vmx_set_cpu_caps(void)
+                kvm_cpu_cap_set(X86_FEATURE_UMIP);
+ 
+        /* CPUID 0xD.1 */
+-       supported_xss = 0;
+        if (!vmx_xsaves_supported())
+                kvm_cpu_cap_clear(X86_FEATURE_XSAVES);
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 96e897d38a63..29cfe80db4b4 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9628,6 +9628,8 @@ int kvm_arch_hardware_setup(void)
+ 
+        if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
+                supported_xss = 0;
++       else
++               supported_xss = host_xss & KVM_SUPPORTED_XSS;
+ 
+        cr4_reserved_bits = kvm_host_cr4_reserved_bits(&boot_cpu_data);
