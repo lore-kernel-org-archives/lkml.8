@@ -2,148 +2,111 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915E2C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BC5C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6641224654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:05:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmExyP/m"
+	by mail.kernel.org (Postfix) with ESMTP id 0F2EB2464B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583787909;
+	bh=LrpstKSS0rJrCTMBq4WQecbURWbFWbhOPZJnK1mHVlw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ILqibIU7s/bMxYaKqXRHUe7eNWmgyIV8VdwFzGiKh3rw6RRQLOhCODQ4liR3jM1Vd
+	 R4M5st+L2eX3FGrEDpKAJyNecAoyQnN/OJIpG3rAsvB66gLMm9MasSuLTxI5HfEalN
+	 n3GSG5aIjX+EtH7s+dsS4n5JClg73JWzN9rHGB/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgCIVE7 (ORCPT
+        id S1726875AbgCIVFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:04:59 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52282 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgCIVE7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:04:59 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p9so1067767wmc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 14:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PPBql3SwnAWXA8bzGM5bAkSVwPmTU0okRlw09OOSTfQ=;
-        b=MmExyP/mYk+2OXsRI4sWEDNBuTe0XrTKYZ4cHF/vlRg4JbJykPReC4Kb8vyDHC5YaW
-         jvA6Ubv8k4CyajsL7sGjqoU92pUiDmr73cmGD3IBOmLh+JHYmZlOyLjPdlaId2pJQjPq
-         YAop7y4iuCxpaqEMf38Y4pgoXaudsMw+2MBH02I78Xv8VXSc6HIa9kCQ9j9ZLae+ceAq
-         mpyKlME+5ttvjgs3nsQPhT3zZgDVYTKZ1SeqoE4x0n9QbndliSZ9XOV8ncRujKQlWYdv
-         iJllEj7PV/ZQ55CvStyXeES9oUusHJl0fWcNHg/ML4EQNKcgiSzgf5mnBixpdZiThRSL
-         3Csw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PPBql3SwnAWXA8bzGM5bAkSVwPmTU0okRlw09OOSTfQ=;
-        b=YdfprRX/wOz0e/8/6DQiii+93WwPZaggfIuiF6J95VWE9CBD2Fvab9LBCzS0jOSMwZ
-         3hI2m0P0pSHitjZSutwTUj7+PZe1uY56bUKVs84nrTZBT/5zW0x++FCaoDoyugdpkH1f
-         6iRyi75bjV/YB1bg+fBwXwKmFM+u083Krz03ALbdqpWmDkoXsBcQsWY3OKvJHtucG1wV
-         4AQb5yZ6+e7akngCw8d+29R7LEDa3CS81o+5iccOaPXdcOEejB/OH/OKFBk9g3EdFDGM
-         8waGH/29EF+Tg+UsSCWCi3evCLG3/ETIhS0te+Az1aD4vejJpgxUQf7AiK03vQBfA6CK
-         Me6g==
-X-Gm-Message-State: ANhLgQ1lYvUHTyTB7t+QrqN3xF+oeIUoF+mcvDB+SiKBNKumTdWpHpM1
-        wzPAdbKkbseHaN9O0fE5p3m0VugD+eAVERxsscU=
-X-Google-Smtp-Source: ADFU+vt867l6+2f6xQRs6lHCyVXlKu6ZX8u2Fkbn27zJpglt9LXymm94ueIRIayE7EahP879gdzct1u7kXjVYQAbarQ=
-X-Received: by 2002:a1c:f21a:: with SMTP id s26mr1067033wmc.39.1583787897357;
- Mon, 09 Mar 2020 14:04:57 -0700 (PDT)
+        Mon, 9 Mar 2020 17:05:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:57536 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgCIVFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 17:05:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1222D1FB;
+        Mon,  9 Mar 2020 14:05:07 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 891E23F534;
+        Mon,  9 Mar 2020 14:05:06 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 21:05:05 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v8 00/11] arm64: Branch Target Identification support
+Message-ID: <20200309210505.GM4101@sirena.org.uk>
+References: <20200227174417.23722-1-broonie@kernel.org>
+ <20200306102729.GC2503422@arrakis.emea.arm.com>
 MIME-Version: 1.0
-References: <20200306234623.547525-1-lyude@redhat.com> <20200306234623.547525-2-lyude@redhat.com>
-In-Reply-To: <20200306234623.547525-2-lyude@redhat.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 9 Mar 2020 17:04:46 -0400
-Message-ID: <CADnq5_PfLg=Pvcb6SQtaEphxfj9G=Ad2t+oAFBK03rPQTn3vdg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] drm/dp_mst: Rename drm_dp_mst_is_dp_mst_end_device()
- to be less redundant
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
-        Sean Paul <seanpaul@google.com>,
-        David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Mikita Lipski <mikita.lipski@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qySB1iFW++5nzUxH"
+Content-Disposition: inline
+In-Reply-To: <20200306102729.GC2503422@arrakis.emea.arm.com>
+X-Cookie: Above all things, reverence yourself.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 6:46 PM Lyude Paul <lyude@redhat.com> wrote:
->
-> It's already prefixed by dp_mst, so we don't really need to repeat
-> ourselves here. One of the changes I should have picked up originally
-> when reviewing MST DSC support.
->
-> There should be no functional changes here
->
-> Cc: Mikita Lipski <mikita.lipski@amd.com>
-> Cc: Sean Paul <seanpaul@google.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
 
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+--qySB1iFW++5nzUxH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 6c62ad8f4414..6714d8a5c558 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -1937,7 +1937,7 @@ static u8 drm_dp_calculate_rad(struct drm_dp_mst_port *port,
->         return parent_lct + 1;
->  }
->
-> -static bool drm_dp_mst_is_dp_mst_end_device(u8 pdt, bool mcs)
-> +static bool drm_dp_mst_is_end_device(u8 pdt, bool mcs)
->  {
->         switch (pdt) {
->         case DP_PEER_DEVICE_DP_LEGACY_CONV:
-> @@ -1967,13 +1967,13 @@ drm_dp_port_set_pdt(struct drm_dp_mst_port *port, u8 new_pdt,
->
->         /* Teardown the old pdt, if there is one */
->         if (port->pdt != DP_PEER_DEVICE_NONE) {
-> -               if (drm_dp_mst_is_dp_mst_end_device(port->pdt, port->mcs)) {
-> +               if (drm_dp_mst_is_end_device(port->pdt, port->mcs)) {
->                         /*
->                          * If the new PDT would also have an i2c bus,
->                          * don't bother with reregistering it
->                          */
->                         if (new_pdt != DP_PEER_DEVICE_NONE &&
-> -                           drm_dp_mst_is_dp_mst_end_device(new_pdt, new_mcs)) {
-> +                           drm_dp_mst_is_end_device(new_pdt, new_mcs)) {
->                                 port->pdt = new_pdt;
->                                 port->mcs = new_mcs;
->                                 return 0;
-> @@ -1993,7 +1993,7 @@ drm_dp_port_set_pdt(struct drm_dp_mst_port *port, u8 new_pdt,
->         port->mcs = new_mcs;
->
->         if (port->pdt != DP_PEER_DEVICE_NONE) {
-> -               if (drm_dp_mst_is_dp_mst_end_device(port->pdt, port->mcs)) {
-> +               if (drm_dp_mst_is_end_device(port->pdt, port->mcs)) {
->                         /* add i2c over sideband */
->                         ret = drm_dp_mst_register_i2c_bus(&port->aux);
->                 } else {
-> @@ -2169,7 +2169,7 @@ drm_dp_mst_port_add_connector(struct drm_dp_mst_branch *mstb,
->         }
->
->         if (port->pdt != DP_PEER_DEVICE_NONE &&
-> -           drm_dp_mst_is_dp_mst_end_device(port->pdt, port->mcs)) {
-> +           drm_dp_mst_is_end_device(port->pdt, port->mcs)) {
->                 port->cached_edid = drm_get_edid(port->connector,
->                                                  &port->aux.ddc);
->                 drm_connector_set_tile_property(port->connector);
-> --
-> 2.24.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+On Fri, Mar 06, 2020 at 10:27:29AM +0000, Catalin Marinas wrote:
+> On Thu, Feb 27, 2020 at 05:44:06PM +0000, Mark Brown wrote:
+
+> > This patch series implements support for ARMv8.5-A Branch Target
+> > Identification (BTI), which is a control flow integrity protection
+> > feature introduced as part of the ARMv8.5-A extensions.
+
+> Does this series affect uprobes in any way? I.e. can you probe a landing
+> pad?
+
+You can't probe a landing pad, uprobes on landing pads will be silently
+ignored so the program isn't disrupted, you just don't get the expected
+trace from those uprobes.  This isn't new with the BTI support since
+the landing pads are generally pointer auth instructions, these already
+can't be probed regardless of what's going on with this series.  It's
+already on the list to get sorted.
+
+--qySB1iFW++5nzUxH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5mr4AACgkQJNaLcl1U
+h9Blwwf8CR8zwN1uUuwJWSzyItw8ZiSf2fLHJ6Smgao/rc/O876dKM+ZZQqzuQ3B
+kG8nQyocUyEa7jghPeuTnqveuK4hpSDe/++EG1Ncl+7gMe8pmbTLVfOCYZzs1TPc
+3QiBL54YSDsAtYFT/Q+2Q27pv4vP3Xm7vsyhvWHYujG6HuFVt3Oco0Nnh8ipL6Eo
+XPOS5rfxJTLe2vcwFfj6Nf03zK+DoS2gU4LAXCjQeXGuwGep9BYzoEQhXk8srTA7
+ZJSrDH0XTMYRRmkmHTcppBRfqbKwES2xZYt6GDRWKqG7yvnEcq+v1MFR2Mgw87ZA
+eQr2xNhLMxU8o5zqjJiwHMI5S3jMoQ==
+=TGul
+-----END PGP SIGNATURE-----
+
+--qySB1iFW++5nzUxH--
