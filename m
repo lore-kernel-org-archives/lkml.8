@@ -2,132 +2,271 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1804C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17065C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7D421655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC26D222C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583780642;
-	bh=OjqjiRfH2HloYi+ecAKXsWnEex+EbCkptWtQaFFrpkc=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=zGcHjUVzVAKAEPfDIfePCYMR9NhiM2JVhPfCYwHXJfsop59HzCxn98J9ppeycHc0M
-	 i7vQqlQFLlm2RxWbUjFvaQfZ+XpsxOPI29NzSlema3RxaWuFOzrdj2vwilWipH/PSh
-	 CW0qi3JpeMq3RGQay4szbTGCqGX5fNInphALrvqQ=
+	s=default; t=1583780666;
+	bh=VGkuqjF/s5r6Iv79hAYNwdWoBO/zHDw0/x67bih9yew=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OvkJCVBN0lzcWXzz+LK3LxJse3qgCj4jkaFhARjmUkl9I37VtyGWM2DzU6BiX53Z/
+	 uJ3sRXDyVSG8tP47geSjekPgfQtFp+WXiQ1bVa09KZxf7e94bpkAduxjZJmnLUvhoJ
+	 mqHhYfGqNe981ebWYSFnO2GztQfzz5/TgnBUsJso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbgCITEB (ORCPT
+        id S1727571AbgCITEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:04:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47360 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 15:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727380AbgCITEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:04:01 -0400
+        id S1727446AbgCITEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:04:23 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1417420873;
-        Mon,  9 Mar 2020 19:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A631C2253D;
+        Mon,  9 Mar 2020 19:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583780640;
-        bh=OjqjiRfH2HloYi+ecAKXsWnEex+EbCkptWtQaFFrpkc=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=l0sMWuxbr+K422eqYJH9wRNE/QXq6gYYgAOr5oxilRpJ/f4YKsmC+BLyz1QHiEDPz
-         fYZxjb6Z6QoIkRCUyhBUh6UrIU8HAZohQA9ZInnukuP2bETxovD2lhSeN+IhkZf0Ai
-         EcWfiZjkfD3f4ccjONhx+TlI1WUSNgX6RaejCEM4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D78053522730; Mon,  9 Mar 2020 12:03:59 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 12:03:59 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
+        s=default; t=1583780662;
+        bh=VGkuqjF/s5r6Iv79hAYNwdWoBO/zHDw0/x67bih9yew=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=X9kQwSz/TNdmb23gPRtLGNvGcuBCXuEToF0hOJ3ZOJnLZLfKpi+LEnCxdp5URquJC
+         rcBdeaNMc8Sgggt5zC3cL+ozxy3onOgwSCkZ5kbTUVXq7tsljLSad4jQ4HaOoCCVnd
+         bZW1Oi/Mufq1pyq0Jc+JJsqUyapknLsCLtAjrc4U=
+From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com
-Subject: [PATCH kcsan 0/32] KCSAN commits for v5.7
-Message-ID: <20200309190359.GA5822@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH kcsan 03/32] kcsan: Rate-limit reporting per data races
+Date:   Mon,  9 Mar 2020 12:03:51 -0700
+Message-Id: <20200309190420.6100-3-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200309190359.GA5822@paulmck-ThinkPad-P72>
+References: <20200309190359.GA5822@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: Marco Elver <elver@google.com>
 
-The patches in this series have already been posted, so this posting
-is just to give a heads up as to  which of them are likely to be part
-of next week's KCSAN pull request.  Unless otherwise noted, these are
-courtesy of Marco Elver.
+KCSAN data-race reports can occur quite frequently, so much so as
+to render the system useless.  This commit therefore adds support for
+time-based rate-limiting KCSAN reports, with the time interval specified
+by a new KCSAN_REPORT_ONCE_IN_MS Kconfig option.  The default is 3000
+milliseconds, also known as three seconds.
 
-1.	kcsan: Prefer __always_inline for fast-path.
-2.	kcsan: Show full access type in report.
-3.	kcsan: Rate-limit reporting per data races.
-4.	kcsan: Make KCSAN compatible with lockdep.
-5.	kcsan: Address missing case with KCSAN_REPORT_VALUE_CHANGE_ONLY.
-6.	include/linux: Add instrumented.h infrastructure.
-7.	asm-generic, atomic-instrumented: Use generic instrumented.h.
-8.	asm-generic, kcsan: Add KCSAN instrumentation for bitops.
-9.	iov_iter: Use generic instrumented.h.
-10.	copy_to_user, copy_from_user: Use generic instrumented.h.
-11.	kcsan: Add docbook header for data_race(), courtesy of yours truly.
-12.	kcsan: Add option to assume plain aligned writes up to word size
-	are atomic.
-13.	kcsan: Clarify Kconfig option.
-14.	kcsan: Cleanup of main KCSAN Kconfig option.
-15.	kcsan: Fix 0-sized checks.
-16.	kcsan: Introduce KCSAN_ACCESS_ASSERT access type.
-17.	kcsan: Introduce ASSERT_EXCLUSIVE_* macros.
-18.	kcsan: Add test to generate conflicts via debugfs.
-19.	kcsan: Expose core configuration parameters as module params.
-20.	kcsan: Fix misreporting if concurrent races on same address.
-21.	kcsan: Move interfaces that affects checks to kcsan-checks.h.
-22.	compiler.h, seqlock.h: Remove unnecessary kcsan.h includes.
-23.	kcsan: Introduce kcsan_value_change type.
-24.	kcsan: Add kcsan_set_access_mask() support.
-25.	kcsan: Introduce ASSERT_EXCLUSIVE_BITS(var, mask).
-26.	kcsan, trace: Make KCSAN compatible with tracing.
-27.	kcsan: Add option to allow watcher interruptions.
-28.	kcsan: Add option for verbose reporting.
-29.	kcsan: Add current->state to implicitly atomic.
-30.	kcsan: Fix a typo in a comment, courtesy of Qiujun Huang.
-31.	kcsan: Update Documentation/dev-tools/kcsan.rst.
-32.	kcsan: Update API documentation in kcsan-checks.h.
+Because KCSAN must detect data races in allocators and in other contexts
+where use of allocation is ill-advised, a fixed-size array is used to
+buffer reports during each reporting interval.  To reduce the number of
+reports lost due to array overflow, this commit stores only one instance
+of duplicate reports, which has the benefit of further reducing KCSAN's
+console output rate.
 
-							Thanx, Paul
+Reported-by: Qian Cai <cai@lca.pw>
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/kcsan/report.c | 110 +++++++++++++++++++++++++++++++++++++++++++++-----
+ lib/Kconfig.kcsan     |  10 +++++
+ 2 files changed, 110 insertions(+), 10 deletions(-)
 
-------------------------------------------------------------------------
+diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+index 9f503ca..b5b4fee 100644
+--- a/kernel/kcsan/report.c
++++ b/kernel/kcsan/report.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
++#include <linux/jiffies.h>
+ #include <linux/kernel.h>
+ #include <linux/preempt.h>
+ #include <linux/printk.h>
+@@ -32,12 +33,99 @@ static struct {
+ } other_info = { .ptr = NULL };
+ 
+ /*
++ * Information about reported data races; used to rate limit reporting.
++ */
++struct report_time {
++	/*
++	 * The last time the data race was reported.
++	 */
++	unsigned long time;
++
++	/*
++	 * The frames of the 2 threads; if only 1 thread is known, one frame
++	 * will be 0.
++	 */
++	unsigned long frame1;
++	unsigned long frame2;
++};
++
++/*
++ * Since we also want to be able to debug allocators with KCSAN, to avoid
++ * deadlock, report_times cannot be dynamically resized with krealloc in
++ * rate_limit_report.
++ *
++ * Therefore, we use a fixed-size array, which at most will occupy a page. This
++ * still adequately rate limits reports, assuming that a) number of unique data
++ * races is not excessive, and b) occurrence of unique data races within the
++ * same time window is limited.
++ */
++#define REPORT_TIMES_MAX (PAGE_SIZE / sizeof(struct report_time))
++#define REPORT_TIMES_SIZE                                                      \
++	(CONFIG_KCSAN_REPORT_ONCE_IN_MS > REPORT_TIMES_MAX ?                   \
++		 REPORT_TIMES_MAX :                                            \
++		 CONFIG_KCSAN_REPORT_ONCE_IN_MS)
++static struct report_time report_times[REPORT_TIMES_SIZE];
++
++/*
+  * This spinlock protects reporting and other_info, since other_info is usually
+  * required when reporting.
+  */
+ static DEFINE_SPINLOCK(report_lock);
+ 
+ /*
++ * Checks if the data race identified by thread frames frame1 and frame2 has
++ * been reported since (now - KCSAN_REPORT_ONCE_IN_MS).
++ */
++static bool rate_limit_report(unsigned long frame1, unsigned long frame2)
++{
++	struct report_time *use_entry = &report_times[0];
++	unsigned long invalid_before;
++	int i;
++
++	BUILD_BUG_ON(CONFIG_KCSAN_REPORT_ONCE_IN_MS != 0 && REPORT_TIMES_SIZE == 0);
++
++	if (CONFIG_KCSAN_REPORT_ONCE_IN_MS == 0)
++		return false;
++
++	invalid_before = jiffies - msecs_to_jiffies(CONFIG_KCSAN_REPORT_ONCE_IN_MS);
++
++	/* Check if a matching data race report exists. */
++	for (i = 0; i < REPORT_TIMES_SIZE; ++i) {
++		struct report_time *rt = &report_times[i];
++
++		/*
++		 * Must always select an entry for use to store info as we
++		 * cannot resize report_times; at the end of the scan, use_entry
++		 * will be the oldest entry, which ideally also happened before
++		 * KCSAN_REPORT_ONCE_IN_MS ago.
++		 */
++		if (time_before(rt->time, use_entry->time))
++			use_entry = rt;
++
++		/*
++		 * Initially, no need to check any further as this entry as well
++		 * as following entries have never been used.
++		 */
++		if (rt->time == 0)
++			break;
++
++		/* Check if entry expired. */
++		if (time_before(rt->time, invalid_before))
++			continue; /* before KCSAN_REPORT_ONCE_IN_MS ago */
++
++		/* Reported recently, check if data race matches. */
++		if ((rt->frame1 == frame1 && rt->frame2 == frame2) ||
++		    (rt->frame1 == frame2 && rt->frame2 == frame1))
++			return true;
++	}
++
++	use_entry->time = jiffies;
++	use_entry->frame1 = frame1;
++	use_entry->frame2 = frame2;
++	return false;
++}
++
++/*
+  * Special rules to skip reporting.
+  */
+ static bool
+@@ -132,7 +220,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+ 	unsigned long stack_entries[NUM_STACK_ENTRIES] = { 0 };
+ 	int num_stack_entries = stack_trace_save(stack_entries, NUM_STACK_ENTRIES, 1);
+ 	int skipnr = get_stack_skipnr(stack_entries, num_stack_entries);
+-	int other_skipnr;
++	unsigned long this_frame = stack_entries[skipnr];
++	unsigned long other_frame = 0;
++	int other_skipnr = 0; /* silence uninit warnings */
+ 
+ 	/*
+ 	 * Must check report filter rules before starting to print.
+@@ -143,34 +233,34 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+ 	if (type == KCSAN_REPORT_RACE_SIGNAL) {
+ 		other_skipnr = get_stack_skipnr(other_info.stack_entries,
+ 						other_info.num_stack_entries);
++		other_frame = other_info.stack_entries[other_skipnr];
+ 
+ 		/* @value_change is only known for the other thread */
+-		if (skip_report(other_info.access_type, value_change,
+-				other_info.stack_entries[other_skipnr]))
++		if (skip_report(other_info.access_type, value_change, other_frame))
+ 			return false;
+ 	}
+ 
++	if (rate_limit_report(this_frame, other_frame))
++		return false;
++
+ 	/* Print report header. */
+ 	pr_err("==================================================================\n");
+ 	switch (type) {
+ 	case KCSAN_REPORT_RACE_SIGNAL: {
+-		void *this_fn = (void *)stack_entries[skipnr];
+-		void *other_fn = (void *)other_info.stack_entries[other_skipnr];
+ 		int cmp;
+ 
+ 		/*
+ 		 * Order functions lexographically for consistent bug titles.
+ 		 * Do not print offset of functions to keep title short.
+ 		 */
+-		cmp = sym_strcmp(other_fn, this_fn);
++		cmp = sym_strcmp((void *)other_frame, (void *)this_frame);
+ 		pr_err("BUG: KCSAN: data-race in %ps / %ps\n",
+-		       cmp < 0 ? other_fn : this_fn,
+-		       cmp < 0 ? this_fn : other_fn);
++		       (void *)(cmp < 0 ? other_frame : this_frame),
++		       (void *)(cmp < 0 ? this_frame : other_frame));
+ 	} break;
+ 
+ 	case KCSAN_REPORT_RACE_UNKNOWN_ORIGIN:
+-		pr_err("BUG: KCSAN: data-race in %pS\n",
+-		       (void *)stack_entries[skipnr]);
++		pr_err("BUG: KCSAN: data-race in %pS\n", (void *)this_frame);
+ 		break;
+ 
+ 	default:
+diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+index 3f78b14..3552990 100644
+--- a/lib/Kconfig.kcsan
++++ b/lib/Kconfig.kcsan
+@@ -81,6 +81,16 @@ config KCSAN_SKIP_WATCH_RANDOMIZE
+ 	  KCSAN_WATCH_SKIP. If false, the chosen value is always
+ 	  KCSAN_WATCH_SKIP.
+ 
++config KCSAN_REPORT_ONCE_IN_MS
++	int "Duration in milliseconds, in which any given data race is only reported once"
++	default 3000
++	help
++	  Any given data race is only reported once in the defined time window.
++	  Different data races may still generate reports within a duration
++	  that is smaller than the duration defined here. This allows rate
++	  limiting reporting to avoid flooding the console with reports.
++	  Setting this to 0 disables rate limiting.
++
+ # Note that, while some of the below options could be turned into boot
+ # parameters, to optimize for the common use-case, we avoid this because: (a)
+ # it would impact performance (and we want to avoid static branch for all
+-- 
+2.9.5
 
- Documentation/dev-tools/kcsan.rst                    |  227 ++++++----
- arch/x86/lib/Makefile                                |    5 
- include/asm-generic/atomic-instrumented.h            |  395 ++++++++----------
- include/asm-generic/bitops/instrumented-atomic.h     |   14 
- include/asm-generic/bitops/instrumented-lock.h       |   10 
- include/asm-generic/bitops/instrumented-non-atomic.h |   16 
- include/linux/compiler.h                             |   16 
- include/linux/instrumented.h                         |  109 +++++
- include/linux/kcsan-checks.h                         |  284 ++++++++++---
- include/linux/kcsan.h                                |   46 --
- include/linux/seqlock.h                              |    2 
- include/linux/uaccess.h                              |   14 
- init/init_task.c                                     |    1 
- kernel/kcsan/Makefile                                |    2 
- kernel/kcsan/atomic.h                                |   23 -
- kernel/kcsan/core.c                                  |  279 ++++++++----
- kernel/kcsan/debugfs.c                               |   94 +++-
- kernel/kcsan/encoding.h                              |   14 
- kernel/kcsan/kcsan.h                                 |   36 +
- kernel/kcsan/report.c                                |  414 ++++++++++++++++---
- kernel/kcsan/test.c                                  |   10 
- kernel/locking/Makefile                              |    3 
- kernel/trace/Makefile                                |    3 
- lib/Kconfig.kcsan                                    |  114 ++++-
- lib/iov_iter.c                                       |    7 
- lib/usercopy.c                                       |    7 
- scripts/atomic/gen-atomic-instrumented.sh            |   19 
- 27 files changed, 1517 insertions(+), 647 deletions(-)
