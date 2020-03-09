@@ -2,103 +2,132 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B16C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D405EC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB69C222C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583765846;
-	bh=lKI8Yb8uZ3tBIe9X4wlAKYTXm/yXMD/FBLCurx3Ybds=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FalVXEbOvXYyDMHOvAaxmBE723fm5lky5XLUh5Rb78FMvxgFV+9kdkhQCnfnVxqex
-	 +AnaU1cCqrR81V6rVzoEWwXn0gBc7rxqB1IqcDl2h8B2lYQLZ4KRmN6B9zcU32vaAm
-	 2jc8SIyd7fJzU/I84+84uUR56wpbvCPuWzJ8C90M=
+	by mail.kernel.org (Postfix) with ESMTP id A48ED21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:59:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sitAIa6q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgCIO5Z (ORCPT
+        id S1726825AbgCIO7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:57:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbgCIO5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:57:25 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A1F421655;
-        Mon,  9 Mar 2020 14:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583765844;
-        bh=lKI8Yb8uZ3tBIe9X4wlAKYTXm/yXMD/FBLCurx3Ybds=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JhpMNSKzrpZSjcFxvL6Ii+nhacGswhk8gehCkK+Eu0AsQMpo2Bf4KZRdeAeibLrmQ
-         ZdB2DECIG4CtwARIQU1ytrj8fN+cvZyyaVFv7Ld7bc3gbmHuRdtqgIF6y5bY05dnbq
-         ztSx+ssyOK9hjHm0wZi1g0s/VeSN+lZ/Nuqla/dI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jBJqM-00BJCg-Ig; Mon, 09 Mar 2020 14:57:22 +0000
+        Mon, 9 Mar 2020 10:59:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45498 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgCIO7z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 10:59:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=+RbY562ZlHYwkdPKappIm3cW8cBre3bUqcDMjctvcSU=; b=sitAIa6qb1pheuvQV1LusSjSQZ
+        1tHDTms/4mth+g3nW1TAeMrIuDeXghdRtiLSY5GncNSWLrph03RWjdrKdAvDy6Gr0MGzKTRdwyXkQ
+        fWkUuAwVzFSlijJk8Ya8h2KS5JP8EWddyx4rJDy0Ma6XsApu9xV2oIuD11a7+gPRH/M3TFkkDSjgN
+        vx/4/s9/a37jtCo5I8MoGz87SmroAKoeX/ngam0PZLfrruls24ju3Xzd+GlX/AsKXhm4WTikPEVH5
+        LVPGRjGUSCj+HIvdOhTtJglej4kpzh++gB8r7ppdqVnSojEYxHjfYrB9Ekw4FflqFPh/aYMMxgwTK
+        0pIKSz0Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jBJso-0002OX-JD; Mon, 09 Mar 2020 14:59:54 +0000
+Subject: Re: [PATCH] ktest: Fix typos in ktest.pl
+To:     Masanari Iida <standby24x7@gmail.com>,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org
+References: <20200309115430.57540-1-standby24x7@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <097cdf11-33b5-45be-6a41-0e5354276bad@infradead.org>
+Date:   Mon, 9 Mar 2020 07:59:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200309115430.57540-1-standby24x7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 14:57:22 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, dietmar.eggemann@arm.com,
-        rjw@rjwysocki.net, pkondeti@codeaurora.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-Subject: Re: [PATCH v5 3/7] arm64/kvm: disable access to AMU registers from
- kvm guests
-In-Reply-To: <20200309142529.GB13343@arm.com>
-References: <20200226132947.29738-1-ionela.voinescu@arm.com>
- <20200226132947.29738-4-ionela.voinescu@arm.com>
- <46b89d0c9704e0a0fb7a4ac2a1fb5b7a@kernel.org>
- <20200309142529.GB13343@arm.com>
-Message-ID: <e3c164afe9fdefe2a01ddbdf34e437a2@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: ionela.voinescu@arm.com, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com, valentin.schneider@arm.com, dietmar.eggemann@arm.com, rjw@rjwysocki.net, pkondeti@codeaurora.org, peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-09 14:25, Ionela Voinescu wrote:
-
-Hi Ionela,
-
-[now with everyone on cc...]
-
->> This will definitely conflict with some of the ongoing rework I 
->> have[1].
->> I'm happy to provide this as a stable branch for you to rebase on top,
->> or use an arm64 provided branch to rebase my stoff on top.
->> 
->> Just let me know how you want to proceed.
->> 
+On 3/9/20 4:54 AM, Masanari Iida wrote:
+> This patch fixes multipe spelling typo found in ktest.pl.
 > 
-> Catalin added the AMU patches on top of 5.6-rc3 at [1].
-> Is this okay as a base branch for your patches?
+> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 
-Sure, no problem. I still need to respin those...
+Looks good.  Thanks.
 
-Thanks,
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-         M.
+> ---
+>  tools/testing/ktest/ktest.pl | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+> index 6a605ba75dd6..dab03d80c902 100755
+> --- a/tools/testing/ktest/ktest.pl
+> +++ b/tools/testing/ktest/ktest.pl
+> @@ -1030,7 +1030,7 @@ sub __read_config {
+>  	    }
+>  
+>  	    if (!$skip && $rest !~ /^\s*$/) {
+> -		die "$name: $.: Gargbage found after $type\n$_";
+> +		die "$name: $.: Garbage found after $type\n$_";
+>  	    }
+>  
+>  	    if ($skip && $type eq "TEST_START") {
+> @@ -1063,7 +1063,7 @@ sub __read_config {
+>  	    }
+>  
+>  	    if ($rest !~ /^\s*$/) {
+> -		die "$name: $.: Gargbage found after DEFAULTS\n$_";
+> +		die "$name: $.: Garbage found after DEFAULTS\n$_";
+>  	    }
+>  
+>  	} elsif (/^\s*INCLUDE\s+(\S+)/) {
+> @@ -1154,7 +1154,7 @@ sub __read_config {
+>  	    # on of these sections that have SKIP defined.
+>  	    # The save variable can be
+>  	    # defined multiple times and the new one simply overrides
+> -	    # the prevous one.
+> +	    # the previous one.
+>  	    set_variable($lvalue, $rvalue);
+>  
+>  	} else {
+> @@ -1234,7 +1234,7 @@ sub read_config {
+>  	foreach my $option (keys %not_used) {
+>  	    print "$option\n";
+>  	}
+> -	print "Set IGRNORE_UNUSED = 1 to have ktest ignore unused variables\n";
+> +	print "Set IGNORE_UNUSED = 1 to have ktest ignore unused variables\n";
+>  	if (!read_yn "Do you want to continue?") {
+>  	    exit -1;
+>  	}
+> @@ -1345,7 +1345,7 @@ sub eval_option {
+>  	# Check for recursive evaluations.
+>  	# 100 deep should be more than enough.
+>  	if ($r++ > 100) {
+> -	    die "Over 100 evaluations accurred with $option\n" .
+> +	    die "Over 100 evaluations occurred with $option\n" .
+>  		"Check for recursive variables\n";
+>  	}
+>  	$prev = $option;
+> @@ -1461,7 +1461,7 @@ sub get_test_name() {
+>  
+>  sub dodie {
+>  
+> -    # avoid recusion
+> +    # avoid recursion
+>      return if ($in_die);
+>      $in_die = 1;
+>  
+> 
+
+
 -- 
-Jazz is not dead. It just smells funny...
+~Randy
