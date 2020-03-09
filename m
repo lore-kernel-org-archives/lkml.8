@@ -2,97 +2,88 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B231C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F309CC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1510520873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:26:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jXpSIUeW"
+	by mail.kernel.org (Postfix) with ESMTP id C972021655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583760414;
+	bh=XwOj/Fq7pJa3hdSOHycHp5sHElq2J4GoqKSBoBad8Qk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XBwDEXH/qj2X+htLkyemerdlAKAaqKK6LTIr5l0R26H7R+9oZ4lN76HufIrS84EjC
+	 vBNwDYJXJZr4hQS4Jm7HFyRcPr1XEtVQmMZWhZFl5Sg+VaiUhCXQxbN24uIo3IZsbN
+	 SimBtbG7MN0RUQKqOvi7moMhmB+WpoTBB76SapY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgCIN0u (ORCPT
+        id S1726645AbgCIN0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:26:50 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:53243 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726469AbgCIN0s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:26:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583760408; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=D+vuyGCUCzEM9aL20B90w5AoCxN08RN5QuMYygPRkqs=; b=jXpSIUeWAjcnU6f9Yr/oLM+ZhlWoLWkatFpQOwXMh8MyQmI5A/pxcodHenOyNreuFcPNdErE
- QltmSxQLzZXI9MWEcnf1yrw5VHdjVT2Elpnb8NlQlpP/ABXt33s225FGcncJHkwMOCnnoKT3
- 7XrIGYoFJgQsMp/BsGUsMVIMk9U=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e66440a.7fea38d5ae30-smtp-out-n04;
- Mon, 09 Mar 2020 13:26:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1DC59C4478F; Mon,  9 Mar 2020 13:26:33 +0000 (UTC)
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F3D0C43637;
-        Mon,  9 Mar 2020 13:26:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F3D0C43637
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V3 0/4] Add support for WLED5
-Date:   Mon,  9 Mar 2020 18:55:58 +0530
-Message-Id: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 9 Mar 2020 09:26:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:52076 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726616AbgCIN0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:26:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A36DD30E;
+        Mon,  9 Mar 2020 06:26:50 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 26E5A3F67D;
+        Mon,  9 Mar 2020 06:26:50 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 13:26:48 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me, Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Subject: Re: [PATCH 1/6] dt-bindings: sound: Convert jz4740-i2s doc to YAML
+Message-ID: <20200309132648.GG4101@sirena.org.uk>
+References: <20200306222931.39664-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Y+xroYBkGM9OatJL"
+Content-Disposition: inline
+In-Reply-To: <20200306222931.39664-1-paul@crapouillou.net>
+X-Cookie: Above all things, reverence yourself.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Currently, WLED driver supports only WLED4 peripherals that is present
-on pmi8998 and pm660L. This patch series  converts the existing WLED4
-bindings from .txt to .yaml format and adds the support for WLED5 peripheral
-that is present on PM8150L.
+--Y+xroYBkGM9OatJL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-PM8150L WLED supports the following.
-    - Two modulators and each sink can use any of the modulator
-    - Multiple CABC selection options
-    - Multiple brightness width selection (12 bits to 15 bits)
+On Fri, Mar 06, 2020 at 11:29:26PM +0100, Paul Cercueil wrote:
+> Convert the textual binding documentation for the AIC (AC97/I2S
+> Controller) of Ingenic SoCs to a YAML schema, and add the new compatible
+> strings in the process.
 
-Changes from V1:
-	- Rebased on top of the below commit.
-	  backlight: qcom-wled: Fix unsigned comparison to zero
+Cleanup and new development patches like this should always come after
+any fixes to ensure that there are no dependencies which would prevent
+fixes being merged as such.
 
-Changes from V2:
-	- Addressed Bjorn's comments by splitting the WLED4 changes
-	  in a seperate patch.
-	- Added WLED5 auto calibration support
+--Y+xroYBkGM9OatJL
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Kiran Gunda (4):
-  backlight: qcom-wled: convert the wled bindings to .yaml format
-  backlight: qcom-wled: Add callbacks functions
-  backlight: qcom-wled: Add support for WLED5 peripheral in PM8150L
-  backlight: qcom-wled: Update auto calibration support for WLED5
+-----BEGIN PGP SIGNATURE-----
 
- .../bindings/leds/backlight/qcom-wled.txt          | 154 -----
- .../bindings/leds/backlight/qcom-wled.yaml         | 223 ++++++++
- drivers/video/backlight/qcom-wled.c                | 622 ++++++++++++++++++---
- 3 files changed, 772 insertions(+), 227 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5mRBcACgkQJNaLcl1U
+h9BiJwf+Pe/BdGSq2c2anqasfwrrUL4Abk4Cu+i1KO6pNmEVWD+KFE9ZvRA3YPSb
+lEPhE+2LfrkoEBPPx6mWVpvl28egf0kwTsX6tynIJsQi+eL1qlRr2fLfvKCEQzVL
+/OAnAMJVXJgSg+wF+p1/Fjv69bkPJUBPX+OK6ooyQNUraG//rSygcKSBtrdvzZOE
+vg02RvfhG9cp1JnhfW6uP7xwG+ISdzyQyDePpgHO1fFPhqUTlM95xRNTUzGGJo/L
+E+5Smb+rEKN3QRWa+J9Nynvrb+zdHtYMrmr/Hi1THgSsUiqfvNlfraITOiiUDCbj
+Rkbg8Bq3JOOSyC9jcOUzTQw3EJhK6g==
+=40Z2
+-----END PGP SIGNATURE-----
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+--Y+xroYBkGM9OatJL--
