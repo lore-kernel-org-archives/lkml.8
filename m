@@ -2,115 +2,89 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA0AC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CA3C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87CB2464B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583777659;
-	bh=GPOsnxPOWkitvcYLr873iWAuXAjAvRcZgDNyk1lxnSw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sj9vJ9lsZSB1UAaUrDVYdUMUtE5iLS8yDluH2JIKuHEVcImj5RNxyiEOtL7VFddna
-	 Cfhqv2jx1jO1gTPE8MfrDLbUpaliO/2AoxNmOmH9zK0FmXglt5ohOOYYUE7JenwwYr
-	 Ev7/XZ2nD9kloifwjztqzt/ADcrt5wtyLv/RbEX4=
+	by mail.kernel.org (Postfix) with ESMTP id 308A720578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:14:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hcX3nNIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbgCISOS (ORCPT
+        id S1727439AbgCISOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:14:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgCISOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:14:18 -0400
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B87622522
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 18:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583777657;
-        bh=GPOsnxPOWkitvcYLr873iWAuXAjAvRcZgDNyk1lxnSw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JpN6DgItReJj4bVteGdpRQHuRkryGz+QlPvJ+ob7GuABPmfHGSjjCZy1cIYhq+Ai5
-         v0XG8mBjVPqu3Hjl6uo0ho+Uy4cMuAjCdBYTAxLZjybdEMyNgzptrJ7CTEvDqQkCSp
-         Z3fv5bx2ECjIIOnCVyJCI6m5hBP+bSrROSa6TK7Q=
-Received: by mail-wm1-f41.google.com with SMTP id g62so415810wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:14:17 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1/+fvMT2sJa92fq0tOZbmls7IlE5Yx+L7O4goSV5fIVbnhm8vX
-        qJvkeYrULanMs4lR1bLF+GUQHWlesOlTyoi2aUYeMA==
-X-Google-Smtp-Source: ADFU+vu+3khw0mvyiOjN3S2PCh5Gg+ouhuqQbOo+d62XxOfUqKh9yBjB8oCXz6OL/+7A908PJLeZq8ErBSIsPMnDAQo=
-X-Received: by 2002:a7b:cd83:: with SMTP id y3mr480519wmj.176.1583777656050;
- Mon, 09 Mar 2020 11:14:16 -0700 (PDT)
+        Mon, 9 Mar 2020 14:14:24 -0400
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:42711 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727425AbgCISOX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:14:23 -0400
+Received: by mail-lj1-f182.google.com with SMTP id q19so11000367ljp.9
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:references:in-reply-to:mime-version:thread-index:date
+         :message-id:subject:to:cc;
+        bh=koPyYPcnPETHgCvHEnnCmdmwfA+OhLOvchqTM1xprps=;
+        b=hcX3nNInTx9iPg7EaR+RByFVzvo/cSttxQcApuNwRryPYcMSIWjR9EGkmg4RuaKhT4
+         Dvkz7XZHPwiW2D/MPgulKgvlSOp2p1+Z6RSgpSLCSj8oQlR1KydMYFuXN2GJqA+khaaI
+         n+jHxvfrvN4OZXWhrflT6H8M3bYWCmMJnNwL4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:references:in-reply-to:mime-version
+         :thread-index:date:message-id:subject:to:cc;
+        bh=koPyYPcnPETHgCvHEnnCmdmwfA+OhLOvchqTM1xprps=;
+        b=MzWT/1jCWbTVymNP9I8NugG1/wof0PCs5xqcpUmdb3Cn4IOyqKi6ERvYGgdGJidMlr
+         YHU8TQe+NxJE/aL50hY45dalqt/+9z3NvnuwWO6lKmbCqsqy2Na9cL9Ot5qBaAG/7/ad
+         CDivXezD+Id5q9ZJMEbu+bTo7fGSxs1BskczdSawA0L+SKZhct752d10lmTHUTq6FN4Y
+         Vdv1mwXrnfeabAYUA6GzcTF7bognF7IPenlh4ExCjwuroKVaZouZM6cZ6jnAGOyNc1y3
+         OAtM/TmEvpfzS/v8BujO0FNjUtcwxtPH/HMah4Z0N/kP+UOM3JPYokUhIknRhOeUwFXq
+         e7iA==
+X-Gm-Message-State: ANhLgQ2OEyE4sayteNWbrCUssUy1OOh62boigCmx8WXZxBRCP7XATC24
+        80gLRqvXGkXm+kfKRyf+9dkBxOx+PZvfYPY7KWNpNw==
+X-Google-Smtp-Source: ADFU+vtgo6olIYRoVSmwWWivdI6JJjr250gtxBwwoAJTPwO/+EsUYi98/L4RLCE5w9lBmxHiqH1H3VYw5KdKjPdM5rA=
+X-Received: by 2002:a2e:80c3:: with SMTP id r3mr10292149ljg.105.1583777660196;
+ Mon, 09 Mar 2020 11:14:20 -0700 (PDT)
+From:   Kevin Li <kevin-ke.li@broadcom.com>
+References: <20200306222705.13309-1-kevin-ke.li@broadcom.com>
+ <20200309123307.GE4101@sirena.org.uk> <69138568e9c18afa57d5edba6be9887b@mail.gmail.com>
+ <20200309175205.GJ4101@sirena.org.uk>
+In-Reply-To: <20200309175205.GJ4101@sirena.org.uk>
 MIME-Version: 1.0
-References: <ed71d0967113a35f670a9625a058b8e6e0b2f104.1583547991.git.luto@kernel.org>
- <CALCETrVmsF9JSMLSd44-3GGWEz6siJQxudeaYiVnvv__YDT1BQ@mail.gmail.com>
- <87ftek9ngq.fsf@nanos.tec.linutronix.de> <CALCETrVsc-t=tDRPbCg5dWHDY0NFv2zjz12ahD-vnGPn8T+RXA@mail.gmail.com>
- <87a74s9ehb.fsf@nanos.tec.linutronix.de> <87wo7v8g4j.fsf@nanos.tec.linutronix.de>
- <877dzu8178.fsf@nanos.tec.linutronix.de> <37440ade-1657-648b-bf72-2b8ca4ac21ce@redhat.com>
- <871rq199oz.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <871rq199oz.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 9 Mar 2020 11:14:04 -0700
-X-Gmail-Original-Message-ID: <CALCETrUHwd8pNr_ZdFqY8vMjJeMdNyw2C+FL6uOUM98SEE9rNQ@mail.gmail.com>
-Message-ID: <CALCETrUHwd8pNr_ZdFqY8vMjJeMdNyw2C+FL6uOUM98SEE9rNQ@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQK6AtPk+W1UvlC/8YJn5FlJAEq5hQGCyJpIAfJ2lUUB0s+e4qZONC5g
+Date:   Mon, 9 Mar 2020 11:14:18 -0700
+Message-ID: <8113837129a1b41aee674c68258cd37f@mail.gmail.com>
+Subject: RE: [PATCH] ASoC: brcm: Add DSL/PON SoC audio driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Jaroslav Kysela <perex@perex.cz>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 2:09 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Paolo Bonzini <pbonzini@redhat.com> writes:
-> > On 09/03/20 07:57, Thomas Gleixner wrote:
-> >> Thomas Gleixner <tglx@linutronix.de> writes:
-> >>
-> >> guest side:
-> >>
-> >>    nmi()/mce() ...
-> >>
-> >>         stash_crs();
-> >>
-> >> +       stash_and_clear_apf_reason();
-> >>
-> >>         ....
-> >>
-> >> +       restore_apf_reason();
-> >>
-> >>      restore_cr2();
-> >>
-> >> Too obvious, isn't it?
-> >
-> > Yes, this works but Andy was not happy about adding more
-> > save-and-restore to NMIs.  If you do not want to do that, I'm okay with
-> > disabling async page fault support for now.
->
-> I'm fine with doing that save/restore dance, but I have no strong
-> opinion either.
->
-> > Storing the page fault reason in memory was not a good idea.  Better
-> > options would be to co-opt the page fault error code (e.g. store the
-> > reason in bits 31:16, mark bits 15:0 with the invalid error code
-> > RSVD=1/P=0), or to use the virtualization exception area.
->
-> Memory store is not the problem. The real problem is hijacking #PF.
->
-> If you'd have just used a separate VECTOR_ASYNC_PF then none of these
-> problems would exist at all.
->
+I can't really parse what you're talking about here (perhaps some of that
+context would have helped...) but it doesn't seem to be the clocking of
+the I2S bus which would normally be what master and slave would be talking
+about.
 
-I'm okay with the save/restore dance, I guess.  It's just yet more
-entry crud to deal with architecture nastiness, except that this
-nastiness is 100% software and isn't Intel/AMD's fault.
-
-At least until we get an async page fault due to apf_reason being paged out...
+It is the clock setting of I2S bus master or slave.
+If I am playing music only, I set TX as master. All others are slave.
+If I am recording only. I set RX as master. All others are slave.
+If I am playing and recording at same time, I set first coming stream as
+master second coming stream as slave. If I shut down first stream before
+second stream, then I will set the second stream as master, otherwise
+there will be no clock/FS signal on the I2S bus to maintain the second
+stream to its end.
+Hope it is clearer.
