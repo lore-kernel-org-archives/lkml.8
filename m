@@ -2,232 +2,132 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F173AC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82432C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05C822522
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:11:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SD8pWHFZ"
+	by mail.kernel.org (Postfix) with ESMTP id 58F6C22525
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgCINL0 (ORCPT
+        id S1726551AbgCINMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:11:26 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58352 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726414AbgCINL0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:11:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583759484;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xRJIUHA2CnOOeiHBMD4y+dr1ZXYznLSuwH0WgiBK5ck=;
-        b=SD8pWHFZtyclFsLyZychQ3WhfZaP7d9FJSQ3urFJU1Sj1cziI2MB0SJmtHjEPp1nhnGrZu
-        XKa7Xeo4iFXPYCwxGJ4SnVsdtX7C1fu77ghQL0pAjmR5Jcl0f+bcQ3MCAeY8EuANET5xIE
-        fpNfjKqaaXRit5vue6Tbd8x7Y2sjxG8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-438-MhwNH3oiPYieyfIk55V9iQ-1; Mon, 09 Mar 2020 09:11:20 -0400
-X-MC-Unique: MhwNH3oiPYieyfIk55V9iQ-1
-Received: by mail-wr1-f70.google.com with SMTP id b12so5221783wro.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 06:11:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xRJIUHA2CnOOeiHBMD4y+dr1ZXYznLSuwH0WgiBK5ck=;
-        b=mMNr5I77AYsQBXb7UPP73qrx0VWZQnY+Mypd/k98b1Pu0uSZX7U0oE5OPQD9AsXw0c
-         ph3/c1rN7xioqCpeKSQIUSanr9ffoJjGkNDR95NhG6Jb+aVW0kenj1tgOweUAQQK/xoG
-         rc/Pb6qDe48tWV08/V9+IB2dN3eyeZ1ZsvJ+6lpb1SazW9IE8Ha9vW1gSajFJLdOp5WR
-         AfXoJuvKoRYAN0XM70fMf+87AoAtOI7HkWfOdA1rn+VDt40svHKoP7x3uTyI5dIImAfP
-         xTs397iwiHRlDjsLp9jBFQHkMc3CokSawZ6Q/xaF+c28T7ltq7xeZO9ZOCosC6srXv2V
-         nJTQ==
-X-Gm-Message-State: ANhLgQ2G8kj01oKt8zxw1LYVdJGBJ8JclWmoHytMO+j0HAJ1Ln6Bvl6l
-        uEn0uy1j9pQ2pTH9HLOqZFdY7C3yks7Ghpw0XBAi5iQcU91XmdmbNYWoBr1lsDC9ROmOHAegSql
-        ZyuxXL0wnKHTK82y0HwmPNdap
-X-Received: by 2002:adf:e506:: with SMTP id j6mr20733582wrm.309.1583759479368;
-        Mon, 09 Mar 2020 06:11:19 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuCDJFZ7JTpz5uoFvZAVeKx+9vsgLNPQPPkBhoFe61RXjhOioyK15/Hhufdoq2jrHxA0uFd5Q==
-X-Received: by 2002:adf:e506:: with SMTP id j6mr20733564wrm.309.1583759479021;
-        Mon, 09 Mar 2020 06:11:19 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id y15sm5710650wrq.89.2020.03.09.06.11.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 06:11:18 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 14:11:17 +0100
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH v7 7/7] mm/madvise: allow KSM hints for remote API
-Message-ID: <20200309131117.anvyjszaigpoz2kp@butterfly.localdomain>
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-8-minchan@kernel.org>
- <2a66abd8-4103-f11b-06d1-07762667eee6@suse.cz>
- <20200306134146.mqiyvsdnqty7so53@butterfly.localdomain>
- <a63768c1-3959-563b-376b-1d8d90d79b41@suse.cz>
+        Mon, 9 Mar 2020 09:12:48 -0400
+Received: from mga04.intel.com ([192.55.52.120]:23411 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgCINMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:12:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 06:12:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,533,1574150400"; 
+   d="scan'208";a="442740252"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 09 Mar 2020 06:12:46 -0700
+Received: from [10.251.21.146] (kliang2-mobl.ccr.corp.intel.com [10.251.21.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 036345802A3;
+        Mon,  9 Mar 2020 06:12:43 -0700 (PDT)
+Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a dedicated
+ counter for guest PEBS
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Luwei Kang <luwei.kang@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
+        thomas.lendacky@amd.com, fenghua.yu@intel.com,
+        like.xu@linux.intel.com
+References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+ <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
+ <20200306135317.GD12561@hirez.programming.kicks-ass.net>
+ <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
+ <20200309100443.GG12561@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <97ce1ba4-d75a-8db2-ea2f-7d334942b4e6@linux.intel.com>
+Date:   Mon, 9 Mar 2020 09:12:42 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a63768c1-3959-563b-376b-1d8d90d79b41@suse.cz>
+In-Reply-To: <20200309100443.GG12561@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 05:08:18PM +0100, Vlastimil Babka wrote:
-> On 3/6/20 2:41 PM, Oleksandr Natalenko wrote:
-> > On Fri, Mar 06, 2020 at 02:13:49PM +0100, Vlastimil Babka wrote:
-> >> On 3/2/20 8:36 PM, Minchan Kim wrote:
-> >> > From: Oleksandr Natalenko <oleksandr@redhat.com>
-> >> > 
-> >> > It all began with the fact that KSM works only on memory that is marked
-> >> > by madvise(). And the only way to get around that is to either:
-> >> > 
-> >> >   * use LD_PRELOAD; or
-> >> >   * patch the kernel with something like UKSM or PKSM.
-> >> > 
-> >> > (i skip ptrace can of worms here intentionally)
-> >> > 
-> >> > To overcome this restriction, lets employ a new remote madvise API. This
-> >> > can be used by some small userspace helper daemon that will do auto-KSM
-> >> > job for us.
-> >> > 
-> >> > I think of two major consumers of remote KSM hints:
-> >> > 
-> >> >   * hosts, that run containers, especially similar ones and especially in
-> >> >     a trusted environment, sharing the same runtime like Node.js;
+
+
+On 3/9/2020 6:04 AM, Peter Zijlstra wrote:
+> On Fri, Mar 06, 2020 at 09:42:47AM -0500, Liang, Kan wrote:
+>>
+>>
+>> On 3/6/2020 8:53 AM, Peter Zijlstra wrote:
+>>> On Fri, Mar 06, 2020 at 01:56:55AM +0800, Luwei Kang wrote:
+>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>
+>>>> The PEBS event created by host needs to be assigned specific counters
+>>>> requested by the guest, which means the guest and host counter indexes
+>>>> have to be the same or fail to create. This is needed because PEBS leaks
+>>>> counter indexes into the guest. Otherwise, the guest driver will be
+>>>> confused by the counter indexes in the status field of the PEBS record.
+>>>>
+>>>> A guest_dedicated_idx field is added to indicate the counter index
+>>>> specifically requested by KVM. The dedicated event constraints would
+>>>> constrain the counter in the host to the same numbered counter in guest.
+>>>>
+>>>> A intel_ctrl_guest_dedicated_mask field is added to indicate the enabled
+>>>> counters for guest PEBS events. The IA32_PEBS_ENABLE MSR will be switched
+>>>> during the VMX transitions if intel_ctrl_guest_owned is set.
+>>>>
+>>>
+>>>> +	/* the guest specified counter index of KVM owned event, e.g PEBS */
+>>>> +	int				guest_dedicated_idx;
+>>>
+>>> We've always objected to guest 'owned' counters, they destroy scheduling
+>>> freedom. Why are you expecting that to be any different this time?
+>>>
+>>
+>> The new proposal tries to 'own' a counter by setting the event constraint.
+>> It doesn't stop other events using the counter.
+>> If there is high priority event which requires the same counter, scheduler
+>> can still reject the request from KVM.
+>> I don't think it destroys the scheduling freedom this time.
 > 
-> Ah, I forgot to ask, given the discussion of races in patch 2 (Question 2),
-> where android can stop the tasks to apply the madvise hints in a race-free
-> manner, how does that work for remote KSM hints in your scenarios, especially
-> the one above?
+> Suppose your KVM thing claims counter 0/2 (ICL/SKL) for some random PEBS
+> event, and then the host wants to use PREC_DIST.. Then one of them will
+> be screwed for no reason what so ever.
+>
 
-We have cgroup.freeze for that.
+The multiplexing should be triggered.
 
-> 
-> >> > 
-> >> >   * heavy applications, that can be run in multiple instances, not
-> >> >     limited to opensource ones like Firefox, but also those that cannot be
-> >> >     modified since they are binary-only and, maybe, statically linked.
-> >> > 
-> >> > Speaking of statistics, more numbers can be found in the very first
-> >> > submission, that is related to this one [1]. For my current setup with
-> >> > two Firefox instances I get 100 to 200 MiB saved for the second instance
-> >> > depending on the amount of tabs.
-> >> > 
-> >> > 1 FF instance with 15 tabs:
-> >> > 
-> >> >    $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-> >> >    410
-> >> > 
-> >> > 2 FF instances, second one has 12 tabs (all the tabs are different):
-> >> > 
-> >> >    $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-> >> >    592
-> >> > 
-> >> > At the very moment I do not have specific numbers for containerised
-> >> > workload, but those should be comparable in case the containers share
-> >> > similar/same runtime.
-> >> > 
-> >> > [1] https://lore.kernel.org/patchwork/patch/1012142/
-> >> > 
-> >> > Reviewed-by: SeongJae Park <sjpark@amazon.de>
-> >> > Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-> >> > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> >> 
-> >> This will lead to one process calling unmerge_ksm_pages() of another. There's a
-> >> (signal_pending(current)) test there, should it check also the other task,
-> >> analogically to task 3?
-> > 
-> > Do we care about current there then? Shall we just pass mm into unmerge_ksm_pages and check the signals of the target task only, be it current or something else?
-> 
-> Dunno, it's nice to react to signals quickly, for any proces that gets them, no?
+For host, if both user A and user B requires PREC_DIST, the multiplexing 
+should be triggered for them.
+Now, the user B is KVM. I don't think there is difference. The 
+multiplexing should still be triggered. Why it is screwed?
 
-So, do you mean something like this?
 
-===
-diff --git a/mm/ksm.c b/mm/ksm.c
-index 363ec8189561..b39c237cfcf4 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -849,7 +849,8 @@ static int unmerge_ksm_pages(struct vm_area_struct *vma,
- 	for (addr = start; addr < end && !err; addr += PAGE_SIZE) {
- 		if (ksm_test_exit(vma->vm_mm))
- 			break;
--		if (signal_pending(current))
-+		if (signal_pending(current) ||
-+		    signal_pending(rcu_dereference(vma->vm_mm->owner)))
- 			err = -ERESTARTSYS;
- 		else
- 			err = break_ksm(vma, addr);
-===
-
-BTW, this won't work with !CONFIG_MEMCG, so probably task_struct should be
-passed through instead. IIUC, this would also require amending struct
-mm_slot in order to share the same code path with ksmd.
-
-I'm not sure I've seen such a culprit anywhere else, so I'm in doubt
-this would be a correct thing to do.
-
-Ideas?
-
-> 
-> >> Then break_ksm() is fine as it is, as ksmd also calls it, right?
-> > 
-> > I think break_ksm() cares only about mmap_sem protection, so we should
-> > be fine here.
-> > 
-> >> 
-> >> > ---
-> >> >  mm/madvise.c | 4 ++++
-> >> >  1 file changed, 4 insertions(+)
-> >> > 
-> >> > diff --git a/mm/madvise.c b/mm/madvise.c
-> >> > index e77c6c1fad34..f4fa962ee74d 100644
-> >> > --- a/mm/madvise.c
-> >> > +++ b/mm/madvise.c
-> >> > @@ -1005,6 +1005,10 @@ process_madvise_behavior_valid(int behavior)
-> >> >  	switch (behavior) {
-> >> >  	case MADV_COLD:
-> >> >  	case MADV_PAGEOUT:
-> >> > +#ifdef CONFIG_KSM
-> >> > +	case MADV_MERGEABLE:
-> >> > +	case MADV_UNMERGEABLE:
-> >> > +#endif
-> >> >  		return true;
-> >> >  	default:
-> >> >  		return false;
-> >> > 
-> >> 
-> > 
+> How is that not destroying scheduling freedom? Any other situation we'd
+> have moved the !PREC_DIST PEBS event to another counter.
 > 
 
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Principal Software Maintenance Engineer
+All counters are equivalent for them. It doesn't matter if we move it to 
+another counter. There is no impact for the user.
 
+In the new proposal, KVM user is treated the same as other host events 
+with event constraint. The scheduler is free to choose whether or not to 
+assign a counter for it.
+
+Thanks,
+Kan
