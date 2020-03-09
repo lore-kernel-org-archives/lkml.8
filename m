@@ -2,218 +2,135 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D525C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1FCC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1500B2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:18:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="d/CPPE9u"
+	by mail.kernel.org (Postfix) with ESMTP id 0E86020866
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgCILSS (ORCPT
+        id S1726411AbgCILWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:18:18 -0400
-Received: from onstation.org ([52.200.56.107]:44078 "EHLO onstation.org"
+        Mon, 9 Mar 2020 07:22:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:50790 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgCILSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:18:17 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 0EF123E94B;
-        Mon,  9 Mar 2020 11:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1583752696;
-        bh=3QDZGZgiS58VF0JjyLEvpXThSA6/Pvydn+fwYa8zhWk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=d/CPPE9uBD1E08FiabSDpgtLduLgdQu47yp1Q/DZr9Q+6GV9K5AcFtwvExSutg0so
-         SzCenrkWJjQYHyHSHYZ+UisKp34at5vc15UsFaW7fKjS+G7Jqk+G+AmGzTda/MSqyl
-         K3G6ZydlLGdCoklOYBuekT6EMrM/JBXaLR/Igwbo=
-From:   Brian Masney <masneyb@onstation.org>
-To:     robh+dt@kernel.org, robdclark@gmail.com, sean@poorly.run
-Cc:     jcrouse@codeaurora.org, jeffrey.l.hugo@gmail.com, sam@ravnborg.org,
-        devicetree@vger.kernel.org, airlied@linux.ie,
-        linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org
-Subject: [PATCH] dt-bindings: display: msm: gmu: move sram property to gpu bindings
-Date:   Mon,  9 Mar 2020 07:18:04 -0400
-Message-Id: <20200309111804.188162-1-masneyb@onstation.org>
-X-Mailer: git-send-email 2.24.1
+        id S1725796AbgCILWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 07:22:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 872241FB;
+        Mon,  9 Mar 2020 04:22:46 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22F6C3F6CF;
+        Mon,  9 Mar 2020 04:22:45 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 11:22:42 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Will Deacon <will@kernel.org>, Rafael Aquini <aquini@redhat.com>,
+        Mark Salter <msalter@redhat.com>,
+        Jon Masters <jcm@jonmasters.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        Michal Hocko <mhocko@kernel.org>, QI Fuli <qi.fuli@fujitsu.com>
+Subject: Re: [PATCH 3/3] arm64: tlb: skip tlbi broadcast
+Message-ID: <20200309112242.GB2487@mbp>
+References: <20200223192520.20808-1-aarcange@redhat.com>
+ <20200223192520.20808-4-aarcange@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223192520.20808-4-aarcange@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sram property was incorrectly added to the GMU binding when it
-really belongs with the GPU binding instead. Let's go ahead and
-move it.
+Hi Andrea,
 
-While changes are being made here, let's update the sram property
-description to mention that this property is only valid for a3xx and
-a4xx GPUs. The a3xx/a4xx example in the GPU is replaced with what was
-in the GMU.
+On Sun, Feb 23, 2020 at 02:25:20PM -0500, Andrea Arcangeli wrote:
+>  switch_mm(struct mm_struct *prev, struct mm_struct *next,
+>  	  struct task_struct *tsk)
+>  {
+> -	if (prev != next)
+> -		__switch_mm(next);
+> +	unsigned int cpu = smp_processor_id();
+> +
+> +	if (!per_cpu(cpu_not_lazy_tlb, cpu)) {
+> +		per_cpu(cpu_not_lazy_tlb, cpu) = true;
+> +		atomic_inc(&next->context.nr_active_mm);
+> +		__switch_mm(next, cpu);
+> +	} else if (prev != next) {
+> +		atomic_inc(&next->context.nr_active_mm);
+> +		__switch_mm(next, cpu);
+> +		atomic_dec(&prev->context.nr_active_mm);
+> +	}
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Fixes: 198a72c8f9ee ("dt-bindings: display: msm: gmu: add optional ocmem property")
----
-Background thread:
-https://lore.kernel.org/lkml/20200303170159.GA13109@jcrouse1-lnx.qualcomm.com/
+IIUC, nr_active_mm keeps track of how many instances of the current pgd
+(TTBR0_EL1) are active.
 
-I started to look at what it would take to convert the GPU bindings to
-YAML, however I am unsure of the complete list of "qcom,adreno-XYZ.W"
-compatibles that are valid.
+> +enum tlb_flush_types tlb_flush_check(struct mm_struct *mm, unsigned int cpu)
+> +{
+> +	if (atomic_read(&mm->context.nr_active_mm) <= 1) {
+> +		bool is_local = current->active_mm == mm &&
+> +			per_cpu(cpu_not_lazy_tlb, cpu);
+> +		cpumask_t *stale_cpumask = mm_cpumask(mm);
+> +		unsigned int next_zero = cpumask_next_zero(-1, stale_cpumask);
+> +		bool local_is_clear = false;
+> +		if (next_zero < nr_cpu_ids &&
+> +		    (is_local && next_zero == cpu)) {
+> +			next_zero = cpumask_next_zero(next_zero, stale_cpumask);
+> +			local_is_clear = true;
+> +		}
+> +		if (next_zero < nr_cpu_ids) {
+> +			cpumask_setall(stale_cpumask);
+> +			local_is_clear = false;
+> +		}
+> +
+> +		/*
+> +		 * Enforce CPU ordering between the above
+> +		 * cpumask_setall(mm_cpumask) and the below
+> +		 * atomic_read(nr_active_mm).
+> +		 */
+> +		smp_mb();
+> +
+> +		if (likely(atomic_read(&mm->context.nr_active_mm)) <= 1) {
+> +			if (is_local) {
+> +				if (!local_is_clear)
+> +					cpumask_clear_cpu(cpu, stale_cpumask);
+> +				return TLB_FLUSH_LOCAL;
+> +			}
+> +			if (atomic_read(&mm->context.nr_active_mm) == 0)
+> +				return TLB_FLUSH_NO;
+> +		}
+> +	}
+> +	return TLB_FLUSH_BROADCAST;
 
- .../devicetree/bindings/display/msm/gmu.txt   | 51 -----------------
- .../devicetree/bindings/display/msm/gpu.txt   | 55 ++++++++++++++-----
- 2 files changed, 42 insertions(+), 64 deletions(-)
+And this code here can assume that if nr_active_mm <= 1, no broadcast is
+necessary.
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-index bf9c7a2a495c..90af5b0a56a9 100644
---- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-+++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
-@@ -31,10 +31,6 @@ Required properties:
- - iommus: phandle to the adreno iommu
- - operating-points-v2: phandle to the OPP operating points
- 
--Optional properties:
--- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
--        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
--
- Example:
- 
- / {
-@@ -67,50 +63,3 @@ Example:
- 		operating-points-v2 = <&gmu_opp_table>;
- 	};
- };
--
--a3xx example with OCMEM support:
--
--/ {
--	...
--
--	gpu: adreno@fdb00000 {
--		compatible = "qcom,adreno-330.2",
--		             "qcom,adreno";
--		reg = <0xfdb00000 0x10000>;
--		reg-names = "kgsl_3d0_reg_memory";
--		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "kgsl_3d0_irq";
--		clock-names = "core",
--		              "iface",
--		              "mem_iface";
--		clocks = <&mmcc OXILI_GFX3D_CLK>,
--		         <&mmcc OXILICX_AHB_CLK>,
--		         <&mmcc OXILICX_AXI_CLK>;
--		sram = <&gmu_sram>;
--		power-domains = <&mmcc OXILICX_GDSC>;
--		operating-points-v2 = <&gpu_opp_table>;
--		iommus = <&gpu_iommu 0>;
--	};
--
--	ocmem@fdd00000 {
--		compatible = "qcom,msm8974-ocmem";
--
--		reg = <0xfdd00000 0x2000>,
--		      <0xfec00000 0x180000>;
--		reg-names = "ctrl",
--		             "mem";
--
--		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
--		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
--		clock-names = "core",
--		              "iface";
--
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		gmu_sram: gmu-sram@0 {
--			reg = <0x0 0x100000>;
--			ranges = <0 0 0xfec00000 0x100000>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
-index 7edc298a15f2..fd779cd6994d 100644
---- a/Documentation/devicetree/bindings/display/msm/gpu.txt
-+++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
-@@ -35,25 +35,54 @@ Required properties:
-   bring the GPU out of secure mode.
- - firmware-name: optional property of the 'zap-shader' node, listing the
-   relative path of the device specific zap firmware.
-+- sram: phandle to the On Chip Memory (OCMEM) that's present on some a3xx and
-+        a4xx Snapdragon SoCs. See
-+        Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
- 
--Example 3xx/4xx/a5xx:
-+Example 3xx/4xx:
- 
- / {
- 	...
- 
--	gpu: qcom,kgsl-3d0@4300000 {
--		compatible = "qcom,adreno-320.2", "qcom,adreno";
--		reg = <0x04300000 0x20000>;
-+	gpu: adreno@fdb00000 {
-+		compatible = "qcom,adreno-330.2",
-+		             "qcom,adreno";
-+		reg = <0xfdb00000 0x10000>;
- 		reg-names = "kgsl_3d0_reg_memory";
--		interrupts = <GIC_SPI 80 0>;
--		clock-names =
--		    "core",
--		    "iface",
--		    "mem_iface";
--		clocks =
--		    <&mmcc GFX3D_CLK>,
--		    <&mmcc GFX3D_AHB_CLK>,
--		    <&mmcc MMSS_IMEM_AHB_CLK>;
-+		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "kgsl_3d0_irq";
-+		clock-names = "core",
-+		              "iface",
-+		              "mem_iface";
-+		clocks = <&mmcc OXILI_GFX3D_CLK>,
-+		         <&mmcc OXILICX_AHB_CLK>,
-+		         <&mmcc OXILICX_AXI_CLK>;
-+		sram = <&gpu_sram>;
-+		power-domains = <&mmcc OXILICX_GDSC>;
-+		operating-points-v2 = <&gpu_opp_table>;
-+		iommus = <&gpu_iommu 0>;
-+	};
-+
-+	gpu_sram: ocmem@fdd00000 {
-+		compatible = "qcom,msm8974-ocmem";
-+
-+		reg = <0xfdd00000 0x2000>,
-+		      <0xfec00000 0x180000>;
-+		reg-names = "ctrl",
-+		            "mem";
-+
-+		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
-+		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
-+		clock-names = "core",
-+		              "iface";
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		gpu_sram: gpu-sram@0 {
-+			reg = <0x0 0x100000>;
-+			ranges = <0 0 0xfec00000 0x100000>;
-+		};
- 	};
- };
- 
+One concern I have is the ordering between TTBR0_EL1 update in
+cpu_do_switch_mm() and the nr_active_mm, both on a different CPU. We
+only have an ISB for context synchronisation on that CPU but I don't
+think the architecture guarantees any relation between sysreg access and
+the memory update. We have a DSB but that's further down in switch_to().
+
+However, what worries me more is that you can now potentially do a TLB
+shootdown without clearing the intermediate (e.g. VA to pte) walk caches
+from the TLB. Even if the corresponding pgd and ASID are no longer
+active on other CPUs, I'm not sure it's entirely safe to free (and
+re-allocate) pages belonging to a pgtable without first flushing the
+TLB. All the architecture spec states is that the software must first
+clear the entry followed by TLBI (the break-before-make rules).
+
+That said, the benchmark numbers are not very encouraging. Around 1%
+improvement in a single run, it can as well be noise. Also something
+like hackbench may also show a slight impact on the context switch path.
+Maybe with a true NUMA machine with hundreds of CPUs we may see a
+difference, but it depends on how well the TLBI is implemented.
+
+Thanks.
+
 -- 
-2.24.1
-
+Catalin
