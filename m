@@ -2,184 +2,126 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82259C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7DAC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E4220866
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01BF2067C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:32:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="KgvIPbuC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Avi03q8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgCIIbX (ORCPT
+        id S1726567AbgCIIcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:31:23 -0400
-Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:23378 "EHLO
-        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725796AbgCIIbX (ORCPT
+        Mon, 9 Mar 2020 04:32:46 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34521 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgCIIcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:31:23 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Mar 2020 04:31:22 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1583742682; x=1615278682;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=UgnIsQyrw7V0RiG+5o4AS/b+Nah9kEs6rkBtBbKMBog=;
-  b=KgvIPbuCgunfKgnvu6jsOkhtPSmMiqmdGglzBmjQhHPYTbWejvC4FVGD
-   0p7n5vYGohhzfFTh6rscxlUjKViPdjokuGopL86zAPCARWYWE5vw8ENEQ
-   VxbS4PDfsKgHprSSWzco4/xWDVp5RBCdqTerWGCEFsd2bf1Too6+N6+mK
-   0jrCZbQr/a2vkybl4CDrfxQ4crSUtDi1d1cP4WNNySGPAUNRoXD88CNJb
-   +UQEFPWW99OIWW+xH4HeWg2IOybVVzwy0zDUx3xT8T09NUho66AFm7nLv
-   TCEPTdpAzt3vsSgDphWymkyQAnOZDdjrk4yjy9ptXVaA13lP5zx2dyDzy
-   A==;
-IronPort-SDR: tG2W2IlNj001FKiGJn+JIVXn/ulyclJn6PgAvVSosfqgLki2eO5UiXHQRTzUimUQ32F0NJ82oq
- MZIW9saqpznA==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [RFC PATCH] leds: pwm: add flag to start without PWM init
-Thread-Topic: [RFC PATCH] leds: pwm: add flag to start without PWM init
-Thread-Index: AQHV9ewaOIgIxoAtxUq/BaTh5/4IBw==
-Date:   Mon, 9 Mar 2020 08:24:09 +0000
-Message-ID: <20200309082218.13263-1-Denis.Osterland@diehl.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Mar 2020 04:32:45 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z15so9881756wrl.1;
+        Mon, 09 Mar 2020 01:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=af2cfZjf9x1S9FZ9MDXkYOztGP6qP0GOneEhB/eEIC0=;
+        b=Avi03q8clgrFOrP5q3tRQewNL0Fw0MR443djbetfTNlO/BnS3HlkfETHL3Tu63qtNv
+         gvsi9LD2DzFzpVf0OPveF87+GFgPH4S16hoDLA+KSBIhEpn+v56HrnhqkgWcnzwpcvs0
+         xzcKX1XCRmZUfGbbDPLo5wyOzbQ6H8f6Ieo8y4XmMs+tN1NWsU8gvW4yOLLK39rBcji8
+         yqan3UVUJ9K/wW4TknQtHZ5r/iuBzOqAxVNMQHHG8VtjKlnfOv0OHlqVW595w/AWK7rP
+         K2D6GjaTeqgQ6o99g8I6aOPQ/Jbc/HVZlJ24l+VrsYYumIbiXLL69FiR7dwrVhrCGWsC
+         kPKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=af2cfZjf9x1S9FZ9MDXkYOztGP6qP0GOneEhB/eEIC0=;
+        b=VYSlpNIpbYAHLoBXH8xo4ZEkAfJLL5mMqJPMOzLrc1ESKzVfkWR5a+fafBD0RL6Sh7
+         06nUmTPz4c55lpQJTcWPOstMmrlPjtbh/l+ElrLu9eCVWIQNF1di/1e66kOcGUxNCf4Y
+         M95ShbbJgPPOINe//wf8f1gWM8akl/0yNswkVu//WtipLZNEQ1lZ7LtkASiEQ69lfFe1
+         x9WZxU+Eg6ZxTox+RqpdgMw4i/Leu9TJgAxc7jN76q9zdzTWnfChjOHKPMniYVBlkzI4
+         Ot7Gh7Qk5VWaBMJZIWNPILPEBO8Zu1FVGACmPHYZix4r2CBh3VL9VZp086hYOUHVrX5j
+         YD2g==
+X-Gm-Message-State: ANhLgQ3AsJhxXh1DWLyz+SV+p2SKcUyaWPShI/LTHwWyqk2L/MIpCRsH
+        Aw1bvCjGsrp0arfY/lc4QkIbMiSzJz1ZlUrX/RY=
+X-Google-Smtp-Source: ADFU+vse2mrhpQWQ46FGqAThVW5dYVYVNTdtnUQxbnZFtx6sP4gIg5N4+80B7pi4VKVVc7UzQq04sWlnL39gJJ/hXbs=
+X-Received: by 2002:adf:e408:: with SMTP id g8mr20764712wrm.198.1583742761475;
+ Mon, 09 Mar 2020 01:32:41 -0700 (PDT)
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: PkB65aL1SqtESF35r/jQn+utJHGlOfM4q7b0EC8/4akyCQ5zbSEBILSrYpOrT7a6
+References: <20200305103228.9686-1-zhang.lyra@gmail.com> <CAMuHMdVyy3v24zBxJFe5hYdnzdj80dvE2Z9GO4=AC1N8fD64pw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVyy3v24zBxJFe5hYdnzdj80dvE2Z9GO4=AC1N8fD64pw@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Mon, 9 Mar 2020 16:32:04 +0800
+Message-ID: <CAAfSe-spu2oNmfEYt+WQvRQy1bCC0e1MFjbUyBAFzghd5XNBfw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: change ARCH_SPRD Kconfig to tristate
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add =22pwm,uninitalized=22 devicetree flag support to pwm
-leds, which allows to defer pwm init to first use of led.
+Hi Geert,
 
-This allows to configure the PWM early in bootloader to let the LED
-blink until an application in Linux userspace set something different.
+On Mon, 9 Mar 2020 at 16:03, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Chunyan.
+>
+> On Thu, Mar 5, 2020 at 11:33 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >
+> > The default value of Kconfig for almost all sprd drivers are the same with
+> > ARCH_SPRD, making these drivers built as modules as default would be easier
+> > if we can set ARCH_SPRD as 'm', so this patch change ARCH_SPRD to tristate.
+> >
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> Can you actually boot a kernel on a Spreadtrum platform when all platform
+> and driver support is modular?
 
-Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
----
-Hi,
+Yes, even if all drivers are modular.
+But I hope serial can be builtin, then I can have a console to see
+kernel output before loading modules.
+Also, this's what Google GKI [1] asked :)
 
-I want to ask if such a patch is intresting for mainline and
-if it is woth to think about how to represent this state to user space.
+Regards,
+Chunyan
 
-Regards Denis
+[1] https://arstechnica.com/gadgets/2019/11/google-outlines-plans-for-mainline-linux-kernel-support-in-android/
 
- Documentation/devicetree/bindings/leds/leds-pwm.txt |  1 +
- drivers/leds/leds-pwm.c                             | 10 ++++++++--
- include/linux/leds_pwm.h                            |  1 +
- 3 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
-ntation/devicetree/bindings/leds/leds-pwm.txt
-index 6c6583c35f2f..4f58df631fc9 100644
---- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-@@ -19,6 +19,7 @@ LED sub-node properties:
-   see Documentation/devicetree/bindings/leds/common.txt
- - linux,default-trigger :  (optional)
-   see Documentation/devicetree/bindings/leds/common.txt
-+- pwm,uninitalized : defer PWM init to first brightness change of led
-=20
- Example:
-=20
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 8b6965a563e9..02c90f05602a 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -97,7 +97,8 @@ static int led_pwm_add(struct device *dev, struct led_p=
-wm_priv *priv,
- 	 * FIXME: pwm_apply_args() should be removed when switching to the
- 	 * atomic PWM API.
- 	 */
--	pwm_apply_args(led_data->pwm);
-+	if (!led->pwm_uninitialized)
-+		pwm_apply_args(led_data->pwm);
-=20
- 	pwm_get_args(led_data->pwm, &pargs);
-=20
-@@ -108,7 +109,9 @@ static int led_pwm_add(struct device *dev, struct led=
-_pwm_priv *priv,
- 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
- 	if (ret =3D=3D 0) {
- 		priv->num_leds++;
--		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
-+		if (!led->pwm_uninitialized)
-+			led_pwm_set(&led_data->cdev,
-+					led_data->cdev.brightness);
- 	} else {
- 		dev_err(dev, =22failed to register PWM led for %s: %d=5Cn=22,
- 			led->name, ret);
-@@ -143,6 +146,9 @@ static int led_pwm_create_fwnode(struct device *dev, =
-struct led_pwm_priv *priv)
- 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
- 					 &led.max_brightness);
-=20
-+		led.pwm_uninitialized =3D fwnode_property_read_bool(fwnode,
-+							=22pwm,uninitialized=22);
-+
- 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
- 		if (ret) {
- 			fwnode_handle_put(fwnode);
-diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
-index 93d101d28943..0b04dfd43654 100644
---- a/include/linux/leds_pwm.h
-+++ b/include/linux/leds_pwm.h
-@@ -10,6 +10,7 @@ struct led_pwm {
- 	const char	*default_trigger;
- 	unsigned	pwm_id __deprecated;
- 	u8 		active_low;
-+	u8		pwm_uninitialized;
- 	unsigned 	max_brightness;
- 	unsigned	pwm_period_ns;
- };
---=20
-2.25.1
-
-
-
-Diehl Connectivity Solutions GmbH
-Gesch=E4ftsf=FChrung: Horst Leonberger
-Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
-N=FCrnberg: HRB 32315
-_________________________________________________________________________=
-__________________________
-
-Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
-ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
-Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
-ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
-Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
- und/oder Publikation dieser E-Mail ist strengstens untersagt.
-- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
-Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
-chten/
-
-The contents of the above mentioned e-mail is not legally binding. This e=
--mail contains confidential and/or legally protected information. Please =
-inform us if you have received this e-mail by
-mistake and delete it in such a case. Each unauthorized reproduction, dis=
-closure, alteration, distribution and/or publication of this e-mail is st=
-rictly prohibited.=20
-- For general information on data protection and your respective rights p=
-lease visit https://www.diehl.com/group/en/transparency-and-information-o=
-bligations/
+>
+> > +++ b/arch/arm64/Kconfig.platforms
+> > @@ -249,7 +249,7 @@ config ARCH_TEGRA
+> >           This enables support for the NVIDIA Tegra SoC family.
+> >
+> >  config ARCH_SPRD
+> > -       bool "Spreadtrum SoC platform"
+> > +       tristate "Spreadtrum SoC platform"
+> >         help
+> >           Support for Spreadtrum ARM based SoCs
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
