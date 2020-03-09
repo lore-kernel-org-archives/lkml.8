@@ -2,186 +2,429 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C55C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F52C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8325120873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E910C20727
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:26:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZN2XnYD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OPxChQWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgCIN0K (ORCPT
+        id S1726545AbgCIN0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:26:10 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53794 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgCIN0K (ORCPT
+        Mon, 9 Mar 2020 09:26:46 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:49577 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726384AbgCIN0q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:26:10 -0400
-Received: by mail-pj1-f66.google.com with SMTP id l36so1600935pjb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 06:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SN/uB0D2Yzk6crG8CckiI8AbJhkaIxgSVOsdNRCejtQ=;
-        b=vZN2XnYDJ42k+ninu6A+IqHKelBwH0M+hvsD+QV5C1ROyLTi2CL/HhhIyjJdutTh/1
-         pm1NaWqdB3J+PCc/hmjN7jo8hHGJwXnBk4S+fbh5wZFbZ5jjP2Km+6L0VY7iMrY0L7aA
-         Y7p+WwwdH8DtI3Lb4sE1zsFcv5tQrvN4g/xCdPryr+YFKoAy2AZ2fR72wC2pJp4GuQKj
-         KcLsJGg4vKdABf8bMPdCfQuisRs+6A89s78laLH06lBhpeZBHPaDAyZYwR7gPXSVmw70
-         p6HMEoGKYu041hKfHOxlPj7MIZzisw82/ECfEnov4ZOLA/1j4hFO+xgcM4dmYDOiHlkl
-         EHlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SN/uB0D2Yzk6crG8CckiI8AbJhkaIxgSVOsdNRCejtQ=;
-        b=F5lGnMVnOvyCdCfkMeT+FXYxdnkKRGB5coFzD8s/J5Vb+tWFqXLJyMAihfFB+YXTZ4
-         jirVkGCey/z5uteG9YoIFLySWu9e8nFrjV6oLHI4vPBtcWwXlfecywGrEwUHZkBALdfU
-         cGvTDyO+i0L2GqX3E/eh8EGi7PYo49lGqlv50ALmm04/1hngjVNJABD1XzW4cJf4ILi4
-         comfRnUNypeVpwVizBffkUY2Q5AMiSkCqLIV7OgSR386SdgDcjHvjF6kha+cSDL+Aaj+
-         PNIMPLWDMQgk9JZOnk4CvD9L3z2aSI3UgYM1ECXemzvjELeP573UfsTLX7bEKVmQU1co
-         6Vww==
-X-Gm-Message-State: ANhLgQ07gP1M3/gTlWlXCSb9dmX+QugbBn12uDLutGTWQTGh7zTULlnP
-        F8gTEeG3KCd2JQmQVnjdBpE=
-X-Google-Smtp-Source: ADFU+vuvA9G9Mzw9D+dwlX93AP7zcnrABY3oCgOA0sXAqr3IsZ/b+/wj64/nixCwGiiRrOLixf9kiw==
-X-Received: by 2002:a17:90b:238c:: with SMTP id mr12mr3164241pjb.161.1583760368597;
-        Mon, 09 Mar 2020 06:26:08 -0700 (PDT)
-Received: from Shreeya-Patel ([2405:204:2188:9cfe:18bc:a849:c699:3914])
-        by smtp.googlemail.com with ESMTPSA id v133sm33700710pfc.68.2020.03.09.06.26.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Mar 2020 06:26:07 -0700 (PDT)
-Message-ID: <b2db452217ced8bbd6f85121bf4c8fef3881d6ba.camel@gmail.com>
-Subject: Re: [Outreachy kernel] [PATCH] Staging: rtl8188eu: Add space around
- operators
-From:   Shreeya Patel <shreeya.patel23498@gmail.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Joe Perches <joe@perches.com>,
-        outreachy-kernel <outreachy-kernel@googlegroups.com>,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, sbrivio@redhat.com,
-        daniel.baluta@gmail.com, nramas@linux.microsoft.com,
-        hverkuil@xs4all.nl, Larry.Finger@lwfinger.net
-Date:   Mon, 09 Mar 2020 18:56:00 +0530
-In-Reply-To: <alpine.DEB.2.21.2003090825280.2676@hadrien>
-References: <20200308220004.9960-1-shreeya.patel23498@gmail.com>
-          <f1327099b774e141bbeaa8abc47f98b9c6d49264.camel@perches.com>
-         <af1a27fb8c5f7efbaf99ce3055cf3801b366d627.camel@gmail.com>
-         <alpine.DEB.2.21.2003090825280.2676@hadrien>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 9 Mar 2020 09:26:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583760405; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=wMMrzD7T/RIwHvzv+Ze2mZTFGghdcHPfBa6bIbLUCGs=; b=OPxChQWOWLEReZaISt5CPh9lI27dojTPmgLJ1UKZW2x/uKpig/HY3dAeyM77IQrW5UADH0JI
+ dY86HI3rlfPijR9rplRta+hmS7S/M1dWqPieUVeLXDP2QgBeVREWX+PSqHfh5oN7fDv5okaI
+ 9GQdmIvTFszxto57yk+nUJCWKmM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e664411.7fe1cfd17b20-smtp-out-n03;
+ Mon, 09 Mar 2020 13:26:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C4ACAC44795; Mon,  9 Mar 2020 13:26:39 +0000 (UTC)
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0FC46C44788;
+        Mon,  9 Mar 2020 13:26:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0FC46C44788
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V3 1/4] backlight: qcom-wled: convert the wled bindings to .yaml format
+Date:   Mon,  9 Mar 2020 18:55:59 +0530
+Message-Id: <1583760362-26978-2-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
+References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-09 at 08:35 +0100, Julia Lawall wrote:
-> On Mon, 9 Mar 2020, Shreeya Patel wrote:
-> 
-> > On Sun, 2020-03-08 at 16:05 -0700, Joe Perches wrote:
-> > > On Mon, 2020-03-09 at 03:30 +0530, Shreeya Patel wrote:
-> > > > Add space around operators for improving the code
-> > > > readability.
-> > > 
-> > > Hello again Shreeya.
-> > > 
-> > 
-> > I have some questions here...
-> > 
-> > > The subject isn't really quite appropriate as you
-> > > are not doing this space around operator addition
-> > > for the entire subsystem.
-> > > 
-> > > IMO, the subject should be:
-> > > 
-> > > [PATCH] staging: rtl8188eu: rtw_mlme: Add spaces around operators
-> > > 
-> > > because you are only performing this change on this
-> > > single file.
-> > > 
-> > > If you were to do this for every single file in the
-> > > subsystem, you could have many individual patches with
-> > > the exact same subject line.
-> > > 
-> > > And it would be good to show in the changelog that you
-> > > have compiled the file pre and post patch without object
-> > > code change.
-> > > 
-> > 
-> > I'm not sure how to show this. Do you mean to add the output of
-> > "make drivers/staging/rtl8188eu/core" before and after the changes?
-> 
-> You are working on one specific file, maybe foo.c.  Compile before
-> making changes, which will give you foo.o.  Rename that file to
-> something
-> else.  Make your changes and compile again.  Do a diff with the
-> previously
-> compiled file.  It should produce nothing, indicating no difference.
-> 
-> If this .o file doesn't change and you only changed this .c file, the
-> whole compiled driver won't change either.
-> 
+Convert the qcom-wled bindings from .txt to .yaml format.
 
-ok, got it.
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+ .../bindings/leds/backlight/qcom-wled.txt          | 154 -----------------
+ .../bindings/leds/backlight/qcom-wled.yaml         | 184 +++++++++++++++++++++
+ 2 files changed, 184 insertions(+), 154 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
 
-> > I also don't understand the meaning of no object code change. If we
-> > are
-> > making the changes to code and then compiling it using the make
-> > command
-> > then a new file with .o extension is created and replaced by the
-> > previous one isn't it?
-> > 
-> > > Also, it's good to show that git diff -w shows no source
-> > > file changes.
-> > > 
-> > 
-> > And this has to be...
-> > git diff -w --shortstat drivers/staging/rtl8188eu/core/
-> 
-> --shortstat does not seem useful.  What you hope to see is that it
-> produces nothing.
-> 
-Okay.
-I will send a V2 with all the changes required.
-
-Btw Joe, I am working against staging-testing tree
-
-> julia
-> 
-> > Am I correct?
-> > 
-> > Thanks
-> > 
-> > > > Reported by checkpatch.pl
-> > > > 
-> > > > Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
-> > > > ---
-> > > >  drivers/staging/rtl8188eu/core/rtw_mlme.c | 40 +++++++++++--
-> > > > ----
-> > > > ------
-> > > >  1 file changed, 20 insertions(+), 20 deletions(-)
-> > > 
-> > > When I try this using checkpatch --fix-inplace, I get
-> > > 21 changes against the latest -next tree.
-> > > 
-> > > What tree are you doing this against?
-> > > 
-> > > 
-> > 
-> > --
-> > You received this message because you are subscribed to the Google
-> > Groups "outreachy-kernel" group.
-> > To unsubscribe from this group and stop receiving emails from it,
-> > send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit 
-> > https://groups.google.com/d/msgid/outreachy-kernel/af1a27fb8c5f7efbaf99ce3055cf3801b366d627.camel%40gmail.com
-> > .
-> > 
-
+diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+deleted file mode 100644
+index c06863b..0000000
+--- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
++++ /dev/null
+@@ -1,154 +0,0 @@
+-Binding for Qualcomm Technologies, Inc. WLED driver
+-
+-WLED (White Light Emitting Diode) driver is used for controlling display
+-backlight that is part of PMIC on Qualcomm Technologies, Inc. reference
+-platforms. The PMIC is connected to the host processor via SPMI bus.
+-
+-- compatible
+-	Usage:        required
+-	Value type:   <string>
+-	Definition:   should be one of:
+-			"qcom,pm8941-wled"
+-			"qcom,pmi8998-wled"
+-			"qcom,pm660l-wled"
+-
+-- reg
+-	Usage:        required
+-	Value type:   <prop encoded array>
+-	Definition:   Base address of the WLED modules.
+-
+-- default-brightness
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   brightness value on boot, value from: 0-4095.
+-		      Default: 2048
+-
+-- label
+-	Usage:        required
+-	Value type:   <string>
+-	Definition:   The name of the backlight device
+-
+-- qcom,cs-out
+-	Usage:        optional
+-	Value type:   <bool>
+-	Definition:   enable current sink output.
+-		      This property is supported only for PM8941.
+-
+-- qcom,cabc
+-	Usage:        optional
+-	Value type:   <bool>
+-	Definition:   enable content adaptive backlight control.
+-
+-- qcom,ext-gen
+-	Usage:        optional
+-	Value type:   <bool>
+-	Definition:   use externally generated modulator signal to dim.
+-		      This property is supported only for PM8941.
+-
+-- qcom,current-limit
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   mA; per-string current limit; value from 0 to 25 with
+-		      1 mA step. Default 20 mA.
+-		      This property is supported only for pm8941.
+-
+-- qcom,current-limit-microamp
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   uA; per-string current limit; value from 0 to 30000 with
+-		      2500 uA step. Default 25 mA.
+-
+-- qcom,current-boost-limit
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   mA; boost current limit.
+-		      For pm8941: one of: 105, 385, 525, 805, 980, 1260, 1400,
+-		      1680. Default: 805 mA.
+-		      For pmi8998: one of: 105, 280, 450, 620, 970, 1150, 1300,
+-		      1500. Default: 970 mA.
+-
+-- qcom,switching-freq
+-	Usage:        optional
+-	Value type:   <u32>
+-	 Definition:   kHz; switching frequency; one of: 600, 640, 685, 738,
+-		       800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
+-		       4800, 9600.
+-		       Default: for pm8941: 1600 kHz
+-				for pmi8998: 800 kHz
+-
+-- qcom,ovp
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   V; Over-voltage protection limit; one of:
+-		      27, 29, 32, 35. Default: 29V
+-		      This property is supported only for PM8941.
+-
+-- qcom,ovp-millivolt
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   mV; Over-voltage protection limit;
+-		      For pmi8998: one of 18100, 19600, 29600, 31100.
+-		      Default 29600 mV.
+-		      If this property is not specified for PM8941, it
+-		      falls back to "qcom,ovp" property.
+-
+-- qcom,num-strings
+-	Usage:        optional
+-	Value type:   <u32>
+-	Definition:   #; number of led strings attached;
+-		      value: For PM8941 from 1 to 3. Default: 2
+-			     For PMI8998 from 1 to 4.
+-
+-- interrupts
+-	Usage:        optional
+-	Value type:   <prop encoded array>
+-	Definition:   Interrupts associated with WLED. This should be
+-		      "short" and "ovp" interrupts. Interrupts can be
+-		      specified as per the encoding listed under
+-		      Documentation/devicetree/bindings/spmi/
+-		      qcom,spmi-pmic-arb.txt.
+-
+-- interrupt-names
+-	Usage:        optional
+-	Value type:   <string>
+-	Definition:   Interrupt names associated with the interrupts.
+-		      Must be "short" and "ovp". The short circuit detection
+-		      is not supported for PM8941.
+-
+-- qcom,enabled-strings
+-	Usage:        optional
+-	Value tyoe:   <u32 array>
+-	Definition:   Array of the WLED strings numbered from 0 to 3. Each
+-		      string of leds are operated individually. Specify the
+-		      list of strings used by the device. Any combination of
+-		      led strings can be used.
+-
+-- qcom,external-pfet
+-	Usage:        optional
+-	Value type:   <bool>
+-	Definition:   Specify if external PFET control for short circuit
+-		      protection is used. This property is supported only
+-		      for PMI8998.
+-
+-- qcom,auto-string-detection
+-	Usage:        optional
+-	Value type:   <bool>
+-	Definition:   Enables auto-detection of the WLED string configuration.
+-		      This feature is not supported for PM8941.
+-
+-
+-Example:
+-
+-pm8941-wled@d800 {
+-	compatible = "qcom,pm8941-wled";
+-	reg = <0xd800>;
+-	label = "backlight";
+-
+-	qcom,cs-out;
+-	qcom,current-limit = <20>;
+-	qcom,current-boost-limit = <805>;
+-	qcom,switching-freq = <1600>;
+-	qcom,ovp = <29>;
+-	qcom,num-strings = <2>;
+-	qcom,enabled-strings = <0 1>;
+-};
+diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+new file mode 100644
+index 0000000..d334f81
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+@@ -0,0 +1,184 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/leds/backlight/qcom-wled.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Binding for Qualcomm Technologies, Inc. WLED driver
++
++maintainers:
++  - Lee Jones <lee.jones@linaro.org>
++
++description: |
++  WLED (White Light Emitting Diode) driver is used for controlling display
++  backlight that is part of PMIC on Qualcomm Technologies, Inc. reference
++  platforms. The PMIC is connected to the host processor via SPMI bus.
++
++properties:
++  compatible :
++    enum:
++       - qcom,pm8941-wled
++       - qcom,pmi8998-wled
++       - qcom,pm660l-wled
++
++  reg:
++    maxItems: 1
++
++  default-brightness:
++    maxItems: 1
++    description:
++      brightness value on boot, value from 0-4095.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++        default: 2048
++
++  label:
++    maxItems: 1
++    description:
++      The name of the backlight device.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/string
++
++  qcom,cs-out:
++    description:
++      enable current sink output.
++      This property is supported only for PM8941.
++    type: boolean
++
++  qcom,cabc:
++    description:
++      enable content adaptive backlight control.
++    type: boolean
++
++  qcom,ext-gen:
++    description:
++      use externally generated modulator signal to dim.
++      This property is supported only for PM8941.
++    type: boolean
++
++  qcom,current-limit:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      mA; per-string current limit; value from 0 to 25 with
++      1 mA step. This property is supported only for pm8941.
++    default: 20
++
++  qcom,current-limit-microamp:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      uA; per-string current limit; value from 0 to 30000 with
++      2500 uA step.
++    default: 25
++
++  qcom,current-boost-limit:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      mA; boost current limit.
++      For pm8941 one of 105, 385, 525, 805, 980, 1260, 1400, 1680.
++      Default, 805 mA.
++      For pmi8998 one of 105, 280, 450, 620, 970, 1150, 1300,
++      1500. Default 970 mA.
++
++  qcom,switching-freq:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      kHz; switching frequency; one of 600, 640, 685, 738,
++      800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
++      4800, 9600.
++      Default for pm8941 1600 kHz
++               for pmi8998 800 kHz
++
++  qcom,ovp:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      V; Over-voltage protection limit; one of 27, 29, 32, 35. Default 29V
++      This property is supported only for PM8941.
++
++  qcom,ovp-millivolt:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      mV; Over-voltage protection limit;
++      For pmi8998 one of 18100, 19600, 29600, 31100.
++      Default 29600 mV.
++      If this property is not specified for PM8941, it
++      falls back to "qcom,ovp" property.
++
++  qcom,num-strings:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      number of led strings attached;
++      value for PM8941 from 1 to 3. Default 2
++      For PMI8998 from 1 to 4.
++
++  interrupts:
++    maxItems: 2
++    description:
++      Interrupts associated with WLED. This should be
++      "short" and "ovp" interrupts. Interrupts can be
++      specified as per the encoding listed under
++      Documentation/devicetree/bindings/spmi/
++      qcom,spmi-pmic-arb.txt.
++
++  interrupt-names:
++    description:
++      Interrupt names associated with the interrupts.
++      Must be "short" and "ovp". The short circuit detection
++      is not supported for PM8941.
++
++  qcom,enabled-strings:
++    maxItems: 1
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++    description:
++      Array of the WLED strings numbered from 0 to 3. Each
++      string of leds are operated individually. Specify the
++      list of strings used by the device. Any combination of
++      led strings can be used.
++
++  qcom,external-pfet:
++    description:
++      Specify if external PFET control for short circuit
++      protection is used. This property is supported only
++      for PMI8998.
++    type: boolean
++
++  qcom,auto-string-detection:
++    description:
++      Enables auto-detection of the WLED string configuration.
++      This feature is not supported for PM8941.
++    type: boolean
++
++required:
++  - compatible
++  - reg
++  - label
++
++examples:
++  - |
++    pm8941-wled@d800 {
++        compatible = "qcom,pm8941-wled";
++        reg = <0xd800 0x100>;
++        label = "backlight";
++
++        qcom,cs-out;
++        qcom,current-limit = <20>;
++        qcom,current-boost-limit = <805>;
++        qcom,switching-freq = <1600>;
++        qcom,ovp = <29>;
++        qcom,num-strings = <2>;
++        qcom,enabled-strings = <0 1>;
++     };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
