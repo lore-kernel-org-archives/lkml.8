@@ -2,68 +2,71 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43DDC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A95C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7FF20727
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317D620828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:55:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mF9Mfr/8"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GByup/CP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbgCIQzy (ORCPT
+        id S1727279AbgCIQz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:55:54 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34463 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbgCIQzx (ORCPT
+        Mon, 9 Mar 2020 12:55:56 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36905 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbgCIQzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:55:53 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a23so1515811plm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:55:51 -0700 (PDT)
+        Mon, 9 Mar 2020 12:55:55 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f16so2072729plj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:55:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YKC9LNaZtyUY/Ff2305WgJwZtiH/JDgzAH1pAGoBoKg=;
-        b=mF9Mfr/83Mi60PJDifAAgN2akM9nEfNqk9CHt5jlMY4lyvbmaTza7qEmUrnkqWu/87
-         sdoudwgpopvaiVKUindhwzWAUUFvQrua85KAxeRhVvmHl1bvM4dQqqf50bCU50nQ6at+
-         Te7+0a/h9Pwf9iIdxhJPJvFd0U8Hpf01Z41NLsSlRvv+8P8FQ6xNa7lT+l0WlFh4XJbI
-         IyXTvv105PQQC8xZuBcKi20Y2rC0AY5y12jIoyR5SyiISQBWoQ1KLl4iqZ2WJOYI7iZ1
-         ZvVW1QUQiiV+piqh0Et7/UnA120i6gC0R2iNFkENXxIN1fRjl86xLib0acsjL1niES5X
-         5bJg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=t+sOri2FxRcWtNEoCzFhDA9PpUDCsy8ZKbuRwF8DnYo=;
+        b=GByup/CPxw6+uWC5i9i57G+tx1/0qlQ9mxB7ym/z04BJBTDe2BuGL0UaFnTuXDE0+y
+         DxroElj9BenJf8LoT5q+Y45ceFnWVsFVkdeC4vOci7KdXsbvl+aFZpyQ/P5AnoUEw+Tz
+         0XcdDnt5IQ606O/Vmj7QBnpSZW68EfS9DXw6OoOnuUrp3aEqlZybVs83SkN8NuyrN6Av
+         jNfjOx0d6BjtM//WlXKEBUwRGnwwpkW8Q1OLzxZaXpaPn1CqJb2USdY9XdB8H9V5dMee
+         TFWDLtuTpGEvIG3ub6zYV7elzrrhfEDFcRKN+rdtzZNi3LcLRIrCGu7sXqbdGpgKlj3d
+         g+Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YKC9LNaZtyUY/Ff2305WgJwZtiH/JDgzAH1pAGoBoKg=;
-        b=j6qqW2xCft8orACALyK8+Zs/SUfvqOQUc0JEe+ufFGCuSEoFPX1eHZCyPe/gWLwKE+
-         f58NPL0f3CUKX3dnR2oVM0fkXtFwegHMFPWOfFB63aIAF+KETlB/E0luBJQ29cq+RxJ0
-         r3A+oS9pnV9u2Q/E3Gl0ifj1NT8G1GVrFov8V8/ST54dn3XZwe1yjMM5qZAbsf1BGs79
-         +T57DcDSxam6pePlKt2c+YB7K/WNoH/jRUljUvZTx/jwmiGSgYa8z161Bthw3gyVMIzx
-         mXPvwu/A0S2tJEPM1k67biG/obNmoDewZyynz/unUYht4bm/wXdBWjsj5wMM105PRNl3
-         wcFQ==
-X-Gm-Message-State: ANhLgQ2r6o/k/YlYay8biAMpeW38LsifxNzzECHnnVN027XJqXyaQ4Z1
-        2I1kwB2lib6Mzj4mpjR6I77G6g==
-X-Google-Smtp-Source: ADFU+vtfAu9oURnvRZb4wdaOx8JAoyHiyo47BPzGc96sPN8/2lneZdc9XKADgW+HjDDeUytpou7qnA==
-X-Received: by 2002:a17:902:8d93:: with SMTP id v19mr16980723plo.327.1583772951184;
-        Mon, 09 Mar 2020 09:55:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=t+sOri2FxRcWtNEoCzFhDA9PpUDCsy8ZKbuRwF8DnYo=;
+        b=QicTaHUefuCxnl9bVqSsQs6sJhSoTFmQTgbwetSvmPA8hUAYuwSWKr199whFjD+n9D
+         FevjEQtTWCFO26IUXdBUT09T80/nZX2crONeh/SylF3yyJ6HyXvAc9g4jwQgwOX2hFO+
+         paNu36/Snt6lWmAjrDEgrr/CfIikRafs1a2KjZhyiEyqIKk5QA054VpZFMXHhxXZJSz+
+         d2j+32RV8oiAWr0vUPuS3nVXcH8oI4LnWGow0KPO5ybXP4PkfuS/4kQFGq3cc/N/06sI
+         U31XWap7jdL1TvARJrT14jddSgxX6AKQasg+qgLYiyJR1erdomFm1lyP8Gj5eNotcPy8
+         LvyQ==
+X-Gm-Message-State: ANhLgQ3QpNJIyv2Q5Ij0kiNOCKChPtc/aqYamb3TAiB930EH8wHBtnVi
+        hBWk7rGs9tnmzGINwuZXkrEBeg==
+X-Google-Smtp-Source: ADFU+vtUOJLBzqPaE+z4HqWqtoGyoRlYUkGhYfve2/S+oXYgz5dUBhN02bOjpcHJ/8NjzQVS0QNQdw==
+X-Received: by 2002:a17:902:fe15:: with SMTP id g21mr17419647plj.215.1583772953089;
+        Mon, 09 Mar 2020 09:55:53 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id cm2sm104013pjb.23.2020.03.09.09.55.48
+        by smtp.gmail.com with ESMTPSA id cm2sm104013pjb.23.2020.03.09.09.55.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 09:55:50 -0700 (PDT)
+        Mon, 09 Mar 2020 09:55:52 -0700 (PDT)
 From:   Zong Li <zong.li@sifive.com>
 To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
         aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH v3 0/9] Support strict kernel memory permissions for security
-Date:   Tue, 10 Mar 2020 00:55:35 +0800
-Message-Id: <cover.1583772574.git.zong.li@sifive.com>
+Subject: [PATCH v3 1/9] riscv: add ARCH_HAS_SET_MEMORY support
+Date:   Tue, 10 Mar 2020 00:55:36 +0800
+Message-Id: <ce1ed9995e8340f4dae3ad76c5f52f297449859f.1583772574.git.zong.li@sifive.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1583772574.git.zong.li@sifive.com>
+References: <cover.1583772574.git.zong.li@sifive.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,54 +74,234 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The main purpose of this patch series is changing the kernel mapping permission
-, make sure that code is not writeable, data is not executable, and read-only
-data is neither writable nor executable.
+Add set_memory_ro/rw/x/nx architecture hooks to change the page
+attribution.
 
-This patch series also supports the relevant implementations such as
-ARCH_HAS_SET_MEMORY, ARCH_HAS_SET_DIRECT_MAP,
-ARCH_SUPPORTS_DEBUG_PAGEALLOC and DEBUG_WX.
+Use own set_memory.h rather than generic set_memory.h
+(i.e. include/asm-generic/set_memory.h), because we want to add other
+function prototypes here.
 
-Changes in v3:
- - Fix build error on nommu configuration. We already support nommu on
-   RISC-V, so we should consider nommu case and test not only rv32/64,
-   but also nommu.
-
-Changes in v2:
- - Use _data to specify the start of data section with write permission.
- - Change ftrace patch text implementaion.
- - Separate DEBUG_WX patch to another patchset.
-
-Zong Li (9):
-  riscv: add ARCH_HAS_SET_MEMORY support
-  riscv: add ARCH_HAS_SET_DIRECT_MAP support
-  riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
-  riscv: move exception table immediately after RO_DATA
-  riscv: add alignment for text, rodata and data sections
-  riscv: add STRICT_KERNEL_RWX support
-  riscv: add macro to get instruction length
-  riscv: introduce interfaces to patch kernel code
-  riscv: patch code by fixmap mapping
-
- arch/riscv/Kconfig                  |   6 +
- arch/riscv/include/asm/bug.h        |   8 ++
- arch/riscv/include/asm/fixmap.h     |   2 +
- arch/riscv/include/asm/patch.h      |  12 ++
- arch/riscv/include/asm/set_memory.h |  48 +++++++
- arch/riscv/kernel/Makefile          |   4 +-
- arch/riscv/kernel/ftrace.c          |  13 +-
- arch/riscv/kernel/patch.c           | 120 ++++++++++++++++++
- arch/riscv/kernel/traps.c           |   3 +-
- arch/riscv/kernel/vmlinux.lds.S     |  11 +-
+Signed-off-by: Zong Li <zong.li@sifive.com>
+---
+ arch/riscv/Kconfig                  |   1 +
+ arch/riscv/include/asm/set_memory.h |  24 +++++
  arch/riscv/mm/Makefile              |   2 +-
- arch/riscv/mm/init.c                |  44 +++++++
- arch/riscv/mm/pageattr.c            | 187 ++++++++++++++++++++++++++++
- 13 files changed, 445 insertions(+), 15 deletions(-)
- create mode 100644 arch/riscv/include/asm/patch.h
+ arch/riscv/mm/pageattr.c            | 150 ++++++++++++++++++++++++++++
+ 4 files changed, 176 insertions(+), 1 deletion(-)
  create mode 100644 arch/riscv/include/asm/set_memory.h
- create mode 100644 arch/riscv/kernel/patch.c
  create mode 100644 arch/riscv/mm/pageattr.c
 
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index af9b03609c5a..9ab592aa1b5f 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -60,6 +60,7 @@ config RISCV
+ 	select HAVE_EBPF_JIT if 64BIT
+ 	select EDAC_SUPPORT
+ 	select ARCH_HAS_GIGANTIC_PAGE
++	select ARCH_HAS_SET_MEMORY
+ 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+ 	select SPARSEMEM_STATIC if 32BIT
+ 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
+new file mode 100644
+index 000000000000..79a810f0f38b
+--- /dev/null
++++ b/arch/riscv/include/asm/set_memory.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2019 SiFive
++ */
++
++#ifndef _ASM_RISCV_SET_MEMORY_H
++#define _ASM_RISCV_SET_MEMORY_H
++
++/*
++ * Functions to change memory attributes.
++ */
++#ifdef CONFIG_MMU
++int set_memory_ro(unsigned long addr, int numpages);
++int set_memory_rw(unsigned long addr, int numpages);
++int set_memory_x(unsigned long addr, int numpages);
++int set_memory_nx(unsigned long addr, int numpages);
++#else
++static inline int set_memory_ro(unsigned long addr, int numpages) { return 0; }
++static inline int set_memory_rw(unsigned long addr, int numpages) { return 0; }
++static inline int set_memory_x(unsigned long addr, int numpages) { return 0; }
++static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
++#endif
++
++#endif /* _ASM_RISCV_SET_MEMORY_H */
+diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+index 814e16a8d68a..363ef01c30b1 100644
+--- a/arch/riscv/mm/Makefile
++++ b/arch/riscv/mm/Makefile
+@@ -7,7 +7,7 @@ endif
+ 
+ obj-y += init.o
+ obj-y += extable.o
+-obj-$(CONFIG_MMU) += fault.o
++obj-$(CONFIG_MMU) += fault.o pageattr.o
+ obj-y += cacheflush.o
+ obj-y += context.o
+ 
+diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
+new file mode 100644
+index 000000000000..fcd59ef2835b
+--- /dev/null
++++ b/arch/riscv/mm/pageattr.c
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2019 SiFive
++ */
++
++#include <linux/pagewalk.h>
++#include <asm/pgtable.h>
++#include <asm/tlbflush.h>
++#include <asm/bitops.h>
++
++struct pageattr_masks {
++	pgprot_t set_mask;
++	pgprot_t clear_mask;
++};
++
++static unsigned long set_pageattr_masks(unsigned long val, struct mm_walk *walk)
++{
++	struct pageattr_masks *masks = walk->private;
++	unsigned long new_val = val;
++
++	new_val &= ~(pgprot_val(masks->clear_mask));
++	new_val |= (pgprot_val(masks->set_mask));
++
++	return new_val;
++}
++
++static int pageattr_pgd_entry(pgd_t *pgd, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pgd_t val = READ_ONCE(*pgd);
++
++	if (pgd_leaf(val)) {
++		val = __pgd(set_pageattr_masks(pgd_val(val), walk));
++		set_pgd(pgd, val);
++	}
++
++	return 0;
++}
++
++static int pageattr_p4d_entry(p4d_t *p4d, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	p4d_t val = READ_ONCE(*p4d);
++
++	if (p4d_leaf(val)) {
++		val = __p4d(set_pageattr_masks(p4d_val(val), walk));
++		set_p4d(p4d, val);
++	}
++
++	return 0;
++}
++
++static int pageattr_pud_entry(pud_t *pud, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pud_t val = READ_ONCE(*pud);
++
++	if (pud_leaf(val)) {
++		val = __pud(set_pageattr_masks(pud_val(val), walk));
++		set_pud(pud, val);
++	}
++
++	return 0;
++}
++
++static int pageattr_pmd_entry(pmd_t *pmd, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pmd_t val = READ_ONCE(*pmd);
++
++	if (pmd_leaf(val)) {
++		val = __pmd(set_pageattr_masks(pmd_val(val), walk));
++		set_pmd(pmd, val);
++	}
++
++	return 0;
++}
++
++static int pageattr_pte_entry(pte_t *pte, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pte_t val = READ_ONCE(*pte);
++
++	val = __pte(set_pageattr_masks(pte_val(val), walk));
++	set_pte(pte, val);
++
++	return 0;
++}
++
++static int pageattr_pte_hole(unsigned long addr, unsigned long next,
++			     int depth, struct mm_walk *walk)
++{
++	/* Nothing to do here */
++	return 0;
++}
++
++const static struct mm_walk_ops pageattr_ops = {
++	.pgd_entry = pageattr_pgd_entry,
++	.p4d_entry = pageattr_p4d_entry,
++	.pud_entry = pageattr_pud_entry,
++	.pmd_entry = pageattr_pmd_entry,
++	.pte_entry = pageattr_pte_entry,
++	.pte_hole = pageattr_pte_hole,
++};
++
++static int __set_memory(unsigned long addr, int numpages, pgprot_t set_mask,
++			pgprot_t clear_mask)
++{
++	int ret;
++	unsigned long start = addr;
++	unsigned long end = start + PAGE_SIZE * numpages;
++	struct pageattr_masks masks = {
++		.set_mask = set_mask,
++		.clear_mask = clear_mask
++	};
++
++	if (!numpages)
++		return 0;
++
++	down_read(&init_mm.mmap_sem);
++	ret =  walk_page_range_novma(&init_mm, start, end, &pageattr_ops, NULL,
++				     &masks);
++	up_read(&init_mm.mmap_sem);
++
++	flush_tlb_kernel_range(start, end);
++
++	return ret;
++}
++
++int set_memory_ro(unsigned long addr, int numpages)
++{
++	return __set_memory(addr, numpages, __pgprot(_PAGE_READ),
++			    __pgprot(_PAGE_WRITE));
++}
++
++int set_memory_rw(unsigned long addr, int numpages)
++{
++	return __set_memory(addr, numpages, __pgprot(_PAGE_READ | _PAGE_WRITE),
++			    __pgprot(0));
++}
++
++int set_memory_x(unsigned long addr, int numpages)
++{
++	return __set_memory(addr, numpages, __pgprot(_PAGE_EXEC), __pgprot(0));
++}
++
++int set_memory_nx(unsigned long addr, int numpages)
++{
++	return __set_memory(addr, numpages, __pgprot(0), __pgprot(_PAGE_EXEC));
++}
 -- 
 2.25.1
 
