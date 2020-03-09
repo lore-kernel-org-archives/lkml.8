@@ -2,136 +2,130 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE40C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0165CC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D488420828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:21:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tg0va+Ty"
+	by mail.kernel.org (Postfix) with ESMTP id D604520828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgCIIVL (ORCPT
+        id S1726475AbgCIIVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:21:11 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33061 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgCIIVL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:21:11 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d22so6395915qtn.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 01:21:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+AmaLlbiWLt+TX3UuGAGFHaSPjHO8BCUcdCcLxJEM2c=;
-        b=Tg0va+TymUv3GuTlS5e8oTEcJ/tf/03YU7zol790GrSBcP/5EfHlkOnIoQW1hyhIPu
-         U6FEs++MrAOhNxvIO3kxcPKXxEcy0zbEoeeIF5iJWX8MUcBDclZZQrO+vCtQhxQjf1I8
-         ggJzC7m82pJXP2Q9R1U+y38cXbqsoNJ+0vItXtbX3Dw1WH5zEJppSRFL6zV3Y0BlufBR
-         TsjszgdS2Cac/z7cGXIzpXnbhRmhEccumSr42Gdonnc0lxxMqkQ2SKjEQweyQr8laEly
-         ZHtJBb5xYI2cpD42MnBhpaxRBGHNS+rW4DYCYR3taQn7UyvULvnRVpdKcji5wXmdiuK0
-         TsEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+AmaLlbiWLt+TX3UuGAGFHaSPjHO8BCUcdCcLxJEM2c=;
-        b=fCi3tmP2r3L1PcZJS+MYL03Xihg7ZpoXhA1LetVC4lspljhYhkvjedPkQ1Qq0F8Q4+
-         WBaQiQCgVtTf4lnGjd+30XWc9xkwoa4Zjf+y7pINcb4vokwSQ6Y55OiQ2mQVJM/USiGZ
-         mRqA0bvK94P6bHUjrrGJJqLbpdfYHHVEjUSDVDBmT8rKl23eqWtUA2oc4cImm1hmuAFV
-         UXpPGZ+wg2wSlAc12VBlKbE3ao0mVne1OjSa+WzHikIIFnbLhJKwWex0r4RqCpOdddxg
-         6YKa07YFuBjQ0nJRNjMSofGL5TntH6V5ntyCPx/ZFFB7FmYARSbWhmyCFc9pDgOtaP6Z
-         ha4w==
-X-Gm-Message-State: ANhLgQ3bdMgRDC+q6TRwd3Nm1PAZcpPaFIHEKm15uoDyVwcgmwkvzCUv
-        co7RDXN3YnFXWDMojvNFFTCe1VgUNYckKsg/thgtjQ==
-X-Google-Smtp-Source: ADFU+vvJ7/CtdWJbDQ9hp55oWelT68zYReFpKzLUyahx7UcTfYYh9fk3xqX0+EF8UXLLo4wOG3DoZPAZMiZg2ogIeOU=
-X-Received: by 2002:aed:2591:: with SMTP id x17mr1765941qtc.380.1583742069992;
- Mon, 09 Mar 2020 01:21:09 -0700 (PDT)
+        Mon, 9 Mar 2020 04:21:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55562 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726215AbgCIIVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:21:14 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E35596FD0CB43560891F;
+        Mon,  9 Mar 2020 16:20:26 +0800 (CST)
+Received: from [127.0.0.1] (10.133.205.80) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 9 Mar 2020
+ 16:20:24 +0800
+Subject: Re: [PATCH] timer_list: avoid other cpu soft lockup when printing
+ timer list
+To:     Stephen Boyd <sboyd@kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1582170152-69418-1-git-send-email-yangyingliang@huawei.com>
+ <158224928306.184098.11550548610262156729@swboyd.mtv.corp.google.com>
+CC:     <tglx@linutronix.de>, <john.stultz@linaro.org>
+From:   Yang Yingliang <yangyingliang@huawei.com>
+Message-ID: <5E65FC47.8070102@huawei.com>
+Date:   Mon, 9 Mar 2020 16:20:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-References: <000000000000ff323f05a053100c@google.com> <CAG48ez02bt7V4+n68MNK3bmHpXxDnNmLZn8LpZ8r2w63ZhrkiQ@mail.gmail.com>
-In-Reply-To: <CAG48ez02bt7V4+n68MNK3bmHpXxDnNmLZn8LpZ8r2w63ZhrkiQ@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 9 Mar 2020 09:20:58 +0100
-Message-ID: <CACT4Y+YokrJkh0ew-86=zsLLTr9Qnaom5gJeUX9TSMW7tDj=Eg@mail.gmail.com>
-Subject: Re: general protection fault in syscall_return_slowpath
-To:     Jann Horn <jannh@google.com>,
-        syzkaller <syzkaller@googlegroups.com>
-Cc:     syzbot <syzbot+cd66e43794b178bb5cd6@syzkaller.appspotmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <158224928306.184098.11550548610262156729@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.205.80]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 8, 2020 at 7:35 PM 'Jann Horn' via syzkaller-bugs
-<syzkaller-bugs@googlegroups.com> wrote:
+Hi,
+
+sorry for the late reply.
+
+On 2020/2/21 9:41, Stephen Boyd wrote:
+> Quoting Yang Yingliang (2020-02-19 19:42:32)
+>> If system has many cpus (e.g. 128), it will spend a lot of time to
+>> print message to the console when execute echo q > /proc/sysrq-trigger.
+>>
+>> When /proc/sys/kernel/numa_balancing is enabled, if the migration threads
+>> are woke up, the migration thread that on print mesasage cpu can't run
+>> until the print finish, another migration thread may trigger soft lockup.
+>>
+>> PID: 619    TASK: ffffa02fdd8bec80  CPU: 121  COMMAND: "migration/121"
+>>    #0 [ffff00000a103b10] __crash_kexec at ffff0000081bf200
+>>    #1 [ffff00000a103ca0] panic at ffff0000080ec93c
+>>    #2 [ffff00000a103d80] watchdog_timer_fn at ffff0000081f8a14
+>>    #3 [ffff00000a103e00] __run_hrtimer at ffff00000819701c
+>>    #4 [ffff00000a103e40] __hrtimer_run_queues at ffff000008197420
+>>    #5 [ffff00000a103ea0] hrtimer_interrupt at ffff00000819831c
+>>    #6 [ffff00000a103f10] arch_timer_dying_cpu at ffff000008b53144
+>>    #7 [ffff00000a103f30] handle_percpu_devid_irq at ffff000008174e34
+>>    #8 [ffff00000a103f70] generic_handle_irq at ffff00000816c5e8
+>>    #9 [ffff00000a103f90] __handle_domain_irq at ffff00000816d1f4
+>>   #10 [ffff00000a103fd0] gic_handle_irq at ffff000008081860
+>>   --- <IRQ stack> ---
+>>   #11 [ffff00000d6e3d50] el1_irq at ffff0000080834c8
+>>   #12 [ffff00000d6e3d60] multi_cpu_stop at ffff0000081d9964
+>>   #13 [ffff00000d6e3db0] cpu_stopper_thread at ffff0000081d9cfc
+>>   #14 [ffff00000d6e3e10] smpboot_thread_fn at ffff00000811e0a8
+>>   #15 [ffff00000d6e3e70] kthread at ffff000008118988
+>>
+>> To avoid this soft lockup, add touch_all_softlockup_watchdogs()
+>> in sysrq_timer_list_show()
+>>
+>> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+>> ---
+>>   kernel/time/timer_list.c | 8 ++++++--
+>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
+>> index acb326f..4cb0e6f 100644
+>> --- a/kernel/time/timer_list.c
+>> +++ b/kernel/time/timer_list.c
+>> @@ -289,13 +289,17 @@ void sysrq_timer_list_show(void)
+>>   
+>>          timer_list_header(NULL, now);
+>>   
+>> -       for_each_online_cpu(cpu)
+>> +       for_each_online_cpu(cpu) {
+>> +               touch_all_softlockup_watchdogs();
+> Usage of touch_all_softlockup_watchdogs() deserves a comment. Otherwise
+> the reader is left to git archaeology to understand why watchdogs are
+> being touched. Of course, we failed at that with commit 010704276865
+> ("sysrq: Reset the watchdog timers while displaying high-resolution
+> timers") which looks awfully similar to this.
+OK, I will add a comment later.
 >
-> On Sun, Mar 8, 2020 at 5:40 PM syzbot
-> <syzbot+cd66e43794b178bb5cd6@syzkaller.appspotmail.com> wrote:
-> > HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16cfeac3e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=cd66e43794b178bb5cd6
-> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a42329e00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+cd66e43794b178bb5cd6@syzkaller.appspotmail.com
-> >
-> > general protection fault, probably for non-canonical address 0x1ffffffff1255a6b: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 0 PID: 8742 Comm: syz-executor.2 Not tainted 5.6.0-rc3-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > RIP: 0010:arch_local_irq_disable arch/x86/include/asm/paravirt.h:757 [inline]
-> > RIP: 0010:syscall_return_slowpath+0xeb/0x4a0 arch/x86/entry/common.c:277
-> > Code: 00 10 0f 85 de 00 00 00 e8 b2 a3 76 00 48 c7 c0 58 d3 2a 89 48 c1 e8 03 80 3c 18 00 74 0c 48 c7 c7 58 d3 2a 89 e8 05 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > RSP: 0018:ffffc900020a7ed0 EFLAGS: 00010246
-> > RAX: 1ffffffff1255a6b RBX: dffffc0000000000 RCX: ffff88808c512380
-> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> > RBP: ffffc900020a7f10 R08: ffffffff810075bb R09: fffffbfff14d9182
-> > R10: fffffbfff14d9182 R11: 0000000000000000 R12: 1ffff110118a2470
-> > R13: 0000000000004000 R14: ffff88808c512380 R15: ffff88808c512380
-> > FS:  000000000154f940(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 000000000076c000 CR3: 00000000a6b05000 CR4: 00000000001406f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > BUG: kernel NULL pointer dereference, address: 0000000000000000
-> > #PF: supervisor write access in kernel mode
-> > #PF: error_code(0x0002) - not-present page
-> > PGD 8fecc067 P4D 8fecc067 PUD 97953067 PMD 0
-> > Oops: 0002 [#2] PREEMPT SMP KASAN
-> > CPU: 0 PID: 8742 Comm: syz-executor.2 Not tainted 5.6.0-rc3-syzkaller #0
+>>                  print_cpu(NULL, cpu, now);
+>> +       }
+>>   
+>>   #ifdef CONFIG_GENERIC_CLOCKEVENTS
+>>          timer_list_show_tickdevices_header(NULL);
+>> -       for_each_online_cpu(cpu)
+>> +       for_each_online_cpu(cpu) {
+>> +               touch_all_softlockup_watchdogs();
+>>                  print_tickdevice(NULL, tick_get_device(cpu), cpu);
+> print_tickdevice() already has touch_nmi_watchdog() which eventually
+> touches the softlockup watchdog. Is the problem that it isn't enough to
+> do that when the migration thread is also running?
+No, it's not enough.
+The soft lockup occurs on other cpu, so other cpu's soft watchdog need 
+to be touched.
+
 >
-> Ugh, why does it build with -Werror...
+>> +       }
+>>   #endif
+>>          return;
+> .
+>
 
-Now I am realizing I don't know what's the proper way to turn off
-warnings entirely...
 
-We turn off this CONFIG_ERROR_ON_WARNING historically:
-https://github.com/google/syzkaller/blob/2e9971bbbfb4df6ba0118353163a7703f3dbd6ec/dashboard/config/bits-syzbot.config#L17
-and I thought that's enough. But now I realize it's not even a thing.
-I see it referenced in some ChromeOS threads and there are some
-discussions re upstreaming, but apparently it never existed upstream.
-
-make has W=n, but it seems that it can only be used to produce more
-warnings. We don't pass W=3 specifically and there is no W=0.
-
-Should we always build with CFLAGS=-w? Is it guaranteed to work? Or is
-there a better way?
